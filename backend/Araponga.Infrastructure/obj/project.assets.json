@@ -1,11 +1,65 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "Araponga.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Araponga.Domain": "1.0.0",
+          "Araponga.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Araponga.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Araponga.Application.dll": {}
+        }
+      },
+      "Araponga.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Araponga.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Araponga.Domain.dll": {}
+        }
+      },
+      "Araponga.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Araponga.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Araponga.Shared.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Araponga.Application/1.0.0": {
+      "type": "project",
+      "path": "../Araponga.Application/Araponga.Application.csproj",
+      "msbuildProject": "../Araponga.Application/Araponga.Application.csproj"
+    },
+    "Araponga.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Araponga.Domain/Araponga.Domain.csproj",
+      "msbuildProject": "../Araponga.Domain/Araponga.Domain.csproj"
+    },
+    "Araponga.Shared/1.0.0": {
+      "type": "project",
+      "path": "../Araponga.Shared/Araponga.Shared.csproj",
+      "msbuildProject": "../Araponga.Shared/Araponga.Shared.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "Araponga.Application >= 1.0.0",
+      "Araponga.Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\rapha\\.nuget\\packages\\": {}
@@ -31,7 +85,14 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj": {
+              "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj"
+            },
+            "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj": {
+              "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -4,6 +4,129 @@
     "C:\\Users\\rapha\\araponga\\backend\\Araponga.Infrastructure\\Araponga.Infrastructure.csproj": {}
   },
   "projects": {
+    "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj",
+        "projectName": "Araponga.Application",
+        "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj",
+        "packagesPath": "C:\\Users\\rapha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\rapha\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj": {
+                "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj"
+              },
+              "C:\\Users\\rapha\\araponga\\backend\\Araponga.Shared\\Araponga.Shared.csproj": {
+                "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Shared\\Araponga.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj",
+        "projectName": "Araponga.Domain",
+        "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj",
+        "packagesPath": "C:\\Users\\rapha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\rapha\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "C:\\Users\\rapha\\araponga\\backend\\Araponga.Infrastructure\\Araponga.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -12,6 +135,71 @@
         "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Infrastructure\\Araponga.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\rapha\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\rapha\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj": {
+                "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj"
+              },
+              "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj": {
+                "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Domain\\Araponga.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\rapha\\araponga\\backend\\Araponga.Shared\\Araponga.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Shared\\Araponga.Shared.csproj",
+        "projectName": "Araponga.Shared",
+        "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Shared\\Araponga.Shared.csproj",
+        "packagesPath": "C:\\Users\\rapha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rapha\\AppData\\Roaming\\NuGet\\NuGet.Config"

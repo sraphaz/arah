@@ -107,6 +107,54 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Araponga.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Araponga.Domain": "1.0.0",
+          "Araponga.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Araponga.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Araponga.Application.dll": {}
+        }
+      },
+      "Araponga.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Araponga.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Araponga.Domain.dll": {}
+        }
+      },
+      "Araponga.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Araponga.Application": "1.0.0",
+          "Araponga.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Araponga.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Araponga.Infrastructure.dll": {}
+        }
+      },
+      "Araponga.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Araponga.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Araponga.Shared.dll": {}
+        }
       }
     }
   },
@@ -473,10 +521,32 @@
         "swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
+    },
+    "Araponga.Application/1.0.0": {
+      "type": "project",
+      "path": "../Araponga.Application/Araponga.Application.csproj",
+      "msbuildProject": "../Araponga.Application/Araponga.Application.csproj"
+    },
+    "Araponga.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Araponga.Domain/Araponga.Domain.csproj",
+      "msbuildProject": "../Araponga.Domain/Araponga.Domain.csproj"
+    },
+    "Araponga.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../Araponga.Infrastructure/Araponga.Infrastructure.csproj",
+      "msbuildProject": "../Araponga.Infrastructure/Araponga.Infrastructure.csproj"
+    },
+    "Araponga.Shared/1.0.0": {
+      "type": "project",
+      "path": "../Araponga.Shared/Araponga.Shared.csproj",
+      "msbuildProject": "../Araponga.Shared/Araponga.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Araponga.Application >= 1.0.0",
+      "Araponga.Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 8.0.22",
       "Swashbuckle.AspNetCore >= 6.6.2"
     ]
@@ -505,7 +575,14 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj": {
+              "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Application\\Araponga.Application.csproj"
+            },
+            "C:\\Users\\rapha\\araponga\\backend\\Araponga.Infrastructure\\Araponga.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\rapha\\araponga\\backend\\Araponga.Infrastructure\\Araponga.Infrastructure.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

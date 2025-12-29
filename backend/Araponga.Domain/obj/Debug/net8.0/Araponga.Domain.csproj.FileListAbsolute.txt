@@ -1,0 +1,11 @@
+C:\Users\rapha\araponga\backend\Araponga.Domain\bin\Debug\net8.0\Araponga.Domain.deps.json
+C:\Users\rapha\araponga\backend\Araponga.Domain\bin\Debug\net8.0\Araponga.Domain.dll
+C:\Users\rapha\araponga\backend\Araponga.Domain\bin\Debug\net8.0\Araponga.Domain.pdb
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\Araponga.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\Araponga.Domain.AssemblyInfoInputs.cache
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\Araponga.Domain.AssemblyInfo.cs
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\Araponga.Domain.csproj.CoreCompileInputs.cache
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\Araponga.Domain.dll
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\refint\Araponga.Domain.dll
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\Araponga.Domain.pdb
+C:\Users\rapha\araponga\backend\Araponga.Domain\obj\Debug\net8.0\ref\Araponga.Domain.dll

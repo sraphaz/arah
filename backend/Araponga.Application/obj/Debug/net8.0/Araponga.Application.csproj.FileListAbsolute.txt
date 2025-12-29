@@ -1,0 +1,17 @@
+C:\Users\rapha\araponga\backend\Araponga.Application\bin\Debug\net8.0\Araponga.Application.deps.json
+C:\Users\rapha\araponga\backend\Araponga.Application\bin\Debug\net8.0\Araponga.Application.dll
+C:\Users\rapha\araponga\backend\Araponga.Application\bin\Debug\net8.0\Araponga.Application.pdb
+C:\Users\rapha\araponga\backend\Araponga.Application\bin\Debug\net8.0\Araponga.Domain.dll
+C:\Users\rapha\araponga\backend\Araponga.Application\bin\Debug\net8.0\Araponga.Shared.dll
+C:\Users\rapha\araponga\backend\Araponga.Application\bin\Debug\net8.0\Araponga.Domain.pdb
+C:\Users\rapha\araponga\backend\Araponga.Application\bin\Debug\net8.0\Araponga.Shared.pdb
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.Application.csproj.AssemblyReference.cache
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.Application.AssemblyInfoInputs.cache
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.Application.AssemblyInfo.cs
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.Application.csproj.CoreCompileInputs.cache
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.59301F59.Up2Date
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.Application.dll
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\refint\Araponga.Application.dll
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\Araponga.Application.pdb
+C:\Users\rapha\araponga\backend\Araponga.Application\obj\Debug\net8.0\ref\Araponga.Application.dll

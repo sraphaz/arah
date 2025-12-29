@@ -1,0 +1,11 @@
+C:\Users\rapha\araponga\backend\Araponga.Shared\bin\Debug\net8.0\Araponga.Shared.deps.json
+C:\Users\rapha\araponga\backend\Araponga.Shared\bin\Debug\net8.0\Araponga.Shared.dll
+C:\Users\rapha\araponga\backend\Araponga.Shared\bin\Debug\net8.0\Araponga.Shared.pdb
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\Araponga.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\Araponga.Shared.AssemblyInfoInputs.cache
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\Araponga.Shared.AssemblyInfo.cs
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\Araponga.Shared.csproj.CoreCompileInputs.cache
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\Araponga.Shared.dll
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\refint\Araponga.Shared.dll
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\Araponga.Shared.pdb
+C:\Users\rapha\araponga\backend\Araponga.Shared\obj\Debug\net8.0\ref\Araponga.Shared.dll

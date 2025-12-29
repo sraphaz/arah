@@ -1,0 +1,53 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Araponga.Application/1.0.0": {
+        "dependencies": {
+          "Araponga.Domain": "1.0.0",
+          "Araponga.Shared": "1.0.0"
+        },
+        "runtime": {
+          "Araponga.Application.dll": {}
+        }
+      },
+      "Araponga.Domain/1.0.0": {
+        "runtime": {
+          "Araponga.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Araponga.Shared/1.0.0": {
+        "runtime": {
+          "Araponga.Shared.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Araponga.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Araponga.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Araponga.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

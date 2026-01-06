@@ -1,0 +1,35 @@
+Epic,Feature,Story ID,Story Name,Descrição,Ator,Critérios de Aceite,Prioridade,Status,Notas Arquitetura
+Território & Vínculo,Descoberta de Territórios,US-001,Visualizar territórios disponíveis,"Como usuário, quero ver os territórios disponíveis para escolher onde navegar.",Visitante/Morador,"Lista exibe apenas territórios ACTIVE ou PILOT; ordenada por nome",Alta,To Do,"C4: Territories Controller | MER: Territory"
+Território & Vínculo,Seleção de Território,US-002,Selecionar território ativo,"Como usuário, quero selecionar um território para navegar no contexto correto.",Visitante/Morador,"Todas as telas passam a operar no território selecionado",Alta,To Do,"C4: Access Control + Feature Flags"
+Território & Vínculo,Autenticação,US-003,Autenticar via login social,"Como usuário, quero entrar usando Google/Apple/Microsoft.",Visitante,"Login bem-sucedido cria ou recupera usuário",Alta,To Do,"C4: Auth Module | MER: User"
+Território & Vínculo,Declaração de Moradia,US-004,Declarar vínculo como morador,"Como usuário autenticado, quero declarar que sou morador do território.",Morador,"Cria UserTerritory com status PENDING",Alta,To Do,"MER: UserTerritory | C4: Application Services"
+Território & Vínculo,Status de Vínculo,US-005,Visualizar status do vínculo,"Como usuário, quero ver se meu vínculo é pendente ou validado.",Morador,"Status exibido claramente",Média,To Do,"Access Control"
+Território & Vínculo,Validação Comunitária,US-006,Validar vínculo de morador,"Como curador, quero aprovar ou rejeitar vínculos.",Curador,"Apenas curadores podem validar; ação auditada",Alta,To Do,"C4: Moderation Controller | Audit"
+
+Epic,Feature,Story ID,Story Name,Descrição,Ator,Critérios de Aceite,Prioridade,Status,Notas Arquitetura
+Feed Comunitário,Visualização do Feed,US-007,Visualizar feed do território,"Como usuário, quero ver o feed do território.",Visitante/Morador,"Visitante vê apenas público; morador vê exclusivo",Alta,To Do,"C4: Feed Controller | Access Control"
+Feed Comunitário,Criação de Post,US-008,Criar post comunitário,"Como morador, quero criar um post para a comunidade.",Morador,"Post associado a território; respeita visibilidade",Alta,To Do,"MER: Post (futuro)"
+Feed Comunitário,Tipos de Post,US-009,Classificar tipo de post,"Como morador, quero escolher o tipo de post (alerta, evento, etc).",Morador,"Tipos disponíveis conforme regras do território",Média,To Do,"Feature Flags"
+Feed Comunitário,Prioridade de Alertas,US-010,Destaque de alertas,"Como sistema, quero destacar alertas no feed.",Sistema,"Alertas aparecem com prioridade visual",Alta,To Do,"Feed + Saúde do Território"
+
+Epic,Feature,Story ID,Story Name,Descrição,Ator,Critérios de Aceite,Prioridade,Status,Notas Arquitetura
+Interações,Curtidas,US-011,Curtir post,"Como usuário, quero curtir conteúdos relevantes.",Visitante/Morador,"Visitante só curte público; morador tudo permitido",Média,To Do,"Interactions Controller"
+Interações,Comentários,US-012,Comentar post,"Como morador, quero comentar posts.",Morador,"Comentários moderáveis",Alta,To Do,"Moderation Controller"
+Interações,Compartilhamento,US-013,Compartilhar conteúdo,"Como usuário, quero compartilhar posts.",Morador,"Compartilhamento respeita visibilidade",Baixa,To Do,"Audit + Access Control"
+
+Epic,Feature,Story ID,Story Name,Descrição,Ator,Critérios de Aceite,Prioridade,Status,Notas Arquitetura
+Mapa,Visualizar Mapa,US-014,Visualizar mapa do território,"Como usuário, quero ver entidades no mapa.",Visitante/Morador,"Entidades filtradas por sensibilidade",Alta,To Do,"C4: Map Controller"
+Mapa,Sugerir Entidade,US-015,Sugerir ponto no mapa,"Como morador, quero sugerir uma entidade.",Morador,"Entidade criada como SUGGESTED",Alta,To Do,"MER: Place (futuro)"
+Mapa,Validação de Entidade,US-016,Validar entidade do mapa,"Como curador, quero validar entidades.",Curador,"Apenas curadores validam",Alta,To Do,"Moderation + Audit"
+Mapa,Confirmação Comunitária,US-017,Confirmar estabelecimento,"Como morador, quero confirmar um comércio existente.",Morador,"Confirmações aumentam confiabilidade",Baixa,To Do,"Regras futuras"
+
+Epic,Feature,Story ID,Story Name,Descrição,Ator,Critérios de Aceite,Prioridade,Status,Notas Arquitetura
+Saúde do Território,Indicadores,US-018,Visualizar saúde do território,"Como usuário, quero ver indicadores ambientais.",Visitante/Morador,"Indicadores exibidos de forma informativa",Média,To Do,"C4: HealthTerritory Controller"
+Saúde do Território,Reportar Alerta,US-019,Reportar alerta ambiental,"Como morador, quero reportar problemas ambientais.",Morador,"Alerta criado como PENDING",Alta,To Do,"Moderation + Feed"
+Saúde do Território,Validar Alerta,US-020,Validar alerta,"Como curador, quero validar alertas.",Curador,"Alertas validados ganham destaque",Alta,To Do,"Audit + Feed"
+
+Epic,Feature,Story ID,Story Name,Descrição,Ator,Critérios de Aceite,Prioridade,Status,Notas Arquitetura
+Plataforma,Feature Flags,US-021,Configurar regras por território,"Como sistema, quero ativar/desativar features por território.",Sistema,"Regras respeitadas em toda navegação",Alta,To Do,"Feature Flags Service"
+Plataforma,Auditoria,US-022,Registrar ações sensíveis,"Como sistema, quero auditar ações críticas.",Sistema,"Logs de criação/validação/moderação",Alta,To Do,"Audit/Telemetry"
+Plataforma,Visibilidade,US-023,Aplicar controle de acesso,"Como sistema, quero garantir visibilidade correta.",Sistema,"Nenhum dado vaza entre territórios",Alta,To Do,"Access Control"
+

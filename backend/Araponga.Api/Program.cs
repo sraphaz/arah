@@ -152,7 +152,17 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = context =>
+    {
+        if (string.Equals(context.File.Name, "index.html", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(context.File.Name, "config.html", StringComparison.OrdinalIgnoreCase))
+        {
+            context.Context.Response.ContentType = "text/html; charset=utf-8";
+        }
+    }
+});
 
 app.MapControllers();
 

@@ -195,14 +195,11 @@ public sealed class ApiScenariosTests
         {
             return app =>
             {
-                app.UseRouting();
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapGet(
-                        "/__throw",
-                        (HttpContext _) => Task.FromException(new InvalidOperationException("boom")));
-                });
                 next(app);
+                app.Map("/__throw", branch =>
+                {
+                    branch.Run(_ => Task.FromException(new InvalidOperationException("boom")));
+                });
             };
         }
     }

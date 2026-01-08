@@ -1,9 +1,34 @@
+using System.Reflection;
+using Araponga.Api.Security;
+using Araponga.Application.Interfaces;
+using Araponga.Application.Services;
+using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Security;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
 builder.Services.AddControllers();
+
+// Application services
+builder.Services.AddSingleton<InMemoryDataStore>();
+builder.Services.AddSingleton<ITerritoryRepository, InMemoryTerritoryRepository>();
+builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+builder.Services.AddSingleton<IUserTerritoryRepository, InMemoryUserTerritoryRepository>();
+builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
+builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
+builder.Services.AddSingleton<IActiveTerritoryStore, InMemoryActiveTerritoryStore>();
+builder.Services.AddSingleton<ITokenService, SimpleTokenService>();
+
+builder.Services.AddSingleton<TerritoryService>();
+builder.Services.AddSingleton<AuthService>();
+builder.Services.AddSingleton<MembershipService>();
+builder.Services.AddSingleton<AccessEvaluator>();
+builder.Services.AddSingleton<FeedService>();
+builder.Services.AddSingleton<MapService>();
+builder.Services.AddSingleton<ActiveTerritoryService>();
+builder.Services.AddSingleton<CurrentUserAccessor>();
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +59,13 @@ builder.Services.AddSwaggerGen(c =>
         return new[] { controller ?? "General" };
     });
 
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
+
     c.DocInclusionPredicate((_, __) => true);
 });
 
@@ -59,3 +91,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program;

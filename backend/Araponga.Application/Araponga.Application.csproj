@@ -11,4 +11,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Araponga.Domain\Araponga.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

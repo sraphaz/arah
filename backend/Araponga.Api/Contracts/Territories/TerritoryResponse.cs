@@ -5,6 +5,6 @@ public sealed record TerritoryResponse(
     string Name,
     string? Description,
     string SensitivityLevel,
-    bool IsPilot,
+    string Status,
     DateTime CreatedAtUtc
 );

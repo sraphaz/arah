@@ -197,7 +197,7 @@ public sealed class ApiScenariosTests
                 app.UseRouting();
                 app.UseEndpoints(endpoints =>
                 {
-                    endpoints.MapGet("/__throw", () => throw new InvalidOperationException("boom"));
+                    endpoints.MapGet("/__throw", _ => throw new InvalidOperationException("boom"));
                 });
                 next(app);
             };

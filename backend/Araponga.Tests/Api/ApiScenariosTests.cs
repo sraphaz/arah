@@ -168,10 +168,11 @@ public sealed class ApiScenariosTests
     {
         using var factory = new ApiFactory();
         using var client = factory.WithWebHostBuilder(builder =>
-            builder.Configure(app =>
-            {
-                app.MapGet("/__throw", () => throw new InvalidOperationException("boom"));
-            })).CreateClient();
+            builder.ConfigureWebHost(webHost =>
+                webHost.Configure(app =>
+                {
+                    app.MapGet("/__throw", () => throw new InvalidOperationException("boom"));
+                }))).CreateClient();
 
         var response = await client.GetAsync("/__throw");
 

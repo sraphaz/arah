@@ -148,6 +148,44 @@ public sealed class ApiScenariosTests
     }
 
     [Fact]
+    public async Task RootPage_ReturnsMinimalHtml()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/");
+
+        response.EnsureSuccessStatusCode();
+        Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType?.ToString());
+
+        var html = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Araponga API", html, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Carregar dados", html, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ExceptionHandler_ReturnsStructuredProblem()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.WithWebHostBuilder(builder =>
+            builder.Configure(app =>
+            {
+                app.MapGet("/__throw", () => throw new InvalidOperationException("boom"));
+            })).CreateClient();
+
+        var response = await client.GetAsync("/__throw");
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        var payload = await response.Content.ReadFromJsonAsync<Dictionary<string, object>>();
+
+        Assert.NotNull(payload);
+        Assert.Equal("Unexpected error", payload!["title"]?.ToString());
+        Assert.Equal("/__throw", payload["instance"]?.ToString());
+        Assert.Equal("/__throw", payload["path"]?.ToString());
+        Assert.True(payload.ContainsKey("traceId"));
+    }
+
+    [Fact]
     public async Task AuthSocial_ValidatesPayloadAndReusesUser()
     {
         using var factory = new ApiFactory();

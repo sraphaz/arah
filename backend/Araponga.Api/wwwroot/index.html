@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Araponga API</title>
+    <style>
+        :root { color-scheme: light; font-family: "Inter", "Segoe UI", system-ui, sans-serif; }
+        body { margin: 0; background: #f7f7f9; color: #151515; }
+        main { max-width: 960px; margin: 0 auto; padding: 32px 20px 64px; }
+        header { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+        h1 { font-size: 28px; margin: 0; }
+        p { margin: 0; color: #4a4a4a; }
+        section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); margin-bottom: 16px; }
+        button { border: 1px solid #151515; background: #151515; color: #fff; border-radius: 8px; padding: 10px 16px; cursor: pointer; }
+        button.secondary { background: transparent; color: #151515; }
+        .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+        pre { background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 8px; overflow: auto; max-height: 280px; }
+        .meta { font-size: 12px; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Araponga API</h1>
+            <p>Interface mínima para explorar recursos usando o provider configurado.</p>
+            <div class="meta">Use <code>Persistence:Provider</code> em appsettings para alternar InMemory/Postgres.</div>
+        </header>
+
+        <section>
+            <strong>Explorar dados base</strong>
+            <p class="meta">Selecionamos o primeiro território e carregamos feed, mapa e saúde.</p>
+            <div class="grid" style="margin-top: 12px;">
+                <button id="load-all">Carregar dados</button>
+                <button id="clear" class="secondary">Limpar</button>
+            </div>
+        </section>
+
+        <section>
+            <h3>Territórios</h3>
+            <pre id="territories">Clique em "Carregar dados"...</pre>
+        </section>
+
+        <section>
+            <h3>Feed</h3>
+            <pre id="feed">Clique em "Carregar dados"...</pre>
+        </section>
+
+        <section>
+            <h3>Mapa</h3>
+            <pre id="map">Clique em "Carregar dados"...</pre>
+        </section>
+
+        <section>
+            <h3>Saúde</h3>
+            <pre id="health">Clique em "Carregar dados"...</pre>
+        </section>
+    </main>
+    <script>
+        const territoriesEl = document.getElementById("territories");
+        const feedEl = document.getElementById("feed");
+        const mapEl = document.getElementById("map");
+        const healthEl = document.getElementById("health");
+
+        const stringify = (data) => JSON.stringify(data, null, 2);
+
+        const fetchJson = async (url) => {
+            const response = await fetch(url);
+            if (!response.ok) {
+                const message = await response.text();
+                throw new Error(`Erro ${response.status}: ${message || response.statusText}`);
+            }
+            return response.json();
+        };
+
+        const resetPanels = (message) => {
+            territoriesEl.textContent = message;
+            feedEl.textContent = message;
+            mapEl.textContent = message;
+            healthEl.textContent = message;
+        };
+
+        const loadData = async () => {
+            resetPanels("Carregando...");
+
+            const territories = await fetchJson("/api/v1/territories");
+            territoriesEl.textContent = stringify(territories);
+
+            const territoryId = territories?.[0]?.id;
+            if (!territoryId) {
+                feedEl.textContent = "Sem territórios cadastrados.";
+                mapEl.textContent = "Sem territórios cadastrados.";
+                healthEl.textContent = "Sem territórios cadastrados.";
+                return;
+            }
+
+            const [feed, map, health] = await Promise.all([
+                fetchJson(`/api/v1/feed?territoryId=${territoryId}`),
+                fetchJson(`/api/v1/map/entities?territoryId=${territoryId}`),
+                fetchJson(`/api/v1/health/indicators?territoryId=${territoryId}`)
+            ]);
+
+            feedEl.textContent = stringify(feed);
+            mapEl.textContent = stringify(map);
+            healthEl.textContent = stringify(health);
+        };
+
+        document.getElementById("load-all").addEventListener("click", () => {
+            loadData().catch((error) => {
+                territoriesEl.textContent = `Erro: ${error.message}`;
+                feedEl.textContent = "-";
+                mapEl.textContent = "-";
+                healthEl.textContent = "-";
+            });
+        });
+
+        document.getElementById("clear").addEventListener("click", () => {
+            resetPanels("Clique em \"Carregar dados\"...");
+        });
+    </script>
+</body>
+</html>

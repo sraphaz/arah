@@ -125,6 +125,7 @@ public sealed class InMemoryDataStore
     public List<Territory> Territories { get; }
     public List<User> Users { get; }
     public List<TerritoryMembership> Memberships { get; }
+    public List<UserTerritory> UserTerritories { get; } = new();
     public List<CommunityPost> Posts { get; }
     public List<MapEntity> MapEntities { get; }
     public List<HealthAlert> HealthAlerts { get; }

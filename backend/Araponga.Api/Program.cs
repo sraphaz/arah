@@ -3,13 +3,11 @@ using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
-using System.Reflection;
-using Araponga.Api.Security;
-using Araponga.Application.Interfaces;
-using Araponga.Application.Services;
-using Araponga.Infrastructure.InMemory;
-using Araponga.Infrastructure.Security;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,16 +16,38 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Application services
-builder.Services.AddSingleton<InMemoryDataStore>();
-builder.Services.AddSingleton<ITerritoryRepository, InMemoryTerritoryRepository>();
-builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
-builder.Services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
-builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
-builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
-builder.Services.AddSingleton<IActiveTerritoryStore, InMemoryActiveTerritoryStore>();
-builder.Services.AddSingleton<IHealthAlertRepository, InMemoryHealthAlertRepository>();
-builder.Services.AddSingleton<IFeatureFlagService, InMemoryFeatureFlagService>();
-builder.Services.AddSingleton<IAuditLogger, InMemoryAuditLogger>();
+var persistenceProvider = builder.Configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddDbContext<ArapongaDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
+
+    builder.Services.AddScoped<ITerritoryRepository, PostgresTerritoryRepository>();
+    builder.Services.AddScoped<IUserRepository, PostgresUserRepository>();
+    builder.Services.AddScoped<ITerritoryMembershipRepository, PostgresTerritoryMembershipRepository>();
+    builder.Services.AddScoped<IUserTerritoryRepository, PostgresUserTerritoryRepository>();
+    builder.Services.AddScoped<IFeedRepository, PostgresFeedRepository>();
+    builder.Services.AddScoped<IMapRepository, PostgresMapRepository>();
+    builder.Services.AddScoped<IActiveTerritoryStore, PostgresActiveTerritoryStore>();
+    builder.Services.AddScoped<IHealthAlertRepository, PostgresHealthAlertRepository>();
+    builder.Services.AddScoped<IFeatureFlagService, PostgresFeatureFlagService>();
+    builder.Services.AddScoped<IAuditLogger, PostgresAuditLogger>();
+}
+else
+{
+    builder.Services.AddSingleton<InMemoryDataStore>();
+    builder.Services.AddSingleton<ITerritoryRepository, InMemoryTerritoryRepository>();
+    builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+    builder.Services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
+    builder.Services.AddSingleton<IUserTerritoryRepository, InMemoryUserTerritoryRepository>();
+    builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
+    builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
+    builder.Services.AddSingleton<IActiveTerritoryStore, InMemoryActiveTerritoryStore>();
+    builder.Services.AddSingleton<IHealthAlertRepository, InMemoryHealthAlertRepository>();
+    builder.Services.AddSingleton<IFeatureFlagService, InMemoryFeatureFlagService>();
+    builder.Services.AddSingleton<IAuditLogger, InMemoryAuditLogger>();
+}
+
 builder.Services.AddSingleton<ITokenService, SimpleTokenService>();
 
 builder.Services.AddSingleton<TerritoryService>();
@@ -81,6 +101,39 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var feature = context.Features.Get<IExceptionHandlerPathFeature>();
+        var exception = feature?.Error;
+        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+        if (exception is not null)
+        {
+            logger.LogError(exception, "Unhandled exception at {Path}", feature?.Path);
+        }
+
+        var includeDetails = app.Environment.IsDevelopment();
+        var statusCode = exception is ArgumentException
+            ? StatusCodes.Status400BadRequest
+            : StatusCodes.Status500InternalServerError;
+
+        var problem = new ProblemDetails
+        {
+            Title = "Unexpected error",
+            Status = statusCode,
+            Detail = includeDetails ? exception?.Message : "An unexpected error occurred.",
+            Instance = feature?.Path
+        };
+        problem.Extensions["traceId"] = context.TraceIdentifier;
+        problem.Extensions["path"] = feature?.Path;
+
+        context.Response.StatusCode = statusCode;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsJsonAsync(problem);
+    });
+});
+
 // Swagger only in Development (padrão)
 if (app.Environment.IsDevelopment())
 {
@@ -97,6 +150,9 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 

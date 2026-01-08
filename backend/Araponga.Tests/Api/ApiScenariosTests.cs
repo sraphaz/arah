@@ -9,6 +9,8 @@ using Araponga.Api.Contracts.Health;
 using Araponga.Api.Contracts.Map;
 using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Contracts.Territories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Araponga.Tests.Api;
@@ -168,11 +170,10 @@ public sealed class ApiScenariosTests
     {
         using var factory = new ApiFactory();
         using var client = factory.WithWebHostBuilder(builder =>
-            builder.ConfigureWebHost(webHost =>
-                webHost.Configure(app =>
-                {
-                    app.MapGet("/__throw", () => throw new InvalidOperationException("boom"));
-                }))).CreateClient();
+            builder.ConfigureServices(services =>
+            {
+                services.AddSingleton<IStartupFilter, ThrowEndpointStartupFilter>();
+            })).CreateClient();
 
         var response = await client.GetAsync("/__throw");
 
@@ -184,6 +185,18 @@ public sealed class ApiScenariosTests
         Assert.Equal("/__throw", payload["instance"]?.ToString());
         Assert.Equal("/__throw", payload["path"]?.ToString());
         Assert.True(payload.ContainsKey("traceId"));
+    }
+
+    private sealed class ThrowEndpointStartupFilter : IStartupFilter
+    {
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
+        {
+            return app =>
+            {
+                app.MapGet("/__throw", () => throw new InvalidOperationException("boom"));
+                next(app);
+            };
+        }
     }
 
     [Fact]

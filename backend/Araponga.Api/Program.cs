@@ -166,7 +166,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 if (app.Environment.IsEnvironment("Testing"))
 {
-    app.MapGet("/__throw", () => throw new InvalidOperationException("boom"));
+    app.MapGet("/__throw", (HttpContext _) => throw new InvalidOperationException("boom"));
 }
 
 app.MapControllers();

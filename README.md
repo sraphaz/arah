@@ -155,10 +155,21 @@ dotnet restore
 dotnet build
 dotnet test
 dotnet run --project backend/Araponga.Api
+```
 
 A API ficará disponível conforme configurado no projeto (launchSettings.json).
 
-🤝 Contribuindo
+### Portal de autosserviço
+
+A página inicial da API (`/`) serve um portal estático com explicação do produto,
+domínios, fluxos e quickstart. Em desenvolvimento, acesse também:
+
+- `/swagger` (documentação da API)
+- `/health` (status simples)
+
+## 🤝 Contribuindo
+
+Consulte o guia em [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 O Araponga é aberto à colaboração, especialmente de pessoas interessadas em:
 
@@ -186,7 +197,7 @@ feedback conceitual
 
 Antes de abrir PRs grandes, abra uma issue para alinharmos a direção.
 
-🌎 Visão de futuro
+## 🌎 Visão de futuro
 
 Algumas direções possíveis (não promessas fechadas):
 

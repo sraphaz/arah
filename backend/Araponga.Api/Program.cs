@@ -146,11 +146,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Importante: como você está rodando só em HTTP, removemos o redirect p/ HTTPS para não gerar warning.
-// app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.UseDefaultFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -164,10 +159,18 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
+// Importante: como você está rodando só em HTTP, removemos o redirect p/ HTTPS para não gerar warning.
+// app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
 if (app.Environment.IsEnvironment("Testing"))
 {
     app.MapGet("/__throw", (HttpContext _) => throw new InvalidOperationException("boom"));
 }
+
+app.MapGet("/health", () => Results.Ok(new { status = "ok", service = "Araponga.Api" }))
+    .AllowAnonymous();
 
 app.MapControllers();
 

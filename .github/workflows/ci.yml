@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: githubpagesconfig
+        run: ./scripts/sync-github-pages.sh
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:

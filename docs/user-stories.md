@@ -173,3 +173,25 @@
 **Critérios de aceite**
 - Apenas `CURATOR` pode validar.
 - Ao validar, um post `ALERT` é criado no feed e ganha destaque visual.
+
+---
+
+## Epic: Portal & Documentação
+
+### US-P01 — Acessar portal estático
+**Como** visitante  
+**Quero** acessar o portal de autosserviço como site estático  
+**Para** entender rapidamente a visão do produto e seus domínios
+
+**Critérios de aceite**
+- O portal estático é publicado via GitHub Pages.
+- A página inicial explica visão, domínios, fluxos e quickstart.
+
+### US-P02 — Navegar pela documentação do produto
+**Como** colaborador  
+**Quero** acessar documentação, user stories e changelog pelo portal  
+**Para** me orientar sobre o estado atual do produto
+
+**Critérios de aceite**
+- O portal inclui links para user stories e changelog.
+- A documentação fica disponível na mesma publicação estática.

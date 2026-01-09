@@ -1,125 +1,274 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Araponga API</title>
-    <style>
-        :root { color-scheme: light; font-family: "Inter", "Segoe UI", system-ui, sans-serif; }
-        body { margin: 0; background: #f7f7f9; color: #151515; }
-        main { max-width: 960px; margin: 0 auto; padding: 32px 20px 64px; }
-        header { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
-        h1 { font-size: 28px; margin: 0; }
-        p { margin: 0; color: #4a4a4a; }
-        section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); margin-bottom: 16px; }
-        button { border: 1px solid #151515; background: #151515; color: #fff; border-radius: 8px; padding: 10px 16px; cursor: pointer; }
-        button.secondary { background: transparent; color: #151515; }
-        .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-        pre { background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 8px; overflow: auto; max-height: 280px; }
-        .meta { font-size: 12px; color: #6b7280; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Araponga • Developer Portal</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-    <main>
-        <header>
-            <h1>Araponga API</h1>
-            <p>Interface mínima para explorar recursos usando o provider configurado.</p>
-            <div class="meta">Use <code>Persistence:Provider</code> em appsettings para alternar InMemory/Postgres.</div>
-            <div class="meta">
-                <a href="/config.html">Abrir página de configuração</a>
-            </div>
-        </header>
+  <header class="hero">
+    <div class="container">
+      <p class="eyebrow">Araponga • Developer Portal</p>
+      <h1>Territory-first, community-first.</h1>
+      <p class="lead">
+        Araponga é uma plataforma comunitária orientada a territory. Este portal explica o produto,
+        seus domínios, fluxos e como contribuir com uma API que respeita privacidade, governança local
+        e não-extrativismo.
+      </p>
+      <div class="hero-actions">
+        <a class="button" href="/swagger">Abrir Swagger</a>
+        <a class="button secondary" href="/health">Checar health</a>
+        <a class="button ghost" href="https://github.com/sraphaz/araponga">GitHub</a>
+      </div>
+      <div class="meta">
+        Swagger fica habilitado por padrão em ambiente Development. Se estiver desativado, rode com
+        <code>ASPNETCORE_ENVIRONMENT=Development</code>.
+      </div>
+    </div>
+  </header>
 
-        <section>
-            <strong>Explorar dados base</strong>
-            <p class="meta">Selecionamos o primeiro território e carregamos feed, mapa e saúde.</p>
-            <div class="grid" style="margin-top: 12px;">
-                <button id="load-all">Carregar dados</button>
-                <button id="clear" class="secondary">Limpar</button>
-            </div>
-        </section>
+  <main class="container">
+    <section class="toc" id="toc">
+      <h2>Sumário</h2>
+      <div class="toc-grid">
+        <a href="#product-brief">Product brief</a>
+        <a href="#domains">Domínios</a>
+        <a href="#flows">Fluxos principais</a>
+        <a href="#quickstart">Quickstart</a>
+        <a href="#examples">Exemplos de API</a>
+        <a href="#principles">Princípios e governança</a>
+        <a href="#links">Links úteis</a>
+      </div>
+    </section>
 
-        <section>
-            <h3>Territórios</h3>
-            <pre id="territories">Clique em "Carregar dados"...</pre>
-        </section>
+    <section id="product-brief" class="section">
+      <div class="section-header">
+        <h2>Product brief</h2>
+        <p>
+          O Araponga é um serviço para comunidades que querem visibilidade local sem abrir mão de
+          autonomia. Tudo começa pelo territory: um recorte geográfico real que organiza quem vê o quê.
+          Visitor e resident são papéis explícitos que determinam acesso a conteúdo e mapa. A plataforma
+          nasce para proteger relações locais, estimular cuidado e evitar extração de dados.
+        </p>
+      </div>
+      <div class="callout">
+        <strong>Foco técnico:</strong> arquitetura orientada a domínios, APIs simples, governança em camadas
+        e evolução incremental (MVP → camadas avançadas → experiências 3D ancoradas em territory).
+      </div>
+    </section>
 
-        <section>
-            <h3>Feed</h3>
-            <pre id="feed">Clique em "Carregar dados"...</pre>
-        </section>
+    <section id="domains" class="section">
+      <div class="section-header">
+        <h2>Domínios</h2>
+        <p>
+          Cada domínio existe para manter responsabilidades claras e proteger o território de regras sociais
+          acopladas. Campos listados abaixo são os essenciais no momento.
+        </p>
+      </div>
 
-        <section>
-            <h3>Mapa</h3>
-            <pre id="map">Clique em "Carregar dados"...</pre>
-        </section>
+      <div class="card-grid">
+        <article class="card">
+          <h3>Territory</h3>
+          <p><strong>O que é:</strong> recorte geográfico neutro que organiza toda a experiência.</p>
+          <p><strong>Por que existe:</strong> fixa a referência espacial sem carregar regras sociais.</p>
+          <ul>
+            <li><strong>Campos:</strong> id, name, slug, bounds, createdAt.</li>
+            <li><strong>Endpoints:</strong> <code>GET /api/v1/territories</code>, <code>GET /api/v1/territories/{id}</code>.</li>
+          </ul>
+        </article>
 
-        <section>
-            <h3>Saúde</h3>
-            <pre id="health">Clique em "Carregar dados"...</pre>
-        </section>
-    </main>
-    <script>
-        const territoriesEl = document.getElementById("territories");
-        const feedEl = document.getElementById("feed");
-        const mapEl = document.getElementById("map");
-        const healthEl = document.getElementById("health");
+        <article class="card">
+          <h3>User</h3>
+          <p><strong>O que é:</strong> identidade autenticada para interagir com o territory.</p>
+          <p><strong>Por que existe:</strong> permite ações seguras e rastreáveis sem expor dados sensíveis.</p>
+          <ul>
+            <li><strong>Campos:</strong> id, displayName, email, status.</li>
+            <li><strong>Endpoints:</strong> <code>POST /api/v1/auth/login</code>, <code>POST /api/v1/auth/register</code>.</li>
+          </ul>
+        </article>
 
-        const stringify = (data) => JSON.stringify(data, null, 2);
+        <article class="card">
+          <h3>Membership</h3>
+          <p><strong>O que é:</strong> vínculo entre pessoa e territory (visitor ou resident).</p>
+          <p><strong>Por que existe:</strong> governa visibilidade, acesso e prioridades locais.</p>
+          <ul>
+            <li><strong>Campos:</strong> id, userId, territoryId, role, status.</li>
+            <li><strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.</li>
+          </ul>
+        </article>
 
-        const fetchJson = async (url) => {
-            const response = await fetch(url);
-            if (!response.ok) {
-                const message = await response.text();
-                throw new Error(`Erro ${response.status}: ${message || response.statusText}`);
-            }
-            return response.json();
-        };
+        <article class="card">
+          <h3>Feed</h3>
+          <p><strong>O que é:</strong> posts, alertas e eventos vinculados ao territory.</p>
+          <p><strong>Por que existe:</strong> distribui informação relevante com regras de visibilidade.</p>
+          <ul>
+            <li><strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.</li>
+            <li><strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.</li>
+          </ul>
+        </article>
 
-        const resetPanels = (message) => {
-            territoriesEl.textContent = message;
-            feedEl.textContent = message;
-            mapEl.textContent = message;
-            healthEl.textContent = message;
-        };
+        <article class="card">
+          <h3>Map</h3>
+          <p><strong>O que é:</strong> entidades e camadas georreferenciadas do territory.</p>
+          <p><strong>Por que existe:</strong> mostra o que está ativo no território sem ruído global.</p>
+          <ul>
+            <li><strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.</li>
+            <li><strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.</li>
+          </ul>
+        </article>
 
-        const loadData = async () => {
-            resetPanels("Carregando...");
+        <article class="card">
+          <h3>Media + GeoAnchor</h3>
+          <p><strong>O que é:</strong> mídia (foto/áudio/vídeo) ancorada em latitude/longitude.</p>
+          <p><strong>Por que existe:</strong> base para experiências futuras, inclusive camadas 3D.</p>
+          <ul>
+            <li><strong>Campos:</strong> mediaId, territoryId, lat, lon, altitude, visibility.</li>
+            <li><strong>Endpoints:</strong> planejados (<em>upcoming</em>).</li>
+          </ul>
+        </article>
+      </div>
+    </section>
 
-            const territories = await fetchJson("/api/v1/territories");
-            territoriesEl.textContent = stringify(territories);
+    <section id="flows" class="section">
+      <div class="section-header">
+        <h2>Fluxos principais</h2>
+        <p>Dois fluxos definem a experiência inicial. Ambos são orientados por territory.</p>
+      </div>
+      <div class="flow-grid">
+        <div class="flow">
+          <h3>Fluxo 1 — Onboarding</h3>
+          <ol>
+            <li>Login ou criação de conta.</li>
+            <li>Escolha de territory (ou definição via contexto local).</li>
+            <li>Declaração de vínculo: visitor ou resident.</li>
+            <li>Feed e mapa filtrados por visibilidade e papel.</li>
+          </ol>
+        </div>
+        <div class="flow">
+          <h3>Fluxo 2 — Post georreferenciado</h3>
+          <ol>
+            <li>Criar post no feed do territory.</li>
+            <li>Anexar mídia com geoAnchor (lat/lon/alt).</li>
+            <li>Definir visibilidade (público, restrito, residentes).</li>
+            <li>Conteúdo aparece no feed e no mapa local.</li>
+          </ol>
+          <p class="note">Este fluxo está em construção; a etapa de mídia é futura.</p>
+        </div>
+      </div>
+    </section>
 
-            const territoryId = territories?.[0]?.id;
-            if (!territoryId) {
-                feedEl.textContent = "Sem territórios cadastrados.";
-                mapEl.textContent = "Sem territórios cadastrados.";
-                healthEl.textContent = "Sem territórios cadastrados.";
-                return;
-            }
+    <section id="quickstart" class="section">
+      <div class="section-header">
+        <h2>Quickstart</h2>
+        <p>Comece localmente ou via Docker. Estes comandos são copy/paste.</p>
+      </div>
+      <div class="code-grid">
+        <div>
+          <h3>Local (dotnet)</h3>
+          <pre><code>git clone https://github.com/sraphaz/araponga.git
+cd araponga
 
-            const [feed, map, health] = await Promise.all([
-                fetchJson(`/api/v1/feed?territoryId=${territoryId}`),
-                fetchJson(`/api/v1/map/entities?territoryId=${territoryId}`),
-                fetchJson(`/api/v1/health/indicators?territoryId=${territoryId}`)
-            ]);
+dotnet restore
 
-            feedEl.textContent = stringify(feed);
-            mapEl.textContent = stringify(map);
-            healthEl.textContent = stringify(health);
-        };
+dotnet run --project backend/Araponga.Api
+</code></pre>
+        </div>
+        <div>
+          <h3>Docker</h3>
+          <pre><code>docker build -t araponga-api .
 
-        document.getElementById("load-all").addEventListener("click", () => {
-            loadData().catch((error) => {
-                territoriesEl.textContent = `Erro: ${error.message}`;
-                feedEl.textContent = "-";
-                mapEl.textContent = "-";
-                healthEl.textContent = "-";
-            });
-        });
+docker run --rm -p 8080:8080 \
+  -e ASPNETCORE_URLS=http://0.0.0.0:8080 \
+  -e ASPNETCORE_ENVIRONMENT=Development \
+  araponga-api
+</code></pre>
+          <p class="note">Use <code>ASPNETCORE_ENVIRONMENT=Development</code> para habilitar o Swagger localmente.</p>
+        </div>
+      </div>
+    </section>
 
-        document.getElementById("clear").addEventListener("click", () => {
-            resetPanels("Clique em \"Carregar dados\"...");
-        });
-    </script>
+    <section id="examples" class="section">
+      <div class="section-header">
+        <h2>Exemplos de API</h2>
+        <p>Use um territoryId real retornado pelo endpoint de territórios.</p>
+      </div>
+      <div class="code-grid">
+        <div>
+          <h3>Listar territories</h3>
+          <pre><code>curl -s http://localhost:8080/api/v1/territories | jq
+</code></pre>
+        </div>
+        <div>
+          <h3>Listar feed do territory</h3>
+          <pre><code>curl -s "http://localhost:8080/api/v1/feed?territoryId=SEU_TERRITORY_ID" | jq
+</code></pre>
+        </div>
+        <div>
+          <h3>Listar mapa do territory</h3>
+          <pre><code>curl -s "http://localhost:8080/api/v1/map/entities?territoryId=SEU_TERRITORY_ID" | jq
+</code></pre>
+        </div>
+        <div>
+          <h3>Listar mídia do territory (planned)</h3>
+          <pre><code># upcoming endpoint
+curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
+</code></pre>
+        </div>
+        <div>
+          <h3>Postar mídia georreferenciada (planned)</h3>
+          <pre><code>curl -X POST "http://localhost:8080/api/v1/media" \
+  -H "Authorization: Bearer SEU_TOKEN" \
+  -F "territoryId=SEU_TERRITORY_ID" \
+  -F "lat=-23.5505" \
+  -F "lon=-46.6333" \
+  -F "visibility=RESIDENT" \
+  -F "file=@/caminho/arquivo.jpg"
+</code></pre>
+          <p class="note">Planejado para próximas iterações.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="principles" class="section">
+      <div class="section-header">
+        <h2>Princípios e governança</h2>
+      </div>
+      <ul class="principles">
+        <li><strong>Territory como referência:</strong> o espaço físico orienta toda a experiência.</li>
+        <li><strong>Privacidade por design:</strong> acesso mínimo, visibilidade controlada.</li>
+        <li><strong>Anti-extrativismo:</strong> dados não são mercadoria.</li>
+        <li><strong>Governança comunitária:</strong> decisões locais e regras explícitas.</li>
+        <li><strong>Evolutivo:</strong> MVP sólido → camadas avançadas → experiências 3D.</li>
+      </ul>
+      <p>
+        Quer contribuir? Veja <a href="https://github.com/sraphaz/araponga/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>
+        ou abra uma issue no GitHub.
+      </p>
+    </section>
+
+    <section id="links" class="section">
+      <div class="section-header">
+        <h2>Links úteis</h2>
+      </div>
+      <div class="link-grid">
+        <a href="/swagger">Swagger</a>
+        <a href="/health">Health</a>
+        <a href="https://github.com/sraphaz/araponga">GitHub</a>
+        <a href="https://github.com/sraphaz/araponga/blob/main/LICENSE">LICENSE</a>
+        <a href="https://github.com/sraphaz/araponga/blob/main/LICENSE.pt-BR">LICENSE.pt-BR</a>
+        <a href="https://github.com/sraphaz/araponga/blob/main/CONTRIBUTING.md">CONTRIBUTING</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>
+        Araponga é um projeto comunitário focado em territory, cuidado e autonomia.
+        Vamos construir juntos.
+      </p>
+    </div>
+  </footer>
 </body>
 </html>

@@ -3,11 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Araponga é uma plataforma comunitária orientada a território, com governança local, privacidade por design e foco em cuidado." />
+  <link rel="canonical" href="https://araponga.eco.br/" />
+  <meta property="og:title" content="Araponga API • Developer Portal" />
+  <meta property="og:description" content="Araponga é uma plataforma comunitária orientada a território, com governança local, privacidade por design e foco em cuidado." />
+  <meta property="og:url" content="https://araponga.eco.br/" />
   <title>Araponga API • Developer Portal</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
   <script>
     (function () {
-      var LANDING_URL = 'https://araponga-comunidade-jz6zl4f.gamma.site';
+      var LANDING_URL = 'https://araponga.app';
       var RETURN_PARAM = 'fromLanding';
       var returnFlagKey = 'landingReturnAllowed';
       var currentUrl = new URL(window.location.href);
@@ -53,15 +58,13 @@
       </p>
 
       <div class="hero-actions">
-        <a class="button" href="swagger/" data-i18n="hero.action.swagger">Abrir Swagger</a>
-        <a class="button secondary" href="health/" data-i18n="hero.action.health">Checar health</a>
+        <a class="button" href="#quickstart" data-i18n="hero.action.local">Rodar localmente (Swagger)</a>
         <a class="button ghost" href="https://github.com/sraphaz/araponga" data-i18n="hero.action.github">GitHub</a>
       </div>
 
-      <div class="meta" data-i18n="hero.meta.swagger">
-        <strong>Swagger:</strong> normalmente habilitado em ambiente <code>Development</code>. Se estiver desativado,
-        execute com <code>ASPNETCORE_ENVIRONMENT=Development</code>. Em ambientes produtivos, recomenda-se controlar o
-        acesso à documentação e à exploração interativa por segurança e governança.
+      <div class="meta" data-i18n="hero.meta.local">
+        <strong>Swagger &amp; Health:</strong> são recursos do backend local/dev. Rode a API em <code>Development</code>
+        para acessar a documentação interativa e o health check com segurança.
       </div>
 
       <div class="meta" data-i18n="hero.meta.note">
@@ -457,8 +460,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
       </div>
 
       <div class="link-grid">
-        <a href="swagger/" data-i18n="links.swagger">Swagger</a>
-        <a href="health/" data-i18n="links.health">Health</a>
+        <a href="#quickstart" data-i18n="links.local">Rodar localmente</a>
         <a href="https://github.com/sraphaz/araponga" data-i18n="links.github">GitHub</a>
         <a href="#support" data-i18n="links.support">Apoiar o Araponga</a>
         <a href="https://github.com/sponsors/sraphaz" data-i18n="links.sponsors">GitHub Sponsors</a>
@@ -487,10 +489,9 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "hero.eyebrow": "Araponga API • Developer Portal",
         "hero.title": "Araponga API — Territory-first, community-first.",
         "hero.lead": "Araponga é uma plataforma comunitária orientada a <strong>território</strong>: uma célula territorial que organiza contexto, visibilidade e responsabilidade. Este portal apresenta a visão do produto, seus domínios e fluxos, e como contribuir com uma API construída com <em>privacidade por design</em>, governança local e compromisso explícito com cuidado e finalidade dos dados.",
-        "hero.action.swagger": "Abrir Swagger",
-        "hero.action.health": "Checar health",
+        "hero.action.local": "Rodar localmente (Swagger)",
         "hero.action.github": "GitHub",
-        "hero.meta.swagger": "<strong>Swagger:</strong> normalmente habilitado em ambiente <code>Development</code>. Se estiver desativado, execute com <code>ASPNETCORE_ENVIRONMENT=Development</code>. Em ambientes produtivos, recomenda-se controlar o acesso à documentação e à exploração interativa por segurança e governança.",
+        "hero.meta.local": "<strong>Swagger &amp; Health:</strong> são recursos do backend local/dev. Rode a API em <code>Development</code> para acessar a documentação interativa e o health check com segurança.",
         "hero.meta.note": "<strong>Nota prática:</strong> a antiga página inicial tinha o botão “Carregar dados”. A partir daqui, a exploração do território acontece via API: use os exemplos e fluxos abaixo para testar, validar contratos e orientar as próximas iterações.",
         "toc.title": "Sumário",
         "toc.link.productBrief": "Product brief",
@@ -594,8 +595,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "support.note": "Toda contribuição sustenta infraestrutura, documentação, tempo de cuidado e a evolução contínua do Araponga.",
         "links.title": "Links úteis",
         "links.intro": "Atalhos para documentação, status, contribuição e licenças.",
-        "links.swagger": "Swagger",
-        "links.health": "Health",
+        "links.local": "Rodar localmente",
         "links.github": "GitHub",
         "links.support": "Apoiar o Araponga",
         "links.sponsors": "GitHub Sponsors",
@@ -610,10 +610,9 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "hero.eyebrow": "Araponga API • Portal para desarrolladores",
         "hero.title": "Araponga API — Territory-first, community-first.",
         "hero.lead": "Araponga es una plataforma comunitaria orientada al <strong>territory</strong>: una célula territorial que organiza contexto, visibilidad y responsabilidad. Este portal presenta la visión del producto, sus dominios y flujos, y cómo contribuir con una API construida con <em>privacidad por diseño</em>, gobernanza local y un compromiso explícito con el cuidado y la finalidad de los datos.",
-        "hero.action.swagger": "Abrir Swagger",
-        "hero.action.health": "Revisar health",
+        "hero.action.local": "Ejecutar localmente (Swagger)",
         "hero.action.github": "GitHub",
-        "hero.meta.swagger": "<strong>Swagger:</strong> normalmente habilitado en el entorno <code>Development</code>. Si está deshabilitado, ejecute con <code>ASPNETCORE_ENVIRONMENT=Development</code>. En entornos productivos, se recomienda controlar el acceso a la documentación y a la exploración interactiva por seguridad y gobernanza.",
+        "hero.meta.local": "<strong>Swagger &amp; Health:</strong> son recursos del backend local/dev. Ejecute la API en <code>Development</code> para acceder a la documentación interactiva y al health check con seguridad.",
         "hero.meta.note": "<strong>Nota práctica:</strong> la página inicial anterior tenía el botón “Cargar datos”. A partir de aquí, la exploración del territory ocurre vía API: use los ejemplos y flujos de abajo para probar, validar contratos y orientar las próximas iteraciones.",
         "toc.title": "Resumen",
         "toc.link.productBrief": "Resumen del producto",
@@ -717,8 +716,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "support.note": "Cada contribución sostiene infraestructura, documentación, tiempo de cuidado y la evolución continua de Araponga.",
         "links.title": "Enlaces útiles",
         "links.intro": "Atajos para documentación, estado, contribución y licencias.",
-        "links.swagger": "Swagger",
-        "links.health": "Health",
+        "links.local": "Ejecutar localmente",
         "links.github": "GitHub",
         "links.support": "Apoyar Araponga",
         "links.sponsors": "GitHub Sponsors",
@@ -733,10 +731,9 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "hero.eyebrow": "Araponga API • Developer Portal",
         "hero.title": "Araponga API — Territory-first, community-first.",
         "hero.lead": "Araponga is a community platform oriented around <strong>territory</strong>: a territorial cell that organizes context, visibility, and responsibility. This portal shares the product vision, its domains and flows, and how to contribute to an API built with <em>privacy by design</em>, local governance, and an explicit commitment to data care and purpose.",
-        "hero.action.swagger": "Open Swagger",
-        "hero.action.health": "Check health",
+        "hero.action.local": "Run locally (Swagger)",
         "hero.action.github": "GitHub",
-        "hero.meta.swagger": "<strong>Swagger:</strong> usually enabled in the <code>Development</code> environment. If it is disabled, run with <code>ASPNETCORE_ENVIRONMENT=Development</code>. In production environments, it is recommended to control access to the documentation and interactive exploration for security and governance.",
+        "hero.meta.local": "<strong>Swagger &amp; Health:</strong> are local/dev backend resources. Run the API in <code>Development</code> to access interactive docs and the health check safely.",
         "hero.meta.note": "<strong>Practical note:</strong> the previous home page had the “Load data” button. From here on, territory exploration happens via API: use the examples and flows below to test, validate contracts, and guide the next iterations.",
         "toc.title": "Summary",
         "toc.link.productBrief": "Product brief",
@@ -840,8 +837,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "support.note": "Every contribution sustains infrastructure, documentation, care time, and the continuous evolution of Araponga.",
         "links.title": "Useful links",
         "links.intro": "Shortcuts to documentation, status, contributions, and licenses.",
-        "links.swagger": "Swagger",
-        "links.health": "Health",
+        "links.local": "Run locally",
         "links.github": "GitHub",
         "links.support": "Support Araponga",
         "links.sponsors": "GitHub Sponsors",

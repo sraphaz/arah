@@ -27,7 +27,7 @@ Se precisar rodar a API localmente, utilize o .NET 8 e siga as instruções do R
 ## Design e Coerência
 
 O design do Araponga atua como campo de coerência: orienta escolhas visuais para sustentar foco, cuidado e continuidade.
-Consulte o guia completo em [Design & Coerência](https://sraphaz.github.io/araponga/design/).
+Consulte o guia completo em [Design & Coerência](https://araponga.eco.br/design/).
 
 **Princípios**
 - Território como referência.

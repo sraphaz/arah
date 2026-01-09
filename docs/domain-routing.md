@@ -3,12 +3,12 @@
 ## Visão geral
 
 O portal técnico do Araponga fica em `https://araponga.eco.br/` e é servido pelo GitHub Pages a partir da pasta `docs/`.
-A apresentação pública (landing) continua hospedada no Gamma, usando um domínio próprio separado para a experiência pública.
+A apresentação pública (landing) usa o domínio `https://araponga.app/`, com a identidade visual e metadados definidos neste repositório.
 
 ## Domínios adquiridos
 
 - `araponga.eco.br` → portal técnico (GitHub Pages).
-- `araponga.app` → landing pública (Gamma).
+- `araponga.app` → landing pública.
 - `araponga.org` → redireciona para `https://araponga.eco.br/`.
 
 ## Lógica de publicação e redirect

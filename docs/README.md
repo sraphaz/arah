@@ -170,7 +170,6 @@ domínios, fluxos e quickstart. Em desenvolvimento, acesse também:
 Para publicação como site estático, o portal também está disponível em `docs/` e
 pode ser hospedado via GitHub Pages (basta apontar a origem para a pasta `docs`).
 A versão do GitHub Pages inclui links diretos para documentação, user stories e changelog.
-O conteúdo de `docs/index.html` é mantido em sincronia com `backend/Araponga.Api/wwwroot/index.html`.
 
 ## 🤝 Contribuindo
 

@@ -18,4 +18,17 @@
     <ProjectReference Include="..\Araponga.Infrastructure\Araponga.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <DocsSyncFiles Include="wwwroot\index.html" />
+    <DocsSyncFiles Include="wwwroot\styles.css" />
+  </ItemGroup>
+
+  <Target Name="SyncDocsForGitHubPages" AfterTargets="Build">
+    <PropertyGroup>
+      <DocsOutputDir>$(MSBuildProjectDirectory)\..\..\docs</DocsOutputDir>
+    </PropertyGroup>
+    <Message Text="Syncing GitHub Pages assets to $(DocsOutputDir)" Importance="high" />
+    <Copy SourceFiles="@(DocsSyncFiles)" DestinationFolder="$(DocsOutputDir)" SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>

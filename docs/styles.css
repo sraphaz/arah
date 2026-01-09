@@ -9,6 +9,12 @@
   --card: #ffffff;
   --border: #e2e8f0;
   --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --bg-soft: #eef2f5;
+  --surface: #f8fafc;
+  --surface-muted: #e8eef3;
+  --text-soft: #334155;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --focus-ring: rgba(15, 118, 110, 0.3);
 }
 
 * {

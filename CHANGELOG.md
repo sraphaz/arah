@@ -7,5 +7,6 @@
 - Adjusted feed/map/health filtering to use social membership roles.
 - Added optional Postgres persistence with EF Core mappings alongside the InMemory provider.
 - Added a minimal static API home page plus configuration helper UI.
+- Added language selection (pt-BR default, es, en) to the API portal with browser preference detection and PT-BR terminology updates.
 - Added structured error handling with `ProblemDetails` and testing hooks for exception scenarios.
 - Published the self-service portal as a static site in `docs/` for GitHub Pages, linking to documentation and changelog.

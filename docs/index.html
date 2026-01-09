@@ -26,10 +26,10 @@
       <p class="eyebrow" data-i18n="hero.eyebrow">Araponga API • Developer Portal</p>
       <h1 data-i18n="hero.title">Araponga API — Territory-first, community-first.</h1>
       <p class="lead" data-i18n="hero.lead">
-        Araponga é uma plataforma comunitária orientada a <strong>território</strong>: um recorte real que organiza
-        contexto, visibilidade e responsabilidade. Este portal apresenta a visão do produto, seus domínios e fluxos,
-        e como contribuir com uma API construída com <em>privacidade por design</em>, governança local e compromisso
-        explícito com o não-extrativismo.
+        Araponga é uma plataforma comunitária orientada a <strong>território</strong>: uma célula territorial que
+        organiza contexto, visibilidade e responsabilidade. Este portal apresenta a visão do produto, seus domínios e
+        fluxos, e como contribuir com uma API construída com <em>privacidade por design</em>, governança local e
+        compromisso explícito com cuidado e finalidade dos dados.
       </p>
 
       <div class="hero-actions">
@@ -74,14 +74,14 @@
           O Araponga resolve o problema de comunicação local que hoje se perde em feeds globais. Comunidades ganham
           <strong>visibilidade local</strong> sem abrir mão de <strong>autonomia</strong>; usuários recebem informação
           relevante; e integradores têm um modelo claro para construir experiências territoriais. O
-          <strong>território</strong> é o critério técnico e de negócio que organiza a experiência, define contexto e
-          reduz ruído. A partir dele, <strong>visitante</strong> e <strong>morador</strong> determinam regras de
-          visibilidade e prioridade.
+          <strong>território</strong> é a célula territorial que organiza a experiência, define contexto e estabelece
+          prioridade. A partir dela, <strong>visitante</strong> e <strong>morador</strong> determinam regras de
+          visibilidade e acesso.
         </p>
         <p data-i18n="productBrief.p2">
-          Em vez de um feed global, o Araponga entrega um feed e um mapa filtrados por território e vínculo. Isso
-          aumenta relevância, protege conteúdo sensível, e cria base para memória territorial e eventos locais — com
-          mídias ancoradas em coordenadas quando fizer sentido.
+          O Araponga entrega um feed e um mapa filtrados por território e vínculo. Isso prioriza relevância local,
+          cria confiança sobre o que é visto e sustenta memória territorial e eventos locais — com mídias ancoradas em
+          coordenadas quando fizer sentido.
         </p>
       </div>
 
@@ -89,6 +89,15 @@
         <strong>Foco técnico:</strong> arquitetura orientada a domínios, contratos simples e auditáveis,
         governança em camadas e evolução incremental (MVP → camadas avançadas → experiências espaciais ancoradas em território).
         O objetivo é construir um núcleo sólido antes de acelerar funcionalidades.
+      </div>
+
+      <div class="callout" data-i18n="productBrief.example">
+        <strong>Exemplo prático (Feed + Eventos + Mapa):</strong> em uma célula territorial, um morador publica um
+        evento comunitário (mutirão, roda de conversa, aviso de trilha). O backend registra o conteúdo associado ao
+        território e à visibilidade (público / restrito / residentes). O app consome o feed filtrado pela célula e pelo
+        papel do usuário (visitor/resident), priorizando relevância local. Quando há referência geográfica, o conteúdo
+        pode ser projetado no mapa como entidade territorial, gerando uma experiência situada com contexto claro e
+        regras explícitas.
       </div>
     </section>
 
@@ -106,7 +115,7 @@
       <div class="card-grid">
         <article class="card">
           <h3 data-i18n="domains.territory.title">Território</h3>
-          <p data-i18n="domains.territory.what"><strong>O que é:</strong> recorte geográfico neutro — a referência organizadora do Araponga.</p>
+          <p data-i18n="domains.territory.what"><strong>O que é:</strong> célula territorial neutra — a referência organizadora do Araponga.</p>
           <p data-i18n="domains.territory.why">
             <strong>Por que existe:</strong> separa “onde” (território) de “quem” (pessoas e vínculos) e de “o quê”
             (conteúdo e camadas). Isso permite evoluir sem distorcer o conceito base.
@@ -148,9 +157,9 @@
           <h3 data-i18n="domains.feed.title">Feed</h3>
           <p data-i18n="domains.feed.what"><strong>O que é:</strong> stream de postagens, alertas e eventos filtrados por território e visibilidade.</p>
           <p data-i18n="domains.feed.why">
-            <strong>Por que existe:</strong> distribui informação relevante sem ruído global.
-            Eventos são entidades temporais que impactam feed e mapa; postagens são territoriais para manter contexto,
-            reduzir moderação centralizada e aumentar engajamento local.
+            <strong>Por que existe:</strong> prioriza relevância local com regras claras. Eventos são um tipo de
+            conteúdo do feed, com janela temporal e impacto no mapa. Postagens são territoriais para manter contexto e
+            fortalecer a organização local.
           </p>
           <ul>
             <li data-i18n="domains.feed.fields"><strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.</li>
@@ -163,8 +172,8 @@
           <p data-i18n="domains.map.what"><strong>O que é:</strong> entidades e camadas georreferenciadas do território.</p>
           <p data-i18n="domains.map.why">
             <strong>Por que existe:</strong> transforma informação em referência espacial.
-            O mapa não é “mais uma tela”: é o mecanismo que permite situar o que é importante
-            sem depender de ruído global e sem padronizar o território como produto.
+            O mapa projeta entidades territoriais derivadas de conteúdo e cadastros, tornando o contexto local visível
+            e navegável.
           </p>
           <ul>
             <li data-i18n="domains.map.fields"><strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.</li>
@@ -192,8 +201,8 @@
       <div class="section-header">
         <h2 data-i18n="flows.title">Fluxos principais</h2>
         <p data-i18n="flows.intro">
-          Dois fluxos definem a experiência inicial. Ambos são orientados por território e sustentados por vínculo.
-          O sistema resolve visibilidade, prioriza contexto local e entrega respostas consistentes para cliente e API.
+          Dois fluxos definem a experiência inicial. O sistema resolve visibilidade, prioriza contexto local e entrega
+          respostas consistentes para cliente e API.
         </p>
       </div>
 
@@ -207,8 +216,8 @@
             <li data-i18n="flows.flow1.step4"><strong>Resolução de visibilidade</strong>: o sistema filtra feed e mapa pelo papel e território ativo.</li>
           </ol>
           <p class="note" data-i18n="flows.flow1.note">
-            Resultado: o usuário entra em um território como contexto real. A plataforma passa a operar com regras
-            explícitas de convivência e acesso.
+            Resultado: o usuário entra em um território como contexto real, com regras explícitas de convivência e
+            acesso aplicadas desde o início.
           </p>
         </div>
 
@@ -284,7 +293,7 @@ docker run --rm -p 8080:8080 \
           <pre><code>curl -s http://localhost:8080/api/v1/territories | jq
 </code></pre>
           <p class="note" data-i18n="examples.listTerritories.note">
-            Use este endpoint para obtener el <code>territoryId</code> y el recorte geográfico que el cliente necesita renderizar.
+            Use este endpoint para obter o <code>territoryId</code> e a célula territorial que o cliente precisa renderizar.
           </p>
         </div>
 
@@ -313,7 +322,8 @@ docker run --rm -p 8080:8080 \
 curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
 </code></pre>
           <p class="note" data-i18n="examples.listMedia.note">
-            A camada de mídia/geoAnchor deve nascer com controle de visibilidade e intenção explícita: memória territorial, não vigilância.
+            A camada de mídia/geoAnchor deve nascer com controle de visibilidade e finalidade explícita: memória
+            territorial com cuidado e contexto.
           </p>
         </div>
 
@@ -338,15 +348,15 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
       <div class="section-header">
         <h2 data-i18n="principles.title">Princípios e governança</h2>
         <p data-i18n="principles.intro">
-          O Araponga não é neutro no sentido moral: ele nasce para fortalecer autonomia local e evitar padrões
-          de exploração de dados. Estes princípios orientam decisões técnicas e de produto.
+          O Araponga orienta decisões técnicas e de produto para fortalecer autonomia local e tratamento cuidadoso de
+          dados. Estes princípios guiam a evolução do produto.
         </p>
       </div>
 
       <ul class="principles">
         <li data-i18n="principles.items.territory"><strong>Território como referência:</strong> o espaço físico orienta a experiência, o contexto e a responsabilidade.</li>
         <li data-i18n="principles.items.privacy"><strong>Privacidade por design:</strong> acesso mínimo, visibilidade controlada, e cuidado com dados de localização.</li>
-        <li data-i18n="principles.items.antiExtraction"><strong>Anti-extrativismo:</strong> dados não são mercadoria; a plataforma não existe para captura de atenção.</li>
+        <li data-i18n="principles.items.antiExtraction"><strong>Finalidade explícita dos dados:</strong> coleta mínima, uso responsável e anti-extrativismo na prática.</li>
         <li data-i18n="principles.items.governance"><strong>Governança comunitária:</strong> decisões locais e regras explícitas; moderação e critérios evolutivos.</li>
         <li data-i18n="principles.items.evolution"><strong>Evolutivo:</strong> MVP sólido → camadas avançadas → experiências espaciais (inclusive 3D) quando houver maturidade.</li>
       </ul>
@@ -364,7 +374,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         <p data-i18n="support.lead1">
           O Araponga é um projeto comunitário, aberto e orientado ao território.
           Ele existe para sustentar relações locais, cuidado contínuo e autonomia,
-          sem intermediários extrativos ou captura de dados.
+          com contribuição direta e uso responsável de dados.
         </p>
         <p data-i18n="support.lead2">
           Se este trabalho ressoa com você, é possível apoiar de forma voluntária,
@@ -444,7 +454,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "language.label": "Idioma",
         "hero.eyebrow": "Araponga API • Developer Portal",
         "hero.title": "Araponga API — Territory-first, community-first.",
-        "hero.lead": "Araponga é uma plataforma comunitária orientada a <strong>território</strong>: um recorte real que organiza contexto, visibilidade e responsabilidade. Este portal apresenta a visão do produto, seus domínios e fluxos, e como contribuir com uma API construída com <em>privacidade por design</em>, governança local e compromisso explícito com o não-extrativismo.",
+        "hero.lead": "Araponga é uma plataforma comunitária orientada a <strong>território</strong>: uma célula territorial que organiza contexto, visibilidade e responsabilidade. Este portal apresenta a visão do produto, seus domínios e fluxos, e como contribuir com uma API construída com <em>privacidade por design</em>, governança local e compromisso explícito com cuidado e finalidade dos dados.",
         "hero.action.swagger": "Abrir Swagger",
         "hero.action.health": "Checar health",
         "hero.action.github": "GitHub",
@@ -460,13 +470,14 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "toc.link.support": "Apoio",
         "toc.link.links": "Links úteis",
         "productBrief.title": "Product brief",
-        "productBrief.p1": "O Araponga resolve o problema de comunicação local que hoje se perde em feeds globais. Comunidades ganham <strong>visibilidade local</strong> sem abrir mão de <strong>autonomia</strong>; usuários recebem informação relevante; e integradores têm um modelo claro para construir experiências territoriais. O <strong>território</strong> é o critério técnico e de negócio que organiza a experiência, define contexto e reduz ruído. A partir dele, <strong>visitante</strong> e <strong>morador</strong> determinam regras de visibilidade e prioridade.",
-        "productBrief.p2": "Em vez de um feed global, o Araponga entrega um feed e um mapa filtrados por território e vínculo. Isso aumenta relevância, protege conteúdo sensível, e cria base para memória territorial e eventos locais — com mídias ancoradas em coordenadas quando fizer sentido.",
+        "productBrief.p1": "O Araponga resolve o problema de comunicação local que hoje se perde em feeds globais. Comunidades ganham <strong>visibilidade local</strong> sem abrir mão de <strong>autonomia</strong>; usuários recebem informação relevante; e integradores têm um modelo claro para construir experiências territoriais. O <strong>território</strong> é a célula territorial que organiza a experiência, define contexto e estabelece prioridade. A partir dela, <strong>visitante</strong> e <strong>morador</strong> determinam regras de visibilidade e acesso.",
+        "productBrief.p2": "O Araponga entrega um feed e um mapa filtrados por território e vínculo. Isso prioriza relevância local, cria confiança sobre o que é visto e sustenta memória territorial e eventos locais — com mídias ancoradas em coordenadas quando fizer sentido.",
         "productBrief.callout": "<strong>Foco técnico:</strong> arquitetura orientada a domínios, contratos simples e auditáveis, governança em camadas e evolução incremental (MVP → camadas avançadas → experiências espaciais ancoradas em território). O objetivo é construir um núcleo sólido antes de acelerar funcionalidades.",
+        "productBrief.example": "<strong>Exemplo prático (Feed + Eventos + Mapa):</strong> em uma célula territorial, um morador publica um evento comunitário (mutirão, roda de conversa, aviso de trilha). O backend registra o conteúdo associado ao território e à visibilidade (público / restrito / residentes). O app consome o feed filtrado pela célula e pelo papel do usuário (visitor/resident), priorizando relevância local. Quando há referência geográfica, o conteúdo pode ser projetado no mapa como entidade territorial, gerando uma experiência situada com contexto claro e regras explícitas.",
         "domains.title": "Domínios",
         "domains.intro": "Os domínios existem para manter responsabilidades claras e evitar que regras sociais se misturem com representações do território. A intenção é proteger a integridade do sistema: território como referência, pessoas como vínculo, conteúdo como expressão, e governança como camada explícita. Abaixo estão os elementos essenciais no estágio atual.",
         "domains.territory.title": "Território",
-        "domains.territory.what": "<strong>O que é:</strong> recorte geográfico neutro — a referência organizadora do Araponga.",
+        "domains.territory.what": "<strong>O que é:</strong> célula territorial neutra — a referência organizadora do Araponga.",
         "domains.territory.why": "<strong>Por que existe:</strong> separa “onde” (território) de “quem” (pessoas e vínculos) e de “o quê” (conteúdo e camadas). Isso permite evoluir sem distorcer o conceito base.",
         "domains.territory.fields": "<strong>Campos:</strong> id, name, slug, bounds, createdAt.",
         "domains.territory.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories</code>, <code>GET /api/v1/territories/{id}</code>.",
@@ -482,12 +493,12 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.",
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>O que é:</strong> stream de postagens, alertas e eventos filtrados por território e visibilidade.",
-        "domains.feed.why": "<strong>Por que existe:</strong> distribui informação relevante sem ruído global. Eventos são entidades temporais que impactam feed e mapa; postagens são territoriais para manter contexto, reduzir moderação centralizada e aumentar engajamento local.",
+        "domains.feed.why": "<strong>Por que existe:</strong> prioriza relevância local com regras claras. Eventos são um tipo de conteúdo do feed, com janela temporal e impacto no mapa. Postagens são territoriais para manter contexto e fortalecer a organização local.",
         "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.",
         "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
         "domains.map.title": "Mapa",
         "domains.map.what": "<strong>O que é:</strong> entidades e camadas georreferenciadas do território.",
-        "domains.map.why": "<strong>Por que existe:</strong> transforma informação em referência espacial. O mapa não é “mais uma tela”: é o mecanismo que permite situar o que é importante sem depender de ruído global e sem padronizar o território como produto.",
+        "domains.map.why": "<strong>Por que existe:</strong> transforma informação em referência espacial. O mapa projeta entidades territoriais derivadas de conteúdo e cadastros, tornando o contexto local visível e navegável.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
         "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
         "domains.media.title": "Media + GeoAnchor",
@@ -496,13 +507,13 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.media.fields": "<strong>Campos:</strong> mediaId, territoryId, lat, lon, altitude, visibility.",
         "domains.media.endpoints": "<strong>Endpoints:</strong> planejados (<em>upcoming</em>).",
         "flows.title": "Fluxos principais",
-        "flows.intro": "Dois fluxos definem a experiência inicial. Ambos são orientados por território e sustentados por vínculo. O sistema resolve visibilidade, prioriza contexto local e entrega respostas consistentes para cliente e API.",
+        "flows.intro": "Dois fluxos definem a experiência inicial. O sistema resolve visibilidade, prioriza contexto local e entrega respostas consistentes para cliente e API.",
         "flows.flow1.title": "Fluxo 1 — Onboarding",
         "flows.flow1.step1": "<strong>Login</strong> ou criação de conta.",
         "flows.flow1.step2": "<strong>Escolha de território</strong> (ou definição via contexto local, quando aplicável).",
         "flows.flow1.step3": "<strong>Declaração de vínculo</strong>: visitante ou morador.",
         "flows.flow1.step4": "<strong>Resolução de visibilidade</strong>: o sistema filtra feed e mapa pelo papel e território ativo.",
-        "flows.flow1.note": "Resultado: o usuário entra em um território como contexto real. A plataforma passa a operar com regras explícitas de convivência e acesso.",
+        "flows.flow1.note": "Resultado: o usuário entra em um território como contexto real, com regras explícitas de convivência e acesso aplicadas desde o início.",
         "flows.flow2.title": "Fluxo 2 — Post georreferenciado",
         "flows.flow2.step1": "<strong>Criar post</strong> no feed do território.",
         "flows.flow2.step2": "<strong>Anexar mídia</strong> com geoAnchor (lat/lon/alt) quando for relevante.",
@@ -518,25 +529,25 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "examples.title": "Exemplos de API",
         "examples.intro": "Use um <code>territoryId</code> real retornado pelo endpoint de territórios. O princípio é simples: descobrir o território, consumir o feed filtrado e carregar o mapa local.",
         "examples.listTerritories": "Listar territórios",
-        "examples.listTerritories.note": "Use este endpoint para obtener el <code>territoryId</code> y el recorte geográfico que el cliente necesita renderizar.",
+        "examples.listTerritories.note": "Use este endpoint para obter o <code>territoryId</code> e a célula territorial que o cliente precisa renderizar.",
         "examples.listFeed": "Listar feed do território",
         "examples.listFeed.note": "O endpoint retorna um stream filtrado por território e visibilidade. Se houver regras aplicadas por vínculo, teste com perfis visitante e morador para validar o comportamento.",
         "examples.listMap": "Listar mapa do território",
         "examples.listMap.note": "Retorna entidades georreferenciadas para compor a camada local do mapa no cliente.",
         "examples.listMedia": "Listar mídia do território (planejado)",
-        "examples.listMedia.note": "A camada de mídia/geoAnchor deve nascer com controle de visibilidade e intenção explícita: memória territorial, não vigilância.",
+        "examples.listMedia.note": "A camada de mídia/geoAnchor deve nascer com controle de visibilidade e finalidade explícita: memória territorial com cuidado e contexto.",
         "examples.postMedia": "Postar mídia georreferenciada (planejado)",
         "examples.postMedia.note": "Planejado para próximas iterações. Prioridade: contratos claros, validações fortes (lat/lon/alt), e proteção de conteúdo sensível.",
         "principles.title": "Princípios e governança",
-        "principles.intro": "O Araponga não é neutro no sentido moral: ele nasce para fortalecer autonomia local e evitar padrões de exploração de dados. Estes princípios orientam decisões técnicas e de produto.",
+        "principles.intro": "O Araponga orienta decisões técnicas e de produto para fortalecer autonomia local e tratamento cuidadoso de dados. Estes princípios guiam a evolução do produto.",
         "principles.items.territory": "<strong>Território como referência:</strong> o espaço físico orienta a experiência, o contexto e a responsabilidade.",
         "principles.items.privacy": "<strong>Privacidade por design:</strong> acesso mínimo, visibilidade controlada, e cuidado com dados de localização.",
-        "principles.items.antiExtraction": "<strong>Anti-extrativismo:</strong> dados não são mercadoria; a plataforma não existe para captura de atenção.",
+        "principles.items.antiExtraction": "<strong>Finalidade explícita dos dados:</strong> coleta mínima, uso responsável e anti-extrativismo na prática.",
         "principles.items.governance": "<strong>Governança comunitária:</strong> decisões locais e regras explícitas; moderação e critérios evolutivos.",
         "principles.items.evolution": "<strong>Evolutivo:</strong> MVP sólido → camadas avançadas → experiências espaciais (inclusive 3D) quando houver maturidade.",
         "principles.contribute": "Quer contribuir? Veja <a href=\"https://github.com/sraphaz/araponga/blob/main/CONTRIBUTING.md\">CONTRIBUTING.md</a> ou abra uma issue no GitHub com contexto, motivação e critérios de validação.",
         "support.title": "Apoie o Araponga",
-        "support.lead1": "O Araponga é um projeto comunitário, aberto e orientado ao território. Ele existe para sustentar relações locais, cuidado contínuo e autonomia, sem intermediários extrativos ou captura de dados.",
+        "support.lead1": "O Araponga é um projeto comunitário, aberto e orientado ao território. Ele existe para sustentar relações locais, cuidado contínuo e autonomia, com contribuição direta e uso responsável de dados.",
         "support.lead2": "Se este trabalho ressoa com você, é possível apoiar de forma voluntária, consciente e direta — como quem cuida de um espaço comum para que siga vivo.",
         "support.pix.title": "PIX (Brasil)",
         "support.pix.body": "Contribuição direta, sem taxas e sem intermediários. Ideal para apoiar a continuidade de forma simples e soberana.",
@@ -561,7 +572,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "language.label": "Idioma",
         "hero.eyebrow": "Araponga API • Portal para desarrolladores",
         "hero.title": "Araponga API — Territory-first, community-first.",
-        "hero.lead": "Araponga es una plataforma comunitaria orientada al <strong>territory</strong>: un recorte real que organiza contexto, visibilidad y responsabilidad. Este portal presenta la visión del producto, sus dominios y flujos, y cómo contribuir con una API construida con <em>privacidad por diseño</em>, gobernanza local y un compromiso explícito con el anti-extractivismo.",
+        "hero.lead": "Araponga es una plataforma comunitaria orientada al <strong>territory</strong>: una célula territorial que organiza contexto, visibilidad y responsabilidad. Este portal presenta la visión del producto, sus dominios y flujos, y cómo contribuir con una API construida con <em>privacidad por diseño</em>, gobernanza local y un compromiso explícito con el cuidado y la finalidad de los datos.",
         "hero.action.swagger": "Abrir Swagger",
         "hero.action.health": "Revisar health",
         "hero.action.github": "GitHub",
@@ -577,13 +588,14 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "toc.link.support": "Apoyo",
         "toc.link.links": "Enlaces útiles",
         "productBrief.title": "Resumen del producto",
-        "productBrief.p1": "Araponga resuelve el problema de comunicación local que hoy se pierde en feeds globales. Las comunidades ganan <strong>visibilidad local</strong> sin renunciar a la <strong>autonomía</strong>; los usuarios reciben información relevante; y los integradores tienen un modelo claro para construir experiencias territoriales. El <strong>territory</strong> es el criterio técnico y de negocio que organiza la experiencia, define contexto y reduce ruido. A partir de él, <strong>visitor</strong> y <strong>resident</strong> determinan reglas de visibilidad y prioridad.",
-        "productBrief.p2": "En lugar de un feed global, Araponga entrega un feed y un mapa filtrados por territory y vínculo. Esto aumenta relevancia, protege contenido sensible y crea base para memoria territorial y eventos locales — con medios anclados en coordenadas cuando tenga sentido.",
+        "productBrief.p1": "Araponga resuelve el problema de comunicación local que hoy se pierde en feeds globales. Las comunidades ganan <strong>visibilidad local</strong> sin renunciar a la <strong>autonomía</strong>; los usuarios reciben información relevante; y los integradores tienen un modelo claro para construir experiencias territoriales. El <strong>territory</strong> es la célula territorial que organiza la experiencia, define contexto y establece prioridad. A partir de ella, <strong>visitor</strong> y <strong>resident</strong> determinan reglas de visibilidad y acceso.",
+        "productBrief.p2": "Araponga entrega un feed y un mapa filtrados por territory y vínculo. Esto prioriza relevancia local, crea confianza sobre lo que se ve y sostiene memoria territorial y eventos locales — con medios anclados en coordenadas cuando tenga sentido.",
         "productBrief.callout": "<strong>Enfoque técnico:</strong> arquitectura orientada a dominios, contratos simples y auditables, gobernanza en capas y evolución incremental (MVP → capas avanzadas → experiencias espaciales ancladas al territory). El objetivo es construir un núcleo sólido antes de acelerar funcionalidades.",
+        "productBrief.example": "<strong>Ejemplo práctico (Feed + Eventos + Mapa):</strong> en una célula territorial, un resident publica un evento comunitario (mutirão, ronda de conversación, aviso de sendero). El backend registra el contenido asociado al territory y a la visibilidad (público / restringido / residents). La app consume el feed filtrado por la célula y por el rol del usuario (visitor/resident), priorizando relevancia local. Cuando hay referencia geográfica, el contenido puede proyectarse en el mapa como entidad territorial, generando una experiencia situada con contexto claro y reglas explícitas.",
         "domains.title": "Dominios",
         "domains.intro": "Los dominios existen para mantener responsabilidades claras y evitar que reglas sociales se mezclen con representaciones del territorio. La intención es proteger la integridad del sistema: territorio como referencia, personas como vínculo, contenido como expresión y gobernanza como capa explícita. A continuación están los elementos esenciales en la etapa actual.",
         "domains.territory.title": "Territory",
-        "domains.territory.what": "<strong>Qué es:</strong> recorte geográfico neutro — la referencia organizadora de Araponga.",
+        "domains.territory.what": "<strong>Qué es:</strong> célula territorial neutra — la referencia organizadora de Araponga.",
         "domains.territory.why": "<strong>Por qué existe:</strong> separa el “dónde” (territorio) del “quién” (personas y vínculos) y del “qué” (contenido y capas). Esto permite evolucionar sin distorsionar el concepto base.",
         "domains.territory.fields": "<strong>Campos:</strong> id, name, slug, bounds, createdAt.",
         "domains.territory.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories</code>, <code>GET /api/v1/territories/{id}</code>.",
@@ -599,12 +611,12 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.",
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>Qué es:</strong> stream de publicaciones, alertas y eventos filtrados por territory y visibilidad.",
-        "domains.feed.why": "<strong>Por qué existe:</strong> distribuye información relevante sin ruido global. Los eventos son entidades temporales que impactan feed y mapa; las publicaciones son territoriales para mantener contexto, reducir moderación centralizada y aumentar engagement local.",
+        "domains.feed.why": "<strong>Por qué existe:</strong> prioriza relevancia local con reglas claras. Los eventos son un tipo de contenido del feed, con ventana temporal e impacto en el mapa. Las publicaciones son territoriales para mantener contexto y fortalecer la organización local.",
         "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.",
         "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
         "domains.map.title": "Mapa",
         "domains.map.what": "<strong>Qué es:</strong> entidades y capas georreferenciadas del territory.",
-        "domains.map.why": "<strong>Por qué existe:</strong> transforma la información en referencia espacial. El mapa no es “otra pantalla”: es el mecanismo que permite situar lo importante sin depender de ruido global y sin estandarizar el territorio como producto.",
+        "domains.map.why": "<strong>Por qué existe:</strong> transforma la información en referencia espacial. El mapa proyecta entidades territoriales derivadas de contenido y registros, haciendo el contexto local visible y navegable.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
         "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
         "domains.media.title": "Media + GeoAnchor",
@@ -613,13 +625,13 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.media.fields": "<strong>Campos:</strong> mediaId, territoryId, lat, lon, altitude, visibility.",
         "domains.media.endpoints": "<strong>Endpoints:</strong> planificados (<em>upcoming</em>).",
         "flows.title": "Flujos principales",
-        "flows.intro": "Dos flujos definen la experiencia inicial. Ambos están orientados por territory y sostenidos por vínculo. El sistema resuelve visibilidad, prioriza contexto local y entrega respuestas consistentes para cliente y API.",
+        "flows.intro": "Dos flujos definen la experiencia inicial. El sistema resuelve visibilidad, prioriza contexto local y entrega respuestas consistentes para cliente y API.",
         "flows.flow1.title": "Flujo 1 — Onboarding",
         "flows.flow1.step1": "<strong>Login</strong> o creación de cuenta.",
         "flows.flow1.step2": "<strong>Elección de territory</strong> (o definición vía contexto local, cuando aplique).",
         "flows.flow1.step3": "<strong>Declaración de vínculo</strong>: visitor o resident.",
         "flows.flow1.step4": "<strong>Resolución de visibilidad</strong>: el sistema filtra feed y mapa por rol y territory activo.",
-        "flows.flow1.note": "Resultado: el usuario entra en un territorio como contexto real. La plataforma pasa a operar con reglas explícitas de convivencia y acceso.",
+        "flows.flow1.note": "Resultado: el usuario entra en un territorio como contexto real, con reglas explícitas de convivencia y acceso aplicadas desde el inicio.",
         "flows.flow2.title": "Flujo 2 — Post georreferenciado",
         "flows.flow2.step1": "<strong>Crear post</strong> en el feed del territory.",
         "flows.flow2.step2": "<strong>Adjuntar medios</strong> con geoAnchor (lat/lon/alt) cuando sea relevante.",
@@ -635,25 +647,25 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "examples.title": "Ejemplos de API",
         "examples.intro": "Use un <code>territoryId</code> real retornado por el endpoint de territories. El principio es simple: descubrir el territory, consumir el feed filtrado y cargar el mapa local.",
         "examples.listTerritories": "Listar territórios",
-        "examples.listTerritories.note": "Use este endpoint para obtener el <code>territoryId</code> y el recorte geográfico que el cliente necesita renderizar.",
+        "examples.listTerritories.note": "Use este endpoint para obtener el <code>territoryId</code> y la célula territorial que el cliente necesita renderizar.",
         "examples.listFeed": "Listar feed del territory",
         "examples.listFeed.note": "El endpoint devuelve un stream filtrado por territory y visibilidad. Si hay reglas aplicadas por vínculo, pruebe con perfiles visitor y resident para validar el comportamiento.",
         "examples.listMap": "Listar mapa del territory",
         "examples.listMap.note": "Devuelve entidades georreferenciadas para componer la capa local del mapa en el cliente.",
         "examples.listMedia": "Listar medios del territory (planificado)",
-        "examples.listMedia.note": "La capa de medios/geoAnchor debe nacer con control de visibilidad e intención explícita: memoria territorial, no vigilancia.",
+        "examples.listMedia.note": "La capa de medios/geoAnchor debe nacer con control de visibilidad y finalidad explícita: memoria territorial con cuidado y contexto.",
         "examples.postMedia": "Publicar medios georreferenciados (planificado)",
         "examples.postMedia.note": "Planificado para próximas iteraciones. Prioridad: contratos claros, validaciones fuertes (lat/lon/alt) y protección de contenido sensible.",
         "principles.title": "Principios y gobernanza",
-        "principles.intro": "Araponga no es neutro en el sentido moral: nace para fortalecer la autonomía local y evitar patrones de explotación de datos. Estos principios orientan decisiones técnicas y de producto.",
+        "principles.intro": "Araponga orienta decisiones técnicas y de producto para fortalecer autonomía local y tratamiento cuidadoso de datos. Estos principios guían la evolución del producto.",
         "principles.items.territory": "<strong>Territory como referencia:</strong> el espacio físico orienta la experiencia, el contexto y la responsabilidad.",
         "principles.items.privacy": "<strong>Privacidad por diseño:</strong> acceso mínimo, visibilidad controlada y cuidado con datos de ubicación.",
-        "principles.items.antiExtraction": "<strong>Anti-extractivismo:</strong> los datos no son mercancía; la plataforma no existe para capturar atención.",
+        "principles.items.antiExtraction": "<strong>Finalidad explícita de los datos:</strong> recolección mínima, uso responsable y anti-extractivismo en la práctica.",
         "principles.items.governance": "<strong>Gobernanza comunitaria:</strong> decisiones locales y reglas explícitas; moderación y criterios evolutivos.",
         "principles.items.evolution": "<strong>Evolutivo:</strong> MVP sólido → capas avanzadas → experiencias espaciales (incluido 3D) cuando haya madurez.",
         "principles.contribute": "¿Quieres contribuir? Mira <a href=\"https://github.com/sraphaz/araponga/blob/main/CONTRIBUTING.md\">CONTRIBUTING.md</a> o abre un issue en GitHub con contexto, motivación y criterios de validación.",
         "support.title": "Apoya Araponga",
-        "support.lead1": "Araponga es un proyecto comunitario, abierto y orientado al territorio. Existe para sostener relaciones locales, cuidado continuo y autonomía, sin intermediarios extractivos ni captura de datos.",
+        "support.lead1": "Araponga es un proyecto comunitario, abierto y orientado al territorio. Existe para sostener relaciones locales, cuidado continuo y autonomía, con contribución directa y uso responsable de datos.",
         "support.lead2": "Si este trabajo resuena contigo, puedes apoyar de manera voluntaria, consciente y directa — como quien cuida un espacio común para que siga vivo.",
         "support.pix.title": "PIX (Brasil)",
         "support.pix.body": "Contribución directa, sin tasas y sin intermediarios. Ideal para apoyar la continuidad de forma simple y soberana.",
@@ -678,7 +690,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "language.label": "Language",
         "hero.eyebrow": "Araponga API • Developer Portal",
         "hero.title": "Araponga API — Territory-first, community-first.",
-        "hero.lead": "Araponga is a community platform oriented around <strong>territory</strong>: a real slice that organizes context, visibility, and responsibility. This portal shares the product vision, its domains and flows, and how to contribute to an API built with <em>privacy by design</em>, local governance, and an explicit commitment to anti-extraction.",
+        "hero.lead": "Araponga is a community platform oriented around <strong>territory</strong>: a territorial cell that organizes context, visibility, and responsibility. This portal shares the product vision, its domains and flows, and how to contribute to an API built with <em>privacy by design</em>, local governance, and an explicit commitment to data care and purpose.",
         "hero.action.swagger": "Open Swagger",
         "hero.action.health": "Check health",
         "hero.action.github": "GitHub",
@@ -694,13 +706,14 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "toc.link.support": "Support",
         "toc.link.links": "Useful links",
         "productBrief.title": "Product brief",
-        "productBrief.p1": "Araponga solves the local communication problem that gets lost in global feeds today. Communities gain <strong>local visibility</strong> without giving up <strong>autonomy</strong>; users receive relevant information; and integrators get a clear model for building territorial experiences. <strong>Territory</strong> is the technical and business criterion that organizes the experience, defines context, and reduces noise. From it, <strong>visitor</strong> and <strong>resident</strong> determine visibility and priority rules.",
-        "productBrief.p2": "Instead of a global feed, Araponga delivers a feed and a map filtered by territory and membership. This increases relevance, protects sensitive content, and creates a base for territorial memory and local events — with media anchored in coordinates when it makes sense.",
+        "productBrief.p1": "Araponga solves the local communication problem that gets lost in global feeds today. Communities gain <strong>local visibility</strong> without giving up <strong>autonomy</strong>; users receive relevant information; and integrators get a clear model for building territorial experiences. <strong>Territory</strong> is the territorial cell that organizes the experience, defines context, and sets priority. From it, <strong>visitor</strong> and <strong>resident</strong> determine visibility and access rules.",
+        "productBrief.p2": "Araponga delivers a feed and a map filtered by territory and membership. This prioritizes local relevance, builds confidence about what is seen, and sustains territorial memory and local events — with media anchored in coordinates when it makes sense.",
         "productBrief.callout": "<strong>Technical focus:</strong> domain-driven architecture, simple and auditable contracts, layered governance, and incremental evolution (MVP → advanced layers → spatial experiences anchored in territory). The goal is to build a solid core before accelerating features.",
+        "productBrief.example": "<strong>Practical example (Feed + Events + Map):</strong> in a territorial cell, a resident publishes a community event (community cleanup, conversation circle, trail notice). The backend records the content tied to the territory and visibility (public / restricted / residents). The app consumes the feed filtered by the cell and the user role (visitor/resident), prioritizing local relevance. When there is geographic reference, the content can be projected on the map as a territorial entity, producing a situated experience with clear context and explicit rules.",
         "domains.title": "Domains",
         "domains.intro": "Domains exist to keep responsibilities clear and avoid mixing social rules with territory representations. The intent is to protect system integrity: territory as reference, people as linkage, content as expression, and governance as an explicit layer. Below are the essential elements in the current stage.",
         "domains.territory.title": "Territory",
-        "domains.territory.what": "<strong>What it is:</strong> a neutral geographic slice — the organizing reference for Araponga.",
+        "domains.territory.what": "<strong>What it is:</strong> a neutral territorial cell — the organizing reference for Araponga.",
         "domains.territory.why": "<strong>Why it exists:</strong> separates “where” (territory) from “who” (people and ties) and from “what” (content and layers). This enables evolution without distorting the core concept.",
         "domains.territory.fields": "<strong>Fields:</strong> id, name, slug, bounds, createdAt.",
         "domains.territory.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories</code>, <code>GET /api/v1/territories/{id}</code>.",
@@ -716,12 +729,12 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.",
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>What it is:</strong> stream of posts, alerts, and events filtered by territory and visibility.",
-        "domains.feed.why": "<strong>Why it exists:</strong> distributes relevant information without global noise. Events are temporal entities that impact feed and map; posts are territorial to keep context, reduce centralized moderation, and increase local engagement.",
+        "domains.feed.why": "<strong>Why it exists:</strong> prioritizes local relevance with clear rules. Events are a type of feed content, with a temporal window and impact on the map. Posts are territorial to keep context and strengthen local organization.",
         "domains.feed.fields": "<strong>Fields:</strong> id, title, content, type, visibility, createdAtUtc.",
         "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
         "domains.map.title": "Mapa",
         "domains.map.what": "<strong>What it is:</strong> georeferenced entities and layers of the territory.",
-        "domains.map.why": "<strong>Why it exists:</strong> turns information into spatial reference. The map is not “just another screen”: it is the mechanism that lets you situate what matters without relying on global noise and without standardizing territory as a product.",
+        "domains.map.why": "<strong>Why it exists:</strong> turns information into spatial reference. The map projects territorial entities derived from content and records, making local context visible and navigable.",
         "domains.map.fields": "<strong>Fields:</strong> id, name, category, status, visibility, createdAtUtc.",
         "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
         "domains.media.title": "Media + GeoAnchor",
@@ -730,13 +743,13 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.media.fields": "<strong>Fields:</strong> mediaId, territoryId, lat, lon, altitude, visibility.",
         "domains.media.endpoints": "<strong>Endpoints:</strong> planned (<em>upcoming</em>).",
         "flows.title": "Core flows",
-        "flows.intro": "Two flows define the initial experience. Both are oriented by territory and supported by membership. The system resolves visibility, prioritizes local context, and returns consistent responses for client and API.",
+        "flows.intro": "Two flows define the initial experience. The system resolves visibility, prioritizes local context, and returns consistent responses for client and API.",
         "flows.flow1.title": "Flow 1 — Onboarding",
         "flows.flow1.step1": "<strong>Login</strong> or account creation.",
         "flows.flow1.step2": "<strong>Territory selection</strong> (or definition via local context, when applicable).",
         "flows.flow1.step3": "<strong>Bond declaration</strong>: visitor or resident.",
         "flows.flow1.step4": "<strong>Visibility resolution</strong>: the system filters feed and map by role and active territory.",
-        "flows.flow1.note": "Result: the user enters a territory as real context. The platform begins operating with explicit coexistence and access rules.",
+        "flows.flow1.note": "Result: the user enters a territory as real context, with explicit coexistence and access rules applied from the start.",
         "flows.flow2.title": "Flow 2 — Georeferenced post",
         "flows.flow2.step1": "<strong>Create a post</strong> in the territory feed.",
         "flows.flow2.step2": "<strong>Attach media</strong> with geoAnchor (lat/lon/alt) when relevant.",
@@ -752,25 +765,25 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "examples.title": "API examples",
         "examples.intro": "Use a real <code>territoryId</code> returned by the territories endpoint. The principle is simple: discover the territory, consume the filtered feed, and load the local map.",
         "examples.listTerritories": "List territories",
-        "examples.listTerritories.note": "Use this endpoint to obtain the <code>territoryId</code> and the geographic slice the client needs to render.",
+        "examples.listTerritories.note": "Use this endpoint to obtain the <code>territoryId</code> and the territorial cell the client needs to render.",
         "examples.listFeed": "List territory feed",
         "examples.listFeed.note": "The endpoint returns a stream filtered by territory and visibility. If rules are applied by membership, test with visitor and resident profiles to validate behavior.",
         "examples.listMap": "List territory map",
         "examples.listMap.note": "Returns georeferenced entities to compose the local map layer in the client.",
         "examples.listMedia": "List territory media (planned)",
-        "examples.listMedia.note": "The media/geoAnchor layer should be born with visibility control and explicit intent: territorial memory, not surveillance.",
+        "examples.listMedia.note": "The media/geoAnchor layer should be born with visibility control and explicit purpose: territorial memory with care and context.",
         "examples.postMedia": "Post georeferenced media (planned)",
         "examples.postMedia.note": "Planned for upcoming iterations. Priority: clear contracts, strong validations (lat/lon/alt), and protection of sensitive content.",
         "principles.title": "Principles & governance",
-        "principles.intro": "Araponga is not morally neutral: it is built to strengthen local autonomy and avoid patterns of data extraction. These principles guide technical and product decisions.",
+        "principles.intro": "Araponga guides technical and product decisions to strengthen local autonomy and careful data treatment. These principles guide product evolution.",
         "principles.items.territory": "<strong>Territory as reference:</strong> physical space guides experience, context, and responsibility.",
         "principles.items.privacy": "<strong>Privacy by design:</strong> minimal access, controlled visibility, and care with location data.",
-        "principles.items.antiExtraction": "<strong>Anti-extraction:</strong> data is not a commodity; the platform does not exist to capture attention.",
+        "principles.items.antiExtraction": "<strong>Explicit data purpose:</strong> minimal collection, responsible use, and anti-extraction in practice.",
         "principles.items.governance": "<strong>Community governance:</strong> local decisions and explicit rules; moderation and evolving criteria.",
         "principles.items.evolution": "<strong>Evolutive:</strong> solid MVP → advanced layers → spatial experiences (including 3D) when maturity is reached.",
         "principles.contribute": "Want to contribute? See <a href=\"https://github.com/sraphaz/araponga/blob/main/CONTRIBUTING.md\">CONTRIBUTING.md</a> or open an issue on GitHub with context, motivation, and validation criteria.",
         "support.title": "Support Araponga",
-        "support.lead1": "Araponga is a community, open, and territory-oriented project. It exists to sustain local relationships, continuous care, and autonomy, without extractive intermediaries or data capture.",
+        "support.lead1": "Araponga is a community, open, and territory-oriented project. It exists to sustain local relationships, continuous care, and autonomy, with direct contribution and responsible data use.",
         "support.lead2": "If this work resonates with you, you can support it in a voluntary, conscious, and direct way — like caring for a shared space so it can remain alive.",
         "support.pix.title": "PIX (Brazil)",
         "support.pix.body": "Direct contribution, no fees, no intermediaries. Ideal for supporting continuity in a simple and sovereign way.",

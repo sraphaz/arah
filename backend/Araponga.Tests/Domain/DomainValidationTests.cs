@@ -55,6 +55,26 @@ public sealed class DomainValidationTests
     }
 
     [Fact]
+    public void User_DoesNotAllowCpfAndForeignDocumentTogether()
+    {
+        var exception = Assert.Throws<ArgumentException>(() =>
+            new User(
+                Guid.NewGuid(),
+                "User",
+                "user@araponga.com",
+                "123.456.789-00",
+                "PASS-123",
+                null,
+                null,
+                "google",
+                "ext",
+                UserRole.Visitor,
+                DateTime.UtcNow));
+
+        Assert.Contains("either", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void User_RequiresProvider()
     {
         var exception = Assert.Throws<ArgumentException>(() =>

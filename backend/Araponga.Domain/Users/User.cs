@@ -38,6 +38,11 @@ public sealed class User
             throw new ArgumentException("CPF or foreign document is required.", nameof(cpf));
         }
 
+        if (!string.IsNullOrWhiteSpace(normalizedCpf) && !string.IsNullOrWhiteSpace(normalizedForeignDocument))
+        {
+            throw new ArgumentException("Provide either CPF or foreign document, not both.", nameof(cpf));
+        }
+
         Id = id;
         DisplayName = displayName.Trim();
         Email = NormalizeOptional(email);

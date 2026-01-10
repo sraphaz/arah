@@ -4,13 +4,172 @@
 
 :root {
   color-scheme: light;
+  --overlay-top: rgba(13, 38, 24, 0.7);
+  --overlay-mid: rgba(24, 58, 32, 0.55);
+  --overlay-bottom: rgba(10, 30, 18, 0.8);
+  --dense-overlay: rgba(9, 28, 18, 0.72);
+  --glass-bg: rgba(255, 255, 255, 0.16);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  --glass-bg-dense: rgba(255, 255, 255, 0.1);
+  --glass-border-dense: rgba(255, 255, 255, 0.14);
+  --glass-shadow-dense: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --glass-radius: 28px;
+  --glass-blur: 14px;
+  --watermark-opacity: 0.09;
+  --watermark-size: 520px;
+  --watermark-top: -80px;
+  --watermark-right: -120px;
+  --divider-color: rgba(255, 255, 255, 0.14);
+  --divider-margin: 28px;
+  --divider-margin-desktop: 40px;
+  --reveal-translate: 16px;
+  --reveal-duration: 700ms;
+  --reveal-easing: ease-out;
 }
 
 body {
-  @apply bg-forest-50 text-forest-900;
+  @apply text-forest-900;
+  min-height: 100%;
+  background-image: url("/bukeh.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--overlay-top) 0%,
+    var(--overlay-mid) 45%,
+    var(--overlay-bottom) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* container consistent */
 .container-max {
   @apply mx-auto w-full max-w-5xl px-6;
+}
+
+.section {
+  position: relative;
+  padding: 56px 0;
+}
+
+.section-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.section-dense {
+  position: relative;
+  background-image: url("/leaves.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.section-dense::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 24, 16, 0.8) 0%, var(--dense-overlay) 100%);
+  z-index: 0;
+}
+
+.glass-card {
+  position: relative;
+  border-radius: var(--glass-radius);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  overflow: visible;
+}
+
+.glass-card--dense {
+  background: var(--glass-bg-dense);
+  border-color: var(--glass-border-dense);
+  box-shadow: var(--glass-shadow-dense);
+}
+
+.glass-card::after {
+  content: "";
+  position: absolute;
+  width: var(--watermark-size);
+  height: var(--watermark-size);
+  top: var(--watermark-top);
+  right: var(--watermark-right);
+  background-image: url("/Logo_2_watermark.png");
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: contain;
+  opacity: var(--watermark-opacity);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glass-card__content {
+  position: relative;
+  z-index: 1;
+  padding: 32px;
+}
+
+.section-divider {
+  height: 1px;
+  background: var(--divider-color);
+  margin: var(--divider-margin) 0;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-translate));
+  transition: opacity var(--reveal-duration) var(--reveal-easing),
+    transform var(--reveal-duration) var(--reveal-easing);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal.reveal--reduced {
+  opacity: 1;
+  transform: translateY(0);
+  transition: none;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 72px 0;
+  }
+
+  .glass-card__content {
+    padding: 40px;
+  }
+
+  .section-divider {
+    margin: var(--divider-margin-desktop) 0;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  .section-dense {
+    background-attachment: scroll;
+  }
 }

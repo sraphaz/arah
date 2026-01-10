@@ -8,6 +8,7 @@ import Value from "@/components/sections/Value";
 import Architecture from "@/components/sections/Architecture";
 import Roadmap from "@/components/sections/Roadmap";
 import CTA from "@/components/sections/CTA";
+import Support from "@/components/sections/Support";
 import Footer from "@/components/sections/Footer";
 import Divider from "@/components/ui/Divider";
 
@@ -33,6 +34,8 @@ export default function Home() {
       <Roadmap />
       <Divider />
       <CTA />
+      <Divider />
+      <Support />
       <Divider />
       <Footer />
     </main>

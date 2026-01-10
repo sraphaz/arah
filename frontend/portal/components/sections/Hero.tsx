@@ -37,9 +37,9 @@ export default function Hero() {
             <div className="space-y-4">
               <div className="flex justify-center">
                 <img
-                  src="/Logo_1.png"
+                  src="/first_right_cover.png"
                   alt="Araponga"
-                  className="h-40 w-auto object-contain drop-shadow-md"
+                  className="h-56 w-auto object-contain drop-shadow-md md:h-64"
                 />
               </div>
               <div className="rounded-2xl border border-white/40 bg-white/20 p-5">

@@ -8,21 +8,35 @@ import Value from "@/components/sections/Value";
 import Architecture from "@/components/sections/Architecture";
 import Roadmap from "@/components/sections/Roadmap";
 import CTA from "@/components/sections/CTA";
+import Support from "@/components/sections/Support";
 import Footer from "@/components/sections/Footer";
+import Divider from "@/components/ui/Divider";
 
 export default function Home() {
   return (
     <main>
       <Hero />
+      <Divider />
       <Problem />
+      <Divider />
       <Proposal />
+      <Divider />
       <HowItWorks />
+      <Divider />
       <Domains />
+      <Divider />
       <Visibility />
+      <Divider />
       <Value />
+      <Divider />
       <Architecture />
+      <Divider />
       <Roadmap />
+      <Divider />
       <CTA />
+      <Divider />
+      <Support />
+      <Divider />
       <Footer />
     </main>
   );

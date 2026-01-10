@@ -1,29 +1,52 @@
+import GlassCard from "@/components/ui/GlassCard";
+import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import SectionDense from "@/components/ui/SectionDense";
+
+const VISIBILITY = [
+  {
+    title: "Visitante & Residente",
+    items: [
+      "Visitante vê o que é público no território.",
+      "Residente acessa conteúdos e dinâmicas restritas.",
+      "Regras claras reduzem ruído e aumentam confiança."
+    ]
+  },
+  {
+    title: "Público & Restrito",
+    items: [
+      "Algumas postagens são úteis para visitantes (serviços, eventos abertos).",
+      "Outras exigem pertencimento (alertas locais, decisões comunitárias).",
+      "O modelo prioriza segurança e autonomia territorial."
+    ]
+  }
+];
+
 export default function Visibility() {
   return (
-    <section className="bg-forest-50">
-      <div className="container-max py-14">
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Regras de visibilidade: por que isso importa
-        </h2>
-        <div className="mt-8 grid gap-10 md:grid-cols-2">
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-            <h3 className="text-base font-semibold">Visitante &amp; Residente</h3>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-forest-800">
-              <li>Visitante vê o que é público no território.</li>
-              <li>Residente acessa conteúdos e dinâmicas restritas.</li>
-              <li>Regras claras reduzem ruído e aumentam confiança.</li>
-            </ul>
+    <SectionDense>
+      <RevealOnScroll>
+        <GlassCard tone="dense">
+          <div className="space-y-8">
+            <h2 className="text-2xl font-semibold tracking-tight text-white">
+              Regras de visibilidade: por que isso importa
+            </h2>
+            <div className="grid gap-10 md:grid-cols-2">
+              {VISIBILITY.map((col, index) => (
+                <RevealOnScroll key={col.title} delay={index * 60} className="h-full">
+                  <div className="h-full rounded-2xl border border-white/20 bg-white/10 p-5 text-white/85">
+                    <h3 className="text-base font-semibold text-white">{col.title}</h3>
+                    <ul className="mt-4 list-disc space-y-2 pl-5 text-sm">
+                      {col.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </RevealOnScroll>
+              ))}
+            </div>
           </div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-            <h3 className="text-base font-semibold">Público &amp; Restrito</h3>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-forest-800">
-              <li>Algumas postagens são úteis para visitantes (serviços, eventos abertos).</li>
-              <li>Outras exigem pertencimento (alertas locais, decisões comunitárias).</li>
-              <li>O modelo prioriza segurança e autonomia territorial.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+        </GlassCard>
+      </RevealOnScroll>
+    </SectionDense>
   );
 }

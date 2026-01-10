@@ -4,25 +4,15 @@
 
 :root {
   color-scheme: light;
-  --overlay-top: rgba(13, 38, 24, 0.7);
-  --overlay-mid: rgba(24, 58, 32, 0.55);
-  --overlay-bottom: rgba(10, 30, 18, 0.8);
-  --dense-overlay: rgba(9, 28, 18, 0.72);
-  --glass-bg: rgba(255, 255, 255, 0.16);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-  --glass-bg-dense: rgba(255, 255, 255, 0.1);
-  --glass-border-dense: rgba(255, 255, 255, 0.14);
-  --glass-shadow-dense: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 18px 50px rgba(20, 40, 28, 0.15);
   --glass-radius: 28px;
   --glass-blur: 14px;
-  --watermark-opacity: 0.09;
-  --watermark-size: 520px;
-  --watermark-top: -80px;
+  --watermark-opacity: 0.08;
+  --watermark-size: 460px;
+  --watermark-bottom: -120px;
   --watermark-right: -120px;
-  --divider-color: rgba(255, 255, 255, 0.14);
-  --divider-margin: 28px;
-  --divider-margin-desktop: 40px;
   --reveal-translate: 16px;
   --reveal-duration: 700ms;
   --reveal-easing: ease-out;
@@ -31,24 +21,11 @@
 body {
   @apply text-forest-900;
   min-height: 100%;
-  background-image: url("/bukeh.jpg");
-  background-size: cover;
-  background-position: center;
+  background-image: url("/leaves.jpg");
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: top center;
   background-attachment: fixed;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    var(--overlay-top) 0%,
-    var(--overlay-mid) 45%,
-    var(--overlay-bottom) 100%
-  );
-  z-index: 0;
-  pointer-events: none;
 }
 
 body > * {
@@ -71,22 +48,6 @@ body > * {
   z-index: 1;
 }
 
-.section-dense {
-  position: relative;
-  background-image: url("/leaves.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
-
-.section-dense::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(8, 24, 16, 0.8) 0%, var(--dense-overlay) 100%);
-  z-index: 0;
-}
-
 .glass-card {
   position: relative;
   border-radius: var(--glass-radius);
@@ -98,49 +59,26 @@ body > * {
   overflow: visible;
 }
 
-.glass-card--dense {
-  background: var(--glass-bg-dense);
-  border-color: var(--glass-border-dense);
-  box-shadow: var(--glass-shadow-dense);
-}
-
 .glass-card::after {
   content: "";
   position: absolute;
   width: var(--watermark-size);
   height: var(--watermark-size);
-  top: var(--watermark-top);
+  bottom: var(--watermark-bottom);
   right: var(--watermark-right);
   background-image: url("/Logo_2_watermark.png");
   background-repeat: no-repeat;
-  background-position: top right;
+  background-position: bottom right;
   background-size: contain;
   opacity: var(--watermark-opacity);
   pointer-events: none;
   z-index: 0;
 }
 
-.support-card {
-  background-image: linear-gradient(120deg, rgba(8, 24, 16, 0.78), rgba(12, 38, 24, 0.25)),
-    url("/app_banner.png");
-  background-size: cover;
-  background-position: right center;
-}
-
-.support-card .glass-card__content {
-  padding: 40px;
-}
-
 .glass-card__content {
   position: relative;
   z-index: 1;
   padding: 32px;
-}
-
-.section-divider {
-  height: 1px;
-  background: var(--divider-color);
-  margin: var(--divider-margin) 0;
 }
 
 .reveal {
@@ -161,6 +99,10 @@ body > * {
   transition: none;
 }
 
+.reveal--timeline {
+  --reveal-translate: 24px;
+}
+
 @media (min-width: 768px) {
   .section {
     padding: 72px 0;
@@ -169,18 +111,10 @@ body > * {
   .glass-card__content {
     padding: 40px;
   }
-
-  .section-divider {
-    margin: var(--divider-margin-desktop) 0;
-  }
 }
 
 @media (max-width: 768px) {
   body {
-    background-attachment: scroll;
-  }
-
-  .section-dense {
     background-attachment: scroll;
   }
 }

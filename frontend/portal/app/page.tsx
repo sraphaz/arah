@@ -1,43 +1,33 @@
 import Hero from "@/components/sections/Hero";
+import Inspiration from "@/components/sections/Inspiration";
 import Problem from "@/components/sections/Problem";
 import Proposal from "@/components/sections/Proposal";
 import HowItWorks from "@/components/sections/HowItWorks";
-import Domains from "@/components/sections/Domains";
+import Architecture from "@/components/sections/Architecture";
 import Visibility from "@/components/sections/Visibility";
 import Value from "@/components/sections/Value";
-import Architecture from "@/components/sections/Architecture";
+import Technology from "@/components/sections/Technology";
 import Roadmap from "@/components/sections/Roadmap";
-import CTA from "@/components/sections/CTA";
+import Future from "@/components/sections/Future";
+import Join from "@/components/sections/Join";
 import Support from "@/components/sections/Support";
-import Footer from "@/components/sections/Footer";
-import Divider from "@/components/ui/Divider";
 
 export default function Home() {
   return (
     <main>
       <Hero />
-      <Divider />
+      <Inspiration />
       <Problem />
-      <Divider />
       <Proposal />
-      <Divider />
       <HowItWorks />
-      <Divider />
-      <Domains />
-      <Divider />
-      <Visibility />
-      <Divider />
-      <Value />
-      <Divider />
       <Architecture />
-      <Divider />
+      <Visibility />
+      <Value />
+      <Technology />
       <Roadmap />
-      <Divider />
-      <CTA />
-      <Divider />
+      <Future />
+      <Join />
       <Support />
-      <Divider />
-      <Footer />
     </main>
   );
 }

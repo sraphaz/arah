@@ -1,52 +1,65 @@
 import GlassCard from "@/components/ui/GlassCard";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import SectionDense from "@/components/ui/SectionDense";
-
-const VISIBILITY = [
-  {
-    title: "Visitante & Residente",
-    items: [
-      "Visitante vê o que é público no território.",
-      "Residente acessa conteúdos e dinâmicas restritas.",
-      "Regras claras reduzem ruído e aumentam confiança."
-    ]
-  },
-  {
-    title: "Público & Restrito",
-    items: [
-      "Algumas postagens são úteis para visitantes (serviços, eventos abertos).",
-      "Outras exigem pertencimento (alertas locais, decisões comunitárias).",
-      "O modelo prioriza segurança e autonomia territorial."
-    ]
-  }
-];
+import Section from "@/components/ui/Section";
 
 export default function Visibility() {
   return (
-    <SectionDense>
+    <Section>
       <RevealOnScroll>
-        <GlassCard tone="dense">
+        <GlassCard>
           <div className="space-y-8">
-            <h2 className="text-2xl font-semibold tracking-tight text-white">
+            <h2 className="text-2xl font-semibold tracking-tight text-forest-950">
               Regras de visibilidade: por que isso importa
             </h2>
-            <div className="grid gap-10 md:grid-cols-2">
-              {VISIBILITY.map((col, index) => (
-                <RevealOnScroll key={col.title} delay={index * 60} className="h-full">
-                  <div className="h-full rounded-2xl border border-white/20 bg-white/10 p-5 text-white/85">
-                    <h3 className="text-base font-semibold text-white">{col.title}</h3>
-                    <ul className="mt-4 list-disc space-y-2 pl-5 text-sm">
-                      {col.items.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </RevealOnScroll>
-              ))}
+            <div className="grid gap-8 md:grid-cols-2">
+              <div className="space-y-4 rounded-2xl border border-white/60 bg-white/65 p-5">
+                <h3 className="text-base font-semibold text-forest-900">Visitante &amp; Residente</h3>
+                <p className="text-sm leading-relaxed text-forest-800">
+                  A distinção entre visitante e residente permite que comunidades controlem o
+                  acesso a informações sensíveis ou restritas.
+                </p>
+                <ul className="list-disc space-y-2 pl-5 text-sm text-forest-800">
+                  <li>
+                    <strong>Visitante</strong>: acesso apenas a conteúdo marcado como público
+                  </li>
+                  <li>
+                    <strong>Residente</strong>: acesso ampliado, incluindo conteúdos restritos do
+                    território
+                  </li>
+                </ul>
+                <p className="text-sm leading-relaxed text-forest-800">
+                  Essa separação respeita a autonomia comunitária e permite gradações de confiança
+                  baseadas em engajamento real.
+                </p>
+              </div>
+              <div className="space-y-4 rounded-2xl border border-white/60 bg-white/65 p-5">
+                <h3 className="text-base font-semibold text-forest-900">Público &amp; Restrito</h3>
+                <p className="text-sm leading-relaxed text-forest-800">
+                  Cada publicação, evento ou conteúdo pode ser classificado como público ou
+                  restrito.
+                </p>
+                <p className="text-sm leading-relaxed text-forest-800">
+                  O sistema garante que apenas usuários com permissão adequada tenham acesso a
+                  informações sensíveis.
+                  <br />
+                  Isso é essencial para:
+                </p>
+                <ul className="list-disc space-y-2 pl-5 text-sm text-forest-800">
+                  <li>proteger discussões internas</li>
+                  <li>planejar ações comunitárias sem exposição desnecessária</li>
+                  <li>construir ambientes de confiança</li>
+                </ul>
+                <p className="text-sm leading-relaxed text-forest-800">
+                  Essas regras não são arbitrárias.
+                  <br />
+                  Elas promovem <strong>segurança, relevância e respeito às dinâmicas locais</strong>
+                  .
+                </p>
+              </div>
             </div>
           </div>
         </GlassCard>
       </RevealOnScroll>
-    </SectionDense>
+    </Section>
   );
 }

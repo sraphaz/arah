@@ -44,7 +44,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
-            new List<Application.Models.GeoAnchorInput>
+            new List<Araponga.Application.Models.GeoAnchorInput>
             {
                 new(-23.0, -45.0, "POST")
             },
@@ -61,7 +61,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
-            new List<Application.Models.GeoAnchorInput>
+            new List<Araponga.Application.Models.GeoAnchorInput>
             {
                 new(-23.0, -45.0, "POST")
             },
@@ -265,7 +265,8 @@ public sealed class ApplicationServiceTests
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
-        var service = new ReportService(reportRepository, feedRepository, userRepository, auditLogger);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger);
 
         var reporterId = Guid.NewGuid();
         var postId = dataStore.Posts[0].Id;
@@ -299,7 +300,8 @@ public sealed class ApplicationServiceTests
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
-        var service = new ReportService(reportRepository, feedRepository, userRepository, auditLogger);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger);
 
         var missingPost = await service.ReportPostAsync(
             Guid.NewGuid(),
@@ -311,6 +313,7 @@ public sealed class ApplicationServiceTests
         Assert.Equal("Post not found.", missingPost.error);
 
         var missingUser = await service.ReportUserAsync(
+            Guid.NewGuid(),
             Guid.NewGuid(),
             Guid.NewGuid(),
             "SPAM",
@@ -411,7 +414,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.PendingApproval,
             null,
-            new List<Application.Models.GeoAnchorInput>
+            new List<Araponga.Application.Models.GeoAnchorInput>
             {
                 new(-23.0, -45.0, "EVENT")
             },
@@ -603,7 +606,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
-            new List<Application.Models.GeoAnchorInput>
+            new List<Araponga.Application.Models.GeoAnchorInput>
             {
                 new(-23.0, -45.0, "POST")
             },

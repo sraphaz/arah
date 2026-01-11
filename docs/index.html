@@ -167,7 +167,7 @@
           </p>
           <ul>
             <li data-i18n="domains.user.fields"><strong>Campos:</strong> id, displayName, email, status.</li>
-            <li data-i18n="domains.user.endpoints"><strong>Endpoints:</strong> <code>POST /api/v1/auth/login</code>, <code>POST /api/v1/auth/register</code>.</li>
+            <li data-i18n="domains.user.endpoints"><strong>Endpoints:</strong> <code>POST /api/v1/auth/social</code>.</li>
           </ul>
         </article>
 
@@ -181,7 +181,7 @@
           </p>
           <ul>
             <li data-i18n="domains.membership.fields"><strong>Campos:</strong> id, userId, territoryId, role, status.</li>
-            <li data-i18n="domains.membership.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.</li>
+            <li data-i18n="domains.membership.endpoints"><strong>Endpoints:</strong> <code>POST /api/v1/territories/{territoryId}/membership</code>, <code>GET /api/v1/territories/{territoryId}/membership/me</code>.</li>
           </ul>
         </article>
 
@@ -194,14 +194,14 @@
             confiança e organização local.
           </p>
           <ul>
-            <li data-i18n="domains.feed.fields"><strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.</li>
-            <li data-i18n="domains.feed.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.</li>
+            <li data-i18n="domains.feed.fields"><strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.</li>
+            <li data-i18n="domains.feed.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.</li>
           </ul>
         </article>
 
         <article class="card">
           <h3 data-i18n="domains.map.title">Mapa</h3>
-          <p data-i18n="domains.map.what"><strong>O que é:</strong> entidades e camadas georreferenciadas do território.</p>
+          <p data-i18n="domains.map.what"><strong>O que é:</strong> entidades e camadas georreferenciadas do território. Uma entidade do território pode ser um estabelecimento, um órgão do governo, um espaço público ou um espaço natural.</p>
           <p data-i18n="domains.map.why">
             <strong>Por que existe:</strong> transforma informação em referência espacial.
             O mapa é uma projeção territorial derivada de conteúdo e cadastros, conectando o que aparece no feed às
@@ -209,7 +209,19 @@
           </p>
           <ul>
             <li data-i18n="domains.map.fields"><strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.</li>
-            <li data-i18n="domains.map.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.</li>
+            <li data-i18n="domains.map.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 data-i18n="domains.moderation.title">Moderação</h3>
+          <p data-i18n="domains.moderation.what"><strong>O que é:</strong> reports e bloqueios para proteção da comunidade.</p>
+          <p data-i18n="domains.moderation.why">
+            <strong>Por que existe:</strong> viabiliza resposta rápida a conteúdo inadequado e controle de visibilidade pessoal.
+          </p>
+          <ul>
+            <li data-i18n="domains.moderation.fields"><strong>Campos:</strong> id, targetType, targetId, reason, details, createdAtUtc.</li>
+            <li data-i18n="domains.moderation.endpoints"><strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.</li>
           </ul>
         </article>
 
@@ -295,15 +307,10 @@ dotnet run --project backend/Araponga.Api
 
         <div>
           <h3 data-i18n="quickstart.docker.title">Docker</h3>
-          <pre><code>docker build -t araponga-api .
-
-docker run --rm -p 8080:8080 \
-  -e ASPNETCORE_URLS=http://0.0.0.0:8080 \
-  -e ASPNETCORE_ENVIRONMENT=Development \
-  araponga-api
+          <pre><code>docker compose up --build
 </code></pre>
           <p class="note" data-i18n="quickstart.docker.note">
-            Use <code>ASPNETCORE_ENVIRONMENT=Development</code> para habilitar o Swagger localmente.
+            O compose inicia Postgres + API e aplica migrations automaticamente (configurável via <code>Persistence__ApplyMigrations</code>).
             Em produção, avalie expor Swagger apenas em redes internas ou com autenticação.
           </p>
         </div>
@@ -339,62 +346,72 @@ docker run --rm -p 8080:8080 \
         </p>
       </div>
 
-      <div class="code-grid">
-        <div>
-          <h3 data-i18n="examples.listTerritories">Listar territórios</h3>
-          <pre><code>curl -s http://localhost:8080/api/v1/territories | jq
+        <div class="code-grid">
+          <div>
+            <h3 data-i18n="examples.listTerritories">Listar territórios</h3>
+            <pre><code>curl -s http://localhost:8080/api/v1/territories | jq
 </code></pre>
-          <p class="note" data-i18n="examples.listTerritories.note">
-            Use este endpoint para obter o <code>territoryId</code> e a célula territorial que o cliente precisa renderizar.
-          </p>
-        </div>
+            <p class="note" data-i18n="examples.listTerritories.note">
+              Use este endpoint para obter o <code>territoryId</code> e a célula territorial que o cliente precisa renderizar.
+            </p>
+          </div>
 
-        <div>
-          <h3 data-i18n="examples.listFeed">Listar feed do território</h3>
-          <pre><code>curl -s "http://localhost:8080/api/v1/feed?territoryId=SEU_TERRITORY_ID" | jq
+          <div>
+            <h3 data-i18n="examples.auth">Autenticar e obter JWT</h3>
+            <pre><code>curl -s -X POST http://localhost:8080/api/v1/auth/social \
+  -H "Content-Type: application/json" \
+  -d '{
+    "provider":"google",
+    "externalId":"demo-user",
+    "displayName":"Demo",
+    "cpf":"123.456.789-00",
+    "foreignDocument":null,
+    "phoneNumber":"(11) 99999-0000",
+    "address":"Rua das Flores, 100",
+    "email":"demo@araponga.com"
+  }' | jq
 </code></pre>
-          <p class="note" data-i18n="examples.listFeed.note">
-            O endpoint retorna um stream filtrado por território e visibilidade.
-            Se houver regras aplicadas por vínculo, teste com perfis visitante e morador para validar o comportamento.
-          </p>
-        </div>
+            <p class="note" data-i18n="examples.auth.note">
+              Use o <code>token</code> retornado como <code>Authorization: Bearer &lt;token&gt;</code>.
+            </p>
+          </div>
 
-        <div>
-          <h3 data-i18n="examples.listMap">Listar mapa do território</h3>
-          <pre><code>curl -s "http://localhost:8080/api/v1/map/entities?territoryId=SEU_TERRITORY_ID" | jq
-</code></pre>
-          <p class="note" data-i18n="examples.listMap.note">
-            Retorna entidades georreferenciadas para compor a camada local do mapa no cliente.
-          </p>
-        </div>
-
-        <div>
-          <h3 data-i18n="examples.listMedia">Listar mídia do território (planejado)</h3>
-          <pre><code># upcoming endpoint
-curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
-</code></pre>
-          <p class="note" data-i18n="examples.listMedia.note">
-            A camada de mídia/geoAnchor deve nascer com controle de visibilidade e finalidade explícita: memória
-            territorial com cuidado e contexto.
-          </p>
-        </div>
-
-        <div>
-          <h3 data-i18n="examples.postMedia">Postar mídia georreferenciada (planejado)</h3>
-          <pre><code>curl -X POST "http://localhost:8080/api/v1/media" \
+          <div>
+            <h3 data-i18n="examples.membership">Declarar vínculo com território</h3>
+            <pre><code>curl -s -X POST "http://localhost:8080/api/v1/territories/SEU_TERRITORY_ID/membership" \
   -H "Authorization: Bearer SEU_TOKEN" \
-  -F "territoryId=SEU_TERRITORY_ID" \
-  -F "lat=-23.5505" \
-  -F "lon=-46.6333" \
-  -F "visibility=RESIDENT" \
-  -F "file=@/caminho/arquivo.jpg"
+  -H "Content-Type: application/json" \
+  -H "X-Geo-Latitude: -23.37" \
+  -H "X-Geo-Longitude: -45.02" \
+  -d '{"role":"RESIDENT"}' | jq
 </code></pre>
-          <p class="note" data-i18n="examples.postMedia.note">
-            Planejado para próximas iterações. Prioridade: contratos claros, validações fortes (lat/lon/alt), e proteção de conteúdo sensível.
-          </p>
+            <p class="note" data-i18n="examples.membership.note">
+              VISITOR é idempotente; upgrade para RESIDENT muda o status para PENDING (geo é exigido conforme PresencePolicy).
+            </p>
+          </div>
+
+          <div>
+            <h3 data-i18n="examples.listFeed">Listar feed do território</h3>
+            <pre><code>curl -s "http://localhost:8080/api/v1/feed?territoryId=SEU_TERRITORY_ID" \
+  -H "Authorization: Bearer SEU_TOKEN" | jq
+</code></pre>
+            <p class="note" data-i18n="examples.listFeed.note">
+              O endpoint retorna um stream filtrado por território e visibilidade.
+              Se houver regras aplicadas por vínculo, teste com perfis visitante e morador para validar o comportamento.
+            </p>
+          </div>
+
+          <div>
+            <h3 data-i18n="examples.listMap">Listar mapa do território</h3>
+            <pre><code>curl -s "http://localhost:8080/api/v1/map/entities?territoryId=SEU_TERRITORY_ID" \
+  -H "Authorization: Bearer SEU_TOKEN" | jq
+</code></pre>
+            <p class="note" data-i18n="examples.listMap.note">
+              Retorna entidades georreferenciadas para compor a camada local do mapa no cliente.
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
     <section id="principles" class="section">
       <div class="section-header">
@@ -549,22 +566,27 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.user.what": "<strong>O que é:</strong> identidade autenticada para agir no sistema.",
         "domains.user.why": "<strong>Por que existe:</strong> responsabiliza ações sem depender de exposição de dados sensíveis. A regra é: coletar o mínimo necessário, manter rastreabilidade do que importa e proteger o que não precisa existir.",
         "domains.user.fields": "<strong>Campos:</strong> id, displayName, email, status.",
-        "domains.user.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/auth/login</code>, <code>POST /api/v1/auth/register</code>.",
+        "domains.user.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/auth/social</code>.",
         "domains.membership.title": "Vínculo",
         "domains.membership.what": "<strong>O que é:</strong> vínculo entre pessoa e território (visitante ou morador).",
         "domains.membership.why": "<strong>Por que existe:</strong> governa visibilidade, acesso e prioridades locais. Esse domínio é o “coração operacional” das regras: sem ele, o território vira um filtro genérico; com ele, o território vira contexto de convivência.",
         "domains.membership.fields": "<strong>Campos:</strong> id, userId, territoryId, role, status.",
-        "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.",
+        "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/territories/{territoryId}/membership</code>, <code>GET /api/v1/territories/{territoryId}/membership/me</code>.",
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>O que é:</strong> stream de postagens, alertas e eventos filtrados por território e visibilidade.",
         "domains.feed.why": "<strong>Por que existe:</strong> prioriza relevância local com regras claras. Eventos são um tipo de conteúdo do feed, com janela temporal e impacto no mapa. O feed é territorial para manter contexto, confiança e organização local.",
-        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.",
-        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
+        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
+        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
-        "domains.map.what": "<strong>O que é:</strong> entidades e camadas georreferenciadas do território.",
+        "domains.map.what": "<strong>O que é:</strong> entidades e camadas georreferenciadas do território. Uma entidade do território pode ser um estabelecimento, um órgão do governo, um espaço público ou um espaço natural.",
         "domains.map.why": "<strong>Por que existe:</strong> transforma informação em referência espacial. O mapa é uma projeção territorial derivada de conteúdo e cadastros, conectando o que aparece no feed às entidades locais visíveis e navegáveis.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
-        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
+        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
+        "domains.moderation.title": "Moderação",
+        "domains.moderation.what": "<strong>O que é:</strong> reports e bloqueios para proteção da comunidade.",
+        "domains.moderation.why": "<strong>Por que existe:</strong> viabiliza resposta rápida a conteúdo inadequado e controle de visibilidade pessoal.",
+        "domains.moderation.fields": "<strong>Campos:</strong> id, targetType, targetId, reason, details, createdAtUtc.",
+        "domains.moderation.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.",
         "domains.media.title": "Media + GeoAnchor",
         "domains.media.what": "<strong>O que é:</strong> mídia (foto/áudio/vídeo) ancorada em latitude/longitude (e, quando útil, altitude).",
         "domains.media.why": "<strong>Por que existe:</strong> constrói memória territorial com precisão — e com controle. GeoAnchor cria base para camadas futuras: visualização contextual, trilhas, registros de cuidado, e eventualmente representações espaciais mais complexas (inclusive 3D) geradas a partir de dados e mídias do app.",
@@ -585,11 +607,11 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "flows.flow2.step4": "<strong>Distribuição coerente</strong>: a API publica no feed e, quando aplicável, no mapa local.",
         "flows.flow2.note": "Este fluxo está em construção; a etapa de mídia/geoAnchor é futura. A implementação deve priorizar: privacidade, controle de visibilidade e consistência dos contratos.",
         "quickstart.title": "Quickstart",
-        "quickstart.intro": "Comece localmente ou via Docker. Estes comandos são copy/paste. Dica: valide primeiro <code>/health</code>, depois abra o Swagger, e só então teste os fluxos.",
+        "quickstart.intro": "Comece localmente ou via Docker Compose. Estes comandos são copy/paste. Dica: valide primeiro <code>/health</code>, depois abra o Swagger, e só então teste os fluxos.",
         "quickstart.local.title": "Local (dotnet)",
         "quickstart.local.note": "Abra <code>http://localhost:8080/</code> (portal) e <code>/swagger</code> (documentação). A porta pode variar conforme a configuração.",
-        "quickstart.docker.title": "Docker",
-        "quickstart.docker.note": "Use <code>ASPNETCORE_ENVIRONMENT=Development</code> para habilitar o Swagger localmente. Em produção, avalie expor Swagger apenas em redes internas ou com autenticação.",
+        "quickstart.docker.title": "Docker Compose (Postgres)",
+        "quickstart.docker.note": "O compose inicia Postgres + API e aplica migrations automaticamente (configurável via <code>Persistence__ApplyMigrations</code>). Em produção, avalie expor Swagger apenas em redes internas ou com autenticação.",
         "swagger.title": "Swagger ao vivo (local)",
         "swagger.intro": "Quando a API estiver rodando em <code>Development</code>, o Swagger aparece abaixo para navegar contratos e testar endpoints rapidamente.",
         "swagger.note": "Se o embed não carregar, abra <a href=\"/swagger\">/swagger</a> em outra aba.",
@@ -597,14 +619,14 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "examples.intro": "Use um <code>territoryId</code> real retornado pelo endpoint de territórios. O princípio é simples: descobrir o território, consumir o feed filtrado e carregar o mapa local.",
         "examples.listTerritories": "Listar territórios",
         "examples.listTerritories.note": "Use este endpoint para obter o <code>territoryId</code> e a célula territorial que o cliente precisa renderizar.",
+        "examples.auth": "Autenticar e obter JWT",
+        "examples.auth.note": "Use o <code>token</code> retornado como <code>Authorization: Bearer &lt;token&gt;</code>.",
+        "examples.membership": "Declarar vínculo com território",
+        "examples.membership.note": "VISITOR é idempotente; upgrade para RESIDENT muda o status para PENDING (geo é exigido conforme PresencePolicy).",
         "examples.listFeed": "Listar feed do território",
         "examples.listFeed.note": "O endpoint retorna um stream filtrado por território e visibilidade. Se houver regras aplicadas por vínculo, teste com perfis visitante e morador para validar o comportamento.",
         "examples.listMap": "Listar mapa do território",
         "examples.listMap.note": "Retorna entidades georreferenciadas para compor a camada local do mapa no cliente.",
-        "examples.listMedia": "Listar mídia do território (planejado)",
-        "examples.listMedia.note": "A camada de mídia/geoAnchor deve nascer com controle de visibilidade e finalidade explícita: memória territorial com cuidado e contexto.",
-        "examples.postMedia": "Postar mídia georreferenciada (planejado)",
-        "examples.postMedia.note": "Planejado para próximas iterações. Prioridade: contratos claros, validações fortes (lat/lon/alt), e proteção de conteúdo sensível.",
         "principles.title": "Princípios e governança",
         "principles.intro": "O Araponga orienta decisões técnicas e de produto para fortalecer autonomia local e tratamento cuidadoso de dados. Estes princípios guiam a evolução do produto.",
         "principles.items.territory": "<strong>Território como referência:</strong> o espaço físico orienta a experiência, o contexto e a responsabilidade.",
@@ -674,22 +696,27 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.user.what": "<strong>Qué es:</strong> identidad autenticada para actuar en el sistema.",
         "domains.user.why": "<strong>Por qué existe:</strong> responsabiliza acciones sin depender de exposición de datos sensibles. La regla es: recolectar lo mínimo necesario, mantener trazabilidad de lo importante y proteger lo que no necesita existir.",
         "domains.user.fields": "<strong>Campos:</strong> id, displayName, email, status.",
-        "domains.user.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/auth/login</code>, <code>POST /api/v1/auth/register</code>.",
+        "domains.user.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/auth/social</code>.",
         "domains.membership.title": "Vínculo",
         "domains.membership.what": "<strong>Qué es:</strong> vínculo entre persona y territory (visitor o resident).",
         "domains.membership.why": "<strong>Por qué existe:</strong> gobierna visibilidad, acceso y prioridades locales. Este dominio es el “corazón operativo” de las reglas: sin él, el territorio se vuelve un filtro genérico; con él, el territorio se convierte en contexto de convivencia.",
         "domains.membership.fields": "<strong>Campos:</strong> id, userId, territoryId, role, status.",
-        "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.",
+        "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/territories/{territoryId}/membership</code>, <code>GET /api/v1/territories/{territoryId}/membership/me</code>.",
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>Qué es:</strong> stream de publicaciones, alertas y eventos filtrados por territory y visibilidad.",
         "domains.feed.why": "<strong>Por qué existe:</strong> prioriza relevancia local con reglas claras. Los eventos son un tipo de contenido del feed, con ventana temporal e impacto en el mapa. El feed es territorial para mantener contexto, confianza y organización local.",
-        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.",
-        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
+        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
+        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
-        "domains.map.what": "<strong>Qué es:</strong> entidades y capas georreferenciadas del territory.",
+        "domains.map.what": "<strong>Qué es:</strong> entidades y capas georreferenciadas del territorio. Una entidad del territorio puede ser un establecimiento, un órgano de gobierno, un espacio público o un espacio natural.",
         "domains.map.why": "<strong>Por qué existe:</strong> transforma la información en referencia espacial. El mapa es una proyección territorial derivada de contenido y registros, conectando lo que aparece en el feed con las entidades locales visibles y navegables.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
-        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
+        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
+        "domains.moderation.title": "Moderación",
+        "domains.moderation.what": "<strong>Qué es:</strong> reportes y bloqueos para proteger la comunidad.",
+        "domains.moderation.why": "<strong>Por qué existe:</strong> permite respuesta rápida a contenido inadecuado y control de visibilidad personal.",
+        "domains.moderation.fields": "<strong>Campos:</strong> id, targetType, targetId, reason, details, createdAtUtc.",
+        "domains.moderation.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.",
         "domains.media.title": "Media + GeoAnchor",
         "domains.media.what": "<strong>Qué es:</strong> medios (foto/audio/video) anclados en latitud/longitud (y, cuando sea útil, altitud).",
         "domains.media.why": "<strong>Por qué existe:</strong> construye memoria territorial con precisión — y con control. GeoAnchor crea base para capas futuras: visualización contextual, recorridos, registros de cuidado y eventualmente representaciones espaciales más complejas (incluido 3D) generadas a partir de datos y medios de la app.",
@@ -710,26 +737,26 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "flows.flow2.step4": "<strong>Distribución coherente</strong>: la API publica en el feed y, cuando aplica, en el mapa local.",
         "flows.flow2.note": "Este flujo está en construcción; la etapa de medios/geoAnchor es futura. La implementación debe priorizar: privacidad, control de visibilidad y consistencia de contratos.",
         "quickstart.title": "Inicio rápido",
-        "quickstart.intro": "Comience localmente o vía Docker. Estos comandos son copy/paste. Consejo: valide primero <code>/health</code>, luego abra el Swagger y solo entonces pruebe los flujos.",
+        "quickstart.intro": "Comience localmente o vía Docker Compose. Estos comandos son copy/paste. Consejo: valide primero <code>/health</code>, luego abra el Swagger y solo entonces pruebe los flujos.",
         "quickstart.local.title": "Local (dotnet)",
         "quickstart.local.note": "Abra <code>http://localhost:8080/</code> (portal) y <code>/swagger</code> (documentación). El puerto puede variar según la configuración.",
-        "quickstart.docker.title": "Docker",
-        "quickstart.docker.note": "Use <code>ASPNETCORE_ENVIRONMENT=Development</code> para habilitar Swagger localmente. En producción, evalúe exponer Swagger solo en redes internas o con autenticación.",
+        "quickstart.docker.title": "Docker Compose (Postgres)",
+        "quickstart.docker.note": "El compose inicia Postgres + API y aplica migrations automáticamente (configurable via <code>Persistence__ApplyMigrations</code>). En producción, evalúe exponer Swagger solo en redes internas o con autenticación.",
         "swagger.title": "Swagger en vivo (local)",
         "swagger.intro": "Cuando la API esté en <code>Development</code>, Swagger se muestra abajo para navegar contratos y probar endpoints rápidamente.",
         "swagger.note": "Si el embed no carga, abre <a href=\"/swagger\">/swagger</a> en otra pestaña.",
         "examples.title": "Ejemplos de API",
         "examples.intro": "Use un <code>territoryId</code> real retornado por el endpoint de territories. El principio es simple: descubrir el territory, consumir el feed filtrado y cargar el mapa local.",
-        "examples.listTerritories": "Listar territórios",
+        "examples.listTerritories": "Listar territorios",
         "examples.listTerritories.note": "Use este endpoint para obtener el <code>territoryId</code> y la célula territorial que el cliente necesita renderizar.",
+        "examples.auth": "Autenticar y obtener JWT",
+        "examples.auth.note": "Use el <code>token</code> retornado como <code>Authorization: Bearer &lt;token&gt;</code>.",
+        "examples.membership": "Declarar vínculo con territorio",
+        "examples.membership.note": "VISITOR es idempotente; el upgrade a RESIDENT cambia el status a PENDING (geo se exige según PresencePolicy).",
         "examples.listFeed": "Listar feed del territory",
         "examples.listFeed.note": "El endpoint devuelve un stream filtrado por territory y visibilidad. Si hay reglas aplicadas por vínculo, pruebe con perfiles visitor y resident para validar el comportamiento.",
         "examples.listMap": "Listar mapa del territory",
         "examples.listMap.note": "Devuelve entidades georreferenciadas para componer la capa local del mapa en el cliente.",
-        "examples.listMedia": "Listar medios del territory (planificado)",
-        "examples.listMedia.note": "La capa de medios/geoAnchor debe nacer con control de visibilidad y finalidad explícita: memoria territorial con cuidado y contexto.",
-        "examples.postMedia": "Publicar medios georreferenciados (planificado)",
-        "examples.postMedia.note": "Planificado para próximas iteraciones. Prioridad: contratos claros, validaciones fuertes (lat/lon/alt) y protección de contenido sensible.",
         "principles.title": "Principios y gobernanza",
         "principles.intro": "Araponga orienta decisiones técnicas y de producto para fortalecer autonomía local y tratamiento cuidadoso de datos. Estos principios guían la evolución del producto.",
         "principles.items.territory": "<strong>Territory como referencia:</strong> el espacio físico orienta la experiencia, el contexto y la responsabilidad.",
@@ -799,22 +826,27 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.user.what": "<strong>What it is:</strong> authenticated identity to act in the system.",
         "domains.user.why": "<strong>Why it exists:</strong> holds actions accountable without relying on sensitive data exposure. The rule is: collect the minimum necessary, maintain traceability of what matters, and protect what does not need to exist.",
         "domains.user.fields": "<strong>Fields:</strong> id, displayName, email, status.",
-        "domains.user.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/auth/login</code>, <code>POST /api/v1/auth/register</code>.",
+        "domains.user.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/auth/social</code>.",
         "domains.membership.title": "Vínculo",
         "domains.membership.what": "<strong>What it is:</strong> link between person and territory (visitor or resident).",
         "domains.membership.why": "<strong>Why it exists:</strong> governs visibility, access, and local priorities. This domain is the “operational heart” of the rules: without it, territory becomes a generic filter; with it, territory becomes a coexistence context.",
         "domains.membership.fields": "<strong>Fields:</strong> id, userId, territoryId, role, status.",
-        "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/territories/{territoryId}/membership</code>.",
+        "domains.membership.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/territories/{territoryId}/membership</code>, <code>GET /api/v1/territories/{territoryId}/membership/me</code>.",
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>What it is:</strong> stream of posts, alerts, and events filtered by territory and visibility.",
         "domains.feed.why": "<strong>Why it exists:</strong> prioritizes local relevance with clear rules. Events are a type of feed content, with a temporal window and impact on the map. The feed is territorial to maintain context, trust, and local organization.",
-        "domains.feed.fields": "<strong>Fields:</strong> id, title, content, type, visibility, createdAtUtc.",
-        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
+        "domains.feed.fields": "<strong>Fields:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
+        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
-        "domains.map.what": "<strong>What it is:</strong> georeferenced entities and layers of the territory.",
+        "domains.map.what": "<strong>What it is:</strong> georeferenced entities and layers of the territory. A territory entity can be a business, a government agency, a public space, or a natural area.",
         "domains.map.why": "<strong>Why it exists:</strong> turns information into spatial reference. The map is a territorial projection derived from content and records, connecting what appears in the feed to visible, navigable local entities.",
         "domains.map.fields": "<strong>Fields:</strong> id, name, category, status, visibility, createdAtUtc.",
-        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
+        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
+        "domains.moderation.title": "Moderation",
+        "domains.moderation.what": "<strong>What it is:</strong> reports and blocks to protect the community.",
+        "domains.moderation.why": "<strong>Why it exists:</strong> enables quick response to inappropriate content and personal visibility control.",
+        "domains.moderation.fields": "<strong>Fields:</strong> id, targetType, targetId, reason, details, createdAtUtc.",
+        "domains.moderation.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.",
         "domains.media.title": "Media + GeoAnchor",
         "domains.media.what": "<strong>What it is:</strong> media (photo/audio/video) anchored in latitude/longitude (and, when useful, altitude).",
         "domains.media.why": "<strong>Why it exists:</strong> builds territorial memory with precision — and with control. GeoAnchor creates a base for future layers: contextual visualization, trails, care records, and eventually more complex spatial representations (including 3D) generated from app data and media.",
@@ -835,11 +867,11 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "flows.flow2.step4": "<strong>Coherent distribution</strong>: the API publishes to the feed and, when applicable, to the local map.",
         "flows.flow2.note": "This flow is under construction; the media/geoAnchor step is future. Implementation should prioritize privacy, visibility control, and contract consistency.",
         "quickstart.title": "Quickstart",
-        "quickstart.intro": "Start locally or via Docker. These commands are copy/paste. Tip: validate <code>/health</code> first, then open Swagger, and only then test the flows.",
+        "quickstart.intro": "Start locally or via Docker Compose. These commands are copy/paste. Tip: validate <code>/health</code> first, then open Swagger, and only then test the flows.",
         "quickstart.local.title": "Local (dotnet)",
         "quickstart.local.note": "Open <code>http://localhost:8080/</code> (portal) and <code>/swagger</code> (docs). The port may vary depending on configuration.",
-        "quickstart.docker.title": "Docker",
-        "quickstart.docker.note": "Use <code>ASPNETCORE_ENVIRONMENT=Development</code> to enable Swagger locally. In production, consider exposing Swagger only on internal networks or with authentication.",
+        "quickstart.docker.title": "Docker Compose (Postgres)",
+        "quickstart.docker.note": "Compose starts Postgres + API and applies migrations automatically (configurable via <code>Persistence__ApplyMigrations</code>). In production, consider exposing Swagger only on internal networks or with authentication.",
         "swagger.title": "Live Swagger (local)",
         "swagger.intro": "When the API runs in <code>Development</code>, Swagger appears below to browse contracts and quickly test endpoints.",
         "swagger.note": "If the embed does not load, open <a href=\"/swagger\">/swagger</a> in another tab.",
@@ -847,14 +879,14 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "examples.intro": "Use a real <code>territoryId</code> returned by the territories endpoint. The principle is simple: discover the territory, consume the filtered feed, and load the local map.",
         "examples.listTerritories": "List territories",
         "examples.listTerritories.note": "Use this endpoint to obtain the <code>territoryId</code> and the territorial cell the client needs to render.",
+        "examples.auth": "Authenticate and obtain JWT",
+        "examples.auth.note": "Use the returned <code>token</code> as <code>Authorization: Bearer &lt;token&gt;</code>.",
+        "examples.membership": "Declare territory membership",
+        "examples.membership.note": "VISITOR is idempotent; upgrading to RESIDENT moves status to PENDING (geo is required per PresencePolicy).",
         "examples.listFeed": "List territory feed",
         "examples.listFeed.note": "The endpoint returns a stream filtered by territory and visibility. If rules are applied by membership, test with visitor and resident profiles to validate behavior.",
         "examples.listMap": "List territory map",
         "examples.listMap.note": "Returns georeferenced entities to compose the local map layer in the client.",
-        "examples.listMedia": "List territory media (planned)",
-        "examples.listMedia.note": "The media/geoAnchor layer should be born with visibility control and explicit purpose: territorial memory with care and context.",
-        "examples.postMedia": "Post georeferenced media (planned)",
-        "examples.postMedia.note": "Planned for upcoming iterations. Priority: clear contracts, strong validations (lat/lon/alt), and protection of sensitive content.",
         "principles.title": "Principles & governance",
         "principles.intro": "Araponga guides technical and product decisions to strengthen local autonomy and careful data treatment. These principles guide product evolution.",
         "principles.items.territory": "<strong>Territory as reference:</strong> physical space guides experience, context, and responsibility.",

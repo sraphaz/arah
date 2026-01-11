@@ -54,4 +54,23 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
         membership.VerificationStatus = status;
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task UpdateRoleAndStatusAsync(
+        Guid membershipId,
+        MembershipRole role,
+        VerificationStatus status,
+        CancellationToken cancellationToken)
+    {
+        var membership = await _dbContext.TerritoryMemberships
+            .FirstOrDefaultAsync(m => m.Id == membershipId, cancellationToken);
+
+        if (membership is null)
+        {
+            return;
+        }
+
+        membership.Role = role;
+        membership.VerificationStatus = status;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

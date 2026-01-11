@@ -46,4 +46,21 @@ public sealed class InMemoryTerritoryMembershipRepository : ITerritoryMembership
         membership.UpdateVerificationStatus(status);
         return Task.CompletedTask;
     }
+
+    public Task UpdateRoleAndStatusAsync(
+        Guid membershipId,
+        MembershipRole role,
+        VerificationStatus status,
+        CancellationToken cancellationToken)
+    {
+        var membership = _dataStore.Memberships.FirstOrDefault(m => m.Id == membershipId);
+        if (membership is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        membership.UpdateRole(role);
+        membership.UpdateVerificationStatus(status);
+        return Task.CompletedTask;
+    }
 }

@@ -1,4 +1,5 @@
 using System.Reflection;
+using Araponga.Api.Configuration;
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
@@ -17,6 +18,11 @@ builder.Services.AddControllers();
 
 // Application services
 var persistenceProvider = builder.Configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+var applyMigrations = builder.Configuration.GetValue<bool>("Persistence:ApplyMigrations");
+var jwtSection = builder.Configuration.GetSection("Jwt");
+builder.Services.Configure<JwtOptions>(jwtSection);
+builder.Services.Configure<PresencePolicyOptions>(builder.Configuration.GetSection("PresencePolicy"));
+
 if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
 {
     builder.Services.AddDbContext<ArapongaDbContext>(options =>
@@ -58,19 +64,19 @@ else
     builder.Services.AddSingleton<ISanctionRepository, InMemorySanctionRepository>();
 }
 
-builder.Services.AddSingleton<ITokenService, SimpleTokenService>();
+builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 
-builder.Services.AddSingleton<TerritoryService>();
-builder.Services.AddSingleton<AuthService>();
-builder.Services.AddSingleton<MembershipService>();
-builder.Services.AddSingleton<AccessEvaluator>();
-builder.Services.AddSingleton<FeedService>();
-builder.Services.AddSingleton<MapService>();
-builder.Services.AddSingleton<ActiveTerritoryService>();
-builder.Services.AddSingleton<HealthService>();
-builder.Services.AddSingleton<ReportService>();
-builder.Services.AddSingleton<UserBlockService>();
-builder.Services.AddSingleton<CurrentUserAccessor>();
+builder.Services.AddScoped<TerritoryService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<MembershipService>();
+builder.Services.AddScoped<AccessEvaluator>();
+builder.Services.AddScoped<FeedService>();
+builder.Services.AddScoped<MapService>();
+builder.Services.AddScoped<ActiveTerritoryService>();
+builder.Services.AddScoped<HealthService>();
+builder.Services.AddScoped<ReportService>();
+builder.Services.AddScoped<UserBlockService>();
+builder.Services.AddScoped<CurrentUserAccessor>();
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -112,6 +118,13 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase) && applyMigrations)
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ArapongaDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.UseExceptionHandler(errorApp =>
 {

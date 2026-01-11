@@ -27,6 +27,39 @@ public sealed class MembershipService
 
         if (existing is not null)
         {
+            if (existing.Role == role)
+            {
+                return existing;
+            }
+
+            if (existing.Role == MembershipRole.Resident && role == MembershipRole.Visitor)
+            {
+                return existing;
+            }
+
+            if (existing.Role == MembershipRole.Visitor && role == MembershipRole.Resident)
+            {
+                existing.UpdateRole(MembershipRole.Resident);
+                existing.UpdateVerificationStatus(VerificationStatus.Pending);
+
+                await _membershipRepository.UpdateRoleAndStatusAsync(
+                    existing.Id,
+                    existing.Role,
+                    existing.VerificationStatus,
+                    cancellationToken);
+
+                await _auditLogger.LogAsync(
+                    new Application.Models.AuditEntry(
+                        "membership.upgraded",
+                        userId,
+                        territoryId,
+                        existing.Id,
+                        DateTime.UtcNow),
+                    cancellationToken);
+
+                return existing;
+            }
+
             return existing;
         }
 

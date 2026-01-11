@@ -509,6 +509,33 @@ public sealed class ApplicationServiceTests
     }
 
     [Fact]
+    public async Task MembershipService_AllowsVisitorUpgradeToResident()
+    {
+        var dataStore = new InMemoryDataStore();
+        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var service = new MembershipService(repository, auditLogger);
+
+        var userId = Guid.NewGuid();
+
+        var visitor = await service.DeclareMembershipAsync(
+            userId,
+            ActiveTerritoryId,
+            MembershipRole.Visitor,
+            CancellationToken.None);
+
+        var upgraded = await service.DeclareMembershipAsync(
+            userId,
+            ActiveTerritoryId,
+            MembershipRole.Resident,
+            CancellationToken.None);
+
+        Assert.Equal(visitor.Id, upgraded.Id);
+        Assert.Equal(MembershipRole.Resident, upgraded.Role);
+        Assert.Equal(VerificationStatus.Pending, upgraded.VerificationStatus);
+    }
+
+    [Fact]
     public async Task ReportService_AppliesThresholdsForPostAndUser()
     {
         var dataStore = new InMemoryDataStore();

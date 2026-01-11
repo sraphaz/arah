@@ -31,12 +31,17 @@ public sealed class TerritoryMembership
     public Guid Id { get; }
     public Guid UserId { get; }
     public Guid TerritoryId { get; }
-    public MembershipRole Role { get; }
+    public MembershipRole Role { get; private set; }
     public VerificationStatus VerificationStatus { get; private set; }
     public DateTime CreatedAtUtc { get; }
 
     public void UpdateVerificationStatus(VerificationStatus status)
     {
         VerificationStatus = status;
+    }
+
+    public void UpdateRole(MembershipRole role)
+    {
+        Role = role;
     }
 }

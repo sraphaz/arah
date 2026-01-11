@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: araponga
+      POSTGRES_PASSWORD: araponga
+      POSTGRES_DB: araponga
+    ports:
+      - "5432:5432"
+    volumes:
+      - araponga_pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=araponga;Username=araponga;Password=araponga
+      Persistence__Provider: Postgres
+      Persistence__ApplyMigrations: "true"
+    ports:
+      - "8080:8080"
+
+volumes:
+  araponga_pgdata:

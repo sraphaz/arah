@@ -220,7 +220,7 @@ public sealed class ApiScenariosTests
 
         Assert.NotNull(secondPayload);
         Assert.Equal(firstPayload!.User.Id, secondPayload!.User.Id);
-        Assert.StartsWith("user:", secondPayload.Token);
+        Assert.Contains('.', secondPayload.Token);
     }
 
     [Fact]
@@ -298,6 +298,56 @@ public sealed class ApiScenariosTests
     }
 
     [Fact]
+    public async Task Memberships_UpgradeVisitorToResident()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await LoginForTokenAsync(client, "google", "upgrade-visitor");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var visitor = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/membership",
+            new DeclareMembershipRequest("VISITOR"));
+        visitor.EnsureSuccessStatusCode();
+        var visitorPayload = await visitor.Content.ReadFromJsonAsync<MembershipResponse>();
+        Assert.NotNull(visitorPayload);
+
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
+
+        var upgrade = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/membership",
+            new DeclareMembershipRequest("RESIDENT"));
+        upgrade.EnsureSuccessStatusCode();
+        var upgradePayload = await upgrade.Content.ReadFromJsonAsync<MembershipResponse>();
+        Assert.NotNull(upgradePayload);
+        Assert.Equal(visitorPayload!.Id, upgradePayload!.Id);
+        Assert.Equal("RESIDENT", upgradePayload.Role);
+        Assert.Equal("PENDING", upgradePayload.VerificationStatus);
+    }
+
+    [Fact]
+    public async Task Memberships_UpgradeRequiresGeo()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await LoginForTokenAsync(client, "google", "upgrade-missing-geo");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var visitor = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/membership",
+            new DeclareMembershipRequest("VISITOR"));
+        visitor.EnsureSuccessStatusCode();
+
+        var upgrade = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/membership",
+            new DeclareMembershipRequest("RESIDENT"));
+        Assert.Equal(HttpStatusCode.BadRequest, upgrade.StatusCode);
+    }
+
+    [Fact]
     public async Task Feed_RespectsSessionAndVisibility()
     {
         using var factory = new ApiFactory();
@@ -324,7 +374,7 @@ public sealed class ApiScenariosTests
         Assert.False(visitorFeed[0].IsHighlighted);
         Assert.Equal(0, visitorFeed[0].LikeCount);
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "user:not-a-guid");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "not.a.jwt");
         var invalidToken = await client.GetAsync($"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.Equal(HttpStatusCode.Unauthorized, invalidToken.StatusCode);
 
@@ -407,7 +457,7 @@ public sealed class ApiScenariosTests
         Assert.Single(visitorMap!);
         Assert.Equal("VALIDATED", visitorMap![0].Status);
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "user:not-a-guid");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "not.a.jwt");
         var invalidToken = await client.GetAsync($"api/v1/map/entities?territoryId={ActiveTerritoryId}");
         Assert.Equal(HttpStatusCode.Unauthorized, invalidToken.StatusCode);
 

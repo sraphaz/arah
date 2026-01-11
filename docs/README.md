@@ -143,15 +143,6 @@ backend/
 
 ---
 
-## 🧾 Headers e contexto (MVP)
-
-- **X-Session-Id**: identifica a sessão do cliente e permite selecionar o território ativo.
-  - Usado para `POST /api/v1/territories/selection` e como fallback de `territoryId` em feed/mapa.
-  - Também sustenta ações anônimas (ex.: likes com `session:{id}`).
-- **X-Geo-Latitude / X-Geo-Longitude**: presença física mínima.
-  - Obrigatório para solicitar membership `RESIDENT`.
-  - Obrigatório para criar posts (GeoAnchors).
-
 ## 🧩 Feature flags (MVP)
 - `GET /api/v1/territories/{territoryId}/features`
 - `PUT /api/v1/territories/{territoryId}/features` (curadoria)
@@ -166,7 +157,7 @@ backend/
 ## 🚀 Estado atual do projeto
 
 - ✅ Backend inicial estruturado
-- ✅ Autenticação (registro e login) e gestão básica de usuários
+- ✅ Autenticação social com JWT e gestão básica de usuários
 - ✅ Descoberta e seleção de territórios
 - ✅ Vínculos (morador e visitante) com regras de visibilidade
 - ✅ Feed territorial com criação e moderação de conteúdo
@@ -186,8 +177,9 @@ O projeto está em **evolução ativa**, com foco em solidez antes de escala.
 ### Pré-requisitos
 - .NET SDK 8.x
 - Git
+- Docker (para Postgres via compose)
 
-### Passos
+### InMemory (padrão)
 ```bash
 git clone https://github.com/sraphaz/araponga.git
 cd araponga
@@ -197,7 +189,89 @@ dotnet test
 dotnet run --project backend/Araponga.Api
 ```
 
-A API ficará disponível conforme configurado no projeto (launchSettings.json).
+### Postgres (docker compose)
+```bash
+docker compose up --build
+```
+
+Para rodar localmente com Postgres sem compose, defina:
+```
+Persistence__Provider=Postgres
+ConnectionStrings__Postgres=Host=localhost;Port=5432;Database=araponga;Username=araponga;Password=araponga
+```
+
+### Migrations (Postgres)
+Aplicar migrations manualmente (recomendado quando não usar auto-migrate):
+```bash
+dotnet ef database update \
+  --project backend/Araponga.Infrastructure \
+  --startup-project backend/Araponga.Api
+```
+
+Auto-migrate (opcional, desligado por padrão): defina `Persistence__ApplyMigrations=true`.
+
+---
+
+## 🔐 Autenticação (JWT)
+
+A autenticação utiliza JWT assinado (HS256). O fluxo principal é:
+1. `POST /api/v1/auth/social` retorna o token JWT.
+2. Use `Authorization: Bearer <token>` em endpoints protegidos.
+
+Exemplo rápido:
+```bash
+curl -s -X POST http://localhost:8080/api/v1/auth/social \
+  -H "Content-Type: application/json" \
+  -d '{
+    "provider":"google",
+    "externalId":"demo-user",
+    "displayName":"Demo",
+    "cpf":"123.456.789-00",
+    "foreignDocument":null,
+    "phoneNumber":"(11) 99999-0000",
+    "address":"Rua das Flores, 100",
+    "email":"demo@araponga.com"
+  }' | jq
+```
+
+Configuração JWT (via `appsettings`/env):
+```
+Jwt__Issuer, Jwt__Audience, Jwt__SigningKey, Jwt__ExpirationMinutes
+```
+> A chave padrão é **apenas para DEV**. Troque em produção.
+
+---
+
+## 👥 Membership (visitor → resident)
+
+- Declaração: `POST /api/v1/territories/{territoryId}/membership`
+- Status atual: `GET /api/v1/territories/{territoryId}/membership/me`
+
+Regras:
+- Se já existe `VISITOR` e o usuário pede `RESIDENT`, o vínculo é atualizado para `RESIDENT` com status `PENDING`.
+- Se já é `RESIDENT` e pede `VISITOR`, mantém `RESIDENT` (sem downgrade).
+- Se já é o mesmo papel, a operação é idempotente.
+
+---
+
+## 📍 PresencePolicy (geo headers)
+
+Configuração: `PresencePolicy:Policy` (`None | ResidentOnly | VisitorAndResident`).
+
+Padrão: `ResidentOnly` (somente `RESIDENT` exige geo).
+- `VisitorAndResident`: visitor também exige `X-Geo-Latitude` / `X-Geo-Longitude`.
+- `None`: nenhum vínculo exige geo.
+
+---
+
+## 🧾 Headers e contexto (MVP)
+
+- **X-Session-Id**: identifica a sessão do cliente e permite selecionar o território ativo.
+  - Usado para `POST /api/v1/territories/selection` e como fallback de `territoryId` em feed/mapa.
+  - Também sustenta ações anônimas (ex.: likes com `session:{id}`).
+- **X-Geo-Latitude / X-Geo-Longitude**: presença física mínima.
+  - Obrigatório conforme `PresencePolicy` (default: somente para `RESIDENT`).
+  - Obrigatório para criar posts (GeoAnchors).
 
 ### Portal de autosserviço
 

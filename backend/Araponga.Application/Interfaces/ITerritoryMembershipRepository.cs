@@ -8,4 +8,5 @@ public interface ITerritoryMembershipRepository
     Task<TerritoryMembership?> GetByIdAsync(Guid membershipId, CancellationToken cancellationToken);
     Task AddAsync(TerritoryMembership membership, CancellationToken cancellationToken);
     Task UpdateStatusAsync(Guid membershipId, VerificationStatus status, CancellationToken cancellationToken);
+    Task UpdateRoleAndStatusAsync(Guid membershipId, MembershipRole role, VerificationStatus status, CancellationToken cancellationToken);
 }

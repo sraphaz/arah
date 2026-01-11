@@ -1,10 +1,12 @@
 using Araponga.Api;
+using Araponga.Api.Configuration;
 using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Social;
 using Araponga.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Araponga.Api.Controllers;
 
@@ -18,17 +20,20 @@ public sealed class MembershipsController : ControllerBase
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly TerritoryService _territoryService;
     private readonly AccessEvaluator _accessEvaluator;
+    private readonly PresencePolicyOptions _presencePolicy;
 
     public MembershipsController(
         MembershipService membershipService,
         CurrentUserAccessor currentUserAccessor,
         TerritoryService territoryService,
-        AccessEvaluator accessEvaluator)
+        AccessEvaluator accessEvaluator,
+        IOptions<PresencePolicyOptions> presencePolicy)
     {
         _membershipService = membershipService;
         _currentUserAccessor = currentUserAccessor;
         _territoryService = territoryService;
         _accessEvaluator = accessEvaluator;
+        _presencePolicy = presencePolicy.Value;
     }
 
     /// <summary>
@@ -61,10 +66,10 @@ public sealed class MembershipsController : ControllerBase
             return BadRequest(new { error = "Invalid role." });
         }
 
-        if (role == MembershipRole.Resident &&
+        if (RequiresPresence(role) &&
             !GeoHeaderReader.TryGetCoordinates(Request.Headers, out _, out _))
         {
-            return BadRequest(new { error = "X-Geo-Latitude and X-Geo-Longitude headers are required for resident membership." });
+            return BadRequest(new { error = "X-Geo-Latitude and X-Geo-Longitude headers are required to declare membership." });
         }
 
         var membership = await _membershipService.DeclareMembershipAsync(
@@ -155,5 +160,16 @@ public sealed class MembershipsController : ControllerBase
             status,
             cancellationToken);
         return success ? NoContent() : BadRequest(new { error = "Membership not found." });
+    }
+
+    private bool RequiresPresence(MembershipRole role)
+    {
+        return _presencePolicy.Policy switch
+        {
+            PresencePolicy.None => false,
+            PresencePolicy.ResidentOnly => role == MembershipRole.Resident,
+            PresencePolicy.VisitorAndResident => role == MembershipRole.Resident || role == MembershipRole.Visitor,
+            _ => role == MembershipRole.Resident
+        };
     }
 }

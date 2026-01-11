@@ -145,7 +145,7 @@ backend/
 ## 🚀 Estado atual do projeto
 
 - ✅ Backend inicial estruturado
-- ✅ Autenticação (registro e login) e gestão básica de usuários
+- ✅ Autenticação social com JWT e gestão básica de usuários
 - ✅ Descoberta e seleção de territórios
 - ✅ Vínculos (morador e visitante) com regras de visibilidade
 - ✅ Feed territorial com criação e moderação de conteúdo
@@ -162,21 +162,27 @@ O projeto está em **evolução ativa**, com foco em solidez antes de escala.
 
 ## 🛠️ Como rodar localmente
 
-### Pré-requisitos
-- .NET SDK 8.x
-- Git
+> A documentação canônica de operação está em [`docs/README.md`](docs/README.md).
 
-### Passos
+### InMemory (padrão)
 ```bash
-git clone https://github.com/sraphaz/araponga.git
-cd araponga
 dotnet restore
 dotnet build
 dotnet test
 dotnet run --project backend/Araponga.Api
 ```
 
-A API ficará disponível conforme configurado no projeto (launchSettings.json).
+### Postgres (docker compose)
+```bash
+docker compose up --build
+```
+
+### Migrations (Postgres)
+```bash
+dotnet ef database update \
+  --project backend/Araponga.Infrastructure \
+  --startup-project backend/Araponga.Api
+```
 
 ### Portal de autosserviço
 

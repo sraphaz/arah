@@ -7,6 +7,7 @@ O território físico é a unidade central e a presença no território é requi
 ## Princípios e regras inegociáveis
 - **Território é a unidade central** e representa um lugar físico real.
 - **Presença física é critério de vínculo**: no MVP não é possível associar território remotamente.
+- **Consulta exige cadastro**: no MVP, feed e mapa exigem usuário autenticado.
 - **Conteúdo é georreferenciado via GeoAnchor**.
 - **Feed pessoal (perfil) + feed do território** coexistem.
 - **Postagens referenciam ao menos 1 GeoAnchor** e podem conter múltiplas mídias e múltiplos GeoAnchors.
@@ -36,3 +37,10 @@ O território físico é a unidade central e a presença no território é requi
 ## Público e impacto esperado
 - Moradores, visitantes e organizações locais que precisam de um canal digital **ancorado ao território**.
 - Fortalecimento de redes locais, comunicação de utilidade pública e presença comunitária real.
+
+## Boas práticas transversais (MVP)
+- **Consentimento explícito de localização** e explicação do motivo da coleta.
+- **Falhas de geolocalização** comunicadas com orientação clara para o usuário.
+- **Auditoria mínima** de ações de moderação e sanções.
+- **Proteção contra abuso de reports** (deduplicação por janela de tempo).
+- **Observabilidade mínima** (logs e métricas para erros de localização, reports e moderação).

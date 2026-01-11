@@ -15,6 +15,8 @@
 - [MVP] Visibilidade visitor/resident.
 - [MVP] API + portal.
 - [MVP] Reports, bloqueio e moderação básica.
+- [MVP] Integração base com provedor de mapas.
+- [MVP] Observabilidade técnica mínima.
 
 ## Fase 2 — Pós-MVP
 - [POST-MVP] GeoAnchor avançado (memórias, galeria, pins visuais).

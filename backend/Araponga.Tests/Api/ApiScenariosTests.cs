@@ -166,7 +166,7 @@ public sealed class ApiScenariosTests
 
         var html = await response.Content.ReadAsStringAsync();
         Assert.Contains("Araponga API", html, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("Carregar dados", html, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Developer Portal", html, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

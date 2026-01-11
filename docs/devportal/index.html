@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecionando…</title>
+    <meta http-equiv="refresh" content="0; url=../" />
+  </head>
+  <body>
+    <script>
+      (function () {
+        var search = window.location.search || '';
+        window.location.replace('..' + search);
+      })();
+    </script>
+  </body>
+</html>

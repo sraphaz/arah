@@ -91,6 +91,7 @@
         <a href="#domains" data-i18n="toc.link.domains">Domínios</a>
         <a href="#flows" data-i18n="toc.link.flows">Fluxos principais</a>
         <a href="#quickstart" data-i18n="toc.link.quickstart">Quickstart</a>
+        <a href="#swagger" data-i18n="toc.link.swagger">Swagger</a>
         <a href="#examples" data-i18n="toc.link.examples">Exemplos de API</a>
         <a href="#principles" data-i18n="toc.link.principles">Princípios e governança</a>
         <a href="#design-coherence" data-i18n="toc.link.design">Design & Coerência</a>
@@ -200,7 +201,7 @@
 
         <article class="card">
           <h3 data-i18n="domains.map.title">Mapa</h3>
-          <p data-i18n="domains.map.what"><strong>O que é:</strong> entidades e camadas georreferenciadas do território.</p>
+          <p data-i18n="domains.map.what"><strong>O que é:</strong> entidades e camadas georreferenciadas do território. Uma entidade do território pode ser um estabelecimento, um órgão do governo, um espaço público ou um espaço natural.</p>
           <p data-i18n="domains.map.why">
             <strong>Por que existe:</strong> transforma informação em referência espacial.
             O mapa é uma projeção territorial derivada de conteúdo e cadastros, conectando o que aparece no feed às
@@ -318,6 +319,26 @@ docker run --rm -p 8080:8080 \
             Em produção, avalie expor Swagger apenas em redes internas ou com autenticação.
           </p>
         </div>
+      </div>
+    </section>
+
+    <section id="swagger" class="section">
+      <div class="section-header">
+        <h2 data-i18n="swagger.title">Swagger ao vivo (local)</h2>
+        <p data-i18n="swagger.intro">
+          Quando a API estiver rodando em <code>Development</code>, o Swagger aparece abaixo para navegar contratos e
+          testar endpoints rapidamente.
+        </p>
+      </div>
+
+      <div class="swagger-preview">
+        <iframe
+          src="/swagger/index.html"
+          title="Swagger UI"
+          loading="lazy"></iframe>
+        <p class="note" data-i18n="swagger.note">
+          Se o embed não carregar, abra <a href="/swagger">/swagger</a> em outra aba.
+        </p>
       </div>
     </section>
 
@@ -518,6 +539,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "toc.link.domains": "Domínios",
         "toc.link.flows": "Fluxos principais",
         "toc.link.quickstart": "Quickstart",
+        "toc.link.swagger": "Swagger",
         "toc.link.examples": "Exemplos de API",
         "toc.link.principles": "Princípios e governança",
         "toc.link.design": "Design & Coerência",
@@ -551,7 +573,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
         "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
-        "domains.map.what": "<strong>O que é:</strong> entidades e camadas georreferenciadas do território.",
+        "domains.map.what": "<strong>O que é:</strong> entidades e camadas georreferenciadas do território. Uma entidade do território pode ser um estabelecimento, um órgão do governo, um espaço público ou um espaço natural.",
         "domains.map.why": "<strong>Por que existe:</strong> transforma informação em referência espacial. O mapa é uma projeção territorial derivada de conteúdo e cadastros, conectando o que aparece no feed às entidades locais visíveis e navegáveis.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
         "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
@@ -585,6 +607,9 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "quickstart.local.note": "Abra <code>http://localhost:8080/</code> (portal) e <code>/swagger</code> (documentação). A porta pode variar conforme a configuração.",
         "quickstart.docker.title": "Docker",
         "quickstart.docker.note": "Use <code>ASPNETCORE_ENVIRONMENT=Development</code> para habilitar o Swagger localmente. Em produção, avalie expor Swagger apenas em redes internas ou com autenticação.",
+        "swagger.title": "Swagger ao vivo (local)",
+        "swagger.intro": "Quando a API estiver rodando em <code>Development</code>, o Swagger aparece abaixo para navegar contratos e testar endpoints rapidamente.",
+        "swagger.note": "Se o embed não carregar, abra <a href=\"/swagger\">/swagger</a> em outra aba.",
         "examples.title": "Exemplos de API",
         "examples.intro": "Use um <code>territoryId</code> real retornado pelo endpoint de territórios. O princípio é simples: descobrir o território, consumir o feed filtrado e carregar o mapa local.",
         "examples.listTerritories": "Listar territórios",
@@ -644,6 +669,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "toc.link.domains": "Dominios",
         "toc.link.flows": "Flujos principales",
         "toc.link.quickstart": "Inicio rápido",
+        "toc.link.swagger": "Swagger",
         "toc.link.examples": "Ejemplos de API",
         "toc.link.principles": "Principios y gobernanza",
         "toc.link.design": "Diseño y coherencia",
@@ -677,7 +703,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
         "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
-        "domains.map.what": "<strong>Qué es:</strong> entidades y capas georreferenciadas del territory.",
+        "domains.map.what": "<strong>Qué es:</strong> entidades y capas georreferenciadas del territorio. Una entidad del territorio puede ser un establecimiento, un órgano de gobierno, un espacio público o un espacio natural.",
         "domains.map.why": "<strong>Por qué existe:</strong> transforma la información en referencia espacial. El mapa es una proyección territorial derivada de contenido y registros, conectando lo que aparece en el feed con las entidades locales visibles y navegables.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
         "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
@@ -711,6 +737,9 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "quickstart.local.note": "Abra <code>http://localhost:8080/</code> (portal) y <code>/swagger</code> (documentación). El puerto puede variar según la configuración.",
         "quickstart.docker.title": "Docker",
         "quickstart.docker.note": "Use <code>ASPNETCORE_ENVIRONMENT=Development</code> para habilitar Swagger localmente. En producción, evalúe exponer Swagger solo en redes internas o con autenticación.",
+        "swagger.title": "Swagger en vivo (local)",
+        "swagger.intro": "Cuando la API esté en <code>Development</code>, Swagger se muestra abajo para navegar contratos y probar endpoints rápidamente.",
+        "swagger.note": "Si el embed no carga, abre <a href=\"/swagger\">/swagger</a> en otra pestaña.",
         "examples.title": "Ejemplos de API",
         "examples.intro": "Use un <code>territoryId</code> real retornado por el endpoint de territories. El principio es simple: descubrir el territory, consumir el feed filtrado y cargar el mapa local.",
         "examples.listTerritories": "Listar territórios",
@@ -770,6 +799,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "toc.link.domains": "Domains",
         "toc.link.flows": "Core flows",
         "toc.link.quickstart": "Quickstart",
+        "toc.link.swagger": "Swagger",
         "toc.link.examples": "API examples",
         "toc.link.principles": "Principles & governance",
         "toc.link.design": "Design & Coherence",
@@ -803,7 +833,7 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.feed.fields": "<strong>Fields:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
         "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
-        "domains.map.what": "<strong>What it is:</strong> georeferenced entities and layers of the territory.",
+        "domains.map.what": "<strong>What it is:</strong> georeferenced entities and layers of the territory. A territory entity can be a business, a government agency, a public space, or a natural area.",
         "domains.map.why": "<strong>Why it exists:</strong> turns information into spatial reference. The map is a territorial projection derived from content and records, connecting what appears in the feed to visible, navigable local entities.",
         "domains.map.fields": "<strong>Fields:</strong> id, name, category, status, visibility, createdAtUtc.",
         "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
@@ -837,6 +867,9 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "quickstart.local.note": "Open <code>http://localhost:8080/</code> (portal) and <code>/swagger</code> (docs). The port may vary depending on configuration.",
         "quickstart.docker.title": "Docker",
         "quickstart.docker.note": "Use <code>ASPNETCORE_ENVIRONMENT=Development</code> to enable Swagger locally. In production, consider exposing Swagger only on internal networks or with authentication.",
+        "swagger.title": "Live Swagger (local)",
+        "swagger.intro": "When the API runs in <code>Development</code>, Swagger appears below to browse contracts and quickly test endpoints.",
+        "swagger.note": "If the embed does not load, open <a href=\"/swagger\">/swagger</a> in another tab.",
         "examples.title": "API examples",
         "examples.intro": "Use a real <code>territoryId</code> returned by the territories endpoint. The principle is simple: discover the territory, consume the filtered feed, and load the local map.",
         "examples.listTerritories": "List territories",

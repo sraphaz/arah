@@ -251,6 +251,20 @@ body {
   margin-top: 16px;
 }
 
+.swagger-preview {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.swagger-preview iframe {
+  width: 100%;
+  min-height: 560px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+}
+
 pre {
   background: #0f172a;
   color: #e2e8f0;

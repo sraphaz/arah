@@ -34,6 +34,7 @@ O Araponga é um aplicativo/plataforma que permite:
 - 👥 **Organizar comunidades locais**
 - 🗞️ **Compartilhar informações relevantes ao lugar**
 - 🗺️ **Visualizar eventos, avisos e iniciativas no mapa**
+  - Uma entidade do território pode ser um estabelecimento, um órgão do governo, um espaço público ou um espaço natural.
 - 🧑‍🌾 **Diferenciar moradores e visitantes com respeito**
 - 🤝 **Fortalecer redes locais de cuidado, troca e presença**
 
@@ -130,9 +131,13 @@ backend/
 ## 🚀 Estado atual do projeto
 
 - ✅ Backend inicial estruturado
+- ✅ Autenticação (registro e login) e gestão básica de usuários
 - ✅ Descoberta e seleção de territórios
-- ✅ Diferenciação entre morador e visitante
-- ✅ Feed e mapa orientados ao território
+- ✅ Vínculos (morador e visitante) com regras de visibilidade
+- ✅ Feed territorial com criação e moderação de conteúdo
+- ✅ Mapa territorial com entidades e relações
+- ✅ Moderação (reports e bloqueios)
+- ✅ Feature flags e health check
 - ✅ Testes automatizados
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)
 - 🚧 Frontend e experiências móveis em planejamento
@@ -166,6 +171,9 @@ domínios, fluxos e quickstart. Em desenvolvimento, acesse também:
 
 - `/swagger` (documentação da API)
 - `/health` (status simples)
+
+Quando a API está rodando localmente em ambiente de desenvolvimento, o portal
+exibe um preview do Swagger para navegação e testes rápidos.
 
 Para publicação como site estático, o portal também está disponível em `docs/` e
 pode ser hospedado via GitHub Pages (basta apontar a origem para a pasta `docs`).

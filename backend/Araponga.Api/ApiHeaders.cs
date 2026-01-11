@@ -14,4 +14,14 @@ public static class ApiHeaders
     /// Header name for authorization.
     /// </summary>
     public const string Authorization = "Authorization";
+
+    /// <summary>
+    /// Header name for geo latitude.
+    /// </summary>
+    public const string GeoLatitude = "X-Geo-Latitude";
+
+    /// <summary>
+    /// Header name for geo longitude.
+    /// </summary>
+    public const string GeoLongitude = "X-Geo-Longitude";
 }

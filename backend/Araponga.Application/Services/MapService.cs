@@ -1,4 +1,5 @@
 using Araponga.Application.Interfaces;
+using Araponga.Domain.Geo;
 using Araponga.Domain.Map;
 
 namespace Araponga.Application.Services;
@@ -58,6 +59,8 @@ public sealed class MapService
         Guid userId,
         string name,
         string category,
+        double latitude,
+        double longitude,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(category))
@@ -65,9 +68,9 @@ public sealed class MapService
             return (false, "Name and category are required.", null);
         }
 
-        if (!MapEntityCategory.TryNormalize(category, out var normalizedCategory))
+        if (!GeoCoordinate.IsValid(latitude, longitude))
         {
-            return (false, $"Invalid category. Allowed values: {MapEntityCategory.AllowedList}.", null);
+            return (false, "Invalid latitude/longitude.", null);
         }
 
         var entity = new MapEntity(
@@ -75,7 +78,9 @@ public sealed class MapService
             territoryId,
             userId,
             name,
-            normalizedCategory,
+            category,
+            latitude,
+            longitude,
             MapEntityStatus.Suggested,
             MapEntityVisibility.ResidentsOnly,
             0,

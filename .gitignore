@@ -9,6 +9,12 @@
 **/out/
 **/.turbo/
 **/.cache/
+**/.pnpm-store/
+**/.npm/
+**/.yarn/
+**/.vite/
+**/.parcel-cache/
+**/.eslintcache/
 
 # Visual Studio
 .vs/
@@ -19,5 +25,4 @@
 # OS
 .DS_Store
 Thumbs.db
-
 

@@ -69,6 +69,8 @@ public sealed class PostgresTerritoryRepository : ITerritoryRepository
     public async Task<IReadOnlyList<Territory>> NearbyAsync(
         double latitude,
         double longitude,
+        double radiusKm,
+        int limit,
         CancellationToken cancellationToken)
     {
         const double radius = 6371.0;
@@ -85,8 +87,10 @@ public sealed class PostgresTerritoryRepository : ITerritoryRepository
                     Math.Cos(lat1) * Math.Cos(t.Latitude * Math.PI / 180.0) *
                     Math.Pow(Math.Sin((t.Longitude * Math.PI / 180.0 - lon1) / 2), 2)))
             })
+            .Where(t => t.Distance <= radiusKm)
             .OrderBy(t => t.Distance)
             .Select(t => t.Territory)
+            .Take(limit)
             .ToListAsync(cancellationToken);
         return territories.Select(record => record.ToDomain()).ToList();
     }

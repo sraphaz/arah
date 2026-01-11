@@ -18,6 +18,7 @@ public sealed class ArapongaDbContext : DbContext
     public DbSet<PostCommentRecord> PostComments => Set<PostCommentRecord>();
     public DbSet<MapEntityRecord> MapEntities => Set<MapEntityRecord>();
     public DbSet<MapEntityRelationRecord> MapEntityRelations => Set<MapEntityRelationRecord>();
+    public DbSet<PostGeoAnchorRecord> PostGeoAnchors => Set<PostGeoAnchorRecord>();
     public DbSet<HealthAlertRecord> HealthAlerts => Set<HealthAlertRecord>();
     public DbSet<PostLikeRecord> PostLikes => Set<PostLikeRecord>();
     public DbSet<PostShareRecord> PostShares => Set<PostShareRecord>();
@@ -26,6 +27,7 @@ public sealed class ArapongaDbContext : DbContext
     public DbSet<AuditEntryRecord> AuditEntries => Set<AuditEntryRecord>();
     public DbSet<ModerationReportRecord> ModerationReports => Set<ModerationReportRecord>();
     public DbSet<UserBlockRecord> UserBlocks => Set<UserBlockRecord>();
+    public DbSet<SanctionRecord> Sanctions => Set<SanctionRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -117,6 +119,8 @@ public sealed class ArapongaDbContext : DbContext
             entity.Property(e => e.CreatedByUserId).IsRequired();
             entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Category).HasMaxLength(120).IsRequired();
+            entity.Property(e => e.Latitude).HasColumnType("double precision");
+            entity.Property(e => e.Longitude).HasColumnType("double precision");
             entity.Property(e => e.Status).HasConversion<int>();
             entity.Property(e => e.Visibility).HasConversion<int>();
             entity.Property(e => e.ConfirmationCount).IsRequired();
@@ -133,6 +137,17 @@ public sealed class ArapongaDbContext : DbContext
             entity.HasKey(r => new { r.UserId, r.EntityId });
             entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(r => r.EntityId);
+        });
+
+        modelBuilder.Entity<PostGeoAnchorRecord>(entity =>
+        {
+            entity.ToTable("post_geo_anchors");
+            entity.HasKey(a => a.Id);
+            entity.Property(a => a.Type).HasMaxLength(120).IsRequired();
+            entity.Property(a => a.Latitude).HasColumnType("double precision");
+            entity.Property(a => a.Longitude).HasColumnType("double precision");
+            entity.Property(a => a.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(a => a.PostId);
         });
 
         modelBuilder.Entity<HealthAlertRecord>(entity =>
@@ -196,12 +211,15 @@ public sealed class ArapongaDbContext : DbContext
         {
             entity.ToTable("moderation_reports");
             entity.HasKey(r => r.Id);
+            entity.Property(r => r.TerritoryId).IsRequired();
             entity.Property(r => r.TargetType).HasConversion<int>();
             entity.Property(r => r.Reason).HasMaxLength(300).IsRequired();
             entity.Property(r => r.Details).HasMaxLength(2000);
+            entity.Property(r => r.Status).HasConversion<int>();
             entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(r => r.ReporterUserId);
             entity.HasIndex(r => new { r.TargetType, r.TargetId });
+            entity.HasIndex(r => new { r.TerritoryId, r.CreatedAtUtc });
             entity.HasIndex(r => r.CreatedAtUtc);
         });
 
@@ -211,6 +229,22 @@ public sealed class ArapongaDbContext : DbContext
             entity.HasKey(b => new { b.BlockerUserId, b.BlockedUserId });
             entity.Property(b => b.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(b => b.BlockerUserId);
+        });
+
+        modelBuilder.Entity<SanctionRecord>(entity =>
+        {
+            entity.ToTable("sanctions");
+            entity.HasKey(s => s.Id);
+            entity.Property(s => s.Scope).HasConversion<int>();
+            entity.Property(s => s.TargetType).HasConversion<int>();
+            entity.Property(s => s.Type).HasConversion<int>();
+            entity.Property(s => s.Status).HasConversion<int>();
+            entity.Property(s => s.Reason).HasMaxLength(400).IsRequired();
+            entity.Property(s => s.StartAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(s => s.EndAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(s => s.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(s => s.TargetId);
+            entity.HasIndex(s => s.TerritoryId);
         });
     }
 }

@@ -1,3 +1,4 @@
+using Araponga.Api;
 using Araponga.Api.Contracts.Moderation;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
@@ -15,15 +16,21 @@ public sealed class ModerationController : ControllerBase
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ReportService _reportService;
     private readonly UserBlockService _userBlockService;
+    private readonly ActiveTerritoryService _activeTerritoryService;
+    private readonly AccessEvaluator _accessEvaluator;
 
     public ModerationController(
         CurrentUserAccessor currentUserAccessor,
         ReportService reportService,
-        UserBlockService userBlockService)
+        UserBlockService userBlockService,
+        ActiveTerritoryService activeTerritoryService,
+        AccessEvaluator accessEvaluator)
     {
         _currentUserAccessor = currentUserAccessor;
         _reportService = reportService;
         _userBlockService = userBlockService;
+        _activeTerritoryService = activeTerritoryService;
+        _accessEvaluator = accessEvaluator;
     }
 
     /// <summary>
@@ -98,9 +105,16 @@ public sealed class ModerationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ReportResponse>> ReportUser(
         [FromRoute] Guid userId,
+        [FromQuery] Guid? territoryId,
         [FromBody] ReportRequest request,
         CancellationToken cancellationToken)
     {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
         if (userContext.Status != TokenStatus.Valid || userContext.User is null)
         {
@@ -109,6 +123,7 @@ public sealed class ModerationController : ControllerBase
 
         var result = await _reportService.ReportUserAsync(
             userContext.User.Id,
+            resolvedTerritoryId.Value,
             userId,
             request.Reason,
             request.Details,
@@ -146,6 +161,80 @@ public sealed class ModerationController : ControllerBase
             result.report.CreatedAtUtc);
 
         return CreatedAtAction(nameof(ReportUser), new { userId }, response);
+    }
+
+    /// <summary>
+    /// Lista reports para curadoria.
+    /// </summary>
+    [HttpGet("reports")]
+    [ProducesResponseType(typeof(IEnumerable<ReportSummaryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<ReportSummaryResponse>>> ListReports(
+        [FromQuery] Guid? territoryId,
+        [FromQuery] string? targetType,
+        [FromQuery] string? status,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        CancellationToken cancellationToken)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        if (!_accessEvaluator.IsCurator(userContext.User))
+        {
+            return Unauthorized();
+        }
+
+        ReportTargetType? parsedTargetType = null;
+        if (!string.IsNullOrWhiteSpace(targetType))
+        {
+            if (!Enum.TryParse<ReportTargetType>(targetType, true, out var targetEnum))
+            {
+                return BadRequest(new { error = "Invalid targetType." });
+            }
+
+            parsedTargetType = targetEnum;
+        }
+
+        ReportStatus? parsedStatus = null;
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            if (!Enum.TryParse<ReportStatus>(status, true, out var statusEnum))
+            {
+                return BadRequest(new { error = "Invalid status." });
+            }
+
+            parsedStatus = statusEnum;
+        }
+
+        var reports = await _reportService.ListAsync(
+            resolvedTerritoryId.Value,
+            parsedTargetType,
+            parsedStatus,
+            from,
+            to,
+            cancellationToken);
+
+        var response = reports.Select(report => new ReportSummaryResponse(
+            report.Id,
+            report.TerritoryId,
+            report.TargetType.ToString().ToUpperInvariant(),
+            report.TargetId,
+            report.Reason,
+            report.Status.ToString().ToUpperInvariant(),
+            report.CreatedAtUtc));
+
+        return Ok(response);
     }
 
     /// <summary>
@@ -198,5 +287,49 @@ public sealed class ModerationController : ControllerBase
             result.block.CreatedAtUtc);
 
         return CreatedAtAction(nameof(BlockUser), new { userId }, response);
+    }
+
+    /// <summary>
+    /// Remove o bloqueio de um usuário.
+    /// </summary>
+    [HttpDelete("blocks/users/{userId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UnblockUser(
+        [FromRoute] Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        await _userBlockService.UnblockAsync(userContext.User.Id, userId, cancellationToken);
+        return NoContent();
+    }
+
+    private string? GetSessionId()
+    {
+        return Request.Headers.TryGetValue(ApiHeaders.SessionId, out var header) &&
+               !string.IsNullOrWhiteSpace(header)
+            ? header.ToString()
+            : null;
+    }
+
+    private async Task<Guid?> ResolveTerritoryIdAsync(Guid? territoryId, CancellationToken cancellationToken)
+    {
+        if (territoryId is not null)
+        {
+            return territoryId;
+        }
+
+        var sessionId = GetSessionId();
+        if (sessionId is null)
+        {
+            return null;
+        }
+
+        return await _activeTerritoryService.GetActiveAsync(sessionId, cancellationToken);
     }
 }

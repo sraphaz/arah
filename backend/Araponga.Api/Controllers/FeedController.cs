@@ -1,7 +1,9 @@
+using Araponga.Api;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
+using Araponga.Domain.Geo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -154,6 +156,30 @@ public sealed class FeedController : ControllerBase
             return BadRequest(new { error = "Invalid post type or visibility." });
         }
 
+        if (!GeoHeaderReader.TryGetCoordinates(Request.Headers, out _, out _))
+        {
+            return BadRequest(new { error = "X-Geo-Latitude and X-Geo-Longitude headers are required." });
+        }
+
+        if (request.GeoAnchors is null || request.GeoAnchors.Count == 0)
+        {
+            return BadRequest(new { error = "At least one geo anchor is required." });
+        }
+
+        if (request.GeoAnchors.Any(anchor =>
+                string.IsNullOrWhiteSpace(anchor.Type) ||
+                !GeoCoordinate.IsValid(anchor.Latitude, anchor.Longitude)))
+        {
+            return BadRequest(new { error = "Invalid geo anchor data." });
+        }
+
+        var geoAnchors = request.GeoAnchors
+            .Select(anchor => new Application.Models.GeoAnchorInput(
+                anchor.Latitude,
+                anchor.Longitude,
+                anchor.Type))
+            .ToList();
+
         var isResident = await _accessEvaluator.IsResidentAsync(
             userContext.User.Id,
             resolvedTerritoryId.Value,
@@ -172,6 +198,7 @@ public sealed class FeedController : ControllerBase
             visibility,
             isResident ? PostStatus.Published : PostStatus.PendingApproval,
             request.MapEntityId,
+            geoAnchors,
             cancellationToken);
 
         if (!result.success || result.post is null)

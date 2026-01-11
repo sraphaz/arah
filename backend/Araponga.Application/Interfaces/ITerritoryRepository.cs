@@ -8,5 +8,10 @@ public interface ITerritoryRepository
     Task<Territory?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task AddAsync(Territory territory, CancellationToken cancellationToken);
     Task<IReadOnlyList<Territory>> SearchAsync(string? query, string? city, string? state, CancellationToken cancellationToken);
-    Task<IReadOnlyList<Territory>> NearbyAsync(double latitude, double longitude, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Territory>> NearbyAsync(
+        double latitude,
+        double longitude,
+        double radiusKm,
+        int limit,
+        CancellationToken cancellationToken);
 }

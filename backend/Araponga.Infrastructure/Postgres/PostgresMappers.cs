@@ -183,6 +183,8 @@ public static class PostgresMappers
             CreatedByUserId = entity.CreatedByUserId,
             Name = entity.Name,
             Category = entity.Category,
+            Latitude = entity.Latitude,
+            Longitude = entity.Longitude,
             Status = entity.Status,
             Visibility = entity.Visibility,
             ConfirmationCount = entity.ConfirmationCount,
@@ -198,9 +200,35 @@ public static class PostgresMappers
             record.CreatedByUserId,
             record.Name,
             record.Category,
+            record.Latitude,
+            record.Longitude,
             record.Status,
             record.Visibility,
             record.ConfirmationCount,
+            record.CreatedAtUtc);
+    }
+
+    public static PostGeoAnchorRecord ToRecord(this PostGeoAnchor anchor)
+    {
+        return new PostGeoAnchorRecord
+        {
+            Id = anchor.Id,
+            PostId = anchor.PostId,
+            Latitude = anchor.Latitude,
+            Longitude = anchor.Longitude,
+            Type = anchor.Type,
+            CreatedAtUtc = anchor.CreatedAtUtc
+        };
+    }
+
+    public static PostGeoAnchor ToDomain(this PostGeoAnchorRecord record)
+    {
+        return new PostGeoAnchor(
+            record.Id,
+            record.PostId,
+            record.Latitude,
+            record.Longitude,
+            record.Type,
             record.CreatedAtUtc);
     }
 

@@ -61,6 +61,8 @@ public sealed class InMemoryTerritoryRepository : ITerritoryRepository
     public Task<IReadOnlyList<Territory>> NearbyAsync(
         double latitude,
         double longitude,
+        double radiusKm,
+        int limit,
         CancellationToken cancellationToken)
     {
         var territories = _dataStore.Territories
@@ -69,8 +71,10 @@ public sealed class InMemoryTerritoryRepository : ITerritoryRepository
                 Territory = t,
                 Distance = CalculateDistance(latitude, longitude, t.Latitude, t.Longitude)
             })
+            .Where(t => t.Distance <= radiusKm)
             .OrderBy(t => t.Distance)
             .Select(t => t.Territory)
+            .Take(limit)
             .ToList();
 
         return Task.FromResult<IReadOnlyList<Territory>>(territories);

@@ -10,9 +10,9 @@ O território físico é a unidade central e a presença no território é requi
 - **Consulta exige cadastro**: no MVP, feed e mapa exigem usuário autenticado.
 - **Conteúdo é georreferenciado via GeoAnchor**.
 - **Feed pessoal (perfil) + feed do território** coexistem.
-- **Postagens referenciam ao menos 1 GeoAnchor** e podem conter múltiplas mídias e múltiplos GeoAnchors.
+- **Postagens referenciam ao menos 1 GeoAnchor** e podem conter múltiplos GeoAnchors (mídia é pós-MVP).
 - **Visibilidade e papéis**: visitor e resident no MVP; friends/círculo interno é pós-MVP.
-- **Mapa + feed integrados**: sincronia entre timeline e pins no mapa (mapa destaca o post e o feed destaca o pin).
+- **Mapa + feed integrados**: pins retornam dados mínimos para projeção no mapa; sincronia UI é pós-MVP.
 - **Moderação**: reports de posts e de usuários; bloqueio; automações simples no MVP; sanções territoriais vs globais.
 - **Admin**: visão administrativa para observar territórios, erros e relatórios (pós-MVP).
 
@@ -21,12 +21,12 @@ O território físico é a unidade central e a presença no território é requi
 2. A localização permite encontrar o território próximo (ex.: “Sertão do Camburi”).
 3. Entra como **visitor**.
 4. É incentivado a postar no feed.
-5. A postagem aparece no mapa (com avatar do autor, se possível) e no feed; clicar no pin destaca/abre o post; o feed/scroll temporal mantém sensação de presença.
+5. A postagem aparece no mapa (via pins) e no feed; a sincronia visual entre pin e timeline fica para pós-MVP.
 
 ## Funcionalidades principais (classificação)
 - [MVP] **Território + vínculo** com presença física local.
 - [MVP] **Feeds** (pessoal e do território) com posts georreferenciados.
-- [MVP] **Mapa integrado ao feed** com sincronia timeline ↔ pins.
+- [MVP] **Mapa integrado ao feed** via pins com dados mínimos.
 - [MVP] **Visibilidade visitor/resident**.
 - [MVP] **Reports e bloqueio** com moderação básica.
 - [POST-MVP] **Friends (círculo interno)** e stories exclusivos.

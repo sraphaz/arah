@@ -1,3 +1,4 @@
+using Araponga.Api;
 using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
@@ -58,6 +59,12 @@ public sealed class MembershipsController : ControllerBase
         if (!Enum.TryParse<MembershipRole>(request.Role, true, out var role))
         {
             return BadRequest(new { error = "Invalid role." });
+        }
+
+        if (role == MembershipRole.Resident &&
+            !GeoHeaderReader.TryGetCoordinates(Request.Headers, out _, out _))
+        {
+            return BadRequest(new { error = "X-Geo-Latitude and X-Geo-Longitude headers are required for resident membership." });
         }
 
         var membership = await _membershipService.DeclareMembershipAsync(

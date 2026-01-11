@@ -5,5 +5,6 @@ public sealed record CreatePostRequest(
     string Content,
     string Type,
     string Visibility,
-    Guid? MapEntityId
+    Guid? MapEntityId,
+    IReadOnlyCollection<GeoAnchorRequest> GeoAnchors
 );

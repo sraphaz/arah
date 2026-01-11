@@ -1,5 +1,6 @@
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Feed;
+using Araponga.Domain.Moderation;
 using Araponga.Domain.Social;
 
 namespace Araponga.Application.Services;
@@ -12,6 +13,8 @@ public sealed class FeedService
     private readonly IAuditLogger _auditLogger;
     private readonly IUserBlockRepository _userBlockRepository;
     private readonly IMapRepository _mapRepository;
+    private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
+    private readonly ISanctionRepository _sanctionRepository;
 
     public FeedService(
         IFeedRepository feedRepository,
@@ -19,7 +22,9 @@ public sealed class FeedService
         IFeatureFlagService featureFlags,
         IAuditLogger auditLogger,
         IUserBlockRepository userBlockRepository,
-        IMapRepository mapRepository)
+        IMapRepository mapRepository,
+        IPostGeoAnchorRepository postGeoAnchorRepository,
+        ISanctionRepository sanctionRepository)
     {
         _feedRepository = feedRepository;
         _accessEvaluator = accessEvaluator;
@@ -27,6 +32,8 @@ public sealed class FeedService
         _auditLogger = auditLogger;
         _userBlockRepository = userBlockRepository;
         _mapRepository = mapRepository;
+        _postGeoAnchorRepository = postGeoAnchorRepository;
+        _sanctionRepository = sanctionRepository;
     }
 
     public async Task<IReadOnlyList<CommunityPost>> ListForTerritoryAsync(
@@ -54,7 +61,7 @@ public sealed class FeedService
         var isResident = await _accessEvaluator.IsResidentAsync(userId.Value, territoryId, cancellationToken);
 
         var statusFiltered = isResident
-            ? visiblePosts.Where(post => post.Status != PostStatus.Rejected).ToList()
+            ? visiblePosts.Where(post => post.Status != PostStatus.Rejected && post.Status != PostStatus.Hidden).ToList()
             : visiblePosts.Where(post => post.Visibility == PostVisibility.Public && post.Status == PostStatus.Published).ToList();
 
         if (mapEntityId is null)
@@ -83,6 +90,7 @@ public sealed class FeedService
         PostVisibility visibility,
         PostStatus status,
         Guid? mapEntityId,
+        IReadOnlyCollection<Models.GeoAnchorInput> geoAnchors,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
@@ -109,6 +117,23 @@ public sealed class FeedService
             }
         }
 
+        if (geoAnchors.Count == 0)
+        {
+            return (false, "At least one geo anchor is required.", null);
+        }
+
+        var postingRestricted = await _sanctionRepository.HasActiveSanctionAsync(
+            userId,
+            territoryId,
+            SanctionType.PostingRestriction,
+            DateTime.UtcNow,
+            cancellationToken);
+
+        if (postingRestricted)
+        {
+            return (false, "User is restricted from posting in this territory.", null);
+        }
+
         var post = new CommunityPost(
             Guid.NewGuid(),
             territoryId,
@@ -122,6 +147,16 @@ public sealed class FeedService
             DateTime.UtcNow);
 
         await _feedRepository.AddPostAsync(post, cancellationToken);
+
+        var anchors = geoAnchors.Select(anchor => new Domain.Map.PostGeoAnchor(
+            Guid.NewGuid(),
+            post.Id,
+            anchor.Latitude,
+            anchor.Longitude,
+            anchor.Type,
+            DateTime.UtcNow)).ToList();
+
+        await _postGeoAnchorRepository.AddAsync(anchors, cancellationToken);
 
         await _auditLogger.LogAsync(
             new Models.AuditEntry("post.created", userId, territoryId, post.Id, DateTime.UtcNow),
@@ -200,6 +235,21 @@ public sealed class FeedService
             }
         }
 
+        if (userId is not null)
+        {
+            var interactionRestricted = await _sanctionRepository.HasActiveSanctionAsync(
+                userId.Value,
+                territoryId,
+                SanctionType.InteractionRestriction,
+                DateTime.UtcNow,
+                cancellationToken);
+
+            if (interactionRestricted)
+            {
+                return false;
+            }
+        }
+
         await _feedRepository.AddLikeAsync(postId, actorId, cancellationToken);
         return true;
     }
@@ -221,6 +271,18 @@ public sealed class FeedService
         if (!isResident)
         {
             return (false, "Only residents can comment.");
+        }
+
+        var interactionRestricted = await _sanctionRepository.HasActiveSanctionAsync(
+            userId,
+            territoryId,
+            SanctionType.InteractionRestriction,
+            DateTime.UtcNow,
+            cancellationToken);
+
+        if (interactionRestricted)
+        {
+            return (false, "User is restricted from interacting in this territory.");
         }
 
         var comment = new PostComment(Guid.NewGuid(), postId, userId, content, DateTime.UtcNow);
@@ -249,6 +311,18 @@ public sealed class FeedService
         if (!isResident)
         {
             return (false, "Only residents can share.");
+        }
+
+        var interactionRestricted = await _sanctionRepository.HasActiveSanctionAsync(
+            userId,
+            territoryId,
+            SanctionType.InteractionRestriction,
+            DateTime.UtcNow,
+            cancellationToken);
+
+        if (interactionRestricted)
+        {
+            return (false, "User is restricted from interacting in this territory.");
         }
 
         await _feedRepository.AddShareAsync(postId, userId, cancellationToken);

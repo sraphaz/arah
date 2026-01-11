@@ -27,6 +27,20 @@ public sealed class InMemoryUserBlockRepository : IUserBlockRepository
         return Task.CompletedTask;
     }
 
+    public Task RemoveAsync(Guid blockerUserId, Guid blockedUserId, CancellationToken cancellationToken)
+    {
+        var block = _dataStore.UserBlocks.FirstOrDefault(b =>
+            b.BlockerUserId == blockerUserId &&
+            b.BlockedUserId == blockedUserId);
+
+        if (block is not null)
+        {
+            _dataStore.UserBlocks.Remove(block);
+        }
+
+        return Task.CompletedTask;
+    }
+
     public Task<IReadOnlyCollection<Guid>> GetBlockedUserIdsAsync(
         Guid blockerUserId,
         CancellationToken cancellationToken)

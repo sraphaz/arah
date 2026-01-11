@@ -112,6 +112,24 @@ public sealed class InMemoryDataStore
                 DateTime.UtcNow)
         };
 
+        PostGeoAnchors = new List<PostGeoAnchor>
+        {
+            new(
+                Guid.Parse("abababab-abab-abab-abab-abababababab"),
+                Posts[0].Id,
+                -23.3748,
+                -45.0209,
+                "POST",
+                DateTime.UtcNow),
+            new(
+                Guid.Parse("cdcdcdcd-cdcd-cdcd-cdcd-cdcdcdcdcdcd"),
+                Posts[1].Id,
+                -23.3732,
+                -45.0184,
+                "EVENT",
+                DateTime.UtcNow)
+        };
+
         MapEntities = new List<MapEntity>
         {
             new(
@@ -119,7 +137,9 @@ public sealed class InMemoryDataStore
                 territoryB.Id,
                 residentUser.Id,
                 "Cachoeira do Vale",
-                "espaço natural",
+                "Cachoeira",
+                -23.3723,
+                -45.0193,
                 MapEntityStatus.Validated,
                 MapEntityVisibility.Public,
                 5,
@@ -129,7 +149,9 @@ public sealed class InMemoryDataStore
                 territoryB.Id,
                 residentUser.Id,
                 "Nascente Secreta",
-                "espaço natural",
+                "Nascente",
+                -23.3751,
+                -45.0179,
                 MapEntityStatus.Validated,
                 MapEntityVisibility.ResidentsOnly,
                 2,
@@ -146,6 +168,7 @@ public sealed class InMemoryDataStore
     public List<CommunityPost> Posts { get; }
     public List<MapEntity> MapEntities { get; }
     public List<MapEntityRelation> MapEntityRelations { get; } = new();
+    public List<PostGeoAnchor> PostGeoAnchors { get; }
     public List<HealthAlert> HealthAlerts { get; }
     public Dictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();
@@ -154,4 +177,5 @@ public sealed class InMemoryDataStore
     public List<Application.Models.AuditEntry> AuditEntries { get; } = new();
     public List<ModerationReport> ModerationReports { get; } = new();
     public List<UserBlock> UserBlocks { get; } = new();
+    public List<Sanction> Sanctions { get; } = new();
 }

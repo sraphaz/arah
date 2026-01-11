@@ -114,6 +114,8 @@ public sealed class TerritoriesController : ControllerBase
     public async Task<ActionResult<IEnumerable<TerritoryResponse>>> Nearby(
         [FromQuery] double? lat,
         [FromQuery] double? lng,
+        [FromQuery] double? radiusKm,
+        [FromQuery] int? limit,
         CancellationToken cancellationToken)
     {
         if (lat is null || lng is null)
@@ -121,7 +123,23 @@ public sealed class TerritoriesController : ControllerBase
             return BadRequest(new { error = "lat and lng are required." });
         }
 
-        var territories = await _territoryService.NearbyAsync(lat.Value, lng.Value, cancellationToken);
+        const double defaultRadiusKm = 25;
+        const int defaultLimit = 20;
+
+        var resolvedRadius = radiusKm ?? defaultRadiusKm;
+        var resolvedLimit = limit ?? defaultLimit;
+
+        if (resolvedRadius <= 0 || resolvedLimit <= 0)
+        {
+            return BadRequest(new { error = "radiusKm and limit must be positive." });
+        }
+
+        var territories = await _territoryService.NearbyAsync(
+            lat.Value,
+            lng.Value,
+            resolvedRadius,
+            resolvedLimit,
+            cancellationToken);
         var response = territories.Select(ToResponse);
         return Ok(response);
     }

@@ -79,9 +79,11 @@ public sealed class TerritoryService
     public Task<IReadOnlyList<Territory>> NearbyAsync(
         double latitude,
         double longitude,
+        double radiusKm,
+        int limit,
         CancellationToken cancellationToken)
     {
-        return FilterActiveAsync(_territoryRepository.NearbyAsync(latitude, longitude, cancellationToken));
+        return FilterActiveAsync(_territoryRepository.NearbyAsync(latitude, longitude, radiusKm, limit, cancellationToken));
     }
 
     private async Task<IReadOnlyList<Territory>> FilterActiveAsync(Task<IReadOnlyList<Territory>> task)

@@ -29,12 +29,14 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
     builder.Services.AddScoped<IFeedRepository, PostgresFeedRepository>();
     builder.Services.AddScoped<IMapRepository, PostgresMapRepository>();
     builder.Services.AddScoped<IMapEntityRelationRepository, PostgresMapEntityRelationRepository>();
+    builder.Services.AddScoped<IPostGeoAnchorRepository, PostgresPostGeoAnchorRepository>();
     builder.Services.AddScoped<IActiveTerritoryStore, PostgresActiveTerritoryStore>();
     builder.Services.AddScoped<IHealthAlertRepository, PostgresHealthAlertRepository>();
     builder.Services.AddScoped<IFeatureFlagService, PostgresFeatureFlagService>();
     builder.Services.AddScoped<IAuditLogger, PostgresAuditLogger>();
     builder.Services.AddScoped<IReportRepository, PostgresReportRepository>();
     builder.Services.AddScoped<IUserBlockRepository, PostgresUserBlockRepository>();
+    builder.Services.AddScoped<ISanctionRepository, PostgresSanctionRepository>();
 }
 else
 {
@@ -46,12 +48,14 @@ else
     builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
     builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
     builder.Services.AddSingleton<IMapEntityRelationRepository, InMemoryMapEntityRelationRepository>();
+    builder.Services.AddSingleton<IPostGeoAnchorRepository, InMemoryPostGeoAnchorRepository>();
     builder.Services.AddSingleton<IActiveTerritoryStore, InMemoryActiveTerritoryStore>();
     builder.Services.AddSingleton<IHealthAlertRepository, InMemoryHealthAlertRepository>();
     builder.Services.AddSingleton<IFeatureFlagService, InMemoryFeatureFlagService>();
     builder.Services.AddSingleton<IAuditLogger, InMemoryAuditLogger>();
     builder.Services.AddSingleton<IReportRepository, InMemoryReportRepository>();
     builder.Services.AddSingleton<IUserBlockRepository, InMemoryUserBlockRepository>();
+    builder.Services.AddSingleton<ISanctionRepository, InMemorySanctionRepository>();
 }
 
 builder.Services.AddSingleton<ITokenService, SimpleTokenService>();

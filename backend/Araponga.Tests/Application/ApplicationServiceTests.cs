@@ -23,7 +23,17 @@ public sealed class ApplicationServiceTests
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
-        var service = new FeedService(feedRepository, accessEvaluator, featureFlags, auditLogger, blockRepository, mapRepository);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
 
         var invalid = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -34,6 +44,10 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
+            new List<Application.Models.GeoAnchorInput>
+            {
+                new(-23.0, -45.0, "POST")
+            },
             CancellationToken.None);
 
         Assert.False(invalid.success);
@@ -47,6 +61,10 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
+            new List<Application.Models.GeoAnchorInput>
+            {
+                new(-23.0, -45.0, "POST")
+            },
             CancellationToken.None);
 
         Assert.False(disabledAlert.success);
@@ -93,7 +111,17 @@ public sealed class ApplicationServiceTests
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
-        var service = new FeedService(feedRepository, accessEvaluator, featureFlags, auditLogger, blockRepository, mapRepository);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
 
         var post = new CommunityPost(
             Guid.NewGuid(),
@@ -142,7 +170,9 @@ public sealed class ApplicationServiceTests
             ActiveTerritoryId,
             Guid.NewGuid(),
             "Lugar",
-            "estabelecimento",
+            "Categoria",
+            -23.0,
+            -45.0,
             CancellationToken.None);
 
         Assert.True(suggestion.success);
@@ -321,7 +351,17 @@ public sealed class ApplicationServiceTests
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
-        var service = new FeedService(feedRepository, accessEvaluator, featureFlags, auditLogger, blockRepository, mapRepository);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
 
         var blockerId = dataStore.Users[1].Id;
         var blockedId = dataStore.Users[0].Id;
@@ -349,7 +389,17 @@ public sealed class ApplicationServiceTests
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
-        var service = new FeedService(feedRepository, accessEvaluator, featureFlags, auditLogger, blockRepository, mapRepository);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
 
         var visitorId = Guid.NewGuid();
         var create = await service.CreatePostAsync(
@@ -361,6 +411,10 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.PendingApproval,
             null,
+            new List<Application.Models.GeoAnchorInput>
+            {
+                new(-23.0, -45.0, "EVENT")
+            },
             CancellationToken.None);
 
         Assert.True(create.success);
@@ -386,7 +440,17 @@ public sealed class ApplicationServiceTests
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
-        var service = new FeedService(feedRepository, accessEvaluator, featureFlags, auditLogger, blockRepository, mapRepository);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
 
         var entityId = dataStore.MapEntities[0].Id;
         var post = new CommunityPost(
@@ -438,5 +502,113 @@ public sealed class ApplicationServiceTests
 
         var updated = await repository.GetByUserAndTerritoryAsync(membership.UserId, ActiveTerritoryId, CancellationToken.None);
         Assert.Equal(VerificationStatus.Validated, updated!.VerificationStatus);
+    }
+
+    [Fact]
+    public async Task ReportService_AppliesThresholdsForPostAndUser()
+    {
+        var dataStore = new InMemoryDataStore();
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var reportRepository = new InMemoryReportRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new ReportService(
+            reportRepository,
+            feedRepository,
+            userRepository,
+            sanctionRepository,
+            auditLogger);
+
+        var postId = dataStore.Posts[0].Id;
+
+        for (var i = 0; i < 3; i += 1)
+        {
+            var result = await service.ReportPostAsync(
+                Guid.NewGuid(),
+                postId,
+                "SPAM",
+                null,
+                CancellationToken.None);
+            Assert.True(result.created);
+        }
+
+        var post = await feedRepository.GetPostAsync(postId, CancellationToken.None);
+        Assert.NotNull(post);
+        Assert.Equal(PostStatus.Hidden, post!.Status);
+
+        var userId = dataStore.Users[0].Id;
+        for (var i = 0; i < 3; i += 1)
+        {
+            var result = await service.ReportUserAsync(
+                Guid.NewGuid(),
+                ActiveTerritoryId,
+                userId,
+                "SPAM",
+                null,
+                CancellationToken.None);
+            Assert.True(result.created);
+        }
+
+        Assert.Contains(dataStore.Sanctions, sanction =>
+            sanction.TargetId == userId &&
+            sanction.Type == Araponga.Domain.Moderation.SanctionType.PostingRestriction);
+    }
+
+    [Fact]
+    public async Task FeedService_BlocksPostingWhenSanctioned()
+    {
+        var dataStore = new InMemoryDataStore();
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var featureFlags = new InMemoryFeatureFlagService();
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var blockRepository = new InMemoryUserBlockRepository(dataStore);
+        var mapRepository = new InMemoryMapRepository(dataStore);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+
+        var restrictedUserId = dataStore.Users[0].Id;
+        await sanctionRepository.AddAsync(
+            new Araponga.Domain.Moderation.Sanction(
+                Guid.NewGuid(),
+                ActiveTerritoryId,
+                Araponga.Domain.Moderation.SanctionScope.Territory,
+                Araponga.Domain.Moderation.SanctionTargetType.User,
+                restrictedUserId,
+                Araponga.Domain.Moderation.SanctionType.PostingRestriction,
+                "Threshold",
+                Araponga.Domain.Moderation.SanctionStatus.Active,
+                DateTime.UtcNow.AddMinutes(-5),
+                DateTime.UtcNow.AddDays(1),
+                DateTime.UtcNow),
+            CancellationToken.None);
+
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
+
+        var result = await service.CreatePostAsync(
+            ActiveTerritoryId,
+            restrictedUserId,
+            "Post bloqueado",
+            "Conteudo",
+            PostType.General,
+            PostVisibility.Public,
+            PostStatus.Published,
+            null,
+            new List<Application.Models.GeoAnchorInput>
+            {
+                new(-23.0, -45.0, "POST")
+            },
+            CancellationToken.None);
+
+        Assert.False(result.success);
     }
 }

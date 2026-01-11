@@ -256,6 +256,8 @@ public sealed class ApiScenariosTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
         var notFound = await client.PostAsJsonAsync(
             $"api/v1/territories/{Guid.NewGuid()}/membership",
@@ -272,6 +274,8 @@ public sealed class ApiScenariosTests
 
         var token = await LoginForTokenAsync(client, "google", "new-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
         var first = await client.PostAsJsonAsync(
             $"api/v1/territories/{ActiveTerritoryId}/membership",
@@ -455,6 +459,8 @@ public sealed class ApiScenariosTests
 
         var userToken = await LoginForTokenAsync(client, "google", "new-member");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
         var membership = await client.PostAsJsonAsync(
             $"api/v1/territories/{ActiveTerritoryId}/membership",
@@ -503,15 +509,29 @@ public sealed class ApiScenariosTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
         var created = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
-            new CreatePostRequest("Novo post", "Conteúdo", "GENERAL", "PUBLIC", null));
+            new CreatePostRequest(
+                "Novo post",
+                "Conteúdo",
+                "GENERAL",
+                "PUBLIC",
+                null,
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") }));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
         var invalidPost = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
-            new CreatePostRequest("Novo post", "Conteúdo", "INVALID", "PUBLIC", null));
+            new CreatePostRequest(
+                "Novo post",
+                "Conteúdo",
+                "INVALID",
+                "PUBLIC",
+                null,
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") }));
         Assert.Equal(HttpStatusCode.BadRequest, invalidPost.StatusCode);
 
         var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
@@ -544,10 +564,18 @@ public sealed class ApiScenariosTests
 
         var visitorToken = await LoginForTokenAsync(client, "google", "visitor-event");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
+        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
         var created = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
-            new CreatePostRequest("Evento visitante", "Detalhes", "EVENT", "PUBLIC", null));
+            new CreatePostRequest(
+                "Evento visitante",
+                "Detalhes",
+                "EVENT",
+                "PUBLIC",
+                null,
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "EVENT") }));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
         var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
@@ -619,7 +647,7 @@ public sealed class ApiScenariosTests
 
         var suggestion = await client.PostAsJsonAsync(
             $"api/v1/map/entities?territoryId={ActiveTerritoryId}",
-            new SuggestMapEntityRequest("Ponto novo", "espaço natural"));
+            new SuggestMapEntityRequest("Ponto novo", "Cachoeira", -23.37, -45.02));
         suggestion.EnsureSuccessStatusCode();
         var entity = await suggestion.Content.ReadFromJsonAsync<MapEntityResponse>();
         Assert.NotNull(entity);
@@ -668,6 +696,26 @@ public sealed class ApiScenariosTests
             $"api/v1/map/entities/eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee/relations?territoryId={ActiveTerritoryId}",
             null);
         Assert.Equal(HttpStatusCode.Created, success.StatusCode);
+    }
+
+    [Fact]
+    public async Task Map_Pins_ReturnEntitiesAndAnchors()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "map-pins");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var pins = await client.GetFromJsonAsync<List<MapPinResponse>>(
+            $"api/v1/map/pins?territoryId={ActiveTerritoryId}");
+
+        Assert.NotNull(pins);
+        Assert.NotEmpty(pins!);
+        Assert.Contains(pins, pin => pin.Type == "MAP_ENTITY");
+        Assert.Contains(pins, pin => pin.Id == Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
     }
 
     [Fact]

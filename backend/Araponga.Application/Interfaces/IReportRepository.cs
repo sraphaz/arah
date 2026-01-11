@@ -12,4 +12,18 @@ public interface IReportRepository
         CancellationToken cancellationToken);
 
     Task AddAsync(ModerationReport report, CancellationToken cancellationToken);
+
+    Task<int> CountDistinctReportersAsync(
+        ReportTargetType targetType,
+        Guid targetId,
+        DateTime sinceUtc,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<ModerationReport>> ListAsync(
+        Guid territoryId,
+        ReportTargetType? targetType,
+        ReportStatus? status,
+        DateTime? fromUtc,
+        DateTime? toUtc,
+        CancellationToken cancellationToken);
 }

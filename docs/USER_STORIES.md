@@ -78,8 +78,8 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 
 **Critérios de aceite**
 - Post exige 1..N GeoAnchors.
-- Post pode incluir múltiplas mídias.
-- Se a geolocalização estiver indisponível, o post não pode ser publicado.
+- Se a geolocalização estiver indisponível, o post não pode ser publicado (lat/lng obrigatório).
+- Mídias no post são pós-MVP.
 
 ### [MVP][P0] Eventos com aprovação de moradores
 **Como** visitante ou morador
@@ -102,7 +102,7 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 - Moradores podem se relacionar com entidades do território.
 - Entidades podem ser usadas como filtro no feed/timeline.
 
-### [MVP][P0] Sincronia feed ↔ mapa
+### [POST-MVP] Sincronia feed ↔ mapa
 **Como** usuário
 **Quero** que a timeline do feed sincronize com a geolocalização dos posts
 **Para** identificar o pin correspondente no mapa.

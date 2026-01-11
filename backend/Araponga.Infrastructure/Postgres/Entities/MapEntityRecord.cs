@@ -9,6 +9,8 @@ public sealed class MapEntityRecord
     public Guid CreatedByUserId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
     public MapEntityStatus Status { get; set; }
     public MapEntityVisibility Visibility { get; set; }
     public int ConfirmationCount { get; set; }

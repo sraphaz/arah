@@ -36,6 +36,23 @@ public sealed class PostgresUserBlockRepository : IUserBlockRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task RemoveAsync(Guid blockerUserId, Guid blockedUserId, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.UserBlocks
+            .FirstOrDefaultAsync(block =>
+                block.BlockerUserId == blockerUserId &&
+                block.BlockedUserId == blockedUserId,
+                cancellationToken);
+
+        if (record is null)
+        {
+            return;
+        }
+
+        _dbContext.UserBlocks.Remove(record);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyCollection<Guid>> GetBlockedUserIdsAsync(
         Guid blockerUserId,
         CancellationToken cancellationToken)

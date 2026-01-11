@@ -8,6 +8,8 @@ public sealed class MapEntity
         Guid createdByUserId,
         string name,
         string category,
+        double latitude,
+        double longitude,
         MapEntityStatus status,
         MapEntityVisibility visibility,
         int confirmationCount,
@@ -30,6 +32,11 @@ public sealed class MapEntity
                 nameof(category));
         }
 
+        if (!Geo.GeoCoordinate.IsValid(latitude, longitude))
+        {
+            throw new ArgumentOutOfRangeException(nameof(latitude), "Latitude/longitude is invalid.");
+        }
+
         if (createdByUserId == Guid.Empty)
         {
             throw new ArgumentException("Created-by user ID is required.", nameof(createdByUserId));
@@ -39,7 +46,9 @@ public sealed class MapEntity
         TerritoryId = territoryId;
         CreatedByUserId = createdByUserId;
         Name = name.Trim();
-        Category = normalizedCategory;
+        Category = category.Trim();
+        Latitude = latitude;
+        Longitude = longitude;
         Status = status;
         Visibility = visibility;
         ConfirmationCount = confirmationCount;
@@ -51,6 +60,8 @@ public sealed class MapEntity
     public Guid CreatedByUserId { get; }
     public string Name { get; }
     public string Category { get; }
+    public double Latitude { get; }
+    public double Longitude { get; }
     public MapEntityStatus Status { get; }
     public MapEntityVisibility Visibility { get; }
     public int ConfirmationCount { get; }

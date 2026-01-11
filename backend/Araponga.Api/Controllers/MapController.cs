@@ -1,5 +1,6 @@
 using Araponga.Api.Contracts.Map;
 using Araponga.Api.Security;
+using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Map;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +14,23 @@ namespace Araponga.Api.Controllers;
 public sealed class MapController : ControllerBase
 {
     private readonly MapService _mapService;
+    private readonly FeedService _feedService;
+    private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ActiveTerritoryService _activeTerritoryService;
     private readonly AccessEvaluator _accessEvaluator;
 
     public MapController(
         MapService mapService,
+        FeedService feedService,
+        IPostGeoAnchorRepository postGeoAnchorRepository,
         CurrentUserAccessor currentUserAccessor,
         ActiveTerritoryService activeTerritoryService,
         AccessEvaluator accessEvaluator)
     {
         _mapService = mapService;
+        _feedService = feedService;
+        _postGeoAnchorRepository = postGeoAnchorRepository;
         _currentUserAccessor = currentUserAccessor;
         _activeTerritoryService = activeTerritoryService;
         _accessEvaluator = accessEvaluator;
@@ -65,6 +72,8 @@ public sealed class MapController : ControllerBase
                 entity.Id,
                 entity.Name,
                 entity.Category,
+                entity.Latitude,
+                entity.Longitude,
                 entity.Status.ToString().ToUpperInvariant(),
                 entity.Visibility.ToString().ToUpperInvariant(),
                 entity.ConfirmationCount,
@@ -102,6 +111,8 @@ public sealed class MapController : ControllerBase
             userContext.User.Id,
             request.Name,
             request.Category,
+            request.Latitude,
+            request.Longitude,
             cancellationToken);
 
         if (!result.success || result.entity is null)
@@ -113,12 +124,79 @@ public sealed class MapController : ControllerBase
             result.entity.Id,
             result.entity.Name,
             result.entity.Category,
+            result.entity.Latitude,
+            result.entity.Longitude,
             result.entity.Status.ToString().ToUpperInvariant(),
             result.entity.Visibility.ToString().ToUpperInvariant(),
             result.entity.ConfirmationCount,
             result.entity.CreatedAtUtc);
 
         return CreatedAtAction(nameof(GetEntities), new { }, response);
+    }
+
+    /// <summary>
+    /// Lista pins (entidades + posts) para o mapa do território.
+    /// </summary>
+    [HttpGet("pins")]
+    [ProducesResponseType(typeof(IEnumerable<MapPinResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<MapPinResponse>>> GetPins(
+        [FromQuery] Guid? territoryId,
+        CancellationToken cancellationToken)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        var entities = await _mapService.ListEntitiesAsync(
+            resolvedTerritoryId.Value,
+            userContext.User?.Id,
+            cancellationToken);
+
+        var posts = await _feedService.ListForTerritoryAsync(
+            resolvedTerritoryId.Value,
+            userContext.User?.Id,
+            null,
+            cancellationToken);
+
+        var postIds = posts.Select(post => post.Id).ToList();
+        var anchors = await _postGeoAnchorRepository.ListByPostIdsAsync(postIds, cancellationToken);
+        var postLookup = posts.ToDictionary(post => post.Id, post => post);
+
+        var pins = new List<MapPinResponse>();
+
+        pins.AddRange(entities.Select(entity => new MapPinResponse(
+            entity.Id,
+            "MAP_ENTITY",
+            entity.Latitude,
+            entity.Longitude,
+            entity.Name,
+            entity.Status.ToString().ToUpperInvariant())));
+
+        pins.AddRange(anchors
+            .Where(anchor => postLookup.ContainsKey(anchor.PostId))
+            .Select(anchor =>
+            {
+                var post = postLookup[anchor.PostId];
+                return new MapPinResponse(
+                    post.Id,
+                    anchor.Type.ToUpperInvariant(),
+                    anchor.Latitude,
+                    anchor.Longitude,
+                    post.Title,
+                    post.Status.ToString().ToUpperInvariant());
+            }));
+
+        return Ok(pins);
     }
 
     /// <summary>

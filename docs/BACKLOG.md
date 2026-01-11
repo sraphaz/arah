@@ -15,6 +15,7 @@
 - [MVP] **Busca de territórios próximos via localização** *(já desenvolvido)*
   - Critérios de aceite:
     - Usuário vê territórios próximos a partir de sua posição atual.
+    - Resultados respeitam raio (`radiusKm`) e limite (`limit`).
     - Não existe opção de associação remota no MVP.
     - Sem permissão de localização, o fluxo orienta o usuário a habilitar acesso.
 - [MVP] **Entrada como visitor** *(já desenvolvido)*
@@ -23,11 +24,11 @@
     - O vínculo fica registrado como visitor.
 
 ### Feature: Vínculo visitor/resident
-- [MVP] **Solicitação de vínculo resident**
+- [MVP] **Solicitação de vínculo resident** *(já desenvolvido)*
   - Critérios de aceite:
     - Usuário pode solicitar mudança para resident.
     - Status de vínculo fica como pending/approved.
-    - Sem localização válida, a solicitação é bloqueada.
+    - Sem localização válida (lat/lng), a solicitação é bloqueada.
 - [MVP] **Status de vínculo visível no perfil**
   - Critérios de aceite:
     - Perfil do usuário exibe visitor ou resident.
@@ -52,11 +53,11 @@
 - [MVP] **Pins no mapa para posts** *(já desenvolvido)*
   - Critérios de aceite:
     - Post aparece no mapa no(s) GeoAnchor(s).
-    - Pin exibe avatar do autor quando disponível.
-- [MVP] **Sincronia timeline ↔ mapa (pin)**
+    - Pin expõe dados mínimos (id, type, lat/lng, title, status).
+- [POST-MVP] **Sincronia timeline ↔ mapa (pin)**
   - Critérios de aceite:
-    - Ao navegar na timeline, o pin correspondente é destacado.
-    - Ao tocar no pin, o post é destacado/aberto no feed.
+    - Ao navegar na timeline, o pin correspondente é destacado (UI).
+    - Ao tocar no pin, o post é destacado/aberto no feed (UI).
     - Conteúdo oculto por moderação não aparece no mapa.
 - [MVP] **Filtro de feed por entidade territorial**
   - Critérios de aceite:
@@ -66,7 +67,7 @@
 
 ## Epic 3 — Postagem e GeoAnchor
 ### Feature: Criação de post
-- [MVP] **Post com múltiplas mídias**
+- [POST-MVP] **Post com múltiplas mídias**
   - Critérios de aceite:
     - Post pode conter mais de uma mídia.
 - [MVP] **Post com múltiplos GeoAnchors**

@@ -20,7 +20,7 @@ O MVP implementa fluxos essenciais e automações simples baseadas em thresholds
 3. Sistema registra o report para análise.
 
 **Endpoints**
-- `POST /api/v1/reports/users/{userId}`
+- `POST /api/v1/reports/users/{userId}?territoryId=`
 
 ### Bloquear usuário [MVP]
 - Usuário bloqueado deixa de aparecer nos feeds do bloqueador.
@@ -28,13 +28,23 @@ O MVP implementa fluxos essenciais e automações simples baseadas em thresholds
 
 **Endpoints**
 - `POST /api/v1/blocks/users/{userId}`
+- `DELETE /api/v1/blocks/users/{userId}` (idempotente)
+
+### Listar reports (curadoria) [MVP]
+**Endpoints**
+- `GET /api/v1/reports?territoryId=&targetType=&status=&from=&to=`
+
+**Retorna**
+- `id`, `territoryId`, `targetType`, `targetId`, `reason`, `status`, `createdAt`.
 
 ## Automações do MVP (threshold simples)
-- **Regra**: número mínimo de reports únicos por janela de tempo aciona resposta automática.
-- **Ações automáticas possíveis**:
-  - Ocultar conteúdo do feed do território (pending review).
-  - Restringir usuário no território (não pode postar).
-  - Suspensão curta territorial.
+- **Regra**: número mínimo de reports **únicos** por janela de tempo aciona resposta automática.
+  - Janela: **7 dias**
+  - Threshold: **3 reports únicos**
+- **Ações automáticas**:
+  - **Post**: status alterado para `HIDDEN` (oculto do feed/pins).
+  - **Usuário**: sanção territorial `POSTING_RESTRICTION` por 7 dias.
+- **Auditoria**: toda ação automática gera registro (`moderation.threshold.*`).
 
 ## Sanções: territorial vs global
 - **Territorial**: aplica-se a um território específico (territoryId preenchido).

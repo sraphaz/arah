@@ -139,6 +139,27 @@ backend/
 
 - **Feed / Map**  
   Informação contextual, sempre relacionada a um território específico.
+  - Integração de dados via `GET /api/v1/map/pins` (MapEntity + GeoAnchors de posts).
+
+---
+
+## 🧾 Headers e contexto (MVP)
+
+- **X-Session-Id**: identifica a sessão do cliente e permite selecionar o território ativo.
+  - Usado para `POST /api/v1/territories/selection` e como fallback de `territoryId` em feed/mapa.
+  - Também sustenta ações anônimas (ex.: likes com `session:{id}`).
+- **X-Geo-Latitude / X-Geo-Longitude**: presença física mínima.
+  - Obrigatório para solicitar membership `RESIDENT`.
+  - Obrigatório para criar posts (GeoAnchors).
+
+## 🧩 Feature flags (MVP)
+- `GET /api/v1/territories/{territoryId}/features`
+- `PUT /api/v1/territories/{territoryId}/features` (curadoria)
+
+## 🔗 Endpoints MVP (parâmetros principais)
+- `GET /api/v1/territories/nearby?lat=-23.37&lng=-45.02&radiusKm=25&limit=20`
+- `GET /api/v1/map/pins?territoryId={territoryId}`
+- `GET /api/v1/reports?territoryId={territoryId}&targetType=POST&status=OPEN`
 
 ---
 

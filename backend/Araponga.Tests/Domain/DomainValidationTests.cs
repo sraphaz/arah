@@ -169,7 +169,7 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresTerritoryId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), "Ponto", "estabelecimento", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), "Ponto", "Categoria", -23.0, -45.0, MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("territory", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -178,7 +178,7 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresName()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "", "estabelecimento", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "", "Categoria", -23.0, -45.0, MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("name", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -187,7 +187,7 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresCategory()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Ponto", "", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Ponto", "", -23.0, -45.0, MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("category", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -196,12 +196,12 @@ public sealed class DomainValidationTests
     public void ModerationReport_RequiresReporterAndReason()
     {
         var missingReporter = Assert.Throws<ArgumentException>(() =>
-            new ModerationReport(Guid.NewGuid(), Guid.Empty, ReportTargetType.Post, Guid.NewGuid(), "SPAM", null, DateTime.UtcNow));
+            new ModerationReport(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), ReportTargetType.Post, Guid.NewGuid(), "SPAM", null, ReportStatus.Open, DateTime.UtcNow));
 
         Assert.Contains("reporter", missingReporter.Message, StringComparison.OrdinalIgnoreCase);
 
         var missingReason = Assert.Throws<ArgumentException>(() =>
-            new ModerationReport(Guid.NewGuid(), Guid.NewGuid(), ReportTargetType.Post, Guid.NewGuid(), "", null, DateTime.UtcNow));
+            new ModerationReport(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), ReportTargetType.Post, Guid.NewGuid(), "", null, ReportStatus.Open, DateTime.UtcNow));
 
         Assert.Contains("reason", missingReason.Message, StringComparison.OrdinalIgnoreCase);
     }

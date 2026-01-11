@@ -50,4 +50,16 @@ public sealed class UserBlockService
 
         return (true, null, block);
     }
+
+    public async Task UnblockAsync(
+        Guid blockerUserId,
+        Guid blockedUserId,
+        CancellationToken cancellationToken)
+    {
+        await _blockRepository.RemoveAsync(blockerUserId, blockedUserId, cancellationToken);
+
+        await _auditLogger.LogAsync(
+            new Models.AuditEntry("user.unblocked", blockerUserId, Guid.Empty, blockedUserId, DateTime.UtcNow),
+            cancellationToken);
+    }
 }

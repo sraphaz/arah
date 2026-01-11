@@ -1,13 +1,16 @@
 # Araponga — User Stories Revisadas
 
-> **Regra de ouro:** `territory` é exclusivamente geográfico/canônico (lugar físico real).  
+> **Nota de consolidação:** este conteúdo foi incorporado e classificado em `/docs/USER_STORIES.md`.
+> Use o arquivo consolidado como referência principal para MVP e pós-MVP.
+
+> **Regra de ouro:** `territory` é exclusivamente geográfico/canônico (lugar físico real).
 > `territory` **nunca** contém regras sociais (roles, membership, moderação, visibilidade, permissões).
 
 ## Epic: Territory (Geográfico)
 
 ### US-T01 — Descobrir territórios próximos
-**Como** visitante  
-**Quero** ver territórios próximos à minha localização  
+**Como** visitante
+**Quero** ver territórios próximos à minha localização
 **Para** escolher o lugar correto para navegar
 
 **Critérios de aceite**
@@ -15,8 +18,8 @@
 - A resposta contém apenas dados geográficos (nome, cidade, estado, lat/lng, status canônico).
 
 ### US-T02 — Buscar território por texto
-**Como** visitante  
-**Quero** buscar territórios por nome/cidade/estado  
+**Como** visitante
+**Quero** buscar territórios por nome/cidade/estado
 **Para** encontrar um território específico
 
 **Critérios de aceite**
@@ -24,8 +27,8 @@
 - A resposta não inclui qualquer dado social (roles, membership, visibilidade).
 
 ### US-T03 — Sugerir território canônico
-**Como** usuário  
-**Quero** sugerir um território geográfico  
+**Como** usuário
+**Quero** sugerir um território geográfico
 **Para** habilitar a expansão da base canônica
 
 **Critérios de aceite**
@@ -33,8 +36,8 @@
 - A resposta contém apenas dados geográficos.
 
 ### US-T04 — Consultar território por ID
-**Como** visitante  
-**Quero** consultar um território  
+**Como** visitante
+**Quero** consultar um território
 **Para** validar detalhes geográficos
 
 **Critérios de aceite**
@@ -46,8 +49,8 @@
 ## Epic: Camada Social (Membership/Visibilidade)
 
 ### US-S01 — Declarar membership
-**Como** usuário autenticado  
-**Quero** declarar meu papel (visitor/resident) em um território  
+**Como** usuário autenticado
+**Quero** declarar meu papel (visitor/resident) em um território
 **Para** acessar conteúdos adequados
 
 **Critérios de aceite**
@@ -56,8 +59,8 @@
 - `RESIDENT` recebe `VERIFICATION_STATUS=PENDING`.
 
 ### US-S02 — Consultar meu membership
-**Como** usuário autenticado  
-**Quero** consultar meu vínculo com um território  
+**Como** usuário autenticado
+**Quero** consultar meu vínculo com um território
 **Para** entender meu status social
 
 **Critérios de aceite**
@@ -65,8 +68,8 @@
 - Se não houver vínculo, retorna `role=NONE` e `verificationStatus=NONE`.
 
 ### US-S03 — Validar membership (curadoria)
-**Como** curador  
-**Quero** validar ou rejeitar vínculos de moradores  
+**Como** curador
+**Quero** validar ou rejeitar vínculos de moradores
 **Para** manter governança comunitária
 
 **Critérios de aceite**
@@ -78,8 +81,8 @@
 ## Epic: Feed Comunitário
 
 ### US-F01 — Visualizar feed
-**Como** visitante ou morador  
-**Quero** ver o feed do território  
+**Como** visitante ou morador
+**Quero** ver o feed do território
 **Para** acompanhar atualizações locais
 
 **Critérios de aceite**
@@ -88,8 +91,8 @@
 - Sem autenticação ou sem membership ⇒ apenas `PUBLIC`.
 
 ### US-F02 — Criar post
-**Como** morador  
-**Quero** criar posts no feed  
+**Como** morador
+**Quero** criar posts no feed
 **Para** compartilhar informações com a comunidade
 
 **Critérios de aceite**
@@ -97,8 +100,8 @@
 - Tipos de post seguem feature flags por território.
 
 ### US-F03 — Interações (curtir/comentar/compartilhar)
-**Como** usuário  
-**Quero** interagir com posts  
+**Como** usuário
+**Quero** interagir com posts
 **Para** engajar com a comunidade
 
 **Critérios de aceite**
@@ -110,8 +113,8 @@
 ## Epic: Mapa
 
 ### US-M01 — Visualizar entidades do mapa
-**Como** visitante ou morador  
-**Quero** ver entidades do território  
+**Como** visitante ou morador
+**Quero** ver entidades do território
 **Para** explorar pontos relevantes
 
 **Critérios de aceite**
@@ -119,8 +122,8 @@
 - `RESIDENTS_ONLY` visível apenas para `RESIDENT` validado.
 
 ### US-M02 — Sugerir entidade
-**Como** morador  
-**Quero** sugerir entidades no mapa  
+**Como** morador
+**Quero** sugerir entidades no mapa
 **Para** enriquecer o território
 
 **Critérios de aceite**
@@ -128,8 +131,8 @@
 - Entidade sugerida nasce como `SUGGESTED`.
 
 ### US-M03 — Validar entidade (curadoria)
-**Como** curador  
-**Quero** validar entidades sugeridas  
+**Como** curador
+**Quero** validar entidades sugeridas
 **Para** garantir qualidade
 
 **Critérios de aceite**
@@ -137,8 +140,8 @@
 - Ação auditada.
 
 ### US-M04 — Confirmar entidade
-**Como** morador  
-**Quero** confirmar entidades existentes  
+**Como** morador
+**Quero** confirmar entidades existentes
 **Para** aumentar confiabilidade
 
 **Critérios de aceite**
@@ -149,16 +152,16 @@
 ## Epic: Saúde do Território
 
 ### US-H01 — Indicadores ambientais
-**Como** visitante  
-**Quero** visualizar indicadores  
+**Como** visitante
+**Quero** visualizar indicadores
 **Para** entender a saúde ambiental do território
 
 **Critérios de aceite**
 - Retorna indicadores informativos vinculados ao território selecionado.
 
 ### US-H02 — Reportar alerta
-**Como** morador  
-**Quero** reportar alertas ambientais  
+**Como** morador
+**Quero** reportar alertas ambientais
 **Para** notificar problemas locais
 
 **Critérios de aceite**
@@ -166,8 +169,8 @@
 - Alerta inicia com status `PENDING`.
 
 ### US-H03 — Validar alerta
-**Como** curador  
-**Quero** validar alertas  
+**Como** curador
+**Quero** validar alertas
 **Para** destacar problemas no feed
 
 **Critérios de aceite**
@@ -179,8 +182,8 @@
 ## Epic: Portal & Documentação
 
 ### US-P01 — Acessar portal estático
-**Como** visitante  
-**Quero** acessar o portal de autosserviço como site estático  
+**Como** visitante
+**Quero** acessar o portal de autosserviço como site estático
 **Para** entender rapidamente a visão do produto e seus domínios
 
 **Critérios de aceite**
@@ -188,8 +191,8 @@
 - A página inicial explica visão, domínios, fluxos e quickstart.
 
 ### US-P02 — Navegar pela documentação do produto
-**Como** colaborador  
-**Quero** acessar documentação, user stories e changelog pelo portal  
+**Como** colaborador
+**Quero** acessar documentação, user stories e changelog pelo portal
 **Para** me orientar sobre o estado atual do produto
 
 **Critérios de aceite**

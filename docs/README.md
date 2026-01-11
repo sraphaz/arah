@@ -131,6 +131,7 @@ backend/
 - [Moderação e Reports](/docs/MODERATION_REPORTS.md)
 - [Admin e Observabilidade](/docs/ADMIN_OBSERVABILITY.md)
 - [Glossário](/docs/GLOSSARY.md)
+- [Plano de Implementação](/docs/IMPLEMENTATION_PLAN.md)
 
 - **Membership**  
   Relação entre uma pessoa e um território (morador, visitante, etc.).

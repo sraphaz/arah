@@ -151,7 +151,7 @@ public sealed class MembershipsController : ControllerBase
 
         if (!canValidate)
         {
-            return Forbid();
+            return StatusCode(StatusCodes.Status403Forbidden);
         }
 
         if (!Enum.TryParse<VerificationStatus>(request.Status, true, out var status))

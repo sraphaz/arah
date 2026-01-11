@@ -169,7 +169,7 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresTerritoryId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), "Ponto", "Categoria", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), "Ponto", "estabelecimento", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("territory", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -178,7 +178,7 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresName()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "", "Categoria", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "", "estabelecimento", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("name", exception.Message, StringComparison.OrdinalIgnoreCase);
     }

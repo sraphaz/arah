@@ -23,9 +23,11 @@ public sealed class MapEntity
             throw new ArgumentException("Name is required.", nameof(name));
         }
 
-        if (string.IsNullOrWhiteSpace(category))
+        if (!MapEntityCategory.TryNormalize(category, out var normalizedCategory))
         {
-            throw new ArgumentException("Category is required.", nameof(category));
+            throw new ArgumentException(
+                $"Category must be one of: {MapEntityCategory.AllowedList}.",
+                nameof(category));
         }
 
         if (createdByUserId == Guid.Empty)
@@ -37,7 +39,7 @@ public sealed class MapEntity
         TerritoryId = territoryId;
         CreatedByUserId = createdByUserId;
         Name = name.Trim();
-        Category = category.Trim();
+        Category = normalizedCategory;
         Status = status;
         Visibility = visibility;
         ConfirmationCount = confirmationCount;

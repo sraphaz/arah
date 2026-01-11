@@ -1,3 +1,4 @@
+using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
@@ -44,7 +45,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
-            new List<Araponga.Application.Models.GeoAnchorInput>
+            new List<GeoAnchorInput>
             {
                 new(-23.0, -45.0, "POST")
             },
@@ -61,7 +62,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
-            new List<Araponga.Application.Models.GeoAnchorInput>
+            new List<GeoAnchorInput>
             {
                 new(-23.0, -45.0, "POST")
             },
@@ -414,7 +415,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.PendingApproval,
             null,
-            new List<Araponga.Application.Models.GeoAnchorInput>
+            new List<GeoAnchorInput>
             {
                 new(-23.0, -45.0, "EVENT")
             },
@@ -606,7 +607,7 @@ public sealed class ApplicationServiceTests
             PostVisibility.Public,
             PostStatus.Published,
             null,
-            new List<Araponga.Application.Models.GeoAnchorInput>
+            new List<GeoAnchorInput>
             {
                 new(-23.0, -45.0, "POST")
             },

@@ -170,7 +170,7 @@ public sealed class ApplicationServiceTests
             ActiveTerritoryId,
             Guid.NewGuid(),
             "Lugar",
-            "Categoria",
+            "espaço natural",
             -23.0,
             -45.0,
             CancellationToken.None);

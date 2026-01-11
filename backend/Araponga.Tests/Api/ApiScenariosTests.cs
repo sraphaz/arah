@@ -647,7 +647,7 @@ public sealed class ApiScenariosTests
 
         var suggestion = await client.PostAsJsonAsync(
             $"api/v1/map/entities?territoryId={ActiveTerritoryId}",
-            new SuggestMapEntityRequest("Ponto novo", "Cachoeira", -23.37, -45.02));
+            new SuggestMapEntityRequest("Ponto novo", "espaço natural", -23.37, -45.02));
         suggestion.EnsureSuccessStatusCode();
         var entity = await suggestion.Content.ReadFromJsonAsync<MapEntityResponse>();
         Assert.NotNull(entity);

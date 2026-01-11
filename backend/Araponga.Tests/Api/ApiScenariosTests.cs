@@ -502,7 +502,7 @@ public sealed class ApiScenariosTests
     }
 
     [Fact]
-    public async Task MembershipValidation_RequiresCurator()
+    public async Task MembershipValidation_RequiresValidatedResident()
     {
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
@@ -522,10 +522,10 @@ public sealed class ApiScenariosTests
         var fail = await client.PatchAsJsonAsync(
             $"api/v1/territories/{ActiveTerritoryId}/membership/{membershipPayload!.Id}/validation",
             new ValidateMembershipRequest("VALIDATED"));
-        Assert.Equal(HttpStatusCode.Unauthorized, fail.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, fail.StatusCode);
 
-        var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
 
         var ok = await client.PatchAsJsonAsync(
             $"api/v1/territories/{ActiveTerritoryId}/membership/{membershipPayload.Id}/validation",

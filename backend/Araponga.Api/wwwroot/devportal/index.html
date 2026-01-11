@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Developer Portal da API Araponga: território, memberships, feed, mapa e moderação." />
+  <title>Araponga API • Developer Portal</title>
+  <link rel="icon" href="/araponga_icon.png" />
+  <link rel="apple-touch-icon" href="/araponga_icon.png" />
+  <link rel="stylesheet" href="./assets/css/devportal.css" />
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para conteúdo</a>
+
+  <header class="header">
+    <div class="container hero">
+      <div class="return-banner" hidden data-return-banner>
+        <span>Você voltou do aplicativo Araponga. Continue explorando a API por aqui.</span>
+        <a href="https://araponga.app" rel="noopener">Voltar para araponga.app →</a>
+      </div>
+
+      <span class="hero-tag">Araponga API • Developer Portal</span>
+      <h1>Infraestrutura territorial para comunidades locais.</h1>
+      <p>
+        O Araponga é uma plataforma comunitária <strong>territory-first</strong>. O território organiza contexto,
+        visibilidade e governança. Este portal documenta o produto e a API exatamente como implementada hoje,
+        para acelerar o onboarding de desenvolvedores com segurança e previsibilidade.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button" href="#quickstart">Quickstart</a>
+        <a class="button secondary" href="#openapi">OpenAPI</a>
+        <a class="button secondary" href="#auth">Autenticação</a>
+        <a class="button secondary" href="#territory-session">Selecionar território</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container layout" id="conteudo">
+    <nav class="nav" aria-label="Navegação do portal">
+      <h2>Conteúdo</h2>
+      <ul>
+        <li><a href="#visao-geral">Visão geral</a></li>
+        <li><a href="#conceitos">Conceitos de produto</a></li>
+        <li><a href="#modelo-dominio">Modelo de domínio</a></li>
+        <li><a href="#fluxos">Fluxos principais</a></li>
+        <li><a href="#auth">Autenticação (JWT)</a></li>
+        <li><a href="#territory-session">Território & headers</a></li>
+        <li><a href="#openapi">OpenAPI / Explorer</a></li>
+        <li><a href="#erros">Erros & convenções</a></li>
+        <li><a href="#quickstart">Quickstart</a></li>
+        <li><a href="#versoes">Versões</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section class="section" id="visao-geral">
+        <span class="eyebrow">Visão geral</span>
+        <h2>API orientada a território + curadoria comunitária.</h2>
+        <p>
+          A API da Araponga cria um núcleo confiável para território, vínculos, feed e mapa. Ela prioriza
+          regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam
+          auditáveis e evoluam com segurança.
+        </p>
+        <div class="grid-two">
+          <div class="card">
+            <h3>Por que território?</h3>
+            <p>
+              Território é o recorte geográfico base. Ele separa o “onde” do “quem” e do “o quê”.
+              Isso evita que conteúdo social distorça o mapa e mantém o contexto local como primeira-class.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Governança em camadas</h3>
+            <p>
+              Vínculos (visitor/resident), validações (curadoria) e moderação (reports/bloqueios)
+              formam as camadas que definem o que aparece no feed e no mapa.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="conceitos">
+        <span class="eyebrow">Conceitos de produto</span>
+        <h2>Semântica de negócio</h2>
+        <div class="grid-two">
+          <div class="card">
+            <h3>Territory-first</h3>
+            <p>
+              Território é uma célula geográfica neutra. Não carrega conteúdo social embutido; ele apenas
+              organiza contexto, priorização e governança.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Memberships</h3>
+            <p>
+              Vínculos entre usuário e território podem ser <strong>VISITOR</strong> ou <strong>RESIDENT</strong>.
+              O status de verificação segue <strong>PENDING</strong>, <strong>VALIDATED</strong> ou <strong>REJECTED</strong>
+              e influencia visibilidade e autorização.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Feature flags por território</h3>
+            <p>
+              Cada território pode habilitar flags como <strong>AlertPosts</strong> e <strong>EventPosts</strong>
+              em <code>/api/v1/territories/{territoryId}/features</code>. Elas controlam quais tipos de post são aceitos.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Curadoria/Validação</h3>
+            <p>
+              Alguns fluxos exigem curadoria (role de usuário <strong>Curator</strong>): validação de vínculos,
+              entidades de mapa e alertas ambientais.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Moderação & segurança</h3>
+            <p>
+              Reports e bloqueios moldam o que aparece no feed e no mapa. Bloqueios filtram o conteúdo de
+              usuários bloqueados tanto no feed quanto em entidades do mapa criadas por eles. Limiares
+              automáticos ainda não estão implementados no backend atual.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="modelo-dominio">
+        <span class="eyebrow">Modelo de domínio</span>
+        <h2>Entidades principais e relacionamentos</h2>
+        <figure class="diagram">
+          <img src="./assets/images/domain-diagram.svg" alt="Diagrama de relacionamento entre User, Territory, Membership, Feed, Map e Moderação" />
+          <figcaption>
+            O diagrama resume as relações centrais implementadas hoje no backend.
+          </figcaption>
+        </figure>
+
+        <div class="grid-two">
+          <div class="card">
+            <h3>O que liga com o quê</h3>
+            <ul>
+              <li><strong>User</strong> cria identidade autenticada e recebe role (Visitor/Resident/Curator).</li>
+              <li><strong>TerritoryMembership</strong> conecta User ↔ Territory e define role/status.</li>
+              <li><strong>CommunityPost</strong> pertence ao Territory e pode referenciar MapEntity.</li>
+              <li><strong>PostGeoAnchor</strong> ancora posts no mapa.</li>
+              <li><strong>MapEntity</strong> pertence ao Territory, começa como sugerida e pode ser validada.</li>
+              <li><strong>Reports</strong> e <strong>Blocks</strong> modulam visibilidade e segurança.</li>
+              <li><strong>Feature Flags</strong> habilitam tipos de post por território (AlertPosts/EventPosts).</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Por que existe</h3>
+            <ul>
+              <li>Separar território de identidade evita acoplamento social no mapa.</li>
+              <li>Vínculos explicitam presença local e governança comunitária.</li>
+              <li>Posts + geo anchors conectam feed e mapa sem confundir o domínio.</li>
+              <li>Moderação mantém confiança com regras auditáveis.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="fluxos">
+        <span class="eyebrow">Fluxos principais</span>
+        <h2>Sequências orientadas a produto e API</h2>
+
+        <div class="flow-step">
+          <h4>1. Autenticação social → JWT</h4>
+          <p>
+            Use <code>POST /api/v1/auth/social</code> com <code>Provider</code>, <code>ExternalId</code>, <code>DisplayName</code>
+            e <strong>CPF</strong> ou <strong>ForeignDocument</strong>. A resposta traz o token JWT.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/auth/social \
+  -H "Content-Type: application/json" \
+  -d '{
+    "provider": "google",
+    "externalId": "abc-123",
+    "displayName": "Ana Souza",
+    "cpf": "12345678900",
+    "email": "ana@exemplo.com"
+  }'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>2. Descoberta de território</h4>
+          <p>
+            <code>GET /api/v1/territories</code> lista territórios disponíveis. Para busca, use
+            <code>/search</code> ou <code>/nearby</code> com <code>lat</code> e <code>lng</code>.
+          </p>
+          <pre class="code-block"><code>curl "http://localhost:8080/api/v1/territories/nearby?lat=-23.55&amp;lng=-46.63&amp;radiusKm=10"</code></pre>
+        </div>
+
+        <div class="flow-step" id="territory-selection">
+          <h4>3. Seleção de território (sessão)</h4>
+          <p>
+            Defina o território ativo com <code>POST /api/v1/territories/selection</code> usando
+            <code>X-Session-Id</code>. Esse header substitui o <code>territoryId</code> em várias rotas.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/territories/selection \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: session-123" \
+  -d '{"territoryId": "11111111-1111-1111-1111-111111111111"}'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>4. Feed territorial</h4>
+          <p>
+            <code>GET /api/v1/feed</code> retorna posts filtrados pelo território ativo. Visitantes veem
+            apenas posts públicos publicados. Moradores veem conteúdo ampliado.
+          </p>
+          <pre class="code-block"><code>curl http://localhost:8080/api/v1/feed \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "X-Session-Id: session-123"</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>5. Criar post + âncoras geográficas</h4>
+          <p>
+            Para criar post use <code>POST /api/v1/feed</code>. É obrigatório enviar
+            <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code> e ao menos uma âncora geográfica.
+            Visitantes só podem criar posts do tipo <code>Event</code> (eventos pendentes de aprovação).
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/feed \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: session-123" \
+  -H "X-Geo-Latitude: -23.55" \
+  -H "X-Geo-Longitude: -46.63" \
+  -d '{
+    "title": "Mutirão de limpeza",
+    "content": "Encontro sábado 9h.",
+    "type": "Event",
+    "visibility": "Public",
+    "mapEntityId": null,
+    "geoAnchors": [{"latitude": -23.55, "longitude": -46.63, "type": "EVENT"}]
+  }'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>6. Mapa: entidades, pins e validação</h4>
+          <p>
+            Use <code>GET /api/v1/map/entities</code> e <code>/pins</code> para visualizar. Sugestões usam
+            <code>POST /api/v1/map/entities</code> (categorias: estabelecimento, órgão do governo, espaço público,
+            espaço natural). Confirmações usam <code>/confirmations</code> e validações <code>/validation</code>
+            são exclusivas para curadores.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/map/entities \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: session-123" \
+  -d '{
+    "name": "Praça Central",
+    "category": "espaço público",
+    "latitude": -23.55,
+    "longitude": -46.63
+  }'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>7. Membership: visitor → resident</h4>
+          <p>
+            <code>POST /api/v1/territories/{territoryId}/membership</code> declara vínculo. A validação
+            (morador) é feita por curadores em <code>/validation</code>. O status atual está em
+            <code>GET /api/v1/territories/{territoryId}/membership/me</code>.
+            Quando a policy exige presença, envie <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code>.
+          </p>
+        </div>
+
+        <div class="flow-step">
+          <h4>8. Moderação: reports e bloqueios</h4>
+          <p>
+            Reports podem ser enviados para posts e usuários. Bloqueios removem conteúdo do feed e do mapa
+            de quem foi bloqueado. Use <code>POST /api/v1/reports/posts/{postId}</code>,
+            <code>POST /api/v1/reports/users/{userId}</code> e <code>POST /api/v1/blocks/users/{userId}</code>.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="auth">
+        <span class="eyebrow">Autenticação</span>
+        <h2>JWT (HS256)</h2>
+        <p>
+          O token é emitido pelo endpoint <code>/api/v1/auth/social</code>. Ele utiliza algoritmo HS256 e
+          valida <code>issuer</code> e <code>audience</code> conforme configuração em <code>appsettings.json</code>.
+        </p>
+        <table class="kv-table">
+          <thead>
+            <tr>
+              <th>Configuração</th>
+              <th>Chave</th>
+              <th>Local</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Issuer</td>
+              <td>Jwt:Issuer</td>
+              <td>backend/Araponga.Api/appsettings.json</td>
+            </tr>
+            <tr>
+              <td>Audience</td>
+              <td>Jwt:Audience</td>
+              <td>backend/Araponga.Api/appsettings.json</td>
+            </tr>
+            <tr>
+              <td>SigningKey</td>
+              <td>Jwt:SigningKey</td>
+              <td>backend/Araponga.Api/appsettings.json</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="notice">
+          <strong>Erro 401:</strong> token ausente, inválido, expirado ou com issuer/audience incorretos.
+          Atualmente, autorizações negadas também retornam <strong>401</strong> (não há 403 no código).
+        </div>
+      </section>
+
+      <section class="section" id="territory-session">
+        <span class="eyebrow">Contexto e headers</span>
+        <h2>Território, sessão e geolocalização</h2>
+        <p>
+          Várias rotas aceitam o território via <code>territoryId</code> na query ou via sessão com
+          <code>X-Session-Id</code>. Além disso, algumas operações exigem presença geográfica.
+        </p>
+        <table class="kv-table">
+          <thead>
+            <tr>
+              <th>Header</th>
+              <th>Uso</th>
+              <th>Onde é obrigatório</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>X-Session-Id</td>
+              <td>Seleciona território ativo da sessão.</td>
+              <td>Feed, Mapa, Health, Moderação quando <code>territoryId</code> não está na query.</td>
+            </tr>
+            <tr>
+              <td>X-Geo-Latitude / X-Geo-Longitude</td>
+              <td>Comprova presença no território.</td>
+              <td>Criação de posts e declaração de membership conforme policy.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>PresencePolicy:</strong> a exigência de geolocalização para membership é configurada em
+          <code>PresencePolicy:Policy</code>. O valor padrão atual é <code>ResidentOnly</code>.
+        </div>
+      </section>
+
+      <section class="section" id="openapi">
+        <span class="eyebrow">OpenAPI</span>
+        <h2>API Explorer (Swagger UI local)</h2>
+        <div class="api-explorer">
+          <p>
+            O explorer usa a especificação real da API. Ele tenta carregar o Swagger dinâmico em
+            <code>/swagger/v1/swagger.json</code> (quando o backend roda em <code>Development</code>) e usa
+            fallback para <code>/devportal/openapi.json</code>. A navegação é feita por tags, endpoints e schemas.
+          </p>
+          <a class="button" href="./openapi.json">Baixar OpenAPI (JSON)</a>
+          <button class="button secondary" type="button" data-explorer-button aria-expanded="false">
+            Abrir Explorer
+          </button>
+          <p data-explorer-status class="callout">Explorer pronto para carregar.</p>
+          <div id="openapi-browser" class="swagger-hidden" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="section" id="erros">
+        <span class="eyebrow">Erros & convenções</span>
+        <h2>Como interpretar respostas</h2>
+        <div class="grid-two">
+          <div class="card">
+            <h3>Formato de erro</h3>
+            <p>
+              Erros de validação costumam retornar <code>{"error": "mensagem"}</code>. Exceções não tratadas
+              retornam <code>ProblemDetails</code> com <code>title</code>, <code>status</code>, <code>detail</code>,
+              <code>traceId</code> e <code>path</code>.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Códigos comuns</h3>
+            <ul>
+              <li><strong>400</strong> dados inválidos ou headers obrigatórios ausentes.</li>
+              <li><strong>401</strong> token ausente/ inválido ou falta de permissão.</li>
+              <li><strong>404</strong> recurso inexistente (territory, post, user).</li>
+              <li><strong>409</strong> não usado atualmente.</li>
+              <li><strong>500</strong> exceções não tratadas (ProblemDetails).</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Health check:</strong> <code>GET /health</code> responde <code>{"status": "ok"}</code> e
+          <code>GET /api/v1/health/indicators</code> exibe indicadores do território ativo. Logs seguem a
+          configuração padrão de <code>Logging</code> no <code>appsettings.json</code>.
+        </div>
+      </section>
+
+      <section class="section" id="quickstart">
+        <span class="eyebrow">Quickstart</span>
+        <h2>Copie e cole (5–10 comandos)</h2>
+        <div class="code-block">
+          <code>
+# 1) Rodar API
+ASPNETCORE_ENVIRONMENT=Development dotnet run --project backend/Araponga.Api --urls http://localhost:8080
+
+# 2) Autenticação social (gera token)
+curl -X POST http://localhost:8080/api/v1/auth/social \
+  -H "Content-Type: application/json" \
+  -d '{"provider":"google","externalId":"abc-123","displayName":"Ana","cpf":"12345678900"}'
+
+# 3) Descobrir território
+curl http://localhost:8080/api/v1/territories
+
+# 4) Selecionar território (X-Session-Id)
+curl -X POST http://localhost:8080/api/v1/territories/selection \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: session-123" \
+  -d '{"territoryId":"11111111-1111-1111-1111-111111111111"}'
+
+# 5) Listar feed
+curl http://localhost:8080/api/v1/feed \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "X-Session-Id: session-123"
+
+# 6) Listar pins do mapa
+curl http://localhost:8080/api/v1/map/pins \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "X-Session-Id: session-123"
+          </code>
+        </div>
+      </section>
+
+      <section class="section" id="versoes">
+        <span class="eyebrow">Versões & compatibilidade</span>
+        <h2>Versionamento</h2>
+        <p>
+          A API atual utiliza prefixo <code>/api/v1</code>. Mudanças compatíveis devem manter o contrato dentro
+          dessa versão. Para evolução maior, a estratégia recomendada é introduzir um novo prefixo.
+        </p>
+        <div class="callout">
+          Consulte o changelog do repositório em <a href="/CHANGELOG.md">/CHANGELOG.md</a> para histórico.
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>
+          Portal servido estáticamente em <code>/devportal</code> pelo backend Araponga.Api.
+          Para contribuir, consulte o repositório e a documentação técnica local.
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="./assets/js/devportal.js"></script>
+</body>
+</html>

@@ -142,7 +142,7 @@ public sealed class ApplicationServiceTests
             ActiveTerritoryId,
             Guid.NewGuid(),
             "Lugar",
-            "Categoria",
+            "estabelecimento",
             CancellationToken.None);
 
         Assert.True(suggestion.success);

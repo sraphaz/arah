@@ -65,12 +65,17 @@ public sealed class MapService
             return (false, "Name and category are required.", null);
         }
 
+        if (!MapEntityCategory.TryNormalize(category, out var normalizedCategory))
+        {
+            return (false, $"Invalid category. Allowed values: {MapEntityCategory.AllowedList}.", null);
+        }
+
         var entity = new MapEntity(
             Guid.NewGuid(),
             territoryId,
             userId,
             name,
-            category,
+            normalizedCategory,
             MapEntityStatus.Suggested,
             MapEntityVisibility.ResidentsOnly,
             0,

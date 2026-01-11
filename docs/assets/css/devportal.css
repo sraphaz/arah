@@ -16,6 +16,7 @@
   --radius: 16px;
   --radius-sm: 12px;
   --max-width: 1180px;
+  --content-max: 880px;
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   scroll-behavior: smooth;
 }
@@ -29,11 +30,14 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  font-size: clamp(0.95rem, 0.85rem + 0.4vw, 1.05rem);
+  overflow-x: clip;
 }
 
 img {
   max-width: 100%;
   height: auto;
+  display: block;
 }
 
 a {
@@ -71,7 +75,7 @@ input:focus-visible {
 
 .header {
   background: linear-gradient(140deg, rgba(15, 27, 33, 0.95), rgba(9, 14, 17, 0.95)),
-    url("../images/araponga-icon.svg") no-repeat right 8% / 220px;
+    url("../images/araponga-icon.svg") no-repeat right clamp(4%, 6vw, 8%) / clamp(140px, 22vw, 220px);
   border-bottom: 1px solid var(--border);
   padding: 48px 0 32px;
 }
@@ -79,7 +83,7 @@ input:focus-visible {
 .container {
   width: min(100%, var(--max-width));
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 clamp(16px, 4vw, 32px);
 }
 
 .return-banner {
@@ -153,9 +157,15 @@ input:focus-visible {
 
 .layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 32px;
-  padding: 32px 0 64px;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 32px);
+  padding: clamp(24px, 4vw, 32px) 0 clamp(48px, 6vw, 64px);
+}
+
+main {
+  min-width: 0;
+  width: 100%;
+  max-width: var(--content-max);
 }
 
 .nav {
@@ -185,9 +195,11 @@ input:focus-visible {
 .nav a {
   text-decoration: none;
   color: var(--text);
-  padding: 6px 10px;
+  padding: 10px 12px;
+  min-height: 44px;
   border-radius: 8px;
-  display: block;
+  display: flex;
+  align-items: center;
 }
 
 .nav a:hover,
@@ -196,13 +208,17 @@ input:focus-visible {
 }
 
 .section {
-  padding: 32px 0;
+  padding: clamp(24px, 4vw, 40px) 0;
   border-bottom: 1px solid var(--border);
 }
 
 .section h2 {
   font-size: clamp(1.6rem, 1.5vw + 1rem, 2.2rem);
   margin-top: 0;
+}
+
+.section h3 {
+  font-size: clamp(1.1rem, 0.9rem + 0.5vw, 1.4rem);
 }
 
 .section p {
@@ -219,8 +235,8 @@ input:focus-visible {
 
 .grid-two {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 3vw, 24px);
 }
 
 .card {
@@ -257,12 +273,27 @@ input:focus-visible {
 .code-block {
   background: var(--code-bg);
   border-radius: var(--radius-sm);
-  padding: 16px;
+  padding: clamp(12px, 2.5vw, 16px);
   overflow-x: auto;
   border: 1px solid var(--border);
   color: #d7e3ea;
   font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 0.75rem + 0.3vw, 0.95rem);
+  line-height: 1.5;
+}
+
+pre,
+code {
+  overflow-x: auto;
+}
+
+code {
+  overflow-wrap: anywhere;
+}
+
+pre code {
+  overflow-wrap: normal;
+  white-space: pre;
 }
 
 .kv-table {
@@ -270,6 +301,8 @@ input:focus-visible {
   border-collapse: collapse;
   border: 1px solid var(--border);
   margin-top: 16px;
+  display: block;
+  overflow-x: auto;
 }
 
 .kv-table th,
@@ -290,6 +323,12 @@ input:focus-visible {
   border: 1px solid var(--border);
   background: #ffffff;
   padding: 16px;
+  overflow-x: auto;
+}
+
+.diagram img {
+  border-radius: 12px;
+  margin: 0 auto;
 }
 
 .diagram figcaption {
@@ -353,6 +392,7 @@ input:focus-visible {
   padding: 12px 14px;
   margin-bottom: 10px;
   background: var(--bg-muted);
+  overflow-x: auto;
 }
 
 .endpoint summary {
@@ -427,6 +467,18 @@ input:focus-visible {
   }
 }
 
+@media (min-width: 640px) {
+  .grid-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-two {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 600px) {
   .hero-actions {
     flex-direction: column;
@@ -435,5 +487,11 @@ input:focus-visible {
 
   .button {
     justify-content: center;
+  }
+
+  .kv-table th,
+  .kv-table td {
+    padding: 10px 12px;
+    font-size: 0.9rem;
   }
 }

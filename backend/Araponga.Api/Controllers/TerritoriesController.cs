@@ -1,4 +1,5 @@
 using Araponga.Api.Contracts.Territories;
+using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Territories;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,15 @@ public sealed class TerritoriesController : ControllerBase
 {
     private readonly TerritoryService _territoryService;
     private readonly ActiveTerritoryService _activeTerritoryService;
+    private readonly CurrentUserAccessor _currentUserAccessor;
     public TerritoriesController(
         TerritoryService territoryService,
-        ActiveTerritoryService activeTerritoryService)
+        ActiveTerritoryService activeTerritoryService,
+        CurrentUserAccessor currentUserAccessor)
     {
         _territoryService = territoryService;
         _activeTerritoryService = activeTerritoryService;
+        _currentUserAccessor = currentUserAccessor;
     }
 
     /// <summary>
@@ -47,6 +51,12 @@ public sealed class TerritoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TerritoryResponse>> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
         var territory = await _territoryService.GetByIdAsync(id, cancellationToken);
         return territory is null ? NotFound() : Ok(ToResponse(territory));
     }

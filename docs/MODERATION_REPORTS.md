@@ -11,14 +11,23 @@ O MVP implementa fluxos essenciais e automações simples baseadas em thresholds
 2. Informa motivo e detalhes (opcional).
 3. Sistema registra o report e envia para fila de moderação.
 
+**Endpoints**
+- `POST /api/v1/reports/posts/{postId}`
+
 ### Reportar usuário [MVP]
 1. Usuário acessa perfil e aciona “Reportar usuário”.
 2. Informa motivo e detalhes (opcional).
 3. Sistema registra o report para análise.
 
+**Endpoints**
+- `POST /api/v1/reports/users/{userId}`
+
 ### Bloquear usuário [MVP]
 - Usuário bloqueado deixa de aparecer nos feeds do bloqueador.
 - Bloqueio não remove conteúdo globalmente; atua na experiência do bloqueador.
+
+**Endpoints**
+- `POST /api/v1/blocks/users/{userId}`
 
 ## Automações do MVP (threshold simples)
 - **Regra**: número mínimo de reports únicos por janela de tempo aciona resposta automática.

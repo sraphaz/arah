@@ -21,6 +21,16 @@ public sealed class InMemoryFeedRepository : IFeedRepository
         return Task.FromResult<IReadOnlyList<CommunityPost>>(posts);
     }
 
+    public Task<IReadOnlyList<CommunityPost>> ListByAuthorAsync(Guid authorUserId, CancellationToken cancellationToken)
+    {
+        var posts = _dataStore.Posts
+            .Where(post => post.AuthorUserId == authorUserId)
+            .OrderByDescending(post => post.CreatedAtUtc)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<CommunityPost>>(posts);
+    }
+
     public Task<CommunityPost?> GetPostAsync(Guid postId, CancellationToken cancellationToken)
     {
         var post = _dataStore.Posts.FirstOrDefault(p => p.Id == postId);
@@ -30,6 +40,30 @@ public sealed class InMemoryFeedRepository : IFeedRepository
     public Task AddPostAsync(CommunityPost post, CancellationToken cancellationToken)
     {
         _dataStore.Posts.Add(post);
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateStatusAsync(Guid postId, PostStatus status, CancellationToken cancellationToken)
+    {
+        var post = _dataStore.Posts.FirstOrDefault(p => p.Id == postId);
+        if (post is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        _dataStore.Posts.Remove(post);
+        var updated = new CommunityPost(
+            post.Id,
+            post.TerritoryId,
+            post.AuthorUserId,
+            post.Title,
+            post.Content,
+            post.Type,
+            post.Visibility,
+            status,
+            post.MapEntityId,
+            post.CreatedAtUtc);
+        _dataStore.Posts.Add(updated);
         return Task.CompletedTask;
     }
 

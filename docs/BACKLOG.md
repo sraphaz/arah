@@ -39,6 +39,11 @@
     - Feed do território lista posts associados ao território.
     - Cada post tem ao menos 1 GeoAnchor.
     - Sem vínculo válido, o usuário recebe orientação para declarar vínculo.
+- [MVP] **Eventos com aprovação de moradores**
+  - Critérios de aceite:
+    - Moradores publicam eventos diretamente.
+    - Visitantes publicam eventos com status pendente.
+    - Moradores aprovam ou rejeitam eventos pendentes.
 - [MVP] **Feed pessoal do usuário**
   - Critérios de aceite:
     - Usuário vê seus próprios posts em um feed pessoal.
@@ -53,6 +58,11 @@
     - Ao navegar na timeline, o pin correspondente é destacado.
     - Ao tocar no pin, o post é destacado/aberto no feed.
     - Conteúdo oculto por moderação não aparece no mapa.
+- [MVP] **Filtro de feed por entidade territorial**
+  - Critérios de aceite:
+    - Feed pode filtrar posts associados a uma entidade.
+    - Entidades são sugeridas por visitantes ou moradores e confirmadas por moradores.
+    - Moradores podem se relacionar com entidades do território.
 
 ## Epic 3 — Postagem e GeoAnchor
 ### Feature: Criação de post

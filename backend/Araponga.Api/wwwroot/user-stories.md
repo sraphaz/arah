@@ -86,6 +86,7 @@
 - `PUBLIC` visível para todos.
 - `RESIDENTS_ONLY` visível apenas para membros `RESIDENT` validados.
 - Sem autenticação ou sem membership ⇒ apenas `PUBLIC`.
+- É possível filtrar o feed por entidade territorial quando disponível.
 
 ### US-F02 — Criar post
 **Como** morador  
@@ -95,6 +96,8 @@
 **Critérios de aceite**
 - Apenas `RESIDENT` validado pode criar posts.
 - Tipos de post seguem feature flags por território.
+- Eventos podem ser criados por visitantes com status `PENDING` até aprovação de moradores.
+- Moradores aprovam ou rejeitam eventos pendentes.
 
 ### US-F03 — Interações (curtir/comentar/compartilhar)
 **Como** usuário  
@@ -119,12 +122,12 @@
 - `RESIDENTS_ONLY` visível apenas para `RESIDENT` validado.
 
 ### US-M02 — Sugerir entidade
-**Como** morador  
+**Como** visitante ou morador  
 **Quero** sugerir entidades no mapa  
 **Para** enriquecer o território
 
 **Critérios de aceite**
-- Somente `RESIDENT` validado pode sugerir.
+- Visitantes e moradores podem sugerir.
 - Entidade sugerida nasce como `SUGGESTED`.
 
 ### US-M03 — Validar entidade (curadoria)
@@ -143,6 +146,14 @@
 
 **Critérios de aceite**
 - Somente `RESIDENT` validado pode confirmar.
+
+### US-M05 — Relacionar morador a entidade
+**Como** morador  
+**Quero** me relacionar com entidades do território  
+**Para** declarar vínculo com lugares relevantes
+
+**Critérios de aceite**
+- Somente `RESIDENT` validado pode se relacionar.
 
 ---
 

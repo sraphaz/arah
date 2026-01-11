@@ -6,6 +6,8 @@ public sealed record FeedItemResponse(
     string Content,
     string Type,
     string Visibility,
+    string Status,
+    Guid? MapEntityId,
     bool IsHighlighted,
     int LikeCount,
     int ShareCount,

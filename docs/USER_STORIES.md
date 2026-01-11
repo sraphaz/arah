@@ -81,6 +81,27 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 - Post pode incluir múltiplas mídias.
 - Se a geolocalização estiver indisponível, o post não pode ser publicado.
 
+### [MVP][P0] Eventos com aprovação de moradores
+**Como** visitante ou morador
+**Quero** publicar eventos no território
+**Para** mobilizar ações locais com curadoria comunitária.
+
+**Critérios de aceite**
+- Moradores podem publicar eventos com status publicado imediatamente.
+- Visitantes podem publicar eventos com status pendente até aprovação de moradores.
+- Moradores podem aprovar ou rejeitar eventos pendentes.
+
+### [MVP][P0] Entidades territoriais com confirmação
+**Como** visitante ou morador
+**Quero** sugerir entidades do território
+**Para** registrar lugares relevantes no mapa.
+
+**Critérios de aceite**
+- Visitantes e moradores podem sugerir entidades.
+- Moradores confirmam entidades sugeridas.
+- Moradores podem se relacionar com entidades do território.
+- Entidades podem ser usadas como filtro no feed/timeline.
+
 ### [MVP][P0] Sincronia feed ↔ mapa
 **Como** usuário
 **Quero** que a timeline do feed sincronize com a geolocalização dos posts

@@ -1,6 +1,7 @@
 using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
+using Araponga.Domain.Moderation;
 using Araponga.Domain.Social;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
@@ -90,18 +91,24 @@ public sealed class InMemoryDataStore
             new(
                 Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                 territoryB.Id,
+                residentUser.Id,
                 "Bem-vindos ao Vale!",
                 "Post público de boas-vindas.",
                 PostType.General,
                 PostVisibility.Public,
+                PostStatus.Published,
+                null,
                 DateTime.UtcNow),
             new(
                 Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
                 territoryB.Id,
+                residentUser.Id,
                 "Reunião de moradores",
                 "Encontro exclusivo para moradores.",
                 PostType.Event,
                 PostVisibility.ResidentsOnly,
+                PostStatus.Published,
+                null,
                 DateTime.UtcNow)
         };
 
@@ -110,6 +117,7 @@ public sealed class InMemoryDataStore
             new(
                 Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
                 territoryB.Id,
+                residentUser.Id,
                 "Cachoeira do Vale",
                 "Cachoeira",
                 MapEntityStatus.Validated,
@@ -119,6 +127,7 @@ public sealed class InMemoryDataStore
             new(
                 Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                 territoryB.Id,
+                residentUser.Id,
                 "Nascente Secreta",
                 "Nascente",
                 MapEntityStatus.Validated,
@@ -136,10 +145,13 @@ public sealed class InMemoryDataStore
     public List<UserTerritory> UserTerritories { get; } = new();
     public List<CommunityPost> Posts { get; }
     public List<MapEntity> MapEntities { get; }
+    public List<MapEntityRelation> MapEntityRelations { get; } = new();
     public List<HealthAlert> HealthAlerts { get; }
     public Dictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();
     public Dictionary<Guid, List<PostComment>> PostComments { get; } = new();
     public Dictionary<Guid, HashSet<Guid>> PostShares { get; } = new();
     public List<Application.Models.AuditEntry> AuditEntries { get; } = new();
+    public List<ModerationReport> ModerationReports { get; } = new();
+    public List<UserBlock> UserBlocks { get; } = new();
 }

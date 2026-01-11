@@ -8,12 +8,21 @@ public sealed class MapService
     private readonly IMapRepository _mapRepository;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly IAuditLogger _auditLogger;
+    private readonly IUserBlockRepository _userBlockRepository;
+    private readonly IMapEntityRelationRepository _relationRepository;
 
-    public MapService(IMapRepository mapRepository, AccessEvaluator accessEvaluator, IAuditLogger auditLogger)
+    public MapService(
+        IMapRepository mapRepository,
+        AccessEvaluator accessEvaluator,
+        IAuditLogger auditLogger,
+        IUserBlockRepository userBlockRepository,
+        IMapEntityRelationRepository relationRepository)
     {
         _mapRepository = mapRepository;
         _accessEvaluator = accessEvaluator;
         _auditLogger = auditLogger;
+        _userBlockRepository = userBlockRepository;
+        _relationRepository = relationRepository;
     }
 
     public async Task<IReadOnlyList<MapEntity>> ListEntitiesAsync(
@@ -22,10 +31,17 @@ public sealed class MapService
         CancellationToken cancellationToken)
     {
         var entities = await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        var blockedUserIds = userId is null
+            ? Array.Empty<Guid>()
+            : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
+
+        var visibleEntities = blockedUserIds.Count == 0
+            ? entities
+            : entities.Where(entity => !blockedUserIds.Contains(entity.CreatedByUserId)).ToList();
 
         if (userId is null)
         {
-            return entities
+            return visibleEntities
                 .Where(entity => entity.Visibility == MapEntityVisibility.Public)
                 .ToList();
         }
@@ -33,8 +49,8 @@ public sealed class MapService
         var isResident = await _accessEvaluator.IsResidentAsync(userId.Value, territoryId, cancellationToken);
 
         return isResident
-            ? entities.ToList()
-            : entities.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
+            ? visibleEntities.ToList()
+            : visibleEntities.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
     }
 
     public async Task<(bool success, string? error, MapEntity? entity)> SuggestAsync(
@@ -49,15 +65,10 @@ public sealed class MapService
             return (false, "Name and category are required.", null);
         }
 
-        var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
-        if (!isResident)
-        {
-            return (false, "Only residents can suggest entities.", null);
-        }
-
         var entity = new MapEntity(
             Guid.NewGuid(),
             territoryId,
+            userId,
             name,
             category,
             MapEntityStatus.Suggested,
@@ -72,6 +83,40 @@ public sealed class MapService
             cancellationToken);
 
         return (true, null, entity);
+    }
+
+    public async Task<(bool success, string? error, MapEntityRelation? relation)> RelateAsync(
+        Guid territoryId,
+        Guid entityId,
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var entity = await _mapRepository.GetByIdAsync(entityId, cancellationToken);
+        if (entity is null || entity.TerritoryId != territoryId)
+        {
+            return (false, "Entity not found.", null);
+        }
+
+        var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
+        if (!isResident)
+        {
+            return (false, "Only residents can relate to entities.", null);
+        }
+
+        var exists = await _relationRepository.ExistsAsync(userId, entityId, cancellationToken);
+        if (exists)
+        {
+            return (false, null, null);
+        }
+
+        var relation = new MapEntityRelation(userId, entityId, DateTime.UtcNow);
+        await _relationRepository.AddAsync(relation, cancellationToken);
+
+        await _auditLogger.LogAsync(
+            new Models.AuditEntry("map.related", userId, territoryId, entityId, DateTime.UtcNow),
+            cancellationToken);
+
+        return (true, null, relation);
     }
 
     public async Task<bool> ValidateAsync(

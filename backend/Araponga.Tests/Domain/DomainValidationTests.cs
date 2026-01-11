@@ -1,5 +1,6 @@
 using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
+using Araponga.Domain.Moderation;
 using Araponga.Domain.Social;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
@@ -114,7 +115,7 @@ public sealed class DomainValidationTests
     public void CommunityPost_RequiresTerritoryId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new CommunityPost(Guid.NewGuid(), Guid.Empty, "Title", "Content", PostType.General, PostVisibility.Public, DateTime.UtcNow));
+            new CommunityPost(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), "Title", "Content", PostType.General, PostVisibility.Public, PostStatus.Published, null, DateTime.UtcNow));
 
         Assert.Contains("territory", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -123,7 +124,7 @@ public sealed class DomainValidationTests
     public void CommunityPost_RequiresTitle()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new CommunityPost(Guid.NewGuid(), Guid.NewGuid(), "", "Content", PostType.General, PostVisibility.Public, DateTime.UtcNow));
+            new CommunityPost(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "", "Content", PostType.General, PostVisibility.Public, PostStatus.Published, null, DateTime.UtcNow));
 
         Assert.Contains("title", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -132,7 +133,7 @@ public sealed class DomainValidationTests
     public void CommunityPost_RequiresContent()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new CommunityPost(Guid.NewGuid(), Guid.NewGuid(), "Title", "", PostType.General, PostVisibility.Public, DateTime.UtcNow));
+            new CommunityPost(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Title", "", PostType.General, PostVisibility.Public, PostStatus.Published, null, DateTime.UtcNow));
 
         Assert.Contains("content", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -168,7 +169,7 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresTerritoryId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.Empty, "Ponto", "Categoria", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), "Ponto", "Categoria", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("territory", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -177,7 +178,7 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresName()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), "", "Categoria", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "", "Categoria", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("name", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -186,9 +187,47 @@ public sealed class DomainValidationTests
     public void MapEntity_RequiresCategory()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), "Ponto", "", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
+            new MapEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Ponto", "", MapEntityStatus.Suggested, MapEntityVisibility.Public, 0, DateTime.UtcNow));
 
         Assert.Contains("category", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void ModerationReport_RequiresReporterAndReason()
+    {
+        var missingReporter = Assert.Throws<ArgumentException>(() =>
+            new ModerationReport(Guid.NewGuid(), Guid.Empty, ReportTargetType.Post, Guid.NewGuid(), "SPAM", null, DateTime.UtcNow));
+
+        Assert.Contains("reporter", missingReporter.Message, StringComparison.OrdinalIgnoreCase);
+
+        var missingReason = Assert.Throws<ArgumentException>(() =>
+            new ModerationReport(Guid.NewGuid(), Guid.NewGuid(), ReportTargetType.Post, Guid.NewGuid(), "", null, DateTime.UtcNow));
+
+        Assert.Contains("reason", missingReason.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void UserBlock_RejectsSelfBlock()
+    {
+        var userId = Guid.NewGuid();
+        var exception = Assert.Throws<ArgumentException>(() =>
+            new UserBlock(userId, userId, DateTime.UtcNow));
+
+        Assert.Contains("block", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void MapEntityRelation_RequiresUserAndEntity()
+    {
+        var missingUser = Assert.Throws<ArgumentException>(() =>
+            new MapEntityRelation(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow));
+
+        Assert.Contains("user", missingUser.Message, StringComparison.OrdinalIgnoreCase);
+
+        var missingEntity = Assert.Throws<ArgumentException>(() =>
+            new MapEntityRelation(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow));
+
+        Assert.Contains("entity", missingEntity.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

@@ -126,10 +126,13 @@ public static class PostgresMappers
         {
             Id = post.Id,
             TerritoryId = post.TerritoryId,
+            AuthorUserId = post.AuthorUserId,
             Title = post.Title,
             Content = post.Content,
             Type = post.Type,
             Visibility = post.Visibility,
+            Status = post.Status,
+            MapEntityId = post.MapEntityId,
             CreatedAtUtc = post.CreatedAtUtc
         };
     }
@@ -139,10 +142,13 @@ public static class PostgresMappers
         return new CommunityPost(
             record.Id,
             record.TerritoryId,
+            record.AuthorUserId,
             record.Title,
             record.Content,
             record.Type,
             record.Visibility,
+            record.Status,
+            record.MapEntityId,
             record.CreatedAtUtc);
     }
 
@@ -174,6 +180,7 @@ public static class PostgresMappers
         {
             Id = entity.Id,
             TerritoryId = entity.TerritoryId,
+            CreatedByUserId = entity.CreatedByUserId,
             Name = entity.Name,
             Category = entity.Category,
             Status = entity.Status,
@@ -188,6 +195,7 @@ public static class PostgresMappers
         return new MapEntity(
             record.Id,
             record.TerritoryId,
+            record.CreatedByUserId,
             record.Name,
             record.Category,
             record.Status,

@@ -303,6 +303,9 @@ public sealed class ApiScenariosTests
 
         await SelectTerritoryAsync(client, ActiveTerritoryId);
 
+        var visitorToken = await LoginForTokenAsync(client, "google", "visitor-feed");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
+
         var visitorFeed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(visitorFeed);
@@ -384,6 +387,9 @@ public sealed class ApiScenariosTests
         Assert.Equal(HttpStatusCode.BadRequest, missingSelection.StatusCode);
 
         await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var visitorToken = await LoginForTokenAsync(client, "google", "visitor-map");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
 
         var visitorMap = await client.GetFromJsonAsync<List<MapEntityResponse>>(
             $"api/v1/map/entities?territoryId={ActiveTerritoryId}");
@@ -494,12 +500,12 @@ public sealed class ApiScenariosTests
 
         var created = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
-            new CreatePostRequest("Novo post", "Conteúdo", "GENERAL", "PUBLIC"));
+            new CreatePostRequest("Novo post", "Conteúdo", "GENERAL", "PUBLIC", null));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
         var invalidPost = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
-            new CreatePostRequest("Novo post", "Conteúdo", "INVALID", "PUBLIC"));
+            new CreatePostRequest("Novo post", "Conteúdo", "INVALID", "PUBLIC", null));
         Assert.Equal(HttpStatusCode.BadRequest, invalidPost.StatusCode);
 
         var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
@@ -519,6 +525,35 @@ public sealed class ApiScenariosTests
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(feed);
         Assert.Contains(feed!, item => item.Id == createdPost.Id);
+    }
+
+    [Fact]
+    public async Task Feed_EventRequiresApprovalForVisitor()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "feed-events");
+
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var visitorToken = await LoginForTokenAsync(client, "google", "visitor-event");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
+
+        var created = await client.PostAsJsonAsync(
+            $"api/v1/feed?territoryId={ActiveTerritoryId}",
+            new CreatePostRequest("Evento visitante", "Detalhes", "EVENT", "PUBLIC", null));
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+
+        var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
+        Assert.NotNull(createdPost);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var approve = await client.PatchAsJsonAsync(
+            $"api/v1/feed/{createdPost!.Id}/approval?territoryId={ActiveTerritoryId}",
+            new ApproveEventRequest("PUBLISHED"));
+        Assert.Equal(HttpStatusCode.NoContent, approve.StatusCode);
     }
 
     [Fact]
@@ -602,6 +637,31 @@ public sealed class ApiScenariosTests
             $"api/v1/map/entities/{entity.Id}/confirmations?territoryId={ActiveTerritoryId}",
             null);
         Assert.Equal(HttpStatusCode.NoContent, confirmation.StatusCode);
+    }
+
+    [Fact]
+    public async Task Map_RelateEntityRequiresResident()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "map-relations");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var visitorToken = await LoginForTokenAsync(client, "google", "visitor-rel");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
+
+        var fail = await client.PostAsync(
+            $"api/v1/map/entities/eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee/relations?territoryId={ActiveTerritoryId}",
+            null);
+        Assert.Equal(HttpStatusCode.BadRequest, fail.StatusCode);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var success = await client.PostAsync(
+            $"api/v1/map/entities/eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee/relations?territoryId={ActiveTerritoryId}",
+            null);
+        Assert.Equal(HttpStatusCode.Created, success.StatusCode);
     }
 
     [Fact]

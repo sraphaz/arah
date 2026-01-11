@@ -5,6 +5,8 @@
 - **Territory**
 - **UserTerritoryLink** (vínculo visitor/resident, status pending/approved)
 - **Post** (territoryId, authorId, visibility, status)
+- **MapEntity** (territoryId, createdByUserId, status, visibility)
+- **MapEntityRelation** (userId, entityId, createdAt)
 - **GeoAnchor** (territoryId, lat/lng, type, linkedPostId opcional)
 - **Media** (postId, type, url, metadata)
 - **FriendRelation** (requester, target, status pending/accepted/blocked)
@@ -18,6 +20,8 @@
 - **Territory 1..N Post** → posts no território.
 - **Post 1..N GeoAnchor** → localização(ões) da postagem.
 - **Post 0..N Media** → mídias anexadas.
+- **Post 0..1 MapEntity** → postagem pode referenciar entidade territorial.
+- **User 0..N MapEntityRelation** → moradores vinculam-se a entidades.
 - **GeoAnchor 0..1 Post** → GeoAnchor pode referenciar post específico.
 - **User N..N FriendRelation** → relações friends (pós-MVP).
 - **User 1..N Report** → reports feitos por usuários.
@@ -26,5 +30,5 @@
 - **Territory 0..N Sanction** → sanções territoriais (territoryId preenchido) ou globais (territoryId nulo).
 
 ## Observações de MVP vs Pós-MVP
-- [MVP] UserTerritoryLink, Post, GeoAnchor, Media, Report, Sanction.
+- [MVP] UserTerritoryLink, Post, GeoAnchor, Media, MapEntity, MapEntityRelation, Report, Sanction.
 - [POST-MVP] FriendRelation e comportamentos de círculo interno.

@@ -50,7 +50,7 @@ public sealed class MapController : ControllerBase
         }
 
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
-        if (userContext.Status == TokenStatus.Invalid)
+        if (userContext.Status != TokenStatus.Valid)
         {
             return Unauthorized();
         }
@@ -197,6 +197,51 @@ public sealed class MapController : ControllerBase
             cancellationToken);
 
         return result.success ? NoContent() : BadRequest(new { error = result.error });
+    }
+
+    /// <summary>
+    /// Relaciona um morador a uma entidade do território.
+    /// </summary>
+    [HttpPost("entities/{entityId:guid}/relations")]
+    [ProducesResponseType(typeof(MapEntityRelationResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<MapEntityRelationResponse>> RelateEntity(
+        [FromRoute] Guid entityId,
+        [FromQuery] Guid? territoryId,
+        CancellationToken cancellationToken)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var result = await _mapService.RelateAsync(
+            resolvedTerritoryId.Value,
+            entityId,
+            userContext.User.Id,
+            cancellationToken);
+
+        if (!result.success)
+        {
+            return result.error is null
+                ? Ok(new MapEntityRelationResponse(userContext.User.Id, entityId, DateTime.UtcNow))
+                : BadRequest(new { error = result.error });
+        }
+
+        var response = new MapEntityRelationResponse(
+            result.relation!.UserId,
+            result.relation.EntityId,
+            result.relation.CreatedAtUtc);
+
+        return CreatedAtAction(nameof(RelateEntity), new { entityId }, response);
     }
 
     private string? GetSessionId()

@@ -193,8 +193,8 @@
             confiança e organização local.
           </p>
           <ul>
-            <li data-i18n="domains.feed.fields"><strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.</li>
-            <li data-i18n="domains.feed.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.</li>
+            <li data-i18n="domains.feed.fields"><strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.</li>
+            <li data-i18n="domains.feed.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.</li>
           </ul>
         </article>
 
@@ -208,7 +208,19 @@
           </p>
           <ul>
             <li data-i18n="domains.map.fields"><strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.</li>
-            <li data-i18n="domains.map.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.</li>
+            <li data-i18n="domains.map.endpoints"><strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 data-i18n="domains.moderation.title">Moderação</h3>
+          <p data-i18n="domains.moderation.what"><strong>O que é:</strong> reports e bloqueios para proteção da comunidade.</p>
+          <p data-i18n="domains.moderation.why">
+            <strong>Por que existe:</strong> viabiliza resposta rápida a conteúdo inadequado e controle de visibilidade pessoal.
+          </p>
+          <ul>
+            <li data-i18n="domains.moderation.fields"><strong>Campos:</strong> id, targetType, targetId, reason, details, createdAtUtc.</li>
+            <li data-i18n="domains.moderation.endpoints"><strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.</li>
           </ul>
         </article>
 
@@ -536,13 +548,18 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>O que é:</strong> stream de postagens, alertas e eventos filtrados por território e visibilidade.",
         "domains.feed.why": "<strong>Por que existe:</strong> prioriza relevância local com regras claras. Eventos são um tipo de conteúdo do feed, com janela temporal e impacto no mapa. O feed é territorial para manter contexto, confiança e organização local.",
-        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.",
-        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
+        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
+        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
         "domains.map.what": "<strong>O que é:</strong> entidades e camadas georreferenciadas do território.",
         "domains.map.why": "<strong>Por que existe:</strong> transforma informação em referência espacial. O mapa é uma projeção territorial derivada de conteúdo e cadastros, conectando o que aparece no feed às entidades locais visíveis e navegáveis.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
-        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
+        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
+        "domains.moderation.title": "Moderação",
+        "domains.moderation.what": "<strong>O que é:</strong> reports e bloqueios para proteção da comunidade.",
+        "domains.moderation.why": "<strong>Por que existe:</strong> viabiliza resposta rápida a conteúdo inadequado e controle de visibilidade pessoal.",
+        "domains.moderation.fields": "<strong>Campos:</strong> id, targetType, targetId, reason, details, createdAtUtc.",
+        "domains.moderation.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.",
         "domains.media.title": "Media + GeoAnchor",
         "domains.media.what": "<strong>O que é:</strong> mídia (foto/áudio/vídeo) ancorada em latitude/longitude (e, quando útil, altitude).",
         "domains.media.why": "<strong>Por que existe:</strong> constrói memória territorial com precisão — e com controle. GeoAnchor cria base para camadas futuras: visualização contextual, trilhas, registros de cuidado, e eventualmente representações espaciais mais complexas (inclusive 3D) geradas a partir de dados e mídias do app.",
@@ -657,13 +674,18 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>Qué es:</strong> stream de publicaciones, alertas y eventos filtrados por territory y visibilidad.",
         "domains.feed.why": "<strong>Por qué existe:</strong> prioriza relevancia local con reglas claras. Los eventos son un tipo de contenido del feed, con ventana temporal e impacto en el mapa. El feed es territorial para mantener contexto, confianza y organización local.",
-        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, createdAtUtc.",
-        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
+        "domains.feed.fields": "<strong>Campos:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
+        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
         "domains.map.what": "<strong>Qué es:</strong> entidades y capas georreferenciadas del territory.",
         "domains.map.why": "<strong>Por qué existe:</strong> transforma la información en referencia espacial. El mapa es una proyección territorial derivada de contenido y registros, conectando lo que aparece en el feed con las entidades locales visibles y navegables.",
         "domains.map.fields": "<strong>Campos:</strong> id, name, category, status, visibility, createdAtUtc.",
-        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
+        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
+        "domains.moderation.title": "Moderación",
+        "domains.moderation.what": "<strong>Qué es:</strong> reportes y bloqueos para proteger la comunidad.",
+        "domains.moderation.why": "<strong>Por qué existe:</strong> permite respuesta rápida a contenido inadecuado y control de visibilidad personal.",
+        "domains.moderation.fields": "<strong>Campos:</strong> id, targetType, targetId, reason, details, createdAtUtc.",
+        "domains.moderation.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.",
         "domains.media.title": "Media + GeoAnchor",
         "domains.media.what": "<strong>Qué es:</strong> medios (foto/audio/video) anclados en latitud/longitud (y, cuando sea útil, altitud).",
         "domains.media.why": "<strong>Por qué existe:</strong> construye memoria territorial con precisión — y con control. GeoAnchor crea base para capas futuras: visualización contextual, recorridos, registros de cuidado y eventualmente representaciones espaciales más complejas (incluido 3D) generadas a partir de datos y medios de la app.",
@@ -778,13 +800,18 @@ curl -s "http://localhost:8080/api/v1/media?territoryId=SEU_TERRITORY_ID" | jq
         "domains.feed.title": "Feed",
         "domains.feed.what": "<strong>What it is:</strong> stream of posts, alerts, and events filtered by territory and visibility.",
         "domains.feed.why": "<strong>Why it exists:</strong> prioritizes local relevance with clear rules. Events are a type of feed content, with a temporal window and impact on the map. The feed is territorial to maintain context, trust, and local organization.",
-        "domains.feed.fields": "<strong>Fields:</strong> id, title, content, type, visibility, createdAtUtc.",
-        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>POST /api/v1/feed</code>.",
+        "domains.feed.fields": "<strong>Fields:</strong> id, title, content, type, visibility, status, mapEntityId, createdAtUtc.",
+        "domains.feed.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/feed</code>, <code>GET /api/v1/feed/me</code>, <code>POST /api/v1/feed</code>, <code>PATCH /api/v1/feed/{postId}/approval</code>.",
         "domains.map.title": "Mapa",
         "domains.map.what": "<strong>What it is:</strong> georeferenced entities and layers of the territory.",
         "domains.map.why": "<strong>Why it exists:</strong> turns information into spatial reference. The map is a territorial projection derived from content and records, connecting what appears in the feed to visible, navigable local entities.",
         "domains.map.fields": "<strong>Fields:</strong> id, name, category, status, visibility, createdAtUtc.",
-        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>.",
+        "domains.map.endpoints": "<strong>Endpoints:</strong> <code>GET /api/v1/map/entities</code>, <code>POST /api/v1/map/entities</code>, <code>POST /api/v1/map/entities/{entityId}/relations</code>.",
+        "domains.moderation.title": "Moderation",
+        "domains.moderation.what": "<strong>What it is:</strong> reports and blocks to protect the community.",
+        "domains.moderation.why": "<strong>Why it exists:</strong> enables quick response to inappropriate content and personal visibility control.",
+        "domains.moderation.fields": "<strong>Fields:</strong> id, targetType, targetId, reason, details, createdAtUtc.",
+        "domains.moderation.endpoints": "<strong>Endpoints:</strong> <code>POST /api/v1/reports/posts/{postId}</code>, <code>POST /api/v1/reports/users/{userId}</code>, <code>POST /api/v1/blocks/users/{userId}</code>.",
         "domains.media.title": "Media + GeoAnchor",
         "domains.media.what": "<strong>What it is:</strong> media (photo/audio/video) anchored in latitude/longitude (and, when useful, altitude).",
         "domains.media.why": "<strong>Why it exists:</strong> builds territorial memory with precision — and with control. GeoAnchor creates a base for future layers: contextual visualization, trails, care records, and eventually more complex spatial representations (including 3D) generated from app data and media.",

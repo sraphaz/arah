@@ -17,12 +17,15 @@ public sealed class ArapongaDbContext : DbContext
     public DbSet<CommunityPostRecord> CommunityPosts => Set<CommunityPostRecord>();
     public DbSet<PostCommentRecord> PostComments => Set<PostCommentRecord>();
     public DbSet<MapEntityRecord> MapEntities => Set<MapEntityRecord>();
+    public DbSet<MapEntityRelationRecord> MapEntityRelations => Set<MapEntityRelationRecord>();
     public DbSet<HealthAlertRecord> HealthAlerts => Set<HealthAlertRecord>();
     public DbSet<PostLikeRecord> PostLikes => Set<PostLikeRecord>();
     public DbSet<PostShareRecord> PostShares => Set<PostShareRecord>();
     public DbSet<ActiveTerritoryRecord> ActiveTerritories => Set<ActiveTerritoryRecord>();
     public DbSet<FeatureFlagRecord> FeatureFlags => Set<FeatureFlagRecord>();
     public DbSet<AuditEntryRecord> AuditEntries => Set<AuditEntryRecord>();
+    public DbSet<ModerationReportRecord> ModerationReports => Set<ModerationReportRecord>();
+    public DbSet<UserBlockRecord> UserBlocks => Set<UserBlockRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -85,13 +88,17 @@ public sealed class ArapongaDbContext : DbContext
         {
             entity.ToTable("community_posts");
             entity.HasKey(p => p.Id);
+            entity.Property(p => p.AuthorUserId).IsRequired();
             entity.Property(p => p.Title).HasMaxLength(200).IsRequired();
             entity.Property(p => p.Content).HasMaxLength(4000).IsRequired();
             entity.Property(p => p.Type).HasConversion<int>();
             entity.Property(p => p.Visibility).HasConversion<int>();
+            entity.Property(p => p.Status).HasConversion<int>();
             entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(p => p.TerritoryId);
             entity.HasIndex(p => new { p.TerritoryId, p.CreatedAtUtc });
+            entity.HasIndex(p => p.AuthorUserId);
+            entity.HasIndex(p => p.MapEntityId);
         });
 
         modelBuilder.Entity<PostCommentRecord>(entity =>
@@ -107,6 +114,7 @@ public sealed class ArapongaDbContext : DbContext
         {
             entity.ToTable("map_entities");
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.CreatedByUserId).IsRequired();
             entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Category).HasMaxLength(120).IsRequired();
             entity.Property(e => e.Status).HasConversion<int>();
@@ -116,6 +124,15 @@ public sealed class ArapongaDbContext : DbContext
             entity.HasIndex(e => e.TerritoryId);
             entity.HasIndex(e => new { e.TerritoryId, e.Status });
             entity.HasIndex(e => new { e.TerritoryId, e.Visibility });
+            entity.HasIndex(e => e.CreatedByUserId);
+        });
+
+        modelBuilder.Entity<MapEntityRelationRecord>(entity =>
+        {
+            entity.ToTable("map_entity_relations");
+            entity.HasKey(r => new { r.UserId, r.EntityId });
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.EntityId);
         });
 
         modelBuilder.Entity<HealthAlertRecord>(entity =>
@@ -173,6 +190,27 @@ public sealed class ArapongaDbContext : DbContext
             entity.HasIndex(a => a.TerritoryId);
             entity.HasIndex(a => a.ActorUserId);
             entity.HasIndex(a => a.TimestampUtc);
+        });
+
+        modelBuilder.Entity<ModerationReportRecord>(entity =>
+        {
+            entity.ToTable("moderation_reports");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.TargetType).HasConversion<int>();
+            entity.Property(r => r.Reason).HasMaxLength(300).IsRequired();
+            entity.Property(r => r.Details).HasMaxLength(2000);
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.ReporterUserId);
+            entity.HasIndex(r => new { r.TargetType, r.TargetId });
+            entity.HasIndex(r => r.CreatedAtUtc);
+        });
+
+        modelBuilder.Entity<UserBlockRecord>(entity =>
+        {
+            entity.ToTable("user_blocks");
+            entity.HasKey(b => new { b.BlockerUserId, b.BlockedUserId });
+            entity.Property(b => b.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(b => b.BlockerUserId);
         });
     }
 }

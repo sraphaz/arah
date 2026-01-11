@@ -23,6 +23,17 @@ public sealed class PostgresFeedRepository : IFeedRepository
         return records.Select(record => record.ToDomain()).ToList();
     }
 
+    public async Task<IReadOnlyList<CommunityPost>> ListByAuthorAsync(Guid authorUserId, CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.CommunityPosts
+            .AsNoTracking()
+            .Where(post => post.AuthorUserId == authorUserId)
+            .OrderByDescending(post => post.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+
+        return records.Select(record => record.ToDomain()).ToList();
+    }
+
     public async Task<CommunityPost?> GetPostAsync(Guid postId, CancellationToken cancellationToken)
     {
         var record = await _dbContext.CommunityPosts
@@ -34,6 +45,21 @@ public sealed class PostgresFeedRepository : IFeedRepository
     public async Task AddPostAsync(CommunityPost post, CancellationToken cancellationToken)
     {
         _dbContext.CommunityPosts.Add(post.ToRecord());
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task UpdateStatusAsync(Guid postId, PostStatus status, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.CommunityPosts
+            .FirstOrDefaultAsync(post => post.Id == postId, cancellationToken);
+
+        if (record is null)
+        {
+            return;
+        }
+
+        record.Status = status;
+        _dbContext.CommunityPosts.Update(record);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 

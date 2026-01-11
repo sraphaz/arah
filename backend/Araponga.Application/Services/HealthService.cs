@@ -75,10 +75,13 @@ public sealed class HealthService
             var post = new CommunityPost(
                 Guid.NewGuid(),
                 territoryId,
+                alert.ReporterUserId,
                 alert.Title,
                 alert.Description,
                 PostType.Alert,
                 PostVisibility.Public,
+                PostStatus.Published,
+                null,
                 DateTime.UtcNow);
 
             await _feedRepository.AddPostAsync(post, cancellationToken);

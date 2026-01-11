@@ -45,6 +45,7 @@ public sealed class InMemoryMapRepository : IMapRepository
         var updated = new MapEntity(
             entity.Id,
             entity.TerritoryId,
+            entity.CreatedByUserId,
             entity.Name,
             entity.Category,
             status,
@@ -67,6 +68,7 @@ public sealed class InMemoryMapRepository : IMapRepository
         var updated = new MapEntity(
             entity.Id,
             entity.TerritoryId,
+            entity.CreatedByUserId,
             entity.Name,
             entity.Category,
             entity.Status,

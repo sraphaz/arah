@@ -5,6 +5,7 @@ public sealed class MapEntity
     public MapEntity(
         Guid id,
         Guid territoryId,
+        Guid createdByUserId,
         string name,
         string category,
         MapEntityStatus status,
@@ -27,8 +28,14 @@ public sealed class MapEntity
             throw new ArgumentException("Category is required.", nameof(category));
         }
 
+        if (createdByUserId == Guid.Empty)
+        {
+            throw new ArgumentException("Created-by user ID is required.", nameof(createdByUserId));
+        }
+
         Id = id;
         TerritoryId = territoryId;
+        CreatedByUserId = createdByUserId;
         Name = name.Trim();
         Category = category.Trim();
         Status = status;
@@ -39,6 +46,7 @@ public sealed class MapEntity
 
     public Guid Id { get; }
     public Guid TerritoryId { get; }
+    public Guid CreatedByUserId { get; }
     public string Name { get; }
     public string Category { get; }
     public MapEntityStatus Status { get; }

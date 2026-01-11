@@ -261,6 +261,10 @@ e dos limites do modelo digital atual
 Se você chegou até aqui e sentiu que isso faz sentido,
 você já faz parte da conversa.
 
+## Developer Portal (GitHub Pages)
+
+O conteúdo estático do Developer Portal vive em `backend/Araponga.Api/wwwroot/devportal` e é publicado automaticamente via GitHub Actions na branch `gh-pages` quando há push em `main` ou `master`.
+
 ## 📜 Licença
 
 Este projeto é distribuído sob uma **licença aberta orientada à comunidade e ao território**.

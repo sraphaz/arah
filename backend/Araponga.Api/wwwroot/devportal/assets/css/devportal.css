@@ -71,7 +71,7 @@ input:focus-visible {
 
 .header {
   background: linear-gradient(140deg, rgba(15, 27, 33, 0.95), rgba(9, 14, 17, 0.95)),
-    url("/araponga_icon.png") no-repeat right 8% / 220px;
+    url("../images/araponga-icon.svg") no-repeat right 8% / 220px;
   border-bottom: 1px solid var(--border);
   padding: 48px 0 32px;
 }

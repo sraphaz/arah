@@ -9,6 +9,7 @@ using Araponga.Infrastructure.Security;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -171,6 +172,16 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/devportal")
+    {
+        context.Request.Path = "/devportal/index.html";
+    }
+
+    await next();
+});
+
 app.UseDefaultFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -178,6 +189,24 @@ app.UseStaticFiles(new StaticFileOptions
     {
         if (string.Equals(context.File.Name, "index.html", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(context.File.Name, "config.html", StringComparison.OrdinalIgnoreCase))
+        {
+            context.Context.Response.ContentType = "text/html; charset=utf-8";
+        }
+    }
+});
+
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    RequestPath = "/devportal",
+    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.WebRootPath, "devportal"))
+});
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/devportal",
+    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.WebRootPath, "devportal")),
+    OnPrepareResponse = context =>
+    {
+        if (string.Equals(context.File.Name, "index.html", StringComparison.OrdinalIgnoreCase))
         {
             context.Context.Response.ContentType = "text/html; charset=utf-8";
         }

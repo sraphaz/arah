@@ -51,6 +51,9 @@ public sealed class ApiScenariosTests
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
+        var token = await LoginForTokenAsync(client, "google", "territory-lookup");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
         var existing = await client.GetAsync($"api/v1/territories/{ActiveTerritoryId}");
         existing.EnsureSuccessStatusCode();
 
@@ -63,6 +66,9 @@ public sealed class ApiScenariosTests
     {
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
+
+        var token = await LoginForTokenAsync(client, "google", "territory-json");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var response = await client.GetAsync($"api/v1/territories/{ActiveTerritoryId}");
         response.EnsureSuccessStatusCode();

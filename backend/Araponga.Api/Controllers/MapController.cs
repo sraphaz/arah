@@ -2,6 +2,8 @@ using Araponga.Api.Contracts.Map;
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
+using Araponga.Domain.Assets;
+using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,8 @@ public sealed class MapController : ControllerBase
     private readonly MapService _mapService;
     private readonly FeedService _feedService;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
+    private readonly IAssetRepository _assetRepository;
+    private readonly IAssetGeoAnchorRepository _assetGeoAnchorRepository;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ActiveTerritoryService _activeTerritoryService;
     private readonly AccessEvaluator _accessEvaluator;
@@ -24,6 +28,8 @@ public sealed class MapController : ControllerBase
         MapService mapService,
         FeedService feedService,
         IPostGeoAnchorRepository postGeoAnchorRepository,
+        IAssetRepository assetRepository,
+        IAssetGeoAnchorRepository assetGeoAnchorRepository,
         CurrentUserAccessor currentUserAccessor,
         ActiveTerritoryService activeTerritoryService,
         AccessEvaluator accessEvaluator)
@@ -31,6 +37,8 @@ public sealed class MapController : ControllerBase
         _mapService = mapService;
         _feedService = feedService;
         _postGeoAnchorRepository = postGeoAnchorRepository;
+        _assetRepository = assetRepository;
+        _assetGeoAnchorRepository = assetGeoAnchorRepository;
         _currentUserAccessor = currentUserAccessor;
         _activeTerritoryService = activeTerritoryService;
         _accessEvaluator = accessEvaluator;
@@ -143,6 +151,9 @@ public sealed class MapController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<MapPinResponse>>> GetPins(
         [FromQuery] Guid? territoryId,
+        [FromQuery] string? types,
+        [FromQuery] Guid? assetId,
+        [FromQuery] string? assetTypes,
         CancellationToken cancellationToken)
     {
         var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
@@ -157,46 +168,149 @@ public sealed class MapController : ControllerBase
             return Unauthorized();
         }
 
-        var entities = await _mapService.ListEntitiesAsync(
-            resolvedTerritoryId.Value,
-            userContext.User?.Id,
-            cancellationToken);
-
-        var posts = await _feedService.ListForTerritoryAsync(
-            resolvedTerritoryId.Value,
-            userContext.User?.Id,
-            null,
-            cancellationToken);
-
-        var postIds = posts.Select(post => post.Id).ToList();
-        var anchors = await _postGeoAnchorRepository.ListByPostIdsAsync(postIds, cancellationToken);
-        var postLookup = posts.ToDictionary(post => post.Id, post => post);
+        var typeSet = ParseTypes(types);
+        var includeEntities = typeSet.Contains("entity");
+        var includeAssets = typeSet.Contains("asset");
+        var includeAlerts = typeSet.Contains("alert");
+        var includePosts = typeSet.Contains("post");
+        var includeMedia = typeSet.Contains("media");
 
         var pins = new List<MapPinResponse>();
 
-        pins.AddRange(entities.Select(entity => new MapPinResponse(
-            entity.Id,
-            "MAP_ENTITY",
-            entity.Latitude,
-            entity.Longitude,
-            entity.Name,
-            entity.Status.ToString().ToUpperInvariant())));
+        if (includeEntities)
+        {
+            var entities = await _mapService.ListEntitiesAsync(
+                resolvedTerritoryId.Value,
+                userContext.User?.Id,
+                cancellationToken);
 
-        pins.AddRange(anchors
-            .Where(anchor => postLookup.ContainsKey(anchor.PostId))
-            .Select(anchor =>
+            pins.AddRange(entities.Select(entity => new MapPinResponse(
+                "entity",
+                entity.Latitude,
+                entity.Longitude,
+                entity.Name,
+                null,
+                null,
+                null,
+                entity.Id,
+                entity.Status.ToString().ToUpperInvariant())));
+        }
+
+        if (includeAssets)
+        {
+            var assetTypeList = assetId is null ? ParseCsv(assetTypes) : null;
+            var assets = await _assetRepository.ListAsync(
+                resolvedTerritoryId.Value,
+                assetId,
+                assetTypeList,
+                AssetStatus.Active,
+                null,
+                cancellationToken);
+
+            if (assets.Count > 0)
+            {
+                var assetIds = assets.Select(asset => asset.Id).ToList();
+                var anchors = await _assetGeoAnchorRepository.ListByAssetIdsAsync(assetIds, cancellationToken);
+                var assetLookup = assets.ToDictionary(asset => asset.Id, asset => asset);
+
+                pins.AddRange(anchors.Select(anchor =>
+                {
+                    var asset = assetLookup[anchor.AssetId];
+                    return new MapPinResponse(
+                        "asset",
+                        anchor.Latitude,
+                        anchor.Longitude,
+                        asset.Name,
+                        asset.Id,
+                        null,
+                        null,
+                        null,
+                        asset.Status.ToString().ToUpperInvariant());
+                }));
+            }
+        }
+
+        if (includePosts || includeAlerts || includeMedia)
+        {
+            var posts = await _feedService.ListForTerritoryAsync(
+                resolvedTerritoryId.Value,
+                userContext.User?.Id,
+                null,
+                null,
+                cancellationToken);
+
+            var postIds = posts.Select(post => post.Id).ToList();
+            var anchors = await _postGeoAnchorRepository.ListByPostIdsAsync(postIds, cancellationToken);
+            var postLookup = posts.ToDictionary(post => post.Id, post => post);
+
+            foreach (var anchor in anchors.Where(anchor => postLookup.ContainsKey(anchor.PostId)))
             {
                 var post = postLookup[anchor.PostId];
-                return new MapPinResponse(
-                    post.Id,
-                    anchor.Type.ToUpperInvariant(),
+                var pinType = ResolvePostPinType(post, anchor.Type, includeMedia);
+
+                if (pinType == "alert" && !includeAlerts)
+                {
+                    continue;
+                }
+
+                if (pinType == "post" && !includePosts)
+                {
+                    continue;
+                }
+
+                if (pinType == "media" && !includeMedia)
+                {
+                    continue;
+                }
+
+                pins.Add(new MapPinResponse(
+                    pinType,
                     anchor.Latitude,
                     anchor.Longitude,
                     post.Title,
-                    post.Status.ToString().ToUpperInvariant());
-            }));
+                    null,
+                    pinType is "post" or "alert" ? post.Id : null,
+                    pinType == "media" ? post.Id : null,
+                    null,
+                    post.Status.ToString().ToUpperInvariant()));
+            }
+        }
 
         return Ok(pins);
+    }
+
+    private static string ResolvePostPinType(CommunityPost post, string anchorType, bool includeMedia)
+    {
+        if (includeMedia && anchorType.Equals("MEDIA", StringComparison.OrdinalIgnoreCase))
+        {
+            return "media";
+        }
+
+        return post.Type == PostType.Alert ? "alert" : "post";
+    }
+
+    private static IReadOnlyCollection<string> ParseTypes(string? types)
+    {
+        if (string.IsNullOrWhiteSpace(types))
+        {
+            return new HashSet<string>(new[] { "post", "media", "entity", "alert", "asset" });
+        }
+
+        return new HashSet<string>(
+            types.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(value => value.ToLowerInvariant()));
+    }
+
+    private static IReadOnlyCollection<string>? ParseCsv(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return null;
+        }
+
+        return raw.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(value => value.ToLowerInvariant())
+            .ToList();
     }
 
     /// <summary>

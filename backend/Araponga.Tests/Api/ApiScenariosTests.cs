@@ -3,9 +3,10 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Araponga.Api;
 using Araponga.Api.Contracts.Auth;
+using Araponga.Api.Contracts.Alerts;
+using Araponga.Api.Contracts.Assets;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Contracts.Features;
-using Araponga.Api.Contracts.Health;
 using Araponga.Api.Contracts.Map;
 using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Contracts.Territories;
@@ -570,7 +571,8 @@ public sealed class ApiScenariosTests
                 "GENERAL",
                 "PUBLIC",
                 null,
-                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") }));
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") },
+                null));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
         var invalidPost = await client.PostAsJsonAsync(
@@ -581,7 +583,8 @@ public sealed class ApiScenariosTests
                 "INVALID",
                 "PUBLIC",
                 null,
-                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") }));
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") },
+                null));
         Assert.Equal(HttpStatusCode.BadRequest, invalidPost.StatusCode);
 
         var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
@@ -623,7 +626,8 @@ public sealed class ApiScenariosTests
                 "GENERAL",
                 "PUBLIC",
                 null,
-                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") }));
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") },
+                null));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
         var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
@@ -631,7 +635,7 @@ public sealed class ApiScenariosTests
 
         var dataStore = factory.Services.GetRequiredService<InMemoryDataStore>();
         var anchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == createdPost!.Id).ToList();
-        Assert.Empty(anchors);
+        Assert.NotEmpty(anchors);
     }
 
     [Fact]
@@ -654,7 +658,8 @@ public sealed class ApiScenariosTests
                 "EVENT",
                 "PUBLIC",
                 null,
-                new List<GeoAnchorRequest> { new(-23.37, -45.02, "EVENT") }));
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "EVENT") },
+                null));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
         var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
@@ -793,31 +798,241 @@ public sealed class ApiScenariosTests
 
         Assert.NotNull(pins);
         Assert.NotEmpty(pins!);
-        Assert.Contains(pins, pin => pin.Type == "MAP_ENTITY");
-        Assert.Contains(pins, pin => pin.Id == Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+        Assert.Contains(pins, pin => pin.PinType == "entity");
+        Assert.Contains(pins, pin => pin.EntityId == Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
+        Assert.Contains(pins, pin => pin.PostId == Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
     }
 
     [Fact]
-    public async Task Health_IndicatorsAndAlerts()
+    public async Task Assets_RequireGeoAnchors()
     {
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
-        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "health-actions");
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "assets-geo");
         await SelectTerritoryAsync(client, ActiveTerritoryId);
 
-        var indicators = await client.GetFromJsonAsync<List<HealthIndicatorResponse>>(
-            $"api/v1/health/indicators?territoryId={ActiveTerritoryId}");
-        Assert.NotNull(indicators);
-        Assert.NotEmpty(indicators!);
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var missingAnchors = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "river",
+                "Rio do Vale",
+                "Descrição",
+                Array.Empty<AssetGeoAnchorRequest>()));
+        Assert.Equal(HttpStatusCode.BadRequest, missingAnchors.StatusCode);
+
+        var created = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "river",
+                "Rio do Vale",
+                "Descrição",
+                new[] { new AssetGeoAnchorRequest(-23.37, -45.02) }));
+        created.EnsureSuccessStatusCode();
+        var asset = await created.Content.ReadFromJsonAsync<AssetResponse>();
+        Assert.NotNull(asset);
+
+        var badPatch = await client.PatchAsJsonAsync(
+            $"api/v1/assets/{asset!.Id}?territoryId={ActiveTerritoryId}",
+            new UpdateAssetRequest(
+                "river",
+                "Rio do Vale",
+                "Descrição",
+                Array.Empty<AssetGeoAnchorRequest>()));
+        Assert.Equal(HttpStatusCode.BadRequest, badPatch.StatusCode);
+    }
+
+    [Fact]
+    public async Task Assets_ValidationIsIdempotent()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "assets-validation");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var created = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "spring",
+                "Nascente do Vale",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.371, -45.021) }));
+        created.EnsureSuccessStatusCode();
+        var asset = await created.Content.ReadFromJsonAsync<AssetResponse>();
+        Assert.NotNull(asset);
+
+        var first = await client.PostAsync(
+            $"api/v1/assets/{asset!.Id}/validate?territoryId={ActiveTerritoryId}",
+            null);
+        first.EnsureSuccessStatusCode();
+        var firstPayload = await first.Content.ReadFromJsonAsync<AssetValidationResponse>();
+        Assert.NotNull(firstPayload);
+        Assert.Equal(1, firstPayload!.ValidationsCount);
+
+        var second = await client.PostAsync(
+            $"api/v1/assets/{asset.Id}/validate?territoryId={ActiveTerritoryId}",
+            null);
+        second.EnsureSuccessStatusCode();
+        var secondPayload = await second.Content.ReadFromJsonAsync<AssetValidationResponse>();
+        Assert.NotNull(secondPayload);
+        Assert.Equal(1, secondPayload!.ValidationsCount);
+    }
+
+    [Fact]
+    public async Task Assets_ListFiltersByIdAndType()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "assets-list");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var river = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "river",
+                "Rio Principal",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.372, -45.022) }));
+        river.EnsureSuccessStatusCode();
+        var riverAsset = await river.Content.ReadFromJsonAsync<AssetResponse>();
+
+        var spring = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "spring",
+                "Nascente Azul",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.373, -45.023) }));
+        spring.EnsureSuccessStatusCode();
+
+        var byType = await client.GetFromJsonAsync<List<AssetResponse>>(
+            $"api/v1/assets?territoryId={ActiveTerritoryId}&types=river");
+        Assert.NotNull(byType);
+        Assert.All(byType!, asset => Assert.Equal("river", asset.Type));
+
+        var byId = await client.GetFromJsonAsync<List<AssetResponse>>(
+            $"api/v1/assets?territoryId={ActiveTerritoryId}&assetId={riverAsset!.Id}");
+        Assert.NotNull(byId);
+        Assert.Single(byId!);
+        Assert.Equal(riverAsset.Id, byId[0].Id);
+    }
+
+    [Fact]
+    public async Task Feed_FiltersByAssetId()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "feed-assets");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var assetResponse = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "beach",
+                "Praia do Vale",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.374, -45.024) }));
+        assetResponse.EnsureSuccessStatusCode();
+        var asset = await assetResponse.Content.ReadFromJsonAsync<AssetResponse>();
+        Assert.NotNull(asset);
+
+        var postResponse = await client.PostAsJsonAsync(
+            $"api/v1/feed?territoryId={ActiveTerritoryId}",
+            new CreatePostRequest(
+                "Post com asset",
+                "Conteudo",
+                "GENERAL",
+                "PUBLIC",
+                null,
+                null,
+                new[] { asset!.Id }));
+        postResponse.EnsureSuccessStatusCode();
+        var post = await postResponse.Content.ReadFromJsonAsync<FeedItemResponse>();
+        Assert.NotNull(post);
+
+        var filtered = await client.GetFromJsonAsync<List<FeedItemResponse>>(
+            $"api/v1/feed?territoryId={ActiveTerritoryId}&assetId={asset.Id}");
+        Assert.NotNull(filtered);
+        Assert.Single(filtered!);
+        Assert.Equal(post!.Id, filtered[0].Id);
+    }
+
+    [Fact]
+    public async Task Map_Pins_FilterAssets()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "map-assets");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var riverResponse = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "river",
+                "Rio das Pedras",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.375, -45.025) }));
+        riverResponse.EnsureSuccessStatusCode();
+        var riverAsset = await riverResponse.Content.ReadFromJsonAsync<AssetResponse>();
+
+        var springResponse = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "spring",
+                "Nascente Clara",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.376, -45.026) }));
+        springResponse.EnsureSuccessStatusCode();
+
+        var byType = await client.GetFromJsonAsync<List<MapPinResponse>>(
+            $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetTypes=river");
+        Assert.NotNull(byType);
+        Assert.All(byType!, pin => Assert.Equal(riverAsset!.Id, pin.AssetId));
+
+        var byId = await client.GetFromJsonAsync<List<MapPinResponse>>(
+            $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetId={riverAsset!.Id}");
+        Assert.NotNull(byId);
+        Assert.All(byId!, pin => Assert.Equal(riverAsset.Id, pin.AssetId));
+    }
+
+    [Fact]
+    public async Task Alerts_ReportAndValidate()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "alerts-actions");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
 
         var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
 
         var report = await client.PostAsJsonAsync(
-            $"api/v1/health/alerts?territoryId={ActiveTerritoryId}",
+            $"api/v1/alerts?territoryId={ActiveTerritoryId}",
             new ReportAlertRequest("Alerta", "Descrição"));
         report.EnsureSuccessStatusCode();
-        var alert = await report.Content.ReadFromJsonAsync<HealthAlertResponse>();
+        var alert = await report.Content.ReadFromJsonAsync<AlertResponse>();
         Assert.NotNull(alert);
         Assert.Equal("PENDING", alert!.Status);
 
@@ -825,12 +1040,12 @@ public sealed class ApiScenariosTests
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
 
         var validate = await client.PatchAsJsonAsync(
-            $"api/v1/health/alerts/{alert.Id}/validation?territoryId={ActiveTerritoryId}",
+            $"api/v1/alerts/{alert.Id}/validation?territoryId={ActiveTerritoryId}",
             new ValidateAlertRequest("VALIDATED"));
         Assert.Equal(HttpStatusCode.NoContent, validate.StatusCode);
 
         var invalidValidate = await client.PatchAsJsonAsync(
-            $"api/v1/health/alerts/{alert.Id}/validation?territoryId={ActiveTerritoryId}",
+            $"api/v1/alerts/{alert.Id}/validation?territoryId={ActiveTerritoryId}",
             new ValidateAlertRequest("INVALID"));
         Assert.Equal(HttpStatusCode.BadRequest, invalidValidate.StatusCode);
 

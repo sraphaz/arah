@@ -16,6 +16,8 @@ public sealed class FeedService
     private readonly IUserBlockRepository _userBlockRepository;
     private readonly IMapRepository _mapRepository;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
+    private readonly IPostAssetRepository _postAssetRepository;
+    private readonly IAssetRepository _assetRepository;
     private readonly ISanctionRepository _sanctionRepository;
     private readonly IEventBus _eventBus;
     private readonly IUnitOfWork _unitOfWork;
@@ -28,6 +30,8 @@ public sealed class FeedService
         IUserBlockRepository userBlockRepository,
         IMapRepository mapRepository,
         IPostGeoAnchorRepository postGeoAnchorRepository,
+        IPostAssetRepository postAssetRepository,
+        IAssetRepository assetRepository,
         ISanctionRepository sanctionRepository,
         IEventBus eventBus,
         IUnitOfWork unitOfWork)
@@ -39,6 +43,8 @@ public sealed class FeedService
         _userBlockRepository = userBlockRepository;
         _mapRepository = mapRepository;
         _postGeoAnchorRepository = postGeoAnchorRepository;
+        _postAssetRepository = postAssetRepository;
+        _assetRepository = assetRepository;
         _sanctionRepository = sanctionRepository;
         _eventBus = eventBus;
         _unitOfWork = unitOfWork;
@@ -48,6 +54,7 @@ public sealed class FeedService
         Guid territoryId,
         Guid? userId,
         Guid? mapEntityId,
+        Guid? assetId,
         CancellationToken cancellationToken)
     {
         var posts = await _feedRepository.ListByTerritoryAsync(territoryId, cancellationToken);
@@ -72,14 +79,23 @@ public sealed class FeedService
             ? visiblePosts.Where(post => post.Status != PostStatus.Rejected && post.Status != PostStatus.Hidden).ToList()
             : visiblePosts.Where(post => post.Visibility == PostVisibility.Public && post.Status == PostStatus.Published).ToList();
 
-        if (mapEntityId is null)
+        var scoped = mapEntityId is null
+            ? statusFiltered
+            : statusFiltered.Where(post => post.MapEntityId == mapEntityId).ToList();
+
+        if (assetId is null)
         {
-            return statusFiltered;
+            return scoped;
         }
 
-        return statusFiltered
-            .Where(post => post.MapEntityId == mapEntityId)
-            .ToList();
+        var postIds = await _postAssetRepository.ListPostIdsByAssetIdAsync(assetId.Value, cancellationToken);
+        if (postIds.Count == 0)
+        {
+            return Array.Empty<CommunityPost>();
+        }
+
+        var postLookup = postIds.ToHashSet();
+        return scoped.Where(post => postLookup.Contains(post.Id)).ToList();
     }
 
     public async Task<IReadOnlyList<CommunityPost>> ListForUserAsync(
@@ -99,6 +115,7 @@ public sealed class FeedService
         PostStatus status,
         Guid? mapEntityId,
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors,
+        IReadOnlyCollection<Guid>? assetIds,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
@@ -137,6 +154,20 @@ public sealed class FeedService
             return (false, "User is restricted from posting in this territory.", null);
         }
 
+        var normalizedAssetIds = assetIds?
+            .Where(id => id != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        if (normalizedAssetIds is not null && normalizedAssetIds.Count > 0)
+        {
+            var assets = await _assetRepository.ListByIdsAsync(normalizedAssetIds, cancellationToken);
+            if (assets.Count != normalizedAssetIds.Count || assets.Any(asset => asset.TerritoryId != territoryId))
+            {
+                return (false, "Asset not found for territory.", null);
+            }
+        }
+
         var post = new CommunityPost(
             Guid.NewGuid(),
             territoryId,
@@ -154,6 +185,12 @@ public sealed class FeedService
         var anchors = BuildPostAnchors(post.Id, type, geoAnchors);
 
         await _postGeoAnchorRepository.AddAsync(anchors, cancellationToken);
+
+        if (normalizedAssetIds is not null && normalizedAssetIds.Count > 0)
+        {
+            var postAssets = normalizedAssetIds.Select(assetId => new PostAsset(post.Id, assetId)).ToList();
+            await _postAssetRepository.AddAsync(postAssets, cancellationToken);
+        }
 
         await _auditLogger.LogAsync(
             new Models.AuditEntry("post.created", userId, territoryId, post.Id, DateTime.UtcNow),

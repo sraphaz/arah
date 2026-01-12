@@ -29,6 +29,8 @@ public sealed class NotificationFlowTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
 
@@ -40,6 +42,8 @@ public sealed class NotificationFlowTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             eventBus,
             unitOfWork);
@@ -52,6 +56,7 @@ public sealed class NotificationFlowTests
             PostType.General,
             PostVisibility.Public,
             PostStatus.Published,
+            null,
             null,
             null,
             CancellationToken.None);

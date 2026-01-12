@@ -139,6 +139,8 @@ backend/
 - ✅ Moderação (reports e bloqueios)
 - ✅ Notificações in-app com outbox e inbox persistido
 - ✅ Feature flags e health check
+- ✅ Alerts territoriais (via /api/v1/alerts)
+- ✅ Assets territoriais com geo obrigatório
 - ✅ Testes automatizados
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)
 - 🚧 Frontend e experiências móveis em planejamento

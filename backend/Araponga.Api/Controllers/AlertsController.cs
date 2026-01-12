@@ -1,4 +1,4 @@
-using Araponga.Api.Contracts.Health;
+using Araponga.Api.Contracts.Alerts;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Health;
@@ -7,17 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace Araponga.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/health")]
+[Route("api/v1/alerts")]
 [Produces("application/json")]
-[Tags("Health")]
-public sealed class HealthController : ControllerBase
+[Tags("Alerts")]
+public sealed class AlertsController : ControllerBase
 {
     private readonly ActiveTerritoryService _activeTerritoryService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly HealthService _healthService;
 
-    public HealthController(
+    public AlertsController(
         ActiveTerritoryService activeTerritoryService,
         CurrentUserAccessor currentUserAccessor,
         AccessEvaluator accessEvaluator,
@@ -30,12 +30,13 @@ public sealed class HealthController : ControllerBase
     }
 
     /// <summary>
-    /// Visualiza indicadores de saúde do território ativo.
+    /// Lista alertas do território ativo.
     /// </summary>
-    [HttpGet("indicators")]
-    [ProducesResponseType(typeof(IEnumerable<HealthIndicatorResponse>), StatusCodes.Status200OK)]
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<AlertResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<HealthIndicatorResponse>>> GetIndicators(
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<AlertResponse>>> GetAlerts(
         [FromQuery] Guid? territoryId,
         CancellationToken cancellationToken)
     {
@@ -45,24 +46,38 @@ public sealed class HealthController : ControllerBase
             return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
         }
 
-        var indicators = new List<HealthIndicatorResponse>
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
         {
-            new("Água Potável", "OK", "Monitoramento básico do território."),
-            new("Nascentes", "ATENÇÃO", "Relatos recentes aguardando validação comunitária."),
-            new("Árvores Nativas", "OK", "Inventário atualizado.")
-        };
+            return Unauthorized();
+        }
 
-        return Ok(indicators);
+        var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
+        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
+        {
+            return Unauthorized();
+        }
+
+        var alerts = await _healthService.ListAlertsAsync(resolvedTerritoryId.Value, cancellationToken);
+
+        var response = alerts.Select(alert => new AlertResponse(
+            alert.Id,
+            alert.Title,
+            alert.Description,
+            alert.Status.ToString().ToUpperInvariant(),
+            alert.CreatedAtUtc));
+
+        return Ok(response);
     }
 
     /// <summary>
     /// Reporta um alerta ambiental.
     /// </summary>
-    [HttpPost("alerts")]
-    [ProducesResponseType(typeof(HealthAlertResponse), StatusCodes.Status201Created)]
+    [HttpPost]
+    [ProducesResponseType(typeof(AlertResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<HealthAlertResponse>> ReportAlert(
+    public async Task<ActionResult<AlertResponse>> ReportAlert(
         [FromQuery] Guid? territoryId,
         [FromBody] ReportAlertRequest request,
         CancellationToken cancellationToken)
@@ -80,7 +95,7 @@ public sealed class HealthController : ControllerBase
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
-        if (!isResident)
+        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
         {
             return Unauthorized();
         }
@@ -97,7 +112,7 @@ public sealed class HealthController : ControllerBase
             return BadRequest(new { error = result.error ?? "Unable to report alert." });
         }
 
-        var response = new HealthAlertResponse(
+        var response = new AlertResponse(
             result.alert.Id,
             result.alert.Title,
             result.alert.Description,
@@ -110,7 +125,7 @@ public sealed class HealthController : ControllerBase
     /// <summary>
     /// Valida alerta ambiental (curadoria).
     /// </summary>
-    [HttpPatch("alerts/{alertId:guid}/validation")]
+    [HttpPatch("{alertId:guid}/validation")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -1,9 +1,12 @@
 namespace Araponga.Api.Contracts.Map;
 
 public sealed record MapPinResponse(
-    Guid Id,
-    string Type,
+    string PinType,
     double Latitude,
     double Longitude,
     string Title,
-    string Status);
+    Guid? AssetId,
+    Guid? PostId,
+    Guid? MediaId,
+    Guid? EntityId,
+    string? Status);

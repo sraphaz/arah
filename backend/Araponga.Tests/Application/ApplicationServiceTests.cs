@@ -27,6 +27,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -37,6 +39,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -54,6 +58,7 @@ public sealed class ApplicationServiceTests
             {
                 new(-23.0, -45.0, "POST")
             },
+            null,
             CancellationToken.None);
 
         Assert.False(invalid.success);
@@ -71,6 +76,7 @@ public sealed class ApplicationServiceTests
             {
                 new(-23.0, -45.0, "POST")
             },
+            null,
             CancellationToken.None);
 
         Assert.False(disabledAlert.success);
@@ -118,6 +124,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -128,6 +136,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -370,6 +380,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -380,6 +392,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -394,6 +408,7 @@ public sealed class ApplicationServiceTests
         var posts = await service.ListForTerritoryAsync(
             ActiveTerritoryId,
             blockerId,
+            null,
             null,
             CancellationToken.None);
 
@@ -411,6 +426,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -421,6 +438,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -439,6 +458,7 @@ public sealed class ApplicationServiceTests
             {
                 new(-23.0, -45.0, "EVENT")
             },
+            null,
             CancellationToken.None);
 
         Assert.True(create.success);
@@ -465,6 +485,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -475,6 +497,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -487,6 +511,7 @@ public sealed class ApplicationServiceTests
             PostType.General,
             PostVisibility.Public,
             PostStatus.Published,
+            null,
             null,
             null,
             CancellationToken.None);
@@ -507,6 +532,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -517,6 +544,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -534,6 +563,7 @@ public sealed class ApplicationServiceTests
             {
                 new(-23.3701, -45.0201, "POST")
             },
+            null,
             CancellationToken.None);
 
         Assert.True(created.success);
@@ -555,6 +585,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -565,6 +597,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -590,6 +624,7 @@ public sealed class ApplicationServiceTests
             PostStatus.Published,
             null,
             anchors,
+            null,
             CancellationToken.None);
 
         Assert.True(created.success);
@@ -610,6 +645,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
@@ -620,6 +657,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -643,6 +682,7 @@ public sealed class ApplicationServiceTests
             ActiveTerritoryId,
             Guid.NewGuid(),
             entityId,
+            null,
             CancellationToken.None);
 
         Assert.Contains(filtered, item => item.MapEntityId == entityId);
@@ -769,6 +809,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
+        var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
 
@@ -796,6 +838,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
+            postAssetRepository,
+            assetRepository,
             sanctionRepository,
             EventBus,
             unitOfWork);
@@ -813,6 +857,7 @@ public sealed class ApplicationServiceTests
             {
                 new(-23.0, -45.0, "POST")
             },
+            null,
             CancellationToken.None);
 
         Assert.False(result.success);

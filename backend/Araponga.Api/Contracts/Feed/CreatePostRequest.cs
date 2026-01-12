@@ -6,5 +6,6 @@ public sealed record CreatePostRequest(
     string Type,
     string Visibility,
     Guid? MapEntityId,
-    IReadOnlyCollection<GeoAnchorRequest>? GeoAnchors
+    IReadOnlyCollection<GeoAnchorRequest>? GeoAnchors,
+    IReadOnlyCollection<Guid>? AssetIds
 );

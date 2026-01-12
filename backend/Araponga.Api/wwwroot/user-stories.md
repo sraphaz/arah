@@ -87,6 +87,7 @@
 - `RESIDENTS_ONLY` visível apenas para membros `RESIDENT` validados.
 - Sem autenticação ou sem membership ⇒ apenas `PUBLIC`.
 - É possível filtrar o feed por entidade territorial quando disponível.
+- É possível filtrar o feed por asset via `assetId`.
 
 ### US-F02 — Criar post
 **Como** morador  
@@ -98,6 +99,7 @@
 - Tipos de post seguem feature flags por território.
 - Eventos podem ser criados por visitantes com status `PENDING` até aprovação de moradores.
 - Moradores aprovam ou rejeitam eventos pendentes.
+- Posts podem referenciar assets do território.
 
 ### US-F03 — Interações (curtir/comentar/compartilhar)
 **Como** usuário  
@@ -157,17 +159,9 @@
 
 ---
 
-## Epic: Saúde do Território
+## Epic: Alertas do Território
 
-### US-H01 — Indicadores ambientais
-**Como** visitante  
-**Quero** visualizar indicadores  
-**Para** entender a saúde ambiental do território
-
-**Critérios de aceite**
-- Retorna indicadores informativos vinculados ao território selecionado.
-
-### US-H02 — Reportar alerta
+### US-A01 — Reportar alerta
 **Como** morador  
 **Quero** reportar alertas ambientais  
 **Para** notificar problemas locais
@@ -176,7 +170,7 @@
 - Apenas `RESIDENT` validado pode reportar.
 - Alerta inicia com status `PENDING`.
 
-### US-H03 — Validar alerta
+### US-A02 — Validar alerta
 **Como** curador
 **Quero** validar alertas
 **Para** destacar problemas no feed
@@ -184,6 +178,28 @@
 **Critérios de aceite**
 - Apenas `CURATOR` pode validar.
 - Ao validar, um post `ALERT` é criado no feed e ganha destaque visual.
+- Alertas validados aparecem como pins no mapa.
+
+## Epic: Assets do Território
+
+### US-T01 — Cadastrar assets
+**Como** morador validado  
+**Quero** cadastrar assets do território  
+**Para** registrar recursos geolocalizados no mapa e no feed
+
+**Critérios de aceite**
+- Assets devem ter ao menos um geo anchor.
+- Apenas `RESIDENT` validado ou `CURATOR` pode criar/editar/arquivar.
+- Assets aparecem como pins no mapa e podem ser filtrados por tipo.
+
+### US-T02 — Validar assets
+**Como** morador validado  
+**Quero** validar assets  
+**Para** confirmar coletivamente que eles existem/estão ativos
+
+**Critérios de aceite**
+- Cada morador validado pode validar um asset uma única vez.
+- O sistema expõe contagem de validações e percentual sobre moradores elegíveis.
 
 ---
 

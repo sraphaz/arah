@@ -43,6 +43,7 @@ public sealed class FeedController : ControllerBase
     public async Task<ActionResult<IEnumerable<FeedItemResponse>>> GetFeed(
         [FromQuery] Guid? territoryId,
         [FromQuery] Guid? mapEntityId,
+        [FromQuery] Guid? assetId,
         CancellationToken cancellationToken)
     {
         var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
@@ -61,6 +62,7 @@ public sealed class FeedController : ControllerBase
             resolvedTerritoryId.Value,
             userContext.User?.Id,
             mapEntityId,
+            assetId,
             cancellationToken);
 
         var response = new List<FeedItemResponse>();
@@ -173,7 +175,11 @@ public sealed class FeedController : ControllerBase
             visibility,
             isResident ? PostStatus.Published : PostStatus.PendingApproval,
             request.MapEntityId,
-            Array.Empty<Application.Models.GeoAnchorInput>(),
+            request.GeoAnchors?.Select(anchor => new Application.Models.GeoAnchorInput(
+                anchor.Latitude,
+                anchor.Longitude,
+                anchor.Type)).ToList(),
+            request.AssetIds,
             cancellationToken);
 
         if (!result.success || result.post is null)

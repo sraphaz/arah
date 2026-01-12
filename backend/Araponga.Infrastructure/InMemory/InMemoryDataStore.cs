@@ -1,4 +1,5 @@
 using Araponga.Application.Models;
+using Araponga.Domain.Assets;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
@@ -163,6 +164,10 @@ public sealed class InMemoryDataStore
         };
 
         HealthAlerts = new List<HealthAlert>();
+        TerritoryAssets = new List<TerritoryAsset>();
+        AssetGeoAnchors = new List<AssetGeoAnchor>();
+        AssetValidations = new List<AssetValidation>();
+        PostAssets = new List<PostAsset>();
     }
 
     public List<Territory> Territories { get; }
@@ -174,6 +179,10 @@ public sealed class InMemoryDataStore
     public List<MapEntityRelation> MapEntityRelations { get; } = new();
     public List<PostGeoAnchor> PostGeoAnchors { get; }
     public List<HealthAlert> HealthAlerts { get; }
+    public List<TerritoryAsset> TerritoryAssets { get; }
+    public List<AssetGeoAnchor> AssetGeoAnchors { get; }
+    public List<AssetValidation> AssetValidations { get; }
+    public List<PostAsset> PostAssets { get; }
     public Dictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();
     public Dictionary<Guid, List<PostComment>> PostComments { get; } = new();

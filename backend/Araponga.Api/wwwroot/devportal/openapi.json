@@ -3,7 +3,7 @@
   "info": {
     "title": "Araponga API",
     "version": "v1",
-    "description": "Araponga é uma plataforma comunitária orientada a território. Esta API expõe recursos de território, feed comunitário, entidades do mapa e saúde do território. O objetivo do MVP é viabilizar cadastro, visualização e curadoria comunitária com segurança e governança mínima.",
+    "description": "Araponga é uma plataforma comunitária orientada a território. Esta API expõe recursos de território, feed comunitário, entidades do mapa e alertas do território. O objetivo do MVP é viabilizar cadastro, visualização e curadoria comunitária com segurança e governança mínima.",
     "contact": {
       "name": "Araponga (maintainers)"
     },
@@ -554,6 +554,15 @@
               "format": "uuid",
               "nullable": true
             }
+          },
+          {
+            "name": "assetId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
           }
         ],
         "responses": {
@@ -972,7 +981,7 @@
         "tags": [
           "Map"
         ],
-        "summary": "Lista pins (entidades + posts) para o mapa do território.",
+        "summary": "Lista pins (entidades, posts, alerts e assets) para o mapa do território.",
         "parameters": [
           {
             "name": "territoryId",
@@ -980,6 +989,31 @@
             "schema": {
               "type": "string",
               "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "types",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "assetId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "assetTypes",
+            "in": "query",
+            "schema": {
+              "type": "string",
               "nullable": true
             }
           }
@@ -1568,12 +1602,12 @@
         }
       }
     },
-    "/api/v1/health/indicators": {
+    "/api/v1/alerts": {
       "get": {
         "tags": [
-          "Health"
+          "Alerts"
         ],
-        "summary": "Visualiza indicadores de saúde do território ativo.",
+        "summary": "Lista alertas do território ativo.",
         "parameters": [
           {
             "name": "territoryId",
@@ -1593,7 +1627,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/HealthIndicatorResponse"
+                    "$ref": "#/components/schemas/AlertResponse"
                   }
                 }
               }
@@ -1608,14 +1642,15 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
-      }
-    },
-    "/api/v1/health/alerts": {
+      },
       "post": {
         "tags": [
-          "Health"
+          "Alerts"
         ],
         "summary": "Reporta um alerta ambiental.",
         "parameters": [
@@ -1645,7 +1680,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthAlertResponse"
+                  "$ref": "#/components/schemas/AlertResponse"
                 }
               }
             }
@@ -1666,10 +1701,10 @@
         }
       }
     },
-    "/api/v1/health/alerts/{alertId}/validation": {
+    "/api/v1/alerts/{alertId}/validation": {
       "patch": {
         "tags": [
-          "Health"
+          "Alerts"
         ],
         "summary": "Valida alerta ambiental (curadoria).",
         "parameters": [
@@ -1705,6 +1740,356 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/assets": {
+      "get": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Lista assets do território.",
+        "parameters": [
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "assetId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "types",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssetResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Cria um asset territorial.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/assets/{assetId}": {
+      "get": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Detalhe de um asset.",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Atualiza um asset territorial.",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/assets/{assetId}/archive": {
+      "post": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Arquiva um asset territorial.",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArchiveAssetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/assets/{assetId}/validate": {
+      "post": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Valida um asset territorial.",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetValidationResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -2104,6 +2489,14 @@
             "items": {
               "$ref": "#/components/schemas/GeoAnchorRequest"
             }
+          },
+          "assetIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         }
       },
@@ -2270,11 +2663,7 @@
       "MapPinResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "type": {
+          "pinType": {
             "type": "string"
           },
           "latitude": {
@@ -2288,8 +2677,29 @@
           "title": {
             "type": "string"
           },
+          "assetId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "postId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "mediaId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "entityId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "status": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -2434,36 +2844,7 @@
           }
         }
       },
-      "HealthIndicatorResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
-      },
-      "ReportAlertRequest": {
-        "type": "object",
-        "required": [
-          "title",
-          "description"
-        ],
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
-      },
-      "HealthAlertResponse": {
+      "AlertResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -2482,6 +2863,203 @@
           "createdAtUtc": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ReportAlertRequest": {
+        "type": "object",
+        "required": [
+          "title",
+          "description"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "AssetGeoAnchorRequest": {
+        "type": "object",
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "AssetGeoAnchorResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "CreateAssetRequest": {
+        "type": "object",
+        "required": [
+          "territoryId",
+          "type",
+          "name",
+          "geoAnchors"
+        ],
+        "properties": {
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "geoAnchors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetGeoAnchorRequest"
+            }
+          }
+        }
+      },
+      "UpdateAssetRequest": {
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "geoAnchors"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "geoAnchors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetGeoAnchorRequest"
+            }
+          }
+        }
+      },
+      "ArchiveAssetRequest": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AssetResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "geoAnchors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetGeoAnchorResponse"
+            }
+          },
+          "validationsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eligibleResidentsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "validationPct": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "archivedAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archiveReason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AssetValidationResponse": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "validationsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eligibleResidentsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "validationPct": {
+            "type": "number",
+            "format": "double"
           }
         }
       },

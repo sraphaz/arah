@@ -799,7 +799,8 @@ public sealed class ApiScenariosTests
         Assert.NotNull(pins);
         Assert.NotEmpty(pins!);
         Assert.Contains(pins, pin => pin.PinType == "entity");
-        Assert.Contains(pins, pin => pin.EntityId == Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+        Assert.Contains(pins, pin => pin.EntityId == Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
+        Assert.Contains(pins, pin => pin.PostId == Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
     }
 
     [Fact]

@@ -832,7 +832,7 @@
       },
       "CreatePostRequest": {
         "type": "object",
-        "required": ["title", "content", "type", "visibility", "geoAnchors"],
+        "required": ["title", "content", "type", "visibility"],
         "properties": {
           "title": { "type": "string" },
           "content": { "type": "string" },
@@ -841,6 +841,7 @@
           "mapEntityId": { "type": "string", "format": "uuid", "nullable": true },
           "geoAnchors": {
             "type": "array",
+            "nullable": true,
             "items": { "$ref": "#/components/schemas/GeoAnchorRequest" }
           }
         }

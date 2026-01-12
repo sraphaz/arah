@@ -18,7 +18,7 @@
 - **Territory 1..N UserTerritoryLink** → vínculos de presença.
 - **User 1..N Post** → autor das postagens.
 - **Territory 1..N Post** → posts no território.
-- **Post 1..N PostGeoAnchor** → localização(ões) da postagem.
+- **Post 0..N PostGeoAnchor** → localização(ões) da postagem.
 - **Post 0..N Media** → mídias anexadas (pós-MVP).
 - **Post 0..1 MapEntity** → postagem pode referenciar entidade territorial.
 - **User 0..N MapEntityRelation** → moradores vinculam-se a entidades.

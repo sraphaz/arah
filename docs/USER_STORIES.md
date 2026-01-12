@@ -77,8 +77,9 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 **Para** contextualizar o conteúdo no território.
 
 **Critérios de aceite**
-- Post exige 1..N GeoAnchors.
-- Se a geolocalização estiver indisponível, o post não pode ser publicado (lat/lng obrigatório).
+- Post aceita 0..N GeoAnchors.
+- GeoAnchors são derivados de mídias quando disponíveis; o client não define anchors manualmente.
+- Sem geolocalização, o post pode ser publicado (não aparece no mapa).
 - Mídias no post são pós-MVP.
 
 ### [MVP][P0] Eventos com aprovação de moradores

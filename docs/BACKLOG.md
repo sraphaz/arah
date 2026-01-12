@@ -38,7 +38,7 @@
 - [MVP] **Feed do território com posts georreferenciados** *(já desenvolvido)*
   - Critérios de aceite:
     - Feed do território lista posts associados ao território.
-    - Cada post tem ao menos 1 GeoAnchor.
+    - Posts podem ter 0..N GeoAnchors; sem geo, o post só aparece no feed.
     - Sem vínculo válido, o usuário recebe orientação para declarar vínculo.
 - [MVP] **Eventos com aprovação de moradores**
   - Critérios de aceite:
@@ -52,7 +52,7 @@
 ### Feature: Mapa + feed integrados
 - [MVP] **Pins no mapa para posts** *(já desenvolvido)*
   - Critérios de aceite:
-    - Post aparece no mapa no(s) GeoAnchor(s).
+    - Post aparece no mapa quando tiver GeoAnchor(s).
     - Pin expõe dados mínimos (id, type, lat/lng, title, status).
 - [POST-MVP] **Sincronia timeline ↔ mapa (pin)**
   - Critérios de aceite:
@@ -72,9 +72,9 @@
     - Post pode conter mais de uma mídia.
 - [MVP] **Post com múltiplos GeoAnchors**
   - Critérios de aceite:
-    - Post aceita 1..N GeoAnchors.
-    - Pelo menos 1 GeoAnchor é obrigatório.
-    - Sem geolocalização, o post não pode ser publicado.
+    - Post aceita 0..N GeoAnchors.
+    - GeoAnchors são derivados de mídia quando disponíveis; request do client não define anchors.
+    - Sem geolocalização, o post ainda pode ser publicado (mas não aparece no mapa).
 
 ### Feature: GeoAnchor avançado
 - [POST-MVP] **Memórias, galeria e pins visuais avançados**

@@ -271,7 +271,7 @@ Padrão: `ResidentOnly` (somente `RESIDENT` exige geo).
   - Também sustenta ações anônimas (ex.: likes com `session:{id}`).
 - **X-Geo-Latitude / X-Geo-Longitude**: presença física mínima.
   - Obrigatório conforme `PresencePolicy` (default: somente para `RESIDENT`).
-  - Obrigatório para criar posts (GeoAnchors).
+  - Não é obrigatório para criar posts (GeoAnchors vêm de mídia quando disponíveis).
 
 ### Portal de autosserviço
 

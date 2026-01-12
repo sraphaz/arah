@@ -47,7 +47,7 @@ com dependências explícitas para orientar a sequência de entrega.
 
 - **Feature: Postagem com GeoAnchor**
   - Stories: **[MVP][P0] Post com GeoAnchor**
-  - Depende de: feed do território + geolocalização disponível.
+  - Depende de: feed do território + geolocalização opcional via mídias.
 
 - **Feature: Mapa + feed integrados**
   - Stories: **[MVP][P0] Sincronia feed ↔ mapa**

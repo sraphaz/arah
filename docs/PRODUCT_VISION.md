@@ -8,9 +8,9 @@ O território físico é a unidade central e a presença no território é requi
 - **Território é a unidade central** e representa um lugar físico real.
 - **Presença física é critério de vínculo**: no MVP não é possível associar território remotamente.
 - **Consulta exige cadastro**: no MVP, feed e mapa exigem usuário autenticado.
-- **Conteúdo é georreferenciado via GeoAnchor**.
+- **Conteúdo pode ser georreferenciado via GeoAnchor**.
 - **Feed pessoal (perfil) + feed do território** coexistem.
-- **Postagens referenciam ao menos 1 GeoAnchor** e podem conter múltiplos GeoAnchors (mídia é pós-MVP).
+- **Postagens podem ter 0..N GeoAnchors**, derivados de mídias quando disponíveis.
 - **Visibilidade e papéis**: visitor e resident no MVP; friends/círculo interno é pós-MVP.
 - **Mapa + feed integrados**: pins retornam dados mínimos para projeção no mapa; sincronia UI é pós-MVP.
 - **Moderação**: reports de posts e de usuários; bloqueio; automações simples no MVP; sanções territoriais vs globais.
@@ -21,7 +21,7 @@ O território físico é a unidade central e a presença no território é requi
 2. A localização permite encontrar o território próximo (ex.: “Sertão do Camburi”).
 3. Entra como **visitor**.
 4. É incentivado a postar no feed.
-5. A postagem aparece no mapa (via pins) e no feed; a sincronia visual entre pin e timeline fica para pós-MVP.
+5. A postagem aparece no mapa (via pins) quando há GeoAnchor, e sempre no feed; a sincronia visual entre pin e timeline fica para pós-MVP.
 
 ## Funcionalidades principais (classificação)
 - [MVP] **Território + vínculo** com presença física local.

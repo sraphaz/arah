@@ -1,5 +1,6 @@
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Feed;
+using Araponga.Domain.Geo;
 using Araponga.Domain.Moderation;
 using Araponga.Domain.Social;
 
@@ -90,7 +91,7 @@ public sealed class FeedService
         PostVisibility visibility,
         PostStatus status,
         Guid? mapEntityId,
-        IReadOnlyCollection<Models.GeoAnchorInput> geoAnchors,
+        IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
@@ -115,11 +116,6 @@ public sealed class FeedService
             {
                 return (false, "Map entity not found for territory.", null);
             }
-        }
-
-        if (geoAnchors.Count == 0)
-        {
-            return (false, "At least one geo anchor is required.", null);
         }
 
         var postingRestricted = await _sanctionRepository.HasActiveSanctionAsync(
@@ -148,13 +144,7 @@ public sealed class FeedService
 
         await _feedRepository.AddPostAsync(post, cancellationToken);
 
-        var anchors = geoAnchors.Select(anchor => new Domain.Map.PostGeoAnchor(
-            Guid.NewGuid(),
-            post.Id,
-            anchor.Latitude,
-            anchor.Longitude,
-            anchor.Type,
-            DateTime.UtcNow)).ToList();
+        var anchors = BuildPostAnchors(post.Id, type, geoAnchors);
 
         await _postGeoAnchorRepository.AddAsync(anchors, cancellationToken);
 
@@ -163,6 +153,41 @@ public sealed class FeedService
             cancellationToken);
 
         return (true, null, post);
+    }
+
+    private static IReadOnlyCollection<Domain.Map.PostGeoAnchor> BuildPostAnchors(
+        Guid postId,
+        PostType postType,
+        IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors)
+    {
+        const int MaxAnchors = 50;
+        const int Precision = 5;
+
+        if (geoAnchors is null || geoAnchors.Count == 0)
+        {
+            return Array.Empty<Domain.Map.PostGeoAnchor>();
+        }
+
+        var now = DateTime.UtcNow;
+        var anchorType = postType == PostType.Event ? "EVENT" : "POST";
+
+        return geoAnchors
+            .Where(anchor => GeoCoordinate.IsValid(anchor.Latitude, anchor.Longitude))
+            .Select(anchor => new
+            {
+                Latitude = Math.Round(anchor.Latitude, Precision, MidpointRounding.AwayFromZero),
+                Longitude = Math.Round(anchor.Longitude, Precision, MidpointRounding.AwayFromZero)
+            })
+            .Distinct()
+            .Take(MaxAnchors)
+            .Select(anchor => new Domain.Map.PostGeoAnchor(
+                Guid.NewGuid(),
+                postId,
+                anchor.Latitude,
+                anchor.Longitude,
+                anchorType,
+                now))
+            .ToList();
     }
 
     public async Task<(bool success, string? error)> ApproveEventAsync(

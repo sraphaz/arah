@@ -435,6 +435,142 @@ public sealed class ApplicationServiceTests
     }
 
     [Fact]
+    public async Task FeedService_AllowsPostsWithoutGeoAnchors()
+    {
+        var dataStore = new InMemoryDataStore();
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var featureFlags = new InMemoryFeatureFlagService();
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var blockRepository = new InMemoryUserBlockRepository(dataStore);
+        var mapRepository = new InMemoryMapRepository(dataStore);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
+
+        var created = await service.CreatePostAsync(
+            ActiveTerritoryId,
+            Guid.NewGuid(),
+            "Post sem geo",
+            "Conteudo",
+            PostType.General,
+            PostVisibility.Public,
+            PostStatus.Published,
+            null,
+            null,
+            CancellationToken.None);
+
+        Assert.True(created.success);
+        Assert.NotNull(created.post);
+        Assert.DoesNotContain(dataStore.PostGeoAnchors, anchor => anchor.PostId == created.post!.Id);
+    }
+
+    [Fact]
+    public async Task FeedService_PersistsGeoAnchorsFromMediaMetadata()
+    {
+        var dataStore = new InMemoryDataStore();
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var featureFlags = new InMemoryFeatureFlagService();
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var blockRepository = new InMemoryUserBlockRepository(dataStore);
+        var mapRepository = new InMemoryMapRepository(dataStore);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
+
+        var created = await service.CreatePostAsync(
+            ActiveTerritoryId,
+            Guid.NewGuid(),
+            "Post com midia",
+            "Conteudo",
+            PostType.General,
+            PostVisibility.Public,
+            PostStatus.Published,
+            null,
+            new List<GeoAnchorInput>
+            {
+                new(-23.3701, -45.0201, "POST")
+            },
+            CancellationToken.None);
+
+        Assert.True(created.success);
+        Assert.NotNull(created.post);
+
+        var anchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == created.post!.Id).ToList();
+        Assert.Single(anchors);
+        Assert.Equal("POST", anchors[0].Type);
+    }
+
+    [Fact]
+    public async Task FeedService_DeduplicatesAndLimitsGeoAnchors()
+    {
+        var dataStore = new InMemoryDataStore();
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var featureFlags = new InMemoryFeatureFlagService();
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var blockRepository = new InMemoryUserBlockRepository(dataStore);
+        var mapRepository = new InMemoryMapRepository(dataStore);
+        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
+        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var service = new FeedService(
+            feedRepository,
+            accessEvaluator,
+            featureFlags,
+            auditLogger,
+            blockRepository,
+            mapRepository,
+            geoAnchorRepository,
+            sanctionRepository);
+
+        var anchors = new List<GeoAnchorInput>
+        {
+            new(-23.123456, -45.123456, "POST"),
+            new(-23.123459, -45.123459, "POST")
+        };
+
+        for (var i = 0; i < 60; i += 1)
+        {
+            anchors.Add(new GeoAnchorInput(-23.0 - i * 0.01, -45.0 - i * 0.01, "POST"));
+        }
+
+        var created = await service.CreatePostAsync(
+            ActiveTerritoryId,
+            Guid.NewGuid(),
+            "Post com muitas midias",
+            "Conteudo",
+            PostType.General,
+            PostVisibility.Public,
+            PostStatus.Published,
+            null,
+            anchors,
+            CancellationToken.None);
+
+        Assert.True(created.success);
+        Assert.NotNull(created.post);
+
+        var savedAnchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == created.post!.Id).ToList();
+        Assert.Equal(50, savedAnchors.Count);
+    }
+
+    [Fact]
     public async Task FeedService_FiltersByMapEntity()
     {
         var dataStore = new InMemoryDataStore();

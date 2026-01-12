@@ -9,6 +9,8 @@ using Araponga.Api.Contracts.Health;
 using Araponga.Api.Contracts.Map;
 using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Contracts.Territories;
+using Araponga.Infrastructure.InMemory;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Araponga.Tests.Api;
@@ -559,8 +561,6 @@ public sealed class ApiScenariosTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
-        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
         var created = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
@@ -604,6 +604,37 @@ public sealed class ApiScenariosTests
     }
 
     [Fact]
+    public async Task Feed_CreatePost_IgnoresGeoAnchorsFromRequest()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "feed-geo-ignore");
+
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var token = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var created = await client.PostAsJsonAsync(
+            $"api/v1/feed?territoryId={ActiveTerritoryId}",
+            new CreatePostRequest(
+                "Post sem anchor manual",
+                "Conteúdo",
+                "GENERAL",
+                "PUBLIC",
+                null,
+                new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") }));
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+
+        var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
+        Assert.NotNull(createdPost);
+
+        var dataStore = factory.Services.GetRequiredService<InMemoryDataStore>();
+        var anchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == createdPost!.Id).ToList();
+        Assert.Empty(anchors);
+    }
+
+    [Fact]
     public async Task Feed_EventRequiresApprovalForVisitor()
     {
         using var factory = new ApiFactory();
@@ -614,8 +645,6 @@ public sealed class ApiScenariosTests
 
         var visitorToken = await LoginForTokenAsync(client, "google", "visitor-event");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
-        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
-        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
         var created = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",

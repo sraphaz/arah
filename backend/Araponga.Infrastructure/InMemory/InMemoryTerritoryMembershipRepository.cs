@@ -39,6 +39,19 @@ public sealed class InMemoryTerritoryMembershipRepository : ITerritoryMembership
         return Task.FromResult(hasResident);
     }
 
+    public Task<IReadOnlyList<Guid>> ListResidentUserIdsAsync(Guid territoryId, CancellationToken cancellationToken)
+    {
+        var residents = _dataStore.Memberships
+            .Where(m => m.TerritoryId == territoryId &&
+                        m.Role == MembershipRole.Resident &&
+                        m.VerificationStatus == VerificationStatus.Validated)
+            .Select(m => m.UserId)
+            .Distinct()
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<Guid>>(residents);
+    }
+
     public Task AddAsync(TerritoryMembership membership, CancellationToken cancellationToken)
     {
         _dataStore.Memberships.Add(membership);

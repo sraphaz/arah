@@ -32,6 +32,17 @@ public sealed class PostgresUserRepository : IUserRepository
         return record?.ToDomain();
     }
 
+    public async Task<IReadOnlyList<Guid>> ListUserIdsByRoleAsync(UserRole role, CancellationToken cancellationToken)
+    {
+        var userIds = await _dbContext.Users
+            .AsNoTracking()
+            .Where(user => user.Role == role)
+            .Select(user => user.Id)
+            .ToListAsync(cancellationToken);
+
+        return userIds;
+    }
+
     public Task AddAsync(User user, CancellationToken cancellationToken)
     {
         _dbContext.Users.Add(user.ToRecord());

@@ -12,6 +12,8 @@
 - **FriendRelation** (requester, target, status pending/accepted/blocked)
 - **Report** (territoryId, reporterId, targetType post|user, reason, details, status)
 - **Sanction** (scope territory|global, target user|post, type, reason, status, startAt, endAt)
+- **OutboxMessage** (type, payloadJson, occurredAt, processedAt, attempts)
+- **UserNotification** (userId, title, body, kind, dataJson, createdAt, readAt, sourceOutboxId)
 
 ## Relacionamentos (alto nível)
 - **User 1..N UserTerritoryLink** → vínculo com territórios.
@@ -28,8 +30,10 @@
 - **Report 0..1 Sanction** → sanções derivadas.
 - **User 1..N Sanction** → sanções aplicadas.
 - **Territory 0..N Sanction** → sanções territoriais (territoryId preenchido) ou globais (territoryId nulo).
+- **OutboxMessage 1..N UserNotification** → mensagens geram notificações para destinatários.
+- **User 1..N UserNotification** → inbox de notificações do usuário.
 
 ## Observações de MVP vs Pós-MVP
-- [MVP] UserTerritoryLink, Post, PostGeoAnchor, MapEntity, MapEntityRelation, Report, Sanction.
+- [MVP] UserTerritoryLink, Post, PostGeoAnchor, MapEntity, MapEntityRelation, Report, Sanction, OutboxMessage, UserNotification.
 - [POST-MVP] Media e FriendRelation.
 - [POST-MVP] FriendRelation e comportamentos de círculo interno.

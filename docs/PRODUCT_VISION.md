@@ -14,6 +14,7 @@ O território físico é a unidade central e a presença no território é requi
 - **Visibilidade e papéis**: visitor e resident no MVP; friends/círculo interno é pós-MVP.
 - **Mapa + feed integrados**: pins retornam dados mínimos para projeção no mapa; sincronia UI é pós-MVP.
 - **Moderação**: reports de posts e de usuários; bloqueio; automações simples no MVP; sanções territoriais vs globais.
+- **Notificações in-app**: eventos geram mensagens confiáveis via outbox, convertidas em inbox do usuário.
 - **Admin**: visão administrativa para observar territórios, erros e relatórios (pós-MVP).
 
 ## Fluxo mínimo (MVP)
@@ -29,6 +30,7 @@ O território físico é a unidade central e a presença no território é requi
 - [MVP] **Mapa integrado ao feed** via pins com dados mínimos.
 - [MVP] **Visibilidade visitor/resident**.
 - [MVP] **Reports e bloqueio** com moderação básica.
+- [MVP] **Notificações in-app** com outbox/inbox confiáveis.
 - [POST-MVP] **Friends (círculo interno)** e stories exclusivos.
 - [POST-MVP] **Admin/observabilidade** com visão de territórios e saúde do sistema.
 - [POST-MVP] **GeoAnchor avançado / memórias / galeria**.

@@ -15,6 +15,7 @@
 - [MVP] Visibilidade visitor/resident.
 - [MVP] API + portal.
 - [MVP] Reports, bloqueio e moderação básica.
+- [MVP] Notificações in-app com outbox/inbox.
 - [MVP] Integração base com provedor de mapas.
 - [MVP] Observabilidade técnica mínima.
 

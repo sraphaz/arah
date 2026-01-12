@@ -151,6 +151,7 @@ backend/
 - ✅ Feed territorial com criação e moderação de conteúdo
 - ✅ Mapa territorial com entidades e relações
 - ✅ Moderação (reports e bloqueios)
+- ✅ Notificações in-app com outbox e inbox persistido
 - ✅ Feature flags e health check
 - ✅ Testes automatizados
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)

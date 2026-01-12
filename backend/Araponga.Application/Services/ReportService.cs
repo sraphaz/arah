@@ -1,4 +1,5 @@
 using Araponga.Application.Interfaces;
+using Araponga.Application.Events;
 using Araponga.Domain.Moderation;
 
 namespace Araponga.Application.Services;
@@ -14,6 +15,7 @@ public sealed class ReportService
     private readonly IUserRepository _userRepository;
     private readonly ISanctionRepository _sanctionRepository;
     private readonly IAuditLogger _auditLogger;
+    private readonly IEventBus _eventBus;
     private readonly IUnitOfWork _unitOfWork;
 
     public ReportService(
@@ -22,6 +24,7 @@ public sealed class ReportService
         IUserRepository userRepository,
         ISanctionRepository sanctionRepository,
         IAuditLogger auditLogger,
+        IEventBus eventBus,
         IUnitOfWork unitOfWork)
     {
         _reportRepository = reportRepository;
@@ -29,6 +32,7 @@ public sealed class ReportService
         _userRepository = userRepository;
         _sanctionRepository = sanctionRepository;
         _auditLogger = auditLogger;
+        _eventBus = eventBus;
         _unitOfWork = unitOfWork;
     }
 
@@ -81,6 +85,10 @@ public sealed class ReportService
             cancellationToken);
 
         await EvaluatePostThresholdAsync(report, post, cancellationToken);
+
+        await _eventBus.PublishAsync(
+            new ReportCreatedEvent(report.Id, report.TerritoryId, report.ReporterUserId, DateTime.UtcNow),
+            cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
@@ -142,6 +150,10 @@ public sealed class ReportService
             cancellationToken);
 
         await EvaluateUserThresholdAsync(report, cancellationToken);
+
+        await _eventBus.PublishAsync(
+            new ReportCreatedEvent(report.Id, report.TerritoryId, report.ReporterUserId, DateTime.UtcNow),
+            cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 

@@ -151,6 +151,8 @@ backend/
 - `GET /api/v1/territories/nearby?lat=-23.37&lng=-45.02&radiusKm=25&limit=20`
 - `GET /api/v1/map/pins?territoryId={territoryId}`
 - `GET /api/v1/reports?territoryId={territoryId}&targetType=POST&status=OPEN`
+- `GET /api/v1/notifications?skip=0&take=50`
+- `POST /api/v1/notifications/{id}/read`
 
 ---
 
@@ -163,6 +165,7 @@ backend/
 - ✅ Feed territorial com criação e moderação de conteúdo
 - ✅ Mapa territorial com entidades e relações
 - ✅ Moderação (reports e bloqueios)
+- ✅ Notificações in-app com outbox e inbox persistido
 - ✅ Feature flags e health check
 - ✅ Testes automatizados
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)

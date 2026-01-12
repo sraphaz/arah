@@ -140,6 +140,16 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 - Report exige motivo e detalhes opcionais.
 - Reports repetidos do mesmo usuário na mesma janela são ignorados.
 
+### [MVP][P1] Notificações in-app
+**Como** usuário
+**Quero** receber notificações sobre eventos relevantes
+**Para** acompanhar atualizações do território.
+
+**Critérios de aceite**
+- Eventos de post e report geram notificações in-app para os destinatários.
+- Notificações são persistidas via outbox/inbox e listáveis pela API.
+- Usuário consegue marcar notificações como lidas.
+
 ### [MVP][P0] Bloquear usuário
 **Como** usuário
 **Quero** bloquear outro usuário

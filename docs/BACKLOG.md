@@ -120,12 +120,20 @@
   - Critérios de aceite:
     - Banimento global bloqueia acesso a todos os territórios.
 
-## Epic 6 — Admin e observabilidade
+## Epic 6 — Notificações
+### Feature: Notificações in-app
+- [MVP] **Inbox de notificações com outbox**
+  - Critérios de aceite:
+    - Eventos relevantes (post/report) geram mensagens em outbox na mesma transação.
+    - Worker converte mensagens em notificações persistidas por usuário.
+    - Usuário pode listar notificações e marcá-las como lidas.
+
+## Epic 7 — Admin e observabilidade
 ### Feature: Visão administrativa
 - [POST-MVP] **Painel admin de territórios, erros e relatórios**
 - [POST-MVP] **Saúde do sistema e indicadores**
 
-## Epic 7 — Integrações e observabilidade técnica
+## Epic 8 — Integrações e observabilidade técnica
 ### Feature: Provedor de mapas
 - [MVP] **Integração base com provedor de mapas**
   - Critérios de aceite:
@@ -138,7 +146,7 @@
     - Erros de geolocalização são registrados.
     - Há métricas para requisições e falhas de moderação.
 
-## Epic 7 — Gaps e boas práticas para o modelo de rede
+## Epic 9 — Gaps e boas práticas para o modelo de rede
 ### Feature: Presença e privacidade
 - [MVP] **Consentimento explícito de localização**
   - Critérios de aceite:

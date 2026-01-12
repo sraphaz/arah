@@ -14,7 +14,9 @@
   "paths": {
     "/health": {
       "get": {
-        "tags": ["General"],
+        "tags": [
+          "General"
+        ],
         "summary": "Health check básico",
         "responses": {
           "200": {
@@ -32,7 +34,9 @@
     },
     "/api/v1/auth/social": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Autentica o usuário via login social (MVP).",
         "requestBody": {
           "required": true,
@@ -59,7 +63,9 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
@@ -68,7 +74,9 @@
     },
     "/api/v1/territories": {
       "get": {
-        "tags": ["Territories"],
+        "tags": [
+          "Territories"
+        ],
         "summary": "Lista territórios disponíveis para descoberta (MVP).",
         "responses": {
           "200": {
@@ -77,7 +85,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TerritoryResponse" }
+                  "items": {
+                    "$ref": "#/components/schemas/TerritoryResponse"
+                  }
                 }
               }
             }
@@ -87,14 +97,19 @@
     },
     "/api/v1/territories/{id}": {
       "get": {
-        "tags": ["Territories"],
+        "tags": [
+          "Territories"
+        ],
         "summary": "Obtém um território por Id.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -102,24 +117,34 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TerritoryResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/TerritoryResponse"
+                }
               }
             }
           },
-          "404": { "description": "Not Found" },
-          "401": { "description": "Unauthorized" }
+          "404": {
+            "description": "Not Found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/territories/suggestions": {
       "post": {
-        "tags": ["Territories"],
+        "tags": [
+          "Territories"
+        ],
         "summary": "Sugere um território geográfico para validação.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SuggestTerritoryRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/SuggestTerritoryRequest"
+              }
             }
           }
         },
@@ -128,7 +153,9 @@
             "description": "Created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TerritoryResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/TerritoryResponse"
+                }
               }
             }
           },
@@ -136,7 +163,9 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
@@ -145,12 +174,35 @@
     },
     "/api/v1/territories/search": {
       "get": {
-        "tags": ["Territories"],
+        "tags": [
+          "Territories"
+        ],
         "summary": "Busca territórios por texto e localização administrativa.",
         "parameters": [
-          { "name": "q", "in": "query", "schema": { "type": "string", "nullable": true } },
-          { "name": "city", "in": "query", "schema": { "type": "string", "nullable": true } },
-          { "name": "state", "in": "query", "schema": { "type": "string", "nullable": true } }
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -159,7 +211,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TerritoryResponse" }
+                  "items": {
+                    "$ref": "#/components/schemas/TerritoryResponse"
+                  }
                 }
               }
             }
@@ -169,13 +223,47 @@
     },
     "/api/v1/territories/nearby": {
       "get": {
-        "tags": ["Territories"],
+        "tags": [
+          "Territories"
+        ],
         "summary": "Busca territórios próximos usando latitude e longitude.",
         "parameters": [
-          { "name": "lat", "in": "query", "schema": { "type": "number", "format": "double", "nullable": true } },
-          { "name": "lng", "in": "query", "schema": { "type": "number", "format": "double", "nullable": true } },
-          { "name": "radiusKm", "in": "query", "schema": { "type": "number", "format": "double", "nullable": true } },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "format": "int32", "nullable": true } }
+          {
+            "name": "lat",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "radiusKm",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -184,7 +272,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/TerritoryResponse" }
+                  "items": {
+                    "$ref": "#/components/schemas/TerritoryResponse"
+                  }
                 }
               }
             }
@@ -193,7 +283,9 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
@@ -202,13 +294,17 @@
     },
     "/api/v1/territories/selection": {
       "post": {
-        "tags": ["Territories"],
+        "tags": [
+          "Territories"
+        ],
         "summary": "Seleciona o território ativo da sessão atual.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/TerritorySelectionRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/TerritorySelectionRequest"
+              }
             }
           }
         },
@@ -217,486 +313,1468 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TerritorySelectionResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/TerritorySelectionResponse"
+                }
               }
             }
           },
           "400": {
             "description": "Bad Request",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       },
       "get": {
-        "tags": ["Territories"],
+        "tags": [
+          "Territories"
+        ],
         "summary": "Obtém o território ativo da sessão atual.",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TerritorySelectionResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/TerritorySelectionResponse"
+                }
               }
             }
           },
-          "404": { "description": "Not Found" },
+          "404": {
+            "description": "Not Found"
+          },
           "400": {
             "description": "Bad Request",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/territories/{territoryId}/membership": {
       "post": {
-        "tags": ["Memberships"],
+        "tags": [
+          "Memberships"
+        ],
         "summary": "Declara vínculo social com um território (visitor/resident).",
         "parameters": [
           {
             "name": "territoryId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DeclareMembershipRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeclareMembershipRequest"
+              }
+            }
+          }
         },
         "responses": {
           "201": {
             "description": "Created",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MembershipResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MembershipResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
-          "401": { "description": "Unauthorized" },
-          "404": { "description": "Not Found" }
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
         }
       }
     },
     "/api/v1/territories/{territoryId}/membership/me": {
       "get": {
-        "tags": ["Memberships"],
+        "tags": [
+          "Memberships"
+        ],
         "summary": "Retorna o status do vínculo do usuário com o território.",
         "parameters": [
           {
             "name": "territoryId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MembershipStatusResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MembershipStatusResponse"
+                }
+              }
+            }
           },
-          "401": { "description": "Unauthorized" }
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/territories/{territoryId}/membership/{membershipId}/validation": {
       "patch": {
-        "tags": ["Memberships"],
+        "tags": [
+          "Memberships"
+        ],
         "summary": "Valida um vínculo de morador (curadoria).",
         "parameters": [
           {
             "name": "territoryId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "membershipId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ValidateMembershipRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateMembershipRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "204": { "description": "No Content" },
+          "204": {
+            "description": "No Content"
+          },
           "400": {
             "description": "Bad Request",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
-          "401": { "description": "Unauthorized" }
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/feed": {
       "get": {
-        "tags": ["Feed"],
+        "tags": [
+          "Feed"
+        ],
         "summary": "Visualiza o feed do território ativo.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } },
-          { "name": "mapEntityId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "mapEntityId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/FeedItemResponse" } } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedItemResponse"
+                  }
+                }
+              }
+            }
           },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       },
       "post": {
-        "tags": ["Feed"],
+        "tags": [
+          "Feed"
+        ],
         "summary": "Cria um post comunitário no território ativo.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreatePostRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FeedItemResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedItemResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/feed/me": {
       "get": {
-        "tags": ["Feed"],
+        "tags": [
+          "Feed"
+        ],
         "summary": "Visualiza o feed pessoal do usuário autenticado.",
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/FeedItemResponse" } } } } },
-          "401": { "description": "Unauthorized" }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedItemResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/feed/{postId}/likes": {
       "post": {
-        "tags": ["Feed"],
+        "tags": [
+          "Feed"
+        ],
         "summary": "Curte um post do território ativo.",
         "parameters": [
-          { "name": "postId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/feed/{postId}/comments": {
       "post": {
-        "tags": ["Feed"],
+        "tags": [
+          "Feed"
+        ],
         "summary": "Comenta em um post do território ativo.",
         "parameters": [
-          { "name": "postId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AddCommentRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCommentRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/feed/{postId}/shares": {
       "post": {
-        "tags": ["Feed"],
+        "tags": [
+          "Feed"
+        ],
         "summary": "Compartilha um post do território ativo.",
         "parameters": [
-          { "name": "postId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/feed/{postId}/approval": {
       "patch": {
-        "tags": ["Feed"],
+        "tags": [
+          "Feed"
+        ],
         "summary": "Aprova ou rejeita eventos criados no território ativo.",
         "parameters": [
-          { "name": "postId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApproveEventRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveEventRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/map/entities": {
       "get": {
-        "tags": ["Map"],
+        "tags": [
+          "Map"
+        ],
         "summary": "Visualiza entidades do mapa no território ativo.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/MapEntityResponse" } } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MapEntityResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       },
       "post": {
-        "tags": ["Map"],
+        "tags": [
+          "Map"
+        ],
         "summary": "Sugere uma nova entidade no mapa.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuggestMapEntityRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuggestMapEntityRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MapEntityResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapEntityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/map/pins": {
       "get": {
-        "tags": ["Map"],
+        "tags": [
+          "Map"
+        ],
         "summary": "Lista pins (entidades + posts) para o mapa do território.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/MapPinResponse" } } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MapPinResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/map/entities/{entityId}/validation": {
       "patch": {
-        "tags": ["Map"],
+        "tags": [
+          "Map"
+        ],
         "summary": "Valida uma entidade sugerida (curadoria).",
         "parameters": [
-          { "name": "entityId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "entityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ValidateMapEntityRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateMapEntityRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/map/entities/{entityId}/confirmations": {
       "post": {
-        "tags": ["Map"],
+        "tags": [
+          "Map"
+        ],
         "summary": "Confirma uma entidade existente.",
         "parameters": [
-          { "name": "entityId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "entityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/map/entities/{entityId}/relations": {
       "post": {
-        "tags": ["Map"],
+        "tags": [
+          "Map"
+        ],
         "summary": "Relaciona um morador a uma entidade do território.",
         "parameters": [
-          { "name": "entityId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "entityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MapEntityRelationResponse" } } } },
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MapEntityRelationResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapEntityRelationResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapEntityRelationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/reports/posts/{postId}": {
       "post": {
-        "tags": ["Moderation"],
+        "tags": [
+          "Moderation"
+        ],
         "summary": "Reporta um post do feed.",
         "parameters": [
-          { "name": "postId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReportRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReportResponse" } } } },
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReportResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" },
-          "404": { "description": "Not Found" }
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
         }
       }
     },
     "/api/v1/reports/users/{userId}": {
       "post": {
-        "tags": ["Moderation"],
+        "tags": [
+          "Moderation"
+        ],
         "summary": "Reporta um usuário.",
         "parameters": [
-          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReportRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReportResponse" } } } },
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReportResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" },
-          "404": { "description": "Not Found" }
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
         }
       }
     },
     "/api/v1/reports": {
       "get": {
-        "tags": ["Moderation"],
+        "tags": [
+          "Moderation"
+        ],
         "summary": "Lista reports para curadoria.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } },
-          { "name": "targetType", "in": "query", "schema": { "type": "string", "nullable": true } },
-          { "name": "status", "in": "query", "schema": { "type": "string", "nullable": true } },
-          { "name": "from", "in": "query", "schema": { "type": "string", "format": "date-time", "nullable": true } },
-          { "name": "to", "in": "query", "schema": { "type": "string", "format": "date-time", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "targetType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/ReportSummaryResponse" } } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportSummaryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/blocks/users/{userId}": {
       "post": {
-        "tags": ["Moderation"],
+        "tags": [
+          "Moderation"
+        ],
         "summary": "Bloqueia um usuário para não ver seu conteúdo.",
         "parameters": [
-          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
         "responses": {
-          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BlockResponse" } } } },
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BlockResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" },
-          "404": { "description": "Not Found" }
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
         }
       },
       "delete": {
-        "tags": ["Moderation"],
+        "tags": [
+          "Moderation"
+        ],
         "summary": "Remove o bloqueio de um usuário.",
         "parameters": [
-          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
         "responses": {
-          "204": { "description": "No Content" },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/territories/{territoryId}/features": {
       "get": {
-        "tags": ["Features"],
+        "tags": [
+          "Features"
+        ],
         "summary": "Lista flags habilitadas no território.",
         "parameters": [
-          { "name": "territoryId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+          {
+            "name": "territoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FeatureFlagResponse" } } } }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFlagResponse"
+                }
+              }
+            }
+          }
         }
       },
       "put": {
-        "tags": ["Features"],
+        "tags": [
+          "Features"
+        ],
         "summary": "Atualiza flags habilitadas (curadoria).",
         "parameters": [
-          { "name": "territoryId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+          {
+            "name": "territoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateFeatureFlagsRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFeatureFlagsRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FeatureFlagResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFlagResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/health/indicators": {
       "get": {
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "summary": "Visualiza indicadores de saúde do território ativo.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/HealthIndicatorResponse" } } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HealthIndicatorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
         }
       }
     },
     "/api/v1/health/alerts": {
       "post": {
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "summary": "Reporta um alerta ambiental.",
         "parameters": [
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReportAlertRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportAlertRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HealthAlertResponse" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthAlertResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
         }
       }
     },
     "/api/v1/health/alerts/{alertId}/validation": {
       "patch": {
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "summary": "Valida alerta ambiental (curadoria).",
         "parameters": [
-          { "name": "alertId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "territoryId", "in": "query", "schema": { "type": "string", "format": "uuid", "nullable": true } }
+          {
+            "name": "alertId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ValidateAlertRequest" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateAlertRequest"
+              }
+            }
+          }
         },
         "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-          "401": { "description": "Unauthorized" }
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Lista as notificações do usuário autenticado.",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/notifications/{id}/read": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Marca uma notificação como lida.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
         }
       }
     }
@@ -706,328 +1784,730 @@
       "ErrorResponse": {
         "type": "object",
         "properties": {
-          "error": { "type": "string" }
+          "error": {
+            "type": "string"
+          }
         }
       },
       "ProblemDetails": {
         "type": "object",
         "properties": {
-          "title": { "type": "string" },
-          "status": { "type": "integer", "format": "int32" },
-          "detail": { "type": "string" },
-          "instance": { "type": "string" },
-          "traceId": { "type": "string" },
-          "path": { "type": "string" }
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          },
+          "traceId": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
         }
       },
       "HealthCheckResponse": {
         "type": "object",
         "properties": {
-          "status": { "type": "string" },
-          "service": { "type": "string" }
+          "status": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          }
         }
       },
       "SocialLoginRequest": {
         "type": "object",
-        "required": ["provider", "externalId", "displayName"],
+        "required": [
+          "provider",
+          "externalId",
+          "displayName"
+        ],
         "properties": {
-          "provider": { "type": "string" },
-          "externalId": { "type": "string" },
-          "displayName": { "type": "string" },
-          "cpf": { "type": "string", "nullable": true },
-          "foreignDocument": { "type": "string", "nullable": true },
-          "phoneNumber": { "type": "string", "nullable": true },
-          "address": { "type": "string", "nullable": true },
-          "email": { "type": "string", "nullable": true }
+          "provider": {
+            "type": "string"
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "foreignDocument": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
         }
       },
       "UserResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "displayName": { "type": "string" },
-          "email": { "type": "string", "nullable": true }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
         }
       },
       "SocialLoginResponse": {
         "type": "object",
         "properties": {
-          "user": { "$ref": "#/components/schemas/UserResponse" },
-          "token": { "type": "string" }
+          "user": {
+            "$ref": "#/components/schemas/UserResponse"
+          },
+          "token": {
+            "type": "string"
+          }
         }
       },
       "TerritoryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
-          "description": { "type": "string", "nullable": true },
-          "status": { "type": "string" },
-          "city": { "type": "string" },
-          "state": { "type": "string" },
-          "latitude": { "type": "number", "format": "double" },
-          "longitude": { "type": "number", "format": "double" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "SuggestTerritoryRequest": {
         "type": "object",
-        "required": ["name", "city", "state", "latitude", "longitude"],
+        "required": [
+          "name",
+          "city",
+          "state",
+          "latitude",
+          "longitude"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string", "nullable": true },
-          "city": { "type": "string" },
-          "state": { "type": "string" },
-          "latitude": { "type": "number", "format": "double" },
-          "longitude": { "type": "number", "format": "double" }
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          }
         }
       },
       "TerritorySelectionRequest": {
         "type": "object",
-        "required": ["territoryId"],
+        "required": [
+          "territoryId"
+        ],
         "properties": {
-          "territoryId": { "type": "string", "format": "uuid" }
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          }
         }
       },
       "TerritorySelectionResponse": {
         "type": "object",
         "properties": {
-          "sessionId": { "type": "string" },
-          "territoryId": { "type": "string", "format": "uuid" }
+          "sessionId": {
+            "type": "string"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          }
         }
       },
       "DeclareMembershipRequest": {
         "type": "object",
-        "required": ["role"],
+        "required": [
+          "role"
+        ],
         "properties": {
-          "role": { "type": "string" }
+          "role": {
+            "type": "string"
+          }
         }
       },
       "ValidateMembershipRequest": {
         "type": "object",
-        "required": ["status"],
+        "required": [
+          "status"
+        ],
         "properties": {
-          "status": { "type": "string" }
+          "status": {
+            "type": "string"
+          }
         }
       },
       "MembershipResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "userId": { "type": "string", "format": "uuid" },
-          "territoryId": { "type": "string", "format": "uuid" },
-          "role": { "type": "string" },
-          "verificationStatus": { "type": "string" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string"
+          },
+          "verificationStatus": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "MembershipStatusResponse": {
         "type": "object",
         "properties": {
-          "userId": { "type": "string", "format": "uuid" },
-          "territoryId": { "type": "string", "format": "uuid" },
-          "role": { "type": "string" },
-          "verificationStatus": { "type": "string" }
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string"
+          },
+          "verificationStatus": {
+            "type": "string"
+          }
         }
       },
       "CreatePostRequest": {
         "type": "object",
-        "required": ["title", "content", "type", "visibility"],
+        "required": [
+          "title",
+          "content",
+          "type",
+          "visibility"
+        ],
         "properties": {
-          "title": { "type": "string" },
-          "content": { "type": "string" },
-          "type": { "type": "string" },
-          "visibility": { "type": "string" },
-          "mapEntityId": { "type": "string", "format": "uuid", "nullable": true },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string"
+          },
+          "mapEntityId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "geoAnchors": {
             "type": "array",
             "nullable": true,
-            "items": { "$ref": "#/components/schemas/GeoAnchorRequest" }
+            "items": {
+              "$ref": "#/components/schemas/GeoAnchorRequest"
+            }
           }
         }
       },
       "GeoAnchorRequest": {
         "type": "object",
-        "required": ["latitude", "longitude", "type"],
+        "required": [
+          "latitude",
+          "longitude",
+          "type"
+        ],
         "properties": {
-          "latitude": { "type": "number", "format": "double" },
-          "longitude": { "type": "number", "format": "double" },
-          "type": { "type": "string" }
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "type": {
+            "type": "string"
+          }
         }
       },
       "FeedItemResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "title": { "type": "string" },
-          "content": { "type": "string" },
-          "type": { "type": "string" },
-          "visibility": { "type": "string" },
-          "status": { "type": "string" },
-          "mapEntityId": { "type": "string", "format": "uuid", "nullable": true },
-          "isHighlighted": { "type": "boolean" },
-          "likeCount": { "type": "integer", "format": "int32" },
-          "shareCount": { "type": "integer", "format": "int32" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "mapEntityId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "isHighlighted": {
+            "type": "boolean"
+          },
+          "likeCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shareCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "AddCommentRequest": {
         "type": "object",
-        "required": ["content"],
+        "required": [
+          "content"
+        ],
         "properties": {
-          "content": { "type": "string" }
+          "content": {
+            "type": "string"
+          }
         }
       },
       "ApproveEventRequest": {
         "type": "object",
-        "required": ["status"],
+        "required": [
+          "status"
+        ],
         "properties": {
-          "status": { "type": "string" }
+          "status": {
+            "type": "string"
+          }
         }
       },
       "SuggestMapEntityRequest": {
         "type": "object",
-        "required": ["name", "category", "latitude", "longitude"],
+        "required": [
+          "name",
+          "category",
+          "latitude",
+          "longitude"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "category": { "type": "string" },
-          "latitude": { "type": "number", "format": "double" },
-          "longitude": { "type": "number", "format": "double" }
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          }
         }
       },
       "ValidateMapEntityRequest": {
         "type": "object",
-        "required": ["status"],
+        "required": [
+          "status"
+        ],
         "properties": {
-          "status": { "type": "string" }
+          "status": {
+            "type": "string"
+          }
         }
       },
       "MapEntityResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
-          "category": { "type": "string" },
-          "latitude": { "type": "number", "format": "double" },
-          "longitude": { "type": "number", "format": "double" },
-          "status": { "type": "string" },
-          "visibility": { "type": "string" },
-          "confirmationCount": { "type": "integer", "format": "int32" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "status": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string"
+          },
+          "confirmationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "MapPinResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "type": { "type": "string" },
-          "latitude": { "type": "number", "format": "double" },
-          "longitude": { "type": "number", "format": "double" },
-          "title": { "type": "string" },
-          "status": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
         }
       },
       "MapEntityRelationResponse": {
         "type": "object",
         "properties": {
-          "userId": { "type": "string", "format": "uuid" },
-          "entityId": { "type": "string", "format": "uuid" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ReportRequest": {
         "type": "object",
-        "required": ["reason"],
+        "required": [
+          "reason"
+        ],
         "properties": {
-          "reason": { "type": "string" },
-          "details": { "type": "string", "nullable": true }
+          "reason": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          }
         }
       },
       "ReportResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "targetType": { "type": "string" },
-          "targetId": { "type": "string", "format": "uuid" },
-          "reason": { "type": "string" },
-          "details": { "type": "string", "nullable": true },
-          "isDuplicate": { "type": "boolean" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "isDuplicate": {
+            "type": "boolean"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ReportSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "territoryId": { "type": "string", "format": "uuid" },
-          "targetType": { "type": "string" },
-          "targetId": { "type": "string", "format": "uuid" },
-          "reason": { "type": "string" },
-          "status": { "type": "string" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "BlockResponse": {
         "type": "object",
         "properties": {
-          "blockerUserId": { "type": "string", "format": "uuid" },
-          "blockedUserId": { "type": "string", "format": "uuid" },
-          "alreadyBlocked": { "type": "boolean" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "blockerUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "blockedUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alreadyBlocked": {
+            "type": "boolean"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "FeatureFlagResponse": {
         "type": "object",
         "properties": {
-          "territoryId": { "type": "string", "format": "uuid" },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "enabledFlags": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
       "UpdateFeatureFlagsRequest": {
         "type": "object",
-        "required": ["enabledFlags"],
+        "required": [
+          "enabledFlags"
+        ],
         "properties": {
           "enabledFlags": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
       "HealthIndicatorResponse": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "status": { "type": "string" },
-          "description": { "type": "string" }
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
         }
       },
       "ReportAlertRequest": {
         "type": "object",
-        "required": ["title", "description"],
+        "required": [
+          "title",
+          "description"
+        ],
         "properties": {
-          "title": { "type": "string" },
-          "description": { "type": "string" }
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
         }
       },
       "HealthAlertResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "title": { "type": "string" },
-          "description": { "type": "string" },
-          "status": { "type": "string" },
-          "createdAtUtc": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ValidateAlertRequest": {
         "type": "object",
-        "required": ["status"],
+        "required": [
+          "status"
+        ],
         "properties": {
-          "status": { "type": "string" }
+          "status": {
+            "type": "string"
+          }
         }
+      },
+      "NotificationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          },
+          "kind": {
+            "type": "string"
+          },
+          "dataJson": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "readAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       }
     }
   }

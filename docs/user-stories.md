@@ -179,6 +179,20 @@
 
 ---
 
+## Epic: Notificações
+
+### US-N01 — Notificações in-app
+**Como** usuário
+**Quero** receber notificações sobre eventos relevantes
+**Para** acompanhar atualizações do território
+
+**Critérios de aceite**
+- Eventos de post e report geram notificações in-app para os destinatários.
+- Notificações são persistidas via outbox/inbox e listáveis pela API.
+- Usuário consegue marcar notificações como lidas.
+
+---
+
 ## Epic: Portal & Documentação
 
 ### US-P01 — Acessar portal estático

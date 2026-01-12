@@ -27,6 +27,16 @@ public sealed class InMemoryUserRepository : IUserRepository
         return Task.FromResult(user);
     }
 
+    public Task<IReadOnlyList<Guid>> ListUserIdsByRoleAsync(UserRole role, CancellationToken cancellationToken)
+    {
+        var userIds = _dataStore.Users
+            .Where(user => user.Role == role)
+            .Select(user => user.Id)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<Guid>>(userIds);
+    }
+
     public Task AddAsync(User user, CancellationToken cancellationToken)
     {
         _dataStore.Users.Add(user);

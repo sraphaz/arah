@@ -1,9 +1,12 @@
 using System.Reflection;
 using Araponga.Api.Configuration;
 using Araponga.Api.Security;
+using Araponga.Application.Events;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
+using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Outbox;
 using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
 using Microsoft.AspNetCore.Diagnostics;
@@ -45,6 +48,9 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
     builder.Services.AddScoped<IReportRepository, PostgresReportRepository>();
     builder.Services.AddScoped<IUserBlockRepository, PostgresUserBlockRepository>();
     builder.Services.AddScoped<ISanctionRepository, PostgresSanctionRepository>();
+    builder.Services.AddScoped<IOutbox, PostgresOutbox>();
+    builder.Services.AddScoped<INotificationInboxRepository, PostgresNotificationInboxRepository>();
+    builder.Services.AddHostedService<OutboxDispatcherWorker>();
 }
 else
 {
@@ -65,9 +71,15 @@ else
     builder.Services.AddSingleton<IReportRepository, InMemoryReportRepository>();
     builder.Services.AddSingleton<IUserBlockRepository, InMemoryUserBlockRepository>();
     builder.Services.AddSingleton<ISanctionRepository, InMemorySanctionRepository>();
+    builder.Services.AddSingleton<IOutbox, InMemoryOutbox>();
+    builder.Services.AddSingleton<INotificationInboxRepository, InMemoryNotificationInboxRepository>();
 }
 
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
+
+builder.Services.AddScoped<IEventBus, InMemoryEventBus>();
+builder.Services.AddScoped<IEventHandler<PostCreatedEvent>, PostCreatedNotificationHandler>();
+builder.Services.AddScoped<IEventHandler<ReportCreatedEvent>, ReportCreatedNotificationHandler>();
 
 builder.Services.AddScoped<TerritoryService>();
 builder.Services.AddScoped<AuthService>();

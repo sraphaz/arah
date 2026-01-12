@@ -111,6 +111,21 @@ public partial class ArapongaDbContextModelSnapshot : ModelSnapshot
             entity.HasIndex(r => r.CreatedAtUtc);
         });
 
+        modelBuilder.Entity<OutboxMessageRecord>(entity =>
+        {
+            entity.ToTable("outbox_messages");
+            entity.HasKey(o => o.Id);
+            entity.Property(o => o.Type).HasMaxLength(200).IsRequired();
+            entity.Property(o => o.PayloadJson).HasColumnType("jsonb");
+            entity.Property(o => o.OccurredAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(o => o.ProcessedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(o => o.ProcessAfterUtc).HasColumnType("timestamp with time zone");
+            entity.Property(o => o.Attempts).HasDefaultValue(0);
+            entity.Property(o => o.LastError).HasColumnType("text");
+            entity.HasIndex(o => new { o.ProcessedAtUtc, o.ProcessAfterUtc });
+            entity.HasIndex(o => new { o.Type, o.ProcessedAtUtc });
+        });
+
         modelBuilder.Entity<PostCommentRecord>(entity =>
         {
             entity.ToTable("post_comments");
@@ -201,6 +216,21 @@ public partial class ArapongaDbContextModelSnapshot : ModelSnapshot
             entity.HasKey(b => new { b.BlockerUserId, b.BlockedUserId });
             entity.Property(b => b.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(b => b.BlockerUserId);
+        });
+
+        modelBuilder.Entity<UserNotificationRecord>(entity =>
+        {
+            entity.ToTable("user_notifications");
+            entity.HasKey(n => n.Id);
+            entity.Property(n => n.Title).HasMaxLength(200).IsRequired();
+            entity.Property(n => n.Body).HasMaxLength(1000);
+            entity.Property(n => n.Kind).HasMaxLength(200).IsRequired();
+            entity.Property(n => n.DataJson).HasColumnType("jsonb");
+            entity.Property(n => n.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(n => n.ReadAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(n => n.UserId);
+            entity.HasIndex(n => n.CreatedAtUtc);
+            entity.HasIndex(n => new { n.SourceOutboxId, n.UserId }).IsUnique();
         });
 
         modelBuilder.Entity<UserRecord>(entity =>

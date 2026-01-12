@@ -1,4 +1,5 @@
 using Araponga.Application.Interfaces;
+using Araponga.Application.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Geo;
 using Araponga.Domain.Moderation;
@@ -16,6 +17,7 @@ public sealed class FeedService
     private readonly IMapRepository _mapRepository;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
     private readonly ISanctionRepository _sanctionRepository;
+    private readonly IEventBus _eventBus;
     private readonly IUnitOfWork _unitOfWork;
 
     public FeedService(
@@ -27,6 +29,7 @@ public sealed class FeedService
         IMapRepository mapRepository,
         IPostGeoAnchorRepository postGeoAnchorRepository,
         ISanctionRepository sanctionRepository,
+        IEventBus eventBus,
         IUnitOfWork unitOfWork)
     {
         _feedRepository = feedRepository;
@@ -37,6 +40,7 @@ public sealed class FeedService
         _mapRepository = mapRepository;
         _postGeoAnchorRepository = postGeoAnchorRepository;
         _sanctionRepository = sanctionRepository;
+        _eventBus = eventBus;
         _unitOfWork = unitOfWork;
     }
 
@@ -153,6 +157,10 @@ public sealed class FeedService
 
         await _auditLogger.LogAsync(
             new Models.AuditEntry("post.created", userId, territoryId, post.Id, DateTime.UtcNow),
+            cancellationToken);
+
+        await _eventBus.PublishAsync(
+            new PostCreatedEvent(post.Id, territoryId, userId, DateTime.UtcNow),
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);

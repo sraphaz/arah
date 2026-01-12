@@ -46,6 +46,20 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
                 cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Guid>> ListResidentUserIdsAsync(Guid territoryId, CancellationToken cancellationToken)
+    {
+        var userIds = await _dbContext.TerritoryMemberships
+            .AsNoTracking()
+            .Where(membership => membership.TerritoryId == territoryId &&
+                                 membership.Role == MembershipRole.Resident &&
+                                 membership.VerificationStatus == VerificationStatus.Validated)
+            .Select(membership => membership.UserId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        return userIds;
+    }
+
     public Task AddAsync(TerritoryMembership membership, CancellationToken cancellationToken)
     {
         _dbContext.TerritoryMemberships.Add(membership.ToRecord());

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Developer Portal da API Araponga: território, memberships, feed, mapa e moderação." />
+  <meta name="description" content="Developer Portal da API Araponga: território, memberships, feed, mapa, moderação e notificações." />
   <title>Araponga API • Developer Portal</title>
   <link rel="icon" href="./assets/images/araponga-icon.svg" />
   <link rel="apple-touch-icon" href="./assets/images/araponga-icon.svg" />
@@ -75,7 +75,8 @@
           <div class="card">
             <h3>Governança em camadas</h3>
             <p>
-              Vínculos (visitor/resident), validações comunitárias e moderação (reports/bloqueios)
+              Vínculos (visitor/resident), validações comunitárias, moderação (reports/bloqueios) e
+              notificações in-app
               formam as camadas que definem o que aparece no feed e no mapa.
             </p>
           </div>
@@ -210,6 +211,8 @@
               <li><strong>PostGeoAnchor</strong> ancora posts no mapa.</li>
               <li><strong>MapEntity</strong> pertence ao Territory, começa como sugerida e pode ser validada.</li>
               <li><strong>Reports</strong> e <strong>Blocks</strong> modulam visibilidade e segurança.</li>
+              <li><strong>OutboxMessage</strong> garante a intenção de notificar em transações confiáveis.</li>
+              <li><strong>UserNotification</strong> compõe o inbox in-app por usuário.</li>
               <li><strong>Feature Flags</strong> habilitam tipos de post por território (AlertPosts/EventPosts).</li>
             </ul>
           </div>
@@ -220,6 +223,7 @@
               <li>Vínculos explicitam presença local e governança comunitária.</li>
               <li>Posts + geo anchors conectam feed e mapa sem confundir o domínio.</li>
               <li>Moderação mantém confiança com regras auditáveis.</li>
+              <li>Notificações usam outbox para evitar perda de eventos após o commit.</li>
             </ul>
           </div>
         </div>
@@ -338,6 +342,15 @@
             Reports podem ser enviados para posts e usuários. Bloqueios removem conteúdo do feed e do mapa
             de quem foi bloqueado. Use <code>POST /api/v1/reports/posts/{postId}</code>,
             <code>POST /api/v1/reports/users/{userId}</code> e <code>POST /api/v1/blocks/users/{userId}</code>.
+          </p>
+        </div>
+
+        <div class="flow-step">
+          <h4>9. Notificações in-app</h4>
+          <p>
+            Eventos relevantes geram mensagens em outbox que são processadas em background para criar
+            notificações por usuário. Consulte <code>GET /api/v1/notifications</code> e marque como lidas em
+            <code>POST /api/v1/notifications/{id}/read</code>.
           </p>
         </div>
       </section>

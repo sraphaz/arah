@@ -177,13 +177,27 @@
 - Alerta inicia com status `PENDING`.
 
 ### US-H03 — Validar alerta
-**Como** curador  
-**Quero** validar alertas  
+**Como** curador
+**Quero** validar alertas
 **Para** destacar problemas no feed
 
 **Critérios de aceite**
 - Apenas `CURATOR` pode validar.
 - Ao validar, um post `ALERT` é criado no feed e ganha destaque visual.
+
+---
+
+## Epic: Notificações
+
+### US-N01 — Notificações in-app
+**Como** usuário
+**Quero** receber notificações sobre eventos relevantes
+**Para** acompanhar atualizações do território
+
+**Critérios de aceite**
+- Eventos de post e report geram notificações in-app para os destinatários.
+- Notificações são persistidas via outbox/inbox e listáveis pela API.
+- Usuário consegue marcar notificações como lidas.
 
 ---
 

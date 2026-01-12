@@ -1,3 +1,4 @@
+using Araponga.Application.Models;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
@@ -181,4 +182,6 @@ public sealed class InMemoryDataStore
     public List<ModerationReport> ModerationReports { get; } = new();
     public List<UserBlock> UserBlocks { get; } = new();
     public List<Sanction> Sanctions { get; } = new();
+    public List<OutboxMessage> OutboxMessages { get; } = new();
+    public List<UserNotification> UserNotifications { get; } = new();
 }

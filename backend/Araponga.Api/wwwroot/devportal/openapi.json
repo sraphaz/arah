@@ -12,12 +12,32 @@
     }
   },
   "paths": {
-    "/health": {
+    "/liveness": {
       "get": {
         "tags": [
           "General"
         ],
-        "summary": "Health check básico",
+        "summary": "Liveness check básico",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/readiness": {
+      "get": {
+        "tags": [
+          "General"
+        ],
+        "summary": "Readiness check básico",
         "responses": {
           "200": {
             "description": "OK",

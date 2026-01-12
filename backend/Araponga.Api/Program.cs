@@ -238,7 +238,13 @@ if (app.Environment.IsEnvironment("Testing"))
     app.MapGet("/__throw", (HttpContext _) => throw new InvalidOperationException("boom"));
 }
 
-app.MapGet("/health", () => Results.Ok(new { status = "ok", service = "Araponga.Api" }))
+app.MapGet("/liveness", () => Results.Ok(new { status = "ok" }))
+    .AllowAnonymous()
+    .ExcludeFromDescription();
+
+app.MapGet("/readiness", () =>
+    Results.Ok(new { status = "ready" }))
+    // TODO: add dependency checks
     .AllowAnonymous()
     .ExcludeFromDescription();
 

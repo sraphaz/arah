@@ -471,7 +471,8 @@
           </div>
         </div>
         <div class="callout">
-          <strong>Health check:</strong> <code>GET /health</code> responde <code>{"status": "ok"}</code> e
+          <strong>Status da API:</strong> <code>GET /liveness</code> responde <code>{"status": "ok"}</code> e
+          <code>GET /readiness</code> responde <code>{"status": "ready"}</code>. Já
           <code>GET /api/v1/health/indicators</code> exibe indicadores do território ativo. Logs seguem a
           configuração padrão de <code>Logging</code> no <code>appsettings.json</code>.
         </div>

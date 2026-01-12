@@ -171,7 +171,8 @@ A página inicial da API (`/`) serve um portal estático com explicação do pro
 domínios, fluxos e quickstart. Em desenvolvimento, acesse também:
 
 - `/swagger` (documentação da API)
-- `/health` (status simples)
+- `/liveness` (status simples)
+- `/readiness` (status de prontidão)
 
 Quando a API está rodando localmente em ambiente de desenvolvimento, o portal
 exibe um preview do Swagger para navegação e testes rápidos.

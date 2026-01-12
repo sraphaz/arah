@@ -27,10 +27,10 @@ public sealed class PostgresUserTerritoryRepository : IUserTerritoryRepository
         return record?.ToDomain();
     }
 
-    public async Task AddAsync(UserTerritory membership, CancellationToken cancellationToken)
+    public Task AddAsync(UserTerritory membership, CancellationToken cancellationToken)
     {
         _dbContext.UserTerritories.Add(membership.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task<bool> IsValidatedAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken)

@@ -14,16 +14,16 @@ public sealed class PostgresPostGeoAnchorRepository : IPostGeoAnchorRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddAsync(IReadOnlyCollection<PostGeoAnchor> anchors, CancellationToken cancellationToken)
+    public Task AddAsync(IReadOnlyCollection<PostGeoAnchor> anchors, CancellationToken cancellationToken)
     {
         if (anchors.Count == 0)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         var records = anchors.Select(anchor => anchor.ToRecord());
         _dbContext.PostGeoAnchors.AddRange(records);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task<IReadOnlyList<PostGeoAnchor>> ListByPostIdsAsync(

@@ -31,10 +31,10 @@ public sealed class PostgresHealthAlertRepository : IHealthAlertRepository
         return record?.ToDomain();
     }
 
-    public async Task AddAsync(HealthAlert alert, CancellationToken cancellationToken)
+    public Task AddAsync(HealthAlert alert, CancellationToken cancellationToken)
     {
         _dbContext.HealthAlerts.Add(alert.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task UpdateStatusAsync(Guid alertId, HealthAlertStatus status, CancellationToken cancellationToken)
@@ -48,6 +48,5 @@ public sealed class PostgresHealthAlertRepository : IHealthAlertRepository
         }
 
         record.Status = status;
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

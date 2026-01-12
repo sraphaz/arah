@@ -31,7 +31,7 @@ public sealed class PostgresReportRepository : IReportRepository
                 cancellationToken);
     }
 
-    public async Task AddAsync(ModerationReport report, CancellationToken cancellationToken)
+    public Task AddAsync(ModerationReport report, CancellationToken cancellationToken)
     {
         _dbContext.ModerationReports.Add(new ModerationReportRecord
         {
@@ -45,8 +45,7 @@ public sealed class PostgresReportRepository : IReportRepository
             Status = report.Status,
             CreatedAtUtc = report.CreatedAtUtc
         });
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task<int> CountDistinctReportersAsync(

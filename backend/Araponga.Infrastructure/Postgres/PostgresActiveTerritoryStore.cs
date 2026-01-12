@@ -43,6 +43,5 @@ public sealed class PostgresActiveTerritoryStore : IActiveTerritoryStore
             _dbContext.ActiveTerritories.Update(existing);
         }
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

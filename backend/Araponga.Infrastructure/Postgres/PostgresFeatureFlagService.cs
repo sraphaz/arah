@@ -49,7 +49,5 @@ public sealed class PostgresFeatureFlagService : IFeatureFlagService
                 Flag = flag
             });
         }
-
-        _dbContext.SaveChanges();
     }
 }

@@ -7,11 +7,13 @@ public sealed class AuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AuthService(IUserRepository userRepository, ITokenService tokenService)
+    public AuthService(IUserRepository userRepository, ITokenService tokenService, IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<(User user, string token)> LoginSocialAsync(
@@ -45,6 +47,7 @@ public sealed class AuthService
             DateTime.UtcNow);
 
         await _userRepository.AddAsync(user, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return (user, _tokenService.IssueToken(user.Id));
     }

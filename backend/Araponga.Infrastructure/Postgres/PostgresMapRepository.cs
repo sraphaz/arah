@@ -31,10 +31,10 @@ public sealed class PostgresMapRepository : IMapRepository
         return record?.ToDomain();
     }
 
-    public async Task AddAsync(MapEntity entity, CancellationToken cancellationToken)
+    public Task AddAsync(MapEntity entity, CancellationToken cancellationToken)
     {
         _dbContext.MapEntities.Add(entity.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task UpdateStatusAsync(Guid entityId, MapEntityStatus status, CancellationToken cancellationToken)
@@ -50,7 +50,6 @@ public sealed class PostgresMapRepository : IMapRepository
 
         record.Status = status;
         _dbContext.MapEntities.Update(record);
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task IncrementConfirmationAsync(Guid entityId, CancellationToken cancellationToken)
@@ -66,6 +65,5 @@ public sealed class PostgresMapRepository : IMapRepository
 
         record.ConfirmationCount += 1;
         _dbContext.MapEntities.Update(record);
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

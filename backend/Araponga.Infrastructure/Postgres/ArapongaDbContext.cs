@@ -1,9 +1,10 @@
+using Araponga.Application.Interfaces;
 using Araponga.Infrastructure.Postgres.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Araponga.Infrastructure.Postgres;
 
-public sealed class ArapongaDbContext : DbContext
+public sealed class ArapongaDbContext : DbContext, IUnitOfWork
 {
     public ArapongaDbContext(DbContextOptions<ArapongaDbContext> options)
         : base(options)
@@ -28,6 +29,11 @@ public sealed class ArapongaDbContext : DbContext
     public DbSet<ModerationReportRecord> ModerationReports => Set<ModerationReportRecord>();
     public DbSet<UserBlockRecord> UserBlocks => Set<UserBlockRecord>();
     public DbSet<SanctionRecord> Sanctions => Set<SanctionRecord>();
+
+    public Task CommitAsync(CancellationToken cancellationToken)
+    {
+        return SaveChangesAsync(cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

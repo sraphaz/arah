@@ -21,7 +21,7 @@ public sealed class PostgresMapEntityRelationRepository : IMapEntityRelationRepo
             .AnyAsync(relation => relation.UserId == userId && relation.EntityId == entityId, cancellationToken);
     }
 
-    public async Task AddAsync(MapEntityRelation relation, CancellationToken cancellationToken)
+    public Task AddAsync(MapEntityRelation relation, CancellationToken cancellationToken)
     {
         _dbContext.MapEntityRelations.Add(new MapEntityRelationRecord
         {
@@ -30,6 +30,6 @@ public sealed class PostgresMapEntityRelationRepository : IMapEntityRelationRepo
             CreatedAtUtc = relation.CreatedAtUtc
         });
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 }

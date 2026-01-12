@@ -14,19 +14,22 @@ public sealed class ReportService
     private readonly IUserRepository _userRepository;
     private readonly ISanctionRepository _sanctionRepository;
     private readonly IAuditLogger _auditLogger;
+    private readonly IUnitOfWork _unitOfWork;
 
     public ReportService(
         IReportRepository reportRepository,
         IFeedRepository feedRepository,
         IUserRepository userRepository,
         ISanctionRepository sanctionRepository,
-        IAuditLogger auditLogger)
+        IAuditLogger auditLogger,
+        IUnitOfWork unitOfWork)
     {
         _reportRepository = reportRepository;
         _feedRepository = feedRepository;
         _userRepository = userRepository;
         _sanctionRepository = sanctionRepository;
         _auditLogger = auditLogger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<(bool created, string? error, ModerationReport? report)> ReportPostAsync(
@@ -78,6 +81,8 @@ public sealed class ReportService
             cancellationToken);
 
         await EvaluatePostThresholdAsync(report, post, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return (true, null, report);
     }
@@ -137,6 +142,8 @@ public sealed class ReportService
             cancellationToken);
 
         await EvaluateUserThresholdAsync(report, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return (true, null, report);
     }

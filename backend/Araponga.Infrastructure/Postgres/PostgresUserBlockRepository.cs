@@ -24,7 +24,7 @@ public sealed class PostgresUserBlockRepository : IUserBlockRepository
                 cancellationToken);
     }
 
-    public async Task AddAsync(UserBlock block, CancellationToken cancellationToken)
+    public Task AddAsync(UserBlock block, CancellationToken cancellationToken)
     {
         _dbContext.UserBlocks.Add(new UserBlockRecord
         {
@@ -33,7 +33,7 @@ public sealed class PostgresUserBlockRepository : IUserBlockRepository
             CreatedAtUtc = block.CreatedAtUtc
         });
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task RemoveAsync(Guid blockerUserId, Guid blockedUserId, CancellationToken cancellationToken)
@@ -50,7 +50,6 @@ public sealed class PostgresUserBlockRepository : IUserBlockRepository
         }
 
         _dbContext.UserBlocks.Remove(record);
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyCollection<Guid>> GetBlockedUserIdsAsync(

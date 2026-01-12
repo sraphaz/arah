@@ -30,10 +30,10 @@ public sealed class PostgresTerritoryRepository : ITerritoryRepository
         return record?.ToDomain();
     }
 
-    public async Task AddAsync(Territory territory, CancellationToken cancellationToken)
+    public Task AddAsync(Territory territory, CancellationToken cancellationToken)
     {
         _dbContext.Territories.Add(territory.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task<IReadOnlyList<Territory>> SearchAsync(

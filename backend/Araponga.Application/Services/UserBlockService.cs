@@ -8,15 +8,18 @@ public sealed class UserBlockService
     private readonly IUserBlockRepository _blockRepository;
     private readonly IUserRepository _userRepository;
     private readonly IAuditLogger _auditLogger;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UserBlockService(
         IUserBlockRepository blockRepository,
         IUserRepository userRepository,
-        IAuditLogger auditLogger)
+        IAuditLogger auditLogger,
+        IUnitOfWork unitOfWork)
     {
         _blockRepository = blockRepository;
         _userRepository = userRepository;
         _auditLogger = auditLogger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<(bool created, string? error, UserBlock? block)> BlockAsync(
@@ -48,6 +51,8 @@ public sealed class UserBlockService
             new Models.AuditEntry("user.blocked", blockerUserId, Guid.Empty, blockedUserId, DateTime.UtcNow),
             cancellationToken);
 
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         return (true, null, block);
     }
 
@@ -61,5 +66,7 @@ public sealed class UserBlockService
         await _auditLogger.LogAsync(
             new Models.AuditEntry("user.unblocked", blockerUserId, Guid.Empty, blockedUserId, DateTime.UtcNow),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
     }
 }

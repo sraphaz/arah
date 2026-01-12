@@ -16,6 +16,7 @@ public sealed class FeedService
     private readonly IMapRepository _mapRepository;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
     private readonly ISanctionRepository _sanctionRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public FeedService(
         IFeedRepository feedRepository,
@@ -25,7 +26,8 @@ public sealed class FeedService
         IUserBlockRepository userBlockRepository,
         IMapRepository mapRepository,
         IPostGeoAnchorRepository postGeoAnchorRepository,
-        ISanctionRepository sanctionRepository)
+        ISanctionRepository sanctionRepository,
+        IUnitOfWork unitOfWork)
     {
         _feedRepository = feedRepository;
         _accessEvaluator = accessEvaluator;
@@ -35,6 +37,7 @@ public sealed class FeedService
         _mapRepository = mapRepository;
         _postGeoAnchorRepository = postGeoAnchorRepository;
         _sanctionRepository = sanctionRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IReadOnlyList<CommunityPost>> ListForTerritoryAsync(
@@ -152,6 +155,8 @@ public sealed class FeedService
             new Models.AuditEntry("post.created", userId, territoryId, post.Id, DateTime.UtcNow),
             cancellationToken);
 
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         return (true, null, post);
     }
 
@@ -230,6 +235,8 @@ public sealed class FeedService
                 DateTime.UtcNow),
             cancellationToken);
 
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         return (true, null);
     }
 
@@ -276,6 +283,7 @@ public sealed class FeedService
         }
 
         await _feedRepository.AddLikeAsync(postId, actorId, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
         return true;
     }
 
@@ -317,6 +325,8 @@ public sealed class FeedService
             new Models.AuditEntry("comment.created", userId, territoryId, comment.Id, DateTime.UtcNow),
             cancellationToken);
 
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         return (true, null);
     }
 
@@ -355,6 +365,8 @@ public sealed class FeedService
         await _auditLogger.LogAsync(
             new Models.AuditEntry("post.shared", userId, territoryId, postId, DateTime.UtcNow),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return (true, null);
     }

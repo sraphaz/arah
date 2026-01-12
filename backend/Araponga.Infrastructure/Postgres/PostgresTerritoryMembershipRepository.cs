@@ -46,10 +46,10 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
                 cancellationToken);
     }
 
-    public async Task AddAsync(TerritoryMembership membership, CancellationToken cancellationToken)
+    public Task AddAsync(TerritoryMembership membership, CancellationToken cancellationToken)
     {
         _dbContext.TerritoryMemberships.Add(membership.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task UpdateStatusAsync(Guid membershipId, VerificationStatus status, CancellationToken cancellationToken)
@@ -63,7 +63,6 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
         }
 
         membership.VerificationStatus = status;
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateRoleAndStatusAsync(
@@ -82,6 +81,5 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
 
         membership.Role = role;
         membership.VerificationStatus = status;
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

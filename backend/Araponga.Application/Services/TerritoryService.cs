@@ -7,10 +7,12 @@ namespace Araponga.Application.Services;
 public sealed class TerritoryService
 {
     private readonly ITerritoryRepository _territoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public TerritoryService(ITerritoryRepository territoryRepository)
+    public TerritoryService(ITerritoryRepository territoryRepository, IUnitOfWork unitOfWork)
     {
         _territoryRepository = territoryRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IReadOnlyList<Territory>> ListAvailableAsync(CancellationToken cancellationToken)
@@ -64,6 +66,7 @@ public sealed class TerritoryService
             DateTime.UtcNow);
 
         await _territoryRepository.AddAsync(territory, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return new TerritoryCreationResult(true, null, territory);
     }

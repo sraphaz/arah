@@ -32,9 +32,9 @@ public sealed class PostgresUserRepository : IUserRepository
         return record?.ToDomain();
     }
 
-    public async Task AddAsync(User user, CancellationToken cancellationToken)
+    public Task AddAsync(User user, CancellationToken cancellationToken)
     {
         _dbContext.Users.Add(user.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 }

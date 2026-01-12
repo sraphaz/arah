@@ -26,6 +26,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -34,7 +35,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var invalid = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -114,6 +116,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -122,7 +125,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var post = new CommunityPost(
             Guid.NewGuid(),
@@ -165,7 +169,8 @@ public sealed class ApplicationServiceTests
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var relationRepository = new InMemoryMapEntityRelationRepository(dataStore);
-        var service = new MapService(repository, accessEvaluator, auditLogger, blockRepository, relationRepository);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new MapService(repository, accessEvaluator, auditLogger, blockRepository, relationRepository, unitOfWork);
 
         var suggestion = await service.SuggestAsync(
             ActiveTerritoryId,
@@ -205,7 +210,8 @@ public sealed class ApplicationServiceTests
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var relationRepository = new InMemoryMapEntityRelationRepository(dataStore);
-        var service = new MapService(repository, accessEvaluator, auditLogger, blockRepository, relationRepository);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new MapService(repository, accessEvaluator, auditLogger, blockRepository, relationRepository, unitOfWork);
 
         var residentId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         var entityId = dataStore.MapEntities[0].Id;
@@ -236,7 +242,8 @@ public sealed class ApplicationServiceTests
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var alertRepository = new InMemoryHealthAlertRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
-        var service = new HealthService(alertRepository, feedRepository, auditLogger);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new HealthService(alertRepository, feedRepository, auditLogger, unitOfWork);
 
         var report = await service.ReportAlertAsync(
             ActiveTerritoryId,
@@ -267,7 +274,8 @@ public sealed class ApplicationServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger, unitOfWork);
 
         var reporterId = Guid.NewGuid();
         var postId = dataStore.Posts[0].Id;
@@ -302,7 +310,8 @@ public sealed class ApplicationServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger, unitOfWork);
 
         var missingPost = await service.ReportPostAsync(
             Guid.NewGuid(),
@@ -331,7 +340,8 @@ public sealed class ApplicationServiceTests
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
-        var service = new UserBlockService(blockRepository, userRepository, auditLogger);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new UserBlockService(blockRepository, userRepository, auditLogger, unitOfWork);
 
         var blockerId = Guid.NewGuid();
         var blockedId = dataStore.Users[0].Id;
@@ -357,6 +367,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -365,7 +376,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var blockerId = dataStore.Users[1].Id;
         var blockedId = dataStore.Users[0].Id;
@@ -395,6 +407,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -403,7 +416,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var visitorId = Guid.NewGuid();
         var create = await service.CreatePostAsync(
@@ -446,6 +460,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -454,7 +469,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -485,6 +501,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -493,7 +510,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -530,6 +548,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -538,7 +557,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var anchors = new List<GeoAnchorInput>
         {
@@ -582,6 +602,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
         var service = new FeedService(
             feedRepository,
             accessEvaluator,
@@ -590,7 +611,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var entityId = dataStore.MapEntities[0].Id;
         var post = new CommunityPost(
@@ -622,7 +644,8 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryTerritoryMembershipRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
-        var service = new MembershipService(repository, auditLogger);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new MembershipService(repository, auditLogger, unitOfWork);
 
         var status = await service.GetStatusAsync(Guid.NewGuid(), ActiveTerritoryId, CancellationToken.None);
         Assert.Null(status);
@@ -650,7 +673,8 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryTerritoryMembershipRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
-        var service = new MembershipService(repository, auditLogger);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new MembershipService(repository, auditLogger, unitOfWork);
 
         var userId = Guid.NewGuid();
 
@@ -685,7 +709,8 @@ public sealed class ApplicationServiceTests
             feedRepository,
             userRepository,
             sanctionRepository,
-            auditLogger);
+            auditLogger,
+            new InMemoryUnitOfWork());
 
         var postId = dataStore.Posts[0].Id;
 
@@ -734,6 +759,7 @@ public sealed class ApplicationServiceTests
         var mapRepository = new InMemoryMapRepository(dataStore);
         var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
 
         var restrictedUserId = dataStore.Users[0].Id;
         await sanctionRepository.AddAsync(
@@ -759,7 +785,8 @@ public sealed class ApplicationServiceTests
             blockRepository,
             mapRepository,
             geoAnchorRepository,
-            sanctionRepository);
+            sanctionRepository,
+            unitOfWork);
 
         var result = await service.CreatePostAsync(
             ActiveTerritoryId,

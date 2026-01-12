@@ -29,6 +29,7 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
     builder.Services.AddDbContext<ArapongaDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
+    builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ArapongaDbContext>());
     builder.Services.AddScoped<ITerritoryRepository, PostgresTerritoryRepository>();
     builder.Services.AddScoped<IUserRepository, PostgresUserRepository>();
     builder.Services.AddScoped<ITerritoryMembershipRepository, PostgresTerritoryMembershipRepository>();
@@ -48,6 +49,7 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
 else
 {
     builder.Services.AddSingleton<InMemoryDataStore>();
+    builder.Services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
     builder.Services.AddSingleton<ITerritoryRepository, InMemoryTerritoryRepository>();
     builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
     builder.Services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
@@ -77,6 +79,7 @@ builder.Services.AddScoped<ActiveTerritoryService>();
 builder.Services.AddScoped<HealthService>();
 builder.Services.AddScoped<ReportService>();
 builder.Services.AddScoped<UserBlockService>();
+builder.Services.AddScoped<FeatureFlagService>();
 builder.Services.AddScoped<CurrentUserAccessor>();
 
 // Swagger / OpenAPI

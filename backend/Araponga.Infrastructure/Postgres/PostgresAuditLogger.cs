@@ -13,7 +13,7 @@ public sealed class PostgresAuditLogger : IAuditLogger
         _dbContext = dbContext;
     }
 
-    public async Task LogAsync(AuditEntry entry, CancellationToken cancellationToken)
+    public Task LogAsync(AuditEntry entry, CancellationToken cancellationToken)
     {
         _dbContext.AuditEntries.Add(new AuditEntryRecord
         {
@@ -25,6 +25,6 @@ public sealed class PostgresAuditLogger : IAuditLogger
             TimestampUtc = entry.TimestampUtc
         });
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 }

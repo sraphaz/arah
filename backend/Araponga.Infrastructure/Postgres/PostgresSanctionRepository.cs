@@ -13,7 +13,7 @@ public sealed class PostgresSanctionRepository : ISanctionRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddAsync(Sanction sanction, CancellationToken cancellationToken)
+    public Task AddAsync(Sanction sanction, CancellationToken cancellationToken)
     {
         _dbContext.Sanctions.Add(new Entities.SanctionRecord
         {
@@ -29,8 +29,7 @@ public sealed class PostgresSanctionRepository : ISanctionRepository
             EndAtUtc = sanction.EndAtUtc,
             CreatedAtUtc = sanction.CreatedAtUtc
         });
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task<IReadOnlyList<Sanction>> ListActiveForTargetAsync(

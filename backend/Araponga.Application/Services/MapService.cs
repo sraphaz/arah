@@ -11,19 +11,22 @@ public sealed class MapService
     private readonly IAuditLogger _auditLogger;
     private readonly IUserBlockRepository _userBlockRepository;
     private readonly IMapEntityRelationRepository _relationRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public MapService(
         IMapRepository mapRepository,
         AccessEvaluator accessEvaluator,
         IAuditLogger auditLogger,
         IUserBlockRepository userBlockRepository,
-        IMapEntityRelationRepository relationRepository)
+        IMapEntityRelationRepository relationRepository,
+        IUnitOfWork unitOfWork)
     {
         _mapRepository = mapRepository;
         _accessEvaluator = accessEvaluator;
         _auditLogger = auditLogger;
         _userBlockRepository = userBlockRepository;
         _relationRepository = relationRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IReadOnlyList<MapEntity>> ListEntitiesAsync(
@@ -92,6 +95,8 @@ public sealed class MapService
             new Models.AuditEntry("map.suggested", userId, territoryId, entity.Id, DateTime.UtcNow),
             cancellationToken);
 
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         return (true, null, entity);
     }
 
@@ -126,6 +131,8 @@ public sealed class MapService
             new Models.AuditEntry("map.related", userId, territoryId, entityId, DateTime.UtcNow),
             cancellationToken);
 
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         return (true, null, relation);
     }
 
@@ -147,6 +154,8 @@ public sealed class MapService
         await _auditLogger.LogAsync(
             new Models.AuditEntry($"map.{status.ToString().ToLowerInvariant()}", curatorId, territoryId, entityId, DateTime.UtcNow),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return true;
     }
@@ -174,6 +183,8 @@ public sealed class MapService
         await _auditLogger.LogAsync(
             new Models.AuditEntry("map.confirmed", userId, territoryId, entityId, DateTime.UtcNow),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return (true, null);
     }

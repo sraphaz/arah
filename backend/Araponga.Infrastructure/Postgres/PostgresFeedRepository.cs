@@ -42,10 +42,10 @@ public sealed class PostgresFeedRepository : IFeedRepository
         return record?.ToDomain();
     }
 
-    public async Task AddPostAsync(CommunityPost post, CancellationToken cancellationToken)
+    public Task AddPostAsync(CommunityPost post, CancellationToken cancellationToken)
     {
         _dbContext.CommunityPosts.Add(post.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task UpdateStatusAsync(Guid postId, PostStatus status, CancellationToken cancellationToken)
@@ -60,7 +60,6 @@ public sealed class PostgresFeedRepository : IFeedRepository
 
         record.Status = status;
         _dbContext.CommunityPosts.Update(record);
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task AddLikeAsync(Guid postId, string actorId, CancellationToken cancellationToken)
@@ -80,13 +79,12 @@ public sealed class PostgresFeedRepository : IFeedRepository
             ActorId = actorId,
             CreatedAtUtc = DateTime.UtcNow
         });
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task AddCommentAsync(PostComment comment, CancellationToken cancellationToken)
+    public Task AddCommentAsync(PostComment comment, CancellationToken cancellationToken)
     {
         _dbContext.PostComments.Add(comment.ToRecord());
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 
     public async Task AddShareAsync(Guid postId, Guid userId, CancellationToken cancellationToken)
@@ -106,7 +104,6 @@ public sealed class PostgresFeedRepository : IFeedRepository
             UserId = userId,
             CreatedAtUtc = DateTime.UtcNow
         });
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<int> GetLikeCountAsync(Guid postId, CancellationToken cancellationToken)

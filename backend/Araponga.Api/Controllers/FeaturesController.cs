@@ -1,6 +1,5 @@
 using Araponga.Api.Contracts.Features;
 using Araponga.Api.Security;
-using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +12,12 @@ namespace Araponga.Api.Controllers;
 [Tags("Features")]
 public sealed class FeaturesController : ControllerBase
 {
-    private readonly IFeatureFlagService _featureFlags;
+    private readonly FeatureFlagService _featureFlags;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly AccessEvaluator _accessEvaluator;
 
     public FeaturesController(
-        IFeatureFlagService featureFlags,
+        FeatureFlagService featureFlags,
         CurrentUserAccessor currentUserAccessor,
         AccessEvaluator accessEvaluator)
     {
@@ -75,7 +74,7 @@ public sealed class FeaturesController : ControllerBase
             parsed.Add(parsedFlag);
         }
 
-        _featureFlags.SetEnabledFlags(territoryId, parsed);
+        await _featureFlags.SetEnabledFlagsAsync(territoryId, parsed, cancellationToken);
 
         var response = new FeatureFlagResponse(
             territoryId,

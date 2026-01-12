@@ -7,11 +7,16 @@ public sealed class MembershipService
 {
     private readonly ITerritoryMembershipRepository _membershipRepository;
     private readonly IAuditLogger _auditLogger;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public MembershipService(ITerritoryMembershipRepository membershipRepository, IAuditLogger auditLogger)
+    public MembershipService(
+        ITerritoryMembershipRepository membershipRepository,
+        IAuditLogger auditLogger,
+        IUnitOfWork unitOfWork)
     {
         _membershipRepository = membershipRepository;
         _auditLogger = auditLogger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<TerritoryMembership> DeclareMembershipAsync(
@@ -51,6 +56,8 @@ public sealed class MembershipService
                     DateTime.UtcNow),
                 cancellationToken);
 
+            await _unitOfWork.CommitAsync(cancellationToken);
+
             return visitorMembership;
         }
 
@@ -88,6 +95,8 @@ public sealed class MembershipService
                     DateTime.UtcNow),
                 cancellationToken);
 
+            await _unitOfWork.CommitAsync(cancellationToken);
+
             return existing;
         }
 
@@ -123,6 +132,8 @@ public sealed class MembershipService
                     DateTime.UtcNow),
                 cancellationToken);
         }
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return membership;
     }
@@ -163,6 +174,8 @@ public sealed class MembershipService
                 membershipId,
                 DateTime.UtcNow),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return true;
     }

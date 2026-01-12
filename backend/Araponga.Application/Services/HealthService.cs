@@ -9,15 +9,18 @@ public sealed class HealthService
     private readonly IHealthAlertRepository _alertRepository;
     private readonly IFeedRepository _feedRepository;
     private readonly IAuditLogger _auditLogger;
+    private readonly IUnitOfWork _unitOfWork;
 
     public HealthService(
         IHealthAlertRepository alertRepository,
         IFeedRepository feedRepository,
-        IAuditLogger auditLogger)
+        IAuditLogger auditLogger,
+        IUnitOfWork unitOfWork)
     {
         _alertRepository = alertRepository;
         _feedRepository = feedRepository;
         _auditLogger = auditLogger;
+        _unitOfWork = unitOfWork;
     }
 
     public Task<IReadOnlyList<HealthAlert>> ListAlertsAsync(Guid territoryId, CancellationToken cancellationToken)
@@ -51,6 +54,8 @@ public sealed class HealthService
         await _auditLogger.LogAsync(
             new Models.AuditEntry("alert.reported", userId, territoryId, alert.Id, DateTime.UtcNow),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return (true, null, alert);
     }
@@ -90,6 +95,8 @@ public sealed class HealthService
         await _auditLogger.LogAsync(
             new Models.AuditEntry($"alert.{status.ToString().ToLowerInvariant()}", curatorId, territoryId, alertId, DateTime.UtcNow),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return true;
     }

@@ -227,5 +227,5 @@ Este documento detalha o plano de implementação para as recomendações penden
 
 - Manter compatibilidade com código existente durante migração
 - Atualizar testes conforme necessário
-- Documentar mudanças em CHANGELOG.md
+- Documentar mudanças em [docs/40_CHANGELOG.md](./40_CHANGELOG.md)
 - Considerar breaking changes apenas se necessário

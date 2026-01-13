@@ -12,6 +12,7 @@ namespace Araponga.Application.Services;
 public sealed class EventsService
 {
     private readonly ITerritoryEventRepository _eventRepository;
+    private readonly EventCacheService? _eventCache;
     private readonly IEventParticipationRepository _participationRepository;
     private readonly IFeedRepository _feedRepository;
     private readonly AccessEvaluator _accessEvaluator;
@@ -24,7 +25,8 @@ public sealed class EventsService
         IFeedRepository feedRepository,
         AccessEvaluator accessEvaluator,
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        EventCacheService? eventCache = null)
     {
         _eventRepository = eventRepository;
         _participationRepository = participationRepository;
@@ -32,6 +34,7 @@ public sealed class EventsService
         _accessEvaluator = accessEvaluator;
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _eventCache = eventCache;
     }
 
     public async Task<Result<EventSummary>> CreateEventAsync(
@@ -111,6 +114,9 @@ public sealed class EventsService
         await _feedRepository.AddPostAsync(post, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
+        // Invalidate cache when event is created
+        _eventCache?.InvalidateTerritoryEvents(territoryId);
+
         var displayName = await ResolveDisplayNameAsync(userId, cancellationToken);
         var summary = new EventSummary(territoryEvent, 0, 0, displayName);
 
@@ -161,6 +167,9 @@ public sealed class EventsService
 
         await _eventRepository.UpdateAsync(territoryEvent, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidate cache when event is updated
+        _eventCache?.InvalidateTerritoryEvents(territoryEvent.TerritoryId);
 
         var summaries = await BuildSummariesAsync(new List<TerritoryEvent> { territoryEvent }, cancellationToken);
         var summary = summaries.FirstOrDefault();
@@ -232,7 +241,9 @@ public sealed class EventsService
         EventStatus? status,
         CancellationToken cancellationToken)
     {
-        var events = await _eventRepository.ListByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken);
+        var events = _eventCache is not null
+            ? await _eventCache.GetEventsByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken)
+            : await _eventRepository.ListByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken);
         return await BuildSummariesAsync(events, cancellationToken);
     }
 
@@ -293,7 +304,9 @@ public sealed class EventsService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        var events = await _eventRepository.ListByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken);
+        var events = _eventCache is not null
+            ? await _eventCache.GetEventsByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken)
+            : await _eventRepository.ListByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken);
         var summaries = await BuildSummariesAsync(events, cancellationToken);
 
         var totalCount = summaries.Count;

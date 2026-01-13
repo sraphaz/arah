@@ -8,6 +8,7 @@ namespace Araponga.Application.Services;
 public sealed class HealthService
 {
     private readonly IHealthAlertRepository _alertRepository;
+    private readonly AlertCacheService? _alertCache;
     private readonly IFeedRepository _feedRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
@@ -16,17 +17,21 @@ public sealed class HealthService
         IHealthAlertRepository alertRepository,
         IFeedRepository feedRepository,
         IAuditLogger auditLogger,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        AlertCacheService? alertCache = null)
     {
         _alertRepository = alertRepository;
         _feedRepository = feedRepository;
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
+        _alertCache = alertCache;
     }
 
     public Task<IReadOnlyList<HealthAlert>> ListAlertsAsync(Guid territoryId, CancellationToken cancellationToken)
     {
-        return _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        return _alertCache is not null
+            ? _alertCache.GetAlertsByTerritoryAsync(territoryId, cancellationToken)
+            : _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
     }
 
     public async Task<PagedResult<HealthAlert>> ListAlertsPagedAsync(
@@ -34,7 +39,9 @@ public sealed class HealthService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        var alerts = await _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        var alerts = _alertCache is not null
+            ? await _alertCache.GetAlertsByTerritoryAsync(territoryId, cancellationToken)
+            : await _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
         var totalCount = alerts.Count;
         var pagedItems = alerts
             .OrderByDescending(a => a.CreatedAtUtc)
@@ -73,6 +80,9 @@ public sealed class HealthService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidate cache when alert is created
+        _alertCache?.InvalidateTerritoryAlerts(territoryId);
 
         return Result<HealthAlert>.Success(alert);
     }
@@ -114,6 +124,9 @@ public sealed class HealthService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidate cache when alert status changes
+        _alertCache?.InvalidateTerritoryAlerts(territoryId);
 
         return true;
     }

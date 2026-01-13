@@ -7,9 +7,11 @@ namespace Araponga.Application.Services;
 
 public sealed class MapService
 {
+    private readonly MapEntityCacheService? _mapEntityCache;
     private readonly IMapRepository _mapRepository;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly IAuditLogger _auditLogger;
+    private readonly UserBlockCacheService? _userBlockCache;
     private readonly IUserBlockRepository _userBlockRepository;
     private readonly IMapEntityRelationRepository _relationRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -20,7 +22,9 @@ public sealed class MapService
         IAuditLogger auditLogger,
         IUserBlockRepository userBlockRepository,
         IMapEntityRelationRepository relationRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        MapEntityCacheService? mapEntityCache = null,
+        UserBlockCacheService? userBlockCache = null)
     {
         _mapRepository = mapRepository;
         _accessEvaluator = accessEvaluator;
@@ -28,6 +32,8 @@ public sealed class MapService
         _userBlockRepository = userBlockRepository;
         _relationRepository = relationRepository;
         _unitOfWork = unitOfWork;
+        _mapEntityCache = mapEntityCache;
+        _userBlockCache = userBlockCache;
     }
 
     public async Task<IReadOnlyList<MapEntity>> ListEntitiesAsync(
@@ -35,10 +41,14 @@ public sealed class MapService
         Guid? userId,
         CancellationToken cancellationToken)
     {
-        var entities = await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        var entities = _mapEntityCache is not null
+            ? await _mapEntityCache.GetEntitiesByTerritoryAsync(territoryId, cancellationToken)
+            : await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
         var blockedUserIds = userId is null
             ? Array.Empty<Guid>()
-            : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
+            : _userBlockCache is not null
+                ? await _userBlockCache.GetBlockedUserIdsAsync(userId.Value, cancellationToken)
+                : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
 
         var visibleEntities = blockedUserIds.Count == 0
             ? entities
@@ -64,10 +74,14 @@ public sealed class MapService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        var entities = await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        var entities = _mapEntityCache is not null
+            ? await _mapEntityCache.GetEntitiesByTerritoryAsync(territoryId, cancellationToken)
+            : await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
         var blockedUserIds = userId is null
             ? Array.Empty<Guid>()
-            : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
+            : _userBlockCache is not null
+                ? await _userBlockCache.GetBlockedUserIdsAsync(userId.Value, cancellationToken)
+                : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
 
         var visibleEntities = blockedUserIds.Count == 0
             ? entities
@@ -138,6 +152,9 @@ public sealed class MapService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
+        // Invalidate cache when map entity is created
+        _mapEntityCache?.InvalidateTerritoryEntities(territoryId);
+
         return Result<MapEntity>.Success(entity);
     }
 
@@ -197,6 +214,9 @@ public sealed class MapService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidate cache when map entity status changes
+        _mapEntityCache?.InvalidateTerritoryEntities(territoryId);
 
         return true;
     }

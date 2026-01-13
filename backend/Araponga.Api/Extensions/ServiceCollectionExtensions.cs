@@ -22,6 +22,10 @@ public static class ServiceCollectionExtensions
         // Cache services
         services.AddScoped<TerritoryCacheService>();
         services.AddScoped<FeatureFlagCacheService>();
+        services.AddScoped<UserBlockCacheService>();
+        services.AddScoped<MapEntityCacheService>();
+        services.AddScoped<EventCacheService>();
+        services.AddScoped<AlertCacheService>();
 
         // Feed services (refactored)
         services.AddScoped<PostCreationService>();

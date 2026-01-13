@@ -9,17 +9,20 @@ public sealed class UserBlockService
     private readonly IUserRepository _userRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly UserBlockCacheService? _cacheService;
 
     public UserBlockService(
         IUserBlockRepository blockRepository,
         IUserRepository userRepository,
         IAuditLogger auditLogger,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        UserBlockCacheService? cacheService = null)
     {
         _blockRepository = blockRepository;
         _userRepository = userRepository;
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task<(bool created, string? error, UserBlock? block)> BlockAsync(
@@ -53,6 +56,9 @@ public sealed class UserBlockService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
+        // Invalidate cache when block is created
+        _cacheService?.InvalidateBlock(blockerUserId, blockedUserId);
+
         return (true, null, block);
     }
 
@@ -68,5 +74,8 @@ public sealed class UserBlockService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidate cache when block is removed
+        _cacheService?.InvalidateBlock(blockerUserId, blockedUserId);
     }
 }

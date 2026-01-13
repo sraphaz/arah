@@ -10,17 +10,20 @@ namespace Araponga.Application.Services;
 public sealed class PostFilterService
 {
     private readonly AccessEvaluator _accessEvaluator;
+    private readonly UserBlockCacheService? _userBlockCache;
     private readonly IUserBlockRepository _userBlockRepository;
     private readonly IPostAssetRepository _postAssetRepository;
 
     public PostFilterService(
         AccessEvaluator accessEvaluator,
         IUserBlockRepository userBlockRepository,
-        IPostAssetRepository postAssetRepository)
+        IPostAssetRepository postAssetRepository,
+        UserBlockCacheService? userBlockCache = null)
     {
         _accessEvaluator = accessEvaluator;
         _userBlockRepository = userBlockRepository;
         _postAssetRepository = postAssetRepository;
+        _userBlockCache = userBlockCache;
     }
 
     public async Task<IReadOnlyList<CommunityPost>> FilterPostsAsync(
@@ -33,7 +36,9 @@ public sealed class PostFilterService
     {
         var blockedUserIds = userId is null
             ? Array.Empty<Guid>()
-            : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
+            : _userBlockCache is not null
+                ? await _userBlockCache.GetBlockedUserIdsAsync(userId.Value, cancellationToken)
+                : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
 
         var visiblePosts = blockedUserIds.Count == 0
             ? posts

@@ -64,6 +64,15 @@ public sealed class PlatformFeesController : ControllerBase
     /// <summary>
     /// Lista configurações ativas de fee por território (paginado).
     /// </summary>
+    /// <param name="territoryId">ID do território</param>
+    /// <param name="pageNumber">Número da página (padrão: 1)</param>
+    /// <param name="pageSize">Tamanho da página (padrão: 20, máximo recomendado: 100)</param>
+    /// <param name="cancellationToken">Token de cancelamento</param>
+    /// <returns>Lista paginada de configurações de fee</returns>
+    /// <remarks>
+    /// Requer autenticação e permissões de curador.
+    /// A paginação é feita no nível do repositório para melhor performance.
+    /// </remarks>
     [HttpGet("paged")]
     [ProducesResponseType(typeof(PagedResponse<PlatformFeeResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,9 +80,9 @@ public sealed class PlatformFeesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<PagedResponse<PlatformFeeResponse>>> ListFeesPaged(
         [FromQuery] Guid territoryId,
-        CancellationToken cancellationToken,
         [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 20)
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
     {
         if (territoryId == Guid.Empty)
         {

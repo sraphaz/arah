@@ -3,7 +3,9 @@ using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
+using Araponga.Domain.Health;
 using Araponga.Domain.Map;
+using Araponga.Domain.Marketplace;
 using Araponga.Domain.Social;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
@@ -983,5 +985,84 @@ public sealed class ApplicationServiceTests
         Assert.Equal(1, result.PageNumber);
         Assert.Equal(5, result.PageSize);
         Assert.True(result.TotalCount >= 0);
+    }
+
+    [Fact]
+    public async Task HealthService_ListAlertsPagedAsync_ReturnsPagedResults()
+    {
+        var dataStore = new InMemoryDataStore();
+        var alertRepository = new InMemoryHealthAlertRepository(dataStore);
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new HealthService(
+            alertRepository,
+            feedRepository,
+            auditLogger,
+            unitOfWork,
+            alertCache: null);
+
+        // Criar múltiplos alerts
+        for (int i = 0; i < 8; i++)
+        {
+            var alert = new HealthAlert(
+                Guid.NewGuid(),
+                ActiveTerritoryId,
+                dataStore.Users[0].Id,
+                $"Alert {i}",
+                $"Description {i}",
+                HealthAlertStatus.Pending,
+                DateTime.UtcNow.AddMinutes(-i));
+            await alertRepository.AddAsync(alert, CancellationToken.None);
+        }
+
+        var pagination = new Araponga.Application.Common.PaginationParameters(1, 5);
+        var result = await service.ListAlertsPagedAsync(
+            ActiveTerritoryId,
+            pagination,
+            CancellationToken.None);
+
+        Assert.NotNull(result);
+        Assert.True(result.Items.Count <= 5);
+        Assert.Equal(1, result.PageNumber);
+        Assert.Equal(5, result.PageSize);
+        Assert.True(result.TotalCount >= 8);
+    }
+
+    [Fact]
+    public async Task PlatformFeeService_ListActivePagedAsync_ReturnsPagedResults()
+    {
+        var dataStore = new InMemoryDataStore();
+        var configRepository = new InMemoryPlatformFeeConfigRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new PlatformFeeService(configRepository, unitOfWork);
+
+        // Criar múltiplas configurações
+        for (int i = 0; i < 6; i++)
+        {
+            var config = new PlatformFeeConfig(
+                Guid.NewGuid(),
+                ActiveTerritoryId,
+                (ListingType)(i % 2),
+                PlatformFeeMode.Percentage,
+                10m + i,
+                "BRL",
+                true,
+                DateTime.UtcNow,
+                DateTime.UtcNow);
+            await configRepository.AddAsync(config, CancellationToken.None);
+        }
+
+        var pagination = new Araponga.Application.Common.PaginationParameters(1, 5);
+        var result = await service.ListActivePagedAsync(
+            ActiveTerritoryId,
+            pagination,
+            CancellationToken.None);
+
+        Assert.NotNull(result);
+        Assert.True(result.Items.Count <= 5);
+        Assert.Equal(1, result.PageNumber);
+        Assert.Equal(5, result.PageSize);
+        Assert.True(result.TotalCount >= 6);
     }
 }

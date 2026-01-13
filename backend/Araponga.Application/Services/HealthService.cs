@@ -39,18 +39,7 @@ public sealed class HealthService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        if (_alertCache is not null)
-        {
-            var alerts = await _alertCache.GetAlertsByTerritoryAsync(territoryId, cancellationToken);
-            var cacheTotalCount = alerts.Count;
-            var pagedItems = alerts
-                .OrderByDescending(a => a.CreatedAtUtc)
-                .Skip(pagination.Skip)
-                .Take(pagination.Take)
-                .ToList();
-            return new PagedResult<HealthAlert>(pagedItems, pagination.PageNumber, pagination.PageSize, cacheTotalCount);
-        }
-
+        // Cache não é usado em métodos paginados pois a paginação no repositório é mais eficiente
         var totalCount = await _alertRepository.CountByTerritoryAsync(territoryId, cancellationToken);
         var alertsPaged = await _alertRepository.ListByTerritoryPagedAsync(territoryId, pagination.Skip, pagination.Take, cancellationToken);
 

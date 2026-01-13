@@ -74,9 +74,10 @@ public sealed class MapService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        var entities = _mapEntityCache is not null
-            ? await _mapEntityCache.GetEntitiesByTerritoryAsync(territoryId, cancellationToken)
-            : await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        // Cache não é usado em métodos paginados pois a paginação no repositório é mais eficiente
+        // Primeiro buscamos a página do repositório, depois aplicamos filtros
+        var entitiesPaged = await _mapRepository.ListByTerritoryPagedAsync(territoryId, pagination.Skip, pagination.Take, cancellationToken);
+        
         var blockedUserIds = userId is null
             ? Array.Empty<Guid>()
             : _userBlockCache is not null
@@ -84,8 +85,8 @@ public sealed class MapService
                 : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
 
         var visibleEntities = blockedUserIds.Count == 0
-            ? entities
-            : entities.Where(entity => !blockedUserIds.Contains(entity.CreatedByUserId)).ToList();
+            ? entitiesPaged
+            : entitiesPaged.Where(entity => !blockedUserIds.Contains(entity.CreatedByUserId)).ToList();
 
         IReadOnlyList<MapEntity> filtered;
         if (userId is null)
@@ -102,14 +103,22 @@ public sealed class MapService
                 : visibleEntities.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
         }
 
-        var totalCount = filtered.Count;
-        var pagedItems = filtered
-            .OrderByDescending(e => e.CreatedAtUtc)
-            .Skip(pagination.Skip)
-            .Take(pagination.Take)
-            .ToList();
+        // Para contagem total, precisamos buscar todos (mas apenas a contagem)
+        // Nota: Isso pode ser otimizado no futuro com um método de contagem que aplica os mesmos filtros
+        var allEntities = await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        var allVisible = blockedUserIds.Count == 0
+            ? allEntities
+            : allEntities.Where(entity => !blockedUserIds.Contains(entity.CreatedByUserId)).ToList();
+        
+        var allFiltered = userId is null
+            ? allVisible.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList()
+            : await _accessEvaluator.IsResidentAsync(userId.Value, territoryId, cancellationToken)
+                ? allVisible.ToList()
+                : allVisible.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
 
-        return new PagedResult<MapEntity>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+        var totalCount = allFiltered.Count;
+
+        return new PagedResult<MapEntity>(filtered, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
     public async Task<Result<MapEntity>> SuggestAsync(

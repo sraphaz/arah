@@ -304,19 +304,7 @@ public sealed class EventsService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        if (_eventCache is not null)
-        {
-            var events = await _eventCache.GetEventsByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken);
-            var summaries = await BuildSummariesAsync(events, cancellationToken);
-            var cacheTotalCount = summaries.Count;
-            var pagedItems = summaries
-                .OrderByDescending(s => s.Event.StartsAtUtc)
-                .Skip(pagination.Skip)
-                .Take(pagination.Take)
-                .ToList();
-            return new PagedResult<EventSummary>(pagedItems, pagination.PageNumber, pagination.PageSize, cacheTotalCount);
-        }
-
+        // Cache não é usado em métodos paginados pois a paginação no repositório é mais eficiente
         var totalCount = await _eventRepository.CountByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken);
         var eventsPaged = await _eventRepository.ListByTerritoryPagedAsync(territoryId, fromUtc, toUtc, status, pagination.Skip, pagination.Take, cancellationToken);
         var summariesPaged = await BuildSummariesAsync(eventsPaged, cancellationToken);

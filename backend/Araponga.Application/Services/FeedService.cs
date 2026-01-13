@@ -128,4 +128,11 @@ public sealed class FeedService
     {
         return _feedRepository.GetShareCountAsync(postId, cancellationToken);
     }
+
+    public Task<IReadOnlyDictionary<Guid, PostCounts>> GetCountsByPostIdsAsync(
+        IReadOnlyCollection<Guid> postIds,
+        CancellationToken cancellationToken)
+    {
+        return _feedRepository.GetCountsByPostIdsAsync(postIds, cancellationToken);
+    }
 }

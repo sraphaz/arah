@@ -526,6 +526,11 @@ O projeto possui testes organizados em:
 | Marketplace | POST-MVP | ✅ | ~60% | Implementado antes |
 
 **Cobertura Média de Testes**: ~82% (aumentada de ~78%)
+
+**Isolamento de Testes**: ✅ Implementado
+- Cada teste cria seu próprio `ApiFactory` ou `InMemoryDataStore`
+- Testes são completamente independentes e podem ser executados em qualquer ordem
+- Ver `backend/Araponga.Tests/README.md` para princípios e boas práticas
 **Coesão Geral**: ✅ **95%** - Excelente alinhamento com especificação
 
 ---

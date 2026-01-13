@@ -1,5 +1,7 @@
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Marketplace;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +58,49 @@ public sealed class PlatformFeesController : ControllerBase
 
         var configs = await _platformFeeService.ListActiveAsync(territoryId, cancellationToken);
         var response = configs.Select(ToResponse).ToList();
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista configurações ativas de fee por território (paginado).
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResponse<PlatformFeeResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult<PagedResponse<PlatformFeeResponse>>> ListFeesPaged(
+        [FromQuery] Guid territoryId,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        if (territoryId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        if (!_accessEvaluator.IsCurator(userContext.User))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _platformFeeService.ListActivePagedAsync(territoryId, pagination, cancellationToken);
+        var response = new PagedResponse<PlatformFeeResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
         return Ok(response);
     }
 

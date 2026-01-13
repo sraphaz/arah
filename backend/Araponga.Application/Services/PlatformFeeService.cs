@@ -33,15 +33,10 @@ public sealed class PlatformFeeService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        var configs = await _configRepository.ListActiveAsync(territoryId, cancellationToken);
-        var totalCount = configs.Count;
-        var pagedItems = configs
-            .OrderBy(c => c.ListingType)
-            .Skip(pagination.Skip)
-            .Take(pagination.Take)
-            .ToList();
+        var totalCount = await _configRepository.CountActiveAsync(territoryId, cancellationToken);
+        var configs = await _configRepository.ListActivePagedAsync(territoryId, pagination.Skip, pagination.Take, cancellationToken);
 
-        return new PagedResult<PlatformFeeConfig>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+        return new PagedResult<PlatformFeeConfig>(configs, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
     public async Task<PlatformFeeConfig> UpsertFeeConfigAsync(

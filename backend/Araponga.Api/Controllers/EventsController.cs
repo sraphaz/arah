@@ -50,12 +50,12 @@ public sealed class EventsController : ControllerBase
             request.LocationLabel,
             cancellationToken);
 
-        if (!result.success || result.summary is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to create event." });
+            return BadRequest(new { error = result.Error ?? "Unable to create event." });
         }
 
-        return CreatedAtAction(nameof(GetEvents), new { }, ToResponse(result.summary));
+        return CreatedAtAction(nameof(GetEvents), new { }, ToResponse(result.Value));
     }
 
     /// <summary>
@@ -88,12 +88,12 @@ public sealed class EventsController : ControllerBase
             request.LocationLabel,
             cancellationToken);
 
-        if (!result.success || result.summary is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to update event." });
+            return BadRequest(new { error = result.Error ?? "Unable to update event." });
         }
 
-        return Ok(ToResponse(result.summary));
+        return Ok(ToResponse(result.Value));
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ public sealed class EventsController : ControllerBase
         }
 
         var result = await _eventsService.CancelEventAsync(eventId, userContext.User.Id, cancellationToken);
-        return result.success ? NoContent() : BadRequest(new { error = result.error });
+        return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 
     /// <summary>
@@ -140,7 +140,7 @@ public sealed class EventsController : ControllerBase
             EventParticipationStatus.Interested,
             cancellationToken);
 
-        return result.success ? NoContent() : BadRequest(new { error = result.error });
+        return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 
     /// <summary>
@@ -166,7 +166,7 @@ public sealed class EventsController : ControllerBase
             EventParticipationStatus.Confirmed,
             cancellationToken);
 
-        return result.success ? NoContent() : BadRequest(new { error = result.error });
+        return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 
     /// <summary>

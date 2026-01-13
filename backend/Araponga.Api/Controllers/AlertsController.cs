@@ -107,17 +107,17 @@ public sealed class AlertsController : ControllerBase
             request.Description,
             cancellationToken);
 
-        if (!result.success || result.alert is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to report alert." });
+            return BadRequest(new { error = result.Error ?? "Unable to report alert." });
         }
 
         var response = new AlertResponse(
-            result.alert.Id,
-            result.alert.Title,
-            result.alert.Description,
-            result.alert.Status.ToString().ToUpperInvariant(),
-            result.alert.CreatedAtUtc);
+            result.Value.Id,
+            result.Value.Title,
+            result.Value.Description,
+            result.Value.Status.ToString().ToUpperInvariant(),
+            result.Value.CreatedAtUtc);
 
         return CreatedAtAction(nameof(ReportAlert), new { }, response);
     }

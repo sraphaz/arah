@@ -126,21 +126,21 @@ public sealed class MapController : ControllerBase
             request.Longitude,
             cancellationToken);
 
-        if (!result.success || result.entity is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to suggest entity." });
+            return BadRequest(new { error = result.Error ?? "Unable to suggest entity." });
         }
 
         var response = new MapEntityResponse(
-            result.entity.Id,
-            result.entity.Name,
-            result.entity.Category,
-            result.entity.Latitude,
-            result.entity.Longitude,
-            result.entity.Status.ToString().ToUpperInvariant(),
-            result.entity.Visibility.ToString().ToUpperInvariant(),
-            result.entity.ConfirmationCount,
-            result.entity.CreatedAtUtc);
+            result.Value.Id,
+            result.Value.Name,
+            result.Value.Category,
+            result.Value.Latitude,
+            result.Value.Longitude,
+            result.Value.Status.ToString().ToUpperInvariant(),
+            result.Value.Visibility.ToString().ToUpperInvariant(),
+            result.Value.ConfirmationCount,
+            result.Value.CreatedAtUtc);
 
         return CreatedAtAction(nameof(GetEntities), new { }, response);
     }
@@ -417,7 +417,7 @@ public sealed class MapController : ControllerBase
             userContext.User.Id,
             cancellationToken);
 
-        return result.success ? NoContent() : BadRequest(new { error = result.error });
+        return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 
     /// <summary>
@@ -450,17 +450,17 @@ public sealed class MapController : ControllerBase
             userContext.User.Id,
             cancellationToken);
 
-        if (!result.success)
+        if (!result.IsSuccess)
         {
-            return result.error is null
+            return result.Error is null
                 ? Ok(new MapEntityRelationResponse(userContext.User.Id, entityId, DateTime.UtcNow))
-                : BadRequest(new { error = result.error });
+                : BadRequest(new { error = result.Error });
         }
 
         var response = new MapEntityRelationResponse(
-            result.relation!.UserId,
-            result.relation.EntityId,
-            result.relation.CreatedAtUtc);
+            result.Value!.UserId,
+            result.Value.EntityId,
+            result.Value.CreatedAtUtc);
 
         return CreatedAtAction(nameof(RelateEntity), new { entityId }, response);
     }

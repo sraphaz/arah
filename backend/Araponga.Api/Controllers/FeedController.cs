@@ -71,11 +71,13 @@ public sealed class FeedController : ControllerBase
             cancellationToken);
 
         var eventLookup = await LoadEventSummariesAsync(posts, cancellationToken);
+        var postIds = posts.Select(p => p.Id).ToList();
+        var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
+        
         var response = new List<FeedItemResponse>();
         foreach (var post in posts)
         {
-            var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
-            var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
             var eventSummary = ResolveEventSummary(post, eventLookup);
 
             response.Add(new FeedItemResponse(
@@ -88,8 +90,8 @@ public sealed class FeedController : ControllerBase
                 post.MapEntityId,
                 eventSummary,
                 post.Type == PostType.Alert,
-                likeCount,
-                shareCount,
+                postCounts.LikeCount,
+                postCounts.ShareCount,
                 post.CreatedAtUtc));
         }
 
@@ -133,11 +135,13 @@ public sealed class FeedController : ControllerBase
             cancellationToken);
 
         var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);
+        var postIds = pagedResult.Items.Select(p => p.Id).ToList();
+        var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
+        
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
         {
-            var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
-            var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
             var eventSummary = ResolveEventSummary(post, eventLookup);
 
             items.Add(new FeedItemResponse(
@@ -150,8 +154,8 @@ public sealed class FeedController : ControllerBase
                 post.MapEntityId,
                 eventSummary,
                 post.Type == PostType.Alert,
-                likeCount,
-                shareCount,
+                postCounts.LikeCount,
+                postCounts.ShareCount,
                 post.CreatedAtUtc));
         }
 
@@ -184,11 +188,13 @@ public sealed class FeedController : ControllerBase
 
         var posts = await _feedService.ListForUserAsync(userContext.User.Id, cancellationToken);
         var eventLookup = await LoadEventSummariesAsync(posts, cancellationToken);
+        var postIds = posts.Select(p => p.Id).ToList();
+        var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
+        
         var response = new List<FeedItemResponse>();
         foreach (var post in posts)
         {
-            var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
-            var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
             var eventSummary = ResolveEventSummary(post, eventLookup);
 
             response.Add(new FeedItemResponse(
@@ -201,8 +207,8 @@ public sealed class FeedController : ControllerBase
                 post.MapEntityId,
                 eventSummary,
                 post.Type == PostType.Alert,
-                likeCount,
-                shareCount,
+                postCounts.LikeCount,
+                postCounts.ShareCount,
                 post.CreatedAtUtc));
         }
 
@@ -229,11 +235,13 @@ public sealed class FeedController : ControllerBase
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _feedService.ListForUserPagedAsync(userContext.User.Id, pagination, cancellationToken);
         var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);
+        var postIds = pagedResult.Items.Select(p => p.Id).ToList();
+        var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
+        
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
         {
-            var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
-            var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
             var eventSummary = ResolveEventSummary(post, eventLookup);
 
             items.Add(new FeedItemResponse(
@@ -246,8 +254,8 @@ public sealed class FeedController : ControllerBase
                 post.MapEntityId,
                 eventSummary,
                 post.Type == PostType.Alert,
-                likeCount,
-                shareCount,
+                postCounts.LikeCount,
+                postCounts.ShareCount,
                 post.CreatedAtUtc));
         }
 

@@ -7,6 +7,7 @@ using Araponga.Api.Contracts.Alerts;
 using Araponga.Api.Contracts.Assets;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Contracts.Features;
+using Araponga.Api.Contracts.JoinRequests;
 using Araponga.Api.Contracts.Map;
 using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Contracts.Territories;
@@ -20,6 +21,7 @@ public sealed class ApiScenariosTests
 {
     private static readonly Guid ActiveTerritoryId = Guid.Parse("22222222-2222-2222-2222-222222222222");
     private static readonly Guid PilotTerritoryId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+    private static readonly Guid ResidentUserId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
 
     [Fact]
     public async Task SearchTerritories_ByCity()
@@ -1054,6 +1056,139 @@ public sealed class ApiScenariosTests
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(feed);
         Assert.Contains(feed!, item => item.Type == "ALERT" && item.IsHighlighted);
+    }
+
+    [Fact]
+    public async Task JoinRequests_CreateIncomingAndApprove()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-requester");
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        var otherToken = await LoginForTokenAsync(client, "google", "join-other");
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var createResponse = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(new[] { ResidentUserId }, "Quero entrar"));
+
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<JoinRequestCreatedResponse>();
+        Assert.NotNull(created);
+        Assert.Equal("PENDING", created!.Status);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var incoming = await client.GetFromJsonAsync<List<IncomingJoinRequestResponse>>(
+            "api/v1/join-requests/incoming?status=pending");
+        Assert.NotNull(incoming);
+        Assert.Contains(incoming!, item => item.JoinRequestId == created.JoinRequestId);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", otherToken);
+        var incomingOther = await client.GetFromJsonAsync<List<IncomingJoinRequestResponse>>(
+            "api/v1/join-requests/incoming?status=pending");
+        Assert.NotNull(incomingOther);
+        Assert.DoesNotContain(incomingOther!, item => item.JoinRequestId == created.JoinRequestId);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var approveResponse = await client.PostAsync(
+            $"api/v1/join-requests/{created.JoinRequestId}/approve",
+            null);
+        approveResponse.EnsureSuccessStatusCode();
+        var approvePayload = await approveResponse.Content.ReadFromJsonAsync<JoinRequestActionResponse>();
+        Assert.NotNull(approvePayload);
+        Assert.Equal("APPROVED", approvePayload!.Status);
+
+        var approveAgain = await client.PostAsync(
+            $"api/v1/join-requests/{created.JoinRequestId}/approve",
+            null);
+        approveAgain.EnsureSuccessStatusCode();
+        var approveAgainPayload = await approveAgain.Content.ReadFromJsonAsync<JoinRequestActionResponse>();
+        Assert.NotNull(approveAgainPayload);
+        Assert.Equal("APPROVED", approveAgainPayload!.Status);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var membershipStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
+            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
+        Assert.NotNull(membershipStatus);
+        Assert.Equal("RESIDENT", membershipStatus!.Role);
+        Assert.Equal("VALIDATED", membershipStatus.VerificationStatus);
+    }
+
+    [Fact]
+    public async Task JoinRequests_RequireRecipients()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-empty");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(Array.Empty<Guid>(), null));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task JoinRequests_ApproveRequiresRecipientOrAdmin()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-nonrecipient");
+        var otherToken = await LoginForTokenAsync(client, "google", "join-random");
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var createResponse = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(new[] { ResidentUserId }, "Teste"));
+
+        createResponse.EnsureSuccessStatusCode();
+        var created = await createResponse.Content.ReadFromJsonAsync<JoinRequestCreatedResponse>();
+        Assert.NotNull(created);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", otherToken);
+        var approveResponse = await client.PostAsync(
+            $"api/v1/join-requests/{created!.JoinRequestId}/approve",
+            null);
+
+        Assert.Equal(HttpStatusCode.Forbidden, approveResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task JoinRequests_RejectDoesNotPromoteMembership()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-rejecter");
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var createResponse = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(new[] { ResidentUserId }, "Rejeitar"));
+
+        createResponse.EnsureSuccessStatusCode();
+        var created = await createResponse.Content.ReadFromJsonAsync<JoinRequestCreatedResponse>();
+        Assert.NotNull(created);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var rejectResponse = await client.PostAsync(
+            $"api/v1/join-requests/{created!.JoinRequestId}/reject",
+            null);
+        rejectResponse.EnsureSuccessStatusCode();
+        var rejectPayload = await rejectResponse.Content.ReadFromJsonAsync<JoinRequestActionResponse>();
+        Assert.NotNull(rejectPayload);
+        Assert.Equal("REJECTED", rejectPayload!.Status);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var membershipStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
+            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
+        Assert.NotNull(membershipStatus);
+        Assert.Equal("NONE", membershipStatus!.Role);
     }
 
     private static async Task<string> LoginForTokenAsync(HttpClient client, string provider, string externalId)

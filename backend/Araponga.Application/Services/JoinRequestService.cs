@@ -1,0 +1,305 @@
+using Araponga.Application.Interfaces;
+using Araponga.Application.Models;
+using Araponga.Domain.Social;
+using Araponga.Domain.Social.JoinRequests;
+using Araponga.Domain.Users;
+using System.Linq;
+
+namespace Araponga.Application.Services;
+
+public sealed class JoinRequestService
+{
+    private readonly ITerritoryJoinRequestRepository _joinRequestRepository;
+    private readonly ITerritoryMembershipRepository _membershipRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public JoinRequestService(
+        ITerritoryJoinRequestRepository joinRequestRepository,
+        ITerritoryMembershipRepository membershipRepository,
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork)
+    {
+        _joinRequestRepository = joinRequestRepository;
+        _membershipRepository = membershipRepository;
+        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<(bool created, string? error, TerritoryJoinRequest? request)> CreateAsync(
+        Guid requesterUserId,
+        Guid territoryId,
+        IReadOnlyCollection<Guid> recipientUserIds,
+        string? message,
+        CancellationToken cancellationToken)
+    {
+        if (recipientUserIds.Count == 0)
+        {
+            return (false, "Recipients are required.", null);
+        }
+
+        var uniqueRecipients = recipientUserIds.Distinct().ToList();
+        if (uniqueRecipients.Count != recipientUserIds.Count)
+        {
+            return (false, "Recipients must be unique.", null);
+        }
+
+        if (uniqueRecipients.Contains(requesterUserId))
+        {
+            return (false, "Requester cannot be a recipient.", null);
+        }
+
+        var requesterMembership = await _membershipRepository.GetByUserAndTerritoryAsync(
+            requesterUserId,
+            territoryId,
+            cancellationToken);
+
+        if (requesterMembership is not null &&
+            requesterMembership.Role == MembershipRole.Resident &&
+            requesterMembership.VerificationStatus == VerificationStatus.Validated)
+        {
+            return (false, "Requester is already a confirmed resident.", null);
+        }
+
+        var existing = await _joinRequestRepository.GetPendingByRequesterAsync(
+            territoryId,
+            requesterUserId,
+            cancellationToken);
+
+        if (existing is not null)
+        {
+            return (false, null, existing);
+        }
+
+        var residentUserIds = await _membershipRepository.ListResidentUserIdsAsync(territoryId, cancellationToken);
+        var residentLookup = residentUserIds.ToHashSet();
+
+        foreach (var recipientUserId in uniqueRecipients)
+        {
+            var recipient = await _userRepository.GetByIdAsync(recipientUserId, cancellationToken);
+            if (recipient is null)
+            {
+                return (false, "Recipient not found.", null);
+            }
+
+            if (recipient.Role != UserRole.Curator && !residentLookup.Contains(recipientUserId))
+            {
+                return (false, "Recipient is not a confirmed resident or admin.", null);
+            }
+        }
+
+        var now = DateTime.UtcNow;
+        var request = new TerritoryJoinRequest(
+            Guid.NewGuid(),
+            territoryId,
+            requesterUserId,
+            message,
+            TerritoryJoinRequestStatus.Pending,
+            now,
+            null,
+            null,
+            null);
+
+        var recipients = uniqueRecipients
+            .Select(recipientId => new TerritoryJoinRequestRecipient(
+                request.Id,
+                recipientId,
+                now,
+                null))
+            .ToList();
+
+        await _joinRequestRepository.AddAsync(request, recipients, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return (true, null, request);
+    }
+
+    public async Task<IReadOnlyList<IncomingJoinRequest>> ListIncomingAsync(
+        Guid recipientUserId,
+        CancellationToken cancellationToken)
+    {
+        var requests = await _joinRequestRepository.ListIncomingAsync(
+            recipientUserId,
+            TerritoryJoinRequestStatus.Pending,
+            cancellationToken);
+
+        var requesterIds = requests.Select(request => request.RequesterUserId).Distinct().ToList();
+        var requesterLookup = new Dictionary<Guid, string>();
+
+        foreach (var requesterId in requesterIds)
+        {
+            var user = await _userRepository.GetByIdAsync(requesterId, cancellationToken);
+            if (user is not null)
+            {
+                requesterLookup[requesterId] = user.DisplayName;
+            }
+        }
+
+        return requests
+            .Select(request => new IncomingJoinRequest(
+                request.Id,
+                request.TerritoryId,
+                request.RequesterUserId,
+                requesterLookup.GetValueOrDefault(request.RequesterUserId, string.Empty),
+                request.Message,
+                request.CreatedAtUtc))
+            .ToList();
+    }
+
+    public async Task<JoinRequestDecisionResult> ApproveAsync(
+        Guid requestId,
+        Guid actorUserId,
+        bool isCurator,
+        CancellationToken cancellationToken)
+    {
+        var request = await _joinRequestRepository.GetByIdAsync(requestId, cancellationToken);
+        if (request is null)
+        {
+            return new JoinRequestDecisionResult(false, false, null, false);
+        }
+
+        var isRecipient = await _joinRequestRepository.IsRecipientAsync(requestId, actorUserId, cancellationToken);
+        if (!isRecipient && !isCurator)
+        {
+            return new JoinRequestDecisionResult(true, true, request, false);
+        }
+
+        if (request.Status != TerritoryJoinRequestStatus.Pending)
+        {
+            return new JoinRequestDecisionResult(true, false, request, false);
+        }
+
+        var decidedAtUtc = DateTime.UtcNow;
+        request.UpdateDecision(TerritoryJoinRequestStatus.Approved, decidedAtUtc, actorUserId);
+
+        await _joinRequestRepository.UpdateStatusAsync(
+            requestId,
+            TerritoryJoinRequestStatus.Approved,
+            decidedAtUtc,
+            actorUserId,
+            cancellationToken);
+
+        if (isRecipient)
+        {
+            await _joinRequestRepository.SetRecipientRespondedAtAsync(
+                requestId,
+                actorUserId,
+                decidedAtUtc,
+                cancellationToken);
+        }
+
+        var membership = await _membershipRepository.GetByUserAndTerritoryAsync(
+            request.RequesterUserId,
+            request.TerritoryId,
+            cancellationToken);
+
+        if (membership is null)
+        {
+            var newMembership = new TerritoryMembership(
+                Guid.NewGuid(),
+                request.RequesterUserId,
+                request.TerritoryId,
+                MembershipRole.Resident,
+                VerificationStatus.Validated,
+                decidedAtUtc);
+
+            await _membershipRepository.AddAsync(newMembership, cancellationToken);
+        }
+        else if (membership.Role != MembershipRole.Resident ||
+                 membership.VerificationStatus != VerificationStatus.Validated)
+        {
+            await _membershipRepository.UpdateRoleAndStatusAsync(
+                membership.Id,
+                MembershipRole.Resident,
+                VerificationStatus.Validated,
+                cancellationToken);
+        }
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return new JoinRequestDecisionResult(true, false, request, true);
+    }
+
+    public async Task<JoinRequestDecisionResult> RejectAsync(
+        Guid requestId,
+        Guid actorUserId,
+        bool isCurator,
+        CancellationToken cancellationToken)
+    {
+        var request = await _joinRequestRepository.GetByIdAsync(requestId, cancellationToken);
+        if (request is null)
+        {
+            return new JoinRequestDecisionResult(false, false, null, false);
+        }
+
+        var isRecipient = await _joinRequestRepository.IsRecipientAsync(requestId, actorUserId, cancellationToken);
+        if (!isRecipient && !isCurator)
+        {
+            return new JoinRequestDecisionResult(true, true, request, false);
+        }
+
+        if (request.Status != TerritoryJoinRequestStatus.Pending)
+        {
+            return new JoinRequestDecisionResult(true, false, request, false);
+        }
+
+        var decidedAtUtc = DateTime.UtcNow;
+        request.UpdateDecision(TerritoryJoinRequestStatus.Rejected, decidedAtUtc, actorUserId);
+
+        await _joinRequestRepository.UpdateStatusAsync(
+            requestId,
+            TerritoryJoinRequestStatus.Rejected,
+            decidedAtUtc,
+            actorUserId,
+            cancellationToken);
+
+        if (isRecipient)
+        {
+            await _joinRequestRepository.SetRecipientRespondedAtAsync(
+                requestId,
+                actorUserId,
+                decidedAtUtc,
+                cancellationToken);
+        }
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return new JoinRequestDecisionResult(true, false, request, true);
+    }
+
+    public async Task<JoinRequestDecisionResult> CancelAsync(
+        Guid requestId,
+        Guid requesterUserId,
+        CancellationToken cancellationToken)
+    {
+        var request = await _joinRequestRepository.GetByIdAsync(requestId, cancellationToken);
+        if (request is null)
+        {
+            return new JoinRequestDecisionResult(false, false, null, false);
+        }
+
+        if (request.RequesterUserId != requesterUserId)
+        {
+            return new JoinRequestDecisionResult(true, true, request, false);
+        }
+
+        if (request.Status != TerritoryJoinRequestStatus.Pending)
+        {
+            return new JoinRequestDecisionResult(true, false, request, false);
+        }
+
+        var decidedAtUtc = DateTime.UtcNow;
+        request.UpdateDecision(TerritoryJoinRequestStatus.Canceled, decidedAtUtc, requesterUserId);
+
+        await _joinRequestRepository.UpdateStatusAsync(
+            requestId,
+            TerritoryJoinRequestStatus.Canceled,
+            decidedAtUtc,
+            requesterUserId,
+            cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return new JoinRequestDecisionResult(true, false, request, true);
+    }
+}

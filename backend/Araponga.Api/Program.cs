@@ -37,6 +37,7 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
     builder.Services.AddScoped<IUserRepository, PostgresUserRepository>();
     builder.Services.AddScoped<ITerritoryMembershipRepository, PostgresTerritoryMembershipRepository>();
     builder.Services.AddScoped<IUserTerritoryRepository, PostgresUserTerritoryRepository>();
+    builder.Services.AddScoped<ITerritoryJoinRequestRepository, PostgresTerritoryJoinRequestRepository>();
     builder.Services.AddScoped<IFeedRepository, PostgresFeedRepository>();
     builder.Services.AddScoped<IMapRepository, PostgresMapRepository>();
     builder.Services.AddScoped<IMapEntityRelationRepository, PostgresMapEntityRelationRepository>();
@@ -64,6 +65,7 @@ else
     builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
     builder.Services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
     builder.Services.AddSingleton<IUserTerritoryRepository, InMemoryUserTerritoryRepository>();
+    builder.Services.AddSingleton<ITerritoryJoinRequestRepository, InMemoryTerritoryJoinRequestRepository>();
     builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
     builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
     builder.Services.AddSingleton<IMapEntityRelationRepository, InMemoryMapEntityRelationRepository>();
@@ -92,6 +94,7 @@ builder.Services.AddScoped<IEventHandler<ReportCreatedEvent>, ReportCreatedNotif
 builder.Services.AddScoped<TerritoryService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<MembershipService>();
+builder.Services.AddScoped<JoinRequestService>();
 builder.Services.AddScoped<AccessEvaluator>();
 builder.Services.AddScoped<FeedService>();
 builder.Services.AddScoped<MapService>();

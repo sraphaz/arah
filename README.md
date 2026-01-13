@@ -124,15 +124,28 @@ backend/
 
 ## 📚 Documentação
 
-- [Visão do Produto](/docs/PRODUCT_VISION.md)
-- [Backlog](/docs/BACKLOG.md)
-- [User Stories](/docs/USER_STORIES.md)
-- [Modelo de Domínio (MER)](/docs/DOMAIN_MODEL_MER.md)
-- [Roadmap](/docs/ROADMAP.md)
-- [Moderação e Reports](/docs/MODERATION_REPORTS.md)
-- [Admin e Observabilidade](/docs/ADMIN_OBSERVABILITY.md)
-- [Glossário](/docs/GLOSSARY.md)
-- [Plano de Implementação](/docs/IMPLEMENTATION_PLAN.md)
+**📋 [Índice Completo da Documentação](./docs/00_INDEX.md)** - Navegação estruturada
+
+### Visão e Produto
+- [Visão do Produto](./docs/01_PRODUCT_VISION.md)
+- [Roadmap](./docs/02_ROADMAP.md)
+- [Backlog](./docs/03_BACKLOG.md)
+- [User Stories](./docs/04_USER_STORIES.md)
+- [Glossário](./docs/05_GLOSSARY.md)
+
+### Arquitetura
+- [Decisões Arquiteturais (ADRs)](./docs/10_ARCHITECTURE_DECISIONS.md)
+- [Arquitetura de Services](./docs/11_ARCHITECTURE_SERVICES.md)
+- [Modelo de Domínio](./docs/12_DOMAIN_MODEL.md)
+
+### Desenvolvimento
+- [Plano de Implementação](./docs/20_IMPLEMENTATION_PLAN.md)
+- [Revisão de Código](./docs/21_CODE_REVIEW.md)
+- [Análise de Coesão e Testes](./docs/22_COHESION_AND_TESTS.md)
+
+### Operações
+- [Moderação](./docs/30_MODERATION.md)
+- [Admin e Observabilidade](./docs/31_ADMIN_OBSERVABILITY.md)
 
 - **Membership**  
   Relação entre uma pessoa e um território (morador, visitante, etc.).
@@ -202,7 +215,7 @@ A versão do GitHub Pages inclui links diretos para documentação, user stories
 
 ## 🤝 Contribuindo
 
-Consulte o guia em [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Consulte o guia em [`docs/41_CONTRIBUTING.md`](./docs/41_CONTRIBUTING.md).
 
 O Araponga é aberto à colaboração, especialmente de pessoas interessadas em:
 

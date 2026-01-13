@@ -176,15 +176,13 @@ app.UseStaticFiles(new StaticFileOptions
 // Importante: como você está rodando só em HTTP, removemos o redirect p/ HTTPS para não gerar warning.
 // app.UseHttpsRedirection();
 
-// IMPORTANTE: No ASP.NET Core, middlewares são executados na ordem inversa de registro (LIFO)
-// O último UseMiddleware registrado é o primeiro a ser executado na pipeline
-// Portanto, registramos na ordem inversa da execução desejada
-
-// Correlation ID middleware - registrado por último, executa PRIMEIRO
+// IMPORTANTE: No ASP.NET Core, middlewares são executados na ordem de registro (FIFO)
+// O primeiro UseMiddleware registrado é o primeiro a ser executado
+// Correlation ID middleware - registrado primeiro, executa PRIMEIRO
 // Isso garante que o correlation ID esteja disponível quando o RequestLoggingMiddleware executar
 app.UseMiddleware<CorrelationIdMiddleware>();
 
-// Request logging middleware - registrado primeiro, executa DEPOIS do CorrelationIdMiddleware
+// Request logging middleware - registrado depois, executa DEPOIS do CorrelationIdMiddleware
 app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseAuthorization();

@@ -37,7 +37,7 @@ public sealed class NotificationFlowTests
             null,
             CancellationToken.None);
 
-        Assert.True(created.success);
+        Assert.True(created.IsSuccess);
         Assert.Single(dataStore.OutboxMessages);
 
         var message = dataStore.OutboxMessages[0];

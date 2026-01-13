@@ -191,24 +191,25 @@ public sealed class FeedController : ControllerBase
             request.AssetIds,
             cancellationToken);
 
-        if (!result.success || result.post is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to create post." });
+            return BadRequest(new { error = result.Error ?? "Unable to create post." });
         }
 
+        var post = result.Value;
         var response = new FeedItemResponse(
-            result.post.Id,
-            result.post.Title,
-            result.post.Content,
-            result.post.Type.ToString().ToUpperInvariant(),
-            result.post.Visibility.ToString().ToUpperInvariant(),
-            result.post.Status.ToString().ToUpperInvariant(),
-            result.post.MapEntityId,
-            ResolveEventSummary(result.post, new Dictionary<Guid, Application.Models.EventSummary>()),
-            result.post.Type == PostType.Alert,
+            post.Id,
+            post.Title,
+            post.Content,
+            post.Type.ToString().ToUpperInvariant(),
+            post.Visibility.ToString().ToUpperInvariant(),
+            post.Status.ToString().ToUpperInvariant(),
+            post.MapEntityId,
+            ResolveEventSummary(post, new Dictionary<Guid, Application.Models.EventSummary>()),
+            post.Type == PostType.Alert,
             0,
             0,
-            result.post.CreatedAtUtc);
+            post.CreatedAtUtc);
 
         return CreatedAtAction(nameof(GetFeed), new { }, response);
     }
@@ -281,7 +282,7 @@ public sealed class FeedController : ControllerBase
             request.Content,
             cancellationToken);
 
-        return result.success ? NoContent() : BadRequest(new { error = result.error });
+        return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 
     /// <summary>
@@ -314,7 +315,7 @@ public sealed class FeedController : ControllerBase
             userContext.User.Id,
             cancellationToken);
 
-        return result.success ? NoContent() : BadRequest(new { error = result.error });
+        return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 
     private async Task<Dictionary<Guid, Application.Models.EventSummary>> LoadEventSummariesAsync(

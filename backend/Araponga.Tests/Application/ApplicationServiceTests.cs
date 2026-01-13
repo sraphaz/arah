@@ -39,7 +39,7 @@ public sealed class ApplicationServiceTests
             null,
             CancellationToken.None);
 
-        Assert.False(invalid.success);
+        Assert.False(invalid.IsSuccess);
 
         var disabledAlert = await service.CreatePostAsync(
             PilotTerritoryId,
@@ -57,7 +57,7 @@ public sealed class ApplicationServiceTests
             null,
             CancellationToken.None);
 
-        Assert.False(disabledAlert.success);
+        Assert.False(disabledAlert.IsSuccess);
 
         var likeMissing = await service.LikeAsync(
             ActiveTerritoryId,
@@ -120,7 +120,7 @@ public sealed class ApplicationServiceTests
             "Comentario",
             CancellationToken.None);
 
-        Assert.False(comment.success);
+        Assert.False(comment.IsSuccess);
 
         var share = await service.ShareAsync(
             ActiveTerritoryId,
@@ -128,7 +128,7 @@ public sealed class ApplicationServiceTests
             Guid.NewGuid(),
             CancellationToken.None);
 
-        Assert.False(share.success);
+        Assert.False(share.IsSuccess);
     }
 
     [Fact]
@@ -638,9 +638,9 @@ public sealed class ApplicationServiceTests
             null,
             CancellationToken.None);
 
-        Assert.True(created.success);
-        Assert.NotNull(created.post);
-        Assert.DoesNotContain(dataStore.PostGeoAnchors, anchor => anchor.PostId == created.post!.Id);
+        Assert.True(created.IsSuccess);
+        Assert.NotNull(created.Value);
+        Assert.DoesNotContain(dataStore.PostGeoAnchors, anchor => anchor.PostId == created.Value!.Id);
     }
 
     [Fact]
@@ -665,10 +665,10 @@ public sealed class ApplicationServiceTests
             null,
             CancellationToken.None);
 
-        Assert.True(created.success);
-        Assert.NotNull(created.post);
+        Assert.True(created.IsSuccess);
+        Assert.NotNull(created.Value);
 
-        var anchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == created.post!.Id).ToList();
+        var anchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == created.Value!.Id).ToList();
         Assert.Single(anchors);
         Assert.Equal("POST", anchors[0].Type);
     }
@@ -703,10 +703,10 @@ public sealed class ApplicationServiceTests
             null,
             CancellationToken.None);
 
-        Assert.True(created.success);
-        Assert.NotNull(created.post);
+        Assert.True(created.IsSuccess);
+        Assert.NotNull(created.Value);
 
-        var savedAnchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == created.post!.Id).ToList();
+        var savedAnchors = dataStore.PostGeoAnchors.Where(anchor => anchor.PostId == created.Value!.Id).ToList();
         Assert.Equal(50, savedAnchors.Count);
     }
 
@@ -902,6 +902,6 @@ public sealed class ApplicationServiceTests
             null,
             CancellationToken.None);
 
-        Assert.False(result.success);
+        Assert.False(result.IsSuccess);
     }
 }

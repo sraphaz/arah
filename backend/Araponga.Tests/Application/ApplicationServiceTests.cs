@@ -203,7 +203,7 @@ public sealed class ApplicationServiceTests
             CancellationToken.None);
 
         Assert.False(duplicate.IsSuccess);
-        Assert.Null(duplicate.Error);
+        Assert.Equal("Relation already exists.", duplicate.Error);
     }
 
     [Fact]

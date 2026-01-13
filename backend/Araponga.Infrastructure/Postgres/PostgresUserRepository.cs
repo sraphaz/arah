@@ -48,4 +48,21 @@ public sealed class PostgresUserRepository : IUserRepository
         _dbContext.Users.Add(user.ToRecord());
         return Task.CompletedTask;
     }
+
+    public async Task<IReadOnlyList<User>> ListByIdsAsync(
+        IReadOnlyCollection<Guid> userIds,
+        CancellationToken cancellationToken)
+    {
+        if (userIds.Count == 0)
+        {
+            return Array.Empty<User>();
+        }
+
+        var records = await _dbContext.Users
+            .AsNoTracking()
+            .Where(user => userIds.Contains(user.Id))
+            .ToListAsync(cancellationToken);
+
+        return records.Select(record => record.ToDomain()).ToList();
+    }
 }

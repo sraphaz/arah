@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Feed;
 using Araponga.Infrastructure.Postgres.Entities;
@@ -118,5 +119,39 @@ public sealed class PostgresFeedRepository : IFeedRepository
         return await _dbContext.PostShares
             .AsNoTracking()
             .CountAsync(share => share.PostId == postId, cancellationToken);
+    }
+
+    public async Task<IReadOnlyDictionary<Guid, PostCounts>> GetCountsByPostIdsAsync(
+        IReadOnlyCollection<Guid> postIds,
+        CancellationToken cancellationToken)
+    {
+        if (postIds.Count == 0)
+        {
+            return new Dictionary<Guid, PostCounts>();
+        }
+
+        var likeCounts = await _dbContext.PostLikes
+            .AsNoTracking()
+            .Where(like => postIds.Contains(like.PostId))
+            .GroupBy(like => like.PostId)
+            .Select(g => new { PostId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.PostId, x => x.Count, cancellationToken);
+
+        var shareCounts = await _dbContext.PostShares
+            .AsNoTracking()
+            .Where(share => postIds.Contains(share.PostId))
+            .GroupBy(share => share.PostId)
+            .Select(g => new { PostId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.PostId, x => x.Count, cancellationToken);
+
+        var result = new Dictionary<Guid, PostCounts>();
+        foreach (var postId in postIds)
+        {
+            likeCounts.TryGetValue(postId, out var likeCount);
+            shareCounts.TryGetValue(postId, out var shareCount);
+            result[postId] = new PostCounts(likeCount, shareCount);
+        }
+
+        return result;
     }
 }

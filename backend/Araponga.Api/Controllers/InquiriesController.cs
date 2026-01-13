@@ -1,5 +1,7 @@
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Marketplace;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
 using Microsoft.AspNetCore.Mvc;
@@ -68,6 +70,36 @@ public sealed class InquiriesController : ControllerBase
     }
 
     /// <summary>
+    /// Lista inquiries enviadas pelo usuário (paginado).
+    /// </summary>
+    [HttpGet("inquiries/me/paged")]
+    [ProducesResponseType(typeof(PagedResponse<InquiryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<InquiryResponse>>> ListMyInquiriesPaged(
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _inquiryService.ListMyInquiriesPagedAsync(userContext.User.Id, pagination, cancellationToken);
+        var response = new PagedResponse<InquiryResponse>(
+            pagedResult.Items.Select(inquiry => ToResponse(inquiry, null)).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Lista inquiries recebidas pelo dono das lojas.
     /// </summary>
     [HttpGet("inquiries/received")]
@@ -83,6 +115,36 @@ public sealed class InquiriesController : ControllerBase
 
         var inquiries = await _inquiryService.ListReceivedInquiriesAsync(userContext.User.Id, cancellationToken);
         var response = inquiries.Select(inquiry => ToResponse(inquiry, null)).ToList();
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista inquiries recebidas pelo dono das lojas (paginado).
+    /// </summary>
+    [HttpGet("inquiries/received/paged")]
+    [ProducesResponseType(typeof(PagedResponse<InquiryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<InquiryResponse>>> ListReceivedInquiriesPaged(
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _inquiryService.ListReceivedInquiriesPagedAsync(userContext.User.Id, pagination, cancellationToken);
+        var response = new PagedResponse<InquiryResponse>(
+            pagedResult.Items.Select(inquiry => ToResponse(inquiry, null)).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
         return Ok(response);
     }
 

@@ -1,5 +1,7 @@
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.JoinRequests;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Social.JoinRequests;
 using Microsoft.AspNetCore.Mvc;
@@ -120,6 +122,52 @@ public sealed class JoinRequestsController : ControllerBase
                 request.Message,
                 request.CreatedAtUtc))
             .ToList();
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista join requests recebidos (paginado).
+    /// </summary>
+    [HttpGet("join-requests/incoming/paged")]
+    [ProducesResponseType(typeof(PagedResponse<IncomingJoinRequestResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<IncomingJoinRequestResponse>>> ListIncomingPaged(
+        [FromQuery] string? status,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var parsedStatus = TerritoryJoinRequestStatus.Pending;
+        if (!string.IsNullOrWhiteSpace(status) &&
+            (!Enum.TryParse(status, true, out parsedStatus) ||
+             parsedStatus != TerritoryJoinRequestStatus.Pending))
+        {
+            return BadRequest(new { error = "Unsupported status." });
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _joinRequestService.ListIncomingPagedAsync(userContext.User.Id, pagination, cancellationToken);
+        var response = new PagedResponse<IncomingJoinRequestResponse>(
+            pagedResult.Items.Select(request => new IncomingJoinRequestResponse(
+                request.Id,
+                request.TerritoryId,
+                request.RequesterUserId,
+                request.RequesterDisplayName,
+                request.Message,
+                request.CreatedAtUtc)).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
 
         return Ok(response);
     }

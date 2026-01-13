@@ -1,5 +1,7 @@
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Territories;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Territories;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +42,29 @@ public sealed class TerritoriesController : ControllerBase
     {
         var territories = await _territoryService.ListAvailableAsync(cancellationToken);
         var response = territories.Select(ToResponse);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista territórios disponíveis (paginado).
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResponse<TerritoryResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<TerritoryResponse>>> ListPaged(
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _territoryService.ListAvailablePagedAsync(pagination, cancellationToken);
+        var response = new PagedResponse<TerritoryResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
         return Ok(response);
     }
 
@@ -106,6 +131,32 @@ public sealed class TerritoriesController : ControllerBase
     }
 
     /// <summary>
+    /// Busca territórios por texto e localização administrativa (paginado).
+    /// </summary>
+    [HttpGet("search/paged")]
+    [ProducesResponseType(typeof(PagedResponse<TerritoryResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<TerritoryResponse>>> SearchPaged(
+        [FromQuery] string? q,
+        [FromQuery] string? city,
+        [FromQuery] string? state,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _territoryService.SearchPagedAsync(q, city, state, pagination, cancellationToken);
+        var response = new PagedResponse<TerritoryResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Busca territórios próximos usando latitude e longitude.
     /// </summary>
     [HttpGet("nearby")]
@@ -141,6 +192,53 @@ public sealed class TerritoriesController : ControllerBase
             resolvedLimit,
             cancellationToken);
         var response = territories.Select(ToResponse);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Busca territórios próximos usando latitude e longitude (paginado).
+    /// </summary>
+    [HttpGet("nearby/paged")]
+    [ProducesResponseType(typeof(PagedResponse<TerritoryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<PagedResponse<TerritoryResponse>>> NearbyPaged(
+        [FromQuery] double? lat,
+        [FromQuery] double? lng,
+        [FromQuery] double? radiusKm,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        if (lat is null || lng is null)
+        {
+            return BadRequest(new { error = "lat and lng are required." });
+        }
+
+        const double defaultRadiusKm = 25;
+        var resolvedRadius = radiusKm ?? defaultRadiusKm;
+
+        if (resolvedRadius <= 0)
+        {
+            return BadRequest(new { error = "radiusKm must be positive." });
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _territoryService.NearbyPagedAsync(
+            lat.Value,
+            lng.Value,
+            resolvedRadius,
+            pagination,
+            cancellationToken);
+
+        var response = new PagedResponse<TerritoryResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+
         return Ok(response);
     }
 

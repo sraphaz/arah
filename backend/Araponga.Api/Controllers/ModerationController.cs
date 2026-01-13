@@ -1,6 +1,8 @@
 using Araponga.Api;
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Moderation;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Moderation;
 using Microsoft.AspNetCore.Mvc;
@@ -233,6 +235,91 @@ public sealed class ModerationController : ControllerBase
             report.Reason,
             report.Status.ToString().ToUpperInvariant(),
             report.CreatedAtUtc));
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista reports do território (paginado).
+    /// </summary>
+    [HttpGet("reports/paged")]
+    [ProducesResponseType(typeof(PagedResponse<ReportSummaryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<ReportSummaryResponse>>> ListReportsPaged(
+        [FromQuery] Guid? territoryId,
+        [FromQuery] string? targetType,
+        [FromQuery] string? status,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        if (!_accessEvaluator.IsCurator(userContext.User))
+        {
+            return Forbid();
+        }
+
+        ReportTargetType? parsedTargetType = null;
+        if (!string.IsNullOrWhiteSpace(targetType))
+        {
+            if (!Enum.TryParse<ReportTargetType>(targetType, true, out var targetTypeEnum))
+            {
+                return BadRequest(new { error = "Invalid targetType." });
+            }
+
+            parsedTargetType = targetTypeEnum;
+        }
+
+        ReportStatus? parsedStatus = null;
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            if (!Enum.TryParse<ReportStatus>(status, true, out var statusEnum))
+            {
+                return BadRequest(new { error = "Invalid status." });
+            }
+
+            parsedStatus = statusEnum;
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _reportService.ListPagedAsync(
+            resolvedTerritoryId.Value,
+            parsedTargetType,
+            parsedStatus,
+            from,
+            to,
+            pagination,
+            cancellationToken);
+
+        var response = new PagedResponse<ReportSummaryResponse>(
+            pagedResult.Items.Select(report => new ReportSummaryResponse(
+                report.Id,
+                report.TerritoryId,
+                report.TargetType.ToString().ToUpperInvariant(),
+                report.TargetId,
+                report.Reason,
+                report.Status.ToString().ToUpperInvariant(),
+                report.CreatedAtUtc)).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
 
         return Ok(response);
     }

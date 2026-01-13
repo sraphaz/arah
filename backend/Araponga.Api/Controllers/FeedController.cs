@@ -1,6 +1,8 @@
 using Araponga.Api;
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Microsoft.AspNetCore.Mvc;
@@ -95,6 +97,77 @@ public sealed class FeedController : ControllerBase
     }
 
     /// <summary>
+    /// Visualiza o feed do território ativo (paginado).
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResponse<FeedItemResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<FeedItemResponse>>> GetFeedPaged(
+        [FromQuery] Guid? territoryId,
+        [FromQuery] Guid? mapEntityId,
+        [FromQuery] Guid? assetId,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _feedService.ListForTerritoryPagedAsync(
+            resolvedTerritoryId.Value,
+            userContext.User?.Id,
+            mapEntityId,
+            assetId,
+            pagination,
+            cancellationToken);
+
+        var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);
+        var items = new List<FeedItemResponse>();
+        foreach (var post in pagedResult.Items)
+        {
+            var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
+            var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var eventSummary = ResolveEventSummary(post, eventLookup);
+
+            items.Add(new FeedItemResponse(
+                post.Id,
+                post.Title,
+                post.Content,
+                post.Type.ToString().ToUpperInvariant(),
+                post.Visibility.ToString().ToUpperInvariant(),
+                post.Status.ToString().ToUpperInvariant(),
+                post.MapEntityId,
+                eventSummary,
+                post.Type == PostType.Alert,
+                likeCount,
+                shareCount,
+                post.CreatedAtUtc));
+        }
+
+        var response = new PagedResponse<FeedItemResponse>(
+            items,
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Visualiza o feed pessoal do usuário autenticado.
     /// </summary>
     [HttpGet("me")]
@@ -132,6 +205,60 @@ public sealed class FeedController : ControllerBase
                 shareCount,
                 post.CreatedAtUtc));
         }
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Visualiza o feed pessoal do usuário autenticado (paginado).
+    /// </summary>
+    [HttpGet("me/paged")]
+    [ProducesResponseType(typeof(PagedResponse<FeedItemResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<FeedItemResponse>>> GetMyFeedPaged(
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _feedService.ListForUserPagedAsync(userContext.User.Id, pagination, cancellationToken);
+        var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);
+        var items = new List<FeedItemResponse>();
+        foreach (var post in pagedResult.Items)
+        {
+            var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
+            var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var eventSummary = ResolveEventSummary(post, eventLookup);
+
+            items.Add(new FeedItemResponse(
+                post.Id,
+                post.Title,
+                post.Content,
+                post.Type.ToString().ToUpperInvariant(),
+                post.Visibility.ToString().ToUpperInvariant(),
+                post.Status.ToString().ToUpperInvariant(),
+                post.MapEntityId,
+                eventSummary,
+                post.Type == PostType.Alert,
+                likeCount,
+                shareCount,
+                post.CreatedAtUtc));
+        }
+
+        var response = new PagedResponse<FeedItemResponse>(
+            items,
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
 
         return Ok(response);
     }

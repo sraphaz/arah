@@ -1,5 +1,7 @@
 using Araponga.Api.Contracts.Alerts;
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Health;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +68,57 @@ public sealed class AlertsController : ControllerBase
             alert.Description,
             alert.Status.ToString().ToUpperInvariant(),
             alert.CreatedAtUtc));
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista alertas do território ativo (paginado).
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResponse<AlertResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<AlertResponse>>> GetAlertsPaged(
+        [FromQuery] Guid? territoryId,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
+        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _healthService.ListAlertsPagedAsync(resolvedTerritoryId.Value, pagination, cancellationToken);
+
+        var response = new PagedResponse<AlertResponse>(
+            pagedResult.Items.Select(alert => new AlertResponse(
+                alert.Id,
+                alert.Title,
+                alert.Description,
+                alert.Status.ToString().ToUpperInvariant(),
+                alert.CreatedAtUtc)).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
 
         return Ok(response);
     }

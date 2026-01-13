@@ -1,5 +1,7 @@
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Map;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Assets;
@@ -89,6 +91,59 @@ public sealed class MapController : ControllerBase
                 entity.Visibility.ToString().ToUpperInvariant(),
                 entity.ConfirmationCount,
                 entity.CreatedAtUtc));
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista entidades do mapa do território (paginado).
+    /// </summary>
+    [HttpGet("entities/paged")]
+    [ProducesResponseType(typeof(PagedResponse<MapEntityResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<MapEntityResponse>>> GetEntitiesPaged(
+        [FromQuery] Guid? territoryId,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _mapService.ListEntitiesPagedAsync(
+            resolvedTerritoryId.Value,
+            userContext.User?.Id,
+            pagination,
+            cancellationToken);
+
+        var response = new PagedResponse<MapEntityResponse>(
+            pagedResult.Items.Select(entity => new MapEntityResponse(
+                entity.Id,
+                entity.Name,
+                entity.Category,
+                entity.Latitude,
+                entity.Longitude,
+                entity.Status.ToString().ToUpperInvariant(),
+                entity.Visibility.ToString().ToUpperInvariant(),
+                entity.ConfirmationCount,
+                entity.CreatedAtUtc)).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
 
         return Ok(response);
     }

@@ -81,6 +81,21 @@ Adicionados 21 métodos paginados em 11 services, seguindo o padrão `PagedResul
 - `backend/Araponga.Application/Services/HealthService.cs`
 - `backend/Araponga.Application/Services/PlatformFeeService.cs`
 
+### Controllers (Endpoints Paginados)
+- `backend/Araponga.Api/Controllers/FeedController.cs` - 2 endpoints paginados
+- `backend/Araponga.Api/Controllers/TerritoriesController.cs` - 3 endpoints paginados
+- `backend/Araponga.Api/Controllers/MapController.cs` - 1 endpoint paginado
+- `backend/Araponga.Api/Controllers/EventsController.cs` - 2 endpoints paginados
+- `backend/Araponga.Api/Controllers/ListingsController.cs` - 1 endpoint paginado
+- `backend/Araponga.Api/Controllers/AssetsController.cs` - 1 endpoint paginado
+- `backend/Araponga.Api/Controllers/InquiriesController.cs` - 2 endpoints paginados
+- `backend/Araponga.Api/Controllers/AlertsController.cs` - 1 endpoint paginado
+- `backend/Araponga.Api/Controllers/ModerationController.cs` - 1 endpoint paginado
+- `backend/Araponga.Api/Controllers/JoinRequestsController.cs` - 1 endpoint paginado
+
+### Contratos
+- `backend/Araponga.Api/Contracts/Common/PagedResponse.cs` - Novo contrato para respostas paginadas
+
 ### Developer Portal (Encoding e Configuração)
 - `docs/devportal/index.html`
 - `backend/Araponga.Api/wwwroot/devportal/index.html`
@@ -93,8 +108,9 @@ Adicionados 21 métodos paginados em 11 services, seguindo o padrão `PagedResul
 
 ### Paginação
 - ✅ Build sem erros
-- ✅ Métodos paginados implementados e funcionando
-- ⏳ Testes unitários podem ser adicionados em PR futuro
+- ✅ Métodos paginados implementados e funcionando (21 métodos)
+- ✅ Endpoints paginados adicionados nos controllers (14 endpoints)
+- ✅ Testes unitários adicionados (2 novos testes, 121 testes passando)
 
 ### Encoding
 - ✅ Arquivos re-salvos com UTF-8
@@ -116,18 +132,21 @@ Adicionados 21 métodos paginados em 11 services, seguindo o padrão `PagedResul
 ## Próximos Passos
 
 Após merge deste PR:
-1. Atualizar controllers para expor endpoints paginados (opcional, PR separado)
-2. Adicionar testes unitários para métodos paginados
+1. ✅ Atualizar controllers para expor endpoints paginados - **CONCLUÍDO**
+2. ✅ Adicionar testes unitários para métodos paginados - **CONCLUÍDO**
 3. Validar encoding no navegador após deploy
 4. Configurar DNS para `devportal.araponga.app` (se necessário)
 
 ## Checklist
 
 ### Paginação
-- [x] 21 métodos paginados implementados
+- [x] 21 métodos paginados implementados nos services
+- [x] 14 endpoints paginados adicionados nos controllers
+- [x] Contrato PagedResponse criado
 - [x] Padrão consistente aplicado
 - [x] Métodos originais mantidos
 - [x] Build sem erros
+- [x] Testes adicionados (121 testes passando)
 
 ### Encoding
 - [x] Arquivos re-salvos com UTF-8

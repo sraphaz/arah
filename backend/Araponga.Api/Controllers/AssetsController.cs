@@ -1,5 +1,7 @@
 using Araponga.Api.Contracts.Assets;
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Araponga.Domain.Assets;
@@ -88,6 +90,68 @@ public sealed class AssetsController : ControllerBase
             cancellationToken);
 
         var response = assets.Select(ToResponse).ToList();
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Lista assets do território (paginado).
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResponse<AssetResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<AssetResponse>>> GetAssetsPaged(
+        [FromQuery] Guid? territoryId,
+        [FromQuery(Name = "types")] string? types,
+        [FromQuery] string? status,
+        [FromQuery] string? search,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
+        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
+        {
+            return Unauthorized();
+        }
+
+        var statusFilter = ParseStatus(status);
+        if (status is not null && statusFilter is null)
+        {
+            return BadRequest(new { error = "Invalid status." });
+        }
+        var typeList = ParseCsv(types);
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _assetService.ListPagedAsync(
+            resolvedTerritoryId.Value,
+            typeList,
+            statusFilter,
+            search,
+            pagination,
+            cancellationToken);
+
+        var response = new PagedResponse<AssetResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+
         return Ok(response);
     }
 

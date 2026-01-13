@@ -1,5 +1,7 @@
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Events;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
@@ -205,6 +207,52 @@ public sealed class EventsController : ControllerBase
     }
 
     /// <summary>
+    /// Lista eventos do território (paginado).
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResponse<EventResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<EventResponse>>> ListEventsPaged(
+        [FromQuery] Guid territoryId,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        [FromQuery] string? status,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        EventStatus? parsedStatus = null;
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            if (!Enum.TryParse<EventStatus>(status, true, out var parsed))
+            {
+                return BadRequest(new { error = "Invalid status." });
+            }
+
+            parsedStatus = parsed;
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _eventsService.ListEventsPagedAsync(territoryId, from, to, parsedStatus, pagination, cancellationToken);
+        var response = new PagedResponse<EventResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Lista eventos próximos de uma coordenada.
     /// </summary>
     [HttpGet("nearby")]
@@ -236,6 +284,53 @@ public sealed class EventsController : ControllerBase
             cancellationToken);
 
         return Ok(events.Select(ToResponse));
+    }
+
+    /// <summary>
+    /// Lista eventos próximos de uma coordenada (paginado).
+    /// </summary>
+    [HttpGet("nearby/paged")]
+    [ProducesResponseType(typeof(PagedResponse<EventResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<EventResponse>>> GetNearbyEventsPaged(
+        [FromQuery] double latitude,
+        [FromQuery] double longitude,
+        [FromQuery] double radiusKm,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        [FromQuery] Guid? territoryId,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _eventsService.GetEventsNearbyPagedAsync(
+            latitude,
+            longitude,
+            radiusKm,
+            from,
+            to,
+            territoryId,
+            pagination,
+            cancellationToken);
+
+        var response = new PagedResponse<EventResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+
+        return Ok(response);
     }
 
     private static EventResponse ToResponse(Application.Models.EventSummary summary)

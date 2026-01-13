@@ -3,6 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
 using Araponga.Infrastructure.InMemory;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Araponga.Tests.Application;
 
@@ -13,7 +14,8 @@ public static class FeedServiceTestHelper
         IEventBus? eventBus = null)
     {
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var cache = new MemoryCache(new MemoryCacheOptions());
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore), cache);
         var featureFlags = new InMemoryFeatureFlagService();
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);

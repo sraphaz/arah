@@ -9,15 +9,25 @@ public sealed class TerritoryService
 {
     private readonly ITerritoryRepository _territoryRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly TerritoryCacheService? _cacheService;
 
-    public TerritoryService(ITerritoryRepository territoryRepository, IUnitOfWork unitOfWork)
+    public TerritoryService(
+        ITerritoryRepository territoryRepository,
+        IUnitOfWork unitOfWork,
+        TerritoryCacheService? cacheService = null)
     {
         _territoryRepository = territoryRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task<IReadOnlyList<Territory>> ListAvailableAsync(CancellationToken cancellationToken)
     {
+        if (_cacheService is not null)
+        {
+            return await _cacheService.GetActiveTerritoriesAsync(cancellationToken);
+        }
+
         var territories = await _territoryRepository.ListAsync(cancellationToken);
         return territories
             .Where(t => t.Status == TerritoryStatus.Active)
@@ -68,6 +78,9 @@ public sealed class TerritoryService
 
         await _territoryRepository.AddAsync(territory, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidate cache when territory is created
+        _cacheService?.InvalidateActiveTerritories();
 
         return new TerritoryCreationResult(true, null, territory);
     }

@@ -1,5 +1,7 @@
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Marketplace;
 using Araponga.Api.Security;
+using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
 using Microsoft.AspNetCore.Mvc;
@@ -264,6 +266,80 @@ public sealed class ListingsController : ControllerBase
             cancellationToken);
 
         var response = listings.Select(ToResponse).ToList();
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Busca listings no território (paginado).
+    /// </summary>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResponse<ListingResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PagedResponse<ListingResponse>>> SearchListingsPaged(
+        [FromQuery] Guid territoryId,
+        [FromQuery] string? type,
+        [FromQuery] string? q,
+        [FromQuery] string? category,
+        [FromQuery] string? tags,
+        [FromQuery] string? status,
+        CancellationToken cancellationToken,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        if (territoryId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId is required." });
+        }
+
+        ListingType? parsedType = null;
+        if (!string.IsNullOrWhiteSpace(type))
+        {
+            if (!TryParseListingType(type, out var resolvedType))
+            {
+                return BadRequest(new { error = "Invalid type." });
+            }
+
+            parsedType = resolvedType;
+        }
+
+        ListingStatus? parsedStatus = ListingStatus.Active;
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            if (!TryParseListingStatus(status, out var resolvedStatus))
+            {
+                return BadRequest(new { error = "Invalid status." });
+            }
+
+            parsedStatus = resolvedStatus;
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var pagedResult = await _listingService.SearchListingsPagedAsync(
+            territoryId,
+            parsedType,
+            q,
+            category,
+            tags,
+            parsedStatus,
+            pagination,
+            cancellationToken);
+
+        var response = new PagedResponse<ListingResponse>(
+            pagedResult.Items.Select(ToResponse).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount,
+            pagedResult.TotalPages,
+            pagedResult.HasPreviousPage,
+            pagedResult.HasNextPage);
+
         return Ok(response);
     }
 

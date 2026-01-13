@@ -76,7 +76,20 @@
 - Apenas usuários com `role=CURATOR` podem validar.
 - A ação registra auditoria.
 
----
+### US-S04 — Solicitar aprovação para virar morador confirmado
+**Como** visitante autenticado
+**Quero** solicitar a confirmação como morador escolhendo destinatários específicos
+**Para** ingressar na comunidade sem broadcast para todo o território
+
+**Critérios de aceite**
+- Quando enviar `POST /territories/{id}/join-requests` com `recipientUserIds[1..N]`, a API cria um pedido `PENDING`.
+- Apenas moradores confirmados do território ou curadores podem ser destinatários.
+- O pedido não gera post no feed nem broadcast.
+- `GET /join-requests/incoming?status=pending` retorna apenas pedidos onde o usuário é destinatário.
+- Destinatários (ou curadores) podem aprovar/rejeitar via `POST /join-requests/{id}/approve|reject`.
+- Ao aprovar, o requester recebe membership `RESIDENT` com `VERIFICATION_STATUS=VALIDATED`.
+
+--- 
 
 ## Epic: Feed Comunitário
 

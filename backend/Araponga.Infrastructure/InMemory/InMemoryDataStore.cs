@@ -5,6 +5,7 @@ using Araponga.Domain.Health;
 using Araponga.Domain.Map;
 using Araponga.Domain.Moderation;
 using Araponga.Domain.Social;
+using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 
@@ -193,4 +194,6 @@ public sealed class InMemoryDataStore
     public List<Sanction> Sanctions { get; } = new();
     public List<OutboxMessage> OutboxMessages { get; } = new();
     public List<UserNotification> UserNotifications { get; } = new();
+    public List<TerritoryJoinRequest> TerritoryJoinRequests { get; } = new();
+    public List<TerritoryJoinRequestRecipient> TerritoryJoinRequestRecipients { get; } = new();
 }

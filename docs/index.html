@@ -97,15 +97,17 @@
           <div class="card">
             <h3>Pedido de moradia</h3>
             <p>
-              Para virar morador, o usuário declara <code>role=Resident</code>. O vínculo fica
-              <strong>PENDING</strong> até passar pela aprovação comunitária.
+              Para virar morador, o visitante envia um pedido direcionado via
+              <code>POST /api/v1/territories/{territoryId}/join-requests</code> escolhendo
+              destinatários (moradores validados ou curadores). O pedido não vira broadcast no feed.
             </p>
           </div>
           <div class="card">
             <h3>Aprovação comunitária</h3>
             <p>
-              Apenas moradores <strong>VALIDATED</strong> do território podem aprovar pedidos via
-              <code>PATCH /api/v1/territories/{territoryId}/membership/{membershipId}/validation</code>.
+              Destinatários (ou curadores) aprovam/rejeitam via
+              <code>POST /api/v1/join-requests/{id}/approve|reject</code>. Ao aprovar, o requester
+              torna-se <strong>RESIDENT</strong> com status <strong>VALIDATED</strong>.
             </p>
           </div>
           <div class="card">
@@ -328,10 +330,13 @@
         <div class="flow-step">
           <h4>7. Membership: visitor → resident</h4>
           <p>
-            <code>POST /api/v1/territories/{territoryId}/membership</code> declara vínculo. A validação
-            (morador) é feita por moradores validados em <code>/validation</code>. O status atual está em
+            O visitante solicita aprovação via
+            <code>POST /api/v1/territories/{territoryId}/join-requests</code> com destinatários escolhidos.
+            Destinatários (ou curadores) aprovam em
+            <code>POST /api/v1/join-requests/{id}/approve</code>, promovendo para
+            <strong>RESIDENT</strong>/<strong>VALIDATED</strong>. O status atual está em
             <code>GET /api/v1/territories/{territoryId}/membership/me</code>. Se não houver morador validado,
-            o primeiro residente é autoaprovado como fundador.
+            o primeiro residente declarado é autoaprovado como fundador.
             Quando a policy exige presença, envie <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code>.
           </p>
         </div>

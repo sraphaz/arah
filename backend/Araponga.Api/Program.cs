@@ -176,12 +176,16 @@ app.UseStaticFiles(new StaticFileOptions
 // Importante: como você está rodando só em HTTP, removemos o redirect p/ HTTPS para não gerar warning.
 // app.UseHttpsRedirection();
 
-// Correlation ID middleware (deve vir antes do request logging)
+// IMPORTANTE: No ASP.NET Core, middlewares são executados na ordem inversa de registro (LIFO)
+// O último UseMiddleware registrado é o primeiro a ser executado na pipeline
+// Portanto, registramos na ordem inversa da execução desejada
+
+// Correlation ID middleware - registrado por último, executa PRIMEIRO
+// Isso garante que o correlation ID esteja disponível quando o RequestLoggingMiddleware executar
 app.UseMiddleware<CorrelationIdMiddleware>();
 
-// Request logging middleware (observabilidade mínima)
-var observabilityLogger = app.Services.GetRequiredService<Araponga.Application.Interfaces.IObservabilityLogger>();
-app.UseMiddleware<RequestLoggingMiddleware>(observabilityLogger);
+// Request logging middleware - registrado primeiro, executa DEPOIS do CorrelationIdMiddleware
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseAuthorization();
 

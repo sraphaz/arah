@@ -285,6 +285,84 @@ public sealed class EventsService
         return await BuildSummariesAsync(filtered, cancellationToken);
     }
 
+    public async Task<PagedResult<EventSummary>> ListEventsPagedAsync(
+        Guid territoryId,
+        DateTime? fromUtc,
+        DateTime? toUtc,
+        EventStatus? status,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var events = await _eventRepository.ListByTerritoryAsync(territoryId, fromUtc, toUtc, status, cancellationToken);
+        var summaries = await BuildSummariesAsync(events, cancellationToken);
+
+        var totalCount = summaries.Count;
+        var pagedItems = summaries
+            .OrderByDescending(s => s.Event.StartsAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<EventSummary>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
+    public async Task<PagedResult<EventSummary>> GetEventsNearbyPagedAsync(
+        double latitude,
+        double longitude,
+        double radiusKm,
+        DateTime? fromUtc,
+        DateTime? toUtc,
+        Guid? territoryId,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        if (!GeoCoordinate.IsValid(latitude, longitude))
+        {
+            return new PagedResult<EventSummary>(Array.Empty<EventSummary>(), pagination.PageNumber, pagination.PageSize, 0);
+        }
+
+        var latDelta = radiusKm / 110.574;
+        var cosLat = Math.Cos(latitude * Math.PI / 180.0);
+        var safeCos = Math.Abs(cosLat) < 0.000001 ? 0.000001 : cosLat;
+        var lngDelta = radiusKm / (111.320 * safeCos);
+
+        var minLat = latitude - latDelta;
+        var maxLat = latitude + latDelta;
+        var minLng = longitude - lngDelta;
+        var maxLng = longitude + lngDelta;
+
+        var candidates = await _eventRepository.ListByBoundingBoxAsync(
+            minLat,
+            maxLat,
+            minLng,
+            maxLng,
+            fromUtc,
+            toUtc,
+            territoryId,
+            cancellationToken);
+
+        var filtered = candidates
+            .Select(evt => new
+            {
+                Event = evt,
+                Distance = CalculateDistance(latitude, longitude, evt.Latitude, evt.Longitude)
+            })
+            .Where(item => item.Distance <= radiusKm)
+            .OrderBy(item => item.Distance)
+            .ThenBy(item => item.Event.StartsAtUtc)
+            .Select(item => item.Event)
+            .ToList();
+
+        var summaries = await BuildSummariesAsync(filtered, cancellationToken);
+        var totalCount = summaries.Count;
+        var pagedItems = summaries
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<EventSummary>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
     public async Task<IReadOnlyDictionary<Guid, EventSummary>> GetSummariesByIdsAsync(
         IReadOnlyCollection<Guid> eventIds,
         CancellationToken cancellationToken)

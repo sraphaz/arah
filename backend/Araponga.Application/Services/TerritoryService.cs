@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Territories;
@@ -88,6 +89,69 @@ public sealed class TerritoryService
         CancellationToken cancellationToken)
     {
         return FilterActiveAsync(_territoryRepository.NearbyAsync(latitude, longitude, radiusKm, limit, cancellationToken));
+    }
+
+    public async Task<PagedResult<Territory>> ListAvailablePagedAsync(
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var territories = await _territoryRepository.ListAsync(cancellationToken);
+        var activeTerritories = territories
+            .Where(t => t.Status == TerritoryStatus.Active)
+            .OrderBy(t => t.Name)
+            .ToList();
+
+        var totalCount = activeTerritories.Count;
+        var pagedItems = activeTerritories
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<Territory>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
+    public async Task<PagedResult<Territory>> SearchPagedAsync(
+        string? query,
+        string? city,
+        string? state,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var territories = await _territoryRepository.SearchAsync(query, city, state, cancellationToken);
+        var activeTerritories = territories
+            .Where(t => t.Status == TerritoryStatus.Active)
+            .OrderBy(t => t.Name)
+            .ToList();
+
+        var totalCount = activeTerritories.Count;
+        var pagedItems = activeTerritories
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<Territory>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
+    public async Task<PagedResult<Territory>> NearbyPagedAsync(
+        double latitude,
+        double longitude,
+        double radiusKm,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var limit = pagination.PageSize * pagination.PageNumber;
+        var territories = await _territoryRepository.NearbyAsync(latitude, longitude, radiusKm, limit, cancellationToken);
+        var activeTerritories = territories
+            .Where(t => t.Status == TerritoryStatus.Active)
+            .ToList();
+
+        var totalCount = activeTerritories.Count;
+        var pagedItems = activeTerritories
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<Territory>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
     private async Task<IReadOnlyList<Territory>> FilterActiveAsync(Task<IReadOnlyList<Territory>> task)

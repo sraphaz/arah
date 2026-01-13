@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Events;
 using Araponga.Domain.Moderation;
@@ -176,6 +177,26 @@ public sealed class ReportService
         CancellationToken cancellationToken)
     {
         return _reportRepository.ListAsync(territoryId, targetType, status, fromUtc, toUtc, cancellationToken);
+    }
+
+    public async Task<PagedResult<ModerationReport>> ListPagedAsync(
+        Guid territoryId,
+        ReportTargetType? targetType,
+        ReportStatus? status,
+        DateTime? fromUtc,
+        DateTime? toUtc,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var reports = await _reportRepository.ListAsync(territoryId, targetType, status, fromUtc, toUtc, cancellationToken);
+        var totalCount = reports.Count;
+        var pagedItems = reports
+            .OrderByDescending(r => r.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<ModerationReport>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
     private async Task EvaluatePostThresholdAsync(

@@ -58,6 +58,46 @@ public sealed class MapService
             : visibleEntities.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
     }
 
+    public async Task<PagedResult<MapEntity>> ListEntitiesPagedAsync(
+        Guid territoryId,
+        Guid? userId,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var entities = await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        var blockedUserIds = userId is null
+            ? Array.Empty<Guid>()
+            : await _userBlockRepository.GetBlockedUserIdsAsync(userId.Value, cancellationToken);
+
+        var visibleEntities = blockedUserIds.Count == 0
+            ? entities
+            : entities.Where(entity => !blockedUserIds.Contains(entity.CreatedByUserId)).ToList();
+
+        IReadOnlyList<MapEntity> filtered;
+        if (userId is null)
+        {
+            filtered = visibleEntities
+                .Where(entity => entity.Visibility == MapEntityVisibility.Public)
+                .ToList();
+        }
+        else
+        {
+            var isResident = await _accessEvaluator.IsResidentAsync(userId.Value, territoryId, cancellationToken);
+            filtered = isResident
+                ? visibleEntities.ToList()
+                : visibleEntities.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
+        }
+
+        var totalCount = filtered.Count;
+        var pagedItems = filtered
+            .OrderByDescending(e => e.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<MapEntity>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
     public async Task<Result<MapEntity>> SuggestAsync(
         Guid territoryId,
         Guid userId,

@@ -2,23 +2,21 @@
 
 ## Visão geral
 
-O portal técnico do Araponga fica em `https://araponga.eco.br/` e é servido pelo GitHub Pages a partir da pasta `docs/`.
-A apresentação pública (landing) usa o domínio `https://araponga.app/`, com a identidade visual e metadados definidos neste repositório.
+A apresentação pública (landing) usa o domínio `https://araponga.app/`, servida como página estática no Gamma.
+O Developer Portal fica em `https://devportal.araponga.app/` e é servido pelo GitHub Pages.
 
-## Domínios adquiridos
+## Domínios públicos
 
-- `araponga.eco.br` → portal técnico (GitHub Pages).
-- `araponga.app` → landing pública.
-- `araponga.org` → redireciona para `https://araponga.eco.br/`.
+- `araponga.app` → landing pública (página estática no Gamma).
+- `devportal.araponga.app` → Developer Portal (GitHub Pages, servido diretamente).
 
 ## Lógica de publicação e navegação
 
-- O `docs/index.html` exibe links estáticos para `araponga.app` (página estática no Gamma) e `/devportal/` (Developer Portal).
 - **Sem redirects automáticos**: A navegação é feita apenas através de links clicáveis pelo usuário.
 - O Developer Portal sempre exibe um banner com link para voltar ao `araponga.app`.
-- Ajustes de DNS e redirects externos (ex: `araponga.org` → `araponga.eco.br`) são feitos no provedor de domínio.
+- Não existe página intermediária - o Developer Portal é servido diretamente em `devportal.araponga.app`.
 
 ## Validação rápida
 
-- Abra `https://araponga.eco.br/` e confirme que o redirecionamento leva para a landing pública.
-- Verifique se o retorno para o portal técnico funciona com o parâmetro `?fromLanding=1`.
+- Abra `https://araponga.app/` e confirme que é a landing pública.
+- Abra `https://devportal.araponga.app/` e confirme que é o Developer Portal completo.

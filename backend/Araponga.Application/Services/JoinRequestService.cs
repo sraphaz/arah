@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Social;
@@ -144,6 +145,48 @@ public sealed class JoinRequestService
                 request.Message,
                 request.CreatedAtUtc))
             .ToList();
+    }
+
+    public async Task<PagedResult<IncomingJoinRequest>> ListIncomingPagedAsync(
+        Guid recipientUserId,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var requests = await _joinRequestRepository.ListIncomingAsync(
+            recipientUserId,
+            TerritoryJoinRequestStatus.Pending,
+            cancellationToken);
+
+        var requesterIds = requests.Select(request => request.RequesterUserId).Distinct().ToList();
+        var requesterLookup = new Dictionary<Guid, string>();
+
+        foreach (var requesterId in requesterIds)
+        {
+            var user = await _userRepository.GetByIdAsync(requesterId, cancellationToken);
+            if (user is not null)
+            {
+                requesterLookup[requesterId] = user.DisplayName;
+            }
+        }
+
+        var incomingRequests = requests
+            .Select(request => new IncomingJoinRequest(
+                request.Id,
+                request.TerritoryId,
+                request.RequesterUserId,
+                requesterLookup.GetValueOrDefault(request.RequesterUserId, string.Empty),
+                request.Message,
+                request.CreatedAtUtc))
+            .ToList();
+
+        var totalCount = incomingRequests.Count;
+        var pagedItems = incomingRequests
+            .OrderByDescending(r => r.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<IncomingJoinRequest>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
     public async Task<JoinRequestDecisionResult> ApproveAsync(

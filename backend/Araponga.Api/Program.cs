@@ -166,9 +166,13 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.WebRootPath, "devportal")),
     OnPrepareResponse = context =>
     {
-        if (string.Equals(context.File.Name, "index.html", StringComparison.OrdinalIgnoreCase))
+        var fileName = context.File.Name;
+        var extension = Path.GetExtension(fileName);
+        if (string.Equals(fileName, "index.html", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(extension, ".html", StringComparison.OrdinalIgnoreCase))
         {
             context.Context.Response.ContentType = "text/html; charset=utf-8";
+            context.Context.Response.Headers.Append("Content-Type", "text/html; charset=utf-8");
         }
     }
 });

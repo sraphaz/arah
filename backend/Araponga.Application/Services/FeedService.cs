@@ -56,6 +56,22 @@ public sealed class FeedService
         return _feedRepository.ListByAuthorAsync(userId, cancellationToken);
     }
 
+    public async Task<Common.PagedResult<CommunityPost>> ListForUserPagedAsync(
+        Guid userId,
+        Common.PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var posts = await _feedRepository.ListByAuthorAsync(userId, cancellationToken);
+        var totalCount = posts.Count;
+        var pagedItems = posts
+            .OrderByDescending(p => p.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new Common.PagedResult<CommunityPost>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
     public Task<Result<CommunityPost>> CreatePostAsync(
         Guid territoryId,
         Guid userId,

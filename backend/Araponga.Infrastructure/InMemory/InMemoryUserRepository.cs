@@ -43,6 +43,21 @@ public sealed class InMemoryUserRepository : IUserRepository
         return Task.CompletedTask;
     }
 
+    public Task UpdateAsync(User user, CancellationToken cancellationToken)
+    {
+        var index = _dataStore.Users.FindIndex(u => u.Id == user.Id);
+        if (index >= 0)
+        {
+            _dataStore.Users[index] = user;
+        }
+        else
+        {
+            _dataStore.Users.Add(user);
+        }
+
+        return Task.CompletedTask;
+    }
+
     public Task<IReadOnlyList<User>> ListByIdsAsync(
         IReadOnlyCollection<Guid> userIds,
         CancellationToken cancellationToken)

@@ -52,6 +52,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<InquiryService>();
         services.AddScoped<PlatformFeeService>();
         services.AddScoped<CartService>();
+        services.AddScoped<UserPreferencesService>();
+        services.AddScoped<UserProfileService>();
 
         return services;
     }
@@ -132,6 +134,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICheckoutRepository, PostgresCheckoutRepository>();
         services.AddScoped<ICheckoutItemRepository, PostgresCheckoutItemRepository>();
         services.AddScoped<IPlatformFeeConfigRepository, PostgresPlatformFeeConfigRepository>();
+        services.AddScoped<IUserPreferencesRepository, PostgresUserPreferencesRepository>();
 
         return services;
     }
@@ -170,6 +173,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICheckoutRepository, InMemoryCheckoutRepository>();
         services.AddSingleton<ICheckoutItemRepository, InMemoryCheckoutItemRepository>();
         services.AddSingleton<IPlatformFeeConfigRepository, InMemoryPlatformFeeConfigRepository>();
+        services.AddSingleton<IUserPreferencesRepository, InMemoryUserPreferencesRepository>();
 
         return services;
     }

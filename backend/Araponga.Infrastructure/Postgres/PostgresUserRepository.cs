@@ -49,6 +49,22 @@ public sealed class PostgresUserRepository : IUserRepository
         return Task.CompletedTask;
     }
 
+    public async Task UpdateAsync(User user, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == user.Id, cancellationToken);
+
+        if (record is null)
+        {
+            _dbContext.Users.Add(user.ToRecord());
+        }
+        else
+        {
+            var updatedRecord = user.ToRecord();
+            _dbContext.Entry(record).CurrentValues.SetValues(updatedRecord);
+        }
+    }
+
     public async Task<IReadOnlyList<User>> ListByIdsAsync(
         IReadOnlyCollection<Guid> userIds,
         CancellationToken cancellationToken)

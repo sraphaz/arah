@@ -2,6 +2,7 @@
 
 ## Entidades principais
 - **User**
+- **UserPreferences** (preferências de privacidade e notificações do usuário)
 - **Territory**
 - **UserTerritoryLink** (vínculo visitor/resident, status pending/approved)
 - **Post** (territoryId, authorId, visibility, status)
@@ -16,6 +17,7 @@
 - **UserNotification** (userId, title, body, kind, dataJson, createdAt, readAt, sourceOutboxId)
 
 ## Relacionamentos (alto nível)
+- **User 1..1 UserPreferences** → preferências de privacidade e notificações.
 - **User 1..N UserTerritoryLink** → vínculo com territórios.
 - **Territory 1..N UserTerritoryLink** → vínculos de presença.
 - **User 1..N Post** → autor das postagens.
@@ -34,6 +36,6 @@
 - **User 1..N UserNotification** → inbox de notificações do usuário.
 
 ## Observações de MVP vs Pós-MVP
-- [MVP] UserTerritoryLink, Post, PostGeoAnchor, MapEntity, MapEntityRelation, Report, Sanction, OutboxMessage, UserNotification.
+- [MVP] UserTerritoryLink, Post, PostGeoAnchor, MapEntity, MapEntityRelation, Report, Sanction, OutboxMessage, UserNotification, UserPreferences.
 - [POST-MVP] Media e FriendRelation.
 - [POST-MVP] FriendRelation e comportamentos de círculo interno.

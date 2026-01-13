@@ -19,6 +19,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<AccessEvaluator>();
         services.AddScoped<CurrentUserAccessor>();
 
+        // Cache services
+        services.AddScoped<TerritoryCacheService>();
+        services.AddScoped<FeatureFlagCacheService>();
+
         // Feed services (refactored)
         services.AddScoped<PostCreationService>();
         services.AddScoped<PostInteractionService>();

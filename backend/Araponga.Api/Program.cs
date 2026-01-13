@@ -27,6 +27,9 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
+// Memory cache
+builder.Services.AddMemoryCache();
+
 // Infrastructure (repositories, unit of work, etc.)
 builder.Services.AddInfrastructure(builder.Configuration);
 

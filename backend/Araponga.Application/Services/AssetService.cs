@@ -50,6 +50,34 @@ public sealed class AssetService
         return await BuildAssetDetailsAsync(territoryId, assets, cancellationToken);
     }
 
+    public async Task<PagedResult<AssetDetails>> ListPagedAsync(
+        Guid territoryId,
+        IReadOnlyCollection<string>? types,
+        AssetStatus? status,
+        string? search,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var normalizedTypes = NormalizeTypes(types);
+        var assets = await _assetRepository.ListAsync(
+            territoryId,
+            null,
+            normalizedTypes,
+            status,
+            search,
+            cancellationToken);
+
+        var details = await BuildAssetDetailsAsync(territoryId, assets, cancellationToken);
+        var totalCount = details.Count;
+        var pagedItems = details
+            .OrderByDescending(d => d.Asset.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<AssetDetails>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
     public async Task<AssetDetails?> GetByIdAsync(Guid assetId, CancellationToken cancellationToken)
     {
         var asset = await _assetRepository.GetByIdAsync(assetId, cancellationToken);

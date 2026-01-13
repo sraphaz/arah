@@ -85,4 +85,43 @@ public sealed class InquiryService
         var storeIds = stores.Select(s => s.Id).ToList();
         return await _inquiryRepository.ListByStoreIdsAsync(storeIds, cancellationToken);
     }
+
+    public async Task<Common.PagedResult<ListingInquiry>> ListMyInquiriesPagedAsync(
+        Guid userId,
+        Common.PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var inquiries = await _inquiryRepository.ListByUserAsync(userId, cancellationToken);
+        var totalCount = inquiries.Count;
+        var pagedItems = inquiries
+            .OrderByDescending(i => i.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new Common.PagedResult<ListingInquiry>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
+    public async Task<Common.PagedResult<ListingInquiry>> ListReceivedInquiriesPagedAsync(
+        Guid ownerUserId,
+        Common.PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var stores = await _storeRepository.ListByOwnerAsync(ownerUserId, cancellationToken);
+        if (stores.Count == 0)
+        {
+            return new Common.PagedResult<ListingInquiry>(Array.Empty<ListingInquiry>(), pagination.PageNumber, pagination.PageSize, 0);
+        }
+
+        var storeIds = stores.Select(s => s.Id).ToList();
+        var inquiries = await _inquiryRepository.ListByStoreIdsAsync(storeIds, cancellationToken);
+        var totalCount = inquiries.Count;
+        var pagedItems = inquiries
+            .OrderByDescending(i => i.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new Common.PagedResult<ListingInquiry>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
 }

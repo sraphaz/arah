@@ -190,6 +190,27 @@ public sealed class ListingService
         return _listingRepository.SearchAsync(territoryId, type, query, category, tags, status, cancellationToken);
     }
 
+    public async Task<PagedResult<StoreListing>> SearchListingsPagedAsync(
+        Guid territoryId,
+        ListingType? type,
+        string? query,
+        string? category,
+        string? tags,
+        ListingStatus? status,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var listings = await _listingRepository.SearchAsync(territoryId, type, query, category, tags, status, cancellationToken);
+        var totalCount = listings.Count;
+        var pagedItems = listings
+            .OrderByDescending(l => l.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<StoreListing>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
     private async Task<bool> CanManageStoreAsync(TerritoryStore store, Guid userId, CancellationToken cancellationToken)
     {
         if (store.OwnerUserId == userId)

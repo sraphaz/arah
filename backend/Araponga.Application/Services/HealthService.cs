@@ -29,6 +29,22 @@ public sealed class HealthService
         return _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
     }
 
+    public async Task<PagedResult<HealthAlert>> ListAlertsPagedAsync(
+        Guid territoryId,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var alerts = await _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
+        var totalCount = alerts.Count;
+        var pagedItems = alerts
+            .OrderByDescending(a => a.CreatedAtUtc)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<HealthAlert>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
     public async Task<Result<HealthAlert>> ReportAlertAsync(
         Guid territoryId,
         Guid userId,

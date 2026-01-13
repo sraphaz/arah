@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Marketplace;
 
@@ -25,6 +26,22 @@ public sealed class PlatformFeeService
     public Task<IReadOnlyList<PlatformFeeConfig>> ListActiveAsync(Guid territoryId, CancellationToken cancellationToken)
     {
         return _configRepository.ListActiveAsync(territoryId, cancellationToken);
+    }
+
+    public async Task<PagedResult<PlatformFeeConfig>> ListActivePagedAsync(
+        Guid territoryId,
+        PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var configs = await _configRepository.ListActiveAsync(territoryId, cancellationToken);
+        var totalCount = configs.Count;
+        var pagedItems = configs
+            .OrderBy(c => c.ListingType)
+            .Skip(pagination.Skip)
+            .Take(pagination.Take)
+            .ToList();
+
+        return new PagedResult<PlatformFeeConfig>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
     public async Task<PlatformFeeConfig> UpsertFeeConfigAsync(

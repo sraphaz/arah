@@ -40,11 +40,12 @@
     - Feed do território lista posts associados ao território.
     - Posts podem ter 0..N GeoAnchors; sem geo, o post só aparece no feed.
     - Sem vínculo válido, o usuário recebe orientação para declarar vínculo.
-- [MVP] **Eventos com aprovação de moradores**
+- [MVP] **Eventos do território (abertos)**
   - Critérios de aceite:
-    - Moradores publicam eventos diretamente.
-    - Visitantes publicam eventos com status pendente.
-    - Moradores aprovam ou rejeitam eventos pendentes.
+    - Visitantes e moradores podem criar eventos com data/hora e local obrigatório.
+    - Evento registra se o criador era visitante ou morador no momento da criação.
+    - Participações Interested/Confirmed são registradas.
+    - Eventos aparecem no feed e no mapa via filtros.
 - [MVP] **Feed pessoal do usuário**
   - Critérios de aceite:
     - Usuário vê seus próprios posts em um feed pessoal.

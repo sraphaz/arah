@@ -14,17 +14,20 @@ namespace Araponga.Api.Controllers;
 public sealed class FeedController : ControllerBase
 {
     private readonly FeedService _feedService;
+    private readonly EventsService _eventsService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ActiveTerritoryService _activeTerritoryService;
     private readonly AccessEvaluator _accessEvaluator;
 
     public FeedController(
         FeedService feedService,
+        EventsService eventsService,
         CurrentUserAccessor currentUserAccessor,
         ActiveTerritoryService activeTerritoryService,
         AccessEvaluator accessEvaluator)
     {
         _feedService = feedService;
+        _eventsService = eventsService;
         _currentUserAccessor = currentUserAccessor;
         _activeTerritoryService = activeTerritoryService;
         _accessEvaluator = accessEvaluator;
@@ -65,11 +68,13 @@ public sealed class FeedController : ControllerBase
             assetId,
             cancellationToken);
 
+        var eventLookup = await LoadEventSummariesAsync(posts, cancellationToken);
         var response = new List<FeedItemResponse>();
         foreach (var post in posts)
         {
             var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
             var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var eventSummary = ResolveEventSummary(post, eventLookup);
 
             response.Add(new FeedItemResponse(
                 post.Id,
@@ -79,6 +84,7 @@ public sealed class FeedController : ControllerBase
                 post.Visibility.ToString().ToUpperInvariant(),
                 post.Status.ToString().ToUpperInvariant(),
                 post.MapEntityId,
+                eventSummary,
                 post.Type == PostType.Alert,
                 likeCount,
                 shareCount,
@@ -104,11 +110,13 @@ public sealed class FeedController : ControllerBase
         }
 
         var posts = await _feedService.ListForUserAsync(userContext.User.Id, cancellationToken);
+        var eventLookup = await LoadEventSummariesAsync(posts, cancellationToken);
         var response = new List<FeedItemResponse>();
         foreach (var post in posts)
         {
             var likeCount = await _feedService.GetLikeCountAsync(post.Id, cancellationToken);
             var shareCount = await _feedService.GetShareCountAsync(post.Id, cancellationToken);
+            var eventSummary = ResolveEventSummary(post, eventLookup);
 
             response.Add(new FeedItemResponse(
                 post.Id,
@@ -118,6 +126,7 @@ public sealed class FeedController : ControllerBase
                 post.Visibility.ToString().ToUpperInvariant(),
                 post.Status.ToString().ToUpperInvariant(),
                 post.MapEntityId,
+                eventSummary,
                 post.Type == PostType.Alert,
                 likeCount,
                 shareCount,
@@ -161,7 +170,7 @@ public sealed class FeedController : ControllerBase
             userContext.User.Id,
             resolvedTerritoryId.Value,
             cancellationToken);
-        if (!isResident && postType != PostType.Event)
+        if (!isResident)
         {
             return Unauthorized();
         }
@@ -173,7 +182,7 @@ public sealed class FeedController : ControllerBase
             request.Content,
             postType,
             visibility,
-            isResident ? PostStatus.Published : PostStatus.PendingApproval,
+            PostStatus.Published,
             request.MapEntityId,
             request.GeoAnchors?.Select(anchor => new Application.Models.GeoAnchorInput(
                 anchor.Latitude,
@@ -195,6 +204,7 @@ public sealed class FeedController : ControllerBase
             result.post.Visibility.ToString().ToUpperInvariant(),
             result.post.Status.ToString().ToUpperInvariant(),
             result.post.MapEntityId,
+            ResolveEventSummary(result.post, new Dictionary<Guid, Application.Models.EventSummary>()),
             result.post.Type == PostType.Alert,
             0,
             0,
@@ -307,50 +317,53 @@ public sealed class FeedController : ControllerBase
         return result.success ? NoContent() : BadRequest(new { error = result.error });
     }
 
-    /// <summary>
-    /// Aprova ou rejeita eventos criados no território ativo.
-    /// </summary>
-    [HttpPatch("{postId:guid}/approval")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> ApproveEvent(
-        [FromRoute] Guid postId,
-        [FromQuery] Guid? territoryId,
-        [FromBody] ApproveEventRequest request,
+    private async Task<Dictionary<Guid, Application.Models.EventSummary>> LoadEventSummariesAsync(
+        IReadOnlyCollection<CommunityPost> posts,
         CancellationToken cancellationToken)
     {
-        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
-        if (resolvedTerritoryId is null)
+        var eventIds = posts
+            .Where(post => string.Equals(post.ReferenceType, "EVENT", StringComparison.OrdinalIgnoreCase))
+            .Select(post => post.ReferenceId)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
+
+        if (eventIds.Count == 0)
         {
-            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+            return new Dictionary<Guid, Application.Models.EventSummary>();
         }
 
-        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
-        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        return new Dictionary<Guid, Application.Models.EventSummary>(
+            await _eventsService.GetSummariesByIdsAsync(eventIds, cancellationToken));
+    }
+
+    private static EventSummaryResponse? ResolveEventSummary(
+        CommunityPost post,
+        IReadOnlyDictionary<Guid, Application.Models.EventSummary> eventLookup)
+    {
+        if (!string.Equals(post.ReferenceType, "EVENT", StringComparison.OrdinalIgnoreCase) ||
+            post.ReferenceId is null ||
+            !eventLookup.TryGetValue(post.ReferenceId.Value, out var summary))
         {
-            return Unauthorized();
+            return null;
         }
 
-        var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
-        if (!isResident)
-        {
-            return Unauthorized();
-        }
-
-        if (!Enum.TryParse<PostStatus>(request.Status, true, out var status))
-        {
-            return BadRequest(new { error = "Invalid status." });
-        }
-
-        var result = await _feedService.ApproveEventAsync(
-            resolvedTerritoryId.Value,
-            postId,
-            userContext.User.Id,
-            status,
-            cancellationToken);
-
-        return result.success ? NoContent() : BadRequest(new { error = result.error });
+        var evt = summary.Event;
+        return new EventSummaryResponse(
+            evt.Id,
+            evt.Title,
+            evt.StartsAtUtc,
+            evt.EndsAtUtc,
+            evt.Latitude,
+            evt.Longitude,
+            evt.LocationLabel,
+            evt.Status.ToString().ToUpperInvariant(),
+            evt.CreatedByUserId,
+            summary.CreatedByDisplayName,
+            evt.CreatedByMembership.ToString().ToUpperInvariant(),
+            summary.InterestedCount,
+            summary.ConfirmedCount);
     }
 
     private string? GetSessionId()

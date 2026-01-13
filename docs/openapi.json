@@ -792,62 +792,6 @@
         }
       }
     },
-    "/api/v1/feed/{postId}/approval": {
-      "patch": {
-        "tags": [
-          "Feed"
-        ],
-        "summary": "Aprova ou rejeita eventos criados no território ativo.",
-        "parameters": [
-          {
-            "name": "postId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "territoryId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "nullable": true
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApproveEventRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
     "/api/v1/map/entities": {
       "get": {
         "tags": [

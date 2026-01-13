@@ -170,7 +170,7 @@
           <div class="card">
             <h3>Feature flags por território</h3>
             <p>
-              Cada território pode habilitar flags como <strong>AlertPosts</strong> e <strong>EventPosts</strong>
+              Cada território pode habilitar flags como <strong>AlertPosts</strong>
               em <code>/api/v1/territories/{territoryId}/features</code>. Elas controlam quais tipos de post são aceitos.
             </p>
           </div>
@@ -215,7 +215,7 @@
               <li><strong>Reports</strong> e <strong>Blocks</strong> modulam visibilidade e segurança.</li>
               <li><strong>OutboxMessage</strong> garante a intenção de notificar em transações confiáveis.</li>
               <li><strong>UserNotification</strong> compõe o inbox in-app por usuário.</li>
-              <li><strong>Feature Flags</strong> habilitam tipos de post por território (AlertPosts/EventPosts).</li>
+              <li><strong>Feature Flags</strong> habilitam tipos de post por território (AlertPosts).</li>
             </ul>
           </div>
           <div class="card">
@@ -288,8 +288,8 @@
           <h4>5. Criar post + âncoras geográficas</h4>
           <p>
             Para criar post use <code>POST /api/v1/feed</code>. As âncoras geográficas são opcionais e
-            visitantes só podem criar posts do tipo <code>Event</code> (eventos pendentes de aprovação).
-            Posts podem referenciar assets via <code>assetIds</code>.
+            posts são criados por moradores. Eventos são criados via <code>POST /api/v1/events</code>,
+            com data/hora e geolocalização obrigatória, e aparecem no feed e no mapa.
           </p>
           <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/feed \
   -H "Authorization: Bearer &lt;token&gt;" \
@@ -298,10 +298,10 @@
   -d '{
     "title": "Mutirão de limpeza",
     "content": "Encontro sábado 9h.",
-    "type": "Event",
+    "type": "General",
     "visibility": "Public",
     "mapEntityId": null,
-    "geoAnchors": [{"latitude": -23.55, "longitude": -46.63, "type": "EVENT"}],
+    "geoAnchors": [{"latitude": -23.55, "longitude": -46.63, "type": "POST"}],
     "assetIds": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"]
   }'</code></pre>
         </div>

@@ -41,11 +41,13 @@ public partial class ArapongaDbContextModelSnapshot : ModelSnapshot
             entity.Property(p => p.Type).HasConversion<int>();
             entity.Property(p => p.Visibility).HasConversion<int>();
             entity.Property(p => p.Status).HasConversion<int>();
+            entity.Property(p => p.ReferenceType).HasMaxLength(40);
             entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(p => p.TerritoryId);
             entity.HasIndex(p => new { p.TerritoryId, p.CreatedAtUtc });
             entity.HasIndex(p => p.AuthorUserId);
             entity.HasIndex(p => p.MapEntityId);
+            entity.HasIndex(p => new { p.ReferenceType, p.ReferenceId });
         });
 
         modelBuilder.Entity<FeatureFlagRecord>(entity =>
@@ -66,6 +68,37 @@ public partial class ArapongaDbContextModelSnapshot : ModelSnapshot
             entity.Property(h => h.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(h => h.TerritoryId);
             entity.HasIndex(h => new { h.TerritoryId, h.Status });
+        });
+
+        modelBuilder.Entity<TerritoryEventRecord>(entity =>
+        {
+            entity.ToTable("territory_events");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(4000);
+            entity.Property(e => e.StartsAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(e => e.EndsAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(e => e.Latitude).HasColumnType("double precision");
+            entity.Property(e => e.Longitude).HasColumnType("double precision");
+            entity.Property(e => e.LocationLabel).HasMaxLength(200);
+            entity.Property(e => e.CreatedByMembership).HasConversion<string>().HasMaxLength(32);
+            entity.Property(e => e.Status).HasConversion<string>().HasMaxLength(32);
+            entity.Property(e => e.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(e => e.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(e => new { e.TerritoryId, e.StartsAtUtc });
+            entity.HasIndex(e => new { e.TerritoryId, e.Status });
+            entity.HasIndex(e => new { e.Latitude, e.Longitude });
+        });
+
+        modelBuilder.Entity<EventParticipationRecord>(entity =>
+        {
+            entity.ToTable("event_participations");
+            entity.HasKey(p => new { p.EventId, p.UserId });
+            entity.Property(p => p.Status).HasConversion<string>().HasMaxLength(32);
+            entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(p => p.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(p => new { p.EventId, p.Status });
+            entity.HasIndex(p => new { p.UserId, p.Status });
         });
 
         modelBuilder.Entity<TerritoryAssetRecord>(entity =>

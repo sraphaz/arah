@@ -510,20 +510,21 @@ public interface IFeedRepository
 ## 7. Recomendacoes Prioritarias
 
 ### Prioridade Alta
-1. **Implementar paginacao** em todos os metodos de listagem
-2. **Padronizar tratamento de erros** (Result<T> ou exceptions)
-3. **Adicionar validacao de entrada** na API (FluentValidation)
-4. **Refatorar FeedService** (quebrar em services menores)
-5. **Implementar cache** para dados frequentes
-6. **Corrigir InMemoryUnitOfWork** (adicionar rollback)
+1. ✅ **Implementar paginacao** - Criado `PagedResult<T>` e `PaginationParameters`, implementado em `FeedService.ListForTerritoryPagedAsync`
+2. ✅ **Padronizar tratamento de erros** - Criado `Result<T>` e `OperationResult` (base para migracao futura)
+3. ✅ **Adicionar validacao de entrada** - Implementado FluentValidation com `CreatePostRequestValidator` e `TerritorySelectionRequestValidator` (corrigido para usar `Enum.TryParse`)
+4. ✅ **Refatorar FeedService** - Quebrado em `PostCreationService`, `PostInteractionService` e `PostFilterService` (ADR-009)
+5. **Implementar cache** - Pendente (futuro)
+6. ✅ **Corrigir InMemoryUnitOfWork** - Documentado comportamento e compatibilidade de interface
+7. ✅ **Isolamento de Testes** - Melhorado `ApiFactory` para criar `InMemoryDataStore` isolado por instancia
 
 ### Prioridade Media
-7. **Extrair configuracao de DI** de Program.cs
-8. **Adicionar logging estruturado** com correlation ID
-9. **Implementar rate limiting**
-10. **Otimizar queries** (evitar N+1, usar projections)
-11. **Adicionar indices** estrategicos no banco
-12. **Processar eventos assincronamente**
+8. ✅ **Extrair configuracao de DI** - Extraido para `ServiceCollectionExtensions` (melhor organizacao)
+9. ✅ **Adicionar logging estruturado** - Implementado `CorrelationIdMiddleware` e `RequestLoggingMiddleware` com correlation ID
+10. **Implementar rate limiting** - Pendente (futuro)
+11. **Otimizar queries** - Pendente (futuro)
+12. **Adicionar indices** - Pendente (futuro)
+13. **Processar eventos assincronamente** - Pendente (futuro)
 
 ### Prioridade Baixa
 13. **Implementar Specification Pattern** para queries complexas

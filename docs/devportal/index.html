@@ -3,15 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Redirecionando…</title>
-    <meta http-equiv="refresh" content="0; url=/" />
-  </head>
-  <body>
+    <title>Araponga Developer Portal</title>
     <script>
+      // NÃO redirecionar se já estamos no devportal
+      // Este arquivo é servido em /devportal/, então não deve redirecionar
+      // Apenas limpar o parâmetro fromLanding se necessário para evitar loops
       (function () {
-        var search = window.location.search || '';
-        window.location.replace('/' + search);
+        var currentUrl = new URL(window.location.href);
+        var hasFromLanding = currentUrl.searchParams.has('fromLanding');
+        
+        // Se tiver fromLanding e não tiver redirectExecuted, limpar o parâmetro
+        // para evitar que o index.html da raiz tente redirecionar novamente
+        if (hasFromLanding) {
+          currentUrl.searchParams.delete('fromLanding');
+          // Usar replace para não adicionar ao histórico
+          window.history.replaceState({}, '', currentUrl.toString());
+        }
       })();
     </script>
+  </head>
+  <body>
+    <p>Developer Portal - Carregando...</p>
+    <p>Se você foi redirecionado aqui, o portal deve carregar automaticamente.</p>
   </body>
 </html>

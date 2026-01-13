@@ -18,8 +18,22 @@
     var PORTAL_URL = '/devportal/?fromLanding=1';
     var RETURN_PARAM = 'fromLanding';
     var returnFlagKey = 'landingReturnAllowed';
+    var redirectFlagKey = 'redirectExecuted';
 
     var currentUrl = new URL(window.location.href);
+    
+    // Evitar loops: se já executamos um redirect nesta sessão, não executar novamente
+    var redirectExecuted = sessionStorage.getItem(redirectFlagKey) === '1';
+    if (redirectExecuted) {
+      // Se já redirecionamos, não fazer nada (evita loop infinito)
+      return;
+    }
+
+    // Se já estamos no devportal, não redirecionar
+    if (currentUrl.pathname.startsWith('/devportal')) {
+      return;
+    }
+
     var hasReturnFlag = sessionStorage.getItem(returnFlagKey) === '1';
 
     function isFromLandingReferrer(ref) {
@@ -32,10 +46,13 @@
       }
     }
 
+    // Verificar se vem do landing APENAS pelo referrer (não pelo sessionStorage para evitar loops)
     var fromLanding =
       isFromLandingReferrer(document.referrer) ||
-      currentUrl.searchParams.get(RETURN_PARAM) === '1' ||
-      hasReturnFlag;
+      currentUrl.searchParams.get(RETURN_PARAM) === '1';
+
+    // Marcar que vamos executar um redirect
+    sessionStorage.setItem(redirectFlagKey, '1');
 
     if (fromLanding) {
       sessionStorage.setItem(returnFlagKey, '1');
@@ -43,8 +60,17 @@
       return;
     }
 
-    sessionStorage.setItem(returnFlagKey, '1');
-    window.location.replace(LANDING_ORIGIN + '/');
+    // Redirecionar para landing apenas se não tiver referrer externo
+    // Se tiver referrer externo (como Gamma), não redirecionar para evitar loops
+    var hasExternalReferrer = document.referrer && 
+      !document.referrer.startsWith(window.location.origin) &&
+      !isFromLandingReferrer(document.referrer);
+    
+    if (!hasExternalReferrer) {
+      sessionStorage.setItem(returnFlagKey, '1');
+      window.location.replace(LANDING_ORIGIN + '/');
+    }
+    // Se tem referrer externo, não redirecionar (deixa o usuário ver a página)
   })();
 </script>
 </head>

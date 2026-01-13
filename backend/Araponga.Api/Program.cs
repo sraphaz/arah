@@ -105,6 +105,8 @@ builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
     builder.Services.AddSingleton<IPlatformFeeConfigRepository, InMemoryPlatformFeeConfigRepository>();
 }
 
+builder.Services.AddSingleton<Araponga.Application.Interfaces.IObservabilityLogger, Araponga.Infrastructure.InMemory.InMemoryObservabilityLogger>();
+
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 
 builder.Services.AddScoped<IEventBus, InMemoryEventBus>();
@@ -268,6 +270,10 @@ app.UseStaticFiles(new StaticFileOptions
 
 // Importante: como você está rodando só em HTTP, removemos o redirect p/ HTTPS para não gerar warning.
 // app.UseHttpsRedirection();
+
+// Request logging middleware (observabilidade mínima)
+var observabilityLogger = app.Services.GetRequiredService<Araponga.Application.Interfaces.IObservabilityLogger>();
+app.UseMiddleware<Araponga.Api.Middleware.RequestLoggingMiddleware>(observabilityLogger);
 
 app.UseAuthorization();
 

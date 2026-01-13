@@ -106,6 +106,121 @@ public sealed class NotificationFlowTests
         Assert.NotNull(results[0].ReadAtUtc);
     }
 
+    [Fact]
+    public async Task NotificationInbox_PaginationWorks()
+    {
+        var dataStore = new InMemoryDataStore();
+        var inboxRepository = new InMemoryNotificationInboxRepository(dataStore);
+        var userId = dataStore.Users[0].Id;
+
+        // Criar múltiplas notificações
+        for (var i = 0; i < 15; i++)
+        {
+            var notification = new UserNotification(
+                Guid.NewGuid(),
+                userId,
+                $"Aviso {i}",
+                $"Conteúdo {i}",
+                "post.created",
+                null,
+                DateTime.UtcNow.AddMinutes(-i),
+                null,
+                Guid.NewGuid());
+
+            await inboxRepository.AddAsync(notification, CancellationToken.None);
+        }
+
+        // Primeira página
+        var page1 = await inboxRepository.ListByUserAsync(userId, 0, 10, CancellationToken.None);
+        Assert.Equal(10, page1.Count);
+
+        // Segunda página
+        var page2 = await inboxRepository.ListByUserAsync(userId, 10, 10, CancellationToken.None);
+        Assert.Equal(5, page2.Count);
+
+        // Verificar ordenação (mais recentes primeiro)
+        Assert.True(page1[0].CreatedAtUtc >= page1[1].CreatedAtUtc);
+    }
+
+    [Fact]
+    public async Task NotificationInbox_MarkAsReadIsIdempotent()
+    {
+        var dataStore = new InMemoryDataStore();
+        var inboxRepository = new InMemoryNotificationInboxRepository(dataStore);
+        var userId = dataStore.Users[0].Id;
+
+        var notification = new UserNotification(
+            Guid.NewGuid(),
+            userId,
+            "Aviso",
+            "Conteúdo",
+            "post.created",
+            null,
+            DateTime.UtcNow,
+            null,
+            Guid.NewGuid());
+
+        await inboxRepository.AddAsync(notification, CancellationToken.None);
+
+        // Marcar como lida primeira vez
+        var firstMark = await inboxRepository.MarkAsReadAsync(
+            notification.Id,
+            userId,
+            DateTime.UtcNow,
+            CancellationToken.None);
+        Assert.True(firstMark);
+
+        // Marcar como lida segunda vez (deve ser idempotente)
+        var secondMark = await inboxRepository.MarkAsReadAsync(
+            notification.Id,
+            userId,
+            DateTime.UtcNow.AddMinutes(1),
+            CancellationToken.None);
+        Assert.True(secondMark);
+
+        var results = await inboxRepository.ListByUserAsync(userId, 0, 10, CancellationToken.None);
+        Assert.Single(results);
+        Assert.NotNull(results[0].ReadAtUtc);
+    }
+
+    [Fact]
+    public async Task NotificationInbox_OnlyOwnerCanMarkAsRead()
+    {
+        var dataStore = new InMemoryDataStore();
+        var inboxRepository = new InMemoryNotificationInboxRepository(dataStore);
+        var ownerId = dataStore.Users[0].Id;
+        var otherUserId = Guid.NewGuid();
+
+        var notification = new UserNotification(
+            Guid.NewGuid(),
+            ownerId,
+            "Aviso",
+            "Conteúdo",
+            "post.created",
+            null,
+            DateTime.UtcNow,
+            null,
+            Guid.NewGuid());
+
+        await inboxRepository.AddAsync(notification, CancellationToken.None);
+
+        // Tentar marcar como lida com outro usuário (deve falhar)
+        var unauthorizedMark = await inboxRepository.MarkAsReadAsync(
+            notification.Id,
+            otherUserId,
+            DateTime.UtcNow,
+            CancellationToken.None);
+        Assert.False(unauthorizedMark);
+
+        // Marcar como lida com o dono (deve funcionar)
+        var authorizedMark = await inboxRepository.MarkAsReadAsync(
+            notification.Id,
+            ownerId,
+            DateTime.UtcNow,
+            CancellationToken.None);
+        Assert.True(authorizedMark);
+    }
+
     private static ServiceProvider BuildServiceProvider(InMemoryDataStore dataStore)
     {
         var services = new ServiceCollection();

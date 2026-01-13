@@ -262,4 +262,400 @@ public sealed class MarketplaceServiceTests
         Assert.Equal(3m, createdCheckout.PlatformFeeAmount);
         Assert.Equal(63m, createdCheckout.TotalAmount);
     }
+
+    [Fact]
+    public async Task StoreService_UpdateAndStatusChanges()
+    {
+        var dataStore = new InMemoryDataStore();
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var accessEvaluator = new AccessEvaluator(membershipRepository);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+
+        var createResult = await storeService.UpsertMyStoreAsync(
+            TerritoryId,
+            ResidentUserId,
+            "Loja Original",
+            "Descrição original",
+            StoreContactVisibility.Public,
+            "(11) 90000-0000",
+            null,
+            "loja@exemplo.com",
+            null,
+            null,
+            "email",
+            CancellationToken.None);
+
+        Assert.True(createResult.success);
+        var store = createResult.store!;
+
+        var updateResult = await storeService.UpdateStoreAsync(
+            store.Id,
+            ResidentUserId,
+            "Loja Atualizada",
+            "Nova descrição",
+            StoreContactVisibility.OnInquiryOnly,
+            "(11) 99999-9999",
+            null,
+            "novo@exemplo.com",
+            null,
+            null,
+            "whatsapp",
+            CancellationToken.None);
+
+        Assert.True(updateResult.success);
+        Assert.Equal("Loja Atualizada", updateResult.store!.DisplayName);
+        Assert.Equal(StoreContactVisibility.OnInquiryOnly, updateResult.store.ContactVisibility);
+
+        var pauseResult = await storeService.SetStoreStatusAsync(store.Id, ResidentUserId, StoreStatus.Paused, CancellationToken.None);
+        Assert.True(pauseResult.success);
+        Assert.Equal(StoreStatus.Paused, pauseResult.store!.Status);
+
+        var activateResult = await storeService.SetStoreStatusAsync(store.Id, ResidentUserId, StoreStatus.Active, CancellationToken.None);
+        Assert.True(activateResult.success);
+        Assert.Equal(StoreStatus.Active, activateResult.store!.Status);
+    }
+
+    [Fact]
+    public async Task StoreService_GetMyStoreReturnsNullWhenNotExists()
+    {
+        var dataStore = new InMemoryDataStore();
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var accessEvaluator = new AccessEvaluator(membershipRepository);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+
+        var store = await storeService.GetMyStoreAsync(TerritoryId, ResidentUserId, CancellationToken.None);
+        Assert.Null(store);
+    }
+
+    [Fact]
+    public async Task ListingService_UpdateAndArchive()
+    {
+        var dataStore = new InMemoryDataStore();
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var listingRepository = new InMemoryListingRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var accessEvaluator = new AccessEvaluator(membershipRepository);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var listingService = new ListingService(listingRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+
+        var storeResult = await storeService.UpsertMyStoreAsync(
+            TerritoryId,
+            ResidentUserId,
+            "Loja",
+            null,
+            StoreContactVisibility.Public,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            CancellationToken.None);
+
+        var createResult = await listingService.CreateListingAsync(
+            TerritoryId,
+            ResidentUserId,
+            storeResult.store!.Id,
+            ListingType.Product,
+            "Produto Original",
+            "Descrição original",
+            "Categoria",
+            "tag",
+            ListingPricingType.Fixed,
+            10m,
+            "BRL",
+            "unidade",
+            null,
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        Assert.True(createResult.success);
+        var listing = createResult.listing!;
+
+        var updateResult = await listingService.UpdateListingAsync(
+            listing.Id,
+            ResidentUserId,
+            ListingType.Product,
+            "Produto Atualizado",
+            "Nova descrição",
+            "Nova categoria",
+            "nova-tag",
+            ListingPricingType.Fixed,
+            15m,
+            "BRL",
+            "unidade",
+            null,
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        Assert.True(updateResult.success);
+        Assert.Equal("Produto Atualizado", updateResult.listing!.Title);
+        Assert.Equal(15m, updateResult.listing.PriceAmount);
+
+        var archiveResult = await listingService.ArchiveListingAsync(listing.Id, ResidentUserId, CancellationToken.None);
+        Assert.True(archiveResult.success);
+        Assert.Equal(ListingStatus.Archived, archiveResult.listing!.Status);
+    }
+
+    [Fact]
+    public async Task ListingService_SearchFiltersWork()
+    {
+        var dataStore = new InMemoryDataStore();
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var listingRepository = new InMemoryListingRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var accessEvaluator = new AccessEvaluator(membershipRepository);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var listingService = new ListingService(listingRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+
+        var storeResult = await storeService.UpsertMyStoreAsync(
+            TerritoryId,
+            ResidentUserId,
+            "Loja",
+            null,
+            StoreContactVisibility.Public,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            CancellationToken.None);
+
+        await listingService.CreateListingAsync(
+            TerritoryId,
+            ResidentUserId,
+            storeResult.store!.Id,
+            ListingType.Product,
+            "Mel",
+            "Mel local",
+            "Alimentos",
+            "mel,doce",
+            ListingPricingType.Fixed,
+            30m,
+            "BRL",
+            "unidade",
+            null,
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        await listingService.CreateListingAsync(
+            TerritoryId,
+            ResidentUserId,
+            storeResult.store.Id,
+            ListingType.Service,
+            "Aula",
+            "Aula de música",
+            "Educação",
+            "aula,musica",
+            ListingPricingType.Negotiable,
+            null,
+            "BRL",
+            "hora",
+            null,
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        var productResults = await listingService.SearchListingsAsync(
+            TerritoryId,
+            ListingType.Product,
+            "mel",
+            null,
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        Assert.Single(productResults);
+        Assert.Equal(ListingType.Product, productResults[0].Type);
+
+        var categoryResults = await listingService.SearchListingsAsync(
+            TerritoryId,
+            null,
+            null,
+            "Educação",
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        Assert.Single(categoryResults);
+        Assert.Equal("Educação", categoryResults[0].Category);
+    }
+
+    [Fact]
+    public async Task CartService_AddUpdateRemoveItems()
+    {
+        var dataStore = new InMemoryDataStore();
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var listingRepository = new InMemoryListingRepository(dataStore);
+        var cartRepository = new InMemoryCartRepository(dataStore);
+        var cartItemRepository = new InMemoryCartItemRepository(dataStore);
+        var checkoutRepository = new InMemoryCheckoutRepository(dataStore);
+        var checkoutItemRepository = new InMemoryCheckoutItemRepository(dataStore);
+        var inquiryRepository = new InMemoryInquiryRepository(dataStore);
+        var feeRepository = new InMemoryPlatformFeeConfigRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var accessEvaluator = new AccessEvaluator(membershipRepository);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var listingService = new ListingService(listingRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var cartService = new CartService(
+            cartRepository,
+            cartItemRepository,
+            listingRepository,
+            storeRepository,
+            checkoutRepository,
+            checkoutItemRepository,
+            inquiryRepository,
+            feeRepository,
+            unitOfWork);
+
+        var storeResult = await storeService.UpsertMyStoreAsync(
+            TerritoryId,
+            ResidentUserId,
+            "Loja",
+            null,
+            StoreContactVisibility.Public,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            CancellationToken.None);
+
+        var listingResult = await listingService.CreateListingAsync(
+            TerritoryId,
+            ResidentUserId,
+            storeResult.store!.Id,
+            ListingType.Product,
+            "Produto",
+            null,
+            null,
+            null,
+            ListingPricingType.Fixed,
+            10m,
+            "BRL",
+            "unidade",
+            null,
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        var addResult = await cartService.AddItemAsync(
+            TerritoryId,
+            ResidentUserId,
+            listingResult.listing!.Id,
+            2,
+            "Nota inicial",
+            CancellationToken.None);
+
+        Assert.True(addResult.success);
+        Assert.NotNull(addResult.item);
+        Assert.Equal(2, addResult.item.Quantity);
+
+        var cart = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
+        Assert.Single(cart.Items);
+
+        var updateResult = await cartService.UpdateItemAsync(
+            addResult.item!.Id,
+            ResidentUserId,
+            3,
+            "Nota atualizada",
+            CancellationToken.None);
+
+        Assert.True(updateResult.success);
+        Assert.Equal(3, updateResult.item!.Quantity);
+        Assert.Equal("Nota atualizada", updateResult.item.Notes);
+
+        var removeResult = await cartService.RemoveItemAsync(addResult.item.Id, ResidentUserId, CancellationToken.None);
+        Assert.True(removeResult);
+
+        var emptyCart = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
+        Assert.Empty(emptyCart.Items);
+    }
+
+    [Fact]
+    public async Task InquiryService_ListMyAndReceivedInquiries()
+    {
+        var dataStore = new InMemoryDataStore();
+        var inquiryRepository = new InMemoryInquiryRepository(dataStore);
+        var listingRepository = new InMemoryListingRepository(dataStore);
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var accessEvaluator = new AccessEvaluator(membershipRepository);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var listingService = new ListingService(listingRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var inquiryService = new InquiryService(inquiryRepository, listingRepository, storeRepository, unitOfWork);
+
+        var buyerId = Guid.NewGuid();
+        await userRepository.AddAsync(
+            new User(buyerId, "Comprador", "comprador@araponga.com", "123.456.789-00", null, null, null, "google", "buyer-ext", UserRole.Visitor, DateTime.UtcNow),
+            CancellationToken.None);
+
+        var storeResult = await storeService.UpsertMyStoreAsync(
+            TerritoryId,
+            ResidentUserId,
+            "Loja",
+            null,
+            StoreContactVisibility.Public,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            CancellationToken.None);
+
+        var listingResult = await listingService.CreateListingAsync(
+            TerritoryId,
+            ResidentUserId,
+            storeResult.store!.Id,
+            ListingType.Product,
+            "Produto",
+            null,
+            null,
+            null,
+            ListingPricingType.Fixed,
+            10m,
+            "BRL",
+            "unidade",
+            null,
+            null,
+            ListingStatus.Active,
+            CancellationToken.None);
+
+        var inquiryResult = await inquiryService.CreateInquiryAsync(
+            listingResult.listing!.Id,
+            buyerId,
+            "Quero comprar",
+            null,
+            CancellationToken.None);
+
+        Assert.True(inquiryResult.success);
+
+        var myInquiries = await inquiryService.ListMyInquiriesAsync(buyerId, CancellationToken.None);
+        Assert.Single(myInquiries);
+        Assert.Equal(buyerId, myInquiries[0].FromUserId);
+
+        var receivedInquiries = await inquiryService.ListReceivedInquiriesAsync(ResidentUserId, CancellationToken.None);
+        Assert.Single(receivedInquiries);
+        Assert.Equal(ResidentUserId, receivedInquiries[0].StoreId);
+    }
 }

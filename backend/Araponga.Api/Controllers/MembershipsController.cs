@@ -2,6 +2,7 @@ using Araponga.Api;
 using Araponga.Api.Configuration;
 using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Security;
+using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Social;
 using Araponga.Domain.Users;
@@ -69,6 +70,13 @@ public sealed class MembershipsController : ControllerBase
         if (RequiresPresence(role) &&
             !GeoHeaderReader.TryGetCoordinates(Request.Headers, out _, out _))
         {
+            var observabilityLogger = HttpContext.RequestServices.GetRequiredService<Araponga.Application.Interfaces.IObservabilityLogger>();
+            observabilityLogger.LogGeolocationError(
+                "DeclareMembership",
+                "Missing geo headers for RESIDENT role",
+                userContext.User?.Id,
+                territoryId);
+
             return BadRequest(new { error = "X-Geo-Latitude and X-Geo-Longitude headers are required to declare membership." });
         }
 

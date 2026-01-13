@@ -17,6 +17,7 @@ public sealed class ReportService
     private readonly IAuditLogger _auditLogger;
     private readonly IEventBus _eventBus;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IObservabilityLogger? _observabilityLogger;
 
     public ReportService(
         IReportRepository reportRepository,
@@ -25,7 +26,8 @@ public sealed class ReportService
         ISanctionRepository sanctionRepository,
         IAuditLogger auditLogger,
         IEventBus eventBus,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IObservabilityLogger? observabilityLogger = null)
     {
         _reportRepository = reportRepository;
         _feedRepository = feedRepository;
@@ -34,6 +36,7 @@ public sealed class ReportService
         _auditLogger = auditLogger;
         _eventBus = eventBus;
         _unitOfWork = unitOfWork;
+        _observabilityLogger = observabilityLogger;
     }
 
     public async Task<(bool created, string? error, ModerationReport? report)> ReportPostAsync(
@@ -83,6 +86,8 @@ public sealed class ReportService
         await _auditLogger.LogAsync(
             new Models.AuditEntry("report.post", reporterUserId, post.TerritoryId, postId, DateTime.UtcNow),
             cancellationToken);
+
+        _observabilityLogger?.LogReportCreated("POST", post.TerritoryId);
 
         await EvaluatePostThresholdAsync(report, post, cancellationToken);
 
@@ -149,6 +154,8 @@ public sealed class ReportService
             new Models.AuditEntry("report.user", reporterUserId, territoryId, reportedUserId, DateTime.UtcNow),
             cancellationToken);
 
+        _observabilityLogger?.LogReportCreated("USER", territoryId);
+
         await EvaluateUserThresholdAsync(report, cancellationToken);
 
         await _eventBus.PublishAsync(
@@ -198,6 +205,8 @@ public sealed class ReportService
         await _auditLogger.LogAsync(
             new Models.AuditEntry("moderation.threshold.post", report.ReporterUserId, report.TerritoryId, post.Id, DateTime.UtcNow),
             cancellationToken);
+
+        _observabilityLogger?.LogModerationFailure("EvaluatePostThreshold", $"Post {post.Id} hidden automatically", report.TerritoryId);
     }
 
     private async Task EvaluateUserThresholdAsync(
@@ -246,5 +255,7 @@ public sealed class ReportService
         await _auditLogger.LogAsync(
             new Models.AuditEntry("moderation.threshold.user", report.ReporterUserId, report.TerritoryId, report.TargetId, DateTime.UtcNow),
             cancellationToken);
+
+        _observabilityLogger?.LogModerationFailure("EvaluateUserThreshold", $"User {report.TargetId} sanctioned automatically", report.TerritoryId);
     }
 }

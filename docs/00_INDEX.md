@@ -42,6 +42,16 @@ Documentos sobre histórico e mudanças do projeto.
 - **[Changelog](./40_CHANGELOG.md)** - Histórico de mudanças e versões
 - **[Contribuindo](./41_CONTRIBUTING.md)** - Guia para contribuidores
 
+### 📋 Planos e Recomendações
+Documentos de planejamento e recomendações de implementação.
+
+- **[Plano de Refatoração - Recomendações Pendentes](./PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md)** - Plano de implementação de recomendações pendentes
+
+### 🔗 Pull Requests
+Documentação detalhada de todos os Pull Requests implementados.
+
+- **[Índice de PRs](./prs/README.md)** - Documentação completa de todos os PRs
+
 ## 🔍 Busca Rápida
 
 ### Por Tópico

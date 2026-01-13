@@ -63,7 +63,7 @@ Este documento registra a implementação das recomendações da análise de coe
 
 ### 3. Documentação de Decisões Arquiteturais
 
-**Arquivo**: `docs/DECISOES_ARQUITETURAIS.md` (NOVO)
+**Arquivo**: `docs/10_ARCHITECTURE_DECISIONS.md` (NOVO)
 
 **ADRs Documentados**:
 - ✅ **ADR-001**: Marketplace Implementado Antes do POST-MVP
@@ -136,8 +136,8 @@ Este documento registra a implementação das recomendações da análise de coe
 
 1. `backend/Araponga.Tests/Infrastructure/RepositoryTests.cs` - 9 testes de repositórios
 2. `backend/Araponga.Tests/Api/EndToEndTests.cs` - 4 testes E2E
-3. `docs/DECISOES_ARQUITETURAIS.md` - 8 ADRs documentados
-4. `docs/IMPLEMENTACAO_RECOMENDACOES.md` - Este documento
+3. `docs/10_ARCHITECTURE_DECISIONS.md` - 9 ADRs documentados
+4. `docs/23_IMPLEMENTATION_RECOMMENDATIONS.md` - Este documento
 5. `backend/Araponga.Application/Interfaces/IObservabilityLogger.cs` - Interface de observabilidade
 6. `backend/Araponga.Infrastructure/InMemory/InMemoryObservabilityLogger.cs` - Implementação
 7. `backend/Araponga.Api/Middleware/RequestLoggingMiddleware.cs` - Middleware de logging
@@ -149,7 +149,7 @@ Este documento registra a implementação das recomendações da análise de coe
 3. `backend/Araponga.Application/Services/ReportService.cs` - Integração com observabilidade
 4. `backend/Araponga.Api/Controllers/MembershipsController.cs` - Logging de erros de geo
 5. `backend/Araponga.Api/Program.cs` - Registro de serviços e middleware
-6. `docs/ANALISE_COESAO_E_TESTES.md` - Atualização com status das recomendações
+6. `docs/22_COHESION_AND_TESTS.md` - Atualização com status das recomendações
 
 ---
 

@@ -31,6 +31,6 @@
 
 ### Documentação
 - Adicionado ADR-009 documentando a refatoração do FeedService
-- Criado `ARQUITETURA_SERVICES.md` documentando a arquitetura dos services
-- Atualizada `REVISAO_CODIGO.md` refletindo as melhorias implementadas
-- Atualizado `PLANO_IMPLEMENTACAO_RECOMENDACOES.md` marcando itens como completos
+- Criado `11_ARCHITECTURE_SERVICES.md` documentando a arquitetura dos services
+- Atualizada `21_CODE_REVIEW.md` refletindo as melhorias implementadas
+- Documentação reorganizada e normalizada (ver `00_INDEX.md`)

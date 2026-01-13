@@ -185,6 +185,6 @@ Este documento registra decisões arquiteturais importantes tomadas durante o de
 
 ## Referências
 
-- [Product Vision](./PRODUCT_VISION.md)
-- [User Stories](./USER_STORIES.md)
+- [Product Vision](./01_PRODUCT_VISION.md)
+- [User Stories](./04_USER_STORIES.md)
 - [Architecture C4](./design/Archtecture/C4_Components.md)

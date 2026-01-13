@@ -181,6 +181,6 @@ O `PostFilterService` atualmente carrega todos os posts antes de filtrar. Para g
 
 ## Referências
 
-- [Revisão de Código](./REVISAO_CODIGO.md)
-- [Decisões Arquiteturais](./DECISOES_ARQUITETURAIS.md) - ADR-009
-- [Plano de Implementação](./PLANO_IMPLEMENTACAO_RECOMENDACOES.md)
+- [Revisão de Código](./21_CODE_REVIEW.md)
+- [Decisões Arquiteturais](./10_ARCHITECTURE_DECISIONS.md) - ADR-009
+- [Plano de Implementação](./20_IMPLEMENTATION_PLAN.md)

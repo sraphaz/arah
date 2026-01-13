@@ -21,30 +21,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_ValidatesInputsAndFlags()
     {
         var dataStore = new InMemoryDataStore();
-        var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
 
         var invalid = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -91,6 +68,7 @@ public sealed class ApplicationServiceTests
 
         Assert.False(likeMissing);
 
+        var feedRepository = new InMemoryFeedRepository(dataStore);
         var residentOnlyPost = new CommunityPost(
             Guid.NewGuid(),
             ActiveTerritoryId,
@@ -118,30 +96,8 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_BlocksNonResidentCommentAndShare()
     {
         var dataStore = new InMemoryDataStore();
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
 
         var post = new CommunityPost(
             Guid.NewGuid(),
@@ -374,33 +330,11 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_FiltersBlockedAuthors()
     {
         var dataStore = new InMemoryDataStore();
-        var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
 
         var blockerId = dataStore.Users[1].Id;
         var blockedId = dataStore.Users[0].Id;
+        var blockRepository = new InMemoryUserBlockRepository(dataStore);
 
         await blockRepository.AddAsync(
             new Araponga.Domain.Moderation.UserBlock(blockerId, blockedId, DateTime.UtcNow),
@@ -689,30 +623,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_AllowsPostsWithoutGeoAnchors()
     {
         var dataStore = new InMemoryDataStore();
-        var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -736,30 +647,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_PersistsGeoAnchorsFromMediaMetadata()
     {
         var dataStore = new InMemoryDataStore();
-        var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -789,30 +677,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_DeduplicatesAndLimitsGeoAnchors()
     {
         var dataStore = new InMemoryDataStore();
-        var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
 
         var anchors = new List<GeoAnchorInput>
         {
@@ -849,32 +714,10 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_FiltersByMapEntity()
     {
         var dataStore = new InMemoryDataStore();
-        var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
 
         var entityId = dataStore.MapEntities[0].Id;
+        var feedRepository = new InMemoryFeedRepository(dataStore);
         var post = new CommunityPost(
             Guid.NewGuid(),
             ActiveTerritoryId,
@@ -1041,19 +884,7 @@ public sealed class ApplicationServiceTests
                 DateTime.UtcNow),
             CancellationToken.None);
 
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
 
         var result = await service.CreatePostAsync(
             ActiveTerritoryId,

@@ -22,31 +22,7 @@ public sealed class NotificationFlowTests
         var serviceProvider = BuildServiceProvider(dataStore);
         var eventBus = new InMemoryEventBus(serviceProvider);
 
-        var feedRepository = new InMemoryFeedRepository(dataStore);
-        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-
-        var service = new FeedService(
-            feedRepository,
-            accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            eventBus,
-            unitOfWork);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, eventBus);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,

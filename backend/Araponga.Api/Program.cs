@@ -1,14 +1,13 @@
 using System.Reflection;
 using Araponga.Api.Configuration;
+using Araponga.Api.Extensions;
+using Araponga.Api.Middleware;
 using Araponga.Api.Security;
-using Araponga.Application.Events;
-using Araponga.Application.Interfaces;
-using Araponga.Application.Services;
-using Araponga.Infrastructure.Eventing;
-using Araponga.Infrastructure.InMemory;
 using Araponga.Infrastructure.Outbox;
 using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,122 +16,25 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers
-builder.Services.AddControllers();
-
-// Application services
-var persistenceProvider = builder.Configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
-var applyMigrations = builder.Configuration.GetValue<bool>("Persistence:ApplyMigrations");
+// Configuration
 var jwtSection = builder.Configuration.GetSection("Jwt");
 builder.Services.Configure<JwtOptions>(jwtSection);
 builder.Services.Configure<PresencePolicyOptions>(builder.Configuration.GetSection("PresencePolicy"));
 
-if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
-{
-    builder.Services.AddDbContext<ArapongaDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
+// Controllers with FluentValidation
+builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
-    builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ArapongaDbContext>());
-    builder.Services.AddScoped<ITerritoryRepository, PostgresTerritoryRepository>();
-    builder.Services.AddScoped<IUserRepository, PostgresUserRepository>();
-    builder.Services.AddScoped<ITerritoryMembershipRepository, PostgresTerritoryMembershipRepository>();
-    builder.Services.AddScoped<IUserTerritoryRepository, PostgresUserTerritoryRepository>();
-    builder.Services.AddScoped<ITerritoryJoinRequestRepository, PostgresTerritoryJoinRequestRepository>();
-builder.Services.AddScoped<IFeedRepository, PostgresFeedRepository>();
-builder.Services.AddScoped<ITerritoryEventRepository, PostgresTerritoryEventRepository>();
-builder.Services.AddScoped<IEventParticipationRepository, PostgresEventParticipationRepository>();
-builder.Services.AddScoped<IMapRepository, PostgresMapRepository>();
-    builder.Services.AddScoped<IMapEntityRelationRepository, PostgresMapEntityRelationRepository>();
-    builder.Services.AddScoped<IPostGeoAnchorRepository, PostgresPostGeoAnchorRepository>();
-    builder.Services.AddScoped<IAssetRepository, PostgresAssetRepository>();
-    builder.Services.AddScoped<IAssetGeoAnchorRepository, PostgresAssetGeoAnchorRepository>();
-    builder.Services.AddScoped<IAssetValidationRepository, PostgresAssetValidationRepository>();
-    builder.Services.AddScoped<IPostAssetRepository, PostgresPostAssetRepository>();
-    builder.Services.AddScoped<IActiveTerritoryStore, PostgresActiveTerritoryStore>();
-    builder.Services.AddScoped<IHealthAlertRepository, PostgresHealthAlertRepository>();
-    builder.Services.AddScoped<IFeatureFlagService, PostgresFeatureFlagService>();
-    builder.Services.AddScoped<IAuditLogger, PostgresAuditLogger>();
-    builder.Services.AddScoped<IReportRepository, PostgresReportRepository>();
-    builder.Services.AddScoped<IUserBlockRepository, PostgresUserBlockRepository>();
-    builder.Services.AddScoped<ISanctionRepository, PostgresSanctionRepository>();
-    builder.Services.AddScoped<IOutbox, PostgresOutbox>();
-    builder.Services.AddScoped<INotificationInboxRepository, PostgresNotificationInboxRepository>();
-    builder.Services.AddScoped<IStoreRepository, PostgresStoreRepository>();
-    builder.Services.AddScoped<IListingRepository, PostgresListingRepository>();
-    builder.Services.AddScoped<IInquiryRepository, PostgresInquiryRepository>();
-    builder.Services.AddScoped<ICartRepository, PostgresCartRepository>();
-    builder.Services.AddScoped<ICartItemRepository, PostgresCartItemRepository>();
-    builder.Services.AddScoped<ICheckoutRepository, PostgresCheckoutRepository>();
-    builder.Services.AddScoped<ICheckoutItemRepository, PostgresCheckoutItemRepository>();
-    builder.Services.AddScoped<IPlatformFeeConfigRepository, PostgresPlatformFeeConfigRepository>();
-    builder.Services.AddHostedService<OutboxDispatcherWorker>();
-}
-else
-{
-    builder.Services.AddSingleton<InMemoryDataStore>();
-    builder.Services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
-    builder.Services.AddSingleton<ITerritoryRepository, InMemoryTerritoryRepository>();
-    builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
-    builder.Services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
-    builder.Services.AddSingleton<IUserTerritoryRepository, InMemoryUserTerritoryRepository>();
-    builder.Services.AddSingleton<ITerritoryJoinRequestRepository, InMemoryTerritoryJoinRequestRepository>();
-builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
-builder.Services.AddSingleton<ITerritoryEventRepository, InMemoryTerritoryEventRepository>();
-builder.Services.AddSingleton<IEventParticipationRepository, InMemoryEventParticipationRepository>();
-builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
-    builder.Services.AddSingleton<IMapEntityRelationRepository, InMemoryMapEntityRelationRepository>();
-    builder.Services.AddSingleton<IPostGeoAnchorRepository, InMemoryPostGeoAnchorRepository>();
-    builder.Services.AddSingleton<IAssetRepository, InMemoryAssetRepository>();
-    builder.Services.AddSingleton<IAssetGeoAnchorRepository, InMemoryAssetGeoAnchorRepository>();
-    builder.Services.AddSingleton<IAssetValidationRepository, InMemoryAssetValidationRepository>();
-    builder.Services.AddSingleton<IPostAssetRepository, InMemoryPostAssetRepository>();
-    builder.Services.AddSingleton<IActiveTerritoryStore, InMemoryActiveTerritoryStore>();
-    builder.Services.AddSingleton<IHealthAlertRepository, InMemoryHealthAlertRepository>();
-    builder.Services.AddSingleton<IFeatureFlagService, InMemoryFeatureFlagService>();
-    builder.Services.AddSingleton<IAuditLogger, InMemoryAuditLogger>();
-    builder.Services.AddSingleton<IReportRepository, InMemoryReportRepository>();
-    builder.Services.AddSingleton<IUserBlockRepository, InMemoryUserBlockRepository>();
-    builder.Services.AddSingleton<ISanctionRepository, InMemorySanctionRepository>();
-    builder.Services.AddSingleton<IOutbox, InMemoryOutbox>();
-    builder.Services.AddSingleton<INotificationInboxRepository, InMemoryNotificationInboxRepository>();
-    builder.Services.AddSingleton<IStoreRepository, InMemoryStoreRepository>();
-    builder.Services.AddSingleton<IListingRepository, InMemoryListingRepository>();
-    builder.Services.AddSingleton<IInquiryRepository, InMemoryInquiryRepository>();
-    builder.Services.AddSingleton<ICartRepository, InMemoryCartRepository>();
-    builder.Services.AddSingleton<ICartItemRepository, InMemoryCartItemRepository>();
-    builder.Services.AddSingleton<ICheckoutRepository, InMemoryCheckoutRepository>();
-    builder.Services.AddSingleton<ICheckoutItemRepository, InMemoryCheckoutItemRepository>();
-    builder.Services.AddSingleton<IPlatformFeeConfigRepository, InMemoryPlatformFeeConfigRepository>();
-}
+// Infrastructure (repositories, unit of work, etc.)
+builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddSingleton<Araponga.Application.Interfaces.IObservabilityLogger, Araponga.Infrastructure.InMemory.InMemoryObservabilityLogger>();
+// Application services
+builder.Services.AddApplicationServices();
 
-builder.Services.AddSingleton<ITokenService, JwtTokenService>();
-
-builder.Services.AddScoped<IEventBus, InMemoryEventBus>();
-builder.Services.AddScoped<IEventHandler<PostCreatedEvent>, PostCreatedNotificationHandler>();
-builder.Services.AddScoped<IEventHandler<ReportCreatedEvent>, ReportCreatedNotificationHandler>();
-
-builder.Services.AddScoped<TerritoryService>();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<MembershipService>();
-builder.Services.AddScoped<JoinRequestService>();
-builder.Services.AddScoped<AccessEvaluator>();
-builder.Services.AddScoped<FeedService>();
-builder.Services.AddScoped<EventsService>();
-builder.Services.AddScoped<MapService>();
-builder.Services.AddScoped<ActiveTerritoryService>();
-builder.Services.AddScoped<HealthService>();
-builder.Services.AddScoped<AssetService>();
-builder.Services.AddScoped<ReportService>();
-builder.Services.AddScoped<UserBlockService>();
-builder.Services.AddScoped<FeatureFlagService>();
-builder.Services.AddScoped<CurrentUserAccessor>();
-builder.Services.AddScoped<StoreService>();
-builder.Services.AddScoped<ListingService>();
-builder.Services.AddScoped<InquiryService>();
-builder.Services.AddScoped<PlatformFeeService>();
-builder.Services.AddScoped<CartService>();
+// Event handlers
+builder.Services.AddEventHandlers();
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -174,6 +76,9 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+var persistenceProvider = builder.Configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+var applyMigrations = builder.Configuration.GetValue<bool>("Persistence:ApplyMigrations");
 
 if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase) && applyMigrations)
 {
@@ -271,9 +176,14 @@ app.UseStaticFiles(new StaticFileOptions
 // Importante: como você está rodando só em HTTP, removemos o redirect p/ HTTPS para não gerar warning.
 // app.UseHttpsRedirection();
 
-// Request logging middleware (observabilidade mínima)
-var observabilityLogger = app.Services.GetRequiredService<Araponga.Application.Interfaces.IObservabilityLogger>();
-app.UseMiddleware<Araponga.Api.Middleware.RequestLoggingMiddleware>(observabilityLogger);
+// IMPORTANTE: No ASP.NET Core, middlewares são executados na ordem de registro (FIFO)
+// O primeiro UseMiddleware registrado é o primeiro a ser executado
+// Correlation ID middleware - registrado primeiro, executa PRIMEIRO
+// Isso garante que o correlation ID esteja disponível quando o RequestLoggingMiddleware executar
+app.UseMiddleware<CorrelationIdMiddleware>();
+
+// Request logging middleware - registrado depois, executa DEPOIS do CorrelationIdMiddleware
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseAuthorization();
 

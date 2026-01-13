@@ -124,15 +124,35 @@ backend/
 
 ## 📚 Documentação
 
-- [Visão do Produto](/docs/PRODUCT_VISION.md)
-- [Backlog](/docs/BACKLOG.md)
-- [User Stories](/docs/USER_STORIES.md)
-- [Modelo de Domínio (MER)](/docs/DOMAIN_MODEL_MER.md)
-- [Roadmap](/docs/ROADMAP.md)
-- [Moderação e Reports](/docs/MODERATION_REPORTS.md)
-- [Admin e Observabilidade](/docs/ADMIN_OBSERVABILITY.md)
-- [Glossário](/docs/GLOSSARY.md)
-- [Plano de Implementação](/docs/IMPLEMENTATION_PLAN.md)
+**📋 [Índice Completo da Documentação](./00_INDEX.md)** - Navegação estruturada de toda a documentação
+
+### Visão e Produto
+- [Visão do Produto](./01_PRODUCT_VISION.md)
+- [Roadmap](./02_ROADMAP.md)
+- [Backlog](./03_BACKLOG.md)
+- [User Stories](./04_USER_STORIES.md)
+- [Glossário](./05_GLOSSARY.md)
+
+### Arquitetura
+- [Decisões Arquiteturais (ADRs)](./10_ARCHITECTURE_DECISIONS.md)
+- [Arquitetura de Services](./11_ARCHITECTURE_SERVICES.md)
+- [Modelo de Domínio](./12_DOMAIN_MODEL.md)
+- [Domain Routing](./13_DOMAIN_ROUTING.md)
+
+### Desenvolvimento
+- [Plano de Implementação](./20_IMPLEMENTATION_PLAN.md)
+- [Revisão de Código](./21_CODE_REVIEW.md)
+- [Análise de Coesão e Testes](./22_COHESION_AND_TESTS.md)
+- [Implementação de Recomendações](./23_IMPLEMENTATION_RECOMMENDATIONS.md)
+
+### Operações
+- [Moderação](./30_MODERATION.md)
+- [Admin e Observabilidade](./31_ADMIN_OBSERVABILITY.md)
+- [Rastreabilidade](./32_TRACEABILITY.md)
+
+### Histórico
+- [Changelog](./40_CHANGELOG.md)
+- [Contribuindo](./41_CONTRIBUTING.md)
 
 - **Membership**  
   Relação entre uma pessoa e um território (morador, visitante, etc.).

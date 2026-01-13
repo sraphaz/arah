@@ -71,7 +71,7 @@ public sealed class StoresController : ControllerBase
         if (!result.success || result.store is null)
         {
             return result.error?.Contains("Only confirmed residents", StringComparison.OrdinalIgnoreCase) == true
-                ? Forbid()
+                ? StatusCode(StatusCodes.Status403Forbidden)
                 : BadRequest(new { error = result.error ?? "Unable to manage store." });
         }
 
@@ -162,7 +162,7 @@ public sealed class StoresController : ControllerBase
             }
 
             return result.error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
-                ? Forbid()
+                ? StatusCode(StatusCodes.Status403Forbidden)
                 : BadRequest(new { error = result.error ?? "Unable to update store." });
         }
 
@@ -235,7 +235,7 @@ public sealed class StoresController : ControllerBase
             }
 
             return result.error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
-                ? Forbid()
+                ? StatusCode(StatusCodes.Status403Forbidden)
                 : BadRequest(new { error = result.error ?? "Unable to update payments." });
         }
 
@@ -262,7 +262,7 @@ public sealed class StoresController : ControllerBase
             }
 
             return result.error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
-                ? Forbid()
+                ? StatusCode(StatusCodes.Status403Forbidden)
                 : BadRequest(new { error = result.error ?? "Unable to update store status." });
         }
 

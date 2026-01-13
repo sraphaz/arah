@@ -72,7 +72,7 @@ public sealed class MarketplaceServiceTests
             "Visitante",
             "visitor@araponga.com",
             null,
-            null,
+            "FOREIGN-123",
             "(11) 95555-0000",
             "Rua 1",
             "google",

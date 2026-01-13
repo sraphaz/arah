@@ -81,7 +81,7 @@ public sealed class ListingsController : ControllerBase
         {
             if (result.error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true)
             {
-                return Forbid();
+                return StatusCode(StatusCodes.Status403Forbidden);
             }
 
             return BadRequest(new { error = result.error ?? "Unable to create listing." });
@@ -166,7 +166,7 @@ public sealed class ListingsController : ControllerBase
             }
 
             return result.error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true
-                ? Forbid()
+                ? StatusCode(StatusCodes.Status403Forbidden)
                 : BadRequest(new { error = result.error ?? "Unable to update listing." });
         }
 
@@ -198,7 +198,7 @@ public sealed class ListingsController : ControllerBase
             }
 
             return result.error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true
-                ? Forbid()
+                ? StatusCode(StatusCodes.Status403Forbidden)
                 : BadRequest(new { error = result.error ?? "Unable to archive listing." });
         }
 

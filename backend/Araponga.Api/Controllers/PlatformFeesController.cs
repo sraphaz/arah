@@ -50,7 +50,8 @@ public sealed class PlatformFeesController : ControllerBase
 
         if (!_accessEvaluator.IsCurator(userContext.User))
         {
-            return Forbid();
+             return StatusCode(StatusCodes.Status403Forbidden);
+;
         }
 
         var configs = await _platformFeeService.ListActiveAsync(territoryId, cancellationToken);

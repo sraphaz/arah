@@ -37,8 +37,11 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
     builder.Services.AddScoped<IUserRepository, PostgresUserRepository>();
     builder.Services.AddScoped<ITerritoryMembershipRepository, PostgresTerritoryMembershipRepository>();
     builder.Services.AddScoped<IUserTerritoryRepository, PostgresUserTerritoryRepository>();
-    builder.Services.AddScoped<IFeedRepository, PostgresFeedRepository>();
-    builder.Services.AddScoped<IMapRepository, PostgresMapRepository>();
+    builder.Services.AddScoped<ITerritoryJoinRequestRepository, PostgresTerritoryJoinRequestRepository>();
+builder.Services.AddScoped<IFeedRepository, PostgresFeedRepository>();
+builder.Services.AddScoped<ITerritoryEventRepository, PostgresTerritoryEventRepository>();
+builder.Services.AddScoped<IEventParticipationRepository, PostgresEventParticipationRepository>();
+builder.Services.AddScoped<IMapRepository, PostgresMapRepository>();
     builder.Services.AddScoped<IMapEntityRelationRepository, PostgresMapEntityRelationRepository>();
     builder.Services.AddScoped<IPostGeoAnchorRepository, PostgresPostGeoAnchorRepository>();
     builder.Services.AddScoped<IAssetRepository, PostgresAssetRepository>();
@@ -54,6 +57,14 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
     builder.Services.AddScoped<ISanctionRepository, PostgresSanctionRepository>();
     builder.Services.AddScoped<IOutbox, PostgresOutbox>();
     builder.Services.AddScoped<INotificationInboxRepository, PostgresNotificationInboxRepository>();
+    builder.Services.AddScoped<IStoreRepository, PostgresStoreRepository>();
+    builder.Services.AddScoped<IListingRepository, PostgresListingRepository>();
+    builder.Services.AddScoped<IInquiryRepository, PostgresInquiryRepository>();
+    builder.Services.AddScoped<ICartRepository, PostgresCartRepository>();
+    builder.Services.AddScoped<ICartItemRepository, PostgresCartItemRepository>();
+    builder.Services.AddScoped<ICheckoutRepository, PostgresCheckoutRepository>();
+    builder.Services.AddScoped<ICheckoutItemRepository, PostgresCheckoutItemRepository>();
+    builder.Services.AddScoped<IPlatformFeeConfigRepository, PostgresPlatformFeeConfigRepository>();
     builder.Services.AddHostedService<OutboxDispatcherWorker>();
 }
 else
@@ -64,8 +75,11 @@ else
     builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
     builder.Services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
     builder.Services.AddSingleton<IUserTerritoryRepository, InMemoryUserTerritoryRepository>();
-    builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
-    builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
+    builder.Services.AddSingleton<ITerritoryJoinRequestRepository, InMemoryTerritoryJoinRequestRepository>();
+builder.Services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
+builder.Services.AddSingleton<ITerritoryEventRepository, InMemoryTerritoryEventRepository>();
+builder.Services.AddSingleton<IEventParticipationRepository, InMemoryEventParticipationRepository>();
+builder.Services.AddSingleton<IMapRepository, InMemoryMapRepository>();
     builder.Services.AddSingleton<IMapEntityRelationRepository, InMemoryMapEntityRelationRepository>();
     builder.Services.AddSingleton<IPostGeoAnchorRepository, InMemoryPostGeoAnchorRepository>();
     builder.Services.AddSingleton<IAssetRepository, InMemoryAssetRepository>();
@@ -81,6 +95,14 @@ else
     builder.Services.AddSingleton<ISanctionRepository, InMemorySanctionRepository>();
     builder.Services.AddSingleton<IOutbox, InMemoryOutbox>();
     builder.Services.AddSingleton<INotificationInboxRepository, InMemoryNotificationInboxRepository>();
+    builder.Services.AddSingleton<IStoreRepository, InMemoryStoreRepository>();
+    builder.Services.AddSingleton<IListingRepository, InMemoryListingRepository>();
+    builder.Services.AddSingleton<IInquiryRepository, InMemoryInquiryRepository>();
+    builder.Services.AddSingleton<ICartRepository, InMemoryCartRepository>();
+    builder.Services.AddSingleton<ICartItemRepository, InMemoryCartItemRepository>();
+    builder.Services.AddSingleton<ICheckoutRepository, InMemoryCheckoutRepository>();
+    builder.Services.AddSingleton<ICheckoutItemRepository, InMemoryCheckoutItemRepository>();
+    builder.Services.AddSingleton<IPlatformFeeConfigRepository, InMemoryPlatformFeeConfigRepository>();
 }
 
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
@@ -92,8 +114,10 @@ builder.Services.AddScoped<IEventHandler<ReportCreatedEvent>, ReportCreatedNotif
 builder.Services.AddScoped<TerritoryService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<MembershipService>();
+builder.Services.AddScoped<JoinRequestService>();
 builder.Services.AddScoped<AccessEvaluator>();
 builder.Services.AddScoped<FeedService>();
+builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<MapService>();
 builder.Services.AddScoped<ActiveTerritoryService>();
 builder.Services.AddScoped<HealthService>();
@@ -102,6 +126,11 @@ builder.Services.AddScoped<ReportService>();
 builder.Services.AddScoped<UserBlockService>();
 builder.Services.AddScoped<FeatureFlagService>();
 builder.Services.AddScoped<CurrentUserAccessor>();
+builder.Services.AddScoped<StoreService>();
+builder.Services.AddScoped<ListingService>();
+builder.Services.AddScoped<InquiryService>();
+builder.Services.AddScoped<PlatformFeeService>();
+builder.Services.AddScoped<CartService>();
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();

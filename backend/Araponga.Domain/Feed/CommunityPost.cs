@@ -12,7 +12,9 @@ public sealed class CommunityPost
         PostVisibility visibility,
         PostStatus status,
         Guid? mapEntityId,
-        DateTime createdAtUtc)
+        DateTime createdAtUtc,
+        string? referenceType = null,
+        Guid? referenceId = null)
     {
         if (territoryId == Guid.Empty)
         {
@@ -43,6 +45,8 @@ public sealed class CommunityPost
         Visibility = visibility;
         Status = status;
         MapEntityId = mapEntityId;
+        ReferenceType = string.IsNullOrWhiteSpace(referenceType) ? null : referenceType.Trim();
+        ReferenceId = referenceId;
         CreatedAtUtc = createdAtUtc;
     }
 
@@ -55,5 +59,7 @@ public sealed class CommunityPost
     public PostVisibility Visibility { get; }
     public PostStatus Status { get; }
     public Guid? MapEntityId { get; }
+    public string? ReferenceType { get; }
+    public Guid? ReferenceId { get; }
     public DateTime CreatedAtUtc { get; }
 }

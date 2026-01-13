@@ -97,15 +97,17 @@
           <div class="card">
             <h3>Pedido de moradia</h3>
             <p>
-              Para virar morador, o usuário declara <code>role=Resident</code>. O vínculo fica
-              <strong>PENDING</strong> até passar pela aprovação comunitária.
+              Para virar morador, o visitante envia um pedido direcionado via
+              <code>POST /api/v1/territories/{territoryId}/join-requests</code> escolhendo
+              destinatários (moradores validados ou curadores). O pedido não vira broadcast no feed.
             </p>
           </div>
           <div class="card">
             <h3>Aprovação comunitária</h3>
             <p>
-              Apenas moradores <strong>VALIDATED</strong> do território podem aprovar pedidos via
-              <code>PATCH /api/v1/territories/{territoryId}/membership/{membershipId}/validation</code>.
+              Destinatários (ou curadores) aprovam/rejeitam via
+              <code>POST /api/v1/join-requests/{id}/approve|reject</code>. Ao aprovar, o requester
+              torna-se <strong>RESIDENT</strong> com status <strong>VALIDATED</strong>.
             </p>
           </div>
           <div class="card">
@@ -168,7 +170,7 @@
           <div class="card">
             <h3>Feature flags por território</h3>
             <p>
-              Cada território pode habilitar flags como <strong>AlertPosts</strong> e <strong>EventPosts</strong>
+              Cada território pode habilitar flags como <strong>AlertPosts</strong>
               em <code>/api/v1/territories/{territoryId}/features</code>. Elas controlam quais tipos de post são aceitos.
             </p>
           </div>
@@ -213,7 +215,7 @@
               <li><strong>Reports</strong> e <strong>Blocks</strong> modulam visibilidade e segurança.</li>
               <li><strong>OutboxMessage</strong> garante a intenção de notificar em transações confiáveis.</li>
               <li><strong>UserNotification</strong> compõe o inbox in-app por usuário.</li>
-              <li><strong>Feature Flags</strong> habilitam tipos de post por território (AlertPosts/EventPosts).</li>
+              <li><strong>Feature Flags</strong> habilitam tipos de post por território (AlertPosts).</li>
             </ul>
           </div>
           <div class="card">
@@ -287,7 +289,8 @@
           <p>
             Para criar post use <code>POST /api/v1/feed</code>. É obrigatório enviar
             <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code> e ao menos uma âncora geográfica.
-            Visitantes só podem criar posts do tipo <code>Event</code> (eventos pendentes de aprovação).
+            Posts são criados por moradores; eventos são criados via <code>POST /api/v1/events</code>,
+            com data/hora e geolocalização obrigatória, e aparecem no feed e no mapa.
           </p>
           <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/feed \
   -H "Authorization: Bearer &lt;token&gt;" \
@@ -298,10 +301,10 @@
   -d '{
     "title": "Mutirão de limpeza",
     "content": "Encontro sábado 9h.",
-    "type": "Event",
+    "type": "General",
     "visibility": "Public",
     "mapEntityId": null,
-    "geoAnchors": [{"latitude": -23.55, "longitude": -46.63, "type": "EVENT"}]
+    "geoAnchors": [{"latitude": -23.55, "longitude": -46.63, "type": "POST"}]
   }'</code></pre>
         </div>
 
@@ -328,10 +331,13 @@
         <div class="flow-step">
           <h4>7. Membership: visitor → resident</h4>
           <p>
-            <code>POST /api/v1/territories/{territoryId}/membership</code> declara vínculo. A validação
-            (morador) é feita por moradores validados em <code>/validation</code>. O status atual está em
+            O visitante solicita aprovação via
+            <code>POST /api/v1/territories/{territoryId}/join-requests</code> com destinatários escolhidos.
+            Destinatários (ou curadores) aprovam em
+            <code>POST /api/v1/join-requests/{id}/approve</code>, promovendo para
+            <strong>RESIDENT</strong>/<strong>VALIDATED</strong>. O status atual está em
             <code>GET /api/v1/territories/{territoryId}/membership/me</code>. Se não houver morador validado,
-            o primeiro residente é autoaprovado como fundador.
+            o primeiro residente declarado é autoaprovado como fundador.
             Quando a policy exige presença, envie <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code>.
           </p>
         </div>

@@ -62,7 +62,9 @@ public sealed class InMemoryFeedRepository : IFeedRepository
             post.Visibility,
             status,
             post.MapEntityId,
-            post.CreatedAtUtc);
+            post.CreatedAtUtc,
+            post.ReferenceType,
+            post.ReferenceId);
         _dataStore.Posts.Add(updated);
         return Task.CompletedTask;
     }

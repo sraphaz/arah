@@ -1,8 +1,11 @@
 using Araponga.Domain.Assets;
+using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
+using Araponga.Domain.Marketplace;
 using Araponga.Domain.Social;
+using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.Postgres.Entities;
@@ -123,6 +126,322 @@ public static class PostgresMappers
             record.CreatedAtUtc);
     }
 
+    public static TerritoryStoreRecord ToRecord(this TerritoryStore store)
+    {
+        return new TerritoryStoreRecord
+        {
+            Id = store.Id,
+            TerritoryId = store.TerritoryId,
+            OwnerUserId = store.OwnerUserId,
+            DisplayName = store.DisplayName,
+            Description = store.Description,
+            Status = store.Status,
+            PaymentsEnabled = store.PaymentsEnabled,
+            ContactVisibility = store.ContactVisibility,
+            Phone = store.Phone,
+            Whatsapp = store.Whatsapp,
+            Email = store.Email,
+            Instagram = store.Instagram,
+            Website = store.Website,
+            PreferredContactMethod = store.PreferredContactMethod,
+            CreatedAtUtc = store.CreatedAtUtc,
+            UpdatedAtUtc = store.UpdatedAtUtc
+        };
+    }
+
+    public static TerritoryStore ToDomain(this TerritoryStoreRecord record)
+    {
+        return new TerritoryStore(
+            record.Id,
+            record.TerritoryId,
+            record.OwnerUserId,
+            record.DisplayName,
+            record.Description,
+            record.Status,
+            record.PaymentsEnabled,
+            record.ContactVisibility,
+            record.Phone,
+            record.Whatsapp,
+            record.Email,
+            record.Instagram,
+            record.Website,
+            record.PreferredContactMethod,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static StoreListingRecord ToRecord(this StoreListing listing)
+    {
+        return new StoreListingRecord
+        {
+            Id = listing.Id,
+            TerritoryId = listing.TerritoryId,
+            StoreId = listing.StoreId,
+            Type = listing.Type,
+            Title = listing.Title,
+            Description = listing.Description,
+            Category = listing.Category,
+            Tags = listing.Tags,
+            PricingType = listing.PricingType,
+            PriceAmount = listing.PriceAmount,
+            Currency = listing.Currency,
+            Unit = listing.Unit,
+            Latitude = listing.Latitude,
+            Longitude = listing.Longitude,
+            Status = listing.Status,
+            CreatedAtUtc = listing.CreatedAtUtc,
+            UpdatedAtUtc = listing.UpdatedAtUtc
+        };
+    }
+
+    public static StoreListing ToDomain(this StoreListingRecord record)
+    {
+        return new StoreListing(
+            record.Id,
+            record.TerritoryId,
+            record.StoreId,
+            record.Type,
+            record.Title,
+            record.Description,
+            record.Category,
+            record.Tags,
+            record.PricingType,
+            record.PriceAmount,
+            record.Currency,
+            record.Unit,
+            record.Latitude,
+            record.Longitude,
+            record.Status,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static ListingInquiryRecord ToRecord(this ListingInquiry inquiry)
+    {
+        return new ListingInquiryRecord
+        {
+            Id = inquiry.Id,
+            TerritoryId = inquiry.TerritoryId,
+            ListingId = inquiry.ListingId,
+            StoreId = inquiry.StoreId,
+            FromUserId = inquiry.FromUserId,
+            Message = inquiry.Message,
+            Status = inquiry.Status,
+            BatchId = inquiry.BatchId,
+            CreatedAtUtc = inquiry.CreatedAtUtc
+        };
+    }
+
+    public static ListingInquiry ToDomain(this ListingInquiryRecord record)
+    {
+        return new ListingInquiry(
+            record.Id,
+            record.TerritoryId,
+            record.ListingId,
+            record.StoreId,
+            record.FromUserId,
+            record.Message,
+            record.Status,
+            record.BatchId,
+            record.CreatedAtUtc);
+    }
+
+    public static CartRecord ToRecord(this Cart cart)
+    {
+        return new CartRecord
+        {
+            Id = cart.Id,
+            TerritoryId = cart.TerritoryId,
+            UserId = cart.UserId,
+            CreatedAtUtc = cart.CreatedAtUtc,
+            UpdatedAtUtc = cart.UpdatedAtUtc
+        };
+    }
+
+    public static Cart ToDomain(this CartRecord record)
+    {
+        return new Cart(
+            record.Id,
+            record.TerritoryId,
+            record.UserId,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static CartItemRecord ToRecord(this CartItem item)
+    {
+        return new CartItemRecord
+        {
+            Id = item.Id,
+            CartId = item.CartId,
+            ListingId = item.ListingId,
+            Quantity = item.Quantity,
+            Notes = item.Notes,
+            CreatedAtUtc = item.CreatedAtUtc,
+            UpdatedAtUtc = item.UpdatedAtUtc
+        };
+    }
+
+    public static CartItem ToDomain(this CartItemRecord record)
+    {
+        return new CartItem(
+            record.Id,
+            record.CartId,
+            record.ListingId,
+            record.Quantity,
+            record.Notes,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static CheckoutRecord ToRecord(this Checkout checkout)
+    {
+        return new CheckoutRecord
+        {
+            Id = checkout.Id,
+            TerritoryId = checkout.TerritoryId,
+            BuyerUserId = checkout.BuyerUserId,
+            StoreId = checkout.StoreId,
+            Status = checkout.Status,
+            Currency = checkout.Currency,
+            ItemsSubtotalAmount = checkout.ItemsSubtotalAmount,
+            PlatformFeeAmount = checkout.PlatformFeeAmount,
+            TotalAmount = checkout.TotalAmount,
+            CreatedAtUtc = checkout.CreatedAtUtc,
+            UpdatedAtUtc = checkout.UpdatedAtUtc
+        };
+    }
+
+    public static Checkout ToDomain(this CheckoutRecord record)
+    {
+        return new Checkout(
+            record.Id,
+            record.TerritoryId,
+            record.BuyerUserId,
+            record.StoreId,
+            record.Status,
+            record.Currency,
+            record.ItemsSubtotalAmount,
+            record.PlatformFeeAmount,
+            record.TotalAmount,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static CheckoutItemRecord ToRecord(this CheckoutItem item)
+    {
+        return new CheckoutItemRecord
+        {
+            Id = item.Id,
+            CheckoutId = item.CheckoutId,
+            ListingId = item.ListingId,
+            ListingType = item.ListingType,
+            TitleSnapshot = item.TitleSnapshot,
+            Quantity = item.Quantity,
+            UnitPrice = item.UnitPrice,
+            LineSubtotal = item.LineSubtotal,
+            PlatformFeeLine = item.PlatformFeeLine,
+            LineTotal = item.LineTotal,
+            CreatedAtUtc = item.CreatedAtUtc
+        };
+    }
+
+    public static CheckoutItem ToDomain(this CheckoutItemRecord record)
+    {
+        return new CheckoutItem(
+            record.Id,
+            record.CheckoutId,
+            record.ListingId,
+            record.ListingType,
+            record.TitleSnapshot,
+            record.Quantity,
+            record.UnitPrice,
+            record.LineSubtotal,
+            record.PlatformFeeLine,
+            record.LineTotal,
+            record.CreatedAtUtc);
+    }
+
+    public static PlatformFeeConfigRecord ToRecord(this PlatformFeeConfig config)
+    {
+        return new PlatformFeeConfigRecord
+        {
+            Id = config.Id,
+            TerritoryId = config.TerritoryId,
+            ListingType = config.ListingType,
+            FeeMode = config.FeeMode,
+            FeeValue = config.FeeValue,
+            Currency = config.Currency,
+            IsActive = config.IsActive,
+            CreatedAtUtc = config.CreatedAtUtc,
+            UpdatedAtUtc = config.UpdatedAtUtc
+        };
+    }
+
+    public static PlatformFeeConfig ToDomain(this PlatformFeeConfigRecord record)
+    {
+        return new PlatformFeeConfig(
+            record.Id,
+            record.TerritoryId,
+            record.ListingType,
+            record.FeeMode,
+            record.FeeValue,
+            record.Currency,
+            record.IsActive,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static TerritoryJoinRequestRecord ToRecord(this TerritoryJoinRequest request)
+    {
+        return new TerritoryJoinRequestRecord
+        {
+            Id = request.Id,
+            TerritoryId = request.TerritoryId,
+            RequesterUserId = request.RequesterUserId,
+            Message = request.Message,
+            Status = request.Status,
+            CreatedAtUtc = request.CreatedAtUtc,
+            ExpiresAtUtc = request.ExpiresAtUtc,
+            DecidedAtUtc = request.DecidedAtUtc,
+            DecidedByUserId = request.DecidedByUserId
+        };
+    }
+
+    public static TerritoryJoinRequest ToDomain(this TerritoryJoinRequestRecord record)
+    {
+        return new TerritoryJoinRequest(
+            record.Id,
+            record.TerritoryId,
+            record.RequesterUserId,
+            record.Message,
+            record.Status,
+            record.CreatedAtUtc,
+            record.ExpiresAtUtc,
+            record.DecidedAtUtc,
+            record.DecidedByUserId);
+    }
+
+    public static TerritoryJoinRequestRecipientRecord ToRecord(this TerritoryJoinRequestRecipient recipient)
+    {
+        return new TerritoryJoinRequestRecipientRecord
+        {
+            JoinRequestId = recipient.JoinRequestId,
+            RecipientUserId = recipient.RecipientUserId,
+            CreatedAtUtc = recipient.CreatedAtUtc,
+            RespondedAtUtc = recipient.RespondedAtUtc
+        };
+    }
+
+    public static TerritoryJoinRequestRecipient ToDomain(this TerritoryJoinRequestRecipientRecord record)
+    {
+        return new TerritoryJoinRequestRecipient(
+            record.JoinRequestId,
+            record.RecipientUserId,
+            record.CreatedAtUtc,
+            record.RespondedAtUtc);
+    }
+
     public static CommunityPostRecord ToRecord(this CommunityPost post)
     {
         return new CommunityPostRecord
@@ -136,6 +455,8 @@ public static class PostgresMappers
             Visibility = post.Visibility,
             Status = post.Status,
             MapEntityId = post.MapEntityId,
+            ReferenceType = post.ReferenceType,
+            ReferenceId = post.ReferenceId,
             CreatedAtUtc = post.CreatedAtUtc
         };
     }
@@ -152,7 +473,9 @@ public static class PostgresMappers
             record.Visibility,
             record.Status,
             record.MapEntityId,
-            record.CreatedAtUtc);
+            record.CreatedAtUtc,
+            record.ReferenceType,
+            record.ReferenceId);
     }
 
     public static PostCommentRecord ToRecord(this PostComment comment)
@@ -164,6 +487,58 @@ public static class PostgresMappers
             UserId = comment.UserId,
             Content = comment.Content,
             CreatedAtUtc = comment.CreatedAtUtc
+        };
+    }
+
+    public static TerritoryEventRecord ToRecord(this TerritoryEvent territoryEvent)
+    {
+        return new TerritoryEventRecord
+        {
+            Id = territoryEvent.Id,
+            TerritoryId = territoryEvent.TerritoryId,
+            Title = territoryEvent.Title,
+            Description = territoryEvent.Description,
+            StartsAtUtc = territoryEvent.StartsAtUtc,
+            EndsAtUtc = territoryEvent.EndsAtUtc,
+            Latitude = territoryEvent.Latitude,
+            Longitude = territoryEvent.Longitude,
+            LocationLabel = territoryEvent.LocationLabel,
+            CreatedByUserId = territoryEvent.CreatedByUserId,
+            CreatedByMembership = territoryEvent.CreatedByMembership,
+            Status = territoryEvent.Status,
+            CreatedAtUtc = territoryEvent.CreatedAtUtc,
+            UpdatedAtUtc = territoryEvent.UpdatedAtUtc
+        };
+    }
+
+    public static TerritoryEvent ToDomain(this TerritoryEventRecord record)
+    {
+        return new TerritoryEvent(
+            record.Id,
+            record.TerritoryId,
+            record.Title,
+            record.Description,
+            record.StartsAtUtc,
+            record.EndsAtUtc,
+            record.Latitude,
+            record.Longitude,
+            record.LocationLabel,
+            record.CreatedByUserId,
+            record.CreatedByMembership,
+            record.Status,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static EventParticipationRecord ToRecord(this EventParticipation participation)
+    {
+        return new EventParticipationRecord
+        {
+            EventId = participation.EventId,
+            UserId = participation.UserId,
+            Status = participation.Status,
+            CreatedAtUtc = participation.CreatedAtUtc,
+            UpdatedAtUtc = participation.UpdatedAtUtc
         };
     }
 

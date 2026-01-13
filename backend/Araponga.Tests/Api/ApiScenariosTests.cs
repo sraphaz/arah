@@ -5,10 +5,13 @@ using Araponga.Api;
 using Araponga.Api.Contracts.Auth;
 using Araponga.Api.Contracts.Alerts;
 using Araponga.Api.Contracts.Assets;
+using Araponga.Api.Contracts.Events;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Contracts.Features;
+using Araponga.Api.Contracts.JoinRequests;
 using Araponga.Api.Contracts.Map;
 using Araponga.Api.Contracts.Memberships;
+using Araponga.Api.Contracts.Marketplace;
 using Araponga.Api.Contracts.Territories;
 using Araponga.Infrastructure.InMemory;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +23,7 @@ public sealed class ApiScenariosTests
 {
     private static readonly Guid ActiveTerritoryId = Guid.Parse("22222222-2222-2222-2222-222222222222");
     private static readonly Guid PilotTerritoryId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+    private static readonly Guid ResidentUserId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
 
     [Fact]
     public async Task SearchTerritories_ByCity()
@@ -372,10 +376,10 @@ public sealed class ApiScenariosTests
         var visitorFeed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(visitorFeed);
-        Assert.Single(visitorFeed!);
-        Assert.Equal("GENERAL", visitorFeed![0].Type);
-        Assert.False(visitorFeed[0].IsHighlighted);
-        Assert.Equal(0, visitorFeed[0].LikeCount);
+        Assert.Equal(2, visitorFeed!.Count);
+        Assert.All(visitorFeed, item => Assert.Equal("GENERAL", item.Type));
+        Assert.All(visitorFeed, item => Assert.False(item.IsHighlighted));
+        Assert.All(visitorFeed, item => Assert.Equal(0, item.LikeCount));
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "not.a.jwt");
         var invalidToken = await client.GetAsync($"api/v1/feed?territoryId={ActiveTerritoryId}");
@@ -386,7 +390,7 @@ public sealed class ApiScenariosTests
         var nonResidentFeed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(nonResidentFeed);
-        Assert.Single(nonResidentFeed!);
+        Assert.Equal(2, nonResidentFeed!.Count);
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -415,7 +419,7 @@ public sealed class ApiScenariosTests
         var feed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(feed);
-        Assert.Single(feed!);
+        Assert.Equal(2, feed!.Count);
     }
 
     [Fact]
@@ -639,39 +643,35 @@ public sealed class ApiScenariosTests
     }
 
     [Fact]
-    public async Task Feed_EventRequiresApprovalForVisitor()
+    public async Task Events_CreateAndParticipate()
     {
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
-        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "feed-events");
-
-        await SelectTerritoryAsync(client, ActiveTerritoryId);
 
         var visitorToken = await LoginForTokenAsync(client, "google", "visitor-event");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
 
-        var created = await client.PostAsJsonAsync(
-            $"api/v1/feed?territoryId={ActiveTerritoryId}",
-            new CreatePostRequest(
+        var create = await client.PostAsJsonAsync(
+            "api/v1/events",
+            new CreateEventRequest(
+                ActiveTerritoryId,
                 "Evento visitante",
                 "Detalhes",
-                "EVENT",
-                "PUBLIC",
-                null,
-                new List<GeoAnchorRequest> { new(-23.37, -45.02, "EVENT") },
-                null));
-        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+                DateTime.UtcNow.AddDays(1),
+                DateTime.UtcNow.AddDays(1).AddHours(2),
+                -23.37,
+                -45.02,
+                "Praça"));
+        Assert.Equal(HttpStatusCode.Created, create.StatusCode);
 
-        var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
-        Assert.NotNull(createdPost);
+        var created = await create.Content.ReadFromJsonAsync<EventResponse>();
+        Assert.NotNull(created);
 
-        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var interest = await client.PostAsync($"api/v1/events/{created!.EventId}/interest", null);
+        Assert.Equal(HttpStatusCode.NoContent, interest.StatusCode);
 
-        var approve = await client.PatchAsJsonAsync(
-            $"api/v1/feed/{createdPost!.Id}/approval?territoryId={ActiveTerritoryId}",
-            new ApproveEventRequest("PUBLISHED"));
-        Assert.Equal(HttpStatusCode.NoContent, approve.StatusCode);
+        var confirm = await client.PostAsync($"api/v1/events/{created.EventId}/confirm", null);
+        Assert.Equal(HttpStatusCode.NoContent, confirm.StatusCode);
     }
 
     [Fact]
@@ -799,7 +799,8 @@ public sealed class ApiScenariosTests
         Assert.NotNull(pins);
         Assert.NotEmpty(pins!);
         Assert.Contains(pins, pin => pin.PinType == "entity");
-        Assert.Contains(pins, pin => pin.EntityId == Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+        Assert.Contains(pins, pin => pin.EntityId == Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
+        Assert.Contains(pins, pin => pin.PostId == Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
     }
 
     [Fact]
@@ -1053,6 +1054,257 @@ public sealed class ApiScenariosTests
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(feed);
         Assert.Contains(feed!, item => item.Type == "ALERT" && item.IsHighlighted);
+    }
+
+    [Fact]
+    public async Task JoinRequests_CreateIncomingAndApprove()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-requester");
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        var otherToken = await LoginForTokenAsync(client, "google", "join-other");
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var createResponse = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(new[] { ResidentUserId }, "Quero entrar"));
+
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<JoinRequestCreatedResponse>();
+        Assert.NotNull(created);
+        Assert.Equal("PENDING", created!.Status);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var incoming = await client.GetFromJsonAsync<List<IncomingJoinRequestResponse>>(
+            "api/v1/join-requests/incoming?status=pending");
+        Assert.NotNull(incoming);
+        Assert.Contains(incoming!, item => item.JoinRequestId == created.JoinRequestId);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", otherToken);
+        var incomingOther = await client.GetFromJsonAsync<List<IncomingJoinRequestResponse>>(
+            "api/v1/join-requests/incoming?status=pending");
+        Assert.NotNull(incomingOther);
+        Assert.DoesNotContain(incomingOther!, item => item.JoinRequestId == created.JoinRequestId);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var approveResponse = await client.PostAsync(
+            $"api/v1/join-requests/{created.JoinRequestId}/approve",
+            null);
+        approveResponse.EnsureSuccessStatusCode();
+        var approvePayload = await approveResponse.Content.ReadFromJsonAsync<JoinRequestActionResponse>();
+        Assert.NotNull(approvePayload);
+        Assert.Equal("APPROVED", approvePayload!.Status);
+
+        var approveAgain = await client.PostAsync(
+            $"api/v1/join-requests/{created.JoinRequestId}/approve",
+            null);
+        approveAgain.EnsureSuccessStatusCode();
+        var approveAgainPayload = await approveAgain.Content.ReadFromJsonAsync<JoinRequestActionResponse>();
+        Assert.NotNull(approveAgainPayload);
+        Assert.Equal("APPROVED", approveAgainPayload!.Status);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var membershipStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
+            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
+        Assert.NotNull(membershipStatus);
+        Assert.Equal("RESIDENT", membershipStatus!.Role);
+        Assert.Equal("VALIDATED", membershipStatus.VerificationStatus);
+    }
+
+    [Fact]
+    public async Task JoinRequests_RequireRecipients()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-empty");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(Array.Empty<Guid>(), null));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task JoinRequests_ApproveRequiresRecipientOrAdmin()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-nonrecipient");
+        var otherToken = await LoginForTokenAsync(client, "google", "join-random");
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var createResponse = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(new[] { ResidentUserId }, "Teste"));
+
+        createResponse.EnsureSuccessStatusCode();
+        var created = await createResponse.Content.ReadFromJsonAsync<JoinRequestCreatedResponse>();
+        Assert.NotNull(created);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", otherToken);
+        var approveResponse = await client.PostAsync(
+            $"api/v1/join-requests/{created!.JoinRequestId}/approve",
+            null);
+
+        Assert.Equal(HttpStatusCode.Forbidden, approveResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task JoinRequests_RejectDoesNotPromoteMembership()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var requesterToken = await LoginForTokenAsync(client, "google", "join-rejecter");
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var createResponse = await client.PostAsJsonAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/join-requests",
+            new CreateJoinRequestRequest(new[] { ResidentUserId }, "Rejeitar"));
+
+        createResponse.EnsureSuccessStatusCode();
+        var created = await createResponse.Content.ReadFromJsonAsync<JoinRequestCreatedResponse>();
+        Assert.NotNull(created);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var rejectResponse = await client.PostAsync(
+            $"api/v1/join-requests/{created!.JoinRequestId}/reject",
+            null);
+        rejectResponse.EnsureSuccessStatusCode();
+        var rejectPayload = await rejectResponse.Content.ReadFromJsonAsync<JoinRequestActionResponse>();
+        Assert.NotNull(rejectPayload);
+        Assert.Equal("REJECTED", rejectPayload!.Status);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
+        var membershipStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
+            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
+        Assert.NotNull(membershipStatus);
+        Assert.Equal("NONE", membershipStatus!.Role);
+    }
+
+    [Fact]
+    public async Task Marketplace_VisitorCannotCreateStoreOrListing()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var visitorToken = await LoginForTokenAsync(client, "google", "visitor-store");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
+
+        var storeResponse = await client.PostAsJsonAsync(
+            "api/v1/stores",
+            new UpsertStoreRequest(
+                ActiveTerritoryId,
+                "Loja Visitante",
+                null,
+                "ON_INQUIRY_ONLY",
+                new StoreContactPayload(null, null, null, null, null, null)));
+
+        Assert.Equal(HttpStatusCode.Forbidden, storeResponse.StatusCode);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var residentStoreResponse = await client.PostAsJsonAsync(
+            "api/v1/stores",
+            new UpsertStoreRequest(
+                ActiveTerritoryId,
+                "Loja Morador",
+                null,
+                "ON_INQUIRY_ONLY",
+                new StoreContactPayload(null, null, null, null, null, null)));
+
+        residentStoreResponse.EnsureSuccessStatusCode();
+        var residentStore = await residentStoreResponse.Content.ReadFromJsonAsync<StoreResponse>();
+        Assert.NotNull(residentStore);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
+        var listingResponse = await client.PostAsJsonAsync(
+            "api/v1/listings",
+            new CreateListingRequest(
+                ActiveTerritoryId,
+                residentStore!.Id,
+                "PRODUCT",
+                "Produto",
+                null,
+                null,
+                null,
+                "FIXED",
+                10m,
+                "BRL",
+                "unidade",
+                null,
+                null,
+                "ACTIVE"));
+
+        Assert.Equal(HttpStatusCode.Forbidden, listingResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task Marketplace_SearchAndInquiryWork()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var storeResponse = await client.PostAsJsonAsync(
+            "api/v1/stores",
+            new UpsertStoreRequest(
+                ActiveTerritoryId,
+                "Loja Morador",
+                null,
+                "PUBLIC",
+                new StoreContactPayload("(11) 90000-0000", null, "loja@exemplo.com", null, null, "email")));
+
+        storeResponse.EnsureSuccessStatusCode();
+        var store = await storeResponse.Content.ReadFromJsonAsync<StoreResponse>();
+        Assert.NotNull(store);
+
+        var listingResponse = await client.PostAsJsonAsync(
+            "api/v1/listings",
+            new CreateListingRequest(
+                ActiveTerritoryId,
+                store!.Id,
+                "PRODUCT",
+                "Mel do Vale",
+                "Mel local",
+                "Alimentos",
+                "mel",
+                "FIXED",
+                30m,
+                "BRL",
+                "unidade",
+                null,
+                null,
+                "ACTIVE"));
+
+        listingResponse.EnsureSuccessStatusCode();
+        var listing = await listingResponse.Content.ReadFromJsonAsync<ListingResponse>();
+        Assert.NotNull(listing);
+
+        var search = await client.GetFromJsonAsync<List<ListingResponse>>(
+            $"api/v1/listings?territoryId={ActiveTerritoryId}&type=PRODUCT&q=mel");
+
+        Assert.NotNull(search);
+        Assert.Contains(search!, item => item.Id == listing!.Id);
+
+        var inquiryResponse = await client.PostAsJsonAsync(
+            $"api/v1/listings/{listing!.Id}/inquiries",
+            new CreateInquiryRequest("Quero saber mais"));
+
+        inquiryResponse.EnsureSuccessStatusCode();
+        var inquiry = await inquiryResponse.Content.ReadFromJsonAsync<InquiryResponse>();
+        Assert.NotNull(inquiry);
+        Assert.NotNull(inquiry!.StoreContact);
     }
 
     private static async Task<string> LoginForTokenAsync(HttpClient client, string provider, string externalId)

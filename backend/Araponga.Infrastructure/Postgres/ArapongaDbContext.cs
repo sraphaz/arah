@@ -15,8 +15,12 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<UserRecord> Users => Set<UserRecord>();
     public DbSet<TerritoryMembershipRecord> TerritoryMemberships => Set<TerritoryMembershipRecord>();
     public DbSet<UserTerritoryRecord> UserTerritories => Set<UserTerritoryRecord>();
+    public DbSet<TerritoryJoinRequestRecord> TerritoryJoinRequests => Set<TerritoryJoinRequestRecord>();
+    public DbSet<TerritoryJoinRequestRecipientRecord> TerritoryJoinRequestRecipients => Set<TerritoryJoinRequestRecipientRecord>();
     public DbSet<CommunityPostRecord> CommunityPosts => Set<CommunityPostRecord>();
     public DbSet<PostCommentRecord> PostComments => Set<PostCommentRecord>();
+    public DbSet<TerritoryEventRecord> TerritoryEvents => Set<TerritoryEventRecord>();
+    public DbSet<EventParticipationRecord> EventParticipations => Set<EventParticipationRecord>();
     public DbSet<MapEntityRecord> MapEntities => Set<MapEntityRecord>();
     public DbSet<MapEntityRelationRecord> MapEntityRelations => Set<MapEntityRelationRecord>();
     public DbSet<PostGeoAnchorRecord> PostGeoAnchors => Set<PostGeoAnchorRecord>();
@@ -35,6 +39,14 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<SanctionRecord> Sanctions => Set<SanctionRecord>();
     public DbSet<OutboxMessageRecord> OutboxMessages => Set<OutboxMessageRecord>();
     public DbSet<UserNotificationRecord> UserNotifications => Set<UserNotificationRecord>();
+    public DbSet<TerritoryStoreRecord> TerritoryStores => Set<TerritoryStoreRecord>();
+    public DbSet<StoreListingRecord> StoreListings => Set<StoreListingRecord>();
+    public DbSet<ListingInquiryRecord> ListingInquiries => Set<ListingInquiryRecord>();
+    public DbSet<CartRecord> Carts => Set<CartRecord>();
+    public DbSet<CartItemRecord> CartItems => Set<CartItemRecord>();
+    public DbSet<CheckoutRecord> Checkouts => Set<CheckoutRecord>();
+    public DbSet<CheckoutItemRecord> CheckoutItems => Set<CheckoutItemRecord>();
+    public DbSet<PlatformFeeConfigRecord> PlatformFeeConfigs => Set<PlatformFeeConfigRecord>();
 
     public Task CommitAsync(CancellationToken cancellationToken)
     {
@@ -98,6 +110,31 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasIndex(m => new { m.UserId, m.TerritoryId }).IsUnique();
         });
 
+        modelBuilder.Entity<TerritoryJoinRequestRecord>(entity =>
+        {
+            entity.ToTable("territory_join_requests");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.Status).HasConversion<string>();
+            entity.Property(r => r.Status).HasMaxLength(32);
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(r => r.ExpiresAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(r => r.DecidedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.TerritoryId);
+            entity.HasIndex(r => r.RequesterUserId);
+            entity.HasIndex(r => new { r.TerritoryId, r.RequesterUserId })
+                .HasFilter("\"Status\" = 'Pending'");
+        });
+
+        modelBuilder.Entity<TerritoryJoinRequestRecipientRecord>(entity =>
+        {
+            entity.ToTable("territory_join_request_recipients");
+            entity.HasKey(r => new { r.JoinRequestId, r.RecipientUserId });
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(r => r.RespondedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.JoinRequestId);
+            entity.HasIndex(r => r.RecipientUserId);
+        });
+
         modelBuilder.Entity<CommunityPostRecord>(entity =>
         {
             entity.ToTable("community_posts");
@@ -108,11 +145,13 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.Property(p => p.Type).HasConversion<int>();
             entity.Property(p => p.Visibility).HasConversion<int>();
             entity.Property(p => p.Status).HasConversion<int>();
+            entity.Property(p => p.ReferenceType).HasMaxLength(40);
             entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(p => p.TerritoryId);
             entity.HasIndex(p => new { p.TerritoryId, p.CreatedAtUtc });
             entity.HasIndex(p => p.AuthorUserId);
             entity.HasIndex(p => p.MapEntityId);
+            entity.HasIndex(p => new { p.ReferenceType, p.ReferenceId });
         });
 
         modelBuilder.Entity<PostCommentRecord>(entity =>
@@ -122,6 +161,37 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.Property(c => c.Content).HasMaxLength(2000).IsRequired();
             entity.Property(c => c.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(c => c.PostId);
+        });
+
+        modelBuilder.Entity<TerritoryEventRecord>(entity =>
+        {
+            entity.ToTable("territory_events");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(4000);
+            entity.Property(e => e.StartsAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(e => e.EndsAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(e => e.Latitude).HasColumnType("double precision");
+            entity.Property(e => e.Longitude).HasColumnType("double precision");
+            entity.Property(e => e.LocationLabel).HasMaxLength(200);
+            entity.Property(e => e.CreatedByMembership).HasConversion<string>().HasMaxLength(32);
+            entity.Property(e => e.Status).HasConversion<string>().HasMaxLength(32);
+            entity.Property(e => e.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(e => e.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(e => new { e.TerritoryId, e.StartsAtUtc });
+            entity.HasIndex(e => new { e.TerritoryId, e.Status });
+            entity.HasIndex(e => new { e.Latitude, e.Longitude });
+        });
+
+        modelBuilder.Entity<EventParticipationRecord>(entity =>
+        {
+            entity.ToTable("event_participations");
+            entity.HasKey(p => new { p.EventId, p.UserId });
+            entity.Property(p => p.Status).HasConversion<string>().HasMaxLength(32);
+            entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(p => p.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(p => new { p.EventId, p.Status });
+            entity.HasIndex(p => new { p.UserId, p.Status });
         });
 
         modelBuilder.Entity<MapEntityRecord>(entity =>
@@ -329,6 +399,131 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasIndex(n => n.UserId);
             entity.HasIndex(n => n.CreatedAtUtc);
             entity.HasIndex(n => new { n.SourceOutboxId, n.UserId }).IsUnique();
+        });
+
+        modelBuilder.Entity<TerritoryStoreRecord>(entity =>
+        {
+            entity.ToTable("territory_stores");
+            entity.HasKey(s => s.Id);
+            entity.Property(s => s.DisplayName).HasMaxLength(200).IsRequired();
+            entity.Property(s => s.Description).HasMaxLength(1000);
+            entity.Property(s => s.Status).HasConversion<int>();
+            entity.Property(s => s.ContactVisibility).HasConversion<int>();
+            entity.Property(s => s.Phone).HasMaxLength(80);
+            entity.Property(s => s.Whatsapp).HasMaxLength(80);
+            entity.Property(s => s.Email).HasMaxLength(320);
+            entity.Property(s => s.Instagram).HasMaxLength(120);
+            entity.Property(s => s.Website).HasMaxLength(200);
+            entity.Property(s => s.PreferredContactMethod).HasMaxLength(80);
+            entity.Property(s => s.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(s => s.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(s => s.TerritoryId);
+            entity.HasIndex(s => s.OwnerUserId);
+            entity.HasIndex(s => new { s.TerritoryId, s.OwnerUserId }).IsUnique();
+        });
+
+        modelBuilder.Entity<StoreListingRecord>(entity =>
+        {
+            entity.ToTable("store_listings");
+            entity.HasKey(l => l.Id);
+            entity.Property(l => l.Type).HasConversion<int>();
+            entity.Property(l => l.Title).HasMaxLength(200).IsRequired();
+            entity.Property(l => l.Description).HasMaxLength(4000);
+            entity.Property(l => l.Category).HasMaxLength(120);
+            entity.Property(l => l.Tags).HasMaxLength(4000);
+            entity.Property(l => l.PricingType).HasConversion<int>();
+            entity.Property(l => l.PriceAmount).HasColumnType("numeric(18,2)");
+            entity.Property(l => l.Currency).HasMaxLength(10);
+            entity.Property(l => l.Unit).HasMaxLength(120);
+            entity.Property(l => l.Latitude).HasColumnType("double precision");
+            entity.Property(l => l.Longitude).HasColumnType("double precision");
+            entity.Property(l => l.Status).HasConversion<int>();
+            entity.Property(l => l.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(l => l.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(l => l.TerritoryId);
+            entity.HasIndex(l => l.StoreId);
+            entity.HasIndex(l => new { l.TerritoryId, l.Type, l.Status });
+        });
+
+        modelBuilder.Entity<ListingInquiryRecord>(entity =>
+        {
+            entity.ToTable("listing_inquiries");
+            entity.HasKey(i => i.Id);
+            entity.Property(i => i.Status).HasConversion<int>();
+            entity.Property(i => i.Message).HasMaxLength(2000);
+            entity.Property(i => i.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(i => i.TerritoryId);
+            entity.HasIndex(i => i.ListingId);
+            entity.HasIndex(i => i.StoreId);
+            entity.HasIndex(i => i.FromUserId);
+        });
+
+        modelBuilder.Entity<CartRecord>(entity =>
+        {
+            entity.ToTable("carts");
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(c => c.TerritoryId);
+            entity.HasIndex(c => c.UserId);
+            entity.HasIndex(c => new { c.TerritoryId, c.UserId }).IsUnique();
+        });
+
+        modelBuilder.Entity<CartItemRecord>(entity =>
+        {
+            entity.ToTable("cart_items");
+            entity.HasKey(i => i.Id);
+            entity.Property(i => i.Notes).HasMaxLength(1000);
+            entity.Property(i => i.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(i => i.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(i => i.CartId);
+            entity.HasIndex(i => i.ListingId);
+            entity.HasIndex(i => new { i.CartId, i.ListingId }).IsUnique();
+        });
+
+        modelBuilder.Entity<CheckoutRecord>(entity =>
+        {
+            entity.ToTable("checkouts");
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Status).HasConversion<int>();
+            entity.Property(c => c.Currency).HasMaxLength(10).IsRequired();
+            entity.Property(c => c.ItemsSubtotalAmount).HasColumnType("numeric(18,2)");
+            entity.Property(c => c.PlatformFeeAmount).HasColumnType("numeric(18,2)");
+            entity.Property(c => c.TotalAmount).HasColumnType("numeric(18,2)");
+            entity.Property(c => c.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(c => c.TerritoryId);
+            entity.HasIndex(c => c.BuyerUserId);
+            entity.HasIndex(c => c.StoreId);
+        });
+
+        modelBuilder.Entity<CheckoutItemRecord>(entity =>
+        {
+            entity.ToTable("checkout_items");
+            entity.HasKey(i => i.Id);
+            entity.Property(i => i.ListingType).HasConversion<int>();
+            entity.Property(i => i.TitleSnapshot).HasMaxLength(200).IsRequired();
+            entity.Property(i => i.UnitPrice).HasColumnType("numeric(18,2)");
+            entity.Property(i => i.LineSubtotal).HasColumnType("numeric(18,2)");
+            entity.Property(i => i.PlatformFeeLine).HasColumnType("numeric(18,2)");
+            entity.Property(i => i.LineTotal).HasColumnType("numeric(18,2)");
+            entity.Property(i => i.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(i => i.CheckoutId);
+            entity.HasIndex(i => i.ListingId);
+        });
+
+        modelBuilder.Entity<PlatformFeeConfigRecord>(entity =>
+        {
+            entity.ToTable("platform_fee_configs");
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.ListingType).HasConversion<int>();
+            entity.Property(c => c.FeeMode).HasConversion<int>();
+            entity.Property(c => c.FeeValue).HasColumnType("numeric(18,4)");
+            entity.Property(c => c.Currency).HasMaxLength(10);
+            entity.Property(c => c.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(c => c.TerritoryId);
+            entity.HasIndex(c => new { c.TerritoryId, c.ListingType, c.IsActive }).IsUnique();
         });
     }
 }

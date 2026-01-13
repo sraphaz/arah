@@ -17,6 +17,7 @@ public sealed class MapController : ControllerBase
 {
     private readonly MapService _mapService;
     private readonly FeedService _feedService;
+    private readonly EventsService _eventsService;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
     private readonly IAssetRepository _assetRepository;
     private readonly IAssetGeoAnchorRepository _assetGeoAnchorRepository;
@@ -27,6 +28,7 @@ public sealed class MapController : ControllerBase
     public MapController(
         MapService mapService,
         FeedService feedService,
+        EventsService eventsService,
         IPostGeoAnchorRepository postGeoAnchorRepository,
         IAssetRepository assetRepository,
         IAssetGeoAnchorRepository assetGeoAnchorRepository,
@@ -36,6 +38,7 @@ public sealed class MapController : ControllerBase
     {
         _mapService = mapService;
         _feedService = feedService;
+        _eventsService = eventsService;
         _postGeoAnchorRepository = postGeoAnchorRepository;
         _assetRepository = assetRepository;
         _assetGeoAnchorRepository = assetGeoAnchorRepository;
@@ -174,6 +177,7 @@ public sealed class MapController : ControllerBase
         var includeAlerts = typeSet.Contains("alert");
         var includePosts = typeSet.Contains("post");
         var includeMedia = typeSet.Contains("media");
+        var includeEvents = typeSet.Contains("event");
 
         var pins = new List<MapPinResponse>();
 
@@ -189,6 +193,7 @@ public sealed class MapController : ControllerBase
                 entity.Latitude,
                 entity.Longitude,
                 entity.Name,
+                null,
                 null,
                 null,
                 null,
@@ -222,6 +227,7 @@ public sealed class MapController : ControllerBase
                         anchor.Longitude,
                         asset.Name,
                         asset.Id,
+                        null,
                         null,
                         null,
                         null,
@@ -272,8 +278,31 @@ public sealed class MapController : ControllerBase
                     pinType is "post" or "alert" ? post.Id : null,
                     pinType == "media" ? post.Id : null,
                     null,
+                    null,
                     post.Status.ToString().ToUpperInvariant()));
             }
+        }
+
+        if (includeEvents)
+        {
+            var events = await _eventsService.ListEventsAsync(
+                resolvedTerritoryId.Value,
+                null,
+                null,
+                null,
+                cancellationToken);
+
+            pins.AddRange(events.Select(summary => new MapPinResponse(
+                "event",
+                summary.Event.Latitude,
+                summary.Event.Longitude,
+                summary.Event.Title,
+                null,
+                null,
+                null,
+                summary.Event.Id,
+                null,
+                summary.Event.Status.ToString().ToUpperInvariant())));
         }
 
         return Ok(pins);
@@ -293,7 +322,7 @@ public sealed class MapController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(types))
         {
-            return new HashSet<string>(new[] { "post", "media", "entity", "alert", "asset" });
+            return new HashSet<string>(new[] { "post", "media", "entity", "alert", "asset", "event" });
         }
 
         return new HashSet<string>(

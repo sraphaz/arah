@@ -792,62 +792,6 @@
         }
       }
     },
-    "/api/v1/feed/{postId}/approval": {
-      "patch": {
-        "tags": [
-          "Feed"
-        ],
-        "summary": "Aprova ou rejeita eventos criados no território ativo.",
-        "parameters": [
-          {
-            "name": "postId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "territoryId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "nullable": true
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApproveEventRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
     "/api/v1/map/entities": {
       "get": {
         "tags": [
@@ -1777,6 +1721,1043 @@
           }
         }
       }
+    },
+    "/api/v1/stores": {
+      "post": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Cria ou atualiza a loja do usuário no território.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertStoreRequest"
+              },
+              "examples": {
+                "createStore": {
+                  "summary": "Criar loja",
+                  "value": {
+                    "territoryId": "22222222-2222-2222-2222-222222222222",
+                    "displayName": "Loja do Vale",
+                    "description": "Produtos artesanais da comunidade.",
+                    "contactVisibility": "ON_INQUIRY_ONLY",
+                    "contact": {
+                      "phone": "(11) 90000-0000",
+                      "whatsapp": "(11) 90000-0000",
+                      "email": "loja@comunidade.com",
+                      "instagram": "@lojavale",
+                      "website": "https://lojavale.com",
+                      "preferredContactMethod": "whatsapp"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/stores/me": {
+      "get": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Retorna a loja do usuário no território.",
+        "parameters": [
+          {
+            "name": "territoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/stores/{id}": {
+      "patch": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Atualiza detalhes da loja.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStoreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/stores/{id}/pause": {
+      "post": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Altera status da loja para PAUSED.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/stores/{id}/activate": {
+      "post": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Altera status da loja para ACTIVE.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/stores/{id}/archive": {
+      "post": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Altera status da loja para ARCHIVED.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/stores/{id}/payments/enable": {
+      "post": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Define se a loja aceita pagamentos.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StorePaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/listings": {
+      "get": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Busca listings no território.",
+        "parameters": [
+          {
+            "name": "territoryId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "22222222-2222-2222-2222-222222222222"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "PRODUCT"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "mel"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListingResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Cria um listing (produto ou serviço).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateListingRequest"
+              },
+              "examples": {
+                "produto": {
+                  "summary": "Listing de produto",
+                  "value": {
+                    "territoryId": "22222222-2222-2222-2222-222222222222",
+                    "storeId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                    "type": "PRODUCT",
+                    "title": "Mel artesanal 500g",
+                    "description": "Mel produzido localmente.",
+                    "category": "Alimentos",
+                    "tags": "mel,organico",
+                    "pricingType": "FIXED",
+                    "priceAmount": 32.5,
+                    "currency": "BRL",
+                    "unit": "unidade",
+                    "status": "ACTIVE"
+                  }
+                },
+                "servico": {
+                  "summary": "Listing de serviço",
+                  "value": {
+                    "territoryId": "22222222-2222-2222-2222-222222222222",
+                    "storeId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                    "type": "SERVICE",
+                    "title": "Aula de surf",
+                    "description": "Aula individual de 1h.",
+                    "category": "Esportes",
+                    "tags": "surf,aula",
+                    "pricingType": "HOURLY",
+                    "priceAmount": 80,
+                    "currency": "BRL",
+                    "unit": "hora",
+                    "status": "ACTIVE"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/listings/{id}": {
+      "get": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Detalhe de um listing.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Atualiza um listing.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateListingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/listings/{id}/archive": {
+      "post": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Arquiva um listing.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/listings/{id}/inquiries": {
+      "post": {
+        "tags": [
+          "Inquiries"
+        ],
+        "summary": "Cria uma inquiry para um listing.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInquiryRequest"
+              },
+              "examples": {
+                "contato": {
+                  "summary": "Criar inquiry",
+                  "value": {
+                    "message": "Tenho interesse, podemos conversar?"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InquiryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/inquiries/me": {
+      "get": {
+        "tags": [
+          "Inquiries"
+        ],
+        "summary": "Lista inquiries enviadas pelo usuário.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InquiryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/inquiries/received": {
+      "get": {
+        "tags": [
+          "Inquiries"
+        ],
+        "summary": "Lista inquiries recebidas pelo dono das lojas.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InquiryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/cart": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Retorna o carrinho do usuário no território.",
+        "parameters": [
+          {
+            "name": "territoryId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/cart/items": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Adiciona um item ao carrinho.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItemRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartItemResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/cart/items/{id}": {
+      "patch": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Atualiza um item do carrinho.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCartItemRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartItemResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Remove um item do carrinho.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/cart/checkout": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Finaliza o checkout do carrinho.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartCheckoutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartCheckoutResponse"
+                },
+                "examples": {
+                  "checkout": {
+                    "summary": "Checkout com checkouts e inquiries",
+                    "value": {
+                      "checkouts": [
+                        {
+                          "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+                          "territoryId": "22222222-2222-2222-2222-222222222222",
+                          "buyerUserId": "cccccccc-cccc-cccc-cccc-cccccccccccc",
+                          "storeId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                          "status": "CREATED",
+                          "currency": "BRL",
+                          "itemsSubtotalAmount": 65.0,
+                          "platformFeeAmount": 3.25,
+                          "totalAmount": 68.25,
+                          "createdAtUtc": "2024-11-20T12:00:00Z",
+                          "updatedAtUtc": "2024-11-20T12:00:00Z",
+                          "items": [
+                            {
+                              "id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+                              "listingId": "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee",
+                              "listingType": "PRODUCT",
+                              "titleSnapshot": "Mel artesanal 500g",
+                              "quantity": 2,
+                              "unitPrice": 32.5,
+                              "lineSubtotal": 65.0,
+                              "platformFeeLine": 3.25,
+                              "lineTotal": 68.25,
+                              "createdAtUtc": "2024-11-20T12:00:00Z"
+                            }
+                          ]
+                        }
+                      ],
+                      "inquiries": [
+                        {
+                          "id": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+                          "storeId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                          "listingId": "11111111-1111-1111-1111-111111111111",
+                          "batchId": "22222222-2222-2222-2222-222222222222"
+                        }
+                      ],
+                      "summaries": [
+                        {
+                          "storeId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                          "checkoutItemCount": 1,
+                          "inquiryCount": 1
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/platform-fees": {
+      "get": {
+        "tags": [
+          "PlatformFees"
+        ],
+        "summary": "Lista configurações ativas de fee por território.",
+        "parameters": [
+          {
+            "name": "territoryId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlatformFeeResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "PlatformFees"
+        ],
+        "summary": "Atualiza ou cria uma configuração de fee.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformFeeRequest"
+              },
+              "examples": {
+                "configurarFee": {
+                  "summary": "Configurar fee do território",
+                  "value": {
+                    "territoryId": "22222222-2222-2222-2222-222222222222",
+                    "listingType": "PRODUCT",
+                    "feeMode": "PERCENTAGE",
+                    "feeValue": 0.05,
+                    "currency": "BRL",
+                    "isActive": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformFeeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2508,6 +3489,874 @@
           }
         },
         "additionalProperties": false
+      },
+      "StoreContactPayload": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "whatsapp": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "instagram": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "preferredContactMethod": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpsertStoreRequest": {
+        "required": [
+          "territoryId",
+          "displayName",
+          "contactVisibility"
+        ],
+        "type": "object",
+        "properties": {
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactVisibility": {
+            "type": "string"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/StoreContactPayload"
+          }
+        }
+      },
+      "UpdateStoreRequest": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactVisibility": {
+            "type": "string",
+            "nullable": true
+          },
+          "contact": {
+            "$ref": "#/components/schemas/StoreContactPayload"
+          }
+        }
+      },
+      "StorePaymentRequest": {
+        "required": [
+          "enabled"
+        ],
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StoreResponse": {
+        "required": [
+          "id",
+          "territoryId",
+          "ownerUserId",
+          "displayName",
+          "status",
+          "paymentsEnabled",
+          "contactVisibility",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "paymentsEnabled": {
+            "type": "boolean"
+          },
+          "contactVisibility": {
+            "type": "string"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/StoreContactPayload"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateListingRequest": {
+        "required": [
+          "territoryId",
+          "storeId",
+          "type",
+          "title",
+          "pricingType"
+        ],
+        "type": "object",
+        "properties": {
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "storeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string",
+            "nullable": true
+          },
+          "pricingType": {
+            "type": "string"
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateListingRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string",
+            "nullable": true
+          },
+          "pricingType": {
+            "type": "string",
+            "nullable": true
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ListingResponse": {
+        "required": [
+          "id",
+          "territoryId",
+          "storeId",
+          "type",
+          "title",
+          "pricingType",
+          "status",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "storeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string",
+            "nullable": true
+          },
+          "pricingType": {
+            "type": "string"
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateInquiryRequest": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "StoreContactResponse": {
+        "type": "object",
+        "properties": {
+          "contactVisibility": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "whatsapp": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "instagram": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "preferredContactMethod": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "InquiryResponse": {
+        "required": [
+          "id",
+          "territoryId",
+          "listingId",
+          "storeId",
+          "fromUserId",
+          "status",
+          "createdAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "storeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fromUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "batchId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "storeContact": {
+            "$ref": "#/components/schemas/StoreContactResponse"
+          }
+        }
+      },
+      "AddCartItemRequest": {
+        "required": [
+          "territoryId",
+          "listingId",
+          "quantity"
+        ],
+        "type": "object",
+        "properties": {
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateCartItemRequest": {
+        "required": [
+          "quantity"
+        ],
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CartItemResponse": {
+        "required": [
+          "id",
+          "listingId",
+          "quantity",
+          "createdAtUtc",
+          "updatedAtUtc",
+          "listing",
+          "store",
+          "isPurchasable"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "listing": {
+            "$ref": "#/components/schemas/ListingResponse"
+          },
+          "store": {
+            "$ref": "#/components/schemas/StoreResponse"
+          },
+          "isPurchasable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CartResponse": {
+        "required": [
+          "cartId",
+          "territoryId",
+          "userId",
+          "createdAtUtc",
+          "updatedAtUtc",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "cartId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItemResponse"
+            }
+          }
+        }
+      },
+      "CartCheckoutRequest": {
+        "required": [
+          "territoryId"
+        ],
+        "type": "object",
+        "properties": {
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CheckoutItemResponse": {
+        "required": [
+          "id",
+          "listingId",
+          "listingType",
+          "titleSnapshot",
+          "quantity",
+          "createdAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingType": {
+            "type": "string"
+          },
+          "titleSnapshot": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "lineSubtotal": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "platformFeeLine": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "lineTotal": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CheckoutResponse": {
+        "required": [
+          "id",
+          "territoryId",
+          "buyerUserId",
+          "storeId",
+          "status",
+          "currency",
+          "createdAtUtc",
+          "updatedAtUtc",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "buyerUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "storeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "itemsSubtotalAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "platformFeeAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutItemResponse"
+            }
+          }
+        }
+      },
+      "InquiryBundleResponse": {
+        "required": [
+          "id",
+          "storeId",
+          "listingId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "storeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batchId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "CheckoutSummaryResponse": {
+        "required": [
+          "storeId",
+          "checkoutItemCount",
+          "inquiryCount"
+        ],
+        "type": "object",
+        "properties": {
+          "storeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "checkoutItemCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inquiryCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CartCheckoutResponse": {
+        "required": [
+          "checkouts",
+          "inquiries",
+          "summaries"
+        ],
+        "type": "object",
+        "properties": {
+          "checkouts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutResponse"
+            }
+          },
+          "inquiries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InquiryBundleResponse"
+            }
+          },
+          "summaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutSummaryResponse"
+            }
+          }
+        }
+      },
+      "PlatformFeeRequest": {
+        "required": [
+          "territoryId",
+          "listingType",
+          "feeMode",
+          "feeValue",
+          "isActive"
+        ],
+        "type": "object",
+        "properties": {
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingType": {
+            "type": "string"
+          },
+          "feeMode": {
+            "type": "string"
+          },
+          "feeValue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PlatformFeeResponse": {
+        "required": [
+          "id",
+          "territoryId",
+          "listingType",
+          "feeMode",
+          "feeValue",
+          "isActive",
+          "createdAtUtc",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "territoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "listingType": {
+            "type": "string"
+          },
+          "feeMode": {
+            "type": "string"
+          },
+          "feeValue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       }
     }
   }

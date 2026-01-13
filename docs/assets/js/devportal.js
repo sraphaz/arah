@@ -1,27 +1,5 @@
 (function () {
-  var landingUrl = 'https://araponga.app';
-  var returnParam = 'fromLanding';
-  var returnFlagKey = 'landingReturnAllowed';
-  var banner = document.querySelector('[data-return-banner]');
-
-  try {
-    var currentUrl = new URL(window.location.href);
-    var hasReturnFlag = sessionStorage.getItem(returnFlagKey) === '1';
-    var fromLanding = document.referrer.indexOf(landingUrl) === 0
-      || currentUrl.searchParams.get(returnParam) === '1'
-      || hasReturnFlag;
-
-    if (fromLanding) {
-      sessionStorage.setItem(returnFlagKey, '1');
-      if (banner) {
-        banner.hidden = false;
-      }
-    }
-  } catch (error) {
-    if (banner) {
-      banner.hidden = false;
-    }
-  }
+  // Banner sempre visível - sem lógica de redirect
 
   var explorerButton = document.querySelector('[data-explorer-button]');
   var explorerContainer = document.getElementById('openapi-browser');

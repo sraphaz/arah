@@ -11,12 +11,12 @@ A apresentação pública (landing) usa o domínio `https://araponga.app/`, com 
 - `araponga.app` → landing pública.
 - `araponga.org` → redireciona para `https://araponga.eco.br/`.
 
-## Lógica de publicação e redirect
+## Lógica de publicação e navegação
 
-- O `docs/index.html` mantém o redirect automático para a landing pública.
-- Quando o usuário retorna da landing, a experiência fica no portal técnico (`araponga.eco.br`).
+- O `docs/index.html` exibe links estáticos para `araponga.app` (página estática no Gamma) e `/devportal/` (Developer Portal).
+- **Sem redirects automáticos**: A navegação é feita apenas através de links clicáveis pelo usuário.
+- O Developer Portal sempre exibe um banner com link para voltar ao `araponga.app`.
 - Ajustes de DNS e redirects externos (ex: `araponga.org` → `araponga.eco.br`) são feitos no provedor de domínio.
-- **Proteção contra loops**: O redirect verifica se já foi executado e não redireciona se o usuário vier de páginas externas (como Gamma) para evitar loops infinitos.
 
 ## Validação rápida
 

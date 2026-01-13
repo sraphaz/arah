@@ -36,6 +36,7 @@ Documentos sobre moderação, observabilidade e operações.
 - **[Admin e Observabilidade](./31_ADMIN_OBSERVABILITY.md)** - Administração e observabilidade do sistema
 - **[Rastreabilidade](./32_TRACEABILITY.md)** - Rastreabilidade de requisitos e funcionalidades
 - **[API - Lógica de Negócio e Usabilidade](./60_API_LÓGICA_NEGÓCIO.md)** - Documento completo de lógica de negócio e usabilidade de todas as operações da API
+- **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
 ### 📝 Histórico e Mudanças
 Documentos sobre histórico e mudanças do projeto.
@@ -47,6 +48,7 @@ Documentos sobre histórico e mudanças do projeto.
 Documentos de planejamento e recomendações de implementação.
 
 - **[Plano de Refatoração - Recomendações Pendentes](./PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md)** - Plano de implementação de recomendações pendentes
+- **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
 ### 🚀 Produção e Deploy
 Documentos sobre prontidão para produção e deploy.

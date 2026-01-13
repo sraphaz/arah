@@ -695,4 +695,47 @@ public static class PostgresMappers
             record.Longitude,
             record.CreatedAtUtc);
     }
+
+    public static UserPreferencesRecord ToRecord(this UserPreferences preferences)
+    {
+        return new UserPreferencesRecord
+        {
+            UserId = preferences.UserId,
+            ProfileVisibility = preferences.ProfileVisibility,
+            ContactVisibility = preferences.ContactVisibility,
+            ShareLocation = preferences.ShareLocation,
+            ShowMemberships = preferences.ShowMemberships,
+            NotificationsPostsEnabled = preferences.NotificationPreferences.PostsEnabled,
+            NotificationsCommentsEnabled = preferences.NotificationPreferences.CommentsEnabled,
+            NotificationsEventsEnabled = preferences.NotificationPreferences.EventsEnabled,
+            NotificationsAlertsEnabled = preferences.NotificationPreferences.AlertsEnabled,
+            NotificationsMarketplaceEnabled = preferences.NotificationPreferences.MarketplaceEnabled,
+            NotificationsModerationEnabled = preferences.NotificationPreferences.ModerationEnabled,
+            NotificationsMembershipRequestsEnabled = preferences.NotificationPreferences.MembershipRequestsEnabled,
+            CreatedAtUtc = preferences.CreatedAtUtc,
+            UpdatedAtUtc = preferences.UpdatedAtUtc
+        };
+    }
+
+    public static UserPreferences ToDomain(this UserPreferencesRecord record)
+    {
+        var notificationPreferences = new NotificationPreferences(
+            record.NotificationsPostsEnabled,
+            record.NotificationsCommentsEnabled,
+            record.NotificationsEventsEnabled,
+            record.NotificationsAlertsEnabled,
+            record.NotificationsMarketplaceEnabled,
+            record.NotificationsModerationEnabled,
+            record.NotificationsMembershipRequestsEnabled);
+
+        return new UserPreferences(
+            record.UserId,
+            record.ProfileVisibility,
+            record.ContactVisibility,
+            record.ShareLocation,
+            record.ShowMemberships,
+            notificationPreferences,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
 }

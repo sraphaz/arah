@@ -1007,6 +1007,127 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 
 ---
 
+## 👤 Preferências de Usuário
+
+### Obter Preferências (`GET /api/v1/users/me/preferences`)
+
+**Descrição**: Obtém as preferências de privacidade e notificações do usuário autenticado.
+
+**Como usar**:
+- Requisição autenticada (token JWT obrigatório)
+- Retorna preferências existentes ou cria preferências padrão se não existirem
+
+**Regras de negócio**:
+- Se o usuário não tiver preferências configuradas, retorna valores padrão:
+  - `profileVisibility`: `Public`
+  - `contactVisibility`: `ResidentsOnly`
+  - `shareLocation`: `false`
+  - `showMemberships`: `true`
+  - Todas as notificações habilitadas por padrão
+
+**Resposta**:
+- **200 OK**: Preferências do usuário
+- **401 Unauthorized**: Token inválido ou ausente
+
+### Atualizar Preferências de Privacidade (`PUT /api/v1/users/me/preferences/privacy`)
+
+**Descrição**: Atualiza as preferências de privacidade do usuário autenticado.
+
+**Como usar**:
+- Body: `profileVisibility` (Public, ResidentsOnly, Private), `contactVisibility` (Public, ResidentsOnly, Private), `shareLocation` (boolean), `showMemberships` (boolean)
+
+**Regras de negócio**:
+- `profileVisibility`: Controla quem pode ver o perfil do usuário
+  - `Public`: Visível para todos
+  - `ResidentsOnly`: Apenas moradores dos territórios onde o usuário é membro
+  - `Private`: Apenas o próprio usuário
+- `contactVisibility`: Controla visibilidade de email, telefone e endereço
+  - `Public`: Visível para todos
+  - `ResidentsOnly`: Apenas moradores validados
+  - `Private`: Nunca visível publicamente
+- `shareLocation`: Permite compartilhamento de localização
+- `showMemberships`: Permite exibir territórios onde o usuário é membro
+
+**Resposta**:
+- **200 OK**: Preferências atualizadas
+- **400 Bad Request**: Valores inválidos para enums
+- **401 Unauthorized**: Token inválido ou ausente
+
+### Atualizar Preferências de Notificações (`PUT /api/v1/users/me/preferences/notifications`)
+
+**Descrição**: Atualiza as preferências de notificações do usuário autenticado.
+
+**Como usar**:
+- Body: Flags booleanas para cada tipo de notificação:
+  - `postsEnabled`: Notificações de novos posts
+  - `commentsEnabled`: Notificações de comentários
+  - `eventsEnabled`: Notificações de eventos
+  - `alertsEnabled`: Notificações de alertas
+  - `marketplaceEnabled`: Notificações do marketplace
+  - `moderationEnabled`: Notificações de moderação
+  - `membershipRequestsEnabled`: Notificações de solicitações de entrada
+
+**Regras de negócio**:
+- Cada tipo de notificação pode ser habilitado/desabilitado independentemente
+- Quando desabilitado, o usuário não receberá notificações daquele tipo
+- Notificações do sistema (não categorizadas) sempre são enviadas
+
+**Resposta**:
+- **200 OK**: Preferências atualizadas
+- **401 Unauthorized**: Token inválido ou ausente
+
+### Obter Perfil (`GET /api/v1/users/me/profile`)
+
+**Descrição**: Obtém o perfil do usuário autenticado.
+
+**Como usar**:
+- Requisição autenticada (token JWT obrigatório)
+- Retorna informações do perfil do próprio usuário
+
+**Regras de negócio**:
+- Usuário sempre vê todas as suas próprias informações
+- Regras de visibilidade se aplicam apenas quando outros usuários visualizam o perfil
+
+**Resposta**:
+- **200 OK**: Perfil do usuário
+- **401 Unauthorized**: Token inválido ou ausente
+
+### Atualizar Nome de Exibição (`PUT /api/v1/users/me/profile/display-name`)
+
+**Descrição**: Atualiza o nome de exibição do usuário autenticado.
+
+**Como usar**:
+- Body: `displayName` (string, obrigatório, não vazio)
+
+**Regras de negócio**:
+- Nome de exibição é obrigatório
+- Nome é normalizado (trim de espaços)
+- Nome atualizado é refletido imediatamente em todas as operações
+
+**Resposta**:
+- **200 OK**: Perfil atualizado
+- **400 Bad Request**: Nome vazio ou inválido
+- **401 Unauthorized**: Token inválido ou ausente
+
+### Atualizar Informações de Contato (`PUT /api/v1/users/me/profile/contact`)
+
+**Descrição**: Atualiza as informações de contato do usuário autenticado.
+
+**Como usar**:
+- Body: `email` (opcional), `phoneNumber` (opcional), `address` (opcional)
+- Todos os campos são opcionais, mas pelo menos um deve ser fornecido
+
+**Regras de negócio**:
+- Campos opcionais podem ser atualizados independentemente
+- Valores são normalizados (trim de espaços)
+- Visibilidade das informações de contato é controlada por `contactVisibility` nas preferências
+
+**Resposta**:
+- **200 OK**: Perfil atualizado
+- **401 Unauthorized**: Token inválido ou ausente
+
+---
+
 **Documento gerado em**: 2025-01-13  
 **Versão da API**: v1  
 **Status**: Produção

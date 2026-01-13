@@ -235,7 +235,8 @@ public sealed class InMemoryDataStore
     public List<UserBlock> UserBlocks { get; } = new();
     public List<Sanction> Sanctions { get; } = new();
     public List<OutboxMessage> OutboxMessages { get; } = new();
-    public List<UserNotification> UserNotifications { get; } = new();
-    public List<TerritoryJoinRequest> TerritoryJoinRequests { get; } = new();
-    public List<TerritoryJoinRequestRecipient> TerritoryJoinRequestRecipients { get; } = new();
-}
+        public List<UserNotification> UserNotifications { get; } = new();
+        public List<TerritoryJoinRequest> TerritoryJoinRequests { get; } = new();
+        public List<TerritoryJoinRequestRecipient> TerritoryJoinRequestRecipients { get; } = new();
+        public List<Domain.Users.UserPreferences> UserPreferences { get; } = new();
+    }

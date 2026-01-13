@@ -45,6 +45,11 @@ Esta pasta contém a documentação detalhada de todos os Pull Requests implemen
 - **[PR_MIGRAR_DEVPORTAL_PARA_DEVELOPER.md](./PR_MIGRAR_DEVPORTAL_PARA_DEVELOPER.md)**  
   Migração do DevPortal para Developer Portal
 
+### 👤 Funcionalidades de Usuário
+
+- **[PR_USER_PREFERENCES.md](./PR_USER_PREFERENCES.md)**  
+  Implementação completa de preferências de privacidade e configurações do usuário
+
 ## 📖 Como Usar
 
 Cada arquivo `PR_*.md` contém documentação completa incluindo:

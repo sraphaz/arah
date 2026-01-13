@@ -59,11 +59,13 @@ public sealed class OutboxDispatcherWorker : BackgroundService
             return;
         }
 
+        var preferencesRepository = scope.ServiceProvider.GetRequiredService<IUserPreferencesRepository>();
+
         foreach (var message in messages)
         {
             try
             {
-                await HandleMessageAsync(message, inboxRepository, stoppingToken);
+                await HandleMessageAsync(message, inboxRepository, preferencesRepository, stoppingToken);
                 message.ProcessedAtUtc = DateTime.UtcNow;
                 message.LastError = null;
                 message.ProcessAfterUtc = null;
@@ -90,6 +92,7 @@ public sealed class OutboxDispatcherWorker : BackgroundService
     private static async Task HandleMessageAsync(
         Infrastructure.Postgres.Entities.OutboxMessageRecord message,
         INotificationInboxRepository inboxRepository,
+        IUserPreferencesRepository preferencesRepository,
         CancellationToken cancellationToken)
     {
         if (!string.Equals(message.Type, "notification.dispatch", StringComparison.OrdinalIgnoreCase))
@@ -109,6 +112,28 @@ public sealed class OutboxDispatcherWorker : BackgroundService
 
         foreach (var recipient in payload.Recipients.Distinct())
         {
+            // Verificar preferências do usuário antes de enviar notificação
+            var preferences = await preferencesRepository.GetByUserIdAsync(recipient, cancellationToken);
+            if (preferences is not null)
+            {
+                var shouldNotify = payload.Kind switch
+                {
+                    "post.created" => preferences.NotificationPreferences.PostsEnabled,
+                    "comment.created" => preferences.NotificationPreferences.CommentsEnabled,
+                    "event.created" => preferences.NotificationPreferences.EventsEnabled,
+                    "alert.created" => preferences.NotificationPreferences.AlertsEnabled,
+                    "marketplace.inquiry" => preferences.NotificationPreferences.MarketplaceEnabled,
+                    "report.created" => preferences.NotificationPreferences.ModerationEnabled,
+                    "membership.request" => preferences.NotificationPreferences.MembershipRequestsEnabled,
+                    _ => true // Notificações do sistema sempre habilitadas
+                };
+
+                if (!shouldNotify)
+                {
+                    continue; // Pular este destinatário
+                }
+            }
+
             var notification = new UserNotification(
                 Guid.NewGuid(),
                 recipient,

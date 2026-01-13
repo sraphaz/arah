@@ -13,6 +13,7 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
 
     public DbSet<TerritoryRecord> Territories => Set<TerritoryRecord>();
     public DbSet<UserRecord> Users => Set<UserRecord>();
+    public DbSet<UserPreferencesRecord> UserPreferences => Set<UserPreferencesRecord>();
     public DbSet<TerritoryMembershipRecord> TerritoryMemberships => Set<TerritoryMembershipRecord>();
     public DbSet<UserTerritoryRecord> UserTerritories => Set<UserTerritoryRecord>();
     public DbSet<TerritoryJoinRequestRecord> TerritoryJoinRequests => Set<TerritoryJoinRequestRecord>();
@@ -85,6 +86,21 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.Property(u => u.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => new { u.Provider, u.ExternalId }).IsUnique();
+        });
+
+        modelBuilder.Entity<UserPreferencesRecord>(entity =>
+        {
+            entity.ToTable("user_preferences");
+            entity.HasKey(p => p.UserId);
+            entity.Property(p => p.ProfileVisibility).HasConversion<int>().IsRequired();
+            entity.Property(p => p.ContactVisibility).HasConversion<int>().IsRequired();
+            entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(p => p.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasOne<UserRecord>()
+                .WithOne()
+                .HasForeignKey<UserPreferencesRecord>(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(p => p.UserId).IsUnique();
         });
 
         modelBuilder.Entity<TerritoryMembershipRecord>(entity =>

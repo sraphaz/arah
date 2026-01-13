@@ -1,6 +1,7 @@
 using Araponga.Application.Events;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
+using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
 using Araponga.Domain.Social;
@@ -416,62 +417,272 @@ public sealed class ApplicationServiceTests
     }
 
     [Fact]
-    public async Task FeedService_CreatesPendingEventForVisitorAndApproves()
+    public async Task EventsService_SetsCreatedByMembershipForVisitor()
     {
         var dataStore = new InMemoryDataStore();
+        var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
+        var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
-        var featureFlags = new InMemoryFeatureFlagService();
-        var auditLogger = new InMemoryAuditLogger(dataStore);
-        var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var mapRepository = new InMemoryMapRepository(dataStore);
-        var geoAnchorRepository = new InMemoryPostGeoAnchorRepository(dataStore);
-        var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
-        var assetRepository = new InMemoryAssetRepository(dataStore);
-        var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var service = new FeedService(
+        var service = new EventsService(
+            eventRepository,
+            participationRepository,
             feedRepository,
             accessEvaluator,
-            featureFlags,
-            auditLogger,
-            blockRepository,
-            mapRepository,
-            geoAnchorRepository,
-            postAssetRepository,
-            assetRepository,
-            sanctionRepository,
-            EventBus,
+            userRepository,
             unitOfWork);
 
         var visitorId = Guid.NewGuid();
-        var create = await service.CreatePostAsync(
+        await userRepository.AddAsync(
+            new User(
+                visitorId,
+                "Visitante",
+                "visitante@araponga.com",
+                null,
+                "DOC-1",
+                "(00) 90000-0000",
+                "Rua 1",
+                "google",
+                "visitor-external",
+                UserRole.Visitor,
+                DateTime.UtcNow),
+            CancellationToken.None);
+
+        var create = await service.CreateEventAsync(
             ActiveTerritoryId,
             visitorId,
             "Evento visitante",
             "Detalhes",
-            PostType.Event,
-            PostVisibility.Public,
-            PostStatus.PendingApproval,
+            DateTime.UtcNow.AddDays(1),
+            DateTime.UtcNow.AddDays(1).AddHours(2),
+            -23.0,
+            -45.0,
+            "Praça central",
+            CancellationToken.None);
+
+        Assert.True(create.success);
+        Assert.NotNull(create.summary);
+        Assert.Equal(MembershipRole.Visitor, create.summary!.Event.CreatedByMembership);
+    }
+
+    [Fact]
+    public async Task EventsService_SetsCreatedByMembershipForResident()
+    {
+        var dataStore = new InMemoryDataStore();
+        var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
+        var participationRepository = new InMemoryEventParticipationRepository(dataStore);
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new EventsService(
+            eventRepository,
+            participationRepository,
+            feedRepository,
+            accessEvaluator,
+            userRepository,
+            unitOfWork);
+
+        var residentId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var create = await service.CreateEventAsync(
+            ActiveTerritoryId,
+            residentId,
+            "Evento morador",
+            "Detalhes",
+            DateTime.UtcNow.AddDays(3),
             null,
-            new List<GeoAnchorInput>
-            {
-                new(-23.0, -45.0, "EVENT")
-            },
+            -23.1,
+            -45.1,
             null,
             CancellationToken.None);
 
         Assert.True(create.success);
-        Assert.Equal(PostStatus.PendingApproval, create.post!.Status);
+        Assert.NotNull(create.summary);
+        Assert.Equal(MembershipRole.Resident, create.summary!.Event.CreatedByMembership);
+    }
 
-        var approve = await service.ApproveEventAsync(
+    [Fact]
+    public async Task EventsService_UpsertsParticipation()
+    {
+        var dataStore = new InMemoryDataStore();
+        var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
+        var participationRepository = new InMemoryEventParticipationRepository(dataStore);
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new EventsService(
+            eventRepository,
+            participationRepository,
+            feedRepository,
+            accessEvaluator,
+            userRepository,
+            unitOfWork);
+
+        var eventId = Guid.NewGuid();
+        var territoryEvent = new TerritoryEvent(
+            eventId,
             ActiveTerritoryId,
-            create.post.Id,
+            "Mutirão",
+            "Detalhes",
+            DateTime.UtcNow.AddDays(5),
+            null,
+            -23.2,
+            -45.2,
+            null,
             Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-            PostStatus.Published,
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+        await eventRepository.AddAsync(territoryEvent, CancellationToken.None);
+
+        var userId = Guid.NewGuid();
+        await service.SetParticipationAsync(eventId, userId, EventParticipationStatus.Interested, CancellationToken.None);
+        await service.SetParticipationAsync(eventId, userId, EventParticipationStatus.Confirmed, CancellationToken.None);
+
+        Assert.Single(dataStore.EventParticipations);
+        Assert.Equal(EventParticipationStatus.Confirmed, dataStore.EventParticipations[0].Status);
+    }
+
+    [Fact]
+    public async Task EventsService_ListsByTerritoryAndCounts()
+    {
+        var dataStore = new InMemoryDataStore();
+        dataStore.TerritoryEvents.Clear();
+        var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
+        var participationRepository = new InMemoryEventParticipationRepository(dataStore);
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new EventsService(
+            eventRepository,
+            participationRepository,
+            feedRepository,
+            accessEvaluator,
+            userRepository,
+            unitOfWork);
+
+        var eventA = new TerritoryEvent(
+            Guid.NewGuid(),
+            ActiveTerritoryId,
+            "Evento A",
+            null,
+            DateTime.UtcNow.AddDays(1),
+            null,
+            -23.2,
+            -45.2,
+            null,
+            Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+        var eventB = new TerritoryEvent(
+            Guid.NewGuid(),
+            ActiveTerritoryId,
+            "Evento B",
+            null,
+            DateTime.UtcNow.AddDays(10),
+            null,
+            -23.25,
+            -45.25,
+            null,
+            Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+        await eventRepository.AddAsync(eventA, CancellationToken.None);
+        await eventRepository.AddAsync(eventB, CancellationToken.None);
+
+        await participationRepository.UpsertAsync(
+            new EventParticipation(eventA.Id, Guid.NewGuid(), EventParticipationStatus.Confirmed, DateTime.UtcNow, DateTime.UtcNow),
+            CancellationToken.None);
+        await participationRepository.UpsertAsync(
+            new EventParticipation(eventA.Id, Guid.NewGuid(), EventParticipationStatus.Interested, DateTime.UtcNow, DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(approve.success);
+        var results = await service.ListEventsAsync(
+            ActiveTerritoryId,
+            DateTime.UtcNow,
+            DateTime.UtcNow.AddDays(2),
+            null,
+            CancellationToken.None);
+
+        Assert.Single(results);
+        var summary = results[0];
+        Assert.Equal(eventA.Id, summary.Event.Id);
+        Assert.Equal(1, summary.ConfirmedCount);
+        Assert.Equal(1, summary.InterestedCount);
+    }
+
+    [Fact]
+    public async Task EventsService_FiltersNearbyEvents()
+    {
+        var dataStore = new InMemoryDataStore();
+        var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
+        var participationRepository = new InMemoryEventParticipationRepository(dataStore);
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(new InMemoryTerritoryMembershipRepository(dataStore));
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new EventsService(
+            eventRepository,
+            participationRepository,
+            feedRepository,
+            accessEvaluator,
+            userRepository,
+            unitOfWork);
+
+        var nearbyEvent = new TerritoryEvent(
+            Guid.NewGuid(),
+            ActiveTerritoryId,
+            "Evento perto",
+            null,
+            DateTime.UtcNow.AddDays(1),
+            null,
+            -23.3501,
+            -44.8912,
+            null,
+            Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+        var farEvent = new TerritoryEvent(
+            Guid.NewGuid(),
+            ActiveTerritoryId,
+            "Evento longe",
+            null,
+            DateTime.UtcNow.AddDays(1),
+            null,
+            -22.0,
+            -44.0,
+            null,
+            Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+
+        await eventRepository.AddAsync(nearbyEvent, CancellationToken.None);
+        await eventRepository.AddAsync(farEvent, CancellationToken.None);
+
+        var results = await service.GetEventsNearbyAsync(
+            -23.35,
+            -44.89,
+            5,
+            null,
+            null,
+            ActiveTerritoryId,
+            CancellationToken.None);
+
+        Assert.Single(results);
+        Assert.Equal(nearbyEvent.Id, results[0].Event.Id);
     }
 
     [Fact]

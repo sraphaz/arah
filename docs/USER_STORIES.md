@@ -82,15 +82,16 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 - Sem geolocalização, o post pode ser publicado (não aparece no mapa).
 - Mídias no post são pós-MVP.
 
-### [MVP][P0] Eventos com aprovação de moradores
+### [MVP][P0] Eventos do território (abertos)
 **Como** visitante ou morador
 **Quero** publicar eventos no território
-**Para** mobilizar ações locais com curadoria comunitária.
+**Para** mobilizar ações locais com participação aberta.
 
 **Critérios de aceite**
-- Moradores podem publicar eventos com status publicado imediatamente.
-- Visitantes podem publicar eventos com status pendente até aprovação de moradores.
-- Moradores podem aprovar ou rejeitar eventos pendentes.
+- Visitantes e moradores podem criar eventos com data, horário e geolocalização obrigatória.
+- Evento registra se foi criado por visitante ou morador no momento da criação.
+- Usuários podem marcar interesse ou confirmação em eventos.
+- Eventos aparecem no feed e no mapa via filtros, sem aprovação prévia.
 
 ### [MVP][P0] Entidades territoriais com confirmação
 **Como** visitante ou morador

@@ -13,5 +13,7 @@ public sealed class CommunityPostRecord
     public PostVisibility Visibility { get; set; }
     public PostStatus Status { get; set; }
     public Guid? MapEntityId { get; set; }
+    public string? ReferenceType { get; set; }
+    public Guid? ReferenceId { get; set; }
     public DateTime CreatedAtUtc { get; set; }
 }

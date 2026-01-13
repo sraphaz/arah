@@ -8,6 +8,7 @@ public sealed record FeedItemResponse(
     string Visibility,
     string Status,
     Guid? MapEntityId,
+    EventSummaryResponse? Event,
     bool IsHighlighted,
     int LikeCount,
     int ShareCount,

@@ -128,11 +128,6 @@ public sealed class FeedService
             return (false, "Alert posts are disabled for this territory.", null);
         }
 
-        if (type == PostType.Event && !_featureFlags.IsEnabled(territoryId, Models.FeatureFlag.EventPosts))
-        {
-            return (false, "Event posts are disabled for this territory.", null);
-        }
-
         if (mapEntityId is not null)
         {
             var entity = await _mapRepository.GetByIdAsync(mapEntityId.Value, cancellationToken);
@@ -182,7 +177,7 @@ public sealed class FeedService
 
         await _feedRepository.AddPostAsync(post, cancellationToken);
 
-        var anchors = BuildPostAnchors(post.Id, type, geoAnchors);
+        var anchors = BuildPostAnchors(post.Id, geoAnchors);
 
         await _postGeoAnchorRepository.AddAsync(anchors, cancellationToken);
 
@@ -207,7 +202,6 @@ public sealed class FeedService
 
     private static IReadOnlyCollection<Domain.Map.PostGeoAnchor> BuildPostAnchors(
         Guid postId,
-        PostType postType,
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors)
     {
         const int MaxAnchors = 50;
@@ -219,7 +213,7 @@ public sealed class FeedService
         }
 
         var now = DateTime.UtcNow;
-        var anchorType = postType == PostType.Event ? "EVENT" : "POST";
+        const string AnchorType = "POST";
 
         return geoAnchors
             .Where(anchor => GeoCoordinate.IsValid(anchor.Latitude, anchor.Longitude))
@@ -235,54 +229,9 @@ public sealed class FeedService
                 postId,
                 anchor.Latitude,
                 anchor.Longitude,
-                anchorType,
+                AnchorType,
                 now))
             .ToList();
-    }
-
-    public async Task<(bool success, string? error)> ApproveEventAsync(
-        Guid territoryId,
-        Guid postId,
-        Guid approverUserId,
-        PostStatus status,
-        CancellationToken cancellationToken)
-    {
-        var isResident = await _accessEvaluator.IsResidentAsync(approverUserId, territoryId, cancellationToken);
-        if (!isResident)
-        {
-            return (false, "Only residents can approve events.");
-        }
-
-        var post = await _feedRepository.GetPostAsync(postId, cancellationToken);
-        if (post is null || post.TerritoryId != territoryId)
-        {
-            return (false, "Post not found.");
-        }
-
-        if (post.Type != PostType.Event)
-        {
-            return (false, "Only event posts can be approved.");
-        }
-
-        if (status != PostStatus.Published && status != PostStatus.Rejected)
-        {
-            return (false, "Invalid approval status.");
-        }
-
-        await _feedRepository.UpdateStatusAsync(postId, status, cancellationToken);
-
-        await _auditLogger.LogAsync(
-            new Models.AuditEntry(
-                $"event.{status.ToString().ToLowerInvariant()}",
-                approverUserId,
-                territoryId,
-                postId,
-                DateTime.UtcNow),
-            cancellationToken);
-
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        return (true, null);
     }
 
     public async Task<bool> LikeAsync(

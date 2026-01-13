@@ -1,5 +1,6 @@
 using Araponga.Application.Models;
 using Araponga.Domain.Assets;
+using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
@@ -92,6 +93,25 @@ public sealed class InMemoryDataStore
                 DateTime.UtcNow)
         };
 
+        TerritoryEvents = new List<TerritoryEvent>
+        {
+            new(
+                Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                territoryB.Id,
+                "Reunião de moradores",
+                "Encontro exclusivo para moradores.",
+                DateTime.UtcNow.AddDays(2),
+                DateTime.UtcNow.AddDays(2).AddHours(2),
+                -23.3732,
+                -45.0184,
+                "Praça do Vale",
+                residentUser.Id,
+                MembershipRole.Resident,
+                EventStatus.Scheduled,
+                DateTime.UtcNow,
+                DateTime.UtcNow)
+        };
+
         Posts = new List<CommunityPost>
         {
             new(
@@ -106,16 +126,18 @@ public sealed class InMemoryDataStore
                 null,
                 DateTime.UtcNow),
             new(
-                Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
                 territoryB.Id,
                 residentUser.Id,
                 "Reunião de moradores",
                 "Encontro exclusivo para moradores.",
-                PostType.Event,
-                PostVisibility.ResidentsOnly,
+                PostType.General,
+                PostVisibility.Public,
                 PostStatus.Published,
                 null,
-                DateTime.UtcNow)
+                DateTime.UtcNow,
+                "EVENT",
+                TerritoryEvents[0].Id)
         };
 
         PostGeoAnchors = new List<PostGeoAnchor>
@@ -132,7 +154,7 @@ public sealed class InMemoryDataStore
                 Posts[1].Id,
                 -23.3732,
                 -45.0184,
-                "EVENT",
+                "POST",
                 DateTime.UtcNow)
         };
 
@@ -169,6 +191,7 @@ public sealed class InMemoryDataStore
         AssetGeoAnchors = new List<AssetGeoAnchor>();
         AssetValidations = new List<AssetValidation>();
         PostAssets = new List<PostAsset>();
+        EventParticipations = new List<EventParticipation>();
     }
 
     public List<Territory> Territories { get; }
@@ -176,6 +199,7 @@ public sealed class InMemoryDataStore
     public List<TerritoryMembership> Memberships { get; }
     public List<UserTerritory> UserTerritories { get; } = new();
     public List<CommunityPost> Posts { get; }
+    public List<TerritoryEvent> TerritoryEvents { get; }
     public List<MapEntity> MapEntities { get; }
     public List<MapEntityRelation> MapEntityRelations { get; } = new();
     public List<PostGeoAnchor> PostGeoAnchors { get; }
@@ -184,6 +208,7 @@ public sealed class InMemoryDataStore
     public List<AssetGeoAnchor> AssetGeoAnchors { get; }
     public List<AssetValidation> AssetValidations { get; }
     public List<PostAsset> PostAssets { get; }
+    public List<EventParticipation> EventParticipations { get; }
     public Dictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();
     public Dictionary<Guid, List<PostComment>> PostComments { get; } = new();

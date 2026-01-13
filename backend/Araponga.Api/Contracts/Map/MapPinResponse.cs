@@ -8,5 +8,6 @@ public sealed record MapPinResponse(
     Guid? AssetId,
     Guid? PostId,
     Guid? MediaId,
+    Guid? EventId,
     Guid? EntityId,
     string? Status);

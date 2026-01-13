@@ -5,6 +5,7 @@ using Araponga.Api;
 using Araponga.Api.Contracts.Auth;
 using Araponga.Api.Contracts.Alerts;
 using Araponga.Api.Contracts.Assets;
+using Araponga.Api.Contracts.Events;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Contracts.Features;
 using Araponga.Api.Contracts.JoinRequests;
@@ -374,10 +375,10 @@ public sealed class ApiScenariosTests
         var visitorFeed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(visitorFeed);
-        Assert.Single(visitorFeed!);
-        Assert.Equal("GENERAL", visitorFeed![0].Type);
-        Assert.False(visitorFeed[0].IsHighlighted);
-        Assert.Equal(0, visitorFeed[0].LikeCount);
+        Assert.Equal(2, visitorFeed!.Count);
+        Assert.All(visitorFeed, item => Assert.Equal("GENERAL", item.Type));
+        Assert.All(visitorFeed, item => Assert.False(item.IsHighlighted));
+        Assert.All(visitorFeed, item => Assert.Equal(0, item.LikeCount));
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "not.a.jwt");
         var invalidToken = await client.GetAsync($"api/v1/feed?territoryId={ActiveTerritoryId}");
@@ -388,7 +389,7 @@ public sealed class ApiScenariosTests
         var nonResidentFeed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(nonResidentFeed);
-        Assert.Single(nonResidentFeed!);
+        Assert.Equal(2, nonResidentFeed!.Count);
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -417,7 +418,7 @@ public sealed class ApiScenariosTests
         var feed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
             $"api/v1/feed?territoryId={ActiveTerritoryId}");
         Assert.NotNull(feed);
-        Assert.Single(feed!);
+        Assert.Equal(2, feed!.Count);
     }
 
     [Fact]
@@ -641,39 +642,35 @@ public sealed class ApiScenariosTests
     }
 
     [Fact]
-    public async Task Feed_EventRequiresApprovalForVisitor()
+    public async Task Events_CreateAndParticipate()
     {
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
-        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "feed-events");
-
-        await SelectTerritoryAsync(client, ActiveTerritoryId);
 
         var visitorToken = await LoginForTokenAsync(client, "google", "visitor-event");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
 
-        var created = await client.PostAsJsonAsync(
-            $"api/v1/feed?territoryId={ActiveTerritoryId}",
-            new CreatePostRequest(
+        var create = await client.PostAsJsonAsync(
+            "api/v1/events",
+            new CreateEventRequest(
+                ActiveTerritoryId,
                 "Evento visitante",
                 "Detalhes",
-                "EVENT",
-                "PUBLIC",
-                null,
-                new List<GeoAnchorRequest> { new(-23.37, -45.02, "EVENT") },
-                null));
-        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+                DateTime.UtcNow.AddDays(1),
+                DateTime.UtcNow.AddDays(1).AddHours(2),
+                -23.37,
+                -45.02,
+                "Praça"));
+        Assert.Equal(HttpStatusCode.Created, create.StatusCode);
 
-        var createdPost = await created.Content.ReadFromJsonAsync<FeedItemResponse>();
-        Assert.NotNull(createdPost);
+        var created = await create.Content.ReadFromJsonAsync<EventResponse>();
+        Assert.NotNull(created);
 
-        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+        var interest = await client.PostAsync($"api/v1/events/{created!.EventId}/interest", null);
+        Assert.Equal(HttpStatusCode.NoContent, interest.StatusCode);
 
-        var approve = await client.PatchAsJsonAsync(
-            $"api/v1/feed/{createdPost!.Id}/approval?territoryId={ActiveTerritoryId}",
-            new ApproveEventRequest("PUBLISHED"));
-        Assert.Equal(HttpStatusCode.NoContent, approve.StatusCode);
+        var confirm = await client.PostAsync($"api/v1/events/{created.EventId}/confirm", null);
+        Assert.Equal(HttpStatusCode.NoContent, confirm.StatusCode);
     }
 
     [Fact]

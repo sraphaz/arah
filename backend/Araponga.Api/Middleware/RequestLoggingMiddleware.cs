@@ -29,6 +29,10 @@ public sealed class RequestLoggingMiddleware
         var path = context.Request.Path.Value ?? "/";
         var correlationId = context.Items["CorrelationId"]?.ToString() ?? "unknown";
 
+        // Sanitize user-controlled values before logging to avoid log forging via control characters.
+        var sanitizedMethod = method.Replace("\r", string.Empty).Replace("\n", string.Empty).Trim();
+        var sanitizedPath = path.Replace("\r", string.Empty).Replace("\n", string.Empty).Trim();
+
         try
         {
             await _next(context);

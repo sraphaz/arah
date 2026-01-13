@@ -219,28 +219,26 @@ public async Task<(bool success, string? error, CommunityPost? post)> CreatePost
 
 ## 3. Oportunidades de Refatoracao
 
-### 3.1 FeedService - Muitas Dependencias (God Class)
-**Problema**: `FeedService` tem 12 dependencias, violando Single Responsibility Principle.
+### 3.1 FeedService - Muitas Dependencias (God Class) ✅ **IMPLEMENTADO**
+**Problema Original**: `FeedService` tinha 12 dependencias, violando Single Responsibility Principle.
 
-**Dependencias atuais**:
-- IFeedRepository
-- AccessEvaluator
-- IFeatureFlagService
-- IAuditLogger
-- IUserBlockRepository
-- IMapRepository
-- IPostGeoAnchorRepository
-- IPostAssetRepository
-- IAssetRepository
-- ISanctionRepository
-- IEventBus
-- IUnitOfWork
+**Solucao Implementada**:
+- ✅ Extraido `PostCreationService` (criacao de posts)
+- ✅ Extraido `PostInteractionService` (likes, comments, shares)
+- ✅ Extraido `PostFilterService` (filtros e visibilidade)
+- ✅ `FeedService` agora atua como orquestrador/facade com apenas 4 dependencias
 
-**Recomendacao**:
-- Extrair `PostCreationService` (criacao de posts)
-- Extrair `PostInteractionService` (likes, comments, shares)
-- Extrair `PostFilterService` (filtros e visibilidade)
-- Manter `FeedService` como orquestrador ou facade
+**Dependencias Antigas** (12):
+- IFeedRepository, AccessEvaluator, IFeatureFlagService, IAuditLogger, IUserBlockRepository, IMapRepository, IPostGeoAnchorRepository, IPostAssetRepository, IAssetRepository, ISanctionRepository, IEventBus, IUnitOfWork
+
+**Dependencias Atuais** (4):
+- IFeedRepository, PostCreationService, PostInteractionService, PostFilterService
+
+**Beneficios**:
+- ✅ Melhor separacao de responsabilidades (SRP)
+- ✅ Codigo mais testavel e manutenivel
+- ✅ Reducao de complexidade ciclomatica
+- ✅ Facilita evolucao independente de cada funcionalidade
 
 ### 3.2 Duplicacao de Logica de Validacao
 **Problema**: Validacoes repetidas em varios services.
@@ -443,18 +441,26 @@ var posts = await _feedRepository.ListByTerritoryAsync(...);
 
 ## 6. SOLID Principles - Validacao
 
-### 6.1 Single Responsibility Principle (SRP) ⚠️
-**Problemas**:
-- `FeedService` tem muitas responsabilidades (criacao, listagem, interacoes)
-- `Program.cs` faz configuracao, DI, middleware setup
+### 6.1 Single Responsibility Principle (SRP) ✅ **MELHORADO**
+**Status Anterior**: 
+- `FeedService` tinha muitas responsabilidades (criacao, listagem, interacoes)
+- `Program.cs` fazia configuracao, DI, middleware setup
 
-**Violacoes**:
-- `FeedService`: 377 linhas, 12 dependencias
-- `ReportService`: Gerencia reports E aplica sancoes automaticas
+**Melhorias Implementadas**:
+- ✅ `FeedService` refatorado: agora tem apenas 4 dependencias e atua como orquestrador
+- ✅ `PostCreationService`: responsavel apenas por criacao de posts
+- ✅ `PostInteractionService`: responsavel apenas por likes, comentarios e shares
+- ✅ `PostFilterService`: responsavel apenas por filtragem e paginacao
+- ✅ `Program.cs` simplificado: configuracao extraida para `ServiceCollectionExtensions`
 
-**Recomendacao**: 
-- Quebrar services grandes em services menores
-- Extrair logica de negocio para domain services
+**Status Atual**:
+- `FeedService`: ~115 linhas, 4 dependencias (reducao de 70%)
+- `PostCreationService`: ~150 linhas, 10 dependencias (focado em criacao)
+- `PostInteractionService`: ~120 linhas, 5 dependencias (focado em interacoes)
+- `PostFilterService`: ~90 linhas, 3 dependencias (focado em filtragem)
+
+**Pendente**:
+- `ReportService`: Ainda gerencia reports E aplica sancoes automaticas (pode ser refatorado no futuro)
 
 ### 6.2 Open/Closed Principle (OCP) ✅
 **Status**: Bem respeitado

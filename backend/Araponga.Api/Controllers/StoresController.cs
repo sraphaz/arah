@@ -68,14 +68,14 @@ public sealed class StoresController : ControllerBase
             contact?.PreferredContactMethod,
             cancellationToken);
 
-        if (!result.success || result.store is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return result.error?.Contains("Only confirmed residents", StringComparison.OrdinalIgnoreCase) == true
+            return result.Error?.Contains("Only confirmed residents", StringComparison.OrdinalIgnoreCase) == true
                 ? StatusCode(StatusCodes.Status403Forbidden)
-                : BadRequest(new { error = result.error ?? "Unable to manage store." });
+                : BadRequest(new { error = result.Error ?? "Unable to manage store." });
         }
 
-        return Ok(ToResponse(result.store));
+        return Ok(ToResponse(result.Value));
     }
 
     /// <summary>
@@ -154,19 +154,19 @@ public sealed class StoresController : ControllerBase
             contact?.PreferredContactMethod,
             cancellationToken);
 
-        if (!result.success || result.store is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            if (result.error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
+            if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
             {
                 return NotFound();
             }
 
-            return result.error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
+            return result.Error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
                 ? StatusCode(StatusCodes.Status403Forbidden)
-                : BadRequest(new { error = result.error ?? "Unable to update store." });
+                : BadRequest(new { error = result.Error ?? "Unable to update store." });
         }
 
-        return Ok(ToResponse(result.store));
+        return Ok(ToResponse(result.Value));
     }
 
     /// <summary>
@@ -227,19 +227,19 @@ public sealed class StoresController : ControllerBase
         }
 
         var result = await _storeService.SetPaymentsEnabledAsync(id, userContext.User.Id, request.Enabled, cancellationToken);
-        if (!result.success || result.store is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            if (result.error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
+            if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
             {
                 return NotFound();
             }
 
-            return result.error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
+            return result.Error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
                 ? StatusCode(StatusCodes.Status403Forbidden)
-                : BadRequest(new { error = result.error ?? "Unable to update payments." });
+                : BadRequest(new { error = result.Error ?? "Unable to update payments." });
         }
 
-        return Ok(ToResponse(result.store));
+        return Ok(ToResponse(result.Value));
     }
 
     private async Task<ActionResult<StoreResponse>> SetStoreStatusAsync(
@@ -254,19 +254,19 @@ public sealed class StoresController : ControllerBase
         }
 
         var result = await _storeService.SetStoreStatusAsync(id, userContext.User.Id, status, cancellationToken);
-        if (!result.success || result.store is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            if (result.error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
+            if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
             {
                 return NotFound();
             }
 
-            return result.error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
+            return result.Error?.Contains("Not authorized", StringComparison.OrdinalIgnoreCase) == true
                 ? StatusCode(StatusCodes.Status403Forbidden)
-                : BadRequest(new { error = result.error ?? "Unable to update store status." });
+                : BadRequest(new { error = result.Error ?? "Unable to update store status." });
         }
 
-        return Ok(ToResponse(result.store));
+        return Ok(ToResponse(result.Value));
     }
 
     private static StoreResponse ToResponse(TerritoryStore store)

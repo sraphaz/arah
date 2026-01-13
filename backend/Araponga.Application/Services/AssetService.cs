@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Assets;
@@ -61,7 +62,7 @@ public sealed class AssetService
         return details.Count > 0 ? details[0] : null;
     }
 
-    public async Task<(bool success, string? error, AssetDetails? asset)> CreateAsync(
+    public async Task<Result<AssetDetails>> CreateAsync(
         Guid territoryId,
         Guid userId,
         string type,
@@ -72,18 +73,18 @@ public sealed class AssetService
     {
         if (string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(name))
         {
-            return (false, "Type and name are required.", null);
+            return Result<AssetDetails>.Failure("Type and name are required.");
         }
 
         if (geoAnchors is null || geoAnchors.Count == 0)
         {
-            return (false, "At least one geoAnchor is required.", null);
+            return Result<AssetDetails>.Failure("At least one geoAnchor is required.");
         }
 
         var anchors = BuildAnchors(geoAnchors);
         if (anchors.Count == 0)
         {
-            return (false, "Invalid geoAnchors.", null);
+            return Result<AssetDetails>.Failure("Invalid geoAnchors.");
         }
 
         var now = DateTime.UtcNow;
@@ -117,10 +118,14 @@ public sealed class AssetService
         await _unitOfWork.CommitAsync(cancellationToken);
 
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
-        return (true, null, details[0]);
+        if (details.Count == 0)
+        {
+            return Result<AssetDetails>.Failure("Unable to build asset details.");
+        }
+        return Result<AssetDetails>.Success(details[0]);
     }
 
-    public async Task<(bool success, string? error, AssetDetails? asset)> UpdateAsync(
+    public async Task<Result<AssetDetails>> UpdateAsync(
         Guid assetId,
         Guid territoryId,
         Guid userId,
@@ -132,24 +137,24 @@ public sealed class AssetService
     {
         if (string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(name))
         {
-            return (false, "Type and name are required.", null);
+            return Result<AssetDetails>.Failure("Type and name are required.");
         }
 
         if (geoAnchors is null || geoAnchors.Count == 0)
         {
-            return (false, "At least one geoAnchor is required.", null);
+            return Result<AssetDetails>.Failure("At least one geoAnchor is required.");
         }
 
         var asset = await _assetRepository.GetByIdAsync(assetId, cancellationToken);
         if (asset is null || asset.TerritoryId != territoryId)
         {
-            return (false, "Asset not found.", null);
+            return Result<AssetDetails>.Failure("Asset not found.");
         }
 
         var anchors = BuildAnchors(geoAnchors);
         if (anchors.Count == 0)
         {
-            return (false, "Invalid geoAnchors.", null);
+            return Result<AssetDetails>.Failure("Invalid geoAnchors.");
         }
 
         var now = DateTime.UtcNow;
@@ -175,10 +180,14 @@ public sealed class AssetService
         await _unitOfWork.CommitAsync(cancellationToken);
 
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
-        return (true, null, details[0]);
+        if (details.Count == 0)
+        {
+            return Result<AssetDetails>.Failure("Unable to build asset details.");
+        }
+        return Result<AssetDetails>.Success(details[0]);
     }
 
-    public async Task<(bool success, string? error, AssetDetails? asset)> ArchiveAsync(
+    public async Task<Result<AssetDetails>> ArchiveAsync(
         Guid assetId,
         Guid territoryId,
         Guid userId,
@@ -188,7 +197,7 @@ public sealed class AssetService
         var asset = await _assetRepository.GetByIdAsync(assetId, cancellationToken);
         if (asset is null || asset.TerritoryId != territoryId)
         {
-            return (false, "Asset not found.", null);
+            return Result<AssetDetails>.Failure("Asset not found.");
         }
 
         var now = DateTime.UtcNow;
@@ -202,10 +211,14 @@ public sealed class AssetService
         await _unitOfWork.CommitAsync(cancellationToken);
 
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
-        return (true, null, details[0]);
+        if (details.Count == 0)
+        {
+            return Result<AssetDetails>.Failure("Unable to build asset details.");
+        }
+        return Result<AssetDetails>.Success(details[0]);
     }
 
-    public async Task<(bool success, string? error, AssetDetails? asset, bool created)> ValidateAsync(
+    public async Task<Result<AssetValidationResult>> ValidateAsync(
         Guid assetId,
         Guid territoryId,
         Guid userId,
@@ -214,10 +227,11 @@ public sealed class AssetService
         var asset = await _assetRepository.GetByIdAsync(assetId, cancellationToken);
         if (asset is null || asset.TerritoryId != territoryId)
         {
-            return (false, "Asset not found.", null, false);
+            return Result<AssetValidationResult>.Failure("Asset not found.");
         }
 
         var exists = await _validationRepository.ExistsAsync(assetId, userId, cancellationToken);
+        var created = false;
         if (!exists)
         {
             var now = DateTime.UtcNow;
@@ -226,10 +240,15 @@ public sealed class AssetService
                 new AuditEntry("asset.validated", userId, territoryId, assetId, now),
                 cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
+            created = true;
         }
 
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
-        return (true, null, details[0], !exists);
+        if (details.Count == 0)
+        {
+            return Result<AssetValidationResult>.Failure("Unable to build asset details.");
+        }
+        return Result<AssetValidationResult>.Success(new AssetValidationResult(details[0], created));
     }
 
     private async Task<IReadOnlyList<AssetDetails>> BuildAssetDetailsAsync(

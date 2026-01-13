@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Marketplace;
@@ -93,7 +94,7 @@ public sealed class CartService
         return new CartDetails(cart, itemDetails);
     }
 
-    public async Task<(bool success, string? error, CartItem? item)> AddItemAsync(
+    public async Task<Result<CartItem>> AddItemAsync(
         Guid territoryId,
         Guid userId,
         Guid listingId,
@@ -103,13 +104,13 @@ public sealed class CartService
     {
         if (quantity < 1)
         {
-            return (false, "Quantity must be at least 1.", null);
+            return Result<CartItem>.Failure("Quantity must be at least 1.");
         }
 
         var listing = await _listingRepository.GetByIdAsync(listingId, cancellationToken);
         if (listing is null || listing.TerritoryId != territoryId)
         {
-            return (false, "Listing not found for territory.", null);
+            return Result<CartItem>.Failure("Listing not found for territory.");
         }
 
         var cart = await GetOrCreateCartAsync(territoryId, userId, cancellationToken);
@@ -123,7 +124,7 @@ public sealed class CartService
             cart.Touch(now);
             await _cartRepository.UpdateAsync(cart, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
-            return (true, null, item);
+            return Result<CartItem>.Success(item);
         }
 
         existing.Update(quantity, notes ?? existing.Notes, now);
@@ -131,10 +132,10 @@ public sealed class CartService
         cart.Touch(now);
         await _cartRepository.UpdateAsync(cart, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        return (true, null, existing);
+        return Result<CartItem>.Success(existing);
     }
 
-    public async Task<(bool success, string? error, CartItem? item)> UpdateItemAsync(
+    public async Task<Result<CartItem>> UpdateItemAsync(
         Guid cartItemId,
         Guid userId,
         int quantity,
@@ -143,19 +144,19 @@ public sealed class CartService
     {
         if (quantity < 1)
         {
-            return (false, "Quantity must be at least 1.", null);
+            return Result<CartItem>.Failure("Quantity must be at least 1.");
         }
 
         var item = await _cartItemRepository.GetByIdAsync(cartItemId, cancellationToken);
         if (item is null)
         {
-            return (false, "Cart item not found.", null);
+            return Result<CartItem>.Failure("Cart item not found.");
         }
 
         var cart = await _cartRepository.GetByIdAsync(item.CartId, cancellationToken);
         if (cart is null || cart.UserId != userId)
         {
-            return (false, "Cart item not found.", null);
+            return Result<CartItem>.Failure("Cart item not found.");
         }
 
         var now = DateTime.UtcNow;
@@ -164,7 +165,7 @@ public sealed class CartService
         cart.Touch(now);
         await _cartRepository.UpdateAsync(cart, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        return (true, null, item);
+        return Result<CartItem>.Success(item);
     }
 
     public async Task<bool> RemoveItemAsync(Guid cartItemId, Guid userId, CancellationToken cancellationToken)
@@ -188,7 +189,7 @@ public sealed class CartService
         return true;
     }
 
-    public async Task<(bool success, string? error, CheckoutResult? result)> CheckoutAsync(
+    public async Task<Result<CheckoutResult>> CheckoutAsync(
         Guid territoryId,
         Guid userId,
         string? message,
@@ -197,13 +198,13 @@ public sealed class CartService
         var cart = await _cartRepository.GetByUserAsync(territoryId, userId, cancellationToken);
         if (cart is null)
         {
-            return (true, null, new CheckoutResult(Array.Empty<CheckoutBundle>(), Array.Empty<InquiryBundle>(), Array.Empty<CheckoutSummary>()));
+            return Result<CheckoutResult>.Success(new CheckoutResult(Array.Empty<CheckoutBundle>(), Array.Empty<InquiryBundle>(), Array.Empty<CheckoutSummary>()));
         }
 
         var cartItems = await _cartItemRepository.ListByCartIdAsync(cart.Id, cancellationToken);
         if (cartItems.Count == 0)
         {
-            return (true, null, new CheckoutResult(Array.Empty<CheckoutBundle>(), Array.Empty<InquiryBundle>(), Array.Empty<CheckoutSummary>()));
+            return Result<CheckoutResult>.Success(new CheckoutResult(Array.Empty<CheckoutBundle>(), Array.Empty<InquiryBundle>(), Array.Empty<CheckoutSummary>()));
         }
 
         var listingIds = cartItems.Select(i => i.ListingId).Distinct().ToList();
@@ -336,7 +337,7 @@ public sealed class CartService
         await _unitOfWork.CommitAsync(cancellationToken);
 
         var result = new CheckoutResult(checkoutBundles, inquiries, summaries);
-        return (true, null, result);
+        return Result<CheckoutResult>.Success(result);
     }
 
     private static bool IsPurchasable(StoreListing listing, TerritoryStore store)

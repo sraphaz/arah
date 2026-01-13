@@ -90,13 +90,13 @@ public sealed class CartController : ControllerBase
             request.Notes,
             cancellationToken);
 
-        if (!result.success || result.item is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to add item." });
+            return BadRequest(new { error = result.Error ?? "Unable to add item." });
         }
 
         var cart = await _cartService.GetCartAsync(request.TerritoryId, userContext.User.Id, cancellationToken);
-        var detail = cart.Items.FirstOrDefault(i => i.Item.Id == result.item.Id);
+        var detail = cart.Items.FirstOrDefault(i => i.Item.Id == result.Value.Id);
         if (detail is null)
         {
             return BadRequest(new { error = "Unable to retrieve cart item." });
@@ -124,18 +124,18 @@ public sealed class CartController : ControllerBase
         }
 
         var result = await _cartService.UpdateItemAsync(id, userContext.User.Id, request.Quantity, request.Notes, cancellationToken);
-        if (!result.success || result.item is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to update item." });
+            return BadRequest(new { error = result.Error ?? "Unable to update item." });
         }
 
-        var cart = await _cartService.GetCartByIdAsync(result.item.CartId, userContext.User.Id, cancellationToken);
+        var cart = await _cartService.GetCartByIdAsync(result.Value.CartId, userContext.User.Id, cancellationToken);
         if (cart is null)
         {
             return BadRequest(new { error = "Unable to retrieve cart item." });
         }
 
-        var detail = cart.Items.FirstOrDefault(i => i.Item.Id == result.item.Id);
+        var detail = cart.Items.FirstOrDefault(i => i.Item.Id == result.Value.Id);
         if (detail is null)
         {
             return BadRequest(new { error = "Unable to retrieve cart item." });
@@ -192,19 +192,19 @@ public sealed class CartController : ControllerBase
         }
 
         var result = await _cartService.CheckoutAsync(request.TerritoryId, userContext.User.Id, request.Message, cancellationToken);
-        if (!result.success || result.result is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to checkout." });
+            return BadRequest(new { error = result.Error ?? "Unable to checkout." });
         }
 
         var response = new CartCheckoutResponse(
-            result.result.Checkouts.Select(ToResponse).ToList(),
-            result.result.Inquiries.Select(inquiry => new InquiryBundleResponse(
+            result.Value.Checkouts.Select(ToResponse).ToList(),
+            result.Value.Inquiries.Select(inquiry => new InquiryBundleResponse(
                 inquiry.InquiryId,
                 inquiry.StoreId,
                 inquiry.ListingId,
                 inquiry.BatchId)).ToList(),
-            result.result.Summaries.Select(summary => new CheckoutSummaryResponse(
+            result.Value.Summaries.Select(summary => new CheckoutSummaryResponse(
                 summary.StoreId,
                 summary.CheckoutItemCount,
                 summary.InquiryCount)).ToList());

@@ -170,12 +170,12 @@ public sealed class AssetsController : ControllerBase
             request.GeoAnchors.Select(anchor => new AssetGeoAnchorInput(anchor.Latitude, anchor.Longitude)).ToList(),
             cancellationToken);
 
-        if (!result.success || result.asset is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to create asset." });
+            return BadRequest(new { error = result.Error ?? "Unable to create asset." });
         }
 
-        return CreatedAtAction(nameof(GetAssetById), new { assetId = result.asset.Asset.Id }, ToResponse(result.asset));
+        return CreatedAtAction(nameof(GetAssetById), new { assetId = result.Value.Asset.Id }, ToResponse(result.Value));
     }
 
     /// <summary>
@@ -223,12 +223,12 @@ public sealed class AssetsController : ControllerBase
             request.GeoAnchors.Select(anchor => new AssetGeoAnchorInput(anchor.Latitude, anchor.Longitude)).ToList(),
             cancellationToken);
 
-        if (!result.success || result.asset is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to update asset." });
+            return BadRequest(new { error = result.Error ?? "Unable to update asset." });
         }
 
-        return Ok(ToResponse(result.asset));
+        return Ok(ToResponse(result.Value));
     }
 
     /// <summary>
@@ -268,12 +268,12 @@ public sealed class AssetsController : ControllerBase
             request?.Reason,
             cancellationToken);
 
-        if (!result.success || result.asset is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to archive asset." });
+            return BadRequest(new { error = result.Error ?? "Unable to archive asset." });
         }
 
-        return Ok(ToResponse(result.asset));
+        return Ok(ToResponse(result.Value));
     }
 
     /// <summary>
@@ -311,16 +311,16 @@ public sealed class AssetsController : ControllerBase
             userContext.User.Id,
             cancellationToken);
 
-        if (!result.success || result.asset is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to validate asset." });
+            return BadRequest(new { error = result.Error ?? "Unable to validate asset." });
         }
 
         return Ok(new AssetValidationResponse(
-            result.asset.Asset.Id,
-            result.asset.ValidationsCount,
-            result.asset.EligibleResidentsCount,
-            result.asset.ValidationPct));
+            result.Value.Asset.Asset.Id,
+            result.Value.Asset.ValidationsCount,
+            result.Value.Asset.EligibleResidentsCount,
+            result.Value.Asset.ValidationPct));
     }
 
     private AssetResponse ToResponse(AssetDetails details)

@@ -40,12 +40,12 @@ public sealed class InquiriesController : ControllerBase
         }
 
         var result = await _inquiryService.CreateInquiryAsync(id, userContext.User.Id, request.Message, null, cancellationToken);
-        if (!result.success || result.inquiry is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new { error = result.error ?? "Unable to create inquiry." });
+            return BadRequest(new { error = result.Error ?? "Unable to create inquiry." });
         }
 
-        return CreatedAtAction(nameof(ListMyInquiries), new { }, ToResponse(result.inquiry, result.contact));
+        return CreatedAtAction(nameof(ListMyInquiries), new { }, ToResponse(result.Value.Inquiry, result.Value.Contact));
     }
 
     /// <summary>

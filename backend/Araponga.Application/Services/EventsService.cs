@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Events;
@@ -33,7 +34,7 @@ public sealed class EventsService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<(bool success, string? error, EventSummary? summary)> CreateEventAsync(
+    public async Task<Result<EventSummary>> CreateEventAsync(
         Guid territoryId,
         Guid userId,
         string title,
@@ -47,27 +48,27 @@ public sealed class EventsService
     {
         if (territoryId == Guid.Empty)
         {
-            return (false, "Territory ID is required.", null);
+            return Result<EventSummary>.Failure("Territory ID is required.");
         }
 
         if (userId == Guid.Empty)
         {
-            return (false, "User ID is required.", null);
+            return Result<EventSummary>.Failure("User ID is required.");
         }
 
         if (string.IsNullOrWhiteSpace(title))
         {
-            return (false, "Title is required.", null);
+            return Result<EventSummary>.Failure("Title is required.");
         }
 
         if (!GeoCoordinate.IsValid(latitude, longitude))
         {
-            return (false, "Invalid latitude/longitude.", null);
+            return Result<EventSummary>.Failure("Invalid latitude/longitude.");
         }
 
         if (endsAtUtc is not null && endsAtUtc.Value < startsAtUtc)
         {
-            return (false, "EndsAtUtc must be after StartsAtUtc.", null);
+            return Result<EventSummary>.Failure("EndsAtUtc must be after StartsAtUtc.");
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
@@ -113,10 +114,10 @@ public sealed class EventsService
         var displayName = await ResolveDisplayNameAsync(userId, cancellationToken);
         var summary = new EventSummary(territoryEvent, 0, 0, displayName);
 
-        return (true, null, summary);
+        return Result<EventSummary>.Success(summary);
     }
 
-    public async Task<(bool success, string? error, EventSummary? summary)> UpdateEventAsync(
+    public async Task<Result<EventSummary>> UpdateEventAsync(
         Guid eventId,
         Guid actorUserId,
         string? title,
@@ -131,13 +132,13 @@ public sealed class EventsService
         var territoryEvent = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
         if (territoryEvent is null)
         {
-            return (false, "Event not found.", null);
+            return Result<EventSummary>.Failure("Event not found.");
         }
 
         var canManage = await CanManageEventAsync(territoryEvent, actorUserId, cancellationToken);
         if (!canManage)
         {
-            return (false, "User is not allowed to update this event.", null);
+            return Result<EventSummary>.Failure("User is not allowed to update this event.");
         }
 
         var updatedTitle = title ?? territoryEvent.Title;
@@ -162,10 +163,15 @@ public sealed class EventsService
         await _unitOfWork.CommitAsync(cancellationToken);
 
         var summaries = await BuildSummariesAsync(new List<TerritoryEvent> { territoryEvent }, cancellationToken);
-        return (true, null, summaries.FirstOrDefault());
+        var summary = summaries.FirstOrDefault();
+        if (summary is null)
+        {
+            return Result<EventSummary>.Failure("Unable to build event summary.");
+        }
+        return Result<EventSummary>.Success(summary);
     }
 
-    public async Task<(bool success, string? error)> CancelEventAsync(
+    public async Task<OperationResult> CancelEventAsync(
         Guid eventId,
         Guid actorUserId,
         CancellationToken cancellationToken)
@@ -173,23 +179,23 @@ public sealed class EventsService
         var territoryEvent = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
         if (territoryEvent is null)
         {
-            return (false, "Event not found.");
+            return OperationResult.Failure("Event not found.");
         }
 
         var canManage = await CanManageEventAsync(territoryEvent, actorUserId, cancellationToken);
         if (!canManage)
         {
-            return (false, "User is not allowed to cancel this event.");
+            return OperationResult.Failure("User is not allowed to cancel this event.");
         }
 
         territoryEvent.Cancel(DateTime.UtcNow);
         await _eventRepository.UpdateAsync(territoryEvent, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null);
+        return OperationResult.Success();
     }
 
-    public async Task<(bool success, string? error)> SetParticipationAsync(
+    public async Task<OperationResult> SetParticipationAsync(
         Guid eventId,
         Guid userId,
         EventParticipationStatus status,
@@ -198,7 +204,7 @@ public sealed class EventsService
         var territoryEvent = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
         if (territoryEvent is null)
         {
-            return (false, "Event not found.");
+            return OperationResult.Failure("Event not found.");
         }
 
         var existing = await _participationRepository.GetAsync(eventId, userId, cancellationToken);
@@ -216,7 +222,7 @@ public sealed class EventsService
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
-        return (true, null);
+        return OperationResult.Success();
     }
 
     public async Task<IReadOnlyList<EventSummary>> ListEventsAsync(

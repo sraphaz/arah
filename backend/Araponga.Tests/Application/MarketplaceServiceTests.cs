@@ -38,13 +38,13 @@ public sealed class MarketplaceServiceTests
             "whatsapp",
             CancellationToken.None);
 
-        Assert.True(storeResult.success);
-        Assert.NotNull(storeResult.store);
+        Assert.True(storeResult.IsSuccess);
+        Assert.NotNull(storeResult.Value);
 
         var listingResult = await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
-            storeResult.store!.Id,
+            storeResult.Value!.Id,
             ListingType.Product,
             "Produto",
             null,
@@ -59,8 +59,8 @@ public sealed class MarketplaceServiceTests
             ListingStatus.Active,
             CancellationToken.None);
 
-        Assert.True(listingResult.success);
-        Assert.NotNull(listingResult.listing);
+        Assert.True(listingResult.IsSuccess);
+        Assert.NotNull(listingResult.Value);
     }
 
     [Fact]
@@ -104,7 +104,7 @@ public sealed class MarketplaceServiceTests
             null,
             CancellationToken.None);
 
-        Assert.False(storeResult.success);
+        Assert.False(storeResult.IsSuccess);
 
         var residentStore = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -123,7 +123,7 @@ public sealed class MarketplaceServiceTests
         var listingResult = await listingService.CreateListingAsync(
             TerritoryId,
             visitor.Id,
-            residentStore.store!.Id,
+            residentStore.Value!.Id,
             ListingType.Product,
             "Produto",
             null,
@@ -138,7 +138,7 @@ public sealed class MarketplaceServiceTests
             ListingStatus.Active,
             CancellationToken.None);
 
-        Assert.False(listingResult.success);
+        Assert.False(listingResult.IsSuccess);
     }
 
     [Fact]
@@ -185,7 +185,7 @@ public sealed class MarketplaceServiceTests
             null,
             "email",
             CancellationToken.None);
-        var store = storeResult.store!;
+        var store = storeResult.Value!;
         await storeService.SetPaymentsEnabledAsync(store.Id, ResidentUserId, true, CancellationToken.None);
 
         var product = await listingService.CreateListingAsync(
@@ -244,20 +244,21 @@ public sealed class MarketplaceServiceTests
 
         Assert.Single(listings);
 
-        var inquiry = await inquiryService.CreateInquiryAsync(service.listing!.Id, ResidentUserId, "Contato", null, CancellationToken.None);
-        Assert.True(inquiry.success);
-        Assert.NotNull(inquiry.contact);
+        var inquiry = await inquiryService.CreateInquiryAsync(service.Value!.Id, ResidentUserId, "Contato", null, CancellationToken.None);
+        Assert.True(inquiry.IsSuccess);
+        Assert.NotNull(inquiry.Value);
+        Assert.NotNull(inquiry.Value.Contact);
 
-        await cartService.AddItemAsync(TerritoryId, ResidentUserId, product.listing!.Id, 2, null, CancellationToken.None);
-        await cartService.AddItemAsync(TerritoryId, ResidentUserId, service.listing!.Id, 1, null, CancellationToken.None);
+        await cartService.AddItemAsync(TerritoryId, ResidentUserId, product.Value!.Id, 2, null, CancellationToken.None);
+        await cartService.AddItemAsync(TerritoryId, ResidentUserId, service.Value!.Id, 1, null, CancellationToken.None);
 
         var checkout = await cartService.CheckoutAsync(TerritoryId, ResidentUserId, "mensagem", CancellationToken.None);
-        Assert.True(checkout.success);
-        Assert.NotNull(checkout.result);
-        Assert.Single(checkout.result!.Checkouts);
-        Assert.Single(checkout.result.Inquiries);
+        Assert.True(checkout.IsSuccess);
+        Assert.NotNull(checkout.Value);
+        Assert.Single(checkout.Value!.Checkouts);
+        Assert.Single(checkout.Value.Inquiries);
 
-        var createdCheckout = checkout.result.Checkouts[0].Checkout;
+        var createdCheckout = checkout.Value.Checkouts[0].Checkout;
         Assert.Equal(60m, createdCheckout.ItemsSubtotalAmount);
         Assert.Equal(3m, createdCheckout.PlatformFeeAmount);
         Assert.Equal(63m, createdCheckout.TotalAmount);
@@ -288,8 +289,8 @@ public sealed class MarketplaceServiceTests
             "email",
             CancellationToken.None);
 
-        Assert.True(createResult.success);
-        var store = createResult.store!;
+        Assert.True(createResult.IsSuccess);
+        var store = createResult.Value!;
 
         var updateResult = await storeService.UpdateStoreAsync(
             store.Id,
@@ -305,17 +306,17 @@ public sealed class MarketplaceServiceTests
             "whatsapp",
             CancellationToken.None);
 
-        Assert.True(updateResult.success);
-        Assert.Equal("Loja Atualizada", updateResult.store!.DisplayName);
-        Assert.Equal(StoreContactVisibility.OnInquiryOnly, updateResult.store.ContactVisibility);
+        Assert.True(updateResult.IsSuccess);
+        Assert.Equal("Loja Atualizada", updateResult.Value!.DisplayName);
+        Assert.Equal(StoreContactVisibility.OnInquiryOnly, updateResult.Value.ContactVisibility);
 
         var pauseResult = await storeService.SetStoreStatusAsync(store.Id, ResidentUserId, StoreStatus.Paused, CancellationToken.None);
-        Assert.True(pauseResult.success);
-        Assert.Equal(StoreStatus.Paused, pauseResult.store!.Status);
+        Assert.True(pauseResult.IsSuccess);
+        Assert.Equal(StoreStatus.Paused, pauseResult.Value!.Status);
 
         var activateResult = await storeService.SetStoreStatusAsync(store.Id, ResidentUserId, StoreStatus.Active, CancellationToken.None);
-        Assert.True(activateResult.success);
-        Assert.Equal(StoreStatus.Active, activateResult.store!.Status);
+        Assert.True(activateResult.IsSuccess);
+        Assert.Equal(StoreStatus.Active, activateResult.Value!.Status);
     }
 
     [Fact]
@@ -363,7 +364,7 @@ public sealed class MarketplaceServiceTests
         var createResult = await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
-            storeResult.store!.Id,
+            storeResult.Value!.Id,
             ListingType.Product,
             "Produto Original",
             "Descrição original",
@@ -378,8 +379,8 @@ public sealed class MarketplaceServiceTests
             ListingStatus.Active,
             CancellationToken.None);
 
-        Assert.True(createResult.success);
-        var listing = createResult.listing!;
+        Assert.True(createResult.IsSuccess);
+        var listing = createResult.Value!;
 
         var updateResult = await listingService.UpdateListingAsync(
             listing.Id,
@@ -398,13 +399,13 @@ public sealed class MarketplaceServiceTests
             ListingStatus.Active,
             CancellationToken.None);
 
-        Assert.True(updateResult.success);
-        Assert.Equal("Produto Atualizado", updateResult.listing!.Title);
-        Assert.Equal(15m, updateResult.listing.PriceAmount);
+        Assert.True(updateResult.IsSuccess);
+        Assert.Equal("Produto Atualizado", updateResult.Value!.Title);
+        Assert.Equal(15m, updateResult.Value.PriceAmount);
 
         var archiveResult = await listingService.ArchiveListingAsync(listing.Id, ResidentUserId, CancellationToken.None);
-        Assert.True(archiveResult.success);
-        Assert.Equal(ListingStatus.Archived, archiveResult.listing!.Status);
+        Assert.True(archiveResult.IsSuccess);
+        Assert.Equal(ListingStatus.Archived, archiveResult.Value!.Status);
     }
 
     [Fact]
@@ -437,7 +438,7 @@ public sealed class MarketplaceServiceTests
         await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
-            storeResult.store!.Id,
+            storeResult.Value!.Id,
             ListingType.Product,
             "Mel",
             "Mel local",
@@ -455,7 +456,7 @@ public sealed class MarketplaceServiceTests
         await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
-            storeResult.store.Id,
+            storeResult.Value!.Id,
             ListingType.Service,
             "Aula",
             "Aula de música",
@@ -541,7 +542,7 @@ public sealed class MarketplaceServiceTests
         var listingResult = await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
-            storeResult.store!.Id,
+            storeResult.Value!.Id,
             ListingType.Product,
             "Produto",
             null,
@@ -559,30 +560,30 @@ public sealed class MarketplaceServiceTests
         var addResult = await cartService.AddItemAsync(
             TerritoryId,
             ResidentUserId,
-            listingResult.listing!.Id,
+            listingResult.Value!.Id,
             2,
             "Nota inicial",
             CancellationToken.None);
 
-        Assert.True(addResult.success);
-        Assert.NotNull(addResult.item);
-        Assert.Equal(2, addResult.item.Quantity);
+        Assert.True(addResult.IsSuccess);
+        Assert.NotNull(addResult.Value);
+        Assert.Equal(2, addResult.Value.Quantity);
 
         var cart = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
         Assert.Single(cart.Items);
 
         var updateResult = await cartService.UpdateItemAsync(
-            addResult.item!.Id,
+            addResult.Value!.Id,
             ResidentUserId,
             3,
             "Nota atualizada",
             CancellationToken.None);
 
-        Assert.True(updateResult.success);
-        Assert.Equal(3, updateResult.item!.Quantity);
-        Assert.Equal("Nota atualizada", updateResult.item.Notes);
+        Assert.True(updateResult.IsSuccess);
+        Assert.Equal(3, updateResult.Value!.Quantity);
+        Assert.Equal("Nota atualizada", updateResult.Value.Notes);
 
-        var removeResult = await cartService.RemoveItemAsync(addResult.item.Id, ResidentUserId, CancellationToken.None);
+        var removeResult = await cartService.RemoveItemAsync(addResult.Value!.Id, ResidentUserId, CancellationToken.None);
         Assert.True(removeResult);
 
         var emptyCart = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
@@ -626,7 +627,7 @@ public sealed class MarketplaceServiceTests
         var listingResult = await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
-            storeResult.store!.Id,
+            storeResult.Value!.Id,
             ListingType.Product,
             "Produto",
             null,
@@ -642,13 +643,13 @@ public sealed class MarketplaceServiceTests
             CancellationToken.None);
 
         var inquiryResult = await inquiryService.CreateInquiryAsync(
-            listingResult.listing!.Id,
+            listingResult.Value!.Id,
             buyerId,
             "Quero comprar",
             null,
             CancellationToken.None);
 
-        Assert.True(inquiryResult.success);
+        Assert.True(inquiryResult.IsSuccess);
 
         var myInquiries = await inquiryService.ListMyInquiriesAsync(buyerId, CancellationToken.None);
         Assert.Single(myInquiries);
@@ -656,6 +657,6 @@ public sealed class MarketplaceServiceTests
 
         var receivedInquiries = await inquiryService.ListReceivedInquiriesAsync(ResidentUserId, CancellationToken.None);
         Assert.Single(receivedInquiries);
-        Assert.Equal(storeResult.store!.Id, receivedInquiries[0].StoreId);
+        Assert.Equal(storeResult.Value!.Id, receivedInquiries[0].StoreId);
     }
 }

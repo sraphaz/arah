@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Marketplace;
@@ -23,7 +24,7 @@ public sealed class InquiryService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<(bool success, string? error, ListingInquiry? inquiry, StoreContactInfo? contact)> CreateInquiryAsync(
+    public async Task<Result<InquiryCreationResult>> CreateInquiryAsync(
         Guid listingId,
         Guid fromUserId,
         string? message,
@@ -33,13 +34,13 @@ public sealed class InquiryService
         var listing = await _listingRepository.GetByIdAsync(listingId, cancellationToken);
         if (listing is null)
         {
-            return (false, "Listing not found.", null, null);
+            return Result<InquiryCreationResult>.Failure("Listing not found.");
         }
 
         var store = await _storeRepository.GetByIdAsync(listing.StoreId, cancellationToken);
         if (store is null)
         {
-            return (false, "Store not found.", null, null);
+            return Result<InquiryCreationResult>.Failure("Store not found.");
         }
 
         var inquiry = new ListingInquiry(
@@ -65,7 +66,7 @@ public sealed class InquiryService
             store.Website,
             store.PreferredContactMethod);
 
-        return (true, null, inquiry, contact);
+        return Result<InquiryCreationResult>.Success(new InquiryCreationResult(inquiry, contact));
     }
 
     public Task<IReadOnlyList<ListingInquiry>> ListMyInquiriesAsync(Guid userId, CancellationToken cancellationToken)

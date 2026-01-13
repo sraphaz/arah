@@ -77,17 +77,17 @@ public sealed class ListingsController : ControllerBase
             status,
             cancellationToken);
 
-        if (!result.success || result.listing is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            if (result.error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true)
+            if (result.Error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true)
             {
                 return StatusCode(StatusCodes.Status403Forbidden);
             }
 
-            return BadRequest(new { error = result.error ?? "Unable to create listing." });
+            return BadRequest(new { error = result.Error ?? "Unable to create listing." });
         }
 
-        return CreatedAtAction(nameof(GetListingById), new { id = result.listing.Id }, ToResponse(result.listing));
+        return CreatedAtAction(nameof(GetListingById), new { id = result.Value.Id }, ToResponse(result.Value));
     }
 
     /// <summary>
@@ -158,19 +158,19 @@ public sealed class ListingsController : ControllerBase
             status,
             cancellationToken);
 
-        if (!result.success || result.listing is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            if (result.error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
+            if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
             {
                 return NotFound();
             }
 
-            return result.error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true
+            return result.Error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true
                 ? StatusCode(StatusCodes.Status403Forbidden)
-                : BadRequest(new { error = result.error ?? "Unable to update listing." });
+                : BadRequest(new { error = result.Error ?? "Unable to update listing." });
         }
 
-        return Ok(ToResponse(result.listing));
+        return Ok(ToResponse(result.Value));
     }
 
     /// <summary>
@@ -190,19 +190,19 @@ public sealed class ListingsController : ControllerBase
         }
 
         var result = await _listingService.ArchiveListingAsync(id, userContext.User.Id, cancellationToken);
-        if (!result.success || result.listing is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            if (result.error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
+            if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
             {
                 return NotFound();
             }
 
-            return result.error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true
+            return result.Error?.Contains("not authorized", StringComparison.OrdinalIgnoreCase) == true
                 ? StatusCode(StatusCodes.Status403Forbidden)
-                : BadRequest(new { error = result.error ?? "Unable to archive listing." });
+                : BadRequest(new { error = result.Error ?? "Unable to archive listing." });
         }
 
-        return Ok(ToResponse(result.listing));
+        return Ok(ToResponse(result.Value));
     }
 
     /// <summary>

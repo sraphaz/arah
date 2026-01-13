@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Events;
 using Araponga.Application.Models;
@@ -47,7 +48,7 @@ public sealed class PostCreationService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<(bool success, string? error, CommunityPost? post)> CreatePostAsync(
+    public async Task<Result<CommunityPost>> CreatePostAsync(
         Guid territoryId,
         Guid userId,
         string title,
@@ -62,12 +63,12 @@ public sealed class PostCreationService
     {
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
         {
-            return (false, "Title and content are required.", null);
+            return Result<CommunityPost>.Failure("Title and content are required.");
         }
 
         if (type == PostType.Alert && !_featureFlags.IsEnabled(territoryId, Models.FeatureFlag.AlertPosts))
         {
-            return (false, "Alert posts are disabled for this territory.", null);
+            return Result<CommunityPost>.Failure("Alert posts are disabled for this territory.");
         }
 
         if (mapEntityId is not null)
@@ -75,7 +76,7 @@ public sealed class PostCreationService
             var entity = await _mapRepository.GetByIdAsync(mapEntityId.Value, cancellationToken);
             if (entity is null || entity.TerritoryId != territoryId)
             {
-                return (false, "Map entity not found for territory.", null);
+                return Result<CommunityPost>.Failure("Map entity not found for territory.");
             }
         }
 
@@ -88,7 +89,7 @@ public sealed class PostCreationService
 
         if (postingRestricted)
         {
-            return (false, "User is restricted from posting in this territory.", null);
+            return Result<CommunityPost>.Failure("User is restricted from posting in this territory.");
         }
 
         var normalizedAssetIds = assetIds?
@@ -101,7 +102,7 @@ public sealed class PostCreationService
             var assets = await _assetRepository.ListByIdsAsync(normalizedAssetIds, cancellationToken);
             if (assets.Count != normalizedAssetIds.Count || assets.Any(asset => asset.TerritoryId != territoryId))
             {
-                return (false, "Asset not found for territory.", null);
+                return Result<CommunityPost>.Failure("Asset not found for territory.");
             }
         }
 
@@ -138,7 +139,7 @@ public sealed class PostCreationService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null, post);
+        return Result<CommunityPost>.Success(post);
     }
 
     private static IReadOnlyCollection<Domain.Map.PostGeoAnchor> BuildPostAnchors(

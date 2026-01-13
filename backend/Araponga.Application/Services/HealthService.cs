@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
@@ -28,7 +29,7 @@ public sealed class HealthService
         return _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
     }
 
-    public async Task<(bool success, string? error, HealthAlert? alert)> ReportAlertAsync(
+    public async Task<Result<HealthAlert>> ReportAlertAsync(
         Guid territoryId,
         Guid userId,
         string title,
@@ -37,7 +38,7 @@ public sealed class HealthService
     {
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
         {
-            return (false, "Title and description are required.", null);
+            return Result<HealthAlert>.Failure("Title and description are required.");
         }
 
         var alert = new HealthAlert(
@@ -57,7 +58,7 @@ public sealed class HealthService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null, alert);
+        return Result<HealthAlert>.Success(alert);
     }
 
     public async Task<bool> ValidateAlertAsync(

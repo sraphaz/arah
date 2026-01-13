@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Feed;
 
@@ -55,7 +56,7 @@ public sealed class FeedService
         return _feedRepository.ListByAuthorAsync(userId, cancellationToken);
     }
 
-    public Task<(bool success, string? error, CommunityPost? post)> CreatePostAsync(
+    public Task<Result<CommunityPost>> CreatePostAsync(
         Guid territoryId,
         Guid userId,
         string title,
@@ -83,7 +84,7 @@ public sealed class FeedService
         return _postInteractionService.LikeAsync(territoryId, postId, actorId, userId, cancellationToken);
     }
 
-    public Task<(bool success, string? error)> CommentAsync(
+    public Task<OperationResult> CommentAsync(
         Guid territoryId,
         Guid postId,
         Guid userId,
@@ -93,7 +94,7 @@ public sealed class FeedService
         return _postInteractionService.CommentAsync(territoryId, postId, userId, content, cancellationToken);
     }
 
-    public Task<(bool success, string? error)> ShareAsync(
+    public Task<OperationResult> ShareAsync(
         Guid territoryId,
         Guid postId,
         Guid userId,

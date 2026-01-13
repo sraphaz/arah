@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Geo;
 using Araponga.Domain.Map;
@@ -57,7 +58,7 @@ public sealed class MapService
             : visibleEntities.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
     }
 
-    public async Task<(bool success, string? error, MapEntity? entity)> SuggestAsync(
+    public async Task<Result<MapEntity>> SuggestAsync(
         Guid territoryId,
         Guid userId,
         string name,
@@ -68,12 +69,12 @@ public sealed class MapService
     {
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(category))
         {
-            return (false, "Name and category are required.", null);
+            return Result<MapEntity>.Failure("Name and category are required.");
         }
 
         if (!GeoCoordinate.IsValid(latitude, longitude))
         {
-            return (false, "Invalid latitude/longitude.", null);
+            return Result<MapEntity>.Failure("Invalid latitude/longitude.");
         }
 
         var entity = new MapEntity(
@@ -97,10 +98,10 @@ public sealed class MapService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null, entity);
+        return Result<MapEntity>.Success(entity);
     }
 
-    public async Task<(bool success, string? error, MapEntityRelation? relation)> RelateAsync(
+    public async Task<Result<MapEntityRelation>> RelateAsync(
         Guid territoryId,
         Guid entityId,
         Guid userId,
@@ -109,19 +110,19 @@ public sealed class MapService
         var entity = await _mapRepository.GetByIdAsync(entityId, cancellationToken);
         if (entity is null || entity.TerritoryId != territoryId)
         {
-            return (false, "Entity not found.", null);
+            return Result<MapEntityRelation>.Failure("Entity not found.");
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
         if (!isResident)
         {
-            return (false, "Only residents can relate to entities.", null);
+            return Result<MapEntityRelation>.Failure("Only residents can relate to entities.");
         }
 
         var exists = await _relationRepository.ExistsAsync(userId, entityId, cancellationToken);
         if (exists)
         {
-            return (false, null, null);
+            return Result<MapEntityRelation>.Failure("Relation already exists.");
         }
 
         var relation = new MapEntityRelation(userId, entityId, DateTime.UtcNow);
@@ -133,7 +134,7 @@ public sealed class MapService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null, relation);
+        return Result<MapEntityRelation>.Success(relation);
     }
 
     public async Task<bool> ValidateAsync(
@@ -160,7 +161,7 @@ public sealed class MapService
         return true;
     }
 
-    public async Task<(bool success, string? error)> ConfirmAsync(
+    public async Task<OperationResult> ConfirmAsync(
         Guid territoryId,
         Guid entityId,
         Guid userId,
@@ -169,13 +170,13 @@ public sealed class MapService
         var entity = await _mapRepository.GetByIdAsync(entityId, cancellationToken);
         if (entity is null || entity.TerritoryId != territoryId)
         {
-            return (false, "Entity not found.");
+            return OperationResult.Failure("Entity not found.");
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
         if (!isResident)
         {
-            return (false, "Only residents can confirm entities.");
+            return OperationResult.Failure("Only residents can confirm entities.");
         }
 
         await _mapRepository.IncrementConfirmationAsync(entityId, cancellationToken);
@@ -186,6 +187,6 @@ public sealed class MapService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null);
+        return OperationResult.Success();
     }
 }

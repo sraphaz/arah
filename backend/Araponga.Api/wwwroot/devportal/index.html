@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Developer Portal da API Araponga: território, memberships, feed, mapa, moderação e notificações." />
+  <meta name="description" content="Developer Portal da API Araponga: território, memberships, feed, mapa, marketplace, eventos, moderação e notificações." />
   <title>Araponga API • Developer Portal</title>
   <link rel="icon" href="./assets/images/araponga-icon.svg" />
   <link rel="apple-touch-icon" href="./assets/images/araponga-icon.svg" />
@@ -46,6 +46,8 @@
         <li><a href="#conceitos">Conceitos de produto</a></li>
         <li><a href="#modelo-dominio">Modelo de domínio</a></li>
         <li><a href="#fluxos">Fluxos principais</a></li>
+        <li><a href="#marketplace">Marketplace</a></li>
+        <li><a href="#eventos">Eventos</a></li>
         <li><a href="#auth">Autenticação (JWT)</a></li>
         <li><a href="#territory-session">Território & headers</a></li>
         <li><a href="#openapi">OpenAPI / Explorer</a></li>
@@ -60,7 +62,7 @@
         <span class="eyebrow">Visão geral</span>
         <h2>API orientada a território + curadoria comunitária.</h2>
         <p>
-          A API da Araponga cria um núcleo confiável para território, vínculos, feed e mapa. Ela prioriza
+          A API da Araponga cria um núcleo confiável para território, vínculos, feed, mapa, marketplace e eventos. Ela prioriza
           regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam
           auditáveis e evoluam com segurança.
         </p>
@@ -68,7 +70,7 @@
           <div class="card">
             <h3>Por que território?</h3>
             <p>
-              Território é o recorte geográfico base. Ele separa o “onde” do “quem” e do “o quê”.
+              Território é o recorte geográfico base. Ele separa o "onde" do "quem" e do "o quê".
               Isso evita que conteúdo social distorça o mapa e mantém o contexto local como primeira-class.
             </p>
           </div>
@@ -197,7 +199,7 @@
         <span class="eyebrow">Modelo de domínio</span>
         <h2>Entidades principais e relacionamentos</h2>
         <figure class="diagram">
-          <img src="/devportal/assets/images/domain-diagram.svg" alt="Diagrama de relacionamento entre User, Territory, Membership, Feed, Map e Moderação" />
+          <img src="/devportal/assets/images/domain-diagram.svg" alt="Diagrama de relacionamento entre User, Territory, Membership, Feed, Map, Marketplace, Events e Moderação" />
           <figcaption>
             O diagrama resume as relações centrais implementadas hoje no backend.
           </figcaption>
@@ -212,6 +214,11 @@
               <li><strong>CommunityPost</strong> pertence ao Territory e pode referenciar MapEntity.</li>
               <li><strong>PostGeoAnchor</strong> ancora posts no mapa.</li>
               <li><strong>MapEntity</strong> pertence ao Territory, começa como sugerida e pode ser validada.</li>
+              <li><strong>TerritoryStore</strong> representa loja de um morador no território.</li>
+              <li><strong>StoreListing</strong> representa produto ou serviço oferecido por uma loja.</li>
+              <li><strong>Cart</strong> e <strong>CartItem</strong> gerenciam carrinho de compras por território.</li>
+              <li><strong>ListingInquiry</strong> representa interesse em um listing.</li>
+              <li><strong>TerritoryEvent</strong> representa eventos territoriais com data/hora e localização.</li>
               <li><strong>Reports</strong> e <strong>Blocks</strong> modulam visibilidade e segurança.</li>
               <li><strong>OutboxMessage</strong> garante a intenção de notificar em transações confiáveis.</li>
               <li><strong>UserNotification</strong> compõe o inbox in-app por usuário.</li>
@@ -224,6 +231,8 @@
               <li>Separar território de identidade evita acoplamento social no mapa.</li>
               <li>Vínculos explicitam presença local e governança comunitária.</li>
               <li>Posts + geo anchors conectam feed e mapa sem confundir o domínio.</li>
+              <li>Marketplace permite economia local dentro do território.</li>
+              <li>Eventos conectam comunidade com atividades locais.</li>
               <li>Moderação mantém confiança com regras auditáveis.</li>
               <li>Notificações usam outbox para evitar perda de eventos após o commit.</li>
             </ul>
@@ -385,6 +394,141 @@
         </div>
       </section>
 
+      <section class="section" id="marketplace">
+        <span class="eyebrow">Marketplace</span>
+        <h2>Economia local territorial</h2>
+        <p>
+          O marketplace permite que moradores criem lojas, listem produtos/serviços, gerenciem carrinho de compras
+          e recebam inquiries de interessados. Tudo ancorado no território.
+        </p>
+
+        <div class="flow-step">
+          <h4>12. Criar ou atualizar loja</h4>
+          <p>
+            Moradores validados podem criar ou atualizar sua loja no território via
+            <code>POST /api/v1/stores</code>. A loja define informações de contato e visibilidade.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/stores \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "territoryId": "11111111-1111-1111-1111-111111111111",
+    "displayName": "Loja da Ana",
+    "description": "Produtos artesanais",
+    "contactVisibility": "Public",
+    "contact": {
+      "phone": "+5511999999999",
+      "email": "ana@exemplo.com"
+    }
+  }'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>13. Criar listing (produto ou serviço)</h4>
+          <p>
+            Lojas podem criar listings via <code>POST /api/v1/listings</code>. Listings podem ser produtos
+            ou serviços, com preço fixo, negociável ou gratuito.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/listings \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "territoryId": "11111111-1111-1111-1111-111111111111",
+    "storeId": "22222222-2222-2222-2222-222222222222",
+    "type": "Product",
+    "title": "Bolo de chocolate",
+    "description": "Bolo caseiro",
+    "pricingType": "Fixed",
+    "priceAmount": 25.00,
+    "currency": "BRL"
+  }'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>14. Buscar listings</h4>
+          <p>
+            Use <code>GET /api/v1/listings/search</code> para buscar listings por território, categoria,
+            tags ou texto livre.
+          </p>
+          <pre class="code-block"><code>curl "http://localhost:8080/api/v1/listings/search?territoryId=11111111-1111-1111-1111-111111111111&amp;search=bolo" \
+  -H "Authorization: Bearer &lt;token&gt;"</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>15. Gerenciar carrinho</h4>
+          <p>
+            Usuários podem adicionar itens ao carrinho via <code>POST /api/v1/cart/items</code>,
+            atualizar quantidade via <code>PATCH /api/v1/cart/items/{id}</code> e fazer checkout via
+            <code>POST /api/v1/cart/checkout</code>. O checkout gera inquiries para listings não compráveis
+            e checkout items para os compráveis.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/cart/items \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "territoryId": "11111111-1111-1111-1111-111111111111",
+    "listingId": "33333333-3333-3333-3333-333333333333",
+    "quantity": 2
+  }'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>16. Criar inquiry</h4>
+          <p>
+            Interessados podem criar inquiries diretamente em listings via
+            <code>POST /api/v1/listings/{id}/inquiries</code>. A resposta inclui informações de contato
+            da loja conforme visibilidade configurada.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/listings/33333333-3333-3333-3333-333333333333/inquiries \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Gostaria de mais informações"}'</code></pre>
+        </div>
+      </section>
+
+      <section class="section" id="eventos">
+        <span class="eyebrow">Eventos</span>
+        <h2>Eventos territoriais com data/hora e localização</h2>
+        <p>
+          Eventos são criados por moradores e aparecem no feed e no mapa. Eles têm data/hora de início
+          (obrigatória) e fim (opcional), além de geolocalização obrigatória.
+        </p>
+
+        <div class="flow-step">
+          <h4>17. Criar evento</h4>
+          <p>
+            Use <code>POST /api/v1/events</code> para criar eventos. O evento automaticamente gera um post
+            no feed e aparece no mapa.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/events \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: session-123" \
+  -d '{
+    "territoryId": "11111111-1111-1111-1111-111111111111",
+    "title": "Feira de artesanato",
+    "description": "Feira mensal no centro",
+    "startsAtUtc": "2024-12-15T10:00:00Z",
+    "endsAtUtc": "2024-12-15T18:00:00Z",
+    "latitude": -23.55,
+    "longitude": -46.63,
+    "locationLabel": "Praça Central"
+  }'</code></pre>
+        </div>
+
+        <div class="flow-step">
+          <h4>18. Participação em eventos</h4>
+          <p>
+            Usuários podem declarar participação via <code>POST /api/v1/events/{id}/participation</code>
+            com status <code>Going</code>, <code>Interested</code> ou <code>NotGoing</code>.
+          </p>
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/events/44444444-4444-4444-4444-444444444444/participation \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "Going"}'</code></pre>
+        </div>
+      </section>
+
       <section class="section" id="auth">
         <span class="eyebrow">Autenticação</span>
         <h2>JWT (HS256)</h2>
@@ -444,7 +588,7 @@
             <tr>
               <td>X-Session-Id</td>
               <td>Seleciona território ativo da sessão.</td>
-              <td>Feed, Mapa, Alerts, Assets, Moderação quando <code>territoryId</code> não está na query.</td>
+              <td>Feed, Mapa, Alerts, Assets, Marketplace, Events, Moderação quando <code>territoryId</code> não está na query.</td>
             </tr>
             <tr>
               <td>X-Geo-Latitude / X-Geo-Longitude</td>

@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Feed;
@@ -78,7 +79,7 @@ public sealed class PostInteractionService
         return true;
     }
 
-    public async Task<(bool success, string? error)> CommentAsync(
+    public async Task<OperationResult> CommentAsync(
         Guid territoryId,
         Guid postId,
         Guid userId,
@@ -88,13 +89,13 @@ public sealed class PostInteractionService
         var post = await _feedRepository.GetPostAsync(postId, cancellationToken);
         if (post is null || post.TerritoryId != territoryId)
         {
-            return (false, "Post not found.");
+            return OperationResult.Failure("Post not found.");
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
         if (!isResident)
         {
-            return (false, "Only residents can comment.");
+            return OperationResult.Failure("Only residents can comment.");
         }
 
         var interactionRestricted = await _sanctionRepository.HasActiveSanctionAsync(
@@ -106,7 +107,7 @@ public sealed class PostInteractionService
 
         if (interactionRestricted)
         {
-            return (false, "User is restricted from interacting in this territory.");
+            return OperationResult.Failure("User is restricted from interacting in this territory.");
         }
 
         var comment = new PostComment(Guid.NewGuid(), postId, userId, content, DateTime.UtcNow);
@@ -118,10 +119,10 @@ public sealed class PostInteractionService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null);
+        return OperationResult.Success();
     }
 
-    public async Task<(bool success, string? error)> ShareAsync(
+    public async Task<OperationResult> ShareAsync(
         Guid territoryId,
         Guid postId,
         Guid userId,
@@ -130,13 +131,13 @@ public sealed class PostInteractionService
         var post = await _feedRepository.GetPostAsync(postId, cancellationToken);
         if (post is null || post.TerritoryId != territoryId)
         {
-            return (false, "Post not found.");
+            return OperationResult.Failure("Post not found.");
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
         if (!isResident)
         {
-            return (false, "Only residents can share.");
+            return OperationResult.Failure("Only residents can share.");
         }
 
         var interactionRestricted = await _sanctionRepository.HasActiveSanctionAsync(
@@ -148,7 +149,7 @@ public sealed class PostInteractionService
 
         if (interactionRestricted)
         {
-            return (false, "User is restricted from interacting in this territory.");
+            return OperationResult.Failure("User is restricted from interacting in this territory.");
         }
 
         await _feedRepository.AddShareAsync(postId, userId, cancellationToken);
@@ -159,6 +160,6 @@ public sealed class PostInteractionService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return (true, null);
+        return OperationResult.Success();
     }
 }

@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Marketplace;
 
@@ -22,7 +23,7 @@ public sealed class StoreService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<(bool success, string? error, TerritoryStore? store)> UpsertMyStoreAsync(
+    public async Task<Result<TerritoryStore>> UpsertMyStoreAsync(
         Guid territoryId,
         Guid userId,
         string displayName,
@@ -38,12 +39,12 @@ public sealed class StoreService
     {
         if (!await IsResidentOrCuratorAsync(userId, territoryId, cancellationToken))
         {
-            return (false, "Only confirmed residents or admins can manage stores.", null);
+            return Result<TerritoryStore>.Failure("Only confirmed residents or admins can manage stores.");
         }
 
         if (string.IsNullOrWhiteSpace(displayName))
         {
-            return (false, "Display name is required.", null);
+            return Result<TerritoryStore>.Failure("Display name is required.");
         }
 
         var existing = await _storeRepository.GetByOwnerAsync(territoryId, userId, cancellationToken);
@@ -71,7 +72,7 @@ public sealed class StoreService
 
             await _storeRepository.AddAsync(store, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
-            return (true, null, store);
+            return Result<TerritoryStore>.Success(store);
         }
 
         existing.UpdateDetails(
@@ -88,7 +89,7 @@ public sealed class StoreService
 
         await _storeRepository.UpdateAsync(existing, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        return (true, null, existing);
+        return Result<TerritoryStore>.Success(existing);
     }
 
     public Task<TerritoryStore?> GetMyStoreAsync(Guid territoryId, Guid userId, CancellationToken cancellationToken)
@@ -96,7 +97,7 @@ public sealed class StoreService
         return _storeRepository.GetByOwnerAsync(territoryId, userId, cancellationToken);
     }
 
-    public async Task<(bool success, string? error, TerritoryStore? store)> UpdateStoreAsync(
+    public async Task<Result<TerritoryStore>> UpdateStoreAsync(
         Guid storeId,
         Guid userId,
         string? displayName,
@@ -113,17 +114,17 @@ public sealed class StoreService
         var store = await _storeRepository.GetByIdAsync(storeId, cancellationToken);
         if (store is null)
         {
-            return (false, "Store not found.", null);
+            return Result<TerritoryStore>.Failure("Store not found.");
         }
 
         if (displayName is not null && string.IsNullOrWhiteSpace(displayName))
         {
-            return (false, "Display name is required.", null);
+            return Result<TerritoryStore>.Failure("Display name is required.");
         }
 
         if (!await CanManageStoreAsync(store, userId, cancellationToken))
         {
-            return (false, "Not authorized.", null);
+            return Result<TerritoryStore>.Failure("Not authorized.");
         }
 
         var now = DateTime.UtcNow;
@@ -142,10 +143,10 @@ public sealed class StoreService
 
         await _storeRepository.UpdateAsync(store, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        return (true, null, store);
+        return Result<TerritoryStore>.Success(store);
     }
 
-    public async Task<(bool success, string? error, TerritoryStore? store)> SetStoreStatusAsync(
+    public async Task<Result<TerritoryStore>> SetStoreStatusAsync(
         Guid storeId,
         Guid userId,
         StoreStatus status,
@@ -154,21 +155,21 @@ public sealed class StoreService
         var store = await _storeRepository.GetByIdAsync(storeId, cancellationToken);
         if (store is null)
         {
-            return (false, "Store not found.", null);
+            return Result<TerritoryStore>.Failure("Store not found.");
         }
 
         if (!await CanManageStoreAsync(store, userId, cancellationToken))
         {
-            return (false, "Not authorized.", null);
+            return Result<TerritoryStore>.Failure("Not authorized.");
         }
 
         store.SetStatus(status, DateTime.UtcNow);
         await _storeRepository.UpdateAsync(store, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        return (true, null, store);
+        return Result<TerritoryStore>.Success(store);
     }
 
-    public async Task<(bool success, string? error, TerritoryStore? store)> SetPaymentsEnabledAsync(
+    public async Task<Result<TerritoryStore>> SetPaymentsEnabledAsync(
         Guid storeId,
         Guid userId,
         bool enabled,
@@ -177,18 +178,18 @@ public sealed class StoreService
         var store = await _storeRepository.GetByIdAsync(storeId, cancellationToken);
         if (store is null)
         {
-            return (false, "Store not found.", null);
+            return Result<TerritoryStore>.Failure("Store not found.");
         }
 
         if (!await CanManageStoreAsync(store, userId, cancellationToken))
         {
-            return (false, "Not authorized.", null);
+            return Result<TerritoryStore>.Failure("Not authorized.");
         }
 
         store.SetPaymentsEnabled(enabled, DateTime.UtcNow);
         await _storeRepository.UpdateAsync(store, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        return (true, null, store);
+        return Result<TerritoryStore>.Success(store);
     }
 
     private async Task<bool> CanManageStoreAsync(TerritoryStore store, Guid userId, CancellationToken cancellationToken)

@@ -49,9 +49,37 @@ Se o problema persistir, podemos voltar ao método antigo usando `peaceiris/acti
     publish_branch: gh-pages
 ```
 
+## Organização da Documentação (Incluído)
+
+Além do fix do GitHub Pages, este PR também organiza a documentação do projeto:
+
+### Mudanças de Organização
+
+1. **Documentação de PRs**: Movidos todos os arquivos `PR_*.md` para `docs/prs/`
+   - Criado `docs/prs/README.md` com índice organizado
+   - Estrutura mais limpa na raiz do projeto
+
+2. **Plano de Refatoração**: Movido `PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md` para `docs/`
+
+3. **Changelog**: Removido `CHANGELOG.md` duplicado da raiz (mantido apenas `docs/40_CHANGELOG.md`)
+
+4. **Índice Atualizado**: Atualizado `docs/00_INDEX.md` com novas seções:
+   - Planos e Recomendações
+   - Pull Requests
+
+### Estrutura Final
+
+- **Raiz**: Apenas arquivos essenciais (README, LICENSE, CODE_OF_CONDUCT, etc.)
+- **docs/**: Toda documentação organizada por categorias
+- **docs/prs/**: Documentação de todos os PRs
+
 ## Arquivos Modificados
 
 - `.github/workflows/devportal-pages.yml`
+- `docs/prs/README.md` (novo)
+- `docs/00_INDEX.md`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+- Movidos/Removidos: `PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md`, `CHANGELOG.md`, `PR_*.md`
 
 ## Testes
 

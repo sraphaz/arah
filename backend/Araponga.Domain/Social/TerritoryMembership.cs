@@ -62,10 +62,13 @@ public sealed class TerritoryMembership
         else if (residencyVerification.HasValue)
         {
             ResidencyVerification = residencyVerification.Value;
+            // Para compatibilidade: converter ResidencyVerification de volta para VerificationStatus obsoleto
+            VerificationStatus = ConvertResidencyVerificationToVerificationStatus(residencyVerification.Value, role);
         }
         else
         {
             ResidencyVerification = Araponga.Domain.Social.ResidencyVerification.Unverified;
+            VerificationStatus = VerificationStatus.Pending; // Default para compatibilidade
         }
 
         LastGeoVerifiedAtUtc = lastGeoVerifiedAtUtc;
@@ -95,23 +98,31 @@ public sealed class TerritoryMembership
     public void UpdateRole(MembershipRole role)
     {
         Role = role;
+        // Atualizar VerificationStatus obsoleto para compatibilidade quando role muda
+        VerificationStatus = ConvertResidencyVerificationToVerificationStatus(ResidencyVerification, role);
     }
 
     public void UpdateResidencyVerification(ResidencyVerification verification)
     {
         ResidencyVerification = verification;
+        // Atualizar VerificationStatus obsoleto para compatibilidade
+        VerificationStatus = ConvertResidencyVerificationToVerificationStatus(verification, Role);
     }
 
     public void UpdateGeoVerification(DateTime verifiedAtUtc)
     {
         ResidencyVerification = Araponga.Domain.Social.ResidencyVerification.GeoVerified;
         LastGeoVerifiedAtUtc = verifiedAtUtc;
+        // Atualizar VerificationStatus obsoleto para compatibilidade
+        VerificationStatus = VerificationStatus.Validated;
     }
 
     public void UpdateDocumentVerification(DateTime verifiedAtUtc)
     {
         ResidencyVerification = Araponga.Domain.Social.ResidencyVerification.DocumentVerified;
         LastDocumentVerifiedAtUtc = verifiedAtUtc;
+        // Atualizar VerificationStatus obsoleto para compatibilidade
+        VerificationStatus = VerificationStatus.Validated; // DocumentVerified é considerado Validated
     }
 
     private static ResidencyVerification ConvertVerificationStatusToResidencyVerification(
@@ -129,6 +140,24 @@ public sealed class TerritoryMembership
             VerificationStatus.Validated => Araponga.Domain.Social.ResidencyVerification.GeoVerified, // Assumir geo como padrão
             VerificationStatus.Rejected => Araponga.Domain.Social.ResidencyVerification.Unverified,
             _ => Araponga.Domain.Social.ResidencyVerification.Unverified
+        };
+    }
+
+    private static VerificationStatus ConvertResidencyVerificationToVerificationStatus(
+        ResidencyVerification verification,
+        MembershipRole role)
+    {
+        if (role == MembershipRole.Visitor)
+        {
+            return VerificationStatus.Pending; // Visitor sempre Pending
+        }
+
+        return verification switch
+        {
+            Araponga.Domain.Social.ResidencyVerification.Unverified => VerificationStatus.Pending,
+            Araponga.Domain.Social.ResidencyVerification.GeoVerified => VerificationStatus.Validated,
+            Araponga.Domain.Social.ResidencyVerification.DocumentVerified => VerificationStatus.Validated,
+            _ => VerificationStatus.Pending
         };
     }
 }

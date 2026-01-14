@@ -18,7 +18,9 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<UserRecord> Users => Set<UserRecord>();
     public DbSet<UserPreferencesRecord> UserPreferences => Set<UserPreferencesRecord>();
     public DbSet<TerritoryMembershipRecord> TerritoryMemberships => Set<TerritoryMembershipRecord>();
-    public DbSet<UserTerritoryRecord> UserTerritories => Set<UserTerritoryRecord>();
+    public DbSet<MembershipSettingsRecord> MembershipSettings => Set<MembershipSettingsRecord>();
+    public DbSet<MembershipCapabilityRecord> MembershipCapabilities => Set<MembershipCapabilityRecord>();
+    public DbSet<SystemPermissionRecord> SystemPermissions => Set<SystemPermissionRecord>();
     public DbSet<TerritoryJoinRequestRecord> TerritoryJoinRequests => Set<TerritoryJoinRequestRecord>();
     public DbSet<TerritoryJoinRequestRecipientRecord> TerritoryJoinRequestRecipients => Set<TerritoryJoinRequestRecipientRecord>();
     public DbSet<CommunityPostRecord> CommunityPosts => Set<CommunityPostRecord>();
@@ -125,16 +127,18 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasKey(u => u.Id);
             entity.Property(u => u.DisplayName).HasMaxLength(200).IsRequired();
             entity.Property(u => u.Email).HasMaxLength(320).IsRequired();
-            entity.Property(u => u.Provider).HasMaxLength(80).IsRequired();
+            entity.Property(u => u.AuthProvider).HasMaxLength(80).IsRequired();
             entity.Property(u => u.ExternalId).HasMaxLength(160).IsRequired();
-            entity.Property(u => u.Role).HasConversion<int>();
             // 2FA fields
             entity.Property(u => u.TwoFactorSecret).HasMaxLength(500);
             entity.Property(u => u.TwoFactorRecoveryCodesHash).HasMaxLength(500);
             entity.Property(u => u.TwoFactorVerifiedAtUtc).HasColumnType("timestamp with time zone");
+            // Identity verification fields
+            entity.Property(u => u.IdentityVerificationStatus).HasConversion<int>().IsRequired();
+            entity.Property(u => u.IdentityVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(u => u.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(u => u.Email).IsUnique();
-            entity.HasIndex(u => new { u.Provider, u.ExternalId }).IsUnique();
+            entity.HasIndex(u => new { u.AuthProvider, u.ExternalId }).IsUnique();
         });
 
         modelBuilder.Entity<UserPreferencesRecord>(entity =>
@@ -170,15 +174,53 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
                 .IsUnique();
         });
 
-        modelBuilder.Entity<UserTerritoryRecord>(entity =>
+        modelBuilder.Entity<MembershipSettingsRecord>(entity =>
         {
-            entity.ToTable("user_territories");
-            entity.HasKey(m => m.Id);
-            entity.Property(m => m.Status).HasConversion<int>();
-            entity.Property(m => m.CreatedAtUtc).HasColumnType("timestamp with time zone");
-            entity.HasIndex(m => m.UserId);
-            entity.HasIndex(m => m.TerritoryId);
-            entity.HasIndex(m => new { m.UserId, m.TerritoryId }).IsUnique();
+            entity.ToTable("membership_settings");
+            entity.HasKey(s => s.MembershipId);
+            entity.Property(s => s.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(s => s.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasOne<TerritoryMembershipRecord>()
+                .WithOne()
+                .HasForeignKey<MembershipSettingsRecord>(s => s.MembershipId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(s => s.MembershipId).IsUnique();
+        });
+
+        modelBuilder.Entity<MembershipCapabilityRecord>(entity =>
+        {
+            entity.ToTable("membership_capabilities");
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.CapabilityType).HasConversion<int>();
+            entity.Property(c => c.GrantedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(c => c.RevokedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(c => c.Reason).HasMaxLength(500);
+            entity.HasOne<TerritoryMembershipRecord>()
+                .WithMany()
+                .HasForeignKey(c => c.MembershipId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(c => c.MembershipId);
+            entity.HasIndex(c => new { c.MembershipId, c.CapabilityType })
+                .HasFilter("\"RevokedAtUtc\" IS NULL");
+        });
+
+        modelBuilder.Entity<SystemPermissionRecord>(entity =>
+        {
+            entity.ToTable("system_permissions");
+            entity.HasKey(p => p.Id);
+            entity.Property(p => p.PermissionType).HasConversion<int>();
+            entity.Property(p => p.GrantedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(p => p.RevokedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasOne<UserRecord>()
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(p => p.UserId);
+            entity.HasIndex(p => new { p.UserId, p.PermissionType })
+                .IsUnique()
+                .HasFilter("\"RevokedAtUtc\" IS NULL");
+            entity.HasIndex(p => p.PermissionType)
+                .HasFilter("\"RevokedAtUtc\" IS NULL");
         });
 
         modelBuilder.Entity<TerritoryJoinRequestRecord>(entity =>

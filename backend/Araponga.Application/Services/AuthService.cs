@@ -25,8 +25,21 @@ public sealed class AuthService
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>
+    /// Realiza login/cadastro via provedor de autenticação social.
+    /// </summary>
+    /// <param name="authProvider">Provedor de autenticação (ex: "google", "apple", "facebook").</param>
+    /// <param name="externalId">ID único do usuário no provedor de autenticação.</param>
+    /// <param name="displayName">Nome de exibição do usuário.</param>
+    /// <param name="email">Endereço de e-mail (opcional).</param>
+    /// <param name="cpf">CPF brasileiro (opcional, mutuamente exclusivo com foreignDocument).</param>
+    /// <param name="foreignDocument">Documento de identificação estrangeiro (opcional, mutuamente exclusivo com cpf).</param>
+    /// <param name="phoneNumber">Número de telefone (opcional).</param>
+    /// <param name="address">Endereço físico (opcional).</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Resultado contendo o usuário e token JWT, ou erro se 2FA for necessário.</returns>
     public async Task<Result<(User user, string token)>> LoginSocialAsync(
-        string provider,
+        string authProvider,
         string externalId,
         string displayName,
         string? email,
@@ -36,7 +49,7 @@ public sealed class AuthService
         string? address,
         CancellationToken cancellationToken)
     {
-        var existing = await _userRepository.GetByProviderAsync(provider, externalId, cancellationToken);
+        var existing = await _userRepository.GetByAuthProviderAsync(authProvider, externalId, cancellationToken);
         if (existing is not null)
         {
             // Se 2FA está habilitado, retornar challenge
@@ -62,9 +75,8 @@ public sealed class AuthService
             foreignDocument,
             phoneNumber,
             address,
-            provider,
+            authProvider,
             externalId,
-            UserRole.Visitor,
             DateTime.UtcNow);
 
         await _userRepository.AddAsync(user, cancellationToken);

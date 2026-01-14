@@ -49,9 +49,14 @@ public sealed class UserProfileService
             user.ForeignDocument,
             user.PhoneNumber,
             user.Address,
-            user.Provider,
+            user.AuthProvider,
             user.ExternalId,
-            user.Role,
+            user.TwoFactorEnabled,
+            user.TwoFactorSecret,
+            user.TwoFactorRecoveryCodesHash,
+            user.TwoFactorVerifiedAtUtc,
+            user.IdentityVerificationStatus,
+            user.IdentityVerifiedAtUtc,
             user.CreatedAtUtc);
 
         await _userRepository.UpdateAsync(updatedUser, cancellationToken);
@@ -81,9 +86,14 @@ public sealed class UserProfileService
             user.ForeignDocument,
             phoneNumber,
             address,
-            user.Provider,
+            user.AuthProvider,
             user.ExternalId,
-            user.Role,
+            user.TwoFactorEnabled,
+            user.TwoFactorSecret,
+            user.TwoFactorRecoveryCodesHash,
+            user.TwoFactorVerifiedAtUtc,
+            user.IdentityVerificationStatus,
+            user.IdentityVerifiedAtUtc,
             user.CreatedAtUtc);
 
         await _userRepository.UpdateAsync(updatedUser, cancellationToken);

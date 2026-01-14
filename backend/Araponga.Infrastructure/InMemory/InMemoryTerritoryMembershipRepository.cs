@@ -1,5 +1,5 @@
 using Araponga.Application.Interfaces;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Infrastructure.InMemory;
 
@@ -34,7 +34,7 @@ public sealed class InMemoryTerritoryMembershipRepository : ITerritoryMembership
         var hasResident = _dataStore.Memberships.Any(m =>
             m.TerritoryId == territoryId &&
             m.Role == MembershipRole.Resident &&
-            m.ResidencyVerification != ResidencyVerification.Unverified);
+            m.ResidencyVerification != ResidencyVerification.None);
 
         return Task.FromResult(hasResident);
     }
@@ -44,7 +44,7 @@ public sealed class InMemoryTerritoryMembershipRepository : ITerritoryMembership
         var residents = _dataStore.Memberships
             .Where(m => m.TerritoryId == territoryId &&
                         m.Role == MembershipRole.Resident &&
-                        m.ResidencyVerification != ResidencyVerification.Unverified)
+                        m.ResidencyVerification != ResidencyVerification.None)
             .Select(m => m.UserId)
             .Distinct()
             .ToList();
@@ -135,7 +135,7 @@ public sealed class InMemoryTerritoryMembershipRepository : ITerritoryMembership
             return Task.CompletedTask;
         }
 
-        membership.UpdateGeoVerification(verifiedAtUtc);
+        membership.AddGeoVerification(verifiedAtUtc);
         return Task.CompletedTask;
     }
 
@@ -147,7 +147,7 @@ public sealed class InMemoryTerritoryMembershipRepository : ITerritoryMembership
             return Task.CompletedTask;
         }
 
-        membership.UpdateDocumentVerification(verifiedAtUtc);
+        membership.AddDocumentVerification(verifiedAtUtc);
         return Task.CompletedTask;
     }
 }

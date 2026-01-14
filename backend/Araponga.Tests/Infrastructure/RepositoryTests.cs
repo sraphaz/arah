@@ -2,7 +2,7 @@ using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
 using Araponga.Domain.Marketplace;
 using Araponga.Domain.Moderation;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
@@ -30,7 +30,7 @@ public sealed class RepositoryTests
     }
 
     [Fact]
-    public async Task UserRepository_AddAndGetByProvider()
+    public async Task UserRepository_AddAndGetByAuthProvider()
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryUserRepository(dataStore);
@@ -45,14 +45,15 @@ public sealed class RepositoryTests
             "Rua Teste",
             "google",
             "test-external-id",
-            UserRole.Visitor,
             DateTime.UtcNow);
 
         await repository.AddAsync(user, CancellationToken.None);
 
-        var found = await repository.GetByProviderAsync("google", "test-external-id", CancellationToken.None);
+        var found = await repository.GetByAuthProviderAsync("google", "test-external-id", CancellationToken.None);
         Assert.NotNull(found);
         Assert.Equal(user.Id, found!.Id);
+        Assert.Equal("google", found.AuthProvider);
+        Assert.Equal("test-external-id", found.ExternalId);
     }
 
     [Fact]
@@ -165,13 +166,13 @@ public sealed class RepositoryTests
     }
 
     [Fact]
-    public async Task ListingRepository_AddAndSearch()
+    public async Task StoreItemRepository_AddAndSearch()
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryStoreItemRepository(dataStore);
         var storeId = Guid.NewGuid();
 
-        var listing = new StoreItem(
+        var item = new StoreItem(
             Guid.NewGuid(),
             TerritoryId,
             storeId,
@@ -190,7 +191,7 @@ public sealed class RepositoryTests
             DateTime.UtcNow,
             DateTime.UtcNow);
 
-        await repository.AddAsync(listing, CancellationToken.None);
+        await repository.AddAsync(item, CancellationToken.None);
 
         var results = await repository.SearchAsync(
             TerritoryId,
@@ -201,7 +202,7 @@ public sealed class RepositoryTests
             ItemStatus.Active,
             CancellationToken.None);
 
-        Assert.Contains(results, l => l.Id == listing.Id);
+        Assert.Contains(results, i => i.Id == item.Id);
     }
 
     [Fact]
@@ -280,15 +281,15 @@ public sealed class RepositoryTests
     }
 
     [Fact]
-    public async Task ListingRepository_SearchPagedAsync_ReturnsPagedResults()
+    public async Task StoreItemRepository_SearchPagedAsync_ReturnsPagedResults()
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryStoreItemRepository(dataStore);
 
-        // Criar alguns listings
+        // Criar alguns itens
         for (int i = 0; i < 12; i++)
         {
-            var listing = new StoreItem(
+            var item = new StoreItem(
                 Guid.NewGuid(),
                 TerritoryId,
                 Guid.NewGuid(),
@@ -306,7 +307,7 @@ public sealed class RepositoryTests
                 ItemStatus.Active,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
-            await repository.AddAsync(listing, CancellationToken.None);
+            await repository.AddAsync(item, CancellationToken.None);
         }
 
         var page1 = await repository.SearchPagedAsync(

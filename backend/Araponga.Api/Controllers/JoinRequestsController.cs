@@ -3,6 +3,7 @@ using Araponga.Api.Contracts.JoinRequests;
 using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Social.JoinRequests;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -187,10 +188,16 @@ public sealed class JoinRequestsController : ControllerBase
             return Unauthorized();
         }
 
+        // Obter request para pegar territoryId
+        var joinRequest = await _joinRequestService.GetByIdAsync(id, cancellationToken);
+        var isCurator = joinRequest != null 
+            ? await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, joinRequest.TerritoryId, MembershipCapabilityType.Curator, cancellationToken)
+            : false;
+
         var result = await _joinRequestService.ApproveAsync(
             id,
             userContext.User.Id,
-            _accessEvaluator.IsCurator(userContext.User),
+            isCurator,
             cancellationToken);
 
         if (!result.Found)
@@ -228,10 +235,16 @@ public sealed class JoinRequestsController : ControllerBase
             return Unauthorized();
         }
 
+        // Obter request para pegar territoryId
+        var joinRequest = await _joinRequestService.GetByIdAsync(id, cancellationToken);
+        var isCurator = joinRequest != null 
+            ? await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, joinRequest.TerritoryId, MembershipCapabilityType.Curator, cancellationToken)
+            : false;
+
         var result = await _joinRequestService.RejectAsync(
             id,
             userContext.User.Id,
-            _accessEvaluator.IsCurator(userContext.User),
+            isCurator,
             cancellationToken);
 
         if (!result.Found)

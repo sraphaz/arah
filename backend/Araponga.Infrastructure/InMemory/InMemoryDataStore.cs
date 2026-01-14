@@ -6,7 +6,7 @@ using Araponga.Domain.Health;
 using Araponga.Domain.Map;
 using Araponga.Domain.Marketplace;
 using Araponga.Domain.Moderation;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
@@ -65,7 +65,12 @@ public sealed class InMemoryDataStore
             "Rua das Flores, 100",
             "google",
             "resident-external",
-            UserRole.Resident,
+            false,
+            null,
+            null,
+            null,
+            UserIdentityVerificationStatus.Unverified,
+            null,
             DateTime.UtcNow);
 
         var curatorUser = new User(
@@ -78,15 +83,21 @@ public sealed class InMemoryDataStore
             "Avenida Central, 200",
             "google",
             "curator-external",
-            UserRole.Curator,
+            false,
+            null,
+            null,
+            null,
+            UserIdentityVerificationStatus.Unverified,
+            null,
             DateTime.UtcNow);
 
         Users = new List<User> { residentUser, curatorUser };
 
+        var membershipId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
         Memberships = new List<TerritoryMembership>
         {
             new(
-                Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                membershipId,
                 residentUser.Id,
                 territoryB.Id,
                 MembershipRole.Resident,
@@ -94,6 +105,72 @@ public sealed class InMemoryDataStore
                 DateTime.UtcNow,
                 null,
                 DateTime.UtcNow)
+        };
+
+        MembershipSettings = new List<MembershipSettings>
+        {
+            // No ambiente de testes/in-memory, habilitar opt-in por padrão
+            // para manter cenários de marketplace funcionais.
+            new(
+                membershipId,
+                marketplaceOptIn: true,
+                DateTime.UtcNow,
+                DateTime.UtcNow)
+        };
+
+        // Curador precisa ter Membership no território para checagem de capability
+        var curatorMembershipIdTerritoryB = Guid.Parse("dddddddd-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        Memberships.Add(new TerritoryMembership(
+            curatorMembershipIdTerritoryB,
+            curatorUser.Id,
+            territoryB.Id,
+            MembershipRole.Visitor,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow));
+
+        MembershipSettings.Add(new MembershipSettings(
+            curatorMembershipIdTerritoryB,
+            marketplaceOptIn: false,
+            DateTime.UtcNow,
+            DateTime.UtcNow));
+
+        var curatorMembershipIdTerritoryA = Guid.Parse("dddddddd-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        Memberships.Add(new TerritoryMembership(
+            curatorMembershipIdTerritoryA,
+            curatorUser.Id,
+            territoryA.Id,
+            MembershipRole.Visitor,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow));
+
+        MembershipSettings.Add(new MembershipSettings(
+            curatorMembershipIdTerritoryA,
+            marketplaceOptIn: false,
+            DateTime.UtcNow,
+            DateTime.UtcNow));
+
+        MembershipCapabilities = new List<MembershipCapability>
+        {
+            new(
+                Guid.Parse("eeeeeeee-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                curatorMembershipIdTerritoryB,
+                MembershipCapabilityType.Curator,
+                DateTime.UtcNow,
+                curatorUser.Id,
+                curatorMembershipIdTerritoryB,
+                "Seeded curator capability for in-memory tests"),
+            new(
+                Guid.Parse("eeeeeeee-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                curatorMembershipIdTerritoryA,
+                MembershipCapabilityType.Curator,
+                DateTime.UtcNow,
+                curatorUser.Id,
+                curatorMembershipIdTerritoryA,
+                "Seeded curator capability for in-memory tests")
         };
 
         TerritoryEvents = new List<TerritoryEvent>
@@ -208,7 +285,6 @@ public sealed class InMemoryDataStore
     public List<Territory> Territories { get; }
     public List<User> Users { get; }
     public List<TerritoryMembership> Memberships { get; }
-    public List<UserTerritory> UserTerritories { get; } = new();
     public List<CommunityPost> Posts { get; }
     public List<TerritoryEvent> TerritoryEvents { get; }
     public List<EventParticipation> EventParticipations { get; }
@@ -241,4 +317,7 @@ public sealed class InMemoryDataStore
         public List<TerritoryJoinRequest> TerritoryJoinRequests { get; } = new();
         public List<TerritoryJoinRequestRecipient> TerritoryJoinRequestRecipients { get; } = new();
         public List<Domain.Users.UserPreferences> UserPreferences { get; } = new();
+        public List<MembershipSettings> MembershipSettings { get; } = new();
+        public List<MembershipCapability> MembershipCapabilities { get; } = new();
+        public List<SystemPermission> SystemPermissions { get; } = new();
     }

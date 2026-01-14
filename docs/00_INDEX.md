@@ -123,6 +123,17 @@ Todos os arquivos seguem o padrão:
 | `CHANGELOG.md` | `40_CHANGELOG.md` |
 | `CONTRIBUTING.md` | `41_CONTRIBUTING.md` |
 
+## 📝 Mudanças Recentes no Modelo
+
+### Refatoração User-Centric Membership (2026-01)
+- **Reorganização de Domínio**: Criada pasta `Membership/` em Domain
+- **UserTerritory removido**: Substituído por `TerritoryMembership`
+- **SystemPermission**: Permissões globais (Admin, SystemOperator) separadas de roles territoriais
+- **AuthProvider**: Renomeado de `Provider` para `AuthProvider` no User
+- **Renomeação listing → item**: API e contratos atualizados (`/api/v1/listings` → `/api/v1/items`)
+- **Documentação XML**: Adicionada em todas as entidades principais
+- Ver detalhes em: `REFACTOR_USER_CENTRIC_MEMBERSHIP.md`, `REFACTOR_MODEL_SUMMARY.md`, `VALIDACAO_REST_E_ESTRUTURA.md`
+
 ## 📚 Documentação Externa
 
 - **Developer Portal**: Disponível em `/devportal` quando a API está rodando

@@ -4,7 +4,7 @@ using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
 using Araponga.Domain.Marketplace;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
@@ -57,13 +57,14 @@ public static class PostgresMappers
             ForeignDocument = user.ForeignDocument,
             PhoneNumber = user.PhoneNumber,
             Address = user.Address,
-            Provider = user.Provider,
+            AuthProvider = user.AuthProvider,
             ExternalId = user.ExternalId,
-            Role = user.Role,
             TwoFactorEnabled = user.TwoFactorEnabled,
             TwoFactorSecret = user.TwoFactorSecret,
             TwoFactorRecoveryCodesHash = user.TwoFactorRecoveryCodesHash,
             TwoFactorVerifiedAtUtc = user.TwoFactorVerifiedAtUtc,
+            IdentityVerificationStatus = user.IdentityVerificationStatus,
+            IdentityVerifiedAtUtc = user.IdentityVerifiedAtUtc,
             CreatedAtUtc = user.CreatedAtUtc
         };
     }
@@ -78,13 +79,14 @@ public static class PostgresMappers
             record.ForeignDocument,
             record.PhoneNumber,
             record.Address,
-            record.Provider,
+            record.AuthProvider,
             record.ExternalId,
-            record.Role,
             record.TwoFactorEnabled,
             record.TwoFactorSecret,
             record.TwoFactorRecoveryCodesHash,
             record.TwoFactorVerifiedAtUtc,
+            record.IdentityVerificationStatus,
+            record.IdentityVerifiedAtUtc,
             record.CreatedAtUtc);
     }
 
@@ -113,28 +115,6 @@ public static class PostgresMappers
             record.ResidencyVerification,
             record.LastGeoVerifiedAtUtc,
             record.LastDocumentVerifiedAtUtc,
-            record.CreatedAtUtc);
-    }
-
-    public static UserTerritoryRecord ToRecord(this UserTerritory membership)
-    {
-        return new UserTerritoryRecord
-        {
-            Id = membership.Id,
-            UserId = membership.UserId,
-            TerritoryId = membership.TerritoryId,
-            Status = membership.Status,
-            CreatedAtUtc = membership.CreatedAtUtc
-        };
-    }
-
-    public static UserTerritory ToDomain(this UserTerritoryRecord record)
-    {
-        return new UserTerritory(
-            record.Id,
-            record.UserId,
-            record.TerritoryId,
-            record.Status,
             record.CreatedAtUtc);
     }
 
@@ -749,5 +729,78 @@ public static class PostgresMappers
             notificationPreferences,
             record.CreatedAtUtc,
             record.UpdatedAtUtc);
+    }
+
+    public static MembershipSettingsRecord ToRecord(this MembershipSettings settings)
+    {
+        return new MembershipSettingsRecord
+        {
+            MembershipId = settings.MembershipId,
+            MarketplaceOptIn = settings.MarketplaceOptIn,
+            CreatedAtUtc = settings.CreatedAtUtc,
+            UpdatedAtUtc = settings.UpdatedAtUtc
+        };
+    }
+
+    public static MembershipSettings ToDomain(this MembershipSettingsRecord record)
+    {
+        return new MembershipSettings(
+            record.MembershipId,
+            record.MarketplaceOptIn,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static MembershipCapabilityRecord ToRecord(this MembershipCapability capability)
+    {
+        return new MembershipCapabilityRecord
+        {
+            Id = capability.Id,
+            MembershipId = capability.MembershipId,
+            CapabilityType = capability.CapabilityType,
+            GrantedAtUtc = capability.GrantedAtUtc,
+            RevokedAtUtc = capability.RevokedAtUtc,
+            GrantedByUserId = capability.GrantedByUserId,
+            GrantedByMembershipId = capability.GrantedByMembershipId,
+            Reason = capability.Reason
+        };
+    }
+
+    public static MembershipCapability ToDomain(this MembershipCapabilityRecord record)
+    {
+        return new MembershipCapability(
+            record.Id,
+            record.MembershipId,
+            record.CapabilityType,
+            record.GrantedAtUtc,
+            record.GrantedByUserId,
+            record.GrantedByMembershipId,
+            record.Reason);
+    }
+
+    public static SystemPermissionRecord ToRecord(this SystemPermission permission)
+    {
+        return new SystemPermissionRecord
+        {
+            Id = permission.Id,
+            UserId = permission.UserId,
+            PermissionType = permission.PermissionType,
+            GrantedAtUtc = permission.GrantedAtUtc,
+            GrantedByUserId = permission.GrantedByUserId,
+            RevokedAtUtc = permission.RevokedAtUtc,
+            RevokedByUserId = permission.RevokedByUserId
+        };
+    }
+
+    public static SystemPermission ToDomain(this SystemPermissionRecord record)
+    {
+        return new SystemPermission(
+            record.Id,
+            record.UserId,
+            record.PermissionType,
+            record.GrantedAtUtc,
+            record.GrantedByUserId,
+            record.RevokedAtUtc,
+            record.RevokedByUserId);
     }
 }

@@ -174,7 +174,7 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
   - Validado imediatamente (`VERIFICATION_STATUS=VALIDATED`)
   - Não exige geolocalização
   - Pode ver posts públicos
-  - Não pode criar stores/listings no marketplace
+  - Não pode criar stores/items no marketplace
   - Não pode comentar/compartilhar posts
   
 - **RESIDENT**: 
@@ -182,7 +182,7 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
   - Exige geolocalização (headers obrigatórios)
   - Requer aprovação para ser validado
   - Acesso a conteúdo restrito (RESIDENTS_ONLY)
-  - Pode criar stores/listings no marketplace
+  - Pode criar stores/items no marketplace
   - Pode comentar/compartilhar posts
 
 - Um usuário só pode ter um vínculo por território
@@ -580,7 +580,7 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 
 ## 🏪 Marketplace
 
-O Marketplace lida exclusivamente com produtos e serviços oferecidos por moradores. Stores e Listings não são TerritoryAssets e não podem vender ou transferir TerritoryAssets. Produtos/serviços podem referenciar um TerritoryAsset apenas de forma contextual (ex.: "Serviço de guia na trilha X"), sem implicar propriedade ou venda do asset.
+O Marketplace lida exclusivamente com produtos e serviços oferecidos por moradores. Stores e Items não são TerritoryAssets e não podem vender ou transferir TerritoryAssets. Produtos/serviços podem referenciar um TerritoryAsset apenas de forma contextual (ex.: "Serviço de guia na trilha X"), sem implicar propriedade ou venda do asset.
 
 ### Criar Store (`POST /api/v1/stores`)
 
@@ -597,7 +597,7 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - **Contato**: `contactVisibility` define se contato é público ou privado
 - **Não é Asset**: Store representa operação econômica, não é um TerritoryAsset
 
-### Criar Listing (`POST /api/v1/listings`)
+### Criar Item (`POST /api/v1/items`)
 
 **Descrição**: Cria um produto ou serviço em uma store (oferecido por um morador).
 
@@ -606,33 +606,33 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - Body: `territoryId`, `storeId`, título, descrição, tipo (PRODUCT, SERVICE), `pricingType`, preço (opcional)
 
 **Regras de negócio**:
-- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem criar listings
+- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem criar items
 - **Tipos**: PRODUCT (produto) ou SERVICE (serviço)
 - **Preço**: Pode ser FREE, FIXED (preço fixo), NEGOTIABLE (negociável)
-- **Status**: Listing é criado como `ACTIVE`
-- **Não vende Assets**: Listings não podem vender ou transferir TerritoryAssets; podem apenas referenciar contextualmente (ex.: serviço de guia relacionado a uma trilha)
+- **Status**: Item é criado como `ACTIVE`
+- **Não vende Assets**: Items não podem vender ou transferir TerritoryAssets; podem apenas referenciar contextualmente (ex.: serviço de guia relacionado a uma trilha)
 
-### Buscar Listings (`GET /api/v1/listings/search`)
+### Buscar Items (`GET /api/v1/items`)
 
 **Descrição**: Busca produtos e serviços no marketplace.
 
 **Como usar**:
 - Exige autenticação
-- Query params: `territoryId` (opcional), `storeId` (filtro), `type` (filtro), `query` (busca de texto), `skip`, `take` (paginação)
+- Query params: `territoryId` (opcional), `storeId` (filtro), `type` (filtro), `q` (busca de texto), `skip`, `take` (paginação)
 - Header `X-Session-Id` para identificar território ativo
 
 **Regras de negócio**:
-- **Visibilidade**: Apenas listings ativos (`ACTIVE`) são retornados
-- **Filtros**: `storeId`, `type`, `query` são opcionais e combinados
+- **Visibilidade**: Apenas items ativos (`ACTIVE`) são retornados
+- **Filtros**: `storeId`, `type`, `q` são opcionais e combinados
 - **Paginação**: Padrão 20 itens
 
-### Criar Inquiry (`POST /api/v1/listings/{listingId}/inquiries`)
+### Criar Inquiry (`POST /api/v1/items/{itemId}/inquiries`)
 
-**Descrição**: Cria uma consulta sobre um listing (interesse em comprar/contratar).
+**Descrição**: Cria uma consulta sobre um item (interesse em comprar/contratar).
 
 **Como usar**:
 - Exige autenticação
-- Path param: `listingId`
+- Path param: `itemId`
 - Body: `message` (mensagem)
 
 **Regras de negócio**:
@@ -881,14 +881,14 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - ❌ Ver conteúdo RESIDENTS_ONLY
 - ❌ Comentar posts
 - ❌ Compartilhar posts
-- ❌ Criar stores/listings
+- ❌ Criar stores/items
 - ❌ Criar assets
 - ❌ Relacionar-se com entidades
 
 **RESIDENT, PENDING (Morador Pendente)**:
 - ✅ Todas permissões de VISITOR
 - ❌ Ver conteúdo RESIDENTS_ONLY
-- ❌ Criar stores/listings
+- ❌ Criar stores/items
 - ❌ Criar assets
 - ❌ Relacionar-se com entidades
 
@@ -897,7 +897,7 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - ✅ Ver conteúdo RESIDENTS_ONLY
 - ✅ Comentar posts
 - ✅ Compartilhar posts
-- ✅ Criar stores/listings
+- ✅ Criar stores/items
 - ✅ Criar assets
 - ✅ Relacionar-se com entidades
 
@@ -983,9 +983,9 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 ### Marketplace
 - `POST /api/v1/stores` - Criar store
 - `GET /api/v1/stores` - Listar stores
-- `POST /api/v1/listings` - Criar listing
-- `GET /api/v1/listings/search` - Buscar listings
-- `POST /api/v1/listings/{id}/inquiries` - Criar inquiry
+- `POST /api/v1/items` - Criar item
+- `GET /api/v1/items` - Buscar items
+- `POST /api/v1/items/{id}/inquiries` - Criar inquiry
 - `POST /api/v1/cart` - Adicionar ao carrinho
 - `GET /api/v1/cart` - Obter carrinho
 - `POST /api/v1/cart/checkout` - Finalizar compra

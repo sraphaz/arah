@@ -7,6 +7,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Assets;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
+using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -422,7 +423,8 @@ public sealed class MapController : ControllerBase
             return Unauthorized();
         }
 
-        if (!_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, resolvedTerritoryId.Value, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isCurator)
         {
             return Unauthorized();
         }

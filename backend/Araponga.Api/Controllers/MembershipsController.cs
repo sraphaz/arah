@@ -4,7 +4,7 @@ using Araponga.Api.Contracts.Memberships;
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

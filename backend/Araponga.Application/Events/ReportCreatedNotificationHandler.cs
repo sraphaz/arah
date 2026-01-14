@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 
 namespace Araponga.Application.Events;
@@ -8,19 +9,43 @@ namespace Araponga.Application.Events;
 public sealed class ReportCreatedNotificationHandler : IEventHandler<ReportCreatedEvent>
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-    private readonly IUserRepository _userRepository;
+    private readonly IMembershipCapabilityRepository _capabilityRepository;
+    private readonly ITerritoryMembershipRepository _membershipRepository;
     private readonly IOutbox _outbox;
 
-    public ReportCreatedNotificationHandler(IUserRepository userRepository, IOutbox outbox)
+    public ReportCreatedNotificationHandler(
+        IMembershipCapabilityRepository capabilityRepository,
+        ITerritoryMembershipRepository membershipRepository,
+        IOutbox outbox)
     {
-        _userRepository = userRepository;
+        _capabilityRepository = capabilityRepository;
+        _membershipRepository = membershipRepository;
         _outbox = outbox;
     }
 
     public async Task HandleAsync(ReportCreatedEvent appEvent, CancellationToken cancellationToken)
     {
-        var recipients = await _userRepository.ListUserIdsByRoleAsync(UserRole.Curator, cancellationToken);
-        var filteredRecipients = recipients
+        // Buscar membershipIds com capability de Curator no território do report
+        var membershipIds = await _capabilityRepository.ListMembershipIdsWithCapabilityAsync(
+            MembershipCapabilityType.Curator,
+            appEvent.TerritoryId,
+            cancellationToken);
+
+        // Converter membershipIds para userIds
+        var userIds = new List<Guid>();
+        foreach (var membershipId in membershipIds)
+        {
+            var membership = await _membershipRepository.GetByIdAsync(membershipId, cancellationToken);
+            if (membership != null)
+            {
+                userIds.Add(membership.UserId);
+            }
+        }
+
+        // Nota: Usamos apenas MembershipCapability para identificar curadores.
+        // Não há mais fallback para UserRole, pois foi completamente removido do modelo.
+
+        var filteredRecipients = userIds
             .Where(userId => userId != appEvent.ReporterUserId)
             .Distinct()
             .ToList();

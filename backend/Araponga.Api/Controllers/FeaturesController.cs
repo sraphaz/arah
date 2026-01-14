@@ -2,6 +2,7 @@ using Araponga.Api.Contracts.Features;
 using Araponga.Api.Security;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
+using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -58,7 +59,8 @@ public sealed class FeaturesController : ControllerBase
             return Unauthorized();
         }
 
-        if (!_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, territoryId, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isCurator)
         {
             return Unauthorized();
         }

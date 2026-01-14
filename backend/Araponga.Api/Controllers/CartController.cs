@@ -71,9 +71,9 @@ public sealed class CartController : ControllerBase
             return BadRequest(new { error = "territoryId is required." });
         }
 
-        if (request.ListingId == Guid.Empty)
+        if (request.ItemId == Guid.Empty)
         {
-            return BadRequest(new { error = "listingId is required." });
+            return BadRequest(new { error = "itemId is required." });
         }
 
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
@@ -85,7 +85,7 @@ public sealed class CartController : ControllerBase
         var result = await _cartService.AddItemAsync(
             request.TerritoryId,
             userContext.User.Id,
-            request.ListingId,
+            request.ItemId,
             request.Quantity,
             request.Notes,
             cancellationToken);
@@ -226,26 +226,26 @@ public sealed class CartController : ControllerBase
             detail.IsPurchasable);
     }
 
-    private static ListingResponse ToResponse(StoreItem listing)
+    private static ItemResponse ToResponse(StoreItem item)
     {
-        return new ListingResponse(
-            listing.Id,
-            listing.TerritoryId,
-            listing.StoreId,
-            listing.Type.ToString().ToUpperInvariant(),
-            listing.Title,
-            listing.Description,
-            listing.Category,
-            listing.Tags,
-            listing.PricingType.ToString().ToUpperInvariant(),
-            listing.PriceAmount,
-            listing.Currency,
-            listing.Unit,
-            listing.Latitude,
-            listing.Longitude,
-            listing.Status.ToString().ToUpperInvariant(),
-            listing.CreatedAtUtc,
-            listing.UpdatedAtUtc);
+        return new ItemResponse(
+            item.Id,
+            item.TerritoryId,
+            item.StoreId,
+            item.Type.ToString().ToUpperInvariant(),
+            item.Title,
+            item.Description,
+            item.Category,
+            item.Tags,
+            item.PricingType.ToString().ToUpperInvariant(),
+            item.PriceAmount,
+            item.Currency,
+            item.Unit,
+            item.Latitude,
+            item.Longitude,
+            item.Status.ToString().ToUpperInvariant(),
+            item.CreatedAtUtc,
+            item.UpdatedAtUtc);
     }
 
     private static StoreResponse ToResponse(Store store)

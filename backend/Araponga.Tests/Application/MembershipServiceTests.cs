@@ -1,7 +1,7 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Territories;
 using Araponga.Infrastructure.InMemory;
 using Xunit;
@@ -32,10 +32,11 @@ public sealed class MembershipServiceTests
     private static MembershipService CreateService(InMemoryDataStore dataStore)
     {
         var repository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var territoryRepository = new InMemoryTerritoryRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        return new MembershipService(repository, territoryRepository, auditLogger, unitOfWork);
+        return new MembershipService(repository, settingsRepository, territoryRepository, auditLogger, unitOfWork);
     }
 
     [Fact]
@@ -50,7 +51,7 @@ public sealed class MembershipServiceTests
         Assert.Equal(UserId, membership.UserId);
         Assert.Equal(TerritoryId1, membership.TerritoryId);
         Assert.Equal(MembershipRole.Visitor, membership.Role);
-        Assert.Equal(ResidencyVerification.Unverified, membership.ResidencyVerification);
+        Assert.Equal(ResidencyVerification.None, membership.ResidencyVerification);
     }
 
     [Fact]
@@ -116,7 +117,7 @@ public sealed class MembershipServiceTests
         var secondUserId = Guid.NewGuid();
         var secondResult = await service.BecomeResidentAsync(secondUserId, TerritoryId1, CancellationToken.None);
         Assert.True(secondResult.IsSuccess);
-        Assert.Equal(ResidencyVerification.Unverified, secondResult.Value!.ResidencyVerification);
+        Assert.Equal(ResidencyVerification.None, secondResult.Value!.ResidencyVerification);
     }
 
     [Fact]
@@ -138,7 +139,7 @@ public sealed class MembershipServiceTests
         var oldMembership = await repository.GetByUserAndTerritoryAsync(UserId, TerritoryId1, CancellationToken.None);
         Assert.NotNull(oldMembership);
         Assert.Equal(MembershipRole.Visitor, oldMembership!.Role);
-        Assert.Equal(ResidencyVerification.Unverified, oldMembership.ResidencyVerification);
+        Assert.Equal(ResidencyVerification.None, oldMembership.ResidencyVerification);
 
         // Verificar que território 2 agora é Resident
         var newMembership = await repository.GetByUserAndTerritoryAsync(UserId, TerritoryId2, CancellationToken.None);
@@ -248,7 +249,7 @@ public sealed class MembershipServiceTests
         // Verificar atualização
         var membership = await repository.GetByUserAndTerritoryAsync(UserId, TerritoryId1, CancellationToken.None);
         Assert.NotNull(membership);
-        Assert.Equal(ResidencyVerification.DocumentVerified, membership!.ResidencyVerification);
+        Assert.True(membership!.IsDocumentVerified());
         Assert.NotNull(membership.LastDocumentVerifiedAtUtc);
     }
 

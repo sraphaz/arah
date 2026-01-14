@@ -1,7 +1,7 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Users;
 using System.Linq;
@@ -13,17 +13,20 @@ public sealed class JoinRequestService
     private readonly ITerritoryJoinRequestRepository _joinRequestRepository;
     private readonly ITerritoryMembershipRepository _membershipRepository;
     private readonly IUserRepository _userRepository;
+    private readonly AccessEvaluator _accessEvaluator;
     private readonly IUnitOfWork _unitOfWork;
 
     public JoinRequestService(
         ITerritoryJoinRequestRepository joinRequestRepository,
         ITerritoryMembershipRepository membershipRepository,
         IUserRepository userRepository,
+        AccessEvaluator accessEvaluator,
         IUnitOfWork unitOfWork)
     {
         _joinRequestRepository = joinRequestRepository;
         _membershipRepository = membershipRepository;
         _userRepository = userRepository;
+        _accessEvaluator = accessEvaluator;
         _unitOfWork = unitOfWork;
     }
 
@@ -57,7 +60,7 @@ public sealed class JoinRequestService
 
         if (requesterMembership is not null &&
             requesterMembership.Role == MembershipRole.Resident &&
-            requesterMembership.ResidencyVerification != ResidencyVerification.Unverified)
+            requesterMembership.HasAnyVerification())
         {
             return (false, "Requester is already a confirmed resident.", null);
         }
@@ -83,9 +86,17 @@ public sealed class JoinRequestService
                 return (false, "Recipient not found.", null);
             }
 
-            if (recipient.Role != UserRole.Curator && !residentLookup.Contains(recipientUserId))
+            // Verificar se é resident ou tem capability de Curator no território
+            var isRecipientResident = residentLookup.Contains(recipientUserId);
+            var isRecipientCurator = await _accessEvaluator.HasCapabilityAsync(
+                recipientUserId,
+                territoryId,
+                MembershipCapabilityType.Curator,
+                cancellationToken);
+            
+            if (!isRecipientResident && !isRecipientCurator)
             {
-                return (false, "Recipient is not a confirmed resident or admin.", null);
+                return (false, "Recipient is not a confirmed resident or curator.", null);
             }
         }
 
@@ -189,6 +200,11 @@ public sealed class JoinRequestService
         return new PagedResult<IncomingJoinRequest>(pagedItems, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
+    public async Task<TerritoryJoinRequest?> GetByIdAsync(Guid requestId, CancellationToken cancellationToken)
+    {
+        return await _joinRequestRepository.GetByIdAsync(requestId, cancellationToken);
+    }
+
     public async Task<JoinRequestDecisionResult> ApproveAsync(
         Guid requestId,
         Guid actorUserId,
@@ -251,7 +267,7 @@ public sealed class JoinRequestService
             await _membershipRepository.AddAsync(newMembership, cancellationToken);
         }
         else if (membership.Role != MembershipRole.Resident ||
-                 membership.ResidencyVerification == ResidencyVerification.Unverified)
+                 !membership.HasAnyVerification())
         {
             await _membershipRepository.UpdateRoleAsync(membership.Id, MembershipRole.Resident, cancellationToken);
             await _membershipRepository.UpdateDocumentVerificationAsync(membership.Id, decidedAtUtc, cancellationToken);

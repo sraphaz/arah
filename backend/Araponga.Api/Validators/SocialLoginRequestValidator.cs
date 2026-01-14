@@ -8,9 +8,9 @@ public sealed class SocialLoginRequestValidator : AbstractValidator<SocialLoginR
 {
     public SocialLoginRequestValidator()
     {
-        RuleFor(x => x.Provider)
-            .NotEmpty().WithMessage("Provider is required.")
-            .MaximumLength(50).WithMessage("Provider must not exceed 50 characters.");
+        RuleFor(x => x.AuthProvider)
+            .NotEmpty().WithMessage("AuthProvider is required.")
+            .MaximumLength(50).WithMessage("AuthProvider must not exceed 50 characters.");
 
         RuleFor(x => x.ExternalId)
             .NotEmpty().WithMessage("ExternalId is required.")

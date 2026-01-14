@@ -5,6 +5,7 @@ using Araponga.Application.Common;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Araponga.Domain.Assets;
+using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -122,7 +123,8 @@ public sealed class AssetsController : ControllerBase
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
-        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, resolvedTerritoryId.Value, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isResident && !isCurator)
         {
             return Unauthorized();
         }
@@ -437,7 +439,7 @@ public sealed class AssetsController : ControllerBase
         CancellationToken cancellationToken,
         Araponga.Domain.Users.User user)
     {
-        if (_accessEvaluator.IsCurator(user))
+        if (await _accessEvaluator.HasCapabilityAsync(userId, territoryId, MembershipCapabilityType.Curator, cancellationToken))
         {
             return true;
         }

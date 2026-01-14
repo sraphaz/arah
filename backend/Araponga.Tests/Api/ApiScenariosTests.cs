@@ -531,7 +531,7 @@ public sealed class ApiScenariosTests
         var membershipPayload = await membership.Content.ReadFromJsonAsync<MembershipDetailResponse>();
         Assert.NotNull(membershipPayload);
         Assert.Equal("RESIDENT", membershipPayload!.Role);
-        Assert.Equal("UNVERIFIED", membershipPayload.ResidencyVerification);
+        Assert.Equal("NONE", membershipPayload.ResidencyVerification);
 
         // Verificar que pode verificar residência por geo (coordenadas próximas)
         var verifyGeoResponse = await client.PostAsJsonAsync(
@@ -1226,9 +1226,9 @@ public sealed class ApiScenariosTests
         Assert.NotNull(residentStore);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", visitorToken);
-        var listingResponse = await client.PostAsJsonAsync(
-            "api/v1/listings",
-            new CreateListingRequest(
+        var itemResponse = await client.PostAsJsonAsync(
+            "api/v1/items",
+            new CreateItemRequest(
                 ActiveTerritoryId,
                 residentStore!.Id,
                 "PRODUCT",
@@ -1244,7 +1244,7 @@ public sealed class ApiScenariosTests
                 null,
                 "ACTIVE"));
 
-        Assert.Equal(HttpStatusCode.Forbidden, listingResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, itemResponse.StatusCode);
     }
 
     [Fact]
@@ -1269,9 +1269,9 @@ public sealed class ApiScenariosTests
         var store = await storeResponse.Content.ReadFromJsonAsync<StoreResponse>();
         Assert.NotNull(store);
 
-        var listingResponse = await client.PostAsJsonAsync(
-            "api/v1/listings",
-            new CreateListingRequest(
+        var itemResponse = await client.PostAsJsonAsync(
+            "api/v1/items",
+            new CreateItemRequest(
                 ActiveTerritoryId,
                 store!.Id,
                 "PRODUCT",
@@ -1287,18 +1287,18 @@ public sealed class ApiScenariosTests
                 null,
                 "ACTIVE"));
 
-        listingResponse.EnsureSuccessStatusCode();
-        var listing = await listingResponse.Content.ReadFromJsonAsync<ListingResponse>();
-        Assert.NotNull(listing);
+        itemResponse.EnsureSuccessStatusCode();
+        var item = await itemResponse.Content.ReadFromJsonAsync<ItemResponse>();
+        Assert.NotNull(item);
 
-        var search = await client.GetFromJsonAsync<List<ListingResponse>>(
-            $"api/v1/listings?territoryId={ActiveTerritoryId}&type=PRODUCT&q=mel");
+        var search = await client.GetFromJsonAsync<List<ItemResponse>>(
+            $"api/v1/items?territoryId={ActiveTerritoryId}&type=PRODUCT&q=mel");
 
         Assert.NotNull(search);
-        Assert.Contains(search!, item => item.Id == listing!.Id);
+        Assert.Contains(search!, i => i.Id == item!.Id);
 
         var inquiryResponse = await client.PostAsJsonAsync(
-            $"api/v1/listings/{listing!.Id}/inquiries",
+            $"api/v1/items/{item!.Id}/inquiries",
             new CreateInquiryRequest("Quero saber mais"));
 
         inquiryResponse.EnsureSuccessStatusCode();

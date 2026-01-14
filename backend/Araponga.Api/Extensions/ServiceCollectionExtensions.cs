@@ -55,6 +55,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CartService>();
         services.AddScoped<UserPreferencesService>();
         services.AddScoped<UserProfileService>();
+        services.AddScoped<SystemPermissionService>();
+        services.AddScoped<MembershipCapabilityService>();
 
         return services;
     }
@@ -64,6 +66,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IEventHandler<PostCreatedEvent>, PostCreatedNotificationHandler>();
         services.AddScoped<IEventHandler<ReportCreatedEvent>, ReportCreatedNotificationHandler>();
+        services.AddScoped<IEventHandler<SystemPermissionRevokedEvent>, SystemPermissionRevokedCacheHandler>();
+        services.AddScoped<IEventHandler<MembershipCapabilityRevokedEvent>, MembershipCapabilityRevokedCacheHandler>();
 
         return services;
     }
@@ -106,7 +110,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITerritoryRepository, PostgresTerritoryRepository>();
         services.AddScoped<IUserRepository, PostgresUserRepository>();
         services.AddScoped<ITerritoryMembershipRepository, PostgresTerritoryMembershipRepository>();
-        services.AddScoped<IUserTerritoryRepository, PostgresUserTerritoryRepository>();
         services.AddScoped<ITerritoryJoinRequestRepository, PostgresTerritoryJoinRequestRepository>();
         services.AddScoped<IFeedRepository, PostgresFeedRepository>();
         services.AddScoped<ITerritoryEventRepository, PostgresTerritoryEventRepository>();
@@ -136,6 +139,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICheckoutItemRepository, PostgresCheckoutItemRepository>();
         services.AddScoped<IPlatformFeeConfigRepository, PostgresPlatformFeeConfigRepository>();
         services.AddScoped<IUserPreferencesRepository, PostgresUserPreferencesRepository>();
+        services.AddScoped<IMembershipSettingsRepository, PostgresMembershipSettingsRepository>();
+        services.AddScoped<IMembershipCapabilityRepository, PostgresMembershipCapabilityRepository>();
+        services.AddScoped<ISystemPermissionRepository, PostgresSystemPermissionRepository>();
 
         return services;
     }
@@ -145,7 +151,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITerritoryRepository, InMemoryTerritoryRepository>();
         services.AddSingleton<IUserRepository, InMemoryUserRepository>();
         services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
-        services.AddSingleton<IUserTerritoryRepository, InMemoryUserTerritoryRepository>();
         services.AddSingleton<ITerritoryJoinRequestRepository, InMemoryTerritoryJoinRequestRepository>();
         services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
         services.AddSingleton<ITerritoryEventRepository, InMemoryTerritoryEventRepository>();
@@ -175,6 +180,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICheckoutItemRepository, InMemoryCheckoutItemRepository>();
         services.AddSingleton<IPlatformFeeConfigRepository, InMemoryPlatformFeeConfigRepository>();
         services.AddSingleton<IUserPreferencesRepository, InMemoryUserPreferencesRepository>();
+        services.AddSingleton<IMembershipSettingsRepository, InMemoryMembershipSettingsRepository>();
+        services.AddSingleton<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
+        services.AddSingleton<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
 
         return services;
     }

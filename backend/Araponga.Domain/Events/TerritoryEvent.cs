@@ -1,5 +1,5 @@
 using Araponga.Domain.Geo;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Domain.Events;
 

@@ -1,5 +1,5 @@
 using Araponga.Application.Interfaces;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Infrastructure.Postgres.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,7 +42,7 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
             .AnyAsync(
                 membership => membership.TerritoryId == territoryId &&
                               membership.Role == MembershipRole.Resident &&
-                              membership.ResidencyVerification != ResidencyVerification.Unverified,
+                              membership.ResidencyVerification != ResidencyVerification.None,
                 cancellationToken);
     }
 
@@ -52,7 +52,7 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
             .AsNoTracking()
             .Where(membership => membership.TerritoryId == territoryId &&
                                  membership.Role == MembershipRole.Resident &&
-                                 membership.ResidencyVerification != ResidencyVerification.Unverified)
+                                 membership.ResidencyVerification != ResidencyVerification.None)
             .Select(membership => membership.UserId)
             .Distinct()
             .ToListAsync(cancellationToken);
@@ -142,29 +142,35 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
 
     public async Task UpdateGeoVerificationAsync(Guid membershipId, DateTime verifiedAtUtc, CancellationToken cancellationToken)
     {
-        var membership = await _dbContext.TerritoryMemberships
+        var record = await _dbContext.TerritoryMemberships
             .FirstOrDefaultAsync(m => m.Id == membershipId, cancellationToken);
 
-        if (membership is null)
+        if (record is null)
         {
             return;
         }
 
-        membership.ResidencyVerification = ResidencyVerification.GeoVerified;
-        membership.LastGeoVerifiedAtUtc = verifiedAtUtc;
+        var membership = record.ToDomain();
+        membership.AddGeoVerification(verifiedAtUtc);
+        
+        var updatedRecord = membership.ToRecord();
+        _dbContext.Entry(record).CurrentValues.SetValues(updatedRecord);
     }
 
     public async Task UpdateDocumentVerificationAsync(Guid membershipId, DateTime verifiedAtUtc, CancellationToken cancellationToken)
     {
-        var membership = await _dbContext.TerritoryMemberships
+        var record = await _dbContext.TerritoryMemberships
             .FirstOrDefaultAsync(m => m.Id == membershipId, cancellationToken);
 
-        if (membership is null)
+        if (record is null)
         {
             return;
         }
 
-        membership.ResidencyVerification = ResidencyVerification.DocumentVerified;
-        membership.LastDocumentVerifiedAtUtc = verifiedAtUtc;
+        var membership = record.ToDomain();
+        membership.AddDocumentVerification(verifiedAtUtc);
+        
+        var updatedRecord = membership.ToRecord();
+        _dbContext.Entry(record).CurrentValues.SetValues(updatedRecord);
     }
 }

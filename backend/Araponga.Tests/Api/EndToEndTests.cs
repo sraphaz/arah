@@ -119,7 +119,7 @@ public sealed class EndToEndTests
         membershipResponse.EnsureSuccessStatusCode();
         var membership = await membershipResponse.Content.ReadFromJsonAsync<MembershipDetailResponse>();
         Assert.Equal("RESIDENT", membership!.Role);
-        Assert.Equal("UNVERIFIED", membership.ResidencyVerification);
+        Assert.Equal("NONE", membership.ResidencyVerification);
 
         // 4. Criar post (deve falhar porque ainda está PENDING)
         var postResponse = await client.PostAsJsonAsync(

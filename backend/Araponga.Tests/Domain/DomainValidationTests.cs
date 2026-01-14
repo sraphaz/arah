@@ -1,7 +1,7 @@
 using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
 using Araponga.Domain.Moderation;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Xunit;
@@ -41,7 +41,7 @@ public sealed class DomainValidationTests
     public void User_RequiresDisplayName()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new User(Guid.NewGuid(), "", "user@araponga.com", "123.456.789-00", null, null, null, "google", "ext", UserRole.Visitor, DateTime.UtcNow));
+            new User(Guid.NewGuid(), "", "user@araponga.com", "123.456.789-00", null, null, null, "google", "ext", DateTime.UtcNow));
 
         Assert.Contains("display", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -50,7 +50,7 @@ public sealed class DomainValidationTests
     public void User_RequiresCpfOrForeignDocument()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new User(Guid.NewGuid(), "User", null, null, null, null, null, "google", "ext", UserRole.Visitor, DateTime.UtcNow));
+            new User(Guid.NewGuid(), "User", null, null, null, null, null, "google", "ext", DateTime.UtcNow));
 
         Assert.Contains("cpf", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -69,26 +69,25 @@ public sealed class DomainValidationTests
                 null,
                 "google",
                 "ext",
-                UserRole.Visitor,
                 DateTime.UtcNow));
 
         Assert.Contains("either", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
-    public void User_RequiresProvider()
+    public void User_RequiresAuthProvider()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new User(Guid.NewGuid(), "User", "user@araponga.com", "123.456.789-00", null, null, null, "", "ext", UserRole.Visitor, DateTime.UtcNow));
+            new User(Guid.NewGuid(), "User", "user@araponga.com", "123.456.789-00", null, null, null, "", "ext", DateTime.UtcNow));
 
-        Assert.Contains("provider", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("auth provider", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void User_RequiresExternalId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new User(Guid.NewGuid(), "User", "user@araponga.com", "123.456.789-00", null, null, null, "google", "", UserRole.Visitor, DateTime.UtcNow));
+            new User(Guid.NewGuid(), "User", "user@araponga.com", "123.456.789-00", null, null, null, "google", "", DateTime.UtcNow));
 
         Assert.Contains("external", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -97,7 +96,7 @@ public sealed class DomainValidationTests
     public void TerritoryMembership_RequiresUserId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new TerritoryMembership(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), MembershipRole.Visitor, ResidencyVerification.Unverified, null, null, DateTime.UtcNow));
+            new TerritoryMembership(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), MembershipRole.Visitor, ResidencyVerification.None, null, null, DateTime.UtcNow));
 
         Assert.Contains("user", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -106,7 +105,7 @@ public sealed class DomainValidationTests
     public void TerritoryMembership_RequiresTerritoryId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new TerritoryMembership(Guid.NewGuid(), Guid.NewGuid(), Guid.Empty, MembershipRole.Visitor, ResidencyVerification.Unverified, null, null, DateTime.UtcNow));
+            new TerritoryMembership(Guid.NewGuid(), Guid.NewGuid(), Guid.Empty, MembershipRole.Visitor, ResidencyVerification.None, null, null, DateTime.UtcNow));
 
         Assert.Contains("territory", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -119,12 +118,12 @@ public sealed class DomainValidationTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             MembershipRole.Visitor,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
 
-        Assert.Equal(ResidencyVerification.Unverified, membership.ResidencyVerification);
+        Assert.Equal(ResidencyVerification.None, membership.ResidencyVerification);
     }
 
     [Fact]
@@ -135,7 +134,7 @@ public sealed class DomainValidationTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             MembershipRole.Resident,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
@@ -153,15 +152,15 @@ public sealed class DomainValidationTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             MembershipRole.Resident,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
 
         var verifiedAt = DateTime.UtcNow;
-        membership.UpdateGeoVerification(verifiedAt);
+        membership.AddGeoVerification(verifiedAt);
 
-        Assert.Equal(ResidencyVerification.GeoVerified, membership.ResidencyVerification);
+        Assert.True(membership.IsGeoVerified());
         Assert.NotNull(membership.LastGeoVerifiedAtUtc);
         Assert.Equal(verifiedAt, membership.LastGeoVerifiedAtUtc!.Value, TimeSpan.FromSeconds(1));
     }
@@ -174,15 +173,15 @@ public sealed class DomainValidationTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             MembershipRole.Resident,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
 
         var verifiedAt = DateTime.UtcNow;
-        membership.UpdateDocumentVerification(verifiedAt);
+        membership.AddDocumentVerification(verifiedAt);
 
-        Assert.Equal(ResidencyVerification.DocumentVerified, membership.ResidencyVerification);
+        Assert.True(membership.IsDocumentVerified());
         Assert.NotNull(membership.LastDocumentVerifiedAtUtc);
         Assert.Equal(verifiedAt, membership.LastDocumentVerifiedAtUtc!.Value, TimeSpan.FromSeconds(1));
     }
@@ -201,9 +200,9 @@ public sealed class DomainValidationTests
             DateTime.UtcNow);
 
         var verifiedAt = DateTime.UtcNow;
-        membership.UpdateDocumentVerification(verifiedAt);
+        membership.AddDocumentVerification(verifiedAt);
 
-        Assert.Equal(ResidencyVerification.DocumentVerified, membership.ResidencyVerification);
+        Assert.True(membership.IsDocumentVerified());
         Assert.NotNull(membership.LastDocumentVerifiedAtUtc);
     }
 
@@ -220,7 +219,6 @@ public sealed class DomainValidationTests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             DateTime.UtcNow);
 
         var secret = "SECRET123";
@@ -248,7 +246,6 @@ public sealed class DomainValidationTests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             DateTime.UtcNow);
 
         user.EnableTwoFactor("SECRET", "HASH", DateTime.UtcNow);
@@ -258,6 +255,52 @@ public sealed class DomainValidationTests
         Assert.Null(user.TwoFactorSecret);
         Assert.Null(user.TwoFactorRecoveryCodesHash);
         Assert.Null(user.TwoFactorVerifiedAtUtc);
+    }
+
+    [Fact]
+    public void User_UpdateIdentityVerification_UpdatesStatus()
+    {
+        var user = new User(
+            Guid.NewGuid(),
+            "User",
+            "user@araponga.com",
+            "123.456.789-00",
+            null,
+            null,
+            null,
+            "google",
+            "ext",
+            DateTime.UtcNow);
+
+        Assert.Equal(UserIdentityVerificationStatus.Unverified, user.IdentityVerificationStatus);
+        Assert.Null(user.IdentityVerifiedAtUtc);
+
+        var verifiedAt = DateTime.UtcNow;
+        user.UpdateIdentityVerification(UserIdentityVerificationStatus.Verified, verifiedAt);
+
+        Assert.Equal(UserIdentityVerificationStatus.Verified, user.IdentityVerificationStatus);
+        Assert.Equal(verifiedAt, user.IdentityVerifiedAtUtc);
+    }
+
+    [Fact]
+    public void User_UpdateIdentityVerification_WithoutTimestamp()
+    {
+        var user = new User(
+            Guid.NewGuid(),
+            "User",
+            "user@araponga.com",
+            "123.456.789-00",
+            null,
+            null,
+            null,
+            "google",
+            "ext",
+            DateTime.UtcNow);
+
+        user.UpdateIdentityVerification(UserIdentityVerificationStatus.Pending);
+
+        Assert.Equal(UserIdentityVerificationStatus.Pending, user.IdentityVerificationStatus);
+        Assert.Null(user.IdentityVerifiedAtUtc);
     }
 
     [Fact]

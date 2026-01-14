@@ -1,13 +1,14 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Geo;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Services;
 
 public sealed class MembershipService
 {
     private readonly ITerritoryMembershipRepository _membershipRepository;
+    private readonly IMembershipSettingsRepository _settingsRepository;
     private readonly ITerritoryRepository _territoryRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
@@ -15,11 +16,13 @@ public sealed class MembershipService
 
     public MembershipService(
         ITerritoryMembershipRepository membershipRepository,
+        IMembershipSettingsRepository settingsRepository,
         ITerritoryRepository territoryRepository,
         IAuditLogger auditLogger,
         IUnitOfWork unitOfWork)
     {
         _membershipRepository = membershipRepository;
+        _settingsRepository = settingsRepository;
         _territoryRepository = territoryRepository;
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
@@ -49,12 +52,21 @@ public sealed class MembershipService
             userId,
             territoryId,
             MembershipRole.Visitor,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
 
         await _membershipRepository.AddAsync(visitorMembership, cancellationToken);
+
+        // Criar MembershipSettings automaticamente
+        var now = DateTime.UtcNow;
+        var settings = new MembershipSettings(
+            visitorMembership.Id,
+            marketplaceOptIn: false,
+            now,
+            now);
+        await _settingsRepository.AddAsync(settings, cancellationToken);
 
         await _auditLogger.LogAsync(
             new Application.Models.AuditEntry(
@@ -100,7 +112,7 @@ public sealed class MembershipService
 
         var hasValidatedResident = await _membershipRepository.HasValidatedResidentAsync(territoryId, cancellationToken);
         var residencyVerification = hasValidatedResident
-            ? ResidencyVerification.Unverified
+            ? ResidencyVerification.None
             : ResidencyVerification.GeoVerified; // Primeiro residente é auto-verificado
 
         if (existing is not null)
@@ -111,7 +123,20 @@ public sealed class MembershipService
 
             if (!hasValidatedResident)
             {
-                existing.UpdateGeoVerification(DateTime.UtcNow);
+                existing.AddGeoVerification(DateTime.UtcNow);
+            }
+
+            // Garantir que MembershipSettings existe
+            var existingSettings = await _settingsRepository.GetByMembershipIdAsync(existing.Id, cancellationToken);
+            if (existingSettings is null)
+            {
+                var settingsNow = DateTime.UtcNow;
+                var newSettings = new MembershipSettings(
+                    existing.Id,
+                    marketplaceOptIn: false,
+                    settingsNow,
+                    settingsNow);
+                await _settingsRepository.AddAsync(newSettings, cancellationToken);
             }
 
             // Atualizar tudo de uma vez usando a entidade como fonte da verdade
@@ -147,6 +172,15 @@ public sealed class MembershipService
             DateTime.UtcNow);
 
         await _membershipRepository.AddAsync(membership, cancellationToken);
+
+        // Criar MembershipSettings automaticamente
+        var now = DateTime.UtcNow;
+        var settings = new MembershipSettings(
+            membership.Id,
+            marketplaceOptIn: false,
+            now,
+            now);
+        await _settingsRepository.AddAsync(settings, cancellationToken);
 
         await _auditLogger.LogAsync(
             new Application.Models.AuditEntry(
@@ -197,7 +231,7 @@ public sealed class MembershipService
         {
             // Demover Resident atual para Visitor
             currentResident.UpdateRole(MembershipRole.Visitor);
-            currentResident.UpdateResidencyVerification(ResidencyVerification.Unverified);
+            currentResident.UpdateResidencyVerification(ResidencyVerification.None);
             
             await _membershipRepository.UpdateAsync(currentResident, cancellationToken);
 
@@ -284,7 +318,7 @@ public sealed class MembershipService
             return OperationResult.Failure("Membership not found or user is not a Resident in this territory.");
         }
 
-        membership.UpdateGeoVerification(verifiedAtUtc);
+        membership.AddGeoVerification(verifiedAtUtc);
         await _membershipRepository.UpdateAsync(membership, cancellationToken);
 
         await _auditLogger.LogAsync(
@@ -320,8 +354,8 @@ public sealed class MembershipService
             return OperationResult.Failure("Membership not found or user is not a Resident in this territory.");
         }
 
-        membership.UpdateDocumentVerification(verifiedAtUtc);
-        await _membershipRepository.UpdateDocumentVerificationAsync(membership.Id, verifiedAtUtc, cancellationToken);
+        membership.AddDocumentVerification(verifiedAtUtc);
+        await _membershipRepository.UpdateAsync(membership, cancellationToken);
 
         await _auditLogger.LogAsync(
             new Application.Models.AuditEntry(

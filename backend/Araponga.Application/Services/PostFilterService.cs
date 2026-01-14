@@ -1,6 +1,6 @@
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Feed;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Services;
 

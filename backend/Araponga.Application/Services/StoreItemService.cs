@@ -1,6 +1,8 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Services;
 
@@ -10,6 +12,7 @@ public sealed class StoreItemService
     private readonly IStoreRepository _storeRepository;
     private readonly IUserRepository _userRepository;
     private readonly AccessEvaluator _accessEvaluator;
+    private readonly MembershipAccessRules _accessRules;
     private readonly IUnitOfWork _unitOfWork;
 
     public StoreItemService(
@@ -17,12 +20,14 @@ public sealed class StoreItemService
         IStoreRepository storeRepository,
         IUserRepository userRepository,
         AccessEvaluator accessEvaluator,
+        MembershipAccessRules accessRules,
         IUnitOfWork unitOfWork)
     {
         _itemRepository = itemRepository;
         _storeRepository = storeRepository;
         _userRepository = userRepository;
         _accessEvaluator = accessEvaluator;
+        _accessRules = accessRules;
         _unitOfWork = unitOfWork;
     }
 
@@ -55,9 +60,14 @@ public sealed class StoreItemService
             return Result<StoreItem>.Failure("Store not found.");
         }
 
-        if (!await CanManageStoreAsync(store, userId, cancellationToken))
+        // Verificar regras de marketplace
+        if (!await _accessRules.CanCreateStoreOrItemInMarketplaceAsync(userId, territoryId, cancellationToken))
         {
-            return Result<StoreItem>.Failure("Not authorized.");
+            // Verificar se pode gerenciar a store (owner ou curator)
+            if (!await CanManageStoreAsync(store, userId, cancellationToken))
+            {
+                return Result<StoreItem>.Failure("Not authorized. Marketplace rules not met or not store owner/curator.");
+            }
         }
 
         var now = DateTime.UtcNow;
@@ -213,7 +223,11 @@ public sealed class StoreItemService
             return true;
         }
 
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-        return user is not null && _accessEvaluator.IsCurator(user);
+        // Verificar se tem capacidade de Curator no território da Store
+        return await _accessEvaluator.HasCapabilityAsync(
+            userId,
+            store.TerritoryId,
+            MembershipCapabilityType.Curator,
+            cancellationToken);
     }
 }

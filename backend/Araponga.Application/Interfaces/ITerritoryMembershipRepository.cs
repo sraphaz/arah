@@ -1,4 +1,4 @@
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Interfaces;
 

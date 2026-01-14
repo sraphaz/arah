@@ -1,23 +1,25 @@
-namespace Araponga.Domain.Social;
+namespace Araponga.Domain.Membership;
 
 /// <summary>
-/// Define o nível de validação do vínculo residencial de um Membership.
+/// Define os tipos de verificação do vínculo residencial de um Membership.
+/// Usa Flags para permitir acumulação de verificações (ex: GeoVerified | DocumentVerified).
 /// Separado do MembershipRole para eliminar ambiguidades entre papel e verificação.
 /// </summary>
+[Flags]
 public enum ResidencyVerification
 {
     /// <summary>
     /// Sem verificação de residência.
     /// </summary>
-    Unverified = 1,
+    None = 0,
 
     /// <summary>
     /// Verificado por geolocalização.
     /// </summary>
-    GeoVerified = 2,
+    GeoVerified = 1,
 
     /// <summary>
     /// Verificado por comprovante documental.
     /// </summary>
-    DocumentVerified = 3
+    DocumentVerified = 2
 }

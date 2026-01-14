@@ -1,5 +1,5 @@
 using Araponga.Application.Services;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Infrastructure.InMemory;
 using Xunit;
 
@@ -15,8 +15,10 @@ public sealed class MembershipAccessRulesTests
     {
         var dataStore = new InMemoryDataStore();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
-        var rules = new MembershipAccessRules(membershipRepository, userRepository);
+        var featureFlags = new InMemoryFeatureFlagService();
+        var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
         // Sem membership
         var canCreate1 = await rules.CanCreateStoreAsync(UserId, TerritoryId, CancellationToken.None);
@@ -28,7 +30,7 @@ public sealed class MembershipAccessRulesTests
             UserId,
             TerritoryId,
             MembershipRole.Visitor,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
@@ -53,15 +55,17 @@ public sealed class MembershipAccessRulesTests
     {
         var dataStore = new InMemoryDataStore();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
-        var rules = new MembershipAccessRules(membershipRepository, userRepository);
+        var featureFlags = new InMemoryFeatureFlagService();
+        var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
         var visitorMembership = new TerritoryMembership(
             Guid.NewGuid(),
             UserId,
             TerritoryId,
             MembershipRole.Visitor,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
@@ -76,15 +80,17 @@ public sealed class MembershipAccessRulesTests
     {
         var dataStore = new InMemoryDataStore();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
-        var rules = new MembershipAccessRules(membershipRepository, userRepository);
+        var featureFlags = new InMemoryFeatureFlagService();
+        var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
         var residentMembership = new TerritoryMembership(
             Guid.NewGuid(),
             UserId,
             TerritoryId,
             MembershipRole.Resident,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);
@@ -99,8 +105,10 @@ public sealed class MembershipAccessRulesTests
     {
         var dataStore = new InMemoryDataStore();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
-        var rules = new MembershipAccessRules(membershipRepository, userRepository);
+        var featureFlags = new InMemoryFeatureFlagService();
+        var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
         var residentMembership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -125,8 +133,10 @@ public sealed class MembershipAccessRulesTests
     {
         var dataStore = new InMemoryDataStore();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
-        var rules = new MembershipAccessRules(membershipRepository, userRepository);
+        var featureFlags = new InMemoryFeatureFlagService();
+        var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
         // Sem membership
         var isVerified1 = await rules.IsVerifiedResidentAsync(UserId, TerritoryId, CancellationToken.None);
@@ -138,7 +148,7 @@ public sealed class MembershipAccessRulesTests
             UserId,
             TerritoryId,
             MembershipRole.Visitor,
-            ResidencyVerification.Unverified,
+            ResidencyVerification.None,
             null,
             null,
             DateTime.UtcNow);

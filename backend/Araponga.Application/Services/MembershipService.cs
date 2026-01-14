@@ -74,18 +74,24 @@ public sealed class MembershipService
         Guid territoryId,
         CancellationToken cancellationToken)
     {
-        // Validação: 1 Resident por User
+        var existing = await _membershipRepository.GetByUserAndTerritoryAsync(
+            userId,
+            territoryId,
+            cancellationToken);
+
+        // Se já é Resident no mesmo território, retornar
+        if (existing is not null && existing.Role == MembershipRole.Resident)
+        {
+            return Result<TerritoryMembership>.Success(existing);
+        }
+
+        // Validação: 1 Resident por User (verificar se há Resident em outro território)
         var existingResident = await _membershipRepository.GetResidentMembershipAsync(userId, cancellationToken);
         if (existingResident is not null && existingResident.TerritoryId != territoryId)
         {
             return Result<TerritoryMembership>.Failure(
                 "User already has a Resident membership in another territory. Transfer residency first.");
         }
-
-        var existing = await _membershipRepository.GetByUserAndTerritoryAsync(
-            userId,
-            territoryId,
-            cancellationToken);
 
         var hasValidatedResident = await _membershipRepository.HasValidatedResidentAsync(territoryId, cancellationToken);
         var residencyVerification = hasValidatedResident
@@ -94,11 +100,6 @@ public sealed class MembershipService
 
         if (existing is not null)
         {
-            if (existing.Role == MembershipRole.Resident)
-            {
-                return Result<TerritoryMembership>.Success(existing);
-            }
-
             // Upgrade de Visitor para Resident
             existing.UpdateRole(MembershipRole.Resident);
             existing.UpdateResidencyVerification(residencyVerification);
@@ -108,11 +109,8 @@ public sealed class MembershipService
                 existing.UpdateGeoVerification(DateTime.UtcNow);
             }
 
-            await _membershipRepository.UpdateRoleAndStatusAsync(
-                existing.Id,
-                existing.Role,
-                existing.VerificationStatus, // Mantém compatibilidade
-                cancellationToken);
+            // Atualizar tudo de uma vez usando a entidade como fonte da verdade
+            await _membershipRepository.UpdateAsync(existing, cancellationToken);
 
             var auditEvent = hasValidatedResident
                 ? "membership.upgraded"
@@ -211,11 +209,7 @@ public sealed class MembershipService
         currentResident.UpdateRole(MembershipRole.Visitor);
         currentResident.UpdateResidencyVerification(ResidencyVerification.Unverified);
         
-        await _membershipRepository.UpdateRoleAndStatusAsync(
-            currentResident.Id,
-            currentResident.Role,
-            currentResident.VerificationStatus, // Compatibilidade
-            cancellationToken);
+        await _membershipRepository.UpdateAsync(currentResident, cancellationToken);
 
         await _auditLogger.LogAsync(
             new Application.Models.AuditEntry(
@@ -233,11 +227,7 @@ public sealed class MembershipService
             // Rollback: restaurar Resident anterior
             currentResident.UpdateRole(MembershipRole.Resident);
             currentResident.UpdateResidencyVerification(ResidencyVerification.GeoVerified);
-            await _membershipRepository.UpdateRoleAndStatusAsync(
-                currentResident.Id,
-                currentResident.Role,
-                currentResident.VerificationStatus,
-                cancellationToken);
+            await _membershipRepository.UpdateAsync(currentResident, cancellationToken);
             return result;
         }
 

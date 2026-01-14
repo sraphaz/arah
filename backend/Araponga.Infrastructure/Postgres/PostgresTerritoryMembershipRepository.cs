@@ -42,7 +42,7 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
             .AnyAsync(
                 membership => membership.TerritoryId == territoryId &&
                               membership.Role == MembershipRole.Resident &&
-                              membership.VerificationStatus == VerificationStatus.Validated,
+                              membership.ResidencyVerification != ResidencyVerification.Unverified,
                 cancellationToken);
     }
 
@@ -52,7 +52,7 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
             .AsNoTracking()
             .Where(membership => membership.TerritoryId == territoryId &&
                                  membership.Role == MembershipRole.Resident &&
-                                 membership.VerificationStatus == VerificationStatus.Validated)
+                                 membership.ResidencyVerification != ResidencyVerification.Unverified)
             .Select(membership => membership.UserId)
             .Distinct()
             .ToListAsync(cancellationToken);
@@ -64,6 +64,26 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
     {
         _dbContext.TerritoryMemberships.Add(membership.ToRecord());
         return Task.CompletedTask;
+    }
+
+    public async Task UpdateAsync(TerritoryMembership membership, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.TerritoryMemberships
+            .FirstOrDefaultAsync(m => m.Id == membership.Id, cancellationToken);
+
+        if (record is null)
+        {
+            return;
+        }
+
+        // Atualizar todas as propriedades da entidade de domínio
+        record.Role = membership.Role;
+        record.ResidencyVerification = membership.ResidencyVerification;
+        record.LastGeoVerifiedAtUtc = membership.LastGeoVerifiedAtUtc;
+        record.LastDocumentVerifiedAtUtc = membership.LastDocumentVerifiedAtUtc;
+        
+        // Manter compatibilidade com VerificationStatus obsoleto
+        record.VerificationStatus = membership.VerificationStatus;
     }
 
     public async Task UpdateStatusAsync(Guid membershipId, VerificationStatus status, CancellationToken cancellationToken)
@@ -95,6 +115,19 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
 
         membership.Role = role;
         membership.VerificationStatus = status;
+    }
+
+    public async Task UpdateRoleAsync(Guid membershipId, MembershipRole role, CancellationToken cancellationToken)
+    {
+        var membership = await _dbContext.TerritoryMemberships
+            .FirstOrDefaultAsync(m => m.Id == membershipId, cancellationToken);
+
+        if (membership is null)
+        {
+            return;
+        }
+
+        membership.Role = role;
     }
 
     public Task<bool> HasResidentMembershipAsync(Guid userId, CancellationToken cancellationToken)

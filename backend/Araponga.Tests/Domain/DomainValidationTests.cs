@@ -112,6 +112,155 @@ public sealed class DomainValidationTests
     }
 
     [Fact]
+    public void TerritoryMembership_ResidencyVerification_Initialized_AsUnverified()
+    {
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MembershipRole.Visitor,
+            ResidencyVerification.Unverified,
+            null,
+            null,
+            DateTime.UtcNow);
+
+        Assert.Equal(ResidencyVerification.Unverified, membership.ResidencyVerification);
+    }
+
+    [Fact]
+    public void TerritoryMembership_UpdateResidencyVerification_ChangesState()
+    {
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MembershipRole.Resident,
+            ResidencyVerification.Unverified,
+            null,
+            null,
+            DateTime.UtcNow);
+
+        membership.UpdateResidencyVerification(ResidencyVerification.GeoVerified);
+
+        Assert.Equal(ResidencyVerification.GeoVerified, membership.ResidencyVerification);
+    }
+
+    [Fact]
+    public void TerritoryMembership_UpdateGeoVerification_SetsTimestamp()
+    {
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MembershipRole.Resident,
+            ResidencyVerification.Unverified,
+            null,
+            null,
+            DateTime.UtcNow);
+
+        var verifiedAt = DateTime.UtcNow;
+        membership.UpdateGeoVerification(verifiedAt);
+
+        Assert.Equal(ResidencyVerification.GeoVerified, membership.ResidencyVerification);
+        Assert.NotNull(membership.LastGeoVerifiedAtUtc);
+        Assert.Equal(verifiedAt, membership.LastGeoVerifiedAtUtc!.Value, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public void TerritoryMembership_UpdateDocumentVerification_SetsTimestamp()
+    {
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MembershipRole.Resident,
+            ResidencyVerification.Unverified,
+            null,
+            null,
+            DateTime.UtcNow);
+
+        var verifiedAt = DateTime.UtcNow;
+        membership.UpdateDocumentVerification(verifiedAt);
+
+        Assert.Equal(ResidencyVerification.DocumentVerified, membership.ResidencyVerification);
+        Assert.NotNull(membership.LastDocumentVerifiedAtUtc);
+        Assert.Equal(verifiedAt, membership.LastDocumentVerifiedAtUtc!.Value, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public void TerritoryMembership_DocumentVerified_HasHighestPriority()
+    {
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MembershipRole.Resident,
+            ResidencyVerification.GeoVerified,
+            DateTime.UtcNow.AddDays(-1),
+            null,
+            DateTime.UtcNow);
+
+        var verifiedAt = DateTime.UtcNow;
+        membership.UpdateDocumentVerification(verifiedAt);
+
+        Assert.Equal(ResidencyVerification.DocumentVerified, membership.ResidencyVerification);
+        Assert.NotNull(membership.LastDocumentVerifiedAtUtc);
+    }
+
+    [Fact]
+    public void User_EnableTwoFactor_SetsProperties()
+    {
+        var user = new User(
+            Guid.NewGuid(),
+            "User",
+            "user@araponga.com",
+            "123.456.789-00",
+            null,
+            null,
+            null,
+            "google",
+            "ext",
+            UserRole.Visitor,
+            DateTime.UtcNow);
+
+        var secret = "SECRET123";
+        var recoveryCodesHash = "HASH123";
+        var verifiedAt = DateTime.UtcNow;
+
+        user.EnableTwoFactor(secret, recoveryCodesHash, verifiedAt);
+
+        Assert.True(user.TwoFactorEnabled);
+        Assert.Equal(secret, user.TwoFactorSecret);
+        Assert.Equal(recoveryCodesHash, user.TwoFactorRecoveryCodesHash);
+        Assert.Equal(verifiedAt, user.TwoFactorVerifiedAtUtc);
+    }
+
+    [Fact]
+    public void User_DisableTwoFactor_ClearsSecrets()
+    {
+        var user = new User(
+            Guid.NewGuid(),
+            "User",
+            "user@araponga.com",
+            "123.456.789-00",
+            null,
+            null,
+            null,
+            "google",
+            "ext",
+            UserRole.Visitor,
+            DateTime.UtcNow);
+
+        user.EnableTwoFactor("SECRET", "HASH", DateTime.UtcNow);
+        user.DisableTwoFactor();
+
+        Assert.False(user.TwoFactorEnabled);
+        Assert.Null(user.TwoFactorSecret);
+        Assert.Null(user.TwoFactorRecoveryCodesHash);
+        Assert.Null(user.TwoFactorVerifiedAtUtc);
+    }
+
+    [Fact]
     public void CommunityPost_RequiresTerritoryId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>

@@ -29,6 +29,12 @@
           "Microsoft.TestPlatform.TestHost": "17.11.1"
         }
       },
+      "Otp.NET": {
+        "type": "Direct",
+        "requested": "[1.3.0, )",
+        "resolved": "1.3.0",
+        "contentHash": "6XlSlvszByLDLjgDBULNtrexGhRHTrJpikW2x4oMB+Z4i1jPg89ARRSSOoIfYB2ORTdfugguWYLBz2No4lsM6g=="
+      },
       "xunit": {
         "type": "Direct",
         "requested": "[2.9.2, )",
@@ -543,11 +549,6 @@
           "Microsoft.EntityFrameworkCore.Relational": "8.0.8",
           "Npgsql": "8.0.4"
         }
-      },
-      "Otp.NET": {
-        "type": "Transitive",
-        "resolved": "1.3.0",
-        "contentHash": "6XlSlvszByLDLjgDBULNtrexGhRHTrJpikW2x4oMB+Z4i1jPg89ARRSSOoIfYB2ORTdfugguWYLBz2No4lsM6g=="
       },
       "Serilog": {
         "type": "Transitive",

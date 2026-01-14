@@ -794,7 +794,8 @@ public sealed class ApplicationServiceTests
             CancellationToken.None);
 
         var updated = await repository.GetByUserAndTerritoryAsync(membership.UserId, ActiveTerritoryId, CancellationToken.None);
-        Assert.Equal(VerificationStatus.Validated, updated!.VerificationStatus);
+        // VerificationStatus.Validated é convertido para ResidencyVerification.GeoVerified para Resident
+        Assert.Equal(ResidencyVerification.GeoVerified, updated!.ResidencyVerification);
     }
 
     [Fact]
@@ -822,7 +823,8 @@ public sealed class ApplicationServiceTests
 
         Assert.Equal(visitor.Id, upgraded.Id);
         Assert.Equal(MembershipRole.Resident, upgraded.Role);
-        Assert.Equal(VerificationStatus.Pending, upgraded.VerificationStatus);
+        // Como já há um Resident validado no território (do InMemoryDataStore), o novo Resident fica Unverified
+        Assert.Equal(ResidencyVerification.Unverified, upgraded.ResidencyVerification);
     }
 
     [Fact]

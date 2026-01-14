@@ -206,7 +206,7 @@ public sealed class ListingService
         return new PagedResult<StoreItem>(listings, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 
-    private async Task<bool> CanManageStoreAsync(TerritoryStore store, Guid userId, CancellationToken cancellationToken)
+    private async Task<bool> CanManageStoreAsync(Store store, Guid userId, CancellationToken cancellationToken)
     {
         if (store.OwnerUserId == userId)
         {

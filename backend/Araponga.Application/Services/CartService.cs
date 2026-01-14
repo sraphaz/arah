@@ -340,7 +340,7 @@ public sealed class CartService
         return Result<CheckoutResult>.Success(result);
     }
 
-    private static bool IsPurchasable(StoreItem storeItem, TerritoryStore store)
+    private static bool IsPurchasable(StoreItem storeItem, Store store)
     {
         return storeItem.PricingType == ItemPricingType.Fixed &&
                storeItem.Status == ItemStatus.Active &&

@@ -14,7 +14,7 @@ public sealed class PostgresStoreRepository : IStoreRepository
         _dbContext = dbContext;
     }
 
-    public async Task<TerritoryStore?> GetByIdAsync(Guid storeId, CancellationToken cancellationToken)
+    public async Task<Store?> GetByIdAsync(Guid storeId, CancellationToken cancellationToken)
     {
         var record = await _dbContext.TerritoryStores
             .AsNoTracking()
@@ -23,7 +23,7 @@ public sealed class PostgresStoreRepository : IStoreRepository
         return record?.ToDomain();
     }
 
-    public async Task<TerritoryStore?> GetByOwnerAsync(Guid territoryId, Guid ownerUserId, CancellationToken cancellationToken)
+    public async Task<Store?> GetByOwnerAsync(Guid territoryId, Guid ownerUserId, CancellationToken cancellationToken)
     {
         var record = await _dbContext.TerritoryStores
             .AsNoTracking()
@@ -32,7 +32,7 @@ public sealed class PostgresStoreRepository : IStoreRepository
         return record?.ToDomain();
     }
 
-    public async Task<IReadOnlyList<TerritoryStore>> ListByOwnerAsync(Guid ownerUserId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Store>> ListByOwnerAsync(Guid ownerUserId, CancellationToken cancellationToken)
     {
         var records = await _dbContext.TerritoryStores
             .AsNoTracking()
@@ -42,11 +42,11 @@ public sealed class PostgresStoreRepository : IStoreRepository
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public async Task<IReadOnlyList<TerritoryStore>> ListByIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Store>> ListByIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
     {
         if (storeIds.Count == 0)
         {
-            return Array.Empty<TerritoryStore>();
+            return Array.Empty<Store>();
         }
 
         var records = await _dbContext.TerritoryStores
@@ -57,13 +57,13 @@ public sealed class PostgresStoreRepository : IStoreRepository
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public Task AddAsync(TerritoryStore store, CancellationToken cancellationToken)
+    public Task AddAsync(Store store, CancellationToken cancellationToken)
     {
         _dbContext.TerritoryStores.Add(store.ToRecord());
         return Task.CompletedTask;
     }
 
-    public Task UpdateAsync(TerritoryStore store, CancellationToken cancellationToken)
+    public Task UpdateAsync(Store store, CancellationToken cancellationToken)
     {
         _dbContext.TerritoryStores.Update(store.ToRecord());
         return Task.CompletedTask;

@@ -192,7 +192,7 @@ public sealed class InMemoryDataStore
         AssetGeoAnchors = new List<AssetGeoAnchor>();
         AssetValidations = new List<AssetValidation>();
         PostAssets = new List<PostAsset>();
-        TerritoryStores = new List<TerritoryStore>();
+        TerritoryStores = new List<Store>();
         StoreItems = new List<StoreItem>();
         ItemInquiries = new List<ItemInquiry>();
         Carts = new List<Cart>();
@@ -218,7 +218,7 @@ public sealed class InMemoryDataStore
     public List<AssetGeoAnchor> AssetGeoAnchors { get; }
     public List<AssetValidation> AssetValidations { get; }
     public List<PostAsset> PostAssets { get; }
-    public List<TerritoryStore> TerritoryStores { get; }
+    public List<Store> TerritoryStores { get; }
     public List<StoreItem> StoreItems { get; }
     public List<ItemInquiry> ItemInquiries { get; }
     public List<Cart> Carts { get; }

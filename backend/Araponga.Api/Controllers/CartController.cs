@@ -248,7 +248,7 @@ public sealed class CartController : ControllerBase
             listing.UpdatedAtUtc);
     }
 
-    private static StoreResponse ToResponse(TerritoryStore store)
+    private static StoreResponse ToResponse(Store store)
     {
         var contact = new StoreContactPayload(
             store.Phone,

@@ -126,7 +126,7 @@ public static class PostgresMappers
             record.CreatedAtUtc);
     }
 
-    public static TerritoryStoreRecord ToRecord(this TerritoryStore store)
+    public static TerritoryStoreRecord ToRecord(this Store store)
     {
         return new TerritoryStoreRecord
         {
@@ -149,9 +149,9 @@ public static class PostgresMappers
         };
     }
 
-    public static TerritoryStore ToDomain(this TerritoryStoreRecord record)
+    public static Store ToDomain(this TerritoryStoreRecord record)
     {
-        return new TerritoryStore(
+        return new Store(
             record.Id,
             record.TerritoryId,
             record.OwnerUserId,

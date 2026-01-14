@@ -139,7 +139,7 @@ public sealed class RepositoryTests
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryStoreRepository(dataStore);
 
-        var store = new TerritoryStore(
+        var store = new Store(
             Guid.NewGuid(),
             TerritoryId,
             UserId,

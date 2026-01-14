@@ -2,13 +2,13 @@ namespace Araponga.Domain.Marketplace;
 
 /// <summary>
 /// Representa uma loja/comércio no território para operação econômica de um morador.
-/// TerritoryStore não é um TerritoryAsset - representa operação econômica, não recurso do território.
+/// Store não é um TerritoryAsset - representa operação econômica, não recurso do território.
 /// Stores são criadas apenas por moradores validados (RESIDENT, VALIDATED) e podem ser suspensas
 /// se o membership for revogado, mas os dados não são deletados.
 /// </summary>
-public sealed class TerritoryStore
+public sealed class Store
 {
-    public TerritoryStore(
+    public Store(
         Guid id,
         Guid territoryId,
         Guid ownerUserId,

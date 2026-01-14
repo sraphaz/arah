@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         // Core services
+        services.AddScoped<MembershipAccessRules>();
         services.AddScoped<AccessEvaluator>();
         services.AddScoped<CurrentUserAccessor>();
 

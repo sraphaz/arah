@@ -81,40 +81,6 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
         record.ResidencyVerification = membership.ResidencyVerification;
         record.LastGeoVerifiedAtUtc = membership.LastGeoVerifiedAtUtc;
         record.LastDocumentVerifiedAtUtc = membership.LastDocumentVerifiedAtUtc;
-        
-        // Manter compatibilidade com VerificationStatus obsoleto
-        record.VerificationStatus = membership.VerificationStatus;
-    }
-
-    public async Task UpdateStatusAsync(Guid membershipId, VerificationStatus status, CancellationToken cancellationToken)
-    {
-        var membership = await _dbContext.TerritoryMemberships
-            .FirstOrDefaultAsync(m => m.Id == membershipId, cancellationToken);
-
-        if (membership is null)
-        {
-            return;
-        }
-
-        membership.VerificationStatus = status;
-    }
-
-    public async Task UpdateRoleAndStatusAsync(
-        Guid membershipId,
-        MembershipRole role,
-        VerificationStatus status,
-        CancellationToken cancellationToken)
-    {
-        var membership = await _dbContext.TerritoryMemberships
-            .FirstOrDefaultAsync(m => m.Id == membershipId, cancellationToken);
-
-        if (membership is null)
-        {
-            return;
-        }
-
-        membership.Role = role;
-        membership.VerificationStatus = status;
     }
 
     public async Task UpdateRoleAsync(Guid membershipId, MembershipRole role, CancellationToken cancellationToken)

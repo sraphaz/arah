@@ -97,7 +97,7 @@ public sealed class DomainValidationTests
     public void TerritoryMembership_RequiresUserId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new TerritoryMembership(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), MembershipRole.Visitor, VerificationStatus.Pending, DateTime.UtcNow));
+            new TerritoryMembership(Guid.NewGuid(), Guid.Empty, Guid.NewGuid(), MembershipRole.Visitor, ResidencyVerification.Unverified, null, null, DateTime.UtcNow));
 
         Assert.Contains("user", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -106,7 +106,7 @@ public sealed class DomainValidationTests
     public void TerritoryMembership_RequiresTerritoryId()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            new TerritoryMembership(Guid.NewGuid(), Guid.NewGuid(), Guid.Empty, MembershipRole.Visitor, VerificationStatus.Pending, DateTime.UtcNow));
+            new TerritoryMembership(Guid.NewGuid(), Guid.NewGuid(), Guid.Empty, MembershipRole.Visitor, ResidencyVerification.Unverified, null, null, DateTime.UtcNow));
 
         Assert.Contains("territory", exception.Message, StringComparison.OrdinalIgnoreCase);
     }

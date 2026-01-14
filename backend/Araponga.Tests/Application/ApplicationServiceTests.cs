@@ -769,7 +769,7 @@ public sealed class ApplicationServiceTests
     }
 
     [Fact]
-    public async Task MembershipService_ReturnsStatusAndValidates()
+    public async Task MembershipService_AllowsDocumentVerification()
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryTerritoryMembershipRepository(dataStore);
@@ -778,25 +778,20 @@ public sealed class ApplicationServiceTests
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new MembershipService(repository, territoryRepository, auditLogger, unitOfWork);
 
-        var status = await service.GetStatusAsync(Guid.NewGuid(), ActiveTerritoryId, CancellationToken.None);
-        Assert.Null(status);
+        var userId = Guid.NewGuid();
+        var membershipResult = await service.BecomeResidentAsync(userId, ActiveTerritoryId, CancellationToken.None);
+        Assert.True(membershipResult.IsSuccess);
+        var membership = membershipResult.Value!;
 
-        var membership = await service.DeclareMembershipAsync(
-            Guid.NewGuid(),
+        var verifyResult = await service.VerifyResidencyByDocumentAsync(
+            userId,
             ActiveTerritoryId,
-            MembershipRole.Resident,
+            DateTime.UtcNow,
             CancellationToken.None);
+        Assert.True(verifyResult.IsSuccess);
 
-        await service.ValidateAsync(
-            membership.Id,
-            Guid.NewGuid(),
-            ActiveTerritoryId,
-            VerificationStatus.Validated,
-            CancellationToken.None);
-
-        var updated = await repository.GetByUserAndTerritoryAsync(membership.UserId, ActiveTerritoryId, CancellationToken.None);
-        // VerificationStatus.Validated é convertido para ResidencyVerification.GeoVerified para Resident
-        Assert.Equal(ResidencyVerification.GeoVerified, updated!.ResidencyVerification);
+        var updated = await repository.GetByUserAndTerritoryAsync(userId, ActiveTerritoryId, CancellationToken.None);
+        Assert.Equal(ResidencyVerification.DocumentVerified, updated!.ResidencyVerification);
     }
 
     [Fact]
@@ -811,17 +806,11 @@ public sealed class ApplicationServiceTests
 
         var userId = Guid.NewGuid();
 
-        var visitor = await service.DeclareMembershipAsync(
-            userId,
-            ActiveTerritoryId,
-            MembershipRole.Visitor,
-            CancellationToken.None);
+        var visitor = await service.EnterAsVisitorAsync(userId, ActiveTerritoryId, CancellationToken.None);
 
-        var upgraded = await service.DeclareMembershipAsync(
-            userId,
-            ActiveTerritoryId,
-            MembershipRole.Resident,
-            CancellationToken.None);
+        var upgradedResult = await service.BecomeResidentAsync(userId, ActiveTerritoryId, CancellationToken.None);
+        Assert.True(upgradedResult.IsSuccess);
+        var upgraded = upgradedResult.Value!;
 
         Assert.Equal(visitor.Id, upgraded.Id);
         Assert.Equal(MembershipRole.Resident, upgraded.Role);

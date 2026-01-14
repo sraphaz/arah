@@ -174,27 +174,6 @@ public sealed class MembershipService
         return Result<TerritoryMembership>.Success(membership);
     }
 
-    [Obsolete("Use EnterAsVisitorAsync or BecomeResidentAsync instead.")]
-    public async Task<TerritoryMembership> DeclareMembershipAsync(
-        Guid userId,
-        Guid territoryId,
-        MembershipRole role,
-        CancellationToken cancellationToken)
-    {
-        if (role == MembershipRole.Visitor)
-        {
-            return await EnterAsVisitorAsync(userId, territoryId, cancellationToken);
-        }
-
-        var result = await BecomeResidentAsync(userId, territoryId, cancellationToken);
-        if (result.IsFailure)
-        {
-            throw new InvalidOperationException(result.Error);
-        }
-
-        return result.Value!;
-    }
-
     /// <summary>
     /// Transfere residência de um território para outro.
     /// Demove Resident atual e promove no novo território.
@@ -396,47 +375,4 @@ public sealed class MembershipService
         return degrees * Math.PI / 180.0;
     }
 
-    [Obsolete("Use ResidencyVerification property instead.")]
-    public async Task<VerificationStatus?> GetStatusAsync(
-        Guid userId,
-        Guid territoryId,
-        CancellationToken cancellationToken)
-    {
-        var membership = await _membershipRepository.GetByUserAndTerritoryAsync(
-            userId,
-            territoryId,
-            cancellationToken);
-
-        return membership?.VerificationStatus;
-    }
-
-    [Obsolete("Use verification methods instead.")]
-    public async Task<bool> ValidateAsync(
-        Guid membershipId,
-        Guid curatorId,
-        Guid territoryId,
-        VerificationStatus status,
-        CancellationToken cancellationToken)
-    {
-        var membership = await _membershipRepository.GetByIdAsync(membershipId, cancellationToken);
-        if (membership is null || membership.TerritoryId != territoryId)
-        {
-            return false;
-        }
-
-        await _membershipRepository.UpdateStatusAsync(membershipId, status, cancellationToken);
-
-        await _auditLogger.LogAsync(
-            new Application.Models.AuditEntry(
-                $"membership.{status.ToString().ToLowerInvariant()}",
-                curatorId,
-                territoryId,
-                membershipId,
-                DateTime.UtcNow),
-            cancellationToken);
-
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        return true;
-    }
 }

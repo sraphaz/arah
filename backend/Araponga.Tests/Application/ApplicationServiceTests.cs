@@ -773,9 +773,10 @@ public sealed class ApplicationServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var territoryRepository = new InMemoryTerritoryRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var service = new MembershipService(repository, auditLogger, unitOfWork);
+        var service = new MembershipService(repository, territoryRepository, auditLogger, unitOfWork);
 
         var status = await service.GetStatusAsync(Guid.NewGuid(), ActiveTerritoryId, CancellationToken.None);
         Assert.Null(status);
@@ -803,9 +804,10 @@ public sealed class ApplicationServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var territoryRepository = new InMemoryTerritoryRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var service = new MembershipService(repository, auditLogger, unitOfWork);
+        var service = new MembershipService(repository, territoryRepository, auditLogger, unitOfWork);
 
         var userId = Guid.NewGuid();
 

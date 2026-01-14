@@ -60,10 +60,17 @@ public sealed class MembershipAccessRules
         }
 
         // TODO: Adicionar verificação de MarketplaceIdentityVerifiedAtUtc quando implementado
+        // Esta verificação será necessária para habilitar operações econômicas no marketplace.
+        // O campo MarketplaceIdentityVerifiedAtUtc deve ser adicionado ao User quando a funcionalidade
+        // de verificação de identidade para marketplace for implementada.
         // var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-        // return user?.MarketplaceIdentityVerifiedAtUtc != null;
+        // if (user is null)
+        // {
+        //     return false;
+        // }
+        // return user.MarketplaceIdentityVerifiedAtUtc != null;
         
-        // Por enquanto, retorna true se pode criar item
+        // Por enquanto, retorna true se pode criar item (sem verificação de identidade marketplace)
         return true;
     }
 

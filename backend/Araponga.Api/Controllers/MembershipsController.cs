@@ -348,10 +348,12 @@ public sealed class MembershipsController : ControllerBase
             return Unauthorized();
         }
 
-        // TODO: Validar que a geo enviada é compatível com o território
+        // Validação de geolocalização: verifica se as coordenadas estão dentro do raio permitido do território
         var result = await _membershipService.VerifyResidencyByGeoAsync(
             userContext.User.Id,
             territoryId,
+            request.Lat,
+            request.Lng,
             DateTime.UtcNow,
             cancellationToken);
 
@@ -382,7 +384,13 @@ public sealed class MembershipsController : ControllerBase
             return Unauthorized();
         }
 
-        // TODO: Processar upload de comprovante se necessário
+        // Nota: Upload de comprovante será processado quando o sistema de assets/upload for implementado.
+        // Por enquanto, a verificação documental é apenas registrada sem validação de arquivo.
+        // Quando implementado, o endpoint deve:
+        // 1. Receber arquivo via multipart/form-data ou referência a asset existente
+        // 2. Validar tipo e tamanho do arquivo
+        // 3. Armazenar referência ao asset no banco
+        // 4. Criar registro de verificação pendente para aprovação manual
         var result = await _membershipService.VerifyResidencyByDocumentAsync(
             userContext.User.Id,
             territoryId,

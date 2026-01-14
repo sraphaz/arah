@@ -1,11 +1,14 @@
 using Araponga.Application.Interfaces;
 using Araponga.Infrastructure.Postgres.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Araponga.Infrastructure.Postgres;
 
 public sealed class ArapongaDbContext : DbContext, IUnitOfWork
 {
+    private IDbContextTransaction? _currentTransaction;
+
     public ArapongaDbContext(DbContextOptions<ArapongaDbContext> options)
         : base(options)
     {
@@ -49,9 +52,51 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<CheckoutItemRecord> CheckoutItems => Set<CheckoutItemRecord>();
     public DbSet<PlatformFeeConfigRecord> PlatformFeeConfigs => Set<PlatformFeeConfigRecord>();
 
-    public Task CommitAsync(CancellationToken cancellationToken)
+    public async Task CommitAsync(CancellationToken cancellationToken)
     {
-        return SaveChangesAsync(cancellationToken);
+        // Salva mudanças primeiro
+        await SaveChangesAsync(cancellationToken);
+        
+        // Se há uma transação ativa, faz commit da transação
+        if (_currentTransaction is not null)
+        {
+            await _currentTransaction.CommitAsync(cancellationToken);
+            await _currentTransaction.DisposeAsync();
+            _currentTransaction = null;
+        }
+    }
+
+    public async Task BeginTransactionAsync(CancellationToken cancellationToken)
+    {
+        if (_currentTransaction is not null)
+        {
+            throw new InvalidOperationException("A transaction is already active.");
+        }
+
+        _currentTransaction = await Database.BeginTransactionAsync(cancellationToken);
+    }
+
+    public async Task RollbackAsync(CancellationToken cancellationToken)
+    {
+        if (_currentTransaction is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _currentTransaction.RollbackAsync(cancellationToken);
+        }
+        finally
+        {
+            await _currentTransaction.DisposeAsync();
+            _currentTransaction = null;
+        }
+    }
+
+    public Task<bool> HasActiveTransactionAsync(CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_currentTransaction is not null);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

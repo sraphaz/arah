@@ -227,7 +227,19 @@ app.UseExceptionHandler(errorApp =>
 
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";
-        await context.Response.WriteAsJsonAsync(problem);
+        
+        // Serializar manualmente para garantir que path e traceId sejam propriedades diretas
+        var response = new Dictionary<string, object?>
+        {
+            ["title"] = problem.Title ?? "Unexpected error",
+            ["status"] = problem.Status ?? statusCode,
+            ["detail"] = problem.Detail,
+            ["instance"] = problem.Instance ?? feature?.Path,
+            ["traceId"] = context.TraceIdentifier,
+            ["path"] = feature?.Path
+        };
+        
+        await context.Response.WriteAsJsonAsync(response);
     });
 });
 

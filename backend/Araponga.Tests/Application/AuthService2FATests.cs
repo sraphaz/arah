@@ -9,7 +9,8 @@ namespace Araponga.Tests.Application;
 
 public sealed class AuthService2FATests
 {
-    private static readonly Guid UserId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+    // ID único para testes de 2FA (não conflita com IDs pré-populados do InMemoryDataStore)
+    private static readonly Guid UserId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
 
     [Fact]
     public async Task Setup2FAAsync_GeneratesSecretAndQR()

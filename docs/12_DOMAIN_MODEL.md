@@ -1,6 +1,6 @@
 # Modelo de Domínio (MER conceitual)
 
-> **Nota**: Este documento descreve o modelo atual. Para detalhes da refatoração User-Centric, ver [REFACTOR_USER_CENTRIC_MEMBERSHIP.md](./REFACTOR_USER_CENTRIC_MEMBERSHIP.md).
+> **Nota**: Este documento descreve o modelo atual. Para detalhes da refatoração User-Centric, ver [Refatoração User-Centric Membership](./refactoring/REFACTOR_USER_CENTRIC_MEMBERSHIP.md).
 
 ## Entidades principais
 
@@ -115,6 +115,12 @@
 - Empilháveis (um Membership pode ter múltiplas).
 - Atuam apenas no território do Membership.
 - Podem ser concedidas/revogadas com auditoria (GrantedByUserId, GrantedByMembershipId, Reason).
+
+### Hierarquia de Permissões
+- **SystemAdmin** tem implicitamente todas as `MembershipCapabilities` em todos os territórios.
+- Não requer configuração explícita de capabilities para SystemAdmin.
+- Funciona mesmo sem membership no território (acesso global).
+- Verificação de SystemAdmin é cacheada (15min) para performance.
 
 ### Marketplace como Regra Composta
 - Marketplace não é papel, identidade ou verificação.

@@ -72,8 +72,9 @@ public sealed class AccessEvaluator
     }
 
     /// <summary>
-    /// Verifica se o usuário tem capacidade de Curador no território.
-    /// Baseado em MembershipCapability, não em UserRole.
+    /// Verifica se o usuário tem capacidade no território.
+    /// SystemAdmin tem implicitamente todas as capabilities em todos os territórios.
+    /// Baseado em MembershipCapability para usuários não-admin.
     /// </summary>
     public async Task<bool> HasCapabilityAsync(
         Guid userId,
@@ -81,6 +82,13 @@ public sealed class AccessEvaluator
         MembershipCapabilityType capabilityType,
         CancellationToken cancellationToken)
     {
+        // SystemAdmin tem implicitamente todas as capabilities em todos os territórios
+        var isSystemAdmin = await IsSystemAdminAsync(userId, cancellationToken);
+        if (isSystemAdmin)
+        {
+            return true;
+        }
+
         var membership = await _membershipRepository.GetByUserAndTerritoryAsync(userId, territoryId, cancellationToken);
         if (membership is null)
         {
@@ -91,14 +99,22 @@ public sealed class AccessEvaluator
     }
 
     /// <summary>
-    /// Verifica se o usuário tem capacidade de Curador no território.
-    /// Versão síncrona que aceita Membership já carregado.
+    /// Verifica se o usuário tem capacidade no território.
+    /// SystemAdmin tem implicitamente todas as capabilities em todos os territórios.
+    /// Versão que aceita Membership já carregado.
     /// </summary>
     public async Task<bool> HasCapabilityAsync(
         TerritoryMembership membership,
         MembershipCapabilityType capabilityType,
         CancellationToken cancellationToken)
     {
+        // SystemAdmin tem implicitamente todas as capabilities em todos os territórios
+        var isSystemAdmin = await IsSystemAdminAsync(membership.UserId, cancellationToken);
+        if (isSystemAdmin)
+        {
+            return true;
+        }
+
         return await _capabilityRepository.HasCapabilityAsync(membership.Id, capabilityType, cancellationToken);
     }
 

@@ -231,6 +231,7 @@ public sealed class CacheInvalidationTests
         });
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IEventHandler<SystemPermissionRevokedEvent>, SystemPermissionRevokedCacheHandler>();
+        services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
         services.AddScoped<SystemPermissionService>();
         services.AddScoped<IUnitOfWork, InMemoryUnitOfWork>();
 
@@ -308,6 +309,7 @@ public sealed class CacheInvalidationTests
         });
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IEventHandler<MembershipCapabilityRevokedEvent>, MembershipCapabilityRevokedCacheHandler>();
+        services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
         services.AddScoped<MembershipCapabilityService>();
         services.AddScoped<IUnitOfWork, InMemoryUnitOfWork>();
 
@@ -362,7 +364,7 @@ public sealed class CacheInvalidationTests
         Assert.True(cache.TryGetValue(roleCacheKey, out _));
 
         // Revogar usando serviço
-        var result = await service.RevokeAsync(capability.Id, CancellationToken.None);
+        var result = await service.RevokeAsync(capability.Id, Guid.NewGuid(), CancellationToken.None);
         Assert.True(result.IsSuccess);
 
         // Verificar que cache foi invalidado

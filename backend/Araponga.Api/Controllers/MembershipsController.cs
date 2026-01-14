@@ -183,7 +183,7 @@ public sealed class MembershipsController : ControllerBase
     /// Entra em um território como Visitor.
     /// </summary>
     [HttpPost]
-    [Route("api/v1/territories/{territoryId:guid}/enter")]
+    [Route("/api/v1/territories/{territoryId:guid}/enter")]
     [ProducesResponseType(typeof(EnterTerritoryResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -225,7 +225,7 @@ public sealed class MembershipsController : ControllerBase
     /// Solicita tornar-se Resident no território.
     /// </summary>
     [HttpPost]
-    [Route("api/v1/memberships/{territoryId:guid}/become-resident")]
+    [Route("/api/v1/memberships/{territoryId:guid}/become-resident")]
     [ProducesResponseType(typeof(MembershipDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -278,7 +278,7 @@ public sealed class MembershipsController : ControllerBase
     /// Transfere residência para outro território.
     /// </summary>
     [HttpPost]
-    [Route("api/v1/memberships/transfer-residency")]
+    [Route("/api/v1/memberships/transfer-residency")]
     [ProducesResponseType(typeof(MembershipDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -332,7 +332,7 @@ public sealed class MembershipsController : ControllerBase
     /// Verifica residência por geolocalização.
     /// </summary>
     [HttpPost]
-    [Route("api/v1/memberships/{territoryId:guid}/verify-residency/geo")]
+    [Route("/api/v1/memberships/{territoryId:guid}/verify-residency/geo")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -369,7 +369,7 @@ public sealed class MembershipsController : ControllerBase
     /// Verifica residência por comprovante documental.
     /// </summary>
     [HttpPost]
-    [Route("api/v1/memberships/{territoryId:guid}/verify-residency/document")]
+    [Route("/api/v1/memberships/{territoryId:guid}/verify-residency/document")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -409,7 +409,7 @@ public sealed class MembershipsController : ControllerBase
     /// Consulta meu estado de membership no território.
     /// </summary>
     [HttpGet]
-    [Route("api/v1/memberships/{territoryId:guid}/me")]
+    [Route("/api/v1/memberships/{territoryId:guid}/me")]
     [ProducesResponseType(typeof(MembershipDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -450,7 +450,7 @@ public sealed class MembershipsController : ControllerBase
     /// Lista todos os meus memberships.
     /// </summary>
     [HttpGet]
-    [Route("api/v1/memberships/me")]
+    [Route("/api/v1/memberships/me")]
     [ProducesResponseType(typeof(MyMembershipsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<MyMembershipsResponse>> ListMyMemberships(

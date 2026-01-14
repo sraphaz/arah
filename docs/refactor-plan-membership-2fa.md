@@ -210,19 +210,169 @@ Refatorar o modelo de Membership para eliminar ambiguidades entre papel territor
 
 ### Testes
 
-**Ajustar testes existentes**:
-- `ApplicationServiceTests.MembershipService_*`: Atualizar para `ResidencyVerification`
-- `ApplicationServiceTests.MarketplaceServiceTests`: Atualizar regras de acesso
-- `ApiScenariosTests`: Atualizar fluxos de membership
+#### Testes Existentes a Ajustar
 
-**Novos testes**:
-- Regra "1 Resident por User" (tentativa de criar segundo Resident falha)
-- Transferência de residência
-- Múltiplos Visitors (User pode ter vários)
-- Verificação geo/documental
-- 2FA: Setup, login, recovery codes
-- Visualização multi-território no mapa
-- Filtros de conteúdo por múltiplos territórios
+**Domain Tests (`DomainValidationTests.cs`)**:
+- `TerritoryMembership` construtor e validações
+- Atualizar para usar `ResidencyVerification` em vez de `VerificationStatus`
+- Adicionar testes para novos métodos (`UpdateResidencyVerification`, `UpdateGeoVerification`, `UpdateDocumentVerification`)
+- Testes de 2FA no `User` (EnableTwoFactor, DisableTwoFactor)
+
+**Application Tests (`ApplicationServiceTests.cs`)**:
+- `MembershipService_ReturnsStatusAndValidates`: Atualizar para `ResidencyVerification`
+- `MembershipService_AllowsVisitorUpgradeToResident`: Atualizar para novo modelo e validação de exclusividade
+- Testes de `AccessEvaluator`: Atualizar para usar `MembershipAccessRules` e `ResidencyVerification`
+
+**Marketplace Tests (`MarketplaceServiceTests.cs`)**:
+- Testes de criação de Store: Validar uso de `MembershipAccessRules`
+- Testes de criação de Item: Validar regras baseadas em `ResidencyVerification`
+- Testes de publicação: Validar `MarketplaceIdentityVerifiedAtUtc` quando implementado
+
+**API Tests (`ApiScenariosTests.cs`)**:
+- `Memberships_RequireAuthAndTerritory`: Atualizar para novos endpoints
+- `Memberships_CreatePendingAndReuse`: Atualizar para `ResidencyVerification`
+- Testes de endpoints de membership: Adaptar para novos contratos
+
+**Repository Tests (`RepositoryTests.cs`)**:
+- Testes de `ITerritoryMembershipRepository`: Adicionar testes para novos métodos
+  - `HasResidentMembershipAsync`
+  - `GetResidentMembershipAsync`
+  - `ListByUserAsync`
+  - `UpdateResidencyVerificationAsync`
+  - `UpdateGeoVerificationAsync`
+  - `UpdateDocumentVerificationAsync`
+
+#### Novos Testes de Domínio
+
+**TerritoryMembership**:
+- ✅ `ResidencyVerification_Initialized_AsUnverified` - Verificar inicialização padrão
+- ✅ `UpdateResidencyVerification_ChangesState` - Verificar atualização de verificação
+- ✅ `UpdateGeoVerification_SetsTimestamp` - Verificar timestamp de verificação geo
+- ✅ `UpdateDocumentVerification_SetsTimestamp` - Verificar timestamp de verificação documental
+- ✅ `ResidencyVerification_DocumentVerified_HasHighestPriority` - Verificar que DocumentVerified sobrescreve GeoVerified
+- ✅ `ConvertVerificationStatus_ToResidencyVerification` - Testar conversão de dados legados
+
+**User (2FA)**:
+- ✅ `EnableTwoFactor_SetsProperties` - Verificar habitação de 2FA
+- ✅ `DisableTwoFactor_ClearsSecrets` - Verificar desabilitação e limpeza
+- ✅ `TwoFactorSecret_IsRequired_WhenEnabled` - Validar que secret é obrigatório
+- ✅ `RecoveryCodes_AreHashed` - Validar que recovery codes são hasheados
+
+#### Novos Testes de Application
+
+**MembershipService**:
+- ✅ `EnterAsVisitorAsync_CreatesNewMembership` - Criar membership como Visitor
+- ✅ `EnterAsVisitorAsync_ReturnsExisting_IfAlreadyVisitor` - Retornar membership existente
+- ✅ `BecomeResidentAsync_Succeeds_WhenNoExistingResident` - Permitir tornar-se Resident quando não há outro
+- ✅ `BecomeResidentAsync_Fails_WhenHasResidentInAnotherTerritory` - Validar regra "1 Resident por User"
+- ✅ `BecomeResidentAsync_Returns409Conflict_OnConflict` - Retornar erro apropriado (409)
+- ✅ `BecomeResidentAsync_AutoVerifies_FirstResident` - Primeiro residente é auto-verificado
+- ✅ `BecomeResidentAsync_SetsUnverified_WhenOtherResidentsExist` - Novos residents são Unverified
+- ✅ `TransferResidencyAsync_DemotesCurrentResident` - Demover Resident atual
+- ✅ `TransferResidencyAsync_PromotesNewTerritory` - Promover novo território
+- ✅ `TransferResidencyAsync_RollbackOnFailure` - Reverter mudanças em caso de falha
+- ✅ `VerifyResidencyByGeoAsync_UpdatesVerification` - Atualizar verificação geo
+- ✅ `VerifyResidencyByGeoAsync_Fails_IfNotResident` - Falhar se não for Resident
+- ✅ `VerifyResidencyByDocumentAsync_UpdatesVerification` - Atualizar verificação documental
+- ✅ `VerifyResidencyByDocumentAsync_Fails_IfNotResident` - Falhar se não for Resident
+- ✅ `ListMyMembershipsAsync_ReturnsAllMemberships` - Listar todos os memberships do usuário
+- ✅ `ListMyMembershipsAsync_IncludesMultipleVisitors` - Suportar múltiplos Visitors
+
+**MembershipAccessRules**:
+- ✅ `CanCreateStoreAsync_RequiresResidentAndVerified` - Validar regra de criação de Store
+- ✅ `CanCreateStoreAsync_Fails_ForVisitor` - Visitor não pode criar Store
+- ✅ `CanCreateStoreAsync_Fails_ForUnverifiedResident` - Resident não verificado não pode criar Store
+- ✅ `CanCreateItemAsync_SameAsStoreRule` - Regra igual a criação de Store
+- ✅ `CanPublishItemAsync_RequiresMarketplaceVerification` - Validar regra de publicação (quando implementado)
+- ✅ `IsVerifiedResidentAsync_ChecksRoleAndVerification` - Verificar se é Resident validado
+
+**AuthService (2FA)**:
+- ✅ `Setup2FAAsync_GeneratesSecretAndQR` - Gerar secret e QR code
+- ✅ `Setup2FAAsync_Fails_IfAlreadyEnabled` - Falhar se já habilitado
+- ✅ `Confirm2FAAsync_ValidatesCode` - Validar código TOTP
+- ✅ `Confirm2FAAsync_Fails_OnInvalidCode` - Falhar com código inválido
+- ✅ `Confirm2FAAsync_Enables2FA_OnSuccess` - Habilitar 2FA após confirmação
+- ✅ `Confirm2FAAsync_GeneratesRecoveryCodes` - Gerar recovery codes
+- ✅ `LoginAsync_Returns2FARequired_WhenEnabled` - Retornar 2FA_REQUIRED quando habilitado
+- ✅ `LoginAsync_ReturnsJWT_When2FADisabled` - Retornar JWT quando 2FA desabilitado
+- ✅ `Verify2FAAsync_ReturnsJWT_OnValidCode` - Retornar JWT após verificação 2FA
+- ✅ `Verify2FAAsync_Fails_OnInvalidCode` - Falhar com código inválido
+- ✅ `Recover2FAAsync_ReturnsJWT_OnValidRecoveryCode` - Usar recovery code
+- ✅ `Recover2FAAsync_InvalidatesUsedCode` - Invalidar código usado
+- ✅ `Recover2FAAsync_Fails_OnInvalidCode` - Falhar com recovery code inválido
+- ✅ `Disable2FAAsync_RequiresPasswordOr2FA` - Exigir senha ou 2FA para desabilitar
+- ✅ `Disable2FAAsync_ClearsSecrets` - Limpar secrets ao desabilitar
+
+#### Novos Testes de API
+
+**Membership Endpoints**:
+- ✅ `POST /territories/{id}/enter` - Entrar como Visitor
+  - Retorna 200 com membership
+  - Cria membership se não existir
+  - Retorna membership existente se já for Visitor
+- ✅ `POST /memberships/{territoryId}/become-resident` - Tornar-se Resident
+  - Retorna 200 quando bem-sucedido
+  - Retorna 409 quando já tem Resident em outro território
+  - Retorna 404 se território não existe
+- ✅ `POST /memberships/transfer-residency` - Transferir residência
+  - Retorna 200 quando bem-sucedido
+  - Retorna 400 se não tem Resident atual
+  - Retorna 404 se território destino não existe
+  - Retorna 409 se violar regras
+- ✅ `POST /memberships/{territoryId}/verify-residency/geo` - Verificar geo
+  - Retorna 200 quando bem-sucedido
+  - Retorna 400 se não for Resident
+  - Retorna 404 se membership não existe
+- ✅ `POST /memberships/{territoryId}/verify-residency/document` - Verificar documental
+  - Retorna 200 quando bem-sucedido
+  - Retorna 400 se não for Resident
+  - Retorna 404 se membership não existe
+- ✅ `GET /memberships/{territoryId}/me` - Consultar estado
+  - Retorna 200 com detalhes do membership
+  - Retorna 404 se não tem membership
+  - Retorna ResidencyVerification no response
+- ✅ `GET /memberships/me` - Listar meus memberships
+  - Retorna 200 com lista de memberships
+  - Suporta múltiplos Visitors
+
+**2FA Endpoints**:
+- ✅ `POST /auth/2fa/setup` - Setup 2FA
+  - Retorna QR code e secret
+  - Retorna 400 se já habilitado
+- ✅ `POST /auth/2fa/confirm` - Confirmar 2FA
+  - Retorna recovery codes quando bem-sucedido
+  - Retorna 400 com código inválido
+- ✅ `POST /auth/login` - Login (etapa 1)
+  - Retorna JWT quando 2FA desabilitado
+  - Retorna 2FA_REQUIRED quando 2FA habilitado
+- ✅ `POST /auth/2fa/verify` - Verificar 2FA (etapa 2)
+  - Retorna JWT quando código válido
+  - Retorna 400 com código inválido
+- ✅ `POST /auth/2fa/recover` - Recovery code
+  - Retorna JWT quando código válido
+  - Retorna 400 com código inválido
+  - Invalida código usado
+- ✅ `POST /auth/2fa/disable` - Desabilitar 2FA
+  - Retorna 200 quando bem-sucedido
+  - Exige senha ou código 2FA
+
+**Multi-Território**:
+- ✅ `GET /map/pins?territoryIds=...` - Pins múltiplos territórios
+  - Retorna pins de múltiplos territórios
+  - Filtra conteúdo por role em cada território
+  - Visitor vê apenas conteúdo público
+  - Resident vê todo conteúdo
+
+#### Novos Testes de Integração
+
+**Fluxos Completos**:
+- ✅ `UserCanHaveMultipleVisitors_ButOnlyOneResident` - Validar regra estrutural completa
+- ✅ `TransferResidency_CompleteFlow` - Fluxo completo de transferência
+- ✅ `ResidencyVerification_CompleteFlow` - Fluxo completo de verificação
+- ✅ `2FA_CompleteLoginFlow` - Fluxo completo de login com 2FA
+- ✅ `StoreCreation_RespectsResidencyVerification` - Criar Store respeitando verificação
+- ✅ `ItemCreation_RespectsResidencyVerification` - Criar Item respeitando verificação
+- ✅ `MapVisualization_MultipleTerritories` - Visualização no mapa de múltiplos territórios
 
 ---
 
@@ -342,22 +492,59 @@ Refatorar o modelo de Membership para eliminar ambiguidades entre papel territor
 ### Fase 6: Testes
 
 #### 6.1 Testes de Domínio
-1. Atualizar testes existentes
-2. Novos testes para `ResidencyVerification`
+1. Atualizar `DomainValidationTests.cs`:
+   - `TerritoryMembership`: Atualizar para `ResidencyVerification`
+   - Adicionar testes para novos métodos (`UpdateResidencyVerification*`)
+   - Testes de conversão de `VerificationStatus` → `ResidencyVerification`
+2. Novos testes para `User` (2FA):
+   - `EnableTwoFactor`, `DisableTwoFactor`
+   - Validações de propriedades 2FA
 
 #### 6.2 Testes de Application
-1. Atualizar testes de `MembershipService`
-2. Teste: Regra "1 Resident por User"
-3. Teste: Transferência de residência
-4. Teste: Múltiplos Visitors
-5. Teste: Verificação geo/documental
-6. Teste: 2FA (setup, login, recovery)
-7. Teste: `MembershipAccessRules`
+1. Atualizar `ApplicationServiceTests.cs`:
+   - `MembershipService_ReturnsStatusAndValidates`: Adaptar para `ResidencyVerification`
+   - `MembershipService_AllowsVisitorUpgradeToResident`: Atualizar com validação de exclusividade
+2. Novos testes em `MembershipServiceTests.cs` (criar arquivo):
+   - Regra "1 Resident por User" (8 testes)
+   - Transferência de residência (3 testes)
+   - Múltiplos Visitors (2 testes)
+   - Verificação geo/documental (4 testes)
+3. Testes de `MembershipAccessRules`:
+   - Regras de criação de Store/Item
+   - Validação de publicação (quando implementado)
+4. Testes de `AuthService` (2FA):
+   - Setup e confirmação (4 testes)
+   - Login em duas etapas (3 testes)
+   - Recovery codes (3 testes)
+   - Desabilitação (2 testes)
+5. Atualizar `AccessEvaluator`:
+   - Usar `MembershipAccessRules`
+   - Validar `ResidencyVerification`
 
 #### 6.3 Testes de API
-1. Atualizar testes de endpoints existentes
-2. Testes de novos endpoints
-3. Teste: Visualização multi-território
+1. Atualizar `ApiScenariosTests.cs`:
+   - Endpoints existentes de membership
+   - Adaptar para novos contratos
+2. Novos testes de Membership Endpoints (7 endpoints):
+   - Entrar como Visitor
+   - Tornar-se Resident
+   - Transferir residência
+   - Verificações (geo/document)
+   - Consultar/listar memberships
+3. Novos testes de 2FA Endpoints (6 endpoints):
+   - Setup, confirmação, login, verificação, recovery, disable
+4. Testes de Multi-Território:
+   - Visualização no mapa com múltiplos territórios
+   - Filtros por role em cada território
+
+#### 6.4 Testes de Integração
+1. Testes de fluxos completos:
+   - Regra estrutural completa
+   - Transferência de residência
+   - Verificação completa
+   - Login com 2FA completo
+   - Marketplace respeitando verificação
+   - Visualização multi-território
 
 ### Fase 7: Validação e Cleanup
 
@@ -417,11 +604,16 @@ Refatorar o modelo de Membership para eliminar ambiguidades entre papel territor
 **API**:
 - Response de membership muda (adiciona `ResidencyVerification`, remove `VerificationStatus`)
 - Novos endpoints (não quebram, mas podem conflitar se já existirem)
-- Login com 2FA muda formato de resposta
+- Login com 2FA muda formato de resposta (pode retornar `2FA_REQUIRED`)
 
 **Contratos**:
 - `MembershipResponse`: Mudança de estrutura
-- Versão da API: Considerar versionamento (v1 vs v2)
+- Versão da API: Considerar versionamento (v1 vs v2) se necessário
+- OpenAPI/Swagger: Atualizar documentação de contratos
+
+**Repositórios**:
+- Novos métodos em `ITerritoryMembershipRepository` (não quebram, mas implementações precisam atualizar)
+- Métodos obsoletos mantidos temporariamente para compatibilidade
 
 ### 5. Segurança (2FA)
 
@@ -504,4 +696,135 @@ Refatorar o modelo de Membership para eliminar ambiguidades entre papel territor
 
 ---
 
-**Status**: Aguardando aprovação para iniciar execução
+---
+
+## 📚 Impacto nas Documentações
+
+### Documentações Técnicas
+
+#### 1. `docs/60_API_LÓGICA_NEGÓCIO.md`
+**Mudanças necessárias**:
+- Adicionar seção sobre novos endpoints de Membership
+- Documentar fluxos de verificação (geo/document)
+- Documentar transferência de residência
+- Adicionar seção sobre 2FA (setup, login, recovery)
+- Documentar regra "1 Resident por User"
+- Atualizar exemplos de contratos de Membership
+
+#### 2. `docs/22_COHESION_AND_TESTS.md`
+**Mudanças necessárias**:
+- Atualizar exemplos de testes de Membership
+- Adicionar exemplos de testes de 2FA
+- Documentar novos padrões de teste para regras de acesso
+- Adicionar exemplos de testes de integração para Membership
+
+#### 3. `docs/23_IMPLEMENTATION_RECOMMENDATIONS.md`
+**Mudanças necessárias**:
+- Atualizar recomendações sobre Membership
+- Adicionar recomendações sobre 2FA
+- Documentar padrões de validação de exclusividade
+- Adicionar recomendações sobre visualização multi-território
+
+#### 4. OpenAPI/Swagger (gerado automaticamente)
+**Mudanças necessárias**:
+- Atualizar schemas de `MembershipResponse`
+- Adicionar novos endpoints na documentação
+- Adicionar exemplos de requisições/respostas
+- Documentar códigos de erro (409 Conflict para exclusividade)
+
+### Documentações de Arquitetura
+
+#### 5. `design/Archtecture/C4_Components.md`
+**Mudanças necessárias**:
+- Atualizar diagrama de componentes com novos serviços
+- Documentar `MembershipAccessRules` como componente
+- Adicionar fluxos de 2FA
+- Documentar serviços de verificação de residência
+
+#### 6. `design/Archtecture/C4_Containers.md`
+**Mudanças necessárias**:
+- Atualizar containers com novos endpoints
+- Documentar integração de 2FA no container de autenticação
+- Atualizar fluxos de comunicação entre containers
+
+### Documentações de Modelo de Dados
+
+#### 7. Diagramas ER ou Documentação de Schema
+**Mudanças necessárias**:
+- Atualizar diagrama de `TerritoryMembership`:
+  - Adicionar `ResidencyVerification` (enum)
+  - Adicionar `LastGeoVerifiedAtUtc` (nullable timestamp)
+  - Adicionar `LastDocumentVerifiedAtUtc` (nullable timestamp)
+  - Documentar índice único parcial para Resident
+- Atualizar diagrama de `User`:
+  - Adicionar campos 2FA
+  - Documentar relacionamentos
+- Adicionar notas sobre migração de dados
+
+### Documentações de Planejamento
+
+#### 8. `docs/refactor-plan-membership-2fa.md` (este arquivo)
+**Status**: ✅ Em atualização
+- Adicionar seção de testes detalhados
+- Adicionar seção de impacto em documentações
+- Atualizar progresso conforme implementação
+
+#### 9. README.md (se existir seção de arquitetura)
+**Mudanças necessárias**:
+- Atualizar diagramas de fluxo
+- Adicionar informações sobre 2FA
+- Documentar novas regras de Membership
+
+### Documentações de Usuário (se existirem)
+
+#### 10. Guias de Usuário/Frontend
+**Mudanças necessárias**:
+- Documentar novo fluxo de "Entrar como Visitor"
+- Documentar processo de tornar-se Resident
+- Documentar transferência de residência
+- Documentar verificação de residência (geo/document)
+- Adicionar guia de setup de 2FA
+- Documentar uso de recovery codes
+
+### Checklist de Atualização de Documentações
+
+- [ ] `docs/60_API_LÓGICA_NEGÓCIO.md` - Atualizar endpoints e contratos
+- [ ] `docs/22_COHESION_AND_TESTS.md` - Adicionar exemplos de testes
+- [ ] `docs/23_IMPLEMENTATION_RECOMMENDATIONS.md` - Atualizar recomendações
+- [ ] OpenAPI/Swagger - Atualizar schemas e endpoints
+- [ ] `design/Archtecture/C4_Components.md` - Atualizar componentes
+- [ ] `design/Archtecture/C4_Containers.md` - Atualizar containers
+- [ ] Diagramas ER/Schema - Atualizar modelos de dados
+- [ ] README.md - Atualizar arquitetura (se aplicável)
+- [ ] Guias de usuário - Atualizar fluxos (se existirem)
+- [ ] CHANGELOG.md - Adicionar entrada para esta refatoração
+
+---
+
+## 📈 Estatísticas Atualizadas
+
+### Código
+- **Arquivos a modificar**: ~80-100 arquivos
+- **Classes/Enums a criar**: ~3-5
+- **Classes a modificar**: ~15-20
+- **Novos métodos**: ~30-40
+- **Novos endpoints**: ~12-15
+- **Migrations**: 5-6
+
+### Testes
+- **Testes a atualizar**: ~15-20
+- **Novos testes de domínio**: ~8-10
+- **Novos testes de application**: ~25-30
+- **Novos testes de API**: ~15-20
+- **Novos testes de integração**: ~6-8
+- **Total de testes novos/atualizados**: ~60-80
+
+### Documentações
+- **Documentações técnicas a atualizar**: ~6-8
+- **Documentações de arquitetura**: ~2-3
+- **Diagramas a atualizar**: ~3-5
+- **Guias de usuário**: ~1-2 (se existirem)
+
+---
+
+**Status**: Em execução - Branch `refactor/membership-2fa` criada e parcialmente implementada

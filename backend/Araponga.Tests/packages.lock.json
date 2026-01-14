@@ -544,6 +544,11 @@
           "Npgsql": "8.0.4"
         }
       },
+      "Otp.NET": {
+        "type": "Transitive",
+        "resolved": "1.3.0",
+        "contentHash": "6XlSlvszByLDLjgDBULNtrexGhRHTrJpikW2x4oMB+Z4i1jPg89ARRSSOoIfYB2ORTdfugguWYLBz2No4lsM6g=="
+      },
       "Serilog": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -784,7 +789,8 @@
         "dependencies": {
           "Araponga.Domain": "[1.0.0, )",
           "Araponga.Shared": "[1.0.0, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.11, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.11, )",
+          "Otp.NET": "[1.3.0, )"
         }
       },
       "araponga.domain": {

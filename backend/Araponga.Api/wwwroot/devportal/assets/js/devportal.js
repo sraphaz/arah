@@ -635,7 +635,13 @@
 
         if (entry.operation.parameters && entry.operation.parameters.length) {
           var params = document.createElement('p');
-          params.innerHTML = '<strong>Parâmetros:</strong> ' + entry.operation.parameters.map(function (param) {\n            return param.name + ' (' + param.in + ')';\n          }).join(', ');
+          params.innerHTML =
+            '<strong>Parâmetros:</strong> ' +
+            entry.operation.parameters
+              .map(function (param) {
+                return param.name + ' (' + param.in + ')';
+              })
+              .join(', ');
           body.appendChild(params);
         }
 

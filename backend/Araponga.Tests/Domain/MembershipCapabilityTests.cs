@@ -138,4 +138,40 @@ public sealed class MembershipCapabilityTests
 
         Assert.Null(capability.Reason);
     }
+
+    [Fact]
+    public void MembershipCapability_Throws_WhenReasonExceedsMaxLength()
+    {
+        var longReason = new string('a', 501); // 501 caracteres, excede o limite de 500
+
+        var exception = Assert.Throws<ArgumentException>(() =>
+            new MembershipCapability(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                MembershipCapabilityType.Curator,
+                DateTime.UtcNow,
+                null,
+                null,
+                longReason));
+
+        Assert.Contains("500", exception.Message);
+    }
+
+    [Fact]
+    public void MembershipCapability_AcceptsReason_AtMaxLength()
+    {
+        var maxReason = new string('a', 500); // Exatamente 500 caracteres
+
+        var capability = new MembershipCapability(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MembershipCapabilityType.Curator,
+            DateTime.UtcNow,
+            null,
+            null,
+            maxReason);
+
+        Assert.NotNull(capability.Reason);
+        Assert.Equal(500, capability.Reason!.Length);
+    }
 }

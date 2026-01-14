@@ -6,6 +6,8 @@ namespace Araponga.Domain.Membership;
 /// </summary>
 public sealed class MembershipCapability
 {
+    private const int MaxReasonLength = 500;
+
     /// <summary>
     /// Inicializa uma nova instância de MembershipCapability.
     /// </summary>
@@ -33,6 +35,11 @@ public sealed class MembershipCapability
         if (membershipId == Guid.Empty)
         {
             throw new ArgumentException("Membership ID is required.", nameof(membershipId));
+        }
+
+        if (reason is not null && reason.Length > MaxReasonLength)
+        {
+            throw new ArgumentException($"Reason must not exceed {MaxReasonLength} characters.", nameof(reason));
         }
 
         Id = id;

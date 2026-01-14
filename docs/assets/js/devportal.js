@@ -627,7 +627,7 @@
         method.textContent = entry.method;
         summary.appendChild(method);
         var title = document.createElement('span');
-        title.textContent = entry.path + (entry.operation.summary ? ' ΓÇö ' + entry.operation.summary : '');
+        title.textContent = entry.path + (entry.operation.summary ? ' — ' + entry.operation.summary : '');
         summary.appendChild(title);
         details.appendChild(summary);
 
@@ -659,7 +659,7 @@
           Object.keys(entry.operation.responses).forEach(function (status) {
             var responseSchema = extractSchemaName(entry.operation.responses[status]);
             var item = document.createElement('li');
-            item.textContent = status + (responseSchema ? ' ΓåÆ ' + responseSchema : '');
+            item.textContent = status + (responseSchema ? ' → ' + responseSchema : '');
             responseList.appendChild(item);
           });
           body.appendChild(responseList);

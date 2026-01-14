@@ -57,7 +57,7 @@ public sealed class JoinRequestService
 
         if (requesterMembership is not null &&
             requesterMembership.Role == MembershipRole.Resident &&
-            requesterMembership.VerificationStatus == VerificationStatus.Validated)
+            requesterMembership.ResidencyVerification != ResidencyVerification.Unverified)
         {
             return (false, "Requester is already a confirmed resident.", null);
         }
@@ -243,19 +243,18 @@ public sealed class JoinRequestService
                 request.RequesterUserId,
                 request.TerritoryId,
                 MembershipRole.Resident,
-                VerificationStatus.Validated,
+                ResidencyVerification.DocumentVerified,
+                null,
+                decidedAtUtc,
                 decidedAtUtc);
 
             await _membershipRepository.AddAsync(newMembership, cancellationToken);
         }
         else if (membership.Role != MembershipRole.Resident ||
-                 membership.VerificationStatus != VerificationStatus.Validated)
+                 membership.ResidencyVerification == ResidencyVerification.Unverified)
         {
-            await _membershipRepository.UpdateRoleAndStatusAsync(
-                membership.Id,
-                MembershipRole.Resident,
-                VerificationStatus.Validated,
-                cancellationToken);
+            await _membershipRepository.UpdateRoleAsync(membership.Id, MembershipRole.Resident, cancellationToken);
+            await _membershipRepository.UpdateDocumentVerificationAsync(membership.Id, decidedAtUtc, cancellationToken);
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);

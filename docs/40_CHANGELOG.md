@@ -1,5 +1,29 @@
 # Changelog
 
+## [2026-01-16] - Hierarquia de Permissões e Auditoria
+
+### Adicionado
+- **Hierarquia de Permissões**: SystemAdmin tem implicitamente todas as MembershipCapabilities em todos os territórios
+- **SystemPermissionService.GrantAsync()**: Método para conceder SystemPermissions com auditoria
+- **MembershipCapabilityService.GrantAsync()**: Método para conceder MembershipCapabilities com auditoria
+- **Auditoria completa**: Todos os eventos de grant/revoke são registrados em `IAuditLogger`
+- **OperationResult<T>**: Tipo genérico para resultados de operações com valor de retorno
+- **Testes de hierarquia**: 3 novos testes validando que SystemAdmin tem todas as capabilities
+- **Testes de serviços**: 12 novos testes para SystemPermissionService e MembershipCapabilityService
+
+### Modificado
+- **AccessEvaluator.HasCapabilityAsync()**: Agora verifica SystemAdmin primeiro antes de verificar capabilities territoriais
+- **SystemPermissionService.RevokeAsync()**: Adicionado parâmetro `revokedByUserId` e auditoria
+- **MembershipCapabilityService.RevokeAsync()**: Adicionado parâmetro `revokedByUserId` e auditoria
+- **Documentação**: Organizada em pastas (refactoring/, validation/, recommendations/, analysis/)
+
+### Testes
+- Total: 224 testes passando (15 novos testes adicionados)
+
+---
+
+## [2026-01-13] - Refatoração User-Centric Membership
+
 ## Unreleased
 - Removed all obsolete APIs related to Membership (application not yet launched, no backward compatibility needed):
   - Removed obsolete endpoints: `DeclareMembership`, `GetStatus`, `Validate`

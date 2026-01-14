@@ -285,4 +285,92 @@ public sealed class AccessEvaluatorTests
         var role = await evaluator.GetRoleAsync(OtherUserId, TerritoryId, CancellationToken.None);
         Assert.Null(role);
     }
+
+    [Fact]
+    public async Task HasCapabilityAsync_ReturnsTrue_WhenUserIsSystemAdmin()
+    {
+        var dataStore = new InMemoryDataStore();
+        var evaluator = CreateEvaluator(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+
+        // Usar um UserId diferente para evitar conflito com dados pré-populados
+        var testUserId = Guid.NewGuid();
+        var territoryId = Guid.NewGuid();
+
+        // Criar SystemPermission de SystemAdmin
+        var permission = new SystemPermission(
+            Guid.NewGuid(),
+            testUserId,
+            SystemPermissionType.SystemAdmin,
+            DateTime.UtcNow,
+            Guid.NewGuid(),
+            null,
+            null);
+
+        await systemPermissionRepository.AddAsync(permission, CancellationToken.None);
+
+        // SystemAdmin deve ter implicitamente todas as capabilities em todos os territórios
+        var hasCurator = await evaluator.HasCapabilityAsync(testUserId, territoryId, MembershipCapabilityType.Curator, CancellationToken.None);
+        var hasModerator = await evaluator.HasCapabilityAsync(testUserId, territoryId, MembershipCapabilityType.Moderator, CancellationToken.None);
+
+        Assert.True(hasCurator);
+        Assert.True(hasModerator);
+    }
+
+    [Fact]
+    public async Task HasCapabilityAsync_ReturnsTrue_WhenSystemAdmin_EvenWithoutMembership()
+    {
+        var dataStore = new InMemoryDataStore();
+        var evaluator = CreateEvaluator(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+
+        // Usar um UserId diferente para evitar conflito com dados pré-populados
+        var testUserId = Guid.NewGuid();
+        var territoryId = Guid.NewGuid();
+
+        // Criar SystemPermission de SystemAdmin
+        var permission = new SystemPermission(
+            Guid.NewGuid(),
+            testUserId,
+            SystemPermissionType.SystemAdmin,
+            DateTime.UtcNow,
+            Guid.NewGuid(),
+            null,
+            null);
+
+        await systemPermissionRepository.AddAsync(permission, CancellationToken.None);
+
+        // SystemAdmin deve ter implicitamente todas as capabilities mesmo sem membership no território
+        var hasCurator = await evaluator.HasCapabilityAsync(testUserId, territoryId, MembershipCapabilityType.Curator, CancellationToken.None);
+        Assert.True(hasCurator);
+    }
+
+    [Fact]
+    public async Task HasCapabilityAsync_ReturnsFalse_WhenNotSystemAdminAndNoCapability()
+    {
+        var dataStore = new InMemoryDataStore();
+        var evaluator = CreateEvaluator(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+
+        // Usar um UserId diferente para evitar conflito com dados pré-populados
+        var testUserId = Guid.NewGuid();
+        var territoryId = Guid.NewGuid();
+
+        // Criar membership sem capability
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            testUserId,
+            territoryId,
+            MembershipRole.Resident,
+            ResidencyVerification.GeoVerified,
+            DateTime.UtcNow,
+            null,
+            DateTime.UtcNow);
+
+        await membershipRepository.AddAsync(membership, CancellationToken.None);
+
+        // Sem SystemAdmin e sem capability, deve retornar false
+        var hasCurator = await evaluator.HasCapabilityAsync(testUserId, territoryId, MembershipCapabilityType.Curator, CancellationToken.None);
+        Assert.False(hasCurator);
+    }
 }

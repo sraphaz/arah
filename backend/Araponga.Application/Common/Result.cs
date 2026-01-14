@@ -41,3 +41,26 @@ public sealed class OperationResult
     public static OperationResult Success() => new(true, null);
     public static OperationResult Failure(string error) => new(false, error);
 }
+
+/// <summary>
+/// Represents the result of an operation that may succeed or fail with a return value.
+/// </summary>
+public sealed class OperationResult<T>
+{
+    private OperationResult(bool isSuccess, T? value, string? error)
+    {
+        IsSuccess = isSuccess;
+        Value = value;
+        Error = error;
+    }
+
+    public bool IsSuccess { get; }
+    public bool IsFailure => !IsSuccess;
+    public T? Value { get; }
+    public string? Error { get; }
+
+    public static OperationResult<T> Success(T value) => new(true, value, null);
+    public static OperationResult<T> Failure(string error) => new(false, default, error);
+
+    public static implicit operator OperationResult<T>(T value) => Success(value);
+}

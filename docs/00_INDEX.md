@@ -47,7 +47,8 @@ Documentos sobre histórico e mudanças do projeto.
 ### 📋 Planos e Recomendações
 Documentos de planejamento e recomendações de implementação.
 
-- **[Plano de Refatoração - Recomendações Pendentes](./PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md)** - Plano de implementação de recomendações pendentes
+- **[Recomendações de Segurança](./recommendations/RECOMENDACOES_SEGURANCA_PROXIMOS_PASSOS.md)** - Recomendações de segurança e próximos passos
+- **[Plano de Refatoração - Recomendações Pendentes](./recommendations/PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md)** - Plano de implementação de recomendações pendentes
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
 ### 🚀 Produção e Deploy
@@ -60,6 +61,27 @@ Documentos sobre prontidão para produção e deploy.
 Documentação detalhada de todos os Pull Requests implementados.
 
 - **[Índice de PRs](./prs/README.md)** - Documentação completa de todos os PRs
+
+### 📚 Documentação Organizada por Categoria
+
+#### Refatorações
+- **[Refatoração User-Centric Membership](./refactoring/REFACTOR_USER_CENTRIC_MEMBERSHIP.md)** - Refatoração completa do modelo
+- **[Hierarquia de Permissões e Auditoria](./refactoring/70_HIERARQUIA_PERMISSOES_E_AUDITORIA.md)** - Implementação de hierarquia e auditoria
+- **[Resumo do Modelo](./refactoring/REFACTOR_MODEL_SUMMARY.md)** - Resumo das mudanças
+- Ver mais em: [refactoring/README.md](./refactoring/README.md)
+
+#### Validações
+- **[Validação de Segurança](./validation/VALIDACAO_SEGURANCA.md)** - Validação completa de segurança
+- Ver mais em: [validation/README.md](./validation/README.md)
+
+#### Recomendações
+- **[Recomendações de Segurança](./recommendations/RECOMENDACOES_SEGURANCA_PROXIMOS_PASSOS.md)** - Recomendações e próximos passos
+- **[Plano de Refatoração](./recommendations/PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md)** - Plano de recomendações pendentes
+- Ver mais em: [recommendations/README.md](./recommendations/README.md)
+
+#### Análises
+- **[Análise de Padrões de Design](./analysis/ANALISE_PADROES_DESIGN_MEMBERSHIP.md)** - Análise de padrões
+- Ver mais em: [analysis/README.md](./analysis/README.md)
 
 ## 🔍 Busca Rápida
 
@@ -86,17 +108,27 @@ Documentação detalhada de todos os Pull Requests implementados.
 
 ## 📌 Convenções de Nomenclatura
 
-Todos os arquivos seguem o padrão:
+### Arquivos na Raiz
+Todos os arquivos na raiz seguem o padrão:
 - `NN_NOME_DESCRITIVO.md` onde `NN` é um número sequencial para ordenação
 - Nomes em inglês para consistência
 - Hífens substituídos por underscores para melhor ordenação
 - Categorias por prefixo numérico:
   - `00-09`: Índices e guias
-  - `10-19`: Visão e Produto
-  - `20-29`: Arquitetura e Design
-  - `30-39`: Desenvolvimento
-  - `40-49`: Operações
-  - `50-59`: Histórico
+  - `10-19`: Arquitetura e Design
+  - `20-29`: Desenvolvimento e Implementação
+  - `30-39`: Operações e Governança
+  - `40-49`: Histórico e Mudanças
+  - `50-59`: Produção e Deploy
+  - `60-69`: API e Funcionalidades
+
+### Pastas Organizacionais
+Documentos adicionais são organizados em pastas:
+- **`refactoring/`** - Documentação de refatorações realizadas
+- **`validation/`** - Validações técnicas (REST, segurança, estrutura)
+- **`recommendations/`** - Recomendações e planos futuros
+- **`analysis/`** - Análises técnicas do projeto
+- **`prs/`** - Documentação detalhada de Pull Requests
 
 ## 🔄 Migração de Nomes Antigos
 
@@ -125,6 +157,13 @@ Todos os arquivos seguem o padrão:
 
 ## 📝 Mudanças Recentes no Modelo
 
+### Hierarquia de Permissões e Auditoria (2026-01-16)
+- **SystemAdmin implícito**: SystemAdmin tem todas as MembershipCapabilities em todos os territórios
+- **Operações de configuração**: `GrantAsync`/`RevokeAsync` implementados com auditoria completa
+- **Auditoria completa**: Todos os eventos de grant/revoke são registrados
+- **Invalidação automática de cache**: Via eventos de domínio
+- Ver detalhes em: [Hierarquia de Permissões](./refactoring/70_HIERARQUIA_PERMISSOES_E_AUDITORIA.md)
+
 ### Refatoração User-Centric Membership (2026-01)
 - **Reorganização de Domínio**: Criada pasta `Membership/` em Domain
 - **UserTerritory removido**: Substituído por `TerritoryMembership`
@@ -132,7 +171,7 @@ Todos os arquivos seguem o padrão:
 - **AuthProvider**: Renomeado de `Provider` para `AuthProvider` no User
 - **Renomeação listing → item**: API e contratos atualizados (`/api/v1/listings` → `/api/v1/items`)
 - **Documentação XML**: Adicionada em todas as entidades principais
-- Ver detalhes em: `REFACTOR_USER_CENTRIC_MEMBERSHIP.md`, `REFACTOR_MODEL_SUMMARY.md`, `VALIDACAO_REST_E_ESTRUTURA.md`
+- Ver detalhes em: [Refatoração User-Centric](./refactoring/REFACTOR_USER_CENTRIC_MEMBERSHIP.md)
 
 ## 📚 Documentação Externa
 

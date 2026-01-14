@@ -11,4 +11,36 @@ public interface ITerritoryMembershipRepository
     Task AddAsync(TerritoryMembership membership, CancellationToken cancellationToken);
     Task UpdateStatusAsync(Guid membershipId, VerificationStatus status, CancellationToken cancellationToken);
     Task UpdateRoleAndStatusAsync(Guid membershipId, MembershipRole role, VerificationStatus status, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Verifica se o usuário já possui um Membership como Resident em qualquer território.
+    /// Usado para garantir a regra "1 Resident por User".
+    /// </summary>
+    Task<bool> HasResidentMembershipAsync(Guid userId, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Obtém o Membership Resident do usuário, se existir.
+    /// Usado para transferência de residência.
+    /// </summary>
+    Task<TerritoryMembership?> GetResidentMembershipAsync(Guid userId, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Lista todos os Memberships do usuário.
+    /// </summary>
+    Task<IReadOnlyList<TerritoryMembership>> ListByUserAsync(Guid userId, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Atualiza o ResidencyVerification do membership.
+    /// </summary>
+    Task UpdateResidencyVerificationAsync(Guid membershipId, ResidencyVerification verification, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Atualiza a verificação geo do membership.
+    /// </summary>
+    Task UpdateGeoVerificationAsync(Guid membershipId, DateTime verifiedAtUtc, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Atualiza a verificação documental do membership.
+    /// </summary>
+    Task UpdateDocumentVerificationAsync(Guid membershipId, DateTime verifiedAtUtc, CancellationToken cancellationToken);
 }

@@ -129,7 +129,7 @@ public sealed class PlatformFeesController : ControllerBase
             return BadRequest(new { error = "territoryId is required." });
         }
 
-        if (!TryParseListingType(request.ListingType, out var listingType))
+        if (!TryParseItemType(request.ListingType, out var listingType))
         {
             return BadRequest(new { error = "Invalid listingType." });
         }
@@ -167,7 +167,7 @@ public sealed class PlatformFeesController : ControllerBase
         return new PlatformFeeResponse(
             config.Id,
             config.TerritoryId,
-            config.ListingType.ToString().ToUpperInvariant(),
+            config.ItemType.ToString().ToUpperInvariant(),
             config.FeeMode.ToString().ToUpperInvariant(),
             config.FeeValue,
             config.Currency,
@@ -176,7 +176,7 @@ public sealed class PlatformFeesController : ControllerBase
             config.UpdatedAtUtc);
     }
 
-    private static bool TryParseListingType(string? raw, out ListingType listingType)
+    private static bool TryParseItemType(string? raw, out ItemType listingType)
     {
         return Enum.TryParse(raw, true, out listingType);
     }

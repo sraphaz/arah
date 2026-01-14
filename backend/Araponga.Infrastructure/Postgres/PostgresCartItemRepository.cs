@@ -32,11 +32,11 @@ public sealed class PostgresCartItemRepository : ICartItemRepository
         return record?.ToDomain();
     }
 
-    public async Task<CartItem?> GetByCartAndListingAsync(Guid cartId, Guid listingId, CancellationToken cancellationToken)
+    public async Task<CartItem?> GetByCartAndListingAsync(Guid cartId, Guid itemId, CancellationToken cancellationToken)
     {
         var record = await _dbContext.CartItems
             .AsNoTracking()
-            .FirstOrDefaultAsync(i => i.CartId == cartId && i.ListingId == listingId, cancellationToken);
+            .FirstOrDefaultAsync(i => i.CartId == cartId && i.ItemId == itemId, cancellationToken);
 
         return record?.ToDomain();
     }

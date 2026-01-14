@@ -9,7 +9,7 @@ public sealed record CheckoutBundle(
 public sealed record InquiryBundle(
     Guid InquiryId,
     Guid StoreId,
-    Guid ListingId,
+    Guid ItemId,
     Guid? BatchId);
 
 public sealed record CheckoutSummary(

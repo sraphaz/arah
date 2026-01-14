@@ -46,18 +46,18 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             ResidentUserId,
             storeResult.Value!.Id,
-            ListingType.Product,
+            ItemType.Product,
             "Produto",
             null,
             "Categoria",
             "tag",
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             10m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.True(listingResult.IsSuccess);
@@ -126,18 +126,18 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             visitor.Id,
             residentStore.Value!.Id,
-            ListingType.Product,
+            ItemType.Product,
             "Produto",
             null,
             null,
             null,
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             5m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.False(listingResult.IsSuccess);
@@ -195,41 +195,41 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             ResidentUserId,
             store.Id,
-            ListingType.Product,
+            ItemType.Product,
             "Mel",
             "Mel local",
             "Alimentos",
             "mel",
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             30m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         var service = await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
             store.Id,
-            ListingType.Service,
+            ItemType.Service,
             "Aula",
             null,
             "Esportes",
             "aula",
-            ListingPricingType.Negotiable,
+            ItemPricingType.Negotiable,
             null,
             "BRL",
             "hora",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         await platformFeeService.UpsertFeeConfigAsync(
             TerritoryId,
-            ListingType.Product,
+            ItemType.Product,
             PlatformFeeMode.Percentage,
             0.05m,
             "BRL",
@@ -238,11 +238,11 @@ public sealed class MarketplaceServiceTests
 
         var listings = await listingService.SearchListingsAsync(
             TerritoryId,
-            ListingType.Product,
+            ItemType.Product,
             "mel",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.Single(listings);
@@ -371,18 +371,18 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             ResidentUserId,
             storeResult.Value!.Id,
-            ListingType.Product,
+            ItemType.Product,
             "Produto Original",
             "Descrição original",
             "Categoria",
             "tag",
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             10m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.True(createResult.IsSuccess);
@@ -391,18 +391,18 @@ public sealed class MarketplaceServiceTests
         var updateResult = await listingService.UpdateListingAsync(
             listing.Id,
             ResidentUserId,
-            ListingType.Product,
+            ItemType.Product,
             "Produto Atualizado",
             "Nova descrição",
             "Nova categoria",
             "nova-tag",
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             15m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.True(updateResult.IsSuccess);
@@ -411,7 +411,7 @@ public sealed class MarketplaceServiceTests
 
         var archiveResult = await listingService.ArchiveListingAsync(listing.Id, ResidentUserId, CancellationToken.None);
         Assert.True(archiveResult.IsSuccess);
-        Assert.Equal(ListingStatus.Archived, archiveResult.Value!.Status);
+        Assert.Equal(ItemStatus.Archived, archiveResult.Value!.Status);
     }
 
     [Fact]
@@ -446,49 +446,49 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             ResidentUserId,
             storeResult.Value!.Id,
-            ListingType.Product,
+            ItemType.Product,
             "Mel",
             "Mel local",
             "Alimentos",
             "mel,doce",
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             30m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         await listingService.CreateListingAsync(
             TerritoryId,
             ResidentUserId,
             storeResult.Value!.Id,
-            ListingType.Service,
+            ItemType.Service,
             "Aula",
             "Aula de música",
             "Educação",
             "aula,musica",
-            ListingPricingType.Negotiable,
+            ItemPricingType.Negotiable,
             null,
             "BRL",
             "hora",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         var productResults = await listingService.SearchListingsAsync(
             TerritoryId,
-            ListingType.Product,
+            ItemType.Product,
             "mel",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.Single(productResults);
-        Assert.Equal(ListingType.Product, productResults[0].Type);
+        Assert.Equal(ItemType.Product, productResults[0].Type);
 
         var categoryResults = await listingService.SearchListingsAsync(
             TerritoryId,
@@ -496,7 +496,7 @@ public sealed class MarketplaceServiceTests
             null,
             "Educação",
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.Single(categoryResults);
@@ -551,18 +551,18 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             ResidentUserId,
             storeResult.Value!.Id,
-            ListingType.Product,
+            ItemType.Product,
             "Produto",
             null,
             null,
             null,
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             10m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         var addResult = await cartService.AddItemAsync(
@@ -637,18 +637,18 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             ResidentUserId,
             storeResult.Value!.Id,
-            ListingType.Product,
+            ItemType.Product,
             "Produto",
             null,
             null,
             null,
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             10m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         var inquiryResult = await inquiryService.CreateInquiryAsync(

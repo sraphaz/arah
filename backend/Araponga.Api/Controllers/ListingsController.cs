@@ -39,18 +39,18 @@ public sealed class ListingsController : ControllerBase
             return BadRequest(new { error = "territoryId and storeId are required." });
         }
 
-        if (!TryParseListingType(request.Type, out var type))
+        if (!TryParseItemType(request.Type, out var type))
         {
             return BadRequest(new { error = "Invalid type." });
         }
 
-        if (!TryParsePricingType(request.PricingType, out var pricingType))
+        if (!TryParseItemPricingType(request.PricingType, out var pricingType))
         {
             return BadRequest(new { error = "Invalid pricingType." });
         }
 
-        var status = ListingStatus.Active;
-        if (!string.IsNullOrWhiteSpace(request.Status) && !TryParseListingStatus(request.Status, out status))
+        var status = ItemStatus.Active;
+        if (!string.IsNullOrWhiteSpace(request.Status) && !TryParseItemStatus(request.Status, out status))
         {
             return BadRequest(new { error = "Invalid status." });
         }
@@ -104,10 +104,10 @@ public sealed class ListingsController : ControllerBase
         [FromBody] UpdateListingRequest request,
         CancellationToken cancellationToken)
     {
-        ListingType? type = null;
+        ItemType? type = null;
         if (!string.IsNullOrWhiteSpace(request.Type))
         {
-            if (!TryParseListingType(request.Type, out var parsedType))
+            if (!TryParseItemType(request.Type, out var parsedType))
             {
                 return BadRequest(new { error = "Invalid type." });
             }
@@ -115,10 +115,10 @@ public sealed class ListingsController : ControllerBase
             type = parsedType;
         }
 
-        ListingPricingType? pricingType = null;
+        ItemPricingType? pricingType = null;
         if (!string.IsNullOrWhiteSpace(request.PricingType))
         {
-            if (!TryParsePricingType(request.PricingType, out var parsedPricing))
+            if (!TryParseItemPricingType(request.PricingType, out var parsedPricing))
             {
                 return BadRequest(new { error = "Invalid pricingType." });
             }
@@ -126,10 +126,10 @@ public sealed class ListingsController : ControllerBase
             pricingType = parsedPricing;
         }
 
-        ListingStatus? status = null;
+        ItemStatus? status = null;
         if (!string.IsNullOrWhiteSpace(request.Status))
         {
-            if (!TryParseListingStatus(request.Status, out var parsedStatus))
+            if (!TryParseItemStatus(request.Status, out var parsedStatus))
             {
                 return BadRequest(new { error = "Invalid status." });
             }
@@ -228,10 +228,10 @@ public sealed class ListingsController : ControllerBase
             return BadRequest(new { error = "territoryId is required." });
         }
 
-        ListingType? parsedType = null;
+        ItemType? parsedType = null;
         if (!string.IsNullOrWhiteSpace(type))
         {
-            if (!TryParseListingType(type, out var resolvedType))
+            if (!TryParseItemType(type, out var resolvedType))
             {
                 return BadRequest(new { error = "Invalid type." });
             }
@@ -239,10 +239,10 @@ public sealed class ListingsController : ControllerBase
             parsedType = resolvedType;
         }
 
-        ListingStatus? parsedStatus = ListingStatus.Active;
+        ItemStatus? parsedStatus = ItemStatus.Active;
         if (!string.IsNullOrWhiteSpace(status))
         {
-            if (!TryParseListingStatus(status, out var resolvedStatus))
+            if (!TryParseItemStatus(status, out var resolvedStatus))
             {
                 return BadRequest(new { error = "Invalid status." });
             }
@@ -292,10 +292,10 @@ public sealed class ListingsController : ControllerBase
             return BadRequest(new { error = "territoryId is required." });
         }
 
-        ListingType? parsedType = null;
+        ItemType? parsedType = null;
         if (!string.IsNullOrWhiteSpace(type))
         {
-            if (!TryParseListingType(type, out var resolvedType))
+            if (!TryParseItemType(type, out var resolvedType))
             {
                 return BadRequest(new { error = "Invalid type." });
             }
@@ -303,10 +303,10 @@ public sealed class ListingsController : ControllerBase
             parsedType = resolvedType;
         }
 
-        ListingStatus? parsedStatus = ListingStatus.Active;
+        ItemStatus? parsedStatus = ItemStatus.Active;
         if (!string.IsNullOrWhiteSpace(status))
         {
-            if (!TryParseListingStatus(status, out var resolvedStatus))
+            if (!TryParseItemStatus(status, out var resolvedStatus))
             {
                 return BadRequest(new { error = "Invalid status." });
             }
@@ -368,7 +368,7 @@ public sealed class ListingsController : ControllerBase
         return Ok(ToResponse(listing));
     }
 
-    private static ListingResponse ToResponse(StoreListing listing)
+    private static ListingResponse ToResponse(StoreItem listing)
     {
         return new ListingResponse(
             listing.Id,
@@ -390,7 +390,7 @@ public sealed class ListingsController : ControllerBase
             listing.UpdatedAtUtc);
     }
 
-    private static bool TryParseListingType(string? raw, out ListingType type)
+    private static bool TryParseItemType(string? raw, out ItemType type)
     {
         if (string.IsNullOrWhiteSpace(raw))
         {
@@ -404,7 +404,7 @@ public sealed class ListingsController : ControllerBase
         return Enum.TryParse(normalized, true, out type);
     }
 
-    private static bool TryParsePricingType(string? raw, out ListingPricingType pricingType)
+    private static bool TryParseItemPricingType(string? raw, out ItemPricingType pricingType)
     {
         if (string.IsNullOrWhiteSpace(raw))
         {
@@ -418,7 +418,7 @@ public sealed class ListingsController : ControllerBase
         return Enum.TryParse(normalized, true, out pricingType);
     }
 
-    private static bool TryParseListingStatus(string? raw, out ListingStatus status)
+    private static bool TryParseItemStatus(string? raw, out ItemStatus status)
     {
         if (string.IsNullOrWhiteSpace(raw))
         {

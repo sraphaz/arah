@@ -6,8 +6,8 @@ public sealed class CheckoutItemRecord
 {
     public Guid Id { get; set; }
     public Guid CheckoutId { get; set; }
-    public Guid ListingId { get; set; }
-    public ListingType ListingType { get; set; }
+    public Guid ItemId { get; set; }
+    public ItemType ItemType { get; set; }
     public string TitleSnapshot { get; set; } = string.Empty;
     public int Quantity { get; set; }
     public decimal? UnitPrice { get; set; }

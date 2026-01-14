@@ -6,7 +6,7 @@ public sealed class PlatformFeeConfigRecord
 {
     public Guid Id { get; set; }
     public Guid TerritoryId { get; set; }
-    public ListingType ListingType { get; set; }
+    public ItemType ItemType { get; set; }
     public PlatformFeeMode FeeMode { get; set; }
     public decimal FeeValue { get; set; }
     public string? Currency { get; set; }

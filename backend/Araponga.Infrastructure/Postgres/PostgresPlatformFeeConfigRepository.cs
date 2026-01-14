@@ -13,11 +13,11 @@ public sealed class PostgresPlatformFeeConfigRepository : IPlatformFeeConfigRepo
         _dbContext = dbContext;
     }
 
-    public async Task<PlatformFeeConfig?> GetActiveAsync(Guid territoryId, ListingType listingType, CancellationToken cancellationToken)
+    public async Task<PlatformFeeConfig?> GetActiveAsync(Guid territoryId, ItemType itemType, CancellationToken cancellationToken)
     {
         var record = await _dbContext.PlatformFeeConfigs
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.TerritoryId == territoryId && c.ListingType == listingType && c.IsActive, cancellationToken);
+            .FirstOrDefaultAsync(c => c.TerritoryId == territoryId && c.ItemType == itemType && c.IsActive, cancellationToken);
 
         return record?.ToDomain();
     }

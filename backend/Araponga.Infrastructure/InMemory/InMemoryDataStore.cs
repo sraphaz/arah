@@ -193,8 +193,8 @@ public sealed class InMemoryDataStore
         AssetValidations = new List<AssetValidation>();
         PostAssets = new List<PostAsset>();
         TerritoryStores = new List<TerritoryStore>();
-        StoreListings = new List<StoreListing>();
-        ListingInquiries = new List<ListingInquiry>();
+        StoreItems = new List<StoreItem>();
+        ItemInquiries = new List<ItemInquiry>();
         Carts = new List<Cart>();
         CartItems = new List<CartItem>();
         Checkouts = new List<Checkout>();
@@ -219,8 +219,8 @@ public sealed class InMemoryDataStore
     public List<AssetValidation> AssetValidations { get; }
     public List<PostAsset> PostAssets { get; }
     public List<TerritoryStore> TerritoryStores { get; }
-    public List<StoreListing> StoreListings { get; }
-    public List<ListingInquiry> ListingInquiries { get; }
+    public List<StoreItem> StoreItems { get; }
+    public List<ItemInquiry> ItemInquiries { get; }
     public List<Cart> Carts { get; }
     public List<CartItem> CartItems { get; }
     public List<Checkout> Checkouts { get; }

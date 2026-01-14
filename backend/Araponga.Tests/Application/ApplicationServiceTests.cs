@@ -1043,7 +1043,7 @@ public sealed class ApplicationServiceTests
             var config = new PlatformFeeConfig(
                 Guid.NewGuid(),
                 ActiveTerritoryId,
-                (ListingType)(i % 2),
+                (ItemType)(i % 2),
                 PlatformFeeMode.Percentage,
                 10m + i,
                 "BRL",

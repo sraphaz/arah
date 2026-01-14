@@ -24,9 +24,9 @@ public sealed class InMemoryCartItemRepository : ICartItemRepository
         return Task.FromResult(item);
     }
 
-    public Task<CartItem?> GetByCartAndListingAsync(Guid cartId, Guid listingId, CancellationToken cancellationToken)
+    public Task<CartItem?> GetByCartAndListingAsync(Guid cartId, Guid itemId, CancellationToken cancellationToken)
     {
-        var item = _dataStore.CartItems.FirstOrDefault(i => i.CartId == cartId && i.ListingId == listingId);
+        var item = _dataStore.CartItems.FirstOrDefault(i => i.CartId == cartId && i.ItemId == itemId);
         return Task.FromResult(item);
     }
 

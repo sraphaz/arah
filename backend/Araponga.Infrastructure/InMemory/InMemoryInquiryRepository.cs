@@ -12,54 +12,54 @@ public sealed class InMemoryInquiryRepository : IInquiryRepository
         _dataStore = dataStore;
     }
 
-    public Task AddAsync(ListingInquiry inquiry, CancellationToken cancellationToken)
+    public Task AddAsync(ItemInquiry inquiry, CancellationToken cancellationToken)
     {
-        _dataStore.ListingInquiries.Add(inquiry);
+        _dataStore.ItemInquiries.Add(inquiry);
         return Task.CompletedTask;
     }
 
-    public Task<IReadOnlyList<ListingInquiry>> ListByUserAsync(Guid userId, CancellationToken cancellationToken)
+    public Task<IReadOnlyList<ItemInquiry>> ListByUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        var inquiries = _dataStore.ListingInquiries
+        var inquiries = _dataStore.ItemInquiries
             .Where(i => i.FromUserId == userId)
             .OrderByDescending(i => i.CreatedAtUtc)
             .ToList();
 
-        return Task.FromResult<IReadOnlyList<ListingInquiry>>(inquiries);
+        return Task.FromResult<IReadOnlyList<ItemInquiry>>(inquiries);
     }
 
-    public Task<IReadOnlyList<ListingInquiry>> ListByStoreIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
+    public Task<IReadOnlyList<ItemInquiry>> ListByStoreIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
     {
         if (storeIds.Count == 0)
         {
-            return Task.FromResult<IReadOnlyList<ListingInquiry>>(Array.Empty<ListingInquiry>());
+            return Task.FromResult<IReadOnlyList<ItemInquiry>>(Array.Empty<ItemInquiry>());
         }
 
-        var inquiries = _dataStore.ListingInquiries
+        var inquiries = _dataStore.ItemInquiries
             .Where(i => storeIds.Contains(i.StoreId))
             .OrderByDescending(i => i.CreatedAtUtc)
             .ToList();
 
-        return Task.FromResult<IReadOnlyList<ListingInquiry>>(inquiries);
+        return Task.FromResult<IReadOnlyList<ItemInquiry>>(inquiries);
     }
 
-    public Task<IReadOnlyList<ListingInquiry>> ListByUserPagedAsync(
+    public Task<IReadOnlyList<ItemInquiry>> ListByUserPagedAsync(
         Guid userId,
         int skip,
         int take,
         CancellationToken cancellationToken)
     {
-        var inquiries = _dataStore.ListingInquiries
+        var inquiries = _dataStore.ItemInquiries
             .Where(i => i.FromUserId == userId)
             .OrderByDescending(i => i.CreatedAtUtc)
             .Skip(skip)
             .Take(take)
             .ToList();
 
-        return Task.FromResult<IReadOnlyList<ListingInquiry>>(inquiries);
+        return Task.FromResult<IReadOnlyList<ItemInquiry>>(inquiries);
     }
 
-    public Task<IReadOnlyList<ListingInquiry>> ListByStoreIdsPagedAsync(
+    public Task<IReadOnlyList<ItemInquiry>> ListByStoreIdsPagedAsync(
         IReadOnlyCollection<Guid> storeIds,
         int skip,
         int take,
@@ -67,22 +67,22 @@ public sealed class InMemoryInquiryRepository : IInquiryRepository
     {
         if (storeIds.Count == 0)
         {
-            return Task.FromResult<IReadOnlyList<ListingInquiry>>(Array.Empty<ListingInquiry>());
+            return Task.FromResult<IReadOnlyList<ItemInquiry>>(Array.Empty<ItemInquiry>());
         }
 
-        var inquiries = _dataStore.ListingInquiries
+        var inquiries = _dataStore.ItemInquiries
             .Where(i => storeIds.Contains(i.StoreId))
             .OrderByDescending(i => i.CreatedAtUtc)
             .Skip(skip)
             .Take(take)
             .ToList();
 
-        return Task.FromResult<IReadOnlyList<ListingInquiry>>(inquiries);
+        return Task.FromResult<IReadOnlyList<ItemInquiry>>(inquiries);
     }
 
     public Task<int> CountByUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        var count = _dataStore.ListingInquiries.Count(i => i.FromUserId == userId);
+        var count = _dataStore.ItemInquiries.Count(i => i.FromUserId == userId);
         return Task.FromResult(count);
     }
 
@@ -93,7 +93,7 @@ public sealed class InMemoryInquiryRepository : IInquiryRepository
             return Task.FromResult(0);
         }
 
-        var count = _dataStore.ListingInquiries.Count(i => storeIds.Contains(i.StoreId));
+        var count = _dataStore.ItemInquiries.Count(i => storeIds.Contains(i.StoreId));
         return Task.FromResult(count);
     }
 }

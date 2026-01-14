@@ -41,8 +41,8 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<OutboxMessageRecord> OutboxMessages => Set<OutboxMessageRecord>();
     public DbSet<UserNotificationRecord> UserNotifications => Set<UserNotificationRecord>();
     public DbSet<TerritoryStoreRecord> TerritoryStores => Set<TerritoryStoreRecord>();
-    public DbSet<StoreListingRecord> StoreListings => Set<StoreListingRecord>();
-    public DbSet<ListingInquiryRecord> ListingInquiries => Set<ListingInquiryRecord>();
+    public DbSet<StoreItemRecord> StoreItems => Set<StoreItemRecord>();
+    public DbSet<ItemInquiryRecord> ItemInquiries => Set<ItemInquiryRecord>();
     public DbSet<CartRecord> Carts => Set<CartRecord>();
     public DbSet<CartItemRecord> CartItems => Set<CartItemRecord>();
     public DbSet<CheckoutRecord> Checkouts => Set<CheckoutRecord>();
@@ -440,9 +440,9 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasIndex(s => new { s.TerritoryId, s.OwnerUserId }).IsUnique();
         });
 
-        modelBuilder.Entity<StoreListingRecord>(entity =>
+        modelBuilder.Entity<StoreItemRecord>(entity =>
         {
-            entity.ToTable("store_listings");
+            entity.ToTable("store_items");
             entity.HasKey(l => l.Id);
             entity.Property(l => l.Type).HasConversion<int>();
             entity.Property(l => l.Title).HasMaxLength(200).IsRequired();
@@ -463,15 +463,15 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasIndex(l => new { l.TerritoryId, l.Type, l.Status });
         });
 
-        modelBuilder.Entity<ListingInquiryRecord>(entity =>
+        modelBuilder.Entity<ItemInquiryRecord>(entity =>
         {
-            entity.ToTable("listing_inquiries");
+            entity.ToTable("item_inquiries");
             entity.HasKey(i => i.Id);
             entity.Property(i => i.Status).HasConversion<int>();
             entity.Property(i => i.Message).HasMaxLength(2000);
             entity.Property(i => i.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(i => i.TerritoryId);
-            entity.HasIndex(i => i.ListingId);
+            entity.HasIndex(i => i.ItemId);
             entity.HasIndex(i => i.StoreId);
             entity.HasIndex(i => i.FromUserId);
         });
@@ -495,8 +495,8 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.Property(i => i.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(i => i.UpdatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(i => i.CartId);
-            entity.HasIndex(i => i.ListingId);
-            entity.HasIndex(i => new { i.CartId, i.ListingId }).IsUnique();
+            entity.HasIndex(i => i.ItemId);
+            entity.HasIndex(i => new { i.CartId, i.ItemId }).IsUnique();
         });
 
         modelBuilder.Entity<CheckoutRecord>(entity =>
@@ -519,7 +519,7 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
         {
             entity.ToTable("checkout_items");
             entity.HasKey(i => i.Id);
-            entity.Property(i => i.ListingType).HasConversion<int>();
+            entity.Property(i => i.ItemType).HasConversion<int>();
             entity.Property(i => i.TitleSnapshot).HasMaxLength(200).IsRequired();
             entity.Property(i => i.UnitPrice).HasColumnType("numeric(18,2)");
             entity.Property(i => i.LineSubtotal).HasColumnType("numeric(18,2)");
@@ -527,21 +527,21 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.Property(i => i.LineTotal).HasColumnType("numeric(18,2)");
             entity.Property(i => i.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(i => i.CheckoutId);
-            entity.HasIndex(i => i.ListingId);
+            entity.HasIndex(i => i.ItemId);
         });
 
         modelBuilder.Entity<PlatformFeeConfigRecord>(entity =>
         {
             entity.ToTable("platform_fee_configs");
             entity.HasKey(c => c.Id);
-            entity.Property(c => c.ListingType).HasConversion<int>();
+            entity.Property(c => c.ItemType).HasConversion<int>();
             entity.Property(c => c.FeeMode).HasConversion<int>();
             entity.Property(c => c.FeeValue).HasColumnType("numeric(18,4)");
             entity.Property(c => c.Currency).HasMaxLength(10);
             entity.Property(c => c.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(c => c.TerritoryId);
-            entity.HasIndex(c => new { c.TerritoryId, c.ListingType, c.IsActive }).IsUnique();
+            entity.HasIndex(c => new { c.TerritoryId, c.ItemType, c.IsActive }).IsUnique();
         });
     }
 }

@@ -13,33 +13,33 @@ public sealed class PostgresListingRepository : IListingRepository
         _dbContext = dbContext;
     }
 
-    public async Task<StoreListing?> GetByIdAsync(Guid listingId, CancellationToken cancellationToken)
+    public async Task<StoreItem?> GetByIdAsync(Guid itemId, CancellationToken cancellationToken)
     {
-        var record = await _dbContext.StoreListings
+        var record = await _dbContext.StoreItems
             .AsNoTracking()
-            .FirstOrDefaultAsync(l => l.Id == listingId, cancellationToken);
+            .FirstOrDefaultAsync(l => l.Id == itemId, cancellationToken);
 
         return record?.ToDomain();
     }
 
-    public async Task<IReadOnlyList<StoreListing>> ListByIdsAsync(IReadOnlyCollection<Guid> listingIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<StoreItem>> ListByIdsAsync(IReadOnlyCollection<Guid> itemIds, CancellationToken cancellationToken)
     {
-        if (listingIds.Count == 0)
+        if (itemIds.Count == 0)
         {
-            return Array.Empty<StoreListing>();
+            return Array.Empty<StoreItem>();
         }
 
-        var records = await _dbContext.StoreListings
+        var records = await _dbContext.StoreItems
             .AsNoTracking()
-            .Where(l => listingIds.Contains(l.Id))
+            .Where(l => itemIds.Contains(l.Id))
             .ToListAsync(cancellationToken);
 
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public async Task<IReadOnlyList<StoreListing>> ListByStoreAsync(Guid storeId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<StoreItem>> ListByStoreAsync(Guid storeId, CancellationToken cancellationToken)
     {
-        var records = await _dbContext.StoreListings
+        var records = await _dbContext.StoreItems
             .AsNoTracking()
             .Where(l => l.StoreId == storeId)
             .ToListAsync(cancellationToken);
@@ -47,106 +47,106 @@ public sealed class PostgresListingRepository : IListingRepository
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public async Task<IReadOnlyList<StoreListing>> SearchAsync(
+    public async Task<IReadOnlyList<StoreItem>> SearchAsync(
         Guid territoryId,
-        ListingType? type,
+        ItemType? type,
         string? query,
         string? category,
         string? tags,
-        ListingStatus? status,
+        ItemStatus? status,
         CancellationToken cancellationToken)
     {
-        var listings = _dbContext.StoreListings.AsNoTracking()
+        var items = _dbContext.StoreItems.AsNoTracking()
             .Where(l => l.TerritoryId == territoryId);
 
         if (type is not null)
         {
-            listings = listings.Where(l => l.Type == type);
+            items = items.Where(l => l.Type == type);
         }
 
         if (status is not null)
         {
-            listings = listings.Where(l => l.Status == status);
+            items = items.Where(l => l.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(category))
         {
-            listings = listings.Where(l => l.Category != null && l.Category == category);
+            items = items.Where(l => l.Category != null && l.Category == category);
         }
 
         if (!string.IsNullOrWhiteSpace(tags))
         {
-            listings = listings.Where(l => l.Tags != null && EF.Functions.ILike(l.Tags, $"%{tags}%"));
+            items = items.Where(l => l.Tags != null && EF.Functions.ILike(l.Tags, $"%{tags}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            listings = listings.Where(l =>
+            items = items.Where(l =>
                 EF.Functions.ILike(l.Title, $"%{query}%") ||
                 (l.Description != null && EF.Functions.ILike(l.Description, $"%{query}%")));
         }
 
-        var records = await listings
+        var records = await items
             .OrderByDescending(l => l.CreatedAtUtc)
             .ToListAsync(cancellationToken);
 
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public Task AddAsync(StoreListing listing, CancellationToken cancellationToken)
+    public Task AddAsync(StoreItem item, CancellationToken cancellationToken)
     {
-        _dbContext.StoreListings.Add(listing.ToRecord());
+        _dbContext.StoreItems.Add(item.ToRecord());
         return Task.CompletedTask;
     }
 
-    public Task UpdateAsync(StoreListing listing, CancellationToken cancellationToken)
+    public Task UpdateAsync(StoreItem item, CancellationToken cancellationToken)
     {
-        _dbContext.StoreListings.Update(listing.ToRecord());
+        _dbContext.StoreItems.Update(item.ToRecord());
         return Task.CompletedTask;
     }
 
-    public async Task<IReadOnlyList<StoreListing>> SearchPagedAsync(
+    public async Task<IReadOnlyList<StoreItem>> SearchPagedAsync(
         Guid territoryId,
-        ListingType? type,
+        ItemType? type,
         string? query,
         string? category,
         string? tags,
-        ListingStatus? status,
+        ItemStatus? status,
         int skip,
         int take,
         CancellationToken cancellationToken)
     {
-        var listings = _dbContext.StoreListings.AsNoTracking()
+        var items = _dbContext.StoreItems.AsNoTracking()
             .Where(l => l.TerritoryId == territoryId);
 
         if (type is not null)
         {
-            listings = listings.Where(l => l.Type == type);
+            items = items.Where(l => l.Type == type);
         }
 
         if (status is not null)
         {
-            listings = listings.Where(l => l.Status == status);
+            items = items.Where(l => l.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(category))
         {
-            listings = listings.Where(l => l.Category != null && l.Category == category);
+            items = items.Where(l => l.Category != null && l.Category == category);
         }
 
         if (!string.IsNullOrWhiteSpace(tags))
         {
-            listings = listings.Where(l => l.Tags != null && EF.Functions.ILike(l.Tags, $"%{tags}%"));
+            items = items.Where(l => l.Tags != null && EF.Functions.ILike(l.Tags, $"%{tags}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            listings = listings.Where(l =>
+            items = items.Where(l =>
                 EF.Functions.ILike(l.Title, $"%{query}%") ||
                 (l.Description != null && EF.Functions.ILike(l.Description, $"%{query}%")));
         }
 
-        var records = await listings
+        var records = await items
             .OrderByDescending(l => l.CreatedAtUtc)
             .Skip(skip)
             .Take(take)
@@ -157,43 +157,43 @@ public sealed class PostgresListingRepository : IListingRepository
 
     public async Task<int> CountSearchAsync(
         Guid territoryId,
-        ListingType? type,
+        ItemType? type,
         string? query,
         string? category,
         string? tags,
-        ListingStatus? status,
+        ItemStatus? status,
         CancellationToken cancellationToken)
     {
-        var listings = _dbContext.StoreListings.AsNoTracking()
+        var items = _dbContext.StoreItems.AsNoTracking()
             .Where(l => l.TerritoryId == territoryId);
 
         if (type is not null)
         {
-            listings = listings.Where(l => l.Type == type);
+            items = items.Where(l => l.Type == type);
         }
 
         if (status is not null)
         {
-            listings = listings.Where(l => l.Status == status);
+            items = items.Where(l => l.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(category))
         {
-            listings = listings.Where(l => l.Category != null && l.Category == category);
+            items = items.Where(l => l.Category != null && l.Category == category);
         }
 
         if (!string.IsNullOrWhiteSpace(tags))
         {
-            listings = listings.Where(l => l.Tags != null && EF.Functions.ILike(l.Tags, $"%{tags}%"));
+            items = items.Where(l => l.Tags != null && EF.Functions.ILike(l.Tags, $"%{tags}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            listings = listings.Where(l =>
+            items = items.Where(l =>
                 EF.Functions.ILike(l.Title, $"%{query}%") ||
                 (l.Description != null && EF.Functions.ILike(l.Description, $"%{query}%")));
         }
 
-        return await listings.CountAsync(cancellationToken);
+        return await items.CountAsync(cancellationToken);
     }
 }

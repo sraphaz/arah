@@ -13,15 +13,15 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
         _dbContext = dbContext;
     }
 
-    public Task AddAsync(ListingInquiry inquiry, CancellationToken cancellationToken)
+    public Task AddAsync(ItemInquiry inquiry, CancellationToken cancellationToken)
     {
-        _dbContext.ListingInquiries.Add(inquiry.ToRecord());
+        _dbContext.ItemInquiries.Add(inquiry.ToRecord());
         return Task.CompletedTask;
     }
 
-    public async Task<IReadOnlyList<ListingInquiry>> ListByUserAsync(Guid userId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<ItemInquiry>> ListByUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        var records = await _dbContext.ListingInquiries
+        var records = await _dbContext.ItemInquiries
             .AsNoTracking()
             .Where(i => i.FromUserId == userId)
             .OrderByDescending(i => i.CreatedAtUtc)
@@ -30,14 +30,14 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public async Task<IReadOnlyList<ListingInquiry>> ListByStoreIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<ItemInquiry>> ListByStoreIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
     {
         if (storeIds.Count == 0)
         {
-            return Array.Empty<ListingInquiry>();
+            return Array.Empty<ItemInquiry>();
         }
 
-        var records = await _dbContext.ListingInquiries
+        var records = await _dbContext.ItemInquiries
             .AsNoTracking()
             .Where(i => storeIds.Contains(i.StoreId))
             .OrderByDescending(i => i.CreatedAtUtc)
@@ -46,13 +46,13 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public async Task<IReadOnlyList<ListingInquiry>> ListByUserPagedAsync(
+    public async Task<IReadOnlyList<ItemInquiry>> ListByUserPagedAsync(
         Guid userId,
         int skip,
         int take,
         CancellationToken cancellationToken)
     {
-        var records = await _dbContext.ListingInquiries
+        var records = await _dbContext.ItemInquiries
             .AsNoTracking()
             .Where(i => i.FromUserId == userId)
             .OrderByDescending(i => i.CreatedAtUtc)
@@ -63,7 +63,7 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
         return records.Select(record => record.ToDomain()).ToList();
     }
 
-    public async Task<IReadOnlyList<ListingInquiry>> ListByStoreIdsPagedAsync(
+    public async Task<IReadOnlyList<ItemInquiry>> ListByStoreIdsPagedAsync(
         IReadOnlyCollection<Guid> storeIds,
         int skip,
         int take,
@@ -71,10 +71,10 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
     {
         if (storeIds.Count == 0)
         {
-            return Array.Empty<ListingInquiry>();
+            return Array.Empty<ItemInquiry>();
         }
 
-        var records = await _dbContext.ListingInquiries
+        var records = await _dbContext.ItemInquiries
             .AsNoTracking()
             .Where(i => storeIds.Contains(i.StoreId))
             .OrderByDescending(i => i.CreatedAtUtc)
@@ -87,7 +87,7 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
 
     public async Task<int> CountByUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _dbContext.ListingInquiries
+        return await _dbContext.ItemInquiries
             .Where(i => i.FromUserId == userId)
             .CountAsync(cancellationToken);
     }
@@ -99,7 +99,7 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
             return 0;
         }
 
-        return await _dbContext.ListingInquiries
+        return await _dbContext.ItemInquiries
             .Where(i => storeIds.Contains(i.StoreId))
             .CountAsync(cancellationToken);
     }

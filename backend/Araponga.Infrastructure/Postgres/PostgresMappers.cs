@@ -170,33 +170,33 @@ public static class PostgresMappers
             record.UpdatedAtUtc);
     }
 
-    public static StoreListingRecord ToRecord(this StoreListing listing)
+    public static StoreItemRecord ToRecord(this StoreItem item)
     {
-        return new StoreListingRecord
+        return new StoreItemRecord
         {
-            Id = listing.Id,
-            TerritoryId = listing.TerritoryId,
-            StoreId = listing.StoreId,
-            Type = listing.Type,
-            Title = listing.Title,
-            Description = listing.Description,
-            Category = listing.Category,
-            Tags = listing.Tags,
-            PricingType = listing.PricingType,
-            PriceAmount = listing.PriceAmount,
-            Currency = listing.Currency,
-            Unit = listing.Unit,
-            Latitude = listing.Latitude,
-            Longitude = listing.Longitude,
-            Status = listing.Status,
-            CreatedAtUtc = listing.CreatedAtUtc,
-            UpdatedAtUtc = listing.UpdatedAtUtc
+            Id = item.Id,
+            TerritoryId = item.TerritoryId,
+            StoreId = item.StoreId,
+            Type = item.Type,
+            Title = item.Title,
+            Description = item.Description,
+            Category = item.Category,
+            Tags = item.Tags,
+            PricingType = item.PricingType,
+            PriceAmount = item.PriceAmount,
+            Currency = item.Currency,
+            Unit = item.Unit,
+            Latitude = item.Latitude,
+            Longitude = item.Longitude,
+            Status = item.Status,
+            CreatedAtUtc = item.CreatedAtUtc,
+            UpdatedAtUtc = item.UpdatedAtUtc
         };
     }
 
-    public static StoreListing ToDomain(this StoreListingRecord record)
+    public static StoreItem ToDomain(this StoreItemRecord record)
     {
-        return new StoreListing(
+        return new StoreItem(
             record.Id,
             record.TerritoryId,
             record.StoreId,
@@ -216,13 +216,13 @@ public static class PostgresMappers
             record.UpdatedAtUtc);
     }
 
-    public static ListingInquiryRecord ToRecord(this ListingInquiry inquiry)
+    public static ItemInquiryRecord ToRecord(this ItemInquiry inquiry)
     {
-        return new ListingInquiryRecord
+        return new ItemInquiryRecord
         {
             Id = inquiry.Id,
             TerritoryId = inquiry.TerritoryId,
-            ListingId = inquiry.ListingId,
+            ItemId = inquiry.ItemId,
             StoreId = inquiry.StoreId,
             FromUserId = inquiry.FromUserId,
             Message = inquiry.Message,
@@ -232,12 +232,12 @@ public static class PostgresMappers
         };
     }
 
-    public static ListingInquiry ToDomain(this ListingInquiryRecord record)
+    public static ItemInquiry ToDomain(this ItemInquiryRecord record)
     {
-        return new ListingInquiry(
+        return new ItemInquiry(
             record.Id,
             record.TerritoryId,
-            record.ListingId,
+            record.ItemId,
             record.StoreId,
             record.FromUserId,
             record.Message,
@@ -274,7 +274,7 @@ public static class PostgresMappers
         {
             Id = item.Id,
             CartId = item.CartId,
-            ListingId = item.ListingId,
+            ItemId = item.ItemId,
             Quantity = item.Quantity,
             Notes = item.Notes,
             CreatedAtUtc = item.CreatedAtUtc,
@@ -287,7 +287,7 @@ public static class PostgresMappers
         return new CartItem(
             record.Id,
             record.CartId,
-            record.ListingId,
+            record.ItemId,
             record.Quantity,
             record.Notes,
             record.CreatedAtUtc,
@@ -334,8 +334,8 @@ public static class PostgresMappers
         {
             Id = item.Id,
             CheckoutId = item.CheckoutId,
-            ListingId = item.ListingId,
-            ListingType = item.ListingType,
+            ItemId = item.ItemId,
+            ItemType = item.ItemType,
             TitleSnapshot = item.TitleSnapshot,
             Quantity = item.Quantity,
             UnitPrice = item.UnitPrice,
@@ -351,8 +351,8 @@ public static class PostgresMappers
         return new CheckoutItem(
             record.Id,
             record.CheckoutId,
-            record.ListingId,
-            record.ListingType,
+            record.ItemId,
+            record.ItemType,
             record.TitleSnapshot,
             record.Quantity,
             record.UnitPrice,
@@ -368,7 +368,7 @@ public static class PostgresMappers
         {
             Id = config.Id,
             TerritoryId = config.TerritoryId,
-            ListingType = config.ListingType,
+            ItemType = config.ItemType,
             FeeMode = config.FeeMode,
             FeeValue = config.FeeValue,
             Currency = config.Currency,
@@ -383,7 +383,7 @@ public static class PostgresMappers
         return new PlatformFeeConfig(
             record.Id,
             record.TerritoryId,
-            record.ListingType,
+            record.ItemType,
             record.FeeMode,
             record.FeeValue,
             record.Currency,

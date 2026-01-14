@@ -202,7 +202,7 @@ public sealed class CartController : ControllerBase
             result.Value.Inquiries.Select(inquiry => new InquiryBundleResponse(
                 inquiry.InquiryId,
                 inquiry.StoreId,
-                inquiry.ListingId,
+                inquiry.ItemId,
                 inquiry.BatchId)).ToList(),
             result.Value.Summaries.Select(summary => new CheckoutSummaryResponse(
                 summary.StoreId,
@@ -216,17 +216,17 @@ public sealed class CartController : ControllerBase
     {
         return new CartItemResponse(
             detail.Item.Id,
-            detail.Item.ListingId,
+            detail.Item.ItemId,
             detail.Item.Quantity,
             detail.Item.Notes,
             detail.Item.CreatedAtUtc,
             detail.Item.UpdatedAtUtc,
-            ToResponse(detail.Listing),
+            ToResponse(detail.StoreItem),
             ToResponse(detail.Store),
             detail.IsPurchasable);
     }
 
-    private static ListingResponse ToResponse(StoreListing listing)
+    private static ListingResponse ToResponse(StoreItem listing)
     {
         return new ListingResponse(
             listing.Id,
@@ -293,8 +293,8 @@ public sealed class CartController : ControllerBase
     {
         return new CheckoutItemResponse(
             item.Id,
-            item.ListingId,
-            item.ListingType.ToString().ToUpperInvariant(),
+            item.ItemId,
+            item.ItemType.ToString().ToUpperInvariant(),
             item.TitleSnapshot,
             item.Quantity,
             item.UnitPrice,

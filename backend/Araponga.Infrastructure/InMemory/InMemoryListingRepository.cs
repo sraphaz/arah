@@ -12,174 +12,174 @@ public sealed class InMemoryListingRepository : IListingRepository
         _dataStore = dataStore;
     }
 
-    public Task<StoreListing?> GetByIdAsync(Guid listingId, CancellationToken cancellationToken)
+    public Task<StoreItem?> GetByIdAsync(Guid itemId, CancellationToken cancellationToken)
     {
-        var listing = _dataStore.StoreListings.FirstOrDefault(l => l.Id == listingId);
-        return Task.FromResult(listing);
+        var item = _dataStore.StoreItems.FirstOrDefault(l => l.Id == itemId);
+        return Task.FromResult(item);
     }
 
-    public Task<IReadOnlyList<StoreListing>> ListByIdsAsync(IReadOnlyCollection<Guid> listingIds, CancellationToken cancellationToken)
+    public Task<IReadOnlyList<StoreItem>> ListByIdsAsync(IReadOnlyCollection<Guid> itemIds, CancellationToken cancellationToken)
     {
-        if (listingIds.Count == 0)
+        if (itemIds.Count == 0)
         {
-            return Task.FromResult<IReadOnlyList<StoreListing>>(Array.Empty<StoreListing>());
+            return Task.FromResult<IReadOnlyList<StoreItem>>(Array.Empty<StoreItem>());
         }
 
-        var listings = _dataStore.StoreListings.Where(l => listingIds.Contains(l.Id)).ToList();
-        return Task.FromResult<IReadOnlyList<StoreListing>>(listings);
+        var items = _dataStore.StoreItems.Where(l => itemIds.Contains(l.Id)).ToList();
+        return Task.FromResult<IReadOnlyList<StoreItem>>(items);
     }
 
-    public Task<IReadOnlyList<StoreListing>> ListByStoreAsync(Guid storeId, CancellationToken cancellationToken)
+    public Task<IReadOnlyList<StoreItem>> ListByStoreAsync(Guid storeId, CancellationToken cancellationToken)
     {
-        var listings = _dataStore.StoreListings.Where(l => l.StoreId == storeId).ToList();
-        return Task.FromResult<IReadOnlyList<StoreListing>>(listings);
+        var items = _dataStore.StoreItems.Where(l => l.StoreId == storeId).ToList();
+        return Task.FromResult<IReadOnlyList<StoreItem>>(items);
     }
 
-    public Task<IReadOnlyList<StoreListing>> SearchAsync(
+    public Task<IReadOnlyList<StoreItem>> SearchAsync(
         Guid territoryId,
-        ListingType? type,
+        ItemType? type,
         string? query,
         string? category,
         string? tags,
-        ListingStatus? status,
+        ItemStatus? status,
         CancellationToken cancellationToken)
     {
-        IEnumerable<StoreListing> listings = _dataStore.StoreListings.Where(l => l.TerritoryId == territoryId);
+        IEnumerable<StoreItem> items = _dataStore.StoreItems.Where(l => l.TerritoryId == territoryId);
 
         if (type is not null)
         {
-            listings = listings.Where(l => l.Type == type);
+            items = items.Where(l => l.Type == type);
         }
 
         if (status is not null)
         {
-            listings = listings.Where(l => l.Status == status);
+            items = items.Where(l => l.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(category))
         {
-            listings = listings.Where(l => l.Category == category);
+            items = items.Where(l => l.Category == category);
         }
 
         if (!string.IsNullOrWhiteSpace(tags))
         {
-            listings = listings.Where(l => l.Tags != null && l.Tags.Contains(tags, StringComparison.OrdinalIgnoreCase));
+            items = items.Where(l => l.Tags != null && l.Tags.Contains(tags, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            listings = listings.Where(l =>
+            items = items.Where(l =>
                 l.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
                 (!string.IsNullOrWhiteSpace(l.Description) && l.Description.Contains(query, StringComparison.OrdinalIgnoreCase)));
         }
 
-        return Task.FromResult<IReadOnlyList<StoreListing>>(listings.OrderByDescending(l => l.CreatedAtUtc).ToList());
+        return Task.FromResult<IReadOnlyList<StoreItem>>(items.OrderByDescending(l => l.CreatedAtUtc).ToList());
     }
 
-    public Task AddAsync(StoreListing listing, CancellationToken cancellationToken)
+    public Task AddAsync(StoreItem item, CancellationToken cancellationToken)
     {
-        _dataStore.StoreListings.Add(listing);
+        _dataStore.StoreItems.Add(item);
         return Task.CompletedTask;
     }
 
-    public Task UpdateAsync(StoreListing listing, CancellationToken cancellationToken)
+    public Task UpdateAsync(StoreItem item, CancellationToken cancellationToken)
     {
-        var index = _dataStore.StoreListings.FindIndex(l => l.Id == listing.Id);
+        var index = _dataStore.StoreItems.FindIndex(l => l.Id == item.Id);
         if (index >= 0)
         {
-            _dataStore.StoreListings[index] = listing;
+            _dataStore.StoreItems[index] = item;
         }
 
         return Task.CompletedTask;
     }
 
-    public Task<IReadOnlyList<StoreListing>> SearchPagedAsync(
+    public Task<IReadOnlyList<StoreItem>> SearchPagedAsync(
         Guid territoryId,
-        ListingType? type,
+        ItemType? type,
         string? query,
         string? category,
         string? tags,
-        ListingStatus? status,
+        ItemStatus? status,
         int skip,
         int take,
         CancellationToken cancellationToken)
     {
-        IEnumerable<StoreListing> listings = _dataStore.StoreListings.Where(l => l.TerritoryId == territoryId);
+        IEnumerable<StoreItem> items = _dataStore.StoreItems.Where(l => l.TerritoryId == territoryId);
 
         if (type is not null)
         {
-            listings = listings.Where(l => l.Type == type);
+            items = items.Where(l => l.Type == type);
         }
 
         if (status is not null)
         {
-            listings = listings.Where(l => l.Status == status);
+            items = items.Where(l => l.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(category))
         {
-            listings = listings.Where(l => l.Category == category);
+            items = items.Where(l => l.Category == category);
         }
 
         if (!string.IsNullOrWhiteSpace(tags))
         {
-            listings = listings.Where(l => l.Tags != null && l.Tags.Contains(tags, StringComparison.OrdinalIgnoreCase));
+            items = items.Where(l => l.Tags != null && l.Tags.Contains(tags, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            listings = listings.Where(l =>
+            items = items.Where(l =>
                 l.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
                 (!string.IsNullOrWhiteSpace(l.Description) && l.Description.Contains(query, StringComparison.OrdinalIgnoreCase)));
         }
 
-        var result = listings
+        var result = items
             .OrderByDescending(l => l.CreatedAtUtc)
             .Skip(skip)
             .Take(take)
             .ToList();
 
-        return Task.FromResult<IReadOnlyList<StoreListing>>(result);
+        return Task.FromResult<IReadOnlyList<StoreItem>>(result);
     }
 
     public Task<int> CountSearchAsync(
         Guid territoryId,
-        ListingType? type,
+        ItemType? type,
         string? query,
         string? category,
         string? tags,
-        ListingStatus? status,
+        ItemStatus? status,
         CancellationToken cancellationToken)
     {
-        IEnumerable<StoreListing> listings = _dataStore.StoreListings.Where(l => l.TerritoryId == territoryId);
+        IEnumerable<StoreItem> items = _dataStore.StoreItems.Where(l => l.TerritoryId == territoryId);
 
         if (type is not null)
         {
-            listings = listings.Where(l => l.Type == type);
+            items = items.Where(l => l.Type == type);
         }
 
         if (status is not null)
         {
-            listings = listings.Where(l => l.Status == status);
+            items = items.Where(l => l.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(category))
         {
-            listings = listings.Where(l => l.Category == category);
+            items = items.Where(l => l.Category == category);
         }
 
         if (!string.IsNullOrWhiteSpace(tags))
         {
-            listings = listings.Where(l => l.Tags != null && l.Tags.Contains(tags, StringComparison.OrdinalIgnoreCase));
+            items = items.Where(l => l.Tags != null && l.Tags.Contains(tags, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            listings = listings.Where(l =>
+            items = items.Where(l =>
                 l.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
                 (!string.IsNullOrWhiteSpace(l.Description) && l.Description.Contains(query, StringComparison.OrdinalIgnoreCase)));
         }
 
-        return Task.FromResult(listings.Count());
+        return Task.FromResult(items.Count());
     }
 }

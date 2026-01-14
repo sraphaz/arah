@@ -171,22 +171,22 @@ public sealed class RepositoryTests
         var repository = new InMemoryListingRepository(dataStore);
         var storeId = Guid.NewGuid();
 
-        var listing = new StoreListing(
+        var listing = new StoreItem(
             Guid.NewGuid(),
             TerritoryId,
             storeId,
-            ListingType.Product,
+            ItemType.Product,
             "Test Product",
             "Description",
             "Category",
             "tags",
-            ListingPricingType.Fixed,
+            ItemPricingType.Fixed,
             10m,
             "BRL",
             "unidade",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             DateTime.UtcNow,
             DateTime.UtcNow);
 
@@ -194,11 +194,11 @@ public sealed class RepositoryTests
 
         var results = await repository.SearchAsync(
             TerritoryId,
-            ListingType.Product,
+            ItemType.Product,
             "Test",
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
 
         Assert.Contains(results, l => l.Id == listing.Id);
@@ -288,22 +288,22 @@ public sealed class RepositoryTests
         // Criar alguns listings
         for (int i = 0; i < 12; i++)
         {
-            var listing = new StoreListing(
+            var listing = new StoreItem(
                 Guid.NewGuid(),
                 TerritoryId,
                 Guid.NewGuid(),
-                ListingType.Product,
+                ItemType.Product,
                 $"Product {i}",
                 $"Description {i}",
                 "Category",
                 "tags",
-                ListingPricingType.Fixed,
+                ItemPricingType.Fixed,
                 10m,
                 "BRL",
                 "unidade",
                 null,
                 null,
-                ListingStatus.Active,
+                ItemStatus.Active,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
             await repository.AddAsync(listing, CancellationToken.None);
@@ -315,7 +315,7 @@ public sealed class RepositoryTests
             null,
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             0,
             10,
             CancellationToken.None);
@@ -327,7 +327,7 @@ public sealed class RepositoryTests
             null,
             null,
             null,
-            ListingStatus.Active,
+            ItemStatus.Active,
             CancellationToken.None);
         Assert.True(totalCount >= 12);
     }

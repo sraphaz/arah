@@ -148,7 +148,7 @@ public sealed class InquiriesController : ControllerBase
         return Ok(response);
     }
 
-    private static InquiryResponse ToResponse(ListingInquiry inquiry, Araponga.Application.Models.StoreContactInfo? contact)
+    private static InquiryResponse ToResponse(ItemInquiry inquiry, Araponga.Application.Models.StoreContactInfo? contact)
     {
         StoreContactResponse? contactResponse = null;
         if (contact is not null)
@@ -166,7 +166,7 @@ public sealed class InquiriesController : ControllerBase
         return new InquiryResponse(
             inquiry.Id,
             inquiry.TerritoryId,
-            inquiry.ListingId,
+            inquiry.ItemId,
             inquiry.StoreId,
             inquiry.FromUserId,
             inquiry.Message,

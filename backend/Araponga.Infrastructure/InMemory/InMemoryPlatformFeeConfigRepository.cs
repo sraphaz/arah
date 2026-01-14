@@ -12,11 +12,11 @@ public sealed class InMemoryPlatformFeeConfigRepository : IPlatformFeeConfigRepo
         _dataStore = dataStore;
     }
 
-    public Task<PlatformFeeConfig?> GetActiveAsync(Guid territoryId, ListingType listingType, CancellationToken cancellationToken)
+    public Task<PlatformFeeConfig?> GetActiveAsync(Guid territoryId, ItemType itemType, CancellationToken cancellationToken)
     {
         var config = _dataStore.PlatformFeeConfigs.FirstOrDefault(c =>
             c.TerritoryId == territoryId &&
-            c.ListingType == listingType &&
+            c.ItemType == itemType &&
             c.IsActive);
 
         return Task.FromResult(config);

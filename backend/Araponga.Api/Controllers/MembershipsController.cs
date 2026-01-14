@@ -18,6 +18,7 @@ namespace Araponga.Api.Controllers;
 public sealed class MembershipsController : ControllerBase
 {
     private readonly MembershipService _membershipService;
+    private readonly ResidencyRequestService _residencyRequestService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly TerritoryService _territoryService;
     private readonly AccessEvaluator _accessEvaluator;
@@ -26,6 +27,7 @@ public sealed class MembershipsController : ControllerBase
 
     public MembershipsController(
         MembershipService membershipService,
+        ResidencyRequestService residencyRequestService,
         CurrentUserAccessor currentUserAccessor,
         TerritoryService territoryService,
         AccessEvaluator accessEvaluator,
@@ -33,6 +35,7 @@ public sealed class MembershipsController : ControllerBase
         IOptions<PresencePolicyOptions> presencePolicy)
     {
         _membershipService = membershipService;
+        _residencyRequestService = residencyRequestService;
         _currentUserAccessor = currentUserAccessor;
         _territoryService = territoryService;
         _accessEvaluator = accessEvaluator;
@@ -83,16 +86,19 @@ public sealed class MembershipsController : ControllerBase
     }
 
     /// <summary>
-    /// Solicita tornar-se Resident no território.
+    /// Solicita residência no território (cria JoinRequest).
+    /// O usuário permanece Visitor até aprovação por Curator (ou SystemAdmin como fallback).
     /// </summary>
     [HttpPost]
     [Route("/api/v1/memberships/{territoryId:guid}/become-resident")]
-    [ProducesResponseType(typeof(MembershipDetailResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RequestResidencyResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(RequestResidencyResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<MembershipDetailResponse>> BecomeResident(
+    public async Task<ActionResult<RequestResidencyResponse>> BecomeResident(
         [FromRoute] Guid territoryId,
+        [FromBody] BecomeResidentRequest? request,
         CancellationToken cancellationToken)
     {
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
@@ -107,13 +113,20 @@ public sealed class MembershipsController : ControllerBase
             return NotFound();
         }
 
-        var result = await _membershipService.BecomeResidentAsync(
+        var result = await _residencyRequestService.RequestAsync(
             userContext.User.Id,
             territoryId,
+            request?.RecipientUserIds,
+            request?.Message,
             cancellationToken);
 
         if (result.IsFailure)
         {
+            if (result.Error?.Contains("Too many residency requests", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return StatusCode(StatusCodes.Status429TooManyRequests, new { error = result.Error });
+            }
+
             if (result.Error?.Contains("already has a Resident") == true)
             {
                 return Conflict(new { error = result.Error });
@@ -121,16 +134,17 @@ public sealed class MembershipsController : ControllerBase
             return BadRequest(new { error = result.Error });
         }
 
-        var membership = result.Value!;
-        var response = new MembershipDetailResponse(
-            membership.Id,
-            membership.UserId,
-            membership.TerritoryId,
-            membership.Role.ToString().ToUpperInvariant(),
-            membership.ResidencyVerification.ToString().ToUpperInvariant(),
-            membership.LastGeoVerifiedAtUtc,
-            membership.LastDocumentVerifiedAtUtc,
-            membership.CreatedAtUtc);
+        var residencyRequest = result.Value!;
+        var joinRequest = residencyRequest.JoinRequest;
+        var response = new RequestResidencyResponse(
+            joinRequest.Id,
+            joinRequest.Status.ToString().ToUpperInvariant(),
+            joinRequest.CreatedAtUtc);
+
+        if (residencyRequest.Created)
+        {
+            return Created($"/api/v1/join-requests/{joinRequest.Id}", response);
+        }
 
         return Ok(response);
     }

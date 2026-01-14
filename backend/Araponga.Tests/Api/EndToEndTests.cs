@@ -117,11 +117,11 @@ public sealed class EndToEndTests
             $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
             null);
         membershipResponse.EnsureSuccessStatusCode();
-        var membership = await membershipResponse.Content.ReadFromJsonAsync<MembershipDetailResponse>();
-        Assert.Equal("RESIDENT", membership!.Role);
-        Assert.Equal("NONE", membership.ResidencyVerification);
+        var joinRequest = await membershipResponse.Content.ReadFromJsonAsync<RequestResidencyResponse>();
+        Assert.NotNull(joinRequest);
+        Assert.Equal("PENDING", joinRequest!.Status);
 
-        // 4. Criar post (deve falhar porque ainda está PENDING)
+        // 4. Criar post (pode falhar porque ainda é Visitor)
         var postResponse = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
             new CreatePostRequest(
@@ -133,10 +133,10 @@ public sealed class EndToEndTests
                 null,
                 null));
 
-        // Como o usuário não está validado, pode falhar ou funcionar dependendo da implementação
-        // Este teste valida o fluxo completo mesmo que falhe na criação do post
-        Assert.True(postResponse.StatusCode == HttpStatusCode.Created || 
-                   postResponse.StatusCode == HttpStatusCode.Unauthorized);
+        Assert.True(postResponse.StatusCode == HttpStatusCode.Created ||
+                    postResponse.StatusCode == HttpStatusCode.Unauthorized ||
+                    postResponse.StatusCode == HttpStatusCode.BadRequest ||
+                    postResponse.StatusCode == HttpStatusCode.Forbidden);
     }
 
     [Fact]

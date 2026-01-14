@@ -29,6 +29,11 @@
 ### Moderação
 - **Report** (territoryId, reporterId, targetType post|user, reason, details, status)
 - **Sanction** (scope territory|global, target user|post, type, reason, status, startAt, endAt)
+- **WorkItem** (fila genérica para revisão humana: verificação, curadoria e moderação; status/outcome; requirements de permissão/capability)
+
+### Admin, Configuração e Evidências
+- **SystemConfig** (configurações globais calibráveis: providers, segurança, moderação, validação)
+- **DocumentEvidence** (metadados de evidências documentais para verificação; conteúdo em storage externo)
 
 ### Notificações
 - **OutboxMessage** (type, payloadJson, occurredAt, processedAt, attempts)
@@ -70,6 +75,18 @@
 - **Report 0..1 Sanction** → sanções derivadas.
 - **User 1..N Sanction** → sanções aplicadas.
 - **Territory 0..N Sanction** → sanções territoriais (territoryId preenchido) ou globais (territoryId nulo).
+- **Report 0..1 WorkItem (ModerationCase)** → casos de moderação enfileirados a partir de reports (fallback humano).
+
+### Admin, Configuração e Evidências
+- **SystemConfig** é global (não territorial) e auditável (created/updated por usuários com permissão).
+- **DocumentEvidence** referencia:
+  - **User** (quem submeteu)
+  - **Territory (opcional)**: obrigatório para evidências de residência; nulo para identidade
+- **WorkItem** pode referenciar:
+  - **USER** (ex.: IdentityVerification)
+  - **MEMBERSHIP** (ex.: ResidencyVerification)
+  - **REPORT** (ex.: ModerationCase)
+  - **ASSET** (ex.: AssetCuration)
 
 ### Notificações
 - **OutboxMessage 1..N UserNotification** → mensagens geram notificações para destinatários.
@@ -133,5 +150,6 @@
 
 ## Observações de MVP vs Pós-MVP
 - [MVP] TerritoryMembership, MembershipSettings, MembershipCapability, Post, PostGeoAnchor, MapEntity, MapEntityRelation, Report, Sanction, OutboxMessage, UserNotification, UserPreferences, Store, StoreItem.
+- [MVP] SystemConfig, WorkItem (Work Queue), DocumentEvidence (metadados) e storage (Local/S3 via proxy).
 - [POST-MVP] Media e FriendRelation.
 - [POST-MVP] FriendRelation e comportamentos de círculo interno.

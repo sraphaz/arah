@@ -290,18 +290,71 @@ public sealed class ApiScenariosTests
             null);
         first.EnsureSuccessStatusCode();
 
-        var firstPayload = await first.Content.ReadFromJsonAsync<MembershipDetailResponse>();
+        var firstPayload = await first.Content.ReadFromJsonAsync<RequestResidencyResponse>();
         Assert.NotNull(firstPayload);
-        Assert.Equal("RESIDENT", firstPayload!.Role);
+        Assert.Equal("PENDING", firstPayload!.Status);
 
         var second = await client.PostAsync(
             $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
             null);
         second.EnsureSuccessStatusCode();
 
-        var secondPayload = await second.Content.ReadFromJsonAsync<MembershipDetailResponse>();
+        var secondPayload = await second.Content.ReadFromJsonAsync<RequestResidencyResponse>();
         Assert.NotNull(secondPayload);
-        Assert.Equal(firstPayload.Id, secondPayload!.Id);
+        Assert.Equal(firstPayload.JoinRequestId, secondPayload!.JoinRequestId);
+    }
+
+    [Fact]
+    public async Task Memberships_BecomeResident_RejectsTooManyRecipients()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await LoginForTokenAsync(client, "google", "too-many-recipients");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        // 4 destinatários (limite é 3)
+        var request = new BecomeResidentRequest(
+            new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() },
+            "Oi");
+
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Memberships_BecomeResident_RateLimitsAfterMultipleCancelRecreate()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await LoginForTokenAsync(client, "google", "rate-limit-residency");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        // criar + cancelar 3 vezes (ok), 4a deve retornar 429
+        for (var i = 0; i < 3; i += 1)
+        {
+            var create = await client.PostAsync(
+                $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+                null);
+            Assert.True(create.StatusCode == HttpStatusCode.Created || create.StatusCode == HttpStatusCode.OK);
+
+            var payload = await create.Content.ReadFromJsonAsync<RequestResidencyResponse>();
+            Assert.NotNull(payload);
+
+            var cancel = await client.PostAsync(
+                $"api/v1/join-requests/{payload!.JoinRequestId}/cancel",
+                null);
+            cancel.EnsureSuccessStatusCode();
+        }
+
+        var fourth = await client.PostAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            null);
+        Assert.Equal((HttpStatusCode)429, fourth.StatusCode);
     }
 
     [Fact]
@@ -320,17 +373,29 @@ public sealed class ApiScenariosTests
         var visitorPayload = await visitor.Content.ReadFromJsonAsync<EnterTerritoryResponse>();
         Assert.NotNull(visitorPayload);
 
-        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
-        client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
-
-        var upgrade = await client.PostAsync(
+        var request = await client.PostAsync(
             $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
             null);
-        upgrade.EnsureSuccessStatusCode();
-        var upgradePayload = await upgrade.Content.ReadFromJsonAsync<MembershipDetailResponse>();
-        Assert.NotNull(upgradePayload);
-        Assert.Equal(visitorPayload!.Id, upgradePayload!.Id);
-        Assert.Equal("RESIDENT", upgradePayload.Role);
+        request.EnsureSuccessStatusCode();
+        var requestPayload = await request.Content.ReadFromJsonAsync<RequestResidencyResponse>();
+        Assert.NotNull(requestPayload);
+        Assert.Equal("PENDING", requestPayload!.Status);
+
+        // Aprovar como curador (seeded no InMemoryDataStore)
+        var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        var approve = await client.PostAsync(
+            $"api/v1/join-requests/{requestPayload.JoinRequestId}/approve",
+            null);
+        approve.EnsureSuccessStatusCode();
+
+        // Recarregar como requester e checar membership promovido
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var upgraded = await client.GetFromJsonAsync<MembershipDetailResponse>(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
+        Assert.NotNull(upgraded);
+        Assert.Equal("RESIDENT", upgraded!.Role);
+        Assert.Equal("NONE", upgraded.ResidencyVerification);
     }
 
     [Fact]
@@ -347,17 +412,14 @@ public sealed class ApiScenariosTests
             null);
         visitor.EnsureSuccessStatusCode();
 
-        // BecomeResident não requer geo - pode ser feito sem coordenadas
-        // A verificação geo é feita depois via verify-residency/geo
-        var upgrade = await client.PostAsync(
+        // Pedido de residência não requer geo; o usuário continua Visitor até aprovação.
+        var request = await client.PostAsync(
             $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
             null);
-        upgrade.EnsureSuccessStatusCode();
-
-        var membership = await upgrade.Content.ReadFromJsonAsync<MembershipDetailResponse>();
-        Assert.NotNull(membership);
-        Assert.Equal("RESIDENT", membership!.Role);
-        // Sem geo, fica como UNVERIFIED ou GEOVERIFIED dependendo se há outros residents
+        request.EnsureSuccessStatusCode();
+        var payload = await request.Content.ReadFromJsonAsync<RequestResidencyResponse>();
+        Assert.NotNull(payload);
+        Assert.Equal("PENDING", payload!.Status);
     }
 
     [Fact]
@@ -523,12 +585,29 @@ public sealed class ApiScenariosTests
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
-        // Criar membership como Resident
-        var membership = await client.PostAsync(
+        // Solicitar residência
+        var request = await client.PostAsync(
             $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
             null);
-        membership.EnsureSuccessStatusCode();
-        var membershipPayload = await membership.Content.ReadFromJsonAsync<MembershipDetailResponse>();
+        request.EnsureSuccessStatusCode();
+        var requestPayload = await request.Content.ReadFromJsonAsync<RequestResidencyResponse>();
+        Assert.NotNull(requestPayload);
+        Assert.Equal("PENDING", requestPayload!.Status);
+
+        // Aprovar como curador (seeded)
+        var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        var approve = await client.PostAsync(
+            $"api/v1/join-requests/{requestPayload.JoinRequestId}/approve",
+            null);
+        approve.EnsureSuccessStatusCode();
+
+        // Voltar para o usuário solicitante
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
+
+        // Confirmar que virou Resident (ainda não verificado)
+        var membershipPayload = await client.GetFromJsonAsync<MembershipDetailResponse>(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
         Assert.NotNull(membershipPayload);
         Assert.Equal("RESIDENT", membershipPayload!.Role);
         Assert.Equal("NONE", membershipPayload.ResidencyVerification);
@@ -1111,7 +1190,7 @@ public sealed class ApiScenariosTests
             $"api/v1/memberships/{ActiveTerritoryId}/me");
         Assert.NotNull(membershipStatus);
         Assert.Equal("RESIDENT", membershipStatus!.Role);
-        Assert.True(membershipStatus.ResidencyVerification == "GEOVERIFIED" || membershipStatus.ResidencyVerification == "DOCUMENTVERIFIED");
+        Assert.Equal("NONE", membershipStatus.ResidencyVerification);
     }
 
     [Fact]

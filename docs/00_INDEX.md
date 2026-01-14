@@ -35,6 +35,7 @@ Documentos sobre moderação, observabilidade e operações.
 - **[Moderação e Reports](./30_MODERATION.md)** - Sistema de moderação e reports
 - **[Admin e Observabilidade](./31_ADMIN_OBSERVABILITY.md)** - Administração e observabilidade do sistema
 - **[Rastreabilidade](./32_TRACEABILITY.md)** - Rastreabilidade de requisitos e funcionalidades
+- **[System Config, Work Queue e Evidências](./33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md)** - Configurações globais, fila genérica e evidências documentais (P0)
 - **[API - Lógica de Negócio e Usabilidade](./60_API_LÓGICA_NEGÓCIO.md)** - Documento completo de lógica de negócio e usabilidade de todas as operações da API
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
@@ -80,7 +81,7 @@ Documentação detalhada de todos os Pull Requests implementados.
 - Ver mais em: [recommendations/README.md](./recommendations/README.md)
 
 #### Análises
-- **[Análise de Padrões de Design](./analysis/ANALISE_PADROES_DESIGN_MEMBERSHIP.md)** - Análise de padrões
+- **[Análises técnicas (índice)](./analysis/README.md)** - Índice de análises técnicas
 - Ver mais em: [analysis/README.md](./analysis/README.md)
 
 ## 🔍 Busca Rápida

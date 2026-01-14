@@ -81,7 +81,8 @@ public sealed class MembershipServiceTests
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value);
         Assert.Equal(MembershipRole.Resident, result.Value!.Role);
-        Assert.Equal(ResidencyVerification.GeoVerified, result.Value.ResidencyVerification); // Primeiro residente é auto-verificado
+        // Não existe mais "fundador" / auto-verificação.
+        Assert.Equal(ResidencyVerification.None, result.Value.ResidencyVerification);
     }
 
     [Fact]
@@ -107,11 +108,11 @@ public sealed class MembershipServiceTests
         var dataStore = new InMemoryDataStore();
         var service = CreateService(dataStore);
 
-        // Criar primeiro Resident (auto-verificado)
+        // Criar primeiro Resident (não auto-verificado)
         var firstUserId = Guid.NewGuid();
         var firstResult = await service.BecomeResidentAsync(firstUserId, TerritoryId1, CancellationToken.None);
         Assert.True(firstResult.IsSuccess);
-        Assert.Equal(ResidencyVerification.GeoVerified, firstResult.Value!.ResidencyVerification);
+        Assert.Equal(ResidencyVerification.None, firstResult.Value!.ResidencyVerification);
 
         // Criar segundo Resident (não verificado)
         var secondUserId = Guid.NewGuid();

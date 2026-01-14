@@ -183,6 +183,51 @@ Este documento registra decisões arquiteturais importantes tomadas durante o de
 
 ---
 
+## ADR-009: Work Queue Genérica (WorkItem) para Revisões Humanas
+
+**Status**: Aceito  
+**Data**: 2026  
+**Contexto**: O sistema precisa de filas de revisão para diferentes domínios (verificação, curadoria, moderação) sem criar “N filas” específicas e inconsistentes.
+
+**Decisão**: Introduzir um modelo genérico `WorkItem` (Work Queue) com:
+- `Type`, `Status`, `Outcome`
+- `TerritoryId` opcional (itens globais vs territoriais)
+- `RequiredSystemPermission` e/ou `RequiredCapability`
+- `SubjectType/SubjectId` + `PayloadJson` para contexto mínimo
+
+**Consequências**:
+- ✅ Filas padronizadas e extensíveis (novos tipos sem refatorar infra)
+- ✅ Governança clara (SystemAdmin vs Curator/Moderator)
+- ✅ Auditoria consistente de criação/conclusão
+- ⚠️ `PayloadJson` exige disciplina para evitar acoplamento excessivo
+
+**Alternativas Consideradas**:
+1. Filas específicas por domínio (rejeitado - duplicação e divergência)
+2. “Somente notificações” sem fila (rejeitado - falta rastreabilidade e SLA humano)
+
+---
+
+## ADR-010: Download de Arquivos por Proxy (inicial) vs URL Pré-assinada
+
+**Status**: Aceito  
+**Data**: 2026  
+**Contexto**: Precisamos suportar evidências/mídias em storage externo (S3/MinIO), controlando acesso e auditando downloads.
+
+**Decisão**: Adotar **download por proxy** inicialmente:
+- Cliente chama API
+- API autentica/autoriza, audita e faz streaming do storage
+
+**Consequências**:
+- ✅ Controle total de acesso e auditoria
+- ✅ Simplifica (não exige política de expiração e assinatura no client)
+- ⚠️ Maior carga na API (bandwidth/streaming)
+
+**Alternativas Consideradas**:
+1. URLs pré-assinadas (rejeitado nesta fase - mais variáveis operacionais no client)
+2. URLs públicas (rejeitado - risco de vazamento)
+
+---
+
 ## Referências
 
 - [Product Vision](./01_PRODUCT_VISION.md)

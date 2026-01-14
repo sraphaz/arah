@@ -62,6 +62,7 @@
         <li><a href="#eventos" data-i18n="nav.events">Eventos</a></li>
         <li><a href="#auth" data-i18n="nav.jwt">Autenticação (JWT)</a></li>
         <li><a href="#territory-session" data-i18n="nav.headers">Território & headers</a></li>
+        <li><a href="#admin" data-i18n="nav.admin">Admin & filas</a></li>
         <li><a href="#openapi" data-i18n="nav.openapi">OpenAPI / Explorer</a></li>
         <li><a href="#erros" data-i18n="nav.errors">Erros & convenções</a></li>
         <li><a href="#quickstart" data-i18n="nav.quickstart">Quickstart</a></li>
@@ -104,16 +105,17 @@
           <div class="card">
             <h3>Visitante</h3>
             <p>
-              Visitantes declaram vínculo com <code>role=Visitor</code>. O status já nasce como
-              <strong>VALIDATED</strong>, permitindo participação básica e acesso a conteúdo público.
+              Visitantes declaram vínculo com <code>role=Visitor</code>. Não existe "validação" para visitante:
+              é apenas um vínculo leve para acesso a conteúdo público e operações permitidas para não-moradores.
             </p>
           </div>
           <div class="card">
             <h3>Pedido de moradia</h3>
             <p>
-              Para virar morador, o visitante envia um pedido direcionado via
-              <code>POST /api/v1/territories/{territoryId}/join-requests</code> escolhendo
-              destinatários (moradores validados ou curadores). O pedido não vira broadcast no feed.
+              Para virar morador, o visitante cria um pedido (JoinRequest) via
+              <code>POST /api/v1/memberships/{territoryId}/become-resident</code>.
+              Se ele conhecer alguém, pode enviar <code>recipientUserIds</code> e fazer um convite direcionado.
+              Sem destinatários, o pedido vai para a curadoria (Curator) e, se necessário, para SystemAdmin.
             </p>
           </div>
           <div class="card">
@@ -121,14 +123,17 @@
             <p>
               Destinatários (ou curadores) aprovam/rejeitam via
               <code>POST /api/v1/join-requests/{id}/approve|reject</code>. Ao aprovar, o requester
-              torna-se <strong>RESIDENT</strong> com status <strong>VALIDATED</strong>.
+              torna-se <strong>RESIDENT</strong> (ainda <strong>NÃO verificado</strong>).
+              A verificação de residência acontece depois via
+              <code>POST /api/v1/memberships/{territoryId}/verify-residency/geo</code> ou
+              <code>/verify-residency/document</code>.
             </p>
           </div>
           <div class="card">
-            <h3>Fundador</h3>
+            <h3>Bootstrap (primeiro morador)</h3>
             <p>
-              Se ainda não existe nenhum morador validado no território, o primeiro residente é
-              autoaprovado e se torna o <strong>fundador</strong>.
+              Não existe "fundador" autoaprovado. Se o território ainda não tiver curadores/moradores verificados,
+              o pedido faz fallback para <strong>SystemAdmin</strong> (governança global) para destravar o bootstrap.
             </p>
           </div>
         </div>
@@ -177,8 +182,9 @@
             <h3>Memberships</h3>
             <p>
               Vínculos entre usuário e território podem ser <strong>VISITOR</strong> ou <strong>RESIDENT</strong>.
-              O status de verificação segue <strong>PENDING</strong>, <strong>VALIDATED</strong> ou <strong>REJECTED</strong>
-              e influencia visibilidade e autorização.
+              O pedido de moradia (JoinRequest) tem status <strong>PENDING</strong>/<strong>APPROVED</strong>/<strong>REJECTED</strong>.
+              Já a verificação de residência do membership é feita por flags: <strong>NONE</strong>/<strong>GEOVERIFIED</strong>/<strong>DOCUMENTVERIFIED</strong>,
+              influenciando visibilidade e autorização.
             </p>
           </div>
           <div class="card">
@@ -191,9 +197,9 @@
           <div class="card">
             <h3>Curadoria/Validação</h3>
             <p>
-              A validação de vínculos de moradia é comunitária: apenas moradores <strong>VALIDATED</strong>
-              aprovam pedidos. Curadores continuam responsáveis por validação de entidades do mapa e alertas
-              ambientais.
+              A aprovação de pedidos de moradia é feita por <strong>Curators</strong> e/ou por moradores já
+              verificados (geo/doc). Curadores também continuam responsáveis por validação de entidades do mapa
+              e alertas ambientais.
             </p>
           </div>
           <div class="card">
@@ -461,13 +467,13 @@
         <div class="flow-step">
           <h4>9. Membership: visitor → resident</h4>
           <p>
-            O visitante solicita aprovação via
-            <code>POST /api/v1/territories/{territoryId}/join-requests</code> com destinatários escolhidos.
+            O visitante solicita residência via
+            <code>POST /api/v1/memberships/{territoryId}/become-resident</code> (convite direcionado via <code>recipientUserIds</code> ou fila de curadoria).
             Destinatários (ou curadores) aprovam em
             <code>POST /api/v1/join-requests/{id}/approve</code>, promovendo para
-            <strong>RESIDENT</strong>/<strong>VALIDATED</strong>. O status atual está em
-            <code>GET /api/v1/territories/{territoryId}/membership/me</code>. Se não houver morador validado,
-            o primeiro residente declarado é autoaprovado como fundador.
+            <strong>RESIDENT</strong> (com <strong>ResidencyVerification=NONE</strong>).
+            O status atual do vínculo está em <code>GET /api/v1/memberships/{territoryId}/me</code>.
+            Para verificar residência (geo/doc), use <code>/verify-residency/geo</code> ou <code>/verify-residency/document</code>.
             Quando a policy exige presença, envie <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code>.
           </p>
         </div>
@@ -527,7 +533,7 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
               <li><strong>Autenticar</strong>: <code>POST /api/v1/auth/social</code></li>
               <li><strong>Descobrir território</strong>: <code>GET /api/v1/territories</code> (ou <code>/nearby</code>)</li>
               <li><strong>Selecionar território</strong>: <code>POST /api/v1/territories/selection</code> + <code>X-Session-Id</code></li>
-              <li><strong>Checar membership</strong>: <code>GET /api/v1/territories/{territoryId}/membership/me</code></li>
+              <li><strong>Checar membership</strong>: <code>GET /api/v1/memberships/{territoryId}/me</code></li>
             </ul>
           </div>
           <div class="card">
@@ -764,6 +770,38 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
         <div class="callout">
           <strong>PresencePolicy:</strong> a exigência de geolocalização para membership é configurada em
           <code>PresencePolicy:Policy</code>. O valor padrão atual é <code>ResidentOnly</code>.
+        </div>
+      </section>
+
+      <section class="section" id="admin">
+        <span class="eyebrow" data-i18n="admin.eyebrow">Admin</span>
+        <h2 data-i18n="admin.title">System Config, Work Queue e evidências</h2>
+        <p data-i18n-html="admin.leadHtml">
+          Para suportar validações e governança com rastreabilidade, a API implementa <strong>SystemConfig</strong>
+          (configurações calibráveis), <strong>WorkItem</strong> (fila genérica de revisão humana) e
+          <strong>DocumentEvidence</strong> (metadados de documentos com upload e download por proxy).
+          Leia o documento completo em <a href="https://github.com/sraphaz/araponga/blob/main/docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md" rel="noopener">docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md</a>.
+        </p>
+        <div class="grid-two">
+          <div class="card">
+            <h3 data-i18n="admin.endpointsTitle">Endpoints principais</h3>
+            <ul>
+              <li><strong>System Config (SystemAdmin)</strong>: <code>GET/PUT /api/v1/admin/system-config</code></li>
+              <li><strong>Work Items (SystemAdmin)</strong>: <code>GET /api/v1/admin/work-items</code></li>
+              <li><strong>Work Items (territorial)</strong>: <code>GET /api/v1/territories/{territoryId}/work-items</code></li>
+              <li><strong>Upload identidade</strong>: <code>POST /api/v1/verification/identity/document/upload</code></li>
+              <li><strong>Upload residência</strong>: <code>POST /api/v1/memberships/{territoryId}/verify-residency/document/upload</code></li>
+              <li><strong>Download por proxy</strong>: <code>GET /api/v1/admin/evidences/{evidenceId}/download</code></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 data-i18n="admin.notesTitle">Notas</h3>
+            <ul>
+              <li data-i18n-html="admin.note1Html"><strong>Autorização</strong>: SystemAdmin decide identidade; Curator decide residência e curadoria; Curator/Moderator decide moderação.</li>
+              <li data-i18n-html="admin.note2Html"><strong>Proxy download</strong>: a API faz streaming do storage para aplicar autorização e auditoria (sem URL pública).</li>
+              <li data-i18n-html="admin.note3Html"><strong>OpenAPI</strong>: veja as rotas na seção OpenAPI — tags <code>Admin</code>, <code>Verification</code>, <code>Moderation</code>.</li>
+            </ul>
+          </div>
         </div>
       </section>
 

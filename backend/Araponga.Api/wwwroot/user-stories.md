@@ -51,9 +51,9 @@
 **Para** acessar conteúdos adequados
 
 **Critérios de aceite**
-- Quando enviar `POST /territories/{id}/membership` com `role=VISITOR|RESIDENT`, então a API registra o vínculo.
-- `VISITOR` recebe `VERIFICATION_STATUS=VALIDATED`.
-- `RESIDENT` recebe `VERIFICATION_STATUS=PENDING`.
+- Quando enviar `POST /api/v1/territories/{id}/enter`, então a API cria (ou retorna) o vínculo como `VISITOR`.
+- Para solicitar residência, o usuário chama `POST /api/v1/memberships/{id}/become-resident` (cria uma JoinRequest).
+- `ResidencyVerification` do membership começa como `NONE` e só muda após verificação (geo/doc).
 
 ### US-S02 — Consultar meu membership
 **Como** usuário autenticado  
@@ -61,30 +61,32 @@
 **Para** entender meu status social
 
 **Critérios de aceite**
-- Quando consultar `GET /territories/{id}/membership/me`, então a API retorna `role` e `verificationStatus`.
-- Se não houver vínculo, retorna `role=NONE` e `verificationStatus=NONE`.
+- Quando consultar `GET /api/v1/memberships/{id}/me`, então a API retorna `role` e `residencyVerification`.
+- Se não houver vínculo, retorna `404`.
 
-### US-S03 — Validar membership (curadoria)
+### US-S03 — Aprovar pedido de moradia (curadoria)
 **Como** curador
-**Quero** validar ou rejeitar vínculos de moradores
+**Quero** aprovar ou rejeitar pedidos de moradia (JoinRequests)
 **Para** manter governança comunitária
 
 **Critérios de aceite**
-- Apenas usuários com `role=CURATOR` podem validar.
+- Apenas usuários com capability `CURATOR` (ou destinatários elegíveis) podem aprovar/rejeitar.
 - A ação registra auditoria.
 
 ### US-S04 — Solicitar aprovação para virar morador confirmado
 **Como** visitante autenticado
-**Quero** solicitar a confirmação como morador escolhendo destinatários específicos
+**Quero** solicitar a confirmação como morador
 **Para** ingressar na comunidade sem broadcast para todo o território
 
 **Critérios de aceite**
-- Quando enviar `POST /territories/{id}/join-requests` com `recipientUserIds[1..N]`, a API cria um pedido `PENDING`.
-- Apenas moradores confirmados do território ou curadores podem ser destinatários.
+- Quando enviar `POST /api/v1/memberships/{id}/become-resident`, a API cria um pedido `PENDING` (JoinRequest) com destinatários automáticos.
+- Alternativamente (caso avançado), é possível usar `POST /api/v1/territories/{id}/join-requests` com `recipientUserIds[1..N]`.
+- Apenas moradores já verificados (geo/doc) ou curadores podem ser destinatários.
 - O pedido não gera post no feed nem broadcast.
 - `GET /join-requests/incoming?status=pending` retorna apenas pedidos onde o usuário é destinatário.
 - Destinatários (ou curadores) podem aprovar/rejeitar via `POST /join-requests/{id}/approve|reject`.
-- Ao aprovar, o requester recebe membership `RESIDENT` com `VERIFICATION_STATUS=VALIDATED`.
+- Ao aprovar, o requester recebe membership `RESIDENT` com `ResidencyVerification=NONE` (não verificado).
+- A verificação de residência ocorre depois via `POST /api/v1/memberships/{id}/verify-residency/geo|document`.
 
 --- 
 
@@ -97,7 +99,7 @@
 
 **Critérios de aceite**
 - `PUBLIC` visível para todos.
-- `RESIDENTS_ONLY` visível apenas para membros `RESIDENT` validados.
+- `RESIDENTS_ONLY` visível apenas para membros `RESIDENT` verificados (geo/doc).
 - Sem autenticação ou sem membership ⇒ apenas `PUBLIC`.
 - É possível filtrar o feed por entidade territorial quando disponível.
 - É possível filtrar o feed por asset via `assetId`.

@@ -110,21 +110,15 @@ public sealed class MembershipService
                 "User already has a Resident membership in another territory. Transfer residency first.");
         }
 
-        var hasValidatedResident = await _membershipRepository.HasValidatedResidentAsync(territoryId, cancellationToken);
-        var residencyVerification = hasValidatedResident
-            ? ResidencyVerification.None
-            : ResidencyVerification.GeoVerified; // Primeiro residente é auto-verificado
+        // Importante: não existe mais "fundador" ou auto-verificação.
+        // ResidencyVerification só deve ser setado por geo/documento (ou por fluxo admin explícito).
+        var residencyVerification = ResidencyVerification.None;
 
         if (existing is not null)
         {
             // Upgrade de Visitor para Resident
             existing.UpdateRole(MembershipRole.Resident);
             existing.UpdateResidencyVerification(residencyVerification);
-
-            if (!hasValidatedResident)
-            {
-                existing.AddGeoVerification(DateTime.UtcNow);
-            }
 
             // Garantir que MembershipSettings existe
             var existingSettings = await _settingsRepository.GetByMembershipIdAsync(existing.Id, cancellationToken);
@@ -142,13 +136,9 @@ public sealed class MembershipService
             // Atualizar tudo de uma vez usando a entidade como fonte da verdade
             await _membershipRepository.UpdateAsync(existing, cancellationToken);
 
-            var auditEvent = hasValidatedResident
-                ? "membership.upgraded"
-                : "membership.founder_validated";
-
             await _auditLogger.LogAsync(
                 new Application.Models.AuditEntry(
-                    auditEvent,
+                    "membership.upgraded",
                     userId,
                     territoryId,
                     existing.Id,
@@ -167,7 +157,7 @@ public sealed class MembershipService
             territoryId,
             MembershipRole.Resident,
             residencyVerification,
-            hasValidatedResident ? null : DateTime.UtcNow,
+            null,
             null,
             DateTime.UtcNow);
 
@@ -190,18 +180,6 @@ public sealed class MembershipService
                 membership.Id,
                 DateTime.UtcNow),
             cancellationToken);
-
-        if (!hasValidatedResident)
-        {
-            await _auditLogger.LogAsync(
-                new Application.Models.AuditEntry(
-                    "membership.founder_validated",
-                    userId,
-                    territoryId,
-                    membership.Id,
-                    DateTime.UtcNow),
-                cancellationToken);
-        }
 
         await _unitOfWork.CommitAsync(cancellationToken);
 

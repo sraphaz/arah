@@ -1,5 +1,16 @@
 erDiagram
   %% =========================================================
+  %% NOTE (ATUALIZAÇÃO)
+  %% =========================================================
+  %% Este MER é uma referência conceitual histórica e pode conter nomes legados
+  %% (ex.: USER_TERRITORY). O modelo atual do projeto está descrito em:
+  %% - docs/12_DOMAIN_MODEL.md
+  %%
+  %% A seguir, são adicionadas entidades do P0 Admin/Filas/Evidências:
+  %% - SYSTEM_CONFIG (configurações globais)
+  %% - WORK_ITEM (fila genérica para revisão humana)
+  %% - DOCUMENT_EVIDENCE (metadados de evidências; conteúdo em storage)
+  %% =========================================================
   %% 1) IDENTITY, AUTH, DEVICES
   %% =========================================================
 
@@ -542,6 +553,53 @@ erDiagram
   }
 
   SECURITY_EVENT {
+  %% =========================================================
+  %% 11) ADMIN CONFIG + WORK QUEUE + EVIDENCES
+  %% =========================================================
+
+  SYSTEM_CONFIG {
+    uuid id PK
+    string key                          "unique"
+    string value
+    string category
+    string description
+    uuid created_by_user_id
+    datetime created_at
+    uuid updated_by_user_id
+    datetime updated_at
+  }
+
+  WORK_ITEM {
+    uuid id PK
+    string type                         "IDENTITY_VERIFICATION|RESIDENCY_VERIFICATION|ASSET_CURATION|MODERATION_CASE"
+    string status                       "OPEN|REQUIRES_HUMAN_REVIEW|COMPLETED|CANCELLED"
+    string outcome                      "NONE|APPROVED|REJECTED|NOACTION"
+    uuid territory_id                   "nullable"
+    uuid created_by_user_id
+    datetime created_at
+    string required_system_permission   "nullable"
+    string required_capability          "nullable"
+    string subject_type
+    uuid subject_id
+    string payload_json                 "nullable"
+    uuid completed_by_user_id           "nullable"
+    datetime completed_at               "nullable"
+    string completion_notes             "nullable"
+  }
+
+  DOCUMENT_EVIDENCE {
+    uuid id PK
+    uuid user_id FK
+    uuid territory_id FK                "nullable (identity=global)"
+    string kind                         "IDENTITY|RESIDENCY"
+    string storage_provider             "LOCAL|S3"
+    string storage_key
+    string content_type
+    int size_bytes
+    string sha256
+    string original_file_name
+    datetime created_at
+  }
     uuid id PK
     uuid user_id FK
     uuid device_id FK                   "nullable"
@@ -667,3 +725,10 @@ erDiagram
   TERRITORY |o--o{ AUDIT_EVENT : scopes
   USER       ||--o{ SECURITY_EVENT : generates
   USER_DEVICE |o--o{ SECURITY_EVENT : from_device
+
+  %% Admin/Work Queue/Evidences
+  USER ||--o{ SYSTEM_CONFIG : config_changes
+  USER ||--o{ WORK_ITEM : creates_work
+  TERRITORY |o--o{ WORK_ITEM : scopes_work
+  USER ||--o{ DOCUMENT_EVIDENCE : submits_evidence
+  TERRITORY |o--o{ DOCUMENT_EVIDENCE : scopes_evidence

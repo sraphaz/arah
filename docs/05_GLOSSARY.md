@@ -14,3 +14,12 @@
 - **Presença no Território**: requisito para vínculo no MVP; associação não ocorre remotamente.
 - **Report**: denúncia de post ou usuário com motivo e detalhes.
 - **Sanction (Sanção)**: ação disciplinar aplicada a um usuário, territorial ou global.
+- **SystemAdmin (Admin global)**: permissão global (`SystemPermission`) que permite operar configurações do sistema e decisões globais (ex.: verificação de identidade).
+- **Curator (Curador)**: capability territorial (`MembershipCapability`) para curadoria/validação e decisões territoriais (ex.: residência, assets).
+- **Moderator (Moderador)**: capability territorial (`MembershipCapability`) para decisões de moderação (casos de reports, sanções, etc.).
+- **SystemConfig**: configuração global calibrável (chave/valor/categoria/descrição), auditável, usada para parametrizar o comportamento do sistema.
+- **Work Queue / WorkItem**: fila genérica de “trabalhos” que exigem revisão/decisão humana (verificações, curadoria, moderação), com status e outcome.
+- **Outcome**: resultado de um WorkItem (Approved/Rejected/NoAction).
+- **DocumentEvidence (Evidência documental)**: metadados de um arquivo enviado (kind, contentType, size, hash, storageKey); o arquivo em si fica no storage.
+- **Download por proxy**: padrão em que a API faz o streaming do arquivo do storage para o cliente, aplicando autorização e auditoria (sem expor URL pública/pré-assinada).
+- **S3/MinIO**: storage de objetos compatível com S3; usado para armazenar arquivos/evidências fora do banco, com acesso controlado pela API.

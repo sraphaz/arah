@@ -23,6 +23,8 @@
 13. [Solicitações de Entrada (Join Requests)](#solicitações-de-entrada-join-requests)
 14. [Feature Flags](#feature-flags)
 15. [Regras de Visibilidade e Permissões](#regras-de-visibilidade-e-permissões)
+16. [Admin: System Config e Work Queue](#admin-system-config-e-work-queue)
+17. [Verificações e Evidências (upload/download)](#verificações-e-evidências-uploaddownload)
 
 ---
 
@@ -38,6 +40,51 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - **Visibilidade diferenciada**: Conteúdo pode ser Público (todos) ou Apenas Moradores (RESIDENTS_ONLY)
 
 ---
+
+## 🧰 Admin: System Config e Work Queue
+
+> Referência detalhada: **[33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md](./33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md)**.
+
+### System Config (SystemAdmin)
+**Objetivo**: centralizar configurações calibráveis (providers, segurança, moderação, validação).
+
+- `GET /api/v1/admin/system-config`
+- `GET /api/v1/admin/system-config/{key}`
+- `PUT /api/v1/admin/system-config`
+
+### Work Items (filas)
+**Objetivo**: padronizar revisões humanas (verificação, curadoria, moderação).
+
+**Globais (SystemAdmin)**:
+- `GET /api/v1/admin/work-items`
+- `POST /api/v1/admin/work-items/{workItemId}/complete`
+
+**Territoriais (Curator/Moderator)**:
+- `GET /api/v1/territories/{territoryId}/work-items`
+- `POST /api/v1/territories/{territoryId}/work-items/{workItemId}/complete`
+
+---
+
+## 📎 Verificações e Evidências (upload/download)
+
+### Upload (multipart/form-data)
+- **Identidade (global)**:
+  - `POST /api/v1/verification/identity/document/upload`
+- **Residência (territorial)**:
+  - `POST /api/v1/memberships/{territoryId}/verify-residency/document/upload`
+
+### Decisão de verificação (fila humana)
+- **Identidade (SystemAdmin)**:
+  - `POST /api/v1/admin/verifications/identity/{workItemId}/decide`
+- **Residência (Curator)**:
+  - `POST /api/v1/territories/{territoryId}/verification/residency/{workItemId}/decide`
+
+### Download por proxy (stream via API)
+- **Admin (SystemAdmin)**:
+  - `GET /api/v1/admin/evidences/{evidenceId}/download`
+- **Território (Curator/Moderator)**:
+  - `GET /api/v1/territories/{territoryId}/evidences/{evidenceId}/download`
+
 
 ## 🔐 Autenticação e Cadastro
 
@@ -159,36 +206,41 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 
 ## 👥 Vínculos e Membros (Memberships)
 
-### Declarar Vínculo (`POST /api/v1/territories/{territoryId}/membership`)
+### Entrar no território como VISITOR (`POST /api/v1/territories/{territoryId}/enter`)
 
-**Descrição**: Declara o papel do usuário no território (VISITOR ou RESIDENT).
+**Descrição**: Cria (ou retorna) o vínculo do usuário no território como **VISITOR**.
 
 **Como usar**:
 - Exige autenticação
 - Path param: `territoryId`
-- Body: `role` ("VISITOR" ou "RESIDENT")
-- Headers: `X-Geo-Latitude`, `X-Geo-Longitude` (obrigatórios para RESIDENT)
 
 **Regras de negócio**:
-- **VISITOR**: 
-  - Validado imediatamente (`VERIFICATION_STATUS=VALIDATED`)
-  - Não exige geolocalização
-  - Pode ver posts públicos
-  - Não pode criar stores/items no marketplace
-  - Não pode comentar/compartilhar posts
-  
-- **RESIDENT**: 
-  - Criado com status `PENDING` (`VERIFICATION_STATUS=PENDING`)
-  - Exige geolocalização (headers obrigatórios)
-  - Requer aprovação para ser validado
-  - Acesso a conteúdo restrito (RESIDENTS_ONLY)
-  - Pode criar stores/items no marketplace
-  - Pode comentar/compartilhar posts
+- Cria `TerritoryMembership` com `Role=VISITOR` e `ResidencyVerification=NONE`
+- Não existe "validação" para VISITOR; é um vínculo leve para acesso ao conteúdo público
 
-- Um usuário só pode ter um vínculo por território
-- Se já existir vínculo, atualiza o role (VISITOR → RESIDENT exige nova validação)
+### Solicitar residência (cria JoinRequest) (`POST /api/v1/memberships/{territoryId}/become-resident`)
 
-### Consultar Meu Vínculo (`GET /api/v1/territories/{territoryId}/membership/me`)
+**Descrição**: Cria uma solicitação (JoinRequest) para virar **RESIDENT**. O usuário permanece VISITOR até aprovação.
+
+**Como usar**:
+- Exige autenticação
+- Path param: `territoryId`
+ - Body opcional:
+   - `recipientUserIds` (array) para convite direcionado (quando conhece alguém)
+   - `message` (string) opcional
+
+**Regras de negócio**:
+- Se `recipientUserIds` for informado, o pedido é direcionado para esses destinatários (desde que elegíveis).
+- Se não informar destinatários, o pedido vai para **Curator** do território.
+- Se não houver Curator, faz fallback para **SystemAdmin**.
+- Idempotente: se já houver JoinRequest pendente, retorna a mesma solicitação
+- Regra: 1 Resident por User (se já for Resident em outro território, deve transferir)
+- Anti-abuso:
+  - `recipientUserIds` tem limite de **3** destinatários
+  - Rate limit: no máximo **3** criações (create+cancel+recreate) por usuário/território em janela de **24h**
+  - Quando estourar o rate limit, a API retorna **429 Too Many Requests**
+
+### Consultar meu vínculo no território (`GET /api/v1/memberships/{territoryId}/me`)
 
 **Descrição**: Consulta o vínculo do usuário autenticado com um território.
 
@@ -197,23 +249,24 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - Path param: `territoryId`
 
 **Regras de negócio**:
-- Retorna `role` e `verificationStatus`
-- Se não houver vínculo, retorna `role=NONE`, `verificationStatus=NONE`
+- Retorna `role` e `residencyVerification` (`NONE`, `GEOVERIFIED`, `DOCUMENTVERIFIED`)
+- Se não houver vínculo, retorna `404`
 
-### Atualizar Vínculo VISITOR → RESIDENT (`POST /api/v1/territories/{territoryId}/membership/upgrade`)
+### Verificar residência por geolocalização (`POST /api/v1/memberships/{territoryId}/verify-residency/geo`)
 
-**Descrição**: Atualiza vínculo de VISITOR para RESIDENT (requer geolocalização).
-
-**Como usar**:
-- Exige autenticação
-- Deve ter vínculo VISITOR existente
-- Headers: `X-Geo-Latitude`, `X-Geo-Longitude` obrigatórios
-- Body: `role=RESIDENT`
+**Descrição**: Marca `ResidencyVerification=GEOVERIFIED` quando as coordenadas estão dentro do raio permitido do território.
 
 **Regras de negócio**:
-- Só funciona se vínculo atual for VISITOR
-- Novo vínculo RESIDENT inicia como `PENDING`
-- Requer aprovação para ser validado
+- Requer `Role=RESIDENT` no território
+- Não substitui aprovação do JoinRequest: é um passo de verificação pós-aprovação
+
+### Verificar residência por documento (`POST /api/v1/memberships/{territoryId}/verify-residency/document`)
+
+**Descrição**: Marca `ResidencyVerification=DOCUMENTVERIFIED`.
+
+**Regras de negócio**:
+- Requer `Role=RESIDENT` no território
+- Fluxo completo com upload/evidências e revisão humana está detalhado em `33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md`
 
 ---
 
@@ -252,8 +305,8 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 **Regras de negócio**:
 - **Filtragem por visibilidade**:
   - Visitantes (VISITOR): Veem apenas posts `PUBLIC`
-  - Moradores validados (RESIDENT, VALIDATED): Veem posts `PUBLIC` e `RESIDENTS_ONLY`
-  - Moradores pendentes (RESIDENT, PENDING): Veem apenas posts `PUBLIC`
+  - Moradores verificados (RESIDENT + `ResidencyVerification != NONE`): Veem posts `PUBLIC` e `RESIDENTS_ONLY`
+  - Moradores não verificados (RESIDENT + `ResidencyVerification = NONE`): Veem apenas posts `PUBLIC`
 - **Bloqueios**: Posts de usuários bloqueados não aparecem
 - **Paginação**: Padrão 20 itens por página
 - **Ordenação**: Mais recentes primeiro
@@ -281,7 +334,7 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - Body: `content` (texto do comentário)
 
 **Regras de negócio**:
-- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem comentar
+- **Permissão**: Apenas moradores verificados (geo/doc) podem comentar
 - **Visitantes**: Não podem comentar
 - **Limites**: Conteúdo máximo 2000 caracteres
 - **Bloqueios**: Não pode comentar em posts de usuários bloqueados
@@ -295,7 +348,7 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - Path param: `postId`
 
 **Regras de negócio**:
-- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem compartilhar
+- **Permissão**: Apenas moradores verificados (geo/doc) podem compartilhar
 - **Visitantes**: Não podem compartilhar
 - **Compartilhamento**: Cria novo post referenciando o original
 - **Visibilidade**: Post compartilhado herda visibilidade do original
@@ -461,7 +514,7 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - Path param: `entityId`
 
 **Regras de negócio**:
-- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem se relacionar
+- **Permissão**: Apenas moradores verificados (RESIDENT + `ResidencyVerification != NONE`) podem se relacionar
 - **Idempotente**: Relação é única por usuário/entidade
 - **Uso**: Usado para identificar moradores vinculados a entidades específicas
 
@@ -542,7 +595,7 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - Body: `territoryId`, nome, descrição, tipo, `geoAnchors` (obrigatório)
 
 **Regras de negócio**:
-- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem criar
+- **Permissão**: Apenas moradores verificados (RESIDENT + `ResidencyVerification != NONE`) ou curadores podem criar
 - **Geolocalização**: Obrigatória (pelo menos um GeoAnchor)
 - **Status**: Asset é criado como `PENDING` (aguarda validação)
 - **Limites**: Nome máximo 200 caracteres, descrição máxima 1000 caracteres
@@ -591,7 +644,7 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - Body: `territoryId`, nome, descrição, contato, `contactVisibility`
 
 **Regras de negócio**:
-- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem criar stores
+- **Permissão**: Apenas moradores verificados (geo/doc) podem criar stores (curadores podem gerenciar stores de terceiros)
 - **Limites**: Nome máximo 200 caracteres, descrição máxima 2000 caracteres
 - **Status**: Store é criada como `ACTIVE`
 - **Contato**: `contactVisibility` define se contato é público ou privado
@@ -606,7 +659,7 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - Body: `territoryId`, `storeId`, título, descrição, tipo (PRODUCT, SERVICE), `pricingType`, preço (opcional)
 
 **Regras de negócio**:
-- **Permissão**: Apenas moradores validados (RESIDENT, VALIDATED) podem criar items
+- **Permissão**: Apenas moradores verificados (geo/doc) podem criar items
 - **Tipos**: PRODUCT (produto) ou SERVICE (serviço)
 - **Preço**: Pode ser FREE, FIXED (preço fixo), NEGOTIABLE (negociável)
 - **Status**: Item é criado como `ACTIVE`
@@ -752,9 +805,12 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 
 ## 🔗 Solicitações de Entrada (Join Requests)
 
+> Nota: o caminho recomendado para "virar morador" é `POST /api/v1/memberships/{territoryId}/become-resident`,
+> que cria a JoinRequest com destinatários automáticos. O endpoint abaixo existe para casos avançados (escolha manual).
+
 ### Criar Solicitação (`POST /api/v1/territories/{territoryId}/join-requests`)
 
-**Descrição**: Solicita aprovação para virar morador validado (escolhendo destinatários específicos).
+**Descrição**: Solicita aprovação para virar morador (escolhendo destinatários específicos).
 
 **Como usar**:
 - Exige autenticação
@@ -763,7 +819,7 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 
 **Regras de negócio**:
 - **Permissão**: Visitantes autenticados podem criar solicitações
-- **Destinatários**: Apenas moradores validados (RESIDENT, VALIDATED) ou curadores podem ser destinatários
+- **Destinatários**: Apenas moradores já verificados (geo/doc) ou curadores podem ser destinatários (SystemAdmin também é aceito)
 - **Status**: Solicitação é criada como `PENDING`
 - **Não gera post**: Solicitação não aparece no feed (não é broadcast)
 - **Privacidade**: Apenas destinatários veem a solicitação
@@ -791,7 +847,7 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 
 **Regras de negócio**:
 - **Permissão**: Apenas destinatários da solicitação ou curadores podem aprovar
-- **Promoção**: Ao aprovar, o requester recebe membership `RESIDENT` com `VERIFICATION_STATUS=VALIDATED`
+- **Promoção**: Ao aprovar, o requester recebe membership `RESIDENT` com `ResidencyVerification=NONE` (não verificado)
 - **Status**: Solicitação é marcada como `APPROVED`
 
 ### Rejeitar Solicitação (`POST /api/v1/join-requests/{id}/reject`)
@@ -862,9 +918,9 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - Moradores (RESIDENT) podem ver
 
 **RESIDENTS_ONLY (Apenas Moradores)**:
-- Visível apenas para moradores validados (RESIDENT, VERIFICATION_STATUS=VALIDATED)
+- Visível apenas para moradores verificados (RESIDENT + `ResidencyVerification != NONE`)
 - Visitantes não veem
-- Moradores pendentes (RESIDENT, PENDING) não veem
+- Moradores não verificados (RESIDENT + `ResidencyVerification = NONE`) não veem
 
 ### Permissões por Role
 
@@ -885,14 +941,14 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - ❌ Criar assets
 - ❌ Relacionar-se com entidades
 
-**RESIDENT, PENDING (Morador Pendente)**:
+**RESIDENT (não verificado)**:
 - ✅ Todas permissões de VISITOR
 - ❌ Ver conteúdo RESIDENTS_ONLY
 - ❌ Criar stores/items
 - ❌ Criar assets
 - ❌ Relacionar-se com entidades
 
-**RESIDENT, VALIDATED (Morador Validado)**:
+**RESIDENT (verificado)**:
 - ✅ Todas permissões de VISITOR
 - ✅ Ver conteúdo RESIDENTS_ONLY
 - ✅ Comentar posts
@@ -902,7 +958,7 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - ✅ Relacionar-se com entidades
 
 **CURATOR (Curador)**:
-- ✅ Todas permissões de RESIDENT, VALIDATED
+- ✅ Todas permissões de RESIDENT (verificado)
 - ✅ Validar entidades
 - ✅ Validar alertas
 - ✅ Validar assets

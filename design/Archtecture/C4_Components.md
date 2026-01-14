@@ -13,6 +13,10 @@ Container_Boundary(api, "Araponga API (.NET 8)") {
   Component(healthTerritory, "Territory Health Controller", "REST Controller", "Saúde do território: água potável, nascentes, árvores nativas, santuários, mirantes (MVP evolutivo).")
   Component(interactions, "Interactions Controller", "REST Controller", "Curtidas, comentários, compartilhamentos.")
   Component(moderation, "Moderation Controller", "REST Controller", "Fluxos de validação comunitária/curadoria (confirmar entidade, sinalizar abuso).")
+  Component(admin, "Admin Controllers", "REST Controller", "SystemConfig, WorkItems, decisões de verificação e downloads por proxy (SystemAdmin/Curator/Moderator).")
+  Component(workQueue, "Work Queue", "Application Service", "Fila genérica (WorkItem) para revisões humanas: verificação, curadoria e moderação.")
+  Component(evidence, "Evidence Service", "Application Service", "Criação de DocumentEvidence e integração com storage (upload) e download por proxy.")
+  Component(storage, "File Storage", "Abstraction", "IFileStorage com providers Local e S3/MinIO.")
 
   Component(appServices, "Application Services", "Use Cases", "Orquestram casos de uso e regras de negócio (Clean Architecture).")
   Component(domain, "Domain Model", "Entities/Value Objects", "User, Territory, Membership, Place, Event, Post, Alert, etc.")
@@ -31,6 +35,7 @@ Rel(map, appServices, "Chama", "in-process")
 Rel(healthTerritory, appServices, "Chama", "in-process")
 Rel(interactions, appServices, "Chama", "in-process")
 Rel(moderation, appServices, "Chama", "in-process")
+Rel(admin, appServices, "Chama", "in-process")
 
 Rel(appServices, domain, "Usa", "in-process")
 Rel(appServices, repo, "Usa", "in-process")

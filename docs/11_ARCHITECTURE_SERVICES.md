@@ -176,6 +176,29 @@ Os services ainda retornam tuplas `(bool success, string? error, T? result)`. A 
 ### Cache
 Services que acessam dados frequentemente consultados (ex: feature flags, territórios) podem se beneficiar de cache. Implementação futura planejada.
 
+## Services administrativos (P0)
+
+Além do feed, existem services de suporte a **governança**, **filas** e **configurações calibráveis**:
+
+### SystemConfigService / SystemConfigCacheService
+- **Responsabilidade**: gerenciar configurações globais (`SystemConfig`) com cache e auditoria.
+- **Uso**: calibrar comportamento do sistema (providers, segurança, moderação, validação).
+
+### WorkQueueService
+- **Responsabilidade**: enfileirar/listar/completar `WorkItem` (Work Queue genérica).
+- **Uso**: padronizar revisões humanas (verificação, curadoria, moderação).
+
+### VerificationQueueService
+- **Responsabilidade**: orquestrar fluxos de verificação de identidade (global) e residência (territorial) usando WorkItems.
+- **Observação**: nesta fase, sem OCR/IA; submissão segue direto para revisão humana.
+
+### DocumentEvidenceService
+- **Responsabilidade**: criar `DocumentEvidence` e persistir conteúdo em storage via `IFileStorage`.
+- **Uso**: uploads de documentos e downloads por proxy com autorização/auditoria.
+
+### ModerationCaseService
+- **Responsabilidade**: aplicar decisões humanas em casos de moderação (`WorkItemType.ModerationCase`) e atualizar o estado do report/sanção.
+
 ### Otimizações de Query
 O `PostFilterService` atualmente carrega todos os posts antes de filtrar. Para grandes volumes, a filtragem deve ser feita no nível do repositório.
 

@@ -259,9 +259,9 @@ public sealed class JoinRequestService
                 request.RequesterUserId,
                 request.TerritoryId,
                 MembershipRole.Resident,
-                ResidencyVerification.DocumentVerified,
+                ResidencyVerification.None,
                 null,
-                decidedAtUtc,
+                null,
                 decidedAtUtc);
 
             await _membershipRepository.AddAsync(newMembership, cancellationToken);
@@ -270,7 +270,8 @@ public sealed class JoinRequestService
                  !membership.HasAnyVerification())
         {
             await _membershipRepository.UpdateRoleAsync(membership.Id, MembershipRole.Resident, cancellationToken);
-            await _membershipRepository.UpdateDocumentVerificationAsync(membership.Id, decidedAtUtc, cancellationToken);
+            // Importante: aprovar JoinRequest promove para Resident, mas não "verifica" residência.
+            // ResidencyVerification deve ser feito por geo/documento (ou fluxo admin explícito).
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);

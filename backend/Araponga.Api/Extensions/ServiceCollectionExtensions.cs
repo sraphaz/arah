@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<TerritoryService>();
         services.AddScoped<AuthService>();
         services.AddScoped<MembershipService>();
+        services.AddScoped<ResidencyRequestService>();
         services.AddScoped<JoinRequestService>();
         services.AddScoped<EventsService>();
         services.AddScoped<MapService>();

@@ -9,7 +9,7 @@ System_Boundary(s1, "Araponga") {
   Container(web, "Web App", "Next.js/React (futuro)", "Cliente web para exploração e administração leve.")
   Container(api, "Araponga API (BFF)", ".NET 8 ASP.NET Core", "Exposição de endpoints REST: territórios, feed, mapa, entidades, interações e auth.")
   ContainerDb(db, "Banco de Dados", "PostgreSQL + PostGIS", "Persistência relacional e geoespacial: territórios, memberships, entidades, feed e saúde do território.")
-  Container(storage, "Object Storage", "S3 compatível (futuro)", "Armazenamento de mídia: fotos de usuários, posts, lugares, eventos, alertas.")
+  Container(storage, "Object Storage", "S3 compatível (MinIO/S3)", "Armazenamento de arquivos e evidências. Acesso inicial via download por proxy pela API.")
   Container(queue, "Event Bus", "RabbitMQ/Kafka (futuro)", "Eventos de domínio/integração: auditoria, notificação, indexação, moderação.")
 }
 
@@ -26,7 +26,7 @@ Rel(mobile, api, "Consome API", "HTTPS/JSON")
 Rel(web, api, "Consome API", "HTTPS/JSON")
 
 Rel(api, db, "Lê/Escreve", "SQL")
-Rel(api, storage, "Upload/Download mídia", "HTTPS")
+Rel(api, storage, "Upload/Download (proxy) de arquivos/evidências", "HTTPS")
 Rel(api, queue, "Publica eventos", "AMQP/HTTP")
 
 Rel(api, identity, "Auth login social", "OIDC/OAuth2")

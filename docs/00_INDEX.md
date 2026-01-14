@@ -35,6 +35,7 @@ Documentos sobre moderação, observabilidade e operações.
 - **[Moderação e Reports](./30_MODERATION.md)** - Sistema de moderação e reports
 - **[Admin e Observabilidade](./31_ADMIN_OBSERVABILITY.md)** - Administração e observabilidade do sistema
 - **[Rastreabilidade](./32_TRACEABILITY.md)** - Rastreabilidade de requisitos e funcionalidades
+- **[System Config e Work Queue](./33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md)** - Configurações globais e fila genérica (P0)
 - **[API - Lógica de Negócio e Usabilidade](./60_API_LÓGICA_NEGÓCIO.md)** - Documento completo de lógica de negócio e usabilidade de todas as operações da API
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 

@@ -7,9 +7,12 @@ using Araponga.Domain.Map;
 using Araponga.Domain.Marketplace;
 using Araponga.Domain.Moderation;
 using Araponga.Domain.Membership;
+using Araponga.Domain.Configuration;
+using Araponga.Domain.Evidence;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
+using Araponga.Domain.Work;
 
 namespace Araponga.Infrastructure.InMemory;
 
@@ -320,4 +323,7 @@ public sealed class InMemoryDataStore
         public List<MembershipSettings> MembershipSettings { get; } = new();
         public List<MembershipCapability> MembershipCapabilities { get; } = new();
         public List<SystemPermission> SystemPermissions { get; } = new();
+    public List<SystemConfig> SystemConfigs { get; } = new();
+    public List<WorkItem> WorkItems { get; } = new();
+    public List<DocumentEvidence> DocumentEvidences { get; } = new();
     }

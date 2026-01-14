@@ -12,6 +12,12 @@ public sealed class InMemoryReportRepository : IReportRepository
         _dataStore = dataStore;
     }
 
+    public Task<ModerationReport?> GetByIdAsync(Guid reportId, CancellationToken cancellationToken)
+    {
+        var report = _dataStore.ModerationReports.FirstOrDefault(r => r.Id == reportId);
+        return Task.FromResult<ModerationReport?>(report);
+    }
+
     public Task<bool> HasRecentReportAsync(
         Guid reporterUserId,
         ReportTargetType targetType,
@@ -161,5 +167,29 @@ public sealed class InMemoryReportRepository : IReportRepository
         }
 
         return Task.FromResult(query.Count());
+    }
+
+    public Task UpdateStatusAsync(Guid reportId, ReportStatus status, CancellationToken cancellationToken)
+    {
+        var idx = _dataStore.ModerationReports.FindIndex(r => r.Id == reportId);
+        if (idx < 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        var existing = _dataStore.ModerationReports[idx];
+        var updated = new ModerationReport(
+            existing.Id,
+            existing.ReporterUserId,
+            existing.TerritoryId,
+            existing.TargetType,
+            existing.TargetId,
+            existing.Reason,
+            existing.Details,
+            status,
+            existing.CreatedAtUtc);
+
+        _dataStore.ModerationReports[idx] = updated;
+        return Task.CompletedTask;
     }
 }

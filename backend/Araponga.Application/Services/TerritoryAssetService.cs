@@ -3,6 +3,8 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Assets;
 using Araponga.Domain.Geo;
+using Araponga.Domain.Membership;
+using Araponga.Domain.Work;
 
 namespace Araponga.Application.Services;
 
@@ -12,6 +14,7 @@ public sealed class TerritoryAssetService
     private readonly IAssetGeoAnchorRepository _anchorRepository;
     private readonly IAssetValidationRepository _validationRepository;
     private readonly ITerritoryMembershipRepository _membershipRepository;
+    private readonly IWorkItemRepository _workItemRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
 
@@ -20,6 +23,7 @@ public sealed class TerritoryAssetService
         IAssetGeoAnchorRepository anchorRepository,
         IAssetValidationRepository validationRepository,
         ITerritoryMembershipRepository membershipRepository,
+        IWorkItemRepository workItemRepository,
         IAuditLogger auditLogger,
         IUnitOfWork unitOfWork)
     {
@@ -27,6 +31,7 @@ public sealed class TerritoryAssetService
         _anchorRepository = anchorRepository;
         _validationRepository = validationRepository;
         _membershipRepository = membershipRepository;
+        _workItemRepository = workItemRepository;
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
     }
@@ -122,7 +127,7 @@ public sealed class TerritoryAssetService
             NormalizeType(type),
             name.Trim(),
             string.IsNullOrWhiteSpace(description) ? null : description.Trim(),
-            AssetStatus.Active,
+            AssetStatus.Suggested,
             userId,
             now,
             userId,
@@ -141,6 +146,29 @@ public sealed class TerritoryAssetService
 
         await _auditLogger.LogAsync(
             new AuditEntry("asset.created", userId, territoryId, asset.Id, now),
+            cancellationToken);
+
+        // Enfileirar curadoria para Curator (fallback humano).
+        var workItem = new WorkItem(
+            Guid.NewGuid(),
+            WorkItemType.AssetCuration,
+            WorkItemStatus.RequiresHumanReview,
+            territoryId,
+            userId,
+            now,
+            requiredSystemPermission: null,
+            requiredCapability: MembershipCapabilityType.Curator,
+            subjectType: "ASSET",
+            subjectId: asset.Id,
+            payloadJson: $$"""{"assetId":"{{asset.Id}}","territoryId":"{{territoryId}}"}""",
+            outcome: WorkItemOutcome.None,
+            completedAtUtc: null,
+            completedByUserId: null,
+            completionNotes: null);
+
+        await _workItemRepository.AddAsync(workItem, cancellationToken);
+        await _auditLogger.LogAsync(
+            new AuditEntry("work_item.created", userId, territoryId, workItem.Id, now),
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
@@ -235,6 +263,63 @@ public sealed class TerritoryAssetService
         await _auditLogger.LogAsync(
             new AuditEntry("asset.archived", userId, territoryId, asset.Id, now),
             cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
+        if (details.Count == 0)
+        {
+            return Result<TerritoryAssetDetails>.Failure("Unable to build asset details.");
+        }
+        return Result<TerritoryAssetDetails>.Success(details[0]);
+    }
+
+    public async Task<Result<TerritoryAssetDetails>> CurateAsync(
+        Guid assetId,
+        Guid territoryId,
+        Guid curatorUserId,
+        WorkItemOutcome outcome,
+        string? notes,
+        CancellationToken cancellationToken)
+    {
+        if (outcome != WorkItemOutcome.Approved && outcome != WorkItemOutcome.Rejected)
+        {
+            return Result<TerritoryAssetDetails>.Failure("Invalid outcome.");
+        }
+
+        var asset = await _assetRepository.GetByIdAsync(assetId, cancellationToken);
+        if (asset is null || asset.TerritoryId != territoryId)
+        {
+            return Result<TerritoryAssetDetails>.Failure("Asset not found.");
+        }
+
+        var now = DateTime.UtcNow;
+        if (outcome == WorkItemOutcome.Approved)
+        {
+            asset.Approve(curatorUserId, now);
+            await _auditLogger.LogAsync(new AuditEntry("asset.approved", curatorUserId, territoryId, asset.Id, now), cancellationToken);
+        }
+        else
+        {
+            asset.Reject(curatorUserId, now, notes);
+            await _auditLogger.LogAsync(new AuditEntry("asset.rejected", curatorUserId, territoryId, asset.Id, now), cancellationToken);
+        }
+
+        await _assetRepository.UpdateAsync(asset, cancellationToken);
+
+        // Completar work item associado (se existir)
+        var workItem = await _workItemRepository.GetLatestOpenBySubjectAsync(
+            WorkItemType.AssetCuration,
+            "ASSET",
+            asset.Id,
+            cancellationToken);
+
+        if (workItem is not null)
+        {
+            workItem.Complete(outcome, curatorUserId, notes, now);
+            await _workItemRepository.UpdateAsync(workItem, cancellationToken);
+            await _auditLogger.LogAsync(new AuditEntry("work_item.completed", curatorUserId, territoryId, workItem.Id, now), cancellationToken);
+        }
 
         await _unitOfWork.CommitAsync(cancellationToken);
 

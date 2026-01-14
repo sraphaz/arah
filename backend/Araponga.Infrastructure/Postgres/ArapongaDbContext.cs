@@ -21,6 +21,9 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<MembershipSettingsRecord> MembershipSettings => Set<MembershipSettingsRecord>();
     public DbSet<MembershipCapabilityRecord> MembershipCapabilities => Set<MembershipCapabilityRecord>();
     public DbSet<SystemPermissionRecord> SystemPermissions => Set<SystemPermissionRecord>();
+    public DbSet<SystemConfigRecord> SystemConfigs => Set<SystemConfigRecord>();
+    public DbSet<WorkItemRecord> WorkItems => Set<WorkItemRecord>();
+    public DbSet<DocumentEvidenceRecord> DocumentEvidences => Set<DocumentEvidenceRecord>();
     public DbSet<TerritoryJoinRequestRecord> TerritoryJoinRequests => Set<TerritoryJoinRequestRecord>();
     public DbSet<TerritoryJoinRequestRecipientRecord> TerritoryJoinRequestRecipients => Set<TerritoryJoinRequestRecipientRecord>();
     public DbSet<CommunityPostRecord> CommunityPosts => Set<CommunityPostRecord>();
@@ -221,6 +224,55 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
                 .HasFilter("\"RevokedAtUtc\" IS NULL");
             entity.HasIndex(p => p.PermissionType)
                 .HasFilter("\"RevokedAtUtc\" IS NULL");
+        });
+
+        modelBuilder.Entity<SystemConfigRecord>(entity =>
+        {
+            entity.ToTable("system_configs");
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Key).HasMaxLength(200).IsRequired();
+            entity.Property(c => c.Value).HasColumnType("text").IsRequired();
+            entity.Property(c => c.Category).HasConversion<int>();
+            entity.Property(c => c.Description).HasMaxLength(1000);
+            entity.Property(c => c.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(c => c.Key).IsUnique();
+            entity.HasIndex(c => c.Category);
+        });
+
+        modelBuilder.Entity<WorkItemRecord>(entity =>
+        {
+            entity.ToTable("work_items");
+            entity.HasKey(w => w.Id);
+            entity.Property(w => w.Type).HasConversion<int>();
+            entity.Property(w => w.Status).HasConversion<int>();
+            entity.Property(w => w.RequiredSystemPermission).HasConversion<int>();
+            entity.Property(w => w.RequiredCapability).HasConversion<int>();
+            entity.Property(w => w.Outcome).HasConversion<int>();
+            entity.Property(w => w.SubjectType).HasMaxLength(50).IsRequired();
+            entity.Property(w => w.PayloadJson).HasColumnType("text");
+            entity.Property(w => w.CompletionNotes).HasMaxLength(2000);
+            entity.Property(w => w.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(w => w.CompletedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(w => w.Status);
+            entity.HasIndex(w => w.Type);
+            entity.HasIndex(w => new { w.TerritoryId, w.Status });
+            entity.HasIndex(w => new { w.SubjectType, w.SubjectId });
+        });
+
+        modelBuilder.Entity<DocumentEvidenceRecord>(entity =>
+        {
+            entity.ToTable("document_evidences");
+            entity.HasKey(d => d.Id);
+            entity.Property(d => d.Kind).HasConversion<int>();
+            entity.Property(d => d.StorageProvider).HasConversion<int>();
+            entity.Property(d => d.StorageKey).HasMaxLength(500).IsRequired();
+            entity.Property(d => d.ContentType).HasMaxLength(200).IsRequired();
+            entity.Property(d => d.OriginalFileName).HasMaxLength(300);
+            entity.Property(d => d.Sha256).HasMaxLength(64).IsRequired();
+            entity.Property(d => d.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(d => d.UserId);
+            entity.HasIndex(d => new { d.TerritoryId, d.Kind });
         });
 
         modelBuilder.Entity<TerritoryJoinRequestRecord>(entity =>

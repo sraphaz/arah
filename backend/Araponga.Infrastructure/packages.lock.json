@@ -2,6 +2,15 @@
   "version": 1,
   "dependencies": {
     "net8.0": {
+      "AWSSDK.S3": {
+        "type": "Direct",
+        "requested": "[4.0.17.1, )",
+        "resolved": "4.0.17.1",
+        "contentHash": "LKSufHYQhetc2SfCr0jlvQ+f5COn3deM3t63yA/Jh/k7H4Nv+B9CxSl/CN4Jsrc1TohyLV8ow5LwvABouAhvRg==",
+        "dependencies": {
+          "AWSSDK.Core": "[4.0.3.8, 5.0.0)"
+        }
+      },
       "Microsoft.EntityFrameworkCore": {
         "type": "Direct",
         "requested": "[8.0.8, )",
@@ -55,6 +64,11 @@
           "Microsoft.EntityFrameworkCore.Relational": "8.0.8",
           "Npgsql": "8.0.4"
         }
+      },
+      "AWSSDK.Core": {
+        "type": "Transitive",
+        "resolved": "4.0.3.8",
+        "contentHash": "nJyNzaz3pcD8c8hZvtJXuziJm1dkd3/BYmZvhf1TPNfMo3G3lsesGFZl1UVyQhGEfmQOS+efT0H8tf00PMmjug=="
       },
       "Microsoft.EntityFrameworkCore.Abstractions": {
         "type": "Transitive",

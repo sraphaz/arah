@@ -18,6 +18,8 @@ namespace Araponga.Api.Controllers;
 public sealed class MembershipsController : ControllerBase
 {
     private readonly MembershipService _membershipService;
+    private readonly VerificationQueueService _verificationQueueService;
+    private readonly DocumentEvidenceService _documentEvidenceService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly TerritoryService _territoryService;
     private readonly AccessEvaluator _accessEvaluator;
@@ -26,6 +28,8 @@ public sealed class MembershipsController : ControllerBase
 
     public MembershipsController(
         MembershipService membershipService,
+        VerificationQueueService verificationQueueService,
+        DocumentEvidenceService documentEvidenceService,
         CurrentUserAccessor currentUserAccessor,
         TerritoryService territoryService,
         AccessEvaluator accessEvaluator,
@@ -33,6 +37,8 @@ public sealed class MembershipsController : ControllerBase
         IOptions<PresencePolicyOptions> presencePolicy)
     {
         _membershipService = membershipService;
+        _verificationQueueService = verificationQueueService;
+        _documentEvidenceService = documentEvidenceService;
         _currentUserAccessor = currentUserAccessor;
         _territoryService = territoryService;
         _accessEvaluator = accessEvaluator;
@@ -237,6 +243,7 @@ public sealed class MembershipsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> VerifyResidencyDocument(
         [FromRoute] Guid territoryId,
+        [FromBody] Araponga.Api.Contracts.Memberships.VerifyResidencyDocumentRequest? request,
         CancellationToken cancellationToken)
     {
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
@@ -245,17 +252,16 @@ public sealed class MembershipsController : ControllerBase
             return Unauthorized();
         }
 
-        // Nota: Upload de comprovante será processado quando o sistema de assets/upload for implementado.
-        // Por enquanto, a verificação documental é apenas registrada sem validação de arquivo.
-        // Quando implementado, o endpoint deve:
-        // 1. Receber arquivo via multipart/form-data ou referência a asset existente
-        // 2. Validar tipo e tamanho do arquivo
-        // 3. Armazenar referência ao asset no banco
-        // 4. Criar registro de verificação pendente para aprovação manual
-        var result = await _membershipService.VerifyResidencyByDocumentAsync(
+        if (request is null || request.EvidenceId == Guid.Empty)
+        {
+            return BadRequest(new { error = "evidenceId is required." });
+        }
+
+        // Enfileira verificação documental (fallback humano: Curator do território).
+        var result = await _verificationQueueService.SubmitResidencyDocumentAsync(
             userContext.User.Id,
             territoryId,
-            DateTime.UtcNow,
+            request.EvidenceId,
             cancellationToken);
 
         if (result.IsFailure)
@@ -263,7 +269,61 @@ public sealed class MembershipsController : ControllerBase
             return BadRequest(new { error = result.Error });
         }
 
-        return Ok(new { message = "Document verification submitted." });
+        return Ok(new { message = "Document verification submitted.", workItemId = result.Value!.Id });
+    }
+
+    /// <summary>
+    /// Upload de comprovante para verificação documental de residência.
+    /// </summary>
+    [HttpPost]
+    [Route("/api/v1/memberships/{territoryId:guid}/verify-residency/document/upload")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UploadResidencyDocument(
+        [FromRoute] Guid territoryId,
+        [FromForm] IFormFile file,
+        CancellationToken cancellationToken)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        if (file is null || file.Length <= 0)
+        {
+            return BadRequest(new { error = "file is required." });
+        }
+
+        await using var stream = file.OpenReadStream();
+        var created = await _documentEvidenceService.CreateAsync(
+            userContext.User.Id,
+            territoryId,
+            Araponga.Domain.Evidence.DocumentEvidenceKind.Residency,
+            file.FileName,
+            file.ContentType,
+            stream,
+            cancellationToken);
+
+        if (!created.IsSuccess || created.Value is null)
+        {
+            return BadRequest(new { error = created.Error ?? "Unable to upload evidence." });
+        }
+
+        var work = await _verificationQueueService.SubmitResidencyDocumentAsync(
+            userContext.User.Id,
+            territoryId,
+            created.Value.Id,
+            cancellationToken);
+
+        if (!work.IsSuccess || work.Value is null)
+        {
+            return BadRequest(new { error = work.Error ?? "Unable to submit residency verification." });
+        }
+
+        return Ok(new { message = "Document verification submitted.", evidenceId = created.Value.Id, workItemId = work.Value.Id });
     }
 
     /// <summary>

@@ -11,6 +11,11 @@ O MVP implementa fluxos essenciais e automações simples baseadas em thresholds
 2. Informa motivo e detalhes (opcional).
 3. Sistema registra o report e envia para fila de moderação.
 
+**Fila (P2 inicial)**:
+- Ao criar um report, o sistema também cria um **Work Item** do tipo `MODERATIONCASE` (fallback humano).
+- Curadores podem listar via `GET /api/v1/territories/{territoryId}/work-items?type=MODERATIONCASE`.
+- Decisão humana (Curator/Moderator): `POST /api/v1/territories/{territoryId}/moderation/cases/{workItemId}/decide`
+
 **Endpoints**
 - `POST /api/v1/reports/posts/{postId}`
 
@@ -18,6 +23,9 @@ O MVP implementa fluxos essenciais e automações simples baseadas em thresholds
 1. Usuário acessa perfil e aciona “Reportar usuário”.
 2. Informa motivo e detalhes (opcional).
 3. Sistema registra o report para análise.
+
+**Fila (P2 inicial)**:
+- Também cria Work Item `MODERATIONCASE` para o território.
 
 **Endpoints**
 - `POST /api/v1/reports/users/{userId}?territoryId=`
@@ -61,3 +69,9 @@ O MVP implementa fluxos essenciais e automações simples baseadas em thresholds
 ## Evolução pós-MVP
 - [POST-MVP] Score de risco por usuário/post.
 - [POST-MVP] Escalonamento avançado e revisão humana contextual.
+
+## Infra de fila (P0)
+Foi adicionada uma **Work Queue** genérica para suportar fluxos com **fallback humano** (curadoria/moderação/verificações).
+Ainda não está totalmente integrada aos reports, mas já existe para operacionalizar revisões.
+
+- Detalhes e endpoints: `docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md`

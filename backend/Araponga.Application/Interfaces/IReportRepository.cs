@@ -4,6 +4,8 @@ namespace Araponga.Application.Interfaces;
 
 public interface IReportRepository
 {
+    Task<ModerationReport?> GetByIdAsync(Guid reportId, CancellationToken cancellationToken);
+
     Task<bool> HasRecentReportAsync(
         Guid reporterUserId,
         ReportTargetType targetType,
@@ -50,4 +52,6 @@ public interface IReportRepository
         DateTime? fromUtc,
         DateTime? toUtc,
         CancellationToken cancellationToken);
+
+    Task UpdateStatusAsync(Guid reportId, ReportStatus status, CancellationToken cancellationToken);
 }

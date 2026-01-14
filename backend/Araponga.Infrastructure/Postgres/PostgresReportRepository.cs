@@ -31,6 +31,29 @@ public sealed class PostgresReportRepository : IReportRepository
                 cancellationToken);
     }
 
+    public async Task<ModerationReport?> GetByIdAsync(Guid reportId, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.ModerationReports
+            .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Id == reportId, cancellationToken);
+
+        if (record is null)
+        {
+            return null;
+        }
+
+        return new ModerationReport(
+            record.Id,
+            record.ReporterUserId,
+            record.TerritoryId,
+            record.TargetType,
+            record.TargetId,
+            record.Reason,
+            record.Details,
+            record.Status,
+            record.CreatedAtUtc);
+    }
+
     public Task AddAsync(ModerationReport report, CancellationToken cancellationToken)
     {
         _dbContext.ModerationReports.Add(new ModerationReportRecord
@@ -195,5 +218,17 @@ public sealed class PostgresReportRepository : IReportRepository
         }
 
         return await query.CountAsync(cancellationToken);
+    }
+
+    public async Task UpdateStatusAsync(Guid reportId, ReportStatus status, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.ModerationReports
+            .FirstOrDefaultAsync(r => r.Id == reportId, cancellationToken);
+        if (record is null)
+        {
+            return;
+        }
+
+        record.Status = status;
     }
 }

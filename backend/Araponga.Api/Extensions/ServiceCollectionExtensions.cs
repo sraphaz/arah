@@ -3,6 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Application.Events;
 using Araponga.Infrastructure.Eventing;
+using Araponga.Infrastructure.FileStorage;
 using Araponga.Infrastructure.InMemory;
 using Araponga.Infrastructure.Outbox;
 using Araponga.Infrastructure.Postgres;
@@ -57,6 +58,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UserProfileService>();
         services.AddScoped<SystemPermissionService>();
         services.AddScoped<MembershipCapabilityService>();
+        services.AddScoped<SystemConfigCacheService>();
+        services.AddScoped<SystemConfigService>();
+        services.AddScoped<WorkQueueService>();
+        services.AddScoped<VerificationQueueService>();
+        services.AddScoped<DocumentEvidenceService>();
+        services.AddScoped<ModerationCaseService>();
 
         return services;
     }
@@ -66,6 +73,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IEventHandler<PostCreatedEvent>, PostCreatedNotificationHandler>();
         services.AddScoped<IEventHandler<ReportCreatedEvent>, ReportCreatedNotificationHandler>();
+        services.AddScoped<IEventHandler<ReportCreatedEvent>, ReportCreatedWorkItemHandler>();
         services.AddScoped<IEventHandler<SystemPermissionRevokedEvent>, SystemPermissionRevokedCacheHandler>();
         services.AddScoped<IEventHandler<MembershipCapabilityRevokedEvent>, MembershipCapabilityRevokedCacheHandler>();
 
@@ -101,6 +109,17 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<Araponga.Application.Interfaces.IObservabilityLogger, InMemoryObservabilityLogger>();
         services.AddSingleton<ITokenService, JwtTokenService>();
+        
+        var storageProvider = configuration.GetValue<string>("Storage:Provider") ?? "Local";
+        if (string.Equals(storageProvider, "S3", StringComparison.OrdinalIgnoreCase))
+        {
+            var options = configuration.GetSection("Storage:S3").Get<S3StorageOptions>() ?? new S3StorageOptions();
+            services.AddSingleton<IFileStorage>(_ => new S3FileStorage(options));
+        }
+        else
+        {
+            services.AddSingleton<IFileStorage>(_ => new LocalFileStorage(Path.Combine(AppContext.BaseDirectory, "app_data", "uploads")));
+        }
 
         return services;
     }
@@ -142,6 +161,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMembershipSettingsRepository, PostgresMembershipSettingsRepository>();
         services.AddScoped<IMembershipCapabilityRepository, PostgresMembershipCapabilityRepository>();
         services.AddScoped<ISystemPermissionRepository, PostgresSystemPermissionRepository>();
+        services.AddScoped<ISystemConfigRepository, PostgresSystemConfigRepository>();
+        services.AddScoped<IWorkItemRepository, PostgresWorkItemRepository>();
+        services.AddScoped<IDocumentEvidenceRepository, PostgresDocumentEvidenceRepository>();
 
         return services;
     }
@@ -183,6 +205,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMembershipSettingsRepository, InMemoryMembershipSettingsRepository>();
         services.AddSingleton<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddSingleton<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
+        services.AddSingleton<ISystemConfigRepository, InMemorySystemConfigRepository>();
+        services.AddSingleton<IWorkItemRepository, InMemoryWorkItemRepository>();
+        services.AddSingleton<IDocumentEvidenceRepository, InMemoryDocumentEvidenceRepository>();
 
         return services;
     }

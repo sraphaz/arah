@@ -101,4 +101,21 @@ public sealed class TerritoryAsset
         UpdatedByUserId = updatedByUserId;
         UpdatedAtUtc = updatedAtUtc;
     }
+
+    public void Approve(Guid approvedByUserId, DateTime approvedAtUtc)
+    {
+        Status = AssetStatus.Active;
+        UpdatedByUserId = approvedByUserId;
+        UpdatedAtUtc = approvedAtUtc;
+    }
+
+    public void Reject(Guid rejectedByUserId, DateTime rejectedAtUtc, string? reason)
+    {
+        Status = AssetStatus.Rejected;
+        ArchivedByUserId = rejectedByUserId;
+        ArchivedAtUtc = rejectedAtUtc;
+        ArchiveReason = string.IsNullOrWhiteSpace(reason) ? null : reason.Trim();
+        UpdatedByUserId = rejectedByUserId;
+        UpdatedAtUtc = rejectedAtUtc;
+    }
 }

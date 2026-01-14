@@ -52,6 +52,19 @@
         "resolved": "2.8.2",
         "contentHash": "vm1tbfXhFmjFMUmS4M0J0ASXz3/U5XvXBa6DOQUL3fEz4Vt6YPhv+ESCarx6M6D+9kJkJYZKCNvJMas1+nVfmQ=="
       },
+      "AWSSDK.Core": {
+        "type": "Transitive",
+        "resolved": "4.0.3.8",
+        "contentHash": "nJyNzaz3pcD8c8hZvtJXuziJm1dkd3/BYmZvhf1TPNfMo3G3lsesGFZl1UVyQhGEfmQOS+efT0H8tf00PMmjug=="
+      },
+      "AWSSDK.S3": {
+        "type": "Transitive",
+        "resolved": "4.0.17.1",
+        "contentHash": "LKSufHYQhetc2SfCr0jlvQ+f5COn3deM3t63yA/Jh/k7H4Nv+B9CxSl/CN4Jsrc1TohyLV8ow5LwvABouAhvRg==",
+        "dependencies": {
+          "AWSSDK.Core": "[4.0.3.8, 5.0.0)"
+        }
+      },
       "FluentValidation": {
         "type": "Transitive",
         "resolved": "12.1.1",
@@ -800,6 +813,7 @@
       "araponga.infrastructure": {
         "type": "Project",
         "dependencies": {
+          "AWSSDK.S3": "[4.0.17.1, )",
           "Araponga.Application": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",

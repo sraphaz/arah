@@ -138,9 +138,7 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
             return;
         }
 
-        // TODO: Atualizar quando migration adicionar campo ResidencyVerification
-        // Por enquanto, apenas atualizar o domain object (persistência será feita na migration)
-        // Quando a migration adicionar o campo, atualizar: membership.ResidencyVerification = verification;
+        membership.ResidencyVerification = verification;
     }
 
     public async Task UpdateGeoVerificationAsync(Guid membershipId, DateTime verifiedAtUtc, CancellationToken cancellationToken)
@@ -153,10 +151,8 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
             return;
         }
 
-        // TODO: Atualizar quando migration adicionar campos
-        // Quando a migration adicionar os campos, atualizar:
-        // membership.ResidencyVerification = ResidencyVerification.GeoVerified;
-        // membership.LastGeoVerifiedAtUtc = verifiedAtUtc;
+        membership.ResidencyVerification = ResidencyVerification.GeoVerified;
+        membership.LastGeoVerifiedAtUtc = verifiedAtUtc;
     }
 
     public async Task UpdateDocumentVerificationAsync(Guid membershipId, DateTime verifiedAtUtc, CancellationToken cancellationToken)
@@ -169,9 +165,7 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
             return;
         }
 
-        // TODO: Atualizar quando migration adicionar campos
-        // Quando a migration adicionar os campos, atualizar:
-        // membership.ResidencyVerification = ResidencyVerification.DocumentVerified;
-        // membership.LastDocumentVerifiedAtUtc = verifiedAtUtc;
+        membership.ResidencyVerification = ResidencyVerification.DocumentVerified;
+        membership.LastDocumentVerifiedAtUtc = verifiedAtUtc;
     }
 }

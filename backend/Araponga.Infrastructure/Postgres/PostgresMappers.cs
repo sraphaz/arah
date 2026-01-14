@@ -96,7 +96,6 @@ public static class PostgresMappers
             UserId = membership.UserId,
             TerritoryId = membership.TerritoryId,
             Role = membership.Role,
-            VerificationStatus = membership.VerificationStatus, // Mantém para compatibilidade
             ResidencyVerification = membership.ResidencyVerification,
             LastGeoVerifiedAtUtc = membership.LastGeoVerifiedAtUtc,
             LastDocumentVerifiedAtUtc = membership.LastDocumentVerifiedAtUtc,
@@ -106,27 +105,14 @@ public static class PostgresMappers
 
     public static TerritoryMembership ToDomain(this TerritoryMembershipRecord record)
     {
-        // Usar novo construtor se ResidencyVerification estiver disponível
-        if (record.ResidencyVerification != default(ResidencyVerification))
-        {
-            return new TerritoryMembership(
-                record.Id,
-                record.UserId,
-                record.TerritoryId,
-                record.Role,
-                record.ResidencyVerification,
-                record.LastGeoVerifiedAtUtc,
-                record.LastDocumentVerifiedAtUtc,
-                record.CreatedAtUtc);
-        }
-
-        // Fallback para compatibilidade com dados antigos
         return new TerritoryMembership(
             record.Id,
             record.UserId,
             record.TerritoryId,
             record.Role,
-            record.VerificationStatus,
+            record.ResidencyVerification,
+            record.LastGeoVerifiedAtUtc,
+            record.LastDocumentVerifiedAtUtc,
             record.CreatedAtUtc);
     }
 

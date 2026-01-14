@@ -90,7 +90,9 @@ public sealed class InMemoryDataStore
                 residentUser.Id,
                 territoryB.Id,
                 MembershipRole.Resident,
-                VerificationStatus.Validated,
+                ResidencyVerification.GeoVerified,
+                DateTime.UtcNow,
+                null,
                 DateTime.UtcNow)
         };
 

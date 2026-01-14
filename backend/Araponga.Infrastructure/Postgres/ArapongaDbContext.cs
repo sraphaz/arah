@@ -157,7 +157,6 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.ToTable("territory_memberships");
             entity.HasKey(m => m.Id);
             entity.Property(m => m.Role).HasConversion<int>();
-            entity.Property(m => m.VerificationStatus).HasConversion<int>(); // Mantém para compatibilidade
             entity.Property(m => m.ResidencyVerification).HasConversion<int>();
             entity.Property(m => m.LastGeoVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(m => m.LastDocumentVerifiedAtUtc).HasColumnType("timestamp with time zone");

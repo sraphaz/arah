@@ -49,27 +49,6 @@ public sealed class AccessEvaluator
         return membership is not null && membership.Role == MembershipRole.Resident;
     }
 
-    /// <summary>
-    /// [Obsolete] Usa VerificationStatus legado. Use IsResidentAsync que usa ResidencyVerification.
-    /// </summary>
-    [Obsolete("Use IsResidentAsync which uses ResidencyVerification.")]
-    public async Task<bool> IsResidentLegacyAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken)
-    {
-        var cacheKey = $"membership:resident:legacy:{userId}:{territoryId}";
-        if (_cache.TryGetValue<bool?>(cacheKey, out var cached))
-        {
-            return cached ?? false;
-        }
-
-        var membership = await _membershipRepository.GetByUserAndTerritoryAsync(userId, territoryId, cancellationToken);
-        var isResident = membership is not null &&
-                         membership.Role == MembershipRole.Resident &&
-                         membership.VerificationStatus == VerificationStatus.Validated;
-
-        _cache.Set(cacheKey, isResident, MembershipCacheExpiration);
-        return isResident;
-    }
-
     public async Task<MembershipRole?> GetRoleAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken)
     {
         var cacheKey = $"membership:role:{userId}:{territoryId}";

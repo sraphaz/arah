@@ -72,12 +72,16 @@ catch
 }
 ```
 
-### 6. Métodos Obsoletos ✅
+### 6. Métodos Obsoletos ✅ **REMOVIDOS**
 
-**Status**: Mantidos com `[Obsolete]` para compatibilidade retroativa
-- `DeclareMembershipAsync` - Chama novos métodos internamente
-- `GetStatusAsync` - Mantido para compatibilidade
-- `ValidateAsync` - Mantido para compatibilidade
+**Status**: Removidos completamente (aplicação ainda não lançada, não precisa de compatibilidade)
+- ✅ `DeclareMembershipAsync` - Removido (substituído por `EnterAsVisitorAsync` e `BecomeResidentAsync`)
+- ✅ `GetStatusAsync` - Removido (substituído por acesso direto à propriedade `ResidencyVerification`)
+- ✅ `ValidateAsync` - Removido (substituído por `VerifyResidencyByGeoAsync` e `VerifyResidencyByDocumentAsync`)
+- ✅ Endpoints obsoletos removidos: `DeclareMembership`, `GetStatus`, `Validate`
+- ✅ Métodos obsoletos de repositório removidos: `UpdateStatusAsync`, `UpdateRoleAndStatusAsync`
+- ✅ Método obsoleto de AccessEvaluator removido: `IsResidentLegacyAsync`
+- ⚠️ Propriedade obsoleta `VerificationStatus` de `TerritoryMembership` mantida temporariamente para compatibilidade com banco de dados
 
 ## 📝 Testes Atualizados
 

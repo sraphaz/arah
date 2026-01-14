@@ -16,7 +16,6 @@ Esta revisao identifica gaps, incongruencias, oportunidades de refatoracao, garg
 
 **Exemplo**:
 - `FeedController.CreatePost` aceita `geoAnchors` sem validar limites antes de passar para o service
-- `MembershipsController.DeclareMembership` nao valida coordenadas geograficas antes de processar
 
 **Impacto**: Erros de validacao chegam muito tarde no pipeline, dificultando tratamento adequado.
 

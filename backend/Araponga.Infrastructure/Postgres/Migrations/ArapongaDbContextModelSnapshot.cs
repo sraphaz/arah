@@ -304,11 +304,16 @@ public partial class ArapongaDbContextModelSnapshot : ModelSnapshot
             entity.ToTable("territory_memberships");
             entity.HasKey(m => m.Id);
             entity.Property(m => m.Role).HasConversion<int>();
-            entity.Property(m => m.VerificationStatus).HasConversion<int>();
+            entity.Property(m => m.ResidencyVerification).HasConversion<int>();
+            entity.Property(m => m.LastGeoVerifiedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(m => m.LastDocumentVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(m => m.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(m => m.UserId);
             entity.HasIndex(m => m.TerritoryId);
             entity.HasIndex(m => new { m.UserId, m.TerritoryId }).IsUnique();
+            entity.HasIndex(m => m.UserId)
+                .HasFilter("\"Role\" = 1")
+                .IsUnique();
         });
 
         modelBuilder.Entity<UserBlockRecord>(entity =>

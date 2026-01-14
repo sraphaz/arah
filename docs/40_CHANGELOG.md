@@ -1,6 +1,12 @@
 # Changelog
 
 ## Unreleased
+- Removed all obsolete APIs related to Membership (application not yet launched, no backward compatibility needed):
+  - Removed obsolete endpoints: `DeclareMembership`, `GetStatus`, `Validate`
+  - Removed obsolete service methods: `DeclareMembershipAsync`, `GetStatusAsync`, `ValidateAsync`
+  - Removed obsolete repository methods: `UpdateStatusAsync`, `UpdateRoleAndStatusAsync`
+  - Removed obsolete `AccessEvaluator.IsResidentLegacyAsync`
+  - Updated tests to use new APIs (`EnterAsVisitorAsync`, `BecomeResidentAsync`, `VerifyResidencyByGeoAsync`, `VerifyResidencyByDocumentAsync`)
 - Refactored territory to be purely geographic and moved social logic into membership entities and services.
 - Added revised user stories documentation under `docs/user-stories.md`.
 - Updated API endpoints for territory search/nearby/suggestions and membership handling.

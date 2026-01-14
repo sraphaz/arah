@@ -15,9 +15,6 @@ public interface ITerritoryMembershipRepository
     /// </summary>
     Task UpdateAsync(TerritoryMembership membership, CancellationToken cancellationToken);
     
-    Task UpdateStatusAsync(Guid membershipId, VerificationStatus status, CancellationToken cancellationToken);
-    Task UpdateRoleAndStatusAsync(Guid membershipId, MembershipRole role, VerificationStatus status, CancellationToken cancellationToken);
-    
     /// <summary>
     /// Atualiza apenas o Role do membership, sem afetar ResidencyVerification.
     /// </summary>

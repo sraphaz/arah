@@ -11,15 +11,18 @@ public sealed class UserRecord
     public string? ForeignDocument { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Address { get; set; }
-    public string Provider { get; set; } = string.Empty;
+    public string AuthProvider { get; set; } = string.Empty;
     public string ExternalId { get; set; } = string.Empty;
-    public UserRole Role { get; set; }
     
     // 2FA fields
     public bool TwoFactorEnabled { get; set; }
     public string? TwoFactorSecret { get; set; }
     public string? TwoFactorRecoveryCodesHash { get; set; }
     public DateTime? TwoFactorVerifiedAtUtc { get; set; }
+    
+    // Identity verification fields
+    public UserIdentityVerificationStatus IdentityVerificationStatus { get; set; }
+    public DateTime? IdentityVerifiedAtUtc { get; set; }
     
     public DateTime CreatedAtUtc { get; set; }
 }

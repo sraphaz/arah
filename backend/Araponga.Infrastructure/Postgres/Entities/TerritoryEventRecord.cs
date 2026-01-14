@@ -1,5 +1,5 @@
 using Araponga.Domain.Events;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Infrastructure.Postgres.Entities;
 

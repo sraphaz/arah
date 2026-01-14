@@ -17,7 +17,8 @@ public sealed class InMemoryFeatureFlagService : IFeatureFlagService
         _flags[Guid.Parse("22222222-2222-2222-2222-222222222222")] = new HashSet<FeatureFlag>
         {
             FeatureFlag.AlertPosts,
-            FeatureFlag.EventPosts
+            FeatureFlag.EventPosts,
+            FeatureFlag.MarketplaceEnabled
         };
     }
 

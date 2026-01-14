@@ -16,10 +16,22 @@ public static class FeedServiceTestHelper
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = new MemoryCache(new MemoryCacheOptions());
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
         var featureFlags = new InMemoryFeatureFlagService();
+        var membershipAccessRules = new MembershipAccessRules(
+            membershipRepository,
+            settingsRepository,
+            userRepository,
+            featureFlags);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(
+            membershipRepository,
+            capabilityRepository,
+            systemPermissionRepository,
+            membershipAccessRules,
+            cache);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var mapRepository = new InMemoryMapRepository(dataStore);

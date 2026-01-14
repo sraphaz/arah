@@ -4,6 +4,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Health;
+using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -55,7 +56,8 @@ public sealed class AlertsController : ControllerBase
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
-        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, resolvedTerritoryId.Value, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isResident && !isCurator)
         {
             return Unauthorized();
         }
@@ -98,7 +100,8 @@ public sealed class AlertsController : ControllerBase
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
-        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, resolvedTerritoryId.Value, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isResident && !isCurator)
         {
             return Unauthorized();
         }
@@ -148,7 +151,8 @@ public sealed class AlertsController : ControllerBase
         }
 
         var isResident = await _accessEvaluator.IsResidentAsync(userContext.User.Id, resolvedTerritoryId.Value, cancellationToken);
-        if (!isResident && !_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, resolvedTerritoryId.Value, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isResident && !isCurator)
         {
             return Unauthorized();
         }
@@ -200,7 +204,8 @@ public sealed class AlertsController : ControllerBase
             return Unauthorized();
         }
 
-        if (!_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, resolvedTerritoryId.Value, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isCurator)
         {
             return Unauthorized();
         }

@@ -1,10 +1,11 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
+using Araponga.Application.Services;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Geo;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 
 namespace Araponga.Application.Services;
@@ -425,8 +426,15 @@ public sealed class EventsService
             return true;
         }
 
-        var user = await _userRepository.GetByIdAsync(actorUserId, cancellationToken);
-        return user is not null && user.Role == UserRole.Curator;
+        // Obter territoryId do evento
+        var territoryId = territoryEvent.TerritoryId;
+        
+        // Verificar se tem capacidade de Curator no território
+        return await _accessEvaluator.HasCapabilityAsync(
+            actorUserId,
+            territoryId,
+            MembershipCapabilityType.Curator,
+            cancellationToken);
     }
 
     private async Task<string?> ResolveDisplayNameAsync(Guid userId, CancellationToken cancellationToken)

@@ -3,7 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Moderation;
-using Araponga.Domain.Social;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Services;
 

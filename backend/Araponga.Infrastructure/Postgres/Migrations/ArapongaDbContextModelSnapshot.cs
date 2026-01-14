@@ -470,23 +470,16 @@ public partial class ArapongaDbContextModelSnapshot : ModelSnapshot
             entity.HasKey(u => u.Id);
             entity.Property(u => u.DisplayName).HasMaxLength(200).IsRequired();
             entity.Property(u => u.Email).HasMaxLength(320).IsRequired();
-            entity.Property(u => u.Provider).HasMaxLength(80).IsRequired();
+            entity.Property(u => u.AuthProvider).HasMaxLength(80).IsRequired();
             entity.Property(u => u.ExternalId).HasMaxLength(160).IsRequired();
-            entity.Property(u => u.Role).HasConversion<int>();
+            entity.Property(u => u.TwoFactorSecret).HasMaxLength(500);
+            entity.Property(u => u.TwoFactorRecoveryCodesHash).HasMaxLength(500);
+            entity.Property(u => u.TwoFactorVerifiedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(u => u.IdentityVerificationStatus).HasConversion<int>().IsRequired();
+            entity.Property(u => u.IdentityVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(u => u.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(u => u.Email).IsUnique();
-            entity.HasIndex(u => new { u.Provider, u.ExternalId }).IsUnique();
-        });
-
-        modelBuilder.Entity<UserTerritoryRecord>(entity =>
-        {
-            entity.ToTable("user_territories");
-            entity.HasKey(m => m.Id);
-            entity.Property(m => m.Status).HasConversion<int>();
-            entity.Property(m => m.CreatedAtUtc).HasColumnType("timestamp with time zone");
-            entity.HasIndex(m => m.UserId);
-            entity.HasIndex(m => m.TerritoryId);
-            entity.HasIndex(m => new { m.UserId, m.TerritoryId }).IsUnique();
+            entity.HasIndex(u => new { u.AuthProvider, u.ExternalId }).IsUnique();
         });
     }
 }

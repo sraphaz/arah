@@ -1,6 +1,8 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Services;
 
@@ -9,17 +11,20 @@ public sealed class StoreService
     private readonly IStoreRepository _storeRepository;
     private readonly IUserRepository _userRepository;
     private readonly AccessEvaluator _accessEvaluator;
+    private readonly MembershipAccessRules _accessRules;
     private readonly IUnitOfWork _unitOfWork;
 
     public StoreService(
         IStoreRepository storeRepository,
         IUserRepository userRepository,
         AccessEvaluator accessEvaluator,
+        MembershipAccessRules accessRules,
         IUnitOfWork unitOfWork)
     {
         _storeRepository = storeRepository;
         _userRepository = userRepository;
         _accessEvaluator = accessEvaluator;
+        _accessRules = accessRules;
         _unitOfWork = unitOfWork;
     }
 
@@ -37,9 +42,15 @@ public sealed class StoreService
         string? preferredContactMethod,
         CancellationToken cancellationToken)
     {
-        if (!await IsResidentOrCuratorAsync(userId, territoryId, cancellationToken))
+        // Verificar regras de marketplace
+        if (!await _accessRules.CanCreateStoreOrItemInMarketplaceAsync(userId, territoryId, cancellationToken))
         {
-            return Result<Store>.Failure("Only confirmed residents or admins can manage stores.");
+            // Verificar se é Curator (pode gerenciar stores de outros)
+            var isCurator = await _accessEvaluator.HasCapabilityAsync(userId, territoryId, MembershipCapabilityType.Curator, cancellationToken);
+            if (!isCurator)
+            {
+                return Result<Store>.Failure("Only confirmed residents (marketplace enabled + opt-in) or curators can manage stores.");
+            }
         }
 
         if (string.IsNullOrWhiteSpace(displayName))
@@ -199,14 +210,18 @@ public sealed class StoreService
             return true;
         }
 
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-        return user is not null && _accessEvaluator.IsCurator(user);
+        // Verificar se tem capacidade de Curator no território da Store
+        return await _accessEvaluator.HasCapabilityAsync(
+            userId,
+            store.TerritoryId,
+            MembershipCapabilityType.Curator,
+            cancellationToken);
     }
 
     private async Task<bool> IsResidentOrCuratorAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is not null && _accessEvaluator.IsCurator(user))
+        // Verificar se tem capacidade de Curator
+        if (await _accessEvaluator.HasCapabilityAsync(userId, territoryId, MembershipCapabilityType.Curator, cancellationToken))
         {
             return true;
         }

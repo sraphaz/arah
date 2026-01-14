@@ -1,5 +1,8 @@
+using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
+using Araponga.Application.Models;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
 using Xunit;
@@ -11,20 +14,104 @@ public sealed class MarketplaceServiceTests
     private static readonly Guid TerritoryId = Guid.Parse("22222222-2222-2222-2222-222222222222");
     private static readonly Guid ResidentUserId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
 
+    private static async Task<(StoreService storeService, StoreItemService itemService)> CreateServicesAsync(
+        InMemoryDataStore dataStore,
+        Guid territoryId,
+        CancellationToken cancellationToken)
+    {
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var itemRepository = new InMemoryStoreItemRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
+            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+
+        var featureFlags = new InMemoryFeatureFlagService();
+        featureFlags.SetEnabledFlags(territoryId, new List<FeatureFlag> { FeatureFlag.MarketplaceEnabled });
+
+        var membershipAccessRules = new MembershipAccessRules(
+            membershipRepository,
+            settingsRepository,
+            userRepository,
+            featureFlags);
+
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var accessEvaluator = new AccessEvaluator(
+            membershipRepository,
+            capabilityRepository,
+            systemPermissionRepository,
+            membershipAccessRules,
+            cache);
+
+        // Garantir opt-in do residente default do InMemoryDataStore
+        var residentMembership = await membershipRepository.GetByUserAndTerritoryAsync(ResidentUserId, territoryId, cancellationToken);
+        if (residentMembership is not null)
+        {
+            var residentSettings = await settingsRepository.GetByMembershipIdAsync(residentMembership.Id, cancellationToken);
+            if (residentSettings is not null && !residentSettings.MarketplaceOptIn)
+            {
+                residentSettings.UpdateMarketplaceOptIn(true, DateTime.UtcNow);
+                await settingsRepository.UpdateAsync(residentSettings, cancellationToken);
+            }
+        }
+
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+
+        return (storeService, itemService);
+    }
+
+    private static async Task<(MembershipAccessRules rules, AccessEvaluator evaluator)> CreateAccessAsync(
+        InMemoryDataStore dataStore,
+        ITerritoryMembershipRepository membershipRepository,
+        IUserRepository userRepository,
+        Microsoft.Extensions.Caching.Memory.IMemoryCache cache,
+        Guid territoryId,
+        CancellationToken cancellationToken)
+    {
+        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
+
+        var featureFlags = new InMemoryFeatureFlagService();
+        featureFlags.SetEnabledFlags(territoryId, new List<FeatureFlag> { FeatureFlag.MarketplaceEnabled });
+
+        var rules = new MembershipAccessRules(
+            membershipRepository,
+            settingsRepository,
+            userRepository,
+            featureFlags);
+
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var evaluator = new AccessEvaluator(
+            membershipRepository,
+            capabilityRepository,
+            systemPermissionRepository,
+            rules,
+            cache);
+
+        // Garantir opt-in do residente default do InMemoryDataStore
+        var residentMembership = await membershipRepository.GetByUserAndTerritoryAsync(ResidentUserId, territoryId, cancellationToken);
+        if (residentMembership is not null)
+        {
+            var residentSettings = await settingsRepository.GetByMembershipIdAsync(residentMembership.Id, cancellationToken);
+            if (residentSettings is not null && !residentSettings.MarketplaceOptIn)
+            {
+                residentSettings.UpdateMarketplaceOptIn(true, DateTime.UtcNow);
+                await settingsRepository.UpdateAsync(residentSettings, cancellationToken);
+            }
+        }
+
+        return (rules, evaluator);
+    }
+
     [Fact]
     public async Task ResidentCanCreateStoreAndListing()
     {
         var dataStore = new InMemoryDataStore();
-        var storeRepository = new InMemoryStoreRepository(dataStore);
-        var itemRepository = new InMemoryStoreItemRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (storeService, itemService) = await CreateServicesAsync(dataStore, TerritoryId, CancellationToken.None);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -79,20 +166,10 @@ public sealed class MarketplaceServiceTests
             "Rua 1",
             "google",
             "visitor-external",
-            UserRole.Visitor,
             DateTime.UtcNow);
         dataStore.Users.Add(visitor);
 
-        var storeRepository = new InMemoryStoreRepository(dataStore);
-        var itemRepository = new InMemoryStoreItemRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (storeService, itemService) = await CreateServicesAsync(dataStore, TerritoryId, CancellationToken.None);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -161,10 +238,15 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+            dataStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
         var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, unitOfWork);
         var cartService = new CartService(
             cartRepository,
@@ -279,9 +361,14 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+            dataStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
 
         var createResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -336,9 +423,14 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+            dataStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
 
         var store = await storeService.GetMyStoreAsync(TerritoryId, ResidentUserId, CancellationToken.None);
         Assert.Null(store);
@@ -354,10 +446,15 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+            dataStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -392,10 +489,10 @@ public sealed class MarketplaceServiceTests
             CancellationToken.None);
 
         Assert.True(createResult.IsSuccess);
-        var listing = createResult.Value!;
+        var item = createResult.Value!;
 
         var updateResult = await itemService.UpdateItemAsync(
-            listing.Id,
+            item.Id,
             ResidentUserId,
             ItemType.Product,
             "Produto Atualizado",
@@ -415,7 +512,7 @@ public sealed class MarketplaceServiceTests
         Assert.Equal("Produto Atualizado", updateResult.Value!.Title);
         Assert.Equal(15m, updateResult.Value.PriceAmount);
 
-        var archiveResult = await itemService.ArchiveItemAsync(listing.Id, ResidentUserId, CancellationToken.None);
+        var archiveResult = await itemService.ArchiveItemAsync(item.Id, ResidentUserId, CancellationToken.None);
         Assert.True(archiveResult.IsSuccess);
         Assert.Equal(ItemStatus.Archived, archiveResult.Value!.Status);
     }
@@ -430,10 +527,15 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+            dataStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -526,10 +628,15 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+            dataStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
         var cartService = new CartService(
             cartRepository,
             cartItemRepository,
@@ -617,15 +724,20 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var membershipAccessRules = new MembershipAccessRules(membershipRepository, userRepository);
-        var accessEvaluator = new AccessEvaluator(membershipRepository, membershipAccessRules, cache);
-        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, unitOfWork);
+        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+            dataStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
         var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, unitOfWork);
 
         var buyerId = Guid.NewGuid();
         await userRepository.AddAsync(
-            new User(buyerId, "Comprador", "comprador@araponga.com", "123.456.789-00", null, null, null, "google", "buyer-ext", UserRole.Visitor, DateTime.UtcNow),
+            new User(buyerId, "Comprador", "comprador@araponga.com", "123.456.789-00", null, null, null, "google", "buyer-ext", DateTime.UtcNow),
             CancellationToken.None);
 
         var storeResult = await storeService.UpsertMyStoreAsync(

@@ -4,6 +4,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -50,10 +51,10 @@ public sealed class PlatformFeesController : ControllerBase
             return Unauthorized();
         }
 
-        if (!_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, territoryId, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isCurator)
         {
-             return StatusCode(StatusCodes.Status403Forbidden);
-;
+            return StatusCode(StatusCodes.Status403Forbidden);
         }
 
         var configs = await _platformFeeService.ListActiveAsync(territoryId, cancellationToken);
@@ -95,7 +96,8 @@ public sealed class PlatformFeesController : ControllerBase
             return Unauthorized();
         }
 
-        if (!_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, territoryId, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isCurator)
         {
             return StatusCode(StatusCodes.Status403Forbidden);
         }
@@ -129,9 +131,9 @@ public sealed class PlatformFeesController : ControllerBase
             return BadRequest(new { error = "territoryId is required." });
         }
 
-        if (!TryParseItemType(request.ListingType, out var listingType))
+        if (!TryParseItemType(request.ItemType, out var itemType))
         {
-            return BadRequest(new { error = "Invalid listingType." });
+            return BadRequest(new { error = "Invalid itemType." });
         }
 
         if (!TryParseFeeMode(request.FeeMode, out var feeMode))
@@ -145,14 +147,15 @@ public sealed class PlatformFeesController : ControllerBase
             return Unauthorized();
         }
 
-        if (!_accessEvaluator.IsCurator(userContext.User))
+        var isCurator = await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, request.TerritoryId, MembershipCapabilityType.Curator, cancellationToken);
+        if (!isCurator)
         {
             return Forbid();
         }
 
         var config = await _platformFeeService.UpsertFeeConfigAsync(
             request.TerritoryId,
-            listingType,
+            itemType,
             feeMode,
             request.FeeValue,
             request.Currency,
@@ -176,9 +179,9 @@ public sealed class PlatformFeesController : ControllerBase
             config.UpdatedAtUtc);
     }
 
-    private static bool TryParseItemType(string? raw, out ItemType listingType)
+    private static bool TryParseItemType(string? raw, out ItemType itemType)
     {
-        return Enum.TryParse(raw, true, out listingType);
+        return Enum.TryParse(raw, true, out itemType);
     }
 
     private static bool TryParseFeeMode(string? raw, out PlatformFeeMode feeMode)

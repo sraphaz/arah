@@ -24,9 +24,9 @@ public sealed class InquiriesController : ControllerBase
     }
 
     /// <summary>
-    /// Cria uma inquiry para um listing.
+    /// Cria uma inquiry para um item.
     /// </summary>
-    [HttpPost("listings/{id:guid}/inquiries")]
+    [HttpPost("items/{id:guid}/inquiries")]
     [ProducesResponseType(typeof(InquiryResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

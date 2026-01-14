@@ -9,15 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace Araponga.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/listings")]
+[Route("api/v1/items")]
 [Produces("application/json")]
-[Tags("Listings")]
-public sealed class ListingsController : ControllerBase
+[Tags("Items")]
+public sealed class ItemsController : ControllerBase
 {
     private readonly StoreItemService _itemService;
     private readonly CurrentUserAccessor _currentUserAccessor;
 
-    public ListingsController(StoreItemService itemService, CurrentUserAccessor currentUserAccessor)
+    public ItemsController(StoreItemService itemService, CurrentUserAccessor currentUserAccessor)
     {
         _itemService = itemService;
         _currentUserAccessor = currentUserAccessor;
@@ -27,11 +27,11 @@ public sealed class ListingsController : ControllerBase
     /// Cria um item (produto ou serviço).
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(typeof(ListingResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ItemResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<ListingResponse>> CreateListing(
-        [FromBody] CreateListingRequest request,
+    public async Task<ActionResult<ItemResponse>> CreateItem(
+        [FromBody] CreateItemRequest request,
         CancellationToken cancellationToken)
     {
         if (request.TerritoryId == Guid.Empty || request.StoreId == Guid.Empty)
@@ -89,19 +89,19 @@ public sealed class ListingsController : ControllerBase
             return BadRequest(new { error = result.Error ?? "Unable to create item." });
         }
 
-        return CreatedAtAction(nameof(GetListingById), new { id = result.Value.Id }, ToResponse(result.Value));
+        return CreatedAtAction(nameof(GetItemById), new { id = result.Value.Id }, ToResponse(result.Value));
     }
 
     /// <summary>
     /// Atualiza um item.
     /// </summary>
     [HttpPatch("{id:guid}")]
-    [ProducesResponseType(typeof(ListingResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ItemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<ListingResponse>> UpdateListing(
+    public async Task<ActionResult<ItemResponse>> UpdateItem(
         [FromRoute] Guid id,
-        [FromBody] UpdateListingRequest request,
+        [FromBody] UpdateItemRequest request,
         CancellationToken cancellationToken)
     {
         ItemType? type = null;
@@ -179,9 +179,9 @@ public sealed class ListingsController : ControllerBase
     /// Arquiva um item.
     /// </summary>
     [HttpPost("{id:guid}/archive")]
-    [ProducesResponseType(typeof(ListingResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ItemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<ListingResponse>> ArchiveListing(
+    public async Task<ActionResult<ItemResponse>> ArchiveItem(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
@@ -215,9 +215,9 @@ public sealed class ListingsController : ControllerBase
     /// Por padrão, retorna apenas items ativos (Status=Active).
     /// </remarks>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<ListingResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<ItemResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<ListingResponse>>> SearchListings(
+    public async Task<ActionResult<IEnumerable<ItemResponse>>> SearchItems(
         [FromQuery] Guid territoryId,
         [FromQuery] string? type,
         [FromQuery] string? q,
@@ -274,9 +274,9 @@ public sealed class ListingsController : ControllerBase
     /// Por padrão, retorna apenas items ativos (Status=Active).
     /// </remarks>
     [HttpGet("paged")]
-    [ProducesResponseType(typeof(PagedResponse<ListingResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResponse<ItemResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PagedResponse<ListingResponse>>> SearchListingsPaged(
+    public async Task<ActionResult<PagedResponse<ItemResponse>>> SearchItemsPaged(
         [FromQuery] Guid territoryId,
         [FromQuery] string? type,
         [FromQuery] string? q,
@@ -325,7 +325,7 @@ public sealed class ListingsController : ControllerBase
             pagination,
             cancellationToken);
 
-        var response = new PagedResponse<ListingResponse>(
+        var response = new PagedResponse<ItemResponse>(
             pagedResult.Items.Select(ToResponse).ToList(),
             pagedResult.PageNumber,
             pagedResult.PageSize,
@@ -344,9 +344,9 @@ public sealed class ListingsController : ControllerBase
     /// Endpoint público. Visitantes e moradores podem consultar detalhes de produtos e serviços.
     /// </remarks>
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(ListingResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ItemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ListingResponse>> GetListingById(
+    public async Task<ActionResult<ItemResponse>> GetItemById(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
@@ -359,26 +359,26 @@ public sealed class ListingsController : ControllerBase
         return Ok(ToResponse(item));
     }
 
-    private static ListingResponse ToResponse(StoreItem listing)
+    private static ItemResponse ToResponse(StoreItem item)
     {
-        return new ListingResponse(
-            listing.Id,
-            listing.TerritoryId,
-            listing.StoreId,
-            listing.Type.ToString().ToUpperInvariant(),
-            listing.Title,
-            listing.Description,
-            listing.Category,
-            listing.Tags,
-            listing.PricingType.ToString().ToUpperInvariant(),
-            listing.PriceAmount,
-            listing.Currency,
-            listing.Unit,
-            listing.Latitude,
-            listing.Longitude,
-            listing.Status.ToString().ToUpperInvariant(),
-            listing.CreatedAtUtc,
-            listing.UpdatedAtUtc);
+        return new ItemResponse(
+            item.Id,
+            item.TerritoryId,
+            item.StoreId,
+            item.Type.ToString().ToUpperInvariant(),
+            item.Title,
+            item.Description,
+            item.Category,
+            item.Tags,
+            item.PricingType.ToString().ToUpperInvariant(),
+            item.PriceAmount,
+            item.Currency,
+            item.Unit,
+            item.Latitude,
+            item.Longitude,
+            item.Status.ToString().ToUpperInvariant(),
+            item.CreatedAtUtc,
+            item.UpdatedAtUtc);
     }
 
     private static bool TryParseItemType(string? raw, out ItemType type)

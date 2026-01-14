@@ -14,12 +14,12 @@ public sealed class PostgresUserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<User?> GetByProviderAsync(string provider, string externalId, CancellationToken cancellationToken)
+    public async Task<User?> GetByAuthProviderAsync(string authProvider, string externalId, CancellationToken cancellationToken)
     {
         var record = await _dbContext.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                user => user.Provider == provider && user.ExternalId == externalId,
+                user => user.AuthProvider == authProvider && user.ExternalId == externalId,
                 cancellationToken);
         return record?.ToDomain();
     }
@@ -30,17 +30,6 @@ public sealed class PostgresUserRepository : IUserRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
         return record?.ToDomain();
-    }
-
-    public async Task<IReadOnlyList<Guid>> ListUserIdsByRoleAsync(UserRole role, CancellationToken cancellationToken)
-    {
-        var userIds = await _dbContext.Users
-            .AsNoTracking()
-            .Where(user => user.Role == role)
-            .Select(user => user.Id)
-            .ToListAsync(cancellationToken);
-
-        return userIds;
     }
 
     public Task AddAsync(User user, CancellationToken cancellationToken)

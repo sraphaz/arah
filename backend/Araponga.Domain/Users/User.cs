@@ -1,7 +1,15 @@
+using Araponga.Domain.Users;
+
 namespace Araponga.Domain.Users;
 
+/// <summary>
+/// Representa um usuário do sistema. Contém informações de identidade, autenticação e verificação.
+/// </summary>
 public sealed class User
 {
+    /// <summary>
+    /// Cria uma nova instância de User com valores padrão para 2FA e verificação de identidade.
+    /// </summary>
     public User(
         Guid id,
         string displayName,
@@ -10,14 +18,32 @@ public sealed class User
         string? foreignDocument,
         string? phoneNumber,
         string? address,
-        string provider,
+        string authProvider,
         string externalId,
-        UserRole role,
         DateTime createdAtUtc)
-        : this(id, displayName, email, cpf, foreignDocument, phoneNumber, address, provider, externalId, role, false, null, null, null, createdAtUtc)
+        : this(id, displayName, email, cpf, foreignDocument, phoneNumber, address, authProvider, externalId, false, null, null, null, UserIdentityVerificationStatus.Unverified, null, createdAtUtc)
     {
     }
 
+    /// <summary>
+    /// Cria uma nova instância de User com todos os parâmetros.
+    /// </summary>
+    /// <param name="id">Identificador único do usuário.</param>
+    /// <param name="displayName">Nome de exibição do usuário.</param>
+    /// <param name="email">Endereço de e-mail (opcional).</param>
+    /// <param name="cpf">CPF brasileiro (opcional, mutuamente exclusivo com foreignDocument).</param>
+    /// <param name="foreignDocument">Documento de identificação estrangeiro (opcional, mutuamente exclusivo com cpf).</param>
+    /// <param name="phoneNumber">Número de telefone (opcional).</param>
+    /// <param name="address">Endereço físico (opcional).</param>
+    /// <param name="authProvider">Provedor de autenticação social (ex: "google", "apple", "facebook").</param>
+    /// <param name="externalId">ID único do usuário no provedor de autenticação.</param>
+    /// <param name="twoFactorEnabled">Indica se autenticação de dois fatores está habilitada.</param>
+    /// <param name="twoFactorSecret">Secret para geração de códigos 2FA (opcional).</param>
+    /// <param name="twoFactorRecoveryCodesHash">Hash dos códigos de recuperação 2FA (opcional).</param>
+    /// <param name="twoFactorVerifiedAtUtc">Data/hora UTC em que o 2FA foi verificado (opcional).</param>
+    /// <param name="identityVerificationStatus">Status da verificação de identidade global do usuário.</param>
+    /// <param name="identityVerifiedAtUtc">Data/hora UTC em que a identidade foi verificada (opcional).</param>
+    /// <param name="createdAtUtc">Data/hora UTC de criação do usuário.</param>
     public User(
         Guid id,
         string displayName,
@@ -26,13 +52,14 @@ public sealed class User
         string? foreignDocument,
         string? phoneNumber,
         string? address,
-        string provider,
+        string authProvider,
         string externalId,
-        UserRole role,
         bool twoFactorEnabled,
         string? twoFactorSecret,
         string? twoFactorRecoveryCodesHash,
         DateTime? twoFactorVerifiedAtUtc,
+        UserIdentityVerificationStatus identityVerificationStatus,
+        DateTime? identityVerifiedAtUtc,
         DateTime createdAtUtc)
     {
         if (string.IsNullOrWhiteSpace(displayName))
@@ -40,9 +67,9 @@ public sealed class User
             throw new ArgumentException("Display name is required.", nameof(displayName));
         }
 
-        if (string.IsNullOrWhiteSpace(provider))
+        if (string.IsNullOrWhiteSpace(authProvider))
         {
-            throw new ArgumentException("Provider is required.", nameof(provider));
+            throw new ArgumentException("Auth provider is required.", nameof(authProvider));
         }
 
         if (string.IsNullOrWhiteSpace(externalId))
@@ -70,32 +97,106 @@ public sealed class User
         ForeignDocument = normalizedForeignDocument;
         PhoneNumber = NormalizeOptional(phoneNumber);
         Address = NormalizeOptional(address);
-        Provider = provider.Trim();
+        AuthProvider = authProvider.Trim();
         ExternalId = externalId.Trim();
-        Role = role;
         TwoFactorEnabled = twoFactorEnabled;
         TwoFactorSecret = twoFactorSecret;
         TwoFactorRecoveryCodesHash = twoFactorRecoveryCodesHash;
         TwoFactorVerifiedAtUtc = twoFactorVerifiedAtUtc;
+        IdentityVerificationStatus = identityVerificationStatus;
+        IdentityVerifiedAtUtc = identityVerifiedAtUtc;
         CreatedAtUtc = createdAtUtc;
     }
 
+    /// <summary>
+    /// Identificador único do usuário.
+    /// </summary>
     public Guid Id { get; }
+
+    /// <summary>
+    /// Nome de exibição do usuário.
+    /// </summary>
     public string DisplayName { get; }
+
+    /// <summary>
+    /// Endereço de e-mail do usuário (opcional).
+    /// </summary>
     public string? Email { get; }
+
+    /// <summary>
+    /// CPF brasileiro do usuário (opcional, mutuamente exclusivo com ForeignDocument).
+    /// </summary>
     public string? Cpf { get; }
+
+    /// <summary>
+    /// Documento de identificação estrangeiro (opcional, mutuamente exclusivo com Cpf).
+    /// </summary>
     public string? ForeignDocument { get; }
+
+    /// <summary>
+    /// Número de telefone do usuário (opcional).
+    /// </summary>
     public string? PhoneNumber { get; }
+
+    /// <summary>
+    /// Endereço físico do usuário (opcional).
+    /// </summary>
     public string? Address { get; }
-    public string Provider { get; }
+
+    /// <summary>
+    /// Provedor de autenticação social usado pelo usuário (ex: "google", "apple", "facebook").
+    /// Combinado com ExternalId, forma uma chave única para identificar o usuário.
+    /// </summary>
+    public string AuthProvider { get; }
+
+    /// <summary>
+    /// ID único do usuário no provedor de autenticação (ex: OIDC "sub", Facebook ID).
+    /// Combinado com AuthProvider, forma uma chave única para identificar o usuário.
+    /// </summary>
     public string ExternalId { get; }
-    public UserRole Role { get; }
+
+    /// <summary>
+    /// Indica se autenticação de dois fatores está habilitada para este usuário.
+    /// </summary>
     public bool TwoFactorEnabled { get; private set; }
+
+    /// <summary>
+    /// Secret usado para geração de códigos 2FA (opcional, presente apenas se TwoFactorEnabled for true).
+    /// </summary>
     public string? TwoFactorSecret { get; private set; }
+
+    /// <summary>
+    /// Hash dos códigos de recuperação 2FA (opcional, presente apenas se TwoFactorEnabled for true).
+    /// </summary>
     public string? TwoFactorRecoveryCodesHash { get; private set; }
+
+    /// <summary>
+    /// Data/hora UTC em que o 2FA foi verificado pela primeira vez (opcional).
+    /// </summary>
     public DateTime? TwoFactorVerifiedAtUtc { get; private set; }
+
+    /// <summary>
+    /// Status da verificação de identidade global do usuário.
+    /// Esta verificação é independente das verificações territoriais (ResidencyVerification).
+    /// </summary>
+    public UserIdentityVerificationStatus IdentityVerificationStatus { get; private set; }
+
+    /// <summary>
+    /// Data/hora UTC em que a identidade do usuário foi verificada (opcional).
+    /// </summary>
+    public DateTime? IdentityVerifiedAtUtc { get; private set; }
+
+    /// <summary>
+    /// Data/hora UTC de criação do usuário no sistema.
+    /// </summary>
     public DateTime CreatedAtUtc { get; }
 
+    /// <summary>
+    /// Habilita autenticação de dois fatores para o usuário.
+    /// </summary>
+    /// <param name="secret">Secret para geração de códigos TOTP.</param>
+    /// <param name="recoveryCodesHash">Hash dos códigos de recuperação.</param>
+    /// <param name="verifiedAtUtc">Data/hora UTC em que o 2FA foi verificado.</param>
     public void EnableTwoFactor(string secret, string recoveryCodesHash, DateTime verifiedAtUtc)
     {
         TwoFactorEnabled = true;
@@ -104,12 +205,26 @@ public sealed class User
         TwoFactorVerifiedAtUtc = verifiedAtUtc;
     }
 
+    /// <summary>
+    /// Desabilita autenticação de dois fatores para o usuário, removendo todos os dados relacionados.
+    /// </summary>
     public void DisableTwoFactor()
     {
         TwoFactorEnabled = false;
         TwoFactorSecret = null;
         TwoFactorRecoveryCodesHash = null;
         TwoFactorVerifiedAtUtc = null;
+    }
+
+    /// <summary>
+    /// Atualiza o status da verificação de identidade global do usuário.
+    /// </summary>
+    /// <param name="status">Novo status de verificação.</param>
+    /// <param name="verifiedAtUtc">Data/hora UTC em que a verificação ocorreu (opcional).</param>
+    public void UpdateIdentityVerification(UserIdentityVerificationStatus status, DateTime? verifiedAtUtc = null)
+    {
+        IdentityVerificationStatus = status;
+        IdentityVerifiedAtUtc = verifiedAtUtc;
     }
 
     private static string? NormalizeOptional(string? value)

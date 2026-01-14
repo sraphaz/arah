@@ -42,12 +42,12 @@ public sealed class AuthController : ControllerBase
         var hasCpf = !string.IsNullOrWhiteSpace(request.Cpf);
         var hasForeignDocument = !string.IsNullOrWhiteSpace(request.ForeignDocument);
 
-        if (string.IsNullOrWhiteSpace(request.Provider) ||
+        if (string.IsNullOrWhiteSpace(request.AuthProvider) ||
             string.IsNullOrWhiteSpace(request.ExternalId) ||
             string.IsNullOrWhiteSpace(request.DisplayName) ||
             (!hasCpf && !hasForeignDocument))
         {
-            return BadRequest(new { error = "Provider, ExternalId, DisplayName, and CPF or foreign document are required." });
+            return BadRequest(new { error = "AuthProvider, ExternalId, DisplayName, and CPF or foreign document are required." });
         }
 
         if (hasCpf && hasForeignDocument)
@@ -56,7 +56,7 @@ public sealed class AuthController : ControllerBase
         }
 
         var result = await _authService.LoginSocialAsync(
-            request.Provider,
+            request.AuthProvider,
             request.ExternalId,
             request.DisplayName,
             request.Email,

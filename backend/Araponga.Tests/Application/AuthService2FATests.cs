@@ -39,7 +39,6 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -79,11 +78,12 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             true,
             "SECRET",
             "HASH",
             DateTime.UtcNow,
+            UserIdentityVerificationStatus.Unverified,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -119,7 +119,6 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -171,7 +170,6 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -210,11 +208,12 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             true,
             "SECRET",
             "HASH",
             DateTime.UtcNow,
+            UserIdentityVerificationStatus.Unverified,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -291,11 +290,12 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             true,
             "SECRET",
             "HASH",
             DateTime.UtcNow,
+            UserIdentityVerificationStatus.Unverified,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -352,11 +352,12 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             true,
             "SECRET",
             "HASH",
             DateTime.UtcNow,
+            UserIdentityVerificationStatus.Unverified,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -407,11 +408,12 @@ public sealed class AuthService2FATests
             null,
             "google",
             "ext",
-            UserRole.Visitor,
             true,
             "SECRET",
             "HASH",
             DateTime.UtcNow,
+            UserIdentityVerificationStatus.Unverified,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 

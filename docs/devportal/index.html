@@ -199,10 +199,16 @@
           <div class="card">
             <h3>Moderação & segurança</h3>
             <p>
-              Reports e bloqueios moldam o que aparece no feed e no mapa. Bloqueios filtram o conteúdo de
-              usuários bloqueados tanto no feed quanto em entidades do mapa criadas por eles. Limiares
-              automáticos ainda não estão implementados no backend atual.
+              Moderação é um conjunto de sinais (reports) + ações (bloqueios) para manter o território útil e
+              seguro. O objetivo aqui não é "censura automática", e sim <strong>reduzir abuso e ruído</strong>
+              com decisões auditáveis e fluxo claro de triagem por curadoria.
             </p>
+            <ul>
+              <li><strong>Reportar post</strong>: <code>POST /api/v1/reports/posts/{postId}</code> com <code>reason</code> (obrigatório) e <code>details</code> (opcional).</li>
+              <li><strong>Reportar usuário</strong>: <code>POST /api/v1/reports/users/{userId}</code> (pode receber <code>territoryId</code>).</li>
+              <li><strong>Triagem</strong>: curadoria lista e filtra em <code>GET /api/v1/reports</code> (por território, status e tipo).</li>
+              <li><strong>Bloquear/desbloquear</strong>: corta visibilidade de conteúdo no feed e no mapa via <code>POST</code>/<code>DELETE /api/v1/blocks/users/{userId}</code>.</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -289,11 +295,20 @@
             <h3>🛡️ Moderação e Segurança</h3>
             <dl class="entity-list">
               <dt><strong>Reports</strong></dt>
-              <dd>Denúncias de posts ou usuários</dd>
+              <dd>Denúncias registram sinais de abuso/spam para triagem. Ex.: <code>POST /api/v1/reports/posts/{postId}</code> e <code>POST /api/v1/reports/users/{userId}</code> com <code>reason</code> e <code>details</code>.</dd>
+
+              <dt><strong>Curadoria (triagem)</strong></dt>
+              <dd>Curadores podem listar e filtrar reports por <code>territoryId</code>, <code>status</code> e <code>targetType</code> em <code>GET /api/v1/reports</code>, criando um backlog prático de ação.</dd>
               
               <dt><strong>Blocks</strong></dt>
-              <dd>Bloqueios que filtram conteúdo do feed e mapa</dd>
+              <dd>Bloqueios removem do feed e do mapa o conteúdo produzido por um usuário bloqueado. Use <code>POST /api/v1/blocks/users/{userId}</code> e remova com <code>DELETE /api/v1/blocks/users/{userId}</code>.</dd>
+
+              <dt><strong>Segurança de acesso</strong></dt>
+              <dd>Operações dependem de JWT (<code>401</code> quando ausente/ inválido). Em conjunto com membership (visitor/resident) e presença (geo headers), isso evita ações sensíveis fora do contexto do território.</dd>
             </dl>
+            <div class="example-box">
+              <strong>Exemplo prático:</strong> após denúncias recorrentes, a curadoria filtra <code>GET /api/v1/reports?territoryId=...&amp;status=Open</code>, revisa os alvos e recomenda bloqueio do autor. O bloqueio reduz exposição de posts e entidades do mapa criadas por ele no território.
+            </div>
           </div>
 
           <div class="card">
@@ -458,12 +473,34 @@
         </div>
 
         <div class="flow-step">
-          <h4>10. Moderação: reports e bloqueios</h4>
+          <h4>10. Moderação & segurança: reports, triagem e bloqueios</h4>
           <p>
-            Reports podem ser enviados para posts e usuários. Bloqueios removem conteúdo do feed e do mapa
-            de quem foi bloqueado. Use <code>POST /api/v1/reports/posts/{postId}</code>,
-            <code>POST /api/v1/reports/users/{userId}</code> e <code>POST /api/v1/blocks/users/{userId}</code>.
+            O fluxo típico é: (1) um usuário reporta; (2) a curadoria lista reports do território e prioriza;
+            (3) quando necessário, aplica bloqueio para cortar propagação do conteúdo no feed e no mapa.
+            Reports usam <code>reason</code> (obrigatório) e <code>details</code> (opcional).
           </p>
+          <pre class="code-block"><code># Reportar um post
+curl -X POST http://localhost:8080/api/v1/reports/posts/&lt;postId&gt; \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"reason":"Spam","details":"Link suspeito no conteúdo"}'
+
+# Reportar um usuário (opcionalmente por território)
+curl -X POST "http://localhost:8080/api/v1/reports/users/&lt;userId&gt;?territoryId=11111111-1111-1111-1111-111111111111" \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"reason":"Abuso","details":"Comportamento inadequado"}'
+
+# Curadoria lista reports para triagem
+curl "http://localhost:8080/api/v1/reports?territoryId=11111111-1111-1111-1111-111111111111&amp;status=Open" \
+  -H "Authorization: Bearer &lt;token&gt;"
+
+# Bloquear / desbloquear um usuário
+curl -X POST http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
+  -H "Authorization: Bearer &lt;token&gt;"
+
+curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
+  -H "Authorization: Bearer &lt;token&gt;"</code></pre>
         </div>
 
         <div class="flow-step">

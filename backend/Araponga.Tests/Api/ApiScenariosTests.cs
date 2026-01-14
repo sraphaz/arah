@@ -255,20 +255,21 @@ public sealed class ApiScenariosTests
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
+        // Testar que BecomeResident requer autenticação
         var unauthorized = await client.PostAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
             null);
 
-        Assert.Equal(HttpStatusCode.UnsupportedMediaType, unauthorized.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, unauthorized.StatusCode);
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
-        var notFound = await client.PostAsJsonAsync(
-            $"api/v1/territories/{Guid.NewGuid()}/membership",
-            new DeclareMembershipRequest("RESIDENT"));
+        var notFound = await client.PostAsync(
+            $"api/v1/memberships/{Guid.NewGuid()}/become-resident",
+            null);
 
         Assert.Equal(HttpStatusCode.NotFound, notFound.StatusCode);
     }
@@ -284,22 +285,21 @@ public sealed class ApiScenariosTests
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
-        var first = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("RESIDENT"));
+        var first = await client.PostAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            null);
         first.EnsureSuccessStatusCode();
 
-        var firstPayload = await first.Content.ReadFromJsonAsync<MembershipResponse>();
+        var firstPayload = await first.Content.ReadFromJsonAsync<MembershipDetailResponse>();
         Assert.NotNull(firstPayload);
         Assert.Equal("RESIDENT", firstPayload!.Role);
-        Assert.Equal("PENDING", firstPayload.VerificationStatus);
 
-        var second = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("RESIDENT"));
+        var second = await client.PostAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            null);
         second.EnsureSuccessStatusCode();
 
-        var secondPayload = await second.Content.ReadFromJsonAsync<MembershipResponse>();
+        var secondPayload = await second.Content.ReadFromJsonAsync<MembershipDetailResponse>();
         Assert.NotNull(secondPayload);
         Assert.Equal(firstPayload.Id, secondPayload!.Id);
     }
@@ -313,25 +313,24 @@ public sealed class ApiScenariosTests
         var token = await LoginForTokenAsync(client, "google", "upgrade-visitor");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var visitor = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("VISITOR"));
+        var visitor = await client.PostAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/enter",
+            null);
         visitor.EnsureSuccessStatusCode();
-        var visitorPayload = await visitor.Content.ReadFromJsonAsync<MembershipResponse>();
+        var visitorPayload = await visitor.Content.ReadFromJsonAsync<EnterTerritoryResponse>();
         Assert.NotNull(visitorPayload);
 
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
-        var upgrade = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("RESIDENT"));
+        var upgrade = await client.PostAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            null);
         upgrade.EnsureSuccessStatusCode();
-        var upgradePayload = await upgrade.Content.ReadFromJsonAsync<MembershipResponse>();
+        var upgradePayload = await upgrade.Content.ReadFromJsonAsync<MembershipDetailResponse>();
         Assert.NotNull(upgradePayload);
         Assert.Equal(visitorPayload!.Id, upgradePayload!.Id);
         Assert.Equal("RESIDENT", upgradePayload.Role);
-        Assert.Equal("PENDING", upgradePayload.VerificationStatus);
     }
 
     [Fact]
@@ -343,15 +342,22 @@ public sealed class ApiScenariosTests
         var token = await LoginForTokenAsync(client, "google", "upgrade-missing-geo");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var visitor = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("VISITOR"));
+        var visitor = await client.PostAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/enter",
+            null);
         visitor.EnsureSuccessStatusCode();
 
-        var upgrade = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("RESIDENT"));
-        Assert.Equal(HttpStatusCode.BadRequest, upgrade.StatusCode);
+        // BecomeResident não requer geo - pode ser feito sem coordenadas
+        // A verificação geo é feita depois via verify-residency/geo
+        var upgrade = await client.PostAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            null);
+        upgrade.EnsureSuccessStatusCode();
+
+        var membership = await upgrade.Content.ReadFromJsonAsync<MembershipDetailResponse>();
+        Assert.NotNull(membership);
+        Assert.Equal("RESIDENT", membership!.Role);
+        // Sem geo, fica como UNVERIFIED ou GEOVERIFIED dependendo se há outros residents
     }
 
     [Fact]
@@ -411,9 +417,9 @@ public sealed class ApiScenariosTests
         var token = await LoginForTokenAsync(client, "google", "visitor-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var membership = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("VISITOR"));
+        var membership = await client.PostAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/enter",
+            null);
         membership.EnsureSuccessStatusCode();
 
         var feed = await client.GetFromJsonAsync<List<FeedItemResponse>>(
@@ -492,20 +498,18 @@ public sealed class ApiScenariosTests
         var token = await LoginForTokenAsync(client, "google", "new-status");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var noneStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
-        Assert.NotNull(noneStatus);
-        Assert.Equal("NONE", noneStatus!.Role);
-        Assert.Equal("NONE", noneStatus.VerificationStatus);
+        var noneStatusResponse = await client.GetAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
+        Assert.Equal(HttpStatusCode.NotFound, noneStatusResponse.StatusCode);
 
         var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
 
-        var validatedStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
+        var validatedStatus = await client.GetFromJsonAsync<MembershipDetailResponse>(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
         Assert.NotNull(validatedStatus);
         Assert.Equal("RESIDENT", validatedStatus!.Role);
-        Assert.Equal("VALIDATED", validatedStatus.VerificationStatus);
+        Assert.True(validatedStatus.ResidencyVerification == "GEOVERIFIED" || validatedStatus.ResidencyVerification == "DOCUMENTVERIFIED");
     }
 
     [Fact]
@@ -519,30 +523,27 @@ public sealed class ApiScenariosTests
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
 
-        var membership = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("RESIDENT"));
+        // Criar membership como Resident
+        var membership = await client.PostAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            null);
         membership.EnsureSuccessStatusCode();
-        var membershipPayload = await membership.Content.ReadFromJsonAsync<MembershipResponse>();
+        var membershipPayload = await membership.Content.ReadFromJsonAsync<MembershipDetailResponse>();
         Assert.NotNull(membershipPayload);
+        Assert.Equal("RESIDENT", membershipPayload!.Role);
+        Assert.Equal("UNVERIFIED", membershipPayload.ResidencyVerification);
 
-        var fail = await client.PatchAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/{membershipPayload!.Id}/validation",
-            new ValidateMembershipRequest("VALIDATED"));
-        Assert.Equal(HttpStatusCode.Forbidden, fail.StatusCode);
+        // Verificar que pode verificar residência por geo (coordenadas próximas)
+        var verifyGeoResponse = await client.PostAsJsonAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/verify-residency/geo",
+            new VerifyResidencyGeoRequest(-23.37, -45.02));
+        verifyGeoResponse.EnsureSuccessStatusCode();
 
-        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
-
-        var ok = await client.PatchAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/{membershipPayload.Id}/validation",
-            new ValidateMembershipRequest("VALIDATED"));
-        Assert.Equal(HttpStatusCode.NoContent, ok.StatusCode);
-
-        var invalidStatus = await client.PatchAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/{membershipPayload.Id}/validation",
-            new ValidateMembershipRequest("INVALID"));
-        Assert.Equal(HttpStatusCode.BadRequest, invalidStatus.StatusCode);
+        // Verificar que membership foi atualizado
+        var verifiedMembership = await client.GetFromJsonAsync<MembershipDetailResponse>(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
+        Assert.NotNull(verifiedMembership);
+        Assert.Equal("GEOVERIFIED", verifiedMembership!.ResidencyVerification);
     }
 
     [Fact]
@@ -1106,11 +1107,11 @@ public sealed class ApiScenariosTests
         Assert.Equal("APPROVED", approveAgainPayload!.Status);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
-        var membershipStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
+        var membershipStatus = await client.GetFromJsonAsync<MembershipDetailResponse>(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
         Assert.NotNull(membershipStatus);
         Assert.Equal("RESIDENT", membershipStatus!.Role);
-        Assert.Equal("VALIDATED", membershipStatus.VerificationStatus);
+        Assert.True(membershipStatus.ResidencyVerification == "GEOVERIFIED" || membershipStatus.ResidencyVerification == "DOCUMENTVERIFIED");
     }
 
     [Fact]
@@ -1183,10 +1184,9 @@ public sealed class ApiScenariosTests
         Assert.Equal("REJECTED", rejectPayload!.Status);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", requesterToken);
-        var membershipStatus = await client.GetFromJsonAsync<MembershipStatusResponse>(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
-        Assert.NotNull(membershipStatus);
-        Assert.Equal("NONE", membershipStatus!.Role);
+        var membershipStatusResponse = await client.GetAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
+        Assert.Equal(HttpStatusCode.NotFound, membershipStatusResponse.StatusCode);
     }
 
     [Fact]

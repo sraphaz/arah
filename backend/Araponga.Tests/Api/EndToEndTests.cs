@@ -57,12 +57,12 @@ public sealed class EndToEndTests
             new TerritorySelectionRequest(ActiveTerritoryId));
         selectResponse.EnsureSuccessStatusCode();
 
-        // 4. Declarar vínculo como VISITOR
-        var membershipResponse = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("VISITOR"));
+        // 4. Entrar como VISITOR
+        var membershipResponse = await client.PostAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/enter",
+            null);
         membershipResponse.EnsureSuccessStatusCode();
-        var membership = await membershipResponse.Content.ReadFromJsonAsync<MembershipResponse>();
+        var membership = await membershipResponse.Content.ReadFromJsonAsync<EnterTerritoryResponse>();
         Assert.NotNull(membership);
         Assert.Equal("VISITOR", membership!.Role);
 
@@ -73,8 +73,8 @@ public sealed class EndToEndTests
         Assert.NotEmpty(feedResponse!);
 
         // 6. Consultar status do vínculo
-        var statusResponse = await client.GetFromJsonAsync<MembershipStatusResponse>(
-            $"api/v1/territories/{ActiveTerritoryId}/membership/me");
+        var statusResponse = await client.GetFromJsonAsync<MembershipDetailResponse>(
+            $"api/v1/memberships/{ActiveTerritoryId}/me");
         Assert.NotNull(statusResponse);
         Assert.Equal("VISITOR", statusResponse!.Role);
     }
@@ -112,14 +112,14 @@ public sealed class EndToEndTests
             "api/v1/territories/selection",
             new TerritorySelectionRequest(ActiveTerritoryId));
 
-        // 3. Declarar vínculo como RESIDENT
-        var membershipResponse = await client.PostAsJsonAsync(
-            $"api/v1/territories/{ActiveTerritoryId}/membership",
-            new DeclareMembershipRequest("RESIDENT"));
+        // 3. Tornar-se RESIDENT
+        var membershipResponse = await client.PostAsync(
+            $"api/v1/memberships/{ActiveTerritoryId}/become-resident",
+            null);
         membershipResponse.EnsureSuccessStatusCode();
-        var membership = await membershipResponse.Content.ReadFromJsonAsync<MembershipResponse>();
+        var membership = await membershipResponse.Content.ReadFromJsonAsync<MembershipDetailResponse>();
         Assert.Equal("RESIDENT", membership!.Role);
-        Assert.Equal("PENDING", membership.VerificationStatus);
+        Assert.Equal("UNVERIFIED", membership.ResidencyVerification);
 
         // 4. Criar post (deve falhar porque ainda está PENDING)
         var postResponse = await client.PostAsJsonAsync(

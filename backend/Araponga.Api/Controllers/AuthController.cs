@@ -46,7 +46,7 @@ public sealed class AuthController : ControllerBase
             return BadRequest(new { error = "Provide either CPF or foreign document, not both." });
         }
 
-        var (user, token) = await _authService.LoginSocialAsync(
+        var result = await _authService.LoginSocialAsync(
             request.Provider,
             request.ExternalId,
             request.DisplayName,
@@ -57,6 +57,19 @@ public sealed class AuthController : ControllerBase
             request.Address,
             cancellationToken);
 
+        if (result.IsFailure)
+        {
+            // Verificar se é 2FA_REQUIRED
+            if (result.Error?.StartsWith("2FA_REQUIRED:") == true)
+            {
+                var challengeId = result.Error.Substring("2FA_REQUIRED:".Length);
+                return BadRequest(new { error = "2FA_REQUIRED", challengeId });
+            }
+
+            return BadRequest(new { error = result.Error });
+        }
+
+        var (user, token) = result.Value!;
         var response = new SocialLoginResponse(
             new UserResponse(user.Id, user.DisplayName, user.Email),
             token);

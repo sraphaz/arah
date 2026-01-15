@@ -15,7 +15,7 @@
 | Testes de Segurança | 16h | ⏳ Pendente | 0% |
 | Estratégia de Cache | 24h | 🟡 Em Progresso | 60% |
 | Paginação Completa | 16h | ⏳ Pendente | 0% |
-| Reduzir Duplicação | 16h | 🟡 Em Progresso | 70% |
+| Reduzir Duplicação | 16h | 🟡 Em Progresso | 80% |
 | **Total** | **100h** | **🟡 25%** | |
 
 ---
@@ -108,6 +108,8 @@
 - ✅ `MembershipService` atualizado para usar constantes de geo
 - ✅ `ReportService` atualizado para usar constantes de moderação
 - ✅ `AuthService` atualizado para usar constantes de autenticação
+- ✅ `ResidencyRequestService` atualizado para usar constantes de residency requests
+- ✅ `EventsService` atualizado para usar constantes de geografia
 - ⏳ Atualizar outros services para usar helpers e constantes
 
 ---

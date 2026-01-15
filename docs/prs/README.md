@@ -37,6 +37,9 @@ Esta pasta contém a documentação detalhada de todos os Pull Requests implemen
 - **[PR_MIGRAR_SERVICES_RESULT.md](./PR_MIGRAR_SERVICES_RESULT.md)**  
   Migração de services para usar Result pattern
 
+- **[PR_FEATURE_FLAGS_TERRITORIO.md](./PR_FEATURE_FLAGS_TERRITORIO.md)**  
+  Hardening de feature flags por território (gates, docs e testes)
+
 - **[PR_REMOVER_REDIRECTS.md](./PR_REMOVER_REDIRECTS.md)**  
   Remoção de redirects desnecessários
 

@@ -75,7 +75,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<SellerPayoutService>();
         
         // Payout Gateway
-        services.AddScoped<IPayoutGateway, MockPayoutGateway>();
+        services.AddScoped<IPayoutGateway, Araponga.Infrastructure.Payments.MockPayoutGateway>();
 
         return services;
     }

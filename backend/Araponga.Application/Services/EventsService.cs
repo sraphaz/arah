@@ -19,6 +19,7 @@ public sealed class EventsService
     private readonly AccessEvaluator _accessEvaluator;
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly CacheInvalidationService? _cacheInvalidation;
 
     public EventsService(
         ITerritoryEventRepository eventRepository,
@@ -27,7 +28,8 @@ public sealed class EventsService
         AccessEvaluator accessEvaluator,
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
-        EventCacheService? eventCache = null)
+        EventCacheService? eventCache = null,
+        CacheInvalidationService? cacheInvalidation = null)
     {
         _eventRepository = eventRepository;
         _participationRepository = participationRepository;
@@ -36,6 +38,7 @@ public sealed class EventsService
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _eventCache = eventCache;
+        _cacheInvalidation = cacheInvalidation;
     }
 
     public async Task<Result<EventSummary>> CreateEventAsync(
@@ -115,6 +118,9 @@ public sealed class EventsService
         await _feedRepository.AddPostAsync(post, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
+        // Invalidar cache de eventos do território
+        _cacheInvalidation?.InvalidateEventCache(territoryId, territoryEvent.Id);
+
         // Invalidate cache when event is created
         _eventCache?.InvalidateTerritoryEvents(territoryId);
 
@@ -169,6 +175,9 @@ public sealed class EventsService
         await _eventRepository.UpdateAsync(territoryEvent, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
+        // Invalidar cache de eventos do território
+        _cacheInvalidation?.InvalidateEventCache(territoryEvent.TerritoryId, territoryEvent.Id);
+
         // Invalidate cache when event is updated
         _eventCache?.InvalidateTerritoryEvents(territoryEvent.TerritoryId);
 
@@ -201,6 +210,9 @@ public sealed class EventsService
         territoryEvent.Cancel(DateTime.UtcNow);
         await _eventRepository.UpdateAsync(territoryEvent, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidar cache de eventos do território
+        _cacheInvalidation?.InvalidateEventCache(territoryEvent.TerritoryId, territoryEvent.Id);
 
         return OperationResult.Success();
     }

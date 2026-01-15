@@ -387,7 +387,7 @@ public sealed class MembershipService
         double latitude2,
         double longitude2)
     {
-        const double EarthRadiusKm = 6371.0;
+        const double EarthRadiusKm = Constants.Geography.EarthRadiusKm;
         var lat1 = DegreesToRadians(latitude1);
         var lat2 = DegreesToRadians(latitude2);
         var deltaLat = DegreesToRadians(latitude2 - latitude1);

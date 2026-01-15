@@ -9,10 +9,6 @@ namespace Araponga.Application.Services;
 /// </summary>
 public sealed class TerritoryFeatureFlagGuard
 {
-    private const string MarketplaceDisabledError = "Marketplace is disabled for this territory.";
-    private const string AlertPostsDisabledError = "Alert posts are disabled for this territory.";
-    private const string ChatDisabledError = "Chat is disabled for this territory.";
-    private const string ChatDmDisabledError = "Direct messages are disabled for this territory.";
 
     private readonly FeatureFlagCacheService _flags;
 
@@ -27,21 +23,21 @@ public sealed class TerritoryFeatureFlagGuard
     {
         return _flags.IsEnabled(territoryId, FeatureFlag.MarketplaceEnabled)
             ? OperationResult.Success()
-            : OperationResult.Failure(MarketplaceDisabledError);
+            : OperationResult.Failure(Constants.FeatureFlagErrors.MarketplaceDisabled);
     }
 
     public OperationResult EnsureAlertPostsEnabled(Guid territoryId)
     {
         return _flags.IsEnabled(territoryId, FeatureFlag.AlertPosts)
             ? OperationResult.Success()
-            : OperationResult.Failure(AlertPostsDisabledError);
+            : OperationResult.Failure(Constants.FeatureFlagErrors.AlertPostsDisabled);
     }
 
     public OperationResult EnsureChatEnabled(Guid territoryId)
     {
         return _flags.IsEnabled(territoryId, FeatureFlag.ChatEnabled)
             ? OperationResult.Success()
-            : OperationResult.Failure(ChatDisabledError);
+            : OperationResult.Failure(Constants.FeatureFlagErrors.ChatDisabled);
     }
 
     public OperationResult EnsureChatDmEnabled(Guid territoryId)
@@ -49,11 +45,11 @@ public sealed class TerritoryFeatureFlagGuard
         // DM é um "subfeature" do chat: exige ChatEnabled e ChatDmEnabled
         if (!_flags.IsEnabled(territoryId, FeatureFlag.ChatEnabled))
         {
-            return OperationResult.Failure(ChatDisabledError);
+            return OperationResult.Failure(Constants.FeatureFlagErrors.ChatDisabled);
         }
 
         return _flags.IsEnabled(territoryId, FeatureFlag.ChatDmEnabled)
             ? OperationResult.Success()
-            : OperationResult.Failure(ChatDmDisabledError);
+            : OperationResult.Failure(Constants.FeatureFlagErrors.ChatDmDisabled);
     }
 }

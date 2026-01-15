@@ -409,8 +409,8 @@ public sealed class TerritoryAssetService
     private static IReadOnlyCollection<(double Latitude, double Longitude)> BuildAnchors(
         IReadOnlyCollection<TerritoryAssetGeoAnchorInput> geoAnchors)
     {
-        const int MaxAnchors = 50;
-        const int Precision = 5;
+        const int MaxAnchors = Constants.Posts.MaxAnchors;
+        const int Precision = Constants.Posts.GeoAnchorPrecision;
 
         return geoAnchors
             .Where(anchor => GeoCoordinate.IsValid(anchor.Latitude, anchor.Longitude))

@@ -244,4 +244,46 @@ public static class Constants
         /// </summary>
         public const string PostAnchorType = "POST";
     }
+
+    /// <summary>
+    /// Constantes de cache keys.
+    /// </summary>
+    public static class CacheKeys
+    {
+        /// <summary>
+        /// Cache key para lista de territórios ativos.
+        /// </summary>
+        public const string ActiveTerritories = "territories:active";
+
+        /// <summary>
+        /// Template para cache key de território individual.
+        /// </summary>
+        public static string Territory(Guid territoryId) => $"territory:{territoryId}";
+    }
+
+    /// <summary>
+    /// Constantes de mensagens de erro de feature flags.
+    /// </summary>
+    public static class FeatureFlagErrors
+    {
+        /// <summary>
+        /// Mensagem de erro quando marketplace está desabilitado.
+        /// </summary>
+        public const string MarketplaceDisabled = "Marketplace is disabled for this territory.";
+
+        /// <summary>
+        /// Mensagem de erro quando alert posts estão desabilitados.
+        /// </summary>
+        public const string AlertPostsDisabled = "Alert posts are disabled for this territory.";
+
+        /// <summary>
+        /// Mensagem de erro quando chat está desabilitado.
+        /// </summary>
+        public const string ChatDisabled = "Chat is disabled for this territory.";
+
+        /// <summary>
+        /// Mensagem de erro quando direct messages estão desabilitados.
+        /// </summary>
+        public const string ChatDmDisabled = "Direct messages are disabled for this territory.";
+    }
 }

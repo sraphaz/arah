@@ -1058,17 +1058,14 @@ public static class PostgresMappers
             transaction.AddRelatedTransaction(id);
         }
 
-        // Use reflection to set status and timestamps
-        var statusField = typeof(FinancialTransaction).GetField("_status", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        if (statusField == null)
-        {
-            // Try property setter via reflection
-            var statusProp = typeof(FinancialTransaction).GetProperty("Status", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            if (statusProp?.SetMethod != null)
-            {
-                statusProp.SetValue(transaction, (TransactionStatus)record.Status);
-            }
-        }
+        // Restore status and timestamps using reflection
+        var statusProp = typeof(FinancialTransaction).GetProperty("Status", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var createdAtProp = typeof(FinancialTransaction).GetProperty("CreatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var updatedAtProp = typeof(FinancialTransaction).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+        if (statusProp?.SetMethod != null) statusProp.SetValue(transaction, (TransactionStatus)record.Status);
+        if (createdAtProp?.SetMethod != null) createdAtProp.SetValue(transaction, record.CreatedAtUtc);
+        if (updatedAtProp?.SetMethod != null) updatedAtProp.SetValue(transaction, record.UpdatedAtUtc);
 
         return transaction;
     }
@@ -1122,13 +1119,19 @@ public static class PostgresMappers
             record.SellerUserId,
             record.Currency);
 
-        // Use reflection to set private fields
-        var pendingField = typeof(SellerBalance).GetField("_pendingAmountInCents", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var readyField = typeof(SellerBalance).GetField("_readyForPayoutAmountInCents", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var paidField = typeof(SellerBalance).GetField("_paidAmountInCents", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        // Restore state using reflection
+        var pendingProp = typeof(SellerBalance).GetProperty("PendingAmountInCents", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var readyProp = typeof(SellerBalance).GetProperty("ReadyForPayoutAmountInCents", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var paidProp = typeof(SellerBalance).GetProperty("PaidAmountInCents", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var createdAtProp = typeof(SellerBalance).GetProperty("CreatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var updatedAtProp = typeof(SellerBalance).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 
-        // Since we can't easily set private fields, we'll need to add public methods or use a different approach
-        // For now, let's add a method to the domain entity to restore state
+        if (pendingProp?.SetMethod != null) pendingProp.SetValue(balance, record.PendingAmountInCents);
+        if (readyProp?.SetMethod != null) readyProp.SetValue(balance, record.ReadyForPayoutAmountInCents);
+        if (paidProp?.SetMethod != null) paidProp.SetValue(balance, record.PaidAmountInCents);
+        if (createdAtProp?.SetMethod != null) createdAtProp.SetValue(balance, record.CreatedAtUtc);
+        if (updatedAtProp?.SetMethod != null) updatedAtProp.SetValue(balance, record.UpdatedAtUtc);
+
         return balance;
     }
 
@@ -1167,8 +1170,23 @@ public static class PostgresMappers
             record.PlatformFeeInCents,
             record.Currency);
 
-        // Set status and other fields using reflection or methods
-        // This is complex, so we might need to add restore methods to domain entities
+        // Restore state using reflection
+        var statusProp = typeof(SellerTransaction).GetProperty("Status", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var payoutIdProp = typeof(SellerTransaction).GetProperty("PayoutId", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var readyForPayoutAtProp = typeof(SellerTransaction).GetProperty("ReadyForPayoutAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var paidAtProp = typeof(SellerTransaction).GetProperty("PaidAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var financialTransactionIdProp = typeof(SellerTransaction).GetProperty("FinancialTransactionId", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var createdAtProp = typeof(SellerTransaction).GetProperty("CreatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var updatedAtProp = typeof(SellerTransaction).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+        if (statusProp?.SetMethod != null) statusProp.SetValue(transaction, (SellerTransactionStatus)record.Status);
+        if (payoutIdProp?.SetMethod != null) payoutIdProp.SetValue(transaction, record.PayoutId);
+        if (readyForPayoutAtProp?.SetMethod != null) readyForPayoutAtProp.SetValue(transaction, record.ReadyForPayoutAtUtc);
+        if (paidAtProp?.SetMethod != null) paidAtProp.SetValue(transaction, record.PaidAtUtc);
+        if (financialTransactionIdProp?.SetMethod != null) financialTransactionIdProp.SetValue(transaction, record.FinancialTransactionId);
+        if (createdAtProp?.SetMethod != null) createdAtProp.SetValue(transaction, record.CreatedAtUtc);
+        if (updatedAtProp?.SetMethod != null) updatedAtProp.SetValue(transaction, record.UpdatedAtUtc);
+
         return transaction;
     }
 
@@ -1194,7 +1212,19 @@ public static class PostgresMappers
             record.TerritoryId,
             record.Currency);
 
-        // Restore amounts - need to add methods to domain entity
+        // Restore state using reflection
+        var revenueProp = typeof(PlatformFinancialBalance).GetProperty("TotalRevenueInCents", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var expenseProp = typeof(PlatformFinancialBalance).GetProperty("TotalExpensesInCents", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var netBalanceProp = typeof(PlatformFinancialBalance).GetProperty("NetBalanceInCents", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var createdAtProp = typeof(PlatformFinancialBalance).GetProperty("CreatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var updatedAtProp = typeof(PlatformFinancialBalance).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+        if (revenueProp?.SetMethod != null) revenueProp.SetValue(balance, record.TotalRevenueInCents);
+        if (expenseProp?.SetMethod != null) expenseProp.SetValue(balance, record.TotalExpensesInCents);
+        if (netBalanceProp?.SetMethod != null) netBalanceProp.SetValue(balance, record.NetBalanceInCents);
+        if (createdAtProp?.SetMethod != null) createdAtProp.SetValue(balance, record.CreatedAtUtc);
+        if (updatedAtProp?.SetMethod != null) updatedAtProp.SetValue(balance, record.UpdatedAtUtc);
+
         return balance;
     }
 
@@ -1292,6 +1322,15 @@ public static class PostgresMappers
             record.Currency,
             record.ReconciledByUserId,
             record.Notes);
+
+        // Restore status and timestamps using reflection
+        var statusProp = typeof(ReconciliationRecord).GetProperty("Status", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var createdAtProp = typeof(ReconciliationRecord).GetProperty("CreatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var updatedAtProp = typeof(ReconciliationRecord).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+        if (statusProp?.SetMethod != null) statusProp.SetValue(reconciliation, (ReconciliationStatus)record.Status);
+        if (createdAtProp?.SetMethod != null) createdAtProp.SetValue(reconciliation, record.CreatedAtUtc);
+        if (updatedAtProp?.SetMethod != null) updatedAtProp.SetValue(reconciliation, record.UpdatedAtUtc);
 
         return reconciliation;
     }

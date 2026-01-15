@@ -166,6 +166,17 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICheckoutRepository, PostgresCheckoutRepository>();
         services.AddScoped<ICheckoutItemRepository, PostgresCheckoutItemRepository>();
         services.AddScoped<IPlatformFeeConfigRepository, PostgresPlatformFeeConfigRepository>();
+        
+        // Financial
+        services.AddScoped<IFinancialTransactionRepository, PostgresFinancialTransactionRepository>();
+        services.AddScoped<ITransactionStatusHistoryRepository, PostgresTransactionStatusHistoryRepository>();
+        services.AddScoped<ISellerBalanceRepository, PostgresSellerBalanceRepository>();
+        services.AddScoped<ISellerTransactionRepository, PostgresSellerTransactionRepository>();
+        services.AddScoped<IPlatformFinancialBalanceRepository, PostgresPlatformFinancialBalanceRepository>();
+        services.AddScoped<IPlatformRevenueTransactionRepository, PostgresPlatformRevenueTransactionRepository>();
+        services.AddScoped<IPlatformExpenseTransactionRepository, PostgresPlatformExpenseTransactionRepository>();
+        services.AddScoped<IReconciliationRecordRepository, PostgresReconciliationRecordRepository>();
+        
         services.AddScoped<IUserPreferencesRepository, PostgresUserPreferencesRepository>();
         services.AddScoped<IMembershipSettingsRepository, PostgresMembershipSettingsRepository>();
         services.AddScoped<IMembershipCapabilityRepository, PostgresMembershipCapabilityRepository>();
@@ -216,6 +227,17 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICheckoutRepository, InMemoryCheckoutRepository>();
         services.AddSingleton<ICheckoutItemRepository, InMemoryCheckoutItemRepository>();
         services.AddSingleton<IPlatformFeeConfigRepository, InMemoryPlatformFeeConfigRepository>();
+        
+        // Financial
+        services.AddSingleton<IFinancialTransactionRepository, InMemoryFinancialTransactionRepository>();
+        services.AddSingleton<ITransactionStatusHistoryRepository, InMemoryTransactionStatusHistoryRepository>();
+        services.AddSingleton<ISellerBalanceRepository, InMemorySellerBalanceRepository>();
+        services.AddSingleton<ISellerTransactionRepository, InMemorySellerTransactionRepository>();
+        services.AddSingleton<IPlatformFinancialBalanceRepository, InMemoryPlatformFinancialBalanceRepository>();
+        services.AddSingleton<IPlatformRevenueTransactionRepository, InMemoryPlatformRevenueTransactionRepository>();
+        services.AddSingleton<IPlatformExpenseTransactionRepository, InMemoryPlatformExpenseTransactionRepository>();
+        services.AddSingleton<IReconciliationRecordRepository, InMemoryReconciliationRecordRepository>();
+        
         services.AddSingleton<IUserPreferencesRepository, InMemoryUserPreferencesRepository>();
         services.AddSingleton<IMembershipSettingsRepository, InMemoryMembershipSettingsRepository>();
         services.AddSingleton<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();

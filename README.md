@@ -193,7 +193,8 @@ backend/
 - ✅ Feed territorial com criação, interações (like, comment, share) e moderação
 - ✅ Feed pessoal e feed do território
 - ✅ Posts com GeoAnchors (georreferenciamento)
-- ✅ Paginação eficiente com otimizações (batch operations)
+- ✅ Paginação completa em todos os endpoints de listagem (15 endpoints paginados)
+- ✅ Otimizações de performance (batch operations, cache invalidation)
 
 #### Mapa
 - ✅ Mapa territorial com entidades (MapEntity) e relações
@@ -239,15 +240,21 @@ backend/
   - Write endpoints: 30 req/min
 - ✅ Security headers em todas as respostas (X-Frame-Options, CSP, etc.)
 - ✅ Validação completa de input (14 validators FluentValidation)
+- ✅ Testes de segurança abrangentes (SQL injection, XSS, CSRF, path traversal, etc.)
 - ✅ CORS configurado com validação em produção
 - ✅ Health checks completos (liveness e readiness)
 - ✅ Logging estruturado (Serilog)
 - ✅ Connection pooling e retry policies
 - ✅ Índices de banco para performance
+- ✅ Cache invalidation automático em 9 services críticos
+- ✅ Constantes centralizadas (redução de duplicação)
 
 #### Testes
 - ✅ Testes automatizados (unidade, integração, E2E)
-- ✅ Cobertura de testes ~82%
+- ✅ 341 testes passando (100%)
+- ✅ Cobertura de testes ~45% (em progresso para >90%)
+- ✅ Testes de segurança (14 testes: autenticação, autorização, injection, CSRF, etc.)
+- ✅ Testes de performance (7 testes com SLAs definidos)
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)
 
 ### Em Planejamento 🚧

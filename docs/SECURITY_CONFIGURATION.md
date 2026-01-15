@@ -1,7 +1,7 @@
 # Configuração de Segurança - Araponga
 
-**Última atualização**: 2025-01-13  
-**Versão**: 1.0
+**Última atualização**: 2025-01-15  
+**Versão**: 1.1
 
 ---
 
@@ -334,4 +334,24 @@ export JWT__SIGNINGKEY="seu-secret-aqui"
 
 ---
 
-**Última atualização**: 2025-01-13
+## 🧪 Testes de Segurança
+
+A aplicação inclui uma suíte completa de testes de segurança (14 testes) que validam:
+
+- ✅ Autenticação (JWT válido/inválido/expirado)
+- ✅ Autorização (Visitor vs Resident vs Curator)
+- ✅ Rate limiting
+- ✅ Validação de input (SQL injection, XSS, NoSQL injection)
+- ✅ Path traversal
+- ✅ CSRF
+- ✅ Command injection
+- ✅ Resource ownership
+- ✅ HTTPS enforcement
+- ✅ CORS
+- ✅ Security headers
+
+**Arquivo**: `backend/Araponga.Tests/Api/SecurityTests.cs`
+
+---
+
+**Última atualização**: 2025-01-15

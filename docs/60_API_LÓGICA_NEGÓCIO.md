@@ -1,8 +1,9 @@
 # API Araponga - Lógica de Negócio e Usabilidade
 
 **Documento de Negócio Completo**  
-**Versão**: 1.0  
-**Data**: 2025-01-13
+**Versão**: 1.1  
+**Data**: 2025-01-13  
+**Última Atualização**: 2025-01-15 (Fase 2 - Paginação, Testes de Segurança e Performance)
 
 ---
 

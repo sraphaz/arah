@@ -15,7 +15,7 @@
 | Testes de Segurança | 16h | ⏳ Pendente | 0% |
 | Estratégia de Cache | 24h | 🟡 Em Progresso | 85% |
 | Paginação Completa | 16h | ⏳ Pendente | 0% |
-| Reduzir Duplicação | 16h | 🟡 Em Progresso | 80% |
+| Reduzir Duplicação | 16h | 🟡 Em Progresso | 85% |
 | **Total** | **100h** | **🟡 30%** | |
 
 ---
@@ -145,6 +145,7 @@
 - ✅ `AuthService` atualizado para usar constantes de autenticação
 - ✅ `ResidencyRequestService` atualizado para usar constantes de residency requests
 - ✅ `EventsService` atualizado para usar constantes de geografia
+- ✅ `PostCreationService` atualizado para usar constantes de posts
 - ⏳ Atualizar outros services para usar helpers e constantes
 
 ---
@@ -216,14 +217,14 @@
 **Implementado:**
 - ✅ 57 novos testes criados (Alerts, Assets, Marketplace, Territories, Events)
 - ✅ CacheInvalidationService criado e integrado em 7 services
-- ✅ Constants.cs com 8 categorias de constantes
+- ✅ Constants.cs com 10 categorias de constantes
 - ✅ ValidationHelpers.cs criado
-- ✅ Refatoração de 8 services para usar constantes
+- ✅ Refatoração de 11 services para usar constantes
 
 **Em Progresso:**
 - ✅ 319/319 testes passando (100%)
 - ✅ Cache invalidation integrado em 9 services
-- 🟡 Refatoração 80% completa
+- 🟡 Refatoração 85% completa
 
 **Próximos Passos:**
 1. Corrigir 2 testes que ainda falham

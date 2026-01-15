@@ -10,13 +10,13 @@
 
 | Tarefa | Estimativa | Status | Progresso |
 |--------|------------|--------|----------|
-| Cobertura de Testes >90% | 40h | 🟡 Em Progresso | 30% |
+| Cobertura de Testes >90% | 40h | 🟡 Em Progresso | 45% |
 | Testes de Performance | 24h | ⏳ Pendente | 0% |
 | Testes de Segurança | 16h | ⏳ Pendente | 0% |
-| Estratégia de Cache | 24h | 🟡 Em Progresso | 60% |
+| Estratégia de Cache | 24h | 🟡 Em Progresso | 70% |
 | Paginação Completa | 16h | ⏳ Pendente | 0% |
 | Reduzir Duplicação | 16h | 🟡 Em Progresso | 80% |
-| **Total** | **100h** | **🟡 25%** | |
+| **Total** | **100h** | **🟡 30%** | |
 
 ---
 
@@ -83,9 +83,40 @@
 - ⏳ Testes de edge cases
 - ⏳ Testes de cenários de erro
 
-**Total de testes criados**: 35 novos testes
+**Total de testes criados**: 57 novos testes
 
 **Status dos testes**: 16/18 passando (2 ainda precisam de ajustes finos)
+
+#### TerritoriesControllerTests.cs ✅
+- ✅ `List_ReturnsTerritories`
+- ✅ `ListPaged_ReturnsPagedResults`
+- ✅ `GetById_RequiresAuthentication`
+- ✅ `GetById_ReturnsTerritory`
+- ✅ `GetById_ReturnsNotFound_ForInvalidId`
+- ✅ `Suggest_RequiresRateLimiting`
+- ✅ `Suggest_ValidatesInput`
+- ✅ `Search_ReturnsTerritories`
+- ✅ `SearchPaged_ReturnsPagedResults`
+- ✅ `Nearby_ReturnsTerritories`
+- ✅ `NearbyPaged_ReturnsPagedResults`
+- ✅ `Selection_RequiresSessionHeader`
+- ✅ `Selection_CanSetAndGet`
+
+**Status**: 12 testes criados
+
+#### EventsControllerTests.cs ✅
+- ✅ `CreateEvent_RequiresAuthentication`
+- ✅ `CreateEvent_ValidatesInput`
+- ✅ `UpdateEvent_RequiresAuthentication`
+- ✅ `CancelEvent_RequiresAuthentication`
+- ✅ `ExpressInterest_RequiresAuthentication`
+- ✅ `ConfirmParticipation_RequiresAuthentication`
+- ✅ `GetEvents_RequiresAuthentication`
+- ✅ `GetEventsPaged_RequiresAuthentication`
+- ✅ `GetEventsNearby_RequiresAuthentication`
+- ✅ `GetEventsNearbyPaged_RequiresAuthentication`
+
+**Status**: 10 testes criados
 
 ### 4. Estratégia de Cache e Invalidação
 - ✅ `CacheInvalidationService` criado
@@ -93,9 +124,11 @@
 - ✅ Integrado no `StoreService` (invalidação após criar/atualizar stores)
 - ✅ Integrado no `StoreItemService` (invalidação após criar/atualizar items)
 - ✅ Integrado no `TerritoryAssetService` (invalidação após criar/atualizar/validar assets)
+- ✅ Integrado no `EventsService` (invalidação após criar/atualizar/cancelar eventos)
+- ✅ Integrado no `TerritoryService` (invalidação após criar território)
 - ✅ `HealthService` já tinha invalidação implementada
 - ✅ TTLs movidos para `Constants.Cache`
-- ⏳ Integrar em outros services (TerritoryService, EventsService, etc.)
+- ⏳ Integrar em outros services (FeedService, MapService, etc.)
 - ⏳ Adicionar métricas de cache hit/miss
 
 ### 6. Refatoração: Reduzir Duplicação
@@ -176,18 +209,18 @@
 
 ## 📈 Resumo Executivo
 
-### Progresso Atual: 25%
+### Progresso Atual: 30%
 
 **Implementado:**
-- ✅ 35 novos testes criados (Alerts, Assets, Marketplace)
-- ✅ CacheInvalidationService criado e integrado em 5 services
+- ✅ 57 novos testes criados (Alerts, Assets, Marketplace, Territories, Events)
+- ✅ CacheInvalidationService criado e integrado em 7 services
 - ✅ Constants.cs com 8 categorias de constantes
 - ✅ ValidationHelpers.cs criado
 - ✅ Refatoração de 8 services para usar constantes
 
 **Em Progresso:**
 - 🟡 16/18 testes passando (2 precisam ajustes finos)
-- 🟡 Cache invalidation integrado em 5 services (faltam mais)
+- 🟡 Cache invalidation integrado em 7 services (faltam mais)
 - 🟡 Refatoração 80% completa
 
 **Próximos Passos:**

@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   // Banner sempre visível - sem lógica de redirect.
 
   var LANG_STORAGE_KEY = 'devportal.lang';
@@ -53,7 +53,7 @@
       'quickstart.title': 'Copie e cole (5–10 comandos)',
       'quickstart.bashTitle': 'Bash (Linux/macOS/Git Bash)',
       'quickstart.powershellTitle': 'PowerShell (Windows)',
-      'quickstart.tipHtml': '<strong>Dica:</strong> para manter o portal em <code>docs/</code> e no <code>wwwroot</code> sincronizados, execute <code>./docs/devportal/sync-devportal.ps1</code>.',
+      'quickstart.tipHtml': '<strong>Dica:</strong> fonte única do portal em <code>backend/Araponga.Api/wwwroot/devportal</code>. O GitHub Pages publica exatamente essa pasta.',
       'versions.eyebrow': 'Versões & compatibilidade',
       'versions.title': 'Versionamento',
       'versions.leadHtml': 'A API atual utiliza prefixo <code>/api/v1</code>. Mudanças compatíveis devem manter o contrato dentro dessa versão. Para evolução maior, a estratégia recomendada é introduzir um novo prefixo.',
@@ -145,7 +145,7 @@
       'quickstart.title': 'Copia y pega (5–10 comandos)',
       'quickstart.bashTitle': 'Bash (Linux/macOS/Git Bash)',
       'quickstart.powershellTitle': 'PowerShell (Windows)',
-      'quickstart.tipHtml': '<strong>Consejo:</strong> para mantener el portal en <code>docs/</code> y en <code>wwwroot</code> sincronizados, ejecuta <code>./docs/devportal/sync-devportal.ps1</code>.',
+      'quickstart.tipHtml': '<strong>Consejo:</strong> la fuente única del portal está en <code>backend/Araponga.Api/wwwroot/devportal</code>. GitHub Pages publica exactamente esa carpeta.',
       'versions.eyebrow': 'Versiones y compatibilidad',
       'versions.title': 'Versionado',
       'versions.leadHtml': 'La API actual usa el prefijo <code>/api/v1</code>. Los cambios compatibles deben mantener el contrato dentro de esta versión. Para una evolución mayor, la estrategia recomendada es introducir un nuevo prefijo.',
@@ -237,7 +237,7 @@
       'quickstart.title': 'Copy & paste (5–10 commands)',
       'quickstart.bashTitle': 'Bash (Linux/macOS/Git Bash)',
       'quickstart.powershellTitle': 'PowerShell (Windows)',
-      'quickstart.tipHtml': '<strong>Tip:</strong> to keep the portal in <code>docs/</code> and <code>wwwroot</code> in sync, run <code>./docs/devportal/sync-devportal.ps1</code>.',
+      'quickstart.tipHtml': '<strong>Tip:</strong> single source of truth lives in <code>backend/Araponga.Api/wwwroot/devportal</code>. GitHub Pages deploys that folder as-is.',
       'versions.eyebrow': 'Versions & compatibility',
       'versions.title': 'Versioning',
       'versions.leadHtml': 'The current API uses the <code>/api/v1</code> prefix. Compatible changes should keep the contract within this version. For larger evolution, the recommended strategy is to introduce a new prefix.',
@@ -329,7 +329,7 @@
       'quickstart.title': 'Copia e incolla (5–10 comandi)',
       'quickstart.bashTitle': 'Bash (Linux/macOS/Git Bash)',
       'quickstart.powershellTitle': 'PowerShell (Windows)',
-      'quickstart.tipHtml': '<strong>Suggerimento:</strong> per mantenere il portale in <code>docs/</code> e <code>wwwroot</code> sincronizzati, esegui <code>./docs/devportal/sync-devportal.ps1</code>.',
+      'quickstart.tipHtml': '<strong>Suggerimento:</strong> fonte unica in <code>backend/Araponga.Api/wwwroot/devportal</code>. GitHub Pages pubblica esattamente quella cartella.',
       'versions.eyebrow': 'Versioni e compatibilità',
       'versions.title': 'Versionamento',
       'versions.leadHtml': 'L’API attuale usa il prefisso <code>/api/v1</code>. Le modifiche compatibili dovrebbero mantenere il contratto dentro questa versione. Per evoluzioni maggiori, la strategia consigliata è introdurre un nuovo prefisso.',
@@ -450,7 +450,7 @@
       'quickstart.title': 'Copy & paste (5–10 commands)',
       'quickstart.bashTitle': 'Bash (Linux/macOS/Git Bash)',
       'quickstart.powershellTitle': 'PowerShell (Windows)',
-      'quickstart.tipHtml': '<strong>Tip:</strong> to keep the portal in <code>docs/</code> and <code>wwwroot</code> in sync, run <code>./docs/devportal/sync-devportal.ps1</code>.',
+      'quickstart.tipHtml': '<strong>Tip:</strong> single source of truth lives in <code>backend/Araponga.Api/wwwroot/devportal</code>. GitHub Pages deploys that folder as-is.',
       'versions.eyebrow': 'Versions & compatibility',
       'versions.title': 'Versioning',
       'versions.leadHtml': 'The current API uses the <code>/api/v1</code> prefix. Compatible changes should keep the contract within this version. For larger evolution, the recommended strategy is to introduce a new prefix.',

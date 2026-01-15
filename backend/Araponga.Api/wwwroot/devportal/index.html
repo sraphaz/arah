@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
@@ -223,43 +223,94 @@
         <span class="eyebrow" data-i18n="domain.eyebrow">Modelo de domínio</span>
         <h2 data-i18n="domain.title">Entidades principais e relacionamentos</h2>
         <div class="callout">
-          <strong data-i18n="domain.diagramPlaceholder">Diagrama do domínio: removido temporariamente (vou refazer a imagem).</strong>
+          <strong>Diagrama do domínio:</strong> temporariamente removido (atualização pendente).
         </div>
 
         <div class="model-grid">
           <div class="card">
-            <h3>👤 Identidade e Membros</h3>
+            <h3>🧭 Território & Configuração</h3>
+            <dl class="entity-list">
+              <dt><strong>Territory</strong></dt>
+              <dd>Unidade primária. Contexto para visibilidade, governança e conteúdo.</dd>
+
+              <dt><strong>Feature Flags</strong></dt>
+              <dd>Habilitam recursos por território (ex.: tipos de post como AlertPosts).</dd>
+
+              <dt><strong>SystemConfig</strong></dt>
+              <dd>Parâmetros calibráveis (governança e validações globais).</dd>
+            </dl>
+          </div>
+
+          <div class="card">
+            <h3>👤 Identidade, Perfil & Preferências</h3>
             <dl class="entity-list">
               <dt><strong>User</strong></dt>
-              <dd>Cria identidade autenticada e recebe role (Visitor/Resident/Curator)</dd>
-              
-              <dt><strong>TerritoryMembership</strong></dt>
-              <dd>Conecta <code>User ↔ Territory</code> e define role/status de validação</dd>
+              <dd>Identidade autenticada usada em todos os módulos.</dd>
+
+              <dt><strong>UserProfile</strong></dt>
+              <dd>Perfil do usuário (ex.: display name e contato).</dd>
+
+              <dt><strong>UserPreferences</strong></dt>
+              <dd>Preferências (privacidade e notificações).</dd>
+
+              <dt><strong>2FA (TOTP)</strong></dt>
+              <dd>Camada adicional de segurança para login (setup/confirm/verify).</dd>
             </dl>
           </div>
 
           <div class="card">
-            <h3>📝 Feed e Conteúdo</h3>
+            <h3>🤝 Membership & Onboarding</h3>
+            <dl class="entity-list">
+              <dt><strong>TerritoryMembership</strong></dt>
+              <dd>Vínculo <code>User ↔ Territory</code> com role (Visitor/Resident) e status de residência.</dd>
+
+              <dt><strong>JoinRequest</strong></dt>
+              <dd>Pedido para virar residente (aprovação/rejeição pela comunidade/curadoria).</dd>
+
+              <dt><strong>WorkItem</strong></dt>
+              <dd>Fila genérica de revisão humana (fallback para governança global quando necessário).</dd>
+            </dl>
+          </div>
+
+          <div class="card">
+            <h3>🧾 Verificação & Evidências</h3>
+            <dl class="entity-list">
+              <dt><strong>Verification</strong></dt>
+              <dd>Processos de verificação (identidade e residência) conforme políticas.</dd>
+
+              <dt><strong>DocumentEvidence</strong></dt>
+              <dd>Metadados de evidência (upload e download via proxy).</dd>
+
+              <dt><strong>TerritoryWorkItems</strong></dt>
+              <dd>Backlog territorial para curadoria e validações.</dd>
+            </dl>
+          </div>
+
+          <div class="card">
+            <h3>📝 Feed & Publicações</h3>
             <dl class="entity-list">
               <dt><strong>CommunityPost</strong></dt>
-              <dd>Pertence ao Territory e pode referenciar MapEntity</dd>
-              
+              <dd>Post do território, com tipo/visibilidade e autoria.</dd>
+
               <dt><strong>PostGeoAnchor</strong></dt>
-              <dd>Ancora posts no mapa com coordenadas geográficas</dd>
-              
-              <dt><strong>Feature Flags</strong></dt>
-              <dd>Habilitam tipos de post por território (ex: AlertPosts)</dd>
+              <dd>Âncora geográfica opcional para integrar feed e mapa.</dd>
+
+              <dt><strong>Share</strong></dt>
+              <dd>Compartilhamento de posts dentro do território.</dd>
             </dl>
           </div>
 
           <div class="card">
-            <h3>🗺️ Mapa e Localização</h3>
+            <h3>🗺️ Mapa, Assets & Alerts</h3>
             <dl class="entity-list">
               <dt><strong>MapEntity</strong></dt>
-              <dd>Pertence ao Territory, começa como sugerida e pode ser validada por curadores</dd>
-              
+              <dd>Entidade do mapa (pode começar sugerida e ser confirmada/validada).</dd>
+
               <dt><strong>TerritoryAsset</strong></dt>
-              <dd>Recursos territoriais com geolocalização obrigatória (rios, nascentes, etc.)</dd>
+              <dd>Recurso territorial com geolocalização obrigatória.</dd>
+
+              <dt><strong>Alert</strong></dt>
+              <dd>Alerta territorial (validação/curadoria, aparece em feed + mapa).</dd>
             </dl>
           </div>
 
@@ -267,16 +318,16 @@
             <h3>🛒 Marketplace</h3>
             <dl class="entity-list">
               <dt><strong>TerritoryStore</strong></dt>
-              <dd>Representa loja de um morador no território</dd>
+              <dd>Loja do morador no território.</dd>
               
-              <dt><strong>StoreListing</strong></dt>
-              <dd>Produto ou serviço oferecido por uma loja</dd>
+              <dt><strong>Item</strong></dt>
+              <dd>Produto/serviço publicado pela loja (categoria, tags, preço, status).</dd>
               
               <dt><strong>Cart</strong> / <strong>CartItem</strong></dt>
-              <dd>Gerenciam carrinho de compras por território</dd>
+              <dd>Carrinho por território + itens com quantidade e notas.</dd>
               
-              <dt><strong>ListingInquiry</strong></dt>
-              <dd>Representa interesse de um usuário em um listing</dd>
+              <dt><strong>Inquiry</strong></dt>
+              <dd>Mensagem de interesse em um item (inquiries enviadas/recebidas).</dd>
             </dl>
           </div>
 
@@ -284,47 +335,52 @@
             <h3>📅 Eventos</h3>
             <dl class="entity-list">
               <dt><strong>TerritoryEvent</strong></dt>
-              <dd>Eventos territoriais com data/hora de início (obrigatória) e fim (opcional), além de geolocalização obrigatória. Aparecem no feed e no mapa automaticamente</dd>
+              <dd>Evento territorial com início obrigatório, fim opcional e geolocalização.</dd>
               
-              <dt><strong>EventParticipation</strong></dt>
-              <dd>Usuários declaram participação com status: <code>Going</code>, <code>Interested</code> ou <code>NotGoing</code></dd>
+              <dt><strong>Interest / Confirm</strong></dt>
+              <dd>Estados de engajamento: marcar interesse e confirmar presença.</dd>
               
               <dt><strong>Integração Feed-Mapa</strong></dt>
-              <dd>Criação de evento gera automaticamente um post no feed e um pin no mapa. Exemplo: "Feira de artesanato" na Praça Central aparece em ambos</dd>
+              <dd>Criação do evento alimenta feed e pins do mapa (mesmo território).</dd>
             </dl>
-            <div class="example-box">
-              <strong>Exemplo prático:</strong> Morador cria evento "Mutirão de limpeza" para sábado 9h na Praça. O evento aparece no feed como post e no mapa como pin, permitindo que outros moradores vejam e declarem participação.
-            </div>
           </div>
 
           <div class="card">
-            <h3>🛡️ Moderação e Segurança</h3>
+            <h3>💬 Chat</h3>
             <dl class="entity-list">
-              <dt><strong>Reports</strong></dt>
-              <dd>Denúncias registram sinais de abuso/spam para triagem. Ex.: <code>POST /api/v1/reports/posts/{postId}</code> e <code>POST /api/v1/reports/users/{userId}</code> com <code>reason</code> e <code>details</code>.</dd>
+              <dt><strong>Conversation</strong></dt>
+              <dd>Conversas e grupos (inclui chat territorial).</dd>
 
-              <dt><strong>Curadoria (triagem)</strong></dt>
-              <dd>Curadores podem listar e filtrar reports por <code>territoryId</code>, <code>status</code> e <code>targetType</code> em <code>GET /api/v1/reports</code>, criando um backlog prático de ação.</dd>
-              
-              <dt><strong>Blocks</strong></dt>
-              <dd>Bloqueios removem do feed e do mapa o conteúdo produzido por um usuário bloqueado. Use <code>POST /api/v1/blocks/users/{userId}</code> e remova com <code>DELETE /api/v1/blocks/users/{userId}</code>.</dd>
+              <dt><strong>ChatMessage</strong></dt>
+              <dd>Mensagens com paginação por cursor (beforeCreatedAt / beforeMessageId).</dd>
 
-              <dt><strong>Segurança de acesso</strong></dt>
-              <dd>Operações dependem de JWT (<code>401</code> quando ausente/ inválido). Em conjunto com membership (visitor/resident) e presença (geo headers), isso evita ações sensíveis fora do contexto do território.</dd>
+              <dt><strong>Participants</strong></dt>
+              <dd>Participantes, papéis e “read state” (marcar como lido).</dd>
             </dl>
-            <div class="example-box">
-              <strong>Exemplo prático:</strong> após denúncias recorrentes, a curadoria filtra <code>GET /api/v1/reports?territoryId=...&amp;status=Open</code>, revisa os alvos e recomenda bloqueio do autor. O bloqueio reduz exposição de posts e entidades do mapa criadas por ele no território.
-            </div>
+          </div>
+
+          <div class="card">
+            <h3>🛡️ Moderação & Segurança</h3>
+            <dl class="entity-list">
+              <dt><strong>Report</strong></dt>
+              <dd>Sinalização de abuso (posts e usuários), com motivo e detalhes.</dd>
+
+              <dt><strong>Block</strong></dt>
+              <dd>Remove visibilidade do conteúdo produzido por um usuário bloqueado.</dd>
+
+              <dt><strong>TerritoryModerationCase</strong></dt>
+              <dd>Casos de moderação por território (triagem e rastreabilidade).</dd>
+            </dl>
           </div>
 
           <div class="card">
             <h3>🔔 Notificações</h3>
             <dl class="entity-list">
               <dt><strong>OutboxMessage</strong></dt>
-              <dd>Garante a intenção de notificar em transações confiáveis</dd>
-              
+              <dd>Registro transacional da intenção de notificar.</dd>
+
               <dt><strong>UserNotification</strong></dt>
-              <dd>Compõe o inbox in-app por usuário</dd>
+              <dd>Inbox in-app por usuário (listar e marcar como lida).</dd>
             </dl>
           </div>
 
@@ -486,13 +542,13 @@
             Reports usam <code>reason</code> (obrigatório) e <code>details</code> (opcional).
           </p>
           <pre class="code-block"><code># Reportar um post
-curl -X POST http://localhost:8080/api/v1/reports/posts/&lt;postId&gt; \
+curl -X POST http://localhost:8080/api/v1/reports/posts/{postId} \
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "Content-Type: application/json" \
   -d '{"reason":"Spam","details":"Link suspeito no conteúdo"}'
 
 # Reportar um usuário (opcionalmente por território)
-curl -X POST "http://localhost:8080/api/v1/reports/users/&lt;userId&gt;?territoryId=11111111-1111-1111-1111-111111111111" \
+curl -X POST "http://localhost:8080/api/v1/reports/users/{userId}?territoryId=11111111-1111-1111-1111-111111111111" \
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "Content-Type: application/json" \
   -d '{"reason":"Abuso","details":"Comportamento inadequado"}'
@@ -502,10 +558,10 @@ curl "http://localhost:8080/api/v1/reports?territoryId=11111111-1111-1111-1111-1
   -H "Authorization: Bearer &lt;token&gt;"
 
 # Bloquear / desbloquear um usuário
-curl -X POST http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
+curl -X POST http://localhost:8080/api/v1/blocks/users/{userId} \
   -H "Authorization: Bearer &lt;token&gt;"
 
-curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
+curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
   -H "Authorization: Bearer &lt;token&gt;"</code></pre>
         </div>
 
@@ -556,9 +612,9 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
             <h3>Economia local e eventos</h3>
             <ul>
               <li><strong>Loja</strong>: <code>POST /api/v1/stores</code></li>
-              <li><strong>Listings</strong>: <code>POST /api/v1/listings</code> e <code>GET /api/v1/listings/search</code></li>
+              <li><strong>Items (produtos/serviços)</strong>: <code>POST /api/v1/items</code> e <code>GET /api/v1/items</code></li>
               <li><strong>Carrinho</strong>: <code>POST /api/v1/cart/items</code> e <code>POST /api/v1/cart/checkout</code></li>
-              <li><strong>Evento</strong>: <code>POST /api/v1/events</code> e <code>POST /api/v1/events/{id}/participation</code></li>
+              <li><strong>Evento</strong>: <code>POST /api/v1/events</code>, <code>POST /api/v1/events/{eventId}/interest</code>, <code>POST /api/v1/events/{eventId}/confirm</code></li>
             </ul>
           </div>
         </div>
@@ -568,7 +624,7 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
         <span class="eyebrow" data-i18n="marketplace.eyebrow">Marketplace</span>
         <h2 data-i18n="marketplace.title">Economia local territorial</h2>
         <p data-i18n="marketplace.lead">
-          O marketplace permite que moradores criem lojas, listem produtos/serviços, gerenciem carrinho de compras
+          O marketplace permite criar lojas e publicar produtos/serviços (items), gerenciar carrinho de compras
           e recebam inquiries de interessados. Tudo ancorado no território.
         </p>
 
@@ -594,12 +650,12 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
         </div>
 
         <div class="flow-step">
-          <h4>13. Criar listing (produto ou serviço)</h4>
+          <h4>13. Criar item (produto ou serviço)</h4>
           <p>
-            Lojas podem criar listings via <code>POST /api/v1/listings</code>. Listings podem ser produtos
+            Lojas podem criar items via <code>POST /api/v1/items</code>. Items podem ser produtos
             ou serviços, com preço fixo, negociável ou gratuito.
           </p>
-          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/listings \
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/items \
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "Content-Type: application/json" \
   -d '{
@@ -608,19 +664,24 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
     "type": "Product",
     "title": "Bolo de chocolate",
     "description": "Bolo caseiro",
+    "category": "Alimentos",
+    "tags": "bolo,chocolate",
     "pricingType": "Fixed",
     "priceAmount": 25.00,
-    "currency": "BRL"
+    "currency": "BRL",
+    "unit": "unidade",
+    "latitude": -23.55,
+    "longitude": -46.63
   }'</code></pre>
         </div>
 
         <div class="flow-step">
-          <h4>14. Buscar listings</h4>
+          <h4>14. Buscar items</h4>
           <p>
-            Use <code>GET /api/v1/listings/search</code> para buscar listings por território, categoria,
-            tags ou texto livre.
+            Use <code>GET /api/v1/items</code> para buscar produtos e serviços por território, categoria,
+            tags ou texto livre (<code>q</code>).
           </p>
-          <pre class="code-block"><code>curl "http://localhost:8080/api/v1/listings/search?territoryId=11111111-1111-1111-1111-111111111111&amp;search=bolo" \
+          <pre class="code-block"><code>curl "http://localhost:8080/api/v1/items?territoryId=11111111-1111-1111-1111-111111111111&amp;q=bolo&amp;category=Alimentos" \
   -H "Authorization: Bearer &lt;token&gt;"</code></pre>
         </div>
 
@@ -629,27 +690,26 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
           <p>
             Usuários podem adicionar itens ao carrinho via <code>POST /api/v1/cart/items</code>,
             atualizar quantidade via <code>PATCH /api/v1/cart/items/{id}</code> e fazer checkout via
-            <code>POST /api/v1/cart/checkout</code>. O checkout gera inquiries para listings não compráveis
-            e checkout items para os compráveis.
+            <code>POST /api/v1/cart/checkout</code>.
           </p>
           <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/cart/items \
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "Content-Type: application/json" \
   -d '{
     "territoryId": "11111111-1111-1111-1111-111111111111",
-    "listingId": "33333333-3333-3333-3333-333333333333",
-    "quantity": 2
+    "itemId": "33333333-3333-3333-3333-333333333333",
+    "quantity": 2,
+    "notes": "Entregar após 18h (se possível)"
   }'</code></pre>
         </div>
 
         <div class="flow-step">
           <h4>16. Criar inquiry</h4>
           <p>
-            Interessados podem criar inquiries diretamente em listings via
-            <code>POST /api/v1/listings/{id}/inquiries</code>. A resposta inclui informações de contato
-            da loja conforme visibilidade configurada.
+            Interessados podem criar inquiries diretamente em items via
+            <code>POST /api/v1/items/{id}/inquiries</code>.
           </p>
-          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/listings/33333333-3333-3333-3333-333333333333/inquiries \
+          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/items/{id}/inquiries \
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "Content-Type: application/json" \
   -d '{"message": "Gostaria de mais informações"}'</code></pre>
@@ -687,15 +747,18 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
         </div>
 
         <div class="flow-step">
-          <h4>18. Participação em eventos</h4>
+          <h4>18. Interesse e confirmação em eventos</h4>
           <p>
-            Usuários podem declarar participação via <code>POST /api/v1/events/{id}/participation</code>
-            com status <code>Going</code>, <code>Interested</code> ou <code>NotGoing</code>.
+            Usuários podem marcar interesse via <code>POST /api/v1/events/{eventId}/interest</code> e confirmar participação via
+            <code>POST /api/v1/events/{eventId}/confirm</code>.
           </p>
-          <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/events/44444444-4444-4444-4444-444444444444/participation \
+          <pre class="code-block"><code># Marcar interesse
+curl -X POST http://localhost:8080/api/v1/events/{eventId}/interest \
   -H "Authorization: Bearer &lt;token&gt;" \
-  -H "Content-Type: application/json" \
-  -d '{"status": "Going"}'</code></pre>
+  
+# Confirmar participação
+curl -X POST http://localhost:8080/api/v1/events/{eventId}/confirm \
+  -H "Authorization: Bearer &lt;token&gt;"</code></pre>
         </div>
       </section>
 
@@ -786,7 +849,7 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
           <div class="card">
             <h3 data-i18n="admin.endpointsTitle">Endpoints principais</h3>
             <ul>
-              <li><strong>System Config (SystemAdmin)</strong>: <code>GET/PUT /api/v1/admin/system-config</code></li>
+              <li><strong>System Config (SystemAdmin)</strong>: <code>GET /api/v1/admin/system-configs</code> e <code>GET/PUT /api/v1/admin/system-configs/{key}</code></li>
               <li><strong>Work Items (SystemAdmin)</strong>: <code>GET /api/v1/admin/work-items</code></li>
               <li><strong>Work Items (territorial)</strong>: <code>GET /api/v1/territories/{territoryId}/work-items</code></li>
               <li><strong>Upload identidade</strong>: <code>POST /api/v1/verification/identity/document/upload</code></li>
@@ -898,8 +961,7 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
         </div>
         <div class="callout">
-          <span data-i18n-html="quickstart.tipHtml"><strong>Dica:</strong> para manter o portal em <code>docs/</code> e no <code>wwwroot</code> sincronizados, execute
-          <code>./docs/devportal/sync-devportal.ps1</code>.</span>
+          <span data-i18n-html="quickstart.tipHtml"><strong>Dica:</strong> este portal tem fonte única em <code>backend/Araponga.Api/wwwroot/devportal</code> (HTML/CSS/JS/OpenAPI). O deploy do GitHub Pages publica exatamente essa pasta.</span>
         </div>
       </section>
 

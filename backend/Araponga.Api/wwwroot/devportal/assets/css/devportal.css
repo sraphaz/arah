@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: light dark;
   
   /* Paleta de cores harmoniosa e suave */
@@ -447,11 +447,17 @@ main {
 
 @media (min-width: 1024px) {
   .model-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   
   .card-full {
     grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .model-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -921,6 +927,10 @@ pre code {
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .header {
+    background-attachment: scroll;
+  }
+
   .layout {
     grid-template-columns: 1fr;
   }
@@ -946,7 +956,7 @@ pre code {
 
 @media (min-width: 1024px) {
   .grid-two {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

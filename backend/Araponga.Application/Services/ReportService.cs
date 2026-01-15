@@ -54,7 +54,7 @@ public sealed class ReportService
             return (false, "Post not found.", null);
         }
 
-        var sinceUtc = DateTime.UtcNow.Subtract(DuplicateWindow);
+        var sinceUtc = DateTime.UtcNow.Subtract(Constants.Moderation.DuplicateWindow);
         var alreadyReported = await _reportRepository.HasRecentReportAsync(
             reporterUserId,
             ReportTargetType.Post,
@@ -121,7 +121,7 @@ public sealed class ReportService
             return (false, "Territory ID is required.", null);
         }
 
-        var sinceUtc = DateTime.UtcNow.Subtract(DuplicateWindow);
+        var sinceUtc = DateTime.UtcNow.Subtract(Constants.Moderation.DuplicateWindow);
         var alreadyReported = await _reportRepository.HasRecentReportAsync(
             reporterUserId,
             ReportTargetType.User,

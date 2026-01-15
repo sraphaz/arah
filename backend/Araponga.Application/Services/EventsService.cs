@@ -449,7 +449,7 @@ public sealed class EventsService
         double latitude2,
         double longitude2)
     {
-        const double Radius = 6371.0;
+        const double Radius = Constants.Geography.EarthRadiusKm;
         var lat1 = DegreesToRadians(latitude1);
         var lat2 = DegreesToRadians(latitude2);
         var deltaLat = DegreesToRadians(latitude2 - latitude1);

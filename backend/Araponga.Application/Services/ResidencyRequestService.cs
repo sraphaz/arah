@@ -24,10 +24,6 @@ public sealed class ResidencyRequestService
     private readonly ITerritoryJoinRequestRepository _joinRequestRepository;
     private readonly IMemoryCache _cache;
 
-    private const int MaxInviteRecipients = 3;
-    private const int MaxCreatedRequestsPerTerritoryPerDay = 3;
-    private static readonly TimeSpan RateLimitWindow = TimeSpan.FromHours(24);
-
     public ResidencyRequestService(
         JoinRequestService joinRequestService,
         ITerritoryMembershipRepository membershipRepository,
@@ -51,10 +47,10 @@ public sealed class ResidencyRequestService
         string? message,
         CancellationToken cancellationToken)
     {
-        if (recipientUserIds is not null && recipientUserIds.Count > MaxInviteRecipients)
+        if (recipientUserIds is not null && recipientUserIds.Count > Constants.ResidencyRequests.MaxInviteRecipients)
         {
             return Result<ResidencyRequestResult>.Failure(
-                $"Too many recipients. Maximum allowed is {MaxInviteRecipients}.");
+                $"Too many recipients. Maximum allowed is {Constants.ResidencyRequests.MaxInviteRecipients}.");
         }
 
         // Regra: 1 Resident por User - se já for Resident em outro território, precisa transferir.
@@ -122,7 +118,7 @@ public sealed class ResidencyRequestService
         var key = GetRateLimitKey(requesterUserId, territoryId);
         if (_cache.TryGetValue<RateLimitState?>(key, out var state) && state is not null)
         {
-            return state.CreatedCount >= MaxCreatedRequestsPerTerritoryPerDay;
+            return state.CreatedCount >= Constants.ResidencyRequests.MaxCreatedRequestsPerTerritoryPerDay;
         }
 
         return false;
@@ -136,7 +132,7 @@ public sealed class ResidencyRequestService
             existing.CreatedCount += 1;
             _cache.Set(key, existing, new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = RateLimitWindow
+                AbsoluteExpirationRelativeToNow = Constants.ResidencyRequests.RateLimitWindow
             });
             return;
         }

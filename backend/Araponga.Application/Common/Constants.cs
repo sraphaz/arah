@@ -191,4 +191,36 @@ public static class Constants
         /// </summary>
         public static readonly TimeSpan TwoFactorChallengeExpiration = TimeSpan.FromMinutes(5);
     }
+
+    /// <summary>
+    /// Constantes de residency requests.
+    /// </summary>
+    public static class ResidencyRequests
+    {
+        /// <summary>
+        /// Número máximo de recipients por invite (3).
+        /// </summary>
+        public const int MaxInviteRecipients = 3;
+
+        /// <summary>
+        /// Número máximo de requests criadas por território por dia (3).
+        /// </summary>
+        public const int MaxCreatedRequestsPerTerritoryPerDay = 3;
+
+        /// <summary>
+        /// Janela de tempo para rate limiting (24 horas).
+        /// </summary>
+        public static readonly TimeSpan RateLimitWindow = TimeSpan.FromHours(24);
+    }
+
+    /// <summary>
+    /// Constantes de geografia e cálculos.
+    /// </summary>
+    public static class Geography
+    {
+        /// <summary>
+        /// Raio da Terra em quilômetros (usado em cálculos de distância).
+        /// </summary>
+        public const double EarthRadiusKm = 6371.0;
+    }
 }

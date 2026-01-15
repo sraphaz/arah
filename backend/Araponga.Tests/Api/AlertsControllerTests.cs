@@ -145,11 +145,12 @@ public sealed class AlertsControllerTests
             $"api/v1/alerts/report?territoryId={ActiveTerritoryId}",
             new ReportAlertRequest("", "Description"));
 
-        // Pode retornar BadRequest (validação), Unauthorized (se não for resident), ou Created (se passar validação)
-        // Como o título está vazio, deve retornar BadRequest
+        // FluentValidation deve retornar BadRequest para título vazio
+        // Mas pode retornar Unauthorized se o usuário não for resident/curator
+        // Ou NotFound se o território não existir
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest || 
                    response.StatusCode == HttpStatusCode.Unauthorized ||
-                   response.StatusCode == HttpStatusCode.Created);
+                   response.StatusCode == HttpStatusCode.NotFound);
     }
 
     [Fact]

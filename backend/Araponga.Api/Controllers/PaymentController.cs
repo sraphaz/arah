@@ -168,9 +168,13 @@ public sealed class PaymentController : ControllerBase
             return BadRequest(new { error = "Invalid paymentIntentId format." });
         }
 
+        var sanitizedPaymentIntentId = request.PaymentIntentId
+            .Replace("\r", string.Empty)
+            .Replace("\n", string.Empty);
+
         _logger.LogInformation(
             "Confirming payment {PaymentIntentId} by user {UserId}",
-            request.PaymentIntentId, userContext.User.Id);
+            sanitizedPaymentIntentId, userContext.User.Id);
 
         var result = await _paymentService.ConfirmPaymentAsync(
             request.PaymentIntentId,
@@ -181,7 +185,7 @@ public sealed class PaymentController : ControllerBase
         {
             _logger.LogWarning(
                 "Payment confirmation failed for {PaymentIntentId}: {Error}",
-                request.PaymentIntentId, result.Error);
+                sanitizedPaymentIntentId, result.Error);
             return BadRequest(new { error = result.Error ?? "Unable to confirm payment." });
         }
 

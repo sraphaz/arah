@@ -1,5 +1,6 @@
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Marketplace;
+using Microsoft.EntityFrameworkCore;
 
 namespace Araponga.Infrastructure.Postgres;
 
@@ -10,6 +11,13 @@ public sealed class PostgresCheckoutRepository : ICheckoutRepository
     public PostgresCheckoutRepository(ArapongaDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public async Task<Checkout?> GetByIdAsync(Guid checkoutId, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.Checkouts
+            .FirstOrDefaultAsync(c => c.Id == checkoutId, cancellationToken);
+        return record?.ToDomain();
     }
 
     public Task AddAsync(Checkout checkout, CancellationToken cancellationToken)

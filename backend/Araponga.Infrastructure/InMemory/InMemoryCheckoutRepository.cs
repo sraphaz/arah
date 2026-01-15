@@ -12,6 +12,12 @@ public sealed class InMemoryCheckoutRepository : ICheckoutRepository
         _dataStore = dataStore;
     }
 
+    public Task<Checkout?> GetByIdAsync(Guid checkoutId, CancellationToken cancellationToken)
+    {
+        var checkout = _dataStore.Checkouts.FirstOrDefault(c => c.Id == checkoutId);
+        return Task.FromResult(checkout);
+    }
+
     public Task AddAsync(Checkout checkout, CancellationToken cancellationToken)
     {
         _dataStore.Checkouts.Add(checkout);

@@ -72,6 +72,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ModerationCaseService>();
         services.AddScoped<ChatService>();
         services.AddScoped<InputSanitizationService>();
+        services.AddScoped<SellerPayoutService>();
 
         return services;
     }

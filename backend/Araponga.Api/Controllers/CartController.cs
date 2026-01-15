@@ -43,7 +43,18 @@ public sealed class CartController : ControllerBase
             return Unauthorized();
         }
 
-        var cart = await _cartService.GetCartAsync(territoryId, userContext.User.Id, cancellationToken);
+        var cartResult = await _cartService.GetCartAsync(territoryId, userContext.User.Id, cancellationToken);
+        if (!cartResult.IsSuccess || cartResult.Value is null)
+        {
+            if (string.Equals(cartResult.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
+            return BadRequest(new { error = cartResult.Error ?? "Unable to get cart." });
+        }
+
+        var cart = cartResult.Value;
         var response = new CartResponse(
             cart.Cart.Id,
             cart.Cart.TerritoryId,
@@ -92,10 +103,26 @@ public sealed class CartController : ControllerBase
 
         if (!result.IsSuccess || result.Value is null)
         {
+            if (string.Equals(result.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
             return BadRequest(new { error = result.Error ?? "Unable to add item." });
         }
 
-        var cart = await _cartService.GetCartAsync(request.TerritoryId, userContext.User.Id, cancellationToken);
+        var cartResult = await _cartService.GetCartAsync(request.TerritoryId, userContext.User.Id, cancellationToken);
+        if (!cartResult.IsSuccess || cartResult.Value is null)
+        {
+            if (string.Equals(cartResult.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
+            return BadRequest(new { error = cartResult.Error ?? "Unable to retrieve cart item." });
+        }
+
+        var cart = cartResult.Value;
         var detail = cart.Items.FirstOrDefault(i => i.Item.Id == result.Value.Id);
         if (detail is null)
         {
@@ -129,7 +156,18 @@ public sealed class CartController : ControllerBase
             return BadRequest(new { error = result.Error ?? "Unable to update item." });
         }
 
-        var cart = await _cartService.GetCartByIdAsync(result.Value.CartId, userContext.User.Id, cancellationToken);
+        var cartResult = await _cartService.GetCartByIdAsync(result.Value.CartId, userContext.User.Id, cancellationToken);
+        if (!cartResult.IsSuccess)
+        {
+            if (string.Equals(cartResult.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
+            return BadRequest(new { error = cartResult.Error ?? "Unable to retrieve cart item." });
+        }
+
+        var cart = cartResult.Value;
         if (cart is null)
         {
             return BadRequest(new { error = "Unable to retrieve cart item." });
@@ -194,6 +232,11 @@ public sealed class CartController : ControllerBase
         var result = await _cartService.CheckoutAsync(request.TerritoryId, userContext.User.Id, request.Message, cancellationToken);
         if (!result.IsSuccess || result.Value is null)
         {
+            if (string.Equals(result.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
             return BadRequest(new { error = result.Error ?? "Unable to checkout." });
         }
 

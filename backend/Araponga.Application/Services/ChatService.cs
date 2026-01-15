@@ -606,6 +606,20 @@ public sealed class ChatService
     {
         if (conversation.Kind == ConversationKind.Direct)
         {
+            // DM é território-escopado (feature flags por território).
+            // Falha segura: sem TerritoryId não há como validar flag => negar acesso.
+            if (conversation.TerritoryId is null)
+            {
+                return false;
+            }
+
+            var directTerritoryId = conversation.TerritoryId.Value;
+            if (!_featureFlags.IsEnabled(directTerritoryId, FeatureFlag.ChatEnabled) ||
+                !_featureFlags.IsEnabled(directTerritoryId, FeatureFlag.ChatDmEnabled))
+            {
+                return false;
+            }
+
             var participant = await _participantRepository.GetAsync(conversation.Id, userId, cancellationToken);
             return participant is not null;
         }

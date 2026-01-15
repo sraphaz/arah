@@ -13,6 +13,7 @@ public sealed class StoreItemService
     private readonly IUserRepository _userRepository;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly MembershipAccessRules _accessRules;
+    private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IUnitOfWork _unitOfWork;
 
     public StoreItemService(
@@ -21,6 +22,7 @@ public sealed class StoreItemService
         IUserRepository userRepository,
         AccessEvaluator accessEvaluator,
         MembershipAccessRules accessRules,
+        TerritoryFeatureFlagGuard featureGuard,
         IUnitOfWork unitOfWork)
     {
         _itemRepository = itemRepository;
@@ -28,6 +30,7 @@ public sealed class StoreItemService
         _userRepository = userRepository;
         _accessEvaluator = accessEvaluator;
         _accessRules = accessRules;
+        _featureGuard = featureGuard;
         _unitOfWork = unitOfWork;
     }
 
@@ -183,12 +186,20 @@ public sealed class StoreItemService
         return Result<StoreItem>.Success(item);
     }
 
-    public Task<StoreItem?> GetByIdAsync(Guid itemId, CancellationToken cancellationToken)
+    public async Task<StoreItem?> GetByIdAsync(Guid itemId, CancellationToken cancellationToken)
     {
-        return _itemRepository.GetByIdAsync(itemId, cancellationToken);
+        var item = await _itemRepository.GetByIdAsync(itemId, cancellationToken);
+        if (item is null)
+        {
+            return null;
+        }
+
+        // Evita expor detalhes do marketplace quando desabilitado no território.
+        var gate = _featureGuard.EnsureMarketplaceEnabled(item.TerritoryId);
+        return gate.IsSuccess ? item : null;
     }
 
-    public Task<IReadOnlyList<StoreItem>> SearchItemsAsync(
+    public async Task<Result<IReadOnlyList<StoreItem>>> SearchItemsAsync(
         Guid territoryId,
         ItemType? type,
         string? query,
@@ -197,10 +208,17 @@ public sealed class StoreItemService
         ItemStatus? status,
         CancellationToken cancellationToken)
     {
-        return _itemRepository.SearchAsync(territoryId, type, query, category, tags, status, cancellationToken);
+        var gate = _featureGuard.EnsureMarketplaceEnabled(territoryId);
+        if (gate.IsFailure)
+        {
+            return Result<IReadOnlyList<StoreItem>>.Failure(gate.Error ?? "Marketplace is disabled for this territory.");
+        }
+
+        var items = await _itemRepository.SearchAsync(territoryId, type, query, category, tags, status, cancellationToken);
+        return Result<IReadOnlyList<StoreItem>>.Success(items);
     }
 
-    public async Task<PagedResult<StoreItem>> SearchItemsPagedAsync(
+    public async Task<Result<PagedResult<StoreItem>>> SearchItemsPagedAsync(
         Guid territoryId,
         ItemType? type,
         string? query,
@@ -210,10 +228,16 @@ public sealed class StoreItemService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
+        var gate = _featureGuard.EnsureMarketplaceEnabled(territoryId);
+        if (gate.IsFailure)
+        {
+            return Result<PagedResult<StoreItem>>.Failure(gate.Error ?? "Marketplace is disabled for this territory.");
+        }
+
         var totalCount = await _itemRepository.CountSearchAsync(territoryId, type, query, category, tags, status, cancellationToken);
         var items = await _itemRepository.SearchPagedAsync(territoryId, type, query, category, tags, status, pagination.Skip, pagination.Take, cancellationToken);
 
-        return new PagedResult<StoreItem>(items, pagination.PageNumber, pagination.PageSize, totalCount);
+        return Result<PagedResult<StoreItem>>.Success(new PagedResult<StoreItem>(items, pagination.PageNumber, pagination.PageSize, totalCount));
     }
 
     private async Task<bool> CanManageStoreAsync(Store store, Guid userId, CancellationToken cancellationToken)

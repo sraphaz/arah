@@ -253,7 +253,7 @@ public sealed class ItemsController : ControllerBase
             parsedStatus = resolvedStatus;
         }
 
-        var items = await _itemService.SearchItemsAsync(
+        var result = await _itemService.SearchItemsAsync(
             territoryId,
             parsedType,
             q,
@@ -262,7 +262,18 @@ public sealed class ItemsController : ControllerBase
             parsedStatus,
             cancellationToken);
 
-        var response = items.Select(ToResponse).ToList();
+        if (!result.IsSuccess || result.Value is null)
+        {
+            // Feature flag OFF: evita expor marketplace quando desabilitado no território.
+            if (string.Equals(result.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
+            return BadRequest(new { error = result.Error ?? "Unable to search items." });
+        }
+
+        var response = result.Value.Select(ToResponse).ToList();
         return Ok(response);
     }
 
@@ -315,7 +326,7 @@ public sealed class ItemsController : ControllerBase
         }
 
         var pagination = new PaginationParameters(pageNumber, pageSize);
-        var pagedResult = await _itemService.SearchItemsPagedAsync(
+        var result = await _itemService.SearchItemsPagedAsync(
             territoryId,
             parsedType,
             q,
@@ -325,6 +336,17 @@ public sealed class ItemsController : ControllerBase
             pagination,
             cancellationToken);
 
+        if (!result.IsSuccess || result.Value is null)
+        {
+            if (string.Equals(result.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
+            return BadRequest(new { error = result.Error ?? "Unable to search items." });
+        }
+
+        var pagedResult = result.Value;
         var response = new PagedResponse<ItemResponse>(
             pagedResult.Items.Select(ToResponse).ToList(),
             pagedResult.PageNumber,

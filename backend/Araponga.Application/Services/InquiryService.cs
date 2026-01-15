@@ -10,17 +10,20 @@ public sealed class InquiryService
     private readonly IInquiryRepository _inquiryRepository;
     private readonly IStoreItemRepository _itemRepository;
     private readonly IStoreRepository _storeRepository;
+    private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IUnitOfWork _unitOfWork;
 
     public InquiryService(
         IInquiryRepository inquiryRepository,
         IStoreItemRepository itemRepository,
         IStoreRepository storeRepository,
+        TerritoryFeatureFlagGuard featureGuard,
         IUnitOfWork unitOfWork)
     {
         _inquiryRepository = inquiryRepository;
         _itemRepository = itemRepository;
         _storeRepository = storeRepository;
+        _featureGuard = featureGuard;
         _unitOfWork = unitOfWork;
     }
 
@@ -35,6 +38,12 @@ public sealed class InquiryService
         if (item is null)
         {
             return Result<InquiryCreationResult>.Failure("Item not found.");
+        }
+
+        var gate = _featureGuard.EnsureMarketplaceEnabled(item.TerritoryId);
+        if (gate.IsFailure)
+        {
+            return Result<InquiryCreationResult>.Failure(gate.Error ?? "Marketplace is disabled for this territory.");
         }
 
         var store = await _storeRepository.GetByIdAsync(item.StoreId, cancellationToken);

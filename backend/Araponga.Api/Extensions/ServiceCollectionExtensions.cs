@@ -30,6 +30,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<EventCacheService>();
         services.AddScoped<AlertCacheService>();
 
+        // Feature flags guards (territory-scoped)
+        services.AddScoped<TerritoryFeatureFlagGuard>();
+
         // Feed services (refactored)
         services.AddScoped<PostCreationService>();
         services.AddScoped<PostInteractionService>();

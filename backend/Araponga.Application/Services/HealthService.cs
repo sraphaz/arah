@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Models;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Health;
 
@@ -12,12 +13,14 @@ public sealed class HealthService
     private readonly IFeedRepository _feedRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly TerritoryFeatureFlagGuard _featureGuard;
 
     public HealthService(
         IHealthAlertRepository alertRepository,
         IFeedRepository feedRepository,
         IAuditLogger auditLogger,
         IUnitOfWork unitOfWork,
+        TerritoryFeatureFlagGuard featureGuard,
         AlertCacheService? alertCache = null)
     {
         _alertRepository = alertRepository;
@@ -25,6 +28,7 @@ public sealed class HealthService
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
         _alertCache = alertCache;
+        _featureGuard = featureGuard;
     }
 
     public Task<IReadOnlyList<HealthAlert>> ListAlertsAsync(Guid territoryId, CancellationToken cancellationToken)
@@ -98,19 +102,24 @@ public sealed class HealthService
 
         if (status == HealthAlertStatus.Validated)
         {
-            var post = new CommunityPost(
-                Guid.NewGuid(),
-                territoryId,
-                alert.ReporterUserId,
-                alert.Title,
-                alert.Description,
-                PostType.Alert,
-                PostVisibility.Public,
-                PostStatus.Published,
-                null,
-                DateTime.UtcNow);
+            // Alert posts são controlados por feature flag por território.
+            // Se estiver desabilitada, validamos o alerta mas não publicamos post no feed.
+            if (_featureGuard.IsEnabled(territoryId, FeatureFlag.AlertPosts))
+            {
+                var post = new CommunityPost(
+                    Guid.NewGuid(),
+                    territoryId,
+                    alert.ReporterUserId,
+                    alert.Title,
+                    alert.Description,
+                    PostType.Alert,
+                    PostVisibility.Public,
+                    PostStatus.Published,
+                    null,
+                    DateTime.UtcNow);
 
-            await _feedRepository.AddPostAsync(post, cancellationToken);
+                await _feedRepository.AddPostAsync(post, cancellationToken);
+            }
         }
 
         await _auditLogger.LogAsync(

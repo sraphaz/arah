@@ -31,6 +31,8 @@ public sealed class MarketplaceServiceTests
 
         var featureFlags = new InMemoryFeatureFlagService();
         featureFlags.SetEnabledFlags(territoryId, new List<FeatureFlag> { FeatureFlag.MarketplaceEnabled });
+        var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);
+        var featureGuard = new TerritoryFeatureFlagGuard(featureFlagCache);
 
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
@@ -59,12 +61,12 @@ public sealed class MarketplaceServiceTests
         }
 
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
 
         return (storeService, itemService);
     }
 
-    private static async Task<(MembershipAccessRules rules, AccessEvaluator evaluator)> CreateAccessAsync(
+    private static async Task<(MembershipAccessRules rules, AccessEvaluator evaluator, TerritoryFeatureFlagGuard featureGuard)> CreateAccessAsync(
         InMemoryDataStore dataStore,
         ITerritoryMembershipRepository membershipRepository,
         IUserRepository userRepository,
@@ -77,6 +79,8 @@ public sealed class MarketplaceServiceTests
 
         var featureFlags = new InMemoryFeatureFlagService();
         featureFlags.SetEnabledFlags(territoryId, new List<FeatureFlag> { FeatureFlag.MarketplaceEnabled });
+        var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);
+        var featureGuard = new TerritoryFeatureFlagGuard(featureFlagCache);
 
         var rules = new MembershipAccessRules(
             membershipRepository,
@@ -104,7 +108,7 @@ public sealed class MarketplaceServiceTests
             }
         }
 
-        return (rules, evaluator);
+        return (rules, evaluator, featureGuard);
     }
 
     [Fact]
@@ -238,7 +242,7 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+        var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
             userRepository,
@@ -246,8 +250,8 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, featureGuard, unitOfWork);
         var cartService = new CartService(
             cartRepository,
             cartItemRepository,
@@ -257,6 +261,7 @@ public sealed class MarketplaceServiceTests
             checkoutItemRepository,
             inquiryRepository,
             feeRepository,
+            featureGuard,
             unitOfWork);
         var platformFeeService = new PlatformFeeService(feeRepository, unitOfWork);
 
@@ -321,7 +326,7 @@ public sealed class MarketplaceServiceTests
             true,
             CancellationToken.None);
 
-        var listings = await itemService.SearchItemsAsync(
+        var listingsResult = await itemService.SearchItemsAsync(
             TerritoryId,
             ItemType.Product,
             "mel",
@@ -330,7 +335,9 @@ public sealed class MarketplaceServiceTests
             ItemStatus.Active,
             CancellationToken.None);
 
-        Assert.Single(listings);
+        Assert.True(listingsResult.IsSuccess);
+        Assert.NotNull(listingsResult.Value);
+        Assert.Single(listingsResult.Value!);
 
         var inquiry = await inquiryService.CreateInquiryAsync(service.Value!.Id, ResidentUserId, "Contato", null, CancellationToken.None);
         Assert.True(inquiry.IsSuccess);
@@ -361,7 +368,7 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+        var (membershipAccessRules, accessEvaluator, _) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
             userRepository,
@@ -423,7 +430,7 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+        var (membershipAccessRules, accessEvaluator, _) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
             userRepository,
@@ -446,7 +453,7 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+        var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
             userRepository,
@@ -454,7 +461,7 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -527,7 +534,7 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+        var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
             userRepository,
@@ -535,7 +542,7 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -596,8 +603,10 @@ public sealed class MarketplaceServiceTests
             ItemStatus.Active,
             CancellationToken.None);
 
-        Assert.Single(productResults);
-        Assert.Equal(ItemType.Product, productResults[0].Type);
+        Assert.True(productResults.IsSuccess);
+        Assert.NotNull(productResults.Value);
+        Assert.Single(productResults.Value!);
+        Assert.Equal(ItemType.Product, productResults.Value![0].Type);
 
         var categoryResults = await itemService.SearchItemsAsync(
             TerritoryId,
@@ -608,8 +617,10 @@ public sealed class MarketplaceServiceTests
             ItemStatus.Active,
             CancellationToken.None);
 
-        Assert.Single(categoryResults);
-        Assert.Equal("Educação", categoryResults[0].Category);
+        Assert.True(categoryResults.IsSuccess);
+        Assert.NotNull(categoryResults.Value);
+        Assert.Single(categoryResults.Value!);
+        Assert.Equal("Educação", categoryResults.Value![0].Category);
     }
 
     [Fact]
@@ -628,7 +639,7 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+        var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
             userRepository,
@@ -636,7 +647,7 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
         var cartService = new CartService(
             cartRepository,
             cartItemRepository,
@@ -646,6 +657,7 @@ public sealed class MarketplaceServiceTests
             checkoutItemRepository,
             inquiryRepository,
             feeRepository,
+            featureGuard,
             unitOfWork);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
@@ -692,8 +704,10 @@ public sealed class MarketplaceServiceTests
         Assert.NotNull(addResult.Value);
         Assert.Equal(2, addResult.Value.Quantity);
 
-        var cart = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
-        Assert.Single(cart.Items);
+        var cartResult = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
+        Assert.True(cartResult.IsSuccess);
+        Assert.NotNull(cartResult.Value);
+        Assert.Single(cartResult.Value!.Items);
 
         var updateResult = await cartService.UpdateItemAsync(
             addResult.Value!.Id,
@@ -709,8 +723,10 @@ public sealed class MarketplaceServiceTests
         var removeResult = await cartService.RemoveItemAsync(addResult.Value!.Id, ResidentUserId, CancellationToken.None);
         Assert.True(removeResult);
 
-        var emptyCart = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
-        Assert.Empty(emptyCart.Items);
+        var emptyCartResult = await cartService.GetCartAsync(TerritoryId, ResidentUserId, CancellationToken.None);
+        Assert.True(emptyCartResult.IsSuccess);
+        Assert.NotNull(emptyCartResult.Value);
+        Assert.Empty(emptyCartResult.Value!.Items);
     }
 
     [Fact]
@@ -724,7 +740,7 @@ public sealed class MarketplaceServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var (membershipAccessRules, accessEvaluator) = await CreateAccessAsync(
+        var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
             userRepository,
@@ -732,8 +748,8 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, unitOfWork);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, featureGuard, unitOfWork);
 
         var buyerId = Guid.NewGuid();
         await userRepository.AddAsync(

@@ -44,6 +44,11 @@ public sealed class InquiriesController : ControllerBase
         var result = await _inquiryService.CreateInquiryAsync(id, userContext.User.Id, request.Message, null, cancellationToken);
         if (!result.IsSuccess || result.Value is null)
         {
+            if (string.Equals(result.Error, "Marketplace is disabled for this territory.", StringComparison.Ordinal))
+            {
+                return NotFound();
+            }
+
             return BadRequest(new { error = result.Error ?? "Unable to create inquiry." });
         }
 

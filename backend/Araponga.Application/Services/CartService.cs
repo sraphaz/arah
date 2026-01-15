@@ -15,6 +15,7 @@ public sealed class CartService
     private readonly ICheckoutItemRepository _checkoutItemRepository;
     private readonly IInquiryRepository _inquiryRepository;
     private readonly IPlatformFeeConfigRepository _platformFeeConfigRepository;
+    private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IUnitOfWork _unitOfWork;
 
     public CartService(
@@ -26,6 +27,7 @@ public sealed class CartService
         ICheckoutItemRepository checkoutItemRepository,
         IInquiryRepository inquiryRepository,
         IPlatformFeeConfigRepository platformFeeConfigRepository,
+        TerritoryFeatureFlagGuard featureGuard,
         IUnitOfWork unitOfWork)
     {
         _cartRepository = cartRepository;
@@ -36,24 +38,39 @@ public sealed class CartService
         _checkoutItemRepository = checkoutItemRepository;
         _inquiryRepository = inquiryRepository;
         _platformFeeConfigRepository = platformFeeConfigRepository;
+        _featureGuard = featureGuard;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<CartDetails> GetCartAsync(Guid territoryId, Guid userId, CancellationToken cancellationToken)
+    public async Task<Result<CartDetails>> GetCartAsync(Guid territoryId, Guid userId, CancellationToken cancellationToken)
     {
+        var gate = _featureGuard.EnsureMarketplaceEnabled(territoryId);
+        if (gate.IsFailure)
+        {
+            return Result<CartDetails>.Failure(gate.Error ?? "Marketplace is disabled for this territory.");
+        }
+
         var cart = await GetOrCreateCartAsync(territoryId, userId, cancellationToken);
-        return await BuildCartDetailsAsync(cart, cancellationToken);
+        var details = await BuildCartDetailsAsync(cart, cancellationToken);
+        return Result<CartDetails>.Success(details);
     }
 
-    public async Task<CartDetails?> GetCartByIdAsync(Guid cartId, Guid userId, CancellationToken cancellationToken)
+    public async Task<Result<CartDetails?>> GetCartByIdAsync(Guid cartId, Guid userId, CancellationToken cancellationToken)
     {
         var cart = await _cartRepository.GetByIdAsync(cartId, cancellationToken);
         if (cart is null || cart.UserId != userId)
         {
-            return null;
+            return Result<CartDetails?>.Success(null);
         }
 
-        return await BuildCartDetailsAsync(cart, cancellationToken);
+        var gate = _featureGuard.EnsureMarketplaceEnabled(cart.TerritoryId);
+        if (gate.IsFailure)
+        {
+            return Result<CartDetails?>.Failure(gate.Error ?? "Marketplace is disabled for this territory.");
+        }
+
+        var details = await BuildCartDetailsAsync(cart, cancellationToken);
+        return Result<CartDetails?>.Success(details);
     }
 
     private async Task<CartDetails> BuildCartDetailsAsync(Cart cart, CancellationToken cancellationToken)
@@ -102,6 +119,12 @@ public sealed class CartService
         string? notes,
         CancellationToken cancellationToken)
     {
+        var gate = _featureGuard.EnsureMarketplaceEnabled(territoryId);
+        if (gate.IsFailure)
+        {
+            return Result<CartItem>.Failure(gate.Error ?? "Marketplace is disabled for this territory.");
+        }
+
         if (quantity < 1)
         {
             return Result<CartItem>.Failure("Quantity must be at least 1.");
@@ -195,6 +218,12 @@ public sealed class CartService
         string? message,
         CancellationToken cancellationToken)
     {
+        var gate = _featureGuard.EnsureMarketplaceEnabled(territoryId);
+        if (gate.IsFailure)
+        {
+            return Result<CheckoutResult>.Failure(gate.Error ?? "Marketplace is disabled for this territory.");
+        }
+
         var cart = await _cartRepository.GetByUserAsync(territoryId, userId, cancellationToken);
         if (cart is null)
         {

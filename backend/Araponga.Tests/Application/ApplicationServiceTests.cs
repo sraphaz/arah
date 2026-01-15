@@ -265,7 +265,12 @@ public sealed class ApplicationServiceTests
         var alertRepository = new InMemoryHealthAlertRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var service = new HealthService(alertRepository, feedRepository, auditLogger, unitOfWork);
+        var cache = new MemoryCache(new MemoryCacheOptions());
+        var featureFlags = new InMemoryFeatureFlagService();
+        featureFlags.SetEnabledFlags(ActiveTerritoryId, new List<FeatureFlag> { FeatureFlag.AlertPosts });
+        var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);
+        var featureGuard = new TerritoryFeatureFlagGuard(featureFlagCache);
+        var service = new HealthService(alertRepository, feedRepository, auditLogger, unitOfWork, featureGuard);
 
         var report = await service.ReportAlertAsync(
             ActiveTerritoryId,
@@ -285,6 +290,41 @@ public sealed class ApplicationServiceTests
 
         Assert.True(validated);
         Assert.Contains(dataStore.Posts, post => post.Type == PostType.Alert);
+    }
+
+    [Fact]
+    public async Task HealthService_ValidatedAlert_DoesNotCreatePostWhenAlertPostsDisabled()
+    {
+        var dataStore = new InMemoryDataStore();
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var alertRepository = new InMemoryHealthAlertRepository(dataStore);
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var cache = new MemoryCache(new MemoryCacheOptions());
+        var featureFlags = new InMemoryFeatureFlagService();
+        featureFlags.SetEnabledFlags(ActiveTerritoryId, Array.Empty<FeatureFlag>());
+        var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);
+        var featureGuard = new TerritoryFeatureFlagGuard(featureFlagCache);
+        var service = new HealthService(alertRepository, feedRepository, auditLogger, unitOfWork, featureGuard);
+
+        var report = await service.ReportAlertAsync(
+            ActiveTerritoryId,
+            Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            "Titulo",
+            "Desc",
+            CancellationToken.None);
+
+        Assert.True(report.IsSuccess);
+
+        var validated = await service.ValidateAlertAsync(
+            ActiveTerritoryId,
+            report.Value!.Id,
+            Guid.Parse("cccccccc-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            Araponga.Domain.Health.HealthAlertStatus.Validated,
+            CancellationToken.None);
+
+        Assert.True(validated);
+        Assert.DoesNotContain(dataStore.Posts, post => post.Type == PostType.Alert);
     }
 
     [Fact]
@@ -1042,11 +1082,17 @@ public sealed class ApplicationServiceTests
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
+        var cache = new MemoryCache(new MemoryCacheOptions());
+        var featureFlags = new InMemoryFeatureFlagService();
+        featureFlags.SetEnabledFlags(ActiveTerritoryId, new List<FeatureFlag> { FeatureFlag.AlertPosts });
+        var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);
+        var featureGuard = new TerritoryFeatureFlagGuard(featureFlagCache);
         var service = new HealthService(
             alertRepository,
             feedRepository,
             auditLogger,
             unitOfWork,
+            featureGuard,
             alertCache: null);
 
         // Criar múltiplos alerts

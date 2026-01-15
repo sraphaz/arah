@@ -5,6 +5,7 @@ using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Territories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -90,6 +91,7 @@ public sealed class TerritoriesController : ControllerBase
     /// Sugere um território geográfico para validação.
     /// </summary>
     [HttpPost("suggestions")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(TerritoryResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TerritoryResponse>> Suggest(

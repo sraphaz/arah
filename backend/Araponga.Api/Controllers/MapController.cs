@@ -9,6 +9,7 @@ using Araponga.Domain.Feed;
 using Araponga.Domain.Map;
 using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -153,9 +154,11 @@ public sealed class MapController : ControllerBase
     /// Sugere uma nova entidade no mapa.
     /// </summary>
     [HttpPost("entities")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(MapEntityResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<MapEntityResponse>> SuggestEntity(
         [FromQuery] Guid? territoryId,
         [FromBody] SuggestMapEntityRequest request,

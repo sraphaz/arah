@@ -3,6 +3,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -33,8 +34,10 @@ public sealed class AuthController : ControllerBase
     /// Este endpoint retorna um token simples para o MVP.
     /// </remarks>
     [HttpPost("social")]
+    [EnableRateLimiting("auth")]
     [ProducesResponseType(typeof(SocialLoginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<SocialLoginResponse>> SocialLogin(
         [FromBody] SocialLoginRequest request,
         CancellationToken cancellationToken)

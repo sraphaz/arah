@@ -3,6 +3,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -30,9 +31,11 @@ public sealed class StoresController : ControllerBase
     /// Cria ou atualiza a loja do usuário no território.
     /// </summary>
     [HttpPost]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(StoreResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<StoreResponse>> UpsertMyStore(
         [FromBody] UpsertStoreRequest request,
         CancellationToken cancellationToken)

@@ -6,6 +6,7 @@ using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -42,9 +43,11 @@ public sealed class FeedController : ControllerBase
     /// Visitantes veem somente posts públicos; moradores veem todo o conteúdo.
     /// </remarks>
     [HttpGet]
+    [EnableRateLimiting("feed")]
     [ProducesResponseType(typeof(IEnumerable<FeedItemResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<IEnumerable<FeedItemResponse>>> GetFeed(
         [FromQuery] Guid? territoryId,
         [FromQuery] Guid? mapEntityId,
@@ -275,9 +278,11 @@ public sealed class FeedController : ControllerBase
     /// Cria um post comunitário no território ativo.
     /// </summary>
     [HttpPost]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(FeedItemResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<FeedItemResponse>> CreatePost(
         [FromQuery] Guid? territoryId,
         [FromBody] CreatePostRequest request,
@@ -353,6 +358,7 @@ public sealed class FeedController : ControllerBase
     /// Curte um post do território ativo.
     /// </summary>
     [HttpPost("{postId:guid}/likes")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -389,6 +395,7 @@ public sealed class FeedController : ControllerBase
     /// Comenta em um post do território ativo.
     /// </summary>
     [HttpPost("{postId:guid}/comments")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -424,6 +431,7 @@ public sealed class FeedController : ControllerBase
     /// Compartilha um post do território ativo.
     /// </summary>
     [HttpPost("{postId:guid}/shares")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -5,6 +5,7 @@ using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -27,9 +28,11 @@ public sealed class ItemsController : ControllerBase
     /// Cria um item (produto ou serviço).
     /// </summary>
     [HttpPost]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(ItemResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<ItemResponse>> CreateItem(
         [FromBody] CreateItemRequest request,
         CancellationToken cancellationToken)

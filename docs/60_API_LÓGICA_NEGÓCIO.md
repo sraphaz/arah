@@ -40,6 +40,25 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - **Presença física é critério de vínculo**: No MVP, não é possível associar território remotamente
 - **Visibilidade diferenciada**: Conteúdo pode ser Público (todos) ou Apenas Moradores (RESIDENTS_ONLY)
 
+### 🔒 Segurança e Rate Limiting
+
+A API implementa várias camadas de segurança:
+
+- **Rate Limiting**: Proteção contra abuso e DDoS
+  - Auth endpoints: 5 req/min
+  - Feed endpoints: 100 req/min
+  - Write endpoints: 30 req/min
+  - Global: 60 req/min (configurável)
+- **HTTPS Obrigatório**: Em produção, todas as conexões são criptografadas
+- **Security Headers**: Headers de segurança em todas as respostas
+- **Validação de Input**: Validação automática de todos os requests
+- **CORS Configurado**: Políticas de CORS por ambiente
+
+Quando o rate limit é excedido, a API retorna:
+- **Status Code**: `429 Too Many Requests`
+- **Header**: `Retry-After` com tempo em segundos
+- **Body**: ProblemDetails com detalhes do erro
+
 ---
 
 ## 🧰 Admin: System Config e Work Queue
@@ -105,9 +124,14 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - CPF aceita formatação (pontos e hífen) ou apenas dígitos
 - O token JWT retornado deve ser incluído em todas as requisições subsequentes no header `Authorization: Bearer {token}`
 
+**Rate Limiting**:
+- **Limite**: 5 requisições por minuto por IP/usuário
+- **Resposta quando excedido**: `429 Too Many Requests` com header `Retry-After`
+
 **Resposta**:
 - **200 OK**: Token JWT e dados do usuário
 - **400 Bad Request**: Validação falhou (campos obrigatórios ausentes, CPF inválido, etc.)
+- **429 Too Many Requests**: Rate limit excedido
 
 ---
 
@@ -295,6 +319,17 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - **Limites**: Título máximo 200 caracteres, conteúdo máximo 4000 caracteres
 - **Status**: Posts são criados como `PUBLISHED` por padrão
 
+**Validação**:
+- Título e conteúdo são obrigatórios
+- Título máximo 200 caracteres
+- Conteúdo máximo 4000 caracteres
+- Tipo e visibilidade devem ser valores válidos
+- GeoAnchors máximo 50 (se fornecidos)
+
+**Rate Limiting**:
+- **Limite**: 30 requisições por minuto por usuário autenticado
+- **Resposta quando excedido**: `429 Too Many Requests`
+
 ### Listar Feed (`GET /api/v1/feed`)
 
 **Descrição**: Obtém posts do feed do território ativo.
@@ -312,6 +347,10 @@ O Araponga é uma plataforma **território-first** e **comunidade-first** para o
 - **Bloqueios**: Posts de usuários bloqueados não aparecem
 - **Paginação**: Padrão 20 itens por página
 - **Ordenação**: Mais recentes primeiro
+
+**Rate Limiting**:
+- **Limite**: 100 requisições por minuto por usuário autenticado
+- **Resposta quando excedido**: `429 Too Many Requests`
 
 ### Curtir Post (`POST /api/v1/feed/{postId}/likes`)
 

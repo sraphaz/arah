@@ -8,6 +8,7 @@ using Araponga.Domain.Assets;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Work;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -200,7 +201,9 @@ public sealed class AssetsController : ControllerBase
     /// Cria um asset territorial.
     /// </summary>
     [HttpPost]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(AssetResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AssetResponse>> CreateAsset(

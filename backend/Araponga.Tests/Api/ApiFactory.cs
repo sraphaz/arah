@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Araponga.Api;
 using Araponga.Infrastructure.InMemory;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Araponga.Tests.Api;
@@ -22,6 +24,44 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
+
+        // Configurar JWT secret via variáveis de ambiente (mais confiável que in-memory)
+        // Usando o secret forte fornecido: ZPq7X8Y2m0bH3kLwQ1fRrC8n5Eo9Tt4K6SxDVaJpM=
+        Environment.SetEnvironmentVariable("JWT__SIGNINGKEY", "ZPq7X8Y2m0bH3kLwQ1fRrC8n5Eo9Tt4K6SxDVaJpM=");
+        Environment.SetEnvironmentVariable("RateLimiting__PermitLimit", "1000");
+        Environment.SetEnvironmentVariable("RateLimiting__WindowSeconds", "60");
+        Environment.SetEnvironmentVariable("RateLimiting__QueueLimit", "100");
+        Environment.SetEnvironmentVariable("Cors__AllowedOrigins__0", "*");
+        Environment.SetEnvironmentVariable("Persistence__Provider", "InMemory");
+        Environment.SetEnvironmentVariable("Persistence__ApplyMigrations", "false");
+
+        // Configurar appsettings.json do projeto de testes
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            // Carregar appsettings.json do projeto de testes
+            var assemblyLocation = typeof(ApiFactory).Assembly.Location;
+            var testProjectDir = Path.GetDirectoryName(assemblyLocation);
+            
+            if (testProjectDir != null)
+            {
+                // Tentar caminho relativo ao bin (Debug/Release) - onde o arquivo é copiado
+                var appsettingsInBin = Path.Combine(testProjectDir, "appsettings.json");
+                if (File.Exists(appsettingsInBin))
+                {
+                    config.AddJsonFile(appsettingsInBin, optional: false, reloadOnChange: false);
+                }
+                else
+                {
+                    // Tentar caminho relativo ao projeto (subindo 3 níveis de bin)
+                    var appsettingsInProject = Path.Combine(testProjectDir, "..", "..", "..", "appsettings.json");
+                    var normalizedPath = Path.GetFullPath(appsettingsInProject);
+                    if (File.Exists(normalizedPath))
+                    {
+                        config.AddJsonFile(normalizedPath, optional: false, reloadOnChange: false);
+                    }
+                }
+            }
+        });
 
         // Criar um novo InMemoryDataStore isolado para esta instância do factory
         builder.ConfigureServices(services =>

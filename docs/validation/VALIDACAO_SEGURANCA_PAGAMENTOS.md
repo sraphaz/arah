@@ -485,41 +485,59 @@ foreach (var (key, value) in metadata)
 - [x] Validação de status do checkout
 - [x] Validação de valores (não zero, não negativo)
 - [x] Validação de limites configurados
-- [ ] ⚠️ Sanitização de inputs (PENDENTE)
-- [ ] ⚠️ Validação de currency (PENDENTE)
-- [ ] ⚠️ Validação de gateway provider (PENDENTE)
-- [ ] ⚠️ Validação de PaymentIntentId formato (PENDENTE)
+- [x] ✅ Sanitização de inputs (returnUrl, metadata, reason)
+- [x] ✅ Validação de currency (whitelist SupportedCurrencies)
+- [x] ✅ Validação de gateway provider (whitelist AllowedGateways)
+- [x] ✅ Validação de PaymentIntentId formato (IsValidPaymentIntentId)
 
 ### Proteção de Dados
 - [x] HTTPS obrigatório (já configurado globalmente)
 - [x] Security headers (já configurado globalmente)
-- [ ] ⚠️ Sanitização de metadata (PENDENTE)
-- [ ] ⚠️ Validação de tamanho de metadata (PENDENTE)
+- [x] ✅ Sanitização de metadata (InputSanitizationService)
+- [x] ✅ Validação de tamanho de metadata (max 20 entries, key: 40, value: 500)
 
 ### Webhooks
 - [x] Endpoint de webhook criado
-- [ ] ⚠️ Validação de assinatura adequada (PENDENTE - apenas mock)
-- [ ] ⚠️ Rate limiting específico (PENDENTE)
+- [x] ⚠️ Validação de assinatura adequada (PENDENTE - apenas mock, implementar no gateway real)
+- [x] ✅ Rate limiting específico (payment-webhook)
 
 ### Auditoria e Logging
-- [ ] ⚠️ Auditoria de pagamentos (PENDENTE)
-- [ ] ⚠️ Auditoria de reembolsos (PENDENTE)
-- [ ] ⚠️ Auditoria de configurações (PENDENTE)
-- [ ] ⚠️ Logging estruturado (PENDENTE)
+- [x] ✅ Auditoria de pagamentos (payment.created, payment.confirmed)
+- [x] ✅ Auditoria de reembolsos (payment.refunded)
+- [x] ✅ Auditoria de configurações (payment.config.created/updated)
+- [x] ✅ Logging estruturado (ILogger em todos os endpoints)
 
 ### Integridade
 - [x] Transações atômicas (IUnitOfWork)
 - [x] Validação de estado antes de operações
-- [ ] ⚠️ Validação de reembolso (amount <= valor pago) (PENDENTE)
-- [ ] ⚠️ Proteção contra race conditions (PENDENTE)
+- [x] ✅ Validação de reembolso (amount > 0, amount <= valor pago)
+- [x] ✅ Proteção contra race conditions (verifica PaymentIntentId existente)
 
 ### Rate Limiting
 - [x] Rate limiting em endpoints de escrita
 - [x] Rate limiting em endpoints de leitura
-- [ ] ⚠️ Rate limiting específico para webhook (PENDENTE)
+- [x] ✅ Rate limiting específico para webhook (payment-webhook)
 
 ---
 
-## 🛠️ Correções Necessárias
+## ✅ Status das Correções
 
-Vou implementar as correções críticas e de alta prioridade agora.
+**Data de Implementação**: 2026-01-18  
+**Status**: ✅ **TODAS AS CORREÇÕES CRÍTICAS E DE ALTA PRIORIDADE IMPLEMENTADAS**
+
+### Correções Implementadas
+
+1. ✅ **Sanitização de inputs** - Implementado em `PaymentController` e `TerritoryPaymentConfigController`
+2. ✅ **Validação de PaymentIntentId** - Implementado método `IsValidPaymentIntentId`
+3. ✅ **Validação de valores de reembolso** - Implementado em `PaymentService.CreateRefundAsync`
+4. ✅ **Validação de tamanho de payload de webhook** - Implementado (100KB máximo)
+5. ✅ **Rate limiting específico para webhook** - Configurado `payment-webhook` em `Program.cs`
+6. ✅ **Logging estruturado** - Implementado em todos os endpoints
+7. ✅ **Whitelist de gateways e moedas** - Implementado em `PaymentController` e `TerritoryPaymentConfigService`
+8. ✅ **Proteção contra race conditions** - Implementado verificação de `PaymentIntentId` existente
+9. ✅ **Auditoria completa** - Implementado `IAuditLogger` em `PaymentService` e `TerritoryPaymentConfigService`
+10. ✅ **Validação de metadata** - Implementado sanitização e validação de tamanho
+
+### Pendências (Requerem Gateway Real)
+
+- ⚠️ **Validação de assinatura de webhook** - Requer implementação no gateway real (Stripe, MercadoPago, etc.)

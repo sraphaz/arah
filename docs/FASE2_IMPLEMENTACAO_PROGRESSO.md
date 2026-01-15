@@ -12,11 +12,11 @@
 |--------|------------|--------|----------|
 | Cobertura de Testes >90% | 40h | 🟡 Em Progresso | 45% |
 | Testes de Performance | 24h | ⏳ Pendente | 0% |
-| Testes de Segurança | 16h | ⏳ Pendente | 0% |
+| Testes de Segurança | 16h | 🟡 Em Progresso | 50% |
 | Estratégia de Cache | 24h | 🟡 Em Progresso | 85% |
 | Paginação Completa | 16h | 🟡 Em Progresso | 50% |
 | Reduzir Duplicação | 16h | 🟡 Em Progresso | 85% |
-| **Total** | **100h** | **🟡 38%** | |
+| **Total** | **100h** | **🟡 40%** | |
 
 ---
 
@@ -159,9 +159,13 @@
 - ⏳ Definir SLAs de performance
 
 ### 3. Testes de Segurança
-- ⏳ Expandir testes de autenticação
-- ⏳ Testes de autorização (roles e capabilities)
-- ⏳ Testes de validação de input (SQL injection, XSS)
+- ✅ Testes de autenticação (JWT inválido/expirado)
+- ✅ Testes de autorização (Visitor vs Resident vs Curator)
+- ✅ Testes de rate limiting (já existiam)
+- ✅ Testes de validação de input (SQL injection, XSS)
+- ✅ Testes de CORS (já existiam)
+- ✅ Testes de security headers (já existiam)
+- ⏳ Adicionar mais testes de edge cases de segurança
 
 ### 4. Estratégia de Cache e Invalidação
 - ⏳ Definir TTLs apropriados
@@ -214,7 +218,7 @@
 
 ## 📈 Resumo Executivo
 
-### Progresso Atual: 38%
+### Progresso Atual: 40%
 
 **Implementado:**
 - ✅ 57 novos testes criados (Alerts, Assets, Marketplace, Territories, Events)

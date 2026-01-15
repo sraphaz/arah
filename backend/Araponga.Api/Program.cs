@@ -242,6 +242,15 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueLimit = 5;
     });
     
+    // Payment webhook - specific limits (100 req/min, IP-based)
+    options.AddFixedWindowLimiter("payment-webhook", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 100;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 10;
+    });
+    
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     options.OnRejected = async (context, cancellationToken) =>
     {

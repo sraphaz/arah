@@ -34,13 +34,10 @@ public sealed class PagedResult<T>
 /// </summary>
 public sealed class PaginationParameters
 {
-    private const int DefaultPageSize = 20;
-    private const int MaxPageSize = 100;
-
-    public PaginationParameters(int pageNumber = 1, int pageSize = DefaultPageSize)
+    public PaginationParameters(int pageNumber = Constants.Pagination.DefaultPageNumber, int pageSize = Constants.Pagination.DefaultPageSize)
     {
-        PageNumber = pageNumber < 1 ? 1 : pageNumber;
-        PageSize = pageSize < 1 ? DefaultPageSize : (pageSize > MaxPageSize ? MaxPageSize : pageSize);
+        PageNumber = pageNumber < Constants.Pagination.DefaultPageNumber ? Constants.Pagination.DefaultPageNumber : pageNumber;
+        PageSize = ValidationHelpers.NormalizePageSize(pageSize);
     }
 
     public int PageNumber { get; }

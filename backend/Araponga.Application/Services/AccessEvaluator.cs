@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
@@ -12,8 +13,6 @@ public sealed class AccessEvaluator
     private readonly ISystemPermissionRepository _systemPermissionRepository;
     private readonly MembershipAccessRules _accessRules;
     private readonly IMemoryCache _cache;
-    private static readonly TimeSpan MembershipCacheExpiration = TimeSpan.FromMinutes(10);
-    private static readonly TimeSpan SystemPermissionCacheExpiration = TimeSpan.FromMinutes(15);
 
     public AccessEvaluator(
         ITerritoryMembershipRepository membershipRepository,
@@ -43,7 +42,7 @@ public sealed class AccessEvaluator
 
         var isVerifiedResident = await _accessRules.IsVerifiedResidentAsync(userId, territoryId, cancellationToken);
 
-        _cache.Set(cacheKey, isVerifiedResident, MembershipCacheExpiration);
+        _cache.Set(cacheKey, isVerifiedResident, Constants.Cache.MembershipExpiration);
         return isVerifiedResident;
     }
 
@@ -67,7 +66,7 @@ public sealed class AccessEvaluator
         var membership = await _membershipRepository.GetByUserAndTerritoryAsync(userId, territoryId, cancellationToken);
         var role = membership?.Role;
 
-        _cache.Set(cacheKey, role, MembershipCacheExpiration);
+        _cache.Set(cacheKey, role, Constants.Cache.MembershipExpiration);
         return role;
     }
 
@@ -135,7 +134,7 @@ public sealed class AccessEvaluator
         var hasPermission = await _systemPermissionRepository
             .HasActivePermissionAsync(userId, permissionType, cancellationToken);
 
-        _cache.Set(cacheKey, hasPermission, SystemPermissionCacheExpiration);
+        _cache.Set(cacheKey, hasPermission, Constants.Cache.SystemPermissionExpiration);
         return hasPermission;
     }
 

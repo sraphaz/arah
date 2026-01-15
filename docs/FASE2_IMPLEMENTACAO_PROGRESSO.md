@@ -10,13 +10,13 @@
 
 | Tarefa | Estimativa | Status | Progresso |
 |--------|------------|--------|----------|
-| Cobertura de Testes >90% | 40h | 🟡 Em Progresso | 20% |
+| Cobertura de Testes >90% | 40h | 🟡 Em Progresso | 30% |
 | Testes de Performance | 24h | ⏳ Pendente | 0% |
 | Testes de Segurança | 16h | ⏳ Pendente | 0% |
-| Estratégia de Cache | 24h | ⏳ Pendente | 0% |
+| Estratégia de Cache | 24h | 🟡 Em Progresso | 40% |
 | Paginação Completa | 16h | ⏳ Pendente | 0% |
-| Reduzir Duplicação | 16h | ⏳ Pendente | 0% |
-| **Total** | **100h** | **🟡 3%** | |
+| Reduzir Duplicação | 16h | 🟡 Em Progresso | 50% |
+| **Total** | **100h** | **🟡 15%** | |
 
 ---
 
@@ -50,17 +50,57 @@
 
 **Status**: 10 testes criados, alguns precisam de ajustes
 
+#### MarketplaceControllerTests.cs ✅
+- ✅ `UpsertMyStore_RequiresAuthentication`
+- ✅ `UpsertMyStore_ValidatesTerritoryId`
+- ✅ `UpsertMyStore_ValidatesContactVisibility`
+- ✅ `GetMyStore_RequiresAuthentication`
+- ✅ `PauseStore_RequiresAuthentication`
+- ✅ `ActivateStore_RequiresAuthentication`
+- ✅ `ArchiveStore_RequiresAuthentication`
+- ✅ `SetPaymentsEnabled_RequiresAuthentication`
+- ✅ `CreateItem_RequiresAuthentication`
+- ✅ `CreateItem_ValidatesTerritoryId`
+- ✅ `CreateItem_ValidatesStoreId`
+- ✅ `CreateItem_ValidatesType`
+- ✅ `CreateItem_ValidatesPricingType`
+- ✅ `GetItems_RequiresAuthentication`
+- ✅ `GetItemsPaged_RequiresAuthentication`
+- ✅ `GetItemById_RequiresAuthentication`
+- ✅ `ArchiveItem_RequiresAuthentication`
+
+**Status**: 17 testes criados
+
 ---
 
 ## 🟡 Tarefas Em Progresso
 
 ### 1. Aumentar Cobertura de Testes
-- ✅ Testes para Alerts criados
-- ✅ Testes para Assets criados
-- ⏳ Testes para Marketplace (próximo)
+- ✅ Testes para Alerts criados (8 testes)
+- ✅ Testes para Assets criados (10 testes)
+- ✅ Testes para Marketplace criados (17 testes)
 - ⏳ Testes para Infraestrutura
 - ⏳ Testes de edge cases
 - ⏳ Testes de cenários de erro
+
+**Total de testes criados**: 35 novos testes
+
+### 4. Estratégia de Cache e Invalidação
+- ✅ `CacheInvalidationService` criado
+- ✅ Integrado no `MembershipService` (invalidação após criar/atualizar membership)
+- ✅ TTLs movidos para `Constants.Cache`
+- ⏳ Integrar em outros services (TerritoryService, StoreService, etc.)
+- ⏳ Adicionar métricas de cache hit/miss
+
+### 6. Refatoração: Reduzir Duplicação
+- ✅ `Constants.cs` criado (paginação, cache, geo, validação, rate limiting)
+- ✅ `ValidationHelpers.cs` criado (validações comuns)
+- ✅ `PaginationParameters` atualizado para usar constantes
+- ✅ `AccessEvaluator` atualizado para usar constantes de cache
+- ✅ `TerritoryCacheService` atualizado para usar constantes
+- ✅ `AlertCacheService` atualizado para usar constantes
+- ✅ `MembershipService` atualizado para usar constantes de geo
+- ⏳ Atualizar outros services para usar helpers e constantes
 
 ---
 

@@ -29,6 +29,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<MapEntityCacheService>();
         services.AddScoped<EventCacheService>();
         services.AddScoped<AlertCacheService>();
+        services.AddScoped<CacheInvalidationService>();
 
         // Feature flags guards (territory-scoped)
         services.AddScoped<TerritoryFeatureFlagGuard>();

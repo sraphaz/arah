@@ -13,7 +13,6 @@ public sealed class TerritoryCacheService
     private readonly ITerritoryRepository _territoryRepository;
     private readonly IMemoryCache _cache;
     private const string ActiveTerritoriesCacheKey = "territories:active";
-    private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(30);
 
     public TerritoryCacheService(ITerritoryRepository territoryRepository, IMemoryCache cache)
     {
@@ -37,7 +36,7 @@ public sealed class TerritoryCacheService
             .OrderBy(t => t.Name)
             .ToList();
 
-        _cache.Set(ActiveTerritoriesCacheKey, activeTerritories, CacheExpiration);
+        _cache.Set(ActiveTerritoriesCacheKey, activeTerritories, Constants.Cache.TerritoryExpiration);
 
         return activeTerritories;
     }
@@ -66,7 +65,7 @@ public sealed class TerritoryCacheService
             var territory = await _territoryRepository.GetByIdAsync(id, cancellationToken);
             if (territory is not null)
             {
-                _cache.Set(cacheKey, territory, TimeSpan.FromMinutes(10));
+                _cache.Set(cacheKey, territory, Constants.Cache.TerritoryDetailExpiration);
             }
 
             return territory;

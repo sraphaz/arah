@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Health;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,7 +12,6 @@ public sealed class AlertCacheService
 {
     private readonly IHealthAlertRepository _alertRepository;
     private readonly IMemoryCache _cache;
-    private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(10);
 
     public AlertCacheService(IHealthAlertRepository alertRepository, IMemoryCache cache)
     {
@@ -33,7 +33,7 @@ public sealed class AlertCacheService
         }
 
         var alerts = await _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
-        _cache.Set(cacheKey, alerts, CacheExpiration);
+        _cache.Set(cacheKey, alerts, Constants.Cache.AlertExpiration);
 
         return alerts;
     }

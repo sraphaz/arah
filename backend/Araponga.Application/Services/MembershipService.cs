@@ -12,20 +12,22 @@ public sealed class MembershipService
     private readonly ITerritoryRepository _territoryRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
-    private const double GeoVerificationRadiusKm = 5.0; // Raio de 5km para validação de geolocalização
+    private readonly CacheInvalidationService? _cacheInvalidation;
 
     public MembershipService(
         ITerritoryMembershipRepository membershipRepository,
         IMembershipSettingsRepository settingsRepository,
         ITerritoryRepository territoryRepository,
         IAuditLogger auditLogger,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        CacheInvalidationService? cacheInvalidation = null)
     {
         _membershipRepository = membershipRepository;
         _settingsRepository = settingsRepository;
         _territoryRepository = territoryRepository;
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
+        _cacheInvalidation = cacheInvalidation;
     }
 
     /// <summary>
@@ -78,6 +80,9 @@ public sealed class MembershipService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidar cache de membership
+        _cacheInvalidation?.InvalidateMembershipCache(userId, territoryId);
 
         return visitorMembership;
     }
@@ -147,6 +152,9 @@ public sealed class MembershipService
 
             await _unitOfWork.CommitAsync(cancellationToken);
 
+            // Invalidar cache de membership
+            _cacheInvalidation?.InvalidateMembershipCache(userId, territoryId);
+
             return Result<TerritoryMembership>.Success(existing);
         }
 
@@ -182,6 +190,9 @@ public sealed class MembershipService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidar cache de membership
+        _cacheInvalidation?.InvalidateMembershipCache(userId, territoryId);
 
         return Result<TerritoryMembership>.Success(membership);
     }
@@ -243,6 +254,10 @@ public sealed class MembershipService
             // Commit da transação (salva mudanças e commita transação)
             await _unitOfWork.CommitAsync(cancellationToken);
 
+            // Invalidar cache de membership para ambos os territórios
+            _cacheInvalidation?.InvalidateMembershipCache(userId, currentResident.TerritoryId);
+            _cacheInvalidation?.InvalidateMembershipCache(userId, toTerritoryId);
+
             return result;
         }
         catch
@@ -280,10 +295,10 @@ public sealed class MembershipService
 
         // Validar que as coordenadas estão dentro do raio permitido do território
         var distance = CalculateDistance(latitude, longitude, territory.Latitude, territory.Longitude);
-        if (distance > GeoVerificationRadiusKm)
+        if (distance > Constants.Geo.VerificationRadiusKm)
         {
             return OperationResult.Failure(
-                $"Coordinates are too far from territory center. Distance: {distance:F2}km, Maximum allowed: {GeoVerificationRadiusKm}km.");
+                $"Coordinates are too far from territory center. Distance: {distance:F2}km, Maximum allowed: {Constants.Geo.VerificationRadiusKm}km.");
         }
 
         var membership = await _membershipRepository.GetByUserAndTerritoryAsync(
@@ -345,6 +360,9 @@ public sealed class MembershipService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidar cache de membership após verificação
+        _cacheInvalidation?.InvalidateMembershipCache(userId, territoryId);
 
         return OperationResult.Success();
     }

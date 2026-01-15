@@ -379,6 +379,45 @@ public partial class AddFinancialSystem : Migration
             name: "IX_reconciliation_records_ReconciliationDate",
             table: "reconciliation_records",
             column: "ReconciliationDate");
+
+        // Territory Payout Config
+        migrationBuilder.CreateTable(
+            name: "territory_payout_configs",
+            columns: table => new
+            {
+                Id = table.Column<Guid>(type: "uuid", nullable: false),
+                TerritoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                RetentionPeriodDays = table.Column<int>(type: "integer", nullable: false),
+                MinimumPayoutAmountInCents = table.Column<long>(type: "bigint", nullable: false),
+                MaximumPayoutAmountInCents = table.Column<long>(type: "bigint", nullable: true),
+                Frequency = table.Column<int>(type: "integer", nullable: false),
+                AutoPayoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                RequiresApproval = table.Column<bool>(type: "boolean", nullable: false),
+                Currency = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+            },
+            constraints: table =>
+            {
+                table.PrimaryKey("PK_territory_payout_configs", x => x.Id);
+                table.ForeignKey(
+                    name: "FK_territory_payout_configs_territories_TerritoryId",
+                    column: x => x.TerritoryId,
+                    principalTable: "territories",
+                    principalColumn: "Id",
+                    onDelete: ReferentialAction.Cascade);
+            });
+
+        migrationBuilder.CreateIndex(
+            name: "IX_territory_payout_configs_TerritoryId",
+            table: "territory_payout_configs",
+            column: "TerritoryId");
+
+        migrationBuilder.CreateIndex(
+            name: "IX_territory_payout_configs_TerritoryId_IsActive",
+            table: "territory_payout_configs",
+            columns: new[] { "TerritoryId", "IsActive" });
     }
 
     /// <inheritdoc />
@@ -392,5 +431,6 @@ public partial class AddFinancialSystem : Migration
         migrationBuilder.DropTable(name: "seller_transactions");
         migrationBuilder.DropTable(name: "seller_balances");
         migrationBuilder.DropTable(name: "financial_transactions");
+        migrationBuilder.DropTable(name: "territory_payout_configs");
     }
 }

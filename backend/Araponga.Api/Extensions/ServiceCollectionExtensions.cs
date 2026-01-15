@@ -170,6 +170,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICheckoutRepository, PostgresCheckoutRepository>();
         services.AddScoped<ICheckoutItemRepository, PostgresCheckoutItemRepository>();
         services.AddScoped<IPlatformFeeConfigRepository, PostgresPlatformFeeConfigRepository>();
+        services.AddScoped<ITerritoryPayoutConfigRepository, PostgresTerritoryPayoutConfigRepository>();
         
         // Financial
         services.AddScoped<IFinancialTransactionRepository, PostgresFinancialTransactionRepository>();
@@ -231,6 +232,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICheckoutRepository, InMemoryCheckoutRepository>();
         services.AddSingleton<ICheckoutItemRepository, InMemoryCheckoutItemRepository>();
         services.AddSingleton<IPlatformFeeConfigRepository, InMemoryPlatformFeeConfigRepository>();
+        services.AddSingleton<ITerritoryPayoutConfigRepository, InMemoryTerritoryPayoutConfigRepository>();
         
         // Financial
         services.AddSingleton<IFinancialTransactionRepository, InMemoryFinancialTransactionRepository>();

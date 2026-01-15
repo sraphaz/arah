@@ -309,6 +309,7 @@ public sealed class InMemoryDataStore
     public List<Checkout> Checkouts { get; }
     public List<CheckoutItem> CheckoutItems { get; }
     public List<PlatformFeeConfig> PlatformFeeConfigs { get; }
+    public List<TerritoryPayoutConfig> TerritoryPayoutConfigs { get; } = new();
     
     // Financial
     public List<FinancialTransaction> FinancialTransactions { get; } = new();

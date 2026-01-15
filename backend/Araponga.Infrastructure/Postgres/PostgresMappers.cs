@@ -1334,4 +1334,48 @@ public static class PostgresMappers
 
         return reconciliation;
     }
+
+    public static TerritoryPayoutConfigRecord ToRecord(this TerritoryPayoutConfig config)
+    {
+        return new TerritoryPayoutConfigRecord
+        {
+            Id = config.Id,
+            TerritoryId = config.TerritoryId,
+            RetentionPeriodDays = config.RetentionPeriodDays,
+            MinimumPayoutAmountInCents = config.MinimumPayoutAmountInCents,
+            MaximumPayoutAmountInCents = config.MaximumPayoutAmountInCents,
+            Frequency = (int)config.Frequency,
+            AutoPayoutEnabled = config.AutoPayoutEnabled,
+            RequiresApproval = config.RequiresApproval,
+            Currency = config.Currency,
+            IsActive = config.IsActive,
+            CreatedAtUtc = config.CreatedAtUtc,
+            UpdatedAtUtc = config.UpdatedAtUtc
+        };
+    }
+
+    public static TerritoryPayoutConfig ToDomain(this TerritoryPayoutConfigRecord record)
+    {
+        var config = new TerritoryPayoutConfig(
+            record.Id,
+            record.TerritoryId,
+            record.RetentionPeriodDays,
+            record.MinimumPayoutAmountInCents,
+            record.MaximumPayoutAmountInCents,
+            (PayoutFrequency)record.Frequency,
+            record.AutoPayoutEnabled,
+            record.RequiresApproval,
+            record.Currency);
+
+        // Restore state using reflection
+        var isActiveProp = typeof(TerritoryPayoutConfig).GetProperty("IsActive", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var createdAtProp = typeof(TerritoryPayoutConfig).GetProperty("CreatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var updatedAtProp = typeof(TerritoryPayoutConfig).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+        if (isActiveProp?.SetMethod != null) isActiveProp.SetValue(config, record.IsActive);
+        if (createdAtProp?.SetMethod != null) createdAtProp.SetValue(config, record.CreatedAtUtc);
+        if (updatedAtProp?.SetMethod != null) updatedAtProp.SetValue(config, record.UpdatedAtUtc);
+
+        return config;
+    }
 }

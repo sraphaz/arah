@@ -180,4 +180,15 @@ public static class Constants
         /// </summary>
         public const int ReportThreshold = 3;
     }
+
+    /// <summary>
+    /// Constantes de autenticação.
+    /// </summary>
+    public static class Auth
+    {
+        /// <summary>
+        /// Tempo de expiração para challenges 2FA (5 minutos).
+        /// </summary>
+        public static readonly TimeSpan TwoFactorChallengeExpiration = TimeSpan.FromMinutes(5);
+    }
 }

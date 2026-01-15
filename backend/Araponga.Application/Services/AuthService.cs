@@ -13,7 +13,6 @@ public sealed class AuthService
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
     private readonly IUnitOfWork _unitOfWork;
-    private static readonly TimeSpan TwoFactorChallengeExpiration = TimeSpan.FromMinutes(5);
 
     // Cache temporário para challenges 2FA (em produção, usar Redis ou similar)
     private static readonly Dictionary<string, (Guid userId, DateTime expiresAt)> _twoFactorChallenges = new();
@@ -56,7 +55,7 @@ public sealed class AuthService
             if (existing.TwoFactorEnabled)
             {
                 var challengeId = Guid.NewGuid().ToString("N");
-                _twoFactorChallenges[challengeId] = (existing.Id, DateTime.UtcNow.Add(TwoFactorChallengeExpiration));
+                _twoFactorChallenges[challengeId] = (existing.Id, DateTime.UtcNow.Add(Constants.Auth.TwoFactorChallengeExpiration));
                 
                 // Limpar challenges expirados
                 CleanupExpiredChallenges();

@@ -34,12 +34,20 @@ export default function Technology() {
                     mapa e configurações
                   </li>
                   <li>
-                    <strong>Persistência</strong>: banco relacional; suporte futuro a dados
+                    <strong>Persistência</strong>: banco relacional PostgreSQL com suporte a dados
                     geográficos
                   </li>
                   <li>
                     <strong>Autenticação e autorização</strong>: baseada em papéis e políticas
                     territoriais
+                  </li>
+                  <li>
+                    <strong>Cache distribuído</strong>: Redis com fallback automático para cache em
+                    memória
+                  </li>
+                  <li>
+                    <strong>Processamento assíncrono</strong>: eventos processados em background
+                    com retry e dead letter queue
                   </li>
                 </ul>
               </div>
@@ -50,6 +58,14 @@ export default function Technology() {
                   <li>Evolução incremental</li>
                   <li>API-first</li>
                   <li>Código aberto</li>
+                </ul>
+                <h4 className="mt-4 text-base font-semibold text-forest-900">Performance e escalabilidade</h4>
+                <ul className="list-disc space-y-2 pl-5 text-sm text-forest-800">
+                  <li>Concorrência otimista com RowVersion</li>
+                  <li>Cache distribuído (Redis)</li>
+                  <li>Processamento assíncrono de eventos</li>
+                  <li>Suporte a read replicas</li>
+                  <li>Deployment multi-instância</li>
                 </ul>
               </div>
             </div>

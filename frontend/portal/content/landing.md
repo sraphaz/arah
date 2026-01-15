@@ -155,8 +155,17 @@ A arquitetura prioriza domínios de negócio bem definidos e evolução incremen
 ### Componentes principais
 - **API RESTful**: expõe recursos via HTTP, documentada com Swagger / OpenAPI  
 - **Portal de autosserviço**: interface web para interação com feed, mapa e configurações  
-- **Persistência**: banco relacional; suporte futuro a dados geográficos  
+- **Persistência**: banco relacional PostgreSQL com suporte a dados geográficos  
 - **Autenticação e autorização**: baseada em papéis e políticas territoriais  
+- **Cache distribuído**: Redis com fallback automático para cache em memória  
+- **Processamento assíncrono**: eventos processados em background com retry e dead letter queue
+
+### Performance e escalabilidade
+- **Concorrência otimista**: RowVersion em entidades críticas para prevenir conflitos  
+- **Cache distribuído**: Redis para alta disponibilidade e performance  
+- **Processamento assíncrono**: eventos não bloqueiam requisições HTTP  
+- **Read replicas**: suporte a réplicas de leitura para escalar queries  
+- **Deployment multi-instância**: preparado para load balancing e escalabilidade horizontal  
 
 ### Princípios de design
 - Domínio primeiro  

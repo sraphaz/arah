@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Metrics;
 using Araponga.Application.Models;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Social.JoinRequests;
@@ -122,6 +123,9 @@ public sealed class JoinRequestService
 
         await _joinRequestRepository.AddAsync(request, recipients, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Record business metric
+        ArapongaMetrics.JoinRequestsCreated.Add(1, new KeyValuePair<string, object?>("territory_id", territoryId));
 
         return (true, null, request);
     }

@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Metrics;
 using Araponga.Application.Models;
 using Araponga.Domain.Territories;
 
@@ -85,6 +86,9 @@ public sealed class TerritoryService
         // Invalidate cache when territory is created
         _cacheService?.InvalidateActiveTerritories();
         _cacheInvalidation?.InvalidateTerritoryCache(territory.Id);
+
+        // Record business metric
+        ArapongaMetrics.TerritoriesCreated.Add(1);
 
         return new TerritoryCreationResult(true, null, territory);
     }

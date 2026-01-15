@@ -32,6 +32,17 @@ Esta pasta contém a documentação detalhada de todos os Pull Requests implemen
   - Serialização JSON padronizada
   - 371 testes passando, 2 pulados (requerem PostgreSQL)
 
+### 📊 Observabilidade e Monitoramento
+
+- **[PR_FASE4_OBSERVABILIDADE_MONITORAMENTO.md](./PR_FASE4_OBSERVABILIDADE_MONITORAMENTO.md)**  
+  Fase 4: Observabilidade e Monitoramento (100% completo ✅)
+  - Logs Centralizados (Serilog + Seq)
+  - Métricas Básicas (Prometheus + métricas customizadas)
+  - Distributed Tracing (OpenTelemetry)
+  - Monitoramento Avançado (dashboards e alertas documentados)
+  - Runbook e Troubleshooting completo
+  - 7 arquivos criados, 12+ modificados, ~2000+ linhas de documentação
+
 ### 🚀 Performance e Otimização
 
 - **[PR_ADICIONAR_PAGINACAO.md](./PR_ADICIONAR_PAGINACAO.md)**  

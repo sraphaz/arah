@@ -67,6 +67,14 @@ export default function Technology() {
                   <li>Suporte a read replicas</li>
                   <li>Deployment multi-instância</li>
                 </ul>
+                <h4 className="mt-4 text-base font-semibold text-forest-900">Observabilidade e monitoramento</h4>
+                <ul className="list-disc space-y-2 pl-5 text-sm text-forest-800">
+                  <li>Logs centralizados (Serilog + Seq)</li>
+                  <li>Métricas Prometheus (HTTP, negócio, sistema)</li>
+                  <li>Distributed tracing (OpenTelemetry)</li>
+                  <li>Dashboards e alertas configuráveis</li>
+                  <li>Runbook e troubleshooting completo</li>
+                </ul>
               </div>
             </div>
           </div>

@@ -20,21 +20,48 @@ using Araponga.Api.Swagger;
 using Microsoft.AspNetCore.Http;
 using Serilog;
 using System.Threading.RateLimiting;
+using Prometheus;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
+using Araponga.Application.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Serilog Configuration
+// Serilog Configuration with centralized logging
 builder.Host.UseSerilog((context, configuration) =>
 {
+    var seqUrl = context.Configuration["Logging:Seq:ServerUrl"];
+    var logLevel = context.Configuration["Logging:LogLevel:Default"] ?? "Information";
+    var minLevel = Enum.TryParse<Serilog.Events.LogEventLevel>(logLevel, true, out var level) ? level : Serilog.Events.LogEventLevel.Information;
+
     configuration
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext()
-        .WriteTo.Console()
+        .Enrich.WithMachineName()
+        .Enrich.WithThreadId()
+        .Enrich.WithEnvironmentName()
+        .Enrich.WithProperty("Application", "Araponga")
+        .Enrich.WithProperty("Version", Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown")
+        .MinimumLevel.Is(minLevel)
+        .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+        .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+        .WriteTo.Console(
+            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}")
         .WriteTo.File(
             "logs/araponga-.log",
             rollingInterval: RollingInterval.Day,
             retainedFileCountLimit: 30,
-            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{CorrelationId}] [{MachineName}] [{ThreadId}] {Message:lj}{NewLine}{Exception}");
+
+    // Add Seq sink if configured
+    if (!string.IsNullOrWhiteSpace(seqUrl))
+    {
+        configuration.WriteTo.Seq(
+            serverUrl: seqUrl,
+            apiKey: context.Configuration["Logging:Seq:ApiKey"],
+            restrictedToMinimumLevel: minLevel);
+    }
 });
 
 // Configuration Validation - JWT Secret
@@ -108,6 +135,66 @@ builder.Services.AddCors(options =>
 });
 
 // Rate Limiting Configuration
+// OpenTelemetry Configuration
+var serviceName = "Araponga";
+var serviceVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0";
+
+var otlpEndpoint = builder.Configuration["OpenTelemetry:Otlp:Endpoint"];
+var jaegerEndpoint = builder.Configuration["OpenTelemetry:Jaeger:Endpoint"];
+
+var otelBuilder = builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion));
+
+// Tracing
+otelBuilder.WithTracing(tracing =>
+{
+    tracing
+        .AddAspNetCoreInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddSource("Araponga.*");
+
+    // Exporters
+    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+    {
+        tracing.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
+    }
+    else if (!string.IsNullOrWhiteSpace(jaegerEndpoint))
+    {
+        tracing.AddJaegerExporter(options => options.Endpoint = new Uri(jaegerEndpoint));
+    }
+    else
+    {
+        // Console exporter para desenvolvimento
+        if (builder.Environment.IsDevelopment())
+        {
+            tracing.AddConsoleExporter();
+        }
+    }
+});
+
+// Metrics
+otelBuilder.WithMetrics(metrics =>
+{
+    metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddMeter("Araponga");
+
+    // Exporters
+    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+    {
+        metrics.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
+    }
+    else if (builder.Environment.IsDevelopment())
+    {
+        metrics.AddConsoleExporter();
+    }
+});
+
+// Prometheus Metrics - configured via UseMetricServer() in app pipeline
+
 builder.Services.AddRateLimiter(options =>
 {
     // Global limiter (IP-based)
@@ -292,6 +379,10 @@ builder.Services.AddHsts(options =>
 });
 
 var app = builder.Build();
+
+// Prometheus Metrics Endpoint
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 // Serilog Request Logging
 app.UseSerilogRequestLogging();

@@ -1,3 +1,4 @@
+using Araponga.Application.Metrics;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -28,10 +29,12 @@ public sealed class CacheMetricsService
         if (hit)
         {
             Interlocked.Increment(ref _cacheHits);
+            ArapongaMetrics.CacheHits.Add(1);
         }
         else
         {
             Interlocked.Increment(ref _cacheMisses);
+            ArapongaMetrics.CacheMisses.Add(1);
         }
     }
 

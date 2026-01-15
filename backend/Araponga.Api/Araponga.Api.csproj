@@ -23,6 +23,32 @@
     <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
     <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
+    <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.9.0-beta.1">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0-beta.1">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0-beta.1">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0-beta.1">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.7">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0-beta.1">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0-beta.1">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
+    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.6.0-rc.1">
+      <NoWarn>NU1601</NoWarn>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 

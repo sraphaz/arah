@@ -1,3 +1,4 @@
+using Araponga.Application.Metrics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -26,6 +27,8 @@ public static class ConcurrencyHelper
             catch (DbUpdateConcurrencyException ex)
             {
                 attempts++;
+                ArapongaMetrics.ConcurrencyConflicts.Add(1);
+                
                 if (attempts >= maxRetries)
                 {
                     throw new InvalidOperationException(

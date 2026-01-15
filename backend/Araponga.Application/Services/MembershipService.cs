@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Metrics;
 using Araponga.Domain.Geo;
 using Araponga.Domain.Membership;
 
@@ -193,6 +194,9 @@ public sealed class MembershipService
 
         // Invalidar cache de membership
         _cacheInvalidation?.InvalidateMembershipCache(userId, territoryId);
+
+        // Record business metric
+        ArapongaMetrics.MembershipsCreated.Add(1, new KeyValuePair<string, object?>("territory_id", territoryId));
 
         return Result<TerritoryMembership>.Success(membership);
     }

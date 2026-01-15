@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Metrics;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
@@ -120,6 +121,9 @@ public sealed class EventsService
 
         // Invalidar cache de eventos do território
         _cacheInvalidation?.InvalidateEventCache(territoryId, territoryEvent.Id);
+
+        // Record business metric
+        ArapongaMetrics.EventsCreated.Add(1, new KeyValuePair<string, object?>("territory_id", territoryId));
 
         // Invalidate cache when event is created
         _eventCache?.InvalidateTerritoryEvents(territoryId);

@@ -1,8 +1,10 @@
 using Araponga.Application.Events;
+using Araponga.Application.Metrics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -95,6 +97,7 @@ public sealed class BackgroundEventProcessor : BackgroundService, IEventBus
 
     private async Task ProcessEventAsync(EventMessage message, CancellationToken cancellationToken)
     {
+        var stopwatch = Stopwatch.StartNew();
         await _processingSemaphore.WaitAsync(cancellationToken);
         try
         {
@@ -108,12 +111,19 @@ public sealed class BackgroundEventProcessor : BackgroundService, IEventBus
                 message.Attempts);
 
             var success = await TryProcessEventAsync(message, cancellationToken);
+            stopwatch.Stop();
 
-            if (!success)
+            if (success)
+            {
+                ArapongaMetrics.EventsProcessed.Add(1);
+                ArapongaMetrics.EventProcessingDuration.Record(stopwatch.ElapsedMilliseconds);
+            }
+            else
             {
                 if (message.Attempts >= MaxRetries)
                 {
                     _deadLetterQueue.TryAdd(message.Id, message);
+                    ArapongaMetrics.EventsFailed.Add(1);
                     _logger.LogWarning(
                         "Event {EventId} of type {EventType} moved to dead letter queue after {Attempts} attempts",
                         message.Id,

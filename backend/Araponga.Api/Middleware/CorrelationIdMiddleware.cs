@@ -1,7 +1,10 @@
+using Serilog.Context;
+
 namespace Araponga.Api.Middleware;
 
 /// <summary>
 /// Middleware to add correlation ID to requests for better traceability.
+/// Enhanced to add correlation ID to Serilog context for centralized logging.
 /// </summary>
 public sealed class CorrelationIdMiddleware
 {
@@ -23,6 +26,10 @@ public sealed class CorrelationIdMiddleware
         context.Response.Headers[CorrelationIdHeader] = correlationId;
         context.Items[CorrelationIdKey] = correlationId;
 
-        await _next(context);
+        // Add correlation ID to Serilog context for all logs in this request
+        using (LogContext.PushProperty("CorrelationId", correlationId))
+        {
+            await _next(context);
+        }
     }
 }

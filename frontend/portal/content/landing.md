@@ -167,6 +167,13 @@ A arquitetura prioriza domínios de negócio bem definidos e evolução incremen
 - **Read replicas**: suporte a réplicas de leitura para escalar queries  
 - **Deployment multi-instância**: preparado para load balancing e escalabilidade horizontal  
 
+### Observabilidade e monitoramento
+- **Logs centralizados**: Serilog com Seq para análise e busca de logs estruturados  
+- **Métricas Prometheus**: métricas HTTP, de negócio e de sistema expostas via `/metrics`  
+- **Distributed tracing**: OpenTelemetry para rastreamento de requisições e queries  
+- **Dashboards e alertas**: documentação completa para monitoramento em produção  
+- **Runbook e troubleshooting**: procedimentos operacionais e resolução de problemas documentados  
+
 ### Princípios de design
 - Domínio primeiro  
 - Evolução incremental  

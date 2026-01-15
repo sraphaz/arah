@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Metrics;
 using Araponga.Application.Events;
 using Araponga.Application.Models;
 using Araponga.Domain.Feed;
@@ -144,6 +145,9 @@ public sealed class PostCreationService
 
         // Invalidar cache de feed do território após criar post
         _cacheInvalidation?.InvalidateFeedCache(territoryId);
+
+        // Record business metric
+        ArapongaMetrics.PostsCreated.Add(1, new KeyValuePair<string, object?>("territory_id", territoryId));
 
         return Result<CommunityPost>.Success(post);
     }

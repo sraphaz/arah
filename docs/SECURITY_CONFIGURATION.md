@@ -361,4 +361,100 @@ A aplicação inclui uma suíte completa de testes de segurança (14 testes) que
 
 ---
 
-**Última atualização**: 2025-01-15
+## 🔐 Autenticação de Dois Fatores (2FA)
+
+A API suporta autenticação de dois fatores usando TOTP (Time-based One-Time Password).
+
+### Endpoints de 2FA
+
+- **Setup**: `POST /api/v1/auth/2fa/setup` - Gera secret e QR code
+- **Confirm**: `POST /api/v1/auth/2fa/confirm` - Habilita 2FA após validar código TOTP
+- **Verify**: `POST /api/v1/auth/2fa/verify` - Verifica código TOTP e retorna JWT
+- **Recover**: `POST /api/v1/auth/2fa/recover` - Usa recovery code para autenticação
+- **Disable**: `POST /api/v1/auth/2fa/disable` - Desabilita 2FA (requer código TOTP ou recovery code válido)
+
+### Fluxo de 2FA
+
+1. Usuário faz login social → Se 2FA habilitado, recebe `2FA_REQUIRED:{challengeId}`
+2. Usuário envia código TOTP via `POST /api/v1/auth/2fa/verify` → Recebe JWT
+3. Alternativamente, usuário pode usar recovery code via `POST /api/v1/auth/2fa/recover`
+
+### Recovery Codes
+
+Durante a configuração de 2FA, o usuário recebe recovery codes que podem ser usados caso perca acesso ao dispositivo TOTP. Guarde esses códigos em local seguro.
+
+---
+
+## 🧹 Sanitização de Inputs
+
+A API implementa sanitização avançada de inputs através do `InputSanitizationService`:
+
+- **HTML**: Remove tags e escapa caracteres especiais
+- **Paths**: Remove caracteres perigosos e normaliza separadores
+- **URLs**: Valida formato e bloqueia javascript:, data:, etc
+- **SQL**: Proteção adicional (EF Core já protege contra SQL injection)
+- **Texto**: Remove caracteres de controle e normaliza espaços
+
+**Uso**: O serviço está disponível via DI e pode ser injetado em controllers/services conforme necessário.
+
+---
+
+## 🛡️ Proteção CSRF
+
+A API implementa proteção CSRF usando anti-forgery tokens:
+
+- **Header esperado**: `X-CSRF-Token`
+- **Cookie**: `__Host-CSRF` (HttpOnly, Secure, SameSite=Strict)
+- **Configuração**: Automática via `AddAntiforgery()` no `Program.cs`
+
+**Nota**: Validação explícita em endpoints específicos pode ser adicionada usando `[ValidateAntiForgeryToken]` quando necessário.
+
+---
+
+## 🔑 Secrets Management
+
+A API suporta gerenciamento de secrets através da interface `ISecretsService`:
+
+- **Implementação padrão**: `EnvironmentSecretsService` (usa variáveis de ambiente)
+- **Extensível**: Interface pronta para Azure Key Vault ou AWS Secrets Manager
+- **Formato de variável**: `SECRET_NAME` (substitui `:` por `__`)
+- **Fallback**: Se não encontrado em variável de ambiente, tenta `appsettings.json`
+
+**Exemplo**:
+```bash
+# Variável de ambiente
+JWT__SIGNINGKEY=seu-secret-aqui
+
+# Ou em appsettings.json
+{
+  "Jwt": {
+    "SigningKey": "seu-secret-aqui"
+  }
+}
+```
+
+---
+
+## 📋 Auditoria
+
+A API implementa auditoria de ações críticas:
+
+- **Serviço**: `AuditService` disponível via DI
+- **Repositório**: Interface `IAuditRepository` criada (implementação pode ser adicionada)
+- **Ações auditadas**: Reports, bloqueios, validações, mudanças de dados críticas
+
+**Uso**:
+```csharp
+await _auditService.LogAsync("user.blocked", userId, territoryId, targetId);
+```
+
+---
+
+## 📚 Documentação Adicional
+
+- **[Security Audit](./SECURITY_AUDIT.md)** - Checklist completo de segurança e guia de penetration testing
+- **[Fase 5: Segurança Avançada](./FASE5_IMPLEMENTACAO_RESUMO.md)** - Resumo completo das implementações de segurança avançada
+
+---
+
+**Última atualização**: 2026-01-15

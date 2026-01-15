@@ -13,10 +13,10 @@
 | Cobertura de Testes >90% | 40h | 🟡 Em Progresso | 30% |
 | Testes de Performance | 24h | ⏳ Pendente | 0% |
 | Testes de Segurança | 16h | ⏳ Pendente | 0% |
-| Estratégia de Cache | 24h | 🟡 Em Progresso | 40% |
+| Estratégia de Cache | 24h | 🟡 Em Progresso | 60% |
 | Paginação Completa | 16h | ⏳ Pendente | 0% |
 | Reduzir Duplicação | 16h | 🟡 Em Progresso | 50% |
-| **Total** | **100h** | **🟡 15%** | |
+| **Total** | **100h** | **🟡 20%** | |
 
 ---
 
@@ -90,8 +90,12 @@
 ### 4. Estratégia de Cache e Invalidação
 - ✅ `CacheInvalidationService` criado
 - ✅ Integrado no `MembershipService` (invalidação após criar/atualizar membership)
+- ✅ Integrado no `StoreService` (invalidação após criar/atualizar stores)
+- ✅ Integrado no `StoreItemService` (invalidação após criar/atualizar items)
+- ✅ Integrado no `TerritoryAssetService` (invalidação após criar/atualizar/validar assets)
+- ✅ `HealthService` já tinha invalidação implementada
 - ✅ TTLs movidos para `Constants.Cache`
-- ⏳ Integrar em outros services (TerritoryService, StoreService, etc.)
+- ⏳ Integrar em outros services (TerritoryService, EventsService, etc.)
 - ⏳ Adicionar métricas de cache hit/miss
 
 ### 6. Refatoração: Reduzir Duplicação

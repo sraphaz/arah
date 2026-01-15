@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Map;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,12 +12,16 @@ public sealed class MapEntityCacheService
 {
     private readonly IMapRepository _mapRepository;
     private readonly IMemoryCache _cache;
-    private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(10);
+    private readonly CacheMetricsService? _metrics;
 
-    public MapEntityCacheService(IMapRepository mapRepository, IMemoryCache cache)
+    public MapEntityCacheService(
+        IMapRepository mapRepository, 
+        IMemoryCache cache,
+        CacheMetricsService? metrics = null)
     {
         _mapRepository = mapRepository;
         _cache = cache;
+        _metrics = metrics;
     }
 
     /// <summary>
@@ -29,11 +34,14 @@ public sealed class MapEntityCacheService
         var cacheKey = $"mapentities:{territoryId}";
         if (_cache.TryGetValue<IReadOnlyList<MapEntity>>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached ?? Array.Empty<MapEntity>();
         }
 
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
+
         var entities = await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
-        _cache.Set(cacheKey, entities, CacheExpiration);
+        _cache.Set(cacheKey, entities, Constants.Cache.MapEntityExpiration);
 
         return entities;
     }

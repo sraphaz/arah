@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,12 +12,16 @@ public sealed class FeatureFlagCacheService
 {
     private readonly IFeatureFlagService _featureFlagRepository;
     private readonly IMemoryCache _cache;
-    private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(15);
+    private readonly CacheMetricsService? _metrics;
 
-    public FeatureFlagCacheService(IFeatureFlagService featureFlagRepository, IMemoryCache cache)
+    public FeatureFlagCacheService(
+        IFeatureFlagService featureFlagRepository, 
+        IMemoryCache cache,
+        CacheMetricsService? metrics = null)
     {
         _featureFlagRepository = featureFlagRepository;
         _cache = cache;
+        _metrics = metrics;
     }
 
     /// <summary>
@@ -27,11 +32,14 @@ public sealed class FeatureFlagCacheService
         var cacheKey = $"featureflags:{territoryId}";
         if (_cache.TryGetValue<IReadOnlyList<FeatureFlag>>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached ?? Array.Empty<FeatureFlag>();
         }
 
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
+
         var flags = _featureFlagRepository.GetEnabledFlags(territoryId);
-        _cache.Set(cacheKey, flags, CacheExpiration);
+        _cache.Set(cacheKey, flags, Constants.Cache.FeatureFlagExpiration);
 
         return flags;
     }

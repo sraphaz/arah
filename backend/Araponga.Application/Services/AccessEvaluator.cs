@@ -13,19 +13,22 @@ public sealed class AccessEvaluator
     private readonly ISystemPermissionRepository _systemPermissionRepository;
     private readonly MembershipAccessRules _accessRules;
     private readonly IMemoryCache _cache;
+    private readonly CacheMetricsService? _metrics;
 
     public AccessEvaluator(
         ITerritoryMembershipRepository membershipRepository,
         IMembershipCapabilityRepository capabilityRepository,
         ISystemPermissionRepository systemPermissionRepository,
         MembershipAccessRules accessRules,
-        IMemoryCache cache)
+        IMemoryCache cache,
+        CacheMetricsService? metrics = null)
     {
         _membershipRepository = membershipRepository;
         _capabilityRepository = capabilityRepository;
         _systemPermissionRepository = systemPermissionRepository;
         _accessRules = accessRules;
         _cache = cache;
+        _metrics = metrics;
     }
 
     /// <summary>
@@ -37,8 +40,11 @@ public sealed class AccessEvaluator
         var cacheKey = $"membership:resident:{userId}:{territoryId}";
         if (_cache.TryGetValue<bool?>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached ?? false;
         }
+
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var isVerifiedResident = await _accessRules.IsVerifiedResidentAsync(userId, territoryId, cancellationToken);
 
@@ -60,8 +66,11 @@ public sealed class AccessEvaluator
         var cacheKey = $"membership:role:{userId}:{territoryId}";
         if (_cache.TryGetValue<MembershipRole?>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached;
         }
+
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var membership = await _membershipRepository.GetByUserAndTerritoryAsync(userId, territoryId, cancellationToken);
         var role = membership?.Role;
@@ -128,8 +137,11 @@ public sealed class AccessEvaluator
         var cacheKey = $"system:permission:{userId}:{permissionType}";
         if (_cache.TryGetValue<bool?>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached ?? false;
         }
+
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var hasPermission = await _systemPermissionRepository
             .HasActivePermissionAsync(userId, permissionType, cancellationToken);

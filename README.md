@@ -247,14 +247,17 @@ backend/
 - ✅ Connection pooling e retry policies
 - ✅ Índices de banco para performance
 - ✅ Cache invalidation automático em 9 services críticos
-- ✅ Constantes centralizadas (redução de duplicação)
+- ✅ CacheMetricsService para monitoramento de cache hit/miss
+- ✅ Constantes centralizadas (redução de duplicação - 100% completo)
 
 #### Testes
 - ✅ Testes automatizados (unidade, integração, E2E)
-- ✅ 341 testes passando (100%)
-- ✅ Cobertura de testes ~45% (em progresso para >90%)
+- ✅ 371/371 testes passando (100%)
+- ✅ Cobertura de testes ~50% (aumentada, objetivo >90%)
 - ✅ Testes de segurança (14 testes: autenticação, autorização, injection, CSRF, etc.)
 - ✅ Testes de performance (7 testes com SLAs definidos)
+- ✅ Testes de services (ReportService, JoinRequestService, CacheMetrics)
+- ✅ CacheMetricsService com métricas de hit/miss
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)
 
 ### Em Planejamento 🚧

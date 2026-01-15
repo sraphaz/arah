@@ -60,6 +60,11 @@ public static class Constants
         /// TTL para cache de map entities (10 minutos).
         /// </summary>
         public static readonly TimeSpan MapEntityExpiration = TimeSpan.FromMinutes(10);
+
+        /// <summary>
+        /// TTL para cache de user blocks (15 minutos).
+        /// </summary>
+        public static readonly TimeSpan UserBlockExpiration = TimeSpan.FromMinutes(15);
     }
 
     /// <summary>
@@ -190,6 +195,26 @@ public static class Constants
         /// Tempo de expiração para challenges 2FA (5 minutos).
         /// </summary>
         public static readonly TimeSpan TwoFactorChallengeExpiration = TimeSpan.FromMinutes(5);
+
+        /// <summary>
+        /// Número de recovery codes gerados para 2FA (10 códigos).
+        /// </summary>
+        public const int RecoveryCodeCount = 10;
+
+        /// <summary>
+        /// Tamanho em bytes para gerar recovery codes (9 bytes = 12 caracteres Base64).
+        /// </summary>
+        public const int RecoveryCodeBytes = 9;
+
+        /// <summary>
+        /// Tamanho mínimo de recovery code em caracteres (12 caracteres).
+        /// </summary>
+        public const int RecoveryCodeMinLength = 12;
+
+        /// <summary>
+        /// Issuer padrão para TOTP QR codes.
+        /// </summary>
+        public const string TotpIssuer = "Araponga";
     }
 
     /// <summary>

@@ -1,3 +1,4 @@
+using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Events;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,12 +12,16 @@ public sealed class EventCacheService
 {
     private readonly ITerritoryEventRepository _eventRepository;
     private readonly IMemoryCache _cache;
-    private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(5);
+    private readonly CacheMetricsService? _metrics;
 
-    public EventCacheService(ITerritoryEventRepository eventRepository, IMemoryCache cache)
+    public EventCacheService(
+        ITerritoryEventRepository eventRepository, 
+        IMemoryCache cache,
+        CacheMetricsService? metrics = null)
     {
         _eventRepository = eventRepository;
         _cache = cache;
+        _metrics = metrics;
     }
 
     /// <summary>
@@ -33,11 +38,14 @@ public sealed class EventCacheService
         var cacheKey = $"events:{territoryId}:{from?.ToString("yyyy-MM-dd") ?? "null"}:{to?.ToString("yyyy-MM-dd") ?? "null"}:{status?.ToString() ?? "null"}";
         if (_cache.TryGetValue<IReadOnlyList<TerritoryEvent>>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached ?? Array.Empty<TerritoryEvent>();
         }
 
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
+
         var events = await _eventRepository.ListByTerritoryAsync(territoryId, from, to, status, cancellationToken);
-        _cache.Set(cacheKey, events, CacheExpiration);
+        _cache.Set(cacheKey, events, Constants.Cache.EventExpiration);
 
         return events;
     }

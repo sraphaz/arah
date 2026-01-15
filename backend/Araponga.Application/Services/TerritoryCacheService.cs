@@ -12,11 +12,16 @@ public sealed class TerritoryCacheService
 {
     private readonly ITerritoryRepository _territoryRepository;
     private readonly IMemoryCache _cache;
+    private readonly CacheMetricsService? _metrics;
 
-    public TerritoryCacheService(ITerritoryRepository territoryRepository, IMemoryCache cache)
+    public TerritoryCacheService(
+        ITerritoryRepository territoryRepository, 
+        IMemoryCache cache,
+        CacheMetricsService? metrics = null)
     {
         _territoryRepository = territoryRepository;
         _cache = cache;
+        _metrics = metrics;
     }
 
     /// <summary>
@@ -24,10 +29,14 @@ public sealed class TerritoryCacheService
     /// </summary>
     public async Task<IReadOnlyList<Territory>> GetActiveTerritoriesAsync(CancellationToken cancellationToken)
     {
-        if (_cache.TryGetValue<IReadOnlyList<Territory>>(Constants.CacheKeys.ActiveTerritories, out var cached))
+        var cacheKey = Constants.CacheKeys.ActiveTerritories;
+        if (_cache.TryGetValue<IReadOnlyList<Territory>>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached ?? Array.Empty<Territory>();
         }
+
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var territories = await _territoryRepository.ListAsync(cancellationToken);
         var activeTerritories = territories
@@ -35,7 +44,7 @@ public sealed class TerritoryCacheService
             .OrderBy(t => t.Name)
             .ToList();
 
-        _cache.Set(Constants.CacheKeys.ActiveTerritories, activeTerritories, Constants.Cache.TerritoryExpiration);
+        _cache.Set(cacheKey, activeTerritories, Constants.Cache.TerritoryExpiration);
 
         return activeTerritories;
     }
@@ -58,8 +67,11 @@ public sealed class TerritoryCacheService
             var cacheKey = Constants.CacheKeys.Territory(id);
             if (_cache.TryGetValue<Territory>(cacheKey, out var cached))
             {
+                _metrics?.RecordCacheAccess(cacheKey, hit: true);
                 return cached;
             }
+
+            _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
             var territory = await _territoryRepository.GetByIdAsync(id, cancellationToken);
             if (territory is not null)

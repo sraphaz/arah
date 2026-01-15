@@ -12,11 +12,16 @@ public sealed class AlertCacheService
 {
     private readonly IHealthAlertRepository _alertRepository;
     private readonly IMemoryCache _cache;
+    private readonly CacheMetricsService? _metrics;
 
-    public AlertCacheService(IHealthAlertRepository alertRepository, IMemoryCache cache)
+    public AlertCacheService(
+        IHealthAlertRepository alertRepository, 
+        IMemoryCache cache,
+        CacheMetricsService? metrics = null)
     {
         _alertRepository = alertRepository;
         _cache = cache;
+        _metrics = metrics;
     }
 
     /// <summary>
@@ -29,8 +34,11 @@ public sealed class AlertCacheService
         var cacheKey = $"alerts:{territoryId}";
         if (_cache.TryGetValue<IReadOnlyList<HealthAlert>>(cacheKey, out var cached))
         {
+            _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached ?? Array.Empty<HealthAlert>();
         }
+
+        _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var alerts = await _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
         _cache.Set(cacheKey, alerts, Constants.Cache.AlertExpiration);

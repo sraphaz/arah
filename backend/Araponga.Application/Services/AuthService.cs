@@ -108,7 +108,7 @@ public sealed class AuthService
         var secret = Base32Encoding.ToString(secretBytes);
 
         // Gerar QR code URI
-        var issuer = "Araponga";
+        var issuer = Constants.Auth.TotpIssuer;
         var accountName = email ?? user.DisplayName;
         var qrCodeUri = $"otpauth://totp/{Uri.EscapeDataString(issuer)}:{Uri.EscapeDataString(accountName)}?secret={secret}&issuer={Uri.EscapeDataString(issuer)}";
 
@@ -144,7 +144,7 @@ public sealed class AuthService
         }
 
         // Gerar recovery codes
-        var recoveryCodes = GenerateRecoveryCodes(10);
+        var recoveryCodes = GenerateRecoveryCodes(Constants.Auth.RecoveryCodeCount);
         var recoveryCodesHash = HashRecoveryCodes(recoveryCodes);
 
         // Habilitar 2FA no usuário
@@ -278,7 +278,7 @@ public sealed class AuthService
         {
             // Gerar bytes suficientes para garantir 12 caracteres após remover caracteres especiais
             // 9 bytes = 12 caracteres Base64, garantindo pelo menos 12 após limpeza
-            var bytes = new byte[9];
+            var bytes = new byte[Constants.Auth.RecoveryCodeBytes];
             RandomNumberGenerator.Fill(bytes);
             var base64 = Convert.ToBase64String(bytes)
                 .Replace("+", "-")
@@ -286,7 +286,9 @@ public sealed class AuthService
                 .Replace("=", "");
             
             // Pegar os primeiros 12 caracteres (garantido ter pelo menos 12)
-            var code = base64.Length >= 12 ? base64.Substring(0, 12) : base64;
+            var code = base64.Length >= Constants.Auth.RecoveryCodeMinLength 
+                ? base64.Substring(0, Constants.Auth.RecoveryCodeMinLength) 
+                : base64;
             codes.Add(code);
         }
         return codes;

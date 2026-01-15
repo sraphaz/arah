@@ -5,6 +5,7 @@ using Araponga.Api;
 using Araponga.Api.Contracts.Auth;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Contracts.Territories;
+using Araponga.Tests.Api;
 using Xunit;
 
 namespace Araponga.Tests.Performance;

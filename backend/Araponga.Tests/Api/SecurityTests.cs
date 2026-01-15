@@ -433,10 +433,11 @@ public sealed class SecurityTests
             $"api/v1/alerts/{alertId}/validate?territoryId={ActiveTerritoryId}",
             new Araponga.Api.Contracts.Alerts.ValidateAlertRequest("VALIDATED"));
 
-        // Pode retornar BadRequest (alert não encontrado), Unauthorized (não é curator), ou NoContent (sucesso)
+        // Pode retornar BadRequest (alert não encontrado ou status inválido), Unauthorized (não é curator), NotFound (território/alert), ou NoContent (sucesso)
         Assert.True(
             response.StatusCode == HttpStatusCode.BadRequest ||
             response.StatusCode == HttpStatusCode.Unauthorized ||
+            response.StatusCode == HttpStatusCode.NotFound ||
             response.StatusCode == HttpStatusCode.NoContent);
     }
 

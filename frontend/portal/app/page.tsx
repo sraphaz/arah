@@ -7,6 +7,7 @@ import Architecture from "@/components/sections/Architecture";
 import Visibility from "@/components/sections/Visibility";
 import Value from "@/components/sections/Value";
 import Technology from "@/components/sections/Technology";
+import Improvements from "@/components/sections/Improvements";
 import Roadmap from "@/components/sections/Roadmap";
 import Future from "@/components/sections/Future";
 import Join from "@/components/sections/Join";
@@ -24,6 +25,7 @@ export default function Home() {
       <Visibility />
       <Value />
       <Technology />
+      <Improvements />
       <Roadmap />
       <Future />
       <Join />

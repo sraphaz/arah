@@ -85,7 +85,7 @@
 
 **Total de testes criados**: 57 novos testes
 
-**Status dos testes**: 16/18 passando (2 ainda precisam de ajustes finos)
+**Status dos testes**: ✅ 319/319 passando (100%)
 
 #### TerritoriesControllerTests.cs ✅
 - ✅ `List_ReturnsTerritories`
@@ -219,7 +219,7 @@
 - ✅ Refatoração de 8 services para usar constantes
 
 **Em Progresso:**
-- 🟡 16/18 testes passando (2 precisam ajustes finos)
+- ✅ 319/319 testes passando (100%)
 - 🟡 Cache invalidation integrado em 7 services (faltam mais)
 - 🟡 Refatoração 80% completa
 

@@ -17,6 +17,7 @@ public sealed class TerritoryAssetService
     private readonly IWorkItemRepository _workItemRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly CacheInvalidationService? _cacheInvalidation;
 
     public TerritoryAssetService(
         ITerritoryAssetRepository assetRepository,
@@ -25,7 +26,8 @@ public sealed class TerritoryAssetService
         ITerritoryMembershipRepository membershipRepository,
         IWorkItemRepository workItemRepository,
         IAuditLogger auditLogger,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        CacheInvalidationService? cacheInvalidation = null)
     {
         _assetRepository = assetRepository;
         _anchorRepository = anchorRepository;
@@ -34,6 +36,7 @@ public sealed class TerritoryAssetService
         _workItemRepository = workItemRepository;
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
+        _cacheInvalidation = cacheInvalidation;
     }
 
     public async Task<IReadOnlyList<TerritoryAssetDetails>> ListAsync(
@@ -173,6 +176,9 @@ public sealed class TerritoryAssetService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
+        // Invalidar cache de assets do território
+        _cacheInvalidation?.InvalidateAssetCache(territoryId, asset.Id);
+
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
         if (details.Count == 0)
         {
@@ -235,6 +241,9 @@ public sealed class TerritoryAssetService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
+        // Invalidar cache de assets do território
+        _cacheInvalidation?.InvalidateAssetCache(territoryId, asset.Id);
+
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
         if (details.Count == 0)
         {
@@ -265,6 +274,9 @@ public sealed class TerritoryAssetService
             cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidar cache de assets do território
+        _cacheInvalidation?.InvalidateAssetCache(territoryId, asset.Id);
 
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
         if (details.Count == 0)
@@ -322,6 +334,9 @@ public sealed class TerritoryAssetService
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidar cache de assets do território após curadoria
+        _cacheInvalidation?.InvalidateAssetCache(territoryId, asset.Id);
 
         var details = await BuildAssetDetailsAsync(territoryId, new[] { asset }, cancellationToken);
         if (details.Count == 0)

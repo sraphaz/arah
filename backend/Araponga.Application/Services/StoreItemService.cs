@@ -15,6 +15,7 @@ public sealed class StoreItemService
     private readonly MembershipAccessRules _accessRules;
     private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly CacheInvalidationService? _cacheInvalidation;
 
     public StoreItemService(
         IStoreItemRepository itemRepository,
@@ -23,7 +24,8 @@ public sealed class StoreItemService
         AccessEvaluator accessEvaluator,
         MembershipAccessRules accessRules,
         TerritoryFeatureFlagGuard featureGuard,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        CacheInvalidationService? cacheInvalidation = null)
     {
         _itemRepository = itemRepository;
         _storeRepository = storeRepository;
@@ -32,6 +34,7 @@ public sealed class StoreItemService
         _accessRules = accessRules;
         _featureGuard = featureGuard;
         _unitOfWork = unitOfWork;
+        _cacheInvalidation = cacheInvalidation;
     }
 
     public async Task<Result<StoreItem>> CreateItemAsync(
@@ -95,6 +98,10 @@ public sealed class StoreItemService
 
         await _itemRepository.AddAsync(item, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        // Invalidar cache de items da store
+        _cacheInvalidation?.InvalidateItemCache(storeId, item.Id);
+        
         return Result<StoreItem>.Success(item);
     }
 
@@ -155,6 +162,10 @@ public sealed class StoreItemService
 
         await _itemRepository.UpdateAsync(item, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        // Invalidar cache de items da store
+        _cacheInvalidation?.InvalidateItemCache(item.StoreId, item.Id);
+        
         return Result<StoreItem>.Success(item);
     }
 
@@ -183,6 +194,10 @@ public sealed class StoreItemService
         item.Archive(DateTime.UtcNow);
         await _itemRepository.UpdateAsync(item, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        // Invalidar cache de items da store
+        _cacheInvalidation?.InvalidateItemCache(item.StoreId, item.Id);
+        
         return Result<StoreItem>.Success(item);
     }
 

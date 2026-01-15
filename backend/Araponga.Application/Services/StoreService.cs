@@ -13,19 +13,22 @@ public sealed class StoreService
     private readonly AccessEvaluator _accessEvaluator;
     private readonly MembershipAccessRules _accessRules;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly CacheInvalidationService? _cacheInvalidation;
 
     public StoreService(
         IStoreRepository storeRepository,
         IUserRepository userRepository,
         AccessEvaluator accessEvaluator,
         MembershipAccessRules accessRules,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        CacheInvalidationService? cacheInvalidation = null)
     {
         _storeRepository = storeRepository;
         _userRepository = userRepository;
         _accessEvaluator = accessEvaluator;
         _accessRules = accessRules;
         _unitOfWork = unitOfWork;
+        _cacheInvalidation = cacheInvalidation;
     }
 
     public async Task<Result<Store>> UpsertMyStoreAsync(
@@ -83,6 +86,10 @@ public sealed class StoreService
 
             await _storeRepository.AddAsync(store, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
+            
+            // Invalidar cache de store
+            _cacheInvalidation?.InvalidateStoreCache(territoryId, store.Id);
+            
             return Result<Store>.Success(store);
         }
 
@@ -100,6 +107,10 @@ public sealed class StoreService
 
         await _storeRepository.UpdateAsync(existing, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        // Invalidar cache de store
+        _cacheInvalidation?.InvalidateStoreCache(territoryId, existing.Id);
+        
         return Result<Store>.Success(existing);
     }
 
@@ -154,6 +165,10 @@ public sealed class StoreService
 
         await _storeRepository.UpdateAsync(store, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        // Invalidar cache de store
+        _cacheInvalidation?.InvalidateStoreCache(store.TerritoryId, store.Id);
+        
         return Result<Store>.Success(store);
     }
 
@@ -177,6 +192,10 @@ public sealed class StoreService
         store.SetStatus(status, DateTime.UtcNow);
         await _storeRepository.UpdateAsync(store, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        // Invalidar cache de store
+        _cacheInvalidation?.InvalidateStoreCache(store.TerritoryId, store.Id);
+        
         return Result<Store>.Success(store);
     }
 
@@ -200,6 +219,10 @@ public sealed class StoreService
         store.SetPaymentsEnabled(enabled, DateTime.UtcNow);
         await _storeRepository.UpdateAsync(store, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        // Invalidar cache de store
+        _cacheInvalidation?.InvalidateStoreCache(store.TerritoryId, store.Id);
+        
         return Result<Store>.Success(store);
     }
 

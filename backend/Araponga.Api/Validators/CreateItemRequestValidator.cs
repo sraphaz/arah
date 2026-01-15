@@ -15,8 +15,15 @@ public sealed class CreateItemRequestValidator : AbstractValidator<CreateItemReq
 
         RuleFor(x => x.Type)
             .NotEmpty().WithMessage("Tipo é obrigatório.")
-            .Must(type => type == "Product" || type == "Service")
-            .WithMessage("Tipo inválido. Valores válidos: Product, Service.");
+            .Must(type =>
+            {
+                if (string.IsNullOrWhiteSpace(type))
+                    return false;
+                var normalized = type.Trim();
+                return normalized.Equals("Product", StringComparison.OrdinalIgnoreCase) ||
+                       normalized.Equals("Service", StringComparison.OrdinalIgnoreCase);
+            })
+            .WithMessage("Tipo inválido. Valores válidos: Product, Service (case-insensitive).");
 
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Título é obrigatório.")
@@ -36,10 +43,20 @@ public sealed class CreateItemRequestValidator : AbstractValidator<CreateItemReq
 
         RuleFor(x => x.PricingType)
             .NotEmpty().WithMessage("Tipo de preço é obrigatório.")
-            .Must(pricingType => pricingType == "Fixed" || pricingType == "Negotiable" || pricingType == "Free")
-            .WithMessage("Tipo de preço inválido. Valores válidos: Fixed, Negotiable, Free.");
+            .Must(pricingType =>
+            {
+                if (string.IsNullOrWhiteSpace(pricingType))
+                    return false;
+                var normalized = pricingType.Trim();
+                return normalized.Equals("Fixed", StringComparison.OrdinalIgnoreCase) ||
+                       normalized.Equals("Negotiable", StringComparison.OrdinalIgnoreCase) ||
+                       normalized.Equals("Free", StringComparison.OrdinalIgnoreCase);
+            })
+            .WithMessage("Tipo de preço inválido. Valores válidos: Fixed, Negotiable, Free (case-insensitive).");
 
-        When(x => x.PricingType == "Fixed" && x.PriceAmount.HasValue, () =>
+        When(x => !string.IsNullOrWhiteSpace(x.PricingType) && 
+                  x.PricingType.Trim().Equals("Fixed", StringComparison.OrdinalIgnoreCase) && 
+                  x.PriceAmount.HasValue, () =>
         {
             RuleFor(x => x.PriceAmount!.Value)
                 .GreaterThan(0).WithMessage("Valor do preço deve ser maior que zero.");

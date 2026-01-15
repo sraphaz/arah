@@ -22,8 +22,20 @@ public sealed class UpsertStoreRequestValidator : AbstractValidator<UpsertStoreR
 
         RuleFor(x => x.ContactVisibility)
             .NotEmpty().WithMessage("Visibilidade de contato é obrigatória.")
-            .Must(visibility => visibility == "Public" || visibility == "ResidentsOnly" || visibility == "Private")
-            .WithMessage("Visibilidade de contato inválida. Valores válidos: Public, ResidentsOnly, Private.");
+            .Must(visibility =>
+            {
+                if (string.IsNullOrWhiteSpace(visibility))
+                    return false;
+                
+                // Normalizar para comparação (remove underscores e hífens, case-insensitive)
+                var normalized = visibility.Replace("_", string.Empty, StringComparison.OrdinalIgnoreCase)
+                    .Replace("-", string.Empty, StringComparison.OrdinalIgnoreCase);
+                
+                // Valores válidos do enum StoreContactVisibility: OnInquiryOnly, Public
+                return normalized.Equals("OnInquiryOnly", StringComparison.OrdinalIgnoreCase) ||
+                       normalized.Equals("Public", StringComparison.OrdinalIgnoreCase);
+            })
+            .WithMessage("Visibilidade de contato inválida. Valores válidos: OnInquiryOnly, Public (aceita ON_INQUIRY_ONLY, PUBLIC, etc.).");
 
         When(x => x.Contact != null, () =>
         {

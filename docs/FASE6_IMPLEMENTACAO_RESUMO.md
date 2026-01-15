@@ -183,6 +183,19 @@ public interface IPaymentGateway
 - ✅ Validação de status do checkout antes de pagar
 - ✅ Validação de valores (não pode ser zero ou negativo)
 
+### Segurança Avançada Implementada (2026-01-18)
+- ✅ **Sanitização de Inputs**: `returnUrl`, `metadata`, `reason` sanitizados com `InputSanitizationService`
+- ✅ **Validação de PaymentIntentId**: Formato validado (10-200 caracteres, alphanumeric + underscore/hyphen/dot)
+- ✅ **Validação de Reembolsos**: Amount deve ser positivo e não exceder total do checkout
+- ✅ **Validação de Payload de Webhook**: Tamanho máximo de 100KB para prevenir DoS
+- ✅ **Rate Limiting Específico**: Rate limiter `payment-webhook` configurado (100 req/min)
+- ✅ **Whitelist de Gateways**: Apenas gateways permitidos (`stripe`, `mercadopago`, `pagseguro`, `mock`)
+- ✅ **Whitelist de Moedas**: Apenas moedas suportadas (`BRL`, `USD`, `EUR`)
+- ✅ **Proteção contra Race Conditions**: Verificação de `PaymentIntentId` existente antes de criar novo
+- ✅ **Auditoria Completa**: Logging de todas as operações (`payment.created`, `payment.confirmed`, `payment.refunded`, `payment.webhook.processed`, `payment.config.created/updated`)
+- ✅ **Logging Estruturado**: Logs estruturados em todos os endpoints com contexto relevante
+- ✅ **Validação de Metadata**: Limites de tamanho (max 20 entries, key: 40 chars, value: 500 chars)
+
 ### Transparência de Fees
 - **Basic**: Mostra apenas valor total
 - **Detailed**: Mostra subtotal, fees e total separadamente
@@ -240,9 +253,11 @@ Testes recomendados:
 - **DevPortal**: Atualizado com card "Marketplace e Pagamentos"
 - **FASE6.md**: Status atualizado
 - **CHANGELOG.md**: Entrada completa adicionada
+- **VALIDACAO_SEGURANCA_PAGAMENTOS.md**: Validação completa de segurança realizada
 
 ---
 
 **Implementação**: 2026-01-18  
-**Status**: ✅ Completo (exceto testes)  
+**Validação de Segurança**: 2026-01-18  
+**Status**: ✅ Completo (validação de segurança concluída, testes pendentes)  
 **Próxima Fase**: Exportação de Dados (LGPD) ou Analytics

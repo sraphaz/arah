@@ -7,7 +7,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-## [2026-01-18] - Fase 6: Sistema de Pagamentos ✅ 100% Completo
+## [2026-01-18] - Fase 6: Sistema de Pagamentos ✅ 100% Completo + Validação de Segurança
 
 ### Sistema de Pagamentos
 
@@ -20,6 +20,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - ✅ **Reembolsos**: Sistema completo de reembolsos (total e parcial)
 - ✅ **Validação de Limites**: Validação automática de valores mínimos/máximos por território
 - ✅ **Integração com PlatformFeeConfig**: Cálculo de fees integrado com configurações existentes
+
+### Validação de Segurança (2026-01-18)
+
+- ✅ **Sanitização de Inputs**: `returnUrl`, `metadata`, `reason` sanitizados com `InputSanitizationService`
+- ✅ **Validação de PaymentIntentId**: Formato validado (10-200 caracteres, alphanumeric + underscore/hyphen/dot)
+- ✅ **Validação de Reembolsos**: Amount deve ser positivo e não exceder total do checkout
+- ✅ **Validação de Payload de Webhook**: Tamanho máximo de 100KB para prevenir DoS
+- ✅ **Rate Limiting Específico**: Rate limiter `payment-webhook` configurado (100 req/min)
+- ✅ **Whitelist de Gateways e Moedas**: Apenas gateways/moedas permitidos
+- ✅ **Proteção contra Race Conditions**: Verificação de `PaymentIntentId` existente
+- ✅ **Auditoria Completa**: Logging de todas as operações de pagamento
+- ✅ **Logging Estruturado**: Logs estruturados em todos os endpoints
+- ✅ **Validação de Metadata**: Limites de tamanho e sanitização
 
 ### Arquivos Criados
 
@@ -43,7 +56,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - `backend/Araponga.Infrastructure/Postgres/PostgresCheckoutRepository.cs`: Implementação dos novos métodos
 - `backend/Araponga.Infrastructure/InMemory/InMemoryCheckoutRepository.cs`: Implementação dos novos métodos
 - `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`: Registro de serviços de pagamento
-- `backend/Araponga.Api/wwwroot/devportal/index.html`: Adicionado card "Marketplace e Pagamentos"
+- `backend/Araponga.Api/wwwroot/devportal/index.html`: Adicionado card "Marketplace e Pagamentos" com informações de segurança
+- `backend/Araponga.Api/Controllers/PaymentController.cs`: Sanitização, validações e logging estruturado
+- `backend/Araponga.Application/Services/PaymentService.cs`: Auditoria, whitelists e proteção contra race conditions
+- `backend/Araponga.Application/Services/TerritoryPaymentConfigService.cs`: Auditoria e whitelists
+- `backend/Araponga.Api/Program.cs`: Rate limiter `payment-webhook` configurado
+
+### Documentação de Segurança
+
+- `docs/validation/VALIDACAO_SEGURANCA_PAGAMENTOS.md`: Validação completa de segurança do sistema de pagamentos
 
 ---
 

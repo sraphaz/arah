@@ -14,7 +14,7 @@
       'ui.heroLeadHtml': 'O Araponga é uma plataforma comunitária <strong>territory-first</strong>. O território organiza contexto, visibilidade e governança. Este portal documenta o produto e a API exatamente como implementada hoje, para acelerar o onboarding de desenvolvedores com segurança e previsibilidade.',
       'overview.eyebrow': 'Visão geral',
       'overview.title': 'API orientada a território + curadoria comunitária.',
-      'overview.lead': 'A API da Araponga cria um núcleo confiável para território, vínculos, feed, mapa, marketplace e eventos. Ela prioriza regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam auditáveis e evoluam com segurança.',
+      'overview.lead': 'A API da Araponga cria um núcleo confiável para território, vínculos, feed, mapa, marketplace, eventos e chat. Ela prioriza regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam auditáveis e evoluam com segurança.',
       'how.eyebrow': 'Como o Araponga funciona',
       'how.title': 'Do visitante ao morador validado',
       'territories.eyebrow': 'Territórios',

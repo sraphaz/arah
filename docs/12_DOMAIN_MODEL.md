@@ -26,6 +26,12 @@
 ### Social
 - **FriendRelation** (requester, target, status pending/accepted/blocked) *(pós-MVP)*
 
+### Chat
+- **ChatConversation** (territoryId opcional; kind: TerritoryPublic, TerritoryResidents, Group, Direct; status; auditoria mínima de estado)
+- **ConversationParticipant** (conversationId, userId, role Owner/Member; mute; lastRead)
+- **ChatMessage** (conversationId, senderUserId, contentType, texto/payload; createdAt; soft delete)
+- **ChatConversationStats** (lastMessageAt, lastPreview, messageCount) — read model para performance
+
 ### Moderação
 - **Report** (territoryId, reporterId, targetType post|user, reason, details, status)
 - **Sanction** (scope territory|global, target user|post, type, reason, status, startAt, endAt)
@@ -69,6 +75,12 @@
 
 ### Social
 - **User N..N FriendRelation** → relações friends (pós-MVP).
+
+### Chat
+- **Territory 1..N ChatConversation** → canais e grupos do território (DM tem territoryId nulo).
+- **ChatConversation 1..N ConversationParticipant** → participantes (grupos/DM são explícitos; canais podem ter “participantes implícitos” e também estado por usuário).
+- **ChatConversation 1..N ChatMessage** → mensagens ordenadas por tempo.
+- **ChatConversation 1..1 ChatConversationStats** → resumo para performance (inbox/listagens).
 
 ### Moderação
 - **User 1..N Report** → reports feitos por usuários.
@@ -149,7 +161,8 @@
   - User.IdentityVerificationStatus == Verified (para operações plenas)
 
 ## Observações de MVP vs Pós-MVP
-- [MVP] TerritoryMembership, MembershipSettings, MembershipCapability, Post, PostGeoAnchor, MapEntity, MapEntityRelation, Report, Sanction, OutboxMessage, UserNotification, UserPreferences, Store, StoreItem.
+- [MVP] TerritoryMembership, MembershipSettings, MembershipCapability, FeatureFlag, Post, PostGeoAnchor, MapEntity, MapEntityRelation, Report, Sanction, OutboxMessage, UserNotification, UserPreferences, Store, StoreItem.
+- [MVP] ChatConversation, ConversationParticipant, ChatMessage, ChatConversationStats (canais do território + grupos com aprovação).
 - [MVP] SystemConfig, WorkItem (Work Queue), DocumentEvidence (metadados) e storage (Local/S3 via proxy).
 - [POST-MVP] Media e FriendRelation.
 - [POST-MVP] FriendRelation e comportamentos de círculo interno.

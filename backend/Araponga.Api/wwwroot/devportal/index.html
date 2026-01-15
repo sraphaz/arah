@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Developer Portal da API Araponga: território, memberships, feed, mapa, marketplace, eventos, moderação e notificações." />
+  <meta name="description" content="Developer Portal da API Araponga: território, memberships, feed, mapa, marketplace, eventos, chat, moderação e notificações." />
   <meta name="theme-color" content="#0a0e12" />
   <title>Araponga API • Developer Portal</title>
   <link rel="icon" href="./assets/images/araponga-icon.svg" />
@@ -812,7 +812,7 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/&lt;userId&gt; \
           <p data-i18n-html="openapi.leadHtml">
             O explorer usa a especificação real da API. Ele tenta carregar o Swagger dinâmico em
             <code>/swagger/v1/swagger.json</code> (quando o backend roda em <code>Development</code>) e usa
-            fallback para <code>./openapi.json</code>. A navegação é feita por tags, endpoints e schemas.
+            fallback para <code>../openapi.json</code>. A navegação é feita por tags, endpoints e schemas.
           </p>
           <a class="button" href="./openapi.json" data-i18n="openapi.download">Baixar OpenAPI (JSON)</a>
           <button class="button secondary" type="button" data-explorer-button aria-expanded="false">
@@ -927,3 +927,4 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
   <script src="./assets/js/devportal.js"></script>
 </body>
 </html>
+

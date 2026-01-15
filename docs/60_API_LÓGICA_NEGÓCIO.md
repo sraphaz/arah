@@ -18,13 +18,14 @@
 8. [Alertas de Saúde](#alertas-de-saúde)
 9. [Assets (Recursos Territoriais)](#assets-recursos-territoriais)
 10. [Marketplace](#marketplace)
-11. [Notificações](#notificações)
-12. [Moderação](#moderação)
-13. [Solicitações de Entrada (Join Requests)](#solicitações-de-entrada-join-requests)
-14. [Feature Flags](#feature-flags)
-15. [Regras de Visibilidade e Permissões](#regras-de-visibilidade-e-permissões)
-16. [Admin: System Config e Work Queue](#admin-system-config-e-work-queue)
-17. [Verificações e Evidências (upload/download)](#verificações-e-evidências-uploaddownload)
+11. [Chat (Canais, Grupos e DM)](#chat-canais-grupos-e-dm)
+12. [Notificações](#notificações)
+13. [Moderação](#moderação)
+14. [Solicitações de Entrada (Join Requests)](#solicitações-de-entrada-join-requests)
+15. [Feature Flags](#feature-flags)
+16. [Regras de Visibilidade e Permissões](#regras-de-visibilidade-e-permissões)
+17. [Admin: System Config e Work Queue](#admin-system-config-e-work-queue)
+18. [Verificações e Evidências (upload/download)](#verificações-e-evidências-uploaddownload)
 
 ---
 
@@ -1046,6 +1047,21 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 - `GET /api/v1/cart` - Obter carrinho
 - `POST /api/v1/cart/checkout` - Finalizar compra
 
+### Chat
+- `GET /api/v1/territories/{territoryId}/chat/channels` - Listar canais do território (Público/Moradores)
+- `GET /api/v1/territories/{territoryId}/chat/groups` - Listar grupos do território (apenas ativos)
+- `POST /api/v1/territories/{territoryId}/chat/groups` - Criar grupo (pendente de aprovação)
+- `POST /api/v1/territories/{territoryId}/chat/groups/{groupId}/approve` - Aprovar/habilitar grupo (curadoria)
+- `POST /api/v1/territories/{territoryId}/chat/groups/{groupId}/disable` - Desabilitar grupo (moderação)
+- `POST /api/v1/territories/{territoryId}/chat/groups/{groupId}/lock` - Trancar grupo (moderação)
+- `GET /api/v1/chat/conversations/{conversationId}` - Detalhes da conversa
+- `GET /api/v1/chat/conversations/{conversationId}/messages` - Listar mensagens (cursor-based)
+- `POST /api/v1/chat/conversations/{conversationId}/messages` - Enviar mensagem
+- `GET /api/v1/chat/conversations/{conversationId}/participants` - Listar participantes
+- `POST /api/v1/chat/conversations/{conversationId}/participants` - Adicionar participante (owner/admin)
+- `DELETE /api/v1/chat/conversations/{conversationId}/participants/{userId}` - Remover participante
+- `POST /api/v1/chat/conversations/{conversationId}/read` - Marcar conversa como lida
+
 ### Notificações
 - `GET /api/v1/notifications` - Listar notificações
 - `POST /api/v1/notifications/{id}/read` - Marcar como lida
@@ -1067,6 +1083,81 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 ### Feature Flags
 - `GET /api/v1/territories/{id}/features` - Listar flags
 - `PUT /api/v1/territories/{id}/features` - Atualizar flags (curadoria)
+
+---
+
+## 💬 Chat (Canais, Grupos e DM)
+
+### Objetivo
+Fornecer comunicação em tempo real/assíncrona entre usuários com governança territorial, respeitando:
+- **Papéis territoriais**: `VISITOR` e `RESIDENT`
+- **Capabilidades territoriais**: `CURATOR` e `MODERATOR`
+- **Permissões globais**: `SYSTEM_ADMIN`
+- **Privacidade** (bloqueio e preferências) e **anti-spam**
+- **Feature flags por território** para rollout seguro
+
+### Tipos de conversa (ConversationKind)
+- **`TERRITORY_PUBLIC`**: canal público do território (leitura para membros do território; escrita restrita).
+- **`TERRITORY_RESIDENTS`**: canal exclusivo de moradores validados e usuários verificados.
+- **`GROUP`**: grupo privado (invite-only), criado por moradores validados/verificados e **habilitado por curadoria**.
+- **`DIRECT`**: DM (habilitável por território via flag, e sempre respeitando preferências/bloqueios).
+
+### Feature flags (por território)
+Todas as operações de chat devem checar flags antes de qualquer acesso ao banco (cacheável).
+
+> Observação: a API de feature flags hoje serializa `FeatureFlag.ToString().ToUpperInvariant()`.  
+> Portanto, os valores trafegados tendem a ser como `CHATENABLED`, `CHATGROUPS`, etc. (sem underscores).
+
+- **`CHATENABLED`** (`FeatureFlag.ChatEnabled`): master switch do chat no território.
+- **`CHATTERITORYPUBLICCHANNEL`** (`FeatureFlag.ChatTerritoryPublicChannel`): habilita o canal público.
+- **`CHATTERITORYRESIDENTSCHANNEL`** (`FeatureFlag.ChatTerritoryResidentsChannel`): habilita o canal de moradores.
+- **`CHATGROUPS`** (`FeatureFlag.ChatGroups`): habilita criação/consulta de grupos.
+- **`CHATDMENABLED`** (`FeatureFlag.ChatDmEnabled`): habilita DM no território.
+- **`CHATMEDIAENABLED`** (`FeatureFlag.ChatMediaEnabled`): habilita envio/visualização de mídia (fase 2).
+
+### Regras de permissão (resumo)
+**Premissas**:
+- “Usuário verificado” = `User.IdentityVerificationStatus == Verified`.
+- “Morador validado” = `IsResidentAsync(userId, territoryId) == true`.
+
+#### Canais do território
+- **`TERRITORY_PUBLIC`**
+  - **Ler**: usuário autenticado com membership no território (`VISITOR` ou `RESIDENT`).
+  - **Escrever**: usuário verificado **e** morador validado.
+- **`TERRITORY_RESIDENTS`**
+  - **Ler/Escrever**: usuário verificado **e** morador validado.
+
+#### Grupos
+- **Criar grupo**: usuário verificado **e** morador validado (**visitante não cria**).
+- **Estado inicial**: `PENDING_APPROVAL` (não aparece na descoberta do território).
+- **Aprovar/habilitar**: `CURATOR` do território (ou `SYSTEM_ADMIN`).
+- **Trancar/desabilitar**: `MODERATOR` do território (ou `SYSTEM_ADMIN`).
+- **Participação**: invite-only (admin/owner adiciona/removem participantes).
+
+#### DM (Direct)
+- **Habilitação**: depende de flag territorial `CHAT_DM_ENABLED`.
+- **Iniciar**: usuário verificado e permitido pelas preferências do destinatário (`contactVisibility`/chat settings) e por `UserBlock`.
+- **Ler/Escrever**: apenas participantes (ou `SYSTEM_ADMIN`).
+
+### Privacidade e bloqueios
+- **Bloqueio (`UserBlock`)**:
+  - bloqueia DM/convites e impede interação direta entre `A` e `B`.
+  - (opcional fase 2) pode filtrar exibição de mensagens em grupos/canais.
+- **Preferências**:
+  - defaults já protegem contra spam (`contactVisibility: ResidentsOnly`).
+  - (planejado) chat settings específicos: quem pode iniciar DM, convites, recibos de leitura etc.
+
+### Conteúdo das mensagens (MVP e evolução)
+- **MVP**: texto simples.
+- **Fase 2** (atrás de flag):
+  - **Mídia** (imagem/anexo) com storage externo + URL assinada e validações.
+  - **Referências** a posts/eventos/assets do território (payload estruturado com checagem de acesso no read).
+
+### Performance (recomendação)
+- Paginação de mensagens **cursor-based**: `before=<messageId|timestamp>&limit=<N>`.
+- Evitar N+1 e agregações pesadas:
+  - manter `conversation_stats` (última mensagem/preview/contagem).
+  - manter estado do participante (`last_read_*`, mute).
 
 ---
 

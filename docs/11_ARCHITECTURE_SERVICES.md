@@ -199,6 +199,34 @@ Além do feed, existem services de suporte a **governança**, **filas** e **conf
 ### ModerationCaseService
 - **Responsabilidade**: aplicar decisões humanas em casos de moderação (`WorkItemType.ModerationCase`) e atualizar o estado do report/sanção.
 
+## Services de Chat (P0/P1)
+
+### ChatService
+**Responsabilidade**: orquestrar operações de chat com governança territorial e performance:
+- listar/criar (lazy) os **canais padrão** do território (público e moradores)
+- criar grupos como `PendingApproval` e permitir **aprovação por Curator**
+- permitir **ações de moderação** (lock/disable) em grupos por `Moderator`
+- enviar/listar mensagens com paginação cursor-based
+- manter `ChatConversationStats` para evitar agregações pesadas em hot paths
+
+**Dependências** (8):
+- `IChatConversationRepository`: persistência de conversas (canais/grupos/DM)
+- `IChatConversationParticipantRepository`: participantes (grupos/DM) e estado de leitura/mute
+- `IChatMessageRepository`: persistência e listagem cursor-based de mensagens
+- `IChatConversationStatsRepository`: read model (última mensagem/preview/contagem)
+- `IUserRepository`: checar `UserIdentityVerificationStatus`
+- `FeatureFlagCacheService`: gates por território (ChatEnabled, canais, grupos, DM, mídia)
+- `AccessEvaluator`: gates de membership/capability (`Resident` validado, `Curator`, `Moderator`, `SystemAdmin`)
+- `IUnitOfWork`: commit transacional
+
+**Regras principais (MVP)**:
+- **Canais**: leitura exige membership; escrita exige usuário verificado e, no canal público, morador validado.
+- **Grupos**: visitante não cria; criação exige morador validado + usuário verificado; aprovação por curadoria; moderação pode trancar/desabilitar.
+
+**Performance**:
+- mensagens paginadas por `(ConversationId, CreatedAtUtc, Id)` com cursor
+- stats atualizados em escrita para reduzir custo de listagens
+
 ### Otimizações de Query
 O `PostFilterService` atualmente carrega todos os posts antes de filtrar. Para grandes volumes, a filtragem deve ser feita no nível do repositório.
 

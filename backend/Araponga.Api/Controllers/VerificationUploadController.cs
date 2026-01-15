@@ -1,4 +1,5 @@
 using Araponga.Api.Security;
+using Araponga.Api.Contracts.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Evidence;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ public sealed class VerificationUploadController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> UploadIdentityDocument(
-        [FromForm] IFormFile file,
+        [FromForm] FileUploadRequest request,
         CancellationToken cancellationToken)
     {
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
@@ -43,6 +44,7 @@ public sealed class VerificationUploadController : ControllerBase
             return Unauthorized();
         }
 
+        var file = request.File;
         if (file is null || file.Length <= 0)
         {
             return BadRequest(new { error = "file is required." });

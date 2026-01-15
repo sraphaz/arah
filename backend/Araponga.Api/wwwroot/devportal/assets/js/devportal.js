@@ -1,5 +1,5 @@
-(function () {
-  // Banner sempre visível - sem lógica de redirect
+﻿(function () {
+  // Banner sempre visível - sem lógica de redirect.
 
   var LANG_STORAGE_KEY = 'devportal.lang';
 
@@ -14,7 +14,7 @@
       'ui.heroLeadHtml': 'O Araponga é uma plataforma comunitária <strong>territory-first</strong>. O território organiza contexto, visibilidade e governança. Este portal documenta o produto e a API exatamente como implementada hoje, para acelerar o onboarding de desenvolvedores com segurança e previsibilidade.',
       'overview.eyebrow': 'Visão geral',
       'overview.title': 'API orientada a território + curadoria comunitária.',
-      'overview.lead': 'A API da Araponga cria um núcleo confiável para território, vínculos, feed, mapa, marketplace e eventos. Ela prioriza regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam auditáveis e evoluam com segurança.',
+      'overview.lead': 'A API da Araponga cria um núcleo confiável para território, vínculos, feed, mapa, marketplace, eventos e chat. Ela prioriza regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam auditáveis e evoluam com segurança.',
       'how.eyebrow': 'Como o Araponga funciona',
       'how.title': 'Do visitante ao morador validado',
       'territories.eyebrow': 'Territórios',
@@ -43,7 +43,7 @@
       'headers.leadHtml': 'Várias rotas aceitam o território via <code>territoryId</code> na query ou via sessão com <code>X-Session-Id</code>. Além disso, algumas operações exigem presença geográfica.',
       'openapi.eyebrow': 'OpenAPI',
       'openapi.title': 'API Explorer (Swagger UI local)',
-      'openapi.leadHtml': 'O explorer usa a especificação real da API. Ele tenta carregar o Swagger dinâmico em <code>/swagger/v1/swagger.json</code> (quando o backend roda em <code>Development</code>) e usa fallback para <code>./openapi.json</code>. A navegação é feita por tags, endpoints e schemas.',
+      'openapi.leadHtml': 'O explorer usa a especificação real da API. Ele tenta carregar o Swagger dinâmico em <code>/swagger/v1/swagger.json</code> (quando o backend roda em <code>Development</code>) e usa fallback para <code>../openapi.json</code>. A navegação é feita por tags, endpoints e schemas.',
       'openapi.download': 'Baixar OpenAPI (JSON)',
       'openapi.open': 'Abrir Explorer',
       'openapi.statusReady': 'Explorer pronto para carregar.',
@@ -135,7 +135,7 @@
       'headers.leadHtml': 'Varias rutas aceptan el territorio por <code>territoryId</code> en la query o por sesión con <code>X-Session-Id</code>. Además, algunas operaciones requieren presencia geográfica.',
       'openapi.eyebrow': 'OpenAPI',
       'openapi.title': 'API Explorer (Swagger UI local)',
-      'openapi.leadHtml': 'El Explorer usa la especificación real de la API. Intenta cargar Swagger dinámico en <code>/swagger/v1/swagger.json</code> (cuando el backend corre en <code>Development</code>) y usa fallback a <code>./openapi.json</code>. La navegación se hace por tags, endpoints y schemas.',
+      'openapi.leadHtml': 'El Explorer usa la especificación real de la API. Intenta cargar Swagger dinámico en <code>/swagger/v1/swagger.json</code> (cuando el backend corre en <code>Development</code>) y usa fallback a <code>../openapi.json</code>. La navegación se hace por tags, endpoints y schemas.',
       'openapi.download': 'Descargar OpenAPI (JSON)',
       'openapi.open': 'Abrir Explorer',
       'openapi.statusReady': 'Explorer listo para cargar.',
@@ -227,7 +227,7 @@
       'headers.leadHtml': 'Several routes accept territory via <code>territoryId</code> in the query or via session using <code>X-Session-Id</code>. Some operations also require geographic presence.',
       'openapi.eyebrow': 'OpenAPI',
       'openapi.title': 'API Explorer (local Swagger UI)',
-      'openapi.leadHtml': 'The Explorer uses the real API specification. It tries to load dynamic Swagger at <code>/swagger/v1/swagger.json</code> (when the backend runs in <code>Development</code>) and falls back to <code>./openapi.json</code>. Navigation is by tags, endpoints, and schemas.',
+      'openapi.leadHtml': 'The Explorer uses the real API specification. It tries to load dynamic Swagger at <code>/swagger/v1/swagger.json</code> (when the backend runs in <code>Development</code>) and falls back to <code>../openapi.json</code>. Navigation is by tags, endpoints, and schemas.',
       'openapi.download': 'Download OpenAPI (JSON)',
       'openapi.open': 'Open Explorer',
       'openapi.statusReady': 'Explorer ready to load.',
@@ -319,7 +319,7 @@
       'headers.leadHtml': 'Diverse rotte accettano il territorio tramite <code>territoryId</code> nella query oppure tramite sessione con <code>X-Session-Id</code>. Inoltre, alcune operazioni richiedono presenza geografica.',
       'openapi.eyebrow': 'OpenAPI',
       'openapi.title': 'API Explorer (Swagger UI locale)',
-      'openapi.leadHtml': 'L’Explorer usa la specifica reale dell’API. Prova a caricare Swagger dinamico su <code>/swagger/v1/swagger.json</code> (quando il backend gira in <code>Development</code>) e fa fallback a <code>./openapi.json</code>. La navigazione avviene per tag, endpoint e schemi.',
+      'openapi.leadHtml': 'L’Explorer usa la specifica reale dell’API. Prova a caricare Swagger dinamico su <code>/swagger/v1/swagger.json</code> (quando il backend gira in <code>Development</code>) e fa fallback a <code>../openapi.json</code>. La navigazione avviene per tag, endpoint e schemi.',
       'openapi.download': 'Scarica OpenAPI (JSON)',
       'openapi.open': 'Apri Explorer',
       'openapi.statusReady': 'Explorer pronto per il caricamento.',
@@ -440,7 +440,7 @@
       'headers.leadHtml': 'Several routes accept territory via <code>territoryId</code> in the query or via session using <code>X-Session-Id</code>. Some operations also require geographic presence.',
       'openapi.eyebrow': 'OpenAPI',
       'openapi.title': 'API Explorer (local Swagger UI)',
-      'openapi.leadHtml': 'The Explorer uses the real API specification. It tries to load dynamic Swagger at <code>/swagger/v1/swagger.json</code> (when the backend runs in <code>Development</code>) and falls back to <code>./openapi.json</code>. Navigation is by tags, endpoints, and schemas.',
+      'openapi.leadHtml': 'The Explorer uses the real API specification. It tries to load dynamic Swagger at <code>/swagger/v1/swagger.json</code> (when the backend runs in <code>Development</code>) and falls back to <code>../openapi.json</code>. Navigation is by tags, endpoints, and schemas.',
       'openapi.download': 'Download OpenAPI (JSON)',
       'openapi.open': 'Open Explorer',
       'openapi.statusReady': 'Explorer ready to load.',
@@ -492,6 +492,7 @@
       // ignore
     }
 
+    // default: Português
     return 'pt';
   }
 
@@ -585,7 +586,7 @@
       }
     }
 
-    return '/devportal/openapi.json';
+    return '/openapi.json';
   }
 
   async function loadExplorer() {
@@ -834,3 +835,4 @@
 
   enhanceCodeBlocks();
 })();
+

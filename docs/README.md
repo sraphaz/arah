@@ -37,6 +37,7 @@ O Araponga é um aplicativo/plataforma que permite:
   - Uma entidade do território pode ser um estabelecimento, um órgão do governo, um espaço público ou um espaço natural.
 - 🧑‍🌾 **Diferenciar moradores e visitantes com respeito**
 - 🤝 **Fortalecer redes locais de cuidado, troca e presença**
+- 💬 **Chat territorial (canais e grupos)** com governança (curadoria/moderação) e feature flags por território
 
 Tudo isso **sem algoritmos de manipulação**,  
 sem feed global infinito,  
@@ -173,6 +174,8 @@ backend/
 - `GET /api/v1/reports?territoryId={territoryId}&targetType=POST&status=OPEN`
 - `GET /api/v1/notifications?skip=0&take=50`
 - `POST /api/v1/notifications/{id}/read`
+- `GET /api/v1/territories/{territoryId}/chat/channels`
+- `GET /api/v1/territories/{territoryId}/chat/groups`
 
 ---
 
@@ -188,6 +191,7 @@ backend/
 - ✅ Notificações in-app com outbox e inbox persistido
 - ✅ Feature flags e health check
 - ✅ Testes automatizados
+- ✅ Chat territorial: canais (público/moradores) + grupos com aprovação por curadoria
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)
 - 🚧 Frontend e experiências móveis em planejamento
 

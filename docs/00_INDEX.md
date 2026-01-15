@@ -37,6 +37,7 @@ Documentos sobre moderação, observabilidade e operações.
 - **[Rastreabilidade](./32_TRACEABILITY.md)** - Rastreabilidade de requisitos e funcionalidades
 - **[System Config, Work Queue e Evidências](./33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md)** - Configurações globais, fila genérica e evidências documentais (P0)
 - **[API - Lógica de Negócio e Usabilidade](./60_API_LÓGICA_NEGÓCIO.md)** - Documento completo de lógica de negócio e usabilidade de todas as operações da API
+- **Chat**: documentado em `60_API_LÓGICA_NEGÓCIO.md` (seção “Chat”) e no DevPortal/OpenAPI (`docs/openapi.json`)
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
 ### 📝 Histórico e Mudanças

@@ -11,14 +11,20 @@ public sealed class InMemoryFeatureFlagService : IFeatureFlagService
     {
         _flags[Guid.Parse("11111111-1111-1111-1111-111111111111")] = new HashSet<FeatureFlag>
         {
-            FeatureFlag.EventPosts
+            FeatureFlag.EventPosts,
+            FeatureFlag.ChatEnabled,
+            FeatureFlag.ChatTerritoryPublicChannel
         };
 
         _flags[Guid.Parse("22222222-2222-2222-2222-222222222222")] = new HashSet<FeatureFlag>
         {
             FeatureFlag.AlertPosts,
             FeatureFlag.EventPosts,
-            FeatureFlag.MarketplaceEnabled
+            FeatureFlag.MarketplaceEnabled,
+            FeatureFlag.ChatEnabled,
+            FeatureFlag.ChatTerritoryPublicChannel,
+            FeatureFlag.ChatTerritoryResidentsChannel,
+            FeatureFlag.ChatGroups
         };
     }
 

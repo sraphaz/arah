@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
+using Araponga.Api.Swagger;
+using Microsoft.AspNetCore.Http;
 using Serilog;
 using System.Threading.RateLimiting;
 
@@ -182,6 +184,10 @@ builder.Services.AddSwaggerGen(c =>
     {
         c.IncludeXmlComments(xmlPath);
     }
+
+    // Support multipart/form-data + IFormFile endpoints in Swagger
+    c.MapType<IFormFile>(() => new OpenApiSchema { Type = "string", Format = "binary" });
+    c.OperationFilter<FormFileOperationFilter>();
 
     c.DocInclusionPredicate((_, __) => true);
 });

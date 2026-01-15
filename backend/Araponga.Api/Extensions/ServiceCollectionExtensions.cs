@@ -65,6 +65,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<VerificationQueueService>();
         services.AddScoped<DocumentEvidenceService>();
         services.AddScoped<ModerationCaseService>();
+        services.AddScoped<ChatService>();
 
         return services;
     }
@@ -166,6 +167,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IWorkItemRepository, PostgresWorkItemRepository>();
         services.AddScoped<IDocumentEvidenceRepository, PostgresDocumentEvidenceRepository>();
 
+        // Chat
+        services.AddScoped<IChatConversationRepository, PostgresChatConversationRepository>();
+        services.AddScoped<IChatConversationParticipantRepository, PostgresChatConversationParticipantRepository>();
+        services.AddScoped<IChatMessageRepository, PostgresChatMessageRepository>();
+        services.AddScoped<IChatConversationStatsRepository, PostgresChatConversationStatsRepository>();
+
         return services;
     }
 
@@ -209,6 +216,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISystemConfigRepository, InMemorySystemConfigRepository>();
         services.AddSingleton<IWorkItemRepository, InMemoryWorkItemRepository>();
         services.AddSingleton<IDocumentEvidenceRepository, InMemoryDocumentEvidenceRepository>();
+
+        // Chat
+        services.AddSingleton<IChatConversationRepository, InMemoryChatConversationRepository>();
+        services.AddSingleton<IChatConversationParticipantRepository, InMemoryChatConversationParticipantRepository>();
+        services.AddSingleton<IChatMessageRepository, InMemoryChatMessageRepository>();
+        services.AddSingleton<IChatConversationStatsRepository, InMemoryChatConversationStatsRepository>();
 
         return services;
     }

@@ -40,6 +40,7 @@ O Araponga é um aplicativo/plataforma que permite:
 - 🏪 **Marketplace territorial** para trocas locais
 - 📅 **Eventos comunitários** organizados por território
 - 🚨 **Alertas de saúde pública** e comunicação emergencial
+- 💬 **Chat territorial (canais e grupos)** com governança (curadoria/moderação) e feature flags por território
 
 Tudo isso **sem algoritmos de manipulação**,  
 sem feed global infinito,  
@@ -186,6 +187,7 @@ backend/
 - ✅ Descoberta e seleção de territórios
 - ✅ Vínculos (morador e visitante) com regras de visibilidade
 - ✅ Feature flags por território
+- ✅ Chat territorial: canais (público/moradores) + grupos com aprovação por curadoria
 
 #### Feed e Social
 - ✅ Feed territorial com criação, interações (like, comment, share) e moderação

@@ -1,6 +1,7 @@
 using Araponga.Api;
 using Araponga.Api.Configuration;
 using Araponga.Api.Contracts.Memberships;
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
@@ -297,7 +298,7 @@ public sealed class MembershipsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> UploadResidencyDocument(
         [FromRoute] Guid territoryId,
-        [FromForm] IFormFile file,
+        [FromForm] FileUploadRequest request,
         CancellationToken cancellationToken)
     {
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
@@ -306,6 +307,7 @@ public sealed class MembershipsController : ControllerBase
             return Unauthorized();
         }
 
+        var file = request.File;
         if (file is null || file.Length <= 0)
         {
             return BadRequest(new { error = "file is required." });

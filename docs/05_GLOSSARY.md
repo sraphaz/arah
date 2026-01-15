@@ -17,6 +17,11 @@
 - **SystemAdmin (Admin global)**: permissão global (`SystemPermission`) que permite operar configurações do sistema e decisões globais (ex.: verificação de identidade).
 - **Curator (Curador)**: capability territorial (`MembershipCapability`) para curadoria/validação e decisões territoriais (ex.: residência, assets).
 - **Moderator (Moderador)**: capability territorial (`MembershipCapability`) para decisões de moderação (casos de reports, sanções, etc.).
+- **Chat**: módulo de comunicação entre usuários, com governança territorial e regras explícitas de acesso.
+- **Canal (Territory channel)**: conversa “implícita” do território (ex.: canal público e canal de moradores). Acesso deriva do `territoryId` + `MembershipRole` + regras de verificação.
+- **Grupo (Group)**: conversa privada (invite-only) dentro de um território. Criado por morador validado e usuário verificado; habilitação/aprovação por curadoria.
+- **DM / Direct Message**: conversa privada entre usuários. Respeita preferências e bloqueios; pode ser habilitada por feature flag do território.
+- **ConversationStats**: resumo por conversa (última mensagem/preview/contagem) usado para performance (evita agregações caras em listagens/inbox).
 - **SystemConfig**: configuração global calibrável (chave/valor/categoria/descrição), auditável, usada para parametrizar o comportamento do sistema.
 - **Work Queue / WorkItem**: fila genérica de “trabalhos” que exigem revisão/decisão humana (verificações, curadoria, moderação), com status e outcome.
 - **Outcome**: resultado de um WorkItem (Approved/Rejected/NoAction).

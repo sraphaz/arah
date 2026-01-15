@@ -8,6 +8,7 @@ using Araponga.Domain.Marketplace;
 using Araponga.Domain.Moderation;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Configuration;
+using Araponga.Domain.Chat;
 using Araponga.Domain.Evidence;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
@@ -326,4 +327,10 @@ public sealed class InMemoryDataStore
     public List<SystemConfig> SystemConfigs { get; } = new();
     public List<WorkItem> WorkItems { get; } = new();
     public List<DocumentEvidence> DocumentEvidences { get; } = new();
+
+    // Chat
+    public List<ChatConversation> ChatConversations { get; } = new();
+    public List<ConversationParticipant> ChatParticipants { get; } = new();
+    public List<ChatMessage> ChatMessages { get; } = new();
+    public List<Araponga.Application.Models.ChatConversationStats> ChatStats { get; } = new();
     }

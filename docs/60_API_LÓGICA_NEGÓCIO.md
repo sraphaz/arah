@@ -616,6 +616,21 @@ Todos os endpoints de listagem têm versões paginadas disponíveis. O padrão d
 - **Filtros**: `type` filtra por tipo de pin
 - **Retorno**: Dados mínimos para projeção no mapa (coordenadas, ID, tipo, título básico)
 
+### Obter Pins do Mapa Paginados (`GET /api/v1/map/pins/paged`)
+
+**Descrição**: Obtém pins do mapa com paginação.
+
+**Como usar**:
+- Exige autenticação
+- Query params: `territoryId` (opcional), `type` (filtro opcional), `pageNumber` (padrão: 1), `pageSize` (padrão: 20)
+- Header `X-Session-Id` para identificar território ativo
+
+**Regras de negócio**:
+- **Paginação**: Padrão 20 itens por página
+- **Visibilidade**: Respeita regras de visibilidade de cada tipo de conteúdo
+- **Filtros**: `type` filtra por tipo de pin
+- **Retorno**: `PagedResponse<MapPinResponse>` com metadados de paginação
+
 ---
 
 ## 🚨 Alertas de Saúde

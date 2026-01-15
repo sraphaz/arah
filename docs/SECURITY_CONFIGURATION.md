@@ -230,7 +230,14 @@ Os seguintes headers são adicionados automaticamente em todas as respostas:
 | `X-XSS-Protection` | `1; mode=block` | Proteção XSS (legacy) |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` | Controla informações de referrer |
 | `Permissions-Policy` | `geolocation=(), microphone=(), camera=()` | Restringe features do navegador |
-| `Content-Security-Policy` | (configurado) | Política de segurança de conteúdo |
+| `Content-Security-Policy` | (configurado dinamicamente) | Política de segurança de conteúdo |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains; preload` | Força HTTPS (apenas em HTTPS) |
+
+### Content-Security-Policy (CSP)
+
+O CSP é configurado dinamicamente:
+- **API endpoints**: CSP mais restritivo (sem `unsafe-inline` ou `unsafe-eval`)
+- **DevPortal/Swagger**: CSP mais permissivo (necessário para funcionamento)
 
 **Não é necessário configurar manualmente** - são aplicados automaticamente.
 

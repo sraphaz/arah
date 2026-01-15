@@ -796,6 +796,36 @@ curl -X POST http://localhost:8080/api/v1/events/{eventId}/confirm \
             </tr>
           </tbody>
         </table>
+        <div class="grid-two">
+          <div class="card">
+            <h3>Autenticação de Dois Fatores (2FA)</h3>
+            <p>
+              A API suporta autenticação de dois fatores usando TOTP (Time-based One-Time Password).
+              Usuários podem configurar 2FA via <code>POST /api/v1/auth/2fa/setup</code> e confirmar via
+              <code>POST /api/v1/auth/2fa/confirm</code>. Recovery codes são fornecidos durante a configuração.
+            </p>
+            <ul>
+              <li><strong>Setup</strong>: <code>POST /api/v1/auth/2fa/setup</code> - Gera secret e QR code</li>
+              <li><strong>Confirm</strong>: <code>POST /api/v1/auth/2fa/confirm</code> - Habilita 2FA após validar código</li>
+              <li><strong>Verify</strong>: <code>POST /api/v1/auth/2fa/verify</code> - Verifica código TOTP e retorna JWT</li>
+              <li><strong>Recover</strong>: <code>POST /api/v1/auth/2fa/recover</code> - Usa recovery code para autenticação</li>
+              <li><strong>Disable</strong>: <code>POST /api/v1/auth/2fa/disable</code> - Desabilita 2FA (requer código válido)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Segurança</h3>
+            <p>
+              A API implementa várias camadas de segurança para proteger dados e operações críticas.
+            </p>
+            <ul>
+              <li><strong>Sanitização de Inputs</strong>: HTML, paths, URLs e SQL são sanitizados</li>
+              <li><strong>Proteção CSRF</strong>: Anti-forgery tokens configurados</li>
+              <li><strong>Security Headers</strong>: CSP, HSTS, X-Frame-Options e outros headers de segurança</li>
+              <li><strong>Rate Limiting</strong>: Proteção contra abuso e DDoS</li>
+              <li><strong>Auditoria</strong>: Todas as ações críticas são registradas</li>
+            </ul>
+          </div>
+        </div>
         <div class="notice">
           <strong>Erro 401:</strong> token ausente, inválido, expirado ou com issuer/audience incorretos.
           Em geral, autorizações negadas retornam <strong>401</strong>, mas a validação de membership sem

@@ -19,14 +19,22 @@ public sealed class FeatureFlagService
         _cacheService = cacheService;
     }
 
-    public IReadOnlyList<FeatureFlag> GetEnabledFlags(Guid territoryId)
+    public async Task<IReadOnlyList<FeatureFlag>> GetEnabledFlagsAsync(Guid territoryId, CancellationToken cancellationToken = default)
     {
         if (_cacheService is not null)
         {
-            return _cacheService.GetEnabledFlags(territoryId);
+            return await _cacheService.GetEnabledFlagsAsync(territoryId, cancellationToken);
         }
 
         return _featureFlagRepository.GetEnabledFlags(territoryId);
+    }
+
+    /// <summary>
+    /// Gets enabled flags for a territory (synchronous version for backward compatibility).
+    /// </summary>
+    public IReadOnlyList<FeatureFlag> GetEnabledFlags(Guid territoryId)
+    {
+        return GetEnabledFlagsAsync(territoryId).GetAwaiter().GetResult();
     }
 
     public async Task SetEnabledFlagsAsync(

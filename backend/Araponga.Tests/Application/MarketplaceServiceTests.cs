@@ -5,6 +5,7 @@ using Araponga.Domain.Marketplace;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Tests.TestHelpers;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -26,8 +27,7 @@ public sealed class MarketplaceServiceTests
         var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
-            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
 
         var featureFlags = new InMemoryFeatureFlagService();
         featureFlags.SetEnabledFlags(territoryId, new List<FeatureFlag> { FeatureFlag.MarketplaceEnabled });
@@ -70,7 +70,7 @@ public sealed class MarketplaceServiceTests
         InMemoryDataStore dataStore,
         ITerritoryMembershipRepository membershipRepository,
         IUserRepository userRepository,
-        Microsoft.Extensions.Caching.Memory.IMemoryCache cache,
+        IDistributedCacheService cache,
         Guid territoryId,
         CancellationToken cancellationToken)
     {
@@ -241,7 +241,7 @@ public sealed class MarketplaceServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
@@ -367,7 +367,7 @@ public sealed class MarketplaceServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, _) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
@@ -429,7 +429,7 @@ public sealed class MarketplaceServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, _) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
@@ -452,7 +452,7 @@ public sealed class MarketplaceServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
@@ -533,7 +533,7 @@ public sealed class MarketplaceServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
@@ -638,7 +638,7 @@ public sealed class MarketplaceServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,
@@ -739,7 +739,7 @@ public sealed class MarketplaceServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
             dataStore,
             membershipRepository,

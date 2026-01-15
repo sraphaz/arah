@@ -7,6 +7,7 @@ using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
 using Araponga.Tests;
+using Araponga.Tests.TestHelpers;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -40,7 +41,7 @@ public sealed class JoinRequestServiceTests
                 membershipSettingsRepository,
                 userRepository,
                 featureFlagService),
-            new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
+            CacheTestHelper.CreateDistributedCacheService());
         var unitOfWork = new InMemoryUnitOfWork();
         return new JoinRequestService(
             joinRequestRepository,

@@ -2,7 +2,6 @@ using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Araponga.Application.Services;
 
@@ -12,7 +11,7 @@ public sealed class AccessEvaluator
     private readonly IMembershipCapabilityRepository _capabilityRepository;
     private readonly ISystemPermissionRepository _systemPermissionRepository;
     private readonly MembershipAccessRules _accessRules;
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCacheService _cache;
     private readonly CacheMetricsService? _metrics;
 
     public AccessEvaluator(
@@ -20,7 +19,7 @@ public sealed class AccessEvaluator
         IMembershipCapabilityRepository capabilityRepository,
         ISystemPermissionRepository systemPermissionRepository,
         MembershipAccessRules accessRules,
-        IMemoryCache cache,
+        IDistributedCacheService cache,
         CacheMetricsService? metrics = null)
     {
         _membershipRepository = membershipRepository;
@@ -38,17 +37,18 @@ public sealed class AccessEvaluator
     public async Task<bool> IsResidentAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken)
     {
         var cacheKey = $"membership:resident:{userId}:{territoryId}";
-        if (_cache.TryGetValue<bool?>(cacheKey, out var cached))
+        var cached = await _cache.GetAsync<bool?>(cacheKey, cancellationToken);
+        if (cached.HasValue)
         {
             _metrics?.RecordCacheAccess(cacheKey, hit: true);
-            return cached ?? false;
+            return cached.Value;
         }
 
         _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var isVerifiedResident = await _accessRules.IsVerifiedResidentAsync(userId, territoryId, cancellationToken);
 
-        _cache.Set(cacheKey, isVerifiedResident, Constants.Cache.MembershipExpiration);
+        await _cache.SetAsync(cacheKey, (bool?)isVerifiedResident, Constants.Cache.MembershipExpiration, cancellationToken);
         return isVerifiedResident;
     }
 
@@ -64,7 +64,8 @@ public sealed class AccessEvaluator
     public async Task<MembershipRole?> GetRoleAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken)
     {
         var cacheKey = $"membership:role:{userId}:{territoryId}";
-        if (_cache.TryGetValue<MembershipRole?>(cacheKey, out var cached))
+        var cached = await _cache.GetAsync<MembershipRole?>(cacheKey, cancellationToken);
+        if (cached is not null)
         {
             _metrics?.RecordCacheAccess(cacheKey, hit: true);
             return cached;
@@ -75,7 +76,7 @@ public sealed class AccessEvaluator
         var membership = await _membershipRepository.GetByUserAndTerritoryAsync(userId, territoryId, cancellationToken);
         var role = membership?.Role;
 
-        _cache.Set(cacheKey, role, Constants.Cache.MembershipExpiration);
+        await _cache.SetAsync(cacheKey, role, Constants.Cache.MembershipExpiration, cancellationToken);
         return role;
     }
 
@@ -135,10 +136,11 @@ public sealed class AccessEvaluator
         CancellationToken cancellationToken)
     {
         var cacheKey = $"system:permission:{userId}:{permissionType}";
-        if (_cache.TryGetValue<bool?>(cacheKey, out var cached))
+        var cached = await _cache.GetAsync<bool?>(cacheKey, cancellationToken);
+        if (cached.HasValue)
         {
             _metrics?.RecordCacheAccess(cacheKey, hit: true);
-            return cached ?? false;
+            return cached.Value;
         }
 
         _metrics?.RecordCacheAccess(cacheKey, hit: false);
@@ -146,7 +148,7 @@ public sealed class AccessEvaluator
         var hasPermission = await _systemPermissionRepository
             .HasActivePermissionAsync(userId, permissionType, cancellationToken);
 
-        _cache.Set(cacheKey, hasPermission, Constants.Cache.SystemPermissionExpiration);
+        await _cache.SetAsync(cacheKey, (bool?)hasPermission, Constants.Cache.SystemPermissionExpiration, cancellationToken);
         return hasPermission;
     }
 
@@ -178,28 +180,44 @@ public sealed class AccessEvaluator
     /// <summary>
     /// Invalidates membership cache for a user-territory pair.
     /// </summary>
+    public async Task InvalidateMembershipCacheAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken = default)
+    {
+        await _cache.RemoveAsync($"membership:resident:{userId}:{territoryId}", cancellationToken);
+        await _cache.RemoveAsync($"membership:role:{userId}:{territoryId}", cancellationToken);
+    }
+
+    /// <summary>
+    /// Invalidates membership cache for a user-territory pair (synchronous version for backward compatibility).
+    /// </summary>
     public void InvalidateMembershipCache(Guid userId, Guid territoryId)
     {
-        _cache.Remove($"membership:resident:{userId}:{territoryId}");
-        _cache.Remove($"membership:role:{userId}:{territoryId}");
+        InvalidateMembershipCacheAsync(userId, territoryId).GetAwaiter().GetResult();
     }
 
     /// <summary>
     /// Invalidates system permission cache for a user.
     /// </summary>
-    public void InvalidateSystemPermissionCache(Guid userId, SystemPermissionType? permissionType = null)
+    public async Task InvalidateSystemPermissionCacheAsync(Guid userId, SystemPermissionType? permissionType = null, CancellationToken cancellationToken = default)
     {
         if (permissionType.HasValue)
         {
-            _cache.Remove($"system:permission:{userId}:{permissionType.Value}");
+            await _cache.RemoveAsync($"system:permission:{userId}:{permissionType.Value}", cancellationToken);
         }
         else
         {
             // Remove todas as permissões do usuário
             foreach (SystemPermissionType type in Enum.GetValues(typeof(SystemPermissionType)))
             {
-                _cache.Remove($"system:permission:{userId}:{type}");
+                await _cache.RemoveAsync($"system:permission:{userId}:{type}", cancellationToken);
             }
         }
+    }
+
+    /// <summary>
+    /// Invalidates system permission cache for a user (synchronous version for backward compatibility).
+    /// </summary>
+    public void InvalidateSystemPermissionCache(Guid userId, SystemPermissionType? permissionType = null)
+    {
+        InvalidateSystemPermissionCacheAsync(userId, permissionType).GetAwaiter().GetResult();
     }
 }

@@ -8,8 +8,7 @@ public interface IDistributedCacheService
     /// <summary>
     /// Obtém um valor do cache.
     /// </summary>
-    Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
-        where T : class;
+    Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Define um valor no cache com TTL.
@@ -18,8 +17,7 @@ public interface IDistributedCacheService
         string key,
         T value,
         TimeSpan expiration,
-        CancellationToken cancellationToken = default)
-        where T : class;
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Remove um valor do cache.

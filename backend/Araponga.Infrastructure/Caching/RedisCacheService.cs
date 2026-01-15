@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Araponga.Infrastructure.Caching;
 
@@ -15,6 +16,15 @@ public sealed class RedisCacheService : IDistributedCacheService
     private readonly IMemoryCache _memoryCache;
     private readonly ILogger<RedisCacheService> _logger;
     private readonly bool _useDistributedCache;
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        WriteIndented = false,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        MaxDepth = 64,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles
+    };
 
     public RedisCacheService(
         IDistributedCache? distributedCache,
@@ -28,7 +38,6 @@ public sealed class RedisCacheService : IDistributedCacheService
     }
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
-        where T : class
     {
         if (_useDistributedCache && _distributedCache is not null)
         {
@@ -37,7 +46,7 @@ public sealed class RedisCacheService : IDistributedCacheService
                 var cached = await _distributedCache.GetStringAsync(key, cancellationToken);
                 if (cached is not null)
                 {
-                    return JsonSerializer.Deserialize<T>(cached);
+                    return JsonSerializer.Deserialize<T>(cached, JsonOptions);
                 }
             }
             catch (Exception ex)
@@ -48,12 +57,27 @@ public sealed class RedisCacheService : IDistributedCacheService
         }
 
         // Fallback para memory cache
-        if (_memoryCache.TryGetValue(key, out var value) && value is T typedValue)
+        if (_memoryCache.TryGetValue(key, out var value))
         {
-            return typedValue;
+            if (value is T typedValue)
+            {
+                return typedValue;
+            }
+            // Tentar deserializar se for string (para value types)
+            if (value is string strValue)
+            {
+                try
+                {
+                    return JsonSerializer.Deserialize<T>(strValue, JsonOptions);
+                }
+                catch
+                {
+                    // Ignorar erro de deserialização
+                }
+            }
         }
 
-        return null;
+        return default(T);
     }
 
     public async Task SetAsync<T>(
@@ -61,10 +85,9 @@ public sealed class RedisCacheService : IDistributedCacheService
         T value,
         TimeSpan expiration,
         CancellationToken cancellationToken = default)
-        where T : class
     {
-        var serialized = JsonSerializer.Serialize(value);
-        var options = new DistributedCacheEntryOptions
+        var serialized = JsonSerializer.Serialize(value, JsonOptions);
+        var cacheOptions = new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = expiration
         };
@@ -73,7 +96,7 @@ public sealed class RedisCacheService : IDistributedCacheService
         {
             try
             {
-                await _distributedCache.SetStringAsync(key, serialized, options, cancellationToken);
+                await _distributedCache.SetStringAsync(key, serialized, cacheOptions, cancellationToken);
                 return;
             }
             catch (Exception ex)
@@ -108,12 +131,16 @@ public sealed class RedisCacheService : IDistributedCacheService
         _memoryCache.Remove(key);
     }
 
-    public Task RemoveByPatternAsync(string pattern, CancellationToken cancellationToken = default)
+    public async Task RemoveByPatternAsync(string pattern, CancellationToken cancellationToken = default)
     {
-        // Redis suporta padrões, mas IMemoryCache não
-        // Em produção, usar SCAN do Redis ou manter lista de chaves
-        _logger.LogWarning("RemoveByPatternAsync not fully implemented for pattern {Pattern}", pattern);
-        return Task.CompletedTask;
+        // Redis suporta padrões via SCAN, mas IMemoryCache não
+        // Para IMemoryCache, não há suporte nativo a padrões
+        // Em produção com Redis, implementar SCAN aqui
+        _logger.LogDebug("RemoveByPatternAsync called for pattern {Pattern} - pattern removal not fully implemented", pattern);
+        
+        // Por enquanto, apenas logamos - em produção com Redis, implementar SCAN
+        // Para IMemoryCache, manter lista de chaves ou invalidar manualmente
+        await Task.CompletedTask;
     }
 
     public async Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default)

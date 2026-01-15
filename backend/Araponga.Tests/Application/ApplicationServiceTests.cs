@@ -10,7 +10,7 @@ using Araponga.Domain.Marketplace;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
-using Microsoft.Extensions.Caching.Memory;
+using Araponga.Tests.TestHelpers;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -25,7 +25,7 @@ public sealed class ApplicationServiceTests
         InMemoryDataStore dataStore,
         ITerritoryMembershipRepository membershipRepository,
         IUserRepository userRepository,
-        IMemoryCache cache)
+        IDistributedCacheService? cache = null)
     {
         var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
@@ -38,12 +38,13 @@ public sealed class ApplicationServiceTests
             featureFlags);
 
         var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var cacheService = cache ?? CacheTestHelper.CreateDistributedCacheService();
         var evaluator = new AccessEvaluator(
             membershipRepository,
             capabilityRepository,
             systemPermissionRepository,
             rules,
-            cache);
+            cacheService);
 
         return (rules, evaluator);
     }
@@ -167,7 +168,7 @@ public sealed class ApplicationServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryMapRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
@@ -211,7 +212,7 @@ public sealed class ApplicationServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryMapRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
         var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
@@ -265,7 +266,7 @@ public sealed class ApplicationServiceTests
         var alertRepository = new InMemoryHealthAlertRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var featureFlags = new InMemoryFeatureFlagService();
         featureFlags.SetEnabledFlags(ActiveTerritoryId, new List<FeatureFlag> { FeatureFlag.AlertPosts });
         var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);
@@ -300,7 +301,7 @@ public sealed class ApplicationServiceTests
         var alertRepository = new InMemoryHealthAlertRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var featureFlags = new InMemoryFeatureFlagService();
         featureFlags.SetEnabledFlags(ActiveTerritoryId, Array.Empty<FeatureFlag>());
         var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);
@@ -448,7 +449,7 @@ public sealed class ApplicationServiceTests
         var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
@@ -500,7 +501,7 @@ public sealed class ApplicationServiceTests
         var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
@@ -538,7 +539,7 @@ public sealed class ApplicationServiceTests
         var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
@@ -585,7 +586,7 @@ public sealed class ApplicationServiceTests
         var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
@@ -659,7 +660,7 @@ public sealed class ApplicationServiceTests
         var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
@@ -952,7 +953,7 @@ public sealed class ApplicationServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
@@ -1082,7 +1083,7 @@ public sealed class ApplicationServiceTests
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
         var featureFlags = new InMemoryFeatureFlagService();
         featureFlags.SetEnabledFlags(ActiveTerritoryId, new List<FeatureFlag> { FeatureFlag.AlertPosts });
         var featureFlagCache = new FeatureFlagCacheService(featureFlags, cache);

@@ -81,6 +81,8 @@ Cada instância precisa das seguintes variáveis:
 ConnectionStrings__Postgres=Host=db.example.com;Database=araponga;Username=...
 
 # Database (read replica - opcional)
+# Para usar read replicas, configure uma connection string separada e use
+# ArapongaDbContext com ChangeTracker.QueryTrackingBehavior = NoTracking
 ConnectionStrings__PostgresReadOnly=Host=db-read.example.com;Database=araponga;Username=...
 
 # Redis (opcional, fallback para IMemoryCache)

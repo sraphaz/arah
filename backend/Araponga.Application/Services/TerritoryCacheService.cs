@@ -1,22 +1,22 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Territories;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Araponga.Application.Services;
 
 /// <summary>
 /// Service for caching territory data to reduce database queries.
+/// Uses distributed cache (Redis) with automatic fallback to memory cache.
 /// </summary>
 public sealed class TerritoryCacheService
 {
     private readonly ITerritoryRepository _territoryRepository;
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCacheService _cache;
     private readonly CacheMetricsService? _metrics;
 
     public TerritoryCacheService(
         ITerritoryRepository territoryRepository, 
-        IMemoryCache cache,
+        IDistributedCacheService cache,
         CacheMetricsService? metrics = null)
     {
         _territoryRepository = territoryRepository;
@@ -30,10 +30,11 @@ public sealed class TerritoryCacheService
     public async Task<IReadOnlyList<Territory>> GetActiveTerritoriesAsync(CancellationToken cancellationToken)
     {
         var cacheKey = Constants.CacheKeys.ActiveTerritories;
-        if (_cache.TryGetValue<IReadOnlyList<Territory>>(cacheKey, out var cached))
+        var cached = await _cache.GetAsync<IReadOnlyList<Territory>>(cacheKey, cancellationToken);
+        if (cached is not null)
         {
             _metrics?.RecordCacheAccess(cacheKey, hit: true);
-            return cached ?? Array.Empty<Territory>();
+            return cached;
         }
 
         _metrics?.RecordCacheAccess(cacheKey, hit: false);
@@ -44,7 +45,7 @@ public sealed class TerritoryCacheService
             .OrderBy(t => t.Name)
             .ToList();
 
-        _cache.Set(cacheKey, activeTerritories, Constants.Cache.TerritoryExpiration);
+        await _cache.SetAsync(cacheKey, activeTerritories, Constants.Cache.TerritoryExpiration, cancellationToken);
 
         return activeTerritories;
     }
@@ -52,9 +53,17 @@ public sealed class TerritoryCacheService
     /// <summary>
     /// Invalidates the active territories cache.
     /// </summary>
+    public async Task InvalidateActiveTerritoriesAsync(CancellationToken cancellationToken = default)
+    {
+        await _cache.RemoveAsync(Constants.CacheKeys.ActiveTerritories, cancellationToken);
+    }
+
+    /// <summary>
+    /// Invalidates the active territories cache (synchronous version for backward compatibility).
+    /// </summary>
     public void InvalidateActiveTerritories()
     {
-        _cache.Remove(Constants.CacheKeys.ActiveTerritories);
+        InvalidateActiveTerritoriesAsync().GetAwaiter().GetResult();
     }
 
     /// <summary>
@@ -65,7 +74,8 @@ public sealed class TerritoryCacheService
         if (useCache)
         {
             var cacheKey = Constants.CacheKeys.Territory(id);
-            if (_cache.TryGetValue<Territory>(cacheKey, out var cached))
+            var cached = await _cache.GetAsync<Territory>(cacheKey, cancellationToken);
+            if (cached is not null)
             {
                 _metrics?.RecordCacheAccess(cacheKey, hit: true);
                 return cached;
@@ -76,7 +86,7 @@ public sealed class TerritoryCacheService
             var territory = await _territoryRepository.GetByIdAsync(id, cancellationToken);
             if (territory is not null)
             {
-                _cache.Set(cacheKey, territory, Constants.Cache.TerritoryDetailExpiration);
+                await _cache.SetAsync(cacheKey, territory, Constants.Cache.TerritoryDetailExpiration, cancellationToken);
             }
 
             return territory;
@@ -88,10 +98,18 @@ public sealed class TerritoryCacheService
     /// <summary>
     /// Invalidates cache for a specific territory.
     /// </summary>
+    public async Task InvalidateTerritoryAsync(Guid territoryId, CancellationToken cancellationToken = default)
+    {
+        await _cache.RemoveAsync(Constants.CacheKeys.Territory(territoryId), cancellationToken);
+        // Also invalidate active list since it may have changed
+        await InvalidateActiveTerritoriesAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Invalidates cache for a specific territory (synchronous version for backward compatibility).
+    /// </summary>
     public void InvalidateTerritory(Guid territoryId)
     {
-        _cache.Remove(Constants.CacheKeys.Territory(territoryId));
-        // Also invalidate active list since it may have changed
-        InvalidateActiveTerritories();
+        InvalidateTerritoryAsync(territoryId).GetAwaiter().GetResult();
     }
 }

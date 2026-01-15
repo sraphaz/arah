@@ -2,7 +2,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
-using Microsoft.Extensions.Caching.Memory;
+using Araponga.Tests.TestHelpers;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -21,7 +21,7 @@ public sealed class AccessEvaluatorTests
         var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
         var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
         var featureFlags = new InMemoryFeatureFlagService();
-        var cache = new MemoryCache(new MemoryCacheOptions());
+        var cache = CacheTestHelper.CreateDistributedCacheService();
 
         var accessRules = new MembershipAccessRules(
             membershipRepository,

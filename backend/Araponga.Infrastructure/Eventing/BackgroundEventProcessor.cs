@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Araponga.Infrastructure.Eventing;
 
@@ -19,6 +20,15 @@ public sealed class BackgroundEventProcessor : BackgroundService, IEventBus
     private readonly SemaphoreSlim _processingSemaphore;
     private const int MaxRetries = 3;
     private const int MaxConcurrentProcessing = 5;
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        WriteIndented = false,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        MaxDepth = 64,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles
+    };
 
     public BackgroundEventProcessor(
         IServiceProvider serviceProvider,
@@ -39,7 +49,7 @@ public sealed class BackgroundEventProcessor : BackgroundService, IEventBus
         {
             Id = Guid.NewGuid(),
             EventType = typeof(TEvent).FullName ?? typeof(TEvent).Name,
-            EventData = JsonSerializer.Serialize(appEvent),
+            EventData = JsonSerializer.Serialize(appEvent, JsonOptions),
             CreatedAtUtc = DateTime.UtcNow,
             Attempts = 0
         };
@@ -142,7 +152,7 @@ public sealed class BackgroundEventProcessor : BackgroundService, IEventBus
                 return false;
             }
 
-            var appEvent = JsonSerializer.Deserialize(message.EventData, eventType);
+            var appEvent = JsonSerializer.Deserialize(message.EventData, eventType, JsonOptions);
             if (appEvent is not IAppEvent typedEvent)
             {
                 _logger.LogWarning("Failed to deserialize event {EventId}", message.Id);
@@ -158,7 +168,8 @@ public sealed class BackgroundEventProcessor : BackgroundService, IEventBus
                 var handleMethod = handlerType.GetMethod("HandleAsync");
                 if (handleMethod is not null)
                 {
-                    var task = (Task?)handleMethod.Invoke(handler, new[] { typedEvent, cancellationToken });
+                    var parameters = new object?[] { typedEvent, cancellationToken };
+                    var task = (Task?)handleMethod.Invoke(handler, parameters);
                     if (task is not null)
                     {
                         await task;

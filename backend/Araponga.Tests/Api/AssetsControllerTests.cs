@@ -194,7 +194,7 @@ public sealed class AssetsControllerTests
         // O endpoint usa PATCH (HttpPatch)
         var request = new HttpRequestMessage(HttpMethod.Patch, $"api/v1/assets/{assetId}?territoryId={ActiveTerritoryId}")
         {
-            Content = JsonContent.Create(new UpdateAssetRequest("Updated", null, null, new List<Araponga.Api.Contracts.Assets.AssetGeoAnchorRequest>
+            Content = JsonContent.Create(new UpdateAssetRequest("Updated", string.Empty, null, new List<Araponga.Api.Contracts.Assets.AssetGeoAnchorRequest>
             {
                 new Araponga.Api.Contracts.Assets.AssetGeoAnchorRequest(-23.37, -45.02)
             }))

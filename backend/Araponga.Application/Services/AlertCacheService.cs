@@ -1,22 +1,22 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Health;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Araponga.Application.Services;
 
 /// <summary>
 /// Service for caching health alert data to reduce database queries.
+/// Uses distributed cache (Redis) with automatic fallback to memory cache.
 /// </summary>
 public sealed class AlertCacheService
 {
     private readonly IHealthAlertRepository _alertRepository;
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCacheService _cache;
     private readonly CacheMetricsService? _metrics;
 
     public AlertCacheService(
         IHealthAlertRepository alertRepository, 
-        IMemoryCache cache,
+        IDistributedCacheService cache,
         CacheMetricsService? metrics = null)
     {
         _alertRepository = alertRepository;
@@ -32,16 +32,17 @@ public sealed class AlertCacheService
         CancellationToken cancellationToken)
     {
         var cacheKey = $"alerts:{territoryId}";
-        if (_cache.TryGetValue<IReadOnlyList<HealthAlert>>(cacheKey, out var cached))
+        var cached = await _cache.GetAsync<IReadOnlyList<HealthAlert>>(cacheKey, cancellationToken);
+        if (cached is not null)
         {
             _metrics?.RecordCacheAccess(cacheKey, hit: true);
-            return cached ?? Array.Empty<HealthAlert>();
+            return cached;
         }
 
         _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var alerts = await _alertRepository.ListByTerritoryAsync(territoryId, cancellationToken);
-        _cache.Set(cacheKey, alerts, Constants.Cache.AlertExpiration);
+        await _cache.SetAsync(cacheKey, alerts, Constants.Cache.AlertExpiration, cancellationToken);
 
         return alerts;
     }
@@ -49,8 +50,16 @@ public sealed class AlertCacheService
     /// <summary>
     /// Invalidates cache for a territory's alerts.
     /// </summary>
+    public async Task InvalidateTerritoryAlertsAsync(Guid territoryId, CancellationToken cancellationToken = default)
+    {
+        await _cache.RemoveAsync($"alerts:{territoryId}", cancellationToken);
+    }
+
+    /// <summary>
+    /// Invalidates cache for a territory's alerts (synchronous version for backward compatibility).
+    /// </summary>
     public void InvalidateTerritoryAlerts(Guid territoryId)
     {
-        _cache.Remove($"alerts:{territoryId}");
+        InvalidateTerritoryAlertsAsync(territoryId).GetAwaiter().GetResult();
     }
 }

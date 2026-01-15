@@ -5,7 +5,7 @@ using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
-using Microsoft.Extensions.Caching.Memory;
+using Araponga.Tests.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -18,7 +18,8 @@ public sealed class CacheInvalidationTests
     {
         var dataStore = new InMemoryDataStore();
         var services = new ServiceCollection();
-        services.AddMemoryCache();
+        var cacheService = CacheTestHelper.CreateDistributedCacheService();
+        services.AddSingleton<IDistributedCacheService>(_ => cacheService);
         services.AddSingleton<InMemoryDataStore>(dataStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<AccessEvaluator>(sp =>
@@ -30,7 +31,7 @@ public sealed class CacheInvalidationTests
             var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
             var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
             var featureFlags = new InMemoryFeatureFlagService();
-            var cache = sp.GetRequiredService<IMemoryCache>();
+            var cache = sp.GetRequiredService<IDistributedCacheService>();
 
             var accessRules = new MembershipAccessRules(
                 membershipRepository,
@@ -73,9 +74,10 @@ public sealed class CacheInvalidationTests
         Assert.True(hasPermission);
 
         // Verificar que está em cache
-        var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+        var cache = serviceProvider.GetRequiredService<IDistributedCacheService>();
         var cacheKey = $"system:permission:{userId}:{permissionType}";
-        Assert.True(cache.TryGetValue(cacheKey, out _));
+        var exists = await cache.ExistsAsync(cacheKey, CancellationToken.None);
+        Assert.True(exists);
 
         // Revogar permissão
         permission.Revoke(Guid.NewGuid(), DateTime.UtcNow);
@@ -90,7 +92,8 @@ public sealed class CacheInvalidationTests
         await eventBus.PublishAsync(revokedEvent, CancellationToken.None);
 
         // Verificar que cache foi invalidado
-        Assert.False(cache.TryGetValue(cacheKey, out _));
+        var stillExists = await cache.ExistsAsync(cacheKey, CancellationToken.None);
+        Assert.False(stillExists);
     }
 
     [Fact]
@@ -98,7 +101,8 @@ public sealed class CacheInvalidationTests
     {
         var dataStore = new InMemoryDataStore();
         var services = new ServiceCollection();
-        services.AddMemoryCache();
+        var cacheService = CacheTestHelper.CreateDistributedCacheService();
+        services.AddSingleton<IDistributedCacheService>(_ => cacheService);
         services.AddSingleton<InMemoryDataStore>(dataStore);
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
@@ -111,7 +115,7 @@ public sealed class CacheInvalidationTests
             var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
             var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
             var featureFlags = new InMemoryFeatureFlagService();
-            var cache = sp.GetRequiredService<IMemoryCache>();
+            var cache = sp.GetRequiredService<IDistributedCacheService>();
 
             var accessRules = new MembershipAccessRules(
                 membershipRepository,
@@ -168,7 +172,7 @@ public sealed class CacheInvalidationTests
         Assert.Equal(MembershipRole.Resident, role);
 
         // Verificar que está em cache
-        var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+        var cache = serviceProvider.GetRequiredService<IDistributedCacheService>();
         var residentCacheKey = $"membership:resident:{userId}:{territoryId}";
         var roleCacheKey = $"membership:role:{userId}:{territoryId}";
         
@@ -176,8 +180,8 @@ public sealed class CacheInvalidationTests
         var isResident = await accessEvaluator.IsResidentAsync(userId, territoryId, CancellationToken.None);
         
         // Verificar que ambos estão em cache
-        Assert.True(cache.TryGetValue(residentCacheKey, out _));
-        Assert.True(cache.TryGetValue(roleCacheKey, out _));
+        Assert.True(await cache.ExistsAsync(residentCacheKey, CancellationToken.None));
+        Assert.True(await cache.ExistsAsync(roleCacheKey, CancellationToken.None));
 
         // Revogar capability
         capability.Revoke(DateTime.UtcNow);
@@ -193,8 +197,8 @@ public sealed class CacheInvalidationTests
         await eventBus.PublishAsync(revokedEvent, CancellationToken.None);
 
         // Verificar que cache foi invalidado
-        Assert.False(cache.TryGetValue(residentCacheKey, out _));
-        Assert.False(cache.TryGetValue(roleCacheKey, out _));
+        Assert.False(await cache.ExistsAsync(residentCacheKey, CancellationToken.None));
+        Assert.False(await cache.ExistsAsync(roleCacheKey, CancellationToken.None));
     }
 
     [Fact]
@@ -202,7 +206,8 @@ public sealed class CacheInvalidationTests
     {
         var dataStore = new InMemoryDataStore();
         var services = new ServiceCollection();
-        services.AddMemoryCache();
+        var cacheService = CacheTestHelper.CreateDistributedCacheService();
+        services.AddSingleton<IDistributedCacheService>(_ => cacheService);
         services.AddSingleton<InMemoryDataStore>(dataStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<AccessEvaluator>(sp =>
@@ -214,7 +219,7 @@ public sealed class CacheInvalidationTests
             var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
             var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
             var featureFlags = new InMemoryFeatureFlagService();
-            var cache = sp.GetRequiredService<IMemoryCache>();
+            var cache = sp.GetRequiredService<IDistributedCacheService>();
 
             var accessRules = new MembershipAccessRules(
                 membershipRepository,
@@ -262,16 +267,18 @@ public sealed class CacheInvalidationTests
         Assert.True(hasPermission);
 
         // Verificar que está em cache
-        var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+        var cache = serviceProvider.GetRequiredService<IDistributedCacheService>();
         var cacheKey = $"system:permission:{userId}:{permissionType}";
-        Assert.True(cache.TryGetValue(cacheKey, out _));
+        var exists = await cache.ExistsAsync(cacheKey, CancellationToken.None);
+        Assert.True(exists);
 
         // Revogar usando serviço
         var result = await service.RevokeAsync(permission.Id, Guid.NewGuid(), CancellationToken.None);
         Assert.True(result.IsSuccess);
 
         // Verificar que cache foi invalidado
-        Assert.False(cache.TryGetValue(cacheKey, out _));
+        var stillExists = await cache.ExistsAsync(cacheKey, CancellationToken.None);
+        Assert.False(stillExists);
     }
 
     [Fact]
@@ -279,7 +286,8 @@ public sealed class CacheInvalidationTests
     {
         var dataStore = new InMemoryDataStore();
         var services = new ServiceCollection();
-        services.AddMemoryCache();
+        var cacheService = CacheTestHelper.CreateDistributedCacheService();
+        services.AddSingleton<IDistributedCacheService>(_ => cacheService);
         services.AddSingleton<InMemoryDataStore>(dataStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
@@ -292,7 +300,7 @@ public sealed class CacheInvalidationTests
             var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
             var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
             var featureFlags = new InMemoryFeatureFlagService();
-            var cache = sp.GetRequiredService<IMemoryCache>();
+            var cache = sp.GetRequiredService<IDistributedCacheService>();
 
             var accessRules = new MembershipAccessRules(
                 membershipRepository,
@@ -357,18 +365,18 @@ public sealed class CacheInvalidationTests
         var isResident = await accessEvaluator.IsResidentAsync(userId, territoryId, CancellationToken.None);
 
         // Verificar que está em cache
-        var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+        var cache = serviceProvider.GetRequiredService<IDistributedCacheService>();
         var residentCacheKey = $"membership:resident:{userId}:{territoryId}";
         var roleCacheKey = $"membership:role:{userId}:{territoryId}";
-        Assert.True(cache.TryGetValue(residentCacheKey, out _));
-        Assert.True(cache.TryGetValue(roleCacheKey, out _));
+        Assert.True(await cache.ExistsAsync(residentCacheKey, CancellationToken.None));
+        Assert.True(await cache.ExistsAsync(roleCacheKey, CancellationToken.None));
 
         // Revogar usando serviço
         var result = await service.RevokeAsync(capability.Id, Guid.NewGuid(), CancellationToken.None);
         Assert.True(result.IsSuccess);
 
         // Verificar que cache foi invalidado
-        Assert.False(cache.TryGetValue(residentCacheKey, out _));
-        Assert.False(cache.TryGetValue(roleCacheKey, out _));
+        Assert.False(await cache.ExistsAsync(residentCacheKey, CancellationToken.None));
+        Assert.False(await cache.ExistsAsync(roleCacheKey, CancellationToken.None));
     }
 }

@@ -1,22 +1,22 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Map;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Araponga.Application.Services;
 
 /// <summary>
 /// Service for caching map entity data to reduce database queries.
+/// Uses distributed cache (Redis) with automatic fallback to memory cache.
 /// </summary>
 public sealed class MapEntityCacheService
 {
     private readonly IMapRepository _mapRepository;
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCacheService _cache;
     private readonly CacheMetricsService? _metrics;
 
     public MapEntityCacheService(
         IMapRepository mapRepository, 
-        IMemoryCache cache,
+        IDistributedCacheService cache,
         CacheMetricsService? metrics = null)
     {
         _mapRepository = mapRepository;
@@ -32,16 +32,17 @@ public sealed class MapEntityCacheService
         CancellationToken cancellationToken)
     {
         var cacheKey = $"mapentities:{territoryId}";
-        if (_cache.TryGetValue<IReadOnlyList<MapEntity>>(cacheKey, out var cached))
+        var cached = await _cache.GetAsync<IReadOnlyList<MapEntity>>(cacheKey, cancellationToken);
+        if (cached is not null)
         {
             _metrics?.RecordCacheAccess(cacheKey, hit: true);
-            return cached ?? Array.Empty<MapEntity>();
+            return cached;
         }
 
         _metrics?.RecordCacheAccess(cacheKey, hit: false);
 
         var entities = await _mapRepository.ListByTerritoryAsync(territoryId, cancellationToken);
-        _cache.Set(cacheKey, entities, Constants.Cache.MapEntityExpiration);
+        await _cache.SetAsync(cacheKey, entities, Constants.Cache.MapEntityExpiration, cancellationToken);
 
         return entities;
     }
@@ -49,8 +50,16 @@ public sealed class MapEntityCacheService
     /// <summary>
     /// Invalidates cache for a territory's map entities.
     /// </summary>
+    public async Task InvalidateTerritoryEntitiesAsync(Guid territoryId, CancellationToken cancellationToken = default)
+    {
+        await _cache.RemoveAsync($"mapentities:{territoryId}", cancellationToken);
+    }
+
+    /// <summary>
+    /// Invalidates cache for a territory's map entities (synchronous version for backward compatibility).
+    /// </summary>
     public void InvalidateTerritoryEntities(Guid territoryId)
     {
-        _cache.Remove($"mapentities:{territoryId}");
+        InvalidateTerritoryEntitiesAsync(territoryId).GetAwaiter().GetResult();
     }
 }

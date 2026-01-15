@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Caching.Memory;
+using Araponga.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Araponga.Application.Services;
@@ -9,10 +9,10 @@ namespace Araponga.Application.Services;
 /// </summary>
 public sealed class CacheInvalidationService
 {
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCacheService _cache;
     private readonly ILogger<CacheInvalidationService> _logger;
 
-    public CacheInvalidationService(IMemoryCache cache, ILogger<CacheInvalidationService> logger)
+    public CacheInvalidationService(IDistributedCacheService cache, ILogger<CacheInvalidationService> logger)
     {
         _cache = cache;
         _logger = logger;
@@ -247,7 +247,7 @@ public sealed class CacheInvalidationService
             else
             {
                 // Chave específica - pode invalidar diretamente
-                _cache.Remove(pattern);
+                _cache.RemoveAsync(pattern).GetAwaiter().GetResult();
             }
         }
     }
@@ -255,10 +255,18 @@ public sealed class CacheInvalidationService
     /// <summary>
     /// Invalida uma chave específica de cache.
     /// </summary>
+    public async Task InvalidateKeyAsync(string key, CancellationToken cancellationToken = default)
+    {
+        await _cache.RemoveAsync(key, cancellationToken);
+        _logger.LogDebug("Invalidated cache key: {Key}", key);
+    }
+
+    /// <summary>
+    /// Invalida uma chave específica de cache (synchronous version for backward compatibility).
+    /// </summary>
     public void InvalidateKey(string key)
     {
-        _cache.Remove(key);
-        _logger.LogDebug("Invalidated cache key: {Key}", key);
+        InvalidateKeyAsync(key).GetAwaiter().GetResult();
     }
 
     /// <summary>

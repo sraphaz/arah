@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Membership;
@@ -8,7 +9,15 @@ namespace Araponga.Application.Events;
 
 public sealed class ReportCreatedNotificationHandler : IEventHandler<ReportCreatedEvent>
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        WriteIndented = false,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        MaxDepth = 64,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles
+    };
     private readonly IMembershipCapabilityRepository _capabilityRepository;
     private readonly ITerritoryMembershipRepository _membershipRepository;
     private readonly IOutbox _outbox;

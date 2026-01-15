@@ -7,10 +7,6 @@ namespace Araponga.Application.Services;
 
 public sealed class ReportService
 {
-    private static readonly TimeSpan DuplicateWindow = TimeSpan.FromHours(24);
-    private static readonly TimeSpan ThresholdWindow = TimeSpan.FromDays(7);
-    private static readonly TimeSpan SanctionDuration = TimeSpan.FromDays(7);
-    private const int ReportThreshold = 3;
     private readonly IReportRepository _reportRepository;
     private readonly IFeedRepository _feedRepository;
     private readonly IUserRepository _userRepository;
@@ -204,14 +200,14 @@ public sealed class ReportService
         Domain.Feed.CommunityPost post,
         CancellationToken cancellationToken)
     {
-        var sinceUtc = DateTime.UtcNow.Subtract(ThresholdWindow);
+        var sinceUtc = DateTime.UtcNow.Subtract(Constants.Moderation.ThresholdWindow);
         var reportCount = await _reportRepository.CountDistinctReportersAsync(
             ReportTargetType.Post,
             report.TargetId,
             sinceUtc,
             cancellationToken);
 
-        if (reportCount < ReportThreshold)
+        if (reportCount < Constants.Moderation.ReportThreshold)
         {
             return;
         }
@@ -234,14 +230,14 @@ public sealed class ReportService
         ModerationReport report,
         CancellationToken cancellationToken)
     {
-        var sinceUtc = DateTime.UtcNow.Subtract(ThresholdWindow);
+        var sinceUtc = DateTime.UtcNow.Subtract(Constants.Moderation.ThresholdWindow);
         var reportCount = await _reportRepository.CountDistinctReportersAsync(
             ReportTargetType.User,
             report.TargetId,
             sinceUtc,
             cancellationToken);
 
-        if (reportCount < ReportThreshold)
+        if (reportCount < Constants.Moderation.ReportThreshold)
         {
             return;
         }
@@ -268,7 +264,7 @@ public sealed class ReportService
             $"Automatic threshold reached for {report.TargetType}.",
             SanctionStatus.Active,
             DateTime.UtcNow,
-            DateTime.UtcNow.Add(SanctionDuration),
+            DateTime.UtcNow.Add(Constants.Moderation.SanctionDuration),
             DateTime.UtcNow);
 
         await _sanctionRepository.AddAsync(sanction, cancellationToken);

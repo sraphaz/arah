@@ -154,4 +154,30 @@ public static class Constants
         /// </summary>
         public const int WritePermitLimit = 30;
     }
+
+    /// <summary>
+    /// Constantes de moderação.
+    /// </summary>
+    public static class Moderation
+    {
+        /// <summary>
+        /// Janela de tempo para considerar reports duplicados (24 horas).
+        /// </summary>
+        public static readonly TimeSpan DuplicateWindow = TimeSpan.FromHours(24);
+
+        /// <summary>
+        /// Janela de tempo para avaliar threshold de reports (7 dias).
+        /// </summary>
+        public static readonly TimeSpan ThresholdWindow = TimeSpan.FromDays(7);
+
+        /// <summary>
+        /// Duração padrão de sanção (7 dias).
+        /// </summary>
+        public static readonly TimeSpan SanctionDuration = TimeSpan.FromDays(7);
+
+        /// <summary>
+        /// Threshold de reports para aplicar sanção automática (3 reports).
+        /// </summary>
+        public const int ReportThreshold = 3;
+    }
 }

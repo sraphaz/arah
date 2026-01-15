@@ -230,14 +230,18 @@ backend/
 - ✅ Notificações in-app com outbox e inbox persistido
 - ✅ Sistema confiável de entrega de notificações
 
-#### Produção e Observabilidade
-- ✅ JWT secret via variáveis de ambiente (segurança)
-- ✅ HTTPS obrigatório em produção
-- ✅ Rate limiting (proteção contra DDoS)
+#### Segurança e Produção
+- ✅ JWT secret via variáveis de ambiente (obrigatório, mínimo 32 caracteres)
+- ✅ HTTPS obrigatório em produção com HSTS
+- ✅ Rate limiting completo (proteção contra DDoS e abuso):
+  - Auth endpoints: 5 req/min
+  - Feed endpoints: 100 req/min
+  - Write endpoints: 30 req/min
+- ✅ Security headers em todas as respostas (X-Frame-Options, CSP, etc.)
+- ✅ Validação completa de input (14 validators FluentValidation)
+- ✅ CORS configurado com validação em produção
 - ✅ Health checks completos (liveness e readiness)
 - ✅ Logging estruturado (Serilog)
-- ✅ CORS configurável
-- ✅ Validação de entrada (FluentValidation)
 - ✅ Connection pooling e retry policies
 - ✅ Índices de banco para performance
 
@@ -300,7 +304,13 @@ Para rodar em produção, configure as variáveis de ambiente:
 
 **Obrigatório**:
 ```bash
-JWT__SIGNINGKEY=<secret-forte-de-pelo-menos-32-bytes>
+# JWT Secret - Mínimo 32 caracteres
+# Gere com: openssl rand -base64 32
+JWT__SIGNINGKEY=<secret-forte-de-pelo-menos-32-caracteres>
+
+# CORS Origins - Não pode ser wildcard (*) em produção
+Cors__AllowedOrigins__0=https://app.araponga.com
+Cors__AllowedOrigins__1=https://www.araponga.com
 ```
 
 **Opcional** (se usar Postgres):
@@ -310,16 +320,21 @@ Persistence__Provider=Postgres
 Persistence__ApplyMigrations=true
 ```
 
-**Opcional** (configurar CORS):
+**Opcional** (ajustar rate limiting):
 ```json
 {
-  "Cors": {
-    "AllowedOrigins": ["https://araponga.app", "https://www.araponga.app"]
+  "RateLimiting": {
+    "PermitLimit": 60,
+    "WindowSeconds": 60,
+    "QueueLimit": 0
   }
 }
 ```
 
-Mais detalhes em [`docs/50_PRODUCAO_AVALIACAO_COMPLETA.md`](./docs/50_PRODUCAO_AVALIACAO_COMPLETA.md).
+**Documentação Completa**:
+- [Configuração de Segurança](./docs/SECURITY_CONFIGURATION.md) - Guia completo de configuração
+- [Avaliação para Produção](./docs/50_PRODUCAO_AVALIACAO_COMPLETA.md) - Checklist completo
+- [Política de Segurança](./SECURITY.md) - Medidas de segurança implementadas
 
 ### Portal de autosserviço
 

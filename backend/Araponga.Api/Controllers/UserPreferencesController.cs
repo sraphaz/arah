@@ -3,6 +3,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -49,9 +50,11 @@ public sealed class UserPreferencesController : ControllerBase
     /// Atualiza as preferências de privacidade do usuário autenticado.
     /// </summary>
     [HttpPut("privacy")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(UserPreferencesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<UserPreferencesResponse>> UpdatePrivacyPreferences(
         [FromBody] UpdatePrivacyPreferencesRequest request,
         CancellationToken cancellationToken)
@@ -87,9 +90,11 @@ public sealed class UserPreferencesController : ControllerBase
     /// Atualiza as preferências de notificações do usuário autenticado.
     /// </summary>
     [HttpPut("notifications")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(UserPreferencesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<UserPreferencesResponse>> UpdateNotificationPreferences(
         [FromBody] UpdateNotificationPreferencesRequest request,
         CancellationToken cancellationToken)

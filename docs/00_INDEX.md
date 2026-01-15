@@ -40,6 +40,12 @@ Documentos sobre moderação, observabilidade e operações.
 - **Chat**: documentado em `60_API_LÓGICA_NEGÓCIO.md` (seção “Chat”) e no DevPortal/OpenAPI (`backend/Araponga.Api/wwwroot/devportal/openapi.json`)
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
+### 🔒 Segurança
+Documentos sobre segurança, configuração e implementação de medidas de segurança.
+
+- **[Configuração de Segurança](./SECURITY_CONFIGURATION.md)** - Guia completo de configuração de segurança (JWT, Rate Limiting, CORS, HTTPS)
+- **[Fase 1: Implementação de Segurança](./FASE1_IMPLEMENTACAO_RESUMO.md)** - Resumo da implementação da Fase 1 (Segurança Crítica)
+
 ### 📝 Histórico e Mudanças
 Documentos sobre histórico e mudanças do projeto.
 

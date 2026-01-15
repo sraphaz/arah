@@ -37,13 +37,34 @@ builder.Host.UseSerilog((context, configuration) =>
             outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
 });
 
-// Configuration Validation
+// Configuration Validation - JWT Secret
 var jwtSigningKey = builder.Configuration["Jwt:SigningKey"] ?? builder.Configuration["JWT__SIGNINGKEY"];
-if (builder.Environment.IsProduction() && (string.IsNullOrWhiteSpace(jwtSigningKey) || jwtSigningKey == "dev-only-change-me"))
+if (string.IsNullOrWhiteSpace(jwtSigningKey))
 {
     throw new InvalidOperationException(
-        "JWT SigningKey must be configured via environment variable JWT__SIGNINGKEY in production. " +
-        "Never use the default value in production.");
+        "JWT SigningKey must be configured via environment variable JWT__SIGNINGKEY or appsettings.json. " +
+        "Never leave this empty.");
+}
+
+if (jwtSigningKey == "dev-only-change-me")
+{
+    if (builder.Environment.IsProduction())
+    {
+        throw new InvalidOperationException(
+            "JWT SigningKey must be configured via environment variable JWT__SIGNINGKEY in production. " +
+            "Never use the default value in production.");
+    }
+    else if (!builder.Environment.IsEnvironment("Testing"))
+    {
+        Log.Warning("Using default JWT SigningKey. This should be changed in production.");
+    }
+}
+
+// Validate secret strength (minimum 32 characters for production)
+if (builder.Environment.IsProduction() && jwtSigningKey.Length < 32)
+{
+    throw new InvalidOperationException(
+        $"JWT SigningKey must be at least 32 characters long in production. Current length: {jwtSigningKey.Length}");
 }
 
 // Configuration
@@ -54,6 +75,16 @@ builder.Services.Configure<PresencePolicyOptions>(builder.Configuration.GetSecti
 // CORS Configuration
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ??
                      (builder.Environment.IsDevelopment() ? new[] { "*" } : Array.Empty<string>());
+
+if (builder.Environment.IsProduction())
+{
+    if (allowedOrigins == null || allowedOrigins.Length == 0 || allowedOrigins.Contains("*"))
+    {
+        throw new InvalidOperationException(
+            "Cors:AllowedOrigins must be configured with specific origins in production. " +
+            "Wildcard (*) is not allowed in production.");
+    }
+}
 
 builder.Services.AddCors(options =>
 {
@@ -70,7 +101,8 @@ builder.Services.AddCors(options =>
             corsBuilder.WithOrigins(allowedOrigins)
                        .AllowAnyMethod()
                        .AllowAnyHeader()
-                       .AllowCredentials();
+                       .AllowCredentials()
+                       .SetPreflightMaxAge(TimeSpan.FromHours(24));
         }
     });
 });
@@ -78,29 +110,62 @@ builder.Services.AddCors(options =>
 // Rate Limiting Configuration
 builder.Services.AddRateLimiter(options =>
 {
-    options.AddFixedWindowLimiter("global", limiterOptions =>
-    {
-        limiterOptions.PermitLimit = builder.Configuration.GetValue<int>("RateLimiting:PermitLimit", 60);
-        limiterOptions.Window = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("RateLimiting:WindowSeconds", 60));
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit = builder.Configuration.GetValue<int>("RateLimiting:QueueLimit", 0);
-    });
-    
+    // Global limiter (IP-based)
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+    {
+        // Try to get authenticated user ID first, fallback to IP
+        var userId = context.User?.FindFirst("sub")?.Value;
+        var partitionKey = userId ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: partitionKey,
             factory: _ => new FixedWindowRateLimiterOptions
             {
                 PermitLimit = builder.Configuration.GetValue<int>("RateLimiting:PermitLimit", 60),
                 Window = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("RateLimiting:WindowSeconds", 60)),
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                 QueueLimit = builder.Configuration.GetValue<int>("RateLimiting:QueueLimit", 0)
-            }));
+            });
+    });
+    
+    // Auth endpoints - stricter limits (5 req/min)
+    options.AddFixedWindowLimiter("auth", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 5;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 0;
+    });
+    
+    // Feed endpoints - moderate limits (100 req/min)
+    options.AddFixedWindowLimiter("feed", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 100;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 10;
+    });
+    
+    // Write operations - stricter limits (30 req/min)
+    options.AddFixedWindowLimiter("write", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 30;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 5;
+    });
     
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     options.OnRejected = async (context, cancellationToken) =>
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        
+        // Add rate limit headers
+        if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+        {
+            context.HttpContext.Response.Headers.Append("Retry-After", retryAfter.TotalSeconds.ToString());
+        }
+        
         await context.HttpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
             Title = "Too Many Requests",
@@ -192,15 +257,30 @@ builder.Services.AddSwaggerGen(c =>
     c.DocInclusionPredicate((_, __) => true);
 });
 
+// Configure HSTS (deve ser configurado antes de Build())
+builder.Services.AddHsts(options =>
+{
+    options.Preload = true;
+    options.IncludeSubDomains = true;
+    options.MaxAge = TimeSpan.FromDays(365);
+    
+    // Only in production
+    if (!builder.Environment.IsDevelopment() && !builder.Environment.IsEnvironment("Testing"))
+    {
+        options.ExcludedHosts.Clear();
+    }
+});
+
 var app = builder.Build();
 
 // Serilog Request Logging
 app.UseSerilogRequestLogging();
 
-// HTTPS Redirection (Production only)
+// HTTPS Redirection and HSTS (Production only)
 if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Testing"))
 {
     app.UseHttpsRedirection();
+    app.UseHsts();
 }
 
 // Exception Handler
@@ -310,7 +390,9 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseCors("Default");
 
 // IMPORTANTE: No ASP.NET Core, middlewares são executados na ordem de registro (FIFO)
-// O primeiro UseMiddleware registrado é o primeiro a ser executado
+// Security Headers - deve ser um dos primeiros para aplicar em todas as respostas
+app.UseMiddleware<SecurityHeadersMiddleware>();
+
 // Correlation ID middleware - registrado primeiro, executa PRIMEIRO
 // Isso garante que o correlation ID esteja disponível quando o RequestLoggingMiddleware executar
 app.UseMiddleware<CorrelationIdMiddleware>();

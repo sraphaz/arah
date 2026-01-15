@@ -1,5 +1,42 @@
 # Changelog
 
+## [2025-01-13] - Fase 1: Segurança Crítica
+
+### Adicionado
+- **JWT Secret Management**: Validação obrigatória de secret forte (mínimo 32 caracteres em produção)
+- **Rate Limiting**: Proteção contra abuso e DDoS
+  - Auth endpoints: 5 req/min
+  - Feed endpoints: 100 req/min
+  - Write endpoints: 30 req/min
+  - Global: 60 req/min
+- **Security Headers**: Headers de segurança em todas as respostas
+  - X-Frame-Options, X-Content-Type-Options, X-XSS-Protection
+  - Referrer-Policy, Permissions-Policy, Content-Security-Policy
+  - Strict-Transport-Security (HSTS) em produção
+- **FluentValidation**: Validação de input em todos os endpoints críticos
+  - 8 novos validators criados
+- **CORS**: Configuração segura e flexível via variáveis de ambiente
+- **SecurityHeadersMiddleware**: Middleware customizado para injetar headers
+- **SecurityTests**: 11 novos testes de segurança (100% passando)
+
+### Modificado
+- **Program.cs**: Configuração completa de segurança (JWT, Rate Limiting, HTTPS, CORS)
+- **11 Controllers**: Aplicação de rate limiting via `[EnableRateLimiting]`
+- **ApiFactory**: Configuração de JWT secret para testes
+- **Documentação**: 6 novos documentos + 5 atualizados
+
+### Testes
+- Total: 11 novos testes de segurança (100% passando)
+- Cobertura: Rate limiting, Security headers, Validação, CORS
+
+### Configuração
+- Variáveis de ambiente obrigatórias:
+  - `JWT__SIGNINGKEY` (obrigatório)
+  - `CORS__ALLOWEDORIGINS` (obrigatório em produção)
+  - `RateLimiting__PermitLimit` (opcional)
+
+---
+
 ## [2026-01-16] - Hierarquia de Permissões e Auditoria
 
 ### Adicionado

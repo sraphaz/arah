@@ -2,6 +2,7 @@ using Araponga.Api.Contracts.Users;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -48,9 +49,11 @@ public sealed class UserProfileController : ControllerBase
     /// Atualiza o nome de exibição do usuário autenticado.
     /// </summary>
     [HttpPut("display-name")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<UserProfileResponse>> UpdateDisplayName(
         [FromBody] UpdateDisplayNameRequest request,
         CancellationToken cancellationToken)
@@ -78,6 +81,7 @@ public sealed class UserProfileController : ControllerBase
     /// Atualiza as informações de contato do usuário autenticado.
     /// </summary>
     [HttpPut("contact")]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

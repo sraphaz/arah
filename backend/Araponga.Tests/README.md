@@ -1,5 +1,42 @@
 # Guia de Testes - Araponga
 
+## 🔒 Configuração de Segurança para Testes
+
+### JWT Secret
+
+Os testes configuram automaticamente um JWT secret válido via `ApiFactory`. O secret de teste é:
+- `test-secret-key-for-testing-only-minimum-32-chars`
+
+Este secret atende aos requisitos mínimos (32 caracteres) e é usado apenas em ambiente de testes.
+
+**Arquivo**: `backend/Araponga.Tests/appsettings.json`
+
+### Rate Limiting
+
+Em ambiente de testes (`Testing`), os limites de rate limiting são aumentados para evitar falhas nos testes:
+- Configurado em `appsettings.json` do projeto de testes
+- Limites padrão: 1000 req/min (muito maior que produção)
+- Permite que testes de rate limiting funcionem sem serem bloqueados pelos limites globais
+
+**Arquivo**: `backend/Araponga.Tests/appsettings.json`
+
+### Security Headers
+
+Os security headers são aplicados em todos os testes via `SecurityHeadersMiddleware`. Os testes verificam que os headers estão presentes nas respostas.
+
+### Testes de Segurança
+
+A classe `SecurityTests` contém testes específicos para validar todas as medidas de segurança:
+
+- **Rate Limiting**: Testa limites em auth, feed e write endpoints
+- **Security Headers**: Verifica que todos os headers estão presentes
+- **Validação**: Testa validators FluentValidation
+- **CORS**: Verifica configuração de CORS
+
+**Arquivo**: `backend/Araponga.Tests/Api/SecurityTests.cs`
+
+---
+
 ## Princípios de Testes
 
 ### 1. Isolamento Completo

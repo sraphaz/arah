@@ -6,6 +6,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Health;
 using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Araponga.Api.Controllers;
 
@@ -130,7 +131,9 @@ public sealed class AlertsController : ControllerBase
     /// Reporta um alerta ambiental.
     /// </summary>
     [HttpPost]
+    [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(AlertResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AlertResponse>> ReportAlert(

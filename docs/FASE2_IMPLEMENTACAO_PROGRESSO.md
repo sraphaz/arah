@@ -15,8 +15,8 @@
 | Testes de Segurança | 16h | 🟡 Em Progresso | 50% |
 | Estratégia de Cache | 24h | 🟡 Em Progresso | 85% |
 | Paginação Completa | 16h | 🟡 Em Progresso | 50% |
-| Reduzir Duplicação | 16h | 🟡 Em Progresso | 85% |
-| **Total** | **100h** | **🟡 40%** | |
+| Reduzir Duplicação | 16h | 🟡 Em Progresso | 90% |
+| **Total** | **100h** | **🟡 42%** | |
 
 ---
 
@@ -218,19 +218,19 @@
 
 ## 📈 Resumo Executivo
 
-### Progresso Atual: 40%
+### Progresso Atual: 42%
 
 **Implementado:**
 - ✅ 57 novos testes criados (Alerts, Assets, Marketplace, Territories, Events)
 - ✅ CacheInvalidationService criado e integrado em 7 services
 - ✅ Constants.cs com 10 categorias de constantes
 - ✅ ValidationHelpers.cs criado
-- ✅ Refatoração de 11 services para usar constantes
+- ✅ Refatoração de 15 services para usar constantes
 
 **Em Progresso:**
 - ✅ 319/319 testes passando (100%)
 - ✅ Cache invalidation integrado em 9 services
-- 🟡 Refatoração 85% completa
+- 🟡 Refatoração 90% completa
 
 **Próximos Passos:**
 1. ✅ Todos os testes passando (319/319)

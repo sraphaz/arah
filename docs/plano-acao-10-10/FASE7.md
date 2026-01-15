@@ -117,3 +117,53 @@ Quando um checkout é marcado como `Paid`, o dinheiro fica no gateway mas **não
 
 **Status**: ✅ **MODELOS DE DOMÍNIO COMPLETOS**  
 **Próxima Tarefa**: Criar repositórios e migrations
+
+---
+
+### Semana 14: Configuração e Payout
+
+#### 14.1 Configuração de Payout por Território
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Pendente
+
+#### 14.2 Interface de Payout Gateway
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Pendente
+
+#### 14.3 Serviço de Payout
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ✅ Em Progresso
+
+**Tarefas**:
+- [x] Criar `SellerPayoutService`
+- [x] Integrar com checkout: quando checkout = `Paid`, criar `SellerTransaction`
+- [x] Implementar cálculo de valores (subtotal - fees = valor líquido)
+- [x] Atualizar `SellerBalance` após criação de transação
+- [x] Criar rastreabilidade completa (FinancialTransaction)
+- [x] Criar PlatformRevenueTransaction para fees
+- [x] Atualizar PlatformFinancialBalance
+- [ ] Implementar lógica de retenção (período configurável)
+- [ ] Implementar lógica de valor mínimo (acumular até atingir)
+- [ ] Implementar payout automático
+- [ ] Criar work items para fallback (usar sistema Outbox existente)
+- [ ] Integrar com `IPayoutGateway`
+
+**Arquivos Criados**:
+- `backend/Araponga.Application/Services/SellerPayoutService.cs` ✅
+
+**Arquivos Modificados**:
+- `backend/Araponga.Application/Interfaces/ICheckoutRepository.cs` ✅ (adicionado GetByIdAsync)
+- `backend/Araponga.Infrastructure/Postgres/PostgresCheckoutRepository.cs` ✅
+- `backend/Araponga.Infrastructure/InMemory/InMemoryCheckoutRepository.cs` ✅
+
+**Critérios de Sucesso**:
+- ✅ Quando checkout = `Paid`, `SellerTransaction` é criada automaticamente
+- ✅ Saldo do vendedor é atualizado corretamente
+- ✅ Rastreabilidade completa implementada
+- ⚠️ Payout automático funcionando (pendente)
+- ⚠️ Work items para fallback funcionando (pendente)
+
+---
+
+**Status**: ✅ **FUNDAÇÃO COMPLETA + SELLERPAYOUTSERVICE CRIADO**  
+**Próxima Tarefa**: Configuração de Payout e Interface de Gateway

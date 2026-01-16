@@ -75,6 +75,15 @@ Esta pasta contém a documentação detalhada de todos os Pull Requests implemen
 - **[PR_FIX_ENCODING_DEVPORTAL.md](./PR_FIX_ENCODING_DEVPORTAL.md)**  
   Correção de encoding de caracteres no DevPortal
 
+### 📊 Documentação e Visualização
+
+- **[PR_DEVPORTAL_DIAGRAMAS_SEQUENCIA.md](./PR_DEVPORTAL_DIAGRAMAS_SEQUENCIA.md)**  
+  Integração de diagramas de sequência interativos no DevPortal (100% completo ✅)
+  - Diagramas Mermaid.js para 6 fluxos principais
+  - Acordeões expansíveis harmoniosos
+  - Lazy loading e renderização sob demanda
+  - Tema personalizado alinhado ao devportal
+
 - **[PR_FIX_GITHUB_PAGES_TIMEOUT.md](./PR_FIX_GITHUB_PAGES_TIMEOUT.md)**  
   Correção de timeout no deploy do GitHub Pages
 

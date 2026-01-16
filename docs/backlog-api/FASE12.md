@@ -788,5 +788,5 @@ POST /api/v1/users/me/devices
 
 ---
 
-**Status**: ⏳ **FASE 10 PENDENTE**  
+**Status**: ⏳ **FASE 12 PENDENTE**  
 **Última Fase**: Conclusão do Backlog API

@@ -170,7 +170,7 @@ Este PR implementa observabilidade completa no sistema Araponga, incluindo logs 
 - ✅ `docs/RUNBOOK.md` - Runbook de operações
 - ✅ `docs/TROUBLESHOOTING.md` - Troubleshooting comum
 - ✅ `docs/INCIDENT_PLAYBOOK.md` - Playbook de incidentes
-- ✅ `docs/FASE4_IMPLEMENTACAO_RESUMO.md` - Resumo completo
+- ✅ `docs/backlog-api/implementacoes/FASE4_IMPLEMENTACAO_RESUMO.md` - Resumo completo
 - ✅ `docs/backlog-api/FASE4.md` - Plano atualizado
 
 ---
@@ -198,7 +198,7 @@ Este PR implementa observabilidade completa no sistema Araponga, incluindo logs 
 ## 🔗 Links Relacionados
 
 - [FASE4.md](../backlog-api/FASE4.md) - Plano completo da Fase 4
-- [FASE4_IMPLEMENTACAO_RESUMO.md](../FASE4_IMPLEMENTACAO_RESUMO.md) - Resumo detalhado
+- [FASE4_IMPLEMENTACAO_RESUMO.md](../backlog-api/implementacoes/FASE4_IMPLEMENTACAO_RESUMO.md) - Resumo detalhado
 - [METRICS.md](../METRICS.md) - Documentação de métricas
 - [MONITORING.md](../MONITORING.md) - Dashboards e alertas
 - [RUNBOOK.md](../RUNBOOK.md) - Runbook de operações

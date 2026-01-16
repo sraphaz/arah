@@ -1893,10 +1893,16 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                    // Remove conteúdo entre tags style (caso alguma tag tenha escapado)
                    .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '')
                    // Remove TODAS as tags de fechamento XML/HTML (</qualquercoisa>)
-                   // IMPORTANTE: Executar múltiplas vezes para remover tags aninhadas
+                   // IMPORTANTE: Executar múltiplas vezes para remover tags aninhadas e incompletas
+                   // Remove tags completas: </territory>, </feeditemresponse>
                    .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '') // Segunda passagem
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '') // Terceira passagem
+                   // Remove tags incompletas: </terri (sem fechamento >)
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
+                   // Segunda e terceira passagem para garantir remoção completa
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
                    // Remove tags de abertura XML/HTML (tags começam com minúscula)
                    // Preserva tipos genéricos protegidos como &lt;Territory&gt;
                    .replace(/<([a-z][a-zA-Z0-9-]+)(?:\s+[^>]*)?\s*>/gi, '')

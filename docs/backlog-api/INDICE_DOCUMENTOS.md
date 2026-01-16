@@ -1,10 +1,7 @@
 # Índice de Documentos - Backlog API
 
 **Data**: 2025-01-13  
-**Última Atualização**: 2025-01-16
-
-**Data**: 2025-01-13  
-**Última Atualização**: 2025-01-13
+**Última Atualização**: 2025-01-17
 
 ---
 
@@ -99,6 +96,13 @@
 40. **[FASE21.md](./FASE21.md)** - Suporte a Criptomoedas
 41. **[FASE19.md](./FASE19.md)** - Arquitetura Modular
 
+#### Onda 7: Autonomia Digital e Economia Circular (Novas Fases)
+
+42. **[FASE25.md](./FASE25.md)** - Hub de Serviços Digitais Base
+43. **[FASE26.md](./FASE26.md)** - Chat com IA e Consumo Consciente
+44. **[FASE27.md](./FASE27.md)** - Negociação Territorial e Assinatura Coletiva
+45. **[FASE28.md](./FASE28.md)** - Banco de Sementes e Mudas Territorial
+
 ---
 
 ### 📁 Subpastas
@@ -116,12 +120,12 @@
 - **Resumos**: RESUMO_EXECUTIVO_ESTRATEGICO.md, RESUMO_REORGANIZACAO_FINAL.md
 - **Roadmaps**: ROADMAP_VISUAL.md
 - **Análises**: ANALISE_IMPACTO_FASES_11_14.md
-- **Fases**: FASE1.md até FASE24.md
+- **Fases**: FASE1.md até FASE28.md
 
 ### Por Prioridade
 
-- **🔴 Crítico**: FASE8, FASE9, FASE10, FASE13, FASE14, FASE18, FASE23
-- **🟡 Importante**: FASE11, FASE12, FASE15, FASE16, FASE17, FASE20, FASE22, FASE24
+- **🔴 Crítico**: FASE8, FASE9, FASE10, FASE13, FASE14, FASE18, FASE23, FASE25, FASE26, FASE27
+- **🟡 Importante**: FASE11, FASE12, FASE15, FASE16, FASE17, FASE20, FASE22, FASE24, FASE28
 - **🟢 Opcional**: FASE19, FASE21
 
 ---

@@ -9,6 +9,7 @@ using Araponga.Api.Contracts.Events;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Contracts.Marketplace;
 using Araponga.Api.Contracts.Media;
+using Araponga.Api.Contracts.Territories;
 using Xunit;
 
 namespace Araponga.Tests.Api;
@@ -36,6 +37,22 @@ public sealed class MediaInContentIntegrationTests
         response.EnsureSuccessStatusCode();
         var payload = await response.Content.ReadFromJsonAsync<SocialLoginResponse>();
         return payload!.Token;
+    }
+
+    private static async Task SelectTerritoryAsync(HttpClient client, Guid territoryId)
+    {
+        var response = await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(territoryId));
+        response.EnsureSuccessStatusCode();
+    }
+
+    private static async Task BecomeResidentAsync(HttpClient client, Guid territoryId)
+    {
+        var response = await client.PostAsync(
+            $"api/v1/memberships/{territoryId}/become-resident",
+            null);
+        response.EnsureSuccessStatusCode();
     }
 
     private static async Task<Guid> UploadTestMediaAsync(HttpClient client, string testId)
@@ -81,6 +98,10 @@ public sealed class MediaInContentIntegrationTests
         var token = await LoginForTokenAsync(client, "google", "post-media-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "post-media-session");
+
+        // Tornar-se resident
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
 
         // Upload de 2 mídias
         var mediaId1 = await UploadTestMediaAsync(client, "post-1");
@@ -145,6 +166,10 @@ public sealed class MediaInContentIntegrationTests
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "feed-media-session");
 
+        // Tornar-se resident
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
+
         // Upload e criar post com mídia
         var mediaId = await UploadTestMediaAsync(client, "feed-post");
         await client.PostAsJsonAsync(
@@ -180,6 +205,10 @@ public sealed class MediaInContentIntegrationTests
         var token = await LoginForTokenAsync(client, "google", "post-invalid-media-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "post-invalid-media-session");
+
+        // Tornar-se resident
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
 
         // Tentar criar post com mídia inexistente
         var invalidMediaId = Guid.NewGuid();
@@ -285,6 +314,10 @@ public sealed class MediaInContentIntegrationTests
         var token = await LoginForTokenAsync(client, "google", "item-media-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
+        // Tornar-se resident
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
+
         // Primeiro criar uma store
         var storeResponse = await client.PostAsJsonAsync(
             "api/v1/stores",
@@ -339,6 +372,10 @@ public sealed class MediaInContentIntegrationTests
         var token = await LoginForTokenAsync(client, "google", "item-media-limit-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
+        // Tornar-se resident
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
+
         // Criar store
         var storeResponse = await client.PostAsJsonAsync(
             "api/v1/stores",
@@ -384,6 +421,10 @@ public sealed class MediaInContentIntegrationTests
 
         var token = await LoginForTokenAsync(client, "google", "items-media-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        // Tornar-se resident
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
 
         // Criar store e item com mídia
         var storeResponse = await client.PostAsJsonAsync(
@@ -536,6 +577,8 @@ public sealed class MediaInContentIntegrationTests
         var token1 = await LoginForTokenAsync(client, "google", "user1-media");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token1);
         client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "user1-session");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
         var mediaId = await UploadTestMediaAsync(client, "user1-media");
 
         // Usuário 2: tentar usar mídia do usuário 1
@@ -543,6 +586,8 @@ public sealed class MediaInContentIntegrationTests
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token2);
         client.DefaultRequestHeaders.Remove(ApiHeaders.SessionId);
         client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "user2-session");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+        await BecomeResidentAsync(client, ActiveTerritoryId);
 
         var createResponse = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",

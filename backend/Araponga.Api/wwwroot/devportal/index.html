@@ -1877,8 +1877,11 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                    .replace(/&amp;/g, '&'); // Decodifica &amp; por último
                  
                  // Primeiro proteger tipos genéricos C# (como List<Territory>, PagedResult<CommunityPost>)
-                 // Padrão: Letra<TipoComLetraMaiuscula> -> Letra&lt;TipoComLetraMaiuscula&gt;
-                 var protectedContent = tempContent.replace(/([a-zA-Z0-9])<([A-Z][a-zA-Z0-9]+)>/g, '$1&lt;$2&gt;');
+                 // Padrão: Palavra<TipoComLetraMaiuscula> -> Palavra&lt;TipoComLetraMaiuscula&gt;
+                 // Regex melhorado: captura palavra completa antes de < (sem espaço)
+                 var protectedContent = tempContent.replace(/([a-zA-Z][a-zA-Z0-9]*[a-zA-Z0-9]|[a-zA-Z])<([A-Z][a-zA-Z0-9]+)>/g, function(match, prefix, type) {
+                   return prefix + '&lt;' + type + '&gt;';
+                 });
                  
                  var cleanedDiagramContent = protectedContent
                    // Remove tags <script> com todas variações (espaços, atributos, etc)
@@ -1889,8 +1892,17 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                    .replace(/<\/?\s*style\s*(?:\s+[^>]*)?\s*>/gi, '')
                    // Remove conteúdo entre tags style (caso alguma tag tenha escapado)
                    .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '')
-                   // Remove tags de fechamento explícitas (</tag>, </tag >)
+                   // Remove TODAS as tags de fechamento XML/HTML (</qualquercoisa>)
+                   // IMPORTANTE: Executar múltiplas vezes para remover tags aninhadas e incompletas
+                   // Remove tags completas: </territory>, </feeditemresponse>
                    .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                   // Remove tags incompletas: </terri (sem fechamento >)
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
+                   // Segunda e terceira passagem para garantir remoção completa
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
                    // Remove tags de abertura XML/HTML (tags começam com minúscula)
                    // Preserva tipos genéricos protegidos como &lt;Territory&gt;
                    .replace(/<([a-z][a-zA-Z0-9-]+)(?:\s+[^>]*)?\s*>/gi, '')

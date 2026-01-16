@@ -61,11 +61,27 @@ public sealed class MediaServiceTests
         _storageServiceMock.Setup(s => s.UploadAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(storageKey);
 
+        // Configurar dimensões para imagem
         _processingServiceMock.Setup(p => p.GetImageDimensionsAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((100, 200));
 
+        // Configurar o mock do repositório para aceitar o MediaAsset
+        var mediaAssetRepositoryMock = new Mock<IMediaAssetRepository>();
+        mediaAssetRepositoryMock.Setup(r => r.AddAsync(It.IsAny<MediaAsset>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        // Recriar o MediaService com o mock do repositório configurado
+        var mediaService = new MediaService(
+            mediaAssetRepositoryMock.Object,
+            new Mock<IMediaAttachmentRepository>().Object,
+            _storageServiceMock.Object,
+            _processingServiceMock.Object,
+            _validatorMock.Object,
+            _auditLogger,
+            _unitOfWork);
+
         // Act
-        var result = await _mediaService.UploadMediaAsync(fileStream, mimeType, fileName, userId, CancellationToken.None);
+        var result = await mediaService.UploadMediaAsync(fileStream, mimeType, fileName, userId, CancellationToken.None);
 
         // Assert
         Assert.True(result.IsSuccess);

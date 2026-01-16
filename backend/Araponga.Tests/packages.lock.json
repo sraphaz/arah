@@ -925,8 +925,8 @@
       },
       "SixLabors.ImageSharp": {
         "type": "Transitive",
-        "resolved": "3.1.6",
-        "contentHash": "dHQ5jugF9v+5/LCVHCWVzaaIL6WOehqJy6eju/0VFYFPEj2WtqkGPoEV9EVQP83dHsdoqYaTuWpZdwAd37UwfA=="
+        "resolved": "3.1.12",
+        "contentHash": "iAg6zifihXEFS/t7fiHhZBGAdCp3FavsF4i2ZIDp0JfeYeDVzvmlbY1CNhhIKimaIzrzSi5M/NBFcWvZT2rB/A=="
       },
       "StackExchange.Redis": {
         "type": "Transitive",
@@ -1143,7 +1143,7 @@
           "Microsoft.Extensions.Caching.StackExchangeRedis": "[8.0.11, )",
           "Microsoft.Extensions.Hosting": "[8.0.0, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )",
-          "SixLabors.ImageSharp": "[3.1.6, )"
+          "SixLabors.ImageSharp": "[3.1.12, )"
         }
       },
       "araponga.shared": {

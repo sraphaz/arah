@@ -39,7 +39,11 @@ public sealed class SellerBalance
     public Territory Territory { get; private set; } = null!;
     public User SellerUser { get; private set; } = null!;
     
-    private SellerBalance() { } // EF Core
+    private SellerBalance() 
+    {
+        // Inicializar propriedades para EF Core
+        Currency = string.Empty;
+    } // EF Core
     
     public SellerBalance(
         Guid id,

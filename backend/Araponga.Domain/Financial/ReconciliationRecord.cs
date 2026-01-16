@@ -56,7 +56,11 @@ public sealed class ReconciliationRecord
     // Navigation property
     public Territory Territory { get; private set; } = null!;
     
-    private ReconciliationRecord() { } // EF Core
+    private ReconciliationRecord() 
+    {
+        // Inicializar propriedades para EF Core
+        Currency = string.Empty;
+    } // EF Core
     
     public ReconciliationRecord(
         Guid id,

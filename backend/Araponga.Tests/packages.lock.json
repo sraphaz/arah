@@ -29,6 +29,15 @@
           "Microsoft.TestPlatform.TestHost": "17.11.1"
         }
       },
+      "Moq": {
+        "type": "Direct",
+        "requested": "[4.20.72, )",
+        "resolved": "4.20.72",
+        "contentHash": "EA55cjyNn8eTNWrgrdZJH5QLFp2L43oxl1tlkoYUKIE9pRwL784OWiTXeCV5ApS+AMYEAlt7Fo03A2XfouvHmQ==",
+        "dependencies": {
+          "Castle.Core": "5.1.1"
+        }
+      },
       "Otp.NET": {
         "type": "Direct",
         "requested": "[1.3.0, )",
@@ -63,6 +72,14 @@
         "contentHash": "LKSufHYQhetc2SfCr0jlvQ+f5COn3deM3t63yA/Jh/k7H4Nv+B9CxSl/CN4Jsrc1TohyLV8ow5LwvABouAhvRg==",
         "dependencies": {
           "AWSSDK.Core": "[4.0.3.8, 5.0.0)"
+        }
+      },
+      "Castle.Core": {
+        "type": "Transitive",
+        "resolved": "5.1.1",
+        "contentHash": "rpYtIczkzGpf+EkZgDr9CClTdemhsrwA/W5hMoPjLkRFnXzH44zDLoovXeKtmxb1ykXK9aJVODSpiJml8CTw2g==",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "6.0.0"
         }
       },
       "FluentValidation": {
@@ -858,6 +875,11 @@
           "Serilog.Sinks.File": "5.0.0"
         }
       },
+      "SixLabors.ImageSharp": {
+        "type": "Transitive",
+        "resolved": "3.1.6",
+        "contentHash": "dHQ5jugF9v+5/LCVHCWVzaaIL6WOehqJy6eju/0VFYFPEj2WtqkGPoEV9EVQP83dHsdoqYaTuWpZdwAd37UwfA=="
+      },
       "StackExchange.Redis": {
         "type": "Transitive",
         "resolved": "2.7.27",
@@ -1037,7 +1059,8 @@
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "[8.0.11, )",
           "Microsoft.Extensions.Hosting": "[8.0.0, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )",
+          "SixLabors.ImageSharp": "[3.1.6, )"
         }
       },
       "araponga.shared": {

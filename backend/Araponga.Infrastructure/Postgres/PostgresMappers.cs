@@ -6,6 +6,7 @@ using Araponga.Domain.Financial;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
@@ -1377,5 +1378,65 @@ public static class PostgresMappers
         if (updatedAtProp?.SetMethod != null) updatedAtProp.SetValue(config, record.UpdatedAtUtc);
 
         return config;
+    }
+
+    public static MediaAssetRecord ToRecord(this MediaAsset mediaAsset)
+    {
+        return new MediaAssetRecord
+        {
+            Id = mediaAsset.Id,
+            UploadedByUserId = mediaAsset.UploadedByUserId,
+            MediaType = mediaAsset.MediaType,
+            MimeType = mediaAsset.MimeType,
+            StorageKey = mediaAsset.StorageKey,
+            SizeBytes = mediaAsset.SizeBytes,
+            WidthPx = mediaAsset.WidthPx,
+            HeightPx = mediaAsset.HeightPx,
+            Checksum = mediaAsset.Checksum,
+            CreatedAtUtc = mediaAsset.CreatedAtUtc,
+            DeletedByUserId = mediaAsset.DeletedByUserId,
+            DeletedAtUtc = mediaAsset.DeletedAtUtc
+        };
+    }
+
+    public static MediaAsset ToDomain(this MediaAssetRecord record)
+    {
+        return new MediaAsset(
+            record.Id,
+            record.UploadedByUserId,
+            record.MediaType,
+            record.MimeType,
+            record.StorageKey,
+            record.SizeBytes,
+            record.WidthPx,
+            record.HeightPx,
+            record.Checksum,
+            record.CreatedAtUtc,
+            record.DeletedByUserId,
+            record.DeletedAtUtc);
+    }
+
+    public static MediaAttachmentRecord ToRecord(this MediaAttachment attachment)
+    {
+        return new MediaAttachmentRecord
+        {
+            Id = attachment.Id,
+            MediaAssetId = attachment.MediaAssetId,
+            OwnerType = attachment.OwnerType,
+            OwnerId = attachment.OwnerId,
+            DisplayOrder = attachment.DisplayOrder,
+            CreatedAtUtc = attachment.CreatedAtUtc
+        };
+    }
+
+    public static MediaAttachment ToDomain(this MediaAttachmentRecord record)
+    {
+        return new MediaAttachment(
+            record.Id,
+            record.MediaAssetId,
+            record.OwnerType,
+            record.OwnerId,
+            record.DisplayOrder,
+            record.CreatedAtUtc);
     }
 }

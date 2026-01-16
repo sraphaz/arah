@@ -176,7 +176,7 @@ Usa variáveis de ambiente ou `appsettings.json`:
 
 - ✅ `docs/FASE5_IMPLEMENTACAO_RESUMO.md` - Resumo completo da implementação
 - ✅ `docs/SECURITY_AUDIT.md` - Checklist e guia de penetration testing
-- ✅ `docs/plano-acao-10-10/FASE5.md` - Plano atualizado com 100% de conclusão
+- ✅ `docs/backlog-api/FASE5.md` - Plano atualizado com 100% de conclusão
 - ✅ `docs/40_CHANGELOG.md` - Changelog atualizado
 - ✅ `backend/Araponga.Api/wwwroot/devportal/index.html` - DevPortal atualizado com seção de Segurança Avançada
 
@@ -209,7 +209,7 @@ var entries = await auditService.ListAsync(territoryId: territoryId);
 
 ## 🔗 Links Relacionados
 
-- [FASE5.md](../plano-acao-10-10/FASE5.md) - Plano completo da Fase 5
+- [FASE5.md](../backlog-api/FASE5.md) - Plano completo da Fase 5
 - [FASE5_IMPLEMENTACAO_RESUMO.md](../FASE5_IMPLEMENTACAO_RESUMO.md) - Resumo detalhado
 - [SECURITY_AUDIT.md](../SECURITY_AUDIT.md) - Checklist de segurança
 

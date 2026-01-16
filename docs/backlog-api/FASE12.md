@@ -1,9 +1,9 @@
-# Fase 10: Otimizações Finais e Conclusão do Plano 10/10
+# Fase 12: Otimizações Finais e Conclusão
 
 **Duração**: 4 semanas (28 dias úteis)  
-**Prioridade**: 🟡 ALTA (Conformidade legal e operacional)  
+**Prioridade**: 🟡 IMPORTANTE (Conformidade legal e operacional)  
 **Bloqueia**: Alcançar nota 10/10 em todas as categorias  
-**Estimativa Total**: 140 horas  
+**Estimativa Total**: 224 horas  
 **Status**: ⏳ Pendente
 
 ---
@@ -620,7 +620,7 @@ Após as fases anteriores, a aplicação está em **9.2/10**. Restam gaps menore
   - [ ] Métricas antes e depois
   - [ ] Lições aprendidas
   - [ ] Próximos passos
-- [ ] Atualizar `docs/plano-acao-10-10/README.md`
+- [ ] Atualizar `docs/backlog-api/README.md`
   - [ ] Adicionar FASE9 e FASE10
   - [ ] Atualizar status geral
 - [ ] Revisar toda a documentação
@@ -631,7 +631,7 @@ Após as fases anteriores, a aplicação está em **9.2/10**. Restam gaps menore
 
 **Arquivos a Modificar**:
 - `docs/CHANGELOG.md`
-- `docs/plano-acao-10-10/README.md`
+- `docs/backlog-api/README.md`
 
 **Critérios de Sucesso**:
 - ✅ Changelog atualizado
@@ -789,4 +789,4 @@ POST /api/v1/users/me/devices
 ---
 
 **Status**: ⏳ **FASE 10 PENDENTE**  
-**Última Fase**: Conclusão do Plano de Ação 10/10
+**Última Fase**: Conclusão do Backlog API

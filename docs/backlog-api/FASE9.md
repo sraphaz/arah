@@ -1,8 +1,8 @@
-# Fase 12: Perfil de Usuário Completo
+# Fase 9: Perfil de Usuário Completo
 
 **Duração**: 3 semanas (15 dias úteis)  
-**Prioridade**: 🔴 ALTA (Bloqueante para transição)  
-**Depende de**: Fase 11 (Infraestrutura de Mídia)  
+**Prioridade**: 🔴 CRÍTICA (Bloqueante para transição)  
+**Depende de**: Fase 8 (Infraestrutura de Mídia)  
 **Estimativa Total**: 120 horas  
 **Status**: ⏳ Pendente
 
@@ -418,7 +418,7 @@ Completar funcionalidades de perfil de usuário para permitir transição suave 
 
 ---
 
-## 📊 Resumo da Fase 12
+## 📊 Resumo da Fase 9
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
@@ -437,7 +437,7 @@ Completar funcionalidades de perfil de usuário para permitir transição suave 
 
 ---
 
-## ✅ Critérios de Sucesso da Fase 12
+## ✅ Critérios de Sucesso da Fase 9
 
 ### Funcionalidades
 - ✅ Upload de avatar funcionando
@@ -631,6 +631,6 @@ Completar funcionalidades de perfil de usuário para permitir transição suave 
 
 ---
 
-**Status**: ⏳ **FASE 12 PENDENTE**  
-**Depende de**: Fase 11 (Infraestrutura de Mídia)  
+**Status**: ⏳ **FASE 9 PENDENTE**  
+**Depende de**: Fase 8 (Infraestrutura de Mídia)  
 **Impacto**: 🟡 Médio (principalmente no perfil, com melhorias opcionais em outras funcionalidades)

@@ -171,7 +171,7 @@ Este PR implementa observabilidade completa no sistema Araponga, incluindo logs 
 - ✅ `docs/TROUBLESHOOTING.md` - Troubleshooting comum
 - ✅ `docs/INCIDENT_PLAYBOOK.md` - Playbook de incidentes
 - ✅ `docs/FASE4_IMPLEMENTACAO_RESUMO.md` - Resumo completo
-- ✅ `docs/plano-acao-10-10/FASE4.md` - Plano atualizado
+- ✅ `docs/backlog-api/FASE4.md` - Plano atualizado
 
 ---
 
@@ -197,7 +197,7 @@ Este PR implementa observabilidade completa no sistema Araponga, incluindo logs 
 
 ## 🔗 Links Relacionados
 
-- [FASE4.md](../plano-acao-10-10/FASE4.md) - Plano completo da Fase 4
+- [FASE4.md](../backlog-api/FASE4.md) - Plano completo da Fase 4
 - [FASE4_IMPLEMENTACAO_RESUMO.md](../FASE4_IMPLEMENTACAO_RESUMO.md) - Resumo detalhado
 - [METRICS.md](../METRICS.md) - Documentação de métricas
 - [MONITORING.md](../MONITORING.md) - Dashboards e alertas

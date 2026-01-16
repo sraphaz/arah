@@ -27,8 +27,8 @@
 - ✅ `71_PLANO_ACAO_10_10.md` → `arquivos-originais/PLANO_ACAO_10_10_ALTERNATIVO.md`
 
 #### Documentos de Plano
-- ✅ `PLANO_ACAO_10_10_RESUMO.md` → `plano-acao-10-10/`
-- ✅ `MAPA_CORRELACAO_FUNCIONALIDADES.md` → `plano-acao-10-10/`
+- ✅ `PLANO_ACAO_10_10_RESUMO.md` → `backlog-api/`
+- ✅ `MAPA_CORRELACAO_FUNCIONALIDADES.md` → `backlog-api/`
 
 ### 3. Correções de Conteúdo
 
@@ -56,7 +56,7 @@
 ## 📁 Estrutura Final Normalizada
 
 ```
-docs/plano-acao-10-10/
+docs/backlog-api/
 ├── README.md                          # Índice principal
 ├── ESTRUTURA_DOCUMENTOS.md            # Estrutura
 ├── INDICE_DOCUMENTOS.md              # Índice completo

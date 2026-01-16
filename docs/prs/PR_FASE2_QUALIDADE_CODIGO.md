@@ -132,7 +132,7 @@ curl -H "Authorization: Bearer <token>" \
 
 - [FASE2_RESUMO_FINAL.md](../FASE2_RESUMO_FINAL.md) - Resumo completo
 - [FASE2_IMPLEMENTACAO_PROGRESSO.md](../FASE2_IMPLEMENTACAO_PROGRESSO.md) - Progresso detalhado
-- [FASE2.md](../plano-acao-10-10/FASE2.md) - Plano original
+- [FASE2.md](../backlog-api/FASE2.md) - Plano original
 
 ---
 

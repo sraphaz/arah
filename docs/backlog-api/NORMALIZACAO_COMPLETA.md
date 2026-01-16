@@ -9,12 +9,12 @@
 
 ### 1. Estrutura de Pastas Criada
 
-- ✅ `plano-acao-10-10/implementacoes/` - Documentos de implementação
-- ✅ `plano-acao-10-10/arquivos-originais/` - Arquivos originais (referência)
+- ✅ `backlog-api/implementacoes/` - Documentos de implementação
+- ✅ `backlog-api/arquivos-originais/` - Arquivos originais (referência)
 
 ### 2. Documentos Movidos
 
-#### Da Raiz docs/ para plano-acao-10-10/implementacoes/
+#### Da Raiz docs/ para backlog-api/implementacoes/
 - ✅ `FASE1_*.md` (6 arquivos)
 - ✅ `FASE2_*.md` (2 arquivos)
 - ✅ `FASE3_IMPLEMENTACAO_RESUMO.md`
@@ -22,11 +22,11 @@
 - ✅ `FASE5_IMPLEMENTACAO_RESUMO.md`
 - ✅ `TESTES_FASE7_RESUMO.md`
 
-#### Da Raiz docs/ para plano-acao-10-10/arquivos-originais/
+#### Da Raiz docs/ para backlog-api/arquivos-originais/
 - ✅ `PLANO_ACAO_10_10.md` → `PLANO_ACAO_10_10_ORIGINAL.md`
 - ✅ `71_PLANO_ACAO_10_10.md` → `PLANO_ACAO_10_10_ALTERNATIVO.md`
 
-#### Da Raiz docs/ para plano-acao-10-10/
+#### Da Raiz docs/ para backlog-api/
 - ✅ `PLANO_ACAO_10_10_RESUMO.md`
 - ✅ `MAPA_CORRELACAO_FUNCIONALIDADES.md`
 
@@ -49,7 +49,7 @@
 
 ```
 docs/
-├── plano-acao-10-10/
+├── backlog-api/
 │   ├── README.md                          # Índice principal
 │   ├── ESTRUTURA_DOCUMENTOS.md            # Estrutura de organização
 │   ├── INDICE_DOCUMENTOS.md              # Índice completo

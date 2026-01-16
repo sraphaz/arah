@@ -6,6 +6,7 @@ using Araponga.Domain.Financial;
 using Araponga.Domain.Health;
 using Araponga.Domain.Map;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Media;
 using Araponga.Domain.Moderation;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Configuration;
@@ -346,4 +347,8 @@ public sealed class InMemoryDataStore
     public List<ConversationParticipant> ChatParticipants { get; } = new();
     public List<ChatMessage> ChatMessages { get; } = new();
     public List<Araponga.Application.Models.ChatConversationStats> ChatStats { get; } = new();
+
+    // Media
+    public List<MediaAsset> MediaAssets { get; } = new();
+    public List<MediaAttachment> MediaAttachments { get; } = new();
     }

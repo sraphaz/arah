@@ -1866,17 +1866,37 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                 var diagramId = diagramContainer.getAttribute('data-diagram') || 'diagram-' + Date.now();
                  var diagramContent = diagramContainer.textContent.trim();
                  
-                 // Limpar HTML tags e scripts de forma segura (Mermaid não aceita HTML)
-                 // Remove todas as tags HTML, incluindo <script>, <style>, e entidades HTML
-                 var cleanedDiagramContent = diagramContent
-                   .replace(/<script[\s\S]*?<\/script>/gi, '')
-                   .replace(/<style[\s\S]*?<\/style>/gi, '')
-                   .replace(/<[^>]+>/g, '')
-                   .replace(/&lt;/g, '<')
-                   .replace(/&gt;/g, '>')
-                   .replace(/&amp;/g, '&')
+                 // Decodifica entidades HTML em ordem segura para evitar double unescaping
+                 // IMPORTANTE: &amp; deve ser decodificado por último para evitar converter &amp;lt; em &lt;
+                 var tempContent = diagramContent
                    .replace(/&quot;/g, '"')
                    .replace(/&#x27;/g, "'")
+                   .replace(/&#39;/g, "'")
+                   .replace(/&lt;/g, '<')
+                   .replace(/&gt;/g, '>')
+                   .replace(/&amp;/g, '&'); // Decodifica &amp; por último
+                 
+                 // Primeiro proteger tipos genéricos C# (como List<Territory>, PagedResult<CommunityPost>)
+                 // Padrão: Letra<TipoComLetraMaiuscula> -> Letra&lt;TipoComLetraMaiuscula&gt;
+                 var protectedContent = tempContent.replace(/([a-zA-Z0-9])<([A-Z][a-zA-Z0-9]+)>/g, '$1&lt;$2&gt;');
+                 
+                 var cleanedDiagramContent = protectedContent
+                   // Remove tags <script> com todas variações (espaços, atributos, etc)
+                   .replace(/<\/?\s*script\s*(?:\s+[^>]*)?\s*>/gi, '')
+                   // Remove conteúdo entre tags script (caso alguma tag tenha escapado)
+                   .replace(/<script[\s\S]*?<\/\s*script\s*>/gi, '')
+                   // Remove tags <style> com todas variações (espaços, atributos, etc)
+                   .replace(/<\/?\s*style\s*(?:\s+[^>]*)?\s*>/gi, '')
+                   // Remove conteúdo entre tags style (caso alguma tag tenha escapado)
+                   .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '')
+                   // Remove tags de fechamento explícitas (</tag>, </tag >)
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                   // Remove tags de abertura XML/HTML (tags começam com minúscula)
+                   // Preserva tipos genéricos protegidos como &lt;Territory&gt;
+                   .replace(/<([a-z][a-zA-Z0-9-]+)(?:\s+[^>]*)?\s*>/gi, '')
+                   // Restaurar tipos genéricos: &lt;Tipo&gt; -> <Tipo>
+                   .replace(/&lt;/g, '<')
+                   .replace(/&gt;/g, '>')
                    .trim();
                  
                  if (cleanedDiagramContent && !diagramContainer.hasAttribute('data-processed')) {

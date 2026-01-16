@@ -1867,33 +1867,16 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                  var diagramContent = diagramContainer.textContent.trim();
                  
                  // Limpar HTML tags e scripts de forma segura (Mermaid não aceita HTML)
-                 // Decodifica entidades HTML em ordem segura para evitar double unescaping
-                 // IMPORTANTE: &amp; deve ser decodificado por último para evitar converter &amp;lt; em &lt;
-                 var tempContent = diagramContent
-                   .replace(/&quot;/g, '"')
-                   .replace(/&#x27;/g, "'")
-                   .replace(/&#39;/g, "'")
+                 // Remove todas as tags HTML, incluindo <script>, <style>, e entidades HTML
+                 var cleanedDiagramContent = diagramContent
+                   .replace(/<script[\s\S]*?<\/script>/gi, '')
+                   .replace(/<style[\s\S]*?<\/style>/gi, '')
+                   .replace(/<[^>]+>/g, '')
                    .replace(/&lt;/g, '<')
                    .replace(/&gt;/g, '>')
-                   .replace(/&amp;/g, '&'); // Decodifica &amp; por último
-                 
-                 // Remove apenas tags HTML/XML completas (evita remover tipos genéricos C# como List<T>)
-                 // Remove <script> e <style> primeiro (com todas as variações possíveis)
-                 // Regex melhorado para capturar tags com espaços: <script >, </script >, etc.
-                 var cleanedDiagramContent = tempContent
-                   // Remove tags <script> com todas variações (espaços, atributos, etc)
-                   .replace(/<\/?\s*script\s*(?:\s+[^>]*)?\s*>/gi, '')
-                   // Remove conteúdo entre tags script (caso alguma tag tenha escapado)
-                   .replace(/<script[\s\S]*?<\/\s*script\s*>/gi, '')
-                   // Remove tags <style> com todas variações (espaços, atributos, etc)
-                   .replace(/<\/?\s*style\s*(?:\s+[^>]*)?\s*>/gi, '')
-                   // Remove conteúdo entre tags style (caso alguma tag tenha escapado)
-                   .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '')
-                   // Remove tags XML/HTML completas como </territory>, </feeditemresponse>, etc.
-                   // Regex: < ou </ seguido de letras/números/hífen, possivelmente atributos, depois >
-                   .replace(/<\/?[a-zA-Z][a-zA-Z0-9-]*(?:\s+[^>]*)?\s*>/g, '')
-                   // Preserva tipos genéricos C# que não são tags completas (<T>, <CommunityPost>, etc)
-                   // Esses já foram removidos se eram tags completas, então não há risco aqui
+                   .replace(/&amp;/g, '&')
+                   .replace(/&quot;/g, '"')
+                   .replace(/&#x27;/g, "'")
                    .trim();
                  
                  if (cleanedDiagramContent && !diagramContainer.hasAttribute('data-processed')) {

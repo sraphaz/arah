@@ -60,7 +60,8 @@ Write-Host "📝 Criando Home.md..." -ForegroundColor Yellow
 $homeContent = @"
 # Documentação Araponga
 
-**Última Atualização**: 2025-01-16
+**Última Atualização**: 2025-01-16  
+**Fases Completas**: 1-8 ✅
 
 ---
 
@@ -133,7 +134,7 @@ $homeContent = @"
 
 ### 📄 Fases
 
-#### Fases Completas (1-7) ✅
+#### Fases Completas (1-8) ✅
 - [Fase 1: Segurança e Fundação Crítica](Fase-1-Segurança-Fundação-Crítica)
 - [Fase 2: Qualidade de Código](Fase-2-Qualidade-Código)
 - [Fase 3: Performance e Escalabilidade](Fase-3-Performance-Escalabilidade)
@@ -141,9 +142,9 @@ $homeContent = @"
 - [Fase 5: Segurança Avançada](Fase-5-Segurança-Avançada)
 - [Fase 6: Sistema de Pagamentos](Fase-6-Sistema-Pagamentos)
 - [Fase 7: Sistema de Payout](Fase-7-Sistema-Payout)
-
-#### Onda 1: MVP Essencial (8-11) 🔴 CRÍTICO
 - [Fase 8: Infraestrutura de Mídia](Fase-8-Infraestrutura-Mídia)
+
+#### Onda 1: MVP Essencial (9-11) 🔴 CRÍTICO
 - [Fase 9: Perfil de Usuário Completo](Fase-9-Perfil-Usuário-Completo)
 - [Fase 10: Mídias em Conteúdo](Fase-10-Mídias-Conteúdo)
 - [Fase 11: Edição e Gestão](Fase-11-Edição-Gestão)
@@ -222,6 +223,8 @@ function Copy-DocumentToWiki {
         # Links para backlog-api
         $content = $content -replace '\.\.\/backlog-api\/FASE(\d+)\.md', '[Fase $1](Fase-$1)'
         $content = $content -replace '\.\.\/backlog-api\/README\.md', '[Backlog API](Home#backlog-api)'
+        $content = $content -replace '\.\.\/backlog-api\/implementacoes\/FASE(\d+)_([^.]+)\.md', '[Fase $1 $2](Home#backlog-api)'
+        $content = $content -replace '\.\/implementacoes\/FASE(\d+)_([^.]+)\.md', '[Fase $1 $2](Home#backlog-api)'
         
         # Adicionar link para documento completo no repositório
         $repoPath = $sourceFile.Replace($ROOT_DIR, "").Replace("\", "/").TrimStart("/")

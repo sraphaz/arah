@@ -453,7 +453,7 @@ await _auditService.LogAsync("user.blocked", userId, territoryId, targetId);
 ## 📚 Documentação Adicional
 
 - **[Security Audit](./SECURITY_AUDIT.md)** - Checklist completo de segurança e guia de penetration testing
-- **[Fase 5: Segurança Avançada](./FASE5_IMPLEMENTACAO_RESUMO.md)** - Resumo completo das implementações de segurança avançada
+- **[Fase 5: Segurança Avançada](./backlog-api/implementacoes/FASE5_IMPLEMENTACAO_RESUMO.md)** - Resumo completo das implementações de segurança avançada
 
 ---
 

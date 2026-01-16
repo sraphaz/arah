@@ -76,7 +76,7 @@ Este PR implementa a **Fase 2: Qualidade de Código e Confiabilidade** do Plano 
 - `backend/Araponga.Application/Services/CacheMetricsService.cs`
 - `backend/Araponga.Api/Controllers/CacheMetricsController.cs`
 - `docs/FASE2_RESUMO_FINAL.md`
-- `docs/FASE2_IMPLEMENTACAO_PROGRESSO.md`
+- `docs/backlog-api/implementacoes/FASE2_IMPLEMENTACAO_PROGRESSO.md`
 
 ### Arquivos Modificados
 - **Controllers**: NotificationsController, MapController
@@ -131,7 +131,7 @@ curl -H "Authorization: Bearer <token>" \
 ## 📚 Documentação
 
 - [FASE2_RESUMO_FINAL.md](../FASE2_RESUMO_FINAL.md) - Resumo completo
-- [FASE2_IMPLEMENTACAO_PROGRESSO.md](../FASE2_IMPLEMENTACAO_PROGRESSO.md) - Progresso detalhado
+- [FASE2_IMPLEMENTACAO_PROGRESSO.md](../backlog-api/implementacoes/FASE2_IMPLEMENTACAO_PROGRESSO.md) - Progresso detalhado
 - [FASE2.md](../backlog-api/FASE2.md) - Plano original
 
 ---

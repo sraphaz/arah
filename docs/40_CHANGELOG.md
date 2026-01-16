@@ -198,7 +198,7 @@ Todas as funcionalidades são configuráveis via `appsettings.json`:
 - `backend/Araponga.Application/Interfaces/IAuditRepository.cs`: Interface para repositório de auditoria
 - `backend/Araponga.Infrastructure/Security/ISecretsService.cs`: Interface para secrets management
 - `backend/Araponga.Infrastructure/Security/EnvironmentSecretsService.cs`: Implementação usando variáveis de ambiente
-- `docs/FASE5_IMPLEMENTACAO_RESUMO.md`: Resumo completo da implementação
+- `docs/backlog-api/implementacoes/FASE5_IMPLEMENTACAO_RESUMO.md`: Resumo completo da implementação
 - `docs/SECURITY_AUDIT.md`: Checklist e guia de penetration testing
 
 ### Arquivos Modificados
@@ -259,7 +259,7 @@ Todas as funcionalidades são configuráveis via `appsettings.json`:
 - `docs/RUNBOOK.md`: Runbook de operações
 - `docs/TROUBLESHOOTING.md`: Troubleshooting comum
 - `docs/INCIDENT_PLAYBOOK.md`: Playbook de incidentes
-- `docs/FASE4_IMPLEMENTACAO_RESUMO.md`: Resumo completo da implementação
+- `docs/backlog-api/implementacoes/FASE4_IMPLEMENTACAO_RESUMO.md`: Resumo completo da implementação
 - `docs/backlog-api/FASE4.md`: Plano atualizado com 100% de conclusão
 
 ---
@@ -318,7 +318,7 @@ Todas as funcionalidades são configuráveis via `appsettings.json`:
 
 ### Documentação
 - Criado `PR_FASE3_PERFORMANCE_ESCALABILIDADE.md` com resumo completo
-- Atualizado `FASE3.md` e `FASE3_IMPLEMENTACAO_RESUMO.md` para 100%
+- Atualizado `FASE3.md` e `backlog-api/implementacoes/FASE3_IMPLEMENTACAO_RESUMO.md` para 100%
 - Criado `DEPLOYMENT_MULTI_INSTANCE.md` com documentação completa
 - Atualizado `docs/prs/README.md` com novo PR
 
@@ -371,7 +371,7 @@ Todas as funcionalidades são configuráveis via `appsettings.json`:
 
 ### Documentação
 - Criado `FASE2_RESUMO_FINAL.md` com resumo completo das implementações (100% completo)
-- Atualizado `FASE2_IMPLEMENTACAO_PROGRESSO.md` com progresso detalhado
+- Atualizado `backlog-api/implementacoes/FASE2_IMPLEMENTACAO_PROGRESSO.md` com progresso detalhado
 - Documentação de testes de segurança e performance
 - Atualizado README.md, CHANGELOG.md, `22_COHESION_AND_TESTS.md`, `PLANO_ACAO_10_10_RESUMO.md` e outros documentos relevantes
 - Status da Fase 2 atualizado para 100% completo em todos os documentos

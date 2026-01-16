@@ -163,7 +163,7 @@ Este PR completa a Fase 2 com:
 ## 🔗 Links Relacionados
 
 - [FASE2_RESUMO_FINAL.md](../../docs/FASE2_RESUMO_FINAL.md) - Resumo completo da Fase 2
-- [FASE2_IMPLEMENTACAO_PROGRESSO.md](../../docs/FASE2_IMPLEMENTACAO_PROGRESSO.md) - Progresso detalhado
+- [FASE2_IMPLEMENTACAO_PROGRESSO.md](../../docs/backlog-api/implementacoes/FASE2_IMPLEMENTACAO_PROGRESSO.md) - Progresso detalhado
 - [22_COHESION_AND_TESTS.md](../../docs/22_COHESION_AND_TESTS.md) - Análise de coesão e testes
 
 ---

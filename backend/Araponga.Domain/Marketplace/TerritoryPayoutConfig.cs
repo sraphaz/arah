@@ -52,7 +52,11 @@ public sealed class TerritoryPayoutConfig
     // Navigation property
     public Territory Territory { get; private set; } = null!;
     
-    private TerritoryPayoutConfig() { } // EF Core
+    private TerritoryPayoutConfig() 
+    {
+        // Inicializar propriedades para EF Core
+        Currency = string.Empty;
+    } // EF Core
     
     public TerritoryPayoutConfig(
         Guid id,

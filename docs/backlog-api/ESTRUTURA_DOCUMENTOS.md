@@ -1,4 +1,4 @@
-# Estrutura de Documentos - Plano de Ação 10/10
+# Estrutura de Documentos - Backlog API
 
 **Data**: 2025-01-13  
 **Objetivo**: Documentar a estrutura organizada dos documentos
@@ -9,7 +9,7 @@
 
 ```
 docs/
-├── plano-acao-10-10/          # Plano de Ação 10/10 (organizado)
+├── backlog-api/               # Backlog API (organizado)
 │   ├── README.md              # Índice principal
 │   ├── FASE1.md até FASE24.md # Documentos de fases
 │   ├── RESUMO_*.md            # Resumos executivos
@@ -46,20 +46,20 @@ docs/
 - `70_AVALIACAO_GERAL_APLICACAO.md`
 - `AVALIACAO_COMPLETA_APLICACAO.md`
 
-### Documentos de Fases (Movidos para plano-acao-10-10/)
-- `FASE1_*.md` → `plano-acao-10-10/implementacoes/FASE1_*.md`
-- `FASE2_*.md` → `plano-acao-10-10/implementacoes/FASE2_*.md`
-- `TESTES_FASE7_RESUMO.md` → `plano-acao-10-10/implementacoes/`
+### Documentos de Fases (Movidos para backlog-api/)
+- `FASE1_*.md` → `backlog-api/implementacoes/FASE1_*.md`
+- `FASE2_*.md` → `backlog-api/implementacoes/FASE2_*.md`
+- `TESTES_FASE7_RESUMO.md` → `backlog-api/implementacoes/`
 
-### Documentos de Plano (Movidos para plano-acao-10-10/)
-- `PLANO_ACAO_10_10.md` → `plano-acao-10-10/PLANO_ACAO_10_10_ORIGINAL.md`
-- `71_PLANO_ACAO_10_10.md` → `plano-acao-10-10/PLANO_ACAO_10_10_ALTERNATIVO.md`
-- `PLANO_ACAO_10_10_RESUMO.md` → `plano-acao-10-10/PLANO_ACAO_10_10_RESUMO.md`
-- `MAPA_CORRELACAO_FUNCIONALIDADES.md` → `plano-acao-10-10/MAPA_CORRELACAO_FUNCIONALIDADES.md`
+### Documentos de Plano (Movidos para backlog-api/)
+- `PLANO_ACAO_10_10.md` → `backlog-api/arquivos-originais/PLANO_ACAO_10_10_ORIGINAL.md`
+- `71_PLANO_ACAO_10_10.md` → `backlog-api/arquivos-originais/PLANO_ACAO_10_10_ALTERNATIVO.md`
+- `PLANO_ACAO_10_10_RESUMO.md` → `backlog-api/PLANO_ACAO_10_10_RESUMO.md`
+- `MAPA_CORRELACAO_FUNCIONALIDADES.md` → `backlog-api/MAPA_CORRELACAO_FUNCIONALIDADES.md`
 
 ---
 
-## 📋 Documentos em plano-acao-10-10/
+## 📋 Documentos em backlog-api/
 
 ### Documentos Principais
 - `README.md` - Índice e visão geral
@@ -94,19 +94,19 @@ docs/
 ## 🔄 Plano de Normalização
 
 ### Passo 1: Criar Estrutura de Pastas
-- [ ] Criar `plano-acao-10-10/implementacoes/`
-- [ ] Criar `plano-acao-10-10/arquivos-originais/`
+- [x] Criar `backlog-api/implementacoes/`
+- [x] Criar `backlog-api/arquivos-originais/`
 
 ### Passo 2: Mover Documentos de Fases
-- [ ] Mover `FASE1_*.md` → `plano-acao-10-10/implementacoes/`
-- [ ] Mover `FASE2_*.md` → `plano-acao-10-10/implementacoes/`
-- [ ] Mover `TESTES_FASE7_RESUMO.md` → `plano-acao-10-10/implementacoes/`
+- [x] Mover `FASE1_*.md` → `backlog-api/implementacoes/`
+- [x] Mover `FASE2_*.md` → `backlog-api/implementacoes/`
+- [x] Mover `TESTES_FASE7_RESUMO.md` → `backlog-api/implementacoes/`
 
 ### Passo 3: Mover Documentos de Plano
-- [ ] Mover `PLANO_ACAO_10_10.md` → `plano-acao-10-10/arquivos-originais/`
-- [ ] Mover `71_PLANO_ACAO_10_10.md` → `plano-acao-10-10/arquivos-originais/`
-- [ ] Mover `PLANO_ACAO_10_10_RESUMO.md` → `plano-acao-10-10/`
-- [ ] Mover `MAPA_CORRELACAO_FUNCIONALIDADES.md` → `plano-acao-10-10/`
+- [x] Mover `PLANO_ACAO_10_10.md` → `backlog-api/arquivos-originais/`
+- [x] Mover `71_PLANO_ACAO_10_10.md` → `backlog-api/arquivos-originais/`
+- [x] Mover `PLANO_ACAO_10_10_RESUMO.md` → `backlog-api/`
+- [x] Mover `MAPA_CORRELACAO_FUNCIONALIDADES.md` → `backlog-api/`
 
 ### Passo 4: Normalizar Nomes
 - [ ] Garantir que todas as fases seguem padrão `FASE{N}.md`

@@ -246,7 +246,7 @@ builder.Services.AddDbContext<ArapongaDbContext>(options =>
 
 ## 📝 Documentação Atualizada
 
-- ✅ `docs/plano-acao-10-10/FASE3.md` - Atualizado para 100%
+- ✅ `docs/backlog-api/FASE3.md` - Atualizado para 100%
 - ✅ `docs/FASE3_IMPLEMENTACAO_RESUMO.md` - Atualizado para 100%
 - ✅ `docs/DEPLOYMENT_MULTI_INSTANCE.md` - Documentação completa
 - ✅ `docs/prs/README.md` - Adicionado este PR
@@ -264,7 +264,7 @@ builder.Services.AddDbContext<ArapongaDbContext>(options =>
 
 ## 🔗 Links Relacionados
 
-- [FASE3.md](../plano-acao-10-10/FASE3.md) - Plano original da Fase 3
+- [FASE3.md](../backlog-api/FASE3.md) - Plano original da Fase 3
 - [FASE3_IMPLEMENTACAO_RESUMO.md](../FASE3_IMPLEMENTACAO_RESUMO.md) - Resumo detalhado
 - [DEPLOYMENT_MULTI_INSTANCE.md](../DEPLOYMENT_MULTI_INSTANCE.md) - Documentação de deployment
 - [ConcurrencyHelper.cs](../../backend/Araponga.Infrastructure/Postgres/ConcurrencyHelper.cs) - Helper de concorrência

@@ -65,7 +65,11 @@ public sealed class SellerTransaction
     public Checkout Checkout { get; private set; } = null!;
     public User SellerUser { get; private set; } = null!;
     
-    private SellerTransaction() { } // EF Core
+    private SellerTransaction() 
+    {
+        // Inicializar propriedades para EF Core
+        Currency = string.Empty;
+    } // EF Core
     
     public SellerTransaction(
         Guid id,

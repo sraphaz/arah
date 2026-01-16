@@ -1,14 +1,18 @@
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Services;
 using Araponga.Application.Events;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.FileStorage;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Media;
 using Araponga.Infrastructure.Outbox;
 using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 
@@ -74,6 +78,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<InputSanitizationService>();
         services.AddScoped<SellerPayoutService>();
         services.AddScoped<TerritoryPayoutConfigService>();
+        services.AddScoped<MediaService>();
         
         // Payout Gateway
         services.AddScoped<IPayoutGateway, Araponga.Infrastructure.Payments.MockPayoutGateway>();
@@ -134,6 +139,54 @@ public static class ServiceCollectionExtensions
         else
         {
             services.AddSingleton<IFileStorage>(_ => new LocalFileStorage(Path.Combine(AppContext.BaseDirectory, "app_data", "uploads")));
+        }
+
+        // Media Storage Configuration
+        services.Configure<MediaStorageOptions>(configuration.GetSection("MediaStorage"));
+        
+        // Media Storage Factory
+        services.AddSingleton<MediaStorageFactory>();
+        
+        // Media Storage Service (criado via factory para suportar cache)
+        services.AddScoped<IMediaStorageService>(sp =>
+        {
+            var factory = sp.GetRequiredService<MediaStorageFactory>();
+            return factory.CreateStorageService();
+        });
+        
+        // Media Processing Service
+        services.AddScoped<IMediaProcessingService, LocalMediaProcessingService>();
+        services.AddScoped<IMediaValidator, MediaValidator>();
+        
+        // Async Media Processing Background Service (opcional)
+        var mediaStorageOptions = configuration.GetSection("MediaStorage").Get<MediaStorageOptions>() ?? new MediaStorageOptions();
+        if (mediaStorageOptions.EnableAsyncProcessing)
+        {
+            services.AddSingleton<AsyncMediaProcessingBackgroundService>();
+            services.AddHostedService(sp => sp.GetRequiredService<AsyncMediaProcessingBackgroundService>());
+            services.AddSingleton<IAsyncMediaProcessor>(sp => sp.GetRequiredService<AsyncMediaProcessingBackgroundService>());
+        }
+        else
+        {
+            // NoOp se desabilitado
+            services.AddSingleton<IAsyncMediaProcessor, NoOpAsyncMediaProcessor>();
+        }
+        
+        // Distributed Cache para URLs de mídia (se Redis estiver configurado)
+        var redisConnection = configuration.GetConnectionString("Redis");
+        if (!string.IsNullOrWhiteSpace(redisConnection))
+        {
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisConnection;
+                options.InstanceName = "Araponga:";
+            });
+        }
+        else
+        {
+            // Usar cache em memória se Redis não estiver disponível
+            services.AddMemoryCache();
+            services.AddSingleton<IDistributedCache, MemoryDistributedCache>();
         }
 
         return services;
@@ -198,6 +251,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IChatMessageRepository, PostgresChatMessageRepository>();
         services.AddScoped<IChatConversationStatsRepository, PostgresChatConversationStatsRepository>();
 
+        // Media
+        services.AddScoped<IMediaAssetRepository, PostgresMediaAssetRepository>();
+        services.AddScoped<IMediaAttachmentRepository, PostgresMediaAttachmentRepository>();
+
         return services;
     }
 
@@ -259,6 +316,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IChatConversationParticipantRepository, InMemoryChatConversationParticipantRepository>();
         services.AddSingleton<IChatMessageRepository, InMemoryChatMessageRepository>();
         services.AddSingleton<IChatConversationStatsRepository, InMemoryChatConversationStatsRepository>();
+
+        // Media
+        services.AddSingleton<IMediaAssetRepository, InMemoryMediaAssetRepository>();
+        services.AddSingleton<IMediaAttachmentRepository, InMemoryMediaAttachmentRepository>();
 
         return services;
     }

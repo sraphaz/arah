@@ -1,8 +1,8 @@
-# Plano de Ação 10/10 - Estrutura Organizada
+# Backlog API - Estrutura Organizada
 
 **Data de Criação**: 2025-01-13  
 **Última Revisão**: 2025-01-13  
-**Objetivo**: Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias  
+**Objetivo**: Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias  
 **Estimativa Total**: 380 dias sequenciais / ~170 dias com paralelização  
 **Status Atual**: 9.2/10 (após implementação das fases 1-7)  
 **⭐ Nova Ordem Estratégica**: Ver [REORGANIZACAO_ESTRATEGICA_FINAL.md](./REORGANIZACAO_ESTRATEGICA_FINAL.md)
@@ -14,7 +14,7 @@
 ### 📁 Organização
 
 ```
-plano-acao-10-10/
+backlog-api/
 ├── README.md                          # Este arquivo (índice principal)
 ├── ESTRUTURA_DOCUMENTOS.md            # Estrutura de organização
 ├── INDICE_DOCUMENTOS.md               # Índice completo de documentos
@@ -237,6 +237,6 @@ plano-acao-10-10/
 ---
 
 **Documento criado em**: 2025-01-13  
-**Última atualização**: 2025-01-13  
+**Última atualização**: 2025-01-16  
 **Status**: 📋 Estrutura Completa (24 Fases) - Nova Ordem Estratégica  
 **⭐ Ver**: [REORGANIZACAO_ESTRATEGICA_FINAL.md](./REORGANIZACAO_ESTRATEGICA_FINAL.md) para análise detalhada

@@ -38,7 +38,11 @@ public sealed class PlatformExpenseTransaction
     public Territory Territory { get; private set; } = null!;
     public SellerTransaction SellerTransaction { get; private set; } = null!;
     
-    private PlatformExpenseTransaction() { } // EF Core
+    private PlatformExpenseTransaction() 
+    {
+        // Inicializar propriedades para EF Core
+        Currency = string.Empty;
+    } // EF Core
     
     public PlatformExpenseTransaction(
         Guid id,

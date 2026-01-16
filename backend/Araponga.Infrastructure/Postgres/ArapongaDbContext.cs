@@ -74,6 +74,10 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<ChatMessageRecord> ChatMessages => Set<ChatMessageRecord>();
     public DbSet<ChatConversationStatsRecord> ChatConversationStats => Set<ChatConversationStatsRecord>();
 
+    // Media
+    public DbSet<MediaAssetRecord> MediaAssets => Set<MediaAssetRecord>();
+    public DbSet<MediaAttachmentRecord> MediaAttachments => Set<MediaAttachmentRecord>();
+
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
         try
@@ -928,6 +932,35 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(s => s.LastMessageAtUtc);
+        });
+
+        modelBuilder.Entity<MediaAssetRecord>(entity =>
+        {
+            entity.ToTable("media_assets");
+            entity.HasKey(m => m.Id);
+            entity.Property(m => m.MediaType).HasConversion<int>().IsRequired();
+            entity.Property(m => m.MimeType).HasMaxLength(100).IsRequired();
+            entity.Property(m => m.StorageKey).HasMaxLength(500).IsRequired();
+            entity.Property(m => m.SizeBytes).IsRequired();
+            entity.Property(m => m.Checksum).HasMaxLength(64).IsRequired();
+            entity.Property(m => m.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(m => m.DeletedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(m => m.UploadedByUserId);
+            entity.HasIndex(m => m.CreatedAtUtc);
+            entity.HasIndex(m => m.DeletedAtUtc);
+            entity.HasIndex(m => new { m.UploadedByUserId, m.DeletedAtUtc });
+        });
+
+        modelBuilder.Entity<MediaAttachmentRecord>(entity =>
+        {
+            entity.ToTable("media_attachments");
+            entity.HasKey(a => a.Id);
+            entity.Property(a => a.OwnerType).HasConversion<int>().IsRequired();
+            entity.Property(a => a.DisplayOrder).IsRequired();
+            entity.Property(a => a.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(a => new { a.OwnerType, a.OwnerId });
+            entity.HasIndex(a => a.MediaAssetId);
+            entity.HasIndex(a => new { a.OwnerType, a.OwnerId, a.DisplayOrder });
         });
     }
 }

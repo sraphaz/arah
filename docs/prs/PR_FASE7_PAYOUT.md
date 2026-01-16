@@ -136,7 +136,7 @@ Implementação completa do sistema de payout (transferência para vendedores), 
 ### Documentação (3 arquivos)
 - `docs/validation/VALIDACAO_SEGURANCA_PAYOUT_FASE7.md`
 - `docs/TESTES_FASE7_RESUMO.md`
-- `docs/plano-acao-10-10/FASE7.md` (atualizado)
+- `docs/backlog-api/FASE7.md` (atualizado)
 
 ### Developer Portal (1 arquivo)
 - `backend/Araponga.Api/wwwroot/devportal/index.html` (atualizado com seção de Payout)
@@ -265,7 +265,7 @@ dotnet ef database update
 
 ## 📚 Documentação
 
-- **Plano de Ação**: `docs/plano-acao-10-10/FASE7.md`
+- **Plano de Ação**: `docs/backlog-api/FASE7.md`
 - **Validação de Segurança**: `docs/validation/VALIDACAO_SEGURANCA_PAYOUT_FASE7.md`
 - **Resumo de Testes**: `docs/TESTES_FASE7_RESUMO.md`
 - **Changelog**: `docs/40_CHANGELOG.md`

@@ -33,7 +33,11 @@ public sealed class PlatformRevenueTransaction
     public Territory Territory { get; private set; } = null!;
     public Checkout Checkout { get; private set; } = null!;
     
-    private PlatformRevenueTransaction() { } // EF Core
+    private PlatformRevenueTransaction() 
+    {
+        // Inicializar propriedades para EF Core
+        Currency = string.Empty;
+    } // EF Core
     
     public PlatformRevenueTransaction(
         Guid id,

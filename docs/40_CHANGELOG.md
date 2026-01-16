@@ -7,6 +7,65 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [2025-01-16] - Fase 8: Infraestrutura de Mídia e Armazenamento ✅ 100% Completo (incluindo funcionalidades opcionais)
+
+### Sistema de Mídia Completo com Funcionalidades Opcionais
+
+- ✅ **Modelo de Domínio**: MediaAsset, MediaAttachment, MediaType, MediaOwnerType
+- ✅ **Armazenamento Local**: LocalMediaStorageService com organização por tipo e data
+- ✅ **Cloud Storage S3**: S3MediaStorageService com URLs pré-assinadas
+- ✅ **Cloud Storage Azure Blob**: AzureBlobMediaStorageService com SAS URLs
+- ✅ **Cache de URLs**: CachedMediaStorageService com suporte a Redis e Memory Cache
+- ✅ **Processamento Assíncrono**: AsyncMediaProcessingBackgroundService para imagens grandes
+- ✅ **Factory Pattern**: MediaStorageFactory para seleção automática de provider
+- ✅ **Processamento de Imagens**: LocalMediaProcessingService com SixLabors.ImageSharp
+- ✅ **Validação de Mídia**: MediaValidator com validação de MIME, tamanho e dimensões
+- ✅ **API REST Completa**: 4 endpoints (upload, download, info, delete)
+- ✅ **Testes Completos**: Unitários, integração, segurança e performance
+- ✅ **Documentação**: MEDIA_SYSTEM.md atualizado com todas as funcionalidades
+
+### Funcionalidades Opcionais Implementadas
+
+- ✅ **Cloud Storage (S3 e Azure Blob)**: Implementação completa com configuração via appsettings.json
+- ✅ **Cache de URLs de Mídia**: Cache distribuído (Redis ou Memory) com expiração configurável
+- ✅ **Processamento Assíncrono**: Background service para processar imagens grandes (>5MB)
+- ✅ **Testes de Performance**: Testes para upload múltiplas imagens, cache e listagem
+
+### Arquivos Criados
+
+**Cloud Storage e Cache**:
+- `backend/Araponga.Infrastructure/Media/S3MediaStorageService.cs`
+- `backend/Araponga.Infrastructure/Media/AzureBlobMediaStorageService.cs`
+- `backend/Araponga.Infrastructure/Media/CachedMediaStorageService.cs`
+- `backend/Araponga.Infrastructure/Media/MediaStorageFactory.cs`
+- `backend/Araponga.Infrastructure/Media/AsyncMediaProcessingBackgroundService.cs`
+- `backend/Araponga.Infrastructure/Media/NoOpAsyncMediaProcessor.cs`
+- `backend/Araponga.Application/Interfaces/Media/IAsyncMediaProcessor.cs`
+
+**Testes de Performance**:
+- `backend/Araponga.Tests/Performance/MediaPerformanceTests.cs`
+
+**Documentação**:
+- `docs/MEDIA_SYSTEM.md` (atualizado com cloud storage, cache e processamento assíncrono)
+
+### Configuração
+
+Todas as funcionalidades são configuráveis via `appsettings.json`:
+
+```json
+{
+  "MediaStorage": {
+    "Provider": "Local", // ou "S3" ou "AzureBlob"
+    "EnableUrlCache": true,
+    "UrlCacheExpiration": "24:00:00",
+    "EnableAsyncProcessing": true,
+    "AsyncProcessingThresholdBytes": 5242880
+  }
+}
+```
+
+---
+
 ## [2026-01-19] - Fase 7: Sistema de Payout e Gestão Financeira ✅ 100% Completo
 
 ### Sistema de Payout e Gestão Financeira Completo
@@ -86,7 +145,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - `backend/Araponga.Infrastructure/Postgres/PostgresMappers.cs` (adicionados mappers)
 - `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs` (adicionadas listas)
 - `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs` (registros de serviços e worker)
-- `docs/plano-acao-10-10/FASE7.md` (documentação completa)
+- `docs/backlog-api/FASE7.md` (documentação completa)
 
 ### Funcionalidades
 
@@ -148,7 +207,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - `backend/Araponga.Api/Program.cs`: Configuração de anti-forgery tokens
 - `backend/Araponga.Api/Middleware/SecurityHeadersMiddleware.cs`: CSP melhorado e HSTS adicionado
 - `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`: Registro de InputSanitizationService
-- `docs/plano-acao-10-10/FASE5.md`: Plano atualizado com 100% de conclusão
+- `docs/backlog-api/FASE5.md`: Plano atualizado com 100% de conclusão
 
 ---
 
@@ -201,7 +260,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - `docs/TROUBLESHOOTING.md`: Troubleshooting comum
 - `docs/INCIDENT_PLAYBOOK.md`: Playbook de incidentes
 - `docs/FASE4_IMPLEMENTACAO_RESUMO.md`: Resumo completo da implementação
-- `docs/plano-acao-10-10/FASE4.md`: Plano atualizado com 100% de conclusão
+- `docs/backlog-api/FASE4.md`: Plano atualizado com 100% de conclusão
 
 ---
 

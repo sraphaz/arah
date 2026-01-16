@@ -8,6 +8,7 @@ using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
@@ -296,6 +297,18 @@ builder.Services.AddAntiforgery(options =>
     options.Cookie.SameSite = SameSiteMode.Strict;
 });
 
+// Authentication - Configurar esquema padrão para Forbid()
+// Nota: A autenticação JWT é feita via middleware customizado, mas precisamos de um esquema padrão
+// para que ForbidResult funcione corretamente quando retornamos Forbid()
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+    options.DefaultForbidScheme = "Bearer";
+})
+.AddScheme<AuthenticationSchemeOptions, JwtAuthenticationHandler>(
+    "Bearer", _ => { });
+
 // Controllers with FluentValidation
 builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -524,6 +537,8 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 // Rate Limiting
 app.UseRateLimiter();
 
+// Authentication & Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Health Checks

@@ -56,7 +56,13 @@ public sealed class FinancialTransaction
     public Territory Territory { get; private set; } = null!;
     public Checkout? RelatedCheckout { get; private set; }
     
-    private FinancialTransaction() { } // EF Core
+    private FinancialTransaction() 
+    {
+        // Inicializar propriedades para EF Core
+        Currency = string.Empty;
+        Description = string.Empty;
+        RelatedTransactionIds = new List<Guid>();
+    } // EF Core
     
     public FinancialTransaction(
         Guid id,

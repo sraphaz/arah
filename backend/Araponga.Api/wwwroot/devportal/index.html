@@ -1917,24 +1917,54 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       
       // Função para abrir diagrama em tela cheia
       function openDiagramFullscreen(diagramElement) {
-        // Buscar o texto original do diagrama (antes de ser renderizado)
-        // Se o elemento já foi processado, buscar o conteúdo do data-attribute ou do elemento original
-        var diagramText = diagramElement.textContent || diagramElement.innerText || '';
+        // SEMPRE buscar primeiro do data-original-code (nunca usar textContent se já foi renderizado)
+        var diagramText = diagramElement.getAttribute('data-original-code');
         
-        // Se o texto está vazio (já foi renderizado), tentar buscar do container original
+        // Se não encontrou, o elemento pode não ter sido renderizado ainda
+        // Nesse caso, tentar pegar o textContent ANTES que seja processado
         if (!diagramText || diagramText.trim() === '') {
-          // Procurar no container pelo elemento que contém o código original
-          var parentContainer = diagramElement.closest('.sequence-diagram-container');
-          if (parentContainer) {
-            var originalCode = parentContainer.querySelector('.mermaid[data-diagram]');
-            if (originalCode && originalCode.getAttribute('data-original-code')) {
-              diagramText = originalCode.getAttribute('data-original-code');
+          // Se não foi renderizado ainda, pegar textContent
+          if (!diagramElement.hasAttribute('data-processed')) {
+            // Pegar apenas texto direto, não HTML
+            diagramText = '';
+            var childNodes = diagramElement.childNodes;
+            for (var i = 0; i < childNodes.length; i++) {
+              var node = childNodes[i];
+              if (node.nodeType === 3) { // TEXT_NODE
+                diagramText += node.textContent;
+              }
+            }
+            diagramText = diagramText.trim();
+            
+            // Remover HTML se houver
+            if (diagramText) {
+              diagramText = diagramText.replace(/<[^>]*>/g, '').trim();
+            }
+          } else {
+            // Já foi renderizado mas não tem data-original-code - procurar no parent
+            var parentContainer = diagramElement.closest('.sequence-diagram-container');
+            if (parentContainer) {
+              var originalCode = parentContainer.querySelector('.mermaid[data-diagram]');
+              if (originalCode && originalCode.getAttribute('data-original-code')) {
+                diagramText = originalCode.getAttribute('data-original-code');
+              } else {
+                console.error('Diagrama já renderizado mas não tem data-original-code');
+                alert('Erro: Não foi possível encontrar o código original do diagrama. Recarregue a página.');
+                return;
+              }
             } else {
-              // Tentar encontrar um elemento hidden ou comentário com o código
-              console.warn('Não foi possível encontrar o texto original do diagrama');
+              console.error('Não foi possível encontrar o container do diagrama');
+              alert('Erro: Não foi possível encontrar o código original do diagrama.');
               return;
             }
           }
+        }
+        
+        // Validar que temos código válido Mermaid
+        if (!diagramText || !diagramText.trim().startsWith('sequenceDiagram')) {
+          console.error('Código Mermaid inválido:', diagramText);
+          alert('Erro: Código do diagrama não está no formato correto. Recarregue a página.');
+          return;
         }
         
         // Criar modal se não existir

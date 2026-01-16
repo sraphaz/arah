@@ -65,6 +65,18 @@ public sealed class MediaServiceTests
         _processingServiceMock.Setup(p => p.GetImageDimensionsAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((100, 200));
 
+        // Configurar otimização de imagem
+        _processingServiceMock.Setup(p => p.OptimizeImageAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Stream stream, string mimeType, CancellationToken ct) =>
+            {
+                // Retornar um novo stream com os mesmos dados para simular otimização
+                var optimizedStream = new MemoryStream();
+                stream.Position = 0;
+                stream.CopyTo(optimizedStream);
+                optimizedStream.Position = 0;
+                return optimizedStream;
+            });
+
         // Configurar o mock do repositório para aceitar o MediaAsset
         var mediaAssetRepositoryMock = new Mock<IMediaAssetRepository>();
         mediaAssetRepositoryMock.Setup(r => r.AddAsync(It.IsAny<MediaAsset>(), It.IsAny<CancellationToken>()))

@@ -55,11 +55,11 @@ export default function HowItWorks() {
       <RevealOnScroll>
         <GlassCard>
           <div className="space-y-8">
-            <div className="space-y-3">
-              <h2 className="text-2xl font-semibold tracking-tight text-forest-950">
+            <div className="space-y-4">
+              <h2 className="text-3xl font-semibold tracking-tight text-forest-950 md:text-4xl">
                 Como funciona na prática
               </h2>
-              <p className="text-base leading-relaxed text-forest-800">
+              <p className="text-base leading-relaxed text-forest-800 md:text-lg">
                 O fluxo de uso foi desenhado para ser direto e respeitar as regras de cada
                 território desde o primeiro acesso.
               </p>

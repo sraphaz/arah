@@ -47,27 +47,32 @@ export default function Improvements() {
       <RevealOnScroll>
         <GlassCard>
           <div className="space-y-8">
-            <h2 className="text-2xl font-semibold tracking-tight text-forest-950">
-              Melhorias Técnicas Implementadas
-            </h2>
-            <p className="text-base leading-relaxed text-forest-800">
-              O Araponga evolui continuamente com melhorias de qualidade, performance e observabilidade.
-              Estas são as principais implementações técnicas concluídas:
-            </p>
+            <div className="space-y-3">
+              <h2 className="text-3xl font-semibold tracking-tight text-forest-950 md:text-4xl">
+                Melhorias Técnicas Implementadas
+              </h2>
+              <p className="text-base leading-relaxed text-forest-800 md:text-lg">
+                O Araponga evolui continuamente com melhorias de qualidade, performance e observabilidade.
+                Estas são as principais implementações técnicas concluídas:
+              </p>
+            </div>
             <div className="grid gap-6 md:grid-cols-3">
               {IMPROVEMENTS.map((improvement, index) => (
                 <RevealOnScroll key={improvement.phase} delay={index * 60} className="h-full">
-                  <div className="h-full rounded-2xl border border-white/60 bg-white/65 p-5 text-forest-800">
-                    <div className="mb-3">
-                      <span className="text-xs font-semibold text-forest-600">{improvement.phase}</span>
-                      <h3 className="mt-1 text-base font-semibold text-forest-900">{improvement.title}</h3>
+                  <div className="h-full rounded-2xl border border-white/60 bg-white/65 p-6 text-forest-800 transition-transform duration-300 hover:scale-105">
+                    <div className="mb-4">
+                      <span className="text-xs font-semibold text-forest-600 uppercase tracking-wide">{improvement.phase}</span>
+                      <h3 className="mt-2 text-base font-semibold text-forest-900">{improvement.title}</h3>
                       <p className="mt-2 text-sm font-semibold text-forest-700">
                         {improvement.status}
                       </p>
                     </div>
-                    <ul className="mt-4 list-disc space-y-2 pl-5 text-sm">
+                    <ul className="mt-4 space-y-2 text-sm">
                       {improvement.items.map((item) => (
-                        <li key={item}>{item}</li>
+                        <li key={item} className="flex items-start gap-2">
+                          <span className="mt-0.5 flex-shrink-0 text-forest-600">✓</span>
+                          <span className="leading-relaxed">{item}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>

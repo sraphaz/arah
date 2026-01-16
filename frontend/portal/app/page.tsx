@@ -7,6 +7,7 @@ import Architecture from "@/components/sections/Architecture";
 import Visibility from "@/components/sections/Visibility";
 import Value from "@/components/sections/Value";
 import Technology from "@/components/sections/Technology";
+import Features from "@/components/sections/Features";
 import Improvements from "@/components/sections/Improvements";
 import Roadmap from "@/components/sections/Roadmap";
 import Future from "@/components/sections/Future";
@@ -25,6 +26,7 @@ export default function Home() {
       <Visibility />
       <Value />
       <Technology />
+      <Features />
       <Improvements />
       <Roadmap />
       <Future />

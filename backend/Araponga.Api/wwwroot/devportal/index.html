@@ -380,7 +380,7 @@
               <dd>Conversas e grupos (inclui chat territorial).</dd>
 
               <dt><strong>ChatMessage</strong></dt>
-              <dd>Mensagens com paginação por cursor (beforeCreatedAt / beforeMessageId).</dd>
+              <dd>Mensagens com paginação por cursor (beforeCreatedAt / beforeMessageId). Suporta envio de imagens (1 por mensagem, máx. 5MB).</dd>
 
               <dt><strong>Participants</strong></dt>
               <dd>Participantes, papéis e “read state” (marcar como lido).</dd>
@@ -481,10 +481,11 @@
         </div>
 
         <div class="flow-step">
-          <h4>5. Criar post + âncoras geográficas</h4>
+          <h4>5. Criar post + âncoras geográficas + mídias</h4>
           <p>
             Para criar post use <code>POST /api/v1/feed</code>. As âncoras geográficas são opcionais e
-            posts são criados por moradores. Eventos são criados via <code>POST /api/v1/events</code>,
+            posts são criados por moradores. Posts podem incluir até 10 imagens através do campo <code>mediaIds</code>.
+            Eventos são criados via <code>POST /api/v1/events</code>,
             com data/hora e geolocalização obrigatória, e aparecem no feed e no mapa.
           </p>
           <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/feed \
@@ -498,8 +499,18 @@
     "visibility": "Public",
     "mapEntityId": null,
     "geoAnchors": [{"latitude": -23.55, "longitude": -46.63, "type": "POST"}],
-    "assetIds": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"]
+    "assetIds": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"],
+    "mediaIds": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc"]
   }'</code></pre>
+          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+            <strong>📸 Mídias em Posts:</strong>
+            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+              <li><strong>Upload de mídia</strong>: Primeiro, faça upload via <code>POST /api/v1/media/upload</code> para obter o <code>mediaId</code></li>
+              <li><strong>Associar ao post</strong>: Inclua os <code>mediaIds</code> no array ao criar o post (máximo 10 imagens)</li>
+              <li><strong>Resposta</strong>: O <code>FeedItemResponse</code> inclui <code>mediaUrls</code> (array de URLs) e <code>mediaCount</code></li>
+              <li><strong>Validação</strong>: Todas as mídias devem pertencer ao usuário que está criando o post</li>
+            </ul>
+          </div>
         </div>
 
         <div class="flow-step">
@@ -601,6 +612,38 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
             <code>POST /api/v1/notifications/{id}/read</code>.
           </p>
         </div>
+
+        <div class="flow-step">
+          <h4>11a. Enviar mensagem no chat com imagem</h4>
+          <p>
+            O chat permite enviar imagens junto com mensagens de texto. Cada mensagem pode conter uma imagem
+            (máximo 5MB, apenas imagens). Primeiro faça upload da imagem via <code>POST /api/v1/media/upload</code>
+            e depois inclua o <code>mediaId</code> ao enviar a mensagem.
+          </p>
+          <pre class="code-block"><code># 1) Upload da imagem
+curl -X POST http://localhost:8080/api/v1/media/upload \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -F "file=@imagem.jpg"
+
+# 2) Enviar mensagem com imagem
+curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/messages \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Olha essa foto!",
+    "mediaId": "gggggggg-gggg-gggg-gggg-gggggggggggg"
+  }'</code></pre>
+          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+            <strong>💬 Mídias em Chat:</strong>
+            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+              <li><strong>Upload de mídia</strong>: Use <code>POST /api/v1/media/upload</code> para fazer upload da imagem</li>
+              <li><strong>Enviar mensagem</strong>: Inclua o <code>mediaId</code> no campo opcional ao enviar mensagem</li>
+              <li><strong>Limite</strong>: 1 imagem por mensagem, máximo 5MB, apenas imagens (não vídeos)</li>
+              <li><strong>Resposta</strong>: O <code>MessageResponse</code> inclui <code>mediaUrl</code> e <code>hasMedia</code></li>
+              <li><strong>Validação</strong>: A mídia deve pertencer ao usuário que está enviando a mensagem</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <section class="section" id="casos-de-uso">
@@ -621,10 +664,11 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
             </ul>
           </div>
           <div class="card">
-            <h3>Publicar conteúdo (feed + mapa)</h3>
+            <h3>Publicar conteúdo (feed + mapa + mídias)</h3>
             <ul>
               <li><strong>Ler feed</strong>: <code>GET /api/v1/feed</code></li>
-              <li><strong>Criar post</strong>: <code>POST /api/v1/feed</code> (com <code>geoAnchors</code> opcionais)</li>
+              <li><strong>Criar post</strong>: <code>POST /api/v1/feed</code> (com <code>geoAnchors</code> opcionais e <code>mediaIds</code> para até 10 imagens)</li>
+              <li><strong>Upload de mídia</strong>: <code>POST /api/v1/media/upload</code> para obter <code>mediaId</code></li>
               <li><strong>Ver pins</strong>: <code>GET /api/v1/map/pins</code> (tipos: entity/asset/alert/post)</li>
             </ul>
           </div>
@@ -637,12 +681,12 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
             </ul>
           </div>
           <div class="card">
-            <h3>Economia local e eventos</h3>
+            <h3>Economia local e eventos (com mídias)</h3>
             <ul>
               <li><strong>Loja</strong>: <code>POST /api/v1/stores</code></li>
-              <li><strong>Items (produtos/serviços)</strong>: <code>POST /api/v1/items</code> e <code>GET /api/v1/items</code></li>
+              <li><strong>Items (produtos/serviços)</strong>: <code>POST /api/v1/items</code> com <code>mediaIds</code> (até 10 imagens) e <code>GET /api/v1/items</code></li>
               <li><strong>Carrinho</strong>: <code>POST /api/v1/cart/items</code> e <code>POST /api/v1/cart/checkout</code></li>
-              <li><strong>Evento</strong>: <code>POST /api/v1/events</code>, <code>POST /api/v1/events/{eventId}/interest</code>, <code>POST /api/v1/events/{eventId}/confirm</code></li>
+              <li><strong>Evento</strong>: <code>POST /api/v1/events</code> com <code>coverMediaId</code> e <code>additionalMediaIds</code>, <code>POST /api/v1/events/{eventId}/interest</code>, <code>POST /api/v1/events/{eventId}/confirm</code></li>
             </ul>
           </div>
         </div>
@@ -678,10 +722,10 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
         </div>
 
         <div class="flow-step">
-          <h4>13. Criar item (produto ou serviço)</h4>
+          <h4>13. Criar item (produto ou serviço) com imagens</h4>
           <p>
             Lojas podem criar items via <code>POST /api/v1/items</code>. Items podem ser produtos
-            ou serviços, com preço fixo, negociável ou gratuito.
+            ou serviços, com preço fixo, negociável ou gratuito. Items podem incluir até 10 imagens através do campo <code>mediaIds</code>.
           </p>
           <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/items \
   -H "Authorization: Bearer &lt;token&gt;" \
@@ -699,8 +743,18 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
     "currency": "BRL",
     "unit": "unidade",
     "latitude": -23.55,
-    "longitude": -46.63
+    "longitude": -46.63,
+    "mediaIds": ["dddddddd-dddd-dddd-dddd-dddddddddddd", "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"]
   }'</code></pre>
+          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+            <strong>📸 Mídias em Items:</strong>
+            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+              <li><strong>Upload de mídia</strong>: Primeiro, faça upload via <code>POST /api/v1/media/upload</code> para obter o <code>mediaId</code></li>
+              <li><strong>Associar ao item</strong>: Inclua os <code>mediaIds</code> no array ao criar o item (máximo 10 imagens)</li>
+              <li><strong>Imagem principal</strong>: A primeira imagem do array é usada como <code>primaryImageUrl</code></li>
+              <li><strong>Resposta</strong>: O <code>ItemResponse</code> inclui <code>primaryImageUrl</code> e <code>imageUrls</code> (array com todas as imagens)</li>
+            </ul>
+          </div>
         </div>
 
         <div class="flow-step">
@@ -1025,10 +1079,11 @@ curl "http://localhost:8080/api/v1/territories/{territoryId}/platform-financial/
         </p>
 
         <div class="flow-step">
-          <h4>17. Criar evento</h4>
+          <h4>17. Criar evento com imagem de capa e imagens adicionais</h4>
           <p>
             Use <code>POST /api/v1/events</code> para criar eventos. O evento automaticamente gera um post
-            no feed e aparece no mapa.
+            no feed e aparece no mapa. Eventos podem incluir uma imagem de capa (<code>coverMediaId</code>) e
+            até 10 imagens adicionais (<code>additionalMediaIds</code>).
           </p>
           <pre class="code-block"><code>curl -X POST http://localhost:8080/api/v1/events \
   -H "Authorization: Bearer &lt;token&gt;" \
@@ -1042,8 +1097,19 @@ curl "http://localhost:8080/api/v1/territories/{territoryId}/platform-financial/
     "endsAtUtc": "2024-12-15T18:00:00Z",
     "latitude": -23.55,
     "longitude": -46.63,
-    "locationLabel": "Praça Central"
+    "locationLabel": "Praça Central",
+    "coverMediaId": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+    "additionalMediaIds": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"]
   }'</code></pre>
+          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+            <strong>📸 Mídias em Eventos:</strong>
+            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+              <li><strong>Upload de mídia</strong>: Primeiro, faça upload via <code>POST /api/v1/media/upload</code> para obter o <code>mediaId</code></li>
+              <li><strong>Imagem de capa</strong>: Use <code>coverMediaId</code> para definir a imagem principal do evento (opcional)</li>
+              <li><strong>Imagens adicionais</strong>: Use <code>additionalMediaIds</code> para incluir até 10 imagens adicionais</li>
+              <li><strong>Resposta</strong>: O <code>EventResponse</code> inclui <code>coverImageUrl</code> e <code>additionalImageUrls</code></li>
+            </ul>
+          </div>
         </div>
 
         <div class="flow-step">

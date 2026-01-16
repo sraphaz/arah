@@ -1,7 +1,9 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Services;
@@ -11,6 +13,8 @@ public sealed class StoreItemService
     private readonly IStoreItemRepository _itemRepository;
     private readonly IStoreRepository _storeRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IMediaAssetRepository _mediaAssetRepository;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly MembershipAccessRules _accessRules;
     private readonly TerritoryFeatureFlagGuard _featureGuard;
@@ -21,6 +25,8 @@ public sealed class StoreItemService
         IStoreItemRepository itemRepository,
         IStoreRepository storeRepository,
         IUserRepository userRepository,
+        IMediaAssetRepository mediaAssetRepository,
+        IMediaAttachmentRepository mediaAttachmentRepository,
         AccessEvaluator accessEvaluator,
         MembershipAccessRules accessRules,
         TerritoryFeatureFlagGuard featureGuard,
@@ -30,6 +36,8 @@ public sealed class StoreItemService
         _itemRepository = itemRepository;
         _storeRepository = storeRepository;
         _userRepository = userRepository;
+        _mediaAssetRepository = mediaAssetRepository;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
         _accessEvaluator = accessEvaluator;
         _accessRules = accessRules;
         _featureGuard = featureGuard;
@@ -53,6 +61,7 @@ public sealed class StoreItemService
         double? latitude,
         double? longitude,
         ItemStatus status,
+        IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(title))
@@ -73,6 +82,32 @@ public sealed class StoreItemService
             if (!await CanManageStoreAsync(store, userId, cancellationToken))
             {
                 return Result<StoreItem>.Failure("Not authorized. Marketplace rules not met or not store owner/curator.");
+            }
+        }
+
+        // Validar e normalizar mediaIds
+        var normalizedMediaIds = mediaIds?
+            .Where(id => id != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        if (normalizedMediaIds is not null && normalizedMediaIds.Count > 10)
+        {
+            return Result<StoreItem>.Failure("Maximum 10 media items allowed per item.");
+        }
+
+        if (normalizedMediaIds is not null && normalizedMediaIds.Count > 0)
+        {
+            var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(normalizedMediaIds, cancellationToken);
+            if (mediaAssets.Count != normalizedMediaIds.Count)
+            {
+                return Result<StoreItem>.Failure("One or more media assets not found.");
+            }
+
+            // Validar que todas as mídias pertencem ao usuário
+            if (mediaAssets.Any(media => media.UploadedByUserId != userId || media.IsDeleted))
+            {
+                return Result<StoreItem>.Failure("One or more media assets are invalid or do not belong to the user.");
             }
         }
 
@@ -97,6 +132,24 @@ public sealed class StoreItemService
             now);
 
         await _itemRepository.AddAsync(item, cancellationToken);
+
+        // Criar MediaAttachments para as mídias associadas ao item
+        if (normalizedMediaIds is not null && normalizedMediaIds.Count > 0)
+        {
+            foreach (var (mediaId, index) in normalizedMediaIds.Select((id, idx) => (id, idx)))
+            {
+                var attachment = new MediaAttachment(
+                    Guid.NewGuid(),
+                    mediaId,
+                    MediaOwnerType.StoreItem,
+                    item.Id,
+                    index,
+                    now);
+
+                await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+            }
+        }
+
         await _unitOfWork.CommitAsync(cancellationToken);
         
         // Invalidar cache de items da store
@@ -193,6 +246,10 @@ public sealed class StoreItemService
 
         item.Archive(DateTime.UtcNow);
         await _itemRepository.UpdateAsync(item, cancellationToken);
+
+        // Deletar mídias associadas ao item quando arquivado
+        await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.StoreItem, item.Id, cancellationToken);
+
         await _unitOfWork.CommitAsync(cancellationToken);
         
         // Invalidar cache de items da store

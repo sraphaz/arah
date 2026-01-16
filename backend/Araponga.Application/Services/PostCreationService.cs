@@ -1,10 +1,12 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Metrics;
 using Araponga.Application.Events;
 using Araponga.Application.Models;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Geo;
+using Araponga.Domain.Media;
 using Araponga.Domain.Moderation;
 
 namespace Araponga.Application.Services;
@@ -19,6 +21,8 @@ public sealed class PostCreationService
     private readonly ITerritoryAssetRepository _assetRepository;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
     private readonly IPostAssetRepository _postAssetRepository;
+    private readonly IMediaAssetRepository _mediaAssetRepository;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
     private readonly ISanctionRepository _sanctionRepository;
     private readonly IFeatureFlagService _featureFlags;
     private readonly IAuditLogger _auditLogger;
@@ -32,6 +36,8 @@ public sealed class PostCreationService
         ITerritoryAssetRepository assetRepository,
         IPostGeoAnchorRepository postGeoAnchorRepository,
         IPostAssetRepository postAssetRepository,
+        IMediaAssetRepository mediaAssetRepository,
+        IMediaAttachmentRepository mediaAttachmentRepository,
         ISanctionRepository sanctionRepository,
         IFeatureFlagService featureFlags,
         IAuditLogger auditLogger,
@@ -44,6 +50,8 @@ public sealed class PostCreationService
         _assetRepository = assetRepository;
         _postGeoAnchorRepository = postGeoAnchorRepository;
         _postAssetRepository = postAssetRepository;
+        _mediaAssetRepository = mediaAssetRepository;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
         _sanctionRepository = sanctionRepository;
         _featureFlags = featureFlags;
         _auditLogger = auditLogger;
@@ -63,6 +71,7 @@ public sealed class PostCreationService
         Guid? mapEntityId,
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors,
         IReadOnlyCollection<Guid>? assetIds,
+        IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
@@ -110,6 +119,32 @@ public sealed class PostCreationService
             }
         }
 
+        // Validar e normalizar mediaIds
+        var normalizedMediaIds = mediaIds?
+            .Where(id => id != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        if (normalizedMediaIds is not null && normalizedMediaIds.Count > 10)
+        {
+            return Result<CommunityPost>.Failure("Maximum 10 media items allowed per post.");
+        }
+
+        if (normalizedMediaIds is not null && normalizedMediaIds.Count > 0)
+        {
+            var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(normalizedMediaIds, cancellationToken);
+            if (mediaAssets.Count != normalizedMediaIds.Count)
+            {
+                return Result<CommunityPost>.Failure("One or more media assets not found.");
+            }
+
+            // Validar que todas as mídias pertencem ao usuário
+            if (mediaAssets.Any(media => media.UploadedByUserId != userId || media.IsDeleted))
+            {
+                return Result<CommunityPost>.Failure("One or more media assets are invalid or do not belong to the user.");
+            }
+        }
+
         var post = new CommunityPost(
             Guid.NewGuid(),
             territoryId,
@@ -131,6 +166,24 @@ public sealed class PostCreationService
         {
             var postAssets = normalizedAssetIds.Select(assetId => new PostAsset(post.Id, assetId)).ToList();
             await _postAssetRepository.AddAsync(postAssets, cancellationToken);
+        }
+
+        // Criar MediaAttachments para as mídias associadas ao post
+        if (normalizedMediaIds is not null && normalizedMediaIds.Count > 0)
+        {
+            var now = DateTime.UtcNow;
+            foreach (var (mediaId, index) in normalizedMediaIds.Select((id, idx) => (id, idx)))
+            {
+                var attachment = new MediaAttachment(
+                    Guid.NewGuid(),
+                    mediaId,
+                    MediaOwnerType.Post,
+                    post.Id,
+                    index,
+                    now);
+
+                await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+            }
         }
 
         await _auditLogger.LogAsync(

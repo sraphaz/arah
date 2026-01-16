@@ -15,4 +15,6 @@ public sealed record EventResponse(
     string CreatedByMembership,
     string Status,
     int InterestedCount,
-    int ConfirmedCount);
+    int ConfirmedCount,
+    string? CoverImageUrl = null,
+    IReadOnlyCollection<string>? AdditionalImageUrls = null);

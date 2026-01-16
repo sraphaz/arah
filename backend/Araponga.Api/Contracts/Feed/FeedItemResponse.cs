@@ -12,5 +12,7 @@ public sealed record FeedItemResponse(
     bool IsHighlighted,
     int LikeCount,
     int ShareCount,
-    DateTime CreatedAtUtc
+    DateTime CreatedAtUtc,
+    IReadOnlyCollection<string>? MediaUrls = null,
+    int MediaCount = 0
 );

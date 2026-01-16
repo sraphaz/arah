@@ -1,7 +1,9 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Models;
 using Araponga.Domain.Chat;
+using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 
@@ -14,6 +16,8 @@ public sealed class ChatService
     private readonly IChatMessageRepository _messageRepository;
     private readonly IChatConversationStatsRepository _statsRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IMediaAssetRepository _mediaAssetRepository;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
     private readonly FeatureFlagCacheService _featureFlags;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,6 +28,8 @@ public sealed class ChatService
         IChatMessageRepository messageRepository,
         IChatConversationStatsRepository statsRepository,
         IUserRepository userRepository,
+        IMediaAssetRepository mediaAssetRepository,
+        IMediaAttachmentRepository mediaAttachmentRepository,
         FeatureFlagCacheService featureFlags,
         AccessEvaluator accessEvaluator,
         IUnitOfWork unitOfWork)
@@ -33,6 +39,8 @@ public sealed class ChatService
         _messageRepository = messageRepository;
         _statsRepository = statsRepository;
         _userRepository = userRepository;
+        _mediaAssetRepository = mediaAssetRepository;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
         _featureFlags = featureFlags;
         _accessEvaluator = accessEvaluator;
         _unitOfWork = unitOfWork;
@@ -328,6 +336,7 @@ public sealed class ChatService
         Guid conversationId,
         Guid userId,
         string text,
+        Guid? mediaId,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -359,6 +368,33 @@ public sealed class ChatService
             return OperationResult<ChatMessage>.Failure("Conversation is disabled.");
         }
 
+        // Validar mídia se fornecida
+        if (mediaId.HasValue && mediaId.Value != Guid.Empty)
+        {
+            var mediaAsset = await _mediaAssetRepository.GetByIdAsync(mediaId.Value, cancellationToken);
+            if (mediaAsset is null)
+            {
+                return OperationResult<ChatMessage>.Failure("Media asset not found.");
+            }
+
+            if (mediaAsset.UploadedByUserId != userId || mediaAsset.IsDeleted)
+            {
+                return OperationResult<ChatMessage>.Failure("Media asset is invalid or does not belong to the user.");
+            }
+
+            // Validar tipo: apenas imagens em chat
+            if (mediaAsset.MediaType != MediaType.Image)
+            {
+                return OperationResult<ChatMessage>.Failure("Only images are allowed in chat messages.");
+            }
+
+            // Validar tamanho: máximo 5MB
+            if (mediaAsset.SizeBytes > 5 * 1024 * 1024)
+            {
+                return OperationResult<ChatMessage>.Failure("Image size exceeds 5MB limit for chat.");
+            }
+        }
+
         var message = new ChatMessage(
             Guid.NewGuid(),
             conversationId,
@@ -372,6 +408,20 @@ public sealed class ChatService
             deletedByUserId: null);
 
         await _messageRepository.AddAsync(message, cancellationToken);
+
+        // Criar MediaAttachment se mídia foi fornecida
+        if (mediaId.HasValue && mediaId.Value != Guid.Empty)
+        {
+            var attachment = new MediaAttachment(
+                Guid.NewGuid(),
+                mediaId.Value,
+                MediaOwnerType.ChatMessage,
+                message.Id,
+                0,
+                DateTime.UtcNow);
+
+            await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+        }
 
         // Atualizar stats (upsert)
         var existingStats = await _statsRepository.GetAsync(conversationId, cancellationToken);

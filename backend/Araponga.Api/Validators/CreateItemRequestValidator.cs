@@ -73,5 +73,20 @@ public sealed class CreateItemRequestValidator : AbstractValidator<CreateItemReq
             RuleFor(x => x.Longitude!.Value)
                 .InclusiveBetween(-180, 180).WithMessage("Longitude deve estar entre -180 e 180.");
         });
+
+        RuleFor(x => x.MediaIds)
+            .Must(mediaIds => mediaIds == null || mediaIds.Count <= 10)
+            .WithMessage("Maximum 10 media items allowed per item.");
+
+        When(x => x.MediaIds != null, () =>
+        {
+            RuleFor(x => x.MediaIds!)
+                .Must(mediaIds => mediaIds.All(id => id != Guid.Empty))
+                .WithMessage("MediaIds cannot contain empty GUIDs.");
+
+            RuleFor(x => x.MediaIds!)
+                .Must(mediaIds => mediaIds.Distinct().Count() == mediaIds.Count)
+                .WithMessage("MediaIds cannot contain duplicate values.");
+        });
     }
 }

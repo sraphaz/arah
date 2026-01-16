@@ -4,6 +4,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
+using Araponga.Domain.Media;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -16,11 +17,16 @@ namespace Araponga.Api.Controllers;
 public sealed class ItemsController : ControllerBase
 {
     private readonly StoreItemService _itemService;
+    private readonly MediaService _mediaService;
     private readonly CurrentUserAccessor _currentUserAccessor;
 
-    public ItemsController(StoreItemService itemService, CurrentUserAccessor currentUserAccessor)
+    public ItemsController(
+        StoreItemService itemService,
+        MediaService mediaService,
+        CurrentUserAccessor currentUserAccessor)
     {
         _itemService = itemService;
+        _mediaService = mediaService;
         _currentUserAccessor = currentUserAccessor;
     }
 
@@ -80,6 +86,7 @@ public sealed class ItemsController : ControllerBase
             request.Latitude,
             request.Longitude,
             status,
+            request.MediaIds,
             cancellationToken);
 
         if (!result.IsSuccess || result.Value is null)
@@ -92,7 +99,8 @@ public sealed class ItemsController : ControllerBase
             return BadRequest(new { error = result.Error ?? "Unable to create item." });
         }
 
-        return CreatedAtAction(nameof(GetItemById), new { id = result.Value.Id }, ToResponse(result.Value));
+        var mediaUrls = await LoadMediaUrlsForItemAsync(result.Value.Id, cancellationToken);
+        return CreatedAtAction(nameof(GetItemById), new { id = result.Value.Id }, ToResponse(result.Value, mediaUrls.PrimaryImageUrl, mediaUrls.ImageUrls));
     }
 
     /// <summary>
@@ -175,7 +183,8 @@ public sealed class ItemsController : ControllerBase
                 : BadRequest(new { error = result.Error ?? "Unable to update listing." });
         }
 
-        return Ok(ToResponse(result.Value));
+        var mediaUrls = await LoadMediaUrlsForItemAsync(result.Value.Id, cancellationToken);
+        return Ok(ToResponse(result.Value, mediaUrls.PrimaryImageUrl, mediaUrls.ImageUrls));
     }
 
     /// <summary>
@@ -207,7 +216,8 @@ public sealed class ItemsController : ControllerBase
                 : BadRequest(new { error = result.Error ?? "Unable to archive item." });
         }
 
-        return Ok(ToResponse(result.Value));
+        var mediaUrls = await LoadMediaUrlsForItemAsync(result.Value.Id, cancellationToken);
+        return Ok(ToResponse(result.Value, mediaUrls.PrimaryImageUrl, mediaUrls.ImageUrls));
     }
 
     /// <summary>
@@ -276,7 +286,12 @@ public sealed class ItemsController : ControllerBase
             return BadRequest(new { error = result.Error ?? "Unable to search items." });
         }
 
-        var response = result.Value.Select(ToResponse).ToList();
+        var response = new List<ItemResponse>();
+        foreach (var item in result.Value)
+        {
+            var mediaUrls = await LoadMediaUrlsForItemAsync(item.Id, cancellationToken);
+            response.Add(ToResponse(item, mediaUrls.PrimaryImageUrl, mediaUrls.ImageUrls));
+        }
         return Ok(response);
     }
 
@@ -350,8 +365,14 @@ public sealed class ItemsController : ControllerBase
         }
 
         var pagedResult = result.Value;
+        var items = new List<ItemResponse>();
+        foreach (var item in pagedResult.Items)
+        {
+            var mediaUrls = await LoadMediaUrlsForItemAsync(item.Id, cancellationToken);
+            items.Add(ToResponse(item, mediaUrls.PrimaryImageUrl, mediaUrls.ImageUrls));
+        }
         var response = new PagedResponse<ItemResponse>(
-            pagedResult.Items.Select(ToResponse).ToList(),
+            items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
             pagedResult.TotalCount,
@@ -381,10 +402,11 @@ public sealed class ItemsController : ControllerBase
             return NotFound();
         }
 
-        return Ok(ToResponse(item));
+        var mediaUrls = await LoadMediaUrlsForItemAsync(item.Id, cancellationToken);
+        return Ok(ToResponse(item, mediaUrls.PrimaryImageUrl, mediaUrls.ImageUrls));
     }
 
-    private static ItemResponse ToResponse(StoreItem item)
+    private static ItemResponse ToResponse(StoreItem item, string? primaryImageUrl = null, IReadOnlyCollection<string>? imageUrls = null)
     {
         return new ItemResponse(
             item.Id,
@@ -403,7 +425,42 @@ public sealed class ItemsController : ControllerBase
             item.Longitude,
             item.Status.ToString().ToUpperInvariant(),
             item.CreatedAtUtc,
-            item.UpdatedAtUtc);
+            item.UpdatedAtUtc,
+            primaryImageUrl,
+            imageUrls);
+    }
+
+    private async Task<(string? PrimaryImageUrl, IReadOnlyCollection<string> ImageUrls)> LoadMediaUrlsForItemAsync(
+        Guid itemId,
+        CancellationToken cancellationToken)
+    {
+        var mediaAssets = await _mediaService.ListMediaByOwnerAsync(MediaOwnerType.StoreItem, itemId, cancellationToken);
+        if (mediaAssets.Count == 0)
+        {
+            return (null, Array.Empty<string>());
+        }
+
+        // Primeira mídia (DisplayOrder = 0) é a imagem principal
+        string? primaryImageUrl = null;
+        var imageUrls = new List<string>();
+
+        foreach (var mediaAsset in mediaAssets)
+        {
+            var urlResult = await _mediaService.GetMediaUrlAsync(mediaAsset.Id, null, cancellationToken);
+            if (urlResult.IsSuccess && urlResult.Value is not null)
+            {
+                if (primaryImageUrl is null)
+                {
+                    primaryImageUrl = urlResult.Value;
+                }
+                else
+                {
+                    imageUrls.Add(urlResult.Value);
+                }
+            }
+        }
+
+        return (primaryImageUrl, imageUrls);
     }
 
     private static bool TryParseItemType(string? raw, out ItemType type)

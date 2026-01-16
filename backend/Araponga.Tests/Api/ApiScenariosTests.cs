@@ -668,6 +668,7 @@ public sealed class ApiScenariosTests
                 "PUBLIC",
                 null,
                 new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") },
+                null,
                 null));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
@@ -680,6 +681,7 @@ public sealed class ApiScenariosTests
                 "PUBLIC",
                 null,
                 new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") },
+                null,
                 null));
         Assert.Equal(HttpStatusCode.BadRequest, invalidPost.StatusCode);
 
@@ -723,6 +725,7 @@ public sealed class ApiScenariosTests
                 "PUBLIC",
                 null,
                 new List<GeoAnchorRequest> { new(-23.37, -45.02, "POST") },
+                null,
                 null));
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
@@ -1054,7 +1057,8 @@ public sealed class ApiScenariosTests
                 "PUBLIC",
                 null,
                 null,
-                new[] { asset!.Id }));
+                new[] { asset!.Id },
+                null));
         postResponse.EnsureSuccessStatusCode();
         var post = await postResponse.Content.ReadFromJsonAsync<FeedItemResponse>();
         Assert.NotNull(post);

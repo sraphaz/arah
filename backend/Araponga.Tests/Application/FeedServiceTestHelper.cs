@@ -39,6 +39,8 @@ public static class FeedServiceTestHelper
         var postAssetRepository = new InMemoryPostAssetRepository(dataStore);
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var eventBusInstance = eventBus ?? new NoOpEventBus();
 
@@ -49,6 +51,8 @@ public static class FeedServiceTestHelper
             assetRepository,
             geoAnchorRepository,
             postAssetRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
             sanctionRepository,
             featureFlags,
             auditLogger,

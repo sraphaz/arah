@@ -188,11 +188,13 @@ backend/
 - ✅ Vínculos (morador e visitante) com regras de visibilidade
 - ✅ Feature flags por território
 - ✅ Chat territorial: canais (público/moradores) + grupos com aprovação por curadoria
+- ✅ Chat com suporte a envio de imagens (1 imagem por mensagem, máx. 5MB)
 
 #### Feed e Social
 - ✅ Feed territorial com criação, interações (like, comment, share) e moderação
 - ✅ Feed pessoal e feed do território
 - ✅ Posts com GeoAnchors (georreferenciamento)
+- ✅ Posts com múltiplas imagens (até 10 por post)
 - ✅ Paginação completa em todos os endpoints de listagem (15 endpoints paginados)
 - ✅ Otimizações de performance (batch operations, cache invalidation)
 
@@ -203,7 +205,8 @@ backend/
 
 #### Marketplace
 - ✅ Stores (lojas/comércios) por território
-- ✅ Listings (produtos e serviços) com busca e filtros
+- ✅ Items (produtos e serviços) com busca e filtros
+- ✅ Items com múltiplas imagens (até 10 por item)
 - ✅ Cart e Checkout
 - ✅ Inquiries (consultas de compra)
 - ✅ Platform Fees (taxas configuráveis por território)
@@ -212,14 +215,18 @@ backend/
 - ✅ Eventos comunitários por território
 - ✅ Participações em eventos
 - ✅ Eventos com georreferenciamento
+- ✅ Eventos com imagem de capa e imagens adicionais (até 10 no total)
 
 #### Alertas e Saúde
 - ✅ Alertas de saúde pública (Health Alerts)
 - ✅ Comunicação emergencial por território
 
-#### Assets
+#### Assets e Mídia
 - ✅ Recursos compartilhados do território (Territory Assets)
 - ✅ Validação e georreferenciamento de assets
+- ✅ Sistema completo de mídia (armazenamento local, S3, Azure Blob)
+- ✅ Upload, download e gestão de mídias (imagens, vídeos, documentos)
+- ✅ Cache de URLs de mídia com suporte a Redis e Memory Cache
 
 #### Moderação
 - ✅ Reports de posts e usuários

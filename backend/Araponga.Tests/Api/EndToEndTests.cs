@@ -131,6 +131,7 @@ public sealed class EndToEndTests
                 "PUBLIC",
                 null,
                 null,
+                null,
                 null));
 
         Assert.True(postResponse.StatusCode == HttpStatusCode.Created ||
@@ -160,6 +161,7 @@ public sealed class EndToEndTests
                 "Conteúdo",
                 "GENERAL",
                 "PUBLIC",
+                null,
                 null,
                 null,
                 null));

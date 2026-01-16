@@ -40,5 +40,20 @@ public sealed class CreatePostRequestValidator : AbstractValidator<CreatePostReq
                         .InclusiveBetween(-180, 180).WithMessage("Longitude must be between -180 and 180.");
                 });
         });
+
+        RuleFor(x => x.MediaIds)
+            .Must(mediaIds => mediaIds == null || mediaIds.Count <= 10)
+            .WithMessage("Maximum 10 media items allowed per post.");
+
+        When(x => x.MediaIds != null, () =>
+        {
+            RuleFor(x => x.MediaIds!)
+                .Must(mediaIds => mediaIds.All(id => id != Guid.Empty))
+                .WithMessage("MediaIds cannot contain empty GUIDs.");
+
+            RuleFor(x => x.MediaIds!)
+                .Must(mediaIds => mediaIds.Distinct().Count() == mediaIds.Count)
+                .WithMessage("MediaIds cannot contain duplicate values.");
+        });
     }
 }

@@ -7,5 +7,7 @@ public sealed record MessageResponse(
     string ContentType,
     string? Text,
     DateTime CreatedAtUtc,
-    DateTime? EditedAtUtc);
+    DateTime? EditedAtUtc,
+    string? MediaUrl = null,
+    bool HasMedia = false);
 

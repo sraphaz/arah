@@ -31,7 +31,8 @@ public sealed record CreateItemRequest(
     string? Unit,
     double? Latitude,
     double? Longitude,
-    string? Status);
+    string? Status,
+    IReadOnlyCollection<Guid>? MediaIds = null);
 
 /// <summary>
 /// Request para atualizar um item existente.
@@ -60,7 +61,8 @@ public sealed record UpdateItemRequest(
     string? Unit,
     double? Latitude,
     double? Longitude,
-    string? Status);
+    string? Status,
+    IReadOnlyCollection<Guid>? MediaIds = null);
 
 /// <summary>
 /// Response com os dados de um item do marketplace.
@@ -99,4 +101,6 @@ public sealed record ItemResponse(
     double? Longitude,
     string Status,
     DateTime CreatedAtUtc,
-    DateTime UpdatedAtUtc);
+    DateTime UpdatedAtUtc,
+    string? PrimaryImageUrl = null,
+    IReadOnlyCollection<string>? ImageUrls = null);

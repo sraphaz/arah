@@ -23,6 +23,7 @@ public sealed class ReportServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var services = new ServiceCollection();
         services.AddSingleton(dataStore);
         var serviceProvider = services.BuildServiceProvider();
@@ -33,6 +34,7 @@ public sealed class ReportServiceTests
             feedRepository,
             userRepository,
             sanctionRepository,
+            mediaAttachmentRepository,
             auditLogger,
             eventBus,
             unitOfWork);

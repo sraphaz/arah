@@ -61,7 +61,9 @@ public sealed class MarketplaceServiceTests
         }
 
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, mediaAssetRepository, mediaAttachmentRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
 
         return (storeService, itemService);
     }
@@ -150,6 +152,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         Assert.True(listingResult.IsSuccess);
@@ -221,6 +224,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         Assert.False(listingResult.IsSuccess);
@@ -250,7 +254,9 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, mediaAssetRepository, mediaAttachmentRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
         var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, featureGuard, unitOfWork);
         var cartService = new CartService(
             cartRepository,
@@ -297,6 +303,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         var service = await itemService.CreateItemAsync(
@@ -315,6 +322,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         await platformFeeService.UpsertFeeConfigAsync(
@@ -333,6 +341,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         Assert.True(listingsResult.IsSuccess);
@@ -461,7 +470,9 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, mediaAssetRepository, mediaAttachmentRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -493,6 +504,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         Assert.True(createResult.IsSuccess);
@@ -513,6 +525,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         Assert.True(updateResult.IsSuccess);
@@ -542,7 +555,9 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, mediaAssetRepository, mediaAttachmentRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -574,6 +589,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         await itemService.CreateItemAsync(
@@ -592,6 +608,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         var productResults = await itemService.SearchItemsAsync(
@@ -601,6 +618,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         Assert.True(productResults.IsSuccess);
@@ -647,7 +665,9 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, mediaAssetRepository, mediaAttachmentRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
         var cartService = new CartService(
             cartRepository,
             cartItemRepository,
@@ -690,6 +710,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         var addResult = await cartService.AddItemAsync(
@@ -748,7 +769,9 @@ public sealed class MarketplaceServiceTests
             TerritoryId,
             CancellationToken.None);
         var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
-        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var itemService = new StoreItemService(itemRepository, storeRepository, userRepository, mediaAssetRepository, mediaAttachmentRepository, accessEvaluator, membershipAccessRules, featureGuard, unitOfWork);
         var inquiryService = new InquiryService(inquiryRepository, itemRepository, storeRepository, featureGuard, unitOfWork);
 
         var buyerId = Guid.NewGuid();
@@ -786,6 +809,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         var inquiryResult = await inquiryService.CreateInquiryAsync(

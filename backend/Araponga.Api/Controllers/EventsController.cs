@@ -4,6 +4,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
+using Araponga.Domain.Media;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -16,11 +17,16 @@ namespace Araponga.Api.Controllers;
 public sealed class EventsController : ControllerBase
 {
     private readonly EventsService _eventsService;
+    private readonly MediaService _mediaService;
     private readonly CurrentUserAccessor _currentUserAccessor;
 
-    public EventsController(EventsService eventsService, CurrentUserAccessor currentUserAccessor)
+    public EventsController(
+        EventsService eventsService,
+        MediaService mediaService,
+        CurrentUserAccessor currentUserAccessor)
     {
         _eventsService = eventsService;
+        _mediaService = mediaService;
         _currentUserAccessor = currentUserAccessor;
     }
 
@@ -53,6 +59,8 @@ public sealed class EventsController : ControllerBase
             request.Latitude,
             request.Longitude,
             request.LocationLabel,
+            request.CoverMediaId,
+            request.AdditionalMediaIds,
             cancellationToken);
 
         if (!result.IsSuccess || result.Value is null)
@@ -60,7 +68,8 @@ public sealed class EventsController : ControllerBase
             return BadRequest(new { error = result.Error ?? "Unable to create event." });
         }
 
-        return CreatedAtAction(nameof(GetEvents), new { }, ToResponse(result.Value));
+        var mediaUrls = await LoadMediaUrlsForEventAsync(result.Value.Event.Id, cancellationToken);
+        return CreatedAtAction(nameof(GetEvents), new { }, ToResponse(result.Value, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
     }
 
     /// <summary>
@@ -98,7 +107,8 @@ public sealed class EventsController : ControllerBase
             return BadRequest(new { error = result.Error ?? "Unable to update event." });
         }
 
-        return Ok(ToResponse(result.Value));
+        var mediaUrls = await LoadMediaUrlsForEventAsync(result.Value.Event.Id, cancellationToken);
+        return Ok(ToResponse(result.Value, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
     }
 
     /// <summary>
@@ -206,7 +216,13 @@ public sealed class EventsController : ControllerBase
         }
 
         var events = await _eventsService.ListEventsAsync(territoryId, from, to, parsedStatus, cancellationToken);
-        return Ok(events.Select(ToResponse));
+        var responses = new List<EventResponse>();
+        foreach (var evt in events)
+        {
+            var mediaUrls = await LoadMediaUrlsForEventAsync(evt.Event.Id, cancellationToken);
+            responses.Add(ToResponse(evt, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
+        }
+        return Ok(responses);
     }
 
     /// <summary>
@@ -244,8 +260,14 @@ public sealed class EventsController : ControllerBase
 
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _eventsService.ListEventsPagedAsync(territoryId, from, to, parsedStatus, pagination, cancellationToken);
+        var items = new List<EventResponse>();
+        foreach (var evt in pagedResult.Items)
+        {
+            var mediaUrls = await LoadMediaUrlsForEventAsync(evt.Event.Id, cancellationToken);
+            items.Add(ToResponse(evt, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
+        }
         var response = new PagedResponse<EventResponse>(
-            pagedResult.Items.Select(ToResponse).ToList(),
+            items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
             pagedResult.TotalCount,
@@ -286,7 +308,13 @@ public sealed class EventsController : ControllerBase
             territoryId,
             cancellationToken);
 
-        return Ok(events.Select(ToResponse));
+        var responses = new List<EventResponse>();
+        foreach (var evt in events)
+        {
+            var mediaUrls = await LoadMediaUrlsForEventAsync(evt.Event.Id, cancellationToken);
+            responses.Add(ToResponse(evt, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
+        }
+        return Ok(responses);
     }
 
     /// <summary>
@@ -324,8 +352,14 @@ public sealed class EventsController : ControllerBase
             pagination,
             cancellationToken);
 
+        var items = new List<EventResponse>();
+        foreach (var evt in pagedResult.Items)
+        {
+            var mediaUrls = await LoadMediaUrlsForEventAsync(evt.Event.Id, cancellationToken);
+            items.Add(ToResponse(evt, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
+        }
         var response = new PagedResponse<EventResponse>(
-            pagedResult.Items.Select(ToResponse).ToList(),
+            items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
             pagedResult.TotalCount,
@@ -336,7 +370,10 @@ public sealed class EventsController : ControllerBase
         return Ok(response);
     }
 
-    private static EventResponse ToResponse(Application.Models.EventSummary summary)
+    private static EventResponse ToResponse(
+        Application.Models.EventSummary summary,
+        string? coverImageUrl = null,
+        IReadOnlyCollection<string>? additionalImageUrls = null)
     {
         var evt = summary.Event;
         return new EventResponse(
@@ -354,6 +391,46 @@ public sealed class EventsController : ControllerBase
             evt.CreatedByMembership.ToString().ToUpperInvariant(),
             evt.Status.ToString().ToUpperInvariant(),
             summary.InterestedCount,
-            summary.ConfirmedCount);
+            summary.ConfirmedCount,
+            coverImageUrl,
+            additionalImageUrls);
+    }
+
+    private async Task<(string? CoverImageUrl, IReadOnlyCollection<string> AdditionalImageUrls)> LoadMediaUrlsForEventAsync(
+        Guid eventId,
+        CancellationToken cancellationToken)
+    {
+        var mediaAssets = await _mediaService.ListMediaByOwnerAsync(MediaOwnerType.Event, eventId, cancellationToken);
+        if (mediaAssets.Count == 0)
+        {
+            return (null, Array.Empty<string>());
+        }
+
+        // MediaService.ListMediaByOwnerAsync retorna mídias ordenadas por DisplayOrder
+        // DisplayOrder = 0 é sempre a capa (se existir), DisplayOrder >= 1 são adicionais
+        string? coverImageUrl = null;
+        var additionalImageUrls = new List<string>();
+        bool isFirst = true;
+
+        foreach (var mediaAsset in mediaAssets)
+        {
+            var urlResult = await _mediaService.GetMediaUrlAsync(mediaAsset.Id, null, cancellationToken);
+            if (urlResult.IsSuccess && urlResult.Value is not null)
+            {
+                // Primeira mídia (DisplayOrder = 0) é sempre a capa se existir
+                // Caso contrário, todas são adicionais (DisplayOrder >= 1)
+                if (isFirst)
+                {
+                    coverImageUrl = urlResult.Value;
+                    isFirst = false;
+                }
+                else
+                {
+                    additionalImageUrls.Add(urlResult.Value);
+                }
+            }
+        }
+
+        return (coverImageUrl, additionalImageUrls);
     }
 }

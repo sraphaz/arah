@@ -43,5 +43,29 @@ public sealed class CreateEventRequestValidator : AbstractValidator<CreateEventR
             RuleFor(x => x.LocationLabel)
                 .MaximumLength(200).WithMessage("LocationLabel must not exceed 200 characters.");
         });
+
+        RuleFor(x => x.AdditionalMediaIds)
+            .Must(mediaIds => mediaIds == null || mediaIds.Count <= 5)
+            .WithMessage("Maximum 5 additional media items allowed per event.");
+
+        When(x => x.AdditionalMediaIds != null, () =>
+        {
+            RuleFor(x => x.AdditionalMediaIds!)
+                .Must(mediaIds => mediaIds.All(id => id != Guid.Empty))
+                .WithMessage("AdditionalMediaIds cannot contain empty GUIDs.");
+
+            RuleFor(x => x.AdditionalMediaIds!)
+                .Must(mediaIds => mediaIds.Distinct().Count() == mediaIds.Count)
+                .WithMessage("AdditionalMediaIds cannot contain duplicate values.");
+        });
+
+        // Validar que CoverMediaId não está duplicado em AdditionalMediaIds
+        When(x => x.CoverMediaId.HasValue && x.CoverMediaId.Value != Guid.Empty && 
+                  x.AdditionalMediaIds != null && x.AdditionalMediaIds.Count > 0, () =>
+        {
+            RuleFor(x => x.AdditionalMediaIds!)
+                .Must((request, additionalIds) => !additionalIds.Contains(request.CoverMediaId!.Value))
+                .WithMessage("CoverMediaId cannot be duplicated in AdditionalMediaIds.");
+        });
     }
 }

@@ -99,6 +99,7 @@ public sealed class SecurityTests
                     "PUBLIC",
                     null,
                     null,
+                    null,
                     null));
 
             if (response.StatusCode == HttpStatusCode.Created ||
@@ -170,6 +171,7 @@ public sealed class SecurityTests
                 "Conteúdo",
                 "GENERAL",
                 "PUBLIC",
+                null,
                 null,
                 null,
                 null));
@@ -462,6 +464,7 @@ public sealed class SecurityTests
                 "PUBLIC",
                 null,
                 null,
+                null,
                 null));
 
         // Deve retornar 400 (validação) ou 401/403 (permissões), mas NUNCA executar SQL
@@ -492,6 +495,7 @@ public sealed class SecurityTests
                 "Conteúdo",
                 "GENERAL",
                 "PUBLIC",
+                null,
                 null,
                 null,
                 null));
@@ -630,6 +634,7 @@ public sealed class SecurityTests
                 "PUBLIC",
                 null,
                 null,
+                null,
                 null));
 
         // Deve retornar 401 (Unauthorized) - CSRF não deve passar
@@ -706,6 +711,7 @@ public sealed class SecurityTests
                 "Content",
                 "GENERAL",
                 "PUBLIC",
+                null,
                 null,
                 null,
                 null));

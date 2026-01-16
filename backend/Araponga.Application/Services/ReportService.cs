@@ -1,7 +1,9 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Metrics;
 using Araponga.Application.Events;
+using Araponga.Domain.Media;
 using Araponga.Domain.Moderation;
 
 namespace Araponga.Application.Services;
@@ -12,6 +14,7 @@ public sealed class ReportService
     private readonly IFeedRepository _feedRepository;
     private readonly IUserRepository _userRepository;
     private readonly ISanctionRepository _sanctionRepository;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IEventBus _eventBus;
     private readonly IUnitOfWork _unitOfWork;
@@ -22,6 +25,7 @@ public sealed class ReportService
         IFeedRepository feedRepository,
         IUserRepository userRepository,
         ISanctionRepository sanctionRepository,
+        IMediaAttachmentRepository mediaAttachmentRepository,
         IAuditLogger auditLogger,
         IEventBus eventBus,
         IUnitOfWork unitOfWork,
@@ -31,6 +35,7 @@ public sealed class ReportService
         _feedRepository = feedRepository;
         _userRepository = userRepository;
         _sanctionRepository = sanctionRepository;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
         _auditLogger = auditLogger;
         _eventBus = eventBus;
         _unitOfWork = unitOfWork;
@@ -219,6 +224,9 @@ public sealed class ReportService
         }
 
         await _feedRepository.UpdateStatusAsync(post.Id, Domain.Feed.PostStatus.Hidden, cancellationToken);
+
+        // Deletar mídias associadas ao post quando ocultado
+        await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Post, post.Id, cancellationToken);
 
         await _auditLogger.LogAsync(
             new Models.AuditEntry("moderation.threshold.post", report.ReporterUserId, report.TerritoryId, post.Id, DateTime.UtcNow),

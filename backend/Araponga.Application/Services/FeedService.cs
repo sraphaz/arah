@@ -81,11 +81,12 @@ public sealed class FeedService
         Guid? mapEntityId,
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors,
         IReadOnlyCollection<Guid>? assetIds,
+        IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
         return _postCreationService.CreatePostAsync(
             territoryId, userId, title, content, type, visibility, status,
-            mapEntityId, geoAnchors, assetIds, cancellationToken);
+            mapEntityId, geoAnchors, assetIds, mediaIds, cancellationToken);
     }
 
     public Task<bool> LikeAsync(

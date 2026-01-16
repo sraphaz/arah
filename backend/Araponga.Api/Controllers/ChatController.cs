@@ -2,6 +2,7 @@ using Araponga.Api.Contracts.Chat;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Chat;
+using Araponga.Domain.Media;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -14,11 +15,16 @@ public sealed class ChatController : ControllerBase
 {
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ChatService _chatService;
+    private readonly MediaService _mediaService;
 
-    public ChatController(CurrentUserAccessor currentUserAccessor, ChatService chatService)
+    public ChatController(
+        CurrentUserAccessor currentUserAccessor,
+        ChatService chatService,
+        MediaService mediaService)
     {
         _currentUserAccessor = currentUserAccessor;
         _chatService = chatService;
+        _mediaService = mediaService;
     }
 
     [HttpGet("conversations/{conversationId:guid}")]
@@ -82,7 +88,12 @@ public sealed class ChatController : ControllerBase
             return BadRequest(new { error = result.Error });
         }
 
-        var items = result.Value.Select(ToMessageResponse).ToList();
+        var items = new List<MessageResponse>();
+        foreach (var msg in result.Value)
+        {
+            var mediaUrl = await LoadMediaUrlForMessageAsync(msg.Id, cancellationToken);
+            items.Add(ToMessageResponse(msg, mediaUrl));
+        }
         DateTime? nextAt = null;
         Guid? nextId = null;
         if (items.Count > 0)
@@ -113,6 +124,7 @@ public sealed class ChatController : ControllerBase
             conversationId,
             userContext.User.Id,
             request.Text,
+            request.MediaId,
             cancellationToken);
 
         if (result.IsFailure || result.Value is null)
@@ -125,7 +137,8 @@ public sealed class ChatController : ControllerBase
             return BadRequest(new { error = result.Error });
         }
 
-        return CreatedAtAction(nameof(ListMessages), new { conversationId }, ToMessageResponse(result.Value));
+        var mediaUrl = await LoadMediaUrlForMessageAsync(result.Value.Id, cancellationToken);
+        return CreatedAtAction(nameof(ListMessages), new { conversationId }, ToMessageResponse(result.Value, mediaUrl));
     }
 
     [HttpGet("conversations/{conversationId:guid}/participants")]
@@ -274,7 +287,7 @@ public sealed class ChatController : ControllerBase
             c.DisabledAtUtc);
     }
 
-    private static MessageResponse ToMessageResponse(ChatMessage m)
+    private static MessageResponse ToMessageResponse(ChatMessage m, string? mediaUrl = null)
     {
         return new MessageResponse(
             m.Id,
@@ -283,7 +296,23 @@ public sealed class ChatController : ControllerBase
             m.ContentType.ToString().ToUpperInvariant(),
             m.Text,
             m.CreatedAtUtc,
-            m.EditedAtUtc);
+            m.EditedAtUtc,
+            mediaUrl,
+            mediaUrl != null);
+    }
+
+    private async Task<string?> LoadMediaUrlForMessageAsync(Guid messageId, CancellationToken cancellationToken)
+    {
+        var mediaAssets = await _mediaService.ListMediaByOwnerAsync(MediaOwnerType.ChatMessage, messageId, cancellationToken);
+        if (mediaAssets.Count == 0)
+        {
+            return null;
+        }
+
+        // Chat só tem uma mídia por mensagem
+        var mediaAsset = mediaAssets[0];
+        var urlResult = await _mediaService.GetMediaUrlAsync(mediaAsset.Id, null, cancellationToken);
+        return urlResult.IsSuccess ? urlResult.Value : null;
     }
 
     private static ParticipantResponse ToParticipantResponse(ConversationParticipant p)

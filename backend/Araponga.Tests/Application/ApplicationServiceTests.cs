@@ -69,6 +69,7 @@ public sealed class ApplicationServiceTests
                 new(-23.0, -45.0, "POST")
             },
             null,
+            null,
             CancellationToken.None);
 
         Assert.False(invalid.IsSuccess);
@@ -86,6 +87,7 @@ public sealed class ApplicationServiceTests
             {
                 new(-23.0, -45.0, "POST")
             },
+            null,
             null,
             CancellationToken.None);
 
@@ -337,8 +339,9 @@ public sealed class ApplicationServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger, EventBus, unitOfWork);
+        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, mediaAttachmentRepository, auditLogger, EventBus, unitOfWork);
 
         var reporterId = Guid.NewGuid();
         var postId = dataStore.Posts[0].Id;
@@ -373,8 +376,9 @@ public sealed class ApplicationServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, auditLogger, EventBus, unitOfWork);
+        var service = new ReportService(reportRepository, feedRepository, userRepository, sanctionRepository, mediaAttachmentRepository, auditLogger, EventBus, unitOfWork);
 
         var missingPost = await service.ReportPostAsync(
             Guid.NewGuid(),
@@ -453,11 +457,15 @@ public sealed class ApplicationServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -487,6 +495,8 @@ public sealed class ApplicationServiceTests
             -23.0,
             -45.0,
             "Praça central",
+            null,
+            null,
             CancellationToken.None);
 
         Assert.True(create.IsSuccess);
@@ -505,11 +515,15 @@ public sealed class ApplicationServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -524,6 +538,8 @@ public sealed class ApplicationServiceTests
             null,
             -23.1,
             -45.1,
+            null,
+            null,
             null,
             CancellationToken.None);
 
@@ -543,11 +559,15 @@ public sealed class ApplicationServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -590,11 +610,15 @@ public sealed class ApplicationServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -664,11 +688,15 @@ public sealed class ApplicationServiceTests
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
         var userRepository = new InMemoryUserRepository(dataStore);
         var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -764,6 +792,7 @@ public sealed class ApplicationServiceTests
                 new(-23.3701, -45.0201, "POST")
             },
             null,
+            null,
             CancellationToken.None);
 
         Assert.True(created.IsSuccess);
@@ -801,6 +830,7 @@ public sealed class ApplicationServiceTests
             PostStatus.Published,
             null,
             anchors,
+            null,
             null,
             CancellationToken.None);
 
@@ -998,6 +1028,7 @@ public sealed class ApplicationServiceTests
             {
                 new(-23.0, -45.0, "POST")
             },
+            null,
             null,
             CancellationToken.None);
 

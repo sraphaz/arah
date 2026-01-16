@@ -1,11 +1,13 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Metrics;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Geo;
+using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 
@@ -17,6 +19,8 @@ public sealed class EventsService
     private readonly EventCacheService? _eventCache;
     private readonly IEventParticipationRepository _participationRepository;
     private readonly IFeedRepository _feedRepository;
+    private readonly IMediaAssetRepository _mediaAssetRepository;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -26,6 +30,8 @@ public sealed class EventsService
         ITerritoryEventRepository eventRepository,
         IEventParticipationRepository participationRepository,
         IFeedRepository feedRepository,
+        IMediaAssetRepository mediaAssetRepository,
+        IMediaAttachmentRepository mediaAttachmentRepository,
         AccessEvaluator accessEvaluator,
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
@@ -35,6 +41,8 @@ public sealed class EventsService
         _eventRepository = eventRepository;
         _participationRepository = participationRepository;
         _feedRepository = feedRepository;
+        _mediaAssetRepository = mediaAssetRepository;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
         _accessEvaluator = accessEvaluator;
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
@@ -52,6 +60,8 @@ public sealed class EventsService
         double latitude,
         double longitude,
         string? locationLabel,
+        Guid? coverMediaId,
+        IReadOnlyCollection<Guid>? additionalMediaIds,
         CancellationToken cancellationToken)
     {
         if (territoryId == Guid.Empty)
@@ -79,6 +89,42 @@ public sealed class EventsService
             return Result<EventSummary>.Failure("EndsAtUtc must be after StartsAtUtc.");
         }
 
+        // Validar e normalizar mídias
+        var normalizedAdditionalMediaIds = additionalMediaIds?
+            .Where(id => id != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 5)
+        {
+            return Result<EventSummary>.Failure("Maximum 5 additional media items allowed per event.");
+        }
+
+        var allMediaIds = new List<Guid>();
+        if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
+        {
+            allMediaIds.Add(coverMediaId.Value);
+        }
+        if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
+        {
+            allMediaIds.AddRange(normalizedAdditionalMediaIds);
+        }
+
+        if (allMediaIds.Count > 0)
+        {
+            var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(allMediaIds, cancellationToken);
+            if (mediaAssets.Count != allMediaIds.Count)
+            {
+                return Result<EventSummary>.Failure("One or more media assets not found.");
+            }
+
+            // Validar que todas as mídias pertencem ao usuário
+            if (mediaAssets.Any(media => media.UploadedByUserId != userId || media.IsDeleted))
+            {
+                return Result<EventSummary>.Failure("One or more media assets are invalid or do not belong to the user.");
+            }
+        }
+
         var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
         var membership = isResident ? MembershipRole.Resident : MembershipRole.Visitor;
         var now = DateTime.UtcNow;
@@ -100,6 +146,41 @@ public sealed class EventsService
             now);
 
         await _eventRepository.AddAsync(territoryEvent, cancellationToken);
+
+        // Criar MediaAttachments para as mídias associadas ao evento
+        if (allMediaIds.Count > 0)
+        {
+            // Imagem de capa (DisplayOrder = 0)
+            if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
+            {
+                var coverAttachment = new MediaAttachment(
+                    Guid.NewGuid(),
+                    coverMediaId.Value,
+                    MediaOwnerType.Event,
+                    territoryEvent.Id,
+                    0,
+                    now);
+
+                await _mediaAttachmentRepository.AddAsync(coverAttachment, cancellationToken);
+            }
+
+            // Imagens adicionais (DisplayOrder = 1+)
+            if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
+            {
+                foreach (var (mediaId, index) in normalizedAdditionalMediaIds.Select((id, idx) => (id, idx + 1)))
+                {
+                    var attachment = new MediaAttachment(
+                        Guid.NewGuid(),
+                        mediaId,
+                        MediaOwnerType.Event,
+                        territoryEvent.Id,
+                        index,
+                        now);
+
+                    await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+                }
+            }
+        }
 
         var postContent = string.IsNullOrWhiteSpace(description) ? title.Trim() : description.Trim();
         var post = new CommunityPost(
@@ -213,6 +294,10 @@ public sealed class EventsService
 
         territoryEvent.Cancel(DateTime.UtcNow);
         await _eventRepository.UpdateAsync(territoryEvent, cancellationToken);
+
+        // Deletar mídias associadas ao evento quando cancelado
+        await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Event, territoryEvent.Id, cancellationToken);
+
         await _unitOfWork.CommitAsync(cancellationToken);
 
         // Invalidar cache de eventos do território

@@ -5,6 +5,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
+using Araponga.Domain.Media;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -18,6 +19,7 @@ public sealed class FeedController : ControllerBase
 {
     private readonly FeedService _feedService;
     private readonly EventsService _eventsService;
+    private readonly MediaService _mediaService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ActiveTerritoryService _activeTerritoryService;
     private readonly AccessEvaluator _accessEvaluator;
@@ -25,12 +27,14 @@ public sealed class FeedController : ControllerBase
     public FeedController(
         FeedService feedService,
         EventsService eventsService,
+        MediaService mediaService,
         CurrentUserAccessor currentUserAccessor,
         ActiveTerritoryService activeTerritoryService,
         AccessEvaluator accessEvaluator)
     {
         _feedService = feedService;
         _eventsService = eventsService;
+        _mediaService = mediaService;
         _currentUserAccessor = currentUserAccessor;
         _activeTerritoryService = activeTerritoryService;
         _accessEvaluator = accessEvaluator;
@@ -140,12 +144,14 @@ public sealed class FeedController : ControllerBase
         var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);
         var postIds = pagedResult.Items.Select(p => p.Id).ToList();
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
+        var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
         
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
         {
             var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
             var eventSummary = ResolveEventSummary(post, eventLookup);
+            var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
 
             items.Add(new FeedItemResponse(
                 post.Id,
@@ -159,7 +165,9 @@ public sealed class FeedController : ControllerBase
                 post.Type == PostType.Alert,
                 postCounts.LikeCount,
                 postCounts.ShareCount,
-                post.CreatedAtUtc));
+                post.CreatedAtUtc,
+                mediaUrls.Count > 0 ? mediaUrls : null,
+                mediaUrls.Count));
         }
 
         var response = new PagedResponse<FeedItemResponse>(
@@ -193,12 +201,14 @@ public sealed class FeedController : ControllerBase
         var eventLookup = await LoadEventSummariesAsync(posts, cancellationToken);
         var postIds = posts.Select(p => p.Id).ToList();
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
+        var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
         
         var response = new List<FeedItemResponse>();
         foreach (var post in posts)
         {
             var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
             var eventSummary = ResolveEventSummary(post, eventLookup);
+            var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
 
             response.Add(new FeedItemResponse(
                 post.Id,
@@ -212,7 +222,9 @@ public sealed class FeedController : ControllerBase
                 post.Type == PostType.Alert,
                 postCounts.LikeCount,
                 postCounts.ShareCount,
-                post.CreatedAtUtc));
+                post.CreatedAtUtc,
+                mediaUrls.Count > 0 ? mediaUrls : null,
+                mediaUrls.Count));
         }
 
         return Ok(response);
@@ -240,12 +252,14 @@ public sealed class FeedController : ControllerBase
         var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);
         var postIds = pagedResult.Items.Select(p => p.Id).ToList();
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
+        var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
         
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
         {
             var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
             var eventSummary = ResolveEventSummary(post, eventLookup);
+            var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
 
             items.Add(new FeedItemResponse(
                 post.Id,
@@ -259,7 +273,9 @@ public sealed class FeedController : ControllerBase
                 post.Type == PostType.Alert,
                 postCounts.LikeCount,
                 postCounts.ShareCount,
-                post.CreatedAtUtc));
+                post.CreatedAtUtc,
+                mediaUrls.Count > 0 ? mediaUrls : null,
+                mediaUrls.Count));
         }
 
         var response = new PagedResponse<FeedItemResponse>(
@@ -329,6 +345,7 @@ public sealed class FeedController : ControllerBase
                 anchor.Longitude,
                 anchor.Type)).ToList(),
             request.AssetIds,
+            request.MediaIds,
             cancellationToken);
 
         if (!result.IsSuccess || result.Value is null)
@@ -337,6 +354,8 @@ public sealed class FeedController : ControllerBase
         }
 
         var post = result.Value;
+        var mediaUrls = await LoadMediaUrlsForPostAsync(post.Id, cancellationToken);
+        
         var response = new FeedItemResponse(
             post.Id,
             post.Title,
@@ -349,7 +368,9 @@ public sealed class FeedController : ControllerBase
             post.Type == PostType.Alert,
             0,
             0,
-            post.CreatedAtUtc);
+            post.CreatedAtUtc,
+            mediaUrls.Count > 0 ? mediaUrls : null,
+            mediaUrls.Count);
 
         return CreatedAtAction(nameof(GetFeed), new { }, response);
     }
@@ -508,6 +529,68 @@ public sealed class FeedController : ControllerBase
             evt.CreatedByMembership.ToString().ToUpperInvariant(),
             summary.InterestedCount,
             summary.ConfirmedCount);
+    }
+
+    private async Task<IReadOnlyList<string>> LoadMediaUrlsForPostAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        var mediaAssets = await _mediaService.ListMediaByOwnerAsync(MediaOwnerType.Post, postId, cancellationToken);
+        var urls = new List<string>();
+
+        foreach (var mediaAsset in mediaAssets)
+        {
+            var urlResult = await _mediaService.GetMediaUrlAsync(mediaAsset.Id, null, cancellationToken);
+            if (urlResult.IsSuccess && urlResult.Value is not null)
+            {
+                urls.Add(urlResult.Value);
+            }
+        }
+
+        return urls;
+    }
+
+    private async Task<Dictionary<Guid, IReadOnlyList<string>>> LoadMediaUrlsByPostIdsAsync(
+        IReadOnlyCollection<Guid> postIds,
+        CancellationToken cancellationToken)
+    {
+        if (postIds.Count == 0)
+        {
+            return new Dictionary<Guid, IReadOnlyList<string>>();
+        }
+
+        var result = new Dictionary<Guid, IReadOnlyList<string>>();
+
+        // Buscar attachments em batch
+        var attachmentsByPost = new Dictionary<Guid, List<Domain.Media.MediaAsset>>();
+        
+        foreach (var postId in postIds)
+        {
+            var mediaAssets = await _mediaService.ListMediaByOwnerAsync(MediaOwnerType.Post, postId, cancellationToken);
+            if (mediaAssets.Count > 0)
+            {
+                attachmentsByPost[postId] = mediaAssets.ToList();
+            }
+        }
+
+        // Buscar URLs para todas as mídias
+        foreach (var (postId, mediaAssets) in attachmentsByPost)
+        {
+            var urls = new List<string>();
+            foreach (var mediaAsset in mediaAssets)
+            {
+                var urlResult = await _mediaService.GetMediaUrlAsync(mediaAsset.Id, null, cancellationToken);
+                if (urlResult.IsSuccess && urlResult.Value is not null)
+                {
+                    urls.Add(urlResult.Value);
+                }
+            }
+
+            if (urls.Count > 0)
+            {
+                result[postId] = urls;
+            }
+        }
+
+        return result;
     }
 
     private string? GetSessionId()

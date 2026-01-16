@@ -8,4 +8,6 @@ public sealed record CreateEventRequest(
     DateTime? EndsAtUtc,
     double Latitude,
     double Longitude,
-    string? LocationLabel);
+    string? LocationLabel,
+    Guid? CoverMediaId = null,
+    IReadOnlyCollection<Guid>? AdditionalMediaIds = null);

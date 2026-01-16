@@ -1,7 +1,9 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Models;
 using Araponga.Domain.Feed;
+using Araponga.Domain.Media;
 using Araponga.Domain.Moderation;
 using Araponga.Domain.Work;
 
@@ -18,6 +20,7 @@ public sealed class ModerationCaseService
     private readonly IReportRepository _reportRepository;
     private readonly IFeedRepository _feedRepository;
     private readonly ISanctionRepository _sanctionRepository;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
     private readonly IAuditLogger _auditLogger;
     private readonly IUnitOfWork _unitOfWork;
 
@@ -26,6 +29,7 @@ public sealed class ModerationCaseService
         IReportRepository reportRepository,
         IFeedRepository feedRepository,
         ISanctionRepository sanctionRepository,
+        IMediaAttachmentRepository mediaAttachmentRepository,
         IAuditLogger auditLogger,
         IUnitOfWork unitOfWork)
     {
@@ -33,6 +37,7 @@ public sealed class ModerationCaseService
         _reportRepository = reportRepository;
         _feedRepository = feedRepository;
         _sanctionRepository = sanctionRepository;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
         _auditLogger = auditLogger;
         _unitOfWork = unitOfWork;
     }
@@ -93,6 +98,9 @@ public sealed class ModerationCaseService
                 if (post is not null && post.TerritoryId == report.TerritoryId && post.Status != PostStatus.Hidden)
                 {
                     await _feedRepository.UpdateStatusAsync(post.Id, PostStatus.Hidden, cancellationToken);
+                    
+                    // Deletar mídias associadas ao post quando ocultado
+                    await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Post, post.Id, cancellationToken);
                 }
 
                 await _auditLogger.LogAsync(

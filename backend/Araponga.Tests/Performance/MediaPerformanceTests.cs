@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Text;
 using Xunit;
-using SkippableFact = Xunit.SkippableFact.SkippableFactAttribute;
 
 namespace Araponga.Tests.Performance;
 
@@ -45,7 +44,7 @@ public sealed class MediaPerformanceTests : IClassFixture<ApiFactory>, IDisposab
     {
         if (ShouldSkipPerformanceTests())
         {
-            Xunit.SkippableFact.Skip.If(true, "Testes de performance pulados em CI/CD. Configure SKIP_PERFORMANCE_TESTS=false para executar.");
+            SkippableFact.Skip.If(true, "Testes de performance pulados em CI/CD. Configure SKIP_PERFORMANCE_TESTS=false para executar.");
         }
     }
 
@@ -61,7 +60,7 @@ public sealed class MediaPerformanceTests : IClassFixture<ApiFactory>, IDisposab
         _unitOfWork = _scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
     }
 
-    [SkippableFact]
+    [SkippableFact.SkippableFact]
     public async Task UploadMultipleImages_ShouldCompleteWithinTimeLimit()
     {
         if (ShouldSkipPerformanceTests())
@@ -97,7 +96,7 @@ public sealed class MediaPerformanceTests : IClassFixture<ApiFactory>, IDisposab
         Assert.Equal(imageCount, successfulUploads);
     }
 
-    [SkippableFact]
+    [SkippableFact.SkippableFact]
     public async Task UploadSingleLargeImage_ShouldCompleteWithinTimeLimit()
     {
         SkipIfNeeded();
@@ -125,7 +124,7 @@ public sealed class MediaPerformanceTests : IClassFixture<ApiFactory>, IDisposab
         Assert.NotNull(result.Value);
     }
 
-    [SkippableFact]
+    [SkippableFact.SkippableFact]
     public async Task GetMediaUrlMultipleTimes_ShouldUseCache()
     {
         SkipIfNeeded();

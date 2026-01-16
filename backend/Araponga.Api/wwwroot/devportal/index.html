@@ -446,6 +446,51 @@
     "cpf": "12345678900",
     "email": "ana@exemplo.com"
   }'</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <div class="mermaid" data-diagram="auth">
+sequenceDiagram
+    participant Cliente
+    participant AuthController
+    participant AuthService
+    participant UserRepository
+    participant TokenService
+    participant Database
+
+    Cliente->>AuthController: POST /api/v1/auth/social
+    AuthController->>AuthService: LoginSocialAsync()
+    
+    AuthService->>UserRepository: GetByAuthProviderAsync()
+    UserRepository->>Database: SELECT user WHERE provider + externalId
+    Database-->>UserRepository: User ou null
+    UserRepository-->>AuthService: User existente ou null
+    
+    alt Usuário já existe
+        alt 2FA habilitado
+            AuthService-->>AuthController: Result.Failure("2FA_REQUIRED")
+            AuthController-->>Cliente: 400 Bad Request (2FA_REQUIRED)
+        else 2FA não habilitado
+            AuthService->>TokenService: IssueToken(userId)
+            TokenService-->>AuthService: JWT Token
+            AuthService-->>AuthController: Result.Success(user, token)
+            AuthController-->>Cliente: 200 OK (user, token)
+        end
+    else Novo usuário
+        AuthService->>UserRepository: AddAsync(new User())
+        UserRepository->>Database: INSERT user
+        Database-->>UserRepository: User criado
+        UserRepository-->>AuthService: User
+        AuthService->>TokenService: IssueToken(userId)
+        TokenService-->>AuthService: JWT Token
+        AuthService-->>AuthController: Result.Success(user, token)
+        AuthController-->>Cliente: 200 OK (user, token)
+    end
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -455,6 +500,61 @@
             <code>/search</code> ou <code>/nearby</code> com <code>lat</code> e <code>lng</code>.
           </p>
           <pre class="code-block"><code>curl "http://localhost:8080/api/v1/territories/nearby?lat=-23.55&amp;lng=-46.63&amp;radiusKm=10"</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <div class="mermaid" data-diagram="territory-discovery">
+sequenceDiagram
+    participant Cliente
+    participant TerritoryController
+    participant MembershipController
+    participant TerritoryService
+    participant MembershipService
+    participant TerritoryRepository
+    participant MembershipRepository
+    participant SettingsRepository
+    participant AuditLogger
+    participant Database
+
+    Cliente->>TerritoryController: GET /api/v1/territories/nearby
+    TerritoryController->>TerritoryService: FindNearbyAsync()
+    TerritoryService->>TerritoryRepository: FindNearbyAsync()
+    TerritoryRepository->>Database: SELECT territories WHERE distance < radiusKm
+    Database-->>TerritoryRepository: List<Territory>
+    TerritoryRepository-->>TerritoryService: List<Territory>
+    TerritoryService-->>TerritoryController: List<Territory>
+    TerritoryController-->>Cliente: 200 OK (territories)
+
+    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/enter-visitor
+    MembershipController->>MembershipService: EnterAsVisitorAsync(userId, territoryId)
+    
+    MembershipService->>MembershipRepository: GetByUserAndTerritoryAsync()
+    MembershipRepository->>Database: SELECT membership WHERE userId + territoryId
+    Database-->>MembershipRepository: Membership ou null
+    MembershipRepository-->>MembershipService: Membership existente ou null
+    
+    alt Membership já existe
+        MembershipService-->>MembershipController: Membership existente
+    else Novo membership
+        MembershipService->>MembershipRepository: AddAsync(new TerritoryMembership(Visitor))
+        MembershipRepository->>Database: INSERT membership
+        Database-->>MembershipRepository: Membership criado
+        
+        MembershipService->>SettingsRepository: AddAsync(new MembershipSettings())
+        SettingsRepository->>Database: INSERT settings
+        Database-->>SettingsRepository: Settings criado
+        
+        MembershipService->>AuditLogger: LogAsync("membership.declared")
+        MembershipService->>MembershipService: CommitAsync()
+        MembershipService-->>MembershipController: TerritoryMembership
+    end
+    
+    MembershipController-->>Cliente: 200 OK (membership)
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step" id="territory-selection">
@@ -478,6 +578,54 @@
           <pre class="code-block"><code>curl http://localhost:8080/api/v1/feed \
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "X-Session-Id: session-123"</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <div class="mermaid" data-diagram="feed-listing">
+sequenceDiagram
+    participant Cliente
+    participant FeedController
+    participant FeedService
+    participant PostFilterService
+    participant FeedRepository
+    participant AccessEvaluator
+    participant UserBlockRepository
+    participant EventService
+    participant Database
+
+    Cliente->>FeedController: GET /api/v1/feed/paged
+    FeedController->>FeedService: ListForTerritoryPagedAsync()
+    FeedService->>FeedRepository: ListByTerritoryAsync(territoryId)
+    FeedRepository->>Database: SELECT posts WHERE territoryId ORDER BY createdAt DESC
+    Database-->>FeedRepository: List<CommunityPost>
+    FeedRepository-->>FeedService: List<CommunityPost>
+    
+    FeedService->>PostFilterService: FilterAndPaginateAsync(posts, userId)
+    
+    PostFilterService->>AccessEvaluator: GetMembershipAsync(userId, territoryId)
+    AccessEvaluator->>Database: SELECT membership WHERE userId + territoryId
+    Database-->>AccessEvaluator: Membership
+    AccessEvaluator-->>PostFilterService: Membership (role, verification)
+    
+    PostFilterService->>UserBlockRepository: GetBlockedUserIdsAsync(userId)
+    UserBlockRepository->>Database: SELECT blocked_user_ids WHERE userId
+    Database-->>UserBlockRepository: List<Guid>
+    UserBlockRepository-->>PostFilterService: BlockedUserIds
+    
+    PostFilterService->>PostFilterService: Aplicar filtros:<br/>- Bloqueios<br/>- Visibilidade<br/>- Status<br/>- Paginação
+    
+    PostFilterService-->>FeedService: PagedResult<CommunityPost>
+    FeedService-->>FeedController: PagedResult<CommunityPost>
+    
+    FeedController->>EventService: LoadEventSummariesAsync(postIds)
+    FeedController->>FeedService: GetCountsByPostIdsAsync(postIds)
+    FeedController->>FeedController: Montar FeedItemResponse
+    FeedController-->>Cliente: 200 OK (PagedResponse<FeedItemResponse>)
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -511,6 +659,67 @@
               <li><strong>Validação</strong>: Todas as mídias devem pertencer ao usuário que está criando o post</li>
             </ul>
           </div>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <div class="mermaid" data-diagram="post-creation">
+sequenceDiagram
+    participant Cliente
+    participant FeedController
+    participant FeedService
+    participant PostCreationService
+    participant AccessEvaluator
+    participant FeatureFlagService
+    participant SanctionRepository
+    participant AssetRepository
+    participant FeedRepository
+    participant PostGeoAnchorRepository
+    participant EventBus
+    participant Database
+
+    Cliente->>FeedController: POST /api/v1/feed
+    FeedController->>AccessEvaluator: IsResidentAsync(userId, territoryId)
+    AccessEvaluator->>Database: SELECT membership WHERE userId + territoryId
+    Database-->>AccessEvaluator: Membership
+    AccessEvaluator-->>FeedController: isResident
+    
+    alt Não é Resident
+        FeedController-->>Cliente: 401 Unauthorized
+    else É Resident
+        FeedController->>FeedService: CreatePostAsync()
+        FeedService->>PostCreationService: CreatePostAsync()
+        
+        PostCreationService->>FeatureFlagService: IsEnabledAsync(territoryId, "AlertPosts")
+        PostCreationService->>SanctionRepository: HasActiveSanctionAsync(userId, PostingRestriction)
+        SanctionRepository->>Database: SELECT sanction WHERE userId + territoryId
+        Database-->>SanctionRepository: Sanction ou null
+        
+        alt Usuário com restrição
+            PostCreationService-->>FeedService: Result.Failure("Posting restricted")
+            FeedService-->>FeedController: Result.Failure
+            FeedController-->>Cliente: 400 Bad Request
+        else Pode postar
+            PostCreationService->>FeedRepository: AddAsync(new CommunityPost())
+            FeedRepository->>Database: INSERT post
+            Database-->>FeedRepository: Post criado
+            
+            loop Para cada GeoAnchor
+                PostCreationService->>PostGeoAnchorRepository: AddAsync(new PostGeoAnchor())
+                PostGeoAnchorRepository->>Database: INSERT geo_anchor
+            end
+            
+            PostCreationService->>EventBus: PublishAsync(PostCreatedEvent)
+            PostCreationService->>PostCreationService: CommitAsync()
+            PostCreationService-->>FeedService: Result.Success(post)
+            FeedService-->>FeedController: Result.Success(post)
+            FeedController-->>Cliente: 201 Created (post)
+        end
+    end
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -571,6 +780,61 @@
             Para verificar residência (geo/doc), use <code>/verify-residency/geo</code> ou <code>/verify-residency/document</code>.
             Quando a policy exige presença, envie <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code>.
           </p>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <div class="mermaid" data-diagram="membership-resident">
+sequenceDiagram
+    participant Cliente
+    participant MembershipController
+    participant MembershipService
+    participant MembershipRepository
+    participant VerificationQueueService
+    participant WorkQueueService
+    participant DocumentEvidenceService
+    participant FileStorage
+    participant Database
+
+    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/become-resident
+    MembershipController->>MembershipService: BecomeResidentAsync(userId, territoryId)
+    
+    MembershipService->>MembershipRepository: GetResidentMembershipAsync()
+    MembershipRepository->>Database: SELECT membership WHERE userId AND role=Resident
+    Database-->>MembershipRepository: Membership ou null
+    
+    alt Já é Resident em outro território
+        MembershipService-->>MembershipController: Result.Failure("Already resident elsewhere")
+        MembershipController-->>Cliente: 400 Bad Request
+    else Pode tornar-se Resident
+        MembershipService->>MembershipRepository: UpdateRole(Resident)
+        MembershipRepository->>Database: UPDATE membership SET role=Resident
+        Database-->>MembershipRepository: OK
+        
+        MembershipService->>MembershipService: CommitAsync()
+        MembershipService-->>MembershipController: Result.Success(membership)
+        MembershipController-->>Cliente: 200 OK (membership)
+    end
+
+    Note over Cliente,Database: Upload de documento (opcional)
+    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/verify-residency/document/upload
+    MembershipController->>DocumentEvidenceService: UploadDocumentAsync()
+    DocumentEvidenceService->>FileStorage: UploadAsync(file)
+    FileStorage-->>DocumentEvidenceService: File URL
+    DocumentEvidenceService->>Database: INSERT document_evidence
+    Database-->>DocumentEvidenceService: Evidence criada
+    
+    DocumentEvidenceService->>VerificationQueueService: EnqueueResidencyVerification()
+    VerificationQueueService->>WorkQueueService: EnqueueWorkItem(ResidencyVerification)
+    WorkQueueService->>Database: INSERT work_item
+    Database-->>WorkQueueService: WorkItem criado
+    
+    DocumentEvidenceService-->>MembershipController: Evidence + WorkItem
+    MembershipController-->>Cliente: 200 OK (evidenceId, workItemId)
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -602,6 +866,68 @@ curl -X POST http://localhost:8080/api/v1/blocks/users/{userId} \
 
 curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
   -H "Authorization: Bearer &lt;token&gt;"</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <div class="mermaid" data-diagram="moderation">
+sequenceDiagram
+    participant Cliente
+    participant ModerationController
+    participant ModerationService
+    participant ReportService
+    participant WorkQueueService
+    participant ModerationCaseService
+    participant SanctionRepository
+    participant AuditLogger
+    participant EventBus
+    participant Database
+
+    Cliente->>ModerationController: POST /api/v1/reports (targetType, targetId, reason)
+    ModerationController->>ReportService: CreateReportAsync()
+    
+    ReportService->>Database: INSERT report
+    Database-->>ReportService: Report criado
+    
+    ReportService->>WorkQueueService: EnqueueWorkItem(ModerationCase)
+    WorkQueueService->>Database: INSERT work_item
+    Database-->>WorkQueueService: WorkItem criado
+    
+    ReportService->>AuditLogger: LogAsync("report.created")
+    ReportService->>EventBus: PublishAsync(ReportCreatedEvent)
+    ReportService->>ReportService: CommitAsync()
+    ReportService-->>ModerationController: Report
+    ModerationController-->>Cliente: 201 Created (report)
+
+    Note over Cliente,Database: Decisão de Moderação (Curator/Moderator)
+    Cliente->>ModerationController: POST /api/v1/territories/{territoryId}/work-items/{workItemId}/complete
+    ModerationController->>ModerationCaseService: CompleteModerationCaseAsync()
+    
+    ModerationCaseService->>WorkQueueService: GetWorkItemAsync(workItemId)
+    WorkQueueService->>Database: SELECT work_item WHERE id
+    Database-->>WorkQueueService: WorkItem
+    
+    ModerationCaseService->>ReportService: GetByIdAsync(reportId)
+    ReportService->>Database: SELECT report WHERE id
+    Database-->>ReportService: Report
+    
+    alt Decisão: Aplicar Sanção
+        ModerationCaseService->>SanctionRepository: AddAsync(new Sanction())
+        SanctionRepository->>Database: INSERT sanction
+        ModerationCaseService->>EventBus: PublishAsync(SanctionAppliedEvent)
+    end
+    
+    ModerationCaseService->>ReportService: UpdateStatusAsync(reportId, Resolved)
+    ReportService->>Database: UPDATE report SET status=Resolved
+    ModerationCaseService->>WorkQueueService: CompleteWorkItemAsync(workItemId, outcome)
+    ModerationCaseService->>AuditLogger: LogAsync("moderation.completed")
+    ModerationCaseService->>ModerationCaseService: CommitAsync()
+    ModerationCaseService-->>ModerationController: Result.Success
+    ModerationController-->>Cliente: 200 OK
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -1434,6 +1760,150 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
   </div>
 
   <script src="./assets/js/devportal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // Inicialização do Mermaid (após Mermaid.js ser carregado)
+    (function() {
+      function initMermaid() {
+        if (typeof mermaid === 'undefined') {
+          console.error('Mermaid.js não foi carregado corretamente.');
+          setTimeout(initMermaid, 100);
+          return;
+        }
+
+      mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#4dd4a8',
+        primaryTextColor: '#e8edf2',
+        primaryBorderColor: '#3bc495',
+        lineColor: '#4682B4',
+        secondaryColor: '#1a2129',
+        tertiaryColor: '#0a0e12',
+        background: '#0a0e12',
+        mainBkg: '#141a21',
+        secondBkg: '#1a2129',
+        textColor: '#e8edf2',
+        actorBorder: '#4dd4a8',
+        actorBkg: '#1a2129',
+        actorTextColor: '#e8edf2',
+        actorLineColor: '#4682B4',
+        signalColor: '#7dd3ff',
+        signalTextColor: '#e8edf2',
+        labelBoxBkgColor: '#4dd4a8',
+        labelBoxBorderColor: '#3bc495',
+        labelTextColor: '#0a0e12',
+        loopTextColor: '#e8edf2',
+        noteBorderColor: '#4682B4',
+        noteBkgColor: '#1a2129',
+        noteTextColor: '#e8edf2',
+        activationBorderColor: '#4dd4a8',
+        activationBkgColor: 'rgba(77, 212, 168, 0.15)',
+        sequenceNumberColor: '#0a0e12'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 20,
+        useMaxWidth: true
+      },
+      sequence: {
+        diagramMarginX: 50,
+        diagramMarginY: 10,
+        actorMargin: 50,
+        width: 150,
+        height: 65,
+        boxMargin: 10,
+        boxTextMargin: 5,
+        noteMargin: 10,
+        messageMargin: 35,
+        mirrorActors: true,
+        bottomMarginAdj: 1,
+        useMaxWidth: true,
+        rightAngles: false,
+        showSequenceNumbers: false
+      },
+      gantt: {
+        titleTopMargin: 25,
+        barHeight: 20,
+        barGap: 4,
+        topPadding: 50,
+        leftPadding: 75,
+        gridLineStartPadding: 35,
+        fontSize: 11,
+        fontFamily: '"Inter", sans-serif',
+        numberSectionStyles: 4,
+        axisFormat: '%Y-%m-%d'
+      });
+
+      // Renderizar diagramas quando os acordeões são expandidos
+      function initDiagramRendering() {
+        var diagramToggles = document.querySelectorAll('.sequence-diagram-toggle');
+        
+        diagramToggles.forEach(function(toggle) {
+          var rendered = false;
+          
+          toggle.addEventListener('toggle', function(event) {
+            if (this.open && !rendered) {
+              var diagramContainer = this.querySelector('.mermaid');
+              if (diagramContainer) {
+                var diagramId = diagramContainer.getAttribute('data-diagram') || 'diagram-' + Date.now();
+                var diagramContent = diagramContainer.textContent.trim();
+                
+                if (diagramContent && !diagramContainer.hasAttribute('data-processed')) {
+                  try {
+                    mermaid.run({
+                      nodes: [diagramContainer],
+                      suppressErrors: true
+                    }).then(function() {
+                      rendered = true;
+                    }).catch(function(err) {
+                      console.error('Erro ao renderizar diagrama:', err);
+                      var errorMsg = document.createElement('div');
+                      errorMsg.className = 'callout';
+                      errorMsg.style.color = 'var(--danger)';
+                      errorMsg.textContent = 'Erro ao renderizar diagrama. Recarregue a página.';
+                      diagramContainer.parentNode.appendChild(errorMsg);
+                    });
+                  } catch (err) {
+                    console.error('Erro ao inicializar renderização:', err);
+                  }
+                }
+              }
+            }
+          });
+        });
+      }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initDiagramRendering);
+        } else {
+          initDiagramRendering();
+        }
+      }
+
+      // Aguardar carregamento do Mermaid antes de inicializar
+      if (typeof mermaid !== 'undefined') {
+        initMermaid();
+      } else {
+        // Tentar novamente após um delay se Mermaid ainda não foi carregado
+        var checkMermaid = setInterval(function() {
+          if (typeof mermaid !== 'undefined') {
+            clearInterval(checkMermaid);
+            initMermaid();
+          }
+        }, 100);
+        
+        // Timeout de segurança após 5 segundos
+        setTimeout(function() {
+          clearInterval(checkMermaid);
+          if (typeof mermaid === 'undefined') {
+            console.error('Mermaid.js não foi carregado após 5 segundos.');
+          }
+        }, 5000);
+      }
+    })();
+  </script>
 </body>
 </html>
 

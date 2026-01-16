@@ -1071,6 +1071,123 @@ pre code {
   }
 }
 
+/* Sequence Diagram Toggle */
+.sequence-diagram-toggle {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sequence-diagram-toggle:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.sequence-diagram-toggle[open] {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+.sequence-diagram-summary {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  background: var(--bg-card);
+  position: relative;
+}
+
+.sequence-diagram-summary::-webkit-details-marker {
+  display: none;
+}
+
+.sequence-diagram-summary::marker {
+  display: none;
+}
+
+.sequence-diagram-summary::after {
+  content: '▼';
+  font-size: 0.75rem;
+  color: var(--accent);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: auto;
+  padding-left: 1rem;
+}
+
+.sequence-diagram-toggle[open] .sequence-diagram-summary::after {
+  transform: rotate(180deg);
+}
+
+.sequence-diagram-summary:hover {
+  background: var(--accent-subtle);
+  color: var(--accent);
+}
+
+.sequence-diagram-summary span {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+
+.sequence-diagram-summary:hover span {
+  color: var(--accent);
+}
+
+.sequence-diagram-container {
+  padding: 1.5rem;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  overflow-x: auto;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sequence-diagram-container .mermaid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 1rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.sequence-diagram-container .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ajustes de responsividade para diagramas */
+@media (max-width: 768px) {
+  .sequence-diagram-container {
+    padding: 1rem;
+  }
+  
+  .sequence-diagram-container .mermaid {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
 /* Print styles */
 @media print {
   .nav,
@@ -1081,6 +1198,14 @@ pre code {
   
   .layout {
     grid-template-columns: 1fr;
+  }
+  
+  .sequence-diagram-toggle {
+    break-inside: avoid;
+  }
+  
+  .sequence-diagram-toggle[open] {
+    display: block;
   }
 }
 

@@ -13,6 +13,7 @@ $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ROOT_DIR = Split-Path -Parent (Split-Path -Parent $SCRIPT_DIR)
 $WIKI_DIR = Join-Path $ROOT_DIR "wiki-temp"
 $DOCS_DIR = $SCRIPT_DIR
+$DOCS_ROOT = Join-Path $ROOT_DIR "docs"
 
 Write-Host "🚀 Iniciando sincronização para Wiki do GitHub..." -ForegroundColor Green
 Write-Host "📂 Diretório de documentos: $DOCS_DIR" -ForegroundColor Cyan
@@ -57,17 +58,68 @@ Set-Location $WIKI_DIR
 # Criar Home.md (página principal)
 Write-Host "📝 Criando Home.md..." -ForegroundColor Yellow
 $homeContent = @"
-# Backlog API - Araponga
+# Documentação Araponga
 
-**Data de Criação**: 2025-01-13  
-**Última Revisão**: 2025-01-13  
-**Objetivo**: Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias  
-**Estimativa Total**: 380 dias sequenciais / ~170 dias com paralelização  
-**Status Atual**: 9.2/10 (após implementação das fases 1-7)
+**Última Atualização**: 2025-01-16
 
 ---
 
-## 📋 Índice
+## 📋 Índice Geral
+
+### 🎯 Visão e Produto
+- [Índice da Documentação](00-Índice)
+- [Visão do Produto](01-Visão-do-Produto)
+- [Roadmap](02-Roadmap)
+- [Backlog](03-Backlog)
+- [User Stories](04-User-Stories)
+- [Glossário](05-Glossário)
+
+### 🏗️ Arquitetura e Design
+- [Decisões Arquiteturais](10-Decisões-Arquiteturais)
+- [Arquitetura de Services](11-Arquitetura-de-Services)
+- [Modelo de Domínio](12-Modelo-de-Domínio)
+- [Domain Routing](13-Domain-Routing)
+
+### 🔧 Desenvolvimento e Implementação
+- [Plano de Implementação](20-Plano-de-Implementação)
+- [Revisão de Código](21-Revisão-de-Código)
+- [Análise de Coesão e Testes](22-Análise-de-Coesão-e-Testes)
+- [Implementação de Recomendações](23-Implementação-de-Recomendações)
+
+### 🛡️ Operações e Governança
+- [Moderação](30-Moderação)
+- [Admin e Observabilidade](31-Admin-e-Observabilidade)
+- [Rastreabilidade](32-Rastreabilidade)
+- [System Config e Work Queue](33-System-Config-e-Work-Queue)
+- [API - Lógica de Negócio](60-API-Lógica-de-Negócio)
+- [Preferências de Usuário](61-Preferências-de-Usuário)
+
+### 🔒 Segurança
+- [Configuração de Segurança](SECURITY-Configuration)
+- [Security Audit](SECURITY-Audit)
+
+### 📝 Histórico e Mudanças
+- [Changelog](40-Changelog)
+- [Contribuindo](41-Contribuindo)
+
+### 🚀 Produção e Deploy
+- [Avaliação Completa para Produção](50-Produção-Avaliação-Completa)
+- [Plano de Requisitos Desejáveis](51-Produção-Plano-Desejáveis)
+- [Avaliação Geral da Aplicação](70-Avaliação-Geral-Aplicação)
+- [Avaliação Completa da Aplicação](AVALIACAO-COMPLETA-APLICACAO)
+
+### 📊 Monitoramento e Operação
+- [Runbook](RUNBOOK)
+- [Troubleshooting](TROUBLESHOOTING)
+- [Incident Playbook](INCIDENT-Playbook)
+- [Monitoring](MONITORING)
+- [Metrics](METRICS)
+- [Media System](MEDIA-System)
+- [Deployment Multi-Instance](DEPLOYMENT-Multi-Instance)
+
+---
+
+## 📋 Backlog API
 
 ### 🎯 Visão Geral
 - [Resumo Executivo Estratégico](Resumo-Executivo-Estratégico)
@@ -121,14 +173,17 @@ $homeContent = @"
 
 ---
 
+---
+
 ## 🔗 Links Úteis
 
 - [Repositório Principal](https://github.com/$REPO_OWNER/$REPO_NAME)
-- [Documentação Completa no Repositório](https://github.com/$REPO_OWNER/$REPO_NAME/tree/main/docs/backlog-api)
+- [Documentação Completa no Repositório](https://github.com/$REPO_OWNER/$REPO_NAME/tree/main/docs)
+- [Backlog API no Repositório](https://github.com/$REPO_OWNER/$REPO_NAME/tree/main/docs/backlog-api)
 
 ---
 
-**⭐ Ver**: [Reorganização Estratégica Final](Reorganização-Estratégica-Final) para análise detalhada
+**⭐ Ver**: [Reorganização Estratégica Final](Reorganização-Estratégica-Final) para análise detalhada do backlog
 "@
 $homeContent | Out-File -FilePath "Home.md" -Encoding UTF8
 Write-Host "  ✅ Home.md criado" -ForegroundColor Green
@@ -141,6 +196,7 @@ function Copy-DocumentToWiki {
         $content = Get-Content $sourceFile -Raw -Encoding UTF8
         
         # Ajustar links relativos para links da Wiki
+        # Links do backlog-api
         $content = $content -replace '\.\/FASE(\d+)\.md', '[Fase $1](Fase-$1)'
         $content = $content -replace '\.\/RESUMO_([^.]+)\.md', '[Resumo $1](Resumo-$1)'
         $content = $content -replace '\.\/REORGANIZACAO_([^.]+)\.md', '[Reorganização $1](Reorganização-$1)'
@@ -148,8 +204,30 @@ function Copy-DocumentToWiki {
         $content = $content -replace '\.\/MAPA_([^.]+)\.md', '[Mapa $1](Mapa-$1)'
         $content = $content -replace '\.\/REVISAO_([^.]+)\.md', '[Revisão $1](Revisão-$1)'
         
+        # Links para documentos da raiz docs/
+        $content = $content -replace '\.\.\/00_INDEX\.md', '[Índice](00-Índice)'
+        $content = $content -replace '\.\.\/01_PRODUCT_VISION\.md', '[Visão do Produto](01-Visão-do-Produto)'
+        $content = $content -replace '\.\.\/02_ROADMAP\.md', '[Roadmap](02-Roadmap)'
+        $content = $content -replace '\.\.\/03_BACKLOG\.md', '[Backlog](03-Backlog)'
+        $content = $content -replace '\.\.\/40_CHANGELOG\.md', '[Changelog](40-Changelog)'
+        $content = $content -replace '\.\.\/MEDIA_SYSTEM\.md', '[Media System](MEDIA-System)'
+        $content = $content -replace '\.\.\/MONITORING\.md', '[Monitoring](MONITORING)'
+        $content = $content -replace '\.\.\/METRICS\.md', '[Metrics](METRICS)'
+        $content = $content -replace '\.\.\/RUNBOOK\.md', '[Runbook](RUNBOOK)'
+        $content = $content -replace '\.\.\/TROUBLESHOOTING\.md', '[Troubleshooting](TROUBLESHOOTING)'
+        $content = $content -replace '\.\.\/INCIDENT_PLAYBOOK\.md', '[Incident Playbook](INCIDENT-Playbook)'
+        $content = $content -replace '\.\.\/SECURITY_CONFIGURATION\.md', '[Security Configuration](SECURITY-Configuration)'
+        $content = $content -replace '\.\.\/SECURITY_AUDIT\.md', '[Security Audit](SECURITY-Audit)'
+        
+        # Links para backlog-api
+        $content = $content -replace '\.\.\/backlog-api\/FASE(\d+)\.md', '[Fase $1](Fase-$1)'
+        $content = $content -replace '\.\.\/backlog-api\/README\.md', '[Backlog API](Home#backlog-api)'
+        
         # Adicionar link para documento completo no repositório
-        $repoPath = $sourceFile -replace '^\.\\docs\\', '' -replace '\\', '/'
+        $repoPath = $sourceFile.Replace($ROOT_DIR, "").Replace("\", "/").TrimStart("/")
+        if ($repoPath -notmatch "^docs/") {
+            $repoPath = "docs/" + $repoPath
+        }
         $content += "`n`n---`n`n**📄 Documento completo**: [Ver no repositório](https://github.com/$REPO_OWNER/$REPO_NAME/blob/main/$repoPath)"
         
         $targetFile = Join-Path $WIKI_DIR "$targetName.md"
@@ -212,15 +290,65 @@ for ($i = 1; $i -le 24; $i++) {
     }
 }
 
+# Copiar documentos da raiz docs/
+Write-Host "`n📚 Copiando documentação geral..." -ForegroundColor Yellow
+
+# Mapeamento de documentos principais
+$mainDocs = @{
+    "00_INDEX.md" = "00-Índice"
+    "01_PRODUCT_VISION.md" = "01-Visão-do-Produto"
+    "02_ROADMAP.md" = "02-Roadmap"
+    "03_BACKLOG.md" = "03-Backlog"
+    "04_USER_STORIES.md" = "04-User-Stories"
+    "05_GLOSSARY.md" = "05-Glossário"
+    "10_ARCHITECTURE_DECISIONS.md" = "10-Decisões-Arquiteturais"
+    "11_ARCHITECTURE_SERVICES.md" = "11-Arquitetura-de-Services"
+    "12_DOMAIN_MODEL.md" = "12-Modelo-de-Domínio"
+    "13_DOMAIN_ROUTING.md" = "13-Domain-Routing"
+    "20_IMPLEMENTATION_PLAN.md" = "20-Plano-de-Implementação"
+    "21_CODE_REVIEW.md" = "21-Revisão-de-Código"
+    "22_COHESION_AND_TESTS.md" = "22-Análise-de-Coesão-e-Testes"
+    "23_IMPLEMENTATION_RECOMMENDATIONS.md" = "23-Implementação-de-Recomendações"
+    "30_MODERATION.md" = "30-Moderação"
+    "31_ADMIN_OBSERVABILITY.md" = "31-Admin-e-Observabilidade"
+    "32_TRACEABILITY.md" = "32-Rastreabilidade"
+    "33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md" = "33-System-Config-e-Work-Queue"
+    "40_CHANGELOG.md" = "40-Changelog"
+    "41_CONTRIBUTING.md" = "41-Contribuindo"
+    "50_PRODUCAO_AVALIACAO_COMPLETA.md" = "50-Produção-Avaliação-Completa"
+    "51_PRODUCAO_PLANO_DESEJAVEIS.md" = "51-Produção-Plano-Desejáveis"
+    "60_API_LÓGICA_NEGÓCIO.md" = "60-API-Lógica-de-Negócio"
+    "61_USER_PREFERENCES_PLAN.md" = "61-Preferências-de-Usuário"
+    "70_AVALIACAO_GERAL_APLICACAO.md" = "70-Avaliação-Geral-Aplicação"
+    "AVALIACAO_COMPLETA_APLICACAO.md" = "AVALIACAO-COMPLETA-APLICACAO"
+    "SECURITY_CONFIGURATION.md" = "SECURITY-Configuration"
+    "SECURITY_AUDIT.md" = "SECURITY-Audit"
+    "RUNBOOK.md" = "RUNBOOK"
+    "TROUBLESHOOTING.md" = "TROUBLESHOOTING"
+    "INCIDENT_PLAYBOOK.md" = "INCIDENT-Playbook"
+    "MONITORING.md" = "MONITORING"
+    "METRICS.md" = "METRICS"
+    "MEDIA_SYSTEM.md" = "MEDIA-System"
+    "DEPLOYMENT_MULTI_INSTANCE.md" = "DEPLOYMENT-Multi-Instance"
+}
+
+foreach ($doc in $mainDocs.GetEnumerator()) {
+    $sourceFile = Join-Path $DOCS_ROOT $doc.Key
+    if (Copy-DocumentToWiki $sourceFile $doc.Value) {
+        $docsCopied++
+    }
+}
+
 Write-Host "`n✅ Total de documentos copiados: $docsCopied" -ForegroundColor Green
 
 # Commit e push
 Write-Host "`n💾 Fazendo commit..." -ForegroundColor Yellow
 git add .
-$commitMessage = "docs: Sincronização completa do plano de ação 10/10 para Wiki
+$commitMessage = "docs: Sincronização completa da documentação para Wiki
 
 - Adicionada página Home com índice completo
-- Migrados $docsCopied documentos principais e fases
+- Migrados $docsCopied documentos (backlog-api + docs/)
+- Documentação organizada por categorias
 - Links ajustados para estrutura da Wiki
 - Links para documentos completos no repositório"
 git commit -m $commitMessage

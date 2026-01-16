@@ -1890,10 +1890,14 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                    // Remove conteúdo entre tags style (caso alguma tag tenha escapado)
                    .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '')
                    // Remove tags XML/HTML completas como </territory>, </feeditemresponse>, etc.
-                   // Regex: < ou </ seguido de letras/números/hífen, possivelmente atributos, depois >
-                   .replace(/<\/?[a-zA-Z][a-zA-Z0-9-]*(?:\s+[^>]*)?\s*>/g, '')
-                   // Preserva tipos genéricos C# que não são tags completas (<T>, <CommunityPost>, etc)
-                   // Esses já foram removidos se eram tags completas, então não há risco aqui
+                   // IMPORTANTE: Remove apenas tags que sejam claramente tags XML/HTML completas
+                   // Regex mais específico para evitar remover tipos genéricos C# em mensagens
+                   // Primeiro remove tags de fechamento explícitas (</tag>, </tag >)
+                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                   // Depois remove tags de abertura com nome completo (mas não tipos genéricos isolados)
+                   // Remove apenas tags com nome longo (2+ caracteres) que sejam claramente tags XML
+                   // Isso remove </territory>, </feeditemresponse>, mas preserva List<T>, PagedResult<T> em mensagens
+                   .replace(/<([a-zA-Z][a-zA-Z0-9-]{2,})(?:\s+[^>]*)?\s*>/gi, '')
                    .trim();
                  
                  if (cleanedDiagramContent && !diagramContainer.hasAttribute('data-processed')) {

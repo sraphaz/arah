@@ -7,6 +7,7 @@ using Araponga.Tests.Api;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Text;
+using Xunit;
 
 namespace Araponga.Tests.Performance;
 
@@ -61,7 +62,7 @@ public sealed class MediaPerformanceTests : IClassFixture<ApiFactory>, IDisposab
         Assert.True(stopwatch.Elapsed.TotalSeconds < maxTotalSeconds, 
             $"Upload de {imageCount} imagens levou {stopwatch.Elapsed.TotalSeconds:F2} segundos, esperado < {maxTotalSeconds} segundos.");
         
-        Assert.All(results, result => Assert.True(result.IsSuccess, $"Falha no upload: {result.ErrorMessage}"));
+        Assert.All(results, result => Assert.True(result.IsSuccess, $"Falha no upload: {result.Error}"));
         
         var successfulUploads = results.Count(r => r.IsSuccess);
         Assert.Equal(imageCount, successfulUploads);
@@ -89,7 +90,7 @@ public sealed class MediaPerformanceTests : IClassFixture<ApiFactory>, IDisposab
         Assert.True(stopwatch.Elapsed.TotalSeconds < maxSeconds,
             $"Upload de imagem grande levou {stopwatch.Elapsed.TotalSeconds:F2} segundos, esperado < {maxSeconds} segundos.");
         
-        Assert.True(result.IsSuccess, $"Falha no upload: {result.ErrorMessage}");
+        Assert.True(result.IsSuccess, $"Falha no upload: {result.Error}");
         Assert.NotNull(result.Value);
     }
 

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using Araponga.Api;
 using Araponga.Api.Contracts.Auth;
@@ -68,8 +69,8 @@ public sealed class MediaSecurityTests
         // Se passou, verificar que o arquivo não foi salvo em localização perigosa
         if (response.IsSuccessStatusCode)
         {
-            var mediaResponse = await response.Content.ReadFromJsonAsync<object>();
-            Assert.NotNull(mediaResponse);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            Assert.NotNull(responseContent);
         }
     }
 

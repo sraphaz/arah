@@ -2,6 +2,7 @@ using Araponga.Application.Interfaces.Media;
 using Araponga.Infrastructure.Media;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Processing;
 
 namespace Araponga.Infrastructure.Media;
@@ -161,8 +162,19 @@ public sealed class LocalMediaProcessingService : IMediaProcessingService
 
     private static IImageEncoder GetEncoderForImage(Image image)
     {
-        return image.Configuration.ImageFormatsManager.FindEncoderByMimeType(image.Metadata.DecodedImageFormat!.DefaultMimeType)
-               ?? new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder();
+        var format = image.Metadata.DecodedImageFormat;
+        if (format != null)
+        {
+            // Tentar obter o encoder do formato
+            var encoder = image.Configuration.ImageFormatsManager.GetEncoder(format);
+            if (encoder != null)
+            {
+                return encoder;
+            }
+        }
+        
+        // Fallback para JPEG
+        return new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder();
     }
 
     private static IImageEncoder GetEncoderForMimeType(string mimeType)

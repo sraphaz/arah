@@ -335,11 +335,12 @@ public sealed class MediaService
         };
     }
 
-    private static async Task<string> CalculateChecksumAsync(Stream stream, CancellationToken cancellationToken)
+    private static Task<string> CalculateChecksumAsync(Stream stream, CancellationToken cancellationToken)
     {
         using var sha256 = SHA256.Create();
         stream.Position = 0;
         var hashBytes = sha256.ComputeHash(stream);
-        return BitConverter.ToString(hashBytes).Replace("-", "", StringComparison.OrdinalIgnoreCase).ToLowerInvariant();
+        var checksum = BitConverter.ToString(hashBytes).Replace("-", "", StringComparison.OrdinalIgnoreCase).ToLowerInvariant();
+        return Task.FromResult(checksum);
     }
 }

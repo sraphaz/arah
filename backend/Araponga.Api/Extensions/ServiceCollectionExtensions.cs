@@ -11,6 +11,8 @@ using Araponga.Infrastructure.Outbox;
 using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 
@@ -184,7 +186,7 @@ public static class ServiceCollectionExtensions
         {
             // Usar cache em memória se Redis não estiver disponível
             services.AddMemoryCache();
-            services.AddSingleton<IDistributedCache, Microsoft.Extensions.Caching.Memory.MemoryDistributedCache>();
+            services.AddSingleton<IDistributedCache, MemoryDistributedCache>();
         }
 
         return services;

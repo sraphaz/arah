@@ -32,7 +32,7 @@ public sealed class MediaServiceTests
         var mediaAttachmentRepositoryMock = new Mock<IMediaAttachmentRepository>();
         
         _auditLogger = new InMemoryAuditLogger(_dataStore);
-        _unitOfWork = new InMemoryUnitOfWork(_dataStore);
+        _unitOfWork = new InMemoryUnitOfWork();
 
         // Configurar validator para aceitar arquivos válidos
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))

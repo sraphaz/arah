@@ -1688,53 +1688,130 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       </section>
 
       <section class="section" id="capacidades-tecnicas">
-        <span class="eyebrow">Capacidades Técnicas</span>
-        <h2>Capacidades Técnicas</h2>
-        <p>
-          O Araponga oferece recursos avançados de qualidade, performance e observabilidade.
-          Estas são as principais capacidades técnicas da plataforma:
+        <span class="eyebrow">Fundações Técnicas</span>
+        <h2>Qualidade, Performance e Observabilidade</h2>
+        <p class="lead-text">
+          A API Araponga foi construída sobre uma base sólida de práticas de engenharia moderna.
+          Arquitetura limpa, testes abrangentes e observabilidade completa garantem confiabilidade,
+          manutenibilidade e escalabilidade para comunidades em produção.
         </p>
-        <div class="model-grid">
+
+        <div class="model-grid" style="margin-top: 3rem;">
           <div class="card">
-            <h3>Qualidade de Código e Confiabilidade</h3>
-            <ul>
-              <li>Paginação completa em 15 endpoints</li>
-              <li>Validação robusta com FluentValidation</li>
-              <li>Cobertura de testes >90%</li>
-              <li>Testes de segurança e performance</li>
-              <li>Refatoração completa de services</li>
-            </ul>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+              <span style="font-size: 1.75rem;">✓</span>
+              <h3 style="margin: 0;">Qualidade de Código</h3>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+              Engenharia de software orientada a qualidade e confiabilidade, com foco em
+              manutenibilidade a longo prazo e evolução segura da plataforma.
+            </p>
+            <dl class="entity-list" style="margin-top: 1rem;">
+              <dt><strong>Paginação padronizada</strong></dt>
+              <dd>15 endpoints críticos implementam paginação completa com <code>PaginatedResult&lt;T&gt;</code>, garantindo performance consistente em grandes volumes de dados.</dd>
+
+              <dt><strong>Validação robusta</strong></dt>
+              <dd>FluentValidation em todas as camadas: contratos de API, comandos de aplicação e regras de domínio. Validações declarativas e mensagens de erro claras.</dd>
+
+              <dt><strong>Cobertura de testes superior a 90%</strong></dt>
+              <dd>Testes unitários, de integração e end-to-end cobrindo fluxos críticos. Testes de infraestrutura para repositórios e serviços de aplicação.</dd>
+
+              <dt><strong>Testes de segurança e performance</strong></dt>
+              <dd>Testes automatizados de vulnerabilidades comuns, validação de autorização e testes de carga para endpoints críticos.</dd>
+
+              <dt><strong>Refatoração completa de services</strong></dt>
+              <dd>Arquitetura limpa com Single Responsibility Principle. Services focados, testáveis e desacoplados, facilitando manutenção e evolução.</dd>
+            </dl>
           </div>
+
           <div class="card">
-            <h3>Performance e Escalabilidade</h3>
-            <ul>
-              <li>Concorrência otimista com RowVersion</li>
-              <li>Cache distribuído (Redis)</li>
-              <li>Processamento assíncrono de eventos</li>
-              <li>Suporte a read replicas</li>
-              <li>Deployment multi-instância</li>
-            </ul>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+              <span style="font-size: 1.75rem;">⚡</span>
+              <h3 style="margin: 0;">Performance & Escalabilidade</h3>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+              Otimizações arquiteturais e técnicas avançadas para garantir baixa latência
+              e capacidade de crescimento com o aumento da demanda.
+            </p>
+            <dl class="entity-list" style="margin-top: 1rem;">
+              <dt><strong>Concorrência otimista</strong></dt>
+              <dd>RowVersion em entidades críticas previne condições de corrida e garante consistência de dados em operações concorrentes.</dd>
+
+              <dt><strong>Cache distribuído</strong></dt>
+              <dd>Redis para cache de sessões, configurações e dados frequentemente acessados, reduzindo carga no banco de dados.</dd>
+
+              <dt><strong>Processamento assíncrono</strong></dt>
+              <dd>Event Bus com padrão Outbox/Inbox para processamento confiável de eventos, notificações e operações em background.</dd>
+
+              <dt><strong>Read replicas</strong></dt>
+              <dd>Suporte nativo para leitura distribuída, permitindo escalar consultas independentemente de operações de escrita.</dd>
+
+              <dt><strong>Deployment multi-instância</strong></dt>
+              <dd>Arquitetura stateless permite escalonamento horizontal sem compartilhamento de estado entre instâncias.</dd>
+            </dl>
           </div>
+
           <div class="card">
-            <h3>Observabilidade e Monitoramento</h3>
-            <ul>
-              <li>Logs centralizados (Serilog + Seq)</li>
-              <li>Métricas Prometheus</li>
-              <li>Distributed tracing (OpenTelemetry)</li>
-              <li>Dashboards e alertas</li>
-              <li>Runbook e troubleshooting</li>
-            </ul>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+              <span style="font-size: 1.75rem;">📊</span>
+              <h3 style="margin: 0;">Observabilidade</h3>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+              Visibilidade completa sobre o comportamento da plataforma em produção,
+              permitindo detecção proativa de problemas e otimização contínua.
+            </p>
+            <dl class="entity-list" style="margin-top: 1rem;">
+              <dt><strong>Logs estruturados</strong></dt>
+              <dd>Serilog com Seq para logs centralizados, pesquisáveis e estruturados. Contexto enriquecido para debugging eficiente.</dd>
+
+              <dt><strong>Métricas Prometheus</strong></dt>
+              <dd>Métricas de negócio e infraestrutura expostas em formato Prometheus para monitoramento e alertas baseados em thresholds.</dd>
+
+              <dt><strong>Distributed tracing</strong></dt>
+              <dd>OpenTelemetry para rastreamento de requisições através de serviços, facilitando identificação de gargalos e dependências.</dd>
+
+              <dt><strong>Dashboards e alertas</strong></dt>
+              <dd>Grafana para visualização de métricas e alertas configuráveis para eventos críticos e degradação de performance.</dd>
+
+              <dt><strong>Runbook e troubleshooting</strong></dt>
+              <dd>Documentação operacional detalhada para incidentes comuns, facilitando resolução rápida e consistente de problemas.</dd>
+            </dl>
           </div>
+
           <div class="card">
-            <h3>Segurança Avançada</h3>
-            <ul>
-              <li>Autenticação de dois fatores (2FA TOTP)</li>
-              <li>Sanitização avançada de inputs</li>
-              <li>Proteção CSRF (anti-forgery tokens)</li>
-              <li>Security headers melhorados (CSP, HSTS)</li>
-              <li>Auditoria de ações críticas</li>
-            </ul>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+              <span style="font-size: 1.75rem;">🔒</span>
+              <h3 style="margin: 0;">Segurança</h3>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+              Múltiplas camadas de proteção para garantir integridade de dados, privacidade
+              dos usuários e resistência a ataques comuns.
+            </p>
+            <dl class="entity-list" style="margin-top: 1rem;">
+              <dt><strong>Autenticação multi-fator</strong></dt>
+              <dd>2FA via TOTP (Time-based One-Time Password) para proteção adicional de contas sensíveis e operações críticas.</dd>
+
+              <dt><strong>Sanitização avançada</strong></dt>
+              <dd>Validação e sanitização rigorosa de inputs em todas as camadas, prevenindo injeção de código e XSS.</dd>
+
+              <dt><strong>Proteção CSRF</strong></dt>
+              <dd>Anti-forgery tokens para prevenir requisições cross-site não autorizadas em operações de estado.</dd>
+
+              <dt><strong>Security headers</strong></dt>
+              <dd>Content Security Policy (CSP), HTTP Strict Transport Security (HSTS) e outros headers de segurança configurados adequadamente.</dd>
+
+              <dt><strong>Auditoria completa</strong></dt>
+              <dd>Log de todas as ações críticas (mudanças de role, moderação, configurações) para rastreabilidade e compliance.</dd>
+            </dl>
           </div>
+        </div>
+
+        <div class="callout" style="margin-top: 3rem; background: var(--accent-subtle); border-left: 3px solid var(--accent);">
+          <p style="margin: 0; color: var(--text);">
+            <strong>Qualidade em produção:</strong> A API Araponga segue rigorosamente os princípios de engenharia de software
+            de alto padrão, com foco em confiabilidade, manutenibilidade e escalabilidade. Todas as decisões arquiteturais
+            foram documentadas e são continuamente revisadas para garantir evolução segura e sustentável da plataforma.
+          </p>
         </div>
       </section>
 

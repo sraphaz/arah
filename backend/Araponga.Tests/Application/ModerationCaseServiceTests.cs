@@ -21,6 +21,7 @@ public sealed class ModerationCaseServiceTests
         services.AddScoped<IReportRepository, InMemoryReportRepository>();
         services.AddScoped<IFeedRepository, InMemoryFeedRepository>();
         services.AddScoped<ISanctionRepository, InMemorySanctionRepository>();
+        services.AddScoped<Araponga.Application.Interfaces.Media.IMediaAttachmentRepository, InMemoryMediaAttachmentRepository>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
         services.AddScoped<IUnitOfWork, InMemoryUnitOfWork>();
         services.AddScoped<ModerationCaseService>();

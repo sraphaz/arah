@@ -276,12 +276,14 @@ public sealed class ReportServiceTests
         services.AddSingleton(dataStore);
         var serviceProvider = services.BuildServiceProvider();
         var eventBus = new InMemoryEventBus(serviceProvider);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new ReportService(
             reportRepository,
             feedRepository,
             userRepository,
             sanctionRepository,
+            mediaAttachmentRepository,
             auditLogger,
             eventBus,
             unitOfWork);

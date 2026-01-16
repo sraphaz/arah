@@ -341,7 +341,6 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
-            null,
             CancellationToken.None);
 
         Assert.True(listingsResult.IsSuccess);
@@ -525,7 +524,6 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
-            null,
             CancellationToken.None);
 
         Assert.True(updateResult.IsSuccess);
@@ -618,7 +616,6 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
-            null,
             CancellationToken.None);
 
         Assert.True(productResults.IsSuccess);

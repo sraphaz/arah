@@ -765,6 +765,7 @@ public sealed class ApplicationServiceTests
             null,
             null,
             null,
+            null,
             CancellationToken.None);
 
         Assert.True(created.IsSuccess);
@@ -934,11 +935,13 @@ public sealed class ApplicationServiceTests
         var userRepository = new InMemoryUserRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var service = new ReportService(
             reportRepository,
             feedRepository,
             userRepository,
             sanctionRepository,
+            mediaAttachmentRepository,
             auditLogger,
             EventBus,
             new InMemoryUnitOfWork());
@@ -1053,6 +1056,7 @@ public sealed class ApplicationServiceTests
                 PostType.General,
                 PostVisibility.Public,
                 PostStatus.Published,
+                null,
                 null,
                 null,
                 null,

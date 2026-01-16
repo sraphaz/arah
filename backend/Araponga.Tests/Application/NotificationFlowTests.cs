@@ -35,6 +35,7 @@ public sealed class NotificationFlowTests
             null,
             null,
             null,
+            null,
             CancellationToken.None);
 
         Assert.True(created.IsSuccess);

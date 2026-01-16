@@ -69,6 +69,16 @@ public sealed class AsyncMediaProcessingBackgroundService : BackgroundService, I
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                 }
             }
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+            {
+                // Cancelamento esperado durante shutdown - não logar como erro
+                break;
+            }
+            catch (TaskCanceledException) when (stoppingToken.IsCancellationRequested)
+            {
+                // Cancelamento esperado durante shutdown - não logar como erro
+                break;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao processar tarefa de mídia assíncrona.");
@@ -81,6 +91,12 @@ public sealed class AsyncMediaProcessingBackgroundService : BackgroundService, I
 
     private async Task ProcessJobAsync(MediaProcessingJob job, CancellationToken cancellationToken)
     {
+        // Verificar se o cancelamento foi solicitado antes de processar
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
         using var scope = _serviceProvider.CreateScope();
         var storageService = scope.ServiceProvider.GetRequiredService<IMediaStorageService>();
         var processingService = scope.ServiceProvider.GetRequiredService<IMediaProcessingService>();
@@ -158,6 +174,16 @@ public sealed class AsyncMediaProcessingBackgroundService : BackgroundService, I
                         job.MediaAssetId, newStorageKey, widthPx, heightPx);
                 }
             }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Cancelamento esperado durante shutdown - não logar como erro
+            _logger.LogInformation("Processamento cancelado durante shutdown: MediaAssetId={MediaAssetId}", job.MediaAssetId);
+        }
+        catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Cancelamento esperado durante shutdown - não logar como erro
+            _logger.LogInformation("Processamento cancelado durante shutdown: MediaAssetId={MediaAssetId}", job.MediaAssetId);
         }
         catch (Exception ex)
         {

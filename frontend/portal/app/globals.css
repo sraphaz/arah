@@ -4,18 +4,22 @@
 
 :root {
   color-scheme: light;
-  --glass-bg: rgba(255, 255, 255, 0.86);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-shadow: 0 16px 40px rgba(20, 40, 28, 0.12);
-  --glass-radius: 28px;
-  --glass-blur: 14px;
-  --watermark-opacity: 0.08;
-  --watermark-size: 460px;
-  --watermark-bottom: -120px;
-  --watermark-right: -120px;
-  --reveal-translate: 16px;
-  --reveal-duration: 700ms;
-  --reveal-easing: ease-out;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 20px 50px rgba(20, 40, 28, 0.15);
+  --glass-hover-shadow: 0 24px 60px rgba(20, 40, 28, 0.2);
+  --glass-radius: 32px;
+  --glass-blur: 16px;
+  --watermark-opacity: 0.04;
+  --watermark-size: 480px;
+  --watermark-bottom: -140px;
+  --watermark-right: -140px;
+  --body-watermark-opacity: 0.03;
+  --body-watermark-size: 600px;
+  --reveal-translate: 20px;
+  --reveal-duration: 800ms;
+  --reveal-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
@@ -26,9 +30,41 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--body-watermark-size);
+  height: var(--body-watermark-size);
+  max-width: 90vw;
+  max-height: 90vh;
+  background-image: url("/Logo_1.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: var(--body-watermark-opacity);
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: soft-light;
+  filter: grayscale(100%) brightness(1.2);
 }
 
 body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure content is above watermark */
+main,
+section {
   position: relative;
   z-index: 1;
 }
@@ -57,6 +93,12 @@ body > * {
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   overflow: visible;
+  transition: var(--transition-smooth);
+}
+
+.glass-card:hover {
+  box-shadow: var(--glass-hover-shadow);
+  transform: translateY(-2px);
 }
 
 .glass-card::after {
@@ -66,13 +108,15 @@ body > * {
   height: var(--watermark-size);
   bottom: var(--watermark-bottom);
   right: var(--watermark-right);
-  background-image: url("/Logo_2_watermark.png");
+  background-image: url("/Logo_1.png");
   background-repeat: no-repeat;
   background-position: bottom right;
   background-size: contain;
   opacity: var(--watermark-opacity);
   pointer-events: none;
   z-index: 0;
+  filter: grayscale(100%) brightness(1.1);
+  mix-blend-mode: soft-light;
 }
 
 .glass-card__content {
@@ -86,6 +130,7 @@ body > * {
   transform: translateY(var(--reveal-translate));
   transition: opacity var(--reveal-duration) var(--reveal-easing),
     transform var(--reveal-duration) var(--reveal-easing);
+  will-change: opacity, transform;
 }
 
 .reveal.is-visible {
@@ -105,13 +150,37 @@ body > * {
 
 @media (min-width: 768px) {
   .section {
-    padding: 56px 0;
+    padding: 64px 0;
   }
 
   .glass-card__content {
-    padding: 48px;
+    padding: 56px;
   }
 }
+
+@media (min-width: 1024px) {
+  .section {
+    padding: 80px 0;
+  }
+
+  .glass-card__content {
+    padding: 64px;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better focus states */
+*:focus-visible {
+  outline: 2px solid var(--forest-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Improved text rendering - merged with body above */
 
 @media (max-width: 768px) {
   body {

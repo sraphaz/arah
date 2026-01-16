@@ -8,9 +8,15 @@ export default function Visibility() {
       <RevealOnScroll>
         <GlassCard>
           <div className="space-y-8">
-            <h2 className="text-2xl font-semibold tracking-tight text-forest-950">
-              Regras de visibilidade: por que isso importa
-            </h2>
+            <div className="space-y-3">
+              <h2 className="text-3xl font-semibold tracking-tight text-forest-950 md:text-4xl">
+                Regras de visibilidade: por que isso importa
+              </h2>
+              <p className="text-base leading-relaxed text-forest-800 md:text-lg">
+                O sistema de visibilidade do Araponga garante que comunidades tenham controle sobre
+                suas informações, promovendo segurança e confiança.
+              </p>
+            </div>
             <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-4 rounded-2xl border border-white/60 bg-white/65 p-5">
                 <h3 className="text-base font-semibold text-forest-900">Visitante &amp; Residente</h3>

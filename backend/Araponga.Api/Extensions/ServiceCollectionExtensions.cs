@@ -112,6 +112,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ArapongaDbContext>());
             services.AddPostgresRepositories();
             services.AddHostedService<OutboxDispatcherWorker>();
+            services.AddHostedService<Araponga.Infrastructure.Background.PayoutProcessingWorker>();
         }
         else
         {

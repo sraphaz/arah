@@ -614,7 +614,7 @@ sequenceDiagram
     Database-->>UserBlockRepository: List<Guid>
     UserBlockRepository-->>PostFilterService: BlockedUserIds
     
-    PostFilterService->>PostFilterService: Aplicar filtros:<br/>- Bloqueios<br/>- Visibilidade<br/>- Status<br/>- Paginação
+    PostFilterService->>PostFilterService: Aplicar filtros:\n- Bloqueios\n- Visibilidade\n- Status\n- Paginação
     
     PostFilterService-->>FeedService: PagedResult<CommunityPost>
     FeedService-->>FeedController: PagedResult<CommunityPost>

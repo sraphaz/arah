@@ -1864,7 +1864,10 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
             if (this.open && !rendered) {
               if (diagramContainer) {
                 var diagramId = diagramContainer.getAttribute('data-diagram') || 'diagram-' + Date.now();
-                 var diagramContent = diagramContainer.textContent.trim();
+                 // IMPORTANTE: Usar innerHTML em vez de textContent para evitar que o navegador
+                 // adicione tags de fechamento automáticas ao processar <Tipo> em tipos genéricos C#
+                 // O navegador pode interpretar <Territory> como tag HTML não fechada e adicionar </territory>
+                 var diagramContent = diagramContainer.innerHTML.trim();
                  
                  // Decodifica entidades HTML em ordem segura para evitar double unescaping
                  // IMPORTANTE: &amp; deve ser decodificado por último para evitar converter &amp;lt; em &lt;

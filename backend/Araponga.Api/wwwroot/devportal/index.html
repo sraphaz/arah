@@ -453,44 +453,8 @@
               <span>📊 Ver Diagrama de Sequência</span>
             </summary>
             <div class="sequence-diagram-container">
-              <div class="mermaid" data-diagram="auth">
-sequenceDiagram
-    participant Cliente
-    participant AuthController
-    participant AuthService
-    participant UserRepository
-    participant TokenService
-    participant Database
-
-    Cliente->>AuthController: POST /api/v1/auth/social
-    AuthController->>AuthService: LoginSocialAsync()
-    
-    AuthService->>UserRepository: GetByAuthProviderAsync()
-    UserRepository->>Database: SELECT user WHERE provider + externalId
-    Database-->>UserRepository: User ou null
-    UserRepository-->>AuthService: User existente ou null
-    
-    alt Usuário já existe
-        alt 2FA habilitado
-            AuthService-->>AuthController: Result.Failure("2FA_REQUIRED")
-            AuthController-->>Cliente: 400 Bad Request (2FA_REQUIRED)
-        else 2FA não habilitado
-            AuthService->>TokenService: IssueToken(userId)
-            TokenService-->>AuthService: JWT Token
-            AuthService-->>AuthController: Result.Success(user, token)
-            AuthController-->>Cliente: 200 OK (user, token)
-        end
-    else Novo usuário
-        AuthService->>UserRepository: AddAsync(new User())
-        UserRepository->>Database: INSERT user
-        Database-->>UserRepository: User criado
-        UserRepository-->>AuthService: User
-        AuthService->>TokenService: IssueToken(userId)
-        TokenService-->>AuthService: JWT Token
-        AuthService-->>AuthController: Result.Success(user, token)
-        AuthController-->>Cliente: 200 OK (user, token)
-    end
-              </div>
+              <img src="./assets/images/diagrams/auth.svg" alt="Diagrama de sequência: Autenticação" class="mermaid-diagram" data-diagram="auth" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
             </div>
           </details>
         </div>
@@ -507,54 +471,7 @@ sequenceDiagram
               <span>📊 Ver Diagrama de Sequência</span>
             </summary>
             <div class="sequence-diagram-container">
-              <div class="mermaid" data-diagram="territory-discovery">
-sequenceDiagram
-    participant Cliente
-    participant TerritoryController
-    participant MembershipController
-    participant TerritoryService
-    participant MembershipService
-    participant TerritoryRepository
-    participant MembershipRepository
-    participant SettingsRepository
-    participant AuditLogger
-    participant Database
-
-    Cliente->>TerritoryController: GET /api/v1/territories/nearby
-    TerritoryController->>TerritoryService: FindNearbyAsync()
-    TerritoryService->>TerritoryRepository: FindNearbyAsync()
-    TerritoryRepository->>Database: SELECT territories WHERE distance < radiusKm
-    Database-->>TerritoryRepository: List<Territory>
-    TerritoryRepository-->>TerritoryService: List<Territory>
-    TerritoryService-->>TerritoryController: List<Territory>
-    TerritoryController-->>Cliente: 200 OK (territories)
-
-    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/enter-visitor
-    MembershipController->>MembershipService: EnterAsVisitorAsync(userId, territoryId)
-    
-    MembershipService->>MembershipRepository: GetByUserAndTerritoryAsync()
-    MembershipRepository->>Database: SELECT membership WHERE userId + territoryId
-    Database-->>MembershipRepository: Membership ou null
-    MembershipRepository-->>MembershipService: Membership existente ou null
-    
-    alt Membership já existe
-        MembershipService-->>MembershipController: Membership existente
-    else Novo membership
-        MembershipService->>MembershipRepository: AddAsync(new TerritoryMembership(Visitor))
-        MembershipRepository->>Database: INSERT membership
-        Database-->>MembershipRepository: Membership criado
-        
-        MembershipService->>SettingsRepository: AddAsync(new MembershipSettings())
-        SettingsRepository->>Database: INSERT settings
-        Database-->>SettingsRepository: Settings criado
-        
-        MembershipService->>AuditLogger: LogAsync("membership.declared")
-        MembershipService->>MembershipService: CommitAsync()
-        MembershipService-->>MembershipController: TerritoryMembership
-    end
-    
-    MembershipController-->>Cliente: 200 OK (membership)
-              </div>
+              <img src="./assets/images/diagrams/territory-discovery.svg" alt="Diagrama de sequência: territory-discovery" class="mermaid-diagram" data-diagram="territory-discovery" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
             </div>
           </details>
         </div>
@@ -585,47 +502,8 @@ sequenceDiagram
               <span>📊 Ver Diagrama de Sequência</span>
             </summary>
             <div class="sequence-diagram-container">
-              <div class="mermaid" data-diagram="feed-listing">
-sequenceDiagram
-    participant Cliente
-    participant FeedController
-    participant FeedService
-    participant PostFilterService
-    participant FeedRepository
-    participant AccessEvaluator
-    participant UserBlockRepository
-    participant EventService
-    participant Database
-
-    Cliente->>FeedController: GET /api/v1/feed/paged
-    FeedController->>FeedService: ListForTerritoryPagedAsync()
-    FeedService->>FeedRepository: ListByTerritoryAsync(territoryId)
-    FeedRepository->>Database: SELECT posts WHERE territoryId ORDER BY createdAt DESC
-    Database-->>FeedRepository: List<CommunityPost>
-    FeedRepository-->>FeedService: List<CommunityPost>
-    
-    FeedService->>PostFilterService: FilterAndPaginateAsync(posts, userId)
-    
-    PostFilterService->>AccessEvaluator: GetMembershipAsync(userId, territoryId)
-    AccessEvaluator->>Database: SELECT membership WHERE userId + territoryId
-    Database-->>AccessEvaluator: Membership
-    AccessEvaluator-->>PostFilterService: Membership (role, verification)
-    
-    PostFilterService->>UserBlockRepository: GetBlockedUserIdsAsync(userId)
-    UserBlockRepository->>Database: SELECT blocked_user_ids WHERE userId
-    Database-->>UserBlockRepository: List<Guid>
-    UserBlockRepository-->>PostFilterService: BlockedUserIds
-    
-    PostFilterService->>PostFilterService: Aplicar filtros:\n- Bloqueios\n- Visibilidade\n- Status\n- Paginação
-    
-    PostFilterService-->>FeedService: PagedResult<CommunityPost>
-    FeedService-->>FeedController: PagedResult<CommunityPost>
-    
-    FeedController->>EventService: LoadEventSummariesAsync(postIds)
-    FeedController->>FeedService: GetCountsByPostIdsAsync(postIds)
-    FeedController->>FeedController: Montar FeedItemResponse
-    FeedController-->>Cliente: 200 OK (PagedResponse<FeedItemResponse>)
-              </div>
+              <img src="./assets/images/diagrams/feed-listing.svg" alt="Diagrama de sequência: Listagem de Feed" class="mermaid-diagram" data-diagram="feed-listing" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
             </div>
           </details>
         </div>
@@ -666,60 +544,7 @@ sequenceDiagram
               <span>📊 Ver Diagrama de Sequência</span>
             </summary>
             <div class="sequence-diagram-container">
-              <div class="mermaid" data-diagram="post-creation">
-sequenceDiagram
-    participant Cliente
-    participant FeedController
-    participant FeedService
-    participant PostCreationService
-    participant AccessEvaluator
-    participant FeatureFlagService
-    participant SanctionRepository
-    participant AssetRepository
-    participant FeedRepository
-    participant PostGeoAnchorRepository
-    participant EventBus
-    participant Database
-
-    Cliente->>FeedController: POST /api/v1/feed
-    FeedController->>AccessEvaluator: IsResidentAsync(userId, territoryId)
-    AccessEvaluator->>Database: SELECT membership WHERE userId + territoryId
-    Database-->>AccessEvaluator: Membership
-    AccessEvaluator-->>FeedController: isResident
-    
-    alt Não é Resident
-        FeedController-->>Cliente: 401 Unauthorized
-    else É Resident
-        FeedController->>FeedService: CreatePostAsync()
-        FeedService->>PostCreationService: CreatePostAsync()
-        
-        PostCreationService->>FeatureFlagService: IsEnabledAsync(territoryId, "AlertPosts")
-        PostCreationService->>SanctionRepository: HasActiveSanctionAsync(userId, PostingRestriction)
-        SanctionRepository->>Database: SELECT sanction WHERE userId + territoryId
-        Database-->>SanctionRepository: Sanction ou null
-        
-        alt Usuário com restrição
-            PostCreationService-->>FeedService: Result.Failure("Posting restricted")
-            FeedService-->>FeedController: Result.Failure
-            FeedController-->>Cliente: 400 Bad Request
-        else Pode postar
-            PostCreationService->>FeedRepository: AddAsync(new CommunityPost())
-            FeedRepository->>Database: INSERT post
-            Database-->>FeedRepository: Post criado
-            
-            loop Para cada GeoAnchor
-                PostCreationService->>PostGeoAnchorRepository: AddAsync(new PostGeoAnchor())
-                PostGeoAnchorRepository->>Database: INSERT geo_anchor
-            end
-            
-            PostCreationService->>EventBus: PublishAsync(PostCreatedEvent)
-            PostCreationService->>PostCreationService: CommitAsync()
-            PostCreationService-->>FeedService: Result.Success(post)
-            FeedService-->>FeedController: Result.Success(post)
-            FeedController-->>Cliente: 201 Created (post)
-        end
-    end
-              </div>
+              <img src="./assets/images/diagrams/post-creation.svg" alt="Diagrama de sequência: post-creation" class="mermaid-diagram" data-diagram="post-creation" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
             </div>
           </details>
         </div>
@@ -787,54 +612,7 @@ sequenceDiagram
               <span>📊 Ver Diagrama de Sequência</span>
             </summary>
             <div class="sequence-diagram-container">
-              <div class="mermaid" data-diagram="membership-resident">
-sequenceDiagram
-    participant Cliente
-    participant MembershipController
-    participant MembershipService
-    participant MembershipRepository
-    participant VerificationQueueService
-    participant WorkQueueService
-    participant DocumentEvidenceService
-    participant FileStorage
-    participant Database
-
-    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/become-resident
-    MembershipController->>MembershipService: BecomeResidentAsync(userId, territoryId)
-    
-    MembershipService->>MembershipRepository: GetResidentMembershipAsync()
-    MembershipRepository->>Database: SELECT membership WHERE userId AND role=Resident
-    Database-->>MembershipRepository: Membership ou null
-    
-    alt Já é Resident em outro território
-        MembershipService-->>MembershipController: Result.Failure("Already resident elsewhere")
-        MembershipController-->>Cliente: 400 Bad Request
-    else Pode tornar-se Resident
-        MembershipService->>MembershipRepository: UpdateRole(Resident)
-        MembershipRepository->>Database: UPDATE membership SET role=Resident
-        Database-->>MembershipRepository: OK
-        
-        MembershipService->>MembershipService: CommitAsync()
-        MembershipService-->>MembershipController: Result.Success(membership)
-        MembershipController-->>Cliente: 200 OK (membership)
-    end
-
-    Note over Cliente,Database: Upload de documento (opcional)
-    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/verify-residency/document/upload
-    MembershipController->>DocumentEvidenceService: UploadDocumentAsync()
-    DocumentEvidenceService->>FileStorage: UploadAsync(file)
-    FileStorage-->>DocumentEvidenceService: File URL
-    DocumentEvidenceService->>Database: INSERT document_evidence
-    Database-->>DocumentEvidenceService: Evidence criada
-    
-    DocumentEvidenceService->>VerificationQueueService: EnqueueResidencyVerification()
-    VerificationQueueService->>WorkQueueService: EnqueueWorkItem(ResidencyVerification)
-    WorkQueueService->>Database: INSERT work_item
-    Database-->>WorkQueueService: WorkItem criado
-    
-    DocumentEvidenceService-->>MembershipController: Evidence + WorkItem
-    MembershipController-->>Cliente: 200 OK (evidenceId, workItemId)
-              </div>
+              <img src="./assets/images/diagrams/membership-resident.svg" alt="Diagrama de sequência: membership-resident" class="mermaid-diagram" data-diagram="membership-resident" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
             </div>
           </details>
         </div>
@@ -873,61 +651,7 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
               <span>📊 Ver Diagrama de Sequência</span>
             </summary>
             <div class="sequence-diagram-container">
-              <div class="mermaid" data-diagram="moderation">
-sequenceDiagram
-    participant Cliente
-    participant ModerationController
-    participant ModerationService
-    participant ReportService
-    participant WorkQueueService
-    participant ModerationCaseService
-    participant SanctionRepository
-    participant AuditLogger
-    participant EventBus
-    participant Database
-
-    Cliente->>ModerationController: POST /api/v1/reports (targetType, targetId, reason)
-    ModerationController->>ReportService: CreateReportAsync()
-    
-    ReportService->>Database: INSERT report
-    Database-->>ReportService: Report criado
-    
-    ReportService->>WorkQueueService: EnqueueWorkItem(ModerationCase)
-    WorkQueueService->>Database: INSERT work_item
-    Database-->>WorkQueueService: WorkItem criado
-    
-    ReportService->>AuditLogger: LogAsync("report.created")
-    ReportService->>EventBus: PublishAsync(ReportCreatedEvent)
-    ReportService->>ReportService: CommitAsync()
-    ReportService-->>ModerationController: Report
-    ModerationController-->>Cliente: 201 Created (report)
-
-    Note over Cliente,Database: Decisão de Moderação (Curator/Moderator)
-    Cliente->>ModerationController: POST /api/v1/territories/{territoryId}/work-items/{workItemId}/complete
-    ModerationController->>ModerationCaseService: CompleteModerationCaseAsync()
-    
-    ModerationCaseService->>WorkQueueService: GetWorkItemAsync(workItemId)
-    WorkQueueService->>Database: SELECT work_item WHERE id
-    Database-->>WorkQueueService: WorkItem
-    
-    ModerationCaseService->>ReportService: GetByIdAsync(reportId)
-    ReportService->>Database: SELECT report WHERE id
-    Database-->>ReportService: Report
-    
-    alt Decisão: Aplicar Sanção
-        ModerationCaseService->>SanctionRepository: AddAsync(new Sanction())
-        SanctionRepository->>Database: INSERT sanction
-        ModerationCaseService->>EventBus: PublishAsync(SanctionAppliedEvent)
-    end
-    
-    ModerationCaseService->>ReportService: UpdateStatusAsync(reportId, Resolved)
-    ReportService->>Database: UPDATE report SET status=Resolved
-    ModerationCaseService->>WorkQueueService: CompleteWorkItemAsync(workItemId, outcome)
-    ModerationCaseService->>AuditLogger: LogAsync("moderation.completed")
-    ModerationCaseService->>ModerationCaseService: CommitAsync()
-    ModerationCaseService-->>ModerationController: Result.Success
-    ModerationController-->>Cliente: 200 OK
-              </div>
+              <img src="./assets/images/diagrams/moderation.svg" alt="Diagrama de sequência: moderation" class="mermaid-diagram" data-diagram="moderation" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
             </div>
           </details>
         </div>

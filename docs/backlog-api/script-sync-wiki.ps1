@@ -72,12 +72,32 @@ function Copy-DocumentToWiki {
         $content = $content -replace '\.\/MAPA_([^.]+)\.md', '[Mapa $1](Mapa-$1)'
         $content = $content -replace '\.\/REVISAO_([^.]+)\.md', '[Revisão $1](Revisão-$1)'
         
-        # Links para documentos da raiz docs/
+        # Links para documentos da raiz docs/ (onboarding e outros)
         $content = $content -replace '\.\.\/00_INDEX\.md', '[Índice](00-Índice)'
         $content = $content -replace '\.\.\/01_PRODUCT_VISION\.md', '[Visão do Produto](01-Visão-do-Produto)'
         $content = $content -replace '\.\.\/02_ROADMAP\.md', '[Roadmap](02-Roadmap)'
         $content = $content -replace '\.\.\/03_BACKLOG\.md', '[Backlog](03-Backlog)'
         $content = $content -replace '\.\.\/40_CHANGELOG\.md', '[Changelog](40-Changelog)'
+        $content = $content -replace '\.\.\/41_CONTRIBUTING\.md', '[Contribuindo](41-Contribuindo)'
+        
+        # Links de onboarding (com e sem ../docs/)
+        $content = $content -replace '\.\.\/ONBOARDING_PUBLICO\.md', '[Onboarding Público](Onboarding-Público)'
+        $content = $content -replace '\.\.\/ONBOARDING_DEVELOPERS\.md', '[Onboarding Desenvolvedores](Onboarding-Desenvolvedores)'
+        $content = $content -replace '\.\.\/ONBOARDING_ANALISTAS_FUNCIONAIS\.md', '[Onboarding Analistas Funcionais](Onboarding-Analistas-Funcionais)'
+        $content = $content -replace '\.\.\/CARTILHA_COMPLETA\.md', '[Cartilha Completa](Cartilha-Completa)'
+        $content = $content -replace '\.\.\/DISCORD_SETUP\.md', '[Discord Setup](Discord-Setup)'
+        $content = $content -replace '\.\.\/docs\/ONBOARDING_PUBLICO\.md', '[Onboarding Público](Onboarding-Público)'
+        $content = $content -replace '\.\.\/docs\/ONBOARDING_DEVELOPERS\.md', '[Onboarding Desenvolvedores](Onboarding-Desenvolvedores)'
+        $content = $content -replace '\.\.\/docs\/ONBOARDING_ANALISTAS_FUNCIONAIS\.md', '[Onboarding Analistas Funcionais](Onboarding-Analistas-Funcionais)'
+        $content = $content -replace '\.\.\/docs\/CARTILHA_COMPLETA\.md', '[Cartilha Completa](Cartilha-Completa)'
+        $content = $content -replace '\.\.\/docs\/DISCORD_SETUP\.md', '[Discord Setup](Discord-Setup)'
+        $content = $content -replace '\.\/ONBOARDING_PUBLICO\.md', '[Onboarding Público](Onboarding-Público)'
+        $content = $content -replace '\.\/ONBOARDING_DEVELOPERS\.md', '[Onboarding Desenvolvedores](Onboarding-Desenvolvedores)'
+        $content = $content -replace '\.\/ONBOARDING_ANALISTAS_FUNCIONAIS\.md', '[Onboarding Analistas Funcionais](Onboarding-Analistas-Funcionais)'
+        $content = $content -replace '\.\/CARTILHA_COMPLETA\.md', '[Cartilha Completa](Cartilha-Completa)'
+        $content = $content -replace '\.\/DISCORD_SETUP\.md', '[Discord Setup](Discord-Setup)'
+        
+        # Links para outros documentos docs/
         $content = $content -replace '\.\.\/MEDIA_SYSTEM\.md', '[Media System](Media-System)'
         $content = $content -replace '\.\.\/MONITORING\.md', '[Monitoring](Monitoring)'
         $content = $content -replace '\.\.\/METRICS\.md', '[Metrics](Metrics)'
@@ -92,6 +112,14 @@ function Copy-DocumentToWiki {
         $content = $content -replace '\.\.\/backlog-api\/README\.md', '[Backlog API](Backlog-API)'
         $content = $content -replace '\.\.\/backlog-api\/implementacoes\/FASE(\d+)_([^.]+)\.md', '[Fase $1 $2](Home#backlog-api)'
         $content = $content -replace '\.\/implementacoes\/FASE(\d+)_([^.]+)\.md', '[Fase $1 $2](Home#backlog-api)'
+        
+        # Links absolutos do GitHub (transformar em links da Wiki quando for documentação local)
+        $content = $content -replace 'https://github.com/sraphaz/araponga/blob/main/docs/([^.]+)\.md', '[${1}](${1})'
+        $content = $content -replace 'https://github.com/sraphaz/araponga/blob/main/docs/ONBOARDING_PUBLICO\.md', '[Onboarding Público](Onboarding-Público)'
+        $content = $content -replace 'https://github.com/sraphaz/araponga/blob/main/docs/ONBOARDING_DEVELOPERS\.md', '[Onboarding Desenvolvedores](Onboarding-Desenvolvedores)'
+        $content = $content -replace 'https://github.com/sraphaz/araponga/blob/main/docs/ONBOARDING_ANALISTAS_FUNCIONAIS\.md', '[Onboarding Analistas Funcionais](Onboarding-Analistas-Funcionais)'
+        $content = $content -replace 'https://github.com/sraphaz/araponga/blob/main/docs/CARTILHA_COMPLETA\.md', '[Cartilha Completa](Cartilha-Completa)'
+        $content = $content -replace 'https://github.com/sraphaz/araponga/blob/main/docs/DISCORD_SETUP\.md', '[Discord Setup](Discord-Setup)'
         
         # Adicionar link para documento completo no repositório
         $repoPath = $sourceFile.Replace($ROOT_DIR, "").Replace("\", "/").TrimStart("/")

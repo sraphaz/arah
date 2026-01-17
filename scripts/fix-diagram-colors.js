@@ -191,10 +191,10 @@ function fixSVGColors(svgContent) {
     return `<rect${before}height="${TYPOGRAPHY.actorBoxHeight}"${after}>`;
   });
   
-  // 14. Adicionar estilos CSS padrão para tipografia no final do <style>
+  // 14. Adicionar estilos CSS customizados e de tipografia no final do <style>
   const styleEnd = fixed.indexOf('</style>');
   if (styleEnd > -1) {
-    const typographyStyles = `
+    const customStyles = `
 /* Tipografia padronizada Araponga */
 #mermaid-svg text.actor, #mermaid-svg .actor-box { 
   font-size: ${TYPOGRAPHY.actorFontSize} !important; 
@@ -208,14 +208,7 @@ function fixSVGColors(svgContent) {
   font-size: ${TYPOGRAPHY.labelFontSize} !important; 
   font-weight: 400 !important;
 }
-`;
-    fixed = fixed.slice(0, styleEnd) + typographyStyles + fixed.slice(styleEnd);
-  }
-  
-  // 12. Adicionar estilos CSS customizados no final do <style>
-  const styleEnd = fixed.indexOf('</style>');
-  if (styleEnd > -1) {
-    const customStyles = `
+
 /* Cores customizadas Araponga */
 #mermaid-svg .messageLine0 { stroke: ${COLORS.messageLine} !important; }
 #mermaid-svg .messageLine1 { stroke: ${COLORS.messageLine} !important; }

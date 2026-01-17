@@ -78,14 +78,19 @@
     <main role="main">
       <section class="section" id="visao-geral">
         <span class="eyebrow" data-i18n="overview.eyebrow">Visão geral</span>
-        <h2 data-i18n="overview.title">API orientada a território + curadoria comunitária.</h2>
-        <p data-i18n="overview.lead">
-          A API da Araponga cria um núcleo confiável para território, vínculos, feed, mapa, marketplace e eventos. Ela prioriza
-          regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam
-          auditáveis e evoluam com segurança. A arquitetura suporta decisões comunitárias, economia local
-          circular e regeneração social territorial através de ferramentas técnicas que respeitam a soberania
-          e pertencimento dos grupos locais.
-        </p>
+        <div class="section-header-with-icon">
+          <img src="./assets/images/araponga-icon.svg" alt="Araponga" class="section-icon" aria-hidden="true" />
+          <div>
+            <h2 data-i18n="overview.title">API orientada a território + curadoria comunitária.</h2>
+            <p data-i18n="overview.lead">
+              A API da Araponga cria um núcleo confiável para território, vínculos, feed, mapa, marketplace e eventos. Ela prioriza
+              regras explícitas (visibilidade, validação e moderação) para que experiências locais sejam
+              auditáveis e evoluam com segurança. A arquitetura suporta decisões comunitárias, economia local
+              circular e regeneração social territorial através de ferramentas técnicas que respeitam a soberania
+              e pertencimento dos grupos locais.
+            </p>
+          </div>
+        </div>
         <div class="grid-two">
           <div class="card">
             <h3>Por que território?</h3>
@@ -1781,15 +1786,20 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
 
       <section class="section" id="roadmap">
         <span class="eyebrow">Visão Futura</span>
-        <h2>Roadmap e Direcionamento</h2>
-        <p class="lead-text space-bottom">
-          O Araponga evolui de forma consciente e sustentável, priorizando funcionalidades que
-          fortalecem a organização comunitária local. O roadmap de 28 fases desenha um caminho
-          gradual em direção a maior autonomia territorial, economia circular e regeneração social.
-          Cada fase expande capacidades técnicas que, em conjunto, permitem que comunidades
-          construam e sustentem seus próprios sistemas de organização, economia e cuidado territorial.
-          Abaixo estão as direções planejadas e oportunidades de contribuição.
-        </p>
+        <div class="section-header-with-icon">
+          <img src="./assets/images/araponga-icon.svg" alt="Araponga" class="section-icon" aria-hidden="true" />
+          <div>
+            <h2>Roadmap e Direcionamento</h2>
+            <p class="lead-text space-bottom">
+              O Araponga evolui de forma consciente e sustentável, priorizando funcionalidades que
+              fortalecem a organização comunitária local. O roadmap de 28 fases desenha um caminho
+              gradual em direção a maior autonomia territorial, economia circular e regeneração social.
+              Cada fase expande capacidades técnicas que, em conjunto, permitem que comunidades
+              construam e sustentem seus próprios sistemas de organização, economia e cuidado territorial.
+              Abaixo estão as direções planejadas e oportunidades de contribuição.
+            </p>
+          </div>
+        </div>
 
         <div class="model-grid spaced">
           <div class="card">
@@ -2004,10 +2014,21 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       </section>
 
       <footer class="footer" role="contentinfo">
-        <p>
-          Portal disponível em <a href="https://devportal.araponga.app" rel="noopener">https://devportal.araponga.app</a>.
-          Para contribuir, consulte o repositório e a documentação técnica local.
-        </p>
+        <div class="footer-content">
+          <div class="footer-brand">
+            <img src="./assets/images/araponga-icon.svg" alt="Araponga" class="footer-icon" aria-hidden="true" />
+            <div>
+              <p class="footer-title">Araponga API</p>
+              <p class="footer-subtitle">Developer Portal</p>
+            </div>
+          </div>
+          <div class="footer-links">
+            <p>
+              Portal disponível em <a href="https://devportal.araponga.app" rel="noopener">https://devportal.araponga.app</a>.
+              Para contribuir, consulte o <a href="https://github.com/sraphaz/araponga" rel="noopener">repositório</a> e a documentação técnica local.
+            </p>
+          </div>
+        </div>
       </footer>
     </main>
   </div>

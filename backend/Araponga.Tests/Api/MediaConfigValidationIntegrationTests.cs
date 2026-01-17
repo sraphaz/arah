@@ -169,9 +169,12 @@ public sealed class MediaConfigValidationIntegrationTests
 
         // Desabilitar imagens no território (como curador)
         var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
-        using var curatorClient = factory.CreateClient();
-        curatorClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
-        await DisableMediaTypeForTerritoryAsync(curatorClient, ActiveTerritoryId, "Posts", "Images");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        await DisableMediaTypeForTerritoryAsync(client, ActiveTerritoryId, "Posts", "Images");
+        
+        // Voltar para o token do usuário original para o teste
+        var userToken = await LoginForTokenAsync(client, "google", "test-config-validation");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
 
         // Tentar criar post com imagem
         var imageId = await UploadTestImageAsync(client);
@@ -207,13 +210,12 @@ public sealed class MediaConfigValidationIntegrationTests
 
         // Desabilitar vídeos no território (como curador)
         var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
-        using var curatorClient = factory.CreateClient();
-        curatorClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
-        await DisableMediaTypeForTerritoryAsync(curatorClient, ActiveTerritoryId, "Events", "Videos");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        await DisableMediaTypeForTerritoryAsync(client, ActiveTerritoryId, "Events", "Videos");
 
         // Tentar criar evento com vídeo (simulado - precisaria de upload de vídeo real)
         // Por enquanto, apenas verificar que a configuração foi aplicada
-        var configResponse = await curatorClient.GetAsync(
+        var configResponse = await client.GetAsync(
             $"api/v1/territories/{ActiveTerritoryId}/media-config");
         configResponse.EnsureSuccessStatusCode();
         var config = await configResponse.Content.ReadFromJsonAsync<TerritoryMediaConfigResponse>();
@@ -234,12 +236,11 @@ public sealed class MediaConfigValidationIntegrationTests
 
         // Desabilitar áudios no território (como curador)
         var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
-        using var curatorClient = factory.CreateClient();
-        curatorClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
-        await DisableMediaTypeForTerritoryAsync(curatorClient, ActiveTerritoryId, "Marketplace", "Audio");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        await DisableMediaTypeForTerritoryAsync(client, ActiveTerritoryId, "Marketplace", "Audio");
 
         // Verificar que a configuração foi aplicada
-        var configResponse = await curatorClient.GetAsync(
+        var configResponse = await client.GetAsync(
             $"api/v1/territories/{ActiveTerritoryId}/media-config");
         configResponse.EnsureSuccessStatusCode();
         var config = await configResponse.Content.ReadFromJsonAsync<TerritoryMediaConfigResponse>();
@@ -260,18 +261,21 @@ public sealed class MediaConfigValidationIntegrationTests
 
         // Garantir que imagens estão habilitadas
         var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
-        using var curatorClient = factory.CreateClient();
-        curatorClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
         
         var enableRequest = new UpdateTerritoryMediaConfigRequest(
             new MediaContentConfigRequest(
                 ImagesEnabled: true,
                 null, null, null, null, null, null, null, null, null, null),
             null, null, null);
-        var enableResponse = await curatorClient.PutAsJsonAsync(
+        var enableResponse = await client.PutAsJsonAsync(
             $"api/v1/territories/{ActiveTerritoryId}/media-config",
             enableRequest);
         enableResponse.EnsureSuccessStatusCode();
+        
+        // Voltar para o token do usuário original para o teste
+        var userToken = await LoginForTokenAsync(client, "google", "test-enabled-media");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
 
         // Criar post com imagem
         var imageId = await UploadTestImageAsync(client);

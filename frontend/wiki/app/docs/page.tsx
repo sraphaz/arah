@@ -108,7 +108,7 @@ export default async function DocsPage() {
                     <Link
                       key={doc}
                       href={`/docs/${docSlug}`}
-                      className="doc-link"
+                      className="doc-link group"
                     >
                       <span>→</span>
                       <span className="flex-1">{docName}</span>

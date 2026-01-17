@@ -22,7 +22,7 @@ export function CategoryCard({ category, docs }: CategoryCardProps) {
               <li key={doc.path}>
                 <Link
                   href={`/docs/${docSlug}`}
-                  className="doc-link"
+                  className="doc-link group"
                 >
                   <span>→</span>
                   <span className="flex-1">{doc.name}</span>

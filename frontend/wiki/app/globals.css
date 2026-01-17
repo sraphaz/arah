@@ -250,7 +250,8 @@
     @apply text-forest-700 hover:text-forest-900;
     @apply transition-all duration-300 ease-out;
     @apply hover:bg-forest-50 hover:shadow-sm;
-    @apply group relative;
+    @apply relative;
+    position: relative;
   }
 
   .doc-link::before {

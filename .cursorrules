@@ -343,10 +343,20 @@ Consulte `docs/CURSOR_DOCUMENTATION_RULES.md` para mapeamento completo de mudan�
 
 ### Se Build ou Testes Falharem
 
-1. **NÃO crie o PR**
-2. **Corrija os erros localmente**
-3. **Valide novamente** (build + testes)
-4. **Apenas então** crie o PR
+1. **Verifique se os erros são relacionados às suas mudanças:**
+   - Se SIM: **NÃO crie o PR** até corrigir
+   - Se NÃO: Documente no PR que os testes falhando não estão relacionados às mudanças
+
+2. **Se os erros são relacionados às suas mudanças:**
+   - **NÃO crie o PR**
+   - **Corrija os erros localmente**
+   - **Valide novamente** (build + testes)
+   - **Apenas então** crie o PR
+
+3. **Se os erros NÃO são relacionados às suas mudanças:**
+   - Documente no PR quais testes estão falhando e por que não estão relacionados
+   - Explique que os testes devem ser corrigidos em um PR separado
+   - **Ainda assim, tente corrigir se possível** (boa prática)
 
 ### Se Houver Conflitos de Merge
 

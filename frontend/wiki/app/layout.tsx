@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
-      <head>
+      <body className="antialiased">
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -45,8 +45,8 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body className="antialiased">{children}</body>
+        {children}
+      </body>
     </html>
   );
 }

@@ -5,12 +5,12 @@
 @layer base {
   :root {
     color-scheme: light dark;
-    --glass-bg: rgba(255, 255, 255, 0.92);
-    --glass-border: rgba(255, 255, 255, 0.85);
-    --glass-shadow: 0 20px 60px rgba(20, 40, 28, 0.12);
-    --glass-hover-shadow: 0 28px 80px rgba(20, 40, 28, 0.18);
-    --glass-radius: 40px;
-    --glass-blur: 20px;
+    --glass-bg: rgba(255, 255, 255, 0.98);
+    --glass-border: rgba(198, 227, 210, 0.4);
+    --glass-shadow: 0 4px 24px rgba(23, 53, 37, 0.08), 0 2px 8px rgba(23, 53, 37, 0.04);
+    --glass-hover-shadow: 0 8px 32px rgba(23, 53, 37, 0.12), 0 4px 16px rgba(23, 53, 37, 0.08);
+    --glass-radius: 24px;
+    --glass-blur: 24px;
     --watermark-opacity: 0.035;
     --watermark-size: 560px;
     --watermark-bottom: -180px;
@@ -57,10 +57,10 @@
 
   /* Dark mode - identidade visual do devportal */
   :root.dark {
-    --glass-bg: rgba(20, 26, 33, 0.95);
-    --glass-border: rgba(37, 48, 58, 0.8);
-    --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    --glass-hover-shadow: 0 28px 80px rgba(0, 0, 0, 0.4);
+    --glass-bg: rgba(20, 26, 33, 0.98);
+    --glass-border: rgba(37, 48, 58, 0.6);
+    --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+    --glass-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
     --watermark-opacity: 0.015;
     --body-watermark-opacity: 0.01;
     --gradient-overlay: linear-gradient(180deg, rgba(10, 14, 18, 0.8) 0%, rgba(10, 14, 18, 0.4) 100%);
@@ -156,12 +156,12 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
   }
 
-  /* Glass card - Enterprise design refinement */
+  /* Glass card - Modern design refinement */
   .glass-card {
     position: relative;
     border-radius: var(--glass-radius);
     background: var(--glass-bg);
-    border: 1.5px solid var(--glass-border);
+    border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -183,8 +183,12 @@
 
   .glass-card:hover {
     box-shadow: var(--glass-hover-shadow);
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.95);
+    transform: translateY(-4px);
+    border-color: rgba(55, 123, 87, 0.3);
+  }
+
+  :root.dark .glass-card:hover {
+    border-color: rgba(77, 212, 168, 0.3);
   }
 
   .glass-card:hover::before {
@@ -399,13 +403,24 @@
   }
 
   .markdown-content h2 {
-    @apply text-3xl md:text-4xl font-bold text-forest-800 dark:text-forest-100 mb-8 mt-14;
-    @apply pb-4 border-b border-forest-200/60 dark:border-forest-800/60;
+    @apply text-3xl md:text-4xl font-bold text-forest-800 dark:text-forest-100 mb-10 mt-16;
+    @apply pb-4 border-b-2 border-forest-200/80 dark:border-forest-800/80;
     letter-spacing: var(--letter-spacing-tight);
     line-height: var(--line-height-snug);
     position: relative;
     scroll-margin-top: 120px;
     font-weight: 700;
+  }
+
+  .markdown-content h2::before {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    @apply bg-forest-500 dark:bg-[#4dd4a8];
+    border-radius: 1px;
   }
 
   .markdown-content h3 {
@@ -587,10 +602,42 @@
     transition: background-color 0.2s ease;
   }
 
-  /* Horizontal rules */
+  /* Horizontal rules - Modern separators */
   .markdown-content hr {
-    @apply my-12 border-0 border-t-2 border-forest-200 dark:border-forest-800;
+    @apply my-16 border-0;
     max-width: var(--content-width-default);
+    position: relative;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      theme('colors.forest.200') 20%,
+      theme('colors.forest.300') 50%,
+      theme('colors.forest.200') 80%,
+      transparent 100%
+    );
+  }
+
+  :root.dark .markdown-content hr {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      theme('colors.forest.800') 20%,
+      theme('colors.forest.700') 50%,
+      theme('colors.forest.800') 80%,
+      transparent 100%
+    );
+  }
+
+  .markdown-content hr::after {
+    content: "◆";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    @apply bg-forest-50 dark:bg-forest-950 text-forest-400 dark:text-forest-700;
+    padding: 0 0.75rem;
+    font-size: 0.75rem;
   }
 
   /* Images */
@@ -614,14 +661,17 @@
     @apply text-forest-400 dark:text-forest-600;
   }
 
-  /* Metadata badge - Enterprise design */
+  /* Metadata badge - Modern design */
   .metadata-badge {
-    @apply inline-flex items-center px-4 py-2.5 rounded-xl;
-    @apply bg-forest-100 dark:bg-forest-900 text-forest-700 dark:text-forest-200 text-sm font-medium;
-    @apply border border-forest-200 dark:border-forest-800;
-    @apply shadow-sm;
+    @apply inline-flex items-center px-4 py-2 rounded-full;
+    @apply bg-forest-100 dark:bg-forest-900/80 text-forest-700 dark:text-forest-200 text-sm font-medium;
+    @apply border border-forest-200/60 dark:border-forest-800/60;
+    @apply shadow-sm hover:shadow-md;
+    @apply transition-all duration-300 hover:scale-105;
     font-size: var(--font-size-sm);
     letter-spacing: var(--letter-spacing-wide);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   /* Footer refinado */

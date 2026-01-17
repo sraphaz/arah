@@ -45,13 +45,13 @@ export default async function HomePage() {
           <div className="glass-card animation-fade-in">
             <div className="glass-card__content">
               {/* Document Title */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-10 leading-tight tracking-tight">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight tracking-tight">
                 {onboardingDoc.title}
               </h1>
 
               {/* Document Metadata */}
               {onboardingDoc.frontMatter && (onboardingDoc.frontMatter.version || onboardingDoc.frontMatter.date) && (
-                <div className="mb-10 pb-8 border-b border-forest-200/60 flex flex-wrap gap-3">
+                <div className="mb-12 pb-6 border-b-2 border-forest-200/80 dark:border-forest-800/80 flex flex-wrap gap-3">
                   {onboardingDoc.frontMatter.version && (
                     <span className="metadata-badge">
                       <span className="mr-2">📌</span>
@@ -76,8 +76,20 @@ export default async function HomePage() {
           </div>
         )}
 
+        {/* Section Divider */}
+        <div className="mt-20 mb-8 relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t-2 border-forest-200/60 dark:border-forest-800/60"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-forest-50 dark:bg-forest-950 text-forest-500 dark:text-forest-400 font-medium">
+              Explorar Documentação
+            </span>
+          </div>
+        </div>
+
         {/* Quick Navigation - Harmonizado com paleta Araponga */}
-        <div className="mt-16 grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           <FeatureCard
             icon="👨‍💻"
             title="Desenvolvedores"

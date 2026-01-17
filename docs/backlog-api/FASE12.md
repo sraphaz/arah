@@ -788,5 +788,64 @@ POST /api/v1/users/me/devices
 
 ---
 
+#### 12.X Configuração Avançada de Taxas e Limites
+**Estimativa**: 20 horas (2.5 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🟡 Média
+
+**Contexto**: `PlatformFeeConfig` já existe e permite configuração de taxas por território. Esta tarefa estende o modelo para incluir limites de valores mínimo/máximo e integra com `PayoutConfig` para gestão financeira completa.
+
+**Tarefas**:
+- [ ] Estender modelo `PlatformFeeConfig`:
+  - [ ] Adicionar `MinimumFeeValue` (decimal, nullable)
+  - [ ] Adicionar `MaximumFeeValue` (decimal, nullable)
+  - [ ] Adicionar `FeeCalculationMethod` (enum: Percentage, Fixed, Tiered)
+  - [ ] Validação: limites devem ser consistentes com `FeeMode`
+- [ ] Criar `PlatformFeeLimitsConfig` (novo modelo):
+  - [ ] `Id`, `TerritoryId`
+  - [ ] `MinimumPayoutAmountInCents` (integra com `PayoutConfig`)
+  - [ ] `MaximumPayoutAmountInCents`
+  - [ ] `RetentionPeriodDays` (integra com `PayoutConfig`)
+  - [ ] `FeeCalculationRules` (JSON, regras avançadas)
+- [ ] Estender `PlatformFeeConfigService`:
+  - [ ] Validar limites ao calcular taxas
+  - [ ] Aplicar limites mínimos/máximos
+- [ ] Integrar com `TerritoryPayoutConfigService`:
+  - [ ] Sincronizar limites de payout com configuração de taxas
+  - [ ] Garantir consistência entre taxas e payouts
+- [ ] Criar `PlatformFeeLimitsConfigController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/fee-limits-config` (Curator)
+  - [ ] `PUT /api/v1/territories/{territoryId}/fee-limits-config` (Curator)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração completa de taxas e limites
+  - [ ] Visualização integrada de taxas e payouts
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Domain/Marketplace/PlatformFeeConfig.cs`
+- `backend/Araponga.Application/Services/Marketplace/PlatformFeeConfigService.cs`
+- `backend/Araponga.Application/Services/TerritoryPayoutConfigService.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Marketplace/PlatformFeeLimitsConfig.cs`
+- `backend/Araponga.Application/Interfaces/Marketplace/IPlatformFeeLimitsConfigRepository.cs`
+- `backend/Araponga.Application/Services/Marketplace/PlatformFeeLimitsConfigService.cs`
+- `backend/Araponga.Api/Controllers/PlatformFeeLimitsConfigController.cs`
+- `backend/Araponga.Tests/Api/PlatformFeeLimitsConfigIntegrationTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Limites configuráveis por território
+- ✅ Integração com `PayoutConfig` funcionando
+- ✅ Validação de limites funcionando
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
 **Status**: ⏳ **FASE 12 PENDENTE**  
 **Última Fase**: Conclusão do Backlog API

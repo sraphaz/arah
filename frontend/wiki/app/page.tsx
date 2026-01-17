@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { FeatureCard } from "../components/ui/FeatureCard";
+import { QuickLinks } from "../components/layout/QuickLinks";
 
 function processMarkdownLinks(html: string, basePath: string = '/wiki'): string {
   // Processa links <a href="/docs/..."> para <a href="/wiki/docs/...">
@@ -132,6 +133,25 @@ export default async function HomePage() {
             color="link"
             href="/docs/00_INDEX"
           />
+        </div>
+
+        {/* Section Divider - Links Úteis */}
+        <div className="mt-16 mb-8 relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t-2 border-forest-200/60 dark:border-forest-800/60"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-forest-50 dark:bg-forest-950 text-forest-500 dark:text-forest-400 font-medium">
+              Links Úteis
+            </span>
+          </div>
+        </div>
+
+        {/* Quick Links Section - Página Inicial */}
+        <div className="glass-card animation-fade-in">
+          <div className="glass-card__content">
+            <QuickLinks />
+          </div>
         </div>
       </main>
 

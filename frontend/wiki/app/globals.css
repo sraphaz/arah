@@ -84,13 +84,19 @@
     background-position: center;
     background-attachment: fixed;
     position: relative;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    font-feature-settings: "kern" 1, "liga" 1;
+    /* OpenType features para melhor tipografia */
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
+    font-variant-ligatures: common-ligatures;
+    font-kerning: normal;
     transition: background-color 0.3s ease, color 0.3s ease;
     line-height: var(--line-height-relaxed);
     font-size: var(--font-size-lg);
+    /* Ajuste fino para sobriedade */
+    letter-spacing: -0.011em;
   }
 
   /* Dark mode body background */
@@ -403,13 +409,16 @@
   }
 
   .markdown-content h2 {
-    @apply text-3xl md:text-4xl font-bold text-forest-800 dark:text-forest-100 mb-10 mt-16;
-    @apply pb-4 border-b-2 border-forest-200/80 dark:border-forest-800/80;
-    letter-spacing: var(--letter-spacing-tight);
-    line-height: var(--line-height-snug);
+    @apply text-3xl md:text-4xl font-bold text-forest-800 dark:text-forest-100 mb-8 mt-20;
+    @apply pb-5 border-b-2 border-forest-200/80 dark:border-forest-800/80;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    letter-spacing: -0.035em; /* Tighter para headings grandes - sobriedade */
+    line-height: 1.2; /* Snug para impacto visual */
     position: relative;
     scroll-margin-top: 120px;
     font-weight: 700;
+    max-width: 100%; /* Headings podem usar largura completa */
+    font-feature-settings: "kern" 1, "liga" 1, "ss01" 1;
   }
 
   .markdown-content h2::before {
@@ -424,16 +433,21 @@
   }
 
   .markdown-content h3 {
-    @apply text-2xl md:text-3xl font-semibold text-forest-700 dark:text-forest-200 mb-6 mt-12;
-    letter-spacing: var(--letter-spacing-normal);
-    line-height: var(--line-height-snug);
+    @apply text-2xl md:text-3xl font-semibold text-forest-700 dark:text-forest-200 mb-7 mt-14;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    letter-spacing: -0.025em;
+    line-height: 1.3;
     font-weight: 600;
+    max-width: 100%;
+    font-feature-settings: "kern" 1, "liga" 1;
   }
 
   .markdown-content h4 {
-    @apply text-xl md:text-2xl font-semibold text-forest-700 dark:text-forest-200 mb-4 mt-10;
-    letter-spacing: var(--letter-spacing-normal);
+    @apply text-xl md:text-2xl font-semibold text-forest-700 dark:text-forest-200 mb-5 mt-12;
+    letter-spacing: -0.015em;
+    line-height: 1.4;
     font-weight: 600;
+    max-width: 100%;
   }
 
   .markdown-content h5 {
@@ -446,32 +460,53 @@
     font-weight: 600;
   }
 
-  /* Paragraphs - Optimized for reading */
+  /* Paragraphs - Optimized for reading (Market standards: Vercel, Stripe, Linear) */
   .markdown-content p {
-    @apply mb-7 text-forest-800 dark:text-forest-200;
-    font-size: var(--font-size-lg);
-    line-height: var(--line-height-relaxed);
-    max-width: var(--content-width-default);
-    letter-spacing: var(--letter-spacing-normal);
+    @apply mb-6 text-forest-800 dark:text-forest-200;
+    font-size: 1.0625rem; /* 17px - ótimo para leitura prolongada */
+    line-height: 1.85; /* Generoso para reduzir fadiga visual */
+    max-width: 68ch; /* 65-70ch é ideal para leitura (padrão mercado) */
+    letter-spacing: -0.01em; /* Sutil ajuste para melhor legibilidade */
+    word-spacing: 0.05em; /* Espaçamento entre palavras */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .markdown-content p:last-child {
     @apply mb-0;
   }
 
-  /* Lists - Enterprise spacing and design */
+  /* Primeira linha do parágrafo - atenção visual */
+  .markdown-content p:first-of-type {
+    @apply text-lg;
+    font-size: 1.125rem; /* 18px - lead paragraph */
+    line-height: 1.9;
+  }
+
+  /* Lists - Enterprise spacing and design (Market standards) */
   .markdown-content ul,
   .markdown-content ol {
-    @apply mb-7 pl-8 space-y-3;
-    max-width: var(--content-width-default);
+    @apply mb-8 pl-8 space-y-4; /* Mais espaço entre itens para respiração */
+    max-width: 68ch; /* Mesma largura que parágrafos */
   }
 
   .markdown-content li {
     @apply text-forest-800 dark:text-forest-200;
-    line-height: var(--line-height-relaxed);
+    line-height: 1.85; /* Mesma line-height dos parágrafos */
     position: relative;
-    font-size: var(--font-size-lg);
-    padding-left: 0.5rem;
+    font-size: 1.0625rem; /* Consistente com parágrafos */
+    padding-left: 0.75rem; /* Mais espaço para respiração */
+    margin-bottom: 0.25rem; /* Espaçamento extra entre itens longos */
+  }
+
+  /* Parágrafos dentro de listas */
+  .markdown-content li > p {
+    margin-bottom: 0.75rem;
+  }
+
+  .markdown-content li > p:last-child {
+    margin-bottom: 0;
   }
 
   .markdown-content ul li::marker {
@@ -533,21 +568,33 @@
     text-decoration-thickness: 1.5px;
   }
 
-  /* Code blocks - Enterprise design */
+  /* Code blocks - Enterprise design (Market standards) */
   .markdown-content code {
-    @apply bg-forest-100 dark:bg-forest-900 text-forest-900 dark:text-forest-100 px-2.5 py-1.5 rounded-md;
-    @apply text-[0.9375rem] font-mono;
+    @apply bg-forest-100 dark:bg-forest-900 text-forest-900 dark:text-forest-100 px-2.5 py-1 rounded-md;
+    @apply text-[0.9375rem];
+    font-family: var(--font-mono), 'Menlo', 'Monaco', 'Consolas', monospace;
     @apply border border-forest-200 dark:border-forest-800;
-    font-feature-settings: "kern" 0;
+    font-feature-settings: "kern" 1, "liga" 0;
     letter-spacing: 0.01em;
+    line-height: 1.6;
+  }
+
+  /* Code dentro de parágrafos - mais compacto */
+  .markdown-content p code {
+    font-size: 0.9375rem;
+    padding: 0.125rem 0.375rem;
   }
 
   .markdown-content pre {
     @apply bg-forest-900 dark:bg-[#0a0e12] text-forest-50 p-6 rounded-2xl;
-    @apply overflow-x-auto mb-8 border border-forest-800 dark:border-[#25303a];
+    @apply overflow-x-auto mb-10 border border-forest-800 dark:border-[#25303a];
     @apply shadow-lg;
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-relaxed);
+    font-family: var(--font-mono), 'Menlo', 'Monaco', 'Consolas', monospace;
+    font-size: 0.875rem; /* 14px - padrão para code blocks */
+    line-height: 1.75;
+    margin-top: 1.5rem; /* Espaçamento antes */
+    max-width: 100%;
+    font-feature-settings: "kern" 1, "liga" 0;
   }
 
   .markdown-content pre code {
@@ -555,16 +602,26 @@
     font-size: inherit;
   }
 
-  /* Blockquotes - Enterprise design */
+  /* Blockquotes - Enterprise design (Market standards) */
   .markdown-content blockquote {
-    @apply border-l-4 border-forest-400 dark:border-[#4dd4a8] pl-6 py-5 my-8;
+    @apply border-l-4 border-forest-400 dark:border-[#4dd4a8] pl-8 py-6 my-10;
     @apply italic text-forest-700 dark:text-forest-300;
     @apply bg-forest-50/50 dark:bg-forest-900/30 rounded-r-xl;
     @apply shadow-sm;
-    font-size: var(--font-size-lg);
-    line-height: var(--line-height-relaxed);
-    max-width: var(--content-width-default);
+    font-size: 1.125rem; /* 18px - ligeiramente maior para destaque */
+    line-height: 1.9;
+    max-width: 68ch;
     position: relative;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .markdown-content blockquote p {
+    margin-bottom: 0.75rem;
+  }
+
+  .markdown-content blockquote p:last-child {
+    margin-bottom: 0;
   }
 
   .markdown-content blockquote::before {
@@ -577,24 +634,28 @@
     opacity: 0.3;
   }
 
-  /* Tables - Enterprise design */
+  /* Tables - Enterprise design (Market standards) */
   .markdown-content table {
-    @apply w-full border-collapse mb-8 rounded-xl overflow-hidden;
+    @apply w-full border-collapse mb-10 rounded-xl overflow-hidden;
     @apply shadow-md;
     max-width: 100%;
+    margin-top: 1.5rem;
   }
 
   .markdown-content th {
     @apply bg-forest-200 dark:bg-forest-900 text-forest-900 dark:text-forest-50 font-semibold px-6 py-4;
     @apply border-b-2 border-forest-300 dark:border-forest-800 text-left;
-    font-size: var(--font-size-base);
-    letter-spacing: var(--letter-spacing-wide);
+    font-size: 0.9375rem; /* 15px */
+    letter-spacing: 0.025em;
+    line-height: 1.5;
   }
 
   .markdown-content td {
     @apply border-b border-forest-200 dark:border-forest-800 px-6 py-4 text-forest-800 dark:text-forest-200;
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-relaxed);
+    font-size: 0.9375rem; /* Consistente com th */
+    line-height: 1.75; /* Mais espaçado para leitura */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 
   .markdown-content tr:hover {
@@ -602,10 +663,10 @@
     transition: background-color 0.2s ease;
   }
 
-  /* Horizontal rules - Modern separators */
+  /* Horizontal rules - Modern separators (Market standards) */
   .markdown-content hr {
-    @apply my-16 border-0;
-    max-width: var(--content-width-default);
+    @apply my-20 border-0; /* Mais espaço - quebra visual clara */
+    max-width: 68ch;
     position: relative;
     height: 1px;
     background: linear-gradient(
@@ -640,11 +701,34 @@
     font-size: 0.75rem;
   }
 
-  /* Images */
+  /* Images - Market standards */
   .markdown-content img {
-    @apply rounded-xl shadow-lg my-8;
+    @apply rounded-xl shadow-lg my-10;
     max-width: 100%;
     height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  /* Agrupamento semântico - Espaçamento entre seções relacionadas */
+  .markdown-content h2 + p,
+  .markdown-content h3 + p,
+  .markdown-content h4 + p {
+    margin-top: 1rem; /* Menos espaço após heading */
+  }
+
+  /* Espaçamento antes de elementos estruturais */
+  .markdown-content ul + h3,
+  .markdown-content ol + h3,
+  .markdown-content p + h3 {
+    margin-top: 2.5rem; /* Mais espaço antes de nova seção */
+  }
+
+  .markdown-content ul + h2,
+  .markdown-content ol + h2,
+  .markdown-content p + h2 {
+    margin-top: 3rem;
   }
 
   /* Breadcrumb refinado */
@@ -905,6 +989,22 @@
 }
 
 /* Responsividade refinada - Enterprise breakpoints */
+@media (max-width: 640px) {
+  .sidebar-container {
+    @apply hidden;
+  }
+
+  /* Grid layout ajustado para mobile */
+  .grid-cols-1.lg\\:grid-cols-\\[1fr_280px\\] {
+    @apply grid-cols-1;
+  }
+
+  /* TOC escondido em mobile muito pequeno ou transformado */
+  .toc-container {
+    @apply hidden sm:block;
+  }
+}
+
 @media (max-width: 768px) {
   body {
     background-attachment: scroll;
@@ -958,6 +1058,261 @@
 @media (min-width: 1280px) {
   .markdown-content {
     max-width: var(--content-width-wide);
+  }
+}
+
+/* Sidebar Navigation - Enterprise design */
+.sidebar-container {
+  @apply w-64 min-w-[256px] border-r border-forest-200/80 dark:border-forest-800/80;
+  @apply bg-white/80 dark:bg-forest-950/80 backdrop-blur-xl;
+  @apply hidden lg:block;
+  @apply sticky top-[88px] h-[calc(100vh-88px)];
+  @apply overflow-y-auto;
+}
+
+.sidebar-nav {
+  @apply p-4 space-y-2;
+}
+
+.sidebar-section {
+  @apply mb-4;
+}
+
+.sidebar-section-toggle {
+  @apply w-full flex items-center justify-between;
+  @apply px-3 py-2.5 rounded-xl;
+  @apply text-forest-800 dark:text-forest-200 font-semibold text-sm;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/80;
+  @apply transition-all duration-300;
+  @apply cursor-pointer;
+}
+
+.sidebar-section-title {
+  @apply flex items-center space-x-2;
+}
+
+.sidebar-chevron {
+  @apply w-4 h-4 text-forest-500 dark:text-forest-400;
+  @apply transition-transform duration-300;
+}
+
+.sidebar-chevron-open {
+  @apply rotate-180;
+}
+
+.sidebar-items {
+  @apply mt-2 space-y-1 pl-2;
+}
+
+.sidebar-link {
+  @apply block px-3 py-2.5 rounded-lg;
+  @apply text-forest-700 dark:text-forest-300 text-sm;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/60;
+  @apply transition-all duration-300;
+  @apply border-l-2 border-transparent;
+}
+
+.sidebar-link:hover {
+  @apply border-forest-400 dark:border-[#4dd4a8];
+  @apply translate-x-1;
+}
+
+.sidebar-link-active {
+  @apply bg-forest-100 dark:bg-forest-900/80;
+  @apply border-forest-600 dark:border-[#4dd4a8];
+  @apply text-forest-900 dark:text-forest-50;
+  @apply font-medium;
+}
+
+.sidebar-link-title {
+  @apply block;
+}
+
+.sidebar-link-description {
+  @apply block text-xs mt-1;
+  @apply text-forest-500 dark:text-forest-400;
+  @apply opacity-75;
+}
+
+/* Table of Contents - Enterprise design */
+.toc-container {
+  @apply glass-card p-6;
+  @apply sticky top-24;
+}
+
+.toc-header {
+  @apply flex items-center space-x-2 mb-4 pb-3;
+  @apply border-b border-forest-200/80 dark:border-forest-800/80;
+}
+
+.toc-icon {
+  @apply text-xl;
+}
+
+.toc-title {
+  @apply text-lg font-semibold;
+  @apply text-forest-900 dark:text-forest-50;
+}
+
+.toc-list {
+  @apply space-y-1.5;
+}
+
+.toc-item {
+  @apply list-none;
+}
+
+.toc-item-level-2 {
+  @apply pl-0;
+}
+
+.toc-item-level-3 {
+  @apply pl-4;
+}
+
+.toc-item-level-4 {
+  @apply pl-8;
+}
+
+.toc-link {
+  @apply w-full text-left px-3 py-2 rounded-lg;
+  @apply text-sm text-forest-700 dark:text-forest-300;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/60;
+  @apply transition-all duration-300;
+  @apply border-l-2 border-transparent;
+}
+
+.toc-link:hover {
+  @apply border-forest-400 dark:border-[#4dd4a8];
+  @apply translate-x-1;
+  @apply text-forest-900 dark:text-forest-50;
+}
+
+.toc-item-active .toc-link {
+  @apply bg-forest-100 dark:bg-forest-900/80;
+  @apply border-forest-600 dark:border-[#4dd4a8];
+  @apply text-forest-900 dark:text-forest-50;
+  @apply font-medium;
+}
+
+/* Heading links - Adicionar ícone de link em headings com ID */
+.markdown-content h2[id],
+.markdown-content h3[id],
+.markdown-content h4[id] {
+  @apply relative group;
+  scroll-margin-top: 100px; /* Offset para sticky header */
+}
+
+.markdown-content h2[id]:hover::before,
+.markdown-content h3[id]:hover::before,
+.markdown-content h4[id]:hover::before {
+  content: '#';
+  @apply absolute -left-6 text-forest-400 dark:text-forest-500;
+  @apply opacity-0 group-hover:opacity-100;
+  @apply transition-opacity duration-300;
+  font-weight: normal;
+}
+
+/* Progressive Disclosure - Seções longas */
+.document-section-wrapper {
+  @apply relative;
+}
+
+.document-section-wrapper[data-section-id] {
+  /* Marca visual sutil para seções colapsáveis */
+  @apply border-l-2 border-forest-200 dark:border-forest-800 pl-6 ml-2;
+}
+
+/* Quick Links - Enterprise design */
+.quick-links-container {
+  @apply p-4;
+}
+
+.quick-links-header {
+  @apply flex items-center space-x-2 mb-4;
+}
+
+.quick-links-icon {
+  @apply text-lg;
+}
+
+.quick-links-title {
+  @apply text-sm font-semibold text-forest-700 dark:text-forest-300;
+  @apply uppercase tracking-wide;
+}
+
+.quick-links-list {
+  @apply space-y-1.5;
+}
+
+.quick-links-item {
+  @apply list-none;
+}
+
+.quick-link {
+  @apply flex items-center space-x-3 px-3 py-2.5 rounded-lg;
+  @apply text-sm text-forest-700 dark:text-forest-300;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/60;
+  @apply transition-all duration-300;
+  @apply group;
+  @apply w-full;
+}
+
+.quick-link:hover {
+  @apply text-forest-900 dark:text-forest-50;
+  @apply translate-x-1;
+}
+
+.quick-link-icon {
+  @apply text-base flex-shrink-0;
+  @apply group-hover:scale-110 transition-transform duration-300;
+}
+
+.quick-link-content {
+  @apply flex-1 flex flex-col;
+}
+
+.quick-link-label {
+  @apply font-medium;
+}
+
+.quick-link-description {
+  @apply text-xs text-forest-500 dark:text-forest-400;
+  @apply mt-0.5 opacity-75;
+}
+
+.quick-link-external-icon {
+  @apply w-4 h-4 text-forest-400 dark:text-forest-500;
+  @apply flex-shrink-0 opacity-0 group-hover:opacity-100;
+  @apply transition-opacity duration-300;
+}
+
+.sidebar-quick-links {
+  @apply border-t border-forest-200/80 dark:border-forest-800/80;
+}
+
+/* Mobile Responsive - Sidebar */
+@media (max-width: 1023px) {
+  .sidebar-container {
+    @apply hidden;
+  }
+
+  /* Ajusta espaçamento do conteúdo quando sidebar está oculta */
+  main {
+    @apply px-4;
+  }
+
+  /* TOC em mobile - vira um dropdown no topo */
+  .toc-container {
+    @apply mb-8;
+    position: static !important;
+  }
+
+  /* Heading links ajustados para mobile */
+  .markdown-content h2[id]:hover::before,
+  .markdown-content h3[id]:hover::before,
+  .markdown-content h4[id]:hover::before {
+    @apply hidden;
   }
 }
 

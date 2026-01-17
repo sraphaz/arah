@@ -1,6 +1,28 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Inter } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
+
+// Inter - Fonte moderna e sóbria para corpo de texto
+// Usada por Vercel, Stripe, Linear - transmite profissionalismo e modernidade
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  preload: true,
+});
+
+// JetBrains Mono - Fonte técnica e sóbria para código
+// Excelente legibilidade, usada em documentação técnica enterprise
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  preload: true,
+});
 
 const siteUrl = "https://devportal.araponga.app/wiki";
 
@@ -28,8 +50,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
-      <body className="antialiased">
+    <html lang="pt-BR" className={`scroll-smooth ${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <body className="antialiased font-sans">
         <Script
           id="theme-init"
           strategy="beforeInteractive"

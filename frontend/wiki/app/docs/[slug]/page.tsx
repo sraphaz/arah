@@ -8,6 +8,9 @@ import remarkHtml from "remark-html";
 import remarkGfm from "remark-gfm";
 import { Header } from "../../../components/layout/Header";
 import { Footer } from "../../../components/layout/Footer";
+import { Sidebar } from "../../../components/layout/Sidebar";
+import { MobileSidebar } from "../../../components/layout/MobileSidebar";
+import { TableOfContents } from "../../../components/layout/TableOfContents";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -72,8 +75,24 @@ async function getDocContent(fileName: string) {
       .use(remarkGfm)
       .process(content);
 
+    // Adiciona IDs aos headings para navegação
+    let htmlContent = processedContent.toString();
+    htmlContent = htmlContent.replace(
+      /<h([2-4])>(.*?)<\/h\1>/gi,
+      (match, level, text) => {
+        const id = text
+          .replace(/<[^>]*>/g, '') // Remove HTML tags
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+          .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with dash
+          .replace(/^-+|-+$/g, ''); // Remove leading/trailing dashes
+        return `<h${level} id="${id}">${text}</h${level}>`;
+      }
+    );
+
     // Processa links no HTML renderizado para incluir basePath
-    const htmlContent = processMarkdownLinks(processedContent.toString(), '/wiki');
+    htmlContent = processMarkdownLinks(htmlContent, '/wiki');
 
     return {
       content: htmlContent,
@@ -116,73 +135,90 @@ export default async function DocPage({ params }: PageProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <MobileSidebar />
 
-      {/* Main Content */}
-      <main className="flex-1 container-max py-12">
-        <div className="glass-card animation-fade-in">
-          <div className="glass-card__content">
-            {/* Breadcrumb Refinado */}
-            <nav className="breadcrumb mb-8">
-              <Link href="/">Boas-Vindas</Link>
-              <span>›</span>
-              <Link href="/docs">Documentação</Link>
-              <span>›</span>
-              <span className="text-forest-900 font-medium">{doc.title}</span>
-            </nav>
+      {/* Main Content with Sidebar */}
+      <div className="flex-1 flex">
+        <Sidebar />
+        
+        <main className="flex-1 py-12 px-4 md:px-8 lg:px-12">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+            {/* Main Content Column */}
+            <div>
+              <div className="glass-card animation-fade-in">
+                <div className="glass-card__content">
+                  {/* Breadcrumb Refinado */}
+                  <nav className="breadcrumb mb-8">
+                    <Link href="/">Boas-Vindas</Link>
+                    <span>›</span>
+                    <Link href="/docs">Documentação</Link>
+                    <span>›</span>
+                    <span className="text-forest-900 font-medium">{doc.title}</span>
+                  </nav>
 
-            {/* Document Title - Hero */}
-            <h1 className="text-5xl md:text-6xl font-bold text-forest-900 mb-8 leading-tight">
-              {doc.title}
-            </h1>
+                  {/* Document Title - Hero */}
+                  <h1 className="text-5xl md:text-6xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight">
+                    {doc.title}
+                  </h1>
 
-            {/* Document Metadata - Badges */}
-            {doc.frontMatter && (doc.frontMatter.version || doc.frontMatter.date || doc.frontMatter.status) && (
-              <div className="mb-12 pb-6 border-b-2 border-forest-200/80 dark:border-forest-800/80 flex flex-wrap gap-3">
-                {doc.frontMatter.version && (
-                  <span className="metadata-badge">
-                    <span className="mr-2">📌</span>
-                    Versão: {doc.frontMatter.version}
-                  </span>
-                )}
-                {doc.frontMatter.date && (
-                  <span className="metadata-badge">
-                    <span className="mr-2">📅</span>
-                    {doc.frontMatter.date}
-                  </span>
-                )}
-                {doc.frontMatter.status && (
-                  <span className="metadata-badge">
-                    <span className="mr-2">✓</span>
-                    {doc.frontMatter.status}
-                  </span>
-                )}
+                  {/* Document Metadata - Badges */}
+                  {doc.frontMatter && (doc.frontMatter.version || doc.frontMatter.date || doc.frontMatter.status) && (
+                    <div className="mb-12 pb-6 border-b-2 border-forest-200/80 dark:border-forest-800/80 flex flex-wrap gap-3">
+                      {doc.frontMatter.version && (
+                        <span className="metadata-badge">
+                          <span className="mr-2">📌</span>
+                          Versão: {doc.frontMatter.version}
+                        </span>
+                      )}
+                      {doc.frontMatter.date && (
+                        <span className="metadata-badge">
+                          <span className="mr-2">📅</span>
+                          {doc.frontMatter.date}
+                        </span>
+                      )}
+                      {doc.frontMatter.status && (
+                        <span className="metadata-badge">
+                          <span className="mr-2">✓</span>
+                          {doc.frontMatter.status}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Document Content - Refinado */}
+                  <div
+                    className="markdown-content prose-headings:first:mt-0"
+                    dangerouslySetInnerHTML={{ __html: doc.content }}
+                  />
+                </div>
               </div>
-            )}
 
-            {/* Document Content - Refinado */}
-            <div
-              className="markdown-content prose-headings:first:mt-0"
-              dangerouslySetInnerHTML={{ __html: doc.content }}
-            />
+              {/* Navigation Links - Refinado */}
+              <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
+                <Link
+                  href="/"
+                  className="btn-secondary text-center"
+                >
+                  ← Voltar às Boas-Vindas
+                </Link>
+                <Link
+                  href="/docs"
+                  className="btn-secondary text-center"
+                >
+                  Ver Todos os Docs →
+                </Link>
+              </div>
+            </div>
+
+            {/* TOC Column - Sticky */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <TableOfContents />
+              </div>
+            </aside>
           </div>
-        </div>
-
-        {/* Navigation Links - Refinado */}
-        <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
-          <Link
-            href="/"
-            className="btn-secondary text-center"
-          >
-            ← Voltar às Boas-Vindas
-          </Link>
-          <Link
-            href="/docs"
-            className="btn-secondary text-center"
-          >
-            Ver Todos os Docs →
-          </Link>
-        </div>
-      </main>
+        </main>
+      </div>
 
       <Footer />
     </div>

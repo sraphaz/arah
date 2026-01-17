@@ -19,7 +19,7 @@ const COLORS = {
   actorBg: '#1a2129',         // Fundo dos atores (um pouco mais claro)
   actorBorder: '#7dd3ff',     // Borda dos atores (azul)
   actorLine: '#7dd3ff',       // Linha dos atores (azul)
-  actorText: '#ffffff',       // Texto dos atores (branco puro para máximo contraste)
+  actorText: '#4dd4a8',       // Texto dos atores (verde água para contraste harmonioso)
   messageLine: '#7dd3ff',      // Linhas de mensagem (azul)
   arrowhead: '#7dd3ff',       // Pontas de seta (azul)
   labelBoxBorder: '#4dd4a8',   // Borda de labels (verde água)

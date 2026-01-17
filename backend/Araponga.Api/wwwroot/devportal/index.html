@@ -2227,37 +2227,56 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                    return prefix + '&lt;' + type + '&gt;';
                  });
                  
-                 var cleanedDiagramContent = protectedContent
-                   // Remove tags <script> com todas variações (espaços, atributos, etc)
-                   .replace(/<\/?\s*script\s*(?:\s+[^>]*)?\s*>/gi, '')
-                   // Remove conteúdo entre tags script (caso alguma tag tenha escapado)
-                   .replace(/<script[\s\S]*?<\/\s*script\s*>/gi, '')
-                   // Remove tags <style> com todas variações (espaços, atributos, etc)
-                   .replace(/<\/?\s*style\s*(?:\s+[^>]*)?\s*>/gi, '')
-                   // Remove conteúdo entre tags style (caso alguma tag tenha escapado)
-                   .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '')
-                   // Remove TODAS as tags de fechamento XML/HTML (</qualquercoisa>)
-                   // IMPORTANTE: Executar múltiplas vezes para remover tags aninhadas e incompletas
-                   // Remove tags completas: </territory>, </feeditemresponse>
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
-                   // Remove tags incompletas: </terri (sem fechamento >)
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
-                   // Segunda e terceira passagem para garantir remoção completa
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
-                   .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
-                   // Remove tags de abertura XML/HTML (tags começam com minúscula)
-                   // Preserva tipos genéricos protegidos como &lt;Territory&gt;
-                   .replace(/<([a-z][a-zA-Z0-9-]+)(?:\s+[^>]*)?\s*>/gi, '')
+                 // Função auxiliar para limpar conteúdo Mermaid de forma agressiva
+                 function cleanMermaidContent(content, aggressive) {
+                   var result = content;
+                   
+                   // Remove tags <script> e <style> sempre
+                   result = result
+                     .replace(/<\/?\s*script\s*(?:\s+[^>]*)?\s*>/gi, '')
+                     .replace(/<script[\s\S]*?<\/\s*script\s*>/gi, '')
+                     .replace(/<\/?\s*style\s*(?:\s+[^>]*)?\s*>/gi, '')
+                     .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '');
+                   
+                   if (aggressive) {
+                     // Limpeza agressiva: remove qualquer tag XML/HTML restante
+                     // Remove todas as tags de fechamento </qualquercoisa> (múltiplas passagens)
+                     for (var i = 0; i < 5; i++) {
+                       result = result
+                         .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                         .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '');
+                     }
+                     // Remove qualquer tag de abertura <qualquercoisa>
+                     for (var j = 0; j < 5; j++) {
+                       result = result.replace(/<[^>]+>/g, '');
+                     }
+                   } else {
+                     // Limpeza normal: remove tags de fechamento XML/HTML
+                     for (var k = 0; k < 3; k++) {
+                       result = result
+                         .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                         .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '');
+                     }
+                     // Remove tags de abertura XML/HTML (tags começam com minúscula)
+                     // Preserva tipos genéricos protegidos como &lt;Territory&gt;
+                     result = result.replace(/<([a-z][a-zA-Z0-9-]+)(?:\s+[^>]*)?\s*>/gi, '');
+                   }
+                   
                    // Restaurar tipos genéricos: &lt;Tipo&gt; -> <Tipo>
-                   .replace(/&lt;/g, '<')
-                   .replace(/&gt;/g, '>')
-                   .trim();
+                   result = result
+                     .replace(/&lt;/g, '<')
+                     .replace(/&gt;/g, '>')
+                     .trim();
+                   
+                   return result;
+                 }
+                 
+                 var cleanedDiagramContent = cleanMermaidContent(protectedContent, false);
                  
                  if (cleanedDiagramContent && !diagramContainer.hasAttribute('data-processed')) {
                    // Guardar o texto original limpo antes de renderizar
                    diagramContainer.setAttribute('data-original-code', cleanedDiagramContent);
+                   diagramContainer.textContent = cleanedDiagramContent;
                   
                   try {
                     mermaid.run({
@@ -2288,11 +2307,68 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
                       }
                     }).catch(function(err) {
                       console.error('Erro ao renderizar diagrama:', err);
-                      var errorMsg = document.createElement('div');
-                      errorMsg.className = 'callout';
-                      errorMsg.style.color = 'var(--danger)';
-                      errorMsg.textContent = 'Erro ao renderizar diagrama: ' + (err.message || 'Erro desconhecido');
-                      containerDiv.appendChild(errorMsg);
+                      
+                      // Tentar limpeza agressiva e re-renderizar
+                      var originalCleaned = cleanedDiagramContent;
+                      var aggressivelyCleaned = cleanMermaidContent(diagramContent.replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'), true);
+                      
+                      if (aggressivelyCleaned && aggressivelyCleaned !== originalCleaned && aggressivelyCleaned.trim().startsWith('sequenceDiagram')) {
+                        console.log('Tentando re-renderizar com limpeza agressiva...');
+                        diagramContainer.textContent = aggressivelyCleaned.trim();
+                        diagramContainer.setAttribute('data-original-code', aggressivelyCleaned.trim());
+                        diagramContainer.removeAttribute('data-processed');
+                        
+                        // Tentar renderizar novamente
+                        try {
+                          mermaid.run({
+                            nodes: [diagramContainer],
+                            suppressErrors: false
+                          }).then(function() {
+                            rendered = true;
+                            diagramContainer.setAttribute('data-processed', 'true');
+                            
+                            // Adicionar botão de fullscreen
+                            if (diagramContainer && containerDiv) {
+                              var existingBtn = containerDiv.querySelector('.diagram-fullscreen-btn');
+                              if (existingBtn) {
+                                existingBtn.remove();
+                              }
+                              
+                              var fullscreenBtn = document.createElement('button');
+                              fullscreenBtn.className = 'diagram-fullscreen-btn';
+                              fullscreenBtn.textContent = '⛶ Tela Cheia';
+                              fullscreenBtn.setAttribute('aria-label', 'Abrir diagrama em tela cheia');
+                              containerDiv.appendChild(fullscreenBtn);
+                              
+                              fullscreenBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                openDiagramFullscreen(diagramContainer);
+                              });
+                            }
+                          }).catch(function(retryErr) {
+                            console.error('Erro ao re-renderizar diagrama após limpeza agressiva:', retryErr);
+                            var errorMsg = document.createElement('div');
+                            errorMsg.className = 'callout';
+                            errorMsg.style.color = 'var(--danger)';
+                            errorMsg.textContent = 'Erro ao renderizar diagrama: ' + (retryErr.message || 'Erro desconhecido');
+                            containerDiv.appendChild(errorMsg);
+                          });
+                        } catch (retryErr) {
+                          console.error('Erro ao tentar re-renderizar:', retryErr);
+                          var errorMsg = document.createElement('div');
+                          errorMsg.className = 'callout';
+                          errorMsg.style.color = 'var(--danger)';
+                          errorMsg.textContent = 'Erro ao renderizar diagrama: ' + (retryErr.message || 'Erro desconhecido');
+                          containerDiv.appendChild(errorMsg);
+                        }
+                      } else {
+                        // Se limpeza agressiva não funcionou, mostrar erro
+                        var errorMsg = document.createElement('div');
+                        errorMsg.className = 'callout';
+                        errorMsg.style.color = 'var(--danger)';
+                        errorMsg.textContent = 'Erro ao renderizar diagrama: ' + (err.message || 'Erro desconhecido');
+                        containerDiv.appendChild(errorMsg);
+                      }
                     });
                   } catch (err) {
                     console.error('Erro ao inicializar renderização:', err);

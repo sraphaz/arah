@@ -10,8 +10,8 @@
   --border-subtle: #1e2830;
   
   --text: #e8edf2;
-  --text-muted: #a8b5c2;
-  --text-subtle: #7a8794;
+  --text-muted: #b8c5d2; /* Melhorado: contraste WCAG AA 4.5:1 (era #a8b5c2) */
+  --text-subtle: #8a97a4; /* Melhorado: contraste 3:1 (era #7a8794) */
   
   --accent: #4dd4a8;
   --accent-hover: #5ee5b9;
@@ -28,10 +28,22 @@
   --code-bg: #0a0e12;
   --code-border: #1a2129;
   
+  /* Escala de shadows mais completa */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.1);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 24px rgba(77, 212, 168, 0.15);
+  
+  /* Sistema de espaçamento consistente */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
   
   --radius: 12px;
   --radius-sm: 8px;
@@ -77,6 +89,8 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
+  loading: lazy; /* Lazy loading para performance */
+  decoding: async; /* Decode assíncrono */
 }
 
 a {
@@ -93,9 +107,15 @@ a:focus-visible,
 button:focus-visible,
 select:focus-visible,
 input:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 2px;
+  outline: 3px solid var(--accent); /* Aumentado de 2px para melhor visibilidade */
+  outline-offset: 4px; /* Aumentado de 3px */
+  border-radius: 4px;
+}
+
+/* Focus ring interno para elementos com background */
+.button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px; /* Focus interno */
 }
 
 /* Skip link */
@@ -129,7 +149,7 @@ input:focus-visible {
 .header {
   background: linear-gradient(135deg, rgba(15, 20, 25, 0.98) 0%, rgba(10, 14, 18, 0.98) 100%),
     url("../images/araponga-icon.svg") no-repeat right clamp(4%, 6vw, 8%) center / clamp(140px, 22vw, 240px);
-  background-attachment: fixed;
+  background-attachment: scroll; /* Melhor performance que fixed */
   border-bottom: 1px solid var(--border);
   padding: 3.5rem 0 2.5rem;
   position: relative;
@@ -143,7 +163,12 @@ input:focus-visible {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(180deg, rgba(77, 212, 168, 0.05) 0%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(10, 14, 18, 0.95) 0%,
+    rgba(10, 14, 18, 0.8) 50%,
+    rgba(10, 14, 18, 0.95) 100%
+  ); /* Overlay gradiente mais suave */
   pointer-events: none;
 }
 
@@ -257,6 +282,17 @@ input:focus-visible {
   gap: 0.875rem;
 }
 
+/* Melhorar destaque dos CTAs */
+.hero-actions .button {
+  min-height: 48px; /* Tamanho mínimo touch-friendly */
+  padding: 1rem 2rem; /* Mais padding */
+  font-size: 1rem;
+}
+
+.hero-actions .button:first-child {
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+}
+
 .button {
   background: var(--accent);
   color: #0a0e12;
@@ -272,6 +308,10 @@ input:focus-visible {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0); /* GPU acceleration */
+  will-change: transform; /* Otimização de performance */
 }
 
 .button:hover {
@@ -282,6 +322,26 @@ input:focus-visible {
 
 .button:active {
   transform: translateY(0);
+  will-change: auto; /* Reset após animação */
+}
+
+/* Ripple effect sutil em buttons */
+.button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.button:active::after {
+  width: 300px;
+  height: 300px;
 }
 
 .button.secondary {
@@ -346,6 +406,10 @@ main {
   padding: 1.5rem;
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-md);
+  max-height: calc(100vh - 4rem); /* Limitar altura */
+  overflow-y: auto; /* Scroll quando necessário */
+  scroll-behavior: smooth; /* Scroll suave */
+  scrollbar-width: thin; /* Scrollbar fina */
 }
 
 .nav h2 {
@@ -404,15 +468,46 @@ main {
   height: 60%;
 }
 
+/* Indicador de seção ativa */
+.nav a[aria-current="page"],
+.nav a.active {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  font-weight: 600;
+  padding-left: 1rem;
+}
+
+.nav a[aria-current="page"]::before,
+.nav a.active::before {
+  transform: translateY(-50%) scaleY(1);
+  height: 100%;
+  opacity: 1;
+}
+
 /* Sections */
 .section {
-  padding: clamp(2rem, 4vw, 3.5rem) 0;
+  padding: clamp(3rem, 5vw, 5rem) 0; /* Aumentado de 3.5rem para mais respiração */
   border-bottom: 1px solid var(--border-subtle);
-  scroll-margin-top: 2rem;
+  scroll-margin-top: 3rem; /* Aumentado para melhor scroll-spy */
+  position: relative;
+}
+
+.section::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  margin-top: 2rem;
+  opacity: 0.5;
 }
 
 .section:last-of-type {
   border-bottom: none;
+}
+
+.section:last-of-type::after {
+  display: none;
 }
 
 .section h2 {
@@ -439,6 +534,8 @@ main {
 .section p {
   color: var(--text-muted);
   margin: 0 0 1rem;
+  line-height: 1.75; /* Otimizado para leitura longa (era 1.7 implícito) */
+  max-width: 65ch; /* Limitar largura de linha para legibilidade ideal */
 }
 
 .section .eyebrow {
@@ -501,9 +598,12 @@ main {
   border-radius: var(--radius-lg);
   padding: 1.75rem;
   border: 1px solid var(--border);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição mais suave */
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px); /* Efeito blur sutil */
+  transform: translateZ(0); /* GPU acceleration */
+  will-change: transform, box-shadow; /* Otimização de performance */
 }
 
 .card::before {
@@ -519,13 +619,20 @@ main {
 }
 
 .card:hover {
-  border-color: var(--border);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  border-color: rgba(77, 212, 168, 0.4); /* Borda mais visível */
+  box-shadow: var(--shadow-lg); /* Sombra mais forte (era shadow-md) */
+  transform: translateY(-4px); /* Elevação maior (era -2px) */
+  will-change: auto; /* Reset após animação */
 }
 
 .card:hover::before {
   opacity: 1;
+}
+
+/* Estado de foco para acessibilidade */
+.card:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 
 .card h3 {
@@ -748,6 +855,13 @@ main {
   margin: 0;
 }
 
+.lead-text {
+  font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+  line-height: 1.8;
+  font-weight: 400; /* Peso normal para texto longo */
+  color: var(--text); /* Mais visível que muted */
+}
+
 .lead-text.space-bottom {
   margin-bottom: 2rem;
 }
@@ -761,10 +875,19 @@ main {
   border: 1px solid var(--code-border);
   color: #d4e4f0;
   font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono", ui-monospace, monospace;
-  font-size: clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem);
-  line-height: 1.6;
+  font-size: clamp(0.875rem, 0.8125rem + 0.3125vw, 0.9375rem); /* Melhorado de 0.8125rem base */
+  line-height: 1.7; /* Melhorado de 1.6 */
+  letter-spacing: 0.01em; /* Melhor separação de caracteres */
   margin: 1.5rem 0;
   position: relative;
+  /* Gradiente de fade no scroll horizontal */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 1rem,
+    black calc(100% - 1rem),
+    transparent
+  );
 }
 
 .code-block::before {

@@ -2138,7 +2138,7 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       }
       
       // Função para abrir diagrama em tela cheia (global)
-      window.openDiagramFullscreen = function(diagramElement) {
+      function openDiagramFullscreen(diagramElement) {
         // Se for uma imagem SVG, criar um clone e exibir no modal
         if (diagramElement.tagName === 'IMG') {
           var modal = document.getElementById('diagram-modal');

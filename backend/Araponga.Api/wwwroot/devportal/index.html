@@ -977,19 +977,19 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
       <section class="section" id="casos-de-uso">
         <span class="eyebrow" data-i18n="usecases.eyebrow">Casos de uso</span>
         <h2 data-i18n="usecases.title">Jornadas práticas e funcionalidades implementadas</h2>
-        <p class="lead-text" style="margin-bottom: 2rem;">
+        <p class="lead-text space-bottom">
           Cenários práticos conectando objetivo → pré-requisitos → endpoints. Todas as jornadas requerem
           autenticação (JWT) e seleção de território via <code>X-Session-Id</code>. Os exemplos abaixo
           refletem funcionalidades já implementadas e testadas em produção.
         </p>
 
-        <div class="grid-two" style="margin-bottom: 3rem;">
+        <div class="grid-two spaced">
           <div class="card">
             <h3>🚀 Onboarding completo</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Primeira jornada: autenticação, descoberta de território e vínculo inicial.
             </p>
-            <ol style="padding-left: 1.25rem; line-height: 1.8;">
+            <ol class="card-list">
               <li><strong>Autenticar:</strong> <code>POST /api/v1/auth/social</code> (obtém JWT)</li>
               <li><strong>Descobrir território:</strong> <code>GET /api/v1/territories/nearby?lat=-23.55&lng=-46.63</code></li>
               <li><strong>Selecionar território:</strong> <code>POST /api/v1/territories/selection</code> + header <code>X-Session-Id</code></li>
@@ -1000,10 +1000,10 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
 
           <div class="card">
             <h3>📝 Publicar conteúdo com mídias</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Criar post com até 10 imagens e âncoras geográficas opcionais.
             </p>
-            <ol style="padding-left: 1.25rem; line-height: 1.8;">
+            <ol class="card-list">
               <li><strong>Upload de mídias:</strong> <code>POST /api/v1/media/upload</code> (obtém <code>mediaIds</code>)</li>
               <li><strong>Criar post:</strong> <code>POST /api/v1/feed</code> com <code>mediaIds</code> (até 10 imagens)</li>
               <li><strong>GeoAnchors automáticos:</strong> derivados de mídias quando disponíveis</li>
@@ -1014,10 +1014,10 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
 
           <div class="card">
             <h3>🗺️ Assets territoriais com geolocalização</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Recursos territoriais (rios, trilhas, nascentes) sempre com geolocalização obrigatória.
             </p>
-            <ol style="padding-left: 1.25rem; line-height: 1.8;">
+            <ol class="card-list">
               <li><strong>Criar asset:</strong> <code>POST /api/v1/assets</code> (geo obrigatória em <code>geoAnchors</code>)</li>
               <li><strong>Tipos disponíveis:</strong> <code>river</code>, <code>trail</code>, <code>spring</code>, <code>lookout</code>, <code>sanctuary</code></li>
               <li><strong>Apenas moradores verificados ou curadores:</strong> podem criar/editar/arquivar</li>
@@ -1027,10 +1027,10 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
 
           <div class="card">
             <h3>💬 Chat territorial e grupos</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Conversas territoriais, grupos e mensagens diretas com suporte a mídias.
             </p>
-            <ol style="padding-left: 1.25rem; line-height: 1.8;">
+            <ol class="card-list">
               <li><strong>Criar conversa:</strong> <code>POST /api/v1/chat/conversations</code></li>
               <li><strong>Enviar mensagem:</strong> <code>POST /api/v1/chat/conversations/{id}/messages</code></li>
               <li><strong>Mensagem com imagem:</strong> incluir <code>mediaId</code> no payload</li>
@@ -1041,10 +1041,10 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
 
           <div class="card">
             <h3>🏪 Marketplace e economia local</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Lojas, produtos/serviços, carrinho e checkout com até 10 imagens por item.
             </p>
-            <ol style="padding-left: 1.25rem; line-height: 1.8;">
+            <ol class="card-list">
               <li><strong>Criar loja:</strong> <code>POST /api/v1/stores</code></li>
               <li><strong>Adicionar itens:</strong> <code>POST /api/v1/items</code> com <code>mediaIds</code> (até 10 imagens)</li>
               <li><strong>Carrinho:</strong> <code>POST /api/v1/cart/items</code></li>
@@ -1055,10 +1055,10 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
 
           <div class="card">
             <h3>📅 Eventos comunitários com mídias</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Eventos territoriais com data/hora, geolocalização obrigatória e imagens.
             </p>
-            <ol style="padding-left: 1.25rem; line-height: 1.8;">
+            <ol class="card-list">
               <li><strong>Criar evento:</strong> <code>POST /api/v1/events</code> (geo obrigatória)</li>
               <li><strong>Imagens:</strong> <code>coverMediaId</code> e <code>additionalMediaIds</code> (até 10)</li>
               <li><strong>Marcar interesse:</strong> <code>POST /api/v1/events/{id}/interest</code></li>
@@ -1819,17 +1819,17 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           manutenibilidade e escalabilidade para comunidades em produção.
         </p>
 
-        <div class="model-grid" style="margin-top: 3rem;">
+        <div class="model-grid spaced">
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">✓</span>
-              <h3 style="margin: 0;">Qualidade de Código</h3>
+            <div class="card-icon-header">
+              <span class="icon">✓</span>
+              <h3>Qualidade de Código</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Engenharia de software orientada a qualidade e confiabilidade, com foco em
               manutenibilidade a longo prazo e evolução segura da plataforma.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Paginação padronizada</strong></dt>
               <dd>15 endpoints críticos implementam paginação completa com <code>PaginatedResult&lt;T&gt;</code>, garantindo performance consistente em grandes volumes de dados.</dd>
 
@@ -1848,15 +1848,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
 
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">⚡</span>
-              <h3 style="margin: 0;">Performance & Escalabilidade</h3>
+            <div class="card-icon-header">
+              <span class="icon">⚡</span>
+              <h3>Performance & Escalabilidade</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Otimizações arquiteturais e técnicas avançadas para garantir baixa latência
               e capacidade de crescimento com o aumento da demanda.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Concorrência otimista</strong></dt>
               <dd>RowVersion em entidades críticas previne condições de corrida e garante consistência de dados em operações concorrentes.</dd>
 
@@ -1875,15 +1875,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
 
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">📊</span>
-              <h3 style="margin: 0;">Observabilidade</h3>
+            <div class="card-icon-header">
+              <span class="icon">📊</span>
+              <h3>Observabilidade</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Visibilidade completa sobre o comportamento da plataforma em produção,
               permitindo detecção proativa de problemas e otimização contínua.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Logs estruturados</strong></dt>
               <dd>Serilog com Seq para logs centralizados, pesquisáveis e estruturados. Contexto enriquecido para debugging eficiente.</dd>
 
@@ -1902,15 +1902,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
 
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">🔒</span>
-              <h3 style="margin: 0;">Segurança</h3>
+            <div class="card-icon-header">
+              <span class="icon">🔒</span>
+              <h3>Segurança</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Múltiplas camadas de proteção para garantir integridade de dados, privacidade
               dos usuários e resistência a ataques comuns.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Autenticação multi-fator</strong></dt>
               <dd>2FA via TOTP (Time-based One-Time Password) para proteção adicional de contas sensíveis e operações críticas.</dd>
 
@@ -1929,8 +1929,8 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
         </div>
 
-        <div class="callout" style="margin-top: 3rem; background: var(--accent-subtle); border-left: 3px solid var(--accent);">
-          <p style="margin: 0; color: var(--text);">
+        <div class="callout highlight">
+          <p>
             <strong>Qualidade em produção:</strong> A API Araponga segue rigorosamente os princípios de engenharia de software
             de alto padrão, com foco em confiabilidade, manutenibilidade e escalabilidade. Todas as decisões arquiteturais
             foram documentadas e são continuamente revisadas para garantir evolução segura e sustentável da plataforma.
@@ -1941,13 +1941,13 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       <section class="section" id="roadmap">
         <span class="eyebrow">Visão Futura</span>
         <h2>Roadmap e Direcionamento</h2>
-        <p class="lead-text" style="margin-bottom: 2rem;">
+        <p class="lead-text space-bottom">
           O Araponga evolui de forma consciente e sustentável, priorizando funcionalidades que
           fortalecem a organização comunitária local. Abaixo estão as direções planejadas e
           oportunidades de contribuição.
         </p>
 
-        <div class="grid-two" style="margin-bottom: 3rem;">
+        <div class="grid-two spaced">
           <div class="card">
             <h3>🔮 Funcionalidades Planejadas</h3>
             <dl class="entity-list">
@@ -2016,25 +2016,25 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       <section class="section" id="contribuir">
         <span class="eyebrow">Contribuição</span>
         <h2>Contribua com o Araponga</h2>
-        <p class="lead-text" style="margin-bottom: 2rem;">
+        <p class="lead-text space-bottom">
           O Araponga é um projeto comunitário de código aberto. Contribuições são bem-vindas e
           essenciais para fortalecer a plataforma e alcançar comunidades ao redor do mundo.
         </p>
 
-        <div class="grid-two" style="margin-bottom: 2rem;">
+        <div class="grid-two spaced-sm">
           <div class="card">
             <h3>💻 Para Desenvolvedores</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Contribua com código, testes, documentação e melhorias técnicas.
             </p>
-            <ul style="padding-left: 1.25rem; line-height: 1.8;">
+            <ul class="card-list">
               <li><strong>Implementar funcionalidades</strong> alinhadas ao roadmap</li>
               <li><strong>Melhorar cobertura de testes</strong> e qualidade de código</li>
               <li><strong>Documentar APIs</strong> e exemplos de uso</li>
               <li><strong>Otimizar performance</strong> e escalabilidade</li>
               <li><strong>Revisar Pull Requests</strong> e sugerir melhorias</li>
             </ul>
-            <p style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+            <p class="card-divider">
               <strong>🛠️ Setup local:</strong> .NET 8, PostgreSQL + PostGIS, Redis (opcional).
               Consulte <a href="https://github.com/sraphaz/araponga/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>
               para detalhes técnicos e padrões de código.
@@ -2043,10 +2043,10 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
 
           <div class="card">
             <h3>📚 Formas de Contribuição</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+            <p class="card-intro">
               Existem várias formas de contribuir, independente do nível técnico.
             </p>
-            <ul style="padding-left: 1.25rem; line-height: 1.8;">
+            <ul class="card-list">
               <li><strong>Relatar bugs</strong> e propor melhorias via Issues</li>
               <li><strong>Validar fluxos</strong> e testar funcionalidades em desenvolvimento</li>
               <li><strong>Ajustar documentação</strong> e melhorar exemplos práticos</li>
@@ -2054,15 +2054,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
               <li><strong>Traduzir conteúdo</strong> para outros idiomas</li>
               <li><strong>Compartilhar casos de uso</strong> e experiências reais</li>
             </ul>
-            <p style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+            <p class="card-divider">
               <strong>📖 Documentação:</strong> Consulte <a href="https://github.com/sraphaz/araponga/blob/main/docs/">docs/</a>
               para visão de produto, arquitetura, decisões técnicas e guias de implementação.
             </p>
           </div>
         </div>
 
-        <div class="callout" style="background: var(--accent-subtle); border-left: 3px solid var(--accent);">
-          <p style="margin: 0; color: var(--text);">
+        <div class="callout highlight">
+          <p>
             <strong>Próximos passos:</strong> Explore o repositório, abra uma Issue para discussão ou
             envie um Pull Request. Todas as contribuições seguem o
             <a href="https://github.com/sraphaz/araponga/blob/main/CODE_OF_CONDUCT.md" style="color: var(--link);">Código de Conduta</a>

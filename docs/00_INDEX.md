@@ -64,8 +64,11 @@ Documentos sobre segurança, configuração e implementação de medidas de segu
 Documentos sobre histórico e mudanças do projeto.
 
 - **[Changelog](./40_CHANGELOG.md)** - Histórico de mudanças e versões
+- **[Onboarding Público](./ONBOARDING_PUBLICO.md)** 🌟 - Página pública de entrada para conhecer o projeto e escolher seu caminho
+- **[Cartilha Completa](./CARTILHA_COMPLETA.md)** 📘 - Guia detalhado para todos os papéis no projeto
 - **[Onboarding para Desenvolvedores](./ONBOARDING_DEVELOPERS.md)** 🌱 - Guia completo para novos desenvolvedores usando Cursor
 - **[Onboarding para Analistas Funcionais](./ONBOARDING_ANALISTAS_FUNCIONAIS.md)** 👁️ - Guia para analistas funcionais que observam territórios e propõem melhorias
+- **[Configuração do Discord](./DISCORD_SETUP.md)** 💬 - Guia para configurar e usar o Discord do time
 - **[Contribuindo](./41_CONTRIBUTING.md)** - Guia para contribuidores
 
 ### 📋 Planos e Recomendações

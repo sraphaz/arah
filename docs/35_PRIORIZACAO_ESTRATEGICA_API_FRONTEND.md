@@ -242,6 +242,8 @@ FASE 27 (Negociação Territorial)
    - Feature flags por território (imagens, vídeos, áudios)
    - Configuração de limites por tipo de conteúdo
    - Preferências do usuário (visualização de mídias)
+   - ⭐ **Pendente (10.9)**: Limites de tamanho e tipos MIME configuráveis por território
+   - ⭐ **Frontend**: Interface administrativa planejada (consulte [38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS.md](./38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS.md))
 
 6. **Sincronização Offline** ⏳ Pendente (3 dias) ⭐ NOVO
    - Sync batch

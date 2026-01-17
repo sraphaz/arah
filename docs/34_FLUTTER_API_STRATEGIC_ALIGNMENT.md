@@ -605,6 +605,8 @@ X-RateLimit-Reset: 1641234567
 
 **Convergência Final**: 95% ✅
 
+**Configurações Administrativas**: ⭐ **Novo** - Consulte [38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS.md](./38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS.md) para planejamento completo de interfaces administrativas.
+
 **Recomendação**: Seguir [Priorização Estratégica](./35_PRIORIZACAO_ESTRATEGICA_API_FRONTEND.md) para ordem otimizada de implementação.
 
 ---

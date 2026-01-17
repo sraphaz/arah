@@ -101,11 +101,11 @@ body::before {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  opacity: 0.02; /* Muito sutil, quase imperceptível */
+  opacity: 0.03; /* Opacidade aumentada ligeiramente para melhor visibilidade */
   pointer-events: none;
   z-index: 0;
   mix-blend-mode: soft-light;
-  filter: grayscale(100%) brightness(1.5);
+  filter: grayscale(100%) brightness(1.8) opacity(0.03);
 }
 
 /* Garantir que conteúdo fique acima da marca d'água */
@@ -576,17 +576,6 @@ main {
   letter-spacing: normal;
 }
 
-@media (min-width: 768px) {
-  .section p {
-    text-align: justify;
-    text-justify: inter-word;
-    word-spacing: 0.02em;
-    letter-spacing: 0.01em;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-  }
-}
 
 .section .eyebrow {
   color: var(--accent);
@@ -713,35 +702,6 @@ main {
   margin-bottom: 0; /* Último parágrafo sem margin-bottom */
 }
 
-/* Justificar apenas parágrafos longos em telas maiores */
-@media (min-width: 768px) {
-  .card p {
-    /* Apenas justificar se o parágrafo tiver mais de 2 linhas prováveis */
-    text-align: justify;
-    text-justify: inter-word;
-    word-spacing: 0.02em; /* Espaçamento sutil entre palavras */
-    letter-spacing: 0.01em; /* Espaçamento sutil entre letras */
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-  }
-  
-  /* Não justificar parágrafos muito curtos mesmo em telas maiores */
-  .card p:only-child,
-  .card p[style*="margin: 1rem"],
-  .card p[style*="margin-top: 1rem"] {
-    text-align: left;
-    word-spacing: normal;
-  }
-}
-
-/* Em telas muito grandes, usar justify mais conservador */
-@media (min-width: 1600px) {
-  .card p {
-    word-spacing: 0.03em;
-    letter-spacing: 0.015em;
-  }
-}
 
 .card ul {
   margin: 0.75rem 0 0;
@@ -797,17 +757,6 @@ main {
   letter-spacing: normal;
 }
 
-@media (min-width: 768px) {
-  .entity-list dd {
-    text-align: justify;
-    text-justify: inter-word;
-    word-spacing: 0.02em;
-    letter-spacing: 0.01em;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-  }
-}
 
 /* Rationale list */
 .rationale-list {
@@ -878,17 +827,6 @@ main {
   margin: 0;
 }
 
-@media (min-width: 768px) {
-  .callout {
-    text-align: justify;
-    text-justify: inter-word;
-    word-spacing: 0.02em;
-    letter-spacing: 0.01em;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-  }
-}
 
 .callout strong {
   color: var(--text);
@@ -918,17 +856,6 @@ main {
   text-align: left;
 }
 
-@media (min-width: 768px) {
-  .card-intro {
-    text-align: justify;
-    text-justify: inter-word;
-    word-spacing: 0.02em;
-    letter-spacing: 0.01em;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-  }
-}
 
 .card-list {
   padding-left: clamp(1rem, 2vw, 1.25rem);
@@ -1019,17 +946,6 @@ main {
   letter-spacing: normal;
 }
 
-@media (min-width: 768px) {
-  .lead-text {
-    text-align: justify;
-    text-justify: inter-word;
-    word-spacing: 0.025em; /* Espaçamento sutil mas perceptível */
-    letter-spacing: 0.01em;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-  }
-}
 
 .lead-text.space-bottom {
   margin-bottom: 2rem;
@@ -1201,17 +1117,6 @@ pre code {
   letter-spacing: normal;
 }
 
-@media (min-width: 768px) {
-  .flow-step p {
-    text-align: justify;
-    text-justify: inter-word;
-    word-spacing: 0.02em;
-    letter-spacing: 0.01em;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-  }
-}
 
 /* Notice */
 .notice {
@@ -1478,15 +1383,6 @@ pre code {
   }
 }
 
-/* Ajustes de justificação em telas médias e grandes */
-@media (min-width: 768px) {
-  .card p,
-  .lead-text,
-  .section p,
-  .callout {
-    text-align: justify;
-  }
-}
 
 /* Ajustes finos para telas grandes - melhor aproveitamento de espaço */
 @media (min-width: 1366px) {
@@ -1829,19 +1725,27 @@ pre code {
   max-width: none;
 }
 
-/* Diagramas SVG com cores customizadas aplicadas durante geração */
+/* Diagramas SVG - aplicar filtros agressivos para tema escuro */
 .sequence-diagram-container img.mermaid-diagram {
   max-width: 100%;
   height: auto;
   display: block;
   margin: 1rem auto;
   border-radius: var(--radius-sm);
-  /* Cores já aplicadas no SVG gerado - sem filtros necessários */
+  /* Inverter e ajustar cores para tema escuro - diagramas têm cores claras */
+  filter: invert(0.95) hue-rotate(180deg) brightness(0.8) contrast(1.3) saturate(1.5);
+  transition: filter 0.3s ease;
+}
+
+.sequence-diagram-container img.mermaid-diagram:hover {
+  filter: invert(0.95) hue-rotate(180deg) brightness(0.9) contrast(1.4) saturate(1.6);
 }
 
 /* Para o modal também aplicar os mesmos filtros */
 .diagram-modal-content img.mermaid-diagram {
-  /* Cores já aplicadas no SVG gerado - sem filtros necessários */
+  max-width: 100%;
+  height: auto;
+  filter: invert(0.95) hue-rotate(180deg) brightness(0.8) contrast(1.3) saturate(1.5);
 }
 
 /* Ajustar cores específicas via CSS (quando SVG é inline) */

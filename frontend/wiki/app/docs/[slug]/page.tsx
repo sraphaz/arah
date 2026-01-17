@@ -11,6 +11,7 @@ import { Footer } from "../../../components/layout/Footer";
 import { Sidebar } from "../../../components/layout/Sidebar";
 import { MobileSidebar } from "../../../components/layout/MobileSidebar";
 import { TableOfContents } from "../../../components/layout/TableOfContents";
+import { ContentSections } from "./content-sections";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -185,11 +186,8 @@ export default async function DocPage({ params }: PageProps) {
                     </div>
                   )}
 
-                  {/* Document Content - Refinado */}
-                  <div
-                    className="markdown-content prose-headings:first:mt-0"
-                    dangerouslySetInnerHTML={{ __html: doc.content }}
-                  />
+                  {/* Document Content - Refinado com Progressive Disclosure */}
+                  <ContentSections htmlContent={doc.content} />
                 </div>
               </div>
 

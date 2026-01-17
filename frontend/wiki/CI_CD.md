@@ -45,8 +45,8 @@ O workflow está definido em `.github/workflows/wiki-pages.yml` e é executado:
 **Passos**:
 - ✅ Build estático do Next.js (`NEXT_EXPORT=true npm run build`)
 - ✅ Export para diretório `out/`
-- ✅ Criação do arquivo `CNAME` com `wiki.araponga.app`
-- ✅ Preparação dos artifacts para GitHub Pages
+- ✅ Preparação dos artifacts para GitHub Pages (em `dist/wiki/`)
+- ℹ️ Wiki será servido via `devportal.araponga.app/wiki`
 
 **Objetivo**: Gerar o site estático pronto para deploy.
 
@@ -102,26 +102,19 @@ O site é deployado automaticamente para GitHub Pages quando:
 - Todos os testes passam
 - Build estático é gerado corretamente
 
-### Domínio Customizado
+### Domínio e Roteamento
 
-**Domínio**: `wiki.araponga.app`  
-**CNAME**: Criado automaticamente pelo workflow em `dist/CNAME`
+**Acesso**: `devportal.araponga.app/wiki`  
+**Base Path**: `/wiki` (configurado no `next.config.mjs`)
 
 ### Configuração DNS
 
-Para ativar o domínio customizado:
+**Nenhuma configuração DNS adicional necessária!**
 
-1. **GitHub**:
-   - Vá em `Settings` → `Pages`
-   - Configure `Custom domain` como `wiki.araponga.app`
-   - GitHub verificará o DNS automaticamente
-
-2. **DNS**:
-   - Adicione um registro `CNAME`:
-     - **Nome**: `wiki`
-     - **Valor**: `<seu-usuario>.github.io`
-   - Ou use um registro `A` se preferir:
-     - **Valor**: IPs do GitHub Pages (ver [documentação oficial](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages))
+O wiki é servido como subpasta do DevPortal:
+- **URL**: `devportal.araponga.app/wiki`
+- **DNS**: Usa a mesma configuração de `devportal.araponga.app`
+- **CNAME**: Já configurado para `devportal.araponga.app` → `sraphaz.github.io`
 
 ## 🐛 Troubleshooting
 

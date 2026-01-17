@@ -7,9 +7,11 @@ const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   // Para GitHub Pages: export estático
   output: process.env.NEXT_EXPORT === 'true' ? 'export' : undefined,
-  // Base path para GitHub Pages (opcional, se necessário)
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  // Base path para servir em /wiki dentro do devportal.araponga.app
+  basePath: '/wiki',
   trailingSlash: true,
+  // Asset prefix também precisa do basePath
+  assetPrefix: '/wiki',
 };
 
 export default nextConfig;

@@ -515,3 +515,13 @@ Integrar mídias (imagens, vídeos e áudios) em todas as funcionalidades de con
 - ✅ Implementado em `ReportService` (posts moderados) e `ModerationCaseService` (posts ocultos)
 - ✅ Implementado em `EventsService` (eventos cancelados)
 - ✅ Implementado em `StoreItemService` (items arquivados)
+
+### Configuração de Blob Storage via Painel Administrativo
+- ✅ Modelo de domínio `MediaStorageConfig` com suporte a Local, S3 e AzureBlob
+- ✅ Repositório `IMediaStorageConfigRepository` com implementação InMemory
+- ✅ Serviço `MediaStorageConfigService` com auditoria completa
+- ✅ API Controller `MediaStorageConfigController` com endpoints administrativos (SystemAdmin)
+- ✅ Contratos de API (Response, Request) para configuração de storage
+- ✅ Segurança: Secrets (AccessKeyId, ConnectionString) mascarados nas respostas
+- ⏳ Integração com `MediaStorageFactory` (em implementação - usar configuração do painel quando disponível, fallback para `appsettings.json`)
+- 📝 Documentação completa em `FASE10_STORAGE_CONFIG_ADMIN.md`

@@ -1560,34 +1560,106 @@ curl -X POST http://localhost:8080/api/v1/events/{eventId}/confirm \
 
       <section class="section" id="admin">
         <span class="eyebrow" data-i18n="admin.eyebrow">Admin</span>
-        <h2 data-i18n="admin.title">System Config, Work Queue e evidências</h2>
-        <p data-i18n-html="admin.leadHtml">
-          Para suportar validações e governança com rastreabilidade, a API implementa <strong>SystemConfig</strong>
-          (configurações calibráveis), <strong>WorkItem</strong> (fila genérica de revisão humana) e
-          <strong>DocumentEvidence</strong> (metadados de documentos com upload e download por proxy).
-          Leia o documento completo em <a href="https://github.com/sraphaz/araponga/blob/main/docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md" rel="noopener">docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md</a>.
+        <h2 data-i18n="admin.title">Governança, Papéis Administrativos e Evidências</h2>
+        <p class="lead-text" style="margin-bottom: 2rem;">
+          A API Araponga implementa uma arquitetura de governança em camadas com papéis administrativos
+          bem definidos, permitindo validações e decisões com rastreabilidade completa. A governança
+          combina responsabilidades territoriais (curadores e moderadores) com supervisão global (SystemAdmin).
         </p>
-        <div class="grid-two">
+
+        <div class="grid-two" style="margin-bottom: 3rem;">
           <div class="card">
-            <h3 data-i18n="admin.endpointsTitle">Endpoints principais</h3>
-            <ul>
-              <li><strong>System Config (SystemAdmin)</strong>: <code>GET /api/v1/admin/system-configs</code> e <code>GET/PUT /api/v1/admin/system-configs/{key}</code></li>
-              <li><strong>Work Items (SystemAdmin)</strong>: <code>GET /api/v1/admin/work-items</code></li>
-              <li><strong>Work Items (territorial)</strong>: <code>GET /api/v1/territories/{territoryId}/work-items</code></li>
-              <li><strong>Upload identidade</strong>: <code>POST /api/v1/verification/identity/document/upload</code></li>
-              <li><strong>Upload residência</strong>: <code>POST /api/v1/memberships/{territoryId}/verify-residency/document/upload</code></li>
-              <li><strong>Download por proxy</strong>: <code>GET /api/v1/admin/evidences/{evidenceId}/download</code></li>
-            </ul>
+            <h3>👤 Papéis Administrativos</h3>
+            <dl class="entity-list">
+              <dt><strong>SystemAdmin</strong></dt>
+              <dd>
+                Administrador global do sistema com acesso irrestrito. Responsável por:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Configurações globais do sistema (SystemConfig)</li>
+                  <li>Decisão de verificação de identidade global (fallback humano)</li>
+                  <li>Aprovação de pedidos de moradia quando não há curadores (bootstrap)</li>
+                  <li>Acesso a filas de trabalho globais (WorkItems)</li>
+                  <li>Download de evidências para auditoria e compliance</li>
+                  <li>Monitoramento de operações críticas</li>
+                </ul>
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9em;">
+                  <strong>Autorização:</strong> Acesso via <code>SystemPermission</code> do tipo <code>SystemAdmin</code>.
+                  SystemAdmin possui implicitamente todas as capabilities em todos os territórios.
+                </p>
+              </dd>
+
+              <dt><strong>FinancialManager</strong> (Roadmap)</dt>
+              <dd>
+                Papel administrativo territorial planejado para gestão financeira local:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Configuração de taxas de plataforma por território</li>
+                  <li>Visualização de saldos e movimentações financeiras</li>
+                  <li>Gestão de payout e distribuição de receitas</li>
+                  <li>Relatórios financeiros territoriais</li>
+                </ul>
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9em;">
+                  <strong>Status:</strong> Endpoints financeiros atualmente restritos a SystemAdmin.
+                  Suporte a FinancialManager e FinancialViewer será implementado em fase futura.
+                </p>
+              </dd>
+
+              <dt><strong>Curator</strong> (Territorial)</dt>
+              <dd>
+                Morador verificado com permissões de curadoria no território:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Aprovação de pedidos de moradia (JoinRequests)</li>
+                  <li>Validação de entidades do mapa</li>
+                  <li>Moderação de conteúdo e usuários</li>
+                  <li>Acesso a filas de trabalho territoriais</li>
+                </ul>
+              </dd>
+            </dl>
           </div>
+
           <div class="card">
-            <h3 data-i18n="admin.notesTitle">Notas</h3>
-            <ul>
-              <li data-i18n-html="admin.note1Html"><strong>Autorização</strong>: SystemAdmin decide identidade; Curator decide residência e curadoria; Curator/Moderator decide moderação.</li>
-              <li data-i18n-html="admin.note2Html"><strong>Proxy download</strong>: a API faz streaming do storage para aplicar autorização e auditoria (sem URL pública).</li>
-              <li data-i18n-html="admin.note3Html"><strong>OpenAPI</strong>: veja as rotas na seção OpenAPI — tags <code>Admin</code>, <code>Verification</code>, <code>Moderation</code>.</li>
-            </ul>
+            <h3>🔧 Endpoints e Funcionalidades</h3>
+            <dl class="entity-list">
+              <dt><strong>System Config</strong> (SystemAdmin)</dt>
+              <dd>
+                <code>GET /api/v1/admin/system-configs</code><br>
+                <code>GET/PUT /api/v1/admin/system-configs/{key}</code><br>
+                Configurações globais calibráveis (governança, validações, thresholds).
+              </dd>
+
+              <dt><strong>Work Items</strong></dt>
+              <dd>
+                <code>GET /api/v1/admin/work-items</code> (SystemAdmin)<br>
+                <code>GET /api/v1/territories/{territoryId}/work-items</code> (Curator)<br>
+                Filas genéricas para revisão humana (verificações, moderação, curadoria).
+              </dd>
+
+              <dt><strong>Upload de Documentos</strong></dt>
+              <dd>
+                <code>POST /api/v1/verification/identity/document/upload</code><br>
+                <code>POST /api/v1/memberships/{territoryId}/verify-residency/document/upload</code><br>
+                Upload seguro de evidências documentais para verificação.
+              </dd>
+
+              <dt><strong>Download por Proxy</strong> (SystemAdmin)</dt>
+              <dd>
+                <code>GET /api/v1/admin/evidences/{evidenceId}/download</code><br>
+                Streaming seguro do storage com autorização e auditoria (sem URLs públicas).
+              </dd>
+            </dl>
           </div>
         </div>
+
+        <div class="callout" style="background: var(--accent-subtle); border-left: 3px solid var(--accent);">
+          <p style="margin: 0; color: var(--text);">
+            <strong>Separação de responsabilidades:</strong> SystemAdmin opera em nível global (configurações do sistema,
+            verificações globais, bootstrap). Curators e Moderators operam em nível territorial (aprovam moradores,
+            validam entidades, moderam conteúdo). FinancialManager (roadmap) operará em nível territorial para gestão financeira.
+          </p>
+        </div>
+
+        <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.95em;">
+          Documentação completa: <a href="https://github.com/sraphaz/araponga/blob/main/docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md" rel="noopener">docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md</a>
+        </p>
       </section>
 
       <section class="section" id="openapi">

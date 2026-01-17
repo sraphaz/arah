@@ -1,0 +1,81 @@
+sequenceDiagram
+    participant Cliente as Visitante/Morador
+    participant MapController
+    participant MapEntityService
+    participant MapEntityRepository
+    participant WorkQueueService
+    participant ConfirmationService
+    participant Curator as Curador
+    participant ValidationService
+    participant Database
+
+    Note over Cliente,Database: 1. Sugerir Entidade
+    Cliente->>MapController: POST /api/v1/map/entities<br/>(category, name, description,<br/>latitude, longitude, visibility)
+    MapController->>MapEntityService: SuggestEntityAsync(territoryId, userId, entityData)
+    
+    MapEntityService->>MapEntityService: Validar categoria<br/>(estabelecimento, órgão governo,<br/>espaço público, espaço natural)
+    
+    MapEntityService->>MapEntityRepository: AddAsync(new MapEntity(status=Suggested))
+    MapEntityRepository->>Database: INSERT map_entity<br/>(category, name, status=Suggested,<br/>suggestedBy=userId, latitude, longitude)
+    Database-->>MapEntityRepository: MapEntity criado
+    MapEntityRepository-->>MapEntityService: MapEntity
+
+    MapEntityService->>WorkQueueService: EnqueueWorkItemAsync(entityId, type=EntityValidation)
+    WorkQueueService->>Database: INSERT work_item<br/>(entityId, type=EntityValidation,<br/>status=Open)
+    Database-->>WorkQueueService: WorkItem criado
+
+    MapEntityService-->>MapController: Result.Success(entityDetails)
+    MapController-->>Cliente: 200 OK (entityDetails com status=Suggested)
+
+    Note over Cliente,Database: 2. Confirmação por Moradores
+    Cliente->>MapController: POST /api/v1/map/entities/{entityId}/confirmations
+    MapController->>ConfirmationService: ConfirmEntityAsync(entityId, userId)
+    
+    ConfirmationService->>ConfirmationService: Validar que usuário é Resident
+    
+    ConfirmationService->>MapEntityRepository: AddConfirmationAsync(entityId, userId)
+    MapEntityRepository->>Database: INSERT entity_confirmation<br/>(entityId, userId, confirmedAt)
+    Database-->>MapEntityRepository: Confirmation criada
+    MapEntityRepository-->>ConfirmationService: Success
+
+    ConfirmationService->>MapEntityRepository: CountConfirmationsAsync(entityId)
+    MapEntityRepository->>Database: SELECT COUNT(*) FROM entity_confirmations<br/>WHERE entityId
+    Database-->>MapEntityRepository: Confirmation count
+    MapEntityRepository-->>ConfirmationService: Count
+
+    alt Múltiplos moradores confirmaram
+        Note over ConfirmationService: Pode aumentar prioridade na work queue
+    end
+
+    ConfirmationService-->>MapController: Result.Success()
+    MapController-->>Cliente: 200 OK
+
+    Note over Curator,Database: 3. Validação por Curador
+    Curator->>MapController: POST /api/v1/map/entities/{entityId}/validation<br/>(validated=true)
+    MapController->>ValidationService: ValidateEntityAsync(entityId, curatorId, validated=true)
+    
+    ValidationService->>MapEntityRepository: GetByIdAsync(entityId)
+    MapEntityRepository->>Database: SELECT map_entity WHERE id
+    Database-->>MapEntityRepository: MapEntity
+    MapEntityRepository-->>ValidationService: MapEntity
+
+    alt Validar
+        ValidationService->>MapEntityRepository: UpdateStatus(entityId, status=Validated)
+        MapEntityRepository->>Database: UPDATE map_entity<br/>SET status=Validated, validatedBy=curatorId
+        Database-->>MapEntityRepository: OK
+    else Rejeitar
+        ValidationService->>MapEntityRepository: UpdateStatus(entityId, status=Rejected)
+        MapEntityRepository->>Database: UPDATE map_entity<br/>SET status=Rejected
+        Database-->>MapEntityRepository: OK
+    end
+
+    ValidationService->>WorkQueueService: MarkAsCompletedAsync(workItemId)
+    WorkQueueService->>Database: UPDATE work_item<br/>SET status=Completed, completedAt=NOW()
+    Database-->>WorkQueueService: OK
+
+    ValidationService-->>MapController: Result.Success()
+    MapController-->>Curator: 200 OK
+
+    Note over Cliente,Database: 4. Entidade Aparece no Mapa e Feed
+    Cliente->>Cliente: GET /api/v1/map/pins?types=entity<br/>(filtra apenas entidades com status=Validated)
+    Cliente->>Cliente: GET /api/v1/feed?mapEntityId={entityId}<br/>(posts filtrados por entidade)

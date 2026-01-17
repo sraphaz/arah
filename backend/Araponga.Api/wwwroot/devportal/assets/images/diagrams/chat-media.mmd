@@ -1,0 +1,91 @@
+sequenceDiagram
+    participant Cliente
+    participant MediaController
+    participant MediaService
+    participant ChatController
+    participant ChatService
+    participant FileStorage
+    participant MediaRepository
+    participant ConversationRepository
+    participant MessageRepository
+    participant Database
+
+    Note over Cliente,Database: 1. Upload de Mídia
+    Cliente->>MediaController: POST /api/v1/media/upload<br/>(multipart/form-data, file)
+    MediaController->>MediaService: UploadMediaAsync(userId, file)
+    
+    MediaService->>MediaService: Validar tipo e tamanho<br/>(apenas imagens, max 5MB)
+    
+    alt Tipo ou tamanho inválido
+        MediaService-->>MediaController: Result.Failure("Invalid file")
+        MediaController-->>Cliente: 400 Bad Request
+    else Arquivo válido
+        MediaService->>FileStorage: UploadAsync(file)
+        FileStorage-->>MediaService: File URL
+        
+        MediaService->>MediaRepository: AddAsync(new Media())
+        MediaRepository->>Database: INSERT media<br/>(userId, fileUrl, fileSize, mimeType, type=Image)
+        Database-->>MediaRepository: Media criado
+        MediaRepository-->>MediaService: Media
+
+        MediaService-->>MediaController: Result.Success(mediaId, mediaUrl)
+        MediaController-->>Cliente: 200 OK (mediaId, mediaUrl)
+    end
+
+    Note over Cliente,Database: 2. Criar ou Obter Conversa
+    Cliente->>ChatController: GET /api/v1/chat/conversations<br/>(territoryId, participantIds?)
+    ChatController->>ChatService: GetOrCreateConversationAsync(userId, territoryId, participantIds)
+    
+    ChatService->>ConversationRepository: FindConversationAsync(userId, participantIds)
+    ConversationRepository->>Database: SELECT conversation WHERE participants
+    Database-->>ConversationRepository: Conversation ou null
+    
+    alt Conversa não existe
+        ChatService->>ConversationRepository: AddAsync(new Conversation())
+        ConversationRepository->>Database: INSERT conversation<br/>(territoryId, type, createdAt)
+        Database-->>ConversationRepository: Conversation criado
+        
+        loop Para cada participante
+            ConversationRepository->>Database: INSERT conversation_participant<br/>(conversationId, userId)
+            Database-->>ConversationRepository: Participant adicionado
+        end
+    end
+    
+    ConversationRepository-->>ChatService: Conversation
+    ChatService-->>ChatController: Result.Success(conversation)
+    ChatController-->>Cliente: 200 OK (conversationId)
+
+    Note over Cliente,Database: 3. Enviar Mensagem com Mídia
+    Cliente->>ChatController: POST /api/v1/chat/conversations/{conversationId}/messages<br/>(text, mediaId)
+    ChatController->>ChatService: SendMessageAsync(userId, conversationId, text, mediaId)
+    
+    ChatService->>MediaRepository: GetByIdAsync(mediaId)
+    MediaRepository->>Database: SELECT media WHERE id
+    Database-->>MediaRepository: Media ou null
+    
+    alt Media não encontrada ou não pertence ao usuário
+        ChatService-->>ChatController: Result.Failure("Media not found or not owned")
+        ChatController-->>Cliente: 400 Bad Request
+    else Media válida
+        ChatService->>MessageRepository: AddAsync(new Message())
+        MessageRepository->>Database: INSERT message<br/>(conversationId, userId, text, mediaId, createdAt)
+        Database-->>MessageRepository: Message criada
+        MessageRepository-->>ChatService: Message
+
+        ChatService->>ConversationRepository: UpdateLastMessageAtAsync(conversationId)
+        ConversationRepository->>Database: UPDATE conversation<br/>SET LastMessageAtUtc=NOW()
+        Database-->>ConversationRepository: OK
+
+        ChatService-->>ChatController: Result.Success(messageResponse)
+        ChatController-->>Cliente: 200 OK (messageId, text, mediaUrl, hasMedia=true)
+    end
+
+    Note over Cliente,Database: 4. Listar Mensagens
+    Cliente->>ChatController: GET /api/v1/chat/conversations/{conversationId}/messages<br/>(skip, take)
+    ChatController->>ChatService: GetMessagesAsync(conversationId, userId, skip, take)
+    ChatService->>MessageRepository: ListByConversationIdAsync(conversationId, skip, take)
+    MessageRepository->>Database: SELECT messages WHERE conversationId<br/>ORDER BY createdAt DESC<br/>LIMIT take OFFSET skip
+    Database-->>MessageRepository: Messages
+    MessageRepository-->>ChatService: Messages
+    ChatService-->>ChatController: Result.Success(messages)
+    ChatController-->>Cliente: 200 OK (messages com mediaUrl quando há mídia)

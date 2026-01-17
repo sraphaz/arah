@@ -1,0 +1,36 @@
+sequenceDiagram
+    participant Cliente
+    participant AuthController
+    participant AuthService
+    participant UserRepository
+    participant TokenService
+    participant Database
+
+    Cliente->>AuthController: POST /api/v1/auth/social
+    AuthController->>AuthService: LoginSocialAsync()
+    
+    AuthService->>UserRepository: GetByAuthProviderAsync()
+    UserRepository->>Database: SELECT user WHERE provider + externalId
+    Database-->>UserRepository: User ou null
+    UserRepository-->>AuthService: User existente ou null
+    
+    alt Usuário já existe
+        alt 2FA habilitado
+            AuthService-->>AuthController: Result.Failure("2FA_REQUIRED")
+            AuthController-->>Cliente: 400 Bad Request (2FA_REQUIRED)
+        else 2FA não habilitado
+            AuthService->>TokenService: IssueToken(userId)
+            TokenService-->>AuthService: JWT Token
+            AuthService-->>AuthController: Result.Success(user, token)
+            AuthController-->>Cliente: 200 OK (user, token)
+        end
+    else Novo usuário
+        AuthService->>UserRepository: AddAsync(new User())
+        UserRepository->>Database: INSERT user
+        Database-->>UserRepository: User criado
+        UserRepository-->>AuthService: User
+        AuthService->>TokenService: IssueToken(userId)
+        TokenService-->>AuthService: JWT Token
+        AuthService-->>AuthController: Result.Success(user, token)
+        AuthController-->>Cliente: 200 OK (user, token)
+    end

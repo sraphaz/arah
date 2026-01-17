@@ -1,0 +1,65 @@
+sequenceDiagram
+    participant DomainEvent as Evento de Domínio
+    participant EventBus as EventBus
+    participant OutboxRepository
+    participant BackgroundWorker
+    participant NotificationService
+    participant NotificationRepository
+    participant UserRepository
+    participant Database
+    participant Cliente
+
+    Note over DomainEvent,Database: 1. Evento de Domínio Ocorre
+    DomainEvent->>EventBus: PostCreatedEvent(postId, territoryId, userId)
+    EventBus->>OutboxRepository: SaveMessageAsync(eventMessage)
+    OutboxRepository->>Database: INSERT outbox_message<br/>(status=Pending, payload=eventData)
+    Database-->>OutboxRepository: OutboxMessage criada
+    OutboxRepository-->>EventBus: Success
+    EventBus-->>DomainEvent: Published
+
+    Note over BackgroundWorker,Database: 2. Background Worker Processa
+    BackgroundWorker->>OutboxRepository: GetPendingMessagesAsync()
+    OutboxRepository->>Database: SELECT outbox_messages<br/>WHERE status=Pending<br/>ORDER BY createdAt LIMIT 100
+    Database-->>OutboxRepository: OutboxMessages
+    OutboxRepository-->>BackgroundWorker: Pending messages
+
+    loop Para cada mensagem pendente
+        BackgroundWorker->>BackgroundWorker: Deserializar evento
+        BackgroundWorker->>NotificationService: ProcessEventAsync(eventMessage)
+        
+        Note over NotificationService,Database: 3. Determinar Destinatários
+        alt PostCreatedEvent
+            NotificationService->>UserRepository: GetTerritoryMembersAsync(territoryId)
+            UserRepository->>Database: SELECT memberships WHERE territoryId
+            Database-->>UserRepository: Memberships
+            UserRepository-->>NotificationService: Usuários do território
+        end
+        
+        Note over NotificationService,Database: 4. Criar Notificações
+        loop Para cada destinatário (exceto autor)
+            NotificationService->>NotificationRepository: CreateNotificationAsync(userId, eventType, entityId)
+            NotificationRepository->>Database: INSERT notification<br/>(userId, type, entityId, read=false)
+            Database-->>NotificationRepository: Notification criada
+        end
+        
+        NotificationService-->>BackgroundWorker: Processed
+        
+        Note over BackgroundWorker,Database: 5. Marcar Mensagem como Processada
+        BackgroundWorker->>OutboxRepository: MarkAsProcessedAsync(messageId)
+        OutboxRepository->>Database: UPDATE outbox_message<br/>SET status=Processed, processedAt=NOW()
+        Database-->>OutboxRepository: OK
+    end
+
+    Note over Cliente,Database: 6. Usuário Consulta Notificações
+    Cliente->>Cliente: GET /api/v1/notifications
+    Cliente->>NotificationRepository: GetUserNotificationsAsync(userId, skip, take)
+    NotificationRepository->>Database: SELECT notifications<br/>WHERE userId<br/>ORDER BY createdAt DESC<br/>LIMIT take OFFSET skip
+    Database-->>NotificationRepository: Notifications
+    NotificationRepository-->>Cliente: Notificações não lidas
+
+    Note over Cliente,Database: 7. Marcar como Lida
+    Cliente->>Cliente: POST /api/v1/notifications/{id}/read
+    Cliente->>NotificationRepository: MarkAsReadAsync(notificationId, userId)
+    NotificationRepository->>Database: UPDATE notification<br/>SET read=true, readAt=NOW()<br/>WHERE id AND userId
+    Database-->>NotificationRepository: OK
+    NotificationRepository-->>Cliente: 200 OK

@@ -1,0 +1,79 @@
+sequenceDiagram
+    participant Cliente as Morador/Visitante
+    participant AssetsController
+    participant TerritoryAssetService
+    participant AssetRepository
+    participant GeoAnchorRepository
+    participant WorkQueueService
+    participant Curator as Curador
+    participant ValidationService
+    participant Database
+
+    Note over Cliente,Database: 1. Criar Asset
+    Cliente->>AssetsController: POST /api/v1/assets<br/>(type, name, description,<br/>geoAnchors [obrigatório])
+    AssetsController->>TerritoryAssetService: CreateAssetAsync(territoryId, userId, assetData)
+    
+    TerritoryAssetService->>TerritoryAssetService: Validar geoAnchors (obrigatório)
+    
+    alt geoAnchors vazio ou inválido
+        TerritoryAssetService-->>AssetsController: Result.Failure("At least one geoAnchor required")
+        AssetsController-->>Cliente: 400 Bad Request
+    else geoAnchors válido
+        TerritoryAssetService->>AssetRepository: AddAsync(new TerritoryAsset(status=Suggested))
+        AssetRepository->>Database: INSERT territory_asset<br/>(status=Suggested, createdBy=userId)
+        Database-->>AssetRepository: Asset criado
+        AssetRepository-->>TerritoryAssetService: TerritoryAsset
+
+        TerritoryAssetService->>GeoAnchorRepository: AddAsync(geoAnchors)
+        loop Para cada geoAnchor
+            GeoAnchorRepository->>Database: INSERT asset_geo_anchor<br/>(assetId, latitude, longitude)
+            Database-->>GeoAnchorRepository: GeoAnchor criado
+        end
+        GeoAnchorRepository-->>TerritoryAssetService: Success
+
+        Note over TerritoryAssetService,Database: 2. Enfileirar para Curadoria
+        TerritoryAssetService->>WorkQueueService: EnqueueWorkItemAsync(assetId, type=AssetValidation)
+        WorkQueueService->>Database: INSERT work_item<br/>(entityId=assetId, type=AssetValidation,<br/>status=Open, priority=Normal)
+        Database-->>WorkQueueService: WorkItem criado
+        WorkQueueService-->>TerritoryAssetService: Success
+
+        TerritoryAssetService-->>AssetsController: Result.Success(assetDetails)
+        AssetsController-->>Cliente: 200 OK (assetDetails)
+    end
+
+    Note over Curator,Database: 3. Curador Lista Work Queue
+    Curator->>Curator: GET /api/v1/admin/work-queue<br/>?type=AssetValidation&status=Open
+    Curator->>WorkQueueService: ListWorkItemsAsync(type, status)
+    WorkQueueService->>Database: SELECT work_items<br/>WHERE type=AssetValidation AND status=Open<br/>ORDER BY priority, createdAt
+    Database-->>WorkQueueService: WorkItems
+    WorkQueueService-->>Curator: Work items pendentes
+
+    Note over Curator,Database: 4. Validação por Curador
+    Curator->>AssetsController: POST /api/v1/map/entities/{entityId}/validation<br/>(assetId, validated=true)
+    AssetsController->>ValidationService: ValidateEntityAsync(entityId, curatorId, validated=true)
+    
+    ValidationService->>AssetRepository: GetByIdAsync(assetId)
+    AssetRepository->>Database: SELECT territory_asset WHERE id
+    Database-->>AssetRepository: TerritoryAsset
+    AssetRepository-->>ValidationService: TerritoryAsset
+
+    alt Validar
+        ValidationService->>AssetRepository: UpdateStatus(assetId, status=Validated)
+        AssetRepository->>Database: UPDATE territory_asset<br/>SET status=Validated, validatedBy=curatorId
+        Database-->>AssetRepository: OK
+    else Rejeitar
+        ValidationService->>AssetRepository: UpdateStatus(assetId, status=Rejected)
+        AssetRepository->>Database: UPDATE territory_asset<br/>SET status=Rejected
+        Database-->>AssetRepository: OK
+    end
+
+    ValidationService->>WorkQueueService: MarkAsCompletedAsync(workItemId)
+    WorkQueueService->>Database: UPDATE work_item<br/>SET status=Completed, completedAt=NOW()
+    Database-->>WorkQueueService: OK
+
+    ValidationService-->>AssetsController: Result.Success()
+    AssetsController-->>Curator: 200 OK
+
+    Note over Cliente,Database: 5. Asset Aparece no Mapa
+    Cliente->>Cliente: GET /api/v1/map/pins?types=asset<br/>(filtra apenas assets com status=Validated)
+    Cliente->>Cliente: Pins incluem assets validados

@@ -1,0 +1,86 @@
+sequenceDiagram
+    participant Cliente
+    participant MembershipsController
+    participant MembershipService
+    participant EvidenceController
+    participant EvidenceService
+    participant TerritoryRepository
+    participant MembershipRepository
+    participant EvidenceRepository
+    participant FileStorage
+    participant WorkQueueService
+    participant Database
+
+    Note over Cliente,Database: Fluxo 1: Verificação por Geolocalização
+    Cliente->>MembershipsController: POST /api/v1/memberships/{territoryId}/verify-residency/geo<br/>(X-Geo-Latitude, X-Geo-Longitude)
+    MembershipsController->>MembershipService: VerifyResidencyByGeoAsync(userId, territoryId, lat, lng)
+    
+    MembershipService->>TerritoryRepository: GetByIdAsync(territoryId)
+    TerritoryRepository->>Database: SELECT territory WHERE id
+    Database-->>TerritoryRepository: Territory
+    TerritoryRepository-->>MembershipService: Territory (lat, lng, radius)
+
+    MembershipService->>MembershipService: Calcular distância<br/>(lat, lng) vs (territory.lat, territory.lng)
+    
+    alt Distância > raio permitido
+        MembershipService-->>MembershipsController: Result.Failure("Coordinates too far")
+        MembershipsController-->>Cliente: 400 Bad Request
+    else Distância <= raio permitido
+        MembershipService->>MembershipRepository: GetByUserAndTerritoryAsync(userId, territoryId)
+        MembershipRepository->>Database: SELECT membership WHERE userId AND territoryId
+        Database-->>MembershipRepository: Membership
+        MembershipRepository-->>MembershipService: Membership
+
+        alt Membership não existe ou não é Resident
+            MembershipService-->>MembershipsController: Result.Failure("Not a Resident")
+            MembershipsController-->>Cliente: 400 Bad Request
+        else Membership válida
+            MembershipService->>MembershipRepository: UpdateGeoVerification(membership, verifiedAt)
+            MembershipRepository->>Database: UPDATE membership<br/>SET LastGeoVerifiedAtUtc=NOW(),<br/>ResidencyVerification=GEO_VERIFIED
+            Database-->>MembershipRepository: OK
+            MembershipRepository-->>MembershipService: Success
+
+            MembershipService-->>MembershipsController: Result.Success()
+            MembershipsController-->>Cliente: 200 OK
+        end
+    end
+
+    Note over Cliente,Database: Fluxo 2: Verificação por Documento
+    Cliente->>EvidenceController: POST /api/v1/evidences<br/>(file, type=ResidencyDocument)
+    EvidenceController->>EvidenceService: UploadEvidenceAsync(userId, territoryId, file, type)
+    
+    EvidenceService->>FileStorage: UploadAsync(file)
+    FileStorage-->>EvidenceService: File URL
+    
+    EvidenceService->>EvidenceRepository: AddAsync(new Evidence())
+    EvidenceRepository->>Database: INSERT evidence<br/>(userId, territoryId, fileUrl, type, status=Pending)
+    Database-->>EvidenceRepository: Evidence criado
+    EvidenceRepository-->>EvidenceService: Evidence
+
+    EvidenceService->>WorkQueueService: EnqueueResidencyVerificationAsync(evidenceId)
+    WorkQueueService->>Database: INSERT work_item<br/>(entityId=evidenceId, type=ResidencyVerification,<br/>status=Open)
+    Database-->>WorkQueueService: WorkItem criado
+
+    EvidenceService-->>EvidenceController: Result.Success(evidenceId)
+    EvidenceController-->>Cliente: 200 OK (evidenceId, workItemId)
+
+    Note over Cliente,Database: 3. Associação de Evidência ao Membership
+    Cliente->>MembershipsController: POST /api/v1/memberships/{territoryId}/verify-residency/document<br/>(evidenceId)
+    MembershipsController->>MembershipService: VerifyResidencyByDocumentAsync(userId, territoryId, evidenceId)
+    
+    MembershipService->>EvidenceRepository: GetByIdAsync(evidenceId)
+    EvidenceRepository->>Database: SELECT evidence WHERE id AND userId
+    Database-->>EvidenceRepository: Evidence ou null
+    
+    alt Evidence não encontrada
+        MembershipService-->>MembershipsController: Result.Failure("Evidence not found")
+        MembershipsController-->>Cliente: 404 Not Found
+    else Evidence válida
+        MembershipService->>MembershipRepository: UpdateDocumentVerification(membership, evidenceId, verifiedAt)
+        MembershipRepository->>Database: UPDATE membership<br/>SET LastDocumentVerifiedAtUtc=NOW(),<br/>ResidencyVerification=DOCUMENT_VERIFIED,<br/>EvidenceId=evidenceId
+        Database-->>MembershipRepository: OK
+        MembershipRepository-->>MembershipService: Success
+
+        MembershipService-->>MembershipsController: Result.Success()
+        MembershipsController-->>Cliente: 200 OK
+    end

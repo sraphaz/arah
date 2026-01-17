@@ -568,6 +568,15 @@
     "description": "Trecho monitorado",
     "geoAnchors": [{"latitude": -23.55, "longitude": -46.63}]
   }'</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <img src="./assets/images/diagrams/assets-validation.svg" alt="Diagrama de sequência: Assets - Criação e validação por curador" class="mermaid-diagram" data-diagram="assets-validation" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -595,6 +604,15 @@
           <pre class="code-block"><code>curl http://localhost:8080/api/v1/map/pins?types=asset,alert,entity \
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "X-Session-Id: session-123"</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <img src="./assets/images/diagrams/map-entities.svg" alt="Diagrama de sequência: Mapa - Entidades (sugestão → confirmação → validação)" class="mermaid-diagram" data-diagram="map-entities" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -661,12 +679,57 @@ curl -X DELETE http://localhost:8080/api/v1/blocks/users/{userId} \
         </div>
 
         <div class="flow-step">
+          <h4>9a. Verificação de residência</h4>
+          <p>
+            Moradores podem verificar residência por geolocalização (<code>POST /api/v1/memberships/{territoryId}/verify-residency/geo</code>)
+            ou por comprovante documental (<code>POST /api/v1/memberships/{territoryId}/verify-residency/document</code>).
+            Quando a policy exige presença, envie <code>X-Geo-Latitude</code>/<code>X-Geo-Longitude</code>.
+          </p>
+          <pre class="code-block"><code># Verificação por geo
+curl -X POST http://localhost:8080/api/v1/memberships/{territoryId}/verify-residency/geo \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "X-Geo-Latitude: -23.55" \
+  -H "X-Geo-Longitude: -46.63" \
+  -H "Content-Type: application/json" \
+  -d '{"lat": -23.55, "lng": -46.63}'
+
+# Verificação por documento
+curl -X POST http://localhost:8080/api/v1/evidences \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -F "file=@comprovante.pdf" \
+  -F "type=ResidencyDocument"
+
+curl -X POST http://localhost:8080/api/v1/memberships/{territoryId}/verify-residency/document \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"evidenceId": "evidence-id"}'</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <img src="./assets/images/diagrams/residency-verification.svg" alt="Diagrama de sequência: Verificação de residência (geo/document)" class="mermaid-diagram" data-diagram="residency-verification" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
+            </div>
+          </details>
+        </div>
+
+        <div class="flow-step">
           <h4>11. Notificações in-app</h4>
           <p>
             Eventos relevantes geram mensagens em outbox que são processadas em background para criar
             notificações por usuário. Consulte <code>GET /api/v1/notifications</code> e marque como lidas em
             <code>POST /api/v1/notifications/{id}/read</code>.
           </p>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <img src="./assets/images/diagrams/notifications-outbox.svg" alt="Diagrama de sequência: Sistema de Notificações (Outbox Pattern)" class="mermaid-diagram" data-diagram="notifications-outbox" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
+            </div>
+          </details>
         </div>
 
         <div class="flow-step">
@@ -699,6 +762,15 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
               <li><strong>Validação</strong>: A mídia deve pertencer ao usuário que está enviando a mensagem</li>
             </ul>
           </div>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <img src="./assets/images/diagrams/chat-media.svg" alt="Diagrama de sequência: Chat com mídia" class="mermaid-diagram" data-diagram="chat-media" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
+            </div>
+          </details>
         </div>
       </section>
 
@@ -900,6 +972,15 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
   -H "Authorization: Bearer &lt;token&gt;" \
   -H "Content-Type: application/json" \
   -d '{"message": "Gostaria de mais informações"}'</code></pre>
+          <details class="sequence-diagram-toggle">
+            <summary class="sequence-diagram-summary">
+              <span>📊 Ver Diagrama de Sequência</span>
+            </summary>
+            <div class="sequence-diagram-container">
+              <img src="./assets/images/diagrams/marketplace-checkout.svg" alt="Diagrama de sequência: Marketplace - Fluxo completo (loja → item → carrinho → checkout → payout)" class="mermaid-diagram" data-diagram="marketplace-checkout" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" />
+              <button class="diagram-fullscreen-btn" onclick="openDiagramFullscreen(this.previousElementSibling)" aria-label="Abrir diagrama em tela cheia">⛶ Tela Cheia</button>
+            </div>
+          </details>
         </div>
       </section>
 

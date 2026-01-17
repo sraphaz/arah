@@ -7,6 +7,7 @@ import remarkHtml from "remark-html";
 import remarkGfm from "remark-gfm";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
+import { FeatureCard } from "../components/ui/FeatureCard";
 
 async function getDocContent(filePath: string) {
   try {
@@ -75,40 +76,29 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* Quick Navigation - Enterprise design */}
+        {/* Quick Navigation - Dynamic design with FeatureCards */}
         <div className="mt-16 grid md:grid-cols-3 gap-6">
-          <Link
+          <FeatureCard
+            icon="👨‍💻"
+            title="Desenvolvedores"
+            description="Comece a desenvolver com o Araponga"
+            color="forest"
             href="/docs/ONBOARDING_DEVELOPERS"
-            className="glass-card group transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1"
-          >
-            <div className="glass-card__content text-center">
-              <div className="text-5xl mb-5 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">👨‍💻</div>
-              <h3 className="text-xl md:text-2xl font-bold text-forest-900 dark:text-forest-50 mb-3 transition-colors">Desenvolvedores</h3>
-              <p className="text-forest-600 dark:text-forest-300 text-sm md:text-base leading-relaxed">Comece a desenvolver com o Araponga</p>
-            </div>
-          </Link>
-
-          <Link
+          />
+          <FeatureCard
+            icon="👁️"
+            title="Analistas"
+            description="Observe territórios e proponha melhorias"
+            color="blue"
             href="/docs/ONBOARDING_ANALISTAS_FUNCIONAIS"
-            className="glass-card group transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1"
-          >
-            <div className="glass-card__content text-center">
-              <div className="text-5xl mb-5 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">👁️</div>
-              <h3 className="text-xl md:text-2xl font-bold text-forest-900 dark:text-forest-50 mb-3 transition-colors">Analistas</h3>
-              <p className="text-forest-600 dark:text-forest-300 text-sm md:text-base leading-relaxed">Observe territórios e proponha melhorias</p>
-            </div>
-          </Link>
-
-          <Link
+          />
+          <FeatureCard
+            icon="📚"
+            title="Índice Completo"
+            description="Explore toda a documentação"
+            color="purple"
             href="/docs/00_INDEX"
-            className="glass-card group transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1"
-          >
-            <div className="glass-card__content text-center">
-              <div className="text-5xl mb-5 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">📚</div>
-              <h3 className="text-xl md:text-2xl font-bold text-forest-900 dark:text-forest-50 mb-3 transition-colors">Índice Completo</h3>
-              <p className="text-forest-600 dark:text-forest-300 text-sm md:text-base leading-relaxed">Explore toda a documentação</p>
-            </div>
-          </Link>
+          />
         </div>
       </main>
 

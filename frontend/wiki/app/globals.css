@@ -674,6 +674,139 @@
       transform: translateY(0);
     }
   }
+
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.95);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 3s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Markdown enhancements - Callout boxes */
+  .markdown-content blockquote {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .markdown-content blockquote::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    @apply bg-forest-400 dark:bg-[#4dd4a8];
+    animation: slideInLeft 0.5s ease-out;
+  }
+
+  @keyframes slideInLeft {
+    from {
+      width: 0;
+    }
+    to {
+      width: 4px;
+    }
+  }
+
+  /* Interactive list items */
+  .markdown-content li {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .markdown-content li:hover {
+    @apply translate-x-2;
+  }
+
+  /* Highlight boxes for special content */
+  .highlight-box {
+    @apply bg-forest-50/80 dark:bg-forest-900/30 border-2 border-forest-300 dark:border-forest-700 rounded-xl p-6 my-6;
+    @apply shadow-md hover:shadow-lg transition-shadow duration-300;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    @apply bg-forest-400 dark:bg-[#4dd4a8];
+    animation: slideInLeft 0.6s ease-out;
+  }
+
+  /* Stats/numbers display */
+  .stat-number {
+    @apply text-4xl md:text-5xl font-bold text-forest-900 dark:text-forest-50;
+    background: linear-gradient(135deg, theme('colors.forest.600'), theme('colors.forest.400'));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .dark .stat-number {
+    background: linear-gradient(135deg, theme('colors.forest.300'), theme('colors.forest.100'));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 /* Responsividade refinada - Enterprise breakpoints */

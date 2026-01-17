@@ -1,0 +1,112 @@
+sequenceDiagram
+    participant Cliente
+    participant StoresController
+    participant ItemsController
+    participant CartController
+    participant CheckoutController
+    participant StoreService
+    participant ItemService
+    participant CartService
+    participant CheckoutService
+    participant PaymentGateway
+    participant PayoutService
+    participant BackgroundWorker
+    participant Database
+
+    Note over Cliente,Database: 1. Criar Loja
+    Cliente->>StoresController: POST /api/v1/stores
+    StoresController->>StoreService: CreateStoreAsync(territoryId, userId, storeData)
+    StoreService->>Database: INSERT store
+    Database-->>StoreService: Store criado
+    StoreService-->>StoresController: Result.Success(store)
+    StoresController-->>Cliente: 200 OK (store)
+
+    Note over Cliente,Database: 2. Criar Item com Imagens
+    Cliente->>ItemsController: POST /api/v1/items<br/>(com mediaIds)
+    ItemsController->>ItemService: CreateItemAsync(territoryId, storeId, itemData)
+    ItemService->>Database: INSERT item
+    Database-->>ItemService: Item criado
+    ItemService-->>ItemsController: Result.Success(item)
+    ItemsController-->>Cliente: 200 OK (item)
+
+    Note over Cliente,Database: 3. Adicionar ao Carrinho
+    Cliente->>CartController: POST /api/v1/cart/items<br/>(itemId, quantity, notes)
+    CartController->>CartService: AddItemAsync(territoryId, userId, itemId, quantity)
+    CartService->>Database: SELECT cart WHERE userId AND territoryId
+    Database-->>CartService: Cart ou null
+    
+    alt Carrinho não existe
+        CartService->>Database: INSERT cart
+        Database-->>CartService: Cart criado
+    end
+    
+    CartService->>Database: INSERT cart_item
+    Database-->>CartService: CartItem criado
+    CartService-->>CartController: Result.Success(cartItem)
+    CartController-->>Cliente: 200 OK (cartItem)
+
+    Note over Cliente,Database: 4. Checkout
+    Cliente->>CheckoutController: POST /api/v1/cart/checkout<br/>(territoryId, message?)
+    CheckoutController->>CartService: CheckoutAsync(territoryId, userId, message)
+    
+    CartService->>Database: SELECT cart_items WHERE cartId
+    Database-->>CartService: CartItems
+    
+    CartService->>Database: SELECT items WHERE itemIds
+    Database-->>CartService: StoreItems
+    
+    CartService->>CartService: Agrupar itens por loja
+    CartService->>CartService: Separar compráveis de não-compráveis
+    
+    loop Para cada loja
+        alt Há itens compráveis
+            CartService->>Database: INSERT checkout
+            Database-->>CartService: Checkout criado
+            
+            loop Para cada item comprável
+                CartService->>CartService: Calcular platform fee
+                CartService->>Database: INSERT checkout_item
+                Database-->>CartService: CheckoutItem criado
+            end
+        end
+        
+        alt Há itens não-compráveis
+            loop Para cada item não-comprável
+                CartService->>Database: INSERT item_inquiry
+                Database-->>CartService: Inquiry criado
+            end
+        end
+    end
+    
+    CartService->>Database: DELETE cart_items
+    Database-->>CartService: OK
+    CartService-->>CartController: Result.Success(checkoutResult)
+    CheckoutController-->>Cliente: 200 OK (checkoutBundles, inquiries)
+
+    Note over Cliente,Database: 5. Pagamento (Externo)
+    Cliente->>PaymentGateway: Processar pagamento
+    PaymentGateway-->>Cliente: Payment confirmado
+    
+    Cliente->>CheckoutController: POST /api/v1/checkouts/{id}/mark-paid
+    CheckoutController->>CheckoutService: MarkAsPaidAsync(checkoutId)
+    CheckoutService->>Database: UPDATE checkout SET status=Paid
+    Database-->>CheckoutService: OK
+    
+    CheckoutService->>Database: INSERT seller_transaction<br/>(valor líquido: subtotal - fees)
+    Database-->>CheckoutService: SellerTransaction criado
+    CheckoutService-->>CheckoutController: Result.Success()
+    CheckoutController-->>Cliente: 200 OK
+
+    Note over Cliente,Database: 6. Payout Automático (Background)
+    BackgroundWorker->>PayoutService: ProcessPayoutsAsync()
+    PayoutService->>Database: SELECT seller_transactions<br/>WHERE status=Pending AND<br/>retenção expirada AND<br/>valor >= mínimo
+    
+    alt Condições atendidas
+        PayoutService->>Database: UPDATE seller_transaction SET status=Processing
+        PayoutService->>PaymentGateway: Transferir para vendedor
+        PaymentGateway-->>PayoutService: Transfer confirmado
+        PayoutService->>Database: UPDATE seller_transaction SET status=Completed
+        Database-->>PayoutService: OK
+    else Valor acumula ainda
+        Note over PayoutService: Aguarda atingir mínimo
+    end

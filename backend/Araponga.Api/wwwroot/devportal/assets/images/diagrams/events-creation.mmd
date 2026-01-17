@@ -1,0 +1,66 @@
+sequenceDiagram
+    participant Cliente
+    participant EventsController
+    participant EventsService
+    participant PostCreationService
+    participant EventRepository
+    participant FeedRepository
+    participant GeoAnchorRepository
+    participant AccessEvaluator
+    participant Database
+
+    Note over Cliente,Database: 1. Criar Evento
+    Cliente->>EventsController: POST /api/v1/events<br/>(title, description, startsAtUtc,<br/>latitude, longitude, locationLabel)
+    EventsController->>EventsService: CreateEventAsync(territoryId, userId, eventData)
+    
+    EventsService->>AccessEvaluator: IsResidentAsync(userId, territoryId)
+    AccessEvaluator->>Database: SELECT membership WHERE userId AND territoryId
+    Database-->>AccessEvaluator: Membership ou null
+    AccessEvaluator-->>EventsService: isResident (true/false)
+    
+    EventsService->>EventsService: Determinar membership role<br/>(Resident ou Visitor)
+    EventsService->>EventRepository: AddAsync(new TerritoryEvent())
+    EventRepository->>Database: INSERT territory_event<br/>(status=Scheduled, membership=role)
+    Database-->>EventRepository: Event criado
+    EventRepository-->>EventsService: TerritoryEvent
+
+    Note over EventsService,Database: 2. Criação Automática de Post
+    EventsService->>PostCreationService: CreatePostAsync(territoryId, userId,<br/>title, description, type=General,<br/>visibility=Public, mapEntityId=eventId)
+    
+    PostCreationService->>FeedRepository: AddPostAsync(new CommunityPost())
+    FeedRepository->>Database: INSERT community_post<br/>(mapEntityId=eventId, type="EVENT")
+    Database-->>FeedRepository: Post criado
+    FeedRepository-->>PostCreationService: CommunityPost
+
+    PostCreationService->>GeoAnchorRepository: AddAsync(geoAnchor)<br/>(latitude, longitude, type=EVENT)
+    GeoAnchorRepository->>Database: INSERT post_geo_anchor
+    Database-->>GeoAnchorRepository: GeoAnchor criado
+    GeoAnchorRepository-->>PostCreationService: Success
+
+    PostCreationService-->>EventsService: Post criado
+    EventsService-->>EventsController: Result.Success(eventSummary)
+    EventsController-->>Cliente: 200 OK (eventSummary)
+
+    Note over Cliente,Database: 3. Marcar Interesse
+    Cliente->>EventsController: POST /api/v1/events/{eventId}/interest
+    EventsController->>EventsService: MarkInterestAsync(eventId, userId)
+    EventsService->>EventRepository: UpsertParticipationAsync(userId, eventId, status=Interest)
+    EventRepository->>Database: INSERT OR UPDATE event_participation<br/>SET status=Interest
+    Database-->>EventRepository: Participation criado/atualizado
+    EventRepository-->>EventsService: Success
+    EventsService-->>EventsController: Result.Success()
+    EventsController-->>Cliente: 200 OK
+
+    Note over Cliente,Database: 4. Confirmar Presença
+    Cliente->>EventsController: POST /api/v1/events/{eventId}/confirm
+    EventsController->>EventsService: MarkConfirmedAsync(eventId, userId)
+    EventsService->>EventRepository: UpsertParticipationAsync(userId, eventId, status=Confirmed)
+    EventRepository->>Database: INSERT OR UPDATE event_participation<br/>SET status=Confirmed
+    Database-->>EventRepository: Participation atualizado
+    EventRepository-->>EventsService: Success
+    EventsService-->>EventsController: Result.Success()
+    EventsController-->>Cliente: 200 OK
+
+    Note over Cliente,Database: 5. Aparece no Feed e Mapa
+    Cliente->>Cliente: GET /api/v1/feed<br/>(filtra eventos via mapEntityId)
+    Cliente->>Cliente: GET /api/v1/map/pins?types=event<br/>(pins incluem eventos)

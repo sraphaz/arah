@@ -14,11 +14,13 @@ function encodeMermaid(diagramCode) {
   return Buffer.from(diagramCode).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
-// Função para fazer download do SVG
+// Função para fazer download do SVG com tema dark e cores customizadas
 function downloadSVG(diagramCode, outputPath) {
   return new Promise((resolve, reject) => {
     const encoded = encodeMermaid(diagramCode);
-    const url = `https://mermaid.ink/svg/${encoded}`;
+    // Usar tema dark com cores customizadas
+    // mermaid.ink suporta parâmetros de tema via query string
+    const url = `https://mermaid.ink/svg/${encoded}?theme=dark&bgColor=0a0e12`;
     
     const file = fs.createWriteStream(outputPath);
     

@@ -2,6 +2,8 @@
 
 **Uma plataforma digital comunitária orientada ao território**
 
+> *"Tecnologia pode servir à vida. Comunidades podem organizar-se digitalmente mantendo autonomia. Inteligência pode ser reconhecida como valor a serviço do território."*
+
 ---
 
 ## 🎯 O que é o Araponga?
@@ -448,27 +450,30 @@ Para questões específicas ou propostas maiores.
 
 ### Por que se Juntar?
 
-**O Araponga precisa de você**:
-- Sua **inteligência** é valorizada aqui
-- Sua **observação** territorial é expertise
-- Sua **contribuição** fortalece comunidades
-- Seu **aprendizado** serve ao território
+Você se junta não apenas a um projeto, mas a uma **iniciativa de consciência**:
+
+- Sua **inteligência** é reconhecida e honrada como valor
+- Sua **observação territorial** é expertise que guia desenvolvimento
+- Sua **contribuição** fortalece comunidades e autonomia local
+- Seu **aprendizado** serve ao território e à vida que nele habita
 
 ### O que Você Precisa?
 
-**Apenas**:
-- **Interesse** no projeto
-- **Valores** alinhados (autonomia, território, decolonização)
-- **Vontade** de contribuir (no seu ritmo)
-- **Abertura** para aprender e ensinar
+**Apenas sua presença consciente**:
+- **Interesse** genuíno no projeto e seus valores
+- **Alinhamento** com princípios (autonomia, território, decolonização)
+- **Vontade** de contribuir respeitando seu próprio ritmo
+- **Abertura** para aprender, ensinar e co-criar
 
-### O que Você Ganha?
+### O que Você Encontra?
 
-**Ao contribuir**:
-- **Aprende** desenvolvendo e analisando
-- **Constrói** algo que importa
-- **Conecta-se** com pessoas com valores similares
-- **Transforma** tecnologia em serviço ao território
+**Ao contribuir, você participa de**:
+- **Aprendizado** que honra sua inteligência e saberes
+- **Construção** de algo que realmente importa para comunidades
+- **Conexão** com pessoas que compartilham valores elevados
+- **Transformação** de tecnologia em serviço consciente ao território
+
+**E mais importante: você honra sua própria inteligência ao colocá-la a serviço de algo maior.**
 
 ---
 
@@ -508,7 +513,10 @@ Para questões específicas ou propostas maiores.
 ---
 
 **Bem-vindo ao Araponga.**  
-**Comece pequeno. Contribua no seu ritmo. Faça parte da mudança.**
+
+**Comece pequeno. Contribua no seu ritmo. Faça parte da mudança.**  
+
+**Com respeito, glória e consciência elevada.**
 
 ---
 

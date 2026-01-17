@@ -26,9 +26,11 @@
 
 Esta cartilha é um **guia completo** para todas as pessoas que querem contribuir com o Araponga, independente do papel ou nível de experiência.
 
-**Objetivo**: Facilitar organização orgânica de um time livre em torno de um objetivo comum e territorial.
+**Objetivo**: Facilitar organização orgânica de um time livre em torno de um objetivo comum e territorial, construindo com consciência elevada.
 
-**Princípio**: Cada pessoa contribui conforme capacidade, interesse e disponibilidade, sempre respeitando valores de autonomia territorial e decolonização digital.
+**Princípio**: Cada pessoa contribui conforme capacidade, interesse e disponibilidade, sempre respeitando valores de autonomia territorial, decolonização digital e reconhecimento da inteligência como valor.
+
+**Consciência**: Esta cartilha é escrita e deve ser lida com respeito profundo à diversidade de saberes, à autonomia das pessoas e à importância do território como base de tudo.
 
 ---
 

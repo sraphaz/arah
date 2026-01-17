@@ -2050,8 +2050,8 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       
       // Função para abrir diagrama em tela cheia
       function openDiagramFullscreen(diagramElement) {
-        // SEMPRE buscar primeiro do data-original-code (código original antes de renderizar)
-        var diagramText = diagramElement.getAttribute('data-original-code');
+        // SEMPRE buscar primeiro do data-mermaid-code (código SELADO) ou data-original-code
+        var diagramText = diagramElement.getAttribute('data-mermaid-code') || diagramElement.getAttribute('data-original-code');
         
         // Se não encontrou no data-attribute, tentar buscar do elemento original
         if (!diagramText || diagramText.trim() === '') {

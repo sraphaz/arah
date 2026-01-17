@@ -1,58 +1,153 @@
-# Suporte a Vídeos em Mídias - Fase 10
+## 📋 Descrição
 
-## 🎯 Objetivo
+Este PR implementa um sistema completo de **best practices para agentes Cursor** e realiza uma **higienização completa da documentação** do projeto Araponga.
 
-Expandir a Fase 10 (Mídias em Conteúdo) com suporte completo a vídeos em Posts, Eventos e Marketplace, mantendo restrição de apenas imagens no Chat.
+## 🔄 Tipo de Mudança
 
-## ✨ Funcionalidades
+- [x] Nova funcionalidade (sistema de regras para Cursor)
+- [x] Mudança em documentação
+- [x] Correção de bugs (referências incorretas de 24→29 fases, listings→items)
+- [x] Melhoria de estrutura
 
-### Posts
-- Máximo 1 vídeo por post (pode combinar com imagens até 10 mídias)
-- Limite: 50MB, 60 segundos (similar a TikTok/Instagram Reels)
-- Formatos: MP4
+## ✅ Checklist de Documentação
 
-### Eventos
-- Máximo 1 vídeo por evento (em capa ou adicionais)
-- Limite: 100MB, 120 segundos
-- Formatos: MP4
+### Documentação Técnica
+- [x] Atualizado `docs/60_API_LÓGICA_NEGÓCIO.md` (não necessário - apenas correções)
+- [x] Atualizado `docs/12_DOMAIN_MODEL.md` (não necessário - apenas correções)
+- [x] Atualizado `docs/10_ARCHITECTURE_DECISIONS.md` (não necessário - apenas correções)
+- [x] Atualizado `docs/11_ARCHITECTURE_SERVICES.md` (não necessário - apenas correções)
+- [x] Atualizado `docs/22_COHESION_AND_TESTS.md` (não necessário - apenas correções)
 
-### Marketplace (Items)
-- Máximo 1 vídeo por item (pode combinar com imagens até 10 mídias)
-- Limite: 30MB, 30 segundos (demonstração rápida de produto)
-- Formatos: MP4
+### Documentação de Produto
+- [x] Atualizado `README.md` (não necessário - apenas correções)
+- [x] Atualizado `docs/02_ROADMAP.md` - Adicionada Fase 29
+- [x] Atualizado `docs/03_BACKLOG.md` (já estava atualizado)
+- [x] Atualizado `docs/01_PRODUCT_VISION.md` (já estava atualizado)
 
-### Chat
-- Vídeos **não permitidos** (apenas imagens)
-- Razão: Performance e privacidade
+### Histórico e Changelog
+- [ ] Atualizado `docs/40_CHANGELOG.md` (será atualizado após merge)
 
-## 🔒 Segurança
+### Backlog e Fases
+- [x] Atualizado `docs/backlog-api/FASE*.md` - Corrigidas referências de nomenclatura
+- [x] Atualizado `docs/backlog-api/README.md` - Atualizado para 29 fases
+- [x] Atualizado `docs/backlog-api/script-sync-wiki.ps1` - Atualizado para 29 fases
+- [x] Atualizado `docs/STATUS_FASES.md` (já estava correto)
 
-- ✅ Validação de propriedade (vídeos devem pertencer ao usuário)
-- ✅ Validação de quantidade (máx. 1 vídeo por post/evento/item)
-- ✅ Validação de tamanho (limites específicos por tipo)
-- ✅ Validação de tipo (Chat bloqueia vídeos)
-- ✅ Validação de estado (vídeos deletados não podem ser usados)
+### DevPortal
+- [ ] Não aplicável
+
+### Segurança
+- [ ] Não aplicável
+
+### Validação
+- [x] Verificado que todos os links em documentação funcionam
+- [x] Verificado que exemplos de código estão atualizados
+- [x] Verificado que informações não conflitam entre documentos
+
+## 📝 Lista de Documentos Atualizados
+
+### Arquivos de Configuração Criados
+- `.cursorrules` - **NOVO**: Guia completo de best practices para Cursor
+- `docs/CURSOR_DOCUMENTATION_RULES.md` - **NOVO**: Regras detalhadas de documentação
+- `.github/pull_request_template.md` - **NOVO**: Template de PR com checklist de documentação
+
+### Documentos Atualizados
+- `docs/41_CONTRIBUTING.md` - Adicionadas regras de documentação obrigatória
+- `docs/02_ROADMAP.md` - Adicionada Fase 29 (Mobile Avançado)
+- `docs/MEDIA_IN_CONTENT.md` - Adicionada nota sobre status de vídeos
+- `docs/00_INDEX.md` - Corrigida referência de 24 para 29 fases
+- `docs/20_IMPLEMENTATION_PLAN.md` - Corrigida referência de 24 para 29 fases
+- `docs/ALINHAMENTO_FASES_25_28.md` - Atualizado para mencionar 29 fases
+
+### Backlog API - Correções
+- `docs/backlog-api/README.md` - Atualizado para 29 fases, adicionadas Ondas 7 e 8
+- `docs/backlog-api/script-sync-wiki.ps1` - Atualizado para 29 fases, corrigidas referências
+- `docs/backlog-api/ESTRUTURA_DOCUMENTOS.md` - Corrigida referência de 24 para 29 fases
+- `docs/backlog-api/NORMALIZACAO_COMPLETA.md` - Corrigida referência de 24 para 29 fases
+- `docs/backlog-api/RESUMO_NORMALIZACAO.md` - Corrigida referência de 24 para 29 fases
+- `docs/backlog-api/INDICE_DOCUMENTOS.md` - Adicionada Fase 29
+- `docs/backlog-api/FASE11.md` - Corrigido "listings" para "items"
+- `docs/backlog-api/FASE28.md` - Corrigido "listings" para "items"
+- `docs/backlog-api/RESUMO_EXECUTIVO_ESTRATEGICO.md` - Corrigido "listings" para "items"
+- `docs/50_PRODUCAO_AVALIACAO_COMPLETA.md` - Corrigido "listings" para "items"
+
+## 🎯 Principais Mudanças
+
+### 1. Sistema de Best Practices para Cursor
+
+Criado arquivo `.cursorrules` completo com:
+- ✅ Princípios fundamentais do projeto (território como referência)
+- ✅ Arquitetura e estrutura (Clean Architecture)
+- ✅ Padrões de código e nomenclatura
+- ✅ Regras de testes (cobertura >90%)
+- ✅ **Regras obrigatórias de documentação**
+- ✅ Segurança e performance
+- ✅ Commits e PRs padronizados
+- ✅ Design e UX
+
+### 2. Regras de Documentação Automática
+
+Criado sistema completo para garantir que agentes Cursor sempre atualizem documentação:
+- ✅ `.cursorrules` com regras obrigatórias
+- ✅ `docs/CURSOR_DOCUMENTATION_RULES.md` com mapeamento completo
+- ✅ `.github/pull_request_template.md` com checklist obrigatório
+- ✅ `docs/41_CONTRIBUTING.md` atualizado com regras
+
+### 3. Higienização da Documentação
+
+Correções sistemáticas:
+- ✅ Todas as referências de "24 fases" corrigidas para "29 fases"
+- ✅ Todas as referências de "listings" corrigidas para "items"
+- ✅ Script de sincronização Wiki atualizado para 29 fases
+- ✅ Roadmap atualizado com Fase 29
+- ✅ Documentos de backlog atualizados
 
 ## 🧪 Testes
 
-13 testes de integração implementados cobrindo:
-- Validação de quantidade de vídeos
-- Validação de tamanho de vídeos
-- Combinação vídeo + imagens
-- Bloqueio de vídeos no chat
-- Validações de segurança (propriedade, estado)
+- [x] Nenhum teste necessário (apenas documentação e configuração)
+- [x] Verificado que links em documentação funcionam
+- [x] Verificado que não há conflitos entre documentos
 
-## 📝 Documentação
+## 🔗 Links Relacionados
 
-- ✅ DevPortal atualizado com informações sobre vídeos
-- ✅ FASE10.md atualizado com regras de vídeos
-- ✅ Documentos técnicos criados (mapa de impacto, implementação)
+- Issue: N/A (melhoria interna)
+- Documentação relacionada:
+  - `docs/CURSOR_DOCUMENTATION_RULES.md` - Regras detalhadas
+  - `docs/41_CONTRIBUTING.md` - Guia de contribuição atualizado
+  - `docs/STATUS_FASES.md` - Status das 29 fases
 
-## ⚠️ Limitações Conhecidas
+## 📸 Screenshots (se aplicável)
 
-- Validação de duração ainda não implementada (requer metadados de vídeo)
-- Processamento de vídeo (transcoding, thumbnails) planejado para futuro
+N/A - Mudanças em documentação e configuração
+
+## ⚠️ Breaking Changes
+
+- [ ] Esta mudança quebra compatibilidade com versões anteriores
+- [x] Não há breaking changes
+
+## 🔄 Sincronização Wiki
+
+- [x] Documentação atualizada será sincronizada com Wiki do GitHub
+- [x] Script `docs/backlog-api/script-sync-wiki.ps1` atualizado para 29 fases
+
+## 🎉 Benefícios
+
+1. **Agentes Cursor agora seguem regras automaticamente**
+   - Não é mais necessário pedir atualização de documentação
+   - Regras estão no `.cursorrules` que o Cursor lê automaticamente
+
+2. **Documentação consistente e atualizada**
+   - Todas as referências corrigidas (24→29 fases, listings→items)
+   - Roadmap completo com todas as 29 fases
+
+3. **Onboarding facilitado**
+   - Novos desenvolvedores têm guia completo de best practices
+   - Template de PR garante qualidade
+
+4. **Manutenção simplificada**
+   - Sistema automático de regras de documentação
+   - Checklist obrigatório em todos os PRs
 
 ---
 
-**Status**: ✅ Pronto para review
+**⚠️ Lembrete**: Documentação desatualizada é considerado um bug crítico. Este PR estabelece o sistema para garantir que isso não aconteça mais.

@@ -43,6 +43,13 @@ public static class FeedServiceTestHelper
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var eventBusInstance = eventBus ?? new NoOpEventBus();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
 
         // Create the specialized services
         var postCreationService = new PostCreationService(
@@ -55,6 +62,7 @@ public static class FeedServiceTestHelper
             mediaAttachmentRepository,
             sanctionRepository,
             featureFlags,
+            mediaConfigService,
             auditLogger,
             eventBusInstance,
             unitOfWork);

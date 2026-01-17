@@ -460,12 +460,21 @@ public sealed class ApplicationServiceTests
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
+        var featureFlags = new InMemoryFeatureFlagService();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
             mediaAssetRepository,
             mediaAttachmentRepository,
+            mediaConfigService,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -518,12 +527,21 @@ public sealed class ApplicationServiceTests
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
+        var featureFlags = new InMemoryFeatureFlagService();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
             mediaAssetRepository,
             mediaAttachmentRepository,
+            mediaConfigService,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -562,12 +580,21 @@ public sealed class ApplicationServiceTests
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
+        var featureFlags = new InMemoryFeatureFlagService();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
             mediaAssetRepository,
             mediaAttachmentRepository,
+            mediaConfigService,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -613,12 +640,21 @@ public sealed class ApplicationServiceTests
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
+        var featureFlags = new InMemoryFeatureFlagService();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
             mediaAssetRepository,
             mediaAttachmentRepository,
+            mediaConfigService,
             accessEvaluator,
             userRepository,
             unitOfWork);
@@ -691,12 +727,21 @@ public sealed class ApplicationServiceTests
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
+        var featureFlags = new InMemoryFeatureFlagService();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
         var service = new EventsService(
             eventRepository,
             participationRepository,
             feedRepository,
             mediaAssetRepository,
             mediaAttachmentRepository,
+            mediaConfigService,
             accessEvaluator,
             userRepository,
             unitOfWork);

@@ -301,6 +301,75 @@ Consulte `docs/CURSOR_DOCUMENTATION_RULES.md` para mapeamento completo de mudan�
 
 ---
 
+## ✅ Validação Antes de PR - OBRIGATÓRIO
+
+### ⚠️ REGRA CRÍTICA: Build e Testes DEVEM Passar
+
+**ANTES de criar qualquer PR, você DEVE:**
+
+1. **Validar Build:**
+   ```bash
+   dotnet build --no-restore --configuration Release
+   ```
+   - ✅ Build DEVE passar sem erros
+   - ✅ Apenas warnings aceitáveis são permitidos
+   - ❌ NUNCA crie PR com erros de build
+
+2. **Validar Testes:**
+   ```bash
+   dotnet test --no-build --configuration Release
+   ```
+   - ✅ TODOS os testes DEVEM passar
+   - ✅ Cobertura de testes deve ser mantida (>90%)
+   - ❌ NUNCA crie PR com testes falhando
+
+3. **Verificar Conflitos de Merge:**
+   ```bash
+   git fetch origin main
+   git merge origin/main
+   ```
+   - ✅ Resolva TODOS os conflitos antes de criar PR
+   - ✅ Teste novamente após resolver conflitos
+   - ❌ NUNCA crie PR com conflitos não resolvidos
+
+### Checklist Obrigatório Antes de Criar PR
+
+- [ ] **Build passa**: `dotnet build --no-restore --configuration Release` sem erros
+- [ ] **Testes passam**: `dotnet test --no-build --configuration Release` todos passando
+- [ ] **Sem conflitos**: `git merge origin/main` sem conflitos
+- [ ] **Testes após merge**: Se houve merge, rodar testes novamente
+- [ ] **Documentação atualizada**: Verificar checklist de documentação
+- [ ] **Código revisado**: Verificar se segue padrões do projeto
+
+### Se Build ou Testes Falharem
+
+1. **NÃO crie o PR**
+2. **Corrija os erros localmente**
+3. **Valide novamente** (build + testes)
+4. **Apenas então** crie o PR
+
+### Se Houver Conflitos de Merge
+
+1. **NÃO crie o PR**
+2. **Faça merge de `origin/main` na sua branch**
+3. **Resolva TODOS os conflitos**
+4. **Valide novamente** (build + testes)
+5. **Apenas então** crie o PR
+
+### Comandos de Validação Rápida
+
+```bash
+# Validação completa antes de PR
+git fetch origin main
+git merge origin/main  # Resolve conflitos se houver
+dotnet build --no-restore --configuration Release
+dotnet test --no-build --configuration Release
+```
+
+**Se qualquer comando falhar, NÃO crie o PR até corrigir.**
+
+---
+
 ## 📦 Commits e PRs
 
 ### Mensagens de Commit

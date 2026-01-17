@@ -184,8 +184,8 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 - [ ] Criar `RatingController`:
   - [ ] `POST /api/v1/stores/{id}/ratings` → avaliar loja
   - [ ] `GET /api/v1/stores/{id}/ratings` → listar avaliações
-  - [ ] `POST /api/v1/listings/{id}/ratings` → avaliar item
-  - [ ] `GET /api/v1/listings/{id}/ratings` → listar avaliações
+  - [ ] `POST /api/v1/items/{id}/ratings` → avaliar item
+  - [ ] `GET /api/v1/items/{id}/ratings` → listar avaliações
   - [ ] `POST /api/v1/ratings/{id}/response` → responder avaliação
 - [ ] Feature flags: `MarketplaceRatingsEnabled`
 - [ ] Validações
@@ -236,7 +236,7 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 - [ ] Criar `MarketplaceSearchController`:
   - [ ] `GET /api/v1/marketplace/search` → busca geral
   - [ ] `GET /api/v1/stores/search` → buscar lojas
-  - [ ] `GET /api/v1/listings/search` → buscar itens
+  - [ ] `GET /api/v1/items/search` → buscar itens
 - [ ] Feature flags: `MarketplaceSearchEnabled`
 - [ ] Testes
 

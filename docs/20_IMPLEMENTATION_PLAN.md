@@ -1,12 +1,14 @@
 # Plano de Implementação (Prioridades e Dependências)
 
-**Última Atualização**: 2025-01-16  
+**Versão**: 2.0  
+**Data**: 2025-01-20  
+**Última Atualização**: 2025-01-20  
 **Status**: MVP Completo + Fases 1-8 Implementadas ✅
 
 Este documento organiza **épicos → features → user stories** em ordem de prioridade
 com dependências explícitas para orientar a sequência de entrega.
 
-**Nota**: Para o backlog completo de fases futuras (9-24), ver [Backlog API](./backlog-api/README.md).
+**Nota**: Para o backlog completo de fases futuras (9-29), ver [Backlog API](./backlog-api/README.md).
 
 ## Legenda
 - **P0**: crítico para o MVP.

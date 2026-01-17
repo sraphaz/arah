@@ -63,7 +63,7 @@ docs/backlog-api/
 ├── NORMALIZACAO_COMPLETA.md          # Normalização
 ├── RESUMO_NORMALIZACAO.md            # Este arquivo
 │
-├── FASE1.md até FASE24.md            # 24 fases (organizadas)
+├── FASE1.md até FASE29.md            # 29 fases (organizadas)
 │
 ├── RESUMO_*.md                       # Resumos
 ├── REORGANIZACAO_*.md                # Reorganizações

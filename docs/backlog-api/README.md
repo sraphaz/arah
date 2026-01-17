@@ -21,7 +21,7 @@ backlog-api/
 ├── NORMALIZACAO_COMPLETA.md           # Documentação da normalização
 ├── RESUMO_NORMALIZACAO.md             # Resumo da normalização
 │
-├── FASE1.md até FASE24.md             # Documentos de fases (24 fases)
+├── FASE1.md até FASE29.md             # Documentos de fases (29 fases)
 │
 ├── RESUMO_*.md                        # Resumos executivos
 ├── REORGANIZACAO_*.md                 # Documentos de reorganização
@@ -69,7 +69,7 @@ backlog-api/
 
 ---
 
-## 📄 Fases (1-24)
+## 📄 Fases (1-29)
 
 ### Fases Completas (1-8) ✅
 
@@ -114,6 +114,28 @@ backlog-api/
 - **[FASE22.md](./FASE22.md)** - Integrações Externas (35 dias) 🟡 Importante
 - **[FASE21.md](./FASE21.md)** - Suporte a Criptomoedas (28 dias) 🟢 Opcional
 - **[FASE19.md](./FASE19.md)** - Arquitetura Modular (35 dias) 🟢 Futuro
+
+### Onda 7: Autonomia Digital e Economia Circular (84 dias) 🔴 ALTA
+
+- **[FASE25.md](./FASE25.md)** - Hub de Serviços Digitais Base (21 dias) 🔴 Alta
+- **[FASE26.md](./FASE26.md)** - Chat com IA e Consumo Consciente (14 dias) 🔴 Alta
+- **[FASE27.md](./FASE27.md)** - Negociação Territorial e Assinatura Coletiva (28 dias) 🔴 Alta
+- **[FASE28.md](./FASE28.md)** - Banco de Sementes e Mudas Territorial (21 dias) 🟡 Alta
+
+### Onda 8: Mobile Avançado (14 dias) 🟡 ALTA
+
+- **[FASE29.md](./FASE29.md)** - Suporte Mobile Avançado (14 dias) 🟡 Alta
+
+### Onda 7: Autonomia Digital e Economia Circular (84 dias) 🟢 OPCIONAL
+
+- **[FASE25.md](./FASE25.md)** - Hub de Serviços Digitais (21 dias) 🟢 Média
+- **[FASE26.md](./FASE26.md)** - Chat com IA e Consumo Consciente (14 dias) 🟢 Média
+- **[FASE27.md](./FASE27.md)** - Negociação Territorial (28 dias) 🟢 Média
+- **[FASE28.md](./FASE28.md)** - Banco de Sementes e Mudas (21 dias) 🟢 Média
+
+### Onda 8: Mobile Avançado (14 dias) 🟡 IMPORTANTE
+
+- **[FASE29.md](./FASE29.md)** - Suporte Mobile Avançado (14 dias) 🟡 Alta
 
 ---
 
@@ -239,6 +261,6 @@ backlog-api/
 
 **Documento criado em**: 2025-01-13  
 **Última atualização**: 2025-01-16  
-**Status**: 📋 Estrutura Completa (24 Fases) - Nova Ordem Estratégica  
+**Status**: 📋 Estrutura Completa (29 Fases) - Nova Ordem Estratégica  
 **Fases Completas**: 1-8 ✅  
 **⭐ Ver**: [REORGANIZACAO_ESTRATEGICA_FINAL.md](./REORGANIZACAO_ESTRATEGICA_FINAL.md) para análise detalhada

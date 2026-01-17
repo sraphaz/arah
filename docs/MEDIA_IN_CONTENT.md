@@ -8,11 +8,13 @@
 
 ## 📋 Visão Geral
 
-Este documento descreve a integração de mídias (imagens e vídeos) em todos os tipos de conteúdo do Araponga:
-- **Posts**: Múltiplas imagens por post
-- **Eventos**: Imagem de capa + imagens adicionais
-- **Marketplace**: Múltiplas imagens por item
-- **Chat**: Uma imagem por mensagem
+Este documento descreve a integração de mídias em todos os tipos de conteúdo do Araponga:
+- **Posts**: Múltiplas imagens por post (até 10)
+- **Eventos**: Imagem de capa + imagens adicionais (até 10)
+- **Marketplace**: Múltiplas imagens por item (até 10)
+- **Chat**: Uma imagem por mensagem (máx. 5MB)
+
+**Status Atual**: Apenas imagens estão implementadas. Suporte a vídeos, áudios e documentos está planejado para a Fase 10.
 
 ---
 

@@ -80,6 +80,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<SellerPayoutService>();
         services.AddScoped<TerritoryPayoutConfigService>();
         services.AddScoped<MediaService>();
+        services.AddScoped<Araponga.Application.Interfaces.Media.IGlobalMediaLimits, Araponga.Api.Services.GlobalMediaLimitsService>();
         services.AddScoped<Araponga.Application.Services.Media.TerritoryMediaConfigService>();
         services.AddScoped<Araponga.Application.Services.Users.UserMediaPreferencesService>();
         services.AddScoped<Araponga.Application.Services.Media.MediaStorageConfigService>();

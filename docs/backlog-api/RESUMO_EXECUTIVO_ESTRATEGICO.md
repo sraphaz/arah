@@ -66,7 +66,7 @@
 
 #### ✅ Marketplace
 - Stores (lojas/comércios) por território
-- Listings (produtos e serviços) com busca
+- Items (produtos e serviços) com busca
 - Cart e Checkout completo
 - Sistema de pagamentos (Stripe, MercadoPago)
 - Sistema de payout para vendedores

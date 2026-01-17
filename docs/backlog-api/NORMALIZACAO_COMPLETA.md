@@ -55,7 +55,7 @@ docs/
 │   ├── INDICE_DOCUMENTOS.md              # Índice completo
 │   ├── NORMALIZACAO_COMPLETA.md          # Este arquivo
 │   │
-│   ├── FASE1.md até FASE24.md             # 24 fases (organizadas)
+│   ├── FASE1.md até FASE29.md             # 29 fases (organizadas)
 │   │
 │   ├── RESUMO_*.md                        # Resumos executivos
 │   ├── REORGANIZACAO_*.md                 # Reorganizações
@@ -108,7 +108,7 @@ docs/
 - [x] NORMALIZACAO_COMPLETA.md criado
 
 ### Fases
-- [x] Todas as 24 fases documentadas
+- [x] Todas as 29 fases documentadas
 - [x] Dependências atualizadas
 - [x] Números consistentes
 - [x] Links funcionando

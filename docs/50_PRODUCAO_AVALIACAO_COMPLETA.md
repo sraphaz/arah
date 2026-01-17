@@ -87,7 +87,7 @@ A aplicação está **funcionalmente completa** para o MVP e demonstra **arquite
 - ✅ Notificações (outbox/inbox)
 - ✅ Feature flags por território
 - ✅ Alertas ambientais
-- ✅ Marketplace completo (stores, listings, cart, checkout)
+- ✅ Marketplace completo (stores, items, cart, checkout)
 
 ### 3. Testes
 

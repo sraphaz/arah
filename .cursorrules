@@ -1,0 +1,392 @@
+# Araponga - Cursor Best Practices
+
+**Versão**: 1.0  
+**Data**: 2025-01-20  
+**Projeto**: Araponga - Plataforma Digital Comunitária Orientada ao Território
+
+---
+
+## 🎯 Princípios Fundamentais do Projeto
+
+### Território como Referência
+- **Territory** é geográfico e neutro - representa apenas um lugar físico real
+- Território existe antes do app e continua existindo sem usuários
+- Lógica social (memberships, visibilidade, moderação) fica em camadas separadas
+- **NUNCA** coloque lógica social dentro da entidade Territory
+
+### Nomenclatura Obrigatória
+- ✅ Use sempre **territory** (NUNCA "place" ou "location")
+- ✅ Use **items** (NUNCA "listings") para produtos do marketplace
+- ✅ Use **29 fases** (NUNCA "24 fases") ao referenciar backlog
+- ✅ Use **membership** para vínculo usuário-território
+- ✅ Use **visitor/resident** para papéis (NUNCA "user", "member" genérico)
+
+### Valores do Projeto
+- Autonomia local
+- Cuidado coletivo
+- Continuidade da vida no território
+- Fortalecimento do vínculo entre pessoas e lugar
+- **NÃO é**: marketplace agressivo, rede de engajamento infinito, produto de vigilância
+
+---
+
+## 🏗️ Arquitetura e Estrutura
+
+### Clean Architecture - Separação de Camadas
+
+```
+backend/
+├── Araponga.Api          # API HTTP (controllers, endpoints, middlewares)
+├── Araponga.Application  # Casos de uso / regras de aplicação
+├── Araponga.Domain       # Modelo de domínio (territory, regras centrais)
+├── Araponga.Infrastructure # Persistência, integrações, adapters
+├── Araponga.Shared       # Tipos e utilitários compartilhados
+└── Araponga.Tests        # Testes automatizados
+```
+
+### Regras de Dependência
+- ✅ **Domain** não depende de NADA (camada mais interna)
+- ✅ **Application** depende apenas de **Domain**
+- ✅ **Infrastructure** depende de **Domain** e **Application**
+- ✅ **Api** depende de todas as outras (camada mais externa)
+- ❌ **NUNCA** importe Infrastructure ou Api em Domain ou Application
+
+### Organização de Código
+
+#### Domain Layer
+- Entidades de domínio (ex: `Territory`, `Membership`, `Post`)
+- Value Objects (ex: `GeoAnchor`, `Address`)
+- Interfaces de repositórios (ex: `ITerritoryRepository`)
+- Exceções de domínio (ex: `TerritoryNotFoundException`)
+- **NÃO** coloque lógica de persistência aqui
+
+#### Application Layer
+- Services (ex: `TerritoryService`, `PostCreationService`)
+- DTOs de aplicação (ex: `CreatePostRequest`, `PostResponse`)
+- Interfaces de serviços externos (ex: `IMediaStorageService`)
+- **NÃO** coloque lógica HTTP aqui
+
+#### Infrastructure Layer
+- Implementações de repositórios (ex: `PostgresTerritoryRepository`)
+- Implementações de serviços externos (ex: `S3MediaStorageService`)
+- Configurações (ex: `DbContext`, `ServiceCollectionExtensions`)
+- **NÃO** coloque lógica de negócio aqui
+
+#### Api Layer
+- Controllers (ex: `TerritoriesController`, `FeedController`)
+- Middlewares (ex: `AuthenticationMiddleware`, `ErrorHandlingMiddleware`)
+- Configurações de API (ex: `Program.cs`, `Startup.cs`)
+- **NÃO** coloque lógica de negócio aqui
+
+---
+
+## 📝 Padrões de Código
+
+### Nomenclatura
+
+#### Classes e Interfaces
+- ✅ Classes: `PascalCase` (ex: `TerritoryService`, `PostCreationService`)
+- ✅ Interfaces: `I` + `PascalCase` (ex: `ITerritoryRepository`, `IMediaStorageService`)
+- ✅ DTOs: `PascalCase` + sufixo descritivo (ex: `CreatePostRequest`, `PostResponse`)
+- ✅ Entidades: `PascalCase` (ex: `Territory`, `Membership`, `Post`)
+
+#### Métodos e Propriedades
+- ✅ Métodos: `PascalCase` (ex: `CreatePostAsync`, `GetTerritoryByIdAsync`)
+- ✅ Propriedades: `PascalCase` (ex: `Id`, `Title`, `CreatedAtUtc`)
+- ✅ Campos privados: `_camelCase` (ex: `_repository`, `_logger`)
+
+#### Variáveis e Parâmetros
+- ✅ Variáveis locais: `camelCase` (ex: `territoryId`, `userId`)
+- ✅ Parâmetros: `camelCase` (ex: `territoryId`, `cancellationToken`)
+
+### Convenções Específicas
+
+#### Async/Await
+- ✅ Todos os métodos assíncronos terminam com `Async` (ex: `GetTerritoryAsync`)
+- ✅ Sempre use `async`/`await` (NUNCA `.Result` ou `.Wait()`)
+- ✅ Sempre aceite `CancellationToken` em métodos assíncronos
+
+#### Nullable Reference Types
+- ✅ Use `string?` para valores opcionais
+- ✅ Use `string` para valores obrigatórios
+- ✅ Valide null antes de usar (use `ArgumentNullException.ThrowIfNull`)
+
+#### Result Pattern
+- ✅ Use `Result<T>` ou `Result` para operações que podem falhar
+- ✅ NUNCA retorne `null` de métodos públicos
+- ✅ Use `Option<T>` ou `Maybe<T>` para valores opcionais
+
+### Exemplos de Código
+
+#### Service Pattern
+```csharp
+public class TerritoryService : ITerritoryService
+{
+    private readonly ITerritoryRepository _repository;
+    private readonly ILogger<TerritoryService> _logger;
+
+    public TerritoryService(
+        ITerritoryRepository repository,
+        ILogger<TerritoryService> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
+
+    public async Task<Result<Territory>> GetTerritoryByIdAsync(
+        Guid territoryId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(territoryId);
+
+        var territory = await _repository.GetByIdAsync(territoryId, cancellationToken);
+        if (territory == null)
+        {
+            return Result<Territory>.NotFound($"Territory {territoryId} not found");
+        }
+
+        return Result<Territory>.Success(territory);
+    }
+}
+```
+
+#### Repository Pattern
+```csharp
+public interface ITerritoryRepository
+{
+    Task<Territory?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<IEnumerable<Territory>> FindNearbyAsync(
+        double latitude,
+        double longitude,
+        double radiusKm,
+        int limit,
+        CancellationToken cancellationToken);
+    Task<Territory> AddAsync(Territory territory, CancellationToken cancellationToken);
+}
+```
+
+---
+
+## 🧪 Testes
+
+### Cobertura Mínima
+- ✅ **Cobertura >90%** obrigatória
+- ✅ Teste todos os casos de erro
+- ✅ Teste edge cases
+- ✅ Teste validações
+
+### Estrutura de Testes
+```
+Araponga.Tests/
+├── Domain/           # Testes de entidades e value objects
+├── Application/      # Testes de services
+├── Infrastructure/   # Testes de repositórios e adapters
+└── Api/             # Testes de controllers (E2E)
+```
+
+### Padrões de Teste
+- ✅ Use `[Fact]` para testes do xUnit
+- ✅ Nomeie testes descritivamente: `MethodName_Scenario_ExpectedBehavior`
+- ✅ Use `InMemoryDataStore` para testes isolados
+- ✅ Use `WebApplicationFactory<T>` para testes E2E
+
+### Exemplo de Teste
+```csharp
+[Fact]
+public async Task GetTerritoryByIdAsync_WhenTerritoryExists_ReturnsTerritory()
+{
+    // Arrange
+    var territory = new Territory("Test Territory", 0, 0);
+    await _repository.AddAsync(territory, CancellationToken.None);
+
+    // Act
+    var result = await _service.GetTerritoryByIdAsync(territory.Id, CancellationToken.None);
+
+    // Assert
+    Assert.True(result.IsSuccess);
+    Assert.Equal(territory.Id, result.Value.Id);
+}
+```
+
+---
+
+## 📚 Documentação - OBRIGATÓRIO
+
+### ⚠️ REGRA CRÍTICA: Atualização Automática de Documentação
+
+**SEMPRE que você fizer mudanças no código, você DEVE atualizar a documentação correspondente.**
+
+### Quando Atualizar Documentação
+
+1. **Mudanças em Funcionalidades/Features:**
+   - ✅ Atualizar `docs/60_API_LÓGICA_NEGÓCIO.md` se mudar lógica de negócio
+   - ✅ Atualizar `docs/22_COHESION_AND_TESTS.md` se implementar nova funcionalidade
+   - ✅ Atualizar `docs/03_BACKLOG.md` se completar um epic/feature
+   - ✅ Atualizar `docs/40_CHANGELOG.md` com mudanças significativas
+   - ✅ Atualizar `README.md` se mudar funcionalidades listadas
+
+2. **Mudanças em Arquitetura:**
+   - ✅ Atualizar `docs/10_ARCHITECTURE_DECISIONS.md` se tomar nova decisão arquitetural
+   - ✅ Atualizar `docs/12_DOMAIN_MODEL.md` se mudar modelo de domínio
+   - ✅ Atualizar `docs/11_ARCHITECTURE_SERVICES.md` se mudar services
+
+3. **Mudanças em APIs/Endpoints:**
+   - ✅ Atualizar `docs/60_API_LÓGICA_NEGÓCIO.md` com novos endpoints ou mudanças
+   - ✅ Atualizar `backend/Araponga.Api/wwwroot/devportal/index.html` se mudar DevPortal
+   - ✅ Atualizar exemplos de código se mudar contratos
+
+4. **Mudanças em Fases do Backlog:**
+   - ✅ Atualizar `docs/backlog-api/FASE*.md` correspondente
+   - ✅ Atualizar `docs/backlog-api/README.md` se completar fase
+   - ✅ Atualizar `docs/STATUS_FASES.md` se existir
+   - ✅ Atualizar `docs/02_ROADMAP.md` se mudar roadmap
+   - ✅ Atualizar `docs/backlog-api/implementacoes/FASE*_IMPLEMENTACAO_RESUMO.md` se completar fase
+
+5. **Mudanças em Configuração/Segurança:**
+   - ✅ Atualizar `docs/SECURITY_CONFIGURATION.md` se mudar configurações
+   - ✅ Atualizar `docs/SECURITY_AUDIT.md` se adicionar medidas de segurança
+
+### Checklist Obrigatório Antes de Commitar
+
+- [ ] Documentação técnica atualizada (se aplicável)
+- [ ] Exemplos de código atualizados (se aplicável)
+- [ ] Changelog atualizado (se mudança significativa)
+- [ ] README.md atualizado (se mudar funcionalidades principais)
+- [ ] Documentação de API atualizada (se mudar endpoints)
+- [ ] Documentação de fase atualizada (se completar fase)
+
+### Guia Completo
+Consulte `docs/CURSOR_DOCUMENTATION_RULES.md` para mapeamento completo de mudanças → documentos.
+
+---
+
+## 🔒 Segurança
+
+### Validação de Entrada
+- ✅ Sempre valide entrada do usuário
+- ✅ Use FluentValidation para DTOs
+- ✅ Sanitize strings antes de persistir
+- ✅ Valide geolocalização (lat/lng dentro de ranges válidos)
+
+### Autorização
+- ✅ Sempre verifique permissões antes de operações sensíveis
+- ✅ Use `[Authorize]` em controllers
+- ✅ Verifique membership role (visitor/resident) quando necessário
+- ✅ Valide territory ownership quando aplicável
+
+### Dados Sensíveis
+- ✅ NUNCA logue senhas, tokens ou dados pessoais
+- ✅ Use `[Sensitive]` attribute em logs quando necessário
+- ✅ Criptografe dados sensíveis em repouso
+
+---
+
+## 🚀 Performance
+
+### Queries
+- ✅ Use paginação em TODAS as listagens
+- ✅ Use `IQueryable` para queries eficientes
+- ✅ Evite N+1 queries (use `.Include()` ou projeções)
+- ✅ Use índices no banco de dados
+
+### Cache
+- ✅ Cache resultados de queries frequentes
+- ✅ Invalide cache quando dados mudarem
+- ✅ Use `IMemoryCache` ou `IDistributedCache` conforme necessário
+
+### Async
+- ✅ Use async/await para operações I/O
+- ✅ NUNCA bloqueie threads com `.Result` ou `.Wait()`
+- ✅ Configure `ConfigureAwait(false)` em libraries
+
+---
+
+## 📦 Commits e PRs
+
+### Mensagens de Commit
+```
+feat(module): Descrição da funcionalidade
+
+- Implementa [funcionalidade]
+- Atualiza documentação em [arquivo(s)]
+- Adiciona testes para [cobertura]
+
+Documentação:
+- Atualizado docs/60_API_LÓGICA_NEGÓCIO.md
+- Atualizado docs/40_CHANGELOG.md
+```
+
+### Tipos de Commit
+- `feat`: Nova funcionalidade
+- `fix`: Correção de bug
+- `docs`: Mudança em documentação
+- `refactor`: Refatoração de código
+- `test`: Adição ou correção de testes
+- `chore`: Tarefas de manutenção
+
+### Pull Requests
+- ✅ Use o template `.github/pull_request_template.md`
+- ✅ Marque checklist de documentação
+- ✅ Descreva mudanças claramente
+- ✅ Referencie issues relacionadas
+- ✅ Garanta que todos os testes passam
+
+---
+
+## 🎨 Design e UX
+
+### Princípios de Design
+- Território como referência
+- Baixa excitação e foco
+- Silêncio funcional com hierarquia clara
+- Ação consciente e explícita
+- Evolução lenta e íntegra
+
+### O que é Bem-vindo
+- Legibilidade e redução de ruído
+- Consistência entre telas e estados
+- Hierarquia visual clara
+- Acessibilidade (contraste, foco, navegação por teclado)
+
+### O que Evitar
+- Efeitos chamativos e distrações
+- Saturação gratuita
+- Animações celebratórias
+- Metáforas fechadas que reduzam leitura do contexto
+
+---
+
+## 🔍 Referências Rápidas
+
+### Documentação Principal
+- `docs/00_INDEX.md` - Índice completo
+- `docs/01_PRODUCT_VISION.md` - Visão do produto
+- `docs/02_ROADMAP.md` - Roadmap
+- `docs/10_ARCHITECTURE_DECISIONS.md` - Decisões arquiteturais
+- `docs/12_DOMAIN_MODEL.md` - Modelo de domínio
+- `docs/60_API_LÓGICA_NEGÓCIO.md` - Lógica de negócio e APIs
+- `docs/backlog-api/README.md` - Backlog completo (29 fases)
+
+### Glossário
+- `docs/05_GLOSSARY.md` - Termos e conceitos do projeto
+
+### Contribuindo
+- `docs/41_CONTRIBUTING.md` - Guia para contribuidores
+- `docs/CURSOR_DOCUMENTATION_RULES.md` - Regras de documentação
+
+---
+
+## ⚠️ Lembretes Importantes
+
+1. **Documentação desatualizada é um bug crítico**
+2. **Territory é geográfico e neutro - NUNCA coloque lógica social nele**
+3. **Sempre use "territory", "items", "29 fases" - nunca alternativas**
+4. **Cobertura de testes >90% é obrigatória**
+5. **Sempre valide entrada e verifique autorização**
+6. **Use paginação em TODAS as listagens**
+7. **Commits pequenos e focados são preferíveis**
+
+---
+
+**Última Atualização**: 2025-01-20  
+**Versão**: 1.0

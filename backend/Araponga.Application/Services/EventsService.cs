@@ -4,6 +4,7 @@ using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Metrics;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
+using Araponga.Application.Services.Media;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Geo;
@@ -21,6 +22,7 @@ public sealed class EventsService
     private readonly IFeedRepository _feedRepository;
     private readonly IMediaAssetRepository _mediaAssetRepository;
     private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
+    private readonly TerritoryMediaConfigService _mediaConfigService;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -32,6 +34,7 @@ public sealed class EventsService
         IFeedRepository feedRepository,
         IMediaAssetRepository mediaAssetRepository,
         IMediaAttachmentRepository mediaAttachmentRepository,
+        TerritoryMediaConfigService mediaConfigService,
         AccessEvaluator accessEvaluator,
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
@@ -43,6 +46,7 @@ public sealed class EventsService
         _feedRepository = feedRepository;
         _mediaAssetRepository = mediaAssetRepository;
         _mediaAttachmentRepository = mediaAttachmentRepository;
+        _mediaConfigService = mediaConfigService;
         _accessEvaluator = accessEvaluator;
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
@@ -95,11 +99,6 @@ public sealed class EventsService
             .Distinct()
             .ToList();
 
-        if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 5)
-        {
-            return Result<EventSummary>.Failure("Maximum 5 additional media items allowed per event.");
-        }
-
         var allMediaIds = new List<Guid>();
         if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
         {
@@ -112,6 +111,23 @@ public sealed class EventsService
 
         if (allMediaIds.Count > 0)
         {
+            // Obter limites efetivos da configuração territorial (com fallback para global)
+            var limits = await _mediaConfigService.GetEffectiveContentLimitsAsync(
+                territoryId,
+                MediaContentType.Events,
+                cancellationToken);
+
+            // Validar quantidade máxima de mídias (1 capa + adicionais)
+            const int maxTotalMedia = 6; // 1 capa + 5 adicionais
+            if (allMediaIds.Count > maxTotalMedia)
+            {
+                return Result<EventSummary>.Failure($"Maximum {maxTotalMedia} media items allowed per event (1 cover + {maxTotalMedia - 1} additional).");
+            }
+            if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > limits.MaxMediaCount - 1) // -1 para capa
+            {
+                return Result<EventSummary>.Failure($"Maximum {limits.MaxMediaCount - 1} additional media items allowed per event (plus 1 cover).");
+            }
+
             var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(allMediaIds, cancellationToken);
             if (mediaAssets.Count != allMediaIds.Count)
             {
@@ -124,39 +140,65 @@ public sealed class EventsService
                 return Result<EventSummary>.Failure("One or more media assets are invalid or do not belong to the user.");
             }
 
-            // Validar que há no máximo 1 vídeo por evento (em capa ou adicionais)
-            var videoCount = mediaAssets.Count(media => media.MediaType == Domain.Media.MediaType.Video);
-            if (videoCount > 1)
+            var images = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Image).ToList();
+            var videos = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Video).ToList();
+            var audios = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Audio).ToList();
+
+            // Validar imagens
+            if (images.Count > 0 && !limits.ImagesEnabled)
             {
-                return Result<EventSummary>.Failure("Only one video is allowed per event (either as cover or additional media).");
+                return Result<EventSummary>.Failure("Images are not enabled for events in this territory.");
             }
 
-            // Validar tamanho de vídeo (máximo 100MB, duração será validada no futuro)
-            var videos = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Video).ToList();
+            // Validar vídeos
+            if (videos.Count > 0 && !limits.VideosEnabled)
+            {
+                return Result<EventSummary>.Failure("Videos are not enabled for events in this territory.");
+            }
+            if (videos.Count > limits.MaxVideoCount)
+            {
+                return Result<EventSummary>.Failure($"Maximum {limits.MaxVideoCount} video(s) allowed per event.");
+            }
             foreach (var video in videos)
             {
-                const long maxVideoSizeBytes = 100 * 1024 * 1024; // 100MB
-                if (video.SizeBytes > maxVideoSizeBytes)
+                if (video.SizeBytes > limits.MaxVideoSizeBytes)
                 {
-                    return Result<EventSummary>.Failure("Video size exceeds 100MB limit for events.");
+                    var maxSizeMB = limits.MaxVideoSizeBytes / (1024.0 * 1024.0);
+                    return Result<EventSummary>.Failure($"Video size exceeds {maxSizeMB:F1}MB limit for events.");
+                }
+                // Validar tipo MIME se configurado
+                if (limits.AllowedVideoMimeTypes != null && limits.AllowedVideoMimeTypes.Count > 0)
+                {
+                    if (!limits.AllowedVideoMimeTypes.Contains(video.MimeType, StringComparer.OrdinalIgnoreCase))
+                    {
+                        return Result<EventSummary>.Failure($"Video MIME type '{video.MimeType}' is not allowed for events.");
+                    }
                 }
             }
 
-            // Validar que há no máximo 1 áudio por evento (em capa ou adicionais)
-            var audioCount = mediaAssets.Count(media => media.MediaType == Domain.Media.MediaType.Audio);
-            if (audioCount > 1)
+            // Validar áudios
+            if (audios.Count > 0 && !limits.AudioEnabled)
             {
-                return Result<EventSummary>.Failure("Only one audio is allowed per event (either as cover or additional media).");
+                return Result<EventSummary>.Failure("Audio is not enabled for events in this territory.");
             }
-
-            // Validar tamanho de áudio (máximo 20MB, duração será validada no futuro)
-            var audios = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Audio).ToList();
+            if (audios.Count > limits.MaxAudioCount)
+            {
+                return Result<EventSummary>.Failure($"Maximum {limits.MaxAudioCount} audio(s) allowed per event.");
+            }
             foreach (var audio in audios)
             {
-                const long maxAudioSizeBytes = 20 * 1024 * 1024; // 20MB
-                if (audio.SizeBytes > maxAudioSizeBytes)
+                if (audio.SizeBytes > limits.MaxAudioSizeBytes)
                 {
-                    return Result<EventSummary>.Failure("Audio size exceeds 20MB limit for events.");
+                    var maxSizeMB = limits.MaxAudioSizeBytes / (1024.0 * 1024.0);
+                    return Result<EventSummary>.Failure($"Audio size exceeds {maxSizeMB:F1}MB limit for events.");
+                }
+                // Validar tipo MIME se configurado
+                if (limits.AllowedAudioMimeTypes != null && limits.AllowedAudioMimeTypes.Count > 0)
+                {
+                    if (!limits.AllowedAudioMimeTypes.Contains(audio.MimeType, StringComparer.OrdinalIgnoreCase))
+                    {
+                        return Result<EventSummary>.Failure($"Audio MIME type '{audio.MimeType}' is not allowed for events.");
+                    }
                 }
             }
         }

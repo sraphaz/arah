@@ -325,7 +325,7 @@ Implementar sistema de **banco de sementes e mudas territorial** que permite:
 - [ ] Criar `SeedMarketplaceService`:
   - [ ] `ListSeedsInMarketplaceAsync(Guid territoryId, ...)` → listar sementes no marketplace
   - [ ] `AddSeedToMarketplaceAsync(Guid catalogId, Guid userId, decimal? price, ...)` → adicionar ao marketplace
-  - [ ] Integração com sistema de listings existente
+  - [ ] Integração com sistema de items existente
 - [ ] Preços:
   - [ ] Preço 0 para doações
   - [ ] Preço opcional para venda (moeda territorial - Fase 20)

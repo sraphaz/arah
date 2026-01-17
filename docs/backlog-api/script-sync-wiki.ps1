@@ -119,7 +119,7 @@ $homeContent = @"
 # 🦜 Araponga - Documentação Completa
 
 **Status Atual**: 9.3/10 | **Fases Completas**: 1-8 ✅  
-**Última Atualização**: 2025-01-16
+**Última Atualização**: 2025-01-20
 
 ---
 
@@ -127,7 +127,7 @@ $homeContent = @"
 
 - **[📖 Guia de Início](Início-Rápido)** - Comece aqui se é novo no projeto
 - **[📊 Status do Projeto](Status-do-Projeto)** - Visão geral do estado atual
-- **[🎯 Backlog API](Backlog-API)** - Plano completo de 24 fases
+- **[🎯 Backlog API](Backlog-API)** - Plano completo de 29 fases
 - **[📚 Índice Completo](00-Índice)** - Todos os documentos organizados
 
 ---
@@ -185,7 +185,7 @@ $homeContent = @"
 
 ---
 
-## 📋 Backlog API - 24 Fases
+## 📋 Backlog API - 29 Fases
 
 ### ✅ Fases Completas (1-8)
 - [Fase 1: Segurança e Fundação Crítica](Fase-1-Segurança-Fundação-Crítica) ✅
@@ -224,6 +224,15 @@ $homeContent = @"
 - [Fase 19: Arquitetura Modular](Fase-19-Arquitetura-Modular)
 - [Fase 21: Criptomoedas](Fase-21-Criptomoedas)
 - [Fase 22: Integrações Externas](Fase-22-Integrações-Externas)
+
+### 🟢 Onda 7: Autonomia Digital e Economia Circular (25-28)
+- [Fase 25: Hub de Serviços Digitais](Fase-25-Hub-Serviços-Digitais)
+- [Fase 26: Chat com IA e Consumo Consciente](Fase-26-Chat-IA-Consumo-Consciente)
+- [Fase 27: Negociação Territorial](Fase-27-Negociação-Territorial)
+- [Fase 28: Banco de Sementes e Mudas](Fase-28-Banco-Sementes-Mudas)
+
+### 🟡 Onda 8: Mobile Avançado (29)
+- [Fase 29: Suporte Mobile Avançado](Fase-29-Suporte-Mobile-Avançado)
 
 **📊 Ver**: [Backlog API Completo](Backlog-API) | [Reorganização Estratégica](Reorganização-Estratégica-Final)
 
@@ -277,7 +286,7 @@ Bem-vindo à documentação do **Araponga**! Este guia ajuda você a começar ra
 4. **[Status do Projeto](Status-do-Projeto)** - Estado atual
 
 ### Planejamento
-- **[Backlog API](Backlog-API)** - Plano completo de 24 fases
+- **[Backlog API](Backlog-API)** - Plano completo de 29 fases
 - **[Avaliação para Produção](50-Produção-Avaliação-Completa)** - Prontidão atual
 - **[Reorganização Estratégica](Reorganização-Estratégica-Final)** - Estratégia de implementação
 
@@ -382,13 +391,13 @@ $statusContent = @"
 - Fase 13: Conector de Emails
 - Fase 14: Governança Comunitária
 
-**Ver**: [Backlog API Completo](Backlog-API) para todas as 24 fases
+**Ver**: [Backlog API Completo](Backlog-API) para todas as 29 fases
 
 ---
 
 ## 📈 Progresso
 
-- **Fases Completas**: 8/24 (33%)
+- **Fases Completas**: 8/29 (28%)
 - **Valor Entregue**: ~40% (Ondas 1-2 críticas)
 - **Tempo Estimado Restante**: ~170 dias com paralelização
 
@@ -406,16 +415,16 @@ Write-Host "  ✅ Status-do-Projeto.md criado" -ForegroundColor Green
 
 # 4. Página do Backlog API
 $backlogContent = @"
-# 📋 Backlog API - 24 Fases Estratégicas
+# 📋 Backlog API - 29 Fases Estratégicas
 
 **Status Atual**: 9.3/10 | **Fases Completas**: 1-8 ✅  
-**Última Atualização**: 2025-01-16
+**Última Atualização**: 2025-01-20
 
 ---
 
 ## 🎯 Visão Geral
 
-O Backlog API organiza 24 fases em **6 Ondas Estratégicas** para elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias.
+O Backlog API organiza 29 fases em **8 Ondas Estratégicas** para elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias.
 
 **Estimativa Total**: 380 dias sequenciais / ~170 dias com paralelização  
 **90% do valor em 233 dias (47 semanas)**
@@ -464,6 +473,15 @@ O Backlog API organiza 24 fases em **6 Ondas Estratégicas** para elevar a aplic
 - [Fase 19: Arquitetura Modular](Fase-19-Arquitetura-Modular) - 35 dias
 - [Fase 21: Criptomoedas](Fase-21-Criptomoedas) - 28 dias
 - [Fase 22: Integrações Externas](Fase-22-Integrações-Externas) - 35 dias
+
+### 🟢 Onda 7: Autonomia Digital e Economia Circular (84 dias) - 10% do Valor
+- [Fase 25: Hub de Serviços Digitais](Fase-25-Hub-Serviços-Digitais) - 21 dias
+- [Fase 26: Chat com IA e Consumo Consciente](Fase-26-Chat-IA-Consumo-Consciente) - 14 dias
+- [Fase 27: Negociação Territorial](Fase-27-Negociação-Territorial) - 28 dias
+- [Fase 28: Banco de Sementes e Mudas](Fase-28-Banco-Sementes-Mudas) - 21 dias
+
+### 🟡 Onda 8: Mobile Avançado (14 dias) - 2% do Valor
+- [Fase 29: Suporte Mobile Avançado](Fase-29-Suporte-Mobile-Avançado) - 14 dias
 
 ---
 
@@ -527,11 +545,19 @@ $phaseNames = @{
     22 = "Fase-22-Integrações-Externas"
     23 = "Fase-23-Compra-Coletiva"
     24 = "Fase-24-Sistema-Trocas"
+    25 = "Fase-25-Hub-Serviços-Digitais"
+    26 = "Fase-26-Chat-IA-Consumo-Consciente"
+    27 = "Fase-27-Negociação-Territorial"
+    28 = "Fase-28-Banco-Sementes-Mudas"
+    29 = "Fase-29-Suporte-Mobile-Avançado"
+    27 = "Fase-27-Negociação-Territorial"
+    28 = "Fase-28-Banco-Sementes-Mudas"
+    29 = "Fase-29-Suporte-Mobile-Avançado"
 }
 
 # Copiar todas as fases
-Write-Host "`n📄 Copiando fases (1-24)..." -ForegroundColor Yellow
-for ($i = 1; $i -le 24; $i++) {
+Write-Host "`n📄 Copiando fases (1-29)..." -ForegroundColor Yellow
+for ($i = 1; $i -le 29; $i++) {
     $phaseFile = "$DOCS_DIR\FASE$i.md"
     $phaseName = $phaseNames[$i]
     

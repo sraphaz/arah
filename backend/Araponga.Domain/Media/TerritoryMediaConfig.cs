@@ -97,6 +97,21 @@ public sealed class MediaContentConfig
     /// Duração máxima de áudios em segundos (validação futura).
     /// </summary>
     public int? MaxAudioDurationSeconds { get; set; } = null;
+
+    /// <summary>
+    /// Tipos MIME permitidos para imagens (null ou vazio = usar global de MediaStorageOptions).
+    /// </summary>
+    public List<string>? AllowedImageMimeTypes { get; set; } = null;
+
+    /// <summary>
+    /// Tipos MIME permitidos para vídeos (null ou vazio = usar global de MediaStorageOptions).
+    /// </summary>
+    public List<string>? AllowedVideoMimeTypes { get; set; } = null;
+
+    /// <summary>
+    /// Tipos MIME permitidos para áudios (null ou vazio = usar global de MediaStorageOptions).
+    /// </summary>
+    public List<string>? AllowedAudioMimeTypes { get; set; } = null;
 }
 
 /// <summary>
@@ -133,4 +148,14 @@ public sealed class MediaChatConfig
     /// Duração máxima de áudios em segundos (padrão: 60s para mensagens de voz).
     /// </summary>
     public int? MaxAudioDurationSeconds { get; set; } = 60;
+
+    /// <summary>
+    /// Tipos MIME permitidos para imagens no chat (null ou vazio = usar global de MediaStorageOptions).
+    /// </summary>
+    public List<string>? AllowedImageMimeTypes { get; set; } = null;
+
+    /// <summary>
+    /// Tipos MIME permitidos para áudios no chat (null ou vazio = usar global de MediaStorageOptions).
+    /// </summary>
+    public List<string>? AllowedAudioMimeTypes { get; set; } = null;
 }

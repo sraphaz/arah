@@ -1,5 +1,12 @@
 # Backlog
 
+**Versão**: 2.0  
+**Data**: 2025-01-20  
+**Última Atualização**: 2025-01-20  
+**Status**: ✅ MVP Completo + Fases 1-8 Implementadas
+
+---
+
 ## Observações de status
 - **Já desenvolvido**: baseado no estado atual documentado do projeto.
 - Itens MVP abaixo mantêm critérios de aceite curtos.

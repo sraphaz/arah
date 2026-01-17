@@ -11,7 +11,7 @@
 docs/
 ├── backlog-api/               # Backlog API (organizado)
 │   ├── README.md              # Índice principal
-│   ├── FASE1.md até FASE24.md # Documentos de fases
+│   ├── FASE1.md até FASE29.md # Documentos de fases (29 fases)
 │   ├── RESUMO_*.md            # Resumos executivos
 │   ├── REORGANIZACAO_*.md     # Documentos de reorganização
 │   └── ROADMAP_*.md           # Roadmaps visuais
@@ -65,8 +65,8 @@ docs/
 - `README.md` - Índice e visão geral
 - `ESTRUTURA_DOCUMENTOS.md` - Este arquivo
 
-### Fases (FASE1.md até FASE24.md)
-- `FASE1.md` até `FASE24.md` - Documentos de fases
+### Fases (FASE1.md até FASE29.md)
+- `FASE1.md` até `FASE29.md` - Documentos de fases (29 fases)
 
 ### Resumos e Estratégias
 - `RESUMO_EXECUTIVO_ESTRATEGICO.md` - Resumo executivo

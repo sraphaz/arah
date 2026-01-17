@@ -3,6 +3,15 @@
  * Converte seções longas em componentes colapsáveis
  */
 
+const sanitizeHtml = require('sanitize-html');
+
+function getTextContent(html) {
+  return sanitizeHtml(html, {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
+}
+
 function processMarkdownForProgressiveDisclosure(html, options = {}) {
   const {
     minLength = 500, // Mínimo de caracteres para colapsar

@@ -2483,9 +2483,70 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
               document.body.style.overflow = 'hidden';
             }).catch(function(err) {
               console.error('Erro ao renderizar diagrama no modal:', err);
-              modal.classList.remove('active');
-              document.body.style.overflow = '';
-              alert('Erro ao renderizar diagrama: ' + (err.message || 'Erro desconhecido'));
+              
+              // Tentar limpeza agressiva e re-renderizar
+              var originalText = diagramText;
+              // Decodificar entidades HTML primeiro
+              var decodedText = originalText
+                .replace(/&quot;/g, '"')
+                .replace(/&#x27;/g, "'")
+                .replace(/&#39;/g, "'")
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&amp;/g, '&');
+              
+              // Função de limpeza agressiva (mesma lógica do initDiagramRendering)
+              function cleanMermaidContentAggressive(content) {
+                var result = content
+                  .replace(/<\/?\s*script\s*(?:\s+[^>]*)?\s*>/gi, '')
+                  .replace(/<script[\s\S]*?<\/\s*script\s*>/gi, '')
+                  .replace(/<\/?\s*style\s*(?:\s+[^>]*)?\s*>/gi, '')
+                  .replace(/<style[\s\S]*?<\/\s*style\s*>/gi, '');
+                
+                // Remover todas as tags XML/HTML (5 passagens)
+                for (var i = 0; i < 5; i++) {
+                  result = result
+                    .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*>/gi, '')
+                    .replace(/<\/[a-zA-Z][a-zA-Z0-9-]*\s*$/gm, '')
+                    .replace(/<[^>]+>/g, '');
+                }
+                
+                return result.trim();
+              }
+              
+              var aggressivelyCleaned = cleanMermaidContentAggressive(decodedText);
+              
+              if (aggressivelyCleaned && aggressivelyCleaned.trim().startsWith('sequenceDiagram')) {
+                console.log('Tentando re-renderizar no modal com limpeza agressiva...');
+                modalMermaid.innerHTML = '';
+                modalMermaid.textContent = aggressivelyCleaned.trim();
+                modalMermaid.removeAttribute('data-processed');
+                
+                // Tentar renderizar novamente
+                try {
+                  mermaid.run({
+                    nodes: [modalMermaid],
+                    suppressErrors: false
+                  }).then(function() {
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                  }).catch(function(retryErr) {
+                    console.error('Erro ao re-renderizar no modal após limpeza agressiva:', retryErr);
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                    alert('Erro ao renderizar diagrama: ' + (retryErr.message || 'Erro desconhecido'));
+                  });
+                } catch (retryErr) {
+                  console.error('Erro ao tentar re-renderizar no modal:', retryErr);
+                  modal.classList.remove('active');
+                  document.body.style.overflow = '';
+                  alert('Erro ao renderizar diagrama: ' + (retryErr.message || 'Erro desconhecido'));
+                }
+              } else {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                alert('Erro ao renderizar diagrama: ' + (err.message || 'Erro desconhecido'));
+              }
             });
           } catch (err) {
             console.error('Erro ao inicializar renderização no modal:', err);

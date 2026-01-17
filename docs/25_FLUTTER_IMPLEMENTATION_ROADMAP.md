@@ -187,6 +187,8 @@ Este documento define o **roadmap completo de implementação do app mobile Flut
    - Gerenciar feature flags
    - Monitorar saúde do território
    - Aprovar solicitações de residência
+   - ⭐ **Novo**: Configurar Media Limits, Moderation Thresholds, Fee Limits, Presence Policies, Notification Settings, Map Config
+   - ⭐ Consulte [38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS.md](../38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS.md) para detalhes completos
 
 #### Funcionalidades Visíveis
 - ✅ Todas as funcionalidades de RESIDENT

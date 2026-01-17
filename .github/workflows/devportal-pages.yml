@@ -23,11 +23,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare Dev Portal artifacts
+      - name: Setup Node.js (for wiki build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/wiki/package-lock.json
+
+      - name: Build Wiki
+        working-directory: frontend/wiki
+        run: |
+          npm ci
+          NEXT_EXPORT=true npm run build
+        continue-on-error: true
+
+      - name: Prepare Dev Portal artifacts (with wiki subfolder)
         run: |
           rm -rf dist
           mkdir -p dist
+          
+          # Copiar Dev Portal para raiz
           cp -R backend/Araponga.Api/wwwroot/devportal/. dist/
+          
+          # Copiar Wiki para subpasta /wiki (se build foi bem-sucedido)
+          if [ -d "frontend/wiki/out" ]; then
+            mkdir -p dist/wiki
+            cp -R frontend/wiki/out/. dist/wiki/
+            echo "✅ Wiki copiado para dist/wiki/"
+          else
+            echo "⚠️  Wiki build não encontrado, pulando..."
+          fi
+          
           echo "devportal.araponga.app" > dist/CNAME
 
       - name: Setup Pages

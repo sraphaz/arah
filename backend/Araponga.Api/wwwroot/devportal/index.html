@@ -2139,7 +2139,67 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       
       // Função para abrir diagrama em tela cheia
       function openDiagramFullscreen(diagramElement) {
-        // SEMPRE buscar primeiro do data-mermaid-code (código SELADO) ou data-original-code
+        // Se for uma imagem SVG, criar um clone e exibir no modal
+        if (diagramElement.tagName === 'IMG') {
+          var modal = document.getElementById('diagram-modal');
+          if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'diagram-modal';
+            modal.className = 'diagram-modal';
+            
+            var modalContent = document.createElement('div');
+            modalContent.className = 'diagram-modal-content';
+            
+            var closeBtn = document.createElement('button');
+            closeBtn.className = 'diagram-modal-close';
+            closeBtn.textContent = '×';
+            closeBtn.setAttribute('aria-label', 'Fechar');
+            closeBtn.addEventListener('click', function() {
+              modal.classList.remove('active');
+              document.body.style.overflow = '';
+            });
+            
+            modal.appendChild(closeBtn);
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+          }
+          
+          var modalContent = modal.querySelector('.diagram-modal-content');
+          modalContent.innerHTML = '';
+          
+          // Criar clone da imagem
+          var imgClone = diagramElement.cloneNode(true);
+          imgClone.style.maxWidth = '100%';
+          imgClone.style.height = 'auto';
+          imgClone.style.margin = '0 auto';
+          imgClone.style.display = 'block';
+          
+          modalContent.appendChild(imgClone);
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          
+          // Fechar com ESC
+          var escHandler = function(e) {
+            if (e.key === 'Escape') {
+              modal.classList.remove('active');
+              document.body.style.overflow = '';
+              document.removeEventListener('keydown', escHandler);
+            }
+          };
+          document.addEventListener('keydown', escHandler);
+          
+          // Fechar ao clicar fora
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              modal.classList.remove('active');
+              document.body.style.overflow = '';
+            }
+          });
+          
+          return;
+        }
+        
+        // Código legado para elementos Mermaid (se ainda houver)
         var diagramText = diagramElement.getAttribute('data-mermaid-code') || diagramElement.getAttribute('data-original-code');
         
         // Se não encontrou no data-attribute, tentar buscar do elemento original

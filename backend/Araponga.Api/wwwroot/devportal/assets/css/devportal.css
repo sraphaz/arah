@@ -97,7 +97,7 @@ body::before {
   height: clamp(400px, 50vw, 600px);
   max-width: 90vw;
   max-height: 90vh;
-  background-image: url("../images/araponga-icon.svg");
+  background-image: url("../images/Logo_2_watermark.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -515,10 +515,16 @@ main {
 
 /* Sections */
 .section {
-  padding: clamp(3rem, 5vw, 5rem) 0; /* Aumentado de 3.5rem para mais respiração */
+  padding: clamp(2.5rem, 4.5vw, 4rem) 0; /* Padding equilibrado */
   border-bottom: 1px solid var(--border-subtle);
   scroll-margin-top: 3rem; /* Aumentado para melhor scroll-spy */
   position: relative;
+}
+
+/* Reduzir padding em seções com grids (menos conteúdo denso) */
+.section:has(.model-grid),
+.section:has(.grid-two) {
+  padding: clamp(2rem, 4vw, 3.5rem) 0; /* Menos espaço em seções de cards */
 }
 
 .section::after {
@@ -565,11 +571,21 @@ main {
   margin: 0 0 1rem;
   line-height: 1.75; /* Otimizado para leitura longa (era 1.7 implícito) */
   max-width: 65ch; /* Limitar largura de linha para legibilidade ideal */
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
+  text-align: left;
+  word-spacing: normal;
+  letter-spacing: normal;
+}
+
+@media (min-width: 768px) {
+  .section p {
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
 }
 
 .section .eyebrow {
@@ -586,8 +602,8 @@ main {
 .grid-two {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1rem, 2.5vw, 1.5rem);
-  margin-top: clamp(1rem, 2vw, 1.5rem);
+  gap: clamp(1.25rem, 3vw, 2rem); /* Aumentado para melhor respiro */
+  margin-top: clamp(1rem, 2.5vw, 1.75rem);
   /* Garantir que cards não estourem */
   min-width: 0;
 }
@@ -595,8 +611,8 @@ main {
 .model-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1rem, 2.5vw, 1.5rem);
-  margin-top: clamp(1rem, 2vw, 1.5rem);
+  gap: clamp(1.25rem, 3vw, 2rem); /* Aumentado para melhor respiro */
+  margin-top: clamp(1rem, 2.5vw, 1.75rem);
   /* Garantir que cards não estourem */
   min-width: 0;
 }
@@ -634,7 +650,7 @@ main {
 .card {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
-  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding: clamp(1.25rem, 2.75vw, 1.75rem) clamp(1.375rem, 3.25vw, 2rem); /* Padding horizontal aumentado */
   border: 1px solid var(--border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição mais suave */
   position: relative;
@@ -645,6 +661,7 @@ main {
   min-width: 0; /* Permite shrink em grids */
   display: flex;
   flex-direction: column;
+  min-height: fit-content; /* Evita cards muito baixos */
 }
 
 .card::before {
@@ -677,31 +694,53 @@ main {
 }
 
 .card h3 {
-  margin: 0 0 clamp(0.5rem, 1.5vw, 0.75rem);
+  margin: 0 0 clamp(0.625rem, 1.75vw, 0.875rem); /* Espaçamento aumentado abaixo do título */
   color: var(--text);
   font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
   line-height: 1.3;
 }
 
 .card p {
-  margin: 0;
+  margin: 0 0 clamp(0.5rem, 1.25vw, 0.75rem); /* Espaçamento entre parágrafos */
   color: var(--text-muted);
-  text-align: justify;
-  text-justify: inter-word; /* Melhor distribuição de palavras */
-  hyphens: auto; /* Hifenização automática para melhor justificação */
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
+  /* Justificação inteligente - apenas em telas maiores */
+  text-align: left;
+  word-spacing: normal;
+  letter-spacing: normal;
 }
 
-/* Não justificar parágrafos muito curtos */
-.card p:only-child,
-.card p:first-child:last-child {
-  text-align: left;
+.card p:last-child {
+  margin-bottom: 0; /* Último parágrafo sem margin-bottom */
 }
 
-/* Parágrafos com menos de 50 caracteres não justificam bem */
-.card p[style*="margin"] {
-  text-align: left;
+/* Justificar apenas parágrafos longos em telas maiores */
+@media (min-width: 768px) {
+  .card p {
+    /* Apenas justificar se o parágrafo tiver mais de 2 linhas prováveis */
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: 0.02em; /* Espaçamento sutil entre palavras */
+    letter-spacing: 0.01em; /* Espaçamento sutil entre letras */
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
+  
+  /* Não justificar parágrafos muito curtos mesmo em telas maiores */
+  .card p:only-child,
+  .card p[style*="margin: 1rem"],
+  .card p[style*="margin-top: 1rem"] {
+    text-align: left;
+    word-spacing: normal;
+  }
+}
+
+/* Em telas muito grandes, usar justify mais conservador */
+@media (min-width: 1600px) {
+  .card p {
+    word-spacing: 0.03em;
+    letter-spacing: 0.015em;
+  }
 }
 
 .card ul {
@@ -752,18 +791,21 @@ main {
   color: var(--text-muted);
   line-height: 1.75;
   font-size: clamp(0.875rem, 0.8125rem + 0.2vw, 0.9375rem);
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
+  text-align: left;
   max-width: 100%;
+  word-spacing: normal;
+  letter-spacing: normal;
 }
 
-/* Em telas pequenas, dd não justificado */
-@media (max-width: 767px) {
+@media (min-width: 768px) {
   .entity-list dd {
-    text-align: left;
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
   }
 }
 
@@ -826,9 +868,26 @@ main {
   background: var(--bg-muted);
   color: var(--text-muted);
   margin: clamp(1rem, 2vw, 1.5rem) 0;
-  text-align: justify;
-  text-justify: inter-word;
+  text-align: left;
   line-height: 1.75;
+  word-spacing: normal;
+  letter-spacing: normal;
+}
+
+.callout p {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .callout {
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
 }
 
 .callout strong {
@@ -856,11 +915,19 @@ main {
   color: var(--text-muted);
   margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
   line-height: 1.7;
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .card-intro {
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
 }
 
 .card-list {
@@ -946,12 +1013,22 @@ main {
   line-height: 1.75;
   font-weight: 400; /* Peso normal para texto longo */
   color: var(--text); /* Mais visível que muted */
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
+  text-align: left;
   max-width: 100%;
+  word-spacing: normal;
+  letter-spacing: normal;
+}
+
+@media (min-width: 768px) {
+  .lead-text {
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: 0.025em; /* Espaçamento sutil mas perceptível */
+    letter-spacing: 0.01em;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
 }
 
 .lead-text.space-bottom {
@@ -1117,10 +1194,23 @@ pre code {
 .flow-step p {
   margin: 0 0 1rem;
   color: var(--text-muted);
-  text-align: justify;
-  text-justify: inter-word;
+  text-align: left;
   line-height: 1.75;
   padding-right: clamp(0.5rem, 2vw, 1rem);
+  word-spacing: normal;
+  letter-spacing: normal;
+}
+
+@media (min-width: 768px) {
+  .flow-step p {
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
 }
 
 /* Notice */

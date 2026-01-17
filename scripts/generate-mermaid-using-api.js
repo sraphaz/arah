@@ -33,7 +33,8 @@ function getCustomThemeInit() {
       'primaryColor': '${SITE_COLORS.background}',
       'primaryTextColor': '${SITE_COLORS.text}',
       'primaryBorderColor': '${SITE_COLORS.border}',
-      'lineColor': '${SITE_COLORS.accent}',
+      // Cores principais: verde água e azul claro para linhas/setas
+      'lineColor': '${SITE_COLORS.link}', // Azul para linhas principais
       'secondaryColor': '${SITE_COLORS.background}',
       'tertiaryColor': '${SITE_COLORS.background}',
       'background': '${SITE_COLORS.background}',
@@ -41,29 +42,37 @@ function getCustomThemeInit() {
       'secondBkg': '${SITE_COLORS.background}',
       'textColor': '${SITE_COLORS.text}',
       'border1': '${SITE_COLORS.border}',
-      'border2': '${SITE_COLORS.accent}',
-      'arrowheadColor': '${SITE_COLORS.accent}',
-      'arrowLineColor': '${SITE_COLORS.accent}',
+      'border2': '${SITE_COLORS.link}', // Azul para bordas destacadas
+      // Setas e conexões: usar azul e verde água
+      'arrowheadColor': '${SITE_COLORS.link}', // Azul para pontas de seta
+      'arrowLineColor': '${SITE_COLORS.link}', // Azul para linhas de seta
+      'signalColor': '${SITE_COLORS.accent}', // Verde água para sinais
+      'signalTextColor': '${SITE_COLORS.text}',
+      // Notas e caixas
       'noteBkgColor': '${SITE_COLORS.activation}',
       'noteTextColor': '${SITE_COLORS.text}',
-      'noteBorderColor': '${SITE_COLORS.accent}',
+      'noteBorderColor': '${SITE_COLORS.accent}', // Verde água para bordas de nota
+      // Actores e participantes
       'actorBkg': '${SITE_COLORS.background}',
-      'actorBorder': '${SITE_COLORS.border}',
+      'actorBorder': '${SITE_COLORS.link}', // Azul para bordas de ator
       'actorTextColor': '${SITE_COLORS.text}',
-      'actorLineColor': '${SITE_COLORS.accent}',
+      'actorLineColor': '${SITE_COLORS.link}', // Azul para linhas de ator
+      // Labels e caixas de texto
       'labelBoxBkgColor': '${SITE_COLORS.background}',
-      'labelBoxBorderColor': '${SITE_COLORS.accent}',
+      'labelBoxBorderColor': '${SITE_COLORS.accent}', // Verde água para labels
       'labelTextColor': '${SITE_COLORS.textMuted}',
       'loopTextColor': '${SITE_COLORS.text}',
-      'activationBorderColor': '${SITE_COLORS.accent}',
+      // Ativações e seções
+      'activationBorderColor': '${SITE_COLORS.link}', // Azul para bordas de ativação
       'activationBkgColor': '${SITE_COLORS.activation}',
       'sequenceNumberColor': '${SITE_COLORS.text}',
       'sectionBkgColor': '${SITE_COLORS.background}',
       'sectionBkgColor2': '${SITE_COLORS.activation}',
       'altSectionBkgColor': '${SITE_COLORS.background}',
       'excludeBkgColor': '${SITE_COLORS.activation}',
-      'cScale0': '${SITE_COLORS.accent}',
-      'cScale1': '${SITE_COLORS.link}',
+      // Escala de cores para variação
+      'cScale0': '${SITE_COLORS.accent}', // Verde água
+      'cScale1': '${SITE_COLORS.link}', // Azul claro
       'cScale2': '${SITE_COLORS.textMuted}'
     }
   }}%%

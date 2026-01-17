@@ -857,6 +857,51 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* Interactive Components - Progressive Disclosure */
+  .accordion-container {
+    @apply shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+
+  .accordion-trigger {
+    @apply focus-visible:outline-2 focus-visible:outline-forest-500 dark:focus-visible:outline-[#4dd4a8];
+  }
+
+  .accordion-content {
+    @apply border-t border-forest-200/60 dark:border-forest-800/60;
+  }
+
+  .tabs-list {
+    @apply -mx-4 px-4 md:mx-0 md:px-0;
+  }
+
+  .tabs-trigger {
+    @apply focus-visible:outline-2 focus-visible:outline-forest-500 dark:focus-visible:outline-[#4dd4a8] rounded-t-lg;
+    @apply hover:bg-forest-50 dark:hover:bg-forest-900/30;
+  }
+
+  .tabs-trigger:focus-visible {
+    @apply outline-offset-4;
+  }
+
+  .tooltip-content {
+    animation: tooltipFadeIn 0.2s ease-out;
+  }
+
+  @keyframes tooltipFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .expandable-card {
+    @apply shadow-sm hover:shadow-md transition-all duration-300;
+  }
 }
 
 /* Responsividade refinada - Enterprise breakpoints */

@@ -42,6 +42,11 @@
   --content-max: 920px;
   --nav-width: 280px;
   
+  /* Breakpoints para telas grandes */
+  /* HD (1366px+): max-width 1600px, content-max 1200px */
+  /* Full HD (1920px+): max-width 1800px, content-max 1400px */
+  /* QHD/Ultra HD (2560px+): max-width 2400px, content-max 2000px */
+  
   /* Tipografia */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
   font-feature-settings: "kern" 1, "liga" 1;
@@ -308,6 +313,28 @@ main {
   max-width: var(--content-max);
 }
 
+/* Aumentar amplitude em telas maiores mantendo limite claro */
+@media (min-width: 1366px) {
+  :root {
+    --max-width: 1600px;
+    --content-max: 1200px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --max-width: 1800px;
+    --content-max: 1400px;
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --max-width: 2400px;
+    --content-max: 2000px;
+  }
+}
+
 /* Navigation */
 .nav {
   position: sticky;
@@ -458,6 +485,13 @@ main {
 @media (min-width: 1280px) {
   .model-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Mais colunas em telas grandes para aproveitar espaço */
+@media (min-width: 1920px) {
+  .model-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -1049,6 +1083,23 @@ pre code {
   }
 }
 
+/* Aproveitar melhor telas grandes mantendo navegação útil */
+@media (min-width: 1366px) {
+  .layout {
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+}
+
+@media (min-width: 1920px) {
+  .layout {
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+  
+  :root {
+    --nav-width: 320px;
+  }
+}
+
 @media (min-width: 640px) {
   .grid-two {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1058,6 +1109,19 @@ pre code {
 @media (min-width: 1024px) {
   .grid-two {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mais colunas em telas grandes para aproveitar espaço */
+@media (min-width: 1366px) {
+  .grid-two {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1920px) {
+  .grid-two {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

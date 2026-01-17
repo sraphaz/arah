@@ -69,6 +69,8 @@
         <li><a href="#quickstart" data-i18n="nav.quickstart">Quickstart</a></li>
         <li><a href="#capacidades-tecnicas">Capacidades Técnicas</a></li>
         <li><a href="#versoes" data-i18n="nav.versions">Versões</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#contribuir">Contribuir</a></li>
       </ul>
     </nav>
 
@@ -974,46 +976,95 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
 
       <section class="section" id="casos-de-uso">
         <span class="eyebrow" data-i18n="usecases.eyebrow">Casos de uso</span>
-        <h2 data-i18n="usecases.title">Como usar a API (cenários práticos)</h2>
-        <p data-i18n-html="usecases.leadHtml">
-          Estes cenários conectam objetivo → pré-requisitos → endpoints. Em geral, você vai precisar de um JWT
-          e de um território selecionado via <code>X-Session-Id</code>.
+        <h2 data-i18n="usecases.title">Jornadas práticas e funcionalidades implementadas</h2>
+        <p class="lead-text space-bottom">
+          Cenários práticos conectando objetivo → pré-requisitos → endpoints. Todas as jornadas requerem
+          autenticação (JWT) e seleção de território via <code>X-Session-Id</code>. Os exemplos abaixo
+          refletem funcionalidades já implementadas e testadas em produção.
         </p>
-        <div class="grid-two">
+
+        <div class="grid-two spaced">
           <div class="card">
-            <h3>Onboarding (primeiro acesso)</h3>
-            <ul>
-              <li><strong>Autenticar</strong>: <code>POST /api/v1/auth/social</code></li>
-              <li><strong>Descobrir território</strong>: <code>GET /api/v1/territories</code> (ou <code>/nearby</code>)</li>
-              <li><strong>Selecionar território</strong>: <code>POST /api/v1/territories/selection</code> + <code>X-Session-Id</code></li>
-              <li><strong>Checar membership</strong>: <code>GET /api/v1/memberships/{territoryId}/me</code></li>
-            </ul>
+            <h3>🚀 Onboarding completo</h3>
+            <p class="card-intro">
+              Primeira jornada: autenticação, descoberta de território e vínculo inicial.
+            </p>
+            <ol class="card-list">
+              <li><strong>Autenticar:</strong> <code>POST /api/v1/auth/social</code> (obtém JWT)</li>
+              <li><strong>Descobrir território:</strong> <code>GET /api/v1/territories/nearby?lat=-23.55&lng=-46.63</code></li>
+              <li><strong>Selecionar território:</strong> <code>POST /api/v1/territories/selection</code> + header <code>X-Session-Id</code></li>
+              <li><strong>Declarar vínculo:</strong> <code>POST /api/v1/memberships/{territoryId}/enter-visitor</code></li>
+              <li><strong>Verificar membership:</strong> <code>GET /api/v1/memberships/{territoryId}/me</code></li>
+            </ol>
           </div>
+
           <div class="card">
-            <h3>Publicar conteúdo (feed + mapa + mídias)</h3>
-            <ul>
-              <li><strong>Ler feed</strong>: <code>GET /api/v1/feed</code></li>
-              <li><strong>Criar post</strong>: <code>POST /api/v1/feed</code> (com <code>geoAnchors</code> opcionais e <code>mediaIds</code> para até 10 imagens)</li>
-              <li><strong>Upload de mídia</strong>: <code>POST /api/v1/media/upload</code> para obter <code>mediaId</code></li>
-              <li><strong>Ver pins</strong>: <code>GET /api/v1/map/pins</code> (tipos: entity/asset/alert/post)</li>
-            </ul>
+            <h3>📝 Publicar conteúdo com mídias</h3>
+            <p class="card-intro">
+              Criar post com até 10 imagens e âncoras geográficas opcionais.
+            </p>
+            <ol class="card-list">
+              <li><strong>Upload de mídias:</strong> <code>POST /api/v1/media/upload</code> (obtém <code>mediaIds</code>)</li>
+              <li><strong>Criar post:</strong> <code>POST /api/v1/feed</code> com <code>mediaIds</code> (até 10 imagens)</li>
+              <li><strong>GeoAnchors automáticos:</strong> derivados de mídias quando disponíveis</li>
+              <li><strong>Visualizar no mapa:</strong> <code>GET /api/v1/map/pins?types=post</code></li>
+              <li><strong>Ver no feed:</strong> <code>GET /api/v1/feed/paged</code></li>
+            </ol>
           </div>
+
           <div class="card">
-            <h3>Operações territoriais (assets/alerts)</h3>
-            <ul>
-              <li><strong>Criar asset</strong>: <code>POST /api/v1/assets</code> (geo obrigatória)</li>
-              <li><strong>Criar alerta</strong>: <code>POST /api/v1/alerts</code> (validação por curadoria)</li>
-              <li><strong>Listar pins</strong>: <code>GET /api/v1/map/pins?types=asset,alert</code></li>
-            </ul>
+            <h3>🗺️ Assets territoriais com geolocalização</h3>
+            <p class="card-intro">
+              Recursos territoriais (rios, trilhas, nascentes) sempre com geolocalização obrigatória.
+            </p>
+            <ol class="card-list">
+              <li><strong>Criar asset:</strong> <code>POST /api/v1/assets</code> (geo obrigatória em <code>geoAnchors</code>)</li>
+              <li><strong>Tipos disponíveis:</strong> <code>river</code>, <code>trail</code>, <code>spring</code>, <code>lookout</code>, <code>sanctuary</code></li>
+              <li><strong>Apenas moradores verificados ou curadores:</strong> podem criar/editar/arquivar</li>
+              <li><strong>Visualizar no mapa:</strong> <code>GET /api/v1/map/pins?types=asset&assetTypes=river,trail</code></li>
+            </ol>
           </div>
+
           <div class="card">
-            <h3>Economia local e eventos (com mídias)</h3>
-            <ul>
-              <li><strong>Loja</strong>: <code>POST /api/v1/stores</code></li>
-              <li><strong>Items (produtos/serviços)</strong>: <code>POST /api/v1/items</code> com <code>mediaIds</code> (até 10 imagens) e <code>GET /api/v1/items</code></li>
-              <li><strong>Carrinho</strong>: <code>POST /api/v1/cart/items</code> e <code>POST /api/v1/cart/checkout</code></li>
-              <li><strong>Evento</strong>: <code>POST /api/v1/events</code> com <code>coverMediaId</code> e <code>additionalMediaIds</code>, <code>POST /api/v1/events/{eventId}/interest</code>, <code>POST /api/v1/events/{eventId}/confirm</code></li>
-            </ul>
+            <h3>💬 Chat territorial e grupos</h3>
+            <p class="card-intro">
+              Conversas territoriais, grupos e mensagens diretas com suporte a mídias.
+            </p>
+            <ol class="card-list">
+              <li><strong>Criar conversa:</strong> <code>POST /api/v1/chat/conversations</code></li>
+              <li><strong>Enviar mensagem:</strong> <code>POST /api/v1/chat/conversations/{id}/messages</code></li>
+              <li><strong>Mensagem com imagem:</strong> incluir <code>mediaId</code> no payload</li>
+              <li><strong>Listar conversas:</strong> <code>GET /api/v1/chat/conversations</code></li>
+              <li><strong>Histórico:</strong> <code>GET /api/v1/chat/conversations/{id}/messages</code></li>
+            </ol>
+          </div>
+
+          <div class="card">
+            <h3>🏪 Marketplace e economia local</h3>
+            <p class="card-intro">
+              Lojas, produtos/serviços, carrinho e checkout com até 10 imagens por item.
+            </p>
+            <ol class="card-list">
+              <li><strong>Criar loja:</strong> <code>POST /api/v1/stores</code></li>
+              <li><strong>Adicionar itens:</strong> <code>POST /api/v1/items</code> com <code>mediaIds</code> (até 10 imagens)</li>
+              <li><strong>Carrinho:</strong> <code>POST /api/v1/cart/items</code></li>
+              <li><strong>Checkout:</strong> <code>POST /api/v1/cart/checkout</code></li>
+              <li><strong>Consultar itens:</strong> <code>GET /api/v1/items</code> (paginação incluída)</li>
+            </ol>
+          </div>
+
+          <div class="card">
+            <h3>📅 Eventos comunitários com mídias</h3>
+            <p class="card-intro">
+              Eventos territoriais com data/hora, geolocalização obrigatória e imagens.
+            </p>
+            <ol class="card-list">
+              <li><strong>Criar evento:</strong> <code>POST /api/v1/events</code> (geo obrigatória)</li>
+              <li><strong>Imagens:</strong> <code>coverMediaId</code> e <code>additionalMediaIds</code> (até 10)</li>
+              <li><strong>Marcar interesse:</strong> <code>POST /api/v1/events/{id}/interest</code></li>
+              <li><strong>Confirmar presença:</strong> <code>POST /api/v1/events/{id}/confirm</code></li>
+              <li><strong>Aparece no feed e mapa:</strong> eventos aparecem em ambos os contextos</li>
+            </ol>
           </div>
         </div>
       </section>
@@ -1560,34 +1611,106 @@ curl -X POST http://localhost:8080/api/v1/events/{eventId}/confirm \
 
       <section class="section" id="admin">
         <span class="eyebrow" data-i18n="admin.eyebrow">Admin</span>
-        <h2 data-i18n="admin.title">System Config, Work Queue e evidências</h2>
-        <p data-i18n-html="admin.leadHtml">
-          Para suportar validações e governança com rastreabilidade, a API implementa <strong>SystemConfig</strong>
-          (configurações calibráveis), <strong>WorkItem</strong> (fila genérica de revisão humana) e
-          <strong>DocumentEvidence</strong> (metadados de documentos com upload e download por proxy).
-          Leia o documento completo em <a href="https://github.com/sraphaz/araponga/blob/main/docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md" rel="noopener">docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md</a>.
+        <h2 data-i18n="admin.title">Governança, Papéis Administrativos e Evidências</h2>
+        <p class="lead-text" style="margin-bottom: 2rem;">
+          A API Araponga implementa uma arquitetura de governança em camadas com papéis administrativos
+          bem definidos, permitindo validações e decisões com rastreabilidade completa. A governança
+          combina responsabilidades territoriais (curadores e moderadores) com supervisão global (SystemAdmin).
         </p>
-        <div class="grid-two">
+
+        <div class="grid-two" style="margin-bottom: 3rem;">
           <div class="card">
-            <h3 data-i18n="admin.endpointsTitle">Endpoints principais</h3>
-            <ul>
-              <li><strong>System Config (SystemAdmin)</strong>: <code>GET /api/v1/admin/system-configs</code> e <code>GET/PUT /api/v1/admin/system-configs/{key}</code></li>
-              <li><strong>Work Items (SystemAdmin)</strong>: <code>GET /api/v1/admin/work-items</code></li>
-              <li><strong>Work Items (territorial)</strong>: <code>GET /api/v1/territories/{territoryId}/work-items</code></li>
-              <li><strong>Upload identidade</strong>: <code>POST /api/v1/verification/identity/document/upload</code></li>
-              <li><strong>Upload residência</strong>: <code>POST /api/v1/memberships/{territoryId}/verify-residency/document/upload</code></li>
-              <li><strong>Download por proxy</strong>: <code>GET /api/v1/admin/evidences/{evidenceId}/download</code></li>
-            </ul>
+            <h3>👤 Papéis Administrativos</h3>
+            <dl class="entity-list">
+              <dt><strong>SystemAdmin</strong></dt>
+              <dd>
+                Administrador global do sistema com acesso irrestrito. Responsável por:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Configurações globais do sistema (SystemConfig)</li>
+                  <li>Decisão de verificação de identidade global (fallback humano)</li>
+                  <li>Aprovação de pedidos de moradia quando não há curadores (bootstrap)</li>
+                  <li>Acesso a filas de trabalho globais (WorkItems)</li>
+                  <li>Download de evidências para auditoria e compliance</li>
+                  <li>Monitoramento de operações críticas</li>
+                </ul>
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9em;">
+                  <strong>Autorização:</strong> Acesso via <code>SystemPermission</code> do tipo <code>SystemAdmin</code>.
+                  SystemAdmin possui implicitamente todas as capabilities em todos os territórios.
+                </p>
+              </dd>
+
+              <dt><strong>FinancialManager</strong> (Roadmap)</dt>
+              <dd>
+                Papel administrativo territorial planejado para gestão financeira local:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Configuração de taxas de plataforma por território</li>
+                  <li>Visualização de saldos e movimentações financeiras</li>
+                  <li>Gestão de payout e distribuição de receitas</li>
+                  <li>Relatórios financeiros territoriais</li>
+                </ul>
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9em;">
+                  <strong>Status:</strong> Endpoints financeiros atualmente restritos a SystemAdmin.
+                  Suporte a FinancialManager e FinancialViewer será implementado em fase futura.
+                </p>
+              </dd>
+
+              <dt><strong>Curator</strong> (Territorial)</dt>
+              <dd>
+                Morador verificado com permissões de curadoria no território:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Aprovação de pedidos de moradia (JoinRequests)</li>
+                  <li>Validação de entidades do mapa</li>
+                  <li>Moderação de conteúdo e usuários</li>
+                  <li>Acesso a filas de trabalho territoriais</li>
+                </ul>
+              </dd>
+            </dl>
           </div>
+
           <div class="card">
-            <h3 data-i18n="admin.notesTitle">Notas</h3>
-            <ul>
-              <li data-i18n-html="admin.note1Html"><strong>Autorização</strong>: SystemAdmin decide identidade; Curator decide residência e curadoria; Curator/Moderator decide moderação.</li>
-              <li data-i18n-html="admin.note2Html"><strong>Proxy download</strong>: a API faz streaming do storage para aplicar autorização e auditoria (sem URL pública).</li>
-              <li data-i18n-html="admin.note3Html"><strong>OpenAPI</strong>: veja as rotas na seção OpenAPI — tags <code>Admin</code>, <code>Verification</code>, <code>Moderation</code>.</li>
-            </ul>
+            <h3>🔧 Endpoints e Funcionalidades</h3>
+            <dl class="entity-list">
+              <dt><strong>System Config</strong> (SystemAdmin)</dt>
+              <dd>
+                <code>GET /api/v1/admin/system-configs</code><br>
+                <code>GET/PUT /api/v1/admin/system-configs/{key}</code><br>
+                Configurações globais calibráveis (governança, validações, thresholds).
+              </dd>
+
+              <dt><strong>Work Items</strong></dt>
+              <dd>
+                <code>GET /api/v1/admin/work-items</code> (SystemAdmin)<br>
+                <code>GET /api/v1/territories/{territoryId}/work-items</code> (Curator)<br>
+                Filas genéricas para revisão humana (verificações, moderação, curadoria).
+              </dd>
+
+              <dt><strong>Upload de Documentos</strong></dt>
+              <dd>
+                <code>POST /api/v1/verification/identity/document/upload</code><br>
+                <code>POST /api/v1/memberships/{territoryId}/verify-residency/document/upload</code><br>
+                Upload seguro de evidências documentais para verificação.
+              </dd>
+
+              <dt><strong>Download por Proxy</strong> (SystemAdmin)</dt>
+              <dd>
+                <code>GET /api/v1/admin/evidences/{evidenceId}/download</code><br>
+                Streaming seguro do storage com autorização e auditoria (sem URLs públicas).
+              </dd>
+            </dl>
           </div>
         </div>
+
+        <div class="callout" style="background: var(--accent-subtle); border-left: 3px solid var(--accent);">
+          <p style="margin: 0; color: var(--text);">
+            <strong>Separação de responsabilidades:</strong> SystemAdmin opera em nível global (configurações do sistema,
+            verificações globais, bootstrap). Curators e Moderators operam em nível territorial (aprovam moradores,
+            validam entidades, moderam conteúdo). FinancialManager (roadmap) operará em nível territorial para gestão financeira.
+          </p>
+        </div>
+
+        <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.95em;">
+          Documentação completa: <a href="https://github.com/sraphaz/araponga/blob/main/docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md" rel="noopener">docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md</a>
+        </p>
       </section>
 
       <section class="section" id="openapi">
@@ -1696,17 +1819,17 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           manutenibilidade e escalabilidade para comunidades em produção.
         </p>
 
-        <div class="model-grid" style="margin-top: 3rem;">
+        <div class="model-grid spaced">
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">✓</span>
-              <h3 style="margin: 0;">Qualidade de Código</h3>
+            <div class="card-icon-header">
+              <span class="icon">✓</span>
+              <h3>Qualidade de Código</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Engenharia de software orientada a qualidade e confiabilidade, com foco em
               manutenibilidade a longo prazo e evolução segura da plataforma.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Paginação padronizada</strong></dt>
               <dd>15 endpoints críticos implementam paginação completa com <code>PaginatedResult&lt;T&gt;</code>, garantindo performance consistente em grandes volumes de dados.</dd>
 
@@ -1725,15 +1848,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
 
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">⚡</span>
-              <h3 style="margin: 0;">Performance & Escalabilidade</h3>
+            <div class="card-icon-header">
+              <span class="icon">⚡</span>
+              <h3>Performance & Escalabilidade</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Otimizações arquiteturais e técnicas avançadas para garantir baixa latência
               e capacidade de crescimento com o aumento da demanda.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Concorrência otimista</strong></dt>
               <dd>RowVersion em entidades críticas previne condições de corrida e garante consistência de dados em operações concorrentes.</dd>
 
@@ -1752,15 +1875,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
 
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">📊</span>
-              <h3 style="margin: 0;">Observabilidade</h3>
+            <div class="card-icon-header">
+              <span class="icon">📊</span>
+              <h3>Observabilidade</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Visibilidade completa sobre o comportamento da plataforma em produção,
               permitindo detecção proativa de problemas e otimização contínua.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Logs estruturados</strong></dt>
               <dd>Serilog com Seq para logs centralizados, pesquisáveis e estruturados. Contexto enriquecido para debugging eficiente.</dd>
 
@@ -1779,15 +1902,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
 
           <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-              <span style="font-size: 1.75rem;">🔒</span>
-              <h3 style="margin: 0;">Segurança</h3>
+            <div class="card-icon-header">
+              <span class="icon">🔒</span>
+              <h3>Segurança</h3>
             </div>
-            <p style="color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6;">
+            <p class="card-intro">
               Múltiplas camadas de proteção para garantir integridade de dados, privacidade
               dos usuários e resistência a ataques comuns.
             </p>
-            <dl class="entity-list" style="margin-top: 1rem;">
+            <dl class="entity-list">
               <dt><strong>Autenticação multi-fator</strong></dt>
               <dd>2FA via TOTP (Time-based One-Time Password) para proteção adicional de contas sensíveis e operações críticas.</dd>
 
@@ -1806,11 +1929,144 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           </div>
         </div>
 
-        <div class="callout" style="margin-top: 3rem; background: var(--accent-subtle); border-left: 3px solid var(--accent);">
-          <p style="margin: 0; color: var(--text);">
+        <div class="callout highlight">
+          <p>
             <strong>Qualidade em produção:</strong> A API Araponga segue rigorosamente os princípios de engenharia de software
             de alto padrão, com foco em confiabilidade, manutenibilidade e escalabilidade. Todas as decisões arquiteturais
             foram documentadas e são continuamente revisadas para garantir evolução segura e sustentável da plataforma.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="roadmap">
+        <span class="eyebrow">Visão Futura</span>
+        <h2>Roadmap e Direcionamento</h2>
+        <p class="lead-text space-bottom">
+          O Araponga evolui de forma consciente e sustentável, priorizando funcionalidades que
+          fortalecem a organização comunitária local. Abaixo estão as direções planejadas e
+          oportunidades de contribuição.
+        </p>
+
+        <div class="grid-two spaced">
+          <div class="card">
+            <h3>🔮 Funcionalidades Planejadas</h3>
+            <dl class="entity-list">
+              <dt><strong>FinancialManager & FinancialViewer</strong></dt>
+              <dd>
+                Papéis administrativos territoriais para gestão financeira:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Configuração de taxas de plataforma por território</li>
+                  <li>Visualização de saldos e movimentações</li>
+                  <li>Relatórios financeiros territoriais</li>
+                  <li>Gestão de payout e distribuição de receitas</li>
+                </ul>
+              </dd>
+
+              <dt><strong>GeoAnchor Avançado</strong></dt>
+              <dd>
+                Recursos avançados de geolocalização:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Memórias e galeria associadas a locais</li>
+                  <li>Pins visuais customizados</li>
+                  <li>Rastreamento temporal de mudanças geográficas</li>
+                </ul>
+              </dd>
+
+              <dt><strong>Indicadores Comunitários</strong></dt>
+              <dd>
+                Métricas de saúde territorial:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Indicadores de engajamento comunitário</li>
+                  <li>Alertas ambientais avançados</li>
+                  <li>Dashboard de saúde do território</li>
+                </ul>
+              </dd>
+
+              <dt><strong>Integrações Externas</strong></dt>
+              <dd>
+                Conectores e serviços externos:
+                <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                  <li>Geocoding e reverse geocoding</li>
+                  <li>Notificações push via FCM/APNs</li>
+                  <li>E-mail como canal de notificação</li>
+                </ul>
+              </dd>
+            </dl>
+          </div>
+
+          <div class="card">
+            <h3>🎯 Princípios de Evolução</h3>
+            <dl class="entity-list">
+              <dt><strong>Território-first</strong></dt>
+              <dd>Todas as funcionalidades devem fortalecer o vínculo com o território físico e a organização comunitária local.</dd>
+
+              <dt><strong>Governança transparente</strong></dt>
+              <dd>Regras explícitas, auditáveis e evolutivas, com separação clara entre governança global e territorial.</dd>
+
+              <dt><strong>Baixa excitação, alto cuidado</strong></dt>
+              <dd>Interface e funcionalidades que promovem foco, clareza e continuidade, sem manipulação algorítmica.</dd>
+
+              <dt><strong>Qualidade sobre velocidade</strong></dt>
+              <dd>Cobertura de testes >90%, validações robustas, arquitetura limpa e documentação atualizada.</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contribuir">
+        <span class="eyebrow">Contribuição</span>
+        <h2>Contribua com o Araponga</h2>
+        <p class="lead-text space-bottom">
+          O Araponga é um projeto comunitário de código aberto. Contribuições são bem-vindas e
+          essenciais para fortalecer a plataforma e alcançar comunidades ao redor do mundo.
+        </p>
+
+        <div class="grid-two spaced-sm">
+          <div class="card">
+            <h3>💻 Para Desenvolvedores</h3>
+            <p class="card-intro">
+              Contribua com código, testes, documentação e melhorias técnicas.
+            </p>
+            <ul class="card-list">
+              <li><strong>Implementar funcionalidades</strong> alinhadas ao roadmap</li>
+              <li><strong>Melhorar cobertura de testes</strong> e qualidade de código</li>
+              <li><strong>Documentar APIs</strong> e exemplos de uso</li>
+              <li><strong>Otimizar performance</strong> e escalabilidade</li>
+              <li><strong>Revisar Pull Requests</strong> e sugerir melhorias</li>
+            </ul>
+            <p class="card-divider">
+              <strong>🛠️ Setup local:</strong> .NET 8, PostgreSQL + PostGIS, Redis (opcional).
+              Consulte <a href="https://github.com/sraphaz/araponga/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>
+              para detalhes técnicos e padrões de código.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>📚 Formas de Contribuição</h3>
+            <p class="card-intro">
+              Existem várias formas de contribuir, independente do nível técnico.
+            </p>
+            <ul class="card-list">
+              <li><strong>Relatar bugs</strong> e propor melhorias via Issues</li>
+              <li><strong>Validar fluxos</strong> e testar funcionalidades em desenvolvimento</li>
+              <li><strong>Ajustar documentação</strong> e melhorar exemplos práticos</li>
+              <li><strong>Sugerir features</strong> alinhadas à visão do produto</li>
+              <li><strong>Traduzir conteúdo</strong> para outros idiomas</li>
+              <li><strong>Compartilhar casos de uso</strong> e experiências reais</li>
+            </ul>
+            <p class="card-divider">
+              <strong>📖 Documentação:</strong> Consulte <a href="https://github.com/sraphaz/araponga/blob/main/docs/">docs/</a>
+              para visão de produto, arquitetura, decisões técnicas e guias de implementação.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout highlight">
+          <p>
+            <strong>Próximos passos:</strong> Explore o repositório, abra uma Issue para discussão ou
+            envie um Pull Request. Todas as contribuições seguem o
+            <a href="https://github.com/sraphaz/araponga/blob/main/CODE_OF_CONDUCT.md" style="color: var(--link);">Código de Conduta</a>
+            e passam por revisão cuidadosa para manter os altos padrões de qualidade do projeto.
           </p>
         </div>
       </section>
@@ -1923,6 +2179,15 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           var diagramContainer = toggle.querySelector('.mermaid');
           var containerDiv = toggle.querySelector('.sequence-diagram-container');
           
+          // SELAR conteúdo Mermaid imediatamente após DOM estar pronto
+          // Isso garante que o código nunca seja modificado pelo navegador
+          if (diagramContainer && !diagramContainer.hasAttribute('data-mermaid-sealed')) {
+            var originalContent = diagramContainer.innerHTML.trim();
+            // Armazenar código original em data-attribute (selado)
+            diagramContainer.setAttribute('data-mermaid-sealed', 'true');
+            diagramContainer.setAttribute('data-mermaid-code', originalContent);
+          }
+          
           // Adicionar botão de fullscreen
           if (diagramContainer && containerDiv) {
             var fullscreenBtn = document.createElement('button');
@@ -1941,10 +2206,9 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
             if (this.open && !rendered) {
               if (diagramContainer) {
                 var diagramId = diagramContainer.getAttribute('data-diagram') || 'diagram-' + Date.now();
-                 // IMPORTANTE: Usar innerHTML em vez de textContent para evitar que o navegador
-                 // adicione tags de fechamento automáticas ao processar <Tipo> em tipos genéricos C#
-                 // O navegador pode interpretar <Territory> como tag HTML não fechada e adicionar </territory>
-                 var diagramContent = diagramContainer.innerHTML.trim();
+                 // LER código SELADO do data-attribute (nunca modificado pelo navegador)
+                 // Se não houver data-mermaid-code, usar innerHTML como fallback
+                 var diagramContent = diagramContainer.getAttribute('data-mermaid-code') || diagramContainer.innerHTML.trim();
                  
                  // Decodifica entidades HTML em ordem segura para evitar double unescaping
                  // IMPORTANTE: &amp; deve ser decodificado por último para evitar converter &amp;lt; em &lt;
@@ -2042,8 +2306,8 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
       
       // Função para abrir diagrama em tela cheia
       function openDiagramFullscreen(diagramElement) {
-        // SEMPRE buscar primeiro do data-original-code (código original antes de renderizar)
-        var diagramText = diagramElement.getAttribute('data-original-code');
+        // SEMPRE buscar primeiro do data-mermaid-code (código SELADO) ou data-original-code
+        var diagramText = diagramElement.getAttribute('data-mermaid-code') || diagramElement.getAttribute('data-original-code');
         
         // Se não encontrou no data-attribute, tentar buscar do elemento original
         if (!diagramText || diagramText.trim() === '') {

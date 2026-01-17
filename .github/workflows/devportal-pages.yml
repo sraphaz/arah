@@ -75,3 +75,29 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  test-links:
+    runs-on: ubuntu-latest
+    needs: deploy
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Wait for deployment
+        run: |
+          echo "Waiting 30 seconds for GitHub Pages deployment to propagate..."
+          sleep 30
+
+      - name: Test Wiki Links
+        working-directory: frontend/wiki
+        env:
+          WIKI_URL: https://devportal.araponga.app/wiki
+        run: |
+          npm ci
+          npm run test:links

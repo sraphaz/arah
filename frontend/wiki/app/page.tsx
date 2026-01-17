@@ -9,6 +9,24 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { FeatureCard } from "../components/ui/FeatureCard";
 
+function processMarkdownLinks(html: string, basePath: string = '/wiki'): string {
+  // Processa links <a href="/docs/..."> para <a href="/wiki/docs/...">
+  // Mas NÃO processa links externos ou absolutos
+  return html.replace(
+    /<a\s+([^>]*\s+)?href=["'](\/[^"']+)["']([^>]*)>/gi,
+    (match, before, href, after) => {
+      // Ignora se já começa com basePath ou é link externo
+      if (href.startsWith(basePath) || href.startsWith('http')) {
+        return match;
+      }
+      
+      // Adiciona basePath a links relativos que começam com /
+      const newHref = `${basePath}${href}`;
+      return `<a ${before || ''}href="${newHref}"${after || ''}>`;
+    }
+  );
+}
+
 async function getDocContent(filePath: string) {
   try {
     const docsPath = join(process.cwd(), "..", "..", "docs", filePath);
@@ -20,8 +38,11 @@ async function getDocContent(filePath: string) {
       .use(remarkGfm)
       .process(content);
 
+    // Processa links no HTML renderizado para incluir basePath
+    const htmlContent = processMarkdownLinks(processedContent.toString(), '/wiki');
+
     return {
-      content: processedContent.toString(),
+      content: htmlContent,
       frontMatter: data,
       title: data.title || "Bem-Vind@ à Wiki Araponga",
     };

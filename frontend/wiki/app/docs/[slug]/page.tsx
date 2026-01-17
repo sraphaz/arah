@@ -43,6 +43,24 @@ const slugToFile: Record<string, string> = {
   "41_CONTRIBUTING": "41_CONTRIBUTING.md",
 };
 
+function processMarkdownLinks(html: string, basePath: string = '/wiki'): string {
+  // Processa links <a href="/docs/..."> para <a href="/wiki/docs/...">
+  // Mas NÃO processa links externos ou absolutos
+  return html.replace(
+    /<a\s+([^>]*\s+)?href=["'](\/[^"']+)["']([^>]*)>/gi,
+    (match, before, href, after) => {
+      // Ignora se já começa com basePath ou é link externo
+      if (href.startsWith(basePath) || href.startsWith('http')) {
+        return match;
+      }
+      
+      // Adiciona basePath a links relativos que começam com /
+      const newHref = `${basePath}${href}`;
+      return `<a ${before || ''}href="${newHref}"${after || ''}>`;
+    }
+  );
+}
+
 async function getDocContent(fileName: string) {
   try {
     const docsPath = join(process.cwd(), "..", "..", "docs", fileName);
@@ -54,8 +72,11 @@ async function getDocContent(fileName: string) {
       .use(remarkGfm)
       .process(content);
 
+    // Processa links no HTML renderizado para incluir basePath
+    const htmlContent = processMarkdownLinks(processedContent.toString(), '/wiki');
+
     return {
-      content: processedContent.toString(),
+      content: htmlContent,
       frontMatter: data,
       title: data.title || fileName.replace(".md", "").replace(/_/g, " "),
     };

@@ -69,6 +69,41 @@ const channelConfig = [
                 public: true
             }
         ]
+    },
+    {
+        categoryName: '🌐 Canais Sociais',
+        channels: [
+            {
+                name: 'apresentações',
+                description: 'Apresente-se para a comunidade! Conte um pouco sobre você e seu interesse no projeto',
+                type: ChannelType.GuildText,
+                public: true
+            },
+            {
+                name: 'off-topic',
+                description: 'Discussões casuais, tópicos gerais, conversas livres sobre diversos assuntos',
+                type: ChannelType.GuildText,
+                public: true
+            },
+            {
+                name: 'celebrações',
+                description: 'Celebre conquistas, marcos do projeto, contribuições destacadas e momentos importantes',
+                type: ChannelType.GuildText,
+                public: true
+            },
+            {
+                name: 'territórios',
+                description: 'Compartilhe experiências territoriais, histórias de comunidades, conexões locais',
+                type: ChannelType.GuildText,
+                public: true
+            },
+            {
+                name: 'recursos',
+                description: 'Compartilhe recursos úteis: ferramentas, artigos, eventos relacionados, aprendizado',
+                type: ChannelType.GuildText,
+                public: true
+            }
+        ]
     }
 ];
 
@@ -89,6 +124,8 @@ Este é um espaço para construção colaborativa de uma plataforma digital comu
 - #analistas-funcionais - Espaço funcional
 - #propostas-funcionais - Discussão de propostas
 - #feedback-comunidade - Feedback de uso
+- #apresentações - Se apresente para a comunidade
+- #territórios - Experiências e histórias territoriais
 
 🤝 **Valores:**
 - Território como referência

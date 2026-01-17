@@ -2,8 +2,9 @@
 
 **Guia para Configurar o Discord do Time Araponga**
 
-**Versão**: 1.0  
-**Data**: 2025-01-20
+**Versão**: 1.1  
+**Data**: 2025-01-20  
+**Link do Discord**: https://discord.gg/auwqN8Yjgw (permanente, nunca expira)
 
 ---
 

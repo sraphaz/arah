@@ -236,7 +236,7 @@ Ideal se você:
 - **Analistas Funcionais**: Espaço para quem observa territórios
 - **Geral**: Discussões sobre o projeto
 
-👉 **[Entre no Discord](#)** (link será adicionado)
+👉 **[Entre no Discord](https://discord.gg/auwqN8Yjgw)** - Conecte-se com o time!
 
 **Primeiro passo**: Entre na **Sala Pública** e apresente-se!
 
@@ -426,7 +426,7 @@ Quando você contribui com o Araponga, você:
 - **Analistas Funcionais**: Espaço funcional
 - **Geral**: Discussões sobre o projeto
 
-👉 **[Entrar no Discord](https://discord.gg/araponga)** (link será configurado)
+👉 **[Entrar no Discord](https://discord.gg/auwqN8Yjgw)** - Conecte-se com o time!
 
 **Primeiro passo**: Entre na **Sala Pública** e apresente-se!
 

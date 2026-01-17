@@ -1,0 +1,177 @@
+name: Build, Test & Deploy Wiki to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'frontend/wiki/**'
+      - 'docs/**'
+      - '.github/workflows/wiki-pages.yml'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'frontend/wiki/**'
+      - 'docs/**'
+      - '.github/workflows/wiki-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "wiki-pages"
+  cancel-in-progress: true
+
+jobs:
+  # Job de CI: Build e Testes
+  ci:
+    name: Build & Test Wiki
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/wiki/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/wiki
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend/wiki
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Type check
+        working-directory: frontend/wiki
+        run: npm run type-check
+
+      - name: Run tests
+        working-directory: frontend/wiki
+        run: npm test -- --coverage --ci
+        continue-on-error: true
+
+      - name: Build (for CI validation)
+        working-directory: frontend/wiki
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Check build output
+        run: |
+          if [ ! -d "frontend/wiki/.next" ]; then
+            echo "❌ Build failed: .next directory not found"
+            exit 1
+          fi
+          echo "✅ Build successful: .next directory exists"
+
+      # Teste básico: verificar se os documentos podem ser lidos
+      - name: Test document loading
+        working-directory: frontend/wiki
+        run: |
+          if [ ! -d "../../docs" ]; then
+            echo "❌ Docs directory not found"
+            exit 1
+          fi
+          DOC_COUNT=$(find ../../docs -name "*.md" | wc -l)
+          if [ "$DOC_COUNT" -eq 0 ]; then
+            echo "❌ No markdown files found in docs/"
+            exit 1
+          fi
+          echo "✅ Found $DOC_COUNT markdown files in docs/"
+          
+          # Verificar se arquivos principais existem
+          if [ ! -f "../../docs/00_INDEX.md" ]; then
+            echo "⚠️  00_INDEX.md not found"
+          fi
+          
+          if [ ! -f "../../docs/ONBOARDING_PUBLICO.md" ]; then
+            echo "⚠️  ONBOARDING_PUBLICO.md not found"
+          fi
+
+  # Job de Build para Pages (apenas em push para main)
+  build:
+    name: Build Wiki for Pages
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/wiki/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/wiki
+        run: npm ci
+
+      - name: Build for production (static export)
+        working-directory: frontend/wiki
+        run: NEXT_EXPORT=true npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Prepare Pages artifacts
+        run: |
+          mkdir -p dist
+          
+          # Next.js com output: 'export' gera out/
+          if [ -d "frontend/wiki/out" ]; then
+            cp -R frontend/wiki/out/. dist/
+            echo "✅ Copied static export from out/"
+          else
+            echo "❌ Build failed: out/ directory not found"
+            exit 1
+          fi
+          
+          # Criar CNAME para wiki.araponga.app
+          echo "wiki.araponga.app" > dist/CNAME
+          
+          # Verificar se index.html existe
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ No index.html found after export"
+            exit 1
+          fi
+          
+          echo "✅ Pages artifacts prepared in dist/"
+          echo "📄 Files in dist/:"
+          ls -la dist/ | head -20
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  # Job de Deploy para GitHub Pages
+  deploy:
+    name: Deploy Wiki to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    timeout-minutes: 10
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

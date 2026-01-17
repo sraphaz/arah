@@ -2,193 +2,563 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-  --glass-bg: rgba(255, 255, 255, 0.88);
-  --glass-border: rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 20px 50px rgba(20, 40, 28, 0.15);
-  --glass-hover-shadow: 0 24px 60px rgba(20, 40, 28, 0.2);
-  --glass-radius: 32px;
-  --glass-blur: 16px;
-  --watermark-opacity: 0.04;
-  --watermark-size: 480px;
-  --watermark-bottom: -140px;
-  --watermark-right: -140px;
-  --body-watermark-opacity: 0.03;
-  --body-watermark-size: 600px;
-  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+@layer base {
+  :root {
+    color-scheme: light dark;
+    --glass-bg: rgba(255, 255, 255, 0.92);
+    --glass-border: rgba(255, 255, 255, 0.85);
+    --glass-shadow: 0 20px 60px rgba(20, 40, 28, 0.12);
+    --glass-hover-shadow: 0 28px 80px rgba(20, 40, 28, 0.18);
+    --glass-radius: 40px;
+    --glass-blur: 20px;
+    --watermark-opacity: 0.035;
+    --watermark-size: 560px;
+    --watermark-bottom: -180px;
+    --watermark-right: -180px;
+    --body-watermark-opacity: 0.025;
+    --body-watermark-size: 720px;
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-quick: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    --spacing-section: 120px;
+    --spacing-card: 80px;
+    --gradient-overlay: linear-gradient(180deg, rgba(241, 248, 244, 0.6) 0%, rgba(241, 248, 244, 0.2) 100%);
+  }
+
+  /* Dark mode - identidade visual do devportal */
+  :root.dark {
+    --glass-bg: rgba(20, 26, 33, 0.95);
+    --glass-border: rgba(37, 48, 58, 0.8);
+    --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    --glass-hover-shadow: 0 28px 80px rgba(0, 0, 0, 0.4);
+    --watermark-opacity: 0.015;
+    --body-watermark-opacity: 0.01;
+    --gradient-overlay: linear-gradient(180deg, rgba(10, 14, 18, 0.8) 0%, rgba(10, 14, 18, 0.4) 100%);
+  }
+
+  * {
+    @apply border-forest-200;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    @apply text-forest-900 dark:text-forest-100 bg-forest-50 dark:bg-forest-950;
+    min-height: 100vh;
+    background-image: url("/bukeh.jpg");
+    background-repeat: repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Dark mode body background */
+  :root.dark body {
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
+    background-color: #0a0e12;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--body-watermark-size);
+    height: var(--body-watermark-size);
+    max-width: 95vw;
+    max-height: 95vh;
+    background-image: url("/Logo_1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: var(--body-watermark-opacity);
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: soft-light;
+    filter: grayscale(100%) brightness(1.3) contrast(0.9);
+    transition: opacity 2s ease-in-out;
+  }
+
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Scrollbar personalizada */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-forest-100 dark:bg-forest-950;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-forest-300 dark:bg-forest-800 rounded-full;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-forest-400 dark:bg-forest-700;
+  }
 }
 
-body {
-  @apply text-forest-900 bg-forest-50;
-  min-height: 100vh;
-  background-image: url("/bukeh.jpg");
-  background-repeat: repeat;
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  position: relative;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+@layer components {
+  /* Container consistent */
+  .container-max {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
+  }
+
+  /* Glass card - identidade visual Araponga refinada */
+  .glass-card {
+    position: relative;
+    border-radius: var(--glass-radius);
+    background: var(--glass-bg);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    isolation: isolate;
+  }
+
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay);
+    opacity: 0;
+    transition: opacity var(--transition-smooth);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glass-card:hover {
+    box-shadow: var(--glass-hover-shadow);
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.95);
+  }
+
+  .glass-card:hover::before {
+    opacity: 1;
+  }
+
+  .glass-card::after {
+    content: "";
+    position: absolute;
+    width: var(--watermark-size);
+    height: var(--watermark-size);
+    bottom: var(--watermark-bottom);
+    right: var(--watermark-right);
+    background-image: url("/Logo_1.png");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: contain;
+    opacity: var(--watermark-opacity);
+    pointer-events: none;
+    z-index: 0;
+    filter: grayscale(100%) brightness(1.15) contrast(0.85);
+    mix-blend-mode: soft-light;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .glass-card:hover::after {
+    opacity: calc(var(--watermark-opacity) * 1.3);
+  }
+
+  .glass-card__content {
+    position: relative;
+    z-index: 1;
+    padding: var(--spacing-card);
+  }
+
+  /* Navigation refinada */
+  .nav-link {
+    @apply text-forest-700 dark:text-forest-200 hover:text-forest-900 dark:hover:text-forest-50 px-4 py-2.5 rounded-xl font-medium;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/80 hover:shadow-sm;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-link::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    @apply bg-forest-600;
+    transform: translateX(-50%);
+    transition: width var(--transition-quick);
+  }
+
+  .nav-link:hover::before {
+    width: 80%;
+  }
+
+  .nav-link.active {
+    @apply bg-forest-200/60 dark:bg-forest-900/60 text-forest-900 dark:text-forest-50 font-semibold;
+  }
+
+  .nav-link.active::before {
+    width: 80%;
+  }
+
+  /* Category card - design elevado */
+  .category-card {
+    @apply glass-card;
+    @apply hover:scale-[1.02] transition-all duration-500;
+  }
+
+  .category-card h2 {
+    @apply relative inline-block;
+  }
+
+  .category-card h2::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    @apply bg-forest-400;
+    transition: width var(--transition-smooth);
+    border-radius: 2px;
+  }
+
+  .category-card:hover h2::after {
+    width: 100%;
+  }
+
+  .doc-link {
+    @apply flex items-center space-x-3 px-4 py-3 rounded-xl;
+    @apply text-forest-700 hover:text-forest-900;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:bg-forest-50 hover:shadow-sm;
+    @apply group relative;
+  }
+
+  .doc-link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 0;
+    @apply bg-forest-400 rounded-r-full;
+    transform: translateY(-50%);
+    transition: height var(--transition-quick);
+  }
+
+  .doc-link:hover::before {
+    height: 60%;
+  }
+
+  .doc-link span:first-child {
+    @apply text-forest-400 group-hover:text-forest-600 group-hover:translate-x-1;
+    transition: var(--transition-quick);
+    font-size: 1.25rem;
+  }
+
+  /* Hero section */
+  .hero-title {
+    @apply text-5xl md:text-6xl lg:text-7xl font-bold;
+    @apply bg-gradient-to-br from-forest-900 via-forest-800 to-forest-700;
+    @apply bg-clip-text text-transparent;
+    @apply leading-tight mb-6;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-subtitle {
+    @apply text-xl md:text-2xl text-forest-600;
+    @apply leading-relaxed max-w-3xl;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* Buttons refinados */
+  .btn-primary {
+    @apply bg-forest-600 text-white px-8 py-4 rounded-2xl;
+    @apply font-semibold text-lg;
+    @apply hover:bg-forest-700 hover:shadow-xl;
+    @apply active:scale-[0.98];
+    @apply transition-all duration-300 ease-out;
+    @apply relative overflow-hidden;
+    box-shadow: 0 4px 16px rgba(55, 123, 87, 0.3);
+  }
+
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    @apply bg-white;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    opacity: 0.2;
+  }
+
+  .btn-primary:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .btn-secondary {
+    @apply bg-forest-100 text-forest-800 px-8 py-4 rounded-2xl;
+    @apply font-semibold text-lg;
+    @apply hover:bg-forest-200 hover:shadow-lg;
+    @apply active:scale-[0.98];
+    @apply transition-all duration-300 ease-out;
+    border: 1.5px solid rgba(198, 227, 210, 0.6);
+  }
+
+  /* Markdown content refinado */
+  .markdown-content {
+    @apply prose prose-lg max-w-none;
+    @apply prose-headings:font-bold prose-headings:text-forest-900 dark:prose-headings:text-forest-100;
+    @apply prose-p:text-forest-800 dark:prose-p:text-forest-200 prose-p:leading-relaxed;
+    @apply prose-a:text-forest-600 dark:prose-a:text-[#7dd3ff] prose-a:font-medium;
+    @apply prose-a:decoration-forest-300 dark:prose-a:decoration-[#25303a] prose-a:underline-offset-4;
+    @apply prose-strong:text-forest-900 dark:prose-strong:text-forest-50 prose-strong:font-semibold;
+    @apply prose-code:text-forest-800 dark:prose-code:text-forest-100;
+    @apply prose-pre:bg-forest-900 dark:prose-pre:bg-[#0a0e12] prose-pre:text-forest-50;
+    @apply prose-blockquote:border-forest-400 dark:prose-blockquote:border-[#4dd4a8] prose-blockquote:text-forest-700 dark:prose-blockquote:text-forest-300;
+    @apply prose-ul:marker:text-forest-500 dark:prose-ul:marker:text-forest-400;
+  }
+
+  .markdown-content h1 {
+    @apply text-5xl font-bold text-forest-900 dark:text-forest-50 mb-8 mt-12;
+    @apply pb-4 border-b-2 border-forest-200 dark:border-forest-800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .markdown-content h2 {
+    @apply text-3xl font-bold text-forest-800 dark:text-forest-100 mb-6 mt-12;
+    @apply pb-3 border-b border-forest-200/60 dark:border-forest-800/60;
+    letter-spacing: -0.01em;
+    position: relative;
+    scroll-margin-top: 100px;
+  }
+
+  .markdown-content h3 {
+    @apply text-2xl font-semibold text-forest-700 dark:text-forest-200 mb-4 mt-10;
+    letter-spacing: -0.01em;
+  }
+
+  .markdown-content h4 {
+    @apply text-xl font-semibold text-forest-700 dark:text-forest-200 mb-3 mt-8;
+  }
+
+  .markdown-content p {
+    @apply mb-6 leading-relaxed text-forest-800 dark:text-forest-200;
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    @apply mb-6 pl-8 space-y-3;
+  }
+
+  .markdown-content li {
+    @apply text-forest-800 dark:text-forest-200 leading-relaxed;
+    position: relative;
+  }
+
+  .markdown-content ul li::marker {
+    @apply text-forest-500 font-bold;
+  }
+
+  .markdown-content a {
+    @apply text-forest-600 dark:text-[#7dd3ff] hover:text-forest-900 dark:hover:text-[#9de3ff];
+    @apply underline underline-offset-4 decoration-2;
+    @apply decoration-forest-300 dark:decoration-[#25303a] hover:decoration-forest-500 dark:hover:decoration-[#7dd3ff];
+    @apply font-medium transition-colors duration-300;
+    @apply hover:bg-forest-50 dark:hover:bg-forest-900/50 px-1 rounded;
+  }
+
+  .markdown-content code {
+    @apply bg-forest-100 dark:bg-forest-900 text-forest-900 dark:text-forest-100 px-2.5 py-1.5 rounded-lg;
+    @apply text-sm font-mono;
+    @apply border border-forest-200 dark:border-forest-800;
+    font-feature-settings: "kern" 0;
+  }
+
+  .markdown-content pre {
+    @apply bg-forest-900 dark:bg-[#0a0e12] text-forest-50 p-6 rounded-2xl;
+    @apply overflow-x-auto mb-8 border border-forest-800 dark:border-[#25303a];
+    @apply shadow-lg;
+  }
+
+  .markdown-content pre code {
+    @apply bg-transparent text-forest-50 p-0 border-0;
+  }
+
+  .markdown-content blockquote {
+    @apply border-l-4 border-forest-400 pl-6 py-4 my-8;
+    @apply italic text-forest-700 bg-forest-50/50 rounded-r-xl;
+    @apply shadow-sm;
+  }
+
+  .markdown-content table {
+    @apply w-full border-collapse mb-8 rounded-xl overflow-hidden;
+    @apply shadow-md;
+  }
+
+  .markdown-content th {
+    @apply bg-forest-200 text-forest-900 font-semibold px-6 py-4;
+    @apply border-b-2 border-forest-300 text-left;
+  }
+
+  .markdown-content td {
+    @apply border-b border-forest-200 px-6 py-4 text-forest-800;
+  }
+
+  .markdown-content tr:hover {
+    @apply bg-forest-50;
+  }
+
+  /* Breadcrumb refinado */
+  .breadcrumb {
+    @apply flex items-center space-x-2 text-sm text-forest-600 mb-8;
+  }
+
+  .breadcrumb a {
+    @apply hover:text-forest-900 hover:underline transition-colors;
+  }
+
+  .breadcrumb span {
+    @apply text-forest-400;
+  }
+
+  /* Metadata badge */
+  .metadata-badge {
+    @apply inline-flex items-center px-4 py-2 rounded-xl;
+    @apply bg-forest-100 text-forest-700 text-sm font-medium;
+    @apply border border-forest-200;
+  }
+
+  /* Footer refinado */
+  .footer-link {
+    @apply text-forest-600 hover:text-forest-900 underline underline-offset-4;
+    @apply decoration-forest-300 hover:decoration-forest-500;
+    @apply transition-colors duration-300;
+  }
+
+  /* Focus states acessíveis */
+  *:focus-visible {
+    outline: 3px solid theme('colors.forest.500');
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: var(--body-watermark-size);
-  height: var(--body-watermark-size);
-  max-width: 90vw;
-  max-height: 90vh;
-  background-image: url("/Logo_1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  opacity: var(--body-watermark-opacity);
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: soft-light;
-  filter: grayscale(100%) brightness(1.2);
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animation-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .animation-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
-body > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Container consistent */
-.container-max {
-  @apply mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-8;
-}
-
-/* Glass card - identidade visual Araponga */
-.glass-card {
-  position: relative;
-  border-radius: var(--glass-radius);
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  overflow: visible;
-  transition: var(--transition-smooth);
-}
-
-.glass-card:hover {
-  box-shadow: var(--glass-hover-shadow);
-  transform: translateY(-2px);
-}
-
-.glass-card__content {
-  position: relative;
-  z-index: 1;
-  padding: 36px;
-}
-
-/* Markdown content styles */
-.markdown-content {
-  @apply prose prose-lg max-w-none;
-}
-
-.markdown-content h1 {
-  @apply text-4xl font-bold text-forest-900 mb-6 mt-8;
-}
-
-.markdown-content h2 {
-  @apply text-3xl font-semibold text-forest-800 mb-4 mt-8 border-b border-forest-200 pb-2;
-}
-
-.markdown-content h3 {
-  @apply text-2xl font-semibold text-forest-700 mb-3 mt-6;
-}
-
-.markdown-content h4 {
-  @apply text-xl font-semibold text-forest-700 mb-2 mt-4;
-}
-
-.markdown-content p {
-  @apply mb-4 leading-relaxed text-forest-800;
-}
-
-.markdown-content ul,
-.markdown-content ol {
-  @apply mb-4 pl-6 space-y-2;
-}
-
-.markdown-content li {
-  @apply text-forest-800;
-}
-
-.markdown-content a {
-  @apply text-forest-600 hover:text-forest-800 underline underline-offset-2;
-}
-
-.markdown-content code {
-  @apply bg-forest-100 text-forest-800 px-2 py-1 rounded text-sm font-mono;
-}
-
-.markdown-content pre {
-  @apply bg-forest-900 text-forest-50 p-4 rounded-lg overflow-x-auto mb-4;
-}
-
-.markdown-content pre code {
-  @apply bg-transparent text-forest-50 p-0;
-}
-
-.markdown-content blockquote {
-  @apply border-l-4 border-forest-400 pl-4 italic text-forest-700 my-4;
-}
-
-.markdown-content table {
-  @apply w-full border-collapse mb-4;
-}
-
-.markdown-content th,
-.markdown-content td {
-  @apply border border-forest-300 px-4 py-2;
-}
-
-.markdown-content th {
-  @apply bg-forest-100 font-semibold;
-}
-
-/* Navigation */
-.nav-link {
-  @apply text-forest-700 hover:text-forest-900 hover:bg-forest-100 px-3 py-2 rounded transition-colors;
-}
-
-.nav-link.active {
-  @apply bg-forest-200 text-forest-900 font-medium;
-}
-
-/* Focus states */
-*:focus-visible {
-  outline: 2px solid var(--forest-500);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
+/* Responsividade refinada */
 @media (max-width: 768px) {
   body {
     background-attachment: scroll;
   }
 
   .glass-card__content {
-    padding: 24px;
+    padding: 32px 24px;
+  }
+
+  .hero-title {
+    @apply text-4xl;
+  }
+
+  .hero-subtitle {
+    @apply text-lg;
+  }
+
+  .markdown-content h1 {
+    @apply text-3xl;
+  }
+
+  .markdown-content h2 {
+    @apply text-2xl;
   }
 }
 
 @media (min-width: 768px) {
   .glass-card__content {
-    padding: 48px;
+    padding: 64px 56px;
   }
 }
 
 @media (min-width: 1024px) {
   .glass-card__content {
-    padding: 64px;
+    padding: 80px 72px;
+  }
+
+  .markdown-content {
+    @apply prose-xl;
+  }
+}
+
+/* Print styles */
+@media print {
+  .glass-card {
+    @apply shadow-none border border-forest-200;
+    page-break-inside: avoid;
+  }
+
+  .nav-link,
+  .btn-primary,
+  .btn-secondary {
+    @apply hidden;
   }
 }

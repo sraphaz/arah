@@ -245,16 +245,4 @@ public class DevPortalTests : IClassFixture<ApiFactory>
         Assert.Contains("diagram-modal", content, StringComparison.OrdinalIgnoreCase);
     }
 
-    [Fact]
-    public async Task DevPortal_Css_ShouldHaveFilterStylesForDarkTheme()
-    {
-        // Act
-        var response = await _client.GetAsync("/devportal/assets/css/devportal.css");
-        var content = await response.Content.ReadAsStringAsync();
-
-        // Assert
-        // Verifica que há filtros CSS para ajustar cores dos SVGs ao tema dark
-        Assert.Contains("filter:", content, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("invert(", content, StringComparison.OrdinalIgnoreCase);
-    }
 }

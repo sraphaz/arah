@@ -996,7 +996,7 @@
 
   /* Grid layout ajustado para mobile */
   .grid-cols-1.lg\\:grid-cols-\\[1fr_280px\\] {
-    @apply grid-cols-1;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
   /* TOC escondido em mobile muito pequeno ou transformado */

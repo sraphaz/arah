@@ -1199,7 +1199,7 @@
 .markdown-content h2[id],
 .markdown-content h3[id],
 .markdown-content h4[id] {
-  @apply relative group;
+  @apply relative;
   scroll-margin-top: 100px; /* Offset para sticky header */
 }
 
@@ -1254,7 +1254,6 @@
   @apply text-sm text-forest-700 dark:text-forest-300;
   @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/60;
   @apply transition-all duration-300;
-  @apply group;
   @apply w-full;
 }
 

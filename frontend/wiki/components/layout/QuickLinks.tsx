@@ -56,7 +56,7 @@ export function QuickLinks() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="quick-link"
+                className="quick-link group"
               >
                 <span className="quick-link-icon">{link.icon}</span>
                 <div className="quick-link-content">

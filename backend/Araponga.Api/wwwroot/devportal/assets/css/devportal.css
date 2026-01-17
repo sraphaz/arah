@@ -569,12 +569,16 @@ main {
 
 .section p {
   color: var(--text-muted);
-  margin: 0 0 1rem;
-  line-height: 1.75; /* Otimizado para leitura longa (era 1.7 implícito) */
+  margin: 0 0 1rem; /* Espaçamento padrão consistente entre parágrafos */
+  line-height: 1.75; /* Otimizado para leitura longa */
   max-width: 65ch; /* Limitar largura de linha para legibilidade ideal */
   text-align: left;
   word-spacing: normal;
   letter-spacing: normal;
+}
+
+.section p:last-child {
+  margin-bottom: 0; /* Último parágrafo sem margin-bottom */
 }
 
 
@@ -691,9 +695,9 @@ main {
 }
 
 .card p {
-  margin: 0 0 clamp(0.5rem, 1.25vw, 0.75rem); /* Espaçamento entre parágrafos */
+  margin: 0 0 0.75rem; /* Espaçamento padronizado entre parágrafos em cards */
   color: var(--text-muted);
-  /* Justificação inteligente - apenas em telas maiores */
+  line-height: 1.75; /* Consistente com .section p */
   text-align: left;
   word-spacing: normal;
   letter-spacing: normal;
@@ -779,15 +783,33 @@ main {
   margin-bottom: 0.25rem;
 }
 
-/* Example box */
+/* Info box / Example box - caixas informativas padronizadas */
+.info-box,
 .example-box {
-  margin-top: 1.25rem;
+  margin: 1rem 0; /* Espaçamento vertical padronizado */
   padding: 1rem 1.25rem;
   background: var(--bg-muted);
   border-left: 3px solid var(--accent);
   border-radius: var(--radius-sm);
   font-size: 0.9375rem;
-  line-height: 1.6;
+  line-height: 1.75; /* Consistente com outros parágrafos */
+  color: var(--text-muted);
+}
+
+.info-box strong {
+  color: var(--text);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.info-box ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.75; /* Consistente */
+}
+
+.info-box li {
+  margin: 0.375rem 0;
 }
 
 .example-box strong {
@@ -825,7 +847,12 @@ main {
 }
 
 .callout p {
-  margin: 0;
+  margin: 0 0 0.75rem; /* Espaçamento consistente entre parágrafos em callouts */
+  line-height: 1.75; /* Consistente com outros parágrafos */
+}
+
+.callout p:last-child {
+  margin-bottom: 0; /* Último parágrafo sem margin-bottom */
 }
 
 
@@ -852,8 +879,8 @@ main {
 /* Card content patterns */
 .card-intro {
   color: var(--text-muted);
-  margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
-  line-height: 1.7;
+  margin-bottom: 1rem; /* Padronizado com .section p */
+  line-height: 1.75; /* Consistente com outros parágrafos */
   text-align: left;
 }
 
@@ -941,10 +968,15 @@ main {
   line-height: 1.75;
   font-weight: 400; /* Peso normal para texto longo */
   color: var(--text); /* Mais visível que muted */
+  margin: 0 0 1rem; /* Espaçamento padrão consistente */
   text-align: left;
   max-width: 100%;
   word-spacing: normal;
   letter-spacing: normal;
+}
+
+.lead-text:last-child {
+  margin-bottom: 0; /* Último parágrafo sem margin-bottom */
 }
 
 

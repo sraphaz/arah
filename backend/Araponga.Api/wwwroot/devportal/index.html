@@ -552,9 +552,9 @@
     "assetIds": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"],
     "mediaIds": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc"]
   }'</code></pre>
-          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+          <div class="info-box">
             <strong>📸 Mídias em Posts:</strong>
-            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+            <ul>
               <li><strong>Upload de mídia</strong>: Primeiro, faça upload via <code>POST /api/v1/media/upload</code> para obter o <code>mediaId</code></li>
               <li><strong>Associar ao post</strong>: Inclua os <code>mediaIds</code> no array ao criar o post (máximo 10 imagens)</li>
               <li><strong>Resposta</strong>: O <code>FeedItemResponse</code> inclui <code>mediaUrls</code> (array de URLs) e <code>mediaCount</code></li>
@@ -803,9 +803,9 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
     "text": "Olha essa foto!",
     "mediaId": "gggggggg-gggg-gggg-gggg-gggggggggggg"
   }'</code></pre>
-          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+          <div class="info-box">
             <strong>💬 Mídias em Chat:</strong>
-            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+            <ul>
               <li><strong>Upload de mídia</strong>: Use <code>POST /api/v1/media/upload</code> para fazer upload da imagem</li>
               <li><strong>Enviar mensagem</strong>: Inclua o <code>mediaId</code> no campo opcional ao enviar mensagem</li>
               <li><strong>Limite</strong>: 1 imagem por mensagem, máximo 5MB, apenas imagens (não vídeos)</li>
@@ -977,7 +977,7 @@ curl -X POST http://localhost:8080/api/v1/chat/conversations/{conversationId}/me
     "longitude": -46.63,
     "mediaIds": ["dddddddd-dddd-dddd-dddd-dddddddddddd", "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"]
   }'</code></pre>
-          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+          <div class="info-box">
             <strong>📸 Mídias em Items:</strong>
             <ul style="margin-top: 0.5rem; line-height: 1.8;">
               <li><strong>Upload de mídia</strong>: Primeiro, faça upload via <code>POST /api/v1/media/upload</code> para obter o <code>mediaId</code></li>
@@ -1109,7 +1109,7 @@ curl -X POST "http://localhost:8080/api/v1/territories/{territoryId}/payout-conf
     "requiresApproval": false,
     "currency": "BRL"
   }'</code></pre>
-          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+          <div class="info-box">
             <strong>📝 Explicação dos Campos:</strong>
             <ul style="margin-top: 0.5rem; line-height: 1.8;">
               <li><code>retentionPeriodDays</code>: Quantos dias aguardar antes de liberar para payout (ex: 7 = aguarda 7 dias)</li>
@@ -1145,7 +1145,7 @@ curl "http://localhost:8080/api/v1/territories/{territoryId}/seller-balance/me" 
 # Consultar minhas transações como vendedor
 curl "http://localhost:8080/api/v1/territories/{territoryId}/seller-balance/me/transactions" \
   -H "Authorization: Bearer &lt;token&gt;"</code></pre>
-          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+          <div class="info-box">
             <strong>📊 Entendendo o Saldo do Vendedor:</strong>
             <ul style="margin-top: 0.5rem; line-height: 1.8;">
               <li><code>pendingAmountInCents</code>: Valor que ainda está no período de retenção</li>
@@ -1221,7 +1221,7 @@ curl "http://localhost:8080/api/v1/territories/{territoryId}/platform-financial/
             O sistema vem com um <code>MockPayoutGateway</code> para desenvolvimento. Para produção, você precisa
             implementar o <code>IPayoutGateway</code> para seu gateway de pagamento preferido (Stripe Connect, MercadoPago, etc.).
           </p>
-          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+          <div class="info-box">
             <strong>📝 Exemplo: Interface IPayoutGateway</strong>
             <pre class="code-block" style="margin-top: 0.5rem; background: #0a0e12;"><code>public interface IPayoutGateway
 {
@@ -1341,7 +1341,7 @@ curl "http://localhost:8080/api/v1/territories/{territoryId}/platform-financial/
     "coverMediaId": "ffffffff-ffff-ffff-ffff-ffffffffffff",
     "additionalMediaIds": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"]
   }'</code></pre>
-          <div style="margin-top: 1rem; padding: 1rem; background: #1a2a3a; border-radius: 0.5rem;">
+          <div class="info-box">
             <strong>📸 Mídias em Eventos:</strong>
             <ul style="margin-top: 0.5rem; line-height: 1.8;">
               <li><strong>Upload de mídia</strong>: Primeiro, faça upload via <code>POST /api/v1/media/upload</code> para obter o <code>mediaId</code></li>

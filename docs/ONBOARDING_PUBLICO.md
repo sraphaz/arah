@@ -8,16 +8,16 @@
 
 ## 🎯 O que é o Araponga?
 
-O **Araponga** é uma plataforma digital diferente.
+O **Araponga** é uma experiência digital diferente.
 
-Não é uma rede social que captura sua atenção.  
+Não é uma rede social que captura atenção.  
 Não é um marketplace que transforma tudo em mercadoria.  
-Não é um app que te conecta com pessoas distantes enquanto desconecta do lugar onde você vive.
+Não é um app que conecta pessoas distantes enquanto desconecta do lugar onde você vive.
 
-O Araponga é uma **infraestrutura digital comunitária** que:
+É uma **infraestrutura digital comunitária** que:
 
 ✅ **Reconhece o território** como referência fundamental  
-✅ **Fortalecer vínculos** entre pessoas e lugar  
+✅ **Fortalece vínculos** entre pessoas e lugar  
 ✅ **Respeita autonomia** das comunidades locais  
 ✅ **Serve ao cuidado coletivo** e à continuidade da vida no território  
 ✅ **Valoriza inteligência** como serviço, não como recurso a extrair  
@@ -26,25 +26,35 @@ O Araponga é uma **infraestrutura digital comunitária** que:
 
 ## 🌍 Por que existe?
 
-### O Mundo que Vivemos
+### O Contexto Atual
 
-Vivemos um tempo em que:
-- Plataformas digitais nos **desconectam** do lugar onde vivemos
-- Comunidades viram **mercados** para extrair dados
-- Nossa **inteligência não é reconhecida** como valor
+Observamos um tempo em que:
+- Plataformas digitais **desconectam** do lugar onde vivemos
+- Comunidades tornam-se **mercados** para extrair dados
+- **Inteligência não é reconhecida** como valor
 - Tecnologia **serve ao lucro**, não à vida
 
-### O Mundo que Queremos Construir
+### A Visão Coletiva
 
-Um mundo onde:
+Imagine um mundo onde:
 - Tecnologia **fortalece vínculos territoriais**, não os substitui
 - Comunidades **organizam-se digitalmente** mantendo autonomia
 - Inteligência é **reconhecida e valorizada** a serviço do território
 - Digital **serve ao social**, não o contrário
 
-### A Proposta do Araponga
+### Nossa Proposta
 
-Uma plataforma que:
+Construímos uma plataforma que **não é**:
+- ❌ Marketplace agressivo
+- ❌ Rede de engajamento infinito
+- ❌ Produto de vigilância
+
+**Mas sim**:
+- ✅ Infraestrutura digital comunitária
+- ✅ Ferramenta para autonomia local
+- ✅ Tecnologia que serve à vida
+
+**E que funciona assim**:
 - **Não extrai dados** para publicidade
 - **Não captura atenção** para engajamento infinito
 - **Não vigia** comunidades para controle
@@ -57,40 +67,52 @@ Uma plataforma que:
 ### Feed Comunitário
 
 Uma **linha do tempo** do seu território:
-- Posts de moradores e visitantes
-- Informações locais relevantes
-- Conteúdo que importa para o lugar
-- Organizado por **território**, não por algoritmo
+
+* Posts de moradores e visitantes
+* Informações locais relevantes
+* Conteúdo que importa para o lugar
+* Organizado por **território**, não por algoritmo
+
+O território organiza o contexto. O lugar mostra o conteúdo.
 
 ### Marketplace Territorial
 
-**Economia local** fortalecida:
-- Produtos e serviços do território
-- Facilitando trocas locais
-- Economia circular no lugar
-- Valorizando produção territorial
+**Economia circular local** fortalecida:
+
+* Produtos e serviços do território
+* Trocas locais facilitadas
+* Economia circular no lugar
+* Valorização da produção territorial
+
+Valor circula dentro do território. Trocas fortalecem vínculos comunitários.
 
 ### Eventos Comunitários
 
-**Organização** facilitada:
-- Mutirões, festas, reuniões
-- Facilita participação
-- Comunicação clara
-- Organização coletiva
+**Organização coletiva** facilitada:
+
+* Mutirões, festas, reuniões
+* Participação facilitada
+* Comunicação clara
+* Organização coletiva
+
+O cuidado coletivo acontece através de encontros no território.
 
 ### Chat Territorial
 
 **Comunicação** no território:
-- Canais e grupos por território
-- Conversas locais relevantes
-- Comunicação direta entre pessoas do lugar
+
+* Canais e grupos por território
+* Conversas locais relevantes
+* Comunicação direta entre pessoas do lugar
+
+O território torna-se espaço de diálogo. Pessoas encontram-se no lugar.
 
 ### E muito mais...
 
-- **Mapas** que mostram o território e seu conteúdo
-- **Georreferenciamento** que ancora tudo ao lugar
-- **Moderação comunitária** que respeita autonomia local
-- **Sistema de roles** (visitante/morador) que reconhece vínculos
+* **Mapas** que mostram o território e seu conteúdo
+* **Georreferenciamento** que ancora tudo ao lugar
+* **Moderação comunitária** que respeita autonomia local
+* **Sistema de roles** (visitante/morador) que reconhece vínculos
 
 ---
 
@@ -99,37 +121,48 @@ Uma **linha do tempo** do seu território:
 ### Território como Referência
 
 No Araponga, o **território** é um lugar físico real:
-- Tem nome, localização e fronteira geográfica
-- Existe **antes do app** e continua existindo sem usuários
-- É a **base** de tudo, não apenas um filtro
+
+* Tem nome, localização e fronteira geográfica
+* Existe **antes do app** e continua existindo sem usuários
+* É a **base** de tudo, não apenas um filtro
+
+O território não é produto. O território é pré-existente.
 
 ### Autonomia Local
 
 Comunidades **controlam** sua presença digital:
-- Decidem sobre moderação
-- Definem regras locais
-- Mantêm autonomia territorial
-- Tecnologia **serve**, não controla
+
+* Decidem sobre moderação
+* Definem regras locais
+* Mantêm autonomia territorial
+* Tecnologia **serve**, não controla
+
+Autonomia não se negocia. Autonomia se respeita.
 
 ### Tecnologia a Serviço da Vida
 
-O Araponga **não é**:
-- ❌ Marketplace agressivo
-- ❌ Rede de engajamento infinito
-- ❌ Produto de vigilância
+O Araponga **não replica padrões coloniais**:
 
-O Araponga **é**:
-- ✅ Infraestrutura digital comunitária
-- ✅ Ferramenta para autonomia local
-- ✅ Tecnologia que serve à vida
+* Não extrai para lucrar
+* Não captura para controlar
+* Não vigia para dominar
+
+O Araponga **oferece uma alternativa**:
+
+* Infraestrutura digital comunitária
+* Ferramenta para autonomia local
+* Tecnologia que serve à vida
 
 ### Decolonização Digital
 
-Tecnologia que:
-- **Não replica padrões coloniais** de extração
-- **Valoriza saberes locais** e conhecimento territorial
-- **Reconhece inteligência** como valor, não recurso
-- **Serve à autonomia**, não ao controle
+Tecnologia que **não replica padrões coloniais** de extração:
+
+* **Valoriza saberes locais** e conhecimento territorial
+* **Reconhece inteligência** como valor, não recurso
+* **Serve à autonomia**, não ao controle
+* **Respeita** diferentes formas de saber
+
+Inteligência não se extrai. Inteligência se honra.
 
 ---
 
@@ -139,46 +172,51 @@ Tecnologia que:
 
 O Araponga é construído por um **time livre e orgânico** de pessoas que:
 
-- **Compartilham valores** de autonomia territorial
-- **Contribuem** conforme capacidade e interesse
-- **Organizam-se** naturalmente em torno de objetivos comuns
-- **Respeitam** diferentes tipos de inteligência e expertise
+* **Compartilham valores** de autonomia territorial
+* **Contribuem** conforme capacidade e interesse
+* **Organizam-se** naturalmente em torno de objetivos comuns
+* **Respeitam** diferentes tipos de inteligência e expertise
 
-### Diferentes Papéis, Mesmo Objetivo
+Organização não é hierárquica. Organização é orgânica.
+
+### Diferentes Papéis, Mesmo Propósito
 
 #### 👨‍💻 Desenvolvedores
 
-Quem **constroi** a plataforma:
-- Escreve código
-- Implementa funcionalidades
-- Mantém infraestrutura técnica
-- **Usa Cursor** para desenvolvimento colaborativo
+Quem **constrói** a plataforma pode:
 
-**Não precisa ser expert** - raciocínio lógico e Cursor ajudam você a contribuir.
+* Escrever código
+* Implementar funcionalidades
+* Manter infraestrutura técnica
+* **Usar Cursor** para desenvolvimento colaborativo
+
+**Não precisa ser expert**. Raciocínio lógico e Cursor abrem caminhos para contribuir.
 
 👉 **[Comece como Desenvolvedor](./ONBOARDING_DEVELOPERS.md)**
 
 #### 👁️ Analistas Funcionais
 
-Quem **observa** e **propõe**:
-- Identifica necessidades territoriais
-- Propõe funcionalidades baseadas em observação
-- Valida se soluções atendem necessidades reais
-- Conecta território com desenvolvimento
+Quem **observa** e **propõe** pode:
 
-**Não precisa saber código** - observação territorial é sua expertise.
+* Identificar necessidades territoriais
+* Propor funcionalidades baseadas em observação
+* Validar se soluções atendem necessidades reais
+* Conectar território com desenvolvimento
+
+**Não precisa saber código**. Observação territorial é uma expertise valiosa.
 
 👉 **[Comece como Analista Funcional](./ONBOARDING_ANALISTAS_FUNCIONAIS.md)**
 
 #### 🌍 Comunidade
 
-Quem **usa** e **melhora**:
-- Usa a plataforma no território
-- Identifica o que funciona e o que não funciona
-- Propõe melhorias baseadas em uso real
-- Compartilha necessidades territoriais
+Quem **usa** e **melhora** pode:
 
-**Todos podem contribuir** - uso real guia melhorias.
+* Usar a plataforma no território
+* Identificar o que funciona e o que não funciona
+* Propor melhorias baseadas em uso real
+* Compartilhar necessidades territoriais
+
+**Todos podem contribuir**. Uso real mostra caminhos para melhorias.
 
 ---
 
@@ -186,10 +224,11 @@ Quem **usa** e **melhora**:
 
 ### 1. Conheça o Projeto
 
-**Leia sobre o Araponga**:
-- **[Visão do Produto](./01_PRODUCT_VISION.md)** - Por que existe e para quem
-- **[Roadmap](./02_ROADMAP.md)** - O que está planejado
-- **[Glossário](./05_GLOSSARY.md)** - Termos e conceitos
+**Explore o Araponga**:
+
+* **[Visão do Produto](./01_PRODUCT_VISION.md)** - Por que existe e para quem
+* **[Roadmap](./02_ROADMAP.md)** - O que está planejado
+* **[Glossário](./05_GLOSSARY.md)** - Termos e conceitos
 
 **💡 Dica**: Não precisa ler tudo de uma vez. Comece pela Visão do Produto para entender o propósito.
 
@@ -200,30 +239,30 @@ Quem **usa** e **melhora**:
 👉 **[Onboarding para Desenvolvedores](./ONBOARDING_DEVELOPERS.md)**
 
 Ideal se você:
-- Tem raciocínio lógico (não precisa ser programador experiente)
-- Quer aprender a construir aplicações
-- Quer ver suas ideias viradas em código
-- Usa ou quer usar Cursor
+* Tem raciocínio lógico (não precisa ser programador experiente)
+* Quer descobrir como construir aplicações
+* Quer ver suas ideias se tornarem código
+* Usa ou quer usar Cursor
 
 #### Quer Observar e Propor?
 
 👉 **[Onboarding para Analistas Funcionais](./ONBOARDING_ANALISTAS_FUNCIONAIS.md)**
 
 Ideal se você:
-- Conhece e observa territórios
-- Identifica necessidades práticas
-- Quer propor melhorias baseadas em contexto real
-- Não precisa saber código
+* Conhece e observa territórios
+* Identifica necessidades práticas
+* Quer propor melhorias baseadas em contexto real
+* Não precisa saber código
 
 #### Quer Usar e Contribuir?
 
 👉 **[Contribuindo](./41_CONTRIBUTING.md)**
 
 Ideal se você:
-- Quer usar a plataforma no seu território
-- Identifica melhorias ao usar
-- Quer participar sem ser técnico
-- Quer ajudar de outras formas
+* Quer usar a plataforma no seu território
+* Identifica melhorias ao usar
+* Quer participar sem ser técnico
+* Quer ajudar de outras formas
 
 ### 3. Junte-se à Comunidade
 
@@ -231,73 +270,74 @@ Ideal se você:
 
 **Conecte-se com o time**:
 
-- **Sala Pública**: Conheça o time, faça perguntas, participe de discussões
-- **Desenvolvedores**: Espaço para quem constrói código
-- **Analistas Funcionais**: Espaço para quem observa territórios
-- **Geral**: Discussões sobre o projeto
+* **Sala Pública**: Conheça o time, faça perguntas, participe de discussões
+* **Desenvolvedores**: Espaço para quem constrói código
+* **Analistas Funcionais**: Espaço para quem observa territórios
+* **Geral**: Discussões sobre o projeto
 
 👉 **[Entre no Discord](https://discord.gg/auwqN8Yjgw)** - Conecte-se com o time!
 
-**Primeiro passo**: Entre na **Sala Pública** e apresente-se!
+**Primeiro passo**: Entre na **Sala Pública** e apresente-se quando sentir-se pronto!
 
 #### 📋 GitHub
 
-**Contribua com código e propostas**:
-- Issues: Proponha funcionalidades, reporte bugs
-- Pull Requests: Contribua com código
-- Discussions: Participe de debates
+**Colabore no código**:
+
+* Issues: Proponha funcionalidades, reporte bugs
+* Pull Requests: Contribua com código
+* Discussions: Participe de debates
 
 👉 **[GitHub do Araponga](https://github.com/sraphaz/araponga)**
 
 ### 4. Comece Pequeno
 
-**Sugestões de primeiras contribuições**:
+**Comece no seu ritmo**. Sugestões de primeiras contribuições:
 
 #### Se você é Desenvolvedor:
-- Corrija documentação desatualizada
-- Adicione testes para funcionalidades existentes
-- Melhore código existente (legibilidade, comentários)
+* Corrija documentação desatualizada
+* Adicione testes para funcionalidades existentes
+* Melhore código existente (legibilidade, comentários)
 
 #### Se você é Analista Funcional:
-- Observe uma necessidade no seu território
-- Documente proposta de funcionalidade
-- Valide proposta com comunidade
+* Observe uma necessidade no seu território
+* Documente proposta de funcionalidade
+* Valide proposta com comunidade
 
 #### Se você é da Comunidade:
-- Use a plataforma e dê feedback
-- Compartilhe necessidades do seu território
-- Participe de discussões
+* Use a plataforma e compartilhe feedback
+* Compartilhe necessidades do seu território
+* Participe de discussões
 
 ---
 
 ## 🌍 Impacto e Transformação
 
-### O que Construímos Juntos
+### O que Acontece Quando Construímos Juntos
 
-Quando você contribui com o Araponga, você:
+Quando você contribui com o Araponga, faz parte de:
 
-1. **Democratiza tecnologia**:
-   - Mostra que desenvolvimento não é só para "especialistas"
-   - Valoriza diferentes tipos de inteligência
-   - Cria caminhos para pessoas de outras áreas
+1. **Democratização de tecnologia**:
+   * Desenvolvimento não é só para "especialistas"
+   * Diferentes tipos de inteligência são valorizados
+   * Caminhos são criados para pessoas de outras áreas
 
-2. **Serve ao território**:
-   - Fortalece comunidades locais
-   - Facilita organização comunitária
-   - Respeita autonomia e vínculos territoriais
+2. **Serviço ao território**:
+   * Comunidades locais são fortalecidas
+   * Organização comunitária é facilitada
+   * Autonomia e vínculos territoriais são respeitados
 
-3. **Descoloniza digital**:
-   - Cria tecnologia que não extrai, mas serve
-   - Reconhece inteligência como valor
-   - Coloca tecnologia a serviço da vida
+3. **Decolonização digital**:
+   * Tecnologia que não extrai, mas serve
+   * Inteligência reconhecida como valor
+   * Tecnologia colocada a serviço da vida
 
 ### Histórias de Transformação
 
 > "Vim da construção, sou matemático. Descobri que posso usar minha lógica para construir sistemas que servem ao território. Não preciso mudar completamente de área - posso expandir minhas possibilidades."
 
-> "Entendo requisitos funcionais e sempre quis ver minhas ideias viradas em código. Com o Cursor e o Araponga, finalmente consigo participar de algo maior."
+> "Entendo requisitos funcionais e sempre quis ver minhas ideias viradas em código. Com o Cursor e o Araponga, finalmente encontrei espaço para participar de algo maior."
 
-> "Observo meu território há anos. Sempre identifiquei necessidades que tecnologia poderia ajudar, mas nunca soube como propor. Agora posso documentar necessidades e ver funcionalidades sendo implementadas."
+> "Observo meu território há anos. Sempre identifiquei necessidades que tecnologia poderia ajudar, mas nunca soube como propor. Agora consigo documentar necessidades e ver funcionalidades sendo implementadas."
 
 ---
 
@@ -306,27 +346,29 @@ Quando você contribui com o Araponga, você:
 ### Você Não Precisa Saber Tudo
 
 **Todos começamos em algum lugar**:
-- Desenvolvedores começam com código simples
-- Analistas começam com primeira observação
-- Comunidade começa usando a plataforma
+* Desenvolvedores começam com código simples
+* Analistas começam com primeira observação
+* Comunidade começa usando a plataforma
 
 **O importante é começar**.
 
 ### Aprendendo Fazendo
 
 **No Araponga, você aprende**:
-- **Desenvolvendo**: Use Cursor e aprenda construindo
-- **Observando**: Identifique necessidades e proponha
-- **Usando**: Teste funcionalidades e dê feedback
-- **Colaborando**: Aprenda com outras pessoas do time
+* **Desenvolvendo**: Use Cursor e aprenda construindo
+* **Observando**: Identifique necessidades e proponha
+* **Usando**: Teste funcionalidades e compartilhe feedback
+* **Colaborando**: Aprenda com outras pessoas do time
 
 ### Suporte da Comunidade
 
 **Você não está sozinho**:
-- Discord para perguntas e discussões
-- GitHub para colaboração e code reviews
-- Documentação para referência
-- Comunidade sempre disposta a ajudar
+* Discord para perguntas e discussões
+* GitHub para colaboração e code reviews
+* Documentação para referência
+* Comunidade sempre disposta a acolher
+
+**Todos podem receber suporte**. **Todos podem oferecer suporte**.
 
 ---
 
@@ -334,27 +376,39 @@ Quando você contribui com o Araponga, você:
 
 ### Respeito
 
-- Seja respeitoso com todas as pessoas
-- Valorize diferentes perspectivas
-- Seja acolhedor com iniciantes
+**Praticamos**:
+* Respeito com todas as pessoas
+* Valorização de diferentes perspectivas
+* Acolhimento de iniciantes
+
+Respeito não se impõe. Respeito se pratica.
 
 ### Autonomia
 
-- Cada um contribui conforme capacidade
-- Não há hierarquias rígidas
-- Organização orgânica e natural
+**Valorizamos**:
+* Cada um contribui conforme capacidade
+* Não há hierarquias rígidas
+* Organização orgânica e natural
+
+Autonomia não se negocia. Autonomia se honra.
 
 ### Cuidado
 
-- Pense no impacto no território
-- Contribua com consciência
-- Seja responsável com suas mudanças
+**Valorizamos**:
+* Pensamento no impacto no território
+* Contribuição com consciência
+* Responsabilidade com mudanças
+
+Cuidado não se força. Cuidado se pratica.
 
 ### Transparência
 
-- Compartilhe conhecimento
-- Documente decisões
-- Seja aberto e claro
+**Praticamos**:
+* Compartilhamento de conhecimento
+* Documentação de decisões
+* Abertura e clareza
+
+Transparência não se impõe. Transparência se oferece.
 
 **Leia**: [`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md)
 
@@ -364,28 +418,28 @@ Quando você contribui com o Araponga, você:
 
 ### Para Conhecer o Projeto
 
-- **[Visão do Produto](./01_PRODUCT_VISION.md)** - Propósito e valores
-- **[Roadmap](./02_ROADMAP.md)** - Planejamento e direção
-- **[Glossário](./05_GLOSSARY.md)** - Termos e conceitos
+* **[Visão do Produto](./01_PRODUCT_VISION.md)** - Propósito e valores
+* **[Roadmap](./02_ROADMAP.md)** - Planejamento e direção
+* **[Glossário](./05_GLOSSARY.md)** - Termos e conceitos
 
 ### Para Contribuir
 
-- **[Onboarding para Desenvolvedores](./ONBOARDING_DEVELOPERS.md)** - Comece a desenvolver
-- **[Onboarding para Analistas Funcionais](./ONBOARDING_ANALISTAS_FUNCIONAIS.md)** - Comece a analisar
-- **[Contribuindo](./41_CONTRIBUTING.md)** - Guia geral de contribuição
-- **[Cartilha Completa](./CARTILHA_COMPLETA.md)** - Guia detalhado de todos os papéis
+* **[Onboarding para Desenvolvedores](./ONBOARDING_DEVELOPERS.md)** - Comece a desenvolver
+* **[Onboarding para Analistas Funcionais](./ONBOARDING_ANALISTAS_FUNCIONAIS.md)** - Comece a analisar
+* **[Contribuindo](./41_CONTRIBUTING.md)** - Guia geral de contribuição
+* **[Cartilha Completa](./CARTILHA_COMPLETA.md)** - Guia detalhado de todos os papéis
 
 ### Para Entender Técnicas
 
-- **[Arquitetura](./10_ARCHITECTURE_DECISIONS.md)** - Decisões arquiteturais
-- **[Modelo de Domínio](./12_DOMAIN_MODEL.md)** - Estrutura de dados
-- **[API - Lógica de Negócio](./60_API_LÓGICA_NEGÓCIO.md)** - Funcionalidades
+* **[Arquitetura](./10_ARCHITECTURE_DECISIONS.md)** - Decisões arquiteturais
+* **[Modelo de Domínio](./12_DOMAIN_MODEL.md)** - Estrutura de dados
+* **[API - Lógica de Negócio](./60_API_LÓGICA_NEGÓCIO.md)** - Funcionalidades
 
 ---
 
 ## 🗺️ Caminhos de Contribuição
 
-### Fluxo de Onboarding Recomendado
+### Fluxo Recomendado
 
 ```
 1. Leia este documento (você está aqui!)
@@ -407,7 +461,7 @@ Quando você contribui com o Araponga, você:
    [Quer usar e contribuir?]
    → Guia de Contribuição
    → Use a plataforma
-   → Dê feedback
+   → Compartilhe feedback
    ↓
 4. Entre no Discord (Sala Pública)
    ↓
@@ -421,10 +475,11 @@ Quando você contribui com o Araponga, você:
 ### Discord
 
 **Entre na nossa comunidade**:
-- **Sala Pública**: Conheça o time, faça perguntas
-- **Desenvolvedores**: Espaço técnico
-- **Analistas Funcionais**: Espaço funcional
-- **Geral**: Discussões sobre o projeto
+
+* **Sala Pública**: Conheça o time, faça perguntas
+* **Desenvolvedores**: Espaço para quem constrói código
+* **Analistas Funcionais**: Espaço para quem observa territórios
+* **Geral**: Discussões sobre o projeto
 
 👉 **[Entrar no Discord](https://discord.gg/auwqN8Yjgw)** - Conecte-se com o time!
 
@@ -435,16 +490,16 @@ Quando você contribui com o Araponga, você:
 ### GitHub
 
 **Colabore no código**:
-- Issues: Proponha e discuta
-- Pull Requests: Contribua com código
-- Discussions: Participe de debates
+
+* Issues: Proponha e discuta
+* Pull Requests: Contribua com código
+* Discussions: Participe de debates
 
 👉 **[GitHub do Araponga](https://github.com/sraphaz/araponga)**
 
 ### Email
 
-**Contato direto**:
-Para questões específicas ou propostas maiores.
+**Contato direto**: Para questões específicas ou propostas maiores.
 
 ---
 
@@ -452,28 +507,29 @@ Para questões específicas ou propostas maiores.
 
 ### Por que se Juntar?
 
-Você se junta não apenas a um projeto, mas a uma **iniciativa de consciência**:
+Você não se junta apenas a um projeto. Você faz parte de uma **iniciativa de consciência**:
 
-- Sua **inteligência** é reconhecida e honrada como valor
-- Sua **observação territorial** é expertise que guia desenvolvimento
-- Sua **contribuição** fortalece comunidades e autonomia local
-- Seu **aprendizado** serve ao território e à vida que nele habita
+* Sua **inteligência** é reconhecida e honrada como valor
+* Sua **observação territorial** é expertise que guia desenvolvimento
+* Sua **contribuição** fortalece comunidades e autonomia local
+* Seu **aprendizado** serve ao território e à vida que nele habita
 
 ### O que Você Precisa?
 
 **Apenas sua presença consciente**:
-- **Interesse** genuíno no projeto e seus valores
-- **Alinhamento** com princípios (autonomia, território, decolonização)
-- **Vontade** de contribuir respeitando seu próprio ritmo
-- **Abertura** para aprender, ensinar e co-criar
+* **Interesse** genuíno no projeto e seus valores
+* **Alinhamento** com princípios (autonomia, território, decolonização)
+* **Vontade** de contribuir respeitando seu próprio ritmo
+* **Abertura** para aprender, ensinar e co-criar
 
 ### O que Você Encontra?
 
 **Ao contribuir, você participa de**:
-- **Aprendizado** que honra sua inteligência e saberes
-- **Construção** de algo que realmente importa para comunidades
-- **Conexão** com pessoas que compartilham valores elevados
-- **Transformação** de tecnologia em serviço consciente ao território
+
+* **Aprendizado** que honra sua inteligência e saberes
+* **Construção** de algo que realmente importa para comunidades
+* **Conexão** com pessoas que compartilham valores elevados
+* **Transformação** de tecnologia em serviço consciente ao território
 
 **E mais importante: você honra sua própria inteligência ao colocá-la a serviço de algo maior.**
 
@@ -514,15 +570,15 @@ Você se junta não apenas a um projeto, mas a uma **iniciativa de consciência*
 
 ---
 
-**Bem-vindo ao Araponga.**  
+**Bem-vindo ao Araponga.**
 
-**Comece pequeno. Contribua no seu ritmo. Faça parte da mudança.**  
+**Comece pequeno. Contribua no seu ritmo. Faça parte da mudança.**
 
 **Com respeito, glória e consciência elevada.**
 
 ---
 
 **Última Atualização**: 2025-01-20  
-**Versão**: 1.0
+**Versão**: 1.2
 
 **Perguntas?** Entre no Discord ou abra uma Issue no GitHub!

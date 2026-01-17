@@ -116,7 +116,7 @@ export default async function DocPage({ params }: PageProps) {
 
             {/* Document Metadata - Badges */}
             {doc.frontMatter && (doc.frontMatter.version || doc.frontMatter.date || doc.frontMatter.status) && (
-              <div className="mb-10 pb-8 border-b border-forest-200/60 flex flex-wrap gap-3">
+              <div className="mb-12 pb-6 border-b-2 border-forest-200/80 dark:border-forest-800/80 flex flex-wrap gap-3">
                 {doc.frontMatter.version && (
                   <span className="metadata-badge">
                     <span className="mr-2">📌</span>

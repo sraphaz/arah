@@ -7,6 +7,7 @@ import remarkHtml from "remark-html";
 import remarkGfm from "remark-gfm";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
+import { FeatureCard } from "../components/ui/FeatureCard";
 
 async function getDocContent(filePath: string) {
   try {
@@ -39,18 +40,18 @@ export default async function HomePage() {
       <Header />
 
       {/* Main Content */}
-      <main className="flex-1 container-max py-12">
+      <main className="flex-1 container-max py-16 md:py-20">
         {onboardingDoc && (
           <div className="glass-card animation-fade-in">
             <div className="glass-card__content">
               {/* Document Title */}
-              <h1 className="text-5xl md:text-6xl font-bold text-forest-900 mb-8 leading-tight">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight tracking-tight">
                 {onboardingDoc.title}
               </h1>
 
               {/* Document Metadata */}
               {onboardingDoc.frontMatter && (onboardingDoc.frontMatter.version || onboardingDoc.frontMatter.date) && (
-                <div className="mb-10 pb-8 border-b border-forest-200/60 flex flex-wrap gap-3">
+                <div className="mb-12 pb-6 border-b-2 border-forest-200/80 dark:border-forest-800/80 flex flex-wrap gap-3">
                   {onboardingDoc.frontMatter.version && (
                     <span className="metadata-badge">
                       <span className="mr-2">📌</span>
@@ -75,40 +76,41 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* Quick Navigation */}
-        <div className="mt-12 grid md:grid-cols-3 gap-6">
-          <Link
+        {/* Section Divider */}
+        <div className="mt-20 mb-8 relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t-2 border-forest-200/60 dark:border-forest-800/60"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-forest-50 dark:bg-forest-950 text-forest-500 dark:text-forest-400 font-medium">
+              Explorar Documentação
+            </span>
+          </div>
+        </div>
+
+        {/* Quick Navigation - Harmonizado com paleta Araponga */}
+        <div className="grid md:grid-cols-3 gap-6">
+          <FeatureCard
+            icon="👨‍💻"
+            title="Desenvolvedores"
+            description="Comece a desenvolver com o Araponga"
+            color="forest"
             href="/docs/ONBOARDING_DEVELOPERS"
-            className="glass-card group hover:scale-105 transition-transform duration-300"
-          >
-            <div className="glass-card__content text-center">
-              <div className="text-4xl mb-4">👨‍💻</div>
-              <h3 className="text-xl font-bold text-forest-900 mb-2">Desenvolvedores</h3>
-              <p className="text-forest-600 text-sm">Comece a desenvolver com o Araponga</p>
-            </div>
-          </Link>
-
-          <Link
+          />
+          <FeatureCard
+            icon="👁️"
+            title="Analistas"
+            description="Observe territórios e proponha melhorias"
+            color="accent"
             href="/docs/ONBOARDING_ANALISTAS_FUNCIONAIS"
-            className="glass-card group hover:scale-105 transition-transform duration-300"
-          >
-            <div className="glass-card__content text-center">
-              <div className="text-4xl mb-4">👁️</div>
-              <h3 className="text-xl font-bold text-forest-900 mb-2">Analistas</h3>
-              <p className="text-forest-600 text-sm">Observe territórios e proponha melhorias</p>
-            </div>
-          </Link>
-
-          <Link
+          />
+          <FeatureCard
+            icon="📚"
+            title="Índice Completo"
+            description="Explore toda a documentação"
+            color="link"
             href="/docs/00_INDEX"
-            className="glass-card group hover:scale-105 transition-transform duration-300"
-          >
-            <div className="glass-card__content text-center">
-              <div className="text-4xl mb-4">📚</div>
-              <h3 className="text-xl font-bold text-forest-900 mb-2">Índice Completo</h3>
-              <p className="text-forest-600 text-sm">Explore toda a documentação</p>
-            </div>
-          </Link>
+          />
         </div>
       </main>
 

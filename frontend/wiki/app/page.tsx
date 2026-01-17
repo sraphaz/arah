@@ -76,7 +76,7 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* Quick Navigation - Dynamic design with FeatureCards */}
+        {/* Quick Navigation - Harmonizado com paleta Araponga */}
         <div className="mt-16 grid md:grid-cols-3 gap-6">
           <FeatureCard
             icon="👨‍💻"
@@ -89,14 +89,14 @@ export default async function HomePage() {
             icon="👁️"
             title="Analistas"
             description="Observe territórios e proponha melhorias"
-            color="blue"
+            color="accent"
             href="/docs/ONBOARDING_ANALISTAS_FUNCIONAIS"
           />
           <FeatureCard
             icon="📚"
             title="Índice Completo"
             description="Explore toda a documentação"
-            color="purple"
+            color="link"
             href="/docs/00_INDEX"
           />
         </div>

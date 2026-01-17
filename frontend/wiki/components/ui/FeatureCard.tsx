@@ -5,23 +5,22 @@ interface FeatureCardProps {
   icon: ReactNode;
   title: string;
   description: string;
-  color?: "forest" | "blue" | "purple" | "orange";
+  color?: "forest" | "accent" | "link";
   href?: string;
 }
 
 export function FeatureCard({ icon, title, description, color = "forest", href }: FeatureCardProps) {
+  // Harmonizado com a paleta do Dev Portal Araponga
   const colorClasses = {
     forest: "border-forest-400/30 hover:border-forest-400 bg-forest-50/50 dark:bg-forest-900/30 hover:bg-forest-100/70 dark:hover:bg-forest-900/50",
-    blue: "border-blue-400/30 hover:border-blue-400 bg-blue-50/50 dark:bg-blue-900/30 hover:bg-blue-100/70 dark:hover:bg-blue-900/50",
-    purple: "border-purple-400/30 hover:border-purple-400 bg-purple-50/50 dark:bg-purple-900/30 hover:bg-purple-100/70 dark:hover:bg-purple-900/50",
-    orange: "border-orange-400/30 hover:border-orange-400 bg-orange-50/50 dark:bg-orange-900/30 hover:bg-orange-100/70 dark:hover:bg-orange-900/50",
+    accent: "border-[#4dd4a8]/30 hover:border-[#4dd4a8] bg-[#4dd4a8]/5 dark:bg-[#4dd4a8]/10 hover:bg-[#4dd4a8]/10 dark:hover:bg-[#4dd4a8]/15",
+    link: "border-[#7dd3ff]/30 hover:border-[#7dd3ff] bg-[#7dd3ff]/5 dark:bg-[#7dd3ff]/10 hover:bg-[#7dd3ff]/10 dark:hover:bg-[#7dd3ff]/15",
   };
 
   const iconColorClasses = {
     forest: "text-forest-600 dark:text-forest-400",
-    blue: "text-blue-600 dark:text-blue-400",
-    purple: "text-purple-600 dark:text-purple-400",
-    orange: "text-orange-600 dark:text-orange-400",
+    accent: "text-[#4dd4a8] dark:text-[#5ee5b9]",
+    link: "text-[#7dd3ff] dark:text-[#9de3ff]",
   };
 
   const cardContent = (

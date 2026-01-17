@@ -7,34 +7,35 @@ interface InfoBoxProps {
 }
 
 export function InfoBox({ type = "info", title, children }: InfoBoxProps) {
+  // Harmonizado com paleta Araponga (Dev Portal)
   const config = {
     info: {
       icon: "ℹ️",
-      bg: "bg-blue-50/80 dark:bg-blue-900/20",
-      border: "border-blue-400 dark:border-blue-600",
-      text: "text-blue-900 dark:text-blue-100",
-      titleColor: "text-blue-800 dark:text-blue-200",
+      bg: "bg-[#7dd3ff]/10 dark:bg-[#7dd3ff]/15",
+      border: "border-[#7dd3ff]/50 dark:border-[#7dd3ff]/60",
+      text: "text-forest-900 dark:text-[#e8edf2]",
+      titleColor: "text-forest-800 dark:text-[#7dd3ff]",
     },
     success: {
       icon: "✅",
-      bg: "bg-forest-50/80 dark:bg-forest-900/20",
+      bg: "bg-[#4dd4a8]/10 dark:bg-[#4dd4a8]/15",
+      border: "border-[#4dd4a8]/50 dark:border-[#4dd4a8]/60",
+      text: "text-forest-900 dark:text-[#e8edf2]",
+      titleColor: "text-forest-800 dark:text-[#4dd4a8]",
+    },
+    warning: {
+      icon: "⚠️",
+      bg: "bg-forest-50/80 dark:bg-forest-900/30",
       border: "border-forest-400 dark:border-forest-600",
       text: "text-forest-900 dark:text-forest-100",
       titleColor: "text-forest-800 dark:text-forest-200",
     },
-    warning: {
-      icon: "⚠️",
-      bg: "bg-orange-50/80 dark:bg-orange-900/20",
-      border: "border-orange-400 dark:border-orange-600",
-      text: "text-orange-900 dark:text-orange-100",
-      titleColor: "text-orange-800 dark:text-orange-200",
-    },
     tip: {
       icon: "💡",
-      bg: "bg-purple-50/80 dark:bg-purple-900/20",
-      border: "border-purple-400 dark:border-purple-600",
-      text: "text-purple-900 dark:text-purple-100",
-      titleColor: "text-purple-800 dark:text-purple-200",
+      bg: "bg-forest-50/80 dark:bg-forest-900/30",
+      border: "border-forest-500 dark:border-forest-500",
+      text: "text-forest-900 dark:text-forest-100",
+      titleColor: "text-forest-800 dark:text-forest-200",
     },
   };
 

@@ -493,6 +493,71 @@ Implementar sistema de **governança comunitária** que permite:
 
 ---
 
+#### 14.X Configuração Avançada de Notificações
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🟡 Média
+
+**Contexto**: `UserPreferences` já permite configuração de notificações por usuário, mas tipos de notificações e canais disponíveis são fixos no código. Esta tarefa permite configuração de tipos, canais e templates por território ou globalmente.
+
+**Tarefas**:
+- [ ] Criar modelo de domínio `NotificationConfig`:
+  - [ ] `Id`, `TerritoryId` (nullable para config global)
+  - [ ] `NotificationTypes` (JSON, array de tipos disponíveis)
+  - [ ] `Channels` (JSON, array de canais: Email, Push, InApp, SMS)
+  - [ ] `Templates` (JSON, dicionário de templates por tipo)
+  - [ ] `DefaultChannels` (JSON, canais padrão por tipo)
+  - [ ] `Enabled` (bool)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar `INotificationConfigRepository` e implementações (Postgres, InMemory)
+- [ ] Criar `NotificationConfigService`:
+  - [ ] `GetConfigAsync(Guid? territoryId, CancellationToken)` → busca config territorial ou global
+  - [ ] `CreateOrUpdateConfigAsync(NotificationConfig, CancellationToken)`
+  - [ ] `GetAvailableTypesAsync(Guid? territoryId, CancellationToken)`
+  - [ ] `GetTemplatesAsync(Guid? territoryId, string notificationType, CancellationToken)`
+- [ ] Estender `NotificationService`:
+  - [ ] Usar `NotificationConfig` ao enviar notificações
+  - [ ] Aplicar templates configurados
+  - [ ] Respeitar canais disponíveis
+- [ ] Criar `NotificationConfigController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/notification-config` (Curator)
+  - [ ] `PUT /api/v1/territories/{territoryId}/notification-config` (Curator)
+  - [ ] `GET /api/v1/admin/notification-config` (global, SystemAdmin)
+  - [ ] `PUT /api/v1/admin/notification-config` (global, SystemAdmin)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de notificações
+  - [ ] Editor de templates (opcional)
+  - [ ] Visualização de canais disponíveis
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Notifications/NotificationConfig.cs`
+- `backend/Araponga.Application/Interfaces/Notifications/INotificationConfigRepository.cs`
+- `backend/Araponga.Application/Services/Notifications/NotificationConfigService.cs`
+- `backend/Araponga.Api/Controllers/NotificationConfigController.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresNotificationConfigRepository.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryNotificationConfigRepository.cs`
+- `backend/Araponga.Tests/Api/NotificationConfigIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Application/Services/NotificationService.cs` (ou equivalente)
+- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
+- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Critérios de Sucesso**:
+- ✅ Tipos de notificação configuráveis
+- ✅ Canais configuráveis por tipo
+- ✅ Templates configuráveis
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
 ## ✅ Critérios de Sucesso da Fase 14
 
 ### Funcionalidades

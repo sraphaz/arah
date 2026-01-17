@@ -312,6 +312,70 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 ---
 
+---
+
+#### 11.X Configuração de Thresholds de Moderação
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🔴 Alta
+
+**Contexto**: Thresholds de moderação atualmente fixos no código (`ReportService`): janela de 7 dias, threshold de 3 reports únicos. Esta tarefa permite configuração por território (com fallback global) para políticas de moderação mais flexíveis.
+
+**Tarefas**:
+- [ ] Criar modelo de domínio `ModerationThresholdConfig`:
+  - [ ] `Id`, `TerritoryId` (nullable para config global)
+  - [ ] `ThresholdWindowDays` (janela de tempo, padrão: 7)
+  - [ ] `ReportThreshold` (número mínimo de reports, padrão: 3)
+  - [ ] `AutoAction` (enum: None, HidePost, MuteUser, etc.)
+  - [ ] `Enabled` (bool, se automação está ativa)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar `IModerationThresholdConfigRepository` e implementações (Postgres, InMemory)
+- [ ] Criar `ModerationThresholdConfigService`:
+  - [ ] `GetConfigAsync(Guid territoryId, CancellationToken)` → busca config territorial ou global
+  - [ ] `CreateOrUpdateConfigAsync(ModerationThresholdConfig, CancellationToken)`
+  - [ ] Validação: janela mínima (1 dia), threshold mínimo (1)
+- [ ] Atualizar `ReportService`:
+  - [ ] Usar `ModerationThresholdConfig` ao avaliar thresholds
+  - [ ] Fallback para valores padrão se não configurado
+  - [ ] Aplicar `AutoAction` configurado
+- [ ] Criar `ModerationThresholdConfigController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/moderation-threshold-config` (Curator)
+  - [ ] `PUT /api/v1/territories/{territoryId}/moderation-threshold-config` (Curator)
+  - [ ] `GET /api/v1/admin/moderation-threshold-config` (global, SystemAdmin)
+  - [ ] `PUT /api/v1/admin/moderation-threshold-config` (global, SystemAdmin)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de thresholds de moderação
+  - [ ] Explicação de políticas automáticas
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Moderation/ModerationThresholdConfig.cs`
+- `backend/Araponga.Application/Interfaces/Moderation/IModerationThresholdConfigRepository.cs`
+- `backend/Araponga.Application/Services/Moderation/ModerationThresholdConfigService.cs`
+- `backend/Araponga.Api/Controllers/ModerationThresholdConfigController.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresModerationThresholdConfigRepository.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryModerationThresholdConfigRepository.cs`
+- `backend/Araponga.Tests/Api/ModerationThresholdConfigIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Application/Services/ReportService.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
+- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Critérios de Sucesso**:
+- ✅ Thresholds configuráveis por território
+- ✅ Fallback para valores globais funcionando
+- ✅ Ações automáticas aplicadas corretamente
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
 ## ✅ Critérios de Sucesso da Fase 11
 
 ### Funcionalidades

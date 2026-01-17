@@ -711,6 +711,138 @@ Implementar funcionalidades de **Inteligência Artificial** para:
 
 ---
 
+#### 15.X Configuração de Rate Limiting
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🔴 Alta
+
+**Contexto**: Rate limiting atualmente configurado em `appsettings.json` com valores globais (`PermitLimit: 60, WindowSeconds: 60`). Esta tarefa permite configuração por território e por tipo de endpoint para proteção mais granular.
+
+**Tarefas**:
+- [ ] Criar modelo de domínio `RateLimitConfig`:
+  - [ ] `Id`, `TerritoryId` (nullable para config global)
+  - [ ] `EndpointType` (enum: All, Posts, Uploads, ApiGeneral, Chat, etc.)
+  - [ ] `PermitLimit` (int, requisições permitidas)
+  - [ ] `WindowSeconds` (int, janela de tempo)
+  - [ ] `QueueLimit` (int, limite de fila)
+  - [ ] `Enabled` (bool)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar `IRateLimitConfigRepository` e implementações (Postgres, InMemory)
+- [ ] Criar `RateLimitConfigService`:
+  - [ ] `GetConfigAsync(Guid? territoryId, string endpointType, CancellationToken)`
+  - [ ] `CreateOrUpdateConfigAsync(RateLimitConfig, CancellationToken)`
+  - [ ] `GetActiveConfigAsync(Guid? territoryId, string endpointType, CancellationToken)` → retorna territorial ou global
+- [ ] Criar middleware `RateLimitMiddleware`:
+  - [ ] Usar `RateLimitConfigService` para obter configuração
+  - [ ] Aplicar rate limiting dinamicamente
+  - [ ] Integrar com `Microsoft.AspNetCore.RateLimiting` ou implementação custom
+- [ ] Criar `RateLimitConfigController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/rate-limit-config` (Curator)
+  - [ ] `PUT /api/v1/territories/{territoryId}/rate-limit-config` (Curator)
+  - [ ] `GET /api/v1/admin/rate-limit-config` (global, SystemAdmin)
+  - [ ] `PUT /api/v1/admin/rate-limit-config` (global, SystemAdmin)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de rate limiting
+  - [ ] Visualização de configurações por endpoint
+  - [ ] Alertas para limites muito baixos/altos
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Configuration/RateLimitConfig.cs`
+- `backend/Araponga.Application/Interfaces/Configuration/IRateLimitConfigRepository.cs`
+- `backend/Araponga.Application/Services/Configuration/RateLimitConfigService.cs`
+- `backend/Araponga.Api/Middleware/RateLimitMiddleware.cs`
+- `backend/Araponga.Api/Controllers/RateLimitConfigController.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresRateLimitConfigRepository.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryRateLimitConfigRepository.cs`
+- `backend/Araponga.Tests/Api/RateLimitConfigIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Api/Program.cs` (registrar middleware e serviços)
+- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
+- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Critérios de Sucesso**:
+- ✅ Rate limiting configurável por território
+- ✅ Configuração por tipo de endpoint funcionando
+- ✅ Fallback para `appsettings.json` funcionando
+- ✅ Ajustes em tempo real (sem restart)
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
+#### 15.Y Configuração de Autenticação (JWT)
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🟡 Média
+
+**Contexto**: Configuração JWT atualmente em `appsettings.json` (`Issuer`, `Audience`, `ExpirationMinutes`). Esta tarefa permite configuração via painel administrativo para ajustes de segurança sem deploy.
+
+**Tarefas**:
+- [ ] Criar modelo de domínio `JwtConfig`:
+  - [ ] `Id` (configuração global única)
+  - [ ] `Issuer` (string)
+  - [ ] `Audience` (string)
+  - [ ] `AccessTokenExpirationMinutes` (int)
+  - [ ] `RefreshTokenExpirationDays` (int, opcional)
+  - [ ] `IsActive` (bool)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar `IJwtConfigRepository` e implementações (Postgres, InMemory)
+- [ ] Criar `JwtConfigService`:
+  - [ ] `GetActiveConfigAsync(CancellationToken)` → retorna config ativa
+  - [ ] `CreateOrUpdateConfigAsync(JwtConfig, CancellationToken)`
+  - [ ] `ActivateConfigAsync(Guid configId, CancellationToken)` → desativa outras configs
+- [ ] Atualizar `JwtTokenService`:
+  - [ ] Usar `JwtConfigService` ao gerar tokens
+  - [ ] Fallback para `appsettings.json` se não configurado
+  - [ ] Suporte a refresh tokens (se configurado)
+- [ ] Criar `JwtConfigController`:
+  - [ ] `GET /api/v1/admin/jwt-config/active` (SystemAdmin)
+  - [ ] `GET /api/v1/admin/jwt-config` (listar todas, SystemAdmin)
+  - [ ] `POST /api/v1/admin/jwt-config` (criar, SystemAdmin)
+  - [ ] `PUT /api/v1/admin/jwt-config/{configId}` (atualizar, SystemAdmin)
+  - [ ] `POST /api/v1/admin/jwt-config/{configId}/activate` (ativar, SystemAdmin)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de JWT
+  - [ ] Alertas para expirações muito curtas/longas
+  - [ ] Visualização de configuração ativa
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Configuration/JwtConfig.cs`
+- `backend/Araponga.Application/Interfaces/Configuration/IJwtConfigRepository.cs`
+- `backend/Araponga.Application/Services/Configuration/JwtConfigService.cs`
+- `backend/Araponga.Api/Controllers/JwtConfigController.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresJwtConfigRepository.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryJwtConfigRepository.cs`
+- `backend/Araponga.Tests/Api/JwtConfigIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Infrastructure/Security/JwtTokenService.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
+- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Critérios de Sucesso**:
+- ✅ Configuração JWT via painel administrativo
+- ✅ Ajustes de expiração sem deploy
+- ✅ Fallback para `appsettings.json` funcionando
+- ✅ Suporte a múltiplas configurações (ativação seletiva)
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
 ## 📊 Resumo da Fase 15
 
 | Tarefa | Estimativa | Status | Prioridade |

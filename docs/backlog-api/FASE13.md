@@ -360,6 +360,66 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 
 ---
 
+#### 13.X Configuração de Políticas de Presença
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🟢 Baixa
+
+**Contexto**: Política de presença atualmente fixa em `appsettings.json` (`PresencePolicy: Policy: "ResidentOnly"`). Esta tarefa permite configuração por território para políticas mais flexíveis.
+
+**Tarefas**:
+- [ ] Criar modelo de domínio `PresencePolicyConfig`:
+  - [ ] `Id`, `TerritoryId` (nullable para config global)
+  - [ ] `Policy` (enum: ResidentOnly, VerifiedOnly, Public, Custom)
+  - [ ] `CustomRules` (JSON, regras customizadas quando Policy = Custom)
+  - [ ] `Enabled` (bool)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar `IPresencePolicyConfigRepository` e implementações (Postgres, InMemory)
+- [ ] Criar `PresencePolicyConfigService`:
+  - [ ] `GetConfigAsync(Guid territoryId, CancellationToken)` → busca config territorial ou global
+  - [ ] `CreateOrUpdateConfigAsync(PresencePolicyConfig, CancellationToken)`
+  - [ ] `EvaluatePresenceAsync(Guid userId, Guid territoryId, CancellationToken)` → avalia política
+- [ ] Atualizar `AccessEvaluator` ou serviço de presença:
+  - [ ] Usar `PresencePolicyConfig` ao avaliar presença
+  - [ ] Fallback para `appsettings.json` se não configurado
+- [ ] Criar `PresencePolicyConfigController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/presence-policy-config` (Curator)
+  - [ ] `PUT /api/v1/territories/{territoryId}/presence-policy-config` (Curator)
+  - [ ] `GET /api/v1/admin/presence-policy-config` (global, SystemAdmin)
+  - [ ] `PUT /api/v1/admin/presence-policy-config` (global, SystemAdmin)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de políticas de presença
+  - [ ] Explicação de diferentes políticas
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Configuration/PresencePolicyConfig.cs`
+- `backend/Araponga.Application/Interfaces/Configuration/IPresencePolicyConfigRepository.cs`
+- `backend/Araponga.Application/Services/Configuration/PresencePolicyConfigService.cs`
+- `backend/Araponga.Api/Controllers/PresencePolicyConfigController.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresPresencePolicyConfigRepository.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryPresencePolicyConfigRepository.cs`
+- `backend/Araponga.Tests/Api/PresencePolicyConfigIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Application/Services/AccessEvaluator.cs` (ou serviço de presença equivalente)
+- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
+- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Critérios de Sucesso**:
+- ✅ Políticas configuráveis por território
+- ✅ Fallback para configuração global funcionando
+- ✅ Avaliação de presença usando configuração
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
 ## ✅ Critérios de Sucesso da Fase 13
 
 ### Funcionalidades

@@ -319,6 +319,58 @@ Integrar mídias (imagens, vídeos e áudios) em todas as funcionalidades de con
 
 ---
 
+#### 10.9 Configuração Avançada de Limites de Mídia
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🟡 Média
+
+**Contexto**: Estender `TerritoryMediaConfig` (já existente) para incluir configuração de limites de tamanho e tipos MIME, permitindo override de limites globais por território.
+
+**Tarefas**:
+- [ ] Estender modelo `TerritoryMediaConfig`:
+  - [ ] Adicionar campos para limites de tamanho por tipo (imagem, vídeo, áudio) em cada contexto (posts, events, marketplace, chat)
+  - [ ] Adicionar campos para tipos MIME permitidos (override opcional)
+  - [ ] Adicionar validação de limites mínimos/máximos
+- [ ] Estender `TerritoryMediaConfigService`:
+  - [ ] Validar limites contra valores globais (`MediaStorageOptions`)
+  - [ ] Aplicar limites por território quando disponíveis (fallback para global)
+- [ ] Estender `MediaConfigController`:
+  - [ ] Endpoints para atualizar limites de tamanho
+  - [ ] Endpoints para atualizar tipos MIME permitidos
+- [ ] Atualizar serviços de conteúdo (`PostCreationService`, `EventsService`, `StoreItemService`, `ChatService`):
+  - [ ] Usar limites do `TerritoryMediaConfig` quando disponíveis
+  - [ ] Fallback para `MediaStorageOptions` se não configurado
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de limites de mídia
+  - [ ] Explicação de limites globais vs territoriais
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Domain/Media/TerritoryMediaConfig.cs`
+- `backend/Araponga.Application/Services/Media/TerritoryMediaConfigService.cs`
+- `backend/Araponga.Api/Controllers/MediaConfigController.cs`
+- `backend/Araponga.Application/Services/PostCreationService.cs`
+- `backend/Araponga.Application/Services/EventsService.cs`
+- `backend/Araponga.Application/Services/StoreItemService.cs`
+- `backend/Araponga.Application/Services/ChatService.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Arquivos a Criar**:
+- `backend/Araponga.Tests/Api/MediaLimitsConfigIntegrationTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Limites configuráveis por território
+- ✅ Override de limites globais funcionando
+- ✅ Validação de limites funcionando
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
 ## 📊 Resumo da Fase 10
 
 | Tarefa | Estimativa | Status | Prioridade |

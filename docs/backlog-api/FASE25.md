@@ -353,6 +353,77 @@ Implementar infraestrutura base para **serviços digitais integrados** que permi
 
 ---
 
+#### 25.X Configuração de Observabilidade (Complementar)
+**Estimativa**: 20 horas (2.5 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🟢 Baixa
+
+**Contexto**: Configuração de logging, métricas e tracing atualmente em `appsettings.json` (Seq, Prometheus, OpenTelemetry, Jaeger). Esta tarefa permite configuração via painel administrativo para ajustes sem deploy e diferentes níveis por território.
+
+**Tarefas**:
+- [ ] Criar modelo de domínio `ObservabilityConfig`:
+  - [ ] `Id`, `TerritoryId` (nullable para config global)
+  - [ ] `LoggingProvider` (enum: Seq, File, Console, ApplicationInsights, etc.)
+  - [ ] `LoggingLevel` (enum: Trace, Debug, Information, Warning, Error)
+  - [ ] `MetricsProvider` (enum: Prometheus, ApplicationInsights, etc.)
+  - [ ] `TracingProvider` (enum: Jaeger, OpenTelemetry, ApplicationInsights, etc.)
+  - [ ] `ProviderSettings` (JSON, configurações específicas de cada provider)
+  - [ ] `Enabled` (bool)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar `IObservabilityConfigRepository` e implementações (Postgres, InMemory)
+- [ ] Criar `ObservabilityConfigService`:
+  - [ ] `GetConfigAsync(Guid? territoryId, CancellationToken)` → busca config territorial ou global
+  - [ ] `CreateOrUpdateConfigAsync(ObservabilityConfig, CancellationToken)`
+  - [ ] `GetActiveLoggingConfigAsync(CancellationToken)` → retorna config global ativa para logging
+- [ ] Atualizar configuração de Serilog/OpenTelemetry:
+  - [ ] Usar `ObservabilityConfigService` ao inicializar logging
+  - [ ] Aplicar níveis de log configurados (quando por território, usar no contexto do request)
+  - [ ] Configurar providers dinamicamente
+- [ ] Criar `ObservabilityConfigController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/observability-config` (Curator, opcional)
+  - [ ] `PUT /api/v1/territories/{territoryId}/observability-config` (Curator, opcional)
+  - [ ] `GET /api/v1/admin/observability-config/active` (SystemAdmin)
+  - [ ] `GET /api/v1/admin/observability-config` (listar todas, SystemAdmin)
+  - [ ] `POST /api/v1/admin/observability-config` (criar, SystemAdmin)
+  - [ ] `PUT /api/v1/admin/observability-config/{configId}` (atualizar, SystemAdmin)
+  - [ ] `POST /api/v1/admin/observability-config/{configId}/activate` (ativar, SystemAdmin)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de observabilidade
+  - [ ] Visualização de providers disponíveis
+  - [ ] Configuração de níveis de log
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Configuration/ObservabilityConfig.cs`
+- `backend/Araponga.Application/Interfaces/Configuration/IObservabilityConfigRepository.cs`
+- `backend/Araponga.Application/Services/Configuration/ObservabilityConfigService.cs`
+- `backend/Araponga.Api/Controllers/ObservabilityConfigController.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresObservabilityConfigRepository.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryObservabilityConfigRepository.cs`
+- `backend/Araponga.Tests/Api/ObservabilityConfigIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Api/Program.cs` (configuração de Serilog/OpenTelemetry)
+- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
+- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Critérios de Sucesso**:
+- ✅ Configuração de observabilidade via painel administrativo
+- ✅ Ajustes de providers sem deploy
+- ✅ Níveis de log configuráveis (opcional por território)
+- ✅ Fallback para `appsettings.json` funcionando
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+**Nota**: Esta funcionalidade pode ser implementada pós-MVP se não for crítica para lançamento inicial.
+
+---
+
 ## ✅ Critérios de Sucesso da Fase 25
 
 ### Funcionalidades

@@ -172,6 +172,70 @@ Observabilidade completa com métricas, logs e tracing.
 
 ---
 
+#### 4.X Configuração de Mapas e Geo-localização (Complementar)
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Pendente  
+**Prioridade**: 🟢 Baixa
+
+**Contexto**: Raio de busca, limites de distância e configuração de provedores de mapas atualmente fixos no código. Esta tarefa permite configuração por território para ajustes baseados em densidade territorial e integração com diferentes provedores.
+
+**Tarefas**:
+- [ ] Criar modelo de domínio `MapConfig`:
+  - [ ] `Id`, `TerritoryId` (nullable para config global)
+  - [ ] `SearchRadiusMeters` (int, raio de busca em metros)
+  - [ ] `MaxDistanceMeters` (int, distância máxima para "territórios próximos")
+  - [ ] `MapProvider` (enum: Google, Mapbox, OpenStreetMap, etc.)
+  - [ ] `ProviderSettings` (JSON, configurações específicas do provider)
+  - [ ] `DefaultZoom` (int, nível de zoom padrão)
+  - [ ] `Bounds` (JSON, limites de área opcionais)
+  - [ ] `Enabled` (bool)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar `IMapConfigRepository` e implementações (Postgres, InMemory)
+- [ ] Criar `MapConfigService`:
+  - [ ] `GetConfigAsync(Guid? territoryId, CancellationToken)` → busca config territorial ou global
+  - [ ] `CreateOrUpdateConfigAsync(MapConfig, CancellationToken)`
+- [ ] Atualizar serviços de mapa:
+  - [ ] Usar `MapConfig` ao buscar territórios próximos
+  - [ ] Aplicar raio de busca configurado
+  - [ ] Usar provedor de mapas configurado
+- [ ] Criar `MapConfigController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/map-config` (Curator)
+  - [ ] `PUT /api/v1/territories/{territoryId}/map-config` (Curator)
+  - [ ] `GET /api/v1/admin/map-config` (global, SystemAdmin)
+  - [ ] `PUT /api/v1/admin/map-config` (global, SystemAdmin)
+- [ ] Interface administrativa (DevPortal):
+  - [ ] Seção para configuração de mapas
+  - [ ] Explicação de raio de busca e limites
+- [ ] Testes de integração
+- [ ] Documentação
+
+**Arquivos a Criar**:
+- `backend/Araponga.Domain/Map/MapConfig.cs`
+- `backend/Araponga.Application/Interfaces/Map/IMapConfigRepository.cs`
+- `backend/Araponga.Application/Services/Map/MapConfigService.cs`
+- `backend/Araponga.Api/Controllers/MapConfigController.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresMapConfigRepository.cs`
+- `backend/Araponga.Infrastructure/InMemory/InMemoryMapConfigRepository.cs`
+- `backend/Araponga.Tests/Api/MapConfigIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Application/Services/TerritoryService.cs` (ou serviço de mapas equivalente)
+- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
+- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
+- `backend/Araponga.Api/wwwroot/devportal/index.html`
+
+**Critérios de Sucesso**:
+- ✅ Configuração de mapas por território
+- ✅ Raio de busca configurável
+- ✅ Suporte a múltiplos provedores de mapas
+- ✅ Interface administrativa disponível
+- ✅ Testes passando
+- ✅ Documentação atualizada
+
+**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
+
+---
+
 ## ✅ Critérios de Sucesso da Fase 4
 
 - ✅ Logs centralizados funcionando

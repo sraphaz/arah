@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ThemeToggle } from "../ui/ThemeToggle";
 
 export function Header() {
@@ -7,7 +8,16 @@ export function Header() {
       <div className="container-max py-6">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group transition-transform duration-300 hover:scale-[1.02]">
-            <span className="text-3xl transition-transform duration-300 group-hover:rotate-12">🐦</span>
+            <div className="relative w-10 h-10 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+              <Image
+                src="/Logo_1.png"
+                alt="Araponga Logo"
+                width={40}
+                height={40}
+                className="object-contain dark:brightness-110 dark:contrast-105"
+                priority
+              />
+            </div>
             <div>
               <h1 className="text-2xl font-bold text-forest-900 dark:text-forest-50 group-hover:text-forest-700 dark:group-hover:text-forest-200 transition-colors leading-tight">
                 Wiki Araponga

@@ -2391,6 +2391,9 @@ curl.exe -X POST "http://localhost:8080/api/v1/territories/selection" `
           }
         }
       }
+      
+      // Tornar função global para onclick
+      window.openDiagramFullscreen = openDiagramFullscreen;
 
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', initDiagramRendering);

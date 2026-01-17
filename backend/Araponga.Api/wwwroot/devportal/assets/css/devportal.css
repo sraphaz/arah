@@ -536,6 +536,11 @@ main {
   margin: 0 0 1rem;
   line-height: 1.75; /* Otimizado para leitura longa (era 1.7 implícito) */
   max-width: 65ch; /* Limitar largura de linha para legibilidade ideal */
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
 }
 
 .section .eyebrow {
@@ -552,15 +557,19 @@ main {
 .grid-two {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin-top: 1.5rem;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  /* Garantir que cards não estourem */
+  min-width: 0;
 }
 
 .model-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin-top: 1.5rem;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  /* Garantir que cards não estourem */
+  min-width: 0;
 }
 
 @media (min-width: 640px) {
@@ -596,7 +605,7 @@ main {
 .card {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
-  padding: 1.75rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
   border: 1px solid var(--border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição mais suave */
   position: relative;
@@ -604,6 +613,9 @@ main {
   backdrop-filter: blur(10px); /* Efeito blur sutil */
   transform: translateZ(0); /* GPU acceleration */
   will-change: transform, box-shadow; /* Otimização de performance */
+  min-width: 0; /* Permite shrink em grids */
+  display: flex;
+  flex-direction: column;
 }
 
 .card::before {
@@ -636,19 +648,39 @@ main {
 }
 
 .card h3 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 clamp(0.5rem, 1.5vw, 0.75rem);
   color: var(--text);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
+  line-height: 1.3;
 }
 
 .card p {
   margin: 0;
   color: var(--text-muted);
+  text-align: justify;
+  text-justify: inter-word; /* Melhor distribuição de palavras */
+  hyphens: auto; /* Hifenização automática para melhor justificação */
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+}
+
+/* Não justificar parágrafos muito curtos */
+.card p:only-child,
+.card p:first-child:last-child {
+  text-align: left;
+}
+
+/* Parágrafos com menos de 50 caracteres não justificam bem */
+.card p[style*="margin"] {
+  text-align: left;
 }
 
 .card ul {
   margin: 0.75rem 0 0;
-  padding-left: 1.5rem;
+  padding-left: clamp(1.25rem, 2.5vw, 1.5rem);
   color: var(--text-muted);
+  /* Listas não devem ser justificadas */
+  text-align: left;
 }
 
 .card li {
@@ -689,8 +721,21 @@ main {
   margin: 0;
   padding-left: 0;
   color: var(--text-muted);
-  line-height: 1.6;
-  font-size: 0.9375rem;
+  line-height: 1.75;
+  font-size: clamp(0.875rem, 0.8125rem + 0.2vw, 0.9375rem);
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  max-width: 100%;
+}
+
+/* Em telas pequenas, dd não justificado */
+@media (max-width: 767px) {
+  .entity-list dd {
+    text-align: left;
+  }
 }
 
 /* Rationale list */
@@ -746,12 +791,15 @@ main {
 
 /* Callout */
 .callout {
-  padding: 1.25rem 1.5rem;
+  padding: clamp(1rem, 2vw, 1.25rem) clamp(1.25rem, 2.5vw, 1.5rem);
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg-muted);
   color: var(--text-muted);
-  margin: 1.5rem 0;
+  margin: clamp(1rem, 2vw, 1.5rem) 0;
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.75;
 }
 
 .callout strong {
@@ -777,18 +825,26 @@ main {
 /* Card content patterns */
 .card-intro {
   color: var(--text-muted);
-  margin-bottom: 1rem;
-  line-height: 1.6;
+  margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+  line-height: 1.7;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
 }
 
 .card-list {
-  padding-left: 1.25rem;
-  line-height: 1.8;
+  padding-left: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.75;
   margin: 0;
+  /* Listas não devem ser justificadas */
+  text-align: left;
 }
 
 .card-list li {
-  margin-bottom: 0.5rem;
+  margin-bottom: clamp(0.375rem, 1vw, 0.5rem);
+  text-align: left; /* Items de lista sempre alinhados à esquerda */
 }
 
 .card-list li:last-child {
@@ -796,9 +852,10 @@ main {
 }
 
 .card-divider {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  padding-top: clamp(1rem, 2vw, 1.5rem);
   border-top: 1px solid var(--border-subtle);
+  text-align: left; /* Divisores mantêm texto à esquerda */
 }
 
 .content-block {
@@ -857,9 +914,15 @@ main {
 
 .lead-text {
   font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
-  line-height: 1.8;
+  line-height: 1.75;
   font-weight: 400; /* Peso normal para texto longo */
   color: var(--text); /* Mais visível que muted */
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  max-width: 100%;
 }
 
 .lead-text.space-bottom {
@@ -1005,10 +1068,11 @@ pre code {
 /* Flow steps */
 .flow-step {
   border-left: 3px solid var(--accent);
-  padding-left: 1.5rem;
-  margin-bottom: 2rem;
+  padding-left: clamp(1rem, 2.5vw, 1.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
   padding-top: 0.25rem;
   transition: all 0.2s ease;
+  max-width: 100%;
 }
 
 .flow-step:hover {
@@ -1024,6 +1088,10 @@ pre code {
 .flow-step p {
   margin: 0 0 1rem;
   color: var(--text-muted);
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.75;
+  padding-right: clamp(0.5rem, 2vw, 1rem);
 }
 
 /* Notice */
@@ -1275,7 +1343,50 @@ pre code {
   }
   
   .card {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+  
+  /* Em telas pequenas, texto não justificado fica melhor */
+  .card p,
+  .lead-text,
+  .section p {
+    text-align: left;
+  }
+  
+  /* Callout menor em mobile */
+  .callout {
+    padding: 1rem;
+  }
+}
+
+/* Ajustes de justificação em telas médias e grandes */
+@media (min-width: 768px) {
+  .card p,
+  .lead-text,
+  .section p,
+  .callout {
+    text-align: justify;
+  }
+}
+
+/* Ajustes finos para telas grandes - melhor aproveitamento de espaço */
+@media (min-width: 1366px) {
+  .card {
+    padding: clamp(1.5rem, 3vw, 2rem);
+  }
+  
+  .section {
+    padding: clamp(3rem, 6vw, 5rem) 0;
+  }
+  
+  /* Aumentar line-height em telas grandes para melhor respiração */
+  .lead-text {
+    line-height: 1.8;
+  }
+  
+  .card p,
+  .section p {
+    line-height: 1.8;
   }
 }
 

@@ -65,6 +65,7 @@ Documentos sobre histórico e mudanças do projeto.
 
 - **[Changelog](./40_CHANGELOG.md)** - Histórico de mudanças e versões
 - **[Onboarding para Desenvolvedores](./ONBOARDING_DEVELOPERS.md)** 🌱 - Guia completo para novos desenvolvedores usando Cursor
+- **[Onboarding para Analistas Funcionais](./ONBOARDING_ANALISTAS_FUNCIONAIS.md)** 👁️ - Guia para analistas funcionais que observam territórios e propõem melhorias
 - **[Contribuindo](./41_CONTRIBUTING.md)** - Guia para contribuidores
 
 ### 📋 Planos e Recomendações

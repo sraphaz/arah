@@ -1,23 +1,26 @@
 import Link from "next/link";
 import { readdir } from "fs/promises";
 import { join } from "path";
+import { Header } from "../../components/layout/Header";
+import { Footer } from "../../components/layout/Footer";
+import { CategoryCard } from "../../components/ui/CategoryCard";
 
 // Estrutura hierárquica da documentação
 const docStructure = {
-  "Visão e Produto": [
+  "🎯 Visão e Produto": [
     { name: "Visão do Produto", path: "01_PRODUCT_VISION.md" },
     { name: "Roadmap", path: "02_ROADMAP.md" },
     { name: "Backlog", path: "03_BACKLOG.md" },
     { name: "User Stories", path: "04_USER_STORIES.md" },
     { name: "Glossário", path: "05_GLOSSARY.md" },
   ],
-  "Arquitetura e Design": [
+  "🏗️ Arquitetura e Design": [
     { name: "Decisões Arquiteturais", path: "10_ARCHITECTURE_DECISIONS.md" },
     { name: "Arquitetura de Services", path: "11_ARCHITECTURE_SERVICES.md" },
     { name: "Modelo de Domínio", path: "12_DOMAIN_MODEL.md" },
     { name: "Domain Routing", path: "13_DOMAIN_ROUTING.md" },
   ],
-  "Onboarding e Comunidade": [
+  "🌱 Onboarding e Comunidade": [
     { name: "Onboarding Público", path: "ONBOARDING_PUBLICO.md" },
     { name: "Onboarding para Desenvolvedores", path: "ONBOARDING_DEVELOPERS.md" },
     { name: "Onboarding para Analistas", path: "ONBOARDING_ANALISTAS_FUNCIONAIS.md" },
@@ -26,18 +29,18 @@ const docStructure = {
     { name: "Mentoria", path: "MENTORIA.md" },
     { name: "Priorização de Propostas", path: "PRIORIZACAO_PROPOSTAS.md" },
   ],
-  "Desenvolvimento": [
+  "🔧 Desenvolvimento": [
     { name: "Plano de Implementação", path: "20_IMPLEMENTATION_PLAN.md" },
     { name: "Revisão de Código", path: "21_CODE_REVIEW.md" },
     { name: "Coesão e Testes", path: "22_COHESION_AND_TESTS.md" },
     { name: "Implementação de Recomendações", path: "23_IMPLEMENTATION_RECOMMENDATIONS.md" },
     { name: "Estrutura do Projeto", path: "PROJECT_STRUCTURE.md" },
   ],
-  "Segurança": [
+  "🛡️ Segurança": [
     { name: "Configuração de Segurança", path: "SECURITY_CONFIGURATION.md" },
     { name: "Security Audit", path: "SECURITY_AUDIT.md" },
   ],
-  "Referência": [
+  "📚 Referência": [
     { name: "Índice Completo", path: "00_INDEX.md" },
     { name: "Changelog", path: "40_CHANGELOG.md" },
     { name: "Contribuindo", path: "41_CONTRIBUTING.md" },
@@ -59,76 +62,40 @@ export default async function DocsPage() {
   const allDocs = await getAllDocs();
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b border-forest-200 bg-white/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container-max py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3">
-              <h1 className="text-2xl font-bold text-forest-900">🐦 Wiki Araponga</h1>
-            </Link>
-            <nav className="flex items-center space-x-4">
-              <Link href="/" className="nav-link">Início</Link>
-              <Link href="/docs" className="nav-link active">Todos os Docs</Link>
-              <a
-                href="https://araponga.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nav-link"
-              >
-                Site Principal
-              </a>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col">
+      <Header />
 
       {/* Main Content */}
-      <main className="container-max py-8">
-        <div className="glass-card mb-8">
-          <div className="glass-card__content">
-            <h1 className="text-4xl font-bold text-forest-900 mb-4">
+      <main className="flex-1 container-max py-12">
+        {/* Hero Section */}
+        <div className="glass-card mb-12 animation-fade-in">
+          <div className="glass-card__content text-center">
+            <h1 className="hero-title text-balance mb-4">
               Todos os Documentos
             </h1>
-            <p className="text-xl text-forest-700">
-              Explore todos os documentos disponíveis na documentação do Araponga.
+            <p className="hero-subtitle text-balance max-w-2xl mx-auto">
+              Explore toda a documentação disponível na Wiki do Araponga.
             </p>
           </div>
         </div>
 
         {/* Categories Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {Object.entries(docStructure).map(([category, docs]) => (
-            <div key={category} className="glass-card">
-              <div className="glass-card__content">
-                <h2 className="text-2xl font-semibold text-forest-900 mb-4">
-                  {category}
-                </h2>
-                <ul className="space-y-2">
-                  {docs.map((doc) => {
-                    const docSlug = doc.path.replace(".md", "");
-                    return (
-                      <li key={doc.path}>
-                        <Link
-                          href={`/docs/${docSlug}`}
-                          className="text-forest-700 hover:text-forest-900 hover:underline flex items-center space-x-2"
-                        >
-                          <span>→</span>
-                          <span>{doc.name}</span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {Object.entries(docStructure).map(([category, docs], index) => (
+            <div
+              key={category}
+              className="animation-slide-up"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <CategoryCard category={category} docs={docs} />
             </div>
           ))}
         </div>
 
-        {/* All Docs List */}
-        <div className="glass-card">
+        {/* All Docs List - Alfabética */}
+        <div className="glass-card animation-fade-in">
           <div className="glass-card__content">
-            <h2 className="text-2xl font-semibold text-forest-900 mb-4">
+            <h2 className="text-3xl font-bold text-forest-900 mb-6">
               Lista Completa ({allDocs.length} documentos)
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -141,9 +108,10 @@ export default async function DocsPage() {
                     <Link
                       key={doc}
                       href={`/docs/${docSlug}`}
-                      className="text-forest-700 hover:text-forest-900 hover:underline py-2 px-3 rounded hover:bg-forest-100 transition-colors"
+                      className="doc-link"
                     >
-                      {docName}
+                      <span>→</span>
+                      <span className="flex-1">{docName}</span>
                     </Link>
                   );
                 })}
@@ -152,27 +120,7 @@ export default async function DocsPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-forest-200 bg-white/50 backdrop-blur-sm mt-16">
-        <div className="container-max py-8">
-          <div className="text-center text-forest-600">
-            <p>
-              Wiki Araponga — Documentação completa da plataforma digital comunitária
-              orientada ao território
-            </p>
-            <p className="mt-2 text-sm">
-              <a
-                href="https://github.com/sraphaz/araponga"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                Contribuir no GitHub
-              </a>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

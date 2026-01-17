@@ -6,6 +6,8 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
 import remarkGfm from "remark-gfm";
+import { Header } from "../../../components/layout/Header";
+import { Footer } from "../../../components/layout/Footer";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -43,7 +45,6 @@ const slugToFile: Record<string, string> = {
 
 async function getDocContent(fileName: string) {
   try {
-    // Caminho relativo para a pasta docs na raiz do projeto
     const docsPath = join(process.cwd(), "..", "..", "docs", fileName);
     const fileContents = await readFile(docsPath, "utf8");
     const { content, data } = matter(fileContents);
@@ -56,7 +57,7 @@ async function getDocContent(fileName: string) {
     return {
       content: processedContent.toString(),
       frontMatter: data,
-      title: data.title || fileName.replace(".md", ""),
+      title: data.title || fileName.replace(".md", "").replace(/_/g, " "),
     };
   } catch (error) {
     console.error(`Error reading ${fileName}:`, error);
@@ -92,117 +93,77 @@ export default async function DocPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b border-forest-200 bg-white/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container-max py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3">
-              <h1 className="text-2xl font-bold text-forest-900">🐦 Wiki Araponga</h1>
-            </Link>
-            <nav className="flex items-center space-x-4">
-              <Link href="/" className="nav-link">Início</Link>
-              <Link href="/docs" className="nav-link">Todos os Docs</Link>
-              <a
-                href="https://araponga.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nav-link"
-              >
-                Site Principal
-              </a>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col">
+      <Header />
 
       {/* Main Content */}
-      <main className="container-max py-8">
-        <div className="glass-card">
+      <main className="flex-1 container-max py-12">
+        <div className="glass-card animation-fade-in">
           <div className="glass-card__content">
-            {/* Breadcrumb */}
-            <nav className="mb-6 text-sm text-forest-600">
-              <Link href="/" className="hover:underline">
-                Início
-              </Link>
-              <span className="mx-2">/</span>
-              <Link href="/docs" className="hover:underline">
-                Documentação
-              </Link>
-              <span className="mx-2">/</span>
+            {/* Breadcrumb Refinado */}
+            <nav className="breadcrumb mb-8">
+              <Link href="/">Boas-Vindas</Link>
+              <span>›</span>
+              <Link href="/docs">Documentação</Link>
+              <span>›</span>
               <span className="text-forest-900 font-medium">{doc.title}</span>
             </nav>
 
-            {/* Document Title */}
-            <h1 className="text-4xl font-bold text-forest-900 mb-6">{doc.title}</h1>
+            {/* Document Title - Hero */}
+            <h1 className="text-5xl md:text-6xl font-bold text-forest-900 mb-8 leading-tight">
+              {doc.title}
+            </h1>
 
-            {/* Document Metadata */}
-            {doc.frontMatter && (
-              <div className="mb-6 pb-6 border-b border-forest-200">
+            {/* Document Metadata - Badges */}
+            {doc.frontMatter && (doc.frontMatter.version || doc.frontMatter.date || doc.frontMatter.status) && (
+              <div className="mb-10 pb-8 border-b border-forest-200/60 flex flex-wrap gap-3">
                 {doc.frontMatter.version && (
-                  <p className="text-sm text-forest-600">
-                    <span className="font-semibold">Versão:</span> {doc.frontMatter.version}
-                  </p>
+                  <span className="metadata-badge">
+                    <span className="mr-2">📌</span>
+                    Versão: {doc.frontMatter.version}
+                  </span>
                 )}
                 {doc.frontMatter.date && (
-                  <p className="text-sm text-forest-600">
-                    <span className="font-semibold">Data:</span> {doc.frontMatter.date}
-                  </p>
+                  <span className="metadata-badge">
+                    <span className="mr-2">📅</span>
+                    {doc.frontMatter.date}
+                  </span>
                 )}
                 {doc.frontMatter.status && (
-                  <p className="text-sm text-forest-600">
-                    <span className="font-semibold">Status:</span> {doc.frontMatter.status}
-                  </p>
+                  <span className="metadata-badge">
+                    <span className="mr-2">✓</span>
+                    {doc.frontMatter.status}
+                  </span>
                 )}
               </div>
             )}
 
-            {/* Document Content */}
+            {/* Document Content - Refinado */}
             <div
-              className="markdown-content"
+              className="markdown-content prose-headings:first:mt-0"
               dangerouslySetInnerHTML={{ __html: doc.content }}
             />
           </div>
         </div>
 
-        {/* Navigation Links */}
-        <div className="mt-8 flex justify-between">
+        {/* Navigation Links - Refinado */}
+        <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
           <Link
             href="/"
-            className="nav-link bg-forest-100 px-6 py-3 rounded-lg hover:bg-forest-200 transition-colors"
+            className="btn-secondary text-center"
           >
-            ← Voltar ao Início
+            ← Voltar às Boas-Vindas
           </Link>
           <Link
             href="/docs"
-            className="nav-link bg-forest-100 px-6 py-3 rounded-lg hover:bg-forest-200 transition-colors"
+            className="btn-secondary text-center"
           >
             Ver Todos os Docs →
           </Link>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-forest-200 bg-white/50 backdrop-blur-sm mt-16">
-        <div className="container-max py-8">
-          <div className="text-center text-forest-600">
-            <p>
-              Wiki Araponga — Documentação completa da plataforma digital comunitária
-              orientada ao território
-            </p>
-            <p className="mt-2 text-sm">
-              <a
-                href="https://github.com/sraphaz/araponga"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                Contribuir no GitHub
-              </a>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

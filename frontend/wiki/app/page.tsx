@@ -134,7 +134,7 @@ export default async function HomePage() {
               <div className="glass-card animation-fade-in">
                 <div className="glass-card__content markdown-content">
                   {/* Document Title - H1 para SEO, título principal da página */}
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight tracking-tight">
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
                     {onboardingDoc.title}
                   </h1>
 

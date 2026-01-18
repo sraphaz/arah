@@ -11,6 +11,7 @@ import { FeatureCard } from "../components/ui/FeatureCard";
 import { QuickLinks } from "../components/layout/QuickLinks";
 import { ApiDomainDiagram } from "../components/content/ApiDomainDiagram";
 import { AppBanner } from "../components/content/AppBanner";
+import { ContentSections } from "./docs/[slug]/content-sections";
 
 function processMarkdownLinks(html: string, basePath: string = '/wiki'): string {
   // Processa links <a href="/docs/..."> para <a href="/wiki/docs/...">
@@ -41,8 +42,24 @@ async function getDocContent(filePath: string) {
       .use(remarkGfm)
       .process(content);
 
+    // Adiciona IDs aos headings para navegação e progressive disclosure
+    let htmlContent = processedContent.toString();
+    htmlContent = htmlContent.replace(
+      /<h([2-4])>(.*?)<\/h\1>/gi,
+      (match, level, text) => {
+        const id = text
+          .replace(/<[^>]*>/g, '') // Remove HTML tags
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+          .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with dash
+          .replace(/^-+|-+$/g, ''); // Remove leading/trailing dashes
+        return `<h${level} id="${id}">${text}</h${level}>`;
+      }
+    );
+
     // Processa links no HTML renderizado para incluir basePath
-    const htmlContent = processMarkdownLinks(processedContent.toString(), '/wiki');
+    htmlContent = processMarkdownLinks(htmlContent, '/wiki');
 
     return {
       content: htmlContent,
@@ -91,11 +108,8 @@ export default async function HomePage() {
                 </div>
               )}
 
-              {/* Document Content */}
-              <div
-                className="markdown-content prose-headings:first:mt-0"
-                dangerouslySetInnerHTML={{ __html: onboardingDoc.content }}
-              />
+              {/* Document Content - Com Progressive Disclosure */}
+              <ContentSections htmlContent={onboardingDoc.content} />
 
               {/* Diagrama do Domínio API - Visual Explicativo */}
               <ApiDomainDiagram />

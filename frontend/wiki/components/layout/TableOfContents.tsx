@@ -13,18 +13,23 @@ export function TableOfContents() {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
-    // Extract headings from markdown content
+    // Extract headings from markdown content - busca em todo o documento
     const extractHeadings = () => {
-      const content = document.querySelector(".markdown-content");
+      // Tenta múltiplos seletores para encontrar o conteúdo
+      const content = document.querySelector(".markdown-content") || 
+                      document.querySelector("main") ||
+                      document.body;
+
       if (!content) return [];
 
-      const headings = content.querySelectorAll("h1, h2, h3, h4");
+      // Busca headings em todo o documento, não apenas dentro de .markdown-content
+      const headings = content.querySelectorAll("h2[id], h3[id], h4[id]");
       const items: TOCItem[] = [];
 
       headings.forEach((heading) => {
         const id = heading.id || heading.textContent?.toLowerCase().replace(/\s+/g, "-") || "";
         const level = parseInt(heading.tagName.charAt(1));
-        const text = heading.textContent || "";
+        const text = heading.textContent?.trim() || "";
 
         // Only include h2, h3, h4 (skip h1 which is usually the title)
         if (level >= 2 && level <= 4 && id && text) {
@@ -35,26 +40,72 @@ export function TableOfContents() {
       return items;
     };
 
-    // Wait for content to load
-    const timer = setTimeout(() => {
+    // Aguarda o conteúdo carregar - tenta múltiplas vezes
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    const tryExtract = () => {
       const headings = extractHeadings();
-      setToc(headings);
-    }, 100);
+      if (headings.length > 0 || attempts >= maxAttempts) {
+        setToc(headings);
+      } else {
+        attempts++;
+        setTimeout(tryExtract, 200);
+      }
+    };
+
+    // Inicia imediatamente e também após um delay
+    tryExtract();
+    const timer = setTimeout(tryExtract, 500);
 
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    // Track scroll position to highlight active heading
+    // Track scroll position to highlight active heading using IntersectionObserver
+    if (toc.length === 0) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-100px 0px -80% 0px", // Considera heading ativo quando está próximo do topo
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      // Encontra o heading mais próximo do topo que está visível
+      const visibleHeadings = entries
+        .filter(entry => entry.isIntersecting)
+        .map(entry => ({
+          id: entry.target.id,
+          top: entry.boundingClientRect.top,
+        }))
+        .sort((a, b) => a.top - b.top);
+
+      if (visibleHeadings.length > 0) {
+        setActiveId(visibleHeadings[0].id);
+      }
+    }, observerOptions);
+
+    // Observa todos os headings
+    toc.forEach((item) => {
+      const element = document.getElementById(item.id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    // Fallback: também usa scroll listener para garantir detecção
     const handleScroll = () => {
       const headings = toc.map((item) => document.getElementById(item.id)).filter(Boolean) as HTMLElement[];
       
       if (headings.length === 0) return;
 
       let current = "";
+      const offset = 150; // Offset para considerar sticky header
+      
       for (const heading of headings) {
         const rect = heading.getBoundingClientRect();
-        if (rect.top <= 100) {
+        if (rect.top <= offset) {
           current = heading.id;
         } else {
           break;
@@ -66,11 +117,13 @@ export function TableOfContents() {
       }
     };
 
-    if (toc.length > 0) {
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      handleScroll(); // Initial check
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [toc]);
 
   if (toc.length === 0) {

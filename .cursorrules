@@ -827,7 +827,7 @@ public async Task GetTerritoryByIdAsync_WhenTerritoryExists_ReturnsTerritory()
 
 3. **Mudanças em APIs/Endpoints:**
    - ✅ Atualizar `docs/60_API_LÓGICA_NEGÓCIO.md` com novos endpoints ou mudanças
-   - ✅ Atualizar `backend/Araponga.Api/wwwroot/devportal/index.html` se mudar DevPortal
+   - ✅ Atualizar `frontend/devportal/index.html` se mudar DevPortal
    - ✅ Atualizar exemplos de código se mudar contratos
 
 4. **Mudanças em Fases do Backlog:**

@@ -30,7 +30,7 @@ Esta é uma regra **NÃO NEGOCIÁVEL**. Documentação desatualizada é consider
 
 **Arquivos a Atualizar:**
 - ✅ `docs/60_API_LÓGICA_NEGÓCIO.md` - Seção correspondente
-- ✅ `backend/Araponga.Api/wwwroot/devportal/index.html` - Se mudar DevPortal
+- ✅ `frontend/devportal/index.html` - Se mudar DevPortal
 - ✅ `docs/40_CHANGELOG.md` - Se mudança significativa
 
 **Exemplo:**
@@ -226,7 +226,7 @@ Se você atualizar documentos que são sincronizados com Wiki do GitHub:
 Documentos sincronizados:
 - Todos os documentos em `docs/backlog-api/`
 - Documentos principais em `docs/` (00-70)
-- DevPortal em `backend/Araponga.Api/wwwroot/devportal/`
+- DevPortal em `frontend/devportal/`
 
 ---
 

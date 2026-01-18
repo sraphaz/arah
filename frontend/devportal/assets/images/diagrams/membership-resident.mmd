@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant Cliente
+    participant MembershipController
+    participant MembershipService
+    participant MembershipRepository
+    participant VerificationQueueService
+    participant WorkQueueService
+    participant DocumentEvidenceService
+    participant FileStorage
+    participant Database
+
+    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/become-resident
+    MembershipController->>MembershipService: BecomeResidentAsync(userId, territoryId)
+    
+    MembershipService->>MembershipRepository: GetResidentMembershipAsync()
+    MembershipRepository->>Database: SELECT membership WHERE userId AND role=Resident
+    Database-->>MembershipRepository: Membership ou null
+    
+    alt Já é Resident em outro território
+        MembershipService-->>MembershipController: Result.Failure("Already resident elsewhere")
+        MembershipController-->>Cliente: 400 Bad Request
+    else Pode tornar-se Resident
+        MembershipService->>MembershipRepository: UpdateRole(Resident)
+        MembershipRepository->>Database: UPDATE membership SET role=Resident
+        Database-->>MembershipRepository: OK
+        
+        MembershipService->>MembershipService: CommitAsync()
+        MembershipService-->>MembershipController: Result.Success(membership)
+        MembershipController-->>Cliente: 200 OK (membership)
+    end
+
+    Note over Cliente,Database: Upload de documento (opcional)
+    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/verify-residency/document/upload
+    MembershipController->>DocumentEvidenceService: UploadDocumentAsync()
+    DocumentEvidenceService->>FileStorage: UploadAsync(file)
+    FileStorage-->>DocumentEvidenceService: File URL
+    DocumentEvidenceService->>Database: INSERT document_evidence
+    Database-->>DocumentEvidenceService: Evidence criada
+    
+    DocumentEvidenceService->>VerificationQueueService: EnqueueResidencyVerification()
+    VerificationQueueService->>WorkQueueService: EnqueueWorkItem(ResidencyVerification)
+    WorkQueueService->>Database: INSERT work_item
+    Database-->>WorkQueueService: WorkItem criado
+    
+    DocumentEvidenceService-->>MembershipController: Evidence + WorkItem
+    MembershipController-->>Cliente: 200 OK (evidenceId, workItemId)

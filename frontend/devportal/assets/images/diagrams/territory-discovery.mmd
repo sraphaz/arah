@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant Cliente
+    participant TerritoryController
+    participant MembershipController
+    participant TerritoryService
+    participant MembershipService
+    participant TerritoryRepository
+    participant MembershipRepository
+    participant SettingsRepository
+    participant AuditLogger
+    participant Database
+
+    Cliente->>TerritoryController: GET /api/v1/territories/nearby
+    TerritoryController->>TerritoryService: FindNearbyAsync()
+    TerritoryService->>TerritoryRepository: FindNearbyAsync()
+    TerritoryRepository->>Database: SELECT territories WHERE distance < radiusKm
+    Database-->>TerritoryRepository: List
+    TerritoryRepository-->>TerritoryService: List
+    TerritoryService-->>TerritoryController: List
+    TerritoryController-->>Cliente: 200 OK (territories)
+
+    Cliente->>MembershipController: POST /api/v1/memberships/{territoryId}/enter-visitor
+    MembershipController->>MembershipService: EnterAsVisitorAsync(userId, territoryId)
+    
+    MembershipService->>MembershipRepository: GetByUserAndTerritoryAsync()
+    MembershipRepository->>Database: SELECT membership WHERE userId + territoryId
+    Database-->>MembershipRepository: Membership ou null
+    MembershipRepository-->>MembershipService: Membership existente ou null
+    
+    alt Membership já existe
+        MembershipService-->>MembershipController: Membership existente
+    else Novo membership
+        MembershipService->>MembershipRepository: AddAsync(new TerritoryMembership(Visitor))
+        MembershipRepository->>Database: INSERT membership
+        Database-->>MembershipRepository: Membership criado
+        
+        MembershipService->>SettingsRepository: AddAsync(new MembershipSettings())
+        SettingsRepository->>Database: INSERT settings
+        Database-->>SettingsRepository: Settings criado
+        
+        MembershipService->>AuditLogger: LogAsync("membership.declared")
+        MembershipService->>MembershipService: CommitAsync()
+        MembershipService-->>MembershipController: TerritoryMembership
+    end
+    
+    MembershipController-->>Cliente: 200 OK (membership)

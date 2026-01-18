@@ -407,7 +407,7 @@ Se você chegou até aqui e sentiu que isso faz sentido, você já faz parte da 
 
 ## Developer Portal (GitHub Pages)
 
-O conteúdo estático do Developer Portal vive em `backend/Araponga.Api/wwwroot/devportal` e é publicado automaticamente via GitHub Actions na branch `gh-pages` quando há push em `main` ou `master`.
+O conteúdo estático do Developer Portal vive em `frontend/devportal` e é publicado automaticamente via GitHub Actions na branch `gh-pages` quando há push em `main` ou `master`.
 
 ---
 

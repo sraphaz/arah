@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant Cliente
+    participant MembershipsController
+    participant MembershipService
+    participant EvidenceService
+    participant WorkQueueService
+    participant Database
+
+    Note over Cliente,Database: Verificação por Geolocalização
+    Cliente->>MembershipsController: POST /api/v1/memberships/{id}/verify-residency/geo
+    MembershipsController->>MembershipService: VerifyResidencyByGeoAsync(lat, lng)
+    MembershipService->>MembershipService: Calcular distância vs território
+    MembershipService->>Database: UPDATE membership (ResidencyVerification=GEO_VERIFIED)
+    Database-->>MembershipService: OK
+    MembershipService-->>MembershipsController: Result.Success()
+    MembershipsController-->>Cliente: 200 OK
+
+    Note over Cliente,Database: Verificação por Documento
+    Cliente->>EvidenceService: POST /api/v1/evidences (file, type=ResidencyDocument)
+    EvidenceService->>Database: INSERT evidence (status=Pending)
+    Database-->>EvidenceService: Evidence criado
+    EvidenceService->>WorkQueueService: EnqueueResidencyVerificationAsync()
+    EvidenceService-->>Cliente: 200 OK (evidenceId, workItemId)
+
+    Cliente->>MembershipsController: POST /api/v1/memberships/{id}/verify-residency/document
+    MembershipsController->>MembershipService: VerifyResidencyByDocumentAsync(evidenceId)
+    MembershipService->>Database: UPDATE membership (ResidencyVerification=DOCUMENT_VERIFIED)
+    Database-->>MembershipService: OK
+    MembershipService-->>MembershipsController: Result.Success()
+    MembershipsController-->>Cliente: 200 OK

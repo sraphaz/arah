@@ -1,0 +1,42 @@
+sequenceDiagram
+    participant Cliente
+    participant StoresController
+    participant CartController
+    participant CheckoutController
+    participant CartService
+    participant CheckoutService
+    participant PaymentGateway as Payment Gateway
+    participant PayoutService
+    participant Database
+
+    Note over Cliente,Database: Criar Item e Adicionar ao Carrinho
+    Cliente->>StoresController: POST /api/v1/items
+    StoresController->>Database: INSERT item
+    Database-->>Cliente: 200 OK (item)
+
+    Cliente->>CartController: POST /api/v1/cart/items (itemId, quantity)
+    CartController->>CartService: AddItemAsync(itemId, quantity)
+    CartService->>Database: INSERT cart_item
+    Database-->>Cliente: 200 OK (cartItem)
+
+    Note over Cliente,Database: Checkout e Pagamento
+    Cliente->>CheckoutController: POST /api/v1/cart/checkout
+    CheckoutController->>CartService: CheckoutAsync()
+    CartService->>Database: INSERT checkout
+    Database-->>CartService: Checkout criado
+    CartService-->>Cliente: 200 OK (checkoutBundles)
+
+    Cliente->>PaymentGateway: Processar pagamento externo
+    PaymentGateway-->>Cliente: Payment confirmado
+
+    Cliente->>CheckoutController: POST /api/v1/checkouts/{id}/mark-paid
+    CheckoutController->>CheckoutService: MarkAsPaidAsync(checkoutId)
+    CheckoutService->>Database: UPDATE checkout (status=Paid)
+    CheckoutService->>Database: INSERT seller_transaction
+    Database-->>Cliente: 200 OK
+
+    Note over Cliente,Database: Payout Automático
+    PayoutService->>Database: SELECT seller_transactions (Pending)
+    PayoutService->>PaymentGateway: Transferir para vendedor
+    PaymentGateway-->>PayoutService: Transfer confirmado
+    PayoutService->>Database: UPDATE seller_transaction (status=Completed)

@@ -1,0 +1,39 @@
+sequenceDiagram
+    participant Cliente
+    participant FeedController
+    participant FeedService
+    participant PostFilterService
+    participant FeedRepository
+    participant AccessEvaluator
+    participant UserBlockRepository
+    participant EventService
+    participant Database
+
+    Cliente->>FeedController: GET /api/v1/feed/paged
+    FeedController->>FeedService: ListForTerritoryPagedAsync()
+    FeedService->>FeedRepository: ListByTerritoryAsync(territoryId)
+    FeedRepository->>Database: SELECT posts WHERE territoryId ORDER BY createdAt DESC
+    Database-->>FeedRepository: List
+    FeedRepository-->>FeedService: List
+    
+    FeedService->>PostFilterService: FilterAndPaginateAsync(posts, userId)
+    
+    PostFilterService->>AccessEvaluator: GetMembershipAsync(userId, territoryId)
+    AccessEvaluator->>Database: SELECT membership WHERE userId + territoryId
+    Database-->>AccessEvaluator: Membership
+    AccessEvaluator-->>PostFilterService: Membership (role, verification)
+    
+    PostFilterService->>UserBlockRepository: GetBlockedUserIdsAsync(userId)
+    UserBlockRepository->>Database: SELECT blocked_user_ids WHERE userId
+    Database-->>UserBlockRepository: List
+    UserBlockRepository-->>PostFilterService: BlockedUserIds
+    
+    PostFilterService->>PostFilterService: Aplicar filtros:\n- Bloqueios\n- Visibilidade\n- Status\n- Paginação
+    
+    PostFilterService-->>FeedService: PagedResult
+    FeedService-->>FeedController: PagedResult
+    
+    FeedController->>EventService: LoadEventSummariesAsync(postIds)
+    FeedController->>FeedService: GetCountsByPostIdsAsync(postIds)
+    FeedController->>FeedController: Montar FeedItemResponse
+    FeedController-->>Cliente: 200 OK (PagedResponse)

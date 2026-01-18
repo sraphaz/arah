@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant Cliente
+    participant MapController
+    participant MapEntityService
+    participant WorkQueueService
+    participant Curator as Curador
+    participant Database
+
+    Note over Cliente,Database: Sugerir Entidade
+    Cliente->>MapController: POST /api/v1/map/entities
+    MapController->>MapEntityService: SuggestEntityAsync(entityData)
+    MapEntityService->>Database: INSERT map_entity (status=Suggested)
+    Database-->>MapEntityService: Entity criado
+    MapEntityService->>WorkQueueService: EnqueueWorkItemAsync()
+    MapEntityService-->>MapController: Result.Success
+    MapController-->>Cliente: 200 OK (entityDetails)
+
+    Note over Cliente,Database: Confirmar Entidade
+    Curator->>MapController: POST /api/v1/work-items/{id}/complete
+    MapController->>MapEntityService: ConfirmEntityAsync(entityId)
+    MapEntityService->>Database: UPDATE map_entity (status=Confirmed)
+    MapEntityService-->>MapController: Result.Success
+    MapController-->>Curator: 200 OK

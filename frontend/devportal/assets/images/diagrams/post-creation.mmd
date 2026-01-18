@@ -1,0 +1,52 @@
+sequenceDiagram
+    participant Cliente
+    participant FeedController
+    participant FeedService
+    participant PostCreationService
+    participant AccessEvaluator
+    participant FeatureFlagService
+    participant SanctionRepository
+    participant AssetRepository
+    participant FeedRepository
+    participant PostGeoAnchorRepository
+    participant EventBus
+    participant Database
+
+    Cliente->>FeedController: POST /api/v1/feed
+    FeedController->>AccessEvaluator: IsResidentAsync(userId, territoryId)
+    AccessEvaluator->>Database: SELECT membership WHERE userId + territoryId
+    Database-->>AccessEvaluator: Membership
+    AccessEvaluator-->>FeedController: isResident
+    
+    alt Não é Resident
+        FeedController-->>Cliente: 401 Unauthorized
+    else É Resident
+        FeedController->>FeedService: CreatePostAsync()
+        FeedService->>PostCreationService: CreatePostAsync()
+        
+        PostCreationService->>FeatureFlagService: IsEnabledAsync(territoryId, "AlertPosts")
+        PostCreationService->>SanctionRepository: HasActiveSanctionAsync(userId, PostingRestriction)
+        SanctionRepository->>Database: SELECT sanction WHERE userId + territoryId
+        Database-->>SanctionRepository: Sanction ou null
+        
+        alt Usuário com restrição
+            PostCreationService-->>FeedService: Result.Failure("Posting restricted")
+            FeedService-->>FeedController: Result.Failure
+            FeedController-->>Cliente: 400 Bad Request
+        else Pode postar
+            PostCreationService->>FeedRepository: AddAsync(new CommunityPost())
+            FeedRepository->>Database: INSERT post
+            Database-->>FeedRepository: Post criado
+            
+            loop Para cada GeoAnchor
+                PostCreationService->>PostGeoAnchorRepository: AddAsync(new PostGeoAnchor())
+                PostGeoAnchorRepository->>Database: INSERT geo_anchor
+            end
+            
+            PostCreationService->>EventBus: PublishAsync(PostCreatedEvent)
+            PostCreationService->>PostCreationService: CommitAsync()
+            PostCreationService-->>FeedService: Result.Success(post)
+            FeedService-->>FeedController: Result.Success(post)
+            FeedController-->>Cliente: 201 Created (post)
+        end
+    end

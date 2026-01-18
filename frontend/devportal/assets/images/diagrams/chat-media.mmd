@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant Cliente
+    participant MediaController
+    participant MediaService
+    participant ChatService
+    participant FileStorage
+    participant Database
+
+    Cliente->>MediaController: POST /api/v1/media/upload
+    MediaController->>MediaService: UploadMediaAsync(file)
+    MediaService->>FileStorage: UploadAsync(file)
+    FileStorage-->>MediaService: File URL
+    MediaService->>Database: INSERT media
+    Database-->>MediaService: Media criado
+    MediaService-->>MediaController: MediaResponse
+    MediaController-->>Cliente: 200 OK (mediaId, mediaUrl)
+
+    Note over Cliente,Database: Enviar mensagem com mídia
+    Cliente->>ChatService: POST /api/v1/chat/messages<br/>(mediaId)
+    ChatService->>Database: INSERT message
+    Database-->>ChatService: Message criado
+    ChatService-->>Cliente: 200 OK (MessageResponse com mediaUrl)

@@ -43,7 +43,7 @@ jobs:
           mkdir -p dist
 
           # Copiar Dev Portal para raiz
-          cp -R backend/Araponga.Api/wwwroot/devportal/. dist/
+          cp -R frontend/devportal/. dist/
           
           # Verificar se index.html foi copiado
           if [ ! -f "dist/index.html" ]; then

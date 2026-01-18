@@ -20,59 +20,54 @@ Assim como ele se destaca em seu território, buscamos valorizar as comunidades 
 ### O ruído da escala global dificulta o contexto local
 
 #### Relevância diluída
-Plataformas generalistas priorizam alcance global, tornando difícil descobrir informações verdadeiramente relevantes para o entorno imediato onde vivemos e atuamos.
+Plataformas generalistas priorizam alcance global, dificultando a descoberta de informações relevantes ao entorno imediato.
 
 #### Falta de contexto territorial
-Ferramentas existentes não reconhecem adequadamente as especificidades de cada território — suas regras, cultura, dinâmicas de confiança e formas de organização comunitária.
+Ferramentas existentes não reconhecem adequadamente especificidades de cada território — regras, cultura, dinâmicas de confiança e formas de organização comunitária.
 
-#### Dependência de gigantes
-Comunidades locais ficam reféns de algoritmos opacos e políticas de plataformas centralizadas que não atendem às necessidades específicas do território.
+#### Dependência de plataformas centralizadas
+Comunidades locais ficam reféns de algoritmos opacos e políticas de plataformas centralizadas que não atendem necessidades específicas do território.
 
 ---
 
 ## A proposta: território primeiro, comunidade primeiro
 
 ### Orientado ao território
-Cada instância representa um território específico, com suas próprias regras de visibilidade, governança e organização comunitária.
+Cada instância representa um território específico, com regras próprias de visibilidade, governança e organização comunitária.
 
 ### Feed local + mapa integrado
-Publicações e eventos aparecem tanto em timeline quanto em visualização geográfica, facilitando a descoberta do que acontece por perto.
+Publicações e eventos aparecem em timeline e visualização geográfica, facilitando descoberta do que acontece no território.
 
 ### Governança explícita
-Regras claras sobre quem pode ver e participar, com distinção entre visitantes e residentes, respeitando a autonomia comunitária.
+Regras claras sobre quem pode ver e participar, com distinção entre visitantes e residentes, respeitando autonomia comunitária.
 
-O Araponga é uma plataforma de **código aberto** projetada para fortalecer a organização comunitária a partir do território.  
-Ela combina feed social, mapeamento colaborativo e regras de participação definidas pela própria comunidade.
+O Araponga é uma plataforma de código aberto projetada para fortalecer organização comunitária a partir do território. Combina feed social, mapeamento colaborativo e regras de participação definidas pela comunidade.
 
-O objetivo é promover relevância local, reduzir ruído informacional e diminuir a dependência de plataformas generalistas que não atendem às especificidades de cada lugar.
+Promove relevância local, reduz ruído informacional e diminui dependência de plataformas generalistas que não atendem especificidades de cada lugar.
 
 ---
 
 ## Como funciona na prática
 
-O fluxo de uso foi desenhado para ser direto e respeitar as regras de cada território desde o primeiro acesso.
+Fluxo direto que respeita regras de cada território desde o primeiro acesso.
 
 ### 01 — Login e autenticação
-Usuário faz login via sistema de autenticação.  
-A identidade é verificada, mas ainda não há vínculo com um território específico.
+Login via sistema de autenticação. Identidade verificada, sem vínculo inicial com território específico.
 
 ### 02 — Escolher um território
-Usuário seleciona o território de interesse na plataforma.  
-Cada território possui regras próprias de participação e visibilidade.
+Seleção do território de interesse. Cada território possui regras próprias de participação e visibilidade.
 
 ### 03 — Visitante ou Residente
-O sistema atribui o papel inicial:
+Papel inicial atribuído:
 - **Visitante**: acesso limitado  
 - **Residente**: acesso ampliado  
 
-A residência pode ser solicitada conforme regras locais.
+Residência pode ser solicitada conforme regras locais.
 
 ### 04 — Feed e mapa filtrados
-O conteúdo exibido respeita o papel do usuário.  
-Visitantes veem apenas conteúdo público.  
-Residentes acessam conteúdos restritos.  
+Conteúdo exibido respeita papel do usuário. Visitantes veem apenas conteúdo público. Residentes acessam conteúdos restritos.
 
-Tudo aparece tanto no **feed** quanto no **mapa**.
+Conteúdo aparece no **feed** e no **mapa**.
 
 ---
 
@@ -105,27 +100,25 @@ Ainda em desenvolvimento.
 
 ---
 
-## Regras de visibilidade: por que isso importa
+## Regras de visibilidade
 
 ### Visitante & Residente
-A distinção entre visitante e residente permite que comunidades controlem o acesso a informações sensíveis ou restritas.
+Distinção permite que comunidades controlem acesso a informações sensíveis ou restritas.
 
-- **Visitante**: acesso apenas a conteúdo marcado como público  
+- **Visitante**: acesso apenas a conteúdo público  
 - **Residente**: acesso ampliado, incluindo conteúdos restritos do território  
 
-Essa separação respeita a autonomia comunitária e permite gradações de confiança baseadas em engajamento real.
+Separação respeita autonomia comunitária e permite gradações de confiança baseadas em engajamento real.
 
 ### Público & Restrito
 Cada publicação, evento ou conteúdo pode ser classificado como público ou restrito.
 
-O sistema garante que apenas usuários com permissão adequada tenham acesso a informações sensíveis.  
-Isso é essencial para:
+Sistema garante que apenas usuários com permissão adequada tenham acesso a informações sensíveis. Essencial para:
 - proteger discussões internas  
 - planejar ações comunitárias sem exposição desnecessária  
 - construir ambientes de confiança  
 
-Essas regras não são arbitrárias.  
-Elas promovem **segurança, relevância e respeito às dinâmicas locais**.
+Regras promovem segurança, relevância e respeito às dinâmicas locais.
 
 ---
 

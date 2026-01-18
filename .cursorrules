@@ -491,6 +491,33 @@ Documentação:
 
 ---
 
+## 🔄 Processo de Auto-Aprendizado
+
+### ⚠️ OBRIGATÓRIO Após Revisões
+
+**Toda revisão técnica DEVE gerar atualização de diretrizes:**
+
+1. **Capturar Lições**: Documentar em `docs/LICOES_APRENDIDAS.md`
+   - Identificar padrões recurrentes
+   - Categorizar (Crítico/Importante/Otimização)
+   - Documentar contexto e solução
+
+2. **Atualizar Diretrizes**: Aplicar lições aprendidas
+   - Atualizar `CURSOR_DESIGN_RULES.md` se lição é sobre design
+   - Atualizar `.cursorrules` se lição é geral
+   - Atualizar outros documentos conforme necessário
+
+3. **Validar**: Garantir efetividade
+   - Revisar mudanças
+   - Validar conformidade
+   - Documentar no changelog
+
+**Processo Completo**: `docs/PROCESSO_AUTO_APRENDIZADO_REVISOES.md`
+
+**Exemplo Prático**: Ver `docs/LICOES_APRENDIDAS.md` (LIC-001: Cores hardcoded)
+
+---
+
 ## 🔍 Referências Rápidas
 
 ### Documentação Principal

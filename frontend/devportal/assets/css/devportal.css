@@ -1019,6 +1019,8 @@ main {
   letter-spacing: normal;
   font-size: clamp(0.9375rem, 0.875rem + 0.2vw, 1rem);
   flex: 1; /* Permite parágrafos preencherem espaço vertical em cards */
+  /* Remove restrições de largura - texto ocupa espaço livremente */
+  max-width: 100%;
 }
 
 .card p:last-child {
@@ -1150,18 +1152,20 @@ main {
   font-weight: 600;
 }
 
-/* Callout */
+/* Callout - Estilo visível em ambos os temas */
 .callout {
   padding: clamp(1rem, 2vw, 1.25rem) clamp(1.25rem, 2.5vw, 1.5rem);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: var(--bg-muted);
-  color: var(--text-muted);
+  background: var(--accent-subtle); /* Usa variável que funciona em ambos os temas */
+  color: var(--text); /* Texto principal para contraste */
   margin: clamp(1rem, 2vw, 1.5rem) 0;
   text-align: left;
   line-height: 1.75;
   word-spacing: normal;
   letter-spacing: normal;
+  /* Border esquerda para destaque (pode ser sobrescrito por inline styles) */
+  border-left: 4px solid var(--link);
 }
 
 .callout p {
@@ -1176,6 +1180,15 @@ main {
 
 .callout strong {
   color: var(--text);
+}
+
+.callout a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.callout a:hover {
+  color: var(--accent);
 }
 
 .callout.highlight {

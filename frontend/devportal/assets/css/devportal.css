@@ -588,7 +588,7 @@ input:focus-visible {
   grid-template-columns: 256px minmax(0, 1fr);
   /* Padronizado: 24px-32px usando tokens - harmonizado com Wiki */
   gap: clamp(var(--space-lg), 3vw, var(--space-xl));
-  padding: clamp(2rem, 4vw, 3rem) 0 clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(1rem, 2vw, 1.5rem) 0 clamp(2rem, 3vw, 3rem);
   align-items: start;
 }
 
@@ -817,10 +817,10 @@ main {
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-radius: var(--glass-radius);
-  padding: clamp(1.5rem, 3vw, 2rem) clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2rem);
   box-shadow: var(--glass-shadow);
   /* Sem borda explícita - translúcido sem roubar espaço */
-  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
 .section h2 {

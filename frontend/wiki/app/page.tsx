@@ -126,9 +126,9 @@ export default async function HomePage() {
   const onboardingDoc = await getDocContent("ONBOARDING_PUBLICO.md");
 
   return (
-    <main className="container-max py-12 lg:py-16">
+    <main className="container-max py-12 lg:py-16 px-4 md:px-6 lg:px-8">
         {onboardingDoc && (
-          <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-[90rem] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_300px] 2xl:grid-cols-[1fr_320px] gap-6 lg:gap-8 xl:gap-10">
+          <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_240px] xl:grid-cols-[1fr_260px] 2xl:grid-cols-[1fr_280px] gap-4 lg:gap-6 xl:gap-8">
             {/* Main Content Column */}
             <div>
               <div className="glass-card animation-fade-in">

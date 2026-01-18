@@ -189,19 +189,9 @@
     max-width: 100%;
   }
 
-  @media (min-width: 1024px) {
-    .container-max {
-      max-width: 90rem; /* 1440px - melhor aproveitamento de espaço */
-    }
-  }
+  /* Removido max-width restritivo - conteúdo usa toda largura disponível */
 
-  @media (min-width: 1536px) {
-    .container-max {
-      max-width: 96rem; /* 1536px - ainda mais espaço em telas muito grandes */
-    }
-  }
-
-  /* Glass card - Modern design refinement */
+  /* Glass card - Modern design refinement - Bordas simplificadas */
   .glass-card {
     position: relative;
     border-radius: var(--glass-radius);
@@ -213,6 +203,7 @@
     overflow: hidden;
     transition: var(--transition-smooth);
     isolation: isolate;
+    /* Removido encadeamento de bordas - design limpo */
   }
 
   .glass-card::before {
@@ -266,8 +257,8 @@
   .glass-card__content {
     position: relative;
     z-index: 1;
-    /* Espaçamento generoso: 48px-64px vertical, 40px-64px horizontal - permite respiração */
-    padding: clamp(3rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4rem);
+    /* Espaçamento otimizado - mais área útil, menos padding excessivo */
+    padding: clamp(2rem, 4vw, 3rem) clamp(2rem, 5vw, 3.5rem);
   }
 
   /* Navigation refinada - Enterprise design */
@@ -308,7 +299,7 @@
   /* Category Card - Layout limpo sem bordas pesadas */
   .category-card {
     @apply h-full;
-    /* Removido glass-card para bordas mais sutis */
+    /* Bordas simplificadas - sem encadeamento */
     border-radius: var(--glass-radius);
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -449,13 +440,13 @@
   /* Responsivo: conteúdo aproveita melhor espaço em telas maiores */
   @media (min-width: 1280px) {
     .markdown-content {
-      max-width: var(--content-width-wide); /* 90ch em xl */
+      /* Removido max-width - conteúdo usa toda largura disponível */
     }
   }
 
   @media (min-width: 1536px) {
     .markdown-content {
-      max-width: 95ch; /* Ainda mais largo em 2xl, mantendo legibilidade */
+      /* Removido max-width - conteúdo usa toda largura disponível */
     }
   }
 
@@ -517,7 +508,7 @@
     @apply mb-6 text-forest-800 dark:text-forest-200;
     font-size: var(--font-size-base); /* 16px - usa token */
     line-height: var(--line-height-relaxed); /* 1.75 - usa token */
-    max-width: 68ch; /* 65-70ch é ideal para leitura (padrão mercado) */
+    /* Removido max-width - conteúdo usa toda largura disponível */
     letter-spacing: var(--letter-spacing-normal); /* 0 - usa token */
     word-spacing: 0.05em; /* Espaçamento entre palavras */
     text-rendering: optimizeLegibility;
@@ -1112,12 +1103,7 @@
 
   .markdown-content {
     @apply prose-xl;
-  }
-}
-
-@media (min-width: 1280px) {
-  .markdown-content {
-    max-width: var(--content-width-wide);
+    /* Removido max-width restritivo - conteúdo usa toda largura disponível */
   }
 }
 
@@ -1197,15 +1183,16 @@
   @apply opacity-75;
 }
 
-/* Table of Contents - Enterprise design */
+/* Table of Contents - Enterprise design - Margem reduzida */
 .toc-container {
-  @apply glass-card p-6;
+  @apply glass-card p-4;
   @apply sticky top-24;
+  /* Removido padding excessivo - aproveita melhor espaço */
 }
 
 .toc-header {
-  @apply flex items-center space-x-2 mb-4 pb-3;
-  @apply border-b border-forest-200/80 dark:border-forest-800/80;
+  @apply flex items-center space-x-2 mb-3 pb-2;
+  /* Removida borda inferior - design mais limpo, menos encadeamento */
 }
 
 .toc-icon {

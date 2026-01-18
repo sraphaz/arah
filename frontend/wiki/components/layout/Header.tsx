@@ -28,9 +28,6 @@ export function Header() {
             </div>
           </Link>
           <nav className="flex items-center space-x-3">
-            <Link href="/" className="nav-link">
-              Boas-Vindas
-            </Link>
             <Link href="/docs" className="nav-link">
               Todos os Docs
             </Link>
@@ -40,7 +37,7 @@ export function Header() {
               rel="noopener noreferrer"
               className="nav-link"
             >
-              Site Principal
+              Site Institucional
             </a>
             <div className="ml-2 pl-3 border-l border-forest-200 dark:border-forest-800">
               <ThemeToggle />

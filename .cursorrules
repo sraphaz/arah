@@ -119,6 +119,87 @@ backend/
 
 ## 📝 Padrões de Código
 
+### ⚠️ OBRIGATÓRIO: Princípios SOLID e YAGNI/KISS
+
+**TODO código DEVE seguir os princípios SOLID, YAGNI e KISS por padrão.**
+
+#### SOLID - Princípios de Design Orientado a Objetos
+
+**S - Single Responsibility Principle (SRP)**
+- ✅ Cada função/classe/módulo deve ter UMA única responsabilidade
+- ✅ Se uma função faz mais de uma coisa, quebre em funções menores
+- ❌ Evite "God Objects" ou funções monolíticas que fazem tudo
+
+**O - Open/Closed Principle (OCP)**
+- ✅ Aberto para extensão, fechado para modificação
+- ✅ Use interfaces e abstrações para permitir extensão sem modificar código existente
+- ✅ Prefira composição e estratégias em vez de if/switch gigantes
+
+**L - Liskov Substitution Principle (LSP)**
+- ✅ Subtipos devem ser substituíveis por seus tipos base sem quebrar o código
+- ✅ Implementações de interfaces devem cumprir contratos esperados
+
+**I - Interface Segregation Principle (ISP)**
+- ✅ Interfaces específicas e pequenas são melhores que uma interface genérica grande
+- ✅ Clientes não devem depender de métodos que não usam
+- ✅ Prefira múltiplas interfaces pequenas a uma interface monolítica
+
+**D - Dependency Inversion Principle (DIP)**
+- ✅ Dependa de abstrações (interfaces), não de implementações concretas
+- ✅ Use Dependency Injection (DI) para injetar dependências
+- ✅ Alto nível não deve depender de baixo nível; ambos devem depender de abstrações
+
+#### YAGNI - You Aren't Gonna Need It
+
+- ✅ **NÃO** adicione funcionalidades "por precaução" ou "pode ser útil no futuro"
+- ✅ Implemente apenas o que é necessário AGORA para o requisito atual
+- ✅ Refatore quando a necessidade surgir, não antes
+- ❌ Evite abstrações excessivas "para preparar para o futuro"
+
+#### KISS - Keep It Simple, Stupid
+
+- ✅ **Simplicidade acima de complexidade**
+- ✅ Prefira soluções simples e diretas sobre soluções "elegantes" complexas
+- ✅ Código legível e fácil de entender é melhor que código "inteligente" difícil
+- ✅ Se algo parece complicado, provavelmente há uma forma mais simples
+
+#### Exemplos de Aplicação
+
+**❌ BAD - Viola SRP, KISS e YAGNI:**
+```typescript
+// Uma função faz tudo: processa markdown, gera IDs, processa links, remove H1
+function processEverything(content: string, basePath: string, removeH1: boolean, generateIds: boolean): ProcessedContent {
+  // ... 200 linhas fazendo tudo ...
+}
+```
+
+**✅ GOOD - Segue SOLID, YAGNI e KISS:**
+```typescript
+// Funções pequenas com responsabilidade única
+export function getTextContent(html: string): string { ... }
+export function generateUniqueId(text: string, usedIds: Map<string, number>): string { ... }
+export function processMarkdownLinks(html: string, basePath: string): string { ... }
+export function extractFirstH1(htmlContent: string): { title: string | null; content: string } { ... }
+
+// Composição: usa funções pequenas para criar funcionalidade maior
+export async function processMarkdownContent(filePath: string, basePath: string): Promise<DocumentContent | null> {
+  const htmlContent = await parseMarkdown(content);
+  const { title, content } = extractFirstH1(htmlContent);
+  const withIds = addHeadingIds(content);
+  const withLinks = processMarkdownLinks(withIds, basePath);
+  return { content: withLinks, title, frontMatter: data };
+}
+```
+
+#### Checklist Antes de Escrever Código
+
+- [ ] Esta função/classe tem apenas UMA responsabilidade?
+- [ ] Estou adicionando funcionalidade que não é necessária agora? (YAGNI)
+- [ ] Existe uma forma mais simples de fazer isso? (KISS)
+- [ ] Estou dependendo de abstrações ou implementações concretas? (DIP)
+- [ ] Esta interface/abstração é realmente necessária agora ou é "preparação para o futuro"? (YAGNI)
+- [ ] O código ficou mais legível e fácil de entender?
+
 ### Nomenclatura
 
 #### Classes e Interfaces
@@ -550,13 +631,15 @@ Documentação:
 8. **Após revisões: OBRIGATÓRIO capturar lições aprendidas em `LICOES_APRENDIDAS.md` e atualizar diretrizes** (ver `PROCESSO_AUTO_APRENDIZADO_REVISOES.md`)
 9. **NUNCA use cores hardcoded** - sempre variáveis CSS ou classes Tailwind configuradas
 10. **Mobile-first é obrigatório** - todo CSS deve começar com mobile, ajustar para desktop
+11. **SOLID e YAGNI/KISS são obrigatórios** - todo código deve seguir esses princípios (ver seção "Padrões de Código")
 
 ---
 
 **Última Atualização**: 2025-01-20  
-**Versão**: 1.3
+**Versão**: 1.4
 
 ### Changelog
+- **1.4** (2025-01-20): Adicionados princípios SOLID e YAGNI/KISS como obrigatórios em todo código
 - **1.3** (2025-01-20): Adicionado processo de auto-aprendizado obrigatório após revisões, reforçado lembretes de design
 - **1.2** (2025-01-20): Adicionadas regras críticas de design (cores hardcoded proibidas) após revisão completa
 - **1.1** (2025-01-20): Adicionada seção de arquivos de referência para contexto

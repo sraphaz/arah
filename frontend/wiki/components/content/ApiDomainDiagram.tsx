@@ -38,7 +38,7 @@ export function ApiDomainDiagram() {
               style={{ display: 'none' }}
             >
               <p className="text-forest-600 dark:text-forest-400 mb-4">
-                📊 Diagrama do Domínio API Araponga
+                Diagrama do Domínio API Araponga
               </p>
               <p className="text-sm text-forest-500 dark:text-forest-500">
                 A imagem será carregada quando disponível em <code>/public/araponga-api-domain-diagram.png</code>

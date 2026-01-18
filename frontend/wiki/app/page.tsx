@@ -57,7 +57,7 @@ async function getDocContent(filePath: string) {
     // Caminho: de frontend/wiki para docs/ na raiz (2 níveis acima)
     // process.cwd() pode variar em dev vs build - usa __dirname como fallback
     let basePath = process.cwd();
-    
+
     // Se estiver em .next (build), ajusta o caminho
     if (basePath.includes('.next')) {
       basePath = join(basePath, '..', '..', '..', '..');
@@ -65,7 +65,7 @@ async function getDocContent(filePath: string) {
       // Em dev, frontend/wiki - vai 2 níveis acima
       basePath = join(basePath, '..', '..');
     }
-    
+
     const docsPath = join(basePath, "docs", filePath).replace(/\\/g, '/');
     const fileContents = await readFile(docsPath, "utf8");
     const { content, data } = matter(fileContents);
@@ -148,7 +148,7 @@ export default async function HomePage() {
       <main className="container-max py-12 lg:py-16 px-4 md:px-6 lg:px-8">
         <div className="glass-card animation-fade-in">
           <div className="glass-card__content markdown-content">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
               Boas-Vindas ao Araponga
             </h1>
             <p className="text-lg text-forest-700 dark:text-forest-300 mb-8">
@@ -174,7 +174,7 @@ export default async function HomePage() {
               <div className="glass-card animation-fade-in">
                 <div className="glass-card__content markdown-content">
                   {/* Document Title - H1 para SEO, título principal da página */}
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
                     {onboardingDoc.title}
                   </h1>
 

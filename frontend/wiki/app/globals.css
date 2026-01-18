@@ -364,7 +364,7 @@
 
   /* Hero section - Enterprise typography */
   .hero-title {
-    @apply text-5xl md:text-6xl lg:text-7xl font-bold;
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
     @apply bg-gradient-to-br from-forest-900 via-forest-800 to-forest-700;
     @apply dark:from-forest-50 dark:via-forest-100 dark:to-forest-200;
     @apply bg-clip-text text-transparent;
@@ -452,7 +452,7 @@
 
   /* Typography hierarchy - Enterprise level */
   .markdown-content h1 {
-    @apply text-5xl md:text-6xl font-bold text-forest-900 dark:text-forest-50 mb-10 mt-16;
+    @apply text-4xl md:text-5xl font-bold text-forest-900 dark:text-forest-50 mb-10 mt-16;
     @apply pb-6 border-b-2 border-forest-200 dark:border-forest-800;
     letter-spacing: var(--letter-spacing-tight);
     line-height: var(--line-height-tight);
@@ -464,7 +464,7 @@
   }
 
   .markdown-content h2 {
-    @apply text-3xl md:text-4xl font-bold text-forest-800 dark:text-forest-100 mb-6 mt-10;
+    @apply text-2xl md:text-3xl font-bold text-forest-800 dark:text-forest-100 mb-6 mt-10;
     font-family: var(--font-inter), system-ui, sans-serif;
     letter-spacing: var(--letter-spacing-tight); /* -0.025em - usa token */
     line-height: var(--line-height-snug); /* 1.375 - usa token */

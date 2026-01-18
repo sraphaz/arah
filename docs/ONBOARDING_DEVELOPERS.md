@@ -1,4 +1,4 @@
-# 🌱 Onboarding para Desenvolvedores - Araponga
+# Desenvolvedores
 
 **Versão**: 1.0  
 **Data**: 2025-01-20  

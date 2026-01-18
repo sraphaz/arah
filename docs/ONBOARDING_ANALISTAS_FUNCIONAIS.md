@@ -1,4 +1,4 @@
-# 🌱 Onboarding para Analistas Funcionais - Araponga
+# Analistas Funcionais
 
 **Versão**: 1.0  
 **Data**: 2025-01-20  

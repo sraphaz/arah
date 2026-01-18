@@ -195,6 +195,12 @@ export default async function DocPage({ params }: PageProps) {
                 <Link href="/wiki">Boas-Vindas</Link>
                 <span>›</span>
                 <Link href="/wiki/docs">Documentação</Link>
+                {(slug[0]?.startsWith('ONBOARDING_') || slug.some(s => s?.startsWith('ONBOARDING_'))) && (
+                  <>
+                    <span>›</span>
+                    <Link href="/wiki/docs">Onboarding</Link>
+                  </>
+                )}
                 {slug.map((segment, index) => (
                   <span key={index}>
                     <span>›</span>

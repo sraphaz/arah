@@ -107,7 +107,7 @@ export default async function DocsPage() {
             return (
               <section key={group.title} id={group.title.toLowerCase().replace(/\s+/g, '-')} className="animation-fade-in scroll-mt-24">
                 {/* Quebra semântica visual - título de grupo */}
-                <h2 className="text-2xl sm:text-3xl font-semibold text-forest-700 dark:text-forest-300 mb-6 sm:mb-8 lg:mb-10 pb-3">
+                <h2 className="text-xl sm:text-2xl font-semibold text-forest-700 dark:text-forest-300 mb-6 sm:mb-8 lg:mb-10 pb-3">
                   {group.title}
                 </h2>
 

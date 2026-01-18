@@ -775,16 +775,25 @@
   }
 
   /* Metadata badge - Modern design */
-  .metadata-badge {
-    @apply inline-flex items-center px-4 py-2 rounded-full;
-    @apply bg-forest-100 dark:bg-forest-900/80 text-forest-700 dark:text-forest-200 text-sm font-medium;
-    @apply border border-forest-200/60 dark:border-forest-800/60;
-    @apply shadow-sm hover:shadow-md;
-    @apply transition-all duration-300 hover:scale-105;
-    font-size: var(--font-size-sm);
-    letter-spacing: var(--letter-spacing-wide);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+  /* Document Metadata - Padrão internacional discreto (Vercel, Stripe, Linear) */
+  .document-metadata {
+    font-size: var(--font-size-sm); /* 14px - texto pequeno e discreto */
+    color: var(--text-muted); /* Cor neutra - não compete com conteúdo */
+    margin-bottom: var(--space-xl); /* 32px - espaço antes do conteúdo */
+    margin-top: calc(var(--space-sm) * -1); /* -8px - reduz espaço após título */
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm); /* 8px - espaçamento entre elementos */
+    font-variant-numeric: tabular-nums; /* Alinhamento numérico para datas */
+  }
+
+  .document-metadata .separator {
+    color: var(--text-subtle);
+    opacity: 0.5; /* Separador discreto */
+  }
+
+  .document-metadata time {
+    font-variant-numeric: tabular-nums; /* Alinhamento numérico para datas */
   }
 
   /* Footer refinado */

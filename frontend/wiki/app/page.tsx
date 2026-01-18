@@ -138,20 +138,17 @@ export default async function HomePage() {
                     {onboardingDoc.title}
                   </h1>
 
-                  {/* Document Metadata */}
+                  {/* Document Metadata - Padrão internacional discreto */}
               {onboardingDoc.frontMatter && (onboardingDoc.frontMatter.version || onboardingDoc.frontMatter.date) && (
-                <div className="mb-12 pb-6 border-b-2 border-forest-200/80 dark:border-forest-800/80 flex flex-wrap gap-3">
+                <div className="document-metadata">
                   {onboardingDoc.frontMatter.version && (
-                    <span className="metadata-badge">
-                      <span className="mr-2">📌</span>
-                      Versão: {onboardingDoc.frontMatter.version}
-                    </span>
+                    <span>v{onboardingDoc.frontMatter.version}</span>
+                  )}
+                  {onboardingDoc.frontMatter.version && onboardingDoc.frontMatter.date && (
+                    <span className="separator">·</span>
                   )}
                   {onboardingDoc.frontMatter.date && (
-                    <span className="metadata-badge">
-                      <span className="mr-2">📅</span>
-                      {onboardingDoc.frontMatter.date}
-                    </span>
+                    <time dateTime={onboardingDoc.frontMatter.date}>{onboardingDoc.frontMatter.date}</time>
                   )}
                 </div>
               )}

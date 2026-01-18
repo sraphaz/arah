@@ -14,8 +14,12 @@
   --watermark-right: -180px;
   --body-watermark-opacity: 0.025;
   --body-watermark-size: 720px;
-  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-quick: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Transition Tokens - Sincronizado com Wiki */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-quick: 250ms cubic-bezier(0.16, 1, 0.3, 1); /* Alias para compatibilidade */
   --gradient-overlay: linear-gradient(180deg, rgba(241, 248, 244, 0.6) 0%, rgba(241, 248, 244, 0.2) 100%);
 
   /* Paleta de cores harmoniosa e suave */
@@ -201,7 +205,7 @@ img {
 a {
   color: var(--link);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--transition-base); /* 200ms - usa token */
 }
 
 a:hover {

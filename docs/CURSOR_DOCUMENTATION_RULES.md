@@ -12,6 +12,16 @@
 
 Esta é uma regra **NÃO NEGOCIÁVEL**. Documentação desatualizada é considerado um bug crítico.
 
+### Auto-Aprendizado Após Revisões
+
+**⚠️ OBRIGATÓRIO**: Após qualquer revisão técnica (design, código, arquitetura), seguir o processo de auto-aprendizado:
+
+1. **Capturar Lições**: Documentar em `docs/LICOES_APRENDIDAS.md`
+2. **Atualizar Diretrizes**: Aplicar lições aprendidas nas diretrizes relevantes
+3. **Validar**: Garantir que mudanças estão corretas e completas
+
+**Processo Completo**: Ver `docs/PROCESSO_AUTO_APRENDIZADO_REVISOES.md`
+
 ---
 
 ## 📋 Mapeamento: Mudança de Código → Documentação

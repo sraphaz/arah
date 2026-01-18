@@ -1,9 +1,5 @@
 # Analistas Funcionais
 
-**Versão**: 1.0  
-**Data**: 2025-01-20  
-**Para**: Pessoas interessadas em avaliar, conhecer e propor melhorias de negócio baseadas nas necessidades dos territórios
-
 ---
 
 ## 🎯 Bem-vindo ao Araponga

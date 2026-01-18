@@ -1,9 +1,5 @@
 # Desenvolvedores
 
-**Versão**: 1.0  
-**Data**: 2025-01-20  
-**Para**: Novos desenvolvedores que querem contribuir com tecnologia a serviço do território
-
 ---
 
 ## 🎯 Bem-vindo ao Araponga

@@ -17,12 +17,12 @@ export function CategoryCard({ category, docs }: CategoryCardProps) {
 
   return (
     <div className="category-card">
-      <div className="glass-card__content category-card__content">
-        <h2 className="text-xl font-semibold text-forest-900 dark:text-forest-50 mb-6 flex items-center gap-3">
-          {emoji && <span className="text-2xl opacity-80">{emoji}</span>}
+      <div className="category-card__content">
+        <h2 className="text-lg font-semibold text-forest-900 dark:text-forest-50 mb-4 flex items-center gap-2">
+          {emoji && <span className="text-xl opacity-80">{emoji}</span>}
           <span>{titleWithoutEmoji}</span>
         </h2>
-        <ul className="space-y-2.5 flex-1">
+        <ul className="space-y-1.5 flex-1 overflow-y-auto">
           {docs.map((doc) => {
             const docSlug = doc.path.replace(".md", "");
             return (

@@ -84,6 +84,9 @@ export default async function DocsPage() {
 
   return (
     <main className="flex-1 container-max py-12 lg:py-16">
+      <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-[90rem] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_300px] 2xl:grid-cols-[1fr_320px] gap-6 lg:gap-8 xl:gap-10">
+        {/* Main Content Column */}
+        <div>
         {/* Hero Section - Assertivo e direto */}
         <div className="mb-12 sm:mb-16 lg:mb-20 animation-fade-in">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-4 sm:mb-6 leading-tight tracking-tight">
@@ -95,21 +98,21 @@ export default async function DocsPage() {
         </div>
 
         {/* Categories Grid - Responsivo com quebras semânticas */}
-        <div className="space-y-16 sm:space-y-20 lg:space-y-24">
+        <div className="space-y-12 sm:space-y-16 lg:space-y-20">
           {categoryGroups.map((group, groupIndex) => {
             const groupCategories = Object.entries(docStructure).filter(([category]) =>
               group.categories.includes(category)
             );
 
             return (
-              <section key={group.title} className="animation-fade-in">
+              <section key={group.title} id={group.title.toLowerCase().replace(/\s+/g, '-')} className="animation-fade-in scroll-mt-24">
                 {/* Quebra semântica visual - título de grupo */}
-                <h2 className="text-2xl sm:text-3xl font-semibold text-forest-700 dark:text-forest-300 mb-8 sm:mb-10 lg:mb-12 pb-4 border-b border-forest-200 dark:border-forest-800">
+                <h2 className="text-2xl sm:text-3xl font-semibold text-forest-700 dark:text-forest-300 mb-6 sm:mb-8 lg:mb-10 pb-3">
                   {group.title}
                 </h2>
 
                 {/* Grid responsivo - mobile: 1 col, tablet: 2 cols, desktop: 3 cols */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                   {groupCategories.map(([category, docs], index) => (
                     <div
                       key={category}
@@ -124,6 +127,28 @@ export default async function DocsPage() {
             );
           })}
         </div>
+        </div>
+
+        {/* TOC Column - Sticky */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-24">
+            <nav className="space-y-2" aria-label="Navegação de seções">
+              <div className="text-sm font-semibold text-forest-700 dark:text-forest-300 mb-4 pb-2 border-b border-forest-200 dark:border-forest-800">
+                Seções
+              </div>
+              {categoryGroups.map((group) => (
+                <a
+                  key={group.title}
+                  href={`#${group.title.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="block text-sm text-forest-600 dark:text-forest-400 hover:text-forest-900 dark:hover:text-forest-50 py-1.5 transition-colors"
+                >
+                  {group.title}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </aside>
+      </div>
     </main>
   );
 }

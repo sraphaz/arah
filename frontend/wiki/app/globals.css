@@ -305,26 +305,57 @@
   }
 
   /* Category card - Enterprise design */
-  .category-card {
-    @apply glass-card;
-  }
-
+  /* Category Card - Layout limpo sem bordas pesadas */
   .category-card {
     @apply h-full;
-    min-height: 280px;
-  }
-
-  .category-card__content {
-    padding: 2rem 1.75rem;
-    height: 100%;
+    /* Removido glass-card para bordas mais sutis */
+    border-radius: var(--glass-radius);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    transition: var(--transition-smooth);
+    /* Altura padrão consistente - evita espaço vazio */
+    min-height: 240px;
+    max-height: 400px;
     display: flex;
     flex-direction: column;
   }
 
-  @media (min-width: 1024px) {
+  .category-card:hover {
+    box-shadow: var(--glass-hover-shadow);
+    transform: translateY(-2px);
+    border-color: var(--accent-subtle);
+  }
+
+  .category-card__content {
+    /* Padding reduzido - otimiza uso do espaço */
+    padding: 1.5rem 1.25rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evita conteúdo estourando */
+  }
+
+  @media (min-width: 640px) {
+    .category-card {
+      min-height: 260px;
+    }
+    
     .category-card__content {
-      padding: 2.5rem 2.25rem;
-      min-height: 320px;
+      padding: 1.75rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .category-card {
+      min-height: 280px;
+      max-height: 420px;
+    }
+    
+    .category-card__content {
+      padding: 2rem 1.75rem;
     }
   }
 

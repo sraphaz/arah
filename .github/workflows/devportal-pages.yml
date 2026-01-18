@@ -41,10 +41,18 @@ jobs:
         run: |
           rm -rf dist
           mkdir -p dist
-          
+
           # Copiar Dev Portal para raiz
           cp -R backend/Araponga.Api/wwwroot/devportal/. dist/
           
+          # Verificar se index.html foi copiado
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ ERRO: index.html não encontrado em dist/"
+            ls -la dist/
+            exit 1
+          fi
+          echo "✅ index.html encontrado em dist/"
+
           # Copiar Wiki para subpasta /wiki (se build foi bem-sucedido)
           if [ -d "frontend/wiki/out" ]; then
             mkdir -p dist/wiki
@@ -53,8 +61,14 @@ jobs:
           else
             echo "⚠️  Wiki build não encontrado, pulando..."
           fi
-          
+
+          # Criar CNAME para domínio customizado
           echo "devportal.araponga.app" > dist/CNAME
+          echo "✅ CNAME criado: devportal.araponga.app"
+          
+          # Listar estrutura final para debug
+          echo "📁 Estrutura final do dist/:"
+          ls -la dist/ | head -20
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

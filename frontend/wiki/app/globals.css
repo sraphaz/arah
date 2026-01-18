@@ -291,10 +291,11 @@
 
   /* Doc link - Enterprise design */
   .doc-link {
-    @apply flex items-center space-x-3 px-4 py-3 rounded-xl;
-    @apply text-forest-700 dark:text-forest-200 hover:text-forest-900 dark:hover:text-forest-50;
-    @apply transition-all duration-300 ease-out;
-    @apply hover:bg-forest-50/80 dark:hover:bg-forest-900/40 hover:shadow-sm;
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg;
+    @apply text-sm md:text-base text-forest-700 dark:text-forest-300;
+    @apply hover:text-forest-900 dark:hover:text-forest-50;
+    @apply transition-all duration-200 ease-out;
+    @apply hover:bg-forest-50/60 dark:hover:bg-forest-900/50;
     position: relative;
   }
 

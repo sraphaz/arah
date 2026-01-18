@@ -61,57 +61,28 @@ export default async function DocsPage() {
   const allDocs = await getAllDocs();
 
   return (
-    <main className="flex-1 container-max py-12">
-        {/* Hero Section */}
-        <div className="glass-card mb-12 animation-fade-in">
-          <div className="glass-card__content text-center">
-            <h1 className="hero-title text-balance mb-4">
-              Todos os Documentos
-            </h1>
-            <p className="hero-subtitle text-balance max-w-2xl mx-auto">
-              Explore toda a documentação disponível na Wiki do Araponga.
-            </p>
-          </div>
+    <main className="flex-1 container-max py-12 xl:py-16">
+        {/* Hero Section - Assertivo e direto */}
+        <div className="mb-16 animation-fade-in">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
+            Documentação
+          </h1>
+          <p className="text-xl md:text-2xl text-forest-600 dark:text-forest-400 max-w-3xl leading-relaxed">
+            Documentação técnica, arquitetural e funcional da plataforma Araponga, organizada por categoria.
+          </p>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {/* Categories Grid - Responsivo e profissional */}
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
           {Object.entries(docStructure).map(([category, docs], index) => (
             <div
               key={category}
               className="animation-slide-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              style={{ animationDelay: `${index * 0.08}s` }}
             >
               <CategoryCard category={category} docs={docs} />
             </div>
           ))}
-        </div>
-
-        {/* All Docs List - Alfabética */}
-        <div className="glass-card animation-fade-in">
-          <div className="glass-card__content">
-            <h2 className="text-3xl font-bold text-forest-900 mb-6">
-              Lista Completa ({allDocs.length} documentos)
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {allDocs
-                .sort()
-                .map((doc) => {
-                  const docSlug = doc.replace(".md", "");
-                  const docName = doc.replace(".md", "").replace(/_/g, " ");
-                  return (
-                    <Link
-                      key={doc}
-                      href={`/docs/${docSlug}`}
-                      className="doc-link group"
-                    >
-                      <span>→</span>
-                      <span className="flex-1">{docName}</span>
-                    </Link>
-                  );
-                })}
-            </div>
-          </div>
         </div>
     </main>
   );

@@ -54,14 +54,50 @@
   --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 24px rgba(77, 212, 168, 0.15);
 
-  /* Sistema de espaçamento consistente */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-  --space-3xl: 4rem;
+  /* Sistema de espaçamento consistente (Base 8px) - Sincronizado com Wiki */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+
+  /* Aliases para compatibilidade (equivalente a --spacing-* da Wiki) */
+  --spacing-xxs: var(--space-xs);
+  --spacing-xs: var(--space-sm);
+  --spacing-sm: 0.75rem;  /* 12px */
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-2xl: var(--space-2xl);
+  --spacing-3xl: var(--space-3xl);
+
+  /* Typography Scale (Harmonic Scale 1.125) - Sincronizado com Wiki */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 1.875rem;    /* 30px */
+  --font-size-4xl: 2.25rem;     /* 36px */
+  --font-size-5xl: 3rem;        /* 48px */
+  --font-size-6xl: 3.75rem;     /* 60px */
+  --font-size-7xl: 4.5rem;      /* 72px */
+
+  /* Line Heights - Otimizados para leitura - Sincronizado com Wiki */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Letter Spacing - Sincronizado com Wiki */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -111,8 +147,8 @@ body {
     radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
   color: var(--text);
-  line-height: 1.7;
-  font-size: clamp(0.9375rem, 0.875rem + 0.3125vw, 1.0625rem);
+  line-height: var(--line-height-relaxed); /* 1.75 - usa token */
+  font-size: clamp(var(--font-size-base), 0.875rem + 0.3125vw, var(--font-size-lg)); /* 16px-18px - usa tokens */
   overflow-x: hidden;
   position: relative;
 }
@@ -725,16 +761,17 @@ main {
 }
 
 .section h3 {
-  font-size: clamp(1.125rem, 0.875rem + 0.625vw, 1.375rem);
+  font-size: clamp(var(--font-size-lg), 0.875rem + 0.625vw, var(--font-size-xl)); /* 18px-20px - usa tokens */
   font-weight: 600;
-  margin: 0 0 0.5rem;
-  line-height: 1.4;
+  margin: 0 0 var(--space-sm); /* 8px - usa token */
+  line-height: var(--line-height-normal); /* 1.5 - usa token */
 }
 
 .section h4 {
-  font-size: clamp(1rem, 0.875rem + 0.5vw, 1.125rem);
+  font-size: clamp(var(--font-size-base), 0.875rem + 0.5vw, var(--font-size-lg)); /* 16px-18px - usa tokens */
   font-weight: 600;
-  margin: 0 0 0.5rem;
+  margin: 0 0 var(--space-sm); /* 8px - usa token */
+  line-height: var(--line-height-normal); /* 1.5 - usa token */
 }
 
 .section p {

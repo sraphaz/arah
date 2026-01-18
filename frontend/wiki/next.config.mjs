@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: []
+    remotePatterns: [],
+    unoptimized: true // Necessário para static export - desabilita otimização que requer servidor
   },
   // Enable reading markdown files from docs directory
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],

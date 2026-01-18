@@ -67,22 +67,33 @@ export function TableOfContents() {
 
     const observerOptions = {
       root: null,
-      rootMargin: "-100px 0px -80% 0px", // Considera heading ativo quando está próximo do topo
-      threshold: [0, 0.25, 0.5, 0.75, 1],
+      rootMargin: "-140px 0px -60% 0px", // Considera heading ativo quando está próximo do topo (ajustado para sticky header)
+      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
     };
 
     const observer = new IntersectionObserver((entries) => {
-      // Encontra o heading mais próximo do topo que está visível
-      const visibleHeadings = entries
-        .filter(entry => entry.isIntersecting)
+      // Encontra o heading mais próximo do topo que está visível ou que passou do topo
+      const headingsWithPosition = entries
         .map(entry => ({
           id: entry.target.id,
           top: entry.boundingClientRect.top,
+          isIntersecting: entry.isIntersecting,
+          intersectionRatio: entry.intersectionRatio,
         }))
         .sort((a, b) => a.top - b.top);
 
-      if (visibleHeadings.length > 0) {
-        setActiveId(visibleHeadings[0].id);
+      // Primeiro, tenta encontrar um heading visível
+      const visibleHeading = headingsWithPosition.find(h => h.isIntersecting && h.top >= 140);
+      
+      if (visibleHeading) {
+        setActiveId(visibleHeading.id);
+        return;
+      }
+
+      // Se não há heading visível, pega o último que passou do topo (mais próximo do topo)
+      const pastTop = headingsWithPosition.filter(h => h.top < 140);
+      if (pastTop.length > 0) {
+        setActiveId(pastTop[pastTop.length - 1].id);
       }
     }, observerOptions);
 
@@ -94,25 +105,28 @@ export function TableOfContents() {
       }
     });
 
-    // Fallback: também usa scroll listener para garantir detecção
+    // Fallback: também usa scroll listener para garantir detecção mais precisa
     const handleScroll = () => {
       const headings = toc.map((item) => document.getElementById(item.id)).filter(Boolean) as HTMLElement[];
       
       if (headings.length === 0) return;
 
+      const offset = 140; // Offset para considerar sticky header
       let current = "";
-      const offset = 150; // Offset para considerar sticky header
       
-      for (const heading of headings) {
+      // Procura o heading que está mais próximo do topo mas ainda não passou muito
+      for (let i = headings.length - 1; i >= 0; i--) {
+        const heading = headings[i];
         const rect = heading.getBoundingClientRect();
-        if (rect.top <= offset) {
+        
+        // Se o heading está acima ou próximo do offset, é o ativo
+        if (rect.top <= offset + 50) {
           current = heading.id;
-        } else {
           break;
         }
       }
 
-      if (current) {
+      if (current && current !== activeId) {
         setActiveId(current);
       }
     };

@@ -67,11 +67,15 @@ export default function RootLayout({
                   const savedTheme = localStorage.getItem('wiki-theme');
                   const theme = savedTheme || 'dark';
                   
+                  // Aplica imediatamente antes do render para evitar flash
                   if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
                   } else {
                     document.documentElement.classList.remove('dark');
                   }
+                  
+                  // Garante que a classe persiste mesmo após navegação
+                  document.documentElement.setAttribute('data-theme', theme);
                   
                   // Log para debug (apenas em desenvolvimento)
                   if (typeof console !== 'undefined' && console.log) {
@@ -81,6 +85,7 @@ export default function RootLayout({
                   // Fallback: aplica dark mode em caso de erro
                   try {
                     document.documentElement.classList.add('dark');
+                    document.documentElement.setAttribute('data-theme', 'dark');
                     if (typeof console !== 'undefined' && console.error) {
                       console.error('[Theme Init] Error:', e);
                     }

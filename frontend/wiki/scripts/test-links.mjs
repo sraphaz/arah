@@ -130,7 +130,8 @@ async function testAllLinks() {
   // Test required internal links
   console.log('📋 Testing Required Internal Links:\n');
   for (const link of REQUIRED_LINKS) {
-    const fullUrl = link.startsWith('http') ? link : `${BASE_URL}${link.startsWith('/wiki') ? link : `/wiki${link}`}`;
+    // Corrigir: links já começam com /wiki/, não precisa duplicar
+    const fullUrl = link.startsWith('http') ? link : `${BASE_URL}${link}`;
     const result = await testLink(fullUrl);
     if (result.success) {
       results.passed.push(result);
@@ -145,7 +146,14 @@ async function testAllLinks() {
   try {
     const mainPageResponse = await fetch(`${BASE_URL}/`);
     if (mainPageResponse.status === 200) {
-      const extractedLinks = extractLinksFromHTML(mainPageResponse.body, BASE_URL);
+      const extractedLinks = await extractLinksFromHTML(mainPageResponse.body, BASE_URL);
+      
+      // Garantir que extractedLinks é um array
+      if (!Array.isArray(extractedLinks)) {
+        console.log(`  ⚠️  Could not extract links: expected array, got ${typeof extractedLinks}`);
+        return;
+      }
+      
       console.log(`Found ${extractedLinks.length} links in main page`);
       
       // Test only wiki internal links

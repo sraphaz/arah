@@ -22,7 +22,7 @@
     --spacing-section: 120px;
     --spacing-card: 80px;
     --gradient-overlay: linear-gradient(180deg, rgba(241, 248, 244, 0.6) 0%, rgba(241, 248, 244, 0.2) 100%);
-    
+
     /* Design System - Typography Scale */
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;
@@ -34,25 +34,37 @@
     --font-size-4xl: 2.25rem;
     --font-size-5xl: 3rem;
     --font-size-6xl: 3.75rem;
-    
+
     /* Line Heights - Optimized for reading */
     --line-height-tight: 1.25;
     --line-height-snug: 1.375;
     --line-height-normal: 1.5;
     --line-height-relaxed: 1.75;
     --line-height-loose: 2;
-    
+
     /* Letter Spacing */
     --letter-spacing-tighter: -0.05em;
     --letter-spacing-tight: -0.025em;
     --letter-spacing-normal: 0;
     --letter-spacing-wide: 0.025em;
     --letter-spacing-wider: 0.05em;
-    
+
     /* Content Widths - Optimal reading */
     --content-width-narrow: 65ch;
     --content-width-default: 75ch;
     --content-width-wide: 90ch;
+
+    /* Design System - Cores de Acento e Links (conforme DESIGN_SYSTEM_IDENTIDADE_VISUAL.md) */
+    --accent: #4dd4a8;
+    --accent-hover: #5ee5b9;
+    --accent-strong: #3bc495;
+    --accent-subtle: rgba(77, 212, 168, 0.15);
+    --link: #7dd3ff;
+    --link-hover: #9de3ff;
+    
+    /* Dark mode colors */
+    --bg-dark: #0a0e12;
+    --border-dark: #25303a;
   }
 
   /* Dark mode - identidade visual do devportal */
@@ -64,6 +76,9 @@
     --watermark-opacity: 0.015;
     --body-watermark-opacity: 0.01;
     --gradient-overlay: linear-gradient(180deg, rgba(10, 14, 18, 0.8) 0%, rgba(10, 14, 18, 0.4) 100%);
+    
+    /* Cores de acento e links em dark mode (usam mesmas variáveis) */
+    /* --accent e --link já definidas no :root, funcionam em ambos os modos */
   }
 
   * {
@@ -101,10 +116,10 @@
 
   /* Dark mode body background */
   :root.dark body {
-    background-image: 
+    background-image:
       radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
-    background-color: #0a0e12;
+    background-color: var(--bg-dark);
   }
 
   body::before {
@@ -194,7 +209,7 @@
   }
 
   :root.dark .glass-card:hover {
-    border-color: rgba(77, 212, 168, 0.3);
+    border-color: rgba(77, 212, 168, 0.3); /* Usa var(--accent) com opacity */
   }
 
   .glass-card:hover::before {
@@ -246,7 +261,8 @@
     left: 50%;
     width: 0;
     height: 2px;
-    @apply bg-forest-600 dark:bg-[#4dd4a8];
+    @apply bg-forest-600;
+    background-color: var(--accent) !important;
     transform: translateX(-50%);
     transition: width var(--transition-quick);
   }
@@ -280,7 +296,7 @@
     left: 0;
     width: 0;
     height: 3px;
-    @apply bg-forest-400 dark:bg-[#4dd4a8];
+    @apply bg-forest-400 dark:bg-dark-accent;
     transition: width var(--transition-smooth);
     border-radius: 2px;
   }
@@ -291,33 +307,24 @@
 
   /* Doc link - Enterprise design */
   .doc-link {
-    @apply flex items-center space-x-3 px-4 py-3 rounded-xl;
-    @apply text-forest-700 dark:text-forest-200 hover:text-forest-900 dark:hover:text-forest-50;
-    @apply transition-all duration-300 ease-out;
-    @apply hover:bg-forest-50/80 dark:hover:bg-forest-900/40 hover:shadow-sm;
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg;
+    @apply text-sm md:text-base text-forest-700 dark:text-forest-300;
+    @apply hover:text-forest-900 dark:hover:text-forest-50;
+    @apply transition-all duration-200 ease-out;
+    @apply hover:bg-forest-50/60 dark:hover:bg-forest-900/50;
     position: relative;
   }
 
-  .doc-link::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 4px;
-    height: 0;
-    @apply bg-forest-400 dark:bg-[#4dd4a8] rounded-r-full;
-    transform: translateY(-50%);
-    transition: height var(--transition-quick);
+  .doc-link-arrow {
+    @apply text-forest-400 dark:text-forest-600;
+    @apply group-hover:text-forest-600 dark:group-hover:text-dark-accent;
+    @apply transition-all duration-200;
+    @apply opacity-60 group-hover:opacity-100;
+    transform: translateX(0);
   }
 
-  .doc-link:hover::before {
-    height: 60%;
-  }
-
-  .doc-link span:first-child {
-    @apply text-forest-400 dark:text-[#4dd4a8] group-hover:text-forest-600 dark:group-hover:text-[#5ee5b9] group-hover:translate-x-1;
-    transition: var(--transition-quick);
-    font-size: 1.25rem;
+  .doc-link:hover .doc-link-arrow {
+    transform: translateX(2px);
   }
 
   /* Hero section - Enterprise typography */
@@ -341,9 +348,9 @@
 
   /* Buttons refinados - Enterprise design */
   .btn-primary {
-    @apply bg-forest-600 dark:bg-[#4dd4a8] text-white dark:text-forest-950 px-8 py-4 rounded-2xl;
+    @apply bg-forest-600 dark:bg-dark-accent text-white dark:text-forest-950 px-8 py-4 rounded-2xl;
     @apply font-semibold text-lg;
-    @apply hover:bg-forest-700 dark:hover:bg-[#5ee5b9] hover:shadow-xl;
+    @apply hover:bg-forest-700 dark:hover:bg-dark-accent-hover hover:shadow-xl;
     @apply active:scale-[0.98];
     @apply transition-all duration-300 ease-out;
     @apply relative overflow-hidden;
@@ -383,16 +390,29 @@
     @apply prose prose-lg max-w-none;
     @apply prose-headings:font-bold prose-headings:text-forest-900 dark:prose-headings:text-forest-100;
     @apply prose-p:text-forest-800 dark:prose-p:text-forest-200 prose-p:leading-relaxed;
-    @apply prose-a:text-forest-600 dark:prose-a:text-[#7dd3ff] prose-a:font-medium;
-    @apply prose-a:decoration-forest-300 dark:prose-a:decoration-[#25303a] prose-a:underline-offset-4;
+    @apply prose-a:text-forest-600 dark:prose-a:text-dark-link prose-a:font-medium;
+    @apply prose-a:decoration-forest-300 dark:prose-a:decoration-dark-border prose-a:underline-offset-4;
     @apply prose-strong:text-forest-900 dark:prose-strong:text-forest-50 prose-strong:font-semibold;
     @apply prose-code:text-forest-800 dark:prose-code:text-forest-100;
-    @apply prose-pre:bg-forest-900 dark:prose-pre:bg-[#0a0e12] prose-pre:text-forest-50;
-    @apply prose-blockquote:border-forest-400 dark:prose-blockquote:border-[#4dd4a8] prose-blockquote:text-forest-700 dark:prose-blockquote:text-forest-300;
+    @apply prose-pre:bg-forest-900 dark:prose-pre:bg-dark-bg prose-pre:text-forest-50;
+    @apply prose-blockquote:border-forest-400 dark:prose-blockquote:border-dark-accent prose-blockquote:text-forest-700 dark:prose-blockquote:text-forest-300;
     @apply prose-ul:marker:text-forest-500 dark:prose-ul:marker:text-forest-400;
-    
-    /* Optimal reading width */
+
+    /* Optimal reading width - aumenta conforme a resolução */
     max-width: var(--content-width-default);
+  }
+
+  /* Responsivo: conteúdo aproveita melhor espaço em telas maiores */
+  @media (min-width: 1280px) {
+    .markdown-content {
+      max-width: var(--content-width-wide); /* 90ch em xl */
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .markdown-content {
+      max-width: 95ch; /* Ainda mais largo em 2xl, mantendo legibilidade */
+    }
   }
 
   /* Typography hierarchy - Enterprise level */
@@ -428,7 +448,7 @@
     left: 0;
     width: 60px;
     height: 2px;
-    @apply bg-forest-500 dark:bg-[#4dd4a8];
+    @apply bg-forest-500 dark:bg-dark-accent;
     border-radius: 1px;
   }
 
@@ -522,7 +542,7 @@
 
   .markdown-content ul > li::before {
     content: "▸";
-    @apply text-forest-400 dark:text-[#4dd4a8];
+    @apply text-forest-400 dark:text-dark-accent;
     font-weight: bold;
     position: absolute;
     left: -1.5rem;
@@ -560,9 +580,9 @@
 
   /* Links - Enterprise design */
   .markdown-content a {
-    @apply text-forest-600 dark:text-[#7dd3ff] hover:text-forest-900 dark:hover:text-[#9de3ff];
+    @apply text-forest-600 dark:text-dark-link hover:text-forest-900 dark:hover:text-dark-link-hover;
     @apply underline underline-offset-[0.3em] decoration-2;
-    @apply decoration-forest-300 dark:decoration-[#25303a] hover:decoration-forest-500 dark:hover:decoration-[#7dd3ff];
+    @apply decoration-forest-300 dark:decoration-dark-border hover:decoration-forest-500 dark:hover:decoration-dark-link;
     @apply font-medium transition-all duration-300;
     @apply hover:bg-forest-50 dark:hover:bg-forest-900/50 px-1.5 -mx-1.5 rounded;
     text-decoration-thickness: 1.5px;
@@ -586,8 +606,8 @@
   }
 
   .markdown-content pre {
-    @apply bg-forest-900 dark:bg-[#0a0e12] text-forest-50 p-6 rounded-2xl;
-    @apply overflow-x-auto mb-10 border border-forest-800 dark:border-[#25303a];
+    @apply bg-forest-900 dark:bg-dark-bg text-forest-50 p-6 rounded-2xl;
+    @apply overflow-x-auto mb-10 border border-forest-800 dark:border-dark-border;
     @apply shadow-lg;
     font-family: var(--font-mono), 'Menlo', 'Monaco', 'Consolas', monospace;
     font-size: 0.875rem; /* 14px - padrão para code blocks */
@@ -604,7 +624,7 @@
 
   /* Blockquotes - Enterprise design (Market standards) */
   .markdown-content blockquote {
-    @apply border-l-4 border-forest-400 dark:border-[#4dd4a8] pl-8 py-6 my-10;
+    @apply border-l-4 border-forest-400 dark:border-dark-accent pl-8 py-6 my-10;
     @apply italic text-forest-700 dark:text-forest-300;
     @apply bg-forest-50/50 dark:bg-forest-900/30 rounded-r-xl;
     @apply shadow-sm;
@@ -626,7 +646,7 @@
 
   .markdown-content blockquote::before {
     content: '"';
-    @apply text-forest-400 dark:text-[#4dd4a8] text-6xl font-serif;
+    @apply text-forest-400 dark:text-dark-accent text-6xl font-serif;
     position: absolute;
     left: 0.5rem;
     top: 0.5rem;
@@ -772,7 +792,7 @@
     outline: 3px solid theme('colors.forest.500');
     outline-offset: 4px;
     border-radius: 8px;
-    @apply dark:outline-[#4dd4a8];
+    @apply dark:outline-dark-accent;
   }
 }
 
@@ -883,7 +903,7 @@
     left: 0;
     width: 4px;
     height: 100%;
-    @apply bg-forest-400 dark:bg-[#4dd4a8];
+    @apply bg-forest-400 dark:bg-dark-accent;
     animation: slideInLeft 0.5s ease-out;
   }
 
@@ -921,7 +941,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    @apply bg-forest-400 dark:bg-[#4dd4a8];
+    @apply bg-forest-400 dark:bg-dark-accent;
     animation: slideInLeft 0.6s ease-out;
   }
 
@@ -948,7 +968,7 @@
   }
 
   .accordion-trigger {
-    @apply focus-visible:outline-2 focus-visible:outline-forest-500 dark:focus-visible:outline-[#4dd4a8];
+    @apply focus-visible:outline-2 focus-visible:outline-forest-500 dark:focus-visible:outline-dark-accent;
   }
 
   .accordion-content {
@@ -960,7 +980,7 @@
   }
 
   .tabs-trigger {
-    @apply focus-visible:outline-2 focus-visible:outline-forest-500 dark:focus-visible:outline-[#4dd4a8] rounded-t-lg;
+    @apply focus-visible:outline-2 focus-visible:outline-forest-500 dark:focus-visible:outline-dark-accent rounded-t-lg;
     @apply hover:bg-forest-50 dark:hover:bg-forest-900/30;
   }
 
@@ -1116,13 +1136,13 @@
 }
 
 .sidebar-link:hover {
-  @apply border-forest-400 dark:border-[#4dd4a8];
+  @apply border-forest-400 dark:border-dark-accent;
   @apply translate-x-1;
 }
 
 .sidebar-link-active {
   @apply bg-forest-100 dark:bg-forest-900/80;
-  @apply border-forest-600 dark:border-[#4dd4a8];
+  @apply border-forest-600 dark:border-dark-accent;
   @apply text-forest-900 dark:text-forest-50;
   @apply font-medium;
 }
@@ -1186,16 +1206,33 @@
 }
 
 .toc-link:hover {
-  @apply border-forest-400 dark:border-[#4dd4a8];
+  @apply border-forest-400 dark:border-dark-accent;
   @apply translate-x-1;
   @apply text-forest-900 dark:text-forest-50;
 }
 
 .toc-item-active .toc-link {
-  @apply bg-forest-100 dark:bg-forest-900/80;
-  @apply border-forest-600 dark:border-[#4dd4a8];
+  @apply bg-forest-200/80 dark:bg-forest-800/90;
+  @apply border-l-4 border-forest-600 dark:border-dark-accent;
   @apply text-forest-900 dark:text-forest-50;
-  @apply font-medium;
+  @apply font-semibold;
+  @apply shadow-sm;
+  @apply translate-x-1;
+  /* Adiciona indicação visual mais forte para item ativo */
+  position: relative;
+}
+
+.toc-item-active .toc-link::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  @apply bg-forest-600 dark:bg-dark-accent;
+  border-radius: 0 2px 2px 0;
+  animation: slideInLeft 0.3s ease-out;
 }
 
 /* Heading links - Adicionar ícone de link em headings com ID */
@@ -1340,7 +1377,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
+  background-image:
     radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
   pointer-events: none;
@@ -1357,9 +1394,10 @@
 
 .app-banner-badge {
   @apply inline-flex items-center space-x-2 px-4 py-2 rounded-full;
-  @apply bg-[#4dd4a8]/10 dark:bg-[#4dd4a8]/20;
-  @apply border border-[#4dd4a8]/30 dark:border-[#4dd4a8]/40;
-  @apply text-[#4dd4a8] dark:text-[#5ee5b9];
+  /* Usa var(--accent) com opacity via Tailwind opacity utilities */
+  background-color: rgba(77, 212, 168, 0.1);
+  border-color: rgba(77, 212, 168, 0.3);
+  color: var(--accent);
   @apply font-semibold text-sm;
   @apply animate-pulse-slow;
 }
@@ -1377,9 +1415,9 @@
   @apply text-4xl md:text-5xl lg:text-6xl font-bold;
   @apply text-forest-900 dark:text-forest-50;
   @apply leading-tight tracking-tight;
-  background: linear-gradient(135deg, 
-    rgb(20, 40, 30) 0%, 
-    rgb(30, 60, 45) 50%, 
+  background: linear-gradient(135deg,
+    rgb(20, 40, 30) 0%,
+    rgb(30, 60, 45) 50%,
     rgb(40, 80, 60) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1387,9 +1425,9 @@
 }
 
 :root.dark .app-banner-title {
-  background: linear-gradient(135deg, 
-    rgb(240, 255, 250) 0%, 
-    rgb(200, 250, 230) 50%, 
+  background: linear-gradient(135deg,
+    rgb(240, 255, 250) 0%,
+    rgb(200, 250, 230) 50%,
     rgb(180, 240, 220) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1426,17 +1464,18 @@
 
 .app-banner-button-primary {
   @apply inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl;
-  @apply bg-gradient-to-r from-[#4dd4a8] to-[#5ee5b9];
   @apply text-white font-semibold text-base;
-  @apply shadow-lg shadow-[#4dd4a8]/30;
   @apply transition-all duration-300;
-  @apply hover:shadow-xl hover:shadow-[#4dd4a8]/40;
   @apply hover:scale-105 hover:-translate-y-1;
   @apply active:scale-100;
+  /* Gradient usando variáveis CSS com fallback */
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  box-shadow: 0 10px 25px rgba(77, 212, 168, 0.3);
 }
 
 .app-banner-button-primary:hover {
-  background: linear-gradient(135deg, #5ee5b9 0%, #6ef6ca 100%);
+  background: linear-gradient(135deg, var(--accent-hover) 0%, rgba(110, 246, 202, 1) 100%);
+  box-shadow: 0 15px 35px rgba(77, 212, 168, 0.4);
 }
 
 .app-banner-button-secondary {

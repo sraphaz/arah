@@ -11,7 +11,8 @@
 Este documento define **regras práticas de design** para desenvolvimento no repositório Araponga. Use como referência para todas as decisões de design durante o desenvolvimento.
 
 **Documento Relacionado**: `DESIGN_SYSTEM_IDENTIDADE_VISUAL.md` (identidade e marca)  
-**Análise Detalhada**: `ANALISE_DESIGN_SISTEMATICA_MELHORIAS.md` (análise e propostas)
+**Análise Detalhada**: `ANALISE_DESIGN_SISTEMATICA_MELHORIAS.md` (análise e propostas)  
+**Revisão Completa**: `REVISAO_ARTE_DESIGN_WIKI.md` (análise de conformidade realizada em 2025-01-20)
 
 ---
 
@@ -101,25 +102,43 @@ Este documento define **regras práticas de design** para desenvolvimento no rep
 
 ### 2.1 Uso de Variáveis CSS
 
-**Regra Obrigatória**: NUNCA usar cores hex/rgb diretamente. Sempre usar variáveis CSS.
+**Regra Obrigatória**: NUNCA usar cores hex/rgb diretamente. Sempre usar variáveis CSS ou classes Tailwind do config.
 
-**Variáveis Disponíveis**:
+**⚠️ PROIBIDO**: 
+- ❌ Valores hex diretos: `#4dd4a8`, `#7dd3ff`, `#25303a`, etc.
+- ❌ Valores rgb/rgba diretos: `rgb(77, 212, 168)`, `rgba(77, 212, 168, 0.3)`, etc.
+- ❌ Tailwind arbitrárias: `dark:bg-[#4dd4a8]`, `text-[#7dd3ff]`, etc.
+
+**Variáveis CSS Disponíveis**:
 ```css
 /* Backgrounds */
 --bg, --bg-elevated, --bg-card, --bg-muted
+--bg-dark: #0a0e12 (dark mode background)
 
 /* Texto */
 --text, --text-muted, --text-subtle
 
 /* Cores de Acento */
---accent, --accent-hover, --accent-strong, --accent-subtle
+--accent: #4dd4a8
+--accent-hover: #5ee5b9
+--accent-strong: #3bc495
+--accent-subtle: rgba(77, 212, 168, 0.15)
 
 /* Links */
---link, --link-hover
+--link: #7dd3ff
+--link-hover: #9de3ff
+
+/* Bordas Dark Mode */
+--border-dark: #25303a
 
 /* Estados */
 --warning, --danger, --success
 ```
+
+**Classes Tailwind Configuradas** (preferir estas em vez de variáveis quando usar Tailwind):
+- `dark:bg-dark-accent` (em vez de `dark:bg-[#4dd4a8]`)
+- `dark:text-dark-link` (em vez de `dark:text-[#7dd3ff]`)
+- `dark:border-dark-border` (em vez de `dark:border-[#25303a]`)
 
 ✅ **Correto**:
 ```css
@@ -135,10 +154,29 @@ Este documento define **regras práticas de design** para desenvolvimento no rep
 
 ❌ **Incorreto**:
 ```css
+/* ❌ NUNCA fazer isso */
 .button {
-  background: #4dd4a8;
+  background: #4dd4a8; /* Cor hardcoded */
   color: #e8edf2;
 }
+
+/* ❌ NUNCA usar Tailwind arbitrárias */
+.button {
+  @apply dark:bg-[#4dd4a8]; /* Tailwind arbitrária proibida */
+  @apply text-[#7dd3ff]; /* Tailwind arbitrária proibida */
+}
+```
+
+✅ **Correto com Tailwind Classes**:
+```tsx
+/* ✅ Usar classes do Tailwind config */
+<button className="bg-forest-600 dark:bg-dark-accent text-white">
+  Botão
+</button>
+
+<a className="text-forest-600 dark:text-dark-link">
+  Link
+</a>
 ```
 
 ### 2.2 Contraste WCAG AA
@@ -526,7 +564,7 @@ code, pre {
 Antes de fazer commit de mudanças de design, verificar:
 
 - [ ] **Mobile-first**: CSS começa com mobile, ajusta para desktop
-- [ ] **Cores**: Usa variáveis CSS, não valores hardcoded
+- [ ] **Cores**: Usa variáveis CSS ou classes Tailwind configuradas (NUNCA hex/rgb diretos ou Tailwind arbitrárias como `[#4dd4a8]`)
 - [ ] **Espaçamento**: Segue escala 8px (variáveis CSS)
 - [ ] **Tipografia**: Usa Inter/JetBrains Mono e variáveis CSS
 - [ ] **Contraste**: WCAG AA verificado (4.5:1 texto, 3:1 interativo)
@@ -561,8 +599,8 @@ export function Card({ title, children }: CardProps) {
 export function Button({ variant = 'primary', children, ...props }: ButtonProps) {
   const baseClasses = "px-8 py-4 rounded-xl font-semibold transition-all duration-300";
   const variantClasses = {
-    primary: "bg-forest-600 dark:bg-[#4dd4a8] text-white hover:bg-forest-700",
-    secondary: "bg-transparent border-2 border-forest-300 text-forest-700",
+    primary: "bg-forest-600 dark:bg-dark-accent text-white hover:bg-forest-700 dark:hover:bg-dark-accent-hover",
+    secondary: "bg-transparent border-2 border-forest-300 dark:border-dark-border text-forest-700 dark:text-forest-200",
   };
   
   return (
@@ -618,6 +656,13 @@ export function Button({ variant = 'primary', children, ...props }: ButtonProps)
 
 **Versões**:
 - **1.0** (2025-01-20): Documento inicial com regras fundamentais
+- **1.1** (2025-01-20): Reforço de regras sobre cores hardcoded após revisão completa (ver `REVISAO_ARTE_DESIGN_WIKI.md`)
+
+**Lições da Revisão 2025-01-20**:
+- ✅ 29 ocorrências de cores hardcoded corrigidas na Wiki
+- ✅ Cores agora 100% via variáveis CSS ou classes Tailwind configuradas
+- ✅ Padrão estabelecido: usar `dark:bg-dark-accent` em vez de `dark:bg-[#4dd4a8]`
+- ✅ Todos os componentes devem seguir este padrão obrigatoriamente
 
 ---
 

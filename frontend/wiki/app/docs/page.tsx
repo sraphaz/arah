@@ -19,7 +19,7 @@ const docStructure = {
     { name: "Modelo de Domínio", path: "12_DOMAIN_MODEL.md" },
     { name: "Domain Routing", path: "13_DOMAIN_ROUTING.md" },
   ],
-  "Onboarding e Comunidade": [
+  "Onboarding": [
     { name: "Onboarding Público", path: "ONBOARDING_PUBLICO.md" },
     { name: "Onboarding para Desenvolvedores", path: "ONBOARDING_DEVELOPERS.md" },
     { name: "Onboarding para Analistas", path: "ONBOARDING_ANALISTAS_FUNCIONAIS.md" },
@@ -67,7 +67,7 @@ export default async function DocsPage() {
   ];
 
   const communityCategories = [
-    "Onboarding e Comunidade",
+    "Onboarding",
     "Desenvolvimento",
   ];
 
@@ -78,8 +78,8 @@ export default async function DocsPage() {
 
   const categoryGroups = [
     { title: "Fundamentos", categories: coreCategories },
-    { title: "Comunidade e Desenvolvimento", categories: communityCategories },
-    { title: "Referência e Segurança", categories: referenceCategories },
+    { title: "Desenvolvimento", categories: communityCategories },
+    { title: "Referência", categories: referenceCategories },
   ];
 
   return (
@@ -97,8 +97,8 @@ export default async function DocsPage() {
           </p>
         </div>
 
-        {/* Categories Grid - Responsivo com quebras semânticas */}
-        <div className="space-y-12 sm:space-y-16 lg:space-y-20">
+        {/* Categories Grid - Responsivo com quebras semânticas - espaçamento otimizado */}
+        <div className="space-y-10 sm:space-y-12 lg:space-y-14">
           {categoryGroups.map((group, groupIndex) => {
             const groupCategories = Object.entries(docStructure).filter(([category]) =>
               group.categories.includes(category)
@@ -111,9 +111,9 @@ export default async function DocsPage() {
                   {group.title}
                 </h2>
 
-                {/* Grid responsivo - mobile: 1 col, tablet: 2 cols, desktop: 3 cols */}
-                {/* Gap ajustado para melhor aproveitamento do espaço */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+                {/* Grid responsivo - aproveita espaço horizontal sem espremer */}
+                {/* Mobile: 1 col, Tablet: 2 cols, Desktop: 3-4 cols conforme espaço */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 xl:gap-7">
                   {groupCategories.map(([category, docs], index) => (
                     <div
                       key={category}

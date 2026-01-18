@@ -184,7 +184,7 @@ export default async function DocPage({ params }: PageProps) {
   }
 
   return (
-        <main className="flex-1 py-12 lg:py-16 px-4 md:px-8 lg:px-12">
+        <main className="flex-1 py-12 lg:py-16 px-4 md:px-6 lg:px-8">
       <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_240px] xl:grid-cols-[1fr_260px] 2xl:grid-cols-[1fr_280px] gap-4 lg:gap-6 xl:gap-8">
         {/* Main Content Column */}
         <div>

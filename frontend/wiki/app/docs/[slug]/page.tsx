@@ -97,7 +97,7 @@ async function getDocContent(fileName: string) {
 
     // Adiciona IDs aos headings para navegação (garantindo unicidade)
     let htmlContent = processedContent.toString();
-    
+
     // Extrai o primeiro H1 do markdown para usar como título se não houver frontmatter title
     let firstH1Title: string | null = null;
     htmlContent = htmlContent.replace(
@@ -111,7 +111,7 @@ async function getDocContent(fileName: string) {
         return '';
       }
     );
-    
+
     const usedIds = new Map<string, number>(); // Rastreia IDs já usados e seus contadores
 
     htmlContent = htmlContent.replace(

@@ -7,13 +7,13 @@ function getSiteUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL;
   }
-  
+
   // Em desenvolvimento, detecta automaticamente
   if (process.env.NODE_ENV === "development") {
     const port = process.env.PORT || 3000;
     return `http://localhost:${port}`;
   }
-  
+
   // Fallback para produção
   return "https://araponga.app";
 }

@@ -8,12 +8,12 @@ interface OfficialIconProps {
   className?: string;
 }
 
-export function OfficialIcon({ 
-  src, 
-  alt, 
-  width = 24, 
-  height = 24, 
-  className = "" 
+export function OfficialIcon({
+  src,
+  alt,
+  width = 24,
+  height = 24,
+  className = ""
 }: OfficialIconProps) {
   // Para SVGs externos, usar img diretamente (não usa Image do Next.js para evitar problemas com CORS/otimização)
   // O Next.js Image requer domínios configurados em remotePatterns e pode ter problemas com SVGs externos

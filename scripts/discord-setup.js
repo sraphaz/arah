@@ -257,20 +257,20 @@ async function setupDiscord() {
 
     try {
         console.log('\nConectando ao Discord...');
-        
+
         const loginPromise = client.login(token);
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error('Timeout ao conectar (mais de 10 segundos)')), 10000)
         );
-        
+
         await Promise.race([loginPromise, timeoutPromise]);
         console.log('Login bem-sucedido\n');
-        
+
         // Aguardar bot ficar pronto
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         console.log('Buscando servidor...');
-        
+
         const guild = await client.guilds.fetch(guildId);
         console.log(`Servidor encontrado: ${guild.name}`);
         console.log(`Membros: ${guild.memberCount} | Canais: ${guild.channels.cache.size}\n`);
@@ -357,12 +357,12 @@ async function setupDiscord() {
             for (let j = 0; j < categoryConfig.channels.length; j++) {
                 const channelInfo = categoryConfig.channels[j];
                 console.log(`  [${j + 1}/${categoryConfig.channels.length}] #${channelInfo.name}`);
-                
+
                 // Verificar se canal já existe
                 const existingChannel = guild.channels.cache.find(
                     ch => ch.type === channelInfo.type && ch.name === channelInfo.name && ch.parentId === category.id
                 );
-                
+
                 if (existingChannel) {
                     console.log(`  Canal já existe. Usando existente...`);
                     createdChannels[channelInfo.name] = existingChannel;
@@ -387,7 +387,7 @@ async function setupDiscord() {
                 });
 
                 createdChannels[channelInfo.name] = channel;
-                
+
                 // Delay para evitar rate limits
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
@@ -397,15 +397,15 @@ async function setupDiscord() {
         // Enviar ou atualizar mensagem de boas-vindas
         if (createdChannels['sala-pública']) {
             console.log('\nVerificando mensagem de boas-vindas...');
-            
+
             // Verificar se há mensagem do bot existente
             const recentMessages = await createdChannels['sala-pública'].messages.fetch({ limit: 10 });
             const botMessages = recentMessages.filter(msg => msg.author.id === client.user.id);
-            const existingWelcomeMessage = botMessages.find(msg => 
-                msg.content.includes('Bem-vindo ao Araponga') || 
+            const existingWelcomeMessage = botMessages.find(msg =>
+                msg.content.includes('Bem-vindo ao Araponga') ||
                 msg.content.includes('🌟')
             );
-            
+
             if (existingWelcomeMessage) {
                 console.log('Mensagem de boas-vindas encontrada. Atualizando...');
                 try {
@@ -451,13 +451,13 @@ async function setupDiscord() {
         console.log('\n═══════════════════════════════════════════');
         console.log('Setup concluído com sucesso');
         console.log('═══════════════════════════════════════════\n');
-        
+
         const totalChannels = channelConfig.reduce((sum, cat) => sum + cat.channels.length, 0);
         console.log('Resumo:');
         console.log(`- Categorias: ${channelConfig.length}`);
         console.log(`- Canais: ${totalChannels}`);
         console.log(`- Mensagem de boas-vindas: ${createdChannels['sala-pública'] ? 'Criada' : 'Não criada'}\n`);
-        
+
         console.log('Próximos passos:');
         console.log('1. Verifique se todos os canais foram criados corretamente');
         console.log('2. Ajuste permissões se necessário');

@@ -65,12 +65,12 @@ export default async function DocsPage() {
     "🎯 Visão e Produto",
     "🏗️ Arquitetura e Design",
   ];
-  
+
   const communityCategories = [
     "🌱 Onboarding e Comunidade",
     "🔧 Desenvolvimento",
   ];
-  
+
   const referenceCategories = [
     "🛡️ Segurança",
     "📚 Referência",

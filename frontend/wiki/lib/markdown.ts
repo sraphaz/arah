@@ -86,7 +86,7 @@ export function extractFirstH1(htmlContent: string): {
   content: string;
 } {
   let firstH1Title: string | null = null;
-  
+
   const processedContent = htmlContent.replace(
     /<h1[^>]*>(.*?)<\/h1>/gi,
     (match, text) => {

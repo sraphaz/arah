@@ -210,7 +210,7 @@ export default async function DocPage({ params }: PageProps) {
                   </nav>
 
                   {/* Document Title - Hero */}
-                  <h1 className="text-5xl md:text-6xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight">
                     {doc.title}
                   </h1>
 

@@ -1497,22 +1497,33 @@ pre code {
   color: var(--warning);
 }
 
-/* API Explorer */
+/* API Explorer - Layout corrigido para evitar sobreposição */
 .api-explorer {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 2rem;
   background: var(--bg-card);
   box-shadow: var(--shadow-sm);
+  /* Garante que conteúdo não sobreponha */
+  position: relative;
+  overflow: visible;
+}
+
+.api-explorer p {
+  margin-bottom: 1.5rem;
+  /* Remove restrições de largura */
+  max-width: 100%;
 }
 
 .api-explorer .button {
   margin-top: 1rem;
   margin-right: 0.75rem;
+  display: inline-block; /* Evita sobreposição */
 }
 
 #openapi-browser {
   margin-top: 2rem;
+  clear: both; /* Garante que não sobreponha botões */
 }
 
 .swagger-hidden {

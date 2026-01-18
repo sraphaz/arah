@@ -134,9 +134,11 @@ export function ContentSections({ htmlContent }: ContentSectionsProps) {
         }
         
         // Seção longa - extrai título e usa Accordion
+        // Primeira seção sem título usa "Apresentação"
+        const accordionTitle = section.title || (index === 0 ? 'Apresentação' : 'Conteúdo');
         return (
           <section key={index} id={section.id} className="mb-6">
-            <Accordion title={section.title || 'Conteúdo'} defaultOpen={index <= 1}>
+            <Accordion title={accordionTitle} defaultOpen={index <= 1}>
               <div 
                 className="markdown-content"
                 dangerouslySetInnerHTML={{ __html: section.content }} 

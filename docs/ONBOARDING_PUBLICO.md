@@ -1,294 +1,210 @@
-# 🌱 Bem-vindo ao Araponga
+# Araponga
 
-**Uma plataforma digital comunitária orientada ao território**
+**Plataforma digital comunitária orientada ao território**
 
-> *"O que acontece quando tecnologia serve ao território? Como comunidades se organizam digitalmente mantendo autonomia? Que valor tem a inteligência quando reconhecida como serviço?"*
+Araponga é uma infraestrutura digital onde o território vem primeiro. Construímos tecnologia que fortalece comunidades locais, respeita autonomia e serve à continuidade da vida no lugar.
 
----
+Nossa abordagem é fundamentalmente diferente:
 
-## 🎯 O que é o Araponga?
-
-O **Araponga** é uma experiência digital diferente.
-
-Imagina uma infraestrutura que:
-- Reconhece o **território** como referência fundamental
-- Fortalece **vínculos** entre pessoas e lugar
-- Respeita **autonomia** das comunidades locais
-- Serve ao **cuidado coletivo** e à continuidade da vida no território
-- Valoriza **inteligência** como serviço, não como recurso a extrair
+- **Orientada ao território**: Localização geográfica como princípio organizador primário
+- **Autonomia comunitária**: Governança e tomada de decisão locais
+- **Transparência**: Processos abertos, contribuições visíveis e participação pública
+- **Orientada ao serviço**: Tecnologia serve às comunidades, não o contrário
+- **Inteligência como valor**: Conhecimento reconhecido e honrado, não extraído
 
 ---
 
-## 🌍 Por que existe?
+## Por que o Araponga existe
 
-### Questões que nos movem
+Abordamos questões fundamentais sobre o papel da tecnologia na vida comunitária:
 
-Como a tecnologia pode fortalecer vínculos territoriais em vez de substituí-los?
+- Como infraestrutura digital pode fortalecer vínculos territoriais em vez de substituí-los?
+- O que acontece quando comunidades se organizam digitalmente mantendo autonomia?
+- Como a inteligência pode ser reconhecida e valorizada como serviço ao território?
 
-O que acontece quando comunidades organizam-se digitalmente mantendo autonomia?
+### Nosso compromisso
 
-Que valor tem a inteligência quando reconhecida e valorizada a serviço do território?
+Araponga é construído sobre princípios que nos diferenciam de plataformas tradicionais:
 
-Como o digital pode servir ao social de forma genuína?
+- **Sem extração de dados** para publicidade
+- **Sem captura de atenção** para engajamento infinito
+- **Sem vigilância** para controle
+- **Governança transparente** com participação comunitária aberta
 
-### Uma proposta de possibilidade
-
-Construímos uma plataforma que explora:
-- Infraestrutura digital comunitária
-- Ferramenta para autonomia local
-- Tecnologia que serve à vida
-
-**E que funciona assim**:
-- **Não extrai dados** para publicidade
-- **Não captura atenção** para engajamento infinito
-- **Não vigia** comunidades para controle
-- **Serve** ao território, às comunidades e à vida local
+Diferente de plataformas que operam a portas fechadas, todas as decisões, contribuições e processos no Araponga são visíveis e participativos. Comunidades veem como a plataforma evolui, quem contribui e por que decisões são tomadas.
 
 ---
 
-## 💡 O que o Araponga faz?
+## O que o Araponga oferece
 
 ### Feed Comunitário
 
-Uma **linha do tempo** do seu território:
+Uma **linha do tempo organizada por território**, não algoritmos:
 
-* Posts de moradores e visitantes
-* Informações locais relevantes
-* Conteúdo que importa para o lugar
-* Organizado por **território**, não por algoritmo
-
-O território organiza o contexto. O lugar mostra o conteúdo.
+- Posts de moradores e visitantes
+- Informações relevantes ao local
+- Conteúdo que importa ao lugar
+- Território organiza contexto, lugar mostra conteúdo
 
 ### Marketplace Territorial
 
 **Economia circular local** fortalecida:
 
-* Produtos e serviços do território
-* Trocas locais facilitadas
-* Economia circular no lugar
-* Valorização da produção territorial
-
-Valor circula dentro do território. Trocas fortalecem vínculos comunitários.
+- Produtos e serviços do território
+- Trocas locais facilitadas
+- Valor circula dentro do território
+- Vínculos comunitários fortalecidos através do comércio
 
 ### Eventos Comunitários
 
 **Organização coletiva** facilitada:
 
-* Mutirões, festas, reuniões
-* Participação facilitada
-* Comunicação clara
-* Organização coletiva
-
-O cuidado coletivo acontece através de encontros no território.
+- Mutirões, celebrações, reuniões
+- Comunicação clara
+- Participação facilitada
+- Cuidado comunitário através de encontros territoriais
 
 ### Chat Territorial
 
-**Comunicação** no território:
+**Comunicação** ancorada ao lugar:
 
-* Canais e grupos por território
-* Conversas locais relevantes
-* Comunicação direta entre pessoas do lugar
+- Canais e grupos por território
+- Conversas relevantes ao local
+- Comunicação direta entre pessoas do lugar
 
-O território torna-se espaço de diálogo. Pessoas encontram-se no lugar.
+### Recursos adicionais
 
-### E muito mais...
-
-* **Mapas** que mostram o território e seu conteúdo
-* **Georreferenciamento** que ancora tudo ao lugar
-* **Moderação comunitária** que respeita autonomia local
-* **Sistema de roles** (visitante/morador) que reconhece vínculos
+- **Mapas** mostrando território e conteúdo
+- **Georreferenciamento** ancorando tudo ao lugar
+- **Moderação comunitária** respeitando autonomia local
+- **Sistema de roles** (visitante/morador) reconhecendo vínculos territoriais
 
 ---
 
-## 🌿 Valores e Princípios
+## Valores e Princípios
 
 ### Território como Referência
 
 No Araponga, o **território** é um lugar físico real:
 
-* Tem nome, localização e fronteira geográfica
-* Existe **antes do app** e continua existindo sem usuários
-* É a **base** de tudo, não apenas um filtro
+- Tem nome, localização e fronteira geográfica
+- Existe **antes do app** e continua existindo sem usuários
+- É a **base** de tudo, não apenas um filtro
 
-Como seria se o digital reconhecesse a pré-existência do território?
+O digital reconhece a pré-existência do território.
 
 ### Autonomia Local
 
 Comunidades **controlam** sua presença digital:
 
-* Decidem sobre moderação
-* Definem regras locais
-* Mantêm autonomia territorial
-* Tecnologia **serve**, não controla
+- Decidem sobre moderação
+- Definem regras locais
+- Mantêm autonomia territorial
+- Tecnologia **serve**, não controla
 
 Que formas de autonomia se abrem quando a tecnologia serve ao território?
 
-### Tecnologia a Serviço da Vida
+### Transparência e Participação
 
-O Araponga explora uma alternativa:
+Diferente de outras plataformas, no Araponga **tudo é visível**:
 
-* Não extrai para lucrar
-* Não captura para controlar
-* Não vigia para dominar
+- Todas as decisões são públicas e participativas
+- Processos de desenvolvimento são transparentes
+- Comunidades participam ativamente da governança
+- Contribuições são reconhecidas e visíveis
 
-Como seria se a tecnologia reconhecesse seu papel como serviço?
+Isso nos diferencia: transparência radical e participação comunitária aberta não são promessas, são realidade.
 
 ---
 
-## 🤝 Como Funciona?
+## Como Funciona?
 
 ### Para Comunidades
 
 **Comunidades** usam o Araponga para:
 
-* Organizar-se digitalmente
-* Fortalecer vínculos locais
-* Facilitar comunicação e organização
-* Manter autonomia territorial
-
-Como sua comunidade poderia se organizar digitalmente?
+- Organizar-se digitalmente mantendo autonomia
+- Fortalecer vínculos locais
+- Facilitar comunicação e organização
+- Participar ativamente da governança da plataforma
 
 ### Para Pessoas
 
 **Pessoas** encontram no Araponga:
 
-* Conexão com o lugar onde vivem
-* Participação em comunidades locais
-* Valorização da inteligência como serviço
-* Reconhecimento do vínculo com território
-
-Que conexões você gostaria de fortalecer no seu território?
+- Conexão com o lugar onde vivem
+- Participação em comunidades locais
+- Valorização da inteligência como serviço
+- Reconhecimento do vínculo com território
 
 ### Para Desenvolvedores
 
 **Desenvolvedores** contribuem para:
 
-* Construir infraestrutura comunitária
-* Desenvolver tecnologia que serve
-* Aprender e crescer colaborando
-* Reconhecer inteligência como valor
+- Construir infraestrutura comunitária
+- Desenvolver tecnologia que serve
+- Aprender e crescer colaborando
+- Ver suas contribuições serem reconhecidas publicamente
 
-Como você gostaria de contribuir para essa infraestrutura?
+👉 **[Comece como Desenvolvedor](./ONBOARDING_DEVELOPERS.md)**
 
 ### Para Analistas Funcionais
 
 **Analistas Funcionais** observam e propõem:
 
-* Melhorias baseadas em observação territorial
-* Funcionalidades que servem comunidades
-* Propostas alinhadas aos valores do projeto
-* Desenvolvimento orientado ao território
+- Melhorias baseadas em observação territorial
+- Funcionalidades que servem comunidades
+- Propostas alinhadas aos valores do projeto
+- Desenvolvimento orientado ao território
 
-O que você observa que poderia ser melhorado?
+👉 **[Comece como Analista Funcional](./ONBOARDING_ANALISTAS_FUNCIONAIS.md)**
 
 ---
 
-## 🚀 Como Participar?
+## Como Participar?
 
-### Começando
+### Primeiros Passos
 
-Você pode começar **agora mesmo**:
-
-1. **Leia a [Visão do Produto](./01_PRODUCT_VISION.md)** - Entenda o propósito
-2. **Escolha seu caminho** - Desenvolvedor ou Analista Funcional
+1. **Leia a [Visão do Produto](./01_PRODUCT_VISION.md)** — Entenda o propósito
+2. **Escolha seu caminho** — Desenvolvedor ou Analista Funcional
 3. **Leia o onboarding** do seu caminho escolhido
-4. **Entre no Discord** - Conecte-se com o time
+4. **Entre no [Discord](https://discord.gg/auwqN8Yjgw)** — Conecte-se com a comunidade
 
-### Crescendo
+### Participação Ativa
 
 Com o tempo, você pode:
 
-* Configurar seu ambiente (se desenvolvedor) ou começar a observar (se analista)
-* Fazer contribuições que importam
-* Participar de discussões e decisões
-* Propor melhorias baseadas em sua experiência
+- Configurar seu ambiente (se desenvolvedor) ou começar a observar (se analista)
+- Fazer contribuições que importam
+- Participar de discussões e decisões públicas
+- Propor melhorias baseadas em sua experiência
 
-### Expandindo
+### Crescimento na Comunidade
 
 Com experiência, você pode:
 
-* Contribuir regularmente (no seu ritmo)
-* Ajudar outros que estão começando
-* Propor melhorias e novas funcionalidades
-* Tornar-se parte ativa da comunidade
+- Contribuir regularmente (no seu ritmo)
+- Ajudar outros que estão começando
+- Propor melhorias e novas funcionalidades
+- Tornar-se parte ativa da governança comunitária
 
 ---
 
-## 💭 Reflexões que nos Guiam
+## Próximos Passos
 
-### Sobre Tecnologia
+### Agora
 
-Que formas de tecnologia servem genuinamente à vida?
+1. **Leia a [Visão do Produto](./01_PRODUCT_VISION.md)**
+2. **Escolha seu caminho** — Desenvolvedor ou Analista Funcional
+3. **Entre no [Discord](https://discord.gg/auwqN8Yjgw)**
 
-Como podemos construir infraestrutura digital que reconhece autonomia?
-
-### Sobre Comunidade
-
-Que tipo de organização digital fortalece comunidades?
-
-Como comunidades mantêm autonomia em ambientes digitais?
-
-### Sobre Território
-
-Como o digital pode reconhecer e servir ao território?
-
-Que valor tem o vínculo entre pessoas e lugar?
-
-### Sobre Inteligência
-
-Como a inteligência pode ser reconhecida como valor a serviço?
-
-Que acontece quando conhecimento serve ao território?
-
----
-
-## 🌱 Convite
-
-### Por que se Juntar?
-
-Você não se junta apenas a um projeto. Você participa de uma **exploração de possibilidades**:
-
-* Sua **inteligência** pode ser reconhecida e honrada como valor
-* Sua **observação territorial** pode guiar desenvolvimento
-* Sua **contribuição** pode fortalecer comunidades e autonomia local
-* Seu **aprendizado** pode servir ao território e à vida que nele habita
-
-### O que Você Precisa?
-
-**Apenas sua presença consciente**:
-
-* **Interesse** genuíno no projeto e seus valores
-* **Alinhamento** com princípios (autonomia, território, decolonização)
-* **Vontade** de contribuir respeitando seu próprio ritmo
-* **Abertura** para aprender, ensinar e co-criar
-
-### O que Você Encontra?
-
-**Ao contribuir, você participa de**:
-
-* **Aprendizado** que honra sua inteligência e saberes
-* **Construção** de algo que realmente importa para comunidades
-* **Conexão** com pessoas que compartilham valores elevados
-* **Transformação** de tecnologia em serviço consciente ao território
-
----
-
-## 🎯 Próximos Passos
-
-### Agora Mesmo
-
-1. **Leia a [Visão do Produto](./01_PRODUCT_VISION.md)** - Entenda o propósito
-2. **Escolha seu caminho** - Desenvolvedor ou Analista Funcional
-3. **Leia o onboarding** do seu caminho escolhido
-4. **Entre no Discord** - Conecte-se com o time
-
-### Em Uma Semana
+### Esta Semana
 
 1. **Configure seu ambiente** (se desenvolvedor) ou **comece a observar** (se analista)
 2. **Faça sua primeira contribuição** pequena
 3. **Participe de discussões** no Discord ou GitHub
 
-### Em Um Mês
+### Este Mês
 
 1. **Contribua regularmente** (no seu ritmo)
 2. **Ajude outros** que estão começando
@@ -296,27 +212,40 @@ Você não se junta apenas a um projeto. Você participa de uma **exploração d
 
 ---
 
-## 🌍 Transformação Como Potência Viva
+## Por que Participar?
 
-Tecnologia pode servir à vida.
+### Diferenciais do Araponga
 
-Comunidades podem organizar-se digitalmente mantendo autonomia.
+Você participa de uma experiência única:
 
-Inteligência pode ser reconhecida como valor a serviço do território.
+- **Transparência total**: Veja como tudo funciona, quem decide e por quê
+- **Participação real**: Sua voz importa nas decisões da plataforma
+- **Reconhecimento público**: Suas contribuições são visíveis e valorizadas
+- **Autonomia territorial**: Comunidades mantêm controle sobre seus espaços digitais
 
-Você pode fazer parte dessa exploração.
+### O que Você Precisa?
+
+- Interesse genuíno no projeto e seus valores
+- Alinhamento com princípios (autonomia, território, transparência)
+- Vontade de contribuir respeitando seu próprio ritmo
+- Abertura para aprender, ensinar e co-criar
+
+### O que Você Encontra?
+
+- Aprendizado que honra sua inteligência e saberes
+- Construção de algo que realmente importa para comunidades
+- Conexão com pessoas que compartilham valores elevados
+- Tecnologia transformada em serviço consciente ao território
 
 ---
 
 **Bem-vindo ao Araponga.**
 
-**Comece pequeno. Contribua no seu ritmo. Descubra as possibilidades.**
-
-**Com respeito, glória e consciência elevada.**
+**Comece pequeno. Contribua no seu ritmo. Faça parte da transformação.**
 
 ---
 
 **Última Atualização**: 2025-01-20  
-**Versão**: 1.3
+**Versão**: 1.4
 
-**Perguntas?** Entre no Discord ou abra uma Issue no GitHub!
+**Perguntas?** Entre no [Discord](https://discord.gg/auwqN8Yjgw) ou abra uma Issue no [GitHub](https://github.com/sraphaz/araponga).

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { OfficialIcon } from "../ui/OfficialIcon";
-import { OfficialIcon } from "../ui/OfficialIcon";
 
 interface QuickLink {
   label: string;

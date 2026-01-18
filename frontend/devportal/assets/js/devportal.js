@@ -862,7 +862,7 @@
   (function initThemeToggle() {
     var THEME_STORAGE_KEY = 'devportal-theme';
     var themeToggle = document.getElementById('theme-toggle');
-    
+
     if (!themeToggle) {
       return;
     }
@@ -911,25 +911,26 @@
   // Sidebar Sections Toggle - Sincronizado com Wiki
   (function initSidebarSections() {
     var sectionToggles = document.querySelectorAll('.sidebar-section-toggle');
-    
+
     sectionToggles.forEach(function(toggle) {
       var sectionId = toggle.getAttribute('data-section');
       var items = document.querySelector('[data-section-items="' + sectionId + '"]');
-      
+
       if (!items) return;
-      
-      // Verifica se há link ativo na seção para auto-abrir
-      var hasActiveLink = items.querySelector('.sidebar-link-active');
-      if (hasActiveLink && toggle.getAttribute('aria-expanded') !== 'true') {
-        toggle.setAttribute('aria-expanded', 'true');
-        items.removeAttribute('hidden');
-        toggle.querySelector('.sidebar-chevron').classList.add('sidebar-chevron-open');
-      }
-      
+
+      // DESABILITADO: Auto-abertura de seções com link ativo
+      // Todos os menus começam fechados por padrão
+      // var hasActiveLink = items.querySelector('.sidebar-link-active');
+      // if (hasActiveLink && toggle.getAttribute('aria-expanded') !== 'true') {
+      //   toggle.setAttribute('aria-expanded', 'true');
+      //   items.removeAttribute('hidden');
+      //   toggle.querySelector('.sidebar-chevron').classList.add('sidebar-chevron-open');
+      // }
+
       toggle.addEventListener('click', function() {
         var isExpanded = toggle.getAttribute('aria-expanded') === 'true';
         var newExpanded = !isExpanded;
-        
+
         toggle.setAttribute('aria-expanded', newExpanded);
         if (newExpanded) {
           items.removeAttribute('hidden');
@@ -950,7 +951,26 @@
       if (href && href.startsWith('#')) {
         var id = href.substring(1);
         var section = document.getElementById(id);
-        return section ? { link: link, section: section, id: id } : null;
+        // Ignora seções escondidas ou fora dos phase-panels ativos
+        if (section) {
+          var style = window.getComputedStyle(section);
+          var isHidden = style.display === 'none' || style.visibility === 'hidden';
+
+          // Verifica se está dentro de um phase-panel
+          var parentPanel = section.closest('.phase-panel');
+          if (parentPanel) {
+            // Se está em um panel, só inclui se o panel estiver ativo
+            var isInActivePanel = parentPanel.classList.contains('active');
+            if (!isHidden && isInActivePanel) {
+              return { link: link, section: section, id: id };
+            }
+          } else {
+            // Se está fora de qualquer panel (ex: hero), inclui se não estiver escondido
+            if (!isHidden) {
+              return { link: link, section: section, id: id };
+            }
+          }
+        }
       }
       return null;
     }).filter(function(item) { return item !== null; });
@@ -981,16 +1001,17 @@
         targetLink.link.classList.add('active', 'sidebar-link-active');
         targetLink.link.setAttribute('aria-current', 'page');
         activeLink = targetLink.link;
-        
-        // Auto-abre seção se link estiver dentro de uma seção colapsada
-        var sectionContainer = targetLink.link.closest('[data-section-items]');
-        if (sectionContainer) {
-          var sectionId = sectionContainer.getAttribute('data-section-items');
-          var toggle = document.querySelector('[data-section="' + sectionId + '"]');
-          if (toggle && toggle.getAttribute('aria-expanded') !== 'true') {
-            toggle.click();
-          }
-        }
+
+        // DESABILITADO: Auto-abrir seções no scroll sync
+        // Menus devem permanecer fechados até que o usuário os abra manualmente
+        // var sectionContainer = targetLink.link.closest('[data-section-items]');
+        // if (sectionContainer) {
+        //   var sectionId = sectionContainer.getAttribute('data-section-items');
+        //   var toggle = document.querySelector('[data-section="' + sectionId + '"]');
+        //   if (toggle && toggle.getAttribute('aria-expanded') !== 'true') {
+        //     toggle.click();
+        //   }
+        // }
       }
     }
 
@@ -1070,7 +1091,7 @@
   (function initPhaseNavigation() {
     var tabs = document.querySelectorAll('.phase-tab');
     var panels = document.querySelectorAll('.phase-panel');
-    
+
     if (tabs.length === 0 || panels.length === 0) {
       return; // Estrutura não existe ainda, sai silenciosamente
     }
@@ -1079,25 +1100,26 @@
       // Remove active de todos
       tabs.forEach(function(t) { t.classList.remove('active'); });
       panels.forEach(function(p) { p.classList.remove('active'); });
-      
+
       // Adiciona active no alvo
       var targetTab = document.querySelector('[data-phase="' + phase + '"]');
       var targetPanel = document.querySelector('[data-phase-panel="' + phase + '"]');
-      
+
       if (targetTab && targetPanel) {
         targetTab.classList.add('active');
         targetPanel.classList.add('active');
-        
+
         // Atualiza URL (sem reload)
         if (history.pushState) {
           history.pushState(null, '', '#' + phase);
         }
-        
-        // Scroll suave para o topo do conteúdo (após header)
-        setTimeout(function() {
-          var headerHeight = document.querySelector('.header')?.offsetHeight || 200;
-          window.scrollTo({ top: headerHeight, behavior: 'smooth' });
-        }, 100);
+
+        // DESABILITADO: Scroll automático ao mudar de fase
+        // O site deve começar do início (topo) sem scroll automático
+        // setTimeout(function() {
+        //   var headerHeight = document.querySelector('.header')?.offsetHeight || 200;
+        //   window.scrollTo({ top: headerHeight, behavior: 'smooth' });
+        // }, 100);
       }
     }
 
@@ -1120,7 +1142,7 @@
     }
 
     window.addEventListener('hashchange', handleHashChange);
-    
+
     // Verifica hash inicial
     if (window.location.hash) {
       setTimeout(handleHashChange, 100);
@@ -1139,15 +1161,15 @@
   // Nível 2: Section Accordions (Seções Colapsáveis)
   (function initSectionAccordions() {
     var accordions = document.querySelectorAll('.section-accordion-header');
-    
+
     accordions.forEach(function(header) {
       header.addEventListener('click', function() {
         var accordion = header.closest('.section-accordion');
         if (!accordion) return;
-        
+
         var content = accordion.querySelector('.section-accordion-content');
         var isExpanded = content && content.classList.contains('active');
-        
+
         // Toggle
         if (content) {
           if (isExpanded) {
@@ -1169,11 +1191,11 @@
     var panelButtons = document.querySelectorAll('[data-panel]');
     var panels = document.querySelectorAll('.side-panel');
     var overlays = document.querySelectorAll('.panel-overlay');
-    
+
     function openPanel(panelId) {
       var panel = document.querySelector('[data-panel-id="' + panelId + '"]');
       var overlay = document.querySelector('.panel-overlay');
-      
+
       if (panel && overlay) {
         panel.classList.add('open');
         overlay.classList.add('visible');

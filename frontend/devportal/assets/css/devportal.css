@@ -781,7 +781,7 @@ main {
 
 /* Sections */
 .section {
-  padding: clamp(2.5rem, 4.5vw, 4rem) 0; /* Padding equilibrado */
+  padding: clamp(1.5rem, 2.5vw, 2.5rem) 0; /* Padding reduzido */
   border-bottom: 1px solid var(--border-subtle);
   scroll-margin-top: var(--space-2xl); /* 48px - usa token para melhor scroll-spy */
   position: relative;
@@ -790,7 +790,7 @@ main {
 /* Reduzir padding em seções com grids (menos conteúdo denso) */
 .section:has(.model-grid),
 .section:has(.grid-two) {
-  padding: clamp(2rem, 4vw, 3.5rem) 0; /* Menos espaço em seções de cards */
+  padding: clamp(1rem, 2vw, 2rem) 0; /* Menos espaço em seções de cards */
 }
 
 .section::after {

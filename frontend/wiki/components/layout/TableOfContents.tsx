@@ -67,7 +67,7 @@ export function TableOfContents() {
 
     const observerOptions = {
       root: null,
-      rootMargin: "-100px 0px -80% 0px", // Considera heading ativo quando está próximo do topo
+      rootMargin: "-120px 0px -75% 0px", // Considera heading ativo quando está próximo do topo (ajustado para sticky header)
       threshold: [0, 0.25, 0.5, 0.75, 1],
     };
 

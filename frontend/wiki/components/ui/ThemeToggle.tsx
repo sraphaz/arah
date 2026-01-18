@@ -37,11 +37,14 @@ export function ThemeToggle() {
   const applyTheme = (newTheme: "light" | "dark") => {
     try {
       document.documentElement.classList.toggle("dark", newTheme === "dark");
+      // Atualiza atributo data-theme para garantir persistência
+      document.documentElement.setAttribute("data-theme", newTheme);
       localStorage.setItem("wiki-theme", newTheme);
     } catch (error) {
       console.error('[ThemeToggle] Error applying theme:', error);
       try {
         document.documentElement.classList.add("dark");
+        document.documentElement.setAttribute("data-theme", "dark");
       } catch (fallbackError) {
         console.error('[ThemeToggle] Fallback also failed:', fallbackError);
       }

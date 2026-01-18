@@ -7,13 +7,13 @@ export function Header() {
     <header className="border-b border-forest-200/80 dark:border-forest-900/80 bg-white/90 dark:bg-forest-950/90 backdrop-blur-xl sticky top-0 z-50 shadow-sm dark:shadow-forest-900/20 transition-all duration-300">
       <div className="container-max py-6">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3 group transition-transform duration-300 hover:scale-[1.02]">
-            <div className="relative w-10 h-10 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+          <Link href="/" className="flex items-center space-x-4 group transition-transform duration-300 hover:scale-[1.02]">
+            <div className="relative w-14 h-14 md:w-16 md:h-16 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Image
                 src="/wiki/Logo_1.png"
                 alt="Araponga Logo"
-                width={40}
-                height={40}
+                width={64}
+                height={64}
                 className="object-contain dark:brightness-110 dark:contrast-105"
                 priority
                 loading="eager"

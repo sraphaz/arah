@@ -12,6 +12,7 @@ import { QuickLinks } from "../components/layout/QuickLinks";
 import { ApiDomainDiagram } from "../components/content/ApiDomainDiagram";
 import { AppBanner } from "../components/content/AppBanner";
 import { ContentSections } from "./docs/[slug]/content-sections";
+import { TableOfContents } from "../components/layout/TableOfContents";
 
 // Helper function para extrair texto de HTML de forma segura
 function getTextContent(html: string): string {
@@ -63,7 +64,25 @@ async function getDocContent(filePath: string) {
       .process(content);
 
     // Adiciona IDs aos headings para navegação e progressive disclosure
+    // IMPORTANTE: Também processa H1 para garantir que não haja duplicação
     let htmlContent = processedContent.toString();
+    
+    // Remove ou transforma H1 em H2 se necessário para evitar duplicação com título da página
+    htmlContent = htmlContent.replace(
+      /<h1>(.*?)<\/h1>/gi,
+      (match, text) => {
+        // Se o markdown tem H1, transforma em H2 para evitar duplicação
+        const cleanText = getTextContent(text);
+        const id = cleanText
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        return `<h2 id="${id}">${text}</h2>`;
+      }
+    );
+    
     htmlContent = htmlContent.replace(
       /<h([2-4])>(.*?)<\/h\1>/gi,
       (match, level, text) => {
@@ -100,14 +119,17 @@ export default async function HomePage() {
   return (
     <main className="container-max py-16 md:py-20">
         {onboardingDoc && (
-          <div className="glass-card animation-fade-in">
-            <div className="glass-card__content">
-              {/* Document Title */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight tracking-tight">
-                {onboardingDoc.title}
-              </h1>
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+            {/* Main Content Column */}
+            <div>
+              <div className="glass-card animation-fade-in">
+                <div className="glass-card__content markdown-content">
+                  {/* Document Title - H1 para SEO, título principal da página */}
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight tracking-tight">
+                    {onboardingDoc.title}
+                  </h1>
 
-              {/* Document Metadata */}
+                  {/* Document Metadata */}
               {onboardingDoc.frontMatter && (onboardingDoc.frontMatter.version || onboardingDoc.frontMatter.date) && (
                 <div className="mb-12 pb-6 border-b-2 border-forest-200/80 dark:border-forest-800/80 flex flex-wrap gap-3">
                   {onboardingDoc.frontMatter.version && (
@@ -130,7 +152,16 @@ export default async function HomePage() {
 
               {/* Diagrama do Domínio API - Visual Explicativo */}
               <ApiDomainDiagram />
+                </div>
+              </div>
             </div>
+
+            {/* TOC Column - Sticky - Aparece na homepage também */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <TableOfContents />
+              </div>
+            </aside>
           </div>
         )}
 

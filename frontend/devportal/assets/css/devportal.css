@@ -584,12 +584,12 @@ input:focus-visible {
 
 /* Layout */
 .layout {
-  display: grid;
-  grid-template-columns: 256px minmax(0, 1fr);
-  /* Padronizado: 24px-32px usando tokens - harmonizado com Wiki */
-  gap: clamp(var(--space-lg), 3vw, var(--space-xl));
+  display: block;
   padding: clamp(1rem, 2vw, 1.5rem) 0 clamp(2rem, 3vw, 3rem);
-  align-items: start;
+}
+
+.layout > main {
+  margin-left: calc(256px + clamp(var(--space-lg), 3vw, var(--space-xl)));
 }
 
 @media (max-width: 1023px) {
@@ -628,9 +628,9 @@ main {
 
 /* Sidebar - Sincronizado com Wiki */
 .sidebar-container {
-  position: sticky;
+  position: fixed;
   top: 2rem;
-  align-self: start;
+  left: clamp(var(--space-lg), 3vw, var(--space-xl));
   width: 256px;
   min-width: 256px;
   border-right: 1px solid rgba(198, 227, 210, 0.4);
@@ -638,13 +638,14 @@ main {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   padding: 1rem;
-  max-height: calc(100vh - 4rem);
+  height: calc(100vh - 4rem);
   overflow-y: auto;
   overflow-x: hidden;
   border-radius: var(--glass-radius);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   scrollbar-width: thin;
+  z-index: 100;
 }
 
 :root.dark .sidebar-container {

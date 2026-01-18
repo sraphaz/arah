@@ -1,0 +1,41 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# C# - indent 4 espaços (padrão Microsoft)
+[*.{cs,csx,vb,vbx}]
+indent_size = 4
+
+# Markdown - não remover trailing whitespace (importante para quebras de linha)
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON, YAML - indent 2 espaços
+[*.{json,yml,yaml}]
+indent_size = 2
+
+# TypeScript/JavaScript - indent 2 espaços
+[*.{ts,tsx,js,jsx}]
+indent_size = 2
+
+# CSS, SCSS - indent 2 espaços
+[*.{css,scss,sass}]
+indent_size = 2
+
+# HTML, XML - indent 2 espaços
+[*.{html,xml}]
+indent_size = 2
+
+# Shell scripts - indent 2 espaços
+[*.{sh,bash}]
+indent_size = 2
+
+# PowerShell - indent 2 espaços
+[*.ps1]
+indent_size = 2

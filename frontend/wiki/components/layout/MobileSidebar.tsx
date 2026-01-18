@@ -44,10 +44,10 @@ export function MobileSidebar() {
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button - Mobile-first: visível até 1023px */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-24 right-4 z-50 p-3 rounded-xl bg-forest-600 dark:bg-[#4dd4a8] text-white shadow-lg hover:shadow-xl transition-all duration-300"
+        className="fixed top-24 right-4 z-50 p-3 rounded-xl bg-forest-600 dark:bg-[#4dd4a8] text-white shadow-lg hover:shadow-xl transition-all duration-300 lg:hidden"
         aria-label="Toggle navigation menu"
       >
         <svg
@@ -64,17 +64,17 @@ export function MobileSidebar() {
         </svg>
       </button>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay - Mobile-first: até 1023px */}
       {isOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile Menu Panel - Mobile-first: oculto acima de 1024px */}
       <aside
-        className={`lg:hidden fixed top-0 left-0 h-full w-80 max-w-[85vw] z-50 bg-white dark:bg-forest-950 border-r border-forest-200 dark:border-forest-800 transform transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 left-0 h-full w-[280px] sm:w-[320px] max-w-[90vw] z-50 bg-white dark:bg-forest-950 border-r border-forest-200 dark:border-forest-800 transform transition-transform duration-300 ease-in-out flex flex-col lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

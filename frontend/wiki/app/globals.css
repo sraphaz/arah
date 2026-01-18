@@ -1061,13 +1061,16 @@
   }
 }
 
-/* Sidebar Navigation - Enterprise design */
+/* Sidebar Navigation - Enterprise design - Mobile-first */
 .sidebar-container {
-  @apply w-64 min-w-[256px] border-r border-forest-200/80 dark:border-forest-800/80;
+  /* Mobile: oculto por padrão */
+  @apply hidden;
+  @apply border-r border-forest-200/80 dark:border-forest-800/80;
   @apply bg-white/80 dark:bg-forest-950/80 backdrop-blur-xl;
-  @apply hidden lg:block;
   @apply sticky top-[88px] h-[calc(100vh-88px)];
   @apply overflow-y-auto;
+  /* Desktop (lg+): visível, largura fixa */
+  @apply lg:block lg:w-64 lg:min-w-[256px];
 }
 
 .sidebar-nav {
@@ -1521,13 +1524,11 @@
   }
 }
 
-/* Mobile Responsive - Sidebar */
-@media (max-width: 1023px) {
-  .sidebar-container {
-    @apply hidden;
-  }
+/* Mobile Responsive - Sidebar - Mobile-first approach */
+/* Nota: O sidebar-container já usa `hidden lg:block`, então não precisa de media query aqui */
 
-  /* Ajusta espaçamento do conteúdo quando sidebar está oculta */
+/* Ajusta espaçamento do conteúdo em mobile (quando sidebar está oculta) */
+@media (max-width: 1023px) {
   main {
     @apply px-4;
   }

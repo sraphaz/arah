@@ -1,9 +1,9 @@
 # Índice da Documentação
 
-**Versão**: 2.0  
+**Versão**: 3.0  
 **Data**: 2025-01-20  
 **Última Atualização**: 2025-01-20  
-**Status**: ✅ Atualizado
+**Status**: ✅ Atualizado | 📊 Estratégia de Convergência Adicionada
 
 ---
 
@@ -14,8 +14,8 @@ Este documento organiza toda a documentação do projeto Araponga de forma estru
 ### 🎯 Visão e Produto
 Documentos sobre a visão do produto, roadmap e funcionalidades.
 
-- **[Visão do Produto](./01_PRODUCT_VISION.md)** - Visão geral e princípios do Araponga
-- **[Roadmap](./02_ROADMAP.md)** - Planejamento de funcionalidades e épicos
+- **[Visão do Produto](./01_PRODUCT_VISION.md)** ⭐ - Visão geral, princípios e evolução estratégica do Araponga
+- **[Roadmap Estratégico](./02_ROADMAP.md)** ⭐ - Planejamento completo de funcionalidades e épicos, reorganizado estrategicamente
 - **[Backlog](./03_BACKLOG.md)** - Lista de funcionalidades e prioridades
 - **[User Stories](./04_USER_STORIES.md)** - Histórias de usuário consolidadas (MVP e pós-MVP)
 - **[Glossário](./05_GLOSSARY.md)** - Termos e conceitos do projeto
@@ -86,6 +86,12 @@ Documentos de planejamento e recomendações de implementação.
 - **[Plano de Refatoração - Recomendações Pendentes](./recommendations/PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md)** - Plano de implementação de recomendações pendentes
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
+### 🎯 Estratégia e Benchmarking
+Documentos de estratégia de convergência de mercado e análise comparativa.
+
+- **[Mapa de Funcionalidades - Mercado](./38_MAPA_FUNCIONALIDADES_MERCADO.md)** 📊 ⭐⭐⭐ - Mapeamento completo de funcionalidades implementadas, planejadas e previstas para atingir níveis de mercado, comparação com Closer.earth e plataformas líderes
+- **[Estratégia de Convergência de Mercado](./39_ESTRATEGIA_CONVERGENCIA_MERCADO.md)** 🎯 ⭐⭐⭐ - Plano estratégico completo de convergência com padrões de mercado, análise competitiva, roadmap de adequação e mudanças organizacionais
+
 ### 🚀 Produção e Deploy
 Documentos sobre prontidão para produção e deploy.
 
@@ -126,6 +132,8 @@ Documentação detalhada de todos os Pull Requests implementados.
 - Visão do Produto → `01_PRODUCT_VISION.md`
 - User Stories → `04_USER_STORIES.md`
 - Roadmap → `02_ROADMAP.md`
+- Mapa de Funcionalidades → `38_MAPA_FUNCIONALIDADES_MERCADO.md`
+- Estratégia de Convergência → `39_ESTRATEGIA_CONVERGENCIA_MERCADO.md`
 
 **Arquitetura:**
 - Decisões Arquiteturais → `10_ARCHITECTURE_DECISIONS.md`
@@ -150,13 +158,13 @@ Todos os arquivos na raiz seguem o padrão:
 - Nomes em inglês para consistência
 - Hífens substituídos por underscores para melhor ordenação
 - Categorias por prefixo numérico:
-  - `00-09`: Índices e guias
-  - `10-19`: Arquitetura e Design
-  - `20-29`: Desenvolvimento e Implementação
-  - `30-39`: Operações e Governança
-  - `40-49`: Histórico e Mudanças
-  - `50-59`: Produção e Deploy
-  - `60-69`: API e Funcionalidades
+- `00-09`: Índices e guias
+- `10-19`: Arquitetura e Design
+- `20-29`: Desenvolvimento e Implementação
+- `30-39`: Operações, Governança e Estratégia
+- `40-49`: Histórico e Mudanças
+- `50-59`: Produção e Deploy
+- `60-69`: API e Funcionalidades
 
 ### Pastas Organizacionais
 Documentos adicionais são organizados em pastas:
@@ -191,16 +199,33 @@ Documentos adicionais são organizados em pastas:
 | `CHANGELOG.md` | `40_CHANGELOG.md` |
 | `CONTRIBUTING.md` | `41_CONTRIBUTING.md` |
 
-## 📝 Mudanças Recentes no Modelo
+## 📝 Mudanças Recentes no Projeto
 
-### Hierarquia de Permissões e Auditoria (2026-01-16)
+### Estratégia de Convergência de Mercado (2025-01-20)
+- **Análise Comparativa**: Análise profunda do Closer.earth e padrões de mercado estabelecidos
+- **Novas Fases Estratégicas**: 14 novas fases identificadas (Fases 30-43) para convergência com padrões de investimento
+- **Priorização Atualizada**: Reorganização completa de prioridades baseada em gaps críticos vs. mercado
+- **Roadmap Revisado**: Roadmap estratégico reorganizado em 9 ondas com foco em valor entregue
+- **Mapa de Funcionalidades**: Mapeamento completo de funcionalidades implementadas, planejadas e previstas
+- Ver detalhes em: [Estratégia de Convergência de Mercado](./39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) | [Mapa de Funcionalidades](./38_MAPA_FUNCIONALIDADES_MERCADO.md)
+
+### Novas Fases Estratégicas Adicionadas (2025-01-20)
+- **Fase 30**: Proof of Sweat (Tradicional) - Sistema de registro de atividades territoriais
+- **Fase 31**: Dashboard de Métricas Comunitárias - Transparência e visualização de impacto
+- **Fase 32**: Subscriptions & Recurring Payments - Sustentabilidade financeira
+- **Fase 33**: Ticketing para Eventos - Monetização de eventos
+- **Fases 34-37**: Preparação Web3 - Blockchain, wallets, smart contracts
+- **Fases 38-40**: DAO e Tokenização - Tokens on-chain, governança tokenizada
+- **Fases 41-43**: Diferenciação - Learning Hub, Booking System, Agente IA
+
+### Hierarquia de Permissões e Auditoria (2025-01-16)
 - **SystemAdmin implícito**: SystemAdmin tem todas as MembershipCapabilities em todos os territórios
 - **Operações de configuração**: `GrantAsync`/`RevokeAsync` implementados com auditoria completa
 - **Auditoria completa**: Todos os eventos de grant/revoke são registrados
 - **Invalidação automática de cache**: Via eventos de domínio
 - Ver detalhes em: [Hierarquia de Permissões](./refactoring/70_HIERARQUIA_PERMISSOES_E_AUDITORIA.md)
 
-### Refatoração User-Centric Membership (2026-01)
+### Refatoração User-Centric Membership (2025-01)
 - **Reorganização de Domínio**: Criada pasta `Membership/` em Domain
 - **UserTerritory removido**: Substituído por `TerritoryMembership`
 - **SystemPermission**: Permissões globais (Admin, SystemOperator) separadas de roles territoriais

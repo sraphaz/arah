@@ -1,8 +1,40 @@
 # Araponga - Cursor Best Practices
 
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Data**: 2025-01-20  
 **Projeto**: Araponga - Plataforma Digital Comunitária Orientada ao Território
+
+---
+
+## 📚 Arquivos de Referência para Contexto
+
+### Design e Identidade Visual
+- `docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md` - Identidade visual completa, cores, tipografia, componentes
+- `docs/CURSOR_DESIGN_RULES.md` - Regras práticas de design (mobile-first obrigatório, variáveis CSS, escala 8px)
+- `docs/ANALISE_DESIGN_SISTEMATICA_MELHORIAS.md` - Análise detalhada e propostas de melhoria
+
+### Regras e Padrões
+- `docs/CURSOR_DOCUMENTATION_RULES.md` - ⚠️ OBRIGATÓRIO: Mapeamento de mudanças → documentos, checklist de documentação
+- `docs/10_ARCHITECTURE_DECISIONS.md` - Decisões arquiteturais (ADRs), padrões estabelecidos
+- `docs/11_ARCHITECTURE_SERVICES.md` - Estrutura e organização de services
+- `docs/12_DOMAIN_MODEL.md` - Modelo de domínio, entidades e relacionamentos
+- `docs/05_GLOSSARY.md` - Terminologia correta: territory (não "place"), items (não "listings"), 29 fases
+
+### Visão e Negócio
+- `docs/01_PRODUCT_VISION.md` - Visão do produto, princípios, valores
+- `docs/60_API_LÓGICA_NEGÓCIO.md` - Lógica de negócio completa, contratos de API, casos de uso
+
+### Padrões de Código e Testes
+- `docs/21_CODE_REVIEW.md` - Padrões de código, análise de gaps
+- `docs/22_COHESION_AND_TESTS.md` - Cobertura de testes (>90%), estrutura de testes
+- `docs/41_CONTRIBUTING.md` - Padrões de contribuição
+
+### Configurações Técnicas
+- `frontend/wiki/app/globals.css` - Design tokens CSS (cores, espaçamento, tipografia)
+- `frontend/wiki/tailwind.config.ts` - Configuração Tailwind CSS
+- `global.json` - Versão .NET configurada
+- `backend/Araponga.Api/Program.cs` - Configuração da aplicação, DI, middlewares
+- `.editorconfig` - Configuração de formatação (indent C# 4, TS/JS 2)
 
 ---
 

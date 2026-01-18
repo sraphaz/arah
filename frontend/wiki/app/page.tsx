@@ -85,7 +85,7 @@ async function getDocContent(filePath: string) {
     return {
       content: htmlContent,
       frontMatter: data,
-      title: data.title || "Bem-Vind@ à Wiki Araponga",
+      title: data.title || "Araponga",
     };
   } catch (error) {
     console.error(`Error reading ${filePath}:`, error);

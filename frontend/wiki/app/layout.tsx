@@ -59,13 +59,32 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
+                  // Padrão: dark mode (se não houver preferência salva)
                   const savedTheme = localStorage.getItem('wiki-theme');
-                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+                  const theme = savedTheme || 'dark';
+                  
+                  // Aplica dark mode imediatamente para evitar flash branco
                   if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
                   }
-                } catch (e) {}
+                  
+                  // Log para debug (apenas em desenvolvimento)
+                  if (typeof console !== 'undefined' && console.log) {
+                    console.log('[Theme Init] Theme:', theme, 'Saved:', savedTheme);
+                  }
+                } catch (e) {
+                  // Fallback: aplica dark mode em caso de erro
+                  try {
+                    document.documentElement.classList.add('dark');
+                    if (typeof console !== 'undefined' && console.error) {
+                      console.error('[Theme Init] Error:', e);
+                    }
+                  } catch (fallbackError) {
+                    // Ignora se nem o fallback funcionar
+                  }
+                }
               })();
             `,
           }}

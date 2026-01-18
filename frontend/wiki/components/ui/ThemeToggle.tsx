@@ -3,22 +3,50 @@
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Verificar preferência salva ou preferência do sistema
-    const savedTheme = localStorage.getItem("wiki-theme") as "light" | "dark" | null;
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
-    setTheme(initialTheme);
-    applyTheme(initialTheme);
+    try {
+      // Verificar preferência salva ou usar dark como padrão
+      const savedTheme = localStorage.getItem("wiki-theme") as "light" | "dark" | null;
+      // Padrão: dark mode (se não houver preferência salva)
+      const initialTheme = savedTheme || "dark";
+      
+      setTheme(initialTheme);
+      applyTheme(initialTheme);
+      
+      // Log para debug (apenas em desenvolvimento)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[ThemeToggle] Initial theme:', initialTheme, 'Saved:', savedTheme);
+      }
+    } catch (error) {
+      // Fallback: dark mode em caso de erro
+      console.error('[ThemeToggle] Error initializing theme:', error);
+      setTheme("dark");
+      applyTheme("dark");
+    }
   }, []);
 
   const applyTheme = (newTheme: "light" | "dark") => {
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-    localStorage.setItem("wiki-theme", newTheme);
+    try {
+      document.documentElement.classList.toggle("dark", newTheme === "dark");
+      localStorage.setItem("wiki-theme", newTheme);
+      
+      // Log para debug (apenas em desenvolvimento)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[ThemeToggle] Applied theme:', newTheme);
+      }
+    } catch (error) {
+      console.error('[ThemeToggle] Error applying theme:', error);
+      // Tenta aplicar dark mode como fallback
+      try {
+        document.documentElement.classList.add("dark");
+      } catch (fallbackError) {
+        console.error('[ThemeToggle] Fallback also failed:', fallbackError);
+      }
+    }
   };
 
   const toggleTheme = () => {

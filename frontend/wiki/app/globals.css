@@ -1394,9 +1394,9 @@
 
 .app-banner-badge {
   @apply inline-flex items-center space-x-2 px-4 py-2 rounded-full;
-  /* Usa var(--accent) com opacity via Tailwind opacity utilities */
-  background-color: rgba(77, 212, 168, 0.1);
-  border-color: rgba(77, 212, 168, 0.3);
+  /* Usa var(--accent) com opacity */
+  background-color: var(--accent-subtle);
+  border: 1px solid rgba(77, 212, 168, 0.3);
   color: var(--accent);
   @apply font-semibold text-sm;
   @apply animate-pulse-slow;

@@ -1,0 +1,39 @@
+## 📋 Resumo
+
+Este PR corrige os erros 404 nas imagens da wiki ao adicionar images.unoptimized: true no next.config.mjs.
+
+## 🖼️ Problema das Imagens 404
+
+### Problema Identificado
+- Todas as imagens do public/ retornavam 404 após deploy
+- Logo_1.png, app_banner.png, araponga-api-domain-diagram.png, bukeh.jpg, favicon.png não carregavam
+- Next.js tentava otimizar imagens mesmo com output: 'export'
+
+### Causa Raiz
+Com output: 'export' (static export), o Next.js Image component tenta otimizar imagens por padrão, mas isso requer um servidor backend que não está disponível em export estático. A otimização falha e resulta em 404.
+
+### Solução Implementada
+
+**Configuração no next.config.mjs:**
+- Adicionado images.unoptimized: true na configuração
+- Desabilita otimização automática de imagens
+- Permite que imagens do public/ funcionem corretamente em static export
+- Compatível com basePath: '/wiki' e assetPrefix: '/wiki'
+
+## 📦 Arquivos Alterados
+
+- frontend/wiki/next.config.mjs - Adiciona images.unoptimized: true
+
+## ✅ Resultado Esperado
+
+- Todas as imagens devem carregar corretamente após deploy
+- Logo_1.png no header deve aparecer
+- app_banner.png no banner promocional deve aparecer
+- araponga-api-domain-diagram.png no onboarding deve aparecer
+- bukeh.jpg no background deve aparecer
+- favicon.png no navegador deve aparecer
+
+## 🔍 Referências
+
+- Next.js Static Export: https://nextjs.org/docs/app/building-your-application/deploying/static-exports
+- Image Optimization: https://nextjs.org/docs/app/api-reference/components/image#unoptimized

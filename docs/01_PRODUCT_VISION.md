@@ -1,15 +1,26 @@
-# Visão do Produto (ARAPONGA)
+# Visão do Produto - Araponga
+## Plataforma de Organização Comunitária Territorial
 
-**Versão**: 2.0  
+**Versão**: 3.0  
 **Data**: 2025-01-20  
 **Última Atualização**: 2025-01-20  
-**Status**: ✅ MVP Completo + Fases 1-8 Implementadas
+**Status**: ✅ MVP Completo + Fases 1-8 Implementadas | 📊 Estratégia de Convergência em Andamento
 
 ---
 
-## Propósito
-Araponga é uma plataforma **território-first** e **comunidade-first** para organização comunitária local.
-O território físico é a unidade central e a presença no território é requisito para vínculo.
+## 🎯 Propósito e Visão
+
+**Araponga** é uma plataforma operacional para organização comunitária territorial que combina infraestrutura digital robusta com governança descentralizada e economia circular tokenizada. A plataforma evolui de um MVP sólido para uma solução completa que compete com padrões de mercado estabelecidos por projetos que recebem investimentos significativos.
+
+### Princípios Fundamentais
+
+Araponga é **território-first** e **comunidade-first**: o território físico é a unidade central e a presença no território é requisito para vínculo. Este princípio fundamental diferencia o Araponga no mercado, combinando organização geográfica com governança participativa e economia local.
+
+### Evolução Estratégica
+
+O Araponga incorpora padrões de mercado estabelecidos (DAO, tokenização, Web3) mantendo os valores fundamentais do projeto. A convergência estratégica não significa abandonar valores, mas sim incorporar tecnologias e modelos essenciais para competir no mercado de investimento.
+
+**Referência Estratégica**: [Estratégia de Convergência de Mercado](./39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) | [Mapa de Funcionalidades](./38_MAPA_FUNCIONALIDADES_MERCADO.md)
 
 ## Princípios e regras inegociáveis
 - **Território é a unidade central** e representa um lugar físico real.
@@ -56,26 +67,117 @@ O território físico é a unidade central e a presença no território é requi
 - [✅ MVP] **Assets Territoriais** - Recursos com geolocalização obrigatória.
 - [✅ MVP] **Sistema de Mídia** - Upload, armazenamento, processamento.
 
-### ⏳ Planejado (Pós-MVP - Fases 9-29)
+### ⏳ Planejado - Fundação de Governança (Mês 0-3)
 
-- [⏳ Fase 9] **Perfil de Usuário Completo** - Preferências, configurações avançadas.
-- [⏳ Fase 10] **Mídias em Conteúdo** - Vídeos, áudios, documentos.
-- [⏳ Fase 11] **Edição e Gestão** - Edição de posts, eventos, items.
-- [⏳ Fase 13] **Conector de Emails** - Notificações por email.
-- [⏳ Fase 14] **Governança Comunitária** - Votação, decisões coletivas.
-- [⏳ POST-MVP] **Friends (círculo interno)** e stories exclusivos.
-- [⏳ POST-MVP] **Admin/observabilidade** com visão de territórios e saúde do sistema.
-- [⏳ POST-MVP] **GeoAnchor avançado / memórias / galeria**.
-- [⏳ POST-MVP] **Produtos/serviços territoriais, integrações e indicadores comunitários**.
-- [⏳ Fases 15-29] Ver [Backlog API](./backlog-api/README.md) para detalhes completos das 29 fases.
+- [⏳ Fase 14] **Governança Comunitária e Votação** - Sistema de votação tradicional, preparação para blockchain
+- [⏳ Fase 30] **Proof of Sweat (Tradicional)** - Sistema de registro de atividades territoriais, recompensas por participação
+- [⏳ Fase 31] **Dashboard de Métricas Comunitárias** - Transparência e visualização de impacto
 
-## Público e impacto esperado
-- Moradores, visitantes e organizações locais que precisam de um canal digital **ancorado ao território**.
-- Fortalecimento de redes locais, comunicação de utilidade pública e presença comunitária real.
+### ⏳ Planejado - Sustentabilidade Financeira (Mês 3-6)
 
-## Boas práticas transversais (MVP)
-- **Consentimento explícito de localização** e explicação do motivo da coleta.
-- **Falhas de geolocalização** comunicadas com orientação clara para o usuário.
-- **Auditoria mínima** de ações de moderação e sanções.
-- **Proteção contra abuso de reports** (deduplicação por janela de tempo).
-- **Observabilidade mínima** (logs e métricas para erros de localização, reports e moderação).
+- [⏳ Fase 32] **Subscriptions & Recurring Payments** - Planos de assinatura, pagamentos recorrentes
+- [⏳ Fase 33] **Ticketing para Eventos** - Venda de ingressos, QR codes, controle de capacidade
+- [⏳ Fase 13] **Conector de Emails** - Notificações por email
+
+### ⏳ Planejado - Essencial Pós-MVP (Mês 0-6)
+
+- [⏳ Fase 9] **Perfil de Usuário Completo** - Preferências, configurações avançadas
+- [⏳ Fase 10] **Mídias Avançadas** - Vídeos, áudios, documentos
+- [⏳ Fase 11] **Edição e Gestão** - Edição de posts, eventos, items
+
+### ⏳ Planejado - Preparação Web3 (Mês 6-9)
+
+- [⏳ Fase 34-37] **Integração Blockchain** - Avaliação blockchain, camada de abstração, wallets, smart contracts
+
+### ⏳ Planejado - DAO e Tokenização (Mês 9-12)
+
+- [⏳ Fase 38] **Tokens On-chain** - Smart contracts de tokens (ERC-20), distribuição inicial
+- [⏳ Fase 39] **Governança Tokenizada** - Votações on-chain, execução automática, histórico imutável
+- [⏳ Fase 20] **Moeda Territorial (Web3)** - Integração com blockchain, conversão moeda ↔ token
+- [⏳ Fase 40] **Proof of Presence On-chain** - Check-ins on-chain, mint de tokens por presença
+
+### ⏳ Planejado - Soberania Territorial (Mês 6-12)
+
+- [⏳ Fase 18] **Saúde Territorial e Monitoramento** - Atividades territoriais, sensores, observações
+- [⏳ Fase 17] **Gamificação Harmoniosa** - Sistema de pontos, badges, reconhecimento
+
+### ⏳ Planejado - Economia Circular (Mês 12-18)
+
+- [⏳ Fase 23] **Compra Coletiva** - Organização de compras comunitárias
+- [⏳ Fase 24] **Sistema de Trocas Comunitárias** - Trocas locais, economia circular
+
+### ⏳ Planejado - Diferenciação (Mês 12-18)
+
+- [⏳ Fase 41] **Learning Hub** - Sistema de cursos, certificações, monetização de conhecimento
+- [⏳ Fase 42] **Booking System** - Reservas de hóspedes/voluntários, gestão de acomodações
+- [⏳ Fase 43] **Agente IA (Versão Básica)** - Chatbot, sugestões automáticas, moderação assistida
+
+### ⏳ Planejado - Otimizações (Mês 6-18)
+
+- [⏳ Fase 12] **Otimizações Finais** - Performance, escalabilidade, refinamentos
+- [⏳ Fase 15] **Inteligência Artificial** - IA para governança, suporte, automações
+- [⏳ Fase 21] **Suporte a Criptomoedas** - Pagamentos em cripto, conversão
+- [⏳ Fase 22] **Integrações Externas** - APIs de terceiros, webhooks
+- [⏳ Fase 29] **Suporte Mobile Avançado** - Push notifications, background tasks, deep linking
+
+**Referências**: [Roadmap Estratégico](./02_ROADMAP.md) | [Backlog API Completo](./backlog-api/README.md)
+
+## 🎯 Público e Impacto Esperado
+
+### Público-Alvo
+
+**Usuários Principais**:
+- **Moradores** de territórios (Residents) - Participação plena, voto em votações, acesso a recursos
+- **Visitantes** de territórios (Visitors) - Acesso limitado, participação em eventos
+- **Curadores e Moderadores** - Governança territorial, moderação de conteúdo
+- **Organizações Locais** - Gestão de territórios, eventos, marketplace
+
+### Impacto Esperado
+
+**Sustentabilidade Comunitária**:
+- Fortalecimento de redes locais através de comunicação digital ancorada ao território
+- Autonomia territorial através de governança participativa e economia circular
+- Transparência e democracia através de votações e decisões coletivas auditáveis
+
+**Diferenciação de Mercado**:
+- Plataforma competitiva ao nível de projetos com investimento significativo
+- Governança descentralizada com DAO e tokens on-chain
+- Economia circular tokenizada que recompensa participação ativa
+
+## ✅ Boas Práticas Transversais
+
+### Privacidade e Segurança
+
+- **Consentimento explícito de localização** e explicação do motivo da coleta
+- **Falhas de geolocalização** comunicadas com orientação clara para o usuário
+- **Proteção de dados sensíveis** (LGPD/GDPR compliance)
+- **Auditoria completa** de ações de moderação e sanções
+
+### Observabilidade e Transparência
+
+- **Observabilidade completa** (logs estruturados, métricas, health checks)
+- **Proteção contra abuso** (deduplicação de reports por janela de tempo)
+- **Transparência total** em decisões comunitárias (votações auditáveis)
+- **Rastreabilidade** de todas as operações críticas
+
+### Governança
+
+- **Decisões coletivas** através de votações transparentes
+- **Distribuição de poder** proporcional (tradicional ou tokenizada)
+- **Auditoria on-chain** quando blockchain estiver implementado
+- **Histórico imutável** de votações e decisões importantes
+
+---
+
+## 📚 Referências Estratégicas
+
+- **[Roadmap Estratégico](./02_ROADMAP.md)** - Planejamento completo de desenvolvimento
+- **[Estratégia de Convergência de Mercado](./39_ESTRATEGIA_CONVERGENCIA_MERCADO.md)** - Plano estratégico de convergência
+- **[Mapa de Funcionalidades](./38_MAPA_FUNCIONALIDADES_MERCADO.md)** - Mapeamento completo vs. mercado
+- **[Backlog API Completo](./backlog-api/README.md)** - Detalhes de todas as fases
+
+---
+
+**Última Atualização**: 2025-01-20  
+**Versão**: 3.0  
+**Status**: ✅ MVP Completo | 📊 Estratégia Atualizada

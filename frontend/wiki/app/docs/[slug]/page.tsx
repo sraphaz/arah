@@ -64,20 +64,20 @@ function processMarkdownLinks(html: string, basePath: string = '/wiki'): string 
       if (href.startsWith(basePath) || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) {
         return match;
       }
-      
+
       // Se é link relativo que termina com .md, converte para /wiki/docs/... (sem .md)
       if (href.endsWith('.md')) {
         const slug = href.replace(/^\.\/|\.md$/g, '');
         const newHref = `${basePath}/docs/${slug}`;
         return `<a ${before || ''}href="${newHref}"${after || ''}>`;
       }
-      
+
       // Se começa com /, adiciona basePath
       if (href.startsWith('/')) {
         const newHref = `${basePath}${href}`;
         return `<a ${before || ''}href="${newHref}"${after || ''}>`;
       }
-      
+
       // Links relativos sem .md - mantém como está
       return match;
     }

@@ -65,7 +65,7 @@ async function testLink(url, expectedStatus = 200) {
   try {
     console.log(`Testing: ${url}`);
     const response = await fetch(url);
-    
+
     if (response.status === expectedStatus || (expectedStatus === 200 && response.status >= 200 && response.status < 400)) {
       console.log(`  ✅ ${response.status} OK`);
       return { success: true, status: response.status, url };
@@ -82,7 +82,7 @@ async function testLink(url, expectedStatus = 200) {
 async function extractLinksFromHTML(html, baseUrl) {
   const links = [];
   const linkRegex = /href=["']([^"']+)["']/gi;
-  
+
   // Lista de esquemas de URL perigosos/bloqueados
   const dangerousSchemes = [
     'javascript:',
@@ -91,37 +91,37 @@ async function extractLinksFromHTML(html, baseUrl) {
     'file:',
     'about:',
   ];
-  
+
   let match;
   while ((match = linkRegex.exec(html)) !== null) {
     let link = match[1];
-    
+
     // Ignora anchors (#) e esquemas perigosos
     if (link.startsWith('#')) continue;
-    
+
     // Verifica esquemas perigosos (case-insensitive)
     const lowerLink = link.toLowerCase().trim();
-    const isDangerous = dangerousSchemes.some(scheme => 
+    const isDangerous = dangerousSchemes.some(scheme =>
       lowerLink.startsWith(scheme)
     );
     if (isDangerous) continue;
-    
+
     // Converte links relativos para absolutos
     if (link.startsWith('/')) {
       link = new URL(link, baseUrl).href;
     } else if (!link.startsWith('http')) {
       link = new URL(link, baseUrl).href;
     }
-    
+
     links.push(link);
   }
-  
+
   return [...new Set(links)]; // Remove duplicates
 }
 
 async function testAllLinks() {
   console.log(`\n🔍 Testing Wiki Links at: ${BASE_URL}\n`);
-  
+
   const results = {
     passed: [],
     failed: [],
@@ -147,19 +147,19 @@ async function testAllLinks() {
     const mainPageResponse = await fetch(`${BASE_URL}/`);
     if (mainPageResponse.status === 200) {
       const extractedLinks = await extractLinksFromHTML(mainPageResponse.body, BASE_URL);
-      
+
       // Garantir que extractedLinks é um array
       if (!Array.isArray(extractedLinks)) {
         console.log(`  ⚠️  Could not extract links: expected array, got ${typeof extractedLinks}`);
         return;
       }
-      
+
       console.log(`Found ${extractedLinks.length} links in main page`);
-      
+
       // Test only wiki internal links
       const wikiLinks = extractedLinks.filter(link => link.includes('/wiki/'));
       console.log(`Testing ${wikiLinks.length} wiki internal links...\n`);
-      
+
       for (const link of wikiLinks.slice(0, 10)) { // Limit to first 10 to avoid too many requests
         const result = await testLink(link);
         if (result.success) {
@@ -180,7 +180,7 @@ async function testAllLinks() {
   console.log('='.repeat(60));
   console.log(`✅ Passed: ${results.passed.length}`);
   console.log(`❌ Failed: ${results.failed.length}`);
-  
+
   if (results.failed.length > 0) {
     console.log('\n❌ Failed Links:');
     results.failed.forEach((result) => {

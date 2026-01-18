@@ -16,7 +16,7 @@ export function TableOfContents() {
     // Extract headings from markdown content - busca em todo o documento
     const extractHeadings = () => {
       // Tenta múltiplos seletores para encontrar o conteúdo
-      const content = document.querySelector(".markdown-content") || 
+      const content = document.querySelector(".markdown-content") ||
                       document.querySelector("main") ||
                       document.body;
 
@@ -43,7 +43,7 @@ export function TableOfContents() {
     // Aguarda o conteúdo carregar - tenta múltiplas vezes
     let attempts = 0;
     const maxAttempts = 10;
-    
+
     const tryExtract = () => {
       const headings = extractHeadings();
       if (headings.length > 0 || attempts >= maxAttempts) {
@@ -84,7 +84,7 @@ export function TableOfContents() {
 
       // Primeiro, tenta encontrar um heading visível
       const visibleHeading = headingsWithPosition.find(h => h.isIntersecting && h.top >= 140);
-      
+
       if (visibleHeading) {
         setActiveId(visibleHeading.id);
         return;
@@ -108,17 +108,17 @@ export function TableOfContents() {
     // Fallback: também usa scroll listener para garantir detecção mais precisa
     const handleScroll = () => {
       const headings = toc.map((item) => document.getElementById(item.id)).filter(Boolean) as HTMLElement[];
-      
+
       if (headings.length === 0) return;
 
       const offset = 140; // Offset para considerar sticky header
       let current = "";
-      
+
       // Procura o heading que está mais próximo do topo mas ainda não passou muito
       for (let i = headings.length - 1; i >= 0; i--) {
         const heading = headings[i];
         const rect = heading.getBoundingClientRect();
-        
+
         // Se o heading está acima ou próximo do offset, é o ativo
         if (rect.top <= offset + 50) {
           current = heading.id;

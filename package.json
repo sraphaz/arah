@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0"
+  }
+}

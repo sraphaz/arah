@@ -161,7 +161,7 @@ Transparência radical e participação comunitária aberta são realidade, não
 
 ---
 
-## Como Participar?
+## Como Participar
 
 ### Primeiros Passos
 
@@ -170,49 +170,19 @@ Transparência radical e participação comunitária aberta são realidade, não
 3. **Leia o onboarding** do seu caminho escolhido
 4. **Entre no [Discord](https://discord.gg/auwqN8Yjgw)** — Conecte-se com a comunidade
 
-### Participação Ativa
+### Participação Contínua
 
-Com o tempo, você pode:
+Com o tempo:
 
-- Configurar seu ambiente (se desenvolvedor) ou começar a observar (se analista)
-- Fazer contribuições que importam
-- Participar de discussões e decisões públicas
-- Propor melhorias baseadas em sua experiência
-
-### Crescimento na Comunidade
-
-Com experiência, você pode:
-
-- Contribuir regularmente (no seu ritmo)
-- Ajudar outros que estão começando
-- Propor melhorias e novas funcionalidades
-- Tornar-se parte ativa da governança comunitária
+- Configure seu ambiente (se desenvolvedor) ou comece a observar (se analista)
+- Faça contribuições que importam
+- Participe de discussões e decisões públicas
+- Proponha melhorias baseadas em sua experiência
+- Ajude outros que estão começando
 
 ---
 
-## Próximos Passos
-
-### Agora
-
-1. **Leia a [Visão do Produto](./01_PRODUCT_VISION.md)**
-2. **Escolha seu caminho** — Desenvolvedor ou Analista Funcional
-3. **Entre no [Discord](https://discord.gg/auwqN8Yjgw)**
-
-### Esta Semana
-
-1. **Configure seu ambiente** (se desenvolvedor) ou **comece a observar** (se analista)
-2. **Faça sua primeira contribuição** pequena
-3. **Participe de discussões** no Discord ou GitHub
-
-### Este Mês
-
-1. **Contribua regularmente** (no seu ritmo)
-2. **Ajude outros** que estão começando
-3. **Proponha melhorias** baseadas em sua experiência
-
----
-
-## Por que Participar?
+## Por que Participar
 
 ### Diferenciais do Araponga
 
@@ -237,13 +207,6 @@ Com experiência, você pode:
 
 ---
 
-**Bem-vindo ao Araponga.**
-
-**Comece pequeno. Contribua no seu ritmo. Faça parte da transformação.**
-
----
-
-**Última Atualização**: 2025-01-20  
-**Versão**: 1.4
+**Bem-vindo ao Araponga. Comece pequeno. Contribua no seu ritmo.**
 
 **Perguntas?** Entre no [Discord](https://discord.gg/auwqN8Yjgw) ou abra uma Issue no [GitHub](https://github.com/sraphaz/araponga).

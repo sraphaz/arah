@@ -15,29 +15,17 @@ export function OfficialIcon({
   height = 24, 
   className = "" 
 }: OfficialIconProps) {
-  // Para SVGs externos ou URLs oficiais, podemos usar img diretamente
-  if (src.startsWith("http")) {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className={className}
-        style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain" }}
-      />
-    );
-  }
-
-  // Para imagens locais, usar Next.js Image
+  // Para SVGs externos, usar img diretamente (não usa Image do Next.js para evitar problemas com CORS/otimização)
+  // O Next.js Image requer domínios configurados em remotePatterns e pode ter problemas com SVGs externos
   return (
-    <Image
+    <img
       src={src}
       alt={alt}
       width={width}
       height={height}
       className={className}
       style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain" }}
+      loading="lazy"
     />
   );
 }

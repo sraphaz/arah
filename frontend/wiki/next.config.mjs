@@ -1,7 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets-global.website-files.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'github.githubassets.com',
+        pathname: '/**',
+      },
+    ],
     unoptimized: true // Necessário para static export - desabilita otimização que requer servidor
   },
   // Enable reading markdown files from docs directory

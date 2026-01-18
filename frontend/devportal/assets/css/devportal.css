@@ -941,6 +941,7 @@ main {
   transform: translateZ(0);
   will-change: transform, box-shadow;
   min-width: 0;
+  max-width: 100%; /* Garante que cards não excedam célula */
   display: flex;
   flex-direction: column;
   min-height: fit-content;

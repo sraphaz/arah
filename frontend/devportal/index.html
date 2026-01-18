@@ -360,7 +360,7 @@
             <h3>🤝 Membership & Onboarding</h3>
             <dl class="entity-list">
               <dt><strong>TerritoryMembership</strong></dt>
-              <dd>Vínculo <code>User ↔ Territory</code> com role (Visitor/Resident) e status de residência.</dd>
+              <dd>Vínculo User ↔ Territory com role (Visitor/Resident) e status de residência.</dd>
 
               <dt><strong>JoinRequest</strong></dt>
               <dd>Pedido para virar residente (aprovação/rejeição pela comunidade/curadoria).</dd>
@@ -421,8 +421,8 @@
               <dt><strong>Item</strong></dt>
               <dd>Produto/serviço publicado pela loja (categoria, tags, preço, status).</dd>
 
-              <dt><strong>Cart</strong> / <strong>CartItem</strong></dt>
-              <dd>Carrinho por território + itens com quantidade e notas.</dd>
+              <dt><strong>Cart / CartItem</strong></dt>
+              <dd>Carrinho por território com itens (quantidade e notas por item).</dd>
 
               <dt><strong>Inquiry</strong></dt>
               <dd>Mensagem de interesse em um item (inquiries enviadas/recebidas).</dd>
@@ -462,10 +462,10 @@
               <dd>Evento territorial com início obrigatório, fim opcional e geolocalização.</dd>
 
               <dt><strong>Interest / Confirm</strong></dt>
-              <dd>Estados de engajamento: marcar interesse e confirmar presença.</dd>
+              <dd>Estados de engajamento: marcar interesse e confirmar presença no evento.</dd>
 
               <dt><strong>Integração Feed-Mapa</strong></dt>
-              <dd>Criação do evento alimenta feed e pins do mapa (mesmo território).</dd>
+              <dd>Evento criado aparece automaticamente no feed e no mapa (mesmo território).</dd>
             </dl>
           </div>
 
@@ -476,7 +476,7 @@
               <dd>Conversas e grupos (inclui chat territorial).</dd>
 
               <dt><strong>ChatMessage</strong></dt>
-              <dd>Mensagens com paginação por cursor (beforeCreatedAt / beforeMessageId). Suporta envio de imagens (1 por mensagem, máx. 5MB) e áudios curtos (1 por mensagem, máx. 2MB, até 60s). Vídeos não são permitidos em chat.</dd>
+              <dd>Mensagens com paginação por cursor (beforeCreatedAt / beforeMessageId). Suporta imagens (1 por mensagem, máx. 5MB) e áudios curtos (1 por mensagem, máx. 2MB, até 60s). Vídeos não permitidos.</dd>
 
               <dt><strong>Participants</strong></dt>
               <dd>Participantes, papéis e “read state” (marcar como lido).</dd>

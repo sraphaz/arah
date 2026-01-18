@@ -835,9 +835,93 @@
 
   enhanceCodeBlocks();
 
+  // Theme Toggle - Sincronizado com Wiki
+  (function initThemeToggle() {
+    var THEME_STORAGE_KEY = 'devportal-theme';
+    var themeToggle = document.getElementById('theme-toggle');
+    
+    if (!themeToggle) {
+      return;
+    }
+
+    function getInitialTheme() {
+      try {
+        var savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          return savedTheme;
+        }
+      } catch (e) {
+        // Ignora erros de localStorage
+      }
+      // Default: dark mode (como na Wiki)
+      return 'dark';
+    }
+
+    function applyTheme(theme) {
+      try {
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+      } catch (e) {
+        console.error('[ThemeToggle] Error applying theme:', e);
+        // Fallback: aplica dark mode em caso de erro
+        try {
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } catch (fallbackError) {
+          // Ignora se nem o fallback funcionar
+        }
+      }
+    }
+
+    // Aplica tema inicial (antes do DOM estar completamente pronto, se possível)
+    var initialTheme = getInitialTheme();
+    applyTheme(initialTheme);
+
+    themeToggle.addEventListener('click', function() {
+      var currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      var newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      applyTheme(newTheme);
+    });
+  })();
+
+  // Sidebar Sections Toggle - Sincronizado com Wiki
+  (function initSidebarSections() {
+    var sectionToggles = document.querySelectorAll('.sidebar-section-toggle');
+    
+    sectionToggles.forEach(function(toggle) {
+      var sectionId = toggle.getAttribute('data-section');
+      var items = document.querySelector('[data-section-items="' + sectionId + '"]');
+      
+      if (!items) return;
+      
+      // Verifica se há link ativo na seção para auto-abrir
+      var hasActiveLink = items.querySelector('.sidebar-link-active');
+      if (hasActiveLink && toggle.getAttribute('aria-expanded') !== 'true') {
+        toggle.setAttribute('aria-expanded', 'true');
+        items.removeAttribute('hidden');
+        toggle.querySelector('.sidebar-chevron').classList.add('sidebar-chevron-open');
+      }
+      
+      toggle.addEventListener('click', function() {
+        var isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        var newExpanded = !isExpanded;
+        
+        toggle.setAttribute('aria-expanded', newExpanded);
+        if (newExpanded) {
+          items.removeAttribute('hidden');
+          toggle.querySelector('.sidebar-chevron').classList.add('sidebar-chevron-open');
+        } else {
+          items.setAttribute('hidden', '');
+          toggle.querySelector('.sidebar-chevron').classList.remove('sidebar-chevron-open');
+        }
+      });
+    });
+  })();
+
   // Sincronização de scroll: destaque automático no menu lateral conforme rolagem
   (function initScrollSync() {
-    var navLinks = document.querySelectorAll('.nav a[href^="#"]');
+    var navLinks = document.querySelectorAll('.sidebar-link[href^="#"], .nav a[href^="#"]');
     var sections = Array.from(navLinks).map(function(link) {
       var href = link.getAttribute('href');
       if (href && href.startsWith('#')) {
@@ -864,16 +948,26 @@
     function updateActiveLink(targetId) {
       // Remove classe active de todos os links
       navLinks.forEach(function(link) {
-        link.classList.remove('active');
+        link.classList.remove('active', 'sidebar-link-active');
         link.removeAttribute('aria-current');
       });
 
       // Adiciona classe active no link correspondente
       var targetLink = sections.find(function(item) { return item.id === targetId; });
       if (targetLink && targetLink.link) {
-        targetLink.link.classList.add('active');
+        targetLink.link.classList.add('active', 'sidebar-link-active');
         targetLink.link.setAttribute('aria-current', 'page');
         activeLink = targetLink.link;
+        
+        // Auto-abre seção se link estiver dentro de uma seção colapsada
+        var sectionContainer = targetLink.link.closest('[data-section-items]');
+        if (sectionContainer) {
+          var sectionId = sectionContainer.getAttribute('data-section-items');
+          var toggle = document.querySelector('[data-section="' + sectionId + '"]');
+          if (toggle && toggle.getAttribute('aria-expanded') !== 'true') {
+            toggle.click();
+          }
+        }
       }
     }
 

@@ -113,7 +113,7 @@ const welcomeMessage = `🌟 **Bem-vindo ao Araponga!**
 Este é um espaço para construção colaborativa de uma plataforma digital comunitária orientada ao território.
 
 📚 **Para começar:**
-1. Leia: \`docs/ONBOARDING_PUBLICO.md\`
+1. Leia: https://devportal.araponga.app/wiki/docs/ONBOARDING_PUBLICO
 2. Escolha seu caminho (Desenvolvedor ou Analista Funcional)
 3. Explore outras salas conforme interesse
 4. Apresente-se e comece a contribuir!
@@ -619,7 +619,7 @@ async function setupDiscord() {
             console.error('   4. Verifique se o bot tem as permissões necessárias');
             console.error('   5. Verifique a conexão com a internet');
             console.error('   6. Verifique se os intents estão habilitados no Discord Developer Portal');
-            console.error('\n📖 Para mais ajuda, veja: scripts/discord-setup-guide.md');
+            console.error('\n📖 Para mais ajuda, veja: https://devportal.araponga.app/wiki/docs/DISCORD_SETUP');
         }
         
         console.error('═══════════════════════════════════════════');

@@ -724,7 +724,7 @@ main {
 .section {
   padding: clamp(2.5rem, 4.5vw, 4rem) 0; /* Padding equilibrado */
   border-bottom: 1px solid var(--border-subtle);
-  scroll-margin-top: 3rem; /* Aumentado para melhor scroll-spy */
+  scroll-margin-top: var(--space-2xl); /* 48px - usa token para melhor scroll-spy */
   position: relative;
 }
 

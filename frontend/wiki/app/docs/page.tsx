@@ -112,7 +112,8 @@ export default async function DocsPage() {
                 </h2>
 
                 {/* Grid responsivo - mobile: 1 col, tablet: 2 cols, desktop: 3 cols */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                {/* Gap ajustado para melhor aproveitamento do espaço */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
                   {groupCategories.map(([category, docs], index) => (
                     <div
                       key={category}

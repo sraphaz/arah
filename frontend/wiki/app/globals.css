@@ -316,11 +316,10 @@
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     transition: var(--transition-smooth);
-    /* Altura padrão consistente - evita espaço vazio */
-    min-height: 240px;
-    max-height: 400px;
+    /* Altura automática - permite conteúdo expandir sem scroll interno */
     display: flex;
     flex-direction: column;
+    /* Remove min/max height para evitar scroll interno */
   }
 
   .category-card:hover {
@@ -330,43 +329,35 @@
   }
 
   .category-card__content {
-    /* Padding reduzido - otimiza uso do espaço */
+    /* Padding otimizado - melhor uso do espaço */
     padding: 1.5rem 1.25rem;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Evita conteúdo estourando */
+    flex: 1;
+    /* Removido overflow: hidden para evitar scroll interno */
   }
 
   @media (min-width: 640px) {
-    .category-card {
-      min-height: 260px;
-    }
-
     .category-card__content {
       padding: 1.75rem 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
-    .category-card {
-      min-height: 280px;
-      max-height: 420px;
-    }
-
     .category-card__content {
       padding: 2rem 1.75rem;
     }
   }
 
-  /* Doc link - Design limpo e legível - Padrão sistemático */
+  /* Doc link - Design limpo e legível - Tamanho aumentado para melhor legibilidade */
   .doc-link {
-    @apply flex items-center gap-3 px-5 py-3 rounded-lg;
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg;
     @apply text-base text-forest-700 dark:text-forest-300;
     @apply hover:text-forest-900 dark:hover:text-forest-50;
     @apply transition-colors duration-200 ease-out;
     @apply hover:bg-forest-50/80 dark:hover:bg-forest-900/60;
-    line-height: var(--line-height-relaxed);
+    line-height: var(--line-height-normal); /* 1.5 - usa token */
+    font-size: var(--font-size-base); /* 16px - legível, não pequeno */
   }
 
   .doc-link-arrow {

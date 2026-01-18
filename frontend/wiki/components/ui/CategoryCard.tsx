@@ -22,7 +22,7 @@ export function CategoryCard({ category, docs }: CategoryCardProps) {
           {emoji && <span className="text-xl opacity-80">{emoji}</span>}
           <span>{titleWithoutEmoji}</span>
         </h2>
-        <ul className="space-y-1.5 flex-1 overflow-y-auto">
+        <ul className="space-y-2 flex-1">
           {docs.map((doc) => {
             const docSlug = doc.path.replace(".md", "");
             return (

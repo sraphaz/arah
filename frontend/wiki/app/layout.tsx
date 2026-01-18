@@ -88,7 +88,17 @@ export default function RootLayout({
             `,
           }}
         />
-        {children}
+        <div className="min-h-screen flex flex-col">
+          <Header />
+          <MobileSidebar />
+          <div className="flex-1 flex">
+            <Sidebar />
+            <div className="flex-1">
+              {children}
+            </div>
+          </div>
+          <Footer />
+        </div>
       </body>
     </html>
   );

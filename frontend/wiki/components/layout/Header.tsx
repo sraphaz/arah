@@ -16,6 +16,8 @@ export function Header() {
                 height={40}
                 className="object-contain dark:brightness-110 dark:contrast-105"
                 priority
+                loading="eager"
+                style={{ opacity: 1 }}
               />
             </div>
             <div>

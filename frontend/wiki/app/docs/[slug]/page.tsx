@@ -7,10 +7,7 @@ import { remark } from "remark";
 import remarkHtml from "remark-html";
 import remarkGfm from "remark-gfm";
 import sanitizeHtml from "sanitize-html";
-import { Header } from "../../../components/layout/Header";
-import { Footer } from "../../../components/layout/Footer";
-import { Sidebar } from "../../../components/layout/Sidebar";
-import { MobileSidebar } from "../../../components/layout/MobileSidebar";
+// Header, Sidebar e Footer agora estão no layout.tsx raiz
 import { TableOfContents } from "../../../components/layout/TableOfContents";
 import { ContentSections } from "./content-sections";
 
@@ -159,15 +156,7 @@ export default async function DocPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <MobileSidebar />
-
-      {/* Main Content with Sidebar */}
-      <div className="flex-1 flex">
-        <Sidebar />
-        
-        <main className="flex-1 py-12 px-4 md:px-8 lg:px-12">
+    <main className="flex-1 py-12 px-4 md:px-8 lg:px-12">
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
             {/* Main Content Column */}
             <div>
@@ -241,9 +230,5 @@ export default async function DocPage({ params }: PageProps) {
             </aside>
           </div>
         </main>
-      </div>
-
-      <Footer />
-    </div>
   );
 }

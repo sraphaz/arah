@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { readdir } from "fs/promises";
 import { join } from "path";
-import { Header } from "../../components/layout/Header";
-import { Footer } from "../../components/layout/Footer";
+// Header, Sidebar e Footer agora estão no layout.tsx raiz
 import { CategoryCard } from "../../components/ui/CategoryCard";
 
 // Estrutura hierárquica da documentação
@@ -62,11 +61,7 @@ export default async function DocsPage() {
   const allDocs = await getAllDocs();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-
-      {/* Main Content */}
-      <main className="flex-1 container-max py-12">
+    <main className="flex-1 container-max py-12">
         {/* Hero Section */}
         <div className="glass-card mb-12 animation-fade-in">
           <div className="glass-card__content text-center">
@@ -118,9 +113,6 @@ export default async function DocsPage() {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </main>
   );
 }

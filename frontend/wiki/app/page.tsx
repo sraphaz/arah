@@ -118,6 +118,8 @@ async function getDocContent(filePath: string) {
     };
   } catch (error) {
     console.error(`Error reading ${filePath}:`, error);
+    console.error(`Attempted path: ${docsPath}`);
+    console.error(`Current working directory: ${process.cwd()}`);
     return null;
   }
 }

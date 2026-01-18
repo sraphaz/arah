@@ -1,7 +1,7 @@
 # Status da Implementação de Design Tokens
 
 **Data**: 2025-01-20  
-**Versão**: 1.0
+**Versão**: 1.1 (Atualizado)
 
 ---
 
@@ -20,74 +20,57 @@
 - ✅ `docs/DESIGN_SYSTEM_TOKENS.md` - Referência de tokens
 - ✅ `docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md` - Atualizado com nova paleta
 
-### 3. Migração Inicial
-- ✅ **Wiki**: Cores atualizadas para usar `var(--color-primary-*)` e `var(--color-secondary-*)`
-- ✅ **DevPortal**: Cores atualizadas para usar tokens (com fallback)
-- ✅ **Compatibilidade**: Variáveis `--accent`, `--link` agora referenciam tokens
+---
+
+## ✅ Implementado (Fase 2 - Aplicação Sistemática) ~80%
+
+### Wiki
+- ✅ **Tipografia**: `--font-size-*`, `--line-height-*`, `--letter-spacing-*` aplicados
+  - Parágrafos: `font-size-base` + `line-height-relaxed`
+  - Listas: `font-size-base` + `line-height-relaxed`
+  - Code: `font-size-sm`
+  - Blockquotes: `font-size-lg` + `line-height-loose`
+- ✅ **Espaçamento**: `--spacing-*` (xxs a 3xl) aplicados em listas, code, headings
+- ✅ **Cores**: `--accent`, `--link` usando `var(--color-primary-*)` e `var(--color-secondary-*)`
+
+### DevPortal
+- ✅ **Tipografia**: `--font-size-*`, `--line-height-*`, `--letter-spacing-*` aplicados
+  - Body: `font-size-base` com clamp + `line-height-relaxed`
+  - H2, H3, H4: tokens de font-size e line-height
+- ✅ **Espaçamento**: `--space-*` + aliases `--spacing-*` aplicados
+- ✅ **Cores**: `--accent`, `--link` usando tokens (com fallback)
 
 ---
 
-## ⏳ Em Progresso (Fase 2 - Aplicação Sistemática)
+## ✅ Implementado (Fase 3 - Refinamento) ~30%
 
-### Tokens Aplicados Parcialmente
+### Wiki
+- ✅ **Transições padronizadas**: Tokens `--transition-fast` (150ms), `--transition-base` (200ms), `--transition-slow` (300ms), `--transition-smooth` (400ms)
+- ✅ **Cores hardcoded removidas**: `rgba(55,123,87,0.3)` → `var(--accent-subtle)` em glass-card hover
+- ✅ **Transições aplicadas**: Nav-link, sidebar-link, toc-link, list bullets usam tokens
+- ⚠️ **Tailwind @apply**: Alguns `@apply transition-all duration-300` permanecem (compatível com tokens)
 
-**Wiki (`frontend/wiki/app/globals.css`):**
-- ✅ Cores usando tokens: `--accent`, `--link` agora referenciam `--color-primary-*` e `--color-secondary-*`
-- ⚠️ Tipografia: Define tokens mas alguns valores ainda usam `clamp()` (intencional para responsividade)
-- ⚠️ Espaçamento: Alguns valores usam `clamp()` (intencional), mas base pode ser padronizada
-
-**DevPortal (`frontend/devportal/assets/css/devportal.css`):**
-- ✅ Cores usando tokens: `--accent`, `--link` referenciam tokens (com fallback)
-- ⚠️ Tipografia: Valores definidos, mas ainda não totalmente unificados com Wiki
-- ⚠️ Espaçamento: Sistema definido, mas pode ser mais sistemático
+### DevPortal
+- ⏳ **Pendente**: Aplicar tokens de transição e remover cores hardcoded
 
 ---
 
-## 📋 Próximos Passos (Para Completar Fase 2)
+## 📋 Próximos Passos (Para Completar Fase 3)
 
-### 1. Importar Tokens Compartilhados (Prioridade Alta)
+### 1. DevPortal - Refinamento (Prioridade Alta)
+- [ ] Adicionar tokens de transição (`--transition-fast`, `--transition-base`, etc.)
+- [ ] Substituir transições hardcoded (`0.2s`, `0.3s`, etc.) por tokens
+- [ ] Remover cores hardcoded restantes (se houver)
 
-**Wiki:**
-- [ ] Adicionar `@import` ou referência a `design-tokens.css` (se possível com Next.js)
-- [ ] OU: Copiar tokens para `globals.css` e manter sincronizado
+### 2. Estados de Componentes (Prioridade Média)
+- [ ] Focus states: Adicionar `:focus-visible` com indicadores claros
+- [ ] Disabled states: Adicionar `:disabled` com opacidade reduzida
+- [ ] Active states: Garantir feedback visual claro
 
-**DevPortal:**
-- [ ] Adicionar `<link>` no HTML ou `@import` no CSS para `design-tokens.css`
-- [ ] OU: Copiar tokens para `devportal.css` e manter sincronizado
-
-**Nota:** Como são projetos diferentes (Next.js vs HTML estático), pode ser necessário manter tokens duplicados mas sincronizados via documentação.
-
-### 2. Substituir Valores Hardcoded (Prioridade Média)
-
-**Onde encontrar valores hardcoded:**
-- [ ] Verificar se há cores hex/rgb diretas (ex: `#4dd4a8` fora de tokens)
-- [ ] Verificar se há espaçamentos arbitrários (não múltiplos de 4px/8px)
-- [ ] Verificar se há tamanhos de fonte hardcoded (ex: `24px` em vez de `--font-size-2xl`)
-
-### 3. Padronizar Espaçamento (Prioridade Média)
-
-**Objetivo:** Valores base em `clamp()` devem vir de tokens quando possível.
-
-**Exemplo de Padronização:**
-```css
-/* ANTES */
-padding: clamp(2rem, 5vw, 4rem);
-
-/* DEPOIS (usando tokens) */
-padding: clamp(var(--space-8), 5vw, var(--space-16));
-```
-
-**Nota:** `clamp()` para responsividade é válido, mas valores base devem usar tokens.
-
-### 4. Aplicar Hierarquia Tipográfica (Prioridade Alta)
-
-**Objetivo:** Todos os H1-H6 devem usar tokens de tamanho e line-height.
-
-**Checklist:**
-- [ ] H1 usa `--font-size-5xl` ou `--font-size-6xl`
-- [ ] H2 usa `--font-size-3xl` ou `--font-size-4xl`
-- [ ] H3 usa `--font-size-2xl`
-- [ ] Body usa `--font-size-base` com `--line-height-relaxed`
+### 3. Validação WCAG AA (Prioridade Alta)
+- [ ] Verificar contraste 4.5:1 para texto normal
+- [ ] Verificar contraste 3:1 para texto grande (18px+)
+- [ ] Verificar estados de foco claramente visíveis
 
 ---
 
@@ -98,48 +81,46 @@ padding: clamp(var(--space-8), 5vw, var(--space-16));
 - [x] Paleta revisada e alinhada com valores
 - [x] Migração inicial de cores
 
-### Fase 2 (Aplicação): ⏳ ~40% Completo
-- [x] Cores migradas para tokens (parcial)
-- [ ] Tokens importados/compartilhados (não feito)
-- [ ] Espaçamento padronizado (parcial)
-- [ ] Hierarquia tipográfica aplicada (parcial)
+### Fase 2 (Aplicação): ✅ ~80% Completo
+- [x] Cores migradas para tokens (Wiki e DevPortal)
+- [x] Tipografia aplicada sistematicamente (Wiki e DevPortal)
+- [x] Espaçamento aplicado sistematicamente (Wiki e DevPortal)
+- [x] Hierarquia tipográfica aplicada (H1-H6)
 
-### Fase 3 (Refinamento): ❌ 0% Completo
-- [ ] Estados completos de componentes
-- [ ] Micro-interações
-- [ ] Acessibilidade WCAG AA validada
+### Fase 3 (Refinamento): ⏳ ~30% Completo
+- [x] Transições padronizadas (Wiki)
+- [x] Cores hardcoded removidas (Wiki - parcial)
+- [ ] Transições padronizadas (DevPortal)
+- [ ] Estados de componentes (focus, disabled)
+- [ ] Validação WCAG AA
 
 ---
 
 ## 📝 Notas Técnicas
 
-### Estrutura de Projetos
+### Tailwind e Tokens
 
-**Wiki (Next.js):**
-- CSS em `frontend/wiki/app/globals.css`
-- Usa Tailwind CSS (`@apply`)
-- Tokens podem ser definidos no próprio `globals.css` ou importados
+Alguns componentes usam `@apply transition-all duration-300` do Tailwind, que é compatível com tokens CSS. As classes Tailwind (`duration-300` = 300ms) podem coexistir com tokens (`--transition-slow` = 300ms) sem problemas.
 
-**DevPortal (HTML Estático):**
-- CSS em `frontend/devportal/assets/css/devportal.css`
-- Sem build process, HTML estático
-- Tokens podem ser importados via `@import` ou `<link>`
+**Recomendação:** Quando possível, preferir tokens CSS (`transition: var(--transition-slow)`) para maior consistência. Tailwind pode ser usado quando necessário para manter compatibilidade com componentes existentes.
 
-**Solução Recomendada:**
-Como são projetos diferentes, manter tokens **duplicados mas sincronizados** via:
-1. `frontend/shared/styles/design-tokens.css` como fonte única de verdade
-2. Copiar tokens para `globals.css` (Wiki) e `devportal.css` (DevPortal)
-3. Documentação clara de que `design-tokens.css` é a referência
+### Cores Hardcoded Restantes
+
+A maioria das cores hardcoded são:
+- **rgba() em shadows**: Apropriado (usar opacidade dinâmica)
+- **rgba() em gradients**: Apropriado (efeitos visuais complexos)
+- **rgba() em glass morphism**: Apropriado (efeitos de blur)
+
+**Regra:** Cores hardcoded são aceitáveis quando são parte de efeitos visuais complexos (shadows, gradients, glass effects). O importante é que cores **semânticas** (accent, link, text) usem tokens.
 
 ---
 
 ## 🔄 Próxima Ação Recomendada
 
 **Ação Imediata:**
-1. Copiar conteúdo de `design-tokens.css` para seções correspondentes em `globals.css` e `devportal.css`
-2. Ou: Criar script de sincronização (futuro)
-3. Aplicar hierarquia tipográfica sistemática em componentes
-4. Padronizar espaçamento base em `clamp()` para usar tokens
+1. Aplicar tokens de transição no DevPortal
+2. Adicionar estados focus e disabled nos componentes principais
+3. Validar contraste WCAG AA em textos críticos
 
 ---
 

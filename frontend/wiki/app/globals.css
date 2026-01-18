@@ -299,26 +299,16 @@
     position: relative;
   }
 
-  .doc-link::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 4px;
-    height: 0;
-    @apply bg-forest-400 dark:bg-[#4dd4a8] rounded-r-full;
-    transform: translateY(-50%);
-    transition: height var(--transition-quick);
+  .doc-link-arrow {
+    @apply text-forest-400 dark:text-forest-600;
+    @apply group-hover:text-forest-600 dark:group-hover:text-[#4dd4a8];
+    @apply transition-all duration-200;
+    @apply opacity-60 group-hover:opacity-100;
+    transform: translateX(0);
   }
 
-  .doc-link:hover::before {
-    height: 60%;
-  }
-
-  .doc-link span:first-child {
-    @apply text-forest-400 dark:text-[#4dd4a8] group-hover:text-forest-600 dark:group-hover:text-[#5ee5b9] group-hover:translate-x-1;
-    transition: var(--transition-quick);
-    font-size: 1.25rem;
+  .doc-link:hover .doc-link-arrow {
+    transform: translateX(2px);
   }
 
   /* Hero section - Enterprise typography */

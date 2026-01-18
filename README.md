@@ -1,48 +1,42 @@
-# 🐦 Araponga
+# Araponga
 
-**Araponga** é uma plataforma digital comunitária orientada ao território.  
-Um espaço onde tecnologia serve à vida local, à convivência e à autonomia das comunidades.
+**Araponga** é uma plataforma digital comunitária orientada ao território. Tecnologia que serve à vida local, à convivência e à autonomia das comunidades.
 
-Não é uma rede social genérica.  
-É uma **extensão digital do território vivo**.
+Não é uma rede social genérica. É uma **extensão digital do território vivo**.
 
 ---
 
-## 🌱 Propósito
+## Propósito
 
-Vivemos um tempo em que plataformas digitais capturam atenção, desorganizam comunidades e desconectam pessoas do lugar onde vivem.
+Plataformas digitais capturam atenção, desorganizam comunidades e desconectam pessoas do lugar onde vivem.
 
 O Araponga é um contraponto consciente a esse modelo.
 
-> **Território como referência.  
-> Comunidade como prioridade.  
-> Tecnologia como ferramenta — não como fim.**
-
-**Território no centro da experiência digital.**
+**Território como referência. Comunidade como prioridade. Tecnologia como ferramenta — não como fim.**
 
 ---
 
-## 🧭 O que é o Araponga?
+## O que é o Araponga
 
-O Araponga é um aplicativo/plataforma que permite:
+Plataforma que permite:
 
-- 📍 **Descobrir e reconhecer territórios reais**
-- 👥 **Organizar comunidades locais**
-- 🗞️ **Compartilhar informações relevantes ao lugar**
-- 🗺️ **Visualizar eventos, avisos e iniciativas no mapa**
-  - Uma entidade do território pode ser um estabelecimento, um órgão do governo, um espaço público ou um espaço natural.
-- 🧑‍🌾 **Diferenciar moradores e visitantes com respeito**
-- 🤝 **Fortalecer redes locais de cuidado, troca e presença**
-- 🏪 **Marketplace territorial** para trocas locais
-- 📅 **Eventos comunitários** organizados por território
-- 🚨 **Alertas de saúde pública** e comunicação emergencial
-- 💬 **Chat territorial (canais e grupos)** com governança (curadoria/moderação) e feature flags por território
+- **Descobrir e reconhecer territórios reais**
+- **Organizar comunidades locais**
+- **Compartilhar informações relevantes ao lugar**
+- **Visualizar eventos, avisos e iniciativas no mapa**
+  - Entidades do território podem ser estabelecimentos, órgãos do governo, espaços públicos ou espaços naturais.
+- **Diferenciar moradores e visitantes com respeito**
+- **Fortalecer redes locais de cuidado, troca e presença**
+- **Marketplace territorial** para trocas locais
+- **Eventos comunitários** organizados por território
+- **Alertas de saúde pública** e comunicação emergencial
+- **Chat territorial (canais e grupos)** com governança (curadoria/moderação) e feature flags por território
 
-Tudo isso sem algoritmos de manipulação, feed global infinito ou extração de dados para publicidade.
+Sem algoritmos de manipulação, feed global infinito ou extração de dados para publicidade.
 
 ---
 
-## 🧠 Princípios fundamentais
+## Princípios Fundamentais
 
 ### 1. Território é geográfico (e neutro)
 
@@ -100,7 +94,7 @@ Ele é uma **infraestrutura digital comunitária**, pensada para:
 
 ---
 
-## 🧩 Arquitetura (visão geral)
+## Arquitetura
 
 O backend segue princípios de **Clean Architecture**, com separação clara de responsabilidades:
 
@@ -137,9 +131,9 @@ backend/
 
 ---
 
-## 📚 Documentação
+## Documentação
 
-**📋 [Índice Completo da Documentação](./docs/00_INDEX.md)** - Navegação estruturada
+**[Índice Completo da Documentação](./docs/00_INDEX.md)** — Navegação estruturada
 
 ### Visão e Produto
 - [Visão do Produto](./docs/01_PRODUCT_VISION.md)
@@ -171,9 +165,9 @@ backend/
 
 ---
 
-## 🚀 Estado atual do projeto
+## Estado Atual do Projeto
 
-### Funcionalidades Implementadas ✅
+### Funcionalidades Implementadas
 
 #### Core
 - ✅ Backend estruturado com Clean Architecture
@@ -261,18 +255,18 @@ backend/
 - ✅ CacheMetricsService com métricas de hit/miss
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)
 
-### Em Planejamento 🚧
+### Em Planejamento
 
-- 🚧 Frontend e experiências móveis
-- 🚧 Friends (círculo interno) e stories exclusivos
-- 🚧 Admin/observabilidade com dashboards avançados
-- 🚧 GeoAnchor avançado / memórias / galeria
+- Frontend e experiências móveis
+- Friends (círculo interno) e stories exclusivos
+- Admin/observabilidade com dashboards avançados
+- GeoAnchor avançado / memórias / galeria
 
-O projeto está em **evolução ativa**, com foco em solidez antes de escala.
+O projeto está em evolução ativa, com foco em solidez antes de escala.
 
 ---
 
-## 🛠️ Como rodar localmente
+## Como Rodar Localmente
 
 > A documentação canônica de operação está em [`docs/README.md`](docs/README.md).
 
@@ -389,32 +383,25 @@ Antes de abrir PRs grandes, abra uma issue para alinharmos a direção.
 
 ---
 
-## 🌎 Visão de futuro
+## Visão de Futuro
 
-Algumas direções possíveis (não promessas fechadas):
+Direções possíveis (não promessas fechadas):
 
-- economias e moedas locais
-- trocas de serviços comunitários
-- governança distribuída
-- integração com iniciativas regenerativas
-- tecnologia como guardiã do território, não como exploradora
+- Economias e moedas locais
+- Trocas de serviços comunitários
+- Governança distribuída
+- Integração com iniciativas regenerativas
+- Tecnologia como guardiã do território, não como exploradora
 
-O Araponga não quer crescer rápido.  
-Quer criar raízes profundas.
+O Araponga não quer crescer rápido. Quer criar raízes profundas.
 
 ---
 
-## ✨ Uma nota pessoal
+## Uma Nota
 
-Este projeto nasce de uma escuta atenta:
+Este projeto nasce de uma escuta atenta da vida, do território, das comunidades e dos limites do modelo digital atual.
 
-- da vida
-- do território
-- das comunidades
-- e dos limites do modelo digital atual
-
-Se você chegou até aqui e sentiu que isso faz sentido,  
-você já faz parte da conversa.
+Se você chegou até aqui e sentiu que isso faz sentido, você já faz parte da conversa.
 
 ---
 
@@ -424,12 +411,11 @@ O conteúdo estático do Developer Portal vive em `backend/Araponga.Api/wwwroot/
 
 ---
 
-## 📜 Licença
+## Licença
 
 Este projeto é distribuído sob uma **licença aberta orientada à comunidade e ao território**.
 
 - Versão oficial (EN): `LICENSE`
 - Versão em português (PT-BR): `LICENSE.pt-BR`
 
-🐦 Araponga canta para avisar, proteger e comunicar.  
-Que esta plataforma faça o mesmo.
+Araponga canta para avisar, proteger e comunicar. Que esta plataforma faça o mesmo.

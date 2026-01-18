@@ -83,8 +83,8 @@ export default async function DocsPage() {
   ];
 
   return (
-    <main className="flex-1 container-max py-12 lg:py-16">
-      <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_240px] xl:grid-cols-[1fr_260px] 2xl:grid-cols-[1fr_280px] gap-4 lg:gap-6 xl:gap-8">
+    <main className="flex-1 container-max py-12 lg:py-16 px-4 md:px-6 lg:px-8">
+      <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_200px] xl:grid-cols-[1fr_220px] 2xl:grid-cols-[1fr_240px] gap-4 lg:gap-5 xl:gap-6">
         {/* Main Content Column */}
         <div>
         {/* Hero Section - Assertivo e direto */}

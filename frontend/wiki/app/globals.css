@@ -61,7 +61,7 @@
     --accent-subtle: rgba(77, 212, 168, 0.15);
     --link: #7dd3ff;
     --link-hover: #9de3ff;
-    
+
     /* Dark mode colors */
     --bg-dark: #0a0e12;
     --border-dark: #25303a;
@@ -76,7 +76,7 @@
     --watermark-opacity: 0.015;
     --body-watermark-opacity: 0.01;
     --gradient-overlay: linear-gradient(180deg, rgba(10, 14, 18, 0.8) 0%, rgba(10, 14, 18, 0.4) 100%);
-    
+
     /* Cores de acento e links em dark mode (usam mesmas variáveis) */
     /* --accent e --link já definidas no :root, funcionam em ambos os modos */
   }
@@ -132,7 +132,7 @@
     height: var(--body-watermark-size);
     max-width: 95vw;
     max-height: 95vh;
-    background-image: url("/wiki/Logo_1.png");
+    background-image: url("/wiki/icon.png");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -223,7 +223,7 @@
     height: var(--watermark-size);
     bottom: var(--watermark-bottom);
     right: var(--watermark-right);
-    background-image: url("/wiki/Logo_1.png");
+    background-image: url("/wiki/icon.png");
     background-repeat: no-repeat;
     background-position: bottom right;
     background-size: contain;

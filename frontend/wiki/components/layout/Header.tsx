@@ -10,7 +10,7 @@ export function Header() {
           <Link href="/" className="flex items-center space-x-4 group transition-transform duration-300 hover:scale-[1.02]">
             <div className="relative w-14 h-14 md:w-16 md:h-16 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Image
-                src="/wiki/Logo_1.png"
+                src="/wiki/icon.png"
                 alt="Araponga Logo"
                 width={64}
                 height={64}

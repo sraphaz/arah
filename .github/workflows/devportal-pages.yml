@@ -44,7 +44,7 @@ jobs:
 
           # Copiar Dev Portal para raiz
           cp -R frontend/devportal/. dist/
-          
+
           # Verificar se index.html foi copiado
           if [ ! -f "dist/index.html" ]; then
             echo "❌ ERRO: index.html não encontrado em dist/"
@@ -65,7 +65,7 @@ jobs:
           # Criar CNAME para domínio customizado
           echo "devportal.araponga.app" > dist/CNAME
           echo "✅ CNAME criado: devportal.araponga.app"
-          
+
           # Listar estrutura final para debug
           echo "📁 Estrutura final do dist/:"
           ls -la dist/ | head -20

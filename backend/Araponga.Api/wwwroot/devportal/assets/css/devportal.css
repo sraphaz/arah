@@ -1,6 +1,6 @@
 :root {
   color-scheme: light dark;
-  
+
   /* Paleta de cores harmoniosa e suave */
   --bg: #0a0e12;
   --bg-elevated: #0f1419;
@@ -8,26 +8,26 @@
   --bg-muted: #1a2129;
   --border: #25303a;
   --border-subtle: #1e2830;
-  
+
   --text: #e8edf2;
   --text-muted: #b8c5d2; /* Melhorado: contraste WCAG AA 4.5:1 (era #a8b5c2) */
   --text-subtle: #8a97a4; /* Melhorado: contraste 3:1 (era #7a8794) */
-  
+
   --accent: #4dd4a8;
   --accent-hover: #5ee5b9;
   --accent-strong: #3bc495;
   --accent-subtle: rgba(77, 212, 168, 0.15);
-  
+
   --link: #7dd3ff;
   --link-hover: #9de3ff;
-  
+
   --warning: #f5c842;
   --danger: #f26d6d;
   --success: #4dd4a8;
-  
+
   --code-bg: #0a0e12;
   --code-border: #1a2129;
-  
+
   /* Escala de shadows mais completa */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.1);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -35,7 +35,7 @@
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
   --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 24px rgba(77, 212, 168, 0.15);
-  
+
   /* Sistema de espaçamento consistente */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -44,21 +44,21 @@
   --space-xl: 2rem;
   --space-2xl: 3rem;
   --space-3xl: 4rem;
-  
+
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
   --radius-full: 9999px;
-  
+
   --max-width: 1280px;
   --content-max: 1200px;
   --nav-width: 280px;
-  
+
   /* Breakpoints para telas grandes */
   /* HD (1366px+): max-width 1600px, content-max 1200px */
   /* Full HD (1920px+): max-width 1800px, content-max 1400px */
   /* QHD/Ultra HD (2560px+): max-width 2400px, content-max 2000px */
-  
+
   /* Tipografia - padrões elevados de design */
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
   font-optical-sizing: auto;
@@ -66,7 +66,7 @@
   font-feature-settings: "kern" 1, "liga" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
   scroll-behavior: smooth;
   scroll-padding-top: 2rem;
 }
@@ -78,7 +78,7 @@
 body {
   margin: 0;
   background: var(--bg);
-  background-image: 
+  background-image:
     radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
   color: var(--text);
@@ -622,7 +622,7 @@ main {
   .model-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  
+
   .card-full {
     grid-column: 1 / -1;
   }
@@ -1244,24 +1244,24 @@ pre code {
   color: var(--accent);
 }
 
-.method.post { 
-  background: rgba(125, 211, 255, 0.2); 
-  color: var(--link); 
+.method.post {
+  background: rgba(125, 211, 255, 0.2);
+  color: var(--link);
 }
 
-.method.put { 
-  background: rgba(245, 200, 66, 0.2); 
-  color: var(--warning); 
+.method.put {
+  background: rgba(245, 200, 66, 0.2);
+  color: var(--warning);
 }
 
-.method.patch { 
-  background: rgba(242, 109, 109, 0.2); 
-  color: var(--danger); 
+.method.patch {
+  background: rgba(242, 109, 109, 0.2);
+  color: var(--danger);
 }
 
-.method.delete { 
-  background: rgba(242, 109, 109, 0.2); 
-  color: var(--danger); 
+.method.delete {
+  background: rgba(242, 109, 109, 0.2);
+  color: var(--danger);
 }
 
 .schema-grid {
@@ -1328,7 +1328,7 @@ pre code {
     top: 0;
     margin-bottom: 2rem;
   }
-  
+
   .nav ul {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1347,7 +1347,7 @@ pre code {
   .layout {
     gap: clamp(2.5rem, 5vw, 4rem);
   }
-  
+
   :root {
     --nav-width: 320px;
   }
@@ -1394,27 +1394,27 @@ pre code {
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
   }
-  
+
   .code-block {
     font-size: 0.8125rem;
     padding: 1rem;
   }
-  
+
   .section {
     padding: 2rem 0;
   }
-  
+
   .card {
     padding: 1.25rem;
   }
-  
+
   /* Em telas pequenas, texto não justificado fica melhor */
   .card p,
   .lead-text,
   .section p {
     text-align: left;
   }
-  
+
   /* Callout menor em mobile */
   .callout {
     padding: 1rem;
@@ -1427,16 +1427,16 @@ pre code {
   .card {
     padding: clamp(1.5rem, 3vw, 2rem);
   }
-  
+
   .section {
     padding: clamp(3rem, 6vw, 5rem) 0;
   }
-  
+
   /* Aumentar line-height em telas grandes para melhor respiração */
   .lead-text {
     line-height: 1.8;
   }
-  
+
   .card p,
   .section p {
     line-height: 1.8;
@@ -1477,7 +1477,7 @@ pre code {
   .section-header-with-icon {
     gap: 0.75rem;
   }
-  
+
   .section-icon {
     width: 40px;
     height: 40px;
@@ -1559,11 +1559,11 @@ pre code {
     grid-template-columns: auto 1fr;
     align-items: start;
   }
-  
+
   .footer-links {
     text-align: right;
   }
-  
+
   .footer-links p {
     text-align: right;
   }
@@ -2009,7 +2009,7 @@ pre code {
   .sequence-diagram-container {
     padding: 1rem;
   }
-  
+
   .sequence-diagram-container .mermaid {
     padding: 0.5rem;
     font-size: 0.875rem;
@@ -2023,15 +2023,15 @@ pre code {
   .button {
     display: none;
   }
-  
+
   .layout {
     grid-template-columns: 1fr;
   }
-  
+
   .sequence-diagram-toggle {
     break-inside: avoid;
   }
-  
+
   .sequence-diagram-toggle[open] {
     display: block;
   }

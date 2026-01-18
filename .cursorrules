@@ -1,7 +1,7 @@
 # Araponga - Cursor Best Practices
 
-**Versão**: 1.5  
-**Data**: 2025-01-20  
+**Versão**: 1.6
+**Data**: 2025-01-20
 **Projeto**: Araponga - Plataforma Digital Comunitária Orientada ao Território
 
 ---
@@ -46,7 +46,7 @@
 ## 🎯 Princípios Fundamentais do Projeto
 
 ### Território como Referência
-- **Territory** é geográfico e neutro - representa apenas um lugar físico real
+- **Territory** é geográfico e neutro - representa um lugar vivo e real
 - Território existe antes do app e continua existindo sem usuários
 - Lógica social (memberships, visibilidade, moderação) fica em camadas separadas
 - **NUNCA** coloque lógica social dentro da entidade Territory
@@ -168,7 +168,7 @@ public class Territory
         // Validação de regras de negócio
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name cannot be empty");
-        
+
         Name = name;
         Location = new GeoAnchor(latitude, longitude);
     }
@@ -272,7 +272,7 @@ public class TerritoriesController : ControllerBase
             dto.Latitude,
             dto.Longitude,
             HttpContext.RequestAborted);
-        
+
         return result.IsSuccess
             ? CreatedAtAction(nameof(Get), new { id = result.Value.Id }, result.Value)
             : BadRequest(result.Error);
@@ -653,7 +653,7 @@ function calculateTotalPrice(items: CartItem[]): number {
   if (items.length === 0) {
     return 0;
   }
-  
+
   return items.reduce((total, item) => {
     const itemTotal = item.price * item.quantity;
     return total + itemTotal;
@@ -1113,7 +1113,7 @@ Documentação:
 
 ---
 
-**Última Atualização**: 2025-01-20  
+**Última Atualização**: 2025-01-20
 **Versão**: 1.6
 
 ### Changelog

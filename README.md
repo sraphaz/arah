@@ -10,19 +10,15 @@ Não é uma rede social genérica.
 
 ## 🌱 Propósito
 
-Vivemos um tempo em que plataformas digitais:
-- capturam atenção,
-- desorganizam comunidades,
-- e desconectam pessoas do lugar onde vivem.
+Vivemos um tempo em que plataformas digitais capturam atenção, desorganizam comunidades e desconectam pessoas do lugar onde vivem.
 
-O Araponga nasce como um contraponto consciente a esse modelo.
+O Araponga é um contraponto consciente a esse modelo.
 
 > **Território como referência.  
 > Comunidade como prioridade.  
 > Tecnologia como ferramenta — não como fim.**
 
-A proposta é simples e profunda:  
-**recolocar o território no centro da experiência digital.**
+**Território no centro da experiência digital.**
 
 ---
 
@@ -42,9 +38,7 @@ O Araponga é um aplicativo/plataforma que permite:
 - 🚨 **Alertas de saúde pública** e comunicação emergencial
 - 💬 **Chat territorial (canais e grupos)** com governança (curadoria/moderação) e feature flags por território
 
-Tudo isso **sem algoritmos de manipulação**,  
-sem feed global infinito,  
-sem extração de dados para publicidade.
+Tudo isso sem algoritmos de manipulação, feed global infinito ou extração de dados para publicidade.
 
 ---
 

@@ -834,5 +834,115 @@
   }
 
   enhanceCodeBlocks();
+
+  // Sincronização de scroll: destaque automático no menu lateral conforme rolagem
+  (function initScrollSync() {
+    var navLinks = document.querySelectorAll('.nav a[href^="#"]');
+    var sections = Array.from(navLinks).map(function(link) {
+      var href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        var id = href.substring(1);
+        var section = document.getElementById(id);
+        return section ? { link: link, section: section, id: id } : null;
+      }
+      return null;
+    }).filter(function(item) { return item !== null; });
+
+    if (sections.length === 0) {
+      return;
+    }
+
+    // IntersectionObserver para detectar qual seção está visível
+    var observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px', // Considera header e ajusta margem para ativação
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+    };
+
+    var activeLink = null;
+
+    function updateActiveLink(targetId) {
+      // Remove classe active de todos os links
+      navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      });
+
+      // Adiciona classe active no link correspondente
+      var targetLink = sections.find(function(item) { return item.id === targetId; });
+      if (targetLink && targetLink.link) {
+        targetLink.link.classList.add('active');
+        targetLink.link.setAttribute('aria-current', 'page');
+        activeLink = targetLink.link;
+      }
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      // Prioriza seções mais próximas do topo da viewport
+      var visibleSections = entries
+        .filter(function(entry) { return entry.isIntersecting; })
+        .map(function(entry) {
+          var rect = entry.boundingClientRect;
+          return {
+            id: entry.target.id,
+            top: rect.top,
+            intersectionRatio: entry.intersectionRatio
+          };
+        })
+        .sort(function(a, b) {
+          // Prioriza maior intersectionRatio, depois menor distância do topo
+          if (Math.abs(a.intersectionRatio - b.intersectionRatio) > 0.1) {
+            return b.intersectionRatio - a.intersectionRatio;
+          }
+          return Math.abs(a.top) - Math.abs(b.top);
+        });
+
+      if (visibleSections.length > 0) {
+        updateActiveLink(visibleSections[0].id);
+      }
+    }, observerOptions);
+
+    // Observa todas as seções
+    sections.forEach(function(item) {
+      if (item.section) {
+        observer.observe(item.section);
+      }
+    });
+
+    // Fallback: atualiza active link no scroll (para garantir que sempre há um ativo)
+    var scrollTimeout;
+    function handleScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        var scrollY = window.scrollY || window.pageYOffset;
+        var headerOffset = 200; // Offset aproximado do header
+
+        // Encontra a seção mais próxima do topo
+        var closestSection = null;
+        var closestDistance = Infinity;
+
+        sections.forEach(function(item) {
+          if (item.section) {
+            var rect = item.section.getBoundingClientRect();
+            var distance = Math.abs(rect.top - headerOffset);
+
+            if (rect.top <= headerOffset + 100 && distance < closestDistance) {
+              closestDistance = distance;
+              closestSection = item;
+            }
+          }
+        });
+
+        if (closestSection && (!activeLink || activeLink !== closestSection.link)) {
+          updateActiveLink(closestSection.id);
+        }
+      }, 100);
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Atualiza active link inicial baseado na posição da página
+    handleScroll();
+  })();
 })();
 

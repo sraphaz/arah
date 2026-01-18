@@ -1464,17 +1464,18 @@
 
 .app-banner-button-primary {
   @apply inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl;
-  @apply bg-gradient-to-r from-[#4dd4a8] to-[#5ee5b9];
   @apply text-white font-semibold text-base;
-  @apply shadow-lg shadow-[#4dd4a8]/30;
   @apply transition-all duration-300;
-  @apply hover:shadow-xl hover:shadow-[#4dd4a8]/40;
   @apply hover:scale-105 hover:-translate-y-1;
   @apply active:scale-100;
+  /* Gradient usando variáveis CSS com fallback */
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  box-shadow: 0 10px 25px rgba(77, 212, 168, 0.3);
 }
 
 .app-banner-button-primary:hover {
-  background: linear-gradient(135deg, #5ee5b9 0%, #6ef6ca 100%);
+  background: linear-gradient(135deg, var(--accent-hover) 0%, rgba(110, 246, 202, 1) 100%);
+  box-shadow: 0 15px 35px rgba(77, 212, 168, 0.4);
 }
 
 .app-banner-button-secondary {

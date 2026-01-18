@@ -1,3 +1,4 @@
+import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import Section from "@/components/ui/Section";
@@ -19,10 +20,13 @@ export default function Hero() {
               </p>
             </div>
             <div className="flex">
-              <img
+              <Image
                 src="/first_rght_side_cover.png"
                 alt=""
+                width={800}
+                height={600}
                 className="w-full rounded-3xl object-contain shadow-lg md:max-h-96 transition-transform duration-300 hover:scale-105"
+                priority
               />
             </div>
           </div>

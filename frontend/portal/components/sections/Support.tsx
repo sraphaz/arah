@@ -1,3 +1,4 @@
+import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import Section from "@/components/ui/Section";
@@ -72,9 +73,11 @@ export default function Support() {
               </div>
             </div>
             <div className="flex">
-              <img
+              <Image
                 src="/app_banner.png"
                 alt=""
+                width={800}
+                height={600}
                 className="w-full rounded-3xl object-contain shadow-lg transition-transform duration-300 hover:scale-105"
               />
             </div>

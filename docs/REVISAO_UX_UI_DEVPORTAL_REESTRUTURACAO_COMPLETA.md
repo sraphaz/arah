@@ -249,6 +249,8 @@ Nível 4: Documentação Profunda (Side Panels/Modals)
 - Quickstart (accordion)
 - Autenticação (accordion)
 - Território & Headers (accordion)
+- Onboarding Analistas Funcionais (accordion - guia técnico detalhado)
+- Onboarding Desenvolvedores (accordion - guia técnico detalhado)
 - "Ajuda Rápida" (side panel)
 
 ### **Tab 2: 📚 Fundamentos** (Conceitos)

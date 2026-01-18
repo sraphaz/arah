@@ -1078,11 +1078,11 @@
   }
 
   .markdown-content h1 {
-    @apply text-4xl mb-8 mt-12;
+    @apply text-3xl md:text-4xl mb-8 mt-12;
   }
 
   .markdown-content h2 {
-    @apply text-2xl mb-6 mt-10;
+    @apply text-xl md:text-2xl mb-6 mt-10;
   }
 
   .markdown-content p {

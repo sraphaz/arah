@@ -453,17 +453,7 @@
   }
 
   /* Responsivo: conteúdo aproveita melhor espaço em telas maiores */
-  @media (min-width: 1280px) {
-    .markdown-content {
-      /* Removido max-width - conteúdo usa toda largura disponível */
-    }
-  }
-
-  @media (min-width: 1536px) {
-    .markdown-content {
-      /* Removido max-width - conteúdo usa toda largura disponível */
-    }
-  }
+  /* Media queries removidas - max-width já configurado via .markdown-content */
 
   /* Typography hierarchy - Enterprise level */
   .markdown-content h1 {
@@ -1064,11 +1054,6 @@
     @apply hidden;
   }
 
-  /* Grid layout ajustado para mobile */
-  .grid-cols-1.lg\\:grid-cols-\\[1fr_280px\\] {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-
   /* TOC escondido em mobile muito pequeno ou transformado */
   .toc-container {
     @apply hidden sm:block;
@@ -1382,12 +1367,13 @@
 }
 
 .api-domain-diagram-container .glass-card {
-  @apply shadow-xl;
+  box-shadow: var(--elevation-4);
   background: linear-gradient(135deg, rgba(241, 248, 244, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
 }
 
 :root.dark .api-domain-diagram-container .glass-card {
   background: linear-gradient(135deg, rgba(10, 14, 18, 0.95) 0%, rgba(20, 26, 33, 0.98) 100%);
+  box-shadow: var(--elevation-4);
 }
 
 .api-domain-diagram-container img {

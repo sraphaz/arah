@@ -340,9 +340,9 @@ Integrar mídias (imagens, vídeos e áudios) em todas as funcionalidades de con
 - [x] Atualizar serviços de conteúdo (`PostCreationService`, `EventsService`, `StoreItemService`, `ChatService`):
   - [x] Usar limites do `TerritoryMediaConfig` quando disponíveis
   - [x] Fallback para `MediaStorageOptions` via `IGlobalMediaLimits` se não configurado
-- [ ] Interface administrativa (DevPortal):
-  - [ ] Seção para configuração de limites de mídia
-  - [ ] Explicação de limites globais vs territoriais
+- [x] Interface administrativa (DevPortal):
+  - [x] Seção para configuração de limites de mídia
+  - [x] Explicação de limites globais vs territoriais
 - [x] Testes de integração (existentes: `MediaConfigIntegrationTests`, `MediaConfigValidationIntegrationTests`)
 - [x] Documentação
 

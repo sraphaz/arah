@@ -10,11 +10,11 @@ interface FeatureCardProps {
 }
 
 export function FeatureCard({ icon, title, description, color = "forest", href }: FeatureCardProps) {
-  // Harmonizado com a paleta do Dev Portal Araponga
+  // Harmonizado com a paleta do Dev Portal Araponga - sem bordas excessivas
   const colorClasses = {
-    forest: "border-forest-400/30 hover:border-forest-400 bg-forest-50/50 dark:bg-forest-900/30 hover:bg-forest-100/70 dark:hover:bg-forest-900/50",
-    accent: "border-[#4dd4a8]/30 hover:border-[#4dd4a8] bg-[#4dd4a8]/5 dark:bg-[#4dd4a8]/10 hover:bg-[#4dd4a8]/10 dark:hover:bg-[#4dd4a8]/15",
-    link: "border-[#7dd3ff]/30 hover:border-[#7dd3ff] bg-[#7dd3ff]/5 dark:bg-[#7dd3ff]/10 hover:bg-[#7dd3ff]/10 dark:hover:bg-[#7dd3ff]/15",
+    forest: "bg-forest-50/50 dark:bg-forest-900/30 hover:bg-forest-100/70 dark:hover:bg-forest-900/50",
+    accent: "bg-[#4dd4a8]/5 dark:bg-[#4dd4a8]/10 hover:bg-[#4dd4a8]/10 dark:hover:bg-[#4dd4a8]/15",
+    link: "bg-[#7dd3ff]/5 dark:bg-[#7dd3ff]/10 hover:bg-[#7dd3ff]/10 dark:hover:bg-[#7dd3ff]/15",
   };
 
   const iconColorClasses = {
@@ -24,7 +24,7 @@ export function FeatureCard({ icon, title, description, color = "forest", href }
   };
 
   const cardContent = (
-    <div className={`glass-card group relative overflow-hidden border-2 ${colorClasses[color]} transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl`}>
+    <div className={`glass-card group relative overflow-hidden ${colorClasses[color]} transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl`}>
       <div className="glass-card__content relative z-10">
         {/* Decorative background pattern */}
         <div className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none">

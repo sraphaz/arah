@@ -49,6 +49,9 @@ public sealed class TerritoryMediaConfigService
             throw new ArgumentException("Territory ID mismatch.", nameof(config));
         }
 
+        // Ajustar automaticamente valores que excedem limites globais
+        AdjustToGlobalLimits(config);
+
         // Validar limites contra valores globais
         ValidateLimits(config);
 
@@ -59,6 +62,38 @@ public sealed class TerritoryMediaConfigService
         await _unitOfWork.CommitAsync(cancellationToken);
 
         return config;
+    }
+
+    /// <summary>
+    /// Ajusta automaticamente valores que excedem limites globais.
+    /// </summary>
+    private void AdjustToGlobalLimits(TerritoryMediaConfig config)
+    {
+        // Ajustar Posts
+        AdjustContentLimits(config.Posts);
+
+        // Ajustar Events
+        AdjustContentLimits(config.Events);
+
+        // Ajustar Marketplace
+        AdjustContentLimits(config.Marketplace);
+
+        // Ajustar Chat
+        AdjustChatLimits(config.Chat);
+    }
+
+    private void AdjustContentLimits(MediaContentConfig config)
+    {
+        config.MaxImageSizeBytes = Math.Min(config.MaxImageSizeBytes, _globalLimits.MaxImageSizeBytes);
+        config.MaxVideoSizeBytes = Math.Min(config.MaxVideoSizeBytes, _globalLimits.MaxVideoSizeBytes);
+        config.MaxAudioSizeBytes = Math.Min(config.MaxAudioSizeBytes, _globalLimits.MaxAudioSizeBytes);
+    }
+
+    private void AdjustChatLimits(MediaChatConfig config)
+    {
+        config.MaxImageSizeBytes = Math.Min(config.MaxImageSizeBytes, _globalLimits.MaxImageSizeBytes);
+        config.MaxAudioSizeBytes = Math.Min(config.MaxAudioSizeBytes, _globalLimits.MaxAudioSizeBytes);
+        config.VideosEnabled = false; // Sempre bloqueado para chat
     }
 
     /// <summary>

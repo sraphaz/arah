@@ -34,41 +34,83 @@ jobs:
         working-directory: frontend/wiki
         run: |
           npm ci
+          # Gera índice de busca antes do build
+          npm run generate-search-index
           NEXT_EXPORT=true npm run build
         continue-on-error: true
 
-      - name: Prepare Dev Portal artifacts (with wiki subfolder)
+      - name: Prepare artifacts (DevPortal na raiz, Wiki em /wiki)
         run: |
           rm -rf dist
           mkdir -p dist
 
-          # Copiar Dev Portal para raiz
+          # ============================================
+          # DevPortal: Copiar para raiz (devportal.araponga.app/)
+          # ============================================
+          echo "📦 Copiando DevPortal para raiz..."
           cp -R frontend/devportal/. dist/
 
-          # Verificar se index.html foi copiado
+          # Verificar se index.html do DevPortal foi copiado
           if [ ! -f "dist/index.html" ]; then
-            echo "❌ ERRO: index.html não encontrado em dist/"
+            echo "❌ ERRO: index.html do DevPortal não encontrado em dist/"
             ls -la dist/
             exit 1
           fi
-          echo "✅ index.html encontrado em dist/"
+          echo "✅ DevPortal index.html encontrado em dist/"
 
-          # Copiar Wiki para subpasta /wiki (se build foi bem-sucedido)
+          # Verificar se assets do DevPortal foram copiados
+          if [ ! -d "dist/assets" ]; then
+            echo "❌ ERRO: assets do DevPortal não encontrado em dist/"
+            ls -la dist/
+            exit 1
+          fi
+          echo "✅ DevPortal assets encontrado em dist/"
+
+          # ============================================
+          # Wiki: Copiar para subpasta /wiki (devportal.araponga.app/wiki/)
+          # ============================================
           if [ -d "frontend/wiki/out" ]; then
+            echo "📦 Copiando Wiki para dist/wiki/..."
             mkdir -p dist/wiki
             cp -R frontend/wiki/out/. dist/wiki/
+
+            # Verificar se index.html do Wiki foi copiado
+            if [ ! -f "dist/wiki/index.html" ]; then
+              echo "⚠️  Wiki index.html não encontrado, mas continuando..."
+            else
+              echo "✅ Wiki index.html encontrado em dist/wiki/"
+            fi
             echo "✅ Wiki copiado para dist/wiki/"
           else
-            echo "⚠️  Wiki build não encontrado, pulando..."
+            echo "⚠️  Wiki build não encontrado (frontend/wiki/out não existe), pulando..."
+            echo "ℹ️  Wiki será acessível apenas se build for bem-sucedido"
           fi
 
-          # Criar CNAME para domínio customizado
+          # ============================================
+          # CNAME: Configurar domínio customizado
+          # ============================================
           echo "devportal.araponga.app" > dist/CNAME
           echo "✅ CNAME criado: devportal.araponga.app"
+          echo "   - DevPortal: devportal.araponga.app/"
+          echo "   - Wiki: devportal.araponga.app/wiki/"
 
-          # Listar estrutura final para debug
+          # ============================================
+          # Debug: Listar estrutura final
+          # ============================================
+          echo ""
           echo "📁 Estrutura final do dist/:"
+          echo "   dist/"
+          echo "   ├── index.html (DevPortal)"
+          echo "   ├── assets/ (DevPortal)"
+          echo "   ├── wiki/ (Wiki)"
+          echo "   └── CNAME"
+          echo ""
           ls -la dist/ | head -20
+          if [ -d "dist/wiki" ]; then
+            echo ""
+            echo "📁 Conteúdo de dist/wiki/:"
+            ls -la dist/wiki/ | head -10
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

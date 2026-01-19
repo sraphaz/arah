@@ -117,8 +117,12 @@ export function Sidebar() {
                     // Normalizar pathname e href para comparação (remover trailing slash)
                     const normalizedPathname = pathname.replace(/\/$/, '') || '/';
                     const normalizedHref = item.href.replace(/\/$/, '') || '/';
+                    // Lógica mais precisa: /docs só é ativo em /docs exatamente, não em /docs/qualquer-coisa
+                    // Para outras rotas, permite sub-rotas (ex: /docs/ONBOARDING_DEVELOPERS)
                     const isActive = normalizedPathname === normalizedHref ||
-                                   (normalizedHref !== '/' && normalizedPathname.startsWith(normalizedHref + '/'));
+                                   (normalizedHref !== '/' &&
+                                    normalizedHref !== '/docs' && // Exceção: /docs só é ativo em /docs
+                                    normalizedPathname.startsWith(normalizedHref + '/'));
                     return (
                       <li key={item.href}>
                         <Link

@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 
 export function ApiDomainDiagram() {
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
   return (
     <div className="api-domain-diagram-container my-16">
       <div className="glass-card animation-fade-in">
@@ -16,13 +19,25 @@ export function ApiDomainDiagram() {
             </p>
           </div>
 
-          <div className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl border-2 border-forest-200/80 dark:border-forest-800/80">
+          <div
+            className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
+            onClick={() => setIsLightboxOpen(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setIsLightboxOpen(true);
+              }
+            }}
+            aria-label="Clique para ampliar o diagrama"
+          >
             <Image
               src="/wiki/araponga-api-domain-diagram.png"
               alt="Diagrama isométrico do Domínio API Araponga - mostrando TERRITÓRIO no centro com conexões para FEED, MAP, HEALTH, FEATURES, MEMBERSHIP & GOVERNANCE, e AUTENTICAÇÃO"
               width={1200}
               height={800}
-              className="w-full h-auto object-contain"
+              className="w-full h-auto object-contain transition-transform duration-300 hover:scale-[1.02]"
               priority
               unoptimized={true}
               onError={(e) => {
@@ -65,6 +80,45 @@ export function ApiDomainDiagram() {
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal - Imagem em resolução original */}
+      {isLightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={() => setIsLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Diagrama ampliado"
+        >
+          {/* Overlay - Ofusca levemente o fundo */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" />
+
+          {/* Imagem em tamanho original */}
+          <div className="relative z-10 max-w-full max-h-full" onClick={(e) => e.stopPropagation()}>
+            <Image
+              src="/wiki/araponga-api-domain-diagram.png"
+              alt="Diagrama isométrico do Domínio API Araponga - versão ampliada"
+              width={2400}
+              height={1600}
+              className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+              unoptimized={true}
+            />
+            {/* Botão de fechar */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsLightboxOpen(false);
+              }}
+              className="absolute top-4 right-4 p-2 bg-white/90 dark:bg-forest-900/90 rounded-full shadow-lg hover:bg-white dark:hover:bg-forest-900 transition-colors"
+              aria-label="Fechar diagrama ampliado"
+            >
+              <svg className="w-6 h-6 text-forest-900 dark:text-forest-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -50,7 +50,7 @@ public sealed class MediaInContentIntegrationTests
         {
             client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, Guid.NewGuid().ToString());
         }
-        
+
         var response = await client.PostAsJsonAsync(
             "api/v1/territories/selection",
             new TerritorySelectionRequest(territoryId));
@@ -66,7 +66,7 @@ public sealed class MediaInContentIntegrationTests
             $"api/v1/memberships/{territoryId}/become-resident",
             new BecomeResidentRequest(new[] { residentUserId }, "Test residency request"));
         requestResponse.EnsureSuccessStatusCode();
-        
+
         var requestPayload = await requestResponse.Content.ReadFromJsonAsync<RequestResidencyResponse>();
         if (requestPayload is null)
         {
@@ -77,13 +77,13 @@ public sealed class MediaInContentIntegrationTests
         var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
         var originalAuth = client.DefaultRequestHeaders.Authorization;
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
-        
+
         var approveResponse = await client.PostAsync(
             $"api/v1/join-requests/{requestPayload.JoinRequestId}/approve",
             null);
-        
+
         // Se não conseguir aprovar (403 ou 404), assumir que já foi aprovado ou não precisa
-        if (approveResponse.StatusCode != HttpStatusCode.OK && 
+        if (approveResponse.StatusCode != HttpStatusCode.OK &&
             approveResponse.StatusCode != HttpStatusCode.NotFound)
         {
             // Se for 403, pode ser que o usuário não tem permissão, mas continuar tentando verificar
@@ -92,10 +92,10 @@ public sealed class MediaInContentIntegrationTests
                 approveResponse.EnsureSuccessStatusCode();
             }
         }
-        
+
         // 3. Restaurar autorização original
         client.DefaultRequestHeaders.Authorization = originalAuth;
-        
+
         // 4. Verificar residência por geo para tornar o usuário "verified resident"
         // Isso requer que o usuário já seja residente (não apenas tenha um JoinRequest pendente)
         // Se o JoinRequest foi aprovado, o membership foi criado e podemos verificar
@@ -103,7 +103,7 @@ public sealed class MediaInContentIntegrationTests
         var verifyResponse = await client.PostAsJsonAsync(
             $"api/v1/memberships/{territoryId}/verify-residency/geo",
             new VerifyResidencyGeoRequest(-23.3744, -45.0205)); // Coordenadas exatas do Territory2
-        
+
         // Se verificação falhar (usuário não é residente ainda ou coordenadas fora do raio), tentar continuar
         // Isso pode acontecer se o JoinRequest não foi aprovado ou se as coordenadas estão fora do raio
         if (verifyResponse.StatusCode != HttpStatusCode.OK)
@@ -111,12 +111,12 @@ public sealed class MediaInContentIntegrationTests
             // Se não conseguir verificar, pode ser que o JoinRequest não foi aprovado ou coordenadas incorretas
             // Mas vamos continuar porque o JoinRequest pode ter sido aprovado e o usuário já é residente
         }
-        
+
         // 5. Se factory foi fornecido e o usuário precisa criar stores/items, ativar marketplace opt-in
         if (factory is not null)
         {
             var dataStore = factory.GetDataStore();
-            
+
             // Buscar o membership do usuário atual
             var userContextResponse = await client.GetAsync($"api/v1/memberships/{territoryId}/me");
             if (userContextResponse.IsSuccessStatusCode)
@@ -168,7 +168,7 @@ public sealed class MediaInContentIntegrationTests
         content.Add(fileContent, "file", $"test-{testId}.jpg");
 
         var response = await client.PostAsync("api/v1/media/upload", content);
-        
+
         if (response.StatusCode == HttpStatusCode.Created)
         {
             var mediaResponse = await response.Content.ReadFromJsonAsync<MediaAssetResponse>();
@@ -621,7 +621,7 @@ public sealed class MediaInContentIntegrationTests
         // Criar um arquivo "grande" (> 5MB)
         // Nota: Em um teste real, você criaria uma mídia grande real
         // Por enquanto, vamos testar a validação de mídia inexistente
-        
+
         var invalidMediaId = Guid.NewGuid();
 
         var sendResponse = await client.PostAsJsonAsync(
@@ -720,7 +720,7 @@ public sealed class MediaInContentIntegrationTests
         // Criar um MP3 mínimo válido (ID3v2 header básico)
         // Para testes de tamanho, podemos criar um array maior
         var mp3Bytes = new List<byte>();
-        
+
         // ID3v2 header (10 bytes mínimo)
         // ID3v2 identifier (3 bytes): "ID3"
         mp3Bytes.AddRange(new byte[] { 0x49, 0x44, 0x33 });
@@ -730,18 +730,18 @@ public sealed class MediaInContentIntegrationTests
         mp3Bytes.Add(0x00);
         // Size (4 bytes): tamanho do header (10 bytes neste caso mínimo)
         mp3Bytes.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x0A });
-        
+
         // Frame sync MP3 (11 bits): 0xFF 0xE0 (primeiros 11 bits)
         // MPEG-1 Layer 3, 128kbps, 44.1kHz, Stereo
         mp3Bytes.AddRange(new byte[] { 0xFF, 0xFB, 0x90, 0x00 });
-        
+
         // Se o tamanho desejado for maior, preencher com zeros
         while (mp3Bytes.Count < sizeBytes)
         {
             var remaining = (int)Math.Min(sizeBytes - mp3Bytes.Count, 1024);
             mp3Bytes.AddRange(new byte[remaining]);
         }
-        
+
         // Garantir que o tamanho exato seja respeitado
         if (mp3Bytes.Count > sizeBytes)
         {
@@ -754,13 +754,13 @@ public sealed class MediaInContentIntegrationTests
         content.Add(fileContent, "file", $"test-audio-{testId}.mp3");
 
         var response = await client.PostAsync("api/v1/media/upload", content);
-        
+
         if (response.StatusCode == HttpStatusCode.Created)
         {
             var mediaResponse = await response.Content.ReadFromJsonAsync<MediaAssetResponse>();
             return mediaResponse!.Id;
         }
-        
+
         var errorBody = await response.Content.ReadAsStringAsync();
         throw new InvalidOperationException($"Audio upload failed: {response.StatusCode} - {errorBody}");
     }
@@ -773,7 +773,7 @@ public sealed class MediaInContentIntegrationTests
         // Criar um MP4 mínimo válido (ftyp box)
         // Para testes de tamanho, podemos criar um array maior
         var mp4Bytes = new List<byte>();
-        
+
         // ftyp box (File Type Box) - mínimo necessário para um MP4 válido
         // Box size (4 bytes): 32 bytes
         mp4Bytes.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x20 });
@@ -785,14 +785,14 @@ public sealed class MediaInContentIntegrationTests
         mp4Bytes.AddRange(new byte[] { 0x00, 0x00, 0x02, 0x00 });
         // Compatible brands (12 bytes): 'isom', 'iso2'
         mp4Bytes.AddRange(new byte[] { 0x69, 0x73, 0x6F, 0x6D, 0x69, 0x73, 0x6F, 0x32 });
-        
+
         // Se o tamanho desejado for maior, preencher com zeros
         while (mp4Bytes.Count < sizeBytes)
         {
             var remaining = (int)Math.Min(sizeBytes - mp4Bytes.Count, 1024);
             mp4Bytes.AddRange(new byte[remaining]);
         }
-        
+
         // Garantir que o tamanho exato seja respeitado
         if (mp4Bytes.Count > sizeBytes)
         {
@@ -805,7 +805,7 @@ public sealed class MediaInContentIntegrationTests
         content.Add(fileContent, "file", $"test-video-{testId}.mp4");
 
         var response = await client.PostAsync("api/v1/media/upload", content);
-        
+
         if (response.StatusCode == HttpStatusCode.Created)
         {
             var mediaResponse = await response.Content.ReadFromJsonAsync<MediaAssetResponse>();
@@ -866,7 +866,7 @@ public sealed class MediaInContentIntegrationTests
         // A validação do PostCreationService rejeita acima de 50MB, então usamos 50MB + 1 byte
         var dataStore = factory.GetDataStore();
         var mediaRepository = new Araponga.Infrastructure.InMemory.InMemoryMediaAssetRepository(dataStore);
-        
+
         // Obter o vídeo criado
         var video = await mediaRepository.GetByIdAsync(videoId, CancellationToken.None);
         if (video != null)
@@ -992,11 +992,11 @@ public sealed class MediaInContentIntegrationTests
         // Criar MediaAsset diretamente com tamanho maior que 100MB para testar validação do serviço
         var dataStore = factory.GetDataStore();
         var mediaRepository = new Araponga.Infrastructure.InMemory.InMemoryMediaAssetRepository(dataStore);
-        
+
         // Obter o vídeo criado e obter userId
         var video = await mediaRepository.GetByIdAsync(videoId, CancellationToken.None);
         var largeVideoId = videoId;
-        
+
         if (video != null)
         {
             // Criar novo vídeo com 101MB
@@ -1746,6 +1746,7 @@ public sealed class MediaInContentIntegrationTests
 
         var item = await response.Content.ReadFromJsonAsync<ItemResponse>();
         Assert.NotNull(item);
+        Assert.NotNull(item!.ImageUrls);
         Assert.True(item.ImageUrls.Count >= 2, "Deve ter pelo menos 2 imagens");
     }
 
@@ -1765,7 +1766,6 @@ public sealed class MediaInContentIntegrationTests
         // Este teste verifica que áudios pequenos (dentro do limite de 2MB) são aceitos
         // O teste completo de envio requer uma conversa válida, que seria complexo de montar
         // Por simplicidade, verificamos apenas que o áudio é válido (não muito grande)
-        Assert.NotNull(audioId);
         Assert.NotEqual(Guid.Empty, audioId);
     }
 

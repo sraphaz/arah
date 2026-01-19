@@ -8,10 +8,9 @@ import remarkGfm from "remark-gfm";
 import sanitizeHtml from "sanitize-html";
 // Header, Sidebar e Footer agora estão no layout.tsx raiz
 import { FeatureCard } from "../components/ui/FeatureCard";
-import { QuickLinks } from "../components/layout/QuickLinks";
 import { ApiDomainDiagram } from "../components/content/ApiDomainDiagram";
 import { AppBanner } from "../components/content/AppBanner";
-import { ContentSections } from "./docs/[slug]/content-sections";
+import { ContentSectionsProgressive } from "./docs/[slug]/content-sections-progressive";
 import { TableOfContents } from "../components/layout/TableOfContents";
 
 // Helper function para extrair texto de HTML de forma segura
@@ -138,6 +137,30 @@ async function getDocContent(filePath: string) {
   }
 }
 
+// Função para extrair o primeiro parágrafo/texto introdutório (antes de listas ou headings)
+function extractFirstIntroParagraph(html: string): { firstParagraph: string; remainingContent: string } {
+  // Remove espaços em branco no início
+  const trimmed = html.trim();
+
+  // Encontra o primeiro <ul>, <ol>, <h2>, ou <hr>
+  const firstListOrHeadingMatch = trimmed.match(/<(ul|ol|h[2-6]|hr)[\s>]/i);
+
+  if (!firstListOrHeadingMatch) {
+    // Se não encontrar, retorna o conteúdo completo como firstParagraph
+    return { firstParagraph: trimmed, remainingContent: '' };
+  }
+
+  const splitIndex = firstListOrHeadingMatch.index || 0;
+  const firstParagraph = trimmed.substring(0, splitIndex).trim();
+  const remainingContent = trimmed.substring(splitIndex).trim();
+
+  return { firstParagraph, remainingContent };
+}
+
+// Força geração estática no build time - homepage pré-renderizada
+export const dynamic = 'force-static';
+export const revalidate = false; // Página totalmente estática, sem revalidação
+
 export default async function HomePage() {
   // Carregar ONBOARDING_PUBLICO como landing
   const onboardingDoc = await getDocContent("ONBOARDING_PUBLICO.md");
@@ -165,76 +188,77 @@ export default async function HomePage() {
     );
   }
 
+  // Extrai primeiro parágrafo e conteúdo restante
+  const { firstParagraph, remainingContent } = extractFirstIntroParagraph(onboardingDoc.content);
+
   return (
-    <main className="container-max py-4 lg:py-6 px-4 md:px-6 lg:px-8">
-        {onboardingDoc && (
-          <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_240px] xl:grid-cols-[1fr_260px] 2xl:grid-cols-[1fr_280px] gap-4 lg:gap-6 xl:gap-8">
-            {/* Main Content Column */}
-            <div>
-              <div className="glass-card animation-fade-in">
-                <div className="glass-card__content markdown-content">
-                  {/* Document Title - H1 para SEO, título principal da página */}
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
-                    {onboardingDoc.title}
-                  </h1>
+    <main className="flex-1 py-4 px-1 md:px-1.5 lg:px-2">
+      {onboardingDoc && (
+        <div className="max-w-7xl xl:max-w-8xl 2xl:max-w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_300px] 2xl:grid-cols-[1fr_320px] gap-1.5 lg:gap-2 xl:gap-2.5">
+          {/* Main Content Column */}
+          <div>
+            <div className="glass-card animation-fade-in">
+              <div className="glass-card__content markdown-content">
+                {/* Document Title - H1 para SEO, título principal da página - Tipografia Enterprise */}
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-forest-900 dark:text-forest-50 mb-4 leading-tight">
+                  {onboardingDoc.title}
+                </h1>
 
+                {/* Elemento visual decorado - HR após o título */}
+                <hr />
 
-              {/* Document Content - Com Progressive Disclosure */}
-              <ContentSections htmlContent={onboardingDoc.content} />
+                {/* Primeiro parágrafo - Dentro do card, logo após o HR */}
+                {firstParagraph && (
+                  <div className="mb-6" dangerouslySetInnerHTML={{ __html: firstParagraph }} />
+                )}
 
-              {/* Diagrama do Domínio API - Visual Explicativo */}
-              <ApiDomainDiagram />
-                </div>
+                {/* Document Content - Com Progressive Disclosure (mesmo da página de onboarding) */}
+                {remainingContent && (
+                  <ContentSectionsProgressive htmlContent={remainingContent} useProgressive={true} />
+                )}
+
+                {/* Diagrama do Domínio API - Visual Explicativo */}
+                <ApiDomainDiagram />
               </div>
             </div>
 
-            {/* TOC Column - Sticky - Aparece na homepage também */}
-            <aside className="hidden lg:block">
-              <div className="sticky top-24">
-                <TableOfContents />
-              </div>
-            </aside>
+            {/* App Banner - Call to Action para Lançamento */}
+            <AppBanner />
+
+            {/* Quick Navigation - Grid horizontal enterprise-level */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+              <FeatureCard
+                icon="👨‍💻"
+                title="Desenvolvedores"
+                description="Comece a desenvolver com o Araponga"
+                color="forest"
+                href="/docs/ONBOARDING_DEVELOPERS"
+              />
+              <FeatureCard
+                icon="👁️"
+                title="Analistas"
+                description="Observe territórios e proponha melhorias"
+                color="accent"
+                href="/docs/ONBOARDING_ANALISTAS_FUNCIONAIS"
+              />
+              <FeatureCard
+                icon="📚"
+                title="Índice Completo"
+                description="Explore toda a documentação"
+                color="link"
+                href="/docs/00_INDEX"
+              />
+            </div>
           </div>
-        )}
 
-        {/* App Banner - Call to Action para Lançamento */}
-        <AppBanner />
-
-        {/* Section Divider - sem bordas (removido) */}
-
-        {/* Quick Navigation - Harmonizado com paleta Araponga */}
-        <div className="grid md:grid-cols-3 gap-6">
-          <FeatureCard
-            icon="👨‍💻"
-            title="Desenvolvedores"
-            description="Comece a desenvolver com o Araponga"
-            color="forest"
-            href="/docs/ONBOARDING_DEVELOPERS"
-          />
-          <FeatureCard
-            icon="👁️"
-            title="Analistas"
-            description="Observe territórios e proponha melhorias"
-            color="accent"
-            href="/docs/ONBOARDING_ANALISTAS_FUNCIONAIS"
-          />
-          <FeatureCard
-            icon="📚"
-            title="Índice Completo"
-            description="Explore toda a documentação"
-            color="link"
-            href="/docs/00_INDEX"
-          />
+          {/* TOC Column - Sticky - Aparece na homepage também */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">
+              <TableOfContents />
+            </div>
+          </aside>
         </div>
-
-        {/* Section Divider - sem bordas (removido) */}
-
-        {/* Quick Links Section - Página Inicial */}
-        <div className="glass-card animation-fade-in">
-          <div className="glass-card__content">
-            <QuickLinks />
-          </div>
-        </div>
+      )}
     </main>
   );
 }

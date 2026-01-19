@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "../ui/ThemeToggle";
+import { SearchTrigger } from "../search/SearchTrigger";
 
 export function Header() {
   return (
@@ -28,6 +29,7 @@ export function Header() {
             </div>
           </Link>
           <nav className="flex items-center space-x-3">
+            <SearchTrigger />
             <Link href="/docs" className="nav-link">
               Todos os Docs
             </Link>

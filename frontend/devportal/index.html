@@ -23,6 +23,8 @@
   <meta property="twitter:image" content="https://devportal.araponga.app/assets/images/favicon.png" />
   <link rel="stylesheet" href="./assets/css/devportal.css" />
   <link rel="stylesheet" href="./assets/css/content-typography.css" />
+  <link rel="stylesheet" href="./assets/css/search.css" />
+  <link rel="stylesheet" href="./assets/css/breadcrumbs.css" />
   <style>
     /* ============================================
        ISOLAMENTO CRÍTICO DE CONTEÚDO
@@ -1132,6 +1134,113 @@ curl -X POST http://localhost:8080/api/v1/events/{eventId}/confirm \
             <div class="callout">
               <strong>📚 Documentação Completa:</strong>
               Documentação completa: <a href="https://github.com/sraphaz/araponga/blob/main/docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md" rel="noopener">docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md</a>
+            </div>
+
+            <div class="flow-step" style="margin-top: 3rem;">
+              <h4>⚙️ Configuração Avançada de Limites de Mídia por Território</h4>
+              <p>
+                Cada território pode configurar limites personalizados de tamanho e tipos MIME para mídias (imagens, vídeos e áudios)
+                em diferentes contextos (Posts, Eventos, Marketplace, Chat). Os limites territoriais não podem exceder os limites globais
+                do sistema, garantindo consistência e controle centralizado.
+              </p>
+
+              <div class="info-box" style="margin-top: 1.5rem;">
+                <strong>🔧 Endpoints de Configuração:</strong>
+                <ul style="margin-top: 0.5rem; line-height: 1.8;">
+                  <li><strong>Obter configuração:</strong> <code>GET /api/v1/territories/{territoryId}/media-config</code></li>
+                  <li><strong>Atualizar configuração:</strong> <code>PUT /api/v1/territories/{territoryId}/media-config</code> (requer Curator)</li>
+                </ul>
+              </div>
+
+              <h5 style="margin-top: 1.5rem;">📋 Estrutura da Configuração</h5>
+              <p>
+                A configuração permite ajustar limites separadamente para cada contexto:
+              </p>
+              <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong>Posts:</strong> Limites para mídias em posts do feed</li>
+                <li><strong>Eventos:</strong> Limites para mídias de capa e adicionais em eventos</li>
+                <li><strong>Marketplace:</strong> Limites para mídias em itens do marketplace</li>
+                <li><strong>Chat:</strong> Limites para imagens e áudios em mensagens (vídeos sempre bloqueados)</li>
+              </ul>
+
+              <h5 style="margin-top: 1.5rem;">🔒 Limites Globais vs Territoriais</h5>
+              <p>
+                O sistema possui <strong>limites globais</strong> configurados em <code>MediaStorageOptions</code> que definem os valores
+                máximos permitidos em toda a plataforma. Os <strong>limites territoriais</strong> podem ser mais restritivos, mas nunca
+                mais permissivos que os globais:
+              </p>
+              <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong>Limites globais (padrão):</strong> Imagens 10MB, Vídeos 50MB, Áudios 20MB</li>
+                <li><strong>Limites territoriais:</strong> Podem ser menores que os globais (ex: 5MB para imagens), mas nunca maiores</li>
+                <li><strong>Tipos MIME:</strong> Podem ser restringidos por território (ex: apenas JPEG para imagens)</li>
+                <li><strong>Fallback automático:</strong> Se não configurado, usa limites globais</li>
+              </ul>
+
+              <h5 style="margin-top: 1.5rem;">📝 Exemplo: Atualizar Limites de Posts</h5>
+              <pre class="code-block"><code># Atualizar limites de mídia para Posts (como Curator)
+curl -X PUT "http://localhost:8080/api/v1/territories/{territoryId}/media-config" \
+  -H "Authorization: Bearer &lt;curator-token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "posts": {
+      "imagesEnabled": true,
+      "videosEnabled": true,
+      "audioEnabled": true,
+      "maxMediaCount": 10,
+      "maxVideoCount": 1,
+      "maxAudioCount": 1,
+      "maxImageSizeBytes": 5242880,
+      "maxVideoSizeBytes": 26214400,
+      "maxAudioSizeBytes": 5242880,
+      "maxVideoDurationSeconds": 60,
+      "maxAudioDurationSeconds": 300,
+      "allowedImageMimeTypes": ["image/jpeg", "image/png"],
+      "allowedVideoMimeTypes": ["video/mp4"],
+      "allowedAudioMimeTypes": ["audio/mpeg", "audio/wav"]
+    },
+    "events": null,
+    "marketplace": null,
+    "chat": null
+  }'</code></pre>
+
+              <h5 style="margin-top: 1.5rem;">🔄 Atualização Parcial</h5>
+              <p>
+                Você pode atualizar apenas uma parte da configuração. Os campos não especificados mantêm seus valores atuais:
+              </p>
+              <pre class="code-block"><code># Atualizar apenas limites de Chat
+curl -X PUT "http://localhost:8080/api/v1/territories/{territoryId}/media-config" \
+  -H "Authorization: Bearer &lt;curator-token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "posts": null,
+    "events": null,
+    "marketplace": null,
+    "chat": {
+      "imagesEnabled": true,
+      "audioEnabled": true,
+      "maxImageSizeBytes": 2097152,
+      "maxAudioSizeBytes": 1048576,
+      "maxAudioDurationSeconds": 60
+    }
+  }'</code></pre>
+
+              <div class="info-box" style="margin-top: 1.5rem;">
+                <strong>⚠️ Validações Automáticas:</strong>
+                <ul style="margin-top: 0.5rem; line-height: 1.8;">
+                  <li>Valores que excedem limites globais são automaticamente ajustados para os limites globais</li>
+                  <li>Tipos MIME não especificados usam os tipos MIME globais permitidos</li>
+                  <li>Limites mínimos: 1KB para qualquer tipo de mídia</li>
+                  <li>Chat sempre bloqueia vídeos, independente da configuração</li>
+                </ul>
+              </div>
+
+              <div class="callout" style="margin-top: 1.5rem;">
+                <strong>📚 Referências:</strong>
+                <ul style="margin-top: 0.5rem; line-height: 1.8;">
+                  <li>Documentação da Fase 10: <a href="https://github.com/sraphaz/araponga/blob/main/docs/backlog-api/FASE10.md" rel="noopener">docs/backlog-api/FASE10.md</a></li>
+                  <li>Configuração de Storage: <a href="https://github.com/sraphaz/araponga/blob/main/docs/backlog-api/FASE10_STORAGE_CONFIG_ADMIN.md" rel="noopener">docs/backlog-api/FASE10_STORAGE_CONFIG_ADMIN.md</a></li>
+                </ul>
+              </div>
             </div>
           </section>
 
@@ -3687,5 +3796,8 @@ dotnet test</code></pre>
       }
     })();
   </script>
+  <!-- Scripts -->
+  <script src="./assets/js/search.js"></script>
+  <script src="./assets/js/breadcrumbs.js"></script>
 </body>
 </html>

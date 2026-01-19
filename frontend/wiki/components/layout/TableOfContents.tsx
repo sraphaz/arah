@@ -161,26 +161,32 @@ export function TableOfContents() {
   return (
     <nav className="toc-container" aria-label="Índice do documento">
       <div className="toc-header">
-        <span className="toc-icon">📑</span>
         <h3 className="toc-title">Neste Documento</h3>
       </div>
       <ul className="toc-list">
-        {toc.map((item) => (
-          <li
-            key={item.id}
-            className={`toc-item toc-item-level-${item.level} ${
-              activeId === item.id ? "toc-item-active" : ""
-            }`}
-          >
-            <button
-              onClick={() => scrollToHeading(item.id)}
-              className="toc-link"
-              aria-current={activeId === item.id ? "location" : undefined}
+        {toc.map((item, index) => {
+          // Determina se é o início de um novo grupo (nível 2 ou quando muda de nível 2 para 3)
+          const prevItem = index > 0 ? toc[index - 1] : null;
+          const isGroupStart = item.level === 2 || (prevItem && prevItem.level === 2 && item.level > 2);
+          const isGroupEnd = index === toc.length - 1 || (toc[index + 1] && toc[index + 1].level <= item.level);
+
+          return (
+            <li
+              key={item.id}
+              className={`toc-item toc-item-level-${item.level} ${
+                activeId === item.id ? "toc-item-active" : ""
+              } ${isGroupStart ? "toc-group-start" : ""} ${isGroupEnd ? "toc-group-end" : ""}`}
             >
-              {item.text}
-            </button>
-          </li>
-        ))}
+              <button
+                onClick={() => scrollToHeading(item.id)}
+                className="toc-link"
+                aria-current={activeId === item.id ? "location" : undefined}
+              >
+                {item.text}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

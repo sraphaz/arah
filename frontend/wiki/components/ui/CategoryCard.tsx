@@ -18,10 +18,13 @@ export function CategoryCard({ category, docs }: CategoryCardProps) {
   return (
     <div className="category-card">
       <div className="category-card__content">
-        <h2 className="text-lg font-semibold text-forest-900 dark:text-forest-50 mb-4">
+        {/* Título da categoria - Tipografia enterprise-level */}
+        <h3 className="text-xl md:text-2xl font-bold text-forest-900 dark:text-forest-50 mb-6 pb-3 border-b border-forest-200/40 dark:border-forest-800/40">
           {titleWithoutEmoji || category}
-        </h2>
-        <ul className="space-y-2 flex-1">
+        </h3>
+        {/* Grid horizontal para itens - aproveita espaço horizontal */}
+        {/* Mobile: 1 col, Tablet: 2 cols, Desktop: 2 cols (itens alinhados horizontalmente) */}
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
           {docs.map((doc) => {
             const docSlug = doc.path.replace(".md", "");
             return (

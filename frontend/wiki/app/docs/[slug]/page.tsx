@@ -10,6 +10,7 @@ import sanitizeHtml from "sanitize-html";
 // Header, Sidebar e Footer agora estão no layout.tsx raiz
 import { TableOfContents } from "../../../components/layout/TableOfContents";
 import { ContentSections } from "./content-sections";
+import { ContentSectionsProgressive } from "./content-sections-progressive";
 
 // Helper function para extrair texto de HTML de forma segura
 function getTextContent(html: string): string {
@@ -175,6 +176,11 @@ async function getAllDocs() {
   }
 }
 
+// Força geração estática no build time - páginas são pré-renderizadas
+export const dynamic = 'force-static';
+export const dynamicParams = false; // Retorna 404 para slugs não conhecidos em vez de gerar dinamicamente
+export const revalidate = false; // Páginas totalmente estáticas, sem revalidação
+
 export async function generateStaticParams() {
   const docs = await getAllDocs();
   return docs.map((doc) => ({
@@ -194,14 +200,14 @@ export default async function DocPage({ params }: PageProps) {
   }
 
   return (
-    <main className="flex-1 py-12 px-4 md:px-6 lg:px-8">
+    <main className="flex-1 py-4 px-4 md:px-6 lg:px-8">
           <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-[90rem] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_300px] 2xl:grid-cols-[1fr_320px] gap-6 lg:gap-8 xl:gap-10">
             {/* Main Content Column */}
             <div>
               <div className="glass-card animation-fade-in">
                 <div className="glass-card__content">
                   {/* Breadcrumb Refinado */}
-                  <nav className="breadcrumb mb-8">
+                  <nav className="breadcrumb mb-4">
                     <Link href="/">Boas-Vindas</Link>
                     <span>›</span>
                     <Link href="/docs">Documentação</Link>
@@ -210,13 +216,13 @@ export default async function DocPage({ params }: PageProps) {
                   </nav>
 
                   {/* Document Title - Hero */}
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-forest-900 dark:text-forest-50 mb-8 leading-tight">
+                  <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-forest-900 dark:text-forest-50 mb-4 leading-tight">
                     {doc.title}
                   </h1>
 
 
-                  {/* Document Content - Refinado com Progressive Disclosure */}
-                  <ContentSections htmlContent={doc.content} />
+                  {/* Document Content - Progressive Disclosure para documentos longos */}
+                  <ContentSectionsProgressive htmlContent={doc.content} useProgressive={true} />
                 </div>
               </div>
 

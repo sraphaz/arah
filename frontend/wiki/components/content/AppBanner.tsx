@@ -16,10 +16,6 @@ export function AppBanner() {
                 <span className="app-banner-badge-text">Em Breve</span>
               </div>
 
-              <h2 className="app-banner-title">
-                O Araponga está chegando
-              </h2>
-
               <p className="app-banner-description">
                 Uma plataforma digital comunitária que valoriza o território, fortalece vínculos locais e respeita a autonomia das comunidades.
               </p>

@@ -1,17 +1,12 @@
 # Índice da Documentação
 
-**Versão**: 3.0  
-**Data**: 2025-01-20  
-**Última Atualização**: 2025-01-20  
-**Status**: ✅ Atualizado | 📊 Estratégia de Convergência Adicionada
-
 ---
 
 Este documento organiza toda a documentação do projeto Araponga de forma estruturada e fácil de navegar.
 
-## 📋 Estrutura da Documentação
+## Estrutura da Documentação
 
-### 🎯 Visão e Produto
+### Visão e Produto
 Documentos sobre a visão do produto, roadmap e funcionalidades.
 
 - **[Visão do Produto](./01_PRODUCT_VISION.md)** ⭐ - Visão geral, princípios e evolução estratégica do Araponga
@@ -20,7 +15,7 @@ Documentos sobre a visão do produto, roadmap e funcionalidades.
 - **[User Stories](./04_USER_STORIES.md)** - Histórias de usuário consolidadas (MVP e pós-MVP)
 - **[Glossário](./05_GLOSSARY.md)** - Termos e conceitos do projeto
 
-### 🏗️ Arquitetura e Design
+### Arquitetura e Design
 Documentos técnicos sobre arquitetura, decisões e design.
 
 - **[Decisões Arquiteturais (ADRs)](./10_ARCHITECTURE_DECISIONS.md)** - Decisões arquiteturais importantes (ADR-001 a ADR-009)
@@ -28,7 +23,7 @@ Documentos técnicos sobre arquitetura, decisões e design.
 - **[Modelo de Domínio (MER)](./12_DOMAIN_MODEL.md)** - Modelo de entidades e relacionamentos
 - **[Domain Routing](./13_DOMAIN_ROUTING.md)** - Roteamento e organização de domínios
 
-### 🔧 Desenvolvimento e Implementação
+### Desenvolvimento e Implementação
 Documentos sobre desenvolvimento, testes e implementação.
 
 - **[Plano de Implementação](./20_IMPLEMENTATION_PLAN.md)** - Prioridades e dependências de implementação
@@ -39,20 +34,20 @@ Documentos sobre desenvolvimento, testes e implementação.
 - **[Roadmap de Implementação do Frontend Flutter](./25_FLUTTER_IMPLEMENTATION_ROADMAP.md)** ⭐ - Roadmap extensivo detalhado por fases, sincronizado com API até Fase 28 (jornadas, funcionalidades, papéis, padrões elevados)
 - **[Diretrizes de Design do App Flutter](./26_FLUTTER_DESIGN_GUIDELINES.md)** 🎨 ⭐ - Diretrizes high-end profissionais de design (cores, formas, transições, efeitos, estratégias de conversão preservando identidade visual)
 
-### 🛡️ Operações e Governança
+### Operações e Governança
 Documentos sobre moderação, observabilidade e operações.
 
 - **[Moderação e Reports](./30_MODERATION.md)** - Sistema de moderação e reports
 - **[Admin e Observabilidade](./31_ADMIN_OBSERVABILITY.md)** - Administração e observabilidade do sistema
 - **[Rastreabilidade](./32_TRACEABILITY.md)** - Rastreabilidade de requisitos e funcionalidades
 - **[System Config, Work Queue e Evidências](./33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md)** - Configurações globais, fila genérica e evidências documentais (P0)
-- **[API - Lógica de Negócio e Usabilidade](./60_API_LÓGICA_NEGÓCIO.md)** - Documento completo de lógica de negócio e usabilidade de todas as operações da API
+- **[API - Lógica de Negócio e Usabilidade](./60_API_LÓGICA_NEGÓCIO.md)** - Documento índice (reorganizado em 22 subdocumentos - ver [índice completo](./api/60_API_LÓGICA_NEGÓCIO_INDEX.md))
 - **Chat**: documentado em `60_API_LÓGICA_NEGÓCIO.md` (seção "Chat") e no DevPortal/OpenAPI (`backend/Araponga.Api/wwwroot/devportal/openapi.json`)
 - **[Mídias em Conteúdo](./MEDIA_IN_CONTENT.md)** - Documentação completa da integração de mídias em Posts, Eventos, Marketplace e Chat
 - **[Sistema de Mídia](./MEDIA_SYSTEM.md)** - Documentação técnica do sistema de mídia (armazenamento, processamento, APIs)
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
-### 🔒 Segurança
+### Segurança
 Documentos sobre segurança, configuração e implementação de medidas de segurança.
 
 - **[Configuração de Segurança](./SECURITY_CONFIGURATION.md)** - Guia completo de configuração de segurança (JWT, Rate Limiting, CORS, HTTPS)
@@ -60,7 +55,7 @@ Documentos sobre segurança, configuração e implementação de medidas de segu
 - **[Fase 1: Implementação de Segurança](./backlog-api/implementacoes/FASE1_IMPLEMENTACAO_RESUMO.md)** - Resumo da implementação da Fase 1 (Segurança Crítica)
 - **[Fase 5: Segurança Avançada](./backlog-api/implementacoes/FASE5_IMPLEMENTACAO_RESUMO.md)** - Resumo da implementação da Fase 5 (2FA, Sanitização, CSRF, Secrets Management, Security Headers, Auditoria)
 
-### 📝 Histórico e Mudanças
+### Histórico e Mudanças
 Documentos sobre histórico e mudanças do projeto.
 
 - **[Changelog](./40_CHANGELOG.md)** - Histórico de mudanças e versões
@@ -77,7 +72,7 @@ Documentos sobre histórico e mudanças do projeto.
 - **[Configuração do Discord](./DISCORD_SETUP.md)** 💬 - Guia para configurar e usar o Discord do time
 - **[Contribuindo](./41_CONTRIBUTING.md)** - Guia para contribuidores
 
-### 📋 Planos e Recomendações
+### Planos e Recomendações
 Documentos de planejamento e recomendações de implementação.
 
 - **[Backlog API](./backlog-api/README.md)** - Backlog completo da API com fases organizadas estrategicamente (número de fases calculado dinamicamente - ver `PROJECT_PHASES_CONFIG.md`)
@@ -86,24 +81,24 @@ Documentos de planejamento e recomendações de implementação.
 - **[Plano de Refatoração - Recomendações Pendentes](./recommendations/PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md)** - Plano de implementação de recomendações pendentes
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
-### 🎯 Estratégia e Benchmarking
+### Estratégia e Benchmarking
 Documentos de estratégia de convergência de mercado e análise comparativa.
 
 - **[Mapa de Funcionalidades - Mercado](./38_MAPA_FUNCIONALIDADES_MERCADO.md)** 📊 ⭐⭐⭐ - Mapeamento completo de funcionalidades implementadas, planejadas e previstas para atingir níveis de mercado, comparação com Closer.earth e plataformas líderes
 - **[Estratégia de Convergência de Mercado](./39_ESTRATEGIA_CONVERGENCIA_MERCADO.md)** 🎯 ⭐⭐⭐ - Plano estratégico completo de convergência com padrões de mercado, análise competitiva, roadmap de adequação e mudanças organizacionais
 
-### 🚀 Produção e Deploy
+### Produção e Deploy
 Documentos sobre prontidão para produção e deploy.
 
 - **[Avaliação Completa para Produção](./50_PRODUCAO_AVALIACAO_COMPLETA.md)** - Análise completa de prontidão para produção, gaps críticos e recomendações
 - **[Plano de Requisitos Desejáveis](./51_PRODUCAO_PLANO_DESEJAVEIS.md)** - Plano detalhado de implementação para requisitos desejáveis (pós-lançamento)
 
-### 🔗 Pull Requests
+### Pull Requests
 Documentação detalhada de todos os Pull Requests implementados.
 
 - **[Índice de PRs](./prs/README.md)** - Documentação completa de todos os PRs
 
-### 📚 Documentação Organizada por Categoria
+### Documentação Organizada por Categoria
 
 #### Refatorações
 - **[Refatoração User-Centric Membership](./refactoring/REFACTOR_USER_CENTRIC_MEMBERSHIP.md)** - Refatoração completa do modelo
@@ -124,7 +119,7 @@ Documentação detalhada de todos os Pull Requests implementados.
 - **[Análises técnicas (índice)](./analysis/README.md)** - Índice de análises técnicas
 - Ver mais em: [analysis/README.md](./analysis/README.md)
 
-## 🔍 Busca Rápida
+## Busca Rápida
 
 ### Por Tópico
 
@@ -150,7 +145,7 @@ Documentação detalhada de todos os Pull Requests implementados.
 - Moderação → `30_MODERATION.md`
 - Observabilidade → `31_ADMIN_OBSERVABILITY.md`
 
-## 📌 Convenções de Nomenclatura
+## Convenções de Nomenclatura
 
 ### Arquivos na Raiz
 Todos os arquivos na raiz seguem o padrão:
@@ -174,7 +169,7 @@ Documentos adicionais são organizados em pastas:
 - **`analysis/`** - Análises técnicas do projeto
 - **`prs/`** - Documentação detalhada de Pull Requests
 
-## 🔄 Migração de Nomes Antigos
+## Migração de Nomes Antigos
 
 | Nome Antigo | Nome Novo |
 |------------|-----------|
@@ -199,7 +194,7 @@ Documentos adicionais são organizados em pastas:
 | `CHANGELOG.md` | `40_CHANGELOG.md` |
 | `CONTRIBUTING.md` | `41_CONTRIBUTING.md` |
 
-## 📝 Mudanças Recentes no Projeto
+## Mudanças Recentes no Projeto
 
 ### Estratégia de Convergência de Mercado (2025-01-20)
 - **Análise Comparativa**: Análise profunda do Closer.earth e padrões de mercado estabelecidos
@@ -234,7 +229,7 @@ Documentos adicionais são organizados em pastas:
 - **Documentação XML**: Adicionada em todas as entidades principais
 - Ver detalhes em: [Refatoração User-Centric](./refactoring/REFACTOR_USER_CENTRIC_MEMBERSHIP.md)
 
-## 📚 Documentação Externa
+## Documentação Externa
 
 - **Developer Portal**: Disponível em `/devportal` quando a API está rodando
 - **Swagger/OpenAPI**: Disponível em `/swagger` em desenvolvimento

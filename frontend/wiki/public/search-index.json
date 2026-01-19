@@ -1,0 +1,1845 @@
+{
+  "index": [
+    {
+      "id": "00_INDEX",
+      "title": "INDEX",
+      "content": "Índice da Documentação Este documento organiza toda a documentação do projeto Araponga de forma estruturada e fácil de navegar. Estrutura da Documentação Visão e Produto Documentos sobre a visão do produto, roadmap e funcionalidades. Visão do Produto ⭐ - Visão geral, princípios e evolução estratégica do Araponga Roadmap Estratégico ⭐ - Planejamento completo de funcionalidades e épicos, reorganizado estrategicamente Backlog - Lista de funcionalidades e prioridades User Stories - Histórias de usuá",
+      "url": "/wiki/docs/00_INDEX",
+      "category": "Referência"
+    },
+    {
+      "id": "01_PRODUCT_VISION",
+      "title": "PRODUCT VISION",
+      "content": "Visão do Produto - Araponga Plataforma de Organização Comunitária Territorial Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 Status : ✅ MVP Completo + Fases 1-8 Implementadas | 📊 Estratégia de Convergência em Andamento 🎯 Propósito e Visão Araponga é uma plataforma operacional para organização comunitária territorial que combina infraestrutura digital robusta com governança descentralizada e economia circular tokenizada. A plataforma evolui de um MVP sólido para uma solução comp",
+      "url": "/wiki/docs/01_PRODUCT_VISION",
+      "category": "Visão e Produto"
+    },
+    {
+      "id": "02_ROADMAP",
+      "title": "ROADMAP",
+      "content": "Roadmap Estratégico - Araponga Planejamento de Desenvolvimento e Evolução da Plataforma Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 Status : ✅ MVP Completo + Fases 1-8 Implementadas | 📊 Estratégia de Convergência em Andamento 📋 Visão Executiva O roadmap do Araponga apresenta uma estratégia de desenvolvimento progressivo que evolui de um MVP sólido para uma plataforma completa de organização comunitária territorial com governança descentralizada e economia circular tokenizada",
+      "url": "/wiki/docs/02_ROADMAP",
+      "category": "Visão e Produto"
+    },
+    {
+      "id": "03_BACKLOG",
+      "title": "BACKLOG",
+      "content": "Backlog Versão : 2.0 Data : 2025-01-20 Última Atualização : 2025-01-20 Status : ✅ MVP Completo + Fases 1-8 Implementadas Observações de status Já desenvolvido : baseado no estado atual documentado do projeto. Itens MVP abaixo mantêm critérios de aceite curtos. Epic 1 — Território e vínculo Feature: Cadastro e autenticação [MVP] Cadastro e login obrigatórios para consulta (já desenvolvido) Critérios de aceite: Consultas de feed e mapa exigem usuário autenticado. Usuário não autenticado é direcion",
+      "url": "/wiki/docs/03_BACKLOG",
+      "category": "Visão e Produto"
+    },
+    {
+      "id": "04_USER_STORIES",
+      "title": "USER STORIES",
+      "content": "User Stories (Consolidadas) Status atual (já desenvolvido) Com base no estado atual documentado no projeto, já existem entregas relacionadas a: Backend inicial estruturado. Descoberta e seleção de territórios. Diferenciação entre morador (resident) e visitante (visitor). Feed e mapa orientados ao território. Testes automatizados e CI com builds reprodutíveis. MVP [MVP][P0] Cadastro e autenticação Como visitante Quero criar uma conta e autenticar Para acessar consultas e ações no território. Crit",
+      "url": "/wiki/docs/04_USER_STORIES",
+      "category": "Visão e Produto"
+    },
+    {
+      "id": "05_GLOSSARY",
+      "title": "GLOSSARY",
+      "content": "Glossário de Termos e Conceitos Versão : 2.0 Data : 2025-01-20 Aplicação : Documentação, código, comunicação e materiais do projeto Araponga Terminologia Fundamental Território e Geografia Territory (Território) : unidade central do sistema; lugar físico real e neutro com fronteiras geográficas definidas. Existe antes do app e continua existindo sem usuários. Organiza contexto e governança, não é um filtro. GeoAnchor / PostGeoAnchor : ponto georreferenciado (latitude/longitude) que ancora conteú",
+      "url": "/wiki/docs/05_GLOSSARY",
+      "category": "Visão e Produto"
+    },
+    {
+      "id": "10_ARCHITECTURE_DECISIONS",
+      "title": "ARCHITECTURE DECISIONS",
+      "content": "Decisões Arquiteturais Este documento registra decisões arquiteturais importantes tomadas durante o desenvolvimento do projeto Araponga. ADR-001: Marketplace Implementado Antes do POST-MVP Status : Aceito Data : 2024 Contexto : A especificação original marcava Marketplace como funcionalidade POST-MVP, mas durante o desenvolvimento identificamos que: Necessidade de validação : A funcionalidade de marketplace é crítica para validar o modelo de negócio territorial Dependências já implementadas : As",
+      "url": "/wiki/docs/10_ARCHITECTURE_DECISIONS",
+      "category": "Arquitetura"
+    },
+    {
+      "id": "11_ARCHITECTURE_SERVICES",
+      "title": "ARCHITECTURE SERVICES",
+      "content": "Arquitetura de Services Este documento descreve a arquitetura dos services da camada de aplicação do Araponga, especialmente após a refatoração do FeedService . Princípios de Design Single Responsibility Principle (SRP) Cada service tem uma única responsabilidade bem definida: PostCreationService : Apenas criação de posts PostInteractionService : Apenas interações (likes, comentários, shares) PostFilterService : Apenas filtragem e paginação FeedService : Orquestração e coordenação dos services e",
+      "url": "/wiki/docs/11_ARCHITECTURE_SERVICES",
+      "category": "Arquitetura"
+    },
+    {
+      "id": "12_DOMAIN_MODEL",
+      "title": "DOMAIN MODEL",
+      "content": "Modelo de Domínio (MER conceitual) Nota : Este documento descreve o modelo atual. Para detalhes da refatoração User-Centric, ver Refatoração User-Centric Membership . Entidades principais Identidade e Autenticação User (identidade pessoal global, autenticação via AuthProvider, verificação de identidade global via UserIdentityVerificationStatus) SystemPermission (permissões globais do sistema: Admin, SystemOperator - não territoriais) UserPreferences (preferências de privacidade e notificações do",
+      "url": "/wiki/docs/12_DOMAIN_MODEL",
+      "category": "Arquitetura"
+    },
+    {
+      "id": "13_DOMAIN_ROUTING",
+      "title": "DOMAIN ROUTING",
+      "content": "Domínios públicos do Araponga Visão geral A apresentação pública (landing) usa o domínio https://araponga.app/ , servida como página estática no Gamma. O Developer Portal fica em https://devportal.araponga.app/ e é servido pelo GitHub Pages. Domínios públicos araponga.app → landing pública (página estática no Gamma). devportal.araponga.app → Developer Portal (GitHub Pages, servido diretamente). Lógica de publicação e navegação Sem redirects automáticos : A navegação é feita apenas através de lin",
+      "url": "/wiki/docs/13_DOMAIN_ROUTING",
+      "category": "Arquitetura"
+    },
+    {
+      "id": "20_IMPLEMENTATION_PLAN",
+      "title": "IMPLEMENTATION PLAN",
+      "content": "Plano de Implementação (Prioridades e Dependências) Versão : 2.0 Data : 2025-01-20 Última Atualização : 2025-01-20 Status : MVP Completo + Fases 1-8 Implementadas ✅ Este documento organiza épicos → features → user stories em ordem de prioridade com dependências explícitas para orientar a sequência de entrega. Nota : Para o backlog completo de fases futuras (9-29), ver Backlog API . Legenda P0 : crítico para o MVP. P1 : importante para estabilidade do MVP. Depende de : requisitos técnicos/funcion",
+      "url": "/wiki/docs/20_IMPLEMENTATION_PLAN",
+      "category": "Desenvolvimento"
+    },
+    {
+      "id": "21_CODE_REVIEW",
+      "title": "CODE REVIEW",
+      "content": "Revisao Geral do Codigo - Araponga Resumo Executivo Esta revisao identifica gaps, incongruencias, oportunidades de refatoracao, gargalos tecnicos e validacao de design patterns e principios SOLID no codigo do Araponga. Data da Revisao : 2026-01-13 Escopo : Backend completo (API, Application, Domain, Infrastructure) 1. Gaps e Missing Points 1.1 Validacao de Entrada na API Problema : Controllers nao validam adequadamente entradas antes de chamar services. Exemplo : FeedController.CreatePost aceita",
+      "url": "/wiki/docs/21_CODE_REVIEW",
+      "category": "Desenvolvimento"
+    },
+    {
+      "id": "22_COHESION_AND_TESTS",
+      "title": "COHESION AND TESTS",
+      "content": "Análise de Coesão e Cobertura de Testes Resumo Executivo Este documento avalia a coesão entre as funcionalidades implementadas e a especificação do projeto Araponga, além de mapear a cobertura de testes existente. Status Geral : ✅ Alta coesão - A implementação está bem alinhada com a especificação MVP, com algumas funcionalidades adicionais implementadas. Última Atualização : 2025-01-15 (Fase 2 - 100% Completa) Status Atual dos Testes (Fase 2 - Completo) Total de Testes : 371/371 passando (100%)",
+      "url": "/wiki/docs/22_COHESION_AND_TESTS",
+      "category": "Desenvolvimento"
+    },
+    {
+      "id": "23_IMPLEMENTATION_RECOMMENDATIONS",
+      "title": "IMPLEMENTATION RECOMMENDATIONS",
+      "content": "Implementação das Recomendações Este documento registra a implementação das recomendações da análise de coesão e testes. ✅ Recomendações Implementadas 1. Aumentar Cobertura de Testes 1.1 Marketplace (~60% → ~80%) Arquivo : backend/Araponga.Tests/Application/MarketplaceServiceTests.cs Testes Adicionados : ✅ StoreService_UpdateAndStatusChanges - Testa atualização de loja e mudanças de status (pause/activate) ✅ StoreService_GetMyStoreReturnsNullWhenNotExists - Testa retorno null quando loja não exi",
+      "url": "/wiki/docs/23_IMPLEMENTATION_RECOMMENDATIONS",
+      "category": "Desenvolvimento"
+    },
+    {
+      "id": "24_FLUTTER_FRONTEND_PLAN",
+      "title": "FLUTTER FRONTEND PLAN",
+      "content": "Planejamento do Frontend Flutter - Araponga Mobile App Versão : 1.0 Data : 2025-01-20 Status : 📋 Planejamento Tipo : Documentação de Arquitetura e Especificação Técnica 📋 Índice Contexto do Projeto Stack Tecnológica Estrutura do Projeto Funcionalidades por Domínio Design System e UX Segurança e Autenticação Navegação e Roteamento Internacionalização Gerenciamento de Estado Testes Dependências Instruções de Implementação 🎯 Contexto do Projeto O Araponga é uma plataforma território-first e comu",
+      "url": "/wiki/docs/24_FLUTTER_FRONTEND_PLAN",
+      "category": "Outros"
+    },
+    {
+      "id": "25_FLUTTER_IMPLEMENTATION_ROADMAP",
+      "title": "FLUTTER IMPLEMENTATION ROADMAP",
+      "content": "Roadmap de Implementação do Frontend Flutter - Sincronizado com API até Fase 28 Versão : 1.0 Data : 2025-01-20 Status : 📋 Planejamento Extensivo Tipo : Roadmap de Implementação Detalhado 📋 Índice Visão Geral Metodologia e Padrões Fases Sincronizadas com Backend Jornadas de Usuário por Papel Fases Detalhadas Critérios de Qualidade e Entrega Plano de Testes Deploy e Lançamento 🎯 Visão Geral Este documento define o roadmap completo de implementação do app mobile Flutter sincronizado com o desenv",
+      "url": "/wiki/docs/25_FLUTTER_IMPLEMENTATION_ROADMAP",
+      "category": "Outros"
+    },
+    {
+      "id": "26_FLUTTER_DESIGN_GUIDELINES",
+      "title": "FLUTTER DESIGN GUIDELINES",
+      "content": "Diretrizes de Design do App Flutter Araponga Versão : 1.0 Data : 2025-01-20 Status : 🎨 Diretrizes Oficiais de Design Tipo : Design System e Guia de Estilo Completo 📋 Índice Visão Geral e Filosofia Identidade Visual e Valores Estratégia de Conversão e Engajamento Sistema de Cores Tipografia Espaçamento e Layout Formas e Bordas Transições e Animações Efeitos Visuais e Profundidade Componentes e Padrões Hierarquia Visual e Navegação Estados e Feedback Microinterações e Impressões Acessibilidade R",
+      "url": "/wiki/docs/26_FLUTTER_DESIGN_GUIDELINES",
+      "category": "Outros"
+    },
+    {
+      "id": "27_USER_JOURNEYS_MAP",
+      "title": "USER JOURNEYS MAP",
+      "content": "Mapa Completo de Jornadas do Usuário - Araponga Flutter App Versão : 1.0 Data : 2025-01-20 Status : 📋 Mapa Completo de Jornadas Tipo : Documentação de Experiência do Usuário (UX) 📋 Índice Metodologia e Estrutura Narrativa de Acesso Inicial Jornadas por Papel Jornadas por Módulo Jornadas Cruzadas (Interações) Mapa Visual de Jornadas Pontos de Fricção e Otimização Análise de Documentação Existente Recomendações para Desenvolvimento 🎯 Metodologia e Estrutura Definição de Jornada Uma jornada do u",
+      "url": "/wiki/docs/27_USER_JOURNEYS_MAP",
+      "category": "Outros"
+    },
+    {
+      "id": "28_FLUTTER_METRICS_LOGGING_EXCEPTIONS",
+      "title": "FLUTTER METRICS LOGGING EXCEPTIONS",
+      "content": "Métricas, Logs e Exceções - Araponga Flutter App Versão : 1.0 Data : 2025-01-20 Status : 📋 Especificação Completa Tipo : Documentação Técnica de Observabilidade 📋 Índice Visão Geral Arquitetura de Observabilidade Métricas de Frontend Logs Estruturados Captura e Rastreamento de Exceções Integração com Serviços Externos Privacidade e Conformidade Estratégias de Análise e Alertas Implementação e Configuração Boas Práticas e Recomendações 🎯 Visão Geral Objetivo Este documento especifica a estraté",
+      "url": "/wiki/docs/28_FLUTTER_METRICS_LOGGING_EXCEPTIONS",
+      "category": "Outros"
+    },
+    {
+      "id": "29_FLUTTER_ADVANCED_PROMPT",
+      "title": "FLUTTER ADVANCED PROMPT",
+      "content": "Prompt Avançado para Desenvolvimento do Araponga Flutter App Versão : 1.0 Data : 2025-01-20 Tipo : Prompt de Engenharia de Software de Alto Nível Objetivo : Gerar código Flutter corporate-level high-end completo e profissional 🎯 CONTEXTO DO PROJETO Você é um engenheiro Flutter sênior especializado em desenvolvimento mobile de aplicações corporativas de alto nível. Seu objetivo é desenvolver o Araponga Flutter Mobile App , uma plataforma território-first e comunidade-first para organização comun",
+      "url": "/wiki/docs/29_FLUTTER_ADVANCED_PROMPT",
+      "category": "Outros"
+    },
+    {
+      "id": "30_FLUTTER_TESTING_STRATEGY",
+      "title": "FLUTTER TESTING STRATEGY",
+      "content": "alize os proximos passos em toda a documentação para # Estratégia de Testes - Araponga Flutter App Versão : 1.0 Data : 2025-01-20 Status : 📋 Estratégia Completa Tipo : Documentação Técnica de Testes 📋 Índice Visão Geral Tipos de Testes Estrutura de Testes Widget Tests Integration Tests Golden Tests Testes de Acessibilidade Testes de Performance Testes de API (Mock) CI/CD e Testes Automatizados Cobertura de Testes Boas Práticas 🎯 Visão Geral Objetivo Este documento especifica a estratégia comp",
+      "url": "/wiki/docs/30_FLUTTER_TESTING_STRATEGY",
+      "category": "Outros"
+    },
+    {
+      "id": "30_MODERATION",
+      "title": "MODERATION",
+      "content": "Moderação e Reports Escopo A moderação do Araponga é território-first , com capacidade de sanções territoriais e globais . O MVP implementa fluxos essenciais e automações simples baseadas em thresholds. Fluxos de report Reportar post [MVP] Usuário escolhe um post e aciona “Reportar”. Informa motivo e detalhes (opcional). Sistema registra o report e envia para fila de moderação. Fila (P2 inicial) : Ao criar um report, o sistema também cria um Work Item do tipo MODERATIONCASE (fallback humano). Cu",
+      "url": "/wiki/docs/30_MODERATION",
+      "category": "Outros"
+    },
+    {
+      "id": "31_ADMIN_OBSERVABILITY",
+      "title": "ADMIN OBSERVABILITY",
+      "content": "Admin e Observabilidade Visão geral O módulo administrativo é pós-MVP e serve para observar a saúde do ecossistema territorial, com foco em transparência operacional e suporte à moderação. Escopo do módulo admin [POST-MVP] Visão por território (atividade, número de vínculos, nível de reports). Painel de erros e alertas do sistema. Relatórios agregados de moderação. Acompanhamento de sanções (territoriais e globais). Indicadores de saúde do sistema (latência, falhas, filas). Base P0 já implementa",
+      "url": "/wiki/docs/31_ADMIN_OBSERVABILITY",
+      "category": "Outros"
+    },
+    {
+      "id": "31_FLUTTER_ACCESSIBILITY_GUIDE",
+      "title": "FLUTTER ACCESSIBILITY GUIDE",
+      "content": "Guia de Acessibilidade - Araponga Flutter App Versão : 1.0 Data : 2025-01-20 Status : ♿ Guia Completo de Acessibilidade Tipo : Documentação Técnica de Acessibilidade 📋 Índice Visão Geral Padrões e Conformidade Semântica e Labels Navegação e Foco Contraste e Cores Tipografia e Legibilidade Tamanhos de Toque Screen Readers Redução de Movimento Testes de Acessibilidade Checklist WCAG AA Boas Práticas 🎯 Visão Geral Objetivo Este documento especifica as diretrizes completas de acessibilidade para o",
+      "url": "/wiki/docs/31_FLUTTER_ACCESSIBILITY_GUIDE",
+      "category": "Outros"
+    },
+    {
+      "id": "32_FLUTTER_I18N_GUIDE",
+      "title": "FLUTTER I18N GUIDE",
+      "content": "Guia de Internacionalização (i18n) - Araponga Flutter App Versão : 1.0 Data : 2025-01-20 Status : 🌐 Guia Completo de Internacionalização Tipo : Documentação Técnica de i18n 📋 Índice Visão Geral Idiomas Suportados Configuração Inicial Estrutura de Arquivos Arquivos ARB Uso no Código Formatação de Datas e Números Pluralização Localização de Recursos Testes de i18n Boas Práticas 🎯 Visão Geral Objetivo Este documento especifica a estratégia completa de internacionalização (i18n) para o app Flutte",
+      "url": "/wiki/docs/32_FLUTTER_I18N_GUIDE",
+      "category": "Outros"
+    },
+    {
+      "id": "32_TRACEABILITY",
+      "title": "TRACEABILITY",
+      "content": "Matriz de rastreabilidade Feature/User Story Documento de referência Status (MVP/Posterior) Evidência no código (arquivo + trecho) Gap Correção aplicada Territórios próximos (nearby) docs/BACKLOG.md MVP backend/Araponga.Api/Controllers/TerritoriesController.cs ( Nearby com radiusKm / limit ) Endpoint sem raio/limite. Adicionados parâmetros de raio/limite e filtro por distância. Membership visitor/resident docs/04_USER_STORIES.md MVP backend/Araponga.Api/Controllers/MembershipsController.cs (vali",
+      "url": "/wiki/docs/32_TRACEABILITY",
+      "category": "Outros"
+    },
+    {
+      "id": "33_ADMIN_SYSTEM_CONFIG_WORKQUEUE",
+      "title": "ADMIN SYSTEM CONFIG WORKQUEUE",
+      "content": "System Config e Work Queue (P0) Este documento descreve a base P0 implementada para: SystemConfig : configurações globais calibráveis gerenciadas por SystemAdmin . Work Queue : fila genérica de itens de trabalho para suportar automação + fallback humano (curadoria/moderação/verificações). Nota: SystemConfig não armazena segredos (senhas, API keys). Apenas valores calibráveis e seleção de provider. Segredos devem permanecer em variáveis de ambiente/secret manager. 1) SystemConfig Objetivo Central",
+      "url": "/wiki/docs/33_ADMIN_SYSTEM_CONFIG_WORKQUEUE",
+      "category": "Outros"
+    },
+    {
+      "id": "33_FLUTTER_REVIEW_AND_GAPS",
+      "title": "FLUTTER REVIEW AND GAPS",
+      "content": "Revisão Completa e Análise de Gaps - Documentação Flutter Araponga Versão : 1.0 Data : 2025-01-20 Status : 📋 Revisão Completa e Correções Tipo : Documentação de Revisão e Análise 📋 Índice Visão Geral da Revisão Análise de Coesão Gaps de Segurança Identificados Gaps Funcionais Identificados Gaps de Cobertura de Fluxos Gaps de Observabilidade Gaps de Performance Gaps de Acessibilidade Gaps de Internacionalização Melhorias de Coesão Checklist de Correções Recomendações Prioritárias 🎯 Visão Geral",
+      "url": "/wiki/docs/33_FLUTTER_REVIEW_AND_GAPS",
+      "category": "Outros"
+    },
+    {
+      "id": "34_FLUTTER_API_STRATEGIC_ALIGNMENT",
+      "title": "FLUTTER API STRATEGIC ALIGNMENT",
+      "content": "Conciliação Estratégica: Frontend Flutter e Backend API Versão : 1.0 Data : 2025-01-20 Status : 📋 Análise Estratégica Completa Tipo : Documentação de Alinhamento e Convergência 📋 Índice Visão Geral da Conciliação Análise de Convergência Gaps de API Identificados Ajustes nos Planos Repriorização Estratégica Reorganização de Fases Recomendações de Implementação Checklist de Alinhamento 🎯 Visão Geral da Conciliação Objetivo Esta análise estratégica concilia o desenvolvimento do frontend Flutter ",
+      "url": "/wiki/docs/34_FLUTTER_API_STRATEGIC_ALIGNMENT",
+      "category": "Outros"
+    },
+    {
+      "id": "35_PRIORIZACAO_ESTRATEGICA_API_FRONTEND",
+      "title": "PRIORIZACAO ESTRATEGICA API FRONTEND",
+      "content": "Priorização Estratégica: API e Frontend - Desenvolvimento Otimizado Versão : 1.0 Data : 2025-01-20 Status : 📋 Priorização Estratégica Completa Tipo : Documentação de Ordem de Implementação Otimizada 📋 Índice Visão Geral da Priorização Princípios de Priorização Análise de Dependências Críticas Caminho Crítico de Desenvolvimento Fases Reorganizadas por Prosperidade Desenvolvimento Paralelo Otimizado Plano de Execução Recomendado Riscos e Mitigações 🎯 Visão Geral da Priorização Objetivo Reorgani",
+      "url": "/wiki/docs/35_PRIORIZACAO_ESTRATEGICA_API_FRONTEND",
+      "category": "Outros"
+    },
+    {
+      "id": "36_INTEGRIDADE_E_COESAO_PLANOS",
+      "title": "INTEGRIDADE E COESAO PLANOS",
+      "content": "Integridade e Coesão dos Planos - Araponga Versão : 1.0 Data : 2025-01-20 Status : ✅ Integridade Completa e Coesão Estabelecida Tipo : Documentação de Consolidação e Alinhamento 📋 Índice Visão Geral da Integridade Documentos Criados e Atualizados Mapeamento de Referências Cruzadas Alinhamento de Prioridades Consistência de Durações Sincronização de Fases Checklist de Integridade Status Final 🎯 Visão Geral da Integridade Objetivo Garantir que todos os planos e documentos estejam: ✅ Integrados :",
+      "url": "/wiki/docs/36_INTEGRIDADE_E_COESAO_PLANOS",
+      "category": "Outros"
+    },
+    {
+      "id": "37_PLANO_ACAO_EXECUTIVO_CURSOR",
+      "title": "PLANO ACAO EXECUTIVO CURSOR",
+      "content": "Plano de Ação Executivo - Agente Cursor Araponga Versão : 1.0 Data : 2025-01-20 Status : 🚀 Plano de Ação Pronto para Execução Tipo : Guia Sequencial Completo para Agente de IA 📋 Índice Visão Geral do Plano Contexto e Pré-requisitos Ordem de Execução Otimizada Fase 1: Bloqueadores Críticos do Frontend Fase 2: Mídias e Sincronização Offline Fase 3: Funcionalidades Core Validação e Qualidade Próximas Fases Checklist de Progresso 🎯 Visão Geral do Plano Objetivo Este documento fornece um plano de ",
+      "url": "/wiki/docs/37_PLANO_ACAO_EXECUTIVO_CURSOR",
+      "category": "Outros"
+    },
+    {
+      "id": "38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS",
+      "title": "FLUTTER CONFIGURACOES ADMINISTRATIVAS",
+      "content": "Configurações Administrativas no App Flutter - Araponga Versão : 1.0 Data : 2025-01-17 Status : 📋 Planejamento Completo Tipo : Documentação de Funcionalidades Administrativas 📋 Índice Visão Geral Configurações por Papel Funcionalidades por Fase Telas e Componentes Integração com Backend Critérios de Implementação 🎯 Visão Geral Este documento descreve as funcionalidades de configurações administrativas que serão implementadas no app Flutter, sincronizadas com as novas configurações flexíveis d",
+      "url": "/wiki/docs/38_FLUTTER_CONFIGURACOES_ADMINISTRATIVAS",
+      "category": "Outros"
+    },
+    {
+      "id": "38_MAPA_FUNCIONALIDADES_MERCADO",
+      "title": "MAPA FUNCIONALIDADES MERCADO",
+      "content": "Mapa de Funcionalidades - Araponga Funcionalidades Implementadas, Planejadas e Previstas para Nível de Mercado Versão : 1.0 Data : 2025-01-20 Status : 📊 Análise Estratégica Completa Tipo : Mapa Funcional e Benchmarking de Mercado 📋 Índice Visão Executiva Metodologia de Análise Funcionalidades Implementadas Funcionalidades Planejadas Funcionalidades Previstas Gap Analysis vs. Mercado Priorização Estratégica Roadmap de Convergência 🎯 Visão Executiva Objetivo Este documento apresenta um mapeamen",
+      "url": "/wiki/docs/38_MAPA_FUNCIONALIDADES_MERCADO",
+      "category": "Outros"
+    },
+    {
+      "id": "39_ESTRATEGIA_CONVERGENCIA_MERCADO",
+      "title": "ESTRATEGIA CONVERGENCIA MERCADO",
+      "content": "Estratégia de Convergência de Mercado Alinhamento Estratégico para Competir com Padrões de Investimento Versão : 1.0 Data : 2025-01-20 Status : 📋 Estratégia Estratégica Completa Tipo : Plano Estratégico de Convergência 📋 Índice Contexto Estratégico Análise Competitiva Visão de Convergência Plano de Ação Estratégico Ajustes no Roadmap Mudanças Organizacionais Métricas de Sucesso Riscos e Mitigações 🎯 Contexto Estratégico Situação Atual O Araponga encontra-se em uma fase de maturação técnica só",
+      "url": "/wiki/docs/39_ESTRATEGIA_CONVERGENCIA_MERCADO",
+      "category": "Outros"
+    },
+    {
+      "id": "40_CHANGELOG",
+      "title": "CHANGELOG",
+      "content": "Changelog - Araponga Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 📋 Índice Mudanças Recentes Versões Anteriores Histórico Completo 🆕 Mudanças Recentes Versão 3.0 (2025-01-20) - Estratégia de Convergência de Mercado 🎯 Novos Documentos Estratégicos Documentos Criados : ✅ Mapa de Funcionalidades - Mercado - Mapeamento completo de funcionalidades implementadas, planejadas e previstas para atingir níveis de mercado, comparação detalhada com Closer.earth e plataformas líderes ✅ Es",
+      "url": "/wiki/docs/40_CHANGELOG",
+      "category": "Outros"
+    },
+    {
+      "id": "41_CONTRIBUTING",
+      "title": "CONTRIBUTING",
+      "content": "Contribuindo com o Araponga Obrigado por considerar contribuir com o Araponga! Este é um projeto comunitário orientado ao território. Código de conduta Antes de contribuir, leia o CODE_OF_CONDUCT.md . Esperamos uma colaboração respeitosa e cuidadosa. Formas de contribuição Relatar bugs e propor melhorias Ajustar documentação e exemplos Implementar funcionalidades alinhadas ao roadmap Revisar e validar fluxos do produto ⚠️ Regras de Documentação - OBRIGATÓRIO TODA mudança no código DEVE ser acomp",
+      "url": "/wiki/docs/41_CONTRIBUTING",
+      "category": "Outros"
+    },
+    {
+      "id": "42_WIKI_DEVPORTAL_ANALISE_UNIFICADA",
+      "title": "WIKI DEVPORTAL ANALISE UNIFICADA",
+      "content": "Análise Estratégica Unificada - Wiki e DevPortal Araponga Consultoria de Alto Padrão: Design, Narrativa, Estrutura e Separação de Responsabilidades Versão : 1.0 Data : 2025-01-20 Tipo : Análise Estratégica Unificada Escopo : Wiki + DevPortal - Design, Narrativa, UX, Estrutura, Responsabilidades Status : 🔴 PRIORIDADE CRÍTICA - Plano de Ação Pronto para Implementação 📋 Sumário Executivo Este documento apresenta uma análise estratégica unificada da Wiki Araponga ( /wiki/ ) e do DevPortal ( / ), i",
+      "url": "/wiki/docs/42_WIKI_DEVPORTAL_ANALISE_UNIFICADA",
+      "category": "Outros"
+    },
+    {
+      "id": "50_PRODUCAO_AVALIACAO_COMPLETA",
+      "title": "PRODUCAO AVALIACAO COMPLETA",
+      "content": "Avaliação Completa para Produção - Araponga Data da Avaliação : 2025-01-16 Última Atualização : 2025-01-16 Versão Avaliada : MVP + Fases 1-8 Implementadas Objetivo : Determinar prontidão para produção e identificar melhorias críticas 📊 Resumo Executivo Status Geral: ✅ PRONTO PARA PRODUÇÃO COM MELHORIAS PLANEJADAS A aplicação está funcionalmente completa para o MVP e demonstra arquitetura sólida e boa coesão com a especificação. Após implementação das Fases 1-8 do Backlog API, os gaps críticos f",
+      "url": "/wiki/docs/50_PRODUCAO_AVALIACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "51_PRODUCAO_PLANO_DESEJAVEIS",
+      "title": "PRODUCAO PLANO DESEJAVEIS",
+      "content": "Plano de Implementação: Requisitos Desejáveis para Produção Resumo Este documento detalha o plano de implementação para os requisitos desejáveis (pós-lançamento) identificados na avaliação completa para produção ( docs/50_PRODUCAO_AVALIACAO_COMPLETA.md ). 📋 Requisitos Desejáveis Planejados 1. Índices de Banco de Dados Status : Planejado Prioridade : Média Complexidade : Média Estimativa : 1-2 dias Objetivo Adicionar índices faltantes identificados na revisão de código para melhorar performance ",
+      "url": "/wiki/docs/51_PRODUCAO_PLANO_DESEJAVEIS",
+      "category": "Outros"
+    },
+    {
+      "id": "60_API_LÓGICA_NEGÓCIO",
+      "title": "API LÓGICA NEGÓCIO",
+      "content": "API Araponga - Lógica de Negócio e Usabilidade Documento de Negócio Completo Versão : 2.0 Data : 2025-01-20 Última Atualização : 2025-01-20 (Reorganizado em subdocumentos) 📋 Documentação Reorganizada Este documento foi reorganizado em subdocumentos para melhor navegação, manutenção e legibilidade. 🎯 Acesse a Documentação Completa 👉 Índice da Documentação da API A documentação completa está agora organizada em 22 subdocumentos por categoria: Fundamentos Visão Geral e Princípios Paginação Verif",
+      "url": "/wiki/docs/60_API_LÓGICA_NEGÓCIO",
+      "category": "Outros"
+    },
+    {
+      "id": "61_USER_PREFERENCES_PLAN",
+      "title": "USER PREFERENCES PLAN",
+      "content": "Planejamento: Preferências de Usuário e Privacidade Versão : 1.0 Data : 2025-01-13 Status : 📋 Planejamento 🎯 Objetivo Implementar uma funcionalidade completa para que usuários possam configurar suas preferências de privacidade e outras configurações pessoais que atualmente estão \"soltas\" no sistema. 📋 Análise do Estado Atual O que existe hoje Modelo User básico ( Araponga.Domain.Users.User ): Campos: DisplayName , Email , Cpf , ForeignDocument , PhoneNumber , Address , Provider , ExternalId ,",
+      "url": "/wiki/docs/61_USER_PREFERENCES_PLAN",
+      "category": "Outros"
+    },
+    {
+      "id": "61_USER_PREFERENCES_PLAN_RESUMO",
+      "title": "USER PREFERENCES PLAN RESUMO",
+      "content": "Resumo Executivo: Preferências de Usuário e Privacidade Documento completo : 61_USER_PREFERENCES_PLAN.md 🎯 Objetivo Implementar funcionalidade completa para que usuários possam configurar: Preferências de Privacidade : visibilidade do perfil, informações de contato, localização Preferências de Notificações : habilitar/desabilitar por tipo (posts, comentários, eventos, etc.) Configurações de Perfil : atualizar nome, email, telefone, endereço 📊 O que está faltando hoje Estado Atual ✅ Modelo User",
+      "url": "/wiki/docs/61_USER_PREFERENCES_PLAN_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "70_AVALIACAO_GERAL_APLICACAO",
+      "title": "AVALIACAO GERAL APLICACAO",
+      "content": "Avaliação Geral da Aplicação Araponga Data : 2025-01-16 Última Atualização : 2025-01-16 Versão Avaliada : MVP + Fases 1-8 Implementadas Objetivo : Avaliação completa considerando modelo de negócio, integridade dos fluxos, funcionalidades, gaps, pontos fortes/fracos, trade-offs, pontos de falha, potencial para produção e cobertura de testes 📋 Índice Modelo de Negócio Integridade dos Fluxos Funcionalidades Gaps de Negócio Gaps Técnicos Pontos Fortes Pontos Fracos Trade-offs Pontos Conhecidos de F",
+      "url": "/wiki/docs/70_AVALIACAO_GERAL_APLICACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "ALINHAMENTO_FASES_25_28",
+      "title": "ALINHAMENTO FASES 25 28",
+      "content": "Alinhamento Estratégico: Fases 25-28 com Plano Atual Data : 2025-01-17 Versão : 1.0 Status : ✅ Completo 📋 Resumo Executivo As Fases 25-29 foram cuidadosamente planejadas para se integrarem harmoniosamente com o plano completo de 29 fases, promovendo: Autonomia Digital : Usuários usam seus próprios serviços Consumo Consciente : Transparência total de uso e custos Economia de Escala : Negociação coletiva reduz custos Inclusão Digital : Subsídios para membros sem recursos Soberania Alimentar : Pre",
+      "url": "/wiki/docs/ALINHAMENTO_FASES_25_28",
+      "category": "Outros"
+    },
+    {
+      "id": "ANALISE_DESIGN_SISTEMATICA_MELHORIAS",
+      "title": "ANALISE DESIGN SISTEMATICA MELHORIAS",
+      "content": "Análise Sistemática de Design — Propostas de Melhoria Versão : 1.0 Data : 2025-01-20 Escopo : Wiki Araponga e DevPortal Baseado em : DESIGN_SYSTEM_IDENTIDADE_VISUAL.md Sumário Executivo Esta análise sistemática avalia o design atual dos portais Wiki e DevPortal contra as diretrizes de identidade visual estabelecidas e propõe melhorias específicas para alcançar padrões internacionais de excelência. Cada seção identifica gaps, oportunidades e implementações detalhadas. 1. Análise de Tipografia 1.1",
+      "url": "/wiki/docs/ANALISE_DESIGN_SISTEMATICA_MELHORIAS",
+      "category": "Outros"
+    },
+    {
+      "id": "ANALISE_DEVPORTAL_LAYOUT_QUEBRADO",
+      "title": "ANALISE DEVPORTAL LAYOUT QUEBRADO",
+      "content": "Análise Completa: DevPortal Layout Quebrado e Duplicações Data : 2025-01-20 Versão : 1.0 Status : 🔴 CRÍTICO - Layout quebrado, seções duplicadas 🔍 Problemas Identificados 1. Seções Duplicadas ❌ CRÍTICO O DevPortal tem conteúdo duplicado em duas estruturas diferentes: Estrutura 1: Phase Panels (Tabs) - LINHAS 173-388 ✅ Correto : Tabs e accordions implementados ✅ Contém : #quickstart , #auth , #territory-session dentro de accordions Estrutura 2: Seções Antigas (Fora dos Panels) - LINHAS 393-3016",
+      "url": "/wiki/docs/ANALISE_DEVPORTAL_LAYOUT_QUEBRADO",
+      "category": "Outros"
+    },
+    {
+      "id": "ANALISE_DEVPORTAL_REORGANIZACAO",
+      "title": "ANALISE DEVPORTAL REORGANIZACAO",
+      "content": "Análise DevPortal - Reorganização e Correções Data : 2025-01-21 Status : 🔴 Problemas Identificados Problemas Encontrados 1. Estrutura HTML Quebrada Seções fora dos phase-panels : Linhas 1155-1700+ contêm seções que estão fora dos phase-panels , sendo escondidas pelo CSS mas causando problemas de estrutura Conteúdo duplicado : \"Como o Araponga funciona\" aparece dentro de phase-panel (linha 666) e fora (linha 1156) Seções sem IDs corretos : #visao-geral e #como-funciona referenciados na sidebar m",
+      "url": "/wiki/docs/ANALISE_DEVPORTAL_REORGANIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "analysis/README",
+      "title": "README",
+      "content": "Análises Esta pasta contém análises técnicas do projeto. Estrutura ANALISE_PADROES_DESIGN_MEMBERSHIP.md - Análise de padrões de design relacionados a Membership (quando disponível)",
+      "url": "/wiki/docs/analysis/README",
+      "category": "Outros"
+    },
+    {
+      "id": "api/60_00_API_EVIDENCIAS",
+      "title": "00 API EVIDENCIAS",
+      "content": "Verificações e Evidências - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📎 Verificações e Evidências (upload/download) Upload (multipart/form-data) Identidade (global) : POST /api/v1/verification/identity/document/upload Residência (territorial) : POST /api/v1/memberships/{territoryId}/verify-residency/document/upload Decisão de verificação (fila humana) Identidade (SystemAdmin) : POST /api/v1/admin/verifications/identity/{workItemId}/dec",
+      "url": "/wiki/docs/api/60_00_API_EVIDENCIAS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_00_API_PAGINACAO",
+      "title": "00 API PAGINACAO",
+      "content": "Paginação - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📄 Paginação Todos os endpoints de listagem têm versões paginadas disponíveis. O padrão de paginação é: Parâmetros de Paginação pageNumber (int, padrão: 1) - Número da página (1-indexed) pageSize (int, padrão: 20) - Itens por página (mínimo: 1, máximo: 100) Resposta Paginada { \"items\": [...], \"pageNumber\": 1, \"pageSize\": 20, \"totalCount\": 150, \"totalPages\": 8, \"hasPreviousPage\": fals",
+      "url": "/wiki/docs/api/60_00_API_PAGINACAO",
+      "category": "API"
+    },
+    {
+      "id": "api/60_00_API_VISAO_GERAL",
+      "title": "00 API VISAO GERAL",
+      "content": "Visão Geral - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🌐 Visão Geral O Araponga é uma plataforma território-first e comunidade-first para organização comunitária local. Todas as operações são orientadas ao território, com diferenciação clara entre visitantes (VISITOR) e moradores (RESIDENT) . Princípios Fundamentais Território é geográfico e neutro : Representa apenas um lugar físico real Consulta exige cadastro : Feed, mapa e operaçõ",
+      "url": "/wiki/docs/api/60_00_API_VISAO_GERAL",
+      "category": "API"
+    },
+    {
+      "id": "api/60_01_API_AUTENTICACAO",
+      "title": "01 API AUTENTICACAO",
+      "content": "Autenticação e Cadastro - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🔐 Autenticação e Cadastro Login Social ( POST /api/v1/auth/social ) Descrição : Autentica ou cadastra um usuário via login social. Como usar : Envie Provider (ex: \"google\", \"facebook\"), ExternalId, DisplayName Forneça CPF (formato: \"123.456.789-00\" ou \"12345678900\") OU ForeignDocument Campos opcionais: Email, PhoneNumber, Address Regras de negócio : Se o usuário já exi",
+      "url": "/wiki/docs/api/60_01_API_AUTENTICACAO",
+      "category": "API"
+    },
+    {
+      "id": "api/60_02_API_TERRITORIOS",
+      "title": "02 API TERRITORIOS",
+      "content": "Territórios - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🗺️ Territórios Listar Territórios ( GET /api/v1/territories ) Descrição : Lista todos os territórios disponíveis para descoberta. Como usar : Requisição pública (não exige autenticação) Retorna lista paginada de territórios com dados geográficos Regras de negócio : Retorna apenas dados geográficos (nome, cidade, estado, coordenadas) Não inclui informações sociais (membership, role",
+      "url": "/wiki/docs/api/60_02_API_TERRITORIOS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_03_API_MEMBERSHIPS",
+      "title": "03 API MEMBERSHIPS",
+      "content": "Vínculos e Membros (Memberships) - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 👥 Vínculos e Membros (Memberships) Entrar no território como VISITOR ( POST /api/v1/territories/{territoryId}/enter ) Descrição : Cria (ou retorna) o vínculo do usuário no território como VISITOR . Como usar : Exige autenticação Path param: territoryId Regras de negócio : Cria TerritoryMembership com Role=VISITOR e ResidencyVerification=NONE Não existe \"valida",
+      "url": "/wiki/docs/api/60_03_API_MEMBERSHIPS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_04_API_FEED",
+      "title": "04 API FEED",
+      "content": "Feed Comunitário - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📝 Feed Comunitário Criar Post ( POST /api/v1/feed ) Descrição : Publica um post no feed do território. Como usar : Exige autenticação Body: título, conteúdo, tipo (GENERAL, ALERT), visibilidade (PUBLIC, RESIDENTS_ONLY) Opcional: mapEntityId , assetIds , geoAnchors (derivados de mídias, não enviados manualmente) Regras de negócio : Autenticação : Obrigatória Território : Usa t",
+      "url": "/wiki/docs/api/60_04_API_FEED",
+      "category": "API"
+    },
+    {
+      "id": "api/60_05_API_EVENTOS",
+      "title": "05 API EVENTOS",
+      "content": "Eventos - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📅 Eventos Criar Evento ( POST /api/v1/events ) Descrição : Cria um evento comunitário no território. Como usar : Exige autenticação Body: territoryId , título, descrição (opcional), startsAtUtc , endsAtUtc (opcional), latitude , longitude , locationLabel (opcional) Regras de negócio : Permissão : Visitantes e moradores podem criar eventos Geolocalização : Obrigatória (latitude e longi",
+      "url": "/wiki/docs/api/60_05_API_EVENTOS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_06_API_MAPA",
+      "title": "06 API MAPA",
+      "content": "Mapa Territorial - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🗺️ Mapa Territorial Listar Entidades do Mapa ( GET /api/v1/map/entities ) Descrição : Obtém entidades (estabelecimentos, espaços públicos, etc.) do território. Como usar : Exige autenticação Query params: territoryId (opcional, usa território ativo se não informado) Header X-Session-Id para identificar território ativo Regras de negócio : Visibilidade : Visitantes: Veem apena",
+      "url": "/wiki/docs/api/60_06_API_MAPA",
+      "category": "API"
+    },
+    {
+      "id": "api/60_07_API_ALERTAS",
+      "title": "07 API ALERTAS",
+      "content": "Alertas de Saúde - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🚨 Alertas de Saúde Reportar Alerta ( POST /api/v1/alerts ) Descrição : Reporta um alerta de saúde pública no território. Como usar : Exige autenticação Body: territoryId , título, descrição Header X-Session-Id para usar território ativo Regras de negócio : Permissão : Visitantes e moradores podem reportar alertas Limites : Título máximo 200 caracteres, descrição máximo 2000 c",
+      "url": "/wiki/docs/api/60_07_API_ALERTAS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_08_API_ASSETS",
+      "title": "08 API ASSETS",
+      "content": "Assets (Recursos Territoriais) - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📦 Assets (Recursos Territoriais) TerritoryAssets representam recursos valiosos do território que pertencem ao próprio território (naturais, culturais, comunitários, infraestruturais, simbólicos). TerritoryAssets não são vendáveis e não devem ser tratados como produtos ou serviços. Mídia (foto, vídeo, documento, link) deve ser tratada como registro/evidência asso",
+      "url": "/wiki/docs/api/60_08_API_ASSETS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_09_API_MARKETPLACE",
+      "title": "09 API MARKETPLACE",
+      "content": "Marketplace - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🏪 Marketplace O Marketplace lida exclusivamente com produtos e serviços oferecidos por moradores. Stores e Items não são TerritoryAssets e não podem vender ou transferir TerritoryAssets. Produtos/serviços podem referenciar um TerritoryAsset apenas de forma contextual (ex.: \"Serviço de guia na trilha X\"), sem implicar propriedade ou venda do asset. Criar Store ( POST /api/v1/stores",
+      "url": "/wiki/docs/api/60_09_API_MARKETPLACE",
+      "category": "API"
+    },
+    {
+      "id": "api/60_10_API_CHAT",
+      "title": "10 API CHAT",
+      "content": "Chat (Canais, Grupos e DM) - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 💬 Chat (Canais, Grupos e DM) Objetivo Fornecer comunicação em tempo real/assíncrona entre usuários com governança territorial, respeitando: Papéis territoriais : VISITOR e RESIDENT Capabilidades territoriais : CURATOR e MODERATOR Permissões globais : SYSTEM_ADMIN Privacidade (bloqueio e preferências) e anti-spam Feature flags por território para rollout seguro Tipos",
+      "url": "/wiki/docs/api/60_10_API_CHAT",
+      "category": "API"
+    },
+    {
+      "id": "api/60_11_API_NOTIFICACOES",
+      "title": "11 API NOTIFICACOES",
+      "content": "Notificações - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🔔 Notificações Listar Notificações ( GET /api/v1/notifications ) Descrição : Obtém notificações do usuário autenticado. Como usar : Exige autenticação Query params: skip , take (paginação) Regras de negócio : Paginação : Padrão 50 itens Ordenação : Mais recentes primeiro Tipos : Post criado, report criado, inquiry recebido, etc. Sistema : Notificações são geradas via outbox/inbox",
+      "url": "/wiki/docs/api/60_11_API_NOTIFICACOES",
+      "category": "API"
+    },
+    {
+      "id": "api/60_12_API_MODERACAO",
+      "title": "12 API MODERACAO",
+      "content": "Moderação - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🛡️ Moderação Reportar Post ( POST /api/v1/reports/posts/{postId} ) Descrição : Reporta um post por violação. Como usar : Exige autenticação Path param: postId Body: reason , details (opcional) Regras de negócio : Permissão : Todos usuários autenticados podem reportar Deduplicação : Múltiplos reports do mesmo usuário/post em janela de tempo são deduplicados Status : Report é criado c",
+      "url": "/wiki/docs/api/60_12_API_MODERACAO",
+      "category": "API"
+    },
+    {
+      "id": "api/60_13_API_JOIN_REQUESTS",
+      "title": "13 API JOIN REQUESTS",
+      "content": "Solicitações de Entrada (Join Requests) - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🔗 Solicitações de Entrada (Join Requests) Nota: o caminho recomendado para \"virar morador\" é POST /api/v1/memberships/{territoryId}/become-resident , que cria a JoinRequest com destinatários automáticos. O endpoint abaixo existe para casos avançados (escolha manual). Criar Solicitação ( POST /api/v1/territories/{territoryId}/join-requests ) Descrição : ",
+      "url": "/wiki/docs/api/60_13_API_JOIN_REQUESTS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_14_API_ADMIN",
+      "title": "14 API ADMIN",
+      "content": "Admin: System Config e Work Queue - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🧰 Admin: System Config e Work Queue Referência detalhada: 33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md . System Config (SystemAdmin) Objetivo : centralizar configurações calibráveis (providers, segurança, moderação, validação). GET /api/v1/admin/system-config GET /api/v1/admin/system-config/{key} PUT /api/v1/admin/system-config Work Items (filas) Objetivo : padronizar",
+      "url": "/wiki/docs/api/60_14_API_ADMIN",
+      "category": "API"
+    },
+    {
+      "id": "api/60_15_API_MIDIAS",
+      "title": "15 API MIDIAS",
+      "content": "Mídias em Conteúdo (Imagens, Vídeos e Áudios) - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📸🎥🎧 Mídias em Conteúdo (Imagens, Vídeos e Áudios) Visão Geral A plataforma Araponga suporta mídias ricas (imagens, vídeos e áudios) em diferentes tipos de conteúdo, permitindo documentação territorial e fortalecimento comunitário através de conteúdo visual e multimídia. Upload de Mídia ( POST /api/v1/media/upload ) Descrição : Faz upload de um a",
+      "url": "/wiki/docs/api/60_15_API_MIDIAS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_16_API_FEATURE_FLAGS",
+      "title": "16 API FEATURE FLAGS",
+      "content": "Feature Flags - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 ⚙️ Feature Flags Listar Feature Flags ( GET /api/v1/territories/{territoryId}/features ) Descrição : Obtém feature flags habilitadas no território. Como usar : Exige autenticação Path param: territoryId Regras de negócio : Permissão : Todos usuários autenticados podem consultar Retorno : Lista de flags habilitadas no território (strings em UPPERCASE , sem underscores). Exemplos :",
+      "url": "/wiki/docs/api/60_16_API_FEATURE_FLAGS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_17_API_VISIBILIDADE",
+      "title": "17 API VISIBILIDADE",
+      "content": "Regras de Visibilidade e Permissões - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 🔒 Regras de Visibilidade e Permissões Visibilidade de Conteúdo PUBLIC (Público) : Visível para todos usuários autenticados Visitantes (VISITOR) podem ver Moradores (RESIDENT) podem ver RESIDENTS_ONLY (Apenas Moradores) : Visível apenas para moradores verificados (RESIDENT + ResidencyVerification != NONE ) Visitantes não veem Moradores não verificados (RESID",
+      "url": "/wiki/docs/api/60_17_API_VISIBILIDADE",
+      "category": "API"
+    },
+    {
+      "id": "api/60_18_API_PREFERENCIAS",
+      "title": "18 API PREFERENCIAS",
+      "content": "Preferências de Usuário - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 👤 Preferências de Usuário Obter Preferências ( GET /api/v1/users/me/preferences ) Descrição : Obtém as preferências de privacidade e notificações do usuário autenticado. Como usar : Requisição autenticada (token JWT obrigatório) Retorna preferências existentes ou cria preferências padrão se não existirem Regras de negócio : Se o usuário não tiver preferências configura",
+      "url": "/wiki/docs/api/60_18_API_PREFERENCIAS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_99_API_RESUMO_ENDPOINTS",
+      "title": "99 API RESUMO ENDPOINTS",
+      "content": "Resumo de Endpoints Principais - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📚 Resumo de Endpoints Principais Autenticação POST /api/v1/auth/social - Login/Cadastro social Territórios GET /api/v1/territories - Listar territórios GET /api/v1/territories/nearby - Territórios próximos GET /api/v1/territories/search - Buscar territórios GET /api/v1/territories/{id} - Consultar território POST /api/v1/territories/suggestions - Sugerir territó",
+      "url": "/wiki/docs/api/60_99_API_RESUMO_ENDPOINTS",
+      "category": "API"
+    },
+    {
+      "id": "api/60_API_LÓGICA_NEGÓCIO_INDEX",
+      "title": "API LÓGICA NEGÓCIO INDEX",
+      "content": "API Araponga - Lógica de Negócio e Usabilidade Documento de Negócio Completo Versão : 2.0 Data : 2025-01-20 Última Atualização : 2025-01-20 (Reorganizado em subdocumentos) 📋 Índice da Documentação da API Este documento foi reorganizado em subdocumentos para melhor navegação e manutenção. Cada seção principal está documentada em seu próprio arquivo. 📚 Documentos por Categoria 🎯 Fundamentos e Configuração Visão Geral e Princípios - Princípios fundamentais, segurança, rate limiting Paginação - P",
+      "url": "/wiki/docs/api/60_API_LÓGICA_NEGÓCIO_INDEX",
+      "category": "API"
+    },
+    {
+      "id": "AVALIACAO_COMPLETA_APLICACAO",
+      "title": "AVALIACAO COMPLETA APLICACAO",
+      "content": "Avaliação Completa da Aplicação Araponga Data : 2025-01-13 Versão Avaliada : MVP Escopo : Backend completo, Frontend, Arquitetura, Negócio, Código, Patterns, Segurança, Escalabilidade 📋 Índice Resumo Executivo Avaliação de Negócio Avaliação de Arquitetura Avaliação de Código e Patterns Avaliação de Segurança Avaliação de Performance e Escalabilidade Avaliação de Qualidade Princípios SOLID, YAGN, DRY, Lean Complexidade e Manutenibilidade Pontos de Falha e Vulnerabilidades Gaps Técnicos e de Negó",
+      "url": "/wiki/docs/AVALIACAO_COMPLETA_APLICACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/ANALISE_IMPACTO_FASES_11_14",
+      "title": "ANALISE IMPACTO FASES 11 14",
+      "content": "Análise de Impacto: Fases 11-14 nas Funcionalidades Existentes Data : 2025-01-13 Objetivo : Identificar todos os ajustes necessários nas funcionalidades existentes devido às novas funcionalidades das Fases 11-14 🎯 Resumo Executivo As Fases 11-14 introduzem mídias e novas funcionalidades que impactam todas as funcionalidades existentes : Feed/Posts : Adicionar mídias, edição, exclusão Eventos : Adicionar mídias, edição, lista de participantes Marketplace : Adicionar mídias, avaliações, busca Cha",
+      "url": "/wiki/docs/backlog-api/ANALISE_IMPACTO_FASES_11_14",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/arquivos-originais/PLANO_ACAO_10_10_ALTERNATIVO",
+      "title": "PLANO ACAO 10 10 ALTERNATIVO",
+      "content": "Plano de Ação: Tornar Aplicação Araponga 10/10 Data de Criação : 2025-01-XX Objetivo : Elevar a aplicação de 8.0/10 para 10/10 em todas as categorias Estimativa Total : 8-12 semanas (2-3 meses) Status Atual : 8.0/10 📋 Índice Visão Geral Fase 1: Fundação Crítica (Semanas 1-2) Fase 2: Qualidade e Confiabilidade (Semanas 3-4) Fase 3: Performance e Escalabilidade (Semanas 5-6) Fase 4: Observabilidade e Monitoramento (Semanas 7-8) Fase 5: Segurança Avançada (Semanas 9-10) Fase 6: Funcionalidades e N",
+      "url": "/wiki/docs/backlog-api/arquivos-originais/PLANO_ACAO_10_10_ALTERNATIVO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/arquivos-originais/PLANO_ACAO_10_10_ORIGINAL",
+      "title": "PLANO ACAO 10 10 ORIGINAL",
+      "content": "Plano de Ação Detalhado: Tornar Araponga 10/10 Data de Criação : 2025-01-13 Objetivo : Elevar a aplicação de 7.4/10 para 10/10 Estimativa Total : 4-6 semanas (1 desenvolvedor full-time) Priorização : Por impacto e criticidade 📋 Índice Visão Geral Fase 1: Segurança Crítica (Bloqueante) Fase 2: Observabilidade e Monitoramento Fase 3: Performance e Escalabilidade Fase 4: Qualidade de Código Fase 5: Testes e Cobertura Fase 6: Documentação e DevOps Cronograma e Dependências Critérios de Sucesso Chec",
+      "url": "/wiki/docs/backlog-api/arquivos-originais/PLANO_ACAO_10_10_ORIGINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/ATUALIZACAO_ORDEM_FASES",
+      "title": "ATUALIZACAO ORDEM FASES",
+      "content": "Atualização: Nova Ordem das Fases 8-14 Data : 2025-01-13 Motivo : Otimização estratégica baseada em eficiência, urgência e necessidade Status : ⏳ Aguardando Aprovação 🔄 Mapeamento de Renumeração Antes → Depois Fase Antiga Nome Nova Fase Novo Nome Motivo Fase 8 Suporte a Criptomoedas Fase 13 Suporte a Criptomoedas Valor incremental, pode ser depois Fase 9 Arquitetura Modular Fase 14 Arquitetura Modular Arquitetural, não crítico para MVP Fase 10 Otimizações Finais Fase 12 Otimizações Finais Melho",
+      "url": "/wiki/docs/backlog-api/ATUALIZACAO_ORDEM_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/ESTRUTURA_DOCUMENTOS",
+      "title": "ESTRUTURA DOCUMENTOS",
+      "content": "Estrutura de Documentos - Backlog API Data : 2025-01-13 Objetivo : Documentar a estrutura organizada dos documentos 📁 Estrutura de Pastas docs/ ├── backlog-api/ # Backlog API (organizado) │ ├── README.md # Índice principal │ ├── FASE1.md até FASE29.md # Documentos de fases (29 fases) │ ├── RESUMO_*.md # Resumos executivos │ ├── REORGANIZACAO_*.md # Documentos de reorganização │ └── ROADMAP_*.md # Roadmaps visuais │ ├── prs/ # Pull Requests e mudanças ├── refactoring/ # Refatorações ├── recommen",
+      "url": "/wiki/docs/backlog-api/ESTRUTURA_DOCUMENTOS",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE1",
+      "title": "FASE1",
+      "content": "Fase 1: Segurança e Fundação Crítica Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 CRÍTICA Bloqueia : Deploy em produção Estimativa Total : 112 horas Status : ✅ COMPLETA (conforme FASE1_IMPLEMENTACAO_RESUMO.md) 🎯 Objetivo Resolver todos os bloqueantes críticos e estabelecer base sólida para produção. 📋 Tarefas Detalhadas Semana 1: Segurança Crítica e Configuração 1.1 JWT Secret Management ✅ Estimativa : 4 horas Status : ✅ Completo Tarefas : Verificar que SigningKey não está em appsetting",
+      "url": "/wiki/docs/backlog-api/FASE1",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10",
+      "title": "FASE10",
+      "content": "Fase 10: Mídias em Conteúdo Duração : 4 semanas (20 dias úteis) Prioridade : 🔴 CRÍTICA (Bloqueante para edição) Depende de : Fase 8 (Infraestrutura de Mídia) Bloqueia : Fase 11 (Edição e Gestão) Estimativa Total : 160 horas Status : ✅ Implementação Principal Completa + ⚙️ Configuração Avançada por Território (Em Implementação) 🎯 Objetivo Integrar mídias (imagens, vídeos e áudios) em todas as funcionalidades de conteúdo, permitindo: Múltiplas mídias por post (imagens, vídeos e áudios, máximo 1 ",
+      "url": "/wiki/docs/backlog-api/FASE10",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_AUDIO_MAPA_IMPACTO",
+      "title": "FASE10 AUDIO MAPA IMPACTO",
+      "content": "Mapa de Impacto: Suporte a Áudio em Mídias 🎯 Objetivo Permitir áudio além de imagens e vídeos em Posts, Eventos e Marketplace, mantendo regras específicas baseadas em redes sociais existentes. 📊 Regras de Áudio em Redes Sociais (Referência) Limites de Duração Instagram : Até 60 segundos (stories), até 90 segundos (reels) Twitter/X : Até 140 segundos (2 min 20s) para áudio em tweets Facebook : Até 90 segundos (stories) Podcasts : Geralmente 15-60 minutos, mas para posts sociais: 1-5 minutos Spo",
+      "url": "/wiki/docs/backlog-api/FASE10_AUDIO_MAPA_IMPACTO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO",
+      "title": "FASE10 CONFIG FLEXIBILIZACAO AVALIACAO",
+      "content": "Avaliação de Flexibilização de Configurações Data : 2026-01-17 Status : 📋 Análise Completa Objetivo : Identificar funcionalidades com configurações fixas que merecem flexibilização via painel administrativo, similar à configuração de blob storage implementada na Fase 10. 🎯 Contexto Recentemente implementamos a configuração explícita e aberta de blob storage para mídias via painel administrativo ( MediaStorageConfig ), permitindo que administradores configurem provedores de storage (Local, S3, ",
+      "url": "/wiki/docs/backlog-api/FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_CONFIG_MIDIAS_IMPLEMENTACAO",
+      "title": "FASE10 CONFIG MIDIAS IMPLEMENTACAO",
+      "content": "Implementação: Configuração Avançada de Mídias por Território 📋 Resumo da Implementação Esta implementação adiciona controle granular de mídias por território usando feature flags e configurações específicas, permitindo que cada território defina quais tipos de mídia estão disponíveis e quais limites aplicar. Também permite que usuários escolham quais tipos de mídia desejam visualizar. ✅ O que foi implementado 1. Feature Flags Novos ✅ MediaImagesEnabled (valor: 10) ✅ MediaVideosEnabled (valor: ",
+      "url": "/wiki/docs/backlog-api/FASE10_CONFIG_MIDIAS_IMPLEMENTACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_CONFIG_MIDIAS_STATUS",
+      "title": "FASE10 CONFIG MIDIAS STATUS",
+      "content": "Status: Configuração Avançada de Mídias por Território ✅ Implementado 1. Feature Flags ✅ MediaImagesEnabled (valor: 10) ✅ MediaVideosEnabled (valor: 11) ✅ MediaAudioEnabled (valor: 12) ✅ ChatMediaImagesEnabled (valor: 13) ✅ ChatMediaAudioEnabled (valor: 14) 2. Modelos de Domínio ✅ TerritoryMediaConfig - Configuração de mídias por território ✅ MediaContentConfig - Configuração para Posts, Eventos, Marketplace ✅ MediaChatConfig - Configuração específica para Chat ✅ UserMediaPreferences - Preferênc",
+      "url": "/wiki/docs/backlog-api/FASE10_CONFIG_MIDIAS_STATUS",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_CONFIG_MIDIAS_TERRITORIO",
+      "title": "FASE10 CONFIG MIDIAS TERRITORIO",
+      "content": "Configuração Avançada de Mídias por Território - Fase 10 🎯 Objetivo Permitir que cada território configure quais tipos de mídia estão disponíveis e como a plataforma se comporta, usando feature flags e configurações granulares. Também permite que usuários escolham quais tipos de mídia desejam visualizar. 📋 Funcionalidades 1. Feature Flags de Mídia Flags para habilitar/desabilitar tipos de mídia por território: MediaImagesEnabled : Habilita imagens em Posts, Eventos, Marketplace MediaVideosEnab",
+      "url": "/wiki/docs/backlog-api/FASE10_CONFIG_MIDIAS_TERRITORIO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_STORAGE_CONFIG_ADMIN",
+      "title": "FASE10 STORAGE CONFIG ADMIN",
+      "content": "Configuração de Blob Storage via Painel Administrativo Objetivo Permitir configuração explícita e aberta do provedor de blob storage para mídias através do painel administrativo do sistema, substituindo a configuração fixa via appsettings.json . Situação Atual Configuração atual : Fixa via appsettings.json (seção MediaStorage ) Providers suportados : Local, S3 (AWS), AzureBlob Configuração : MediaStorageOptions com propriedades para cada provider Factory : MediaStorageFactory cria instâncias bas",
+      "url": "/wiki/docs/backlog-api/FASE10_STORAGE_CONFIG_ADMIN",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_VIDEOS_IMPLEMENTACAO",
+      "title": "FASE10 VIDEOS IMPLEMENTACAO",
+      "content": "Implementação de Suporte a Vídeos - Fase 10 ✅ Resumo da Implementação Suporte a vídeos foi implementado em Posts, Eventos e Marketplace, com regras baseadas em redes sociais existentes (TikTok, Instagram, Facebook). Chat mantém restrição de apenas imagens por questões de performance e privacidade. 📊 Regras Implementadas (Baseadas em Redes Sociais) Posts Limite total : Máximo 10 mídias (imagens e/ou vídeos) Vídeos : Máximo 1 vídeo por post Tamanho : 50MB por vídeo Duração planejada : 60 segundos",
+      "url": "/wiki/docs/backlog-api/FASE10_VIDEOS_IMPLEMENTACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE10_VIDEOS_MAPA_IMPACTO",
+      "title": "FASE10 VIDEOS MAPA IMPACTO",
+      "content": "Mapa de Impacto: Suporte a Vídeos em Mídias 🎯 Objetivo Permitir vídeos além de imagens em Posts, Eventos e Marketplace, mantendo regras específicas baseadas em redes sociais existentes. 📊 Regras de Vídeos em Redes Sociais (Referência) Limites de Duração TikTok : Até 60s (shorts), até 10 min (longos) Instagram : Até 60s (stories), até 60s (reels), até 10 min (feed) Facebook : Até 240 min (feed) Twitter/X : Até 140s (2 min 20s) não-verificados, até 10 min verificados YouTube Shorts : Até 60s Lim",
+      "url": "/wiki/docs/backlog-api/FASE10_VIDEOS_MAPA_IMPACTO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE11",
+      "title": "FASE11",
+      "content": "Fase 11: Edição, Gestão e Estatísticas Completas Duração : 3 semanas (15 dias úteis) Prioridade : 🟡 IMPORTANTE (Completa funcionalidades essenciais) Depende de : Fase 8 (Infraestrutura Mídia), Fase 10 (Mídias em Conteúdo) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Completar funcionalidades essenciais de edição e gestão que permitem: Editar posts e eventos (correção de erros, atualização de informações) Sistema de avaliações no marketplace (lojas e itens) Busca no marketplace (",
+      "url": "/wiki/docs/backlog-api/FASE11",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE12",
+      "title": "FASE12",
+      "content": "Fase 12: Otimizações Finais e Conclusão Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 IMPORTANTE (Conformidade legal e operacional) Bloqueia : Alcançar nota 10/10 em todas as categorias Estimativa Total : 224 horas Status : ⏳ Pendente 🎯 Objetivo Finalizar todas as melhorias pendentes para alcançar 10/10 em todas as categorias, completando gaps de funcionalidades, testes, documentação e operação. 📋 Contexto e Requisitos Estado Atual Após as fases anteriores, a aplicação está em 9.2/10 . R",
+      "url": "/wiki/docs/backlog-api/FASE12",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE13",
+      "title": "FASE13",
+      "content": "Fase 13: Conector de Envio de Emails Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 ALTA (Comunicação essencial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 80 horas Status : ⏳ Pendente 🎯 Objetivo Implementar um conector de envio de emails para que a plataforma possa enviar emails aos usuários em situações específicas (boas-vindas, recuperação de conta, notificações importantes, alertas críticos). Importante : ❌ NÃO é uma caixa de entrada de emails na plataforma ✅ ",
+      "url": "/wiki/docs/backlog-api/FASE13",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE14",
+      "title": "FASE14",
+      "content": "Fase 14: Governança Comunitária e Sistema de Votação Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 CRÍTICA (Essencial para soberania territorial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de governança comunitária que permite: Usuários definirem interesses que personalizam o que veem no feed Moderação dinâmica definida pela comunidade através de votações Sistema de votação para decisões coletivas (prio",
+      "url": "/wiki/docs/backlog-api/FASE14",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE15",
+      "title": "FASE15",
+      "content": "Fase 15: Inteligência Artificial Duração : 4 semanas (28 dias úteis) Prioridade : 🔴 ALTA (Moderação e busca inteligente) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 208 horas Status : ⏳ Pendente 🎯 Objetivo Implementar funcionalidades de Inteligência Artificial para: Moderação automática (detecção de conteúdo inadequado) Busca inteligente (semântica, não apenas palavras-chave) Categorização automática de conteúdo Recomendações contextuais (sem manipular feed) Análise de",
+      "url": "/wiki/docs/backlog-api/FASE15",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE16",
+      "title": "FASE16",
+      "content": "Fase 16: Sistema de Entregas Territoriais Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 ALTA (Autonomia comunitária e otimização de recursos) Depende de : Fase 6 (Marketplace), Fase 7 (Payout) Estimativa Total : 160 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de entregas territoriais que permite: Usuários se cadastrarem como entregadores do território Otimização de rotas para economizar recursos naturais e tempo Integração com marketplace (entregas de pedidos) Rastreamento de",
+      "url": "/wiki/docs/backlog-api/FASE16",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE16_COMPLIANCE",
+      "title": "FASE16 COMPLIANCE",
+      "content": "Fase 16: Compliance e Retenção de Dados Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 ALTA (Compliance e custos) Depende de : Fase 10 (Mídias), Fase 11 (Moderação) Estimativa Total : 168 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema completo de retenção de dados configurável que permite: Políticas de retenção diferentes por tipo de entidade (Posts, Reports, Media, Logs, etc.) Configuração por território (respeitando legislação local: GDPR, LGPD, etc.) Limpeza automática de dado",
+      "url": "/wiki/docs/backlog-api/FASE16_COMPLIANCE",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE17",
+      "title": "FASE17",
+      "content": "Fase 17: Sistema de Gamificação Harmoniosa Duração : 4 semanas (28 dias úteis) Prioridade : 🔴 ALTA (Engajamento comunitário sustentável) Depende de : Fase 9 (Perfil de Usuário), Fase 14 (Governança) Integra com : Fase 18 (Saúde Territorial) - pode ser desenvolvido em paralelo Estimativa Total : 160 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de gamificação harmoniosa que: Reforça contribuição comunitária real (não engajamento vazio) Respeita interesses do território (personalizaçã",
+      "url": "/wiki/docs/backlog-api/FASE17",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE18",
+      "title": "FASE18",
+      "content": "Fase 18: Saúde Territorial e Monitoramento Duração : 5 semanas (35 dias úteis) Prioridade : 🔴 ALTA (Soberania territorial e autonomia comunitária) Depende de : Fase 9 (Perfil de Usuário) Integra com : Fase 17 (Gamificação) - pode ser desenvolvido em paralelo Estimativa Total : 200 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema completo de saúde territorial e monitoramento que: Permite comunidades monitorarem a saúde do seu território (água, ar, solo, biodiversidade, resíduos) Facilit",
+      "url": "/wiki/docs/backlog-api/FASE18",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE19",
+      "title": "FASE19",
+      "content": "Fase 19: Arquitetura Modular e Deploy Dual (Monolito/Distribuído) Duração : 5 semanas (35 dias úteis) Prioridade : 🟢 MÉDIA Bloqueia : Escalabilidade horizontal e deploy flexível Estimativa Total : 180 horas Status : ⏳ Pendente 🎯 Objetivo Criar arquitetura modular que permita duas versões da aplicação: Versão Monolito : Aplicação única, todos os módulos no mesmo processo (simples, ideal para início) Versão Distribuída : Módulos separados em serviços independentes (escalável, ideal para crescime",
+      "url": "/wiki/docs/backlog-api/FASE19",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE2",
+      "title": "FASE2",
+      "content": "Fase 2: Qualidade de Código e Confiabilidade Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA Bloqueia : Manutenibilidade a longo prazo Estimativa Total : 100 horas Status : ✅ Completo (2025-01-15) 🎯 Objetivo Aumentar cobertura de testes e melhorar qualidade de código. 📋 Tarefas Detalhadas Semana 3: Testes e Cobertura 3.1 Aumentar Cobertura de Testes para >90% Estimativa : 40 horas (5 dias) Status : ⚠️ ~82% atual Tarefas : Analisar cobertura atual por funcionalidade Identificar gaps de",
+      "url": "/wiki/docs/backlog-api/FASE2",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE20",
+      "title": "FASE20",
+      "content": "Fase 20: Sistema de Moeda Territorial (Mint e Economia Local) Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 ALTA (Economia circular e autonomia territorial) Depende de : Fase 6 (Pagamentos), Fase 7 (Payout), Fase 14 (Governança), Fase 17 (Gamificação), Fase 18 (Saúde Territorial) Estimativa Total : 200 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de moeda territorial que: Permite cada território ter sua própria moeda digital Recompensa atividades que agregam valor ao territóri",
+      "url": "/wiki/docs/backlog-api/FASE20",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE21",
+      "title": "FASE21",
+      "content": "Fase 21: Suporte a Criptomoedas (Crypto Ready) Duração : 4 semanas (28 dias úteis) Prioridade : 🟢 MÉDIA Bloqueia : Aceitar pagamentos em criptomoedas Estimativa Total : 152 horas Status : ⏳ Pendente 🎯 Objetivo Tornar a aplicação \"crypto ready\" para aceitar pagamentos tanto em gateways tradicionais (Stripe, MercadoPago) quanto em criptomoedas (Bitcoin, Ethereum, stablecoins), mantendo o mesmo modelo justo, transparente e seguro. 📋 Contexto e Requisitos Visão Geral A aplicação deve suportar múl",
+      "url": "/wiki/docs/backlog-api/FASE21",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE22",
+      "title": "FASE22",
+      "content": "Fase 22: Integrações Externas e Conectividade Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 ALTA (Facilita transição e adoção) Depende de : Fase 6 (Pagamentos), Fase 12 (Termos), Fase 13 (Emails) Estimativa Total : 200 horas Status : ⏳ Pendente 🎯 Objetivo Implementar integrações com aplicativos externos que: Permite postagem cross-platform (Instagram, Facebook, WhatsApp) Conecta com WhatsApp para notificações e comunicação Integra Apple Pay e Google Pay para pagamentos rápidos Implementa ",
+      "url": "/wiki/docs/backlog-api/FASE22",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE23",
+      "title": "FASE23",
+      "content": "Fase 23: Sistema de Compra Coletiva e Organização Comunitária de Alimentos Duração : 4 semanas (28 dias úteis) Prioridade : 🔴 ALTA (Economia local e soberania alimentar) Depende de : Fase 6 (Marketplace), Fase 14 (Governança/Votação), Fase 20 (Moeda Territorial) Integra com : Fase 16 (Entregas) - opcional, pode ser feito depois Estimativa Total : 160 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de compra coletiva de alimentos que: Conecta produtores locais (moradores ou visitantes)",
+      "url": "/wiki/docs/backlog-api/FASE23",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE24",
+      "title": "FASE24",
+      "content": "Fase 24: Sistema de Trocas Comunitárias Duração : 3 semanas (21 dias úteis) Prioridade : 🟡 ALTA (Economia circular e autonomia comunitária) Depende de : Fase 6 (Marketplace), Fase 17 (Gamificação), Fase 20 (Moeda Territorial) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de trocas comunitárias que: Permite usuários trocarem produtos e serviços sem usar dinheiro Facilita economia circular local (troca direta) Integra com sistema de moeda territorial (trocas pod",
+      "url": "/wiki/docs/backlog-api/FASE24",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE25",
+      "title": "FASE25",
+      "content": "Fase 25: Hub de Serviços Digitais Base Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 ALTA (Base para autonomia digital) Depende de : Fase 1 (Segurança), Fase 9 (UserPreferences) Estimativa Total : 96-120 horas Status : ⏳ Pendente 🎯 Objetivo Implementar infraestrutura base para serviços digitais integrados que permite: Usuários conectarem suas próprias contas de serviços digitais (IA, storage, tradução, etc.) Rastreamento de consumo consciente de recursos Feature flags territorial e por us",
+      "url": "/wiki/docs/backlog-api/FASE25",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE26",
+      "title": "FASE26",
+      "content": "Fase 26: Chat com IA e Consumo Consciente Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 ALTA (Valor diferenciado e autonomia) Depende de : Fase 25 (Serviços Digitais Base), Chat (existe) Estimativa Total : 64-80 horas Status : ⏳ Pendente 🎯 Objetivo Implementar IA integrada ao chat que permite: Usuários usarem IA em conversas do chat Seleção de diferentes provedores de IA (OpenAI, Claude, Gemini, etc.) Rastreamento de consumo por conversa Feature flags territorial e por usuário Consumo con",
+      "url": "/wiki/docs/backlog-api/FASE26",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE27",
+      "title": "FASE27",
+      "content": "Fase 27: Negociação Territorial e Assinatura Coletiva de Serviços Digitais Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 ALTA (Economia de escala e inclusão) Depende de : Fase 25 (Serviços Digitais Base), Fase 20 (TerritoryFund), Fase 14 (Votação) Estimativa Total : 120-144 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de negociação territorial de serviços digitais que permite: Territórios negociarem/comprar quotas de serviços digitais Disponibilizar serviços para membros atrav",
+      "url": "/wiki/docs/backlog-api/FASE27",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE28",
+      "title": "FASE28",
+      "content": "Fase 28: Banco de Sementes e Mudas Territorial Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 MÉDIA-ALTA (Soberania alimentar e economia circular) Depende de : TerritoryAsset (existe), Marketplace (existe), Fase 17 (Gamificação), WorkQueue (existe) Estimativa Total : 144-180 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de banco de sementes e mudas territorial que permite: Catalogação e preservação de variedades locais Doação e troca de sementes entre membros Integração com mark",
+      "url": "/wiki/docs/backlog-api/FASE28",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE29",
+      "title": "FASE29",
+      "content": "Fase 29: Suporte Mobile Avançado Duração : 2 semanas (14 dias úteis) ⭐ NOVA Prioridade : 🟡 ALTA (Melhora experiência mobile) Depende de : Fase 9 (Perfil + Segurança), Fase 10 (Mídias + Sync) ⭐ Estimativa Total : 56-70 horas Status : ⏳ Pendente 🎯 Objetivo Implementar suporte completo para funcionalidades mobile avançadas que melhoram significativamente a experiência do usuário no app Flutter, incluindo: Analytics mobile (app version, platform, device info) Deep linking avançado (universal links",
+      "url": "/wiki/docs/backlog-api/FASE29",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE3",
+      "title": "FASE3",
+      "content": "Fase 3: Performance e Escalabilidade Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA Bloqueia : Escalabilidade horizontal Estimativa Total : 84 horas Status : ✅ 100% Completo 🎯 Objetivo Otimizar performance e preparar para escala. 📋 Tarefas Detalhadas Semana 5: Otimizações de Performance 5.1 Concorrência Otimista Estimativa : 24 horas (3 dias) Status : ✅ 100% Implementado Tarefas : Adicionar RowVersion em CommunityPost Adicionar RowVersion em TerritoryEvent Adicionar RowVersion em Map",
+      "url": "/wiki/docs/backlog-api/FASE3",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE4",
+      "title": "FASE4",
+      "content": "Fase 4: Observabilidade e Monitoramento Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA Bloqueia : Operação eficiente em produção Estimativa Total : 80 horas Status : ✅ 100% Completo 🎯 Objetivo Observabilidade completa com métricas, logs e tracing. 📋 Tarefas Detalhadas Semana 7: Logging e Métricas 7.1 Logs Centralizados Estimativa : 24 horas (3 dias) Status : ✅ 100% Completo Tarefas : Escolher plataforma (Seq, Application Insights, ou ELK) Configurar Serilog sink para plataforma escol",
+      "url": "/wiki/docs/backlog-api/FASE4",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE5",
+      "title": "FASE5",
+      "content": "Fase 5: Segurança Avançada Duração : 2 semanas (14 dias úteis) Prioridade : 🟢 MÉDIA-ALTA Bloqueia : Segurança de nível enterprise Estimativa Total : 64 horas Status : ✅ Completo (2025-01-15) 🎯 Objetivo Segurança de nível enterprise. 📋 Tarefas Detalhadas Semana 9: Segurança Básica Avançada 9.1 2FA Completo (TOTP) Estimativa : 24 horas (3 dias) Status : ⚠️ Parcialmente implementado Tarefas : Implementar TOTP (Time-based One-Time Password) Criar endpoints para configurar 2FA Criar endpoints para",
+      "url": "/wiki/docs/backlog-api/FASE5",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE6",
+      "title": "FASE6",
+      "content": "Fase 6: Funcionalidades de Negócio Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA Bloqueia : Completar gaps de negócio essenciais Estimativa Total : 64 horas Status : ✅ Completo (Sistema de Pagamentos implementado na FASE7) Nota : Sistema completo de pagamentos e gestão financeira foi implementado na FASE7 🎯 Objetivo Implementar funcionalidades de negócio essenciais, incluindo sistema de pagamentos básico, exportação de dados (LGPD), analytics e melhorias de interface. Nota : O sistem",
+      "url": "/wiki/docs/backlog-api/FASE6",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE7",
+      "title": "FASE7",
+      "content": "Fase 7: Sistema de Payout e Gestão Financeira Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 ALTA Bloqueia : Completar lógica de negócio de pagamentos Estimativa Total : 176 horas Status : ✅ COMPLETO 🎯 Objetivo Implementar sistema completo de payout (transferência para vendedores), rastreabilidade financeira completa e gestão financeira da plataforma, permitindo transparência total e autonomia para territórios. 📋 Contexto e Requisitos Problema Atual Quando um checkout é marcado como Paid ",
+      "url": "/wiki/docs/backlog-api/FASE7",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE8",
+      "title": "FASE8",
+      "content": "Fase 8: Infraestrutura de Mídia e Armazenamento Duração : 3 semanas (15 dias úteis) Prioridade : 🔴 CRÍTICA (Bloqueante para outras fases) Bloqueia : Fases 9, 10, 11 (todas dependem de mídia) Estimativa Total : 120 horas Status : ✅ Implementado (2025-01-16) Última Atualização : 2025-01-16 🎯 Objetivo Criar infraestrutura completa de armazenamento e gerenciamento de mídias (imagens, vídeos) que será base para: Avatar/Foto de perfil Imagens em posts Imagens em eventos Imagens em anúncios (marketpl",
+      "url": "/wiki/docs/backlog-api/FASE8",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE9",
+      "title": "FASE9",
+      "content": "Fase 9: Perfil de Usuário Completo Duração : 3 semanas (15 dias úteis) Prioridade : 🔴 CRÍTICA (Bloqueante para transição) Depende de : Fase 8 (Infraestrutura de Mídia) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Completar funcionalidades de perfil de usuário para permitir transição suave de outras plataformas, mantendo valores de soberania territorial e união comunitária . Funcionalidades : Avatar/Foto de perfil Bio/Descrição pessoal Visualizar perfil de outros usuários Estatís",
+      "url": "/wiki/docs/backlog-api/FASE9",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_ATUALIZACAO_DEVPORTAL",
+      "title": "FASE10 ATUALIZACAO DEVPORTAL",
+      "content": "Fase 10: Atualização do DevPortal e Documentação Data : 2025-01-17 Status : ✅ Documentação Atualizada 📋 Resumo A Fase 10 introduziu suporte a mídias em todos os tipos de conteúdo (Posts, Eventos, Marketplace, Chat). Este documento descreve as atualizações necessárias no DevPortal e na documentação do projeto. 🔄 OpenAPI/Swagger Geração Automática O arquivo openapi.json é gerado automaticamente quando a aplicação ASP.NET Core roda em modo de desenvolvimento. As mudanças nos contratos (DTOs) são ",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_ATUALIZACAO_DEVPORTAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_DOCUMENTACAO_COMPLETA",
+      "title": "FASE10 DOCUMENTACAO COMPLETA",
+      "content": "Fase 10: Documentação Completa - Checklist Final Data : 2025-01-17 Status : ✅ DOCUMENTAÇÃO COMPLETA ✅ Documentos Criados/Atualizados Documentação Técnica docs/MEDIA_IN_CONTENT.md ✅ Documentação técnica completa da integração de mídias Exemplos de uso da API para cada tipo de conteúdo Guia de validações e limites Arquitetura e padrões de implementação docs/backlog-api/implementacoes/FASE10_IMPLEMENTACAO_COMPLETA.md ✅ Resumo detalhado da implementação Padrões e arquitetura Limitações conhecidas Pr",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_DOCUMENTACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_IMPLEMENTACAO_COMPLETA",
+      "title": "FASE10 IMPLEMENTACAO COMPLETA",
+      "content": "Fase 10: Mídias em Conteúdo - Implementação Completa Data : 2025-01-17 Status : ✅ Implementação Principal Completa Resumo Implementação completa da integração de mídias (imagens e vídeos) em todos os tipos de conteúdo: ✅ Posts : Múltiplas imagens por post (até 10) ✅ Eventos : Imagem de capa + imagens adicionais (até 10 no total) ✅ Marketplace : Múltiplas imagens por item (até 10) ✅ Chat : Uma imagem por mensagem (máximo 5MB) Implementações Realizadas 1. Posts (Feed) Arquivos Modificados backend/",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_IMPLEMENTACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_IMPLEMENTACAO_FINAL",
+      "title": "FASE10 IMPLEMENTACAO FINAL",
+      "content": "Fase 10: Mídias em Conteúdo - Implementação Final Completa Data de Conclusão : 2025-01-17 Status : ✅ IMPLEMENTAÇÃO PRINCIPAL E DOCUMENTAÇÃO COMPLETA 📊 Resumo Executivo A Fase 10 foi 100% implementada e documentada . Todas as funcionalidades principais de integração de mídias em Posts, Eventos, Marketplace e Chat estão funcionando, com documentação técnica completa, DevPortal atualizado e código pronto para produção. ✅ Implementação Completa 1. Posts ✅ ✅ Até 10 imagens por post ✅ Validação de pr",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_IMPLEMENTACAO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_IMPLEMENTACAO_PARCIAL",
+      "title": "FASE10 IMPLEMENTACAO PARCIAL",
+      "content": "Fase 10: Mídias em Conteúdo - Implementação Parcial Data : 2025-01-17 Status : 🔄 Em Progresso (Mídias em Posts concluído) Implementado : ~40% da fase completa ✅ Implementado 1. Mídias em Posts (10.1 e 10.2) Arquivos Modificados: ✅ backend/Araponga.Api/Contracts/Feed/CreatePostRequest.cs - Adicionado campo MediaIds ✅ backend/Araponga.Api/Contracts/Feed/FeedItemResponse.cs - Adicionados campos MediaUrls e MediaCount ✅ backend/Araponga.Api/Validators/CreatePostRequestValidator.cs - Validação de má",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_IMPLEMENTACAO_PARCIAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_PENDENCIAS_IMPLEMENTADAS",
+      "title": "FASE10 PENDENCIAS IMPLEMENTADAS",
+      "content": "Fase 10: Pendências Implementadas Resumo Este documento descreve a implementação das pendências da Fase 10: Testes de Integração , Exclusão Automática de Mídias e Otimizações Adicionais . 1. Testes de Integração (Prioridade Alta) ✅ Implementação Criado arquivo backend/Araponga.Tests/Api/MediaInContentIntegrationTests.cs com testes completos de integração para mídias em conteúdo. Cobertura de Testes 1.1 Posts com Mídias ✅ CreatePost_WithMediaIds_ReturnsPostWithMediaUrls - Criação de post com múlt",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_PENDENCIAS_IMPLEMENTADAS",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_RESUMO_FINAL",
+      "title": "FASE10 RESUMO FINAL",
+      "content": "Fase 10: Mídias em Conteúdo - Resumo Final Data de Conclusão : 2025-01-17 Status : ✅ IMPLEMENTAÇÃO PRINCIPAL COMPLETA ✅ O Que Foi Implementado 1. Posts (Feed) ✅ Múltiplas imagens por post (até 10) ✅ Validação de propriedade e limites ✅ URLs de mídia incluídas nas respostas ✅ Busca em batch para otimização 2. Eventos ✅ Imagem de capa opcional ✅ Até 10 imagens adicionais ✅ Validação de propriedade e limites ✅ URLs de mídia incluídas nas respostas 3. Marketplace (Items) ✅ Múltiplas imagens por item",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_RESUMO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_REVISAO_ESTADO",
+      "title": "FASE10 REVISAO ESTADO",
+      "content": "Fase 10: Revisão de Estado - Preparação para Continuidade Data : 2026-01-16 Status : 📋 Revisão Completa Branch Atual : fix/devportal-diagramas-sintaxe-final Branch da Fase 10 : feature/fase10-midias-em-conteudo 📊 Estado Geral Branch Main (Produção) ❌ Implementação de Mídia : Não presente ✅ Infraestrutura de Mídia (Fase 8) : Implementada ✅ MediaAsset e MediaAttachment : Entidades existem ❌ Mídias em Posts : Não implementado ❌ Mídias em Eventos : Não implementado ❌ Mídias em Marketplace : Não im",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_REVISAO_ESTADO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_STATUS",
+      "title": "FASE10 STATUS",
+      "content": "Fase 10: Status de Implementação Data : 2025-01-17 Progresso : ~60% completo ✅ Implementado 1. Mídias em Posts ✅ CreatePostRequest com MediaIds PostCreationService valida e cria MediaAttachments FeedItemResponse com MediaUrls e MediaCount FeedController inclui URLs em todas as respostas Validação: máximo 10 mídias por post 2. Mídias em Eventos ✅ CreateEventRequest com CoverMediaId e AdditionalMediaIds EventsService valida e cria MediaAttachments EventResponse com CoverImageUrl e AdditionalImageU",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_STATUS",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_STATUS_PREPARACAO",
+      "title": "FASE10 STATUS PREPARACAO",
+      "content": "Fase 10: Status de Preparação - Pronto para Continuidade Data : 2026-01-16 Status : ✅ PREPARAÇÃO COMPLETA Próximo Passo : Verificar estado dos testes e preparar merge 📋 Estado Atual Branch da Fase 10 ✅ Branch : feature/fase10-midias-em-conteudo ✅ Último Commit : 7e54e3f - fix: Corrigir testes de integração de mídia ✅ Implementação : Completa ✅ Documentação : Completa Branch Main ✅ Último Commit : 86102ed - fix(devportal): Remover código Mermaid ⚠️ Fase 10 : Não presente (precisa merge) Branch A",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_STATUS_PREPARACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_VALIDACOES_SEGURANCA",
+      "title": "FASE10 VALIDACOES SEGURANCA",
+      "content": "Fase 10: Validações de Segurança Avançadas Resumo Este documento descreve todas as validações de segurança implementadas para mídias em conteúdo na Fase 10. 1. Validações Implementadas 1.1 Validações de Propriedade ✅ Localização : PostCreationService , EventsService , StoreItemService , ChatService Validações : ✅ Usuário só pode usar mídias que ele mesmo fez upload ( UploadedByUserId == userId ) ✅ Mídias deletadas não podem ser usadas ( IsDeleted == false ) ✅ Validação ocorre antes de criar asso",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_VALIDACOES_SEGURANCA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE1_IMPLEMENTACAO_RESUMO",
+      "title": "FASE1 IMPLEMENTACAO RESUMO",
+      "content": "Fase 1: Segurança Crítica - Resumo de Implementação Data : 2025-01-13 Status : ✅ COMPLETA Duração : Implementada ✅ Implementações Realizadas 1. JWT Secret Management ✅ Melhorias Implementadas ✅ Validação obrigatória de secret em todos os ambientes ✅ Validação de força mínima (32 caracteres em produção) ✅ Validação que secret não é o valor padrão em produção ✅ Mensagens de erro claras e específicas ✅ Logging de warning quando usando secret padrão em desenvolvimento Arquivos Modificados backend/Ar",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE1_IMPLEMENTACAO_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE1_RESUMO_FINAL",
+      "title": "FASE1 RESUMO FINAL",
+      "content": "Fase 1: Segurança Crítica - Resumo Final Data : 2025-01-13 Status : ✅ IMPLEMENTAÇÃO COMPLETA Próximo : Fase 2 - Observabilidade e Monitoramento ✅ Implementações Realizadas 1. JWT Secret Management ✅ Validação obrigatória em todos os ambientes Validação de força mínima (32 caracteres em produção) Validação que secret não é valor padrão em produção Suporte a appsettings.json em desenvolvimento/testes 2. Rate Limiting Completo ✅ Global por IP/usuário autenticado Por endpoint: Auth (5/min), Feed (10",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE1_RESUMO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE1_TESTES_COMPLETO",
+      "title": "FASE1 TESTES COMPLETO",
+      "content": "Fase 1: Testes de Segurança - Documentação Completa Data : 2025-01-13 Status : ✅ COMPLETO 📋 Resumo Este documento detalha todos os testes de segurança implementados para validar as medidas da Fase 1. 🧪 Testes Implementados Classe: SecurityTests Arquivo : backend/Araponga.Tests/Api/SecurityTests.cs Total de Testes : 11 1. Rate Limiting Tests RateLimiting_AuthEndpoint_Returns429AfterLimit Objetivo : Validar rate limiting no endpoint de autenticação Limite Testado : 5 requisições/minuto Comportam",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE1_TESTES_COMPLETO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE1_TESTES_DOCUMENTACAO_ATUALIZACAO",
+      "title": "FASE1 TESTES DOCUMENTACAO ATUALIZACAO",
+      "content": "Fase 1: Atualização de Testes e Documentação Data : 2025-01-13 Status : ✅ COMPLETA 📋 Resumo Este documento descreve as atualizações realizadas em testes e documentação para refletir as mudanças da Fase 1 (Segurança Crítica). ✅ Testes Atualizados 1. ApiFactory - Configuração para Testes ✅ Mudanças ✅ appsettings.json criado no projeto de testes com JWT secret válido ✅ JWT secret configurado: test-secret-key-for-testing-only-minimum-32-chars ✅ Rate limiting configurado com limites maiores para tes",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE1_TESTES_DOCUMENTACAO_ATUALIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE1_TESTES_STATUS_FINAL",
+      "title": "FASE1 TESTES STATUS FINAL",
+      "content": "Fase 1: Status Final dos Testes de Segurança Data : 2025-01-13 Status : ✅ TODOS OS TESTES PASSANDO 📊 Resultado dos Testes Execução Completa Total tests: 11 Passed: 11 ✅ Failed: 0 Total time: ~1 minuto Status : ✅ 100% de sucesso ✅ Testes Passando (11/11) ✅ RateLimiting_AuthEndpoint_Returns429AfterLimit ✅ RateLimiting_WriteEndpoint_Returns429AfterLimit ✅ RateLimiting_FeedEndpoint_RespectsLimit ✅ SecurityHeaders_ArePresentInAllResponses ✅ SecurityHeaders_AllHeadersPresent ✅ Validation_CreatePost_R",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE1_TESTES_STATUS_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE1_VERIFICACAO_COMPLETA",
+      "title": "FASE1 VERIFICACAO COMPLETA",
+      "content": "Fase 1: Verificação Completa de Implementação Data : 2025-01-13 Status : ✅ VERIFICADO E COMPLETO ✅ Checklist de Verificação 1. JWT Secret Management ✅ Implementações Verificadas ✅ Validação obrigatória de secret em todos os ambientes Arquivo : backend/Araponga.Api/Program.cs (linhas 41-47) Código : Verifica se jwtSigningKey está vazio e lança exceção ✅ Validação de força mínima (32 caracteres em produção) Arquivo : backend/Araponga.Api/Program.cs (linhas 63-68) Código : Valida comprimento mínimo",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE1_VERIFICACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE2_IMPLEMENTACAO_PROGRESSO",
+      "title": "FASE2 IMPLEMENTACAO PROGRESSO",
+      "content": "Fase 2: Qualidade de Código e Confiabilidade - Progresso Data Início : 2025-01-15 Status : 🟢 75% Completo Branch : feature/fase2-qualidade-codigo 📊 Progresso Geral Tarefa Estimativa Status Progresso Cobertura de Testes >90% 40h 🟡 Em Progresso 45% Testes de Performance 24h ✅ Completo 100% Testes de Segurança 16h ✅ Completo 100% Estratégia de Cache 24h 🟡 Em Progresso 85% Paginação Completa 16h ✅ Completo 100% Reduzir Duplicação 16h 🟡 Em Progresso 90% Total 100h 🟢 75% ✅ Tarefas Completadas 1.",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE2_IMPLEMENTACAO_PROGRESSO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE2_RESUMO_FINAL",
+      "title": "FASE2 RESUMO FINAL",
+      "content": "Fase 2: Qualidade de Código e Confiabilidade - Resumo Final Data Início : 2025-01-15 Data Conclusão : 2025-01-15 Status : ✅ 100% Completo Branch : feature/fase2-qualidade-codigo PR : Pronto para merge 📊 Progresso Final Tarefa Estimativa Status Progresso Cobertura de Testes >90% 40h ✅ Completo 100% Testes de Performance 24h ✅ Completo 100% Testes de Segurança 16h ✅ Completo 100% Estratégia de Cache 24h ✅ Completo 100% Paginação Completa 16h ✅ Completo 100% Reduzir Duplicação 16h ✅ Completo 100% ",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE2_RESUMO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE3_IMPLEMENTACAO_RESUMO",
+      "title": "FASE3 IMPLEMENTACAO RESUMO",
+      "content": "Fase 3: Performance e Escalabilidade - Resumo de Implementação Data : 2025-01-15 Status : ✅ 100% Completo Branch : feature/fase3-performance-escalabilidade 📋 Resumo Executivo A Fase 3 foi implementada com foco em performance e escalabilidade. As principais implementações incluem: ✅ Concorrência Otimista : RowVersion implementado em entidades críticas ✅ Processamento Assíncrono : BackgroundEventProcessor com retry logic ✅ Redis Cache : Infraestrutura pronta (migração incremental dos services) ✅ ",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE3_IMPLEMENTACAO_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE4_IMPLEMENTACAO_RESUMO",
+      "title": "FASE4 IMPLEMENTACAO RESUMO",
+      "content": "Fase 4: Observabilidade e Monitoramento - Resumo de Implementação Status : ✅ 100% Completo Data de Conclusão : Janeiro 2025 Branch : feature/fase4-observabilidade-monitoramento 📋 Resumo Executivo A Fase 4 implementou observabilidade completa no sistema Araponga, incluindo logs centralizados, métricas de negócio e sistema, distributed tracing com OpenTelemetry, e documentação operacional completa (runbook, troubleshooting, incident playbook). ✅ Implementações Realizadas 1. Logs Centralizados (Se",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE4_IMPLEMENTACAO_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE5_IMPLEMENTACAO_RESUMO",
+      "title": "FASE5 IMPLEMENTACAO RESUMO",
+      "content": "Fase 5: Segurança Avançada - Resumo de Implementação Status : ✅ 100% Completo Data : 2026-01-15 Branch : feature/fase5 📋 Resumo Executivo Este documento resume todas as implementações realizadas na Fase 5: Segurança Avançada, incluindo 2FA completo, sanitização de inputs, proteção CSRF, secrets management, security headers melhorados, auditoria avançada e documentação de penetration testing. ✅ Implementações Realizadas 1. 2FA Completo (TOTP) ✅ Status : ✅ Completo (melhorias implementadas) O que",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE5_IMPLEMENTACAO_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/TESTES_FASE7_RESUMO",
+      "title": "TESTES FASE7 RESUMO",
+      "content": "Resumo de Testes - Fase 7: Sistema de Payout e Gestão Financeira Data : 2026-01-19 Status : ✅ TODOS OS TESTES PASSANDO 📊 Estatísticas de Testes Testes Totais ✅ Testes Passando : 404 testes Testes Pulados : 2 testes (ConcurrencyTests - aguardando ajuste) Testes Falhando : 0 testes Taxa de Sucesso : 100% (404/404) Novos Testes Adicionados ✅ Testes de Domínio : 10+ testes SellerBalanceTests : 5 testes SellerTransactionTests : 5 testes TerritoryPayoutConfigTests : 5 testes Testes de Serviços : 8+ t",
+      "url": "/wiki/docs/backlog-api/implementacoes/TESTES_FASE7_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/INDICE_DOCUMENTOS",
+      "title": "INDICE DOCUMENTOS",
+      "content": "Índice de Documentos - Backlog API Data : 2025-01-13 Última Atualização : 2025-01-17 📚 Documentos por Categoria 🎯 Documentos Principais README.md - Índice principal e visão geral ESTRUTURA_DOCUMENTOS.md - Estrutura de organização INDICE_DOCUMENTOS.md - Este arquivo 📊 Estratégia e Reorganização REORGANIZACAO_ESTRATEGICA_FINAL.md ⭐ - Reorganização completa baseada em padrões elevados RESUMO_REORGANIZACAO_FINAL.md - Resumo executivo da reorganização REVISAO_COMPLETA_PRIORIDADES.md - Revisão comp",
+      "url": "/wiki/docs/backlog-api/INDICE_DOCUMENTOS",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/MAPA_CORRELACAO_FUNCIONALIDADES",
+      "title": "MAPA CORRELACAO FUNCIONALIDADES",
+      "content": "Mapa de Correlação: Funcionalidades entre Plataformas Data : 2025-01-13 Objetivo : Mapear correlações entre funcionalidades de plataformas populares para facilitar transição suave mantendo valores de soberania territorial Contexto : Araponga como alternativa que promove união comunitária vs extrativismo 🎯 Princípios da Correlação Valores do Araponga vs Plataformas Extrativistas Aspecto Plataformas Extrativistas Araponga (Soberania Territorial) Algoritmo Feed manipulado por engajamento Feed cron",
+      "url": "/wiki/docs/backlog-api/MAPA_CORRELACAO_FUNCIONALIDADES",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/NORMALIZACAO_COMPLETA",
+      "title": "NORMALIZACAO COMPLETA",
+      "content": "Normalização Completa da Estrutura Data : 2025-01-13 Status : ✅ NORMALIZAÇÃO COMPLETA ✅ Ações Realizadas 1. Estrutura de Pastas Criada ✅ backlog-api/implementacoes/ - Documentos de implementação ✅ backlog-api/arquivos-originais/ - Arquivos originais (referência) 2. Documentos Movidos Da Raiz docs/ para backlog-api/implementacoes/ ✅ FASE1_*.md (6 arquivos) ✅ FASE2_*.md (2 arquivos) ✅ FASE3_IMPLEMENTACAO_RESUMO.md ✅ FASE4_IMPLEMENTACAO_RESUMO.md ✅ FASE5_IMPLEMENTACAO_RESUMO.md ✅ TESTES_FASE7_RESUM",
+      "url": "/wiki/docs/backlog-api/NORMALIZACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/ORGANIZACAO_FASES_11_14",
+      "title": "ORGANIZACAO FASES 11 14",
+      "content": "Organização Inteligente das Fases 11-14 Data : 2025-01-13 Objetivo : Explicar a organização das fases 11-14 com alternância entre tipos de trabalho e consideração de dependências 🎯 Princípios de Organização 1. Alternância entre Tipos de Trabalho As fases foram organizadas para alternar entre diferentes tipos de trabalho, evitando monotonia e permitindo progresso paralelo quando possível: Fase Tipo de Trabalho Principal Foco Fase 11 Infraestrutura Sistema base de mídia Fase 12 Funcionalidade de ",
+      "url": "/wiki/docs/backlog-api/ORGANIZACAO_FASES_11_14",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/PLANO_ACAO_10_10_RESUMO",
+      "title": "PLANO ACAO 10 10 RESUMO",
+      "content": "Plano de Ação 10/10 - Resumo Executivo Objetivo : Elevar Araponga de 7.4/10 para 10/10 Duração Total : 4-6 semanas (198 horas) Desenvolvedor(es) : 1-2 full-time 📊 Visão Geral Rápida Categoria Atual Alvo Gap Principal Segurança 6/10 10/10 Rate limiting, HTTPS, secrets Observabilidade 6/10 10/10 Métricas, logging estruturado Performance 7/10 10/10 Redis, índices, otimizações Qualidade 7/10 10/10 Result, exceções, DRY Testes 8/10 10/10 Cobertura 90%+, performance Documentação 9/10 10/10 Runbooks, ",
+      "url": "/wiki/docs/backlog-api/PLANO_ACAO_10_10_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/README",
+      "title": "README",
+      "content": "Backlog API - Estrutura Organizada Planejamento Estratégico de Desenvolvimento Data de Criação : 2025-01-13 Última Revisão : 2025-01-20 Objetivo : Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado Estimativa Total : 450 dias sequenciais / ~220 dias com paralelização (incluindo novas fases estratégicas) Status Atual : 9.3/10 (após implementação das fases 1-8, incluindo FASE8 com funcionalidades extras) ⭐ Estratégia de C",
+      "url": "/wiki/docs/backlog-api/README",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/REALINHAMENTO_ESTRATEGICO_FASES_8_14",
+      "title": "REALINHAMENTO ESTRATEGICO FASES 8 14",
+      "content": "Realinhamento Estratégico: Fases 8-14 Data : 2025-01-13 Contexto : Nada está em produção - podemos reorganizar livremente Objetivo : Otimizar ordem de implementação baseado em eficiência, urgência e necessidade 🎯 Análise Estratégica Situação Atual ✅ Fases 1-7 : Completas (Segurança, Qualidade, Performance, Observabilidade, Pagamentos, Payouts) ⏳ Fases 8-14 : Pendentes (Cripto, Arquitetura Modular, Otimizações, Mídia, Perfil, Conteúdo, Edição) 📊 Status : 9.2/10 (excelente base técnica) 🎯 Gap P",
+      "url": "/wiki/docs/backlog-api/REALINHAMENTO_ESTRATEGICO_FASES_8_14",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/REORGANIZACAO_ESTRATEGICA_FINAL",
+      "title": "REORGANIZACAO ESTRATEGICA FINAL",
+      "content": "Reorganização Estratégica Final do Backlog Data : 2025-01-13 Objetivo : Revisão completa e reorganização inteligente baseada em padrões elevados Status : 📋 Análise Completa - Nova Estrutura Proposta 🎯 Princípios de Reorganização Critérios Elevados Aplicados Valor de Negócio Real Permite transição de usuários? Reforça soberania territorial? Gera receita ou reduz custos? Melhora experiência significativamente? Dependências e Bloqueios Minimizar dependências bloqueantes Maximizar paralelização Se",
+      "url": "/wiki/docs/backlog-api/REORGANIZACAO_ESTRATEGICA_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_EXECUTIVO_ESTRATEGICO",
+      "title": "RESUMO EXECUTIVO ESTRATEGICO",
+      "content": "Resumo Executivo Estratégico: Araponga Data : 2025-01-13 Versão : 1.0 Audience : Investidores, Parceiros, Stakeholders 🎯 Visão Executiva O Que É o Araponga? Araponga é uma plataforma de soberania territorial que conecta comunidades locais através de um feed cronológico territorial, marketplace comunitário, eventos locais e mapeamento colaborativo. Diferente de plataformas extrativistas, o Araponga prioriza união comunitária sobre engajamento manipulado , contexto territorial sobre escala global",
+      "url": "/wiki/docs/backlog-api/RESUMO_EXECUTIVO_ESTRATEGICO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_EXPANSAO_FUNCIONALIDADES",
+      "title": "RESUMO EXPANSAO FUNCIONALIDADES",
+      "content": "Resumo Executivo: Expansão de Funcionalidades (Fases 11-14) Data : 2025-01-13 Objetivo : Resumo executivo da expansão de funcionalidades para transição suave mantendo valores de soberania territorial 🎯 Visão Geral As Fases 11-14 expandem funcionalidades existentes para permitir transição suave de usuários de outras plataformas (Instagram, Facebook, WhatsApp), mantendo valores de soberania territorial e união comunitária . Objetivo Principal Elevar funcionalidades de negócio de 6.5/10 para 9.0/1",
+      "url": "/wiki/docs/backlog-api/RESUMO_EXPANSAO_FUNCIONALIDADES",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_FASES_25_28",
+      "title": "RESUMO FASES 25 28",
+      "content": "Resumo Executivo: Fases 25-28 - Autonomia Digital e Economia Circular Data : 2025-01-17 Versão : 1.0 Status : 📋 Planejamento Completo 🎯 Visão Geral As Fases 25-28 expandem a plataforma Araponga para incluir: Fase 25 : Infraestrutura base para serviços digitais integrados Fase 26 : Chat com IA e consumo consciente Fase 27 : Negociação territorial e assinatura coletiva de serviços Fase 28 : Banco de sementes e mudas territorial Objetivo Estratégico : Promover autonomia digital e economia circula",
+      "url": "/wiki/docs/backlog-api/RESUMO_FASES_25_28",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_NORMALIZACAO",
+      "title": "RESUMO NORMALIZACAO",
+      "content": "Resumo da Normalização Completa Data : 2025-01-13 Status : ✅ NORMALIZAÇÃO COMPLETA ✅ Ações Realizadas 1. Estrutura de Pastas ✅ implementacoes/ - Documentos de implementação das fases ✅ arquivos-originais/ - Arquivos originais (referência histórica) 2. Documentos Movidos Implementações ✅ FASE1_*.md (6 arquivos) → implementacoes/ ✅ FASE2_*.md (2 arquivos) → implementacoes/ ✅ FASE3_IMPLEMENTACAO_RESUMO.md → implementacoes/ ✅ FASE4_IMPLEMENTACAO_RESUMO.md → implementacoes/ ✅ FASE5_IMPLEMENTACAO_RESU",
+      "url": "/wiki/docs/backlog-api/RESUMO_NORMALIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_NOVAS_FASES",
+      "title": "RESUMO NOVAS FASES",
+      "content": "Resumo das Novas Fases Criadas Data : 2025-01-13 Contexto : Expansão do plano de ação com funcionalidades de atividades territoriais, saúde, moeda, compra coletiva e integrações 📋 Novas Fases Criadas Fase 18: Saúde Territorial e Monitoramento Duração : 35 dias (200 horas) Prioridade : 🔴 ALTA Status : ⏳ Pendente Funcionalidades Principais : Sistema completo de observações de saúde (água, ar, solo, biodiversidade, resíduos) Sistema de sensores físicos (pluviômetro, qualidade do ar, etc.) Indicad",
+      "url": "/wiki/docs/backlog-api/RESUMO_NOVAS_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_REALINHAMENTO",
+      "title": "RESUMO REALINHAMENTO",
+      "content": "Resumo Executivo: Realinhamento Estratégico das Fases 8-14 Data : 2025-01-13 Decisão : Reorganizar ordem das fases baseado em eficiência, urgência e necessidade 🎯 Decisão Estratégica Situação ✅ Fases 1-7 completas (base técnica sólida: 9.2/10) ⏳ Fases 8-14 pendentes (149 dias de trabalho) 🎯 Gap : Funcionalidades críticas para transição de usuários vêm depois de não-críticas Problema Identificado Ordem Original : Cripto (28 dias) - Valor baixo Arquitetura (35 dias) - Valor baixo Otimizações (21",
+      "url": "/wiki/docs/backlog-api/RESUMO_REALINHAMENTO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_REORGANIZACAO_FINAL",
+      "title": "RESUMO REORGANIZACAO FINAL",
+      "content": "Resumo Executivo: Reorganização Estratégica Final Data : 2025-01-13 Objetivo : Resumo executivo da reorganização estratégica completa do backlog 🎯 Principais Mudanças Estratégicas 1. Saúde Territorial (Fase 18) → Mais Cedo Antes : Após gamificação Depois : Antes de moeda territorial Razão : Base para atividades gamificadas e mint de moeda 2. Gamificação (Fase 17) → Junto com Saúde Antes : Após governança Depois : Paralelo com saúde Razão : Atividades territoriais precisam de gamificação 3. Moed",
+      "url": "/wiki/docs/backlog-api/RESUMO_REORGANIZACAO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/REVISAO_COMPLETA_PRIORIDADES",
+      "title": "REVISAO COMPLETA PRIORIDADES",
+      "content": "Revisão Completa e Reformulação de Prioridades Data : 2025-01-13 Objetivo : Análise consciente e livre do backlog completo com reformulação de prioridades baseada em critérios elevados Status : 📋 Análise Completa - Proposta de Reformulação 🎯 Princípios de Avaliação Critérios Elevados Considerados Valor de Negócio Real Permite transição de usuários de outras plataformas? Reforça valores de soberania territorial? Gera receita ou reduz custos? Melhora experiência do usuário significativamente? De",
+      "url": "/wiki/docs/backlog-api/REVISAO_COMPLETA_PRIORIDADES",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/ROADMAP_VISUAL",
+      "title": "ROADMAP VISUAL",
+      "content": "Roadmap Visual Estratégico Data : 2025-01-13 Versão : Estratégica Final 🎯 Visão Geral das 6 Ondas ┌─────────────────────────────────────────────────────────────────┐ │ ONDA 1: MVP ESSENCIAL (65d) │ │ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ │ │ │ Fase 8 │→ │ Fase 9 │ │ Fase 10 │→ │ Fase 11 │ │ │ │ Mídia │ │ Perfil │ │ Mídias │ │ Edição │ │ │ │ (15d) │ │ (15d) │ │ (20d) │ │ (15d) │ │ │ └──────────┘ └──────────┘ └──────────┘ └──────────┘ │ │ │ │ Resultado: MVP completo (90% transição d",
+      "url": "/wiki/docs/backlog-api/ROADMAP_VISUAL",
+      "category": "Outros"
+    },
+    {
+      "id": "CARTILHA_COMPLETA",
+      "title": "CARTILHA COMPLETA",
+      "content": "📘 Cartilha Completa - Araponga Guia Detalhado para Todos os Papéis na Construção do Araponga Versão : 1.0 Data : 2025-01-20 📋 Índice Introdução Estrutura do Time Papéis e Responsabilidades Fluxos de Trabalho Ferramentas e Recursos Comunicação e Colaboração Discord - Organização do Time GitHub - Controle de Código Processo de Contribuição Valores na Prática Introdução Esta cartilha é um guia completo para todas as pessoas que querem contribuir com o Araponga, independente do papel ou nível de e",
+      "url": "/wiki/docs/CARTILHA_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "CURSOR_CONFIGURACAO_RECOMENDADA",
+      "title": "CURSOR CONFIGURACAO RECOMENDADA",
+      "content": "Configuração Recomendada do Cursor - Arquivos de Referência Versão : 1.0 Data : 2025-01-20 Objetivo : Listar todos os arquivos de configuração recomendados para referência no .cursorrules 📋 Sumário Este documento lista todos os arquivos de configuração e documentação que devem ser referenciados no .cursorrules para garantir que o Cursor tenha contexto completo do projeto, padrões e boas práticas. 1. Arquivos de Configuração Obrigatórios 1.1 Design e Identidade Visual Arquivos Recomendados : doc",
+      "url": "/wiki/docs/CURSOR_CONFIGURACAO_RECOMENDADA",
+      "category": "Outros"
+    },
+    {
+      "id": "CURSOR_CONFIG_FILES_REFERENCE",
+      "title": "CURSOR CONFIG FILES REFERENCE",
+      "content": "Arquivos de Configuração para Referência no Cursor Versão : 1.0 Data : 2025-01-20 Baseado em : .cursorrules , boas práticas do projeto, padrões Cursor 📋 Objetivo Este documento lista arquivos de configuração e documentação que devem ser referenciados no .cursorrules para garantir que o Cursor tenha contexto completo do projeto. 1. Documentação de Regras e Padrões (Obrigatório) Design e Identidade Visual docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md docs/CURSOR_DESIGN_RULES.md docs/ANALISE_DESIGN_SIST",
+      "url": "/wiki/docs/CURSOR_CONFIG_FILES_REFERENCE",
+      "category": "Outros"
+    },
+    {
+      "id": "CURSOR_DESIGN_RULES",
+      "title": "CURSOR DESIGN RULES",
+      "content": "Regras de Design para Desenvolvimento - Araponga Versão : 1.0 Data : 2025-01-20 Aplicação : Wiki, DevPortal, App Mobile, Site Institucional, todas as interfaces Araponga 📋 Sumário Este documento define regras práticas de design para desenvolvimento no repositório Araponga. Use como referência para todas as decisões de design durante o desenvolvimento. Documento Relacionado : DESIGN_SYSTEM_IDENTIDADE_VISUAL.md (identidade e marca) Análise Detalhada : ANALISE_DESIGN_SISTEMATICA_MELHORIAS.md (anál",
+      "url": "/wiki/docs/CURSOR_DESIGN_RULES",
+      "category": "Outros"
+    },
+    {
+      "id": "CURSOR_DOCUMENTATION_RULES",
+      "title": "CURSOR DOCUMENTATION RULES",
+      "content": "Regras de Documentação para Agentes Cursor - Araponga Versão : 1.0 Data : 2025-01-20 Status : ⚠️ OBRIGATÓRIO 🚨 REGRA FUNDAMENTAL TODA mudança no código DEVE ser acompanhada de atualização na documentação correspondente. Esta é uma regra NÃO NEGOCIÁVEL . Documentação desatualizada é considerado um bug crítico. Auto-Aprendizado Após Revisões ⚠️ OBRIGATÓRIO : Após qualquer revisão técnica (design, código, arquitetura), seguir o processo de auto-aprendizado: Capturar Lições : Documentar em docs/LIC",
+      "url": "/wiki/docs/CURSOR_DOCUMENTATION_RULES",
+      "category": "Outros"
+    },
+    {
+      "id": "DEPLOYMENT_MULTI_INSTANCE",
+      "title": "DEPLOYMENT MULTI INSTANCE",
+      "content": "Deployment Multi-Instância e Load Balancer Este documento descreve como configurar e fazer deploy da aplicação Araponga em múltiplas instâncias com load balancer. 📋 Pré-requisitos API stateless (sem sessão no servidor) Cache distribuído (Redis) configurado Banco de dados com suporte a read replicas (opcional, mas recomendado) Load balancer (Nginx, AWS ALB, Azure Load Balancer, etc.) 🔧 Configuração 1. API Stateless A API Araponga é stateless por design: Autenticação via JWT (sem sessão no servi",
+      "url": "/wiki/docs/DEPLOYMENT_MULTI_INSTANCE",
+      "category": "Outros"
+    },
+    {
+      "id": "design-review-devportal",
+      "title": "design-review-devportal",
+      "content": "Design Review: Developer Portal Araponga 📊 Análise Atual ✅ Pontos Fortes Paleta de cores harmoniosa (verde/azul em fundo escuro) Hierarquia tipográfica clara Grid responsivo funcional Navegação lateral bem estruturada Cards com bom contraste 🔍 Oportunidades de Melhoria 🎨 Propostas de Ajuste 1. Hierarquia Visual e Espaçamento Problema: Seções muito próximas visualmente (bordas subtis) Falta de \"respiração\" entre seções grandes Cards podem ter mais diferenciação visual Solução: /* Espaçamento m",
+      "url": "/wiki/docs/design-review-devportal",
+      "category": "Outros"
+    },
+    {
+      "id": "DESIGN_SYSTEM_IDENTIDADE_VISUAL",
+      "title": "DESIGN SYSTEM IDENTIDADE VISUAL",
+      "content": "Araponga — Manual de Identidade Visual e Marca Versão : 1.0 Data : 2025-01-20 Status : Documento Fundacional Aplicação : Todas as interfaces, comunicações e materiais do projeto Araponga Sumário Executivo Este documento define a identidade visual, a marca e os princípios de design do Araponga — uma plataforma digital comunitária orientada ao território. Ele serve como referência única para todas as decisões de design, comunicação e experiência do usuário, garantindo consistência e alinhamento co",
+      "url": "/wiki/docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL",
+      "category": "Outros"
+    },
+    {
+      "id": "DESIGN_SYSTEM_TOKENS",
+      "title": "DESIGN SYSTEM TOKENS",
+      "content": "Design Tokens - Sistema Unificado Versão : 1.0 Data : 2025-01-20 Status : ✅ Implementado Localização : frontend/shared/styles/design-tokens.css 📋 Sumário Este documento descreve o sistema unificado de design tokens do Araponga. Os tokens são a fonte única de verdade para todos os valores de design (cores, tipografia, espaçamento, etc.) e são usados por Wiki e DevPortal para garantir consistência visual total. Objetivo: Garantir que Wiki e DevPortal compartilhem a mesma identidade visual, criand",
+      "url": "/wiki/docs/DESIGN_SYSTEM_TOKENS",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_404_DIAGNOSTICO",
+      "title": "DEVPORTAL 404 DIAGNOSTICO",
+      "content": "Diagnóstico: DevPortal 404 Data : 2025-01-20 Problema : devportal.araponga.app retornando 404 Status : Investigando 🔍 Análise do Problema Sintomas URL devportal.araponga.app retorna 404 \"File not found\" GitHub Pages mostra erro padrão Workflow de deploy está executando com sucesso Possíveis Causas CNAME não configurado no GitHub Pages Verificar configurações do repositório Verificar se domínio customizado está habilitado DNS não apontando corretamente Verificar registros DNS do domínio devporta",
+      "url": "/wiki/docs/DEVPORTAL_404_DIAGNOSTICO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_404_TROUBLESHOOTING",
+      "title": "DEVPORTAL 404 TROUBLESHOOTING",
+      "content": "Troubleshooting: DevPortal 404 no GitHub Pages Problema O DevPortal em devportal.araponga.app está retornando 404, mesmo com o workflow de deploy executando com sucesso. Causa Provável O arquivo CNAME na raiz do repositório ( araponga.eco.br ) pode estar conflitando com o CNAME criado pelo workflow no dist/ ( devportal.araponga.app ). Configuração Atual GitHub Pages CNAME : devportal.araponga.app (configurado via API, confirmado) CNAME na raiz do repo : araponga.eco.br (pode estar conflitando) C",
+      "url": "/wiki/docs/DEVPORTAL_404_TROUBLESHOOTING",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_ANALISE_NAVEGACAO_CONTEUDO",
+      "title": "DEVPORTAL ANALISE NAVEGACAO CONTEUDO",
+      "content": "DevPortal - Análise de Navegação e Conteúdo Data : 2025-01-20 Versão : 1.0 Status : ✅ DOCUMENTAÇÃO - Análise completa da lógica de navegação e estrutura de conteúdo 🎯 Objetivo Este documento descreve a lógica de navegação do DevPortal, explica a diferença entre o menu lateral e o menu central, detalha como o conteúdo foi dividido, e valida se os links estão funcionando corretamente. 📋 Estrutura de Navegação 1. Menu Lateral (Sidebar) Localização : Esquerda da tela ( .sidebar-container ) Função ",
+      "url": "/wiki/docs/DEVPORTAL_ANALISE_NAVEGACAO_CONTEUDO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_ESTRUTURA_PAGINAS_SEPARADAS",
+      "title": "DEVPORTAL ESTRUTURA PAGINAS SEPARADAS",
+      "content": "DevPortal - Estrutura de Páginas Separadas Data : 2025-01-20 Versão : 1.0 Status : 🟢 PROPOSTA - Estrutura modular para exploração progressiva 🎯 Objetivo Criar uma estrutura de páginas separadas que permita ao usuário explorar o conteúdo com calma, mantendo os elementos fixos de navegação (header, sidebar) sempre visíveis. 📐 Estrutura Proposta Arquitetura de Navegação ┌─────────────────────────────────────────────────────────┐ │ HEADER (fixo) │ │ - Logo/título │ │ - Idioma, tema │ │ - Link par",
+      "url": "/wiki/docs/DEVPORTAL_ESTRUTURA_PAGINAS_SEPARADAS",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_EXPLICACAO_NAVEGACAO_COMPLETA",
+      "title": "DEVPORTAL EXPLICACAO NAVEGACAO COMPLETA",
+      "content": "DevPortal - Explicação Completa da Navegação Data : 2025-01-20 Versão : 1.0 Status : ✅ DOCUMENTAÇÃO COMPLETA - Lógica, estrutura e problemas documentados 📋 Sumário Executivo Testes Rodados : ✅ 17 testes executados Testes Passando : ✅ 15 testes (88%) Testes Falhando : ❌ 2 testes (12% - IDs duplicados) Problemas Identificados : 2 IDs duplicados : id=\"admin\" e id=\"eventos\" aparecem 2 vezes cada Conteúdo fora de phase-panels : Algumas seções estão fora dos phase-panels correspondentes Phase-panels ",
+      "url": "/wiki/docs/DEVPORTAL_EXPLICACAO_NAVEGACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_IMPLEMENTACAO_SRP_RESUMO",
+      "title": "DEVPORTAL IMPLEMENTACAO SRP RESUMO",
+      "content": "DevPortal - Implementação SRP - Resumo Executivo Data : 2025-01-20 Versão : 1.0 Status : 🟡 EM IMPLEMENTAÇÃO 🎯 Objetivo Implementar a reestruturação completa do DevPortal respeitando SRP e Simplicidade de Contexto , separando cada diagrama em sua própria seção individual. 📊 Situação Atual vs. Proposta ❌ Situação Atual Seção #fluxos (linha ~1577): Múltiplos diagramas misturados na mesma seção 13 diagramas agrupados em uma única seção com múltiplos flow-step Violação de SRP : Uma seção com múlti",
+      "url": "/wiki/docs/DEVPORTAL_IMPLEMENTACAO_SRP_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_PLANO_ACAO_IMPLEMENTACAO",
+      "title": "DEVPORTAL PLANO ACAO IMPLEMENTACAO",
+      "content": "DevPortal - Plano de Ação de Implementação URGENTE Data : 2025-01-20 Status : 🔴 URGENTE Confirmação de Estrutura : Cenários Práticos em API Prática ✅ ✅ Confirmação de Estrutura Final FUNCIONALIDADES Operações (submenu): Métodos/endpoints com diagramas em páginas próprias API PRÁTICA Cenários Práticos (submenu): 6 páginas dedicadas Guia de Produção (submenu): Passos em páginas dedicadas Autenticação : Página dedicada (já existe #auth ) Contexto e Headers : Página dedicada (já existe - linha 2409",
+      "url": "/wiki/docs/DEVPORTAL_PLANO_ACAO_IMPLEMENTACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_PLANO_ACAO_TIPOGRAFIA_DESIGN",
+      "title": "DEVPORTAL PLANO ACAO TIPOGRAFIA DESIGN",
+      "content": "DevPortal - Plano de Ação: Tipografia e Design de Alto Padrão Data : 2025-01-20 Versão : 1.0 Status : 🟢 PLANO DE AÇÃO - Reorganização profissional do conteúdo 🎯 Objetivo Reorganizar a apresentação do conteúdo na área variável (conteúdo dinâmico) utilizando princípios de tipografia e design de alto padrão visual, considerando-se um profissional expert internacional. 📊 Análise Atual Pontos Fortes Identificados Sistema de tokens CSS : Variáveis bem definidas para espaçamento, tipografia e cores ",
+      "url": "/wiki/docs/DEVPORTAL_PLANO_ACAO_TIPOGRAFIA_DESIGN",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_PRINCIPIOS_ESTRUTURA",
+      "title": "DEVPORTAL PRINCIPIOS ESTRUTURA",
+      "content": "DevPortal - Princípios de Estrutura Data : 2025-01-20 Versão : 1.0 Status : ✅ DIRETRIZES OBRIGATÓRIAS 🎯 Princípios Fundamentais 1. Princípio de Responsabilidade Única (SRP) Cada página deve ter UMA única responsabilidade clara. ✅ Uma página = Um assunto específico ✅ Um diagrama = Uma página dedicada ✅ Um guia = Uma página focada ❌ NUNCA misturar múltiplos assuntos na mesma página ❌ NUNCA misturar diagramas diferentes na mesma página Exemplos: ✅ CORRETO: /fluxos/autenticacao.html → Apenas autent",
+      "url": "/wiki/docs/DEVPORTAL_PRINCIPIOS_ESTRUTURA",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_PROPOSTA_SIMPLIFICACAO",
+      "title": "DEVPORTAL PROPOSTA SIMPLIFICACAO",
+      "content": "DevPortal - Proposta de Simplificação e Coesão Data : 2025-01-20 Objetivo : Simplificar estrutura de navegação, eliminar duplicações e melhorar coesão 🔍 Problemas Identificados 1. Duplicação de Menu \"API Prática\" aparece 2 vezes no sidebar (linhas 316 e 332) Uma versão tem links errados (Funcionalidades) Causa confusão e inconsistência 2. Sobreposição Conceitual \"Funcionalidades\" descreve features (o que o sistema faz) \"API Prática\" descreve uso da API (como usar) Marketplace aparece em ambos c",
+      "url": "/wiki/docs/DEVPORTAL_PROPOSTA_SIMPLIFICACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_REESTRUTURACAO_ARQUIVOS_SEPARADOS",
+      "title": "DEVPORTAL REESTRUTURACAO ARQUIVOS SEPARADOS",
+      "content": "DevPortal - Reestruturação em Arquivos Separados Data : 2025-01-20 Versão : 1.0 Status : 🟢 PROPOSTA - Estrutura proposta para facilitar manutenção 🎯 Objetivo Dividir o conteúdo do DevPortal em arquivos separados (uma página por seção) e criar um sistema de roteamento real, facilitando a manutenção e organização do código. 📁 Estrutura de Arquivos Proposta frontend/devportal/ ├── index.html # Container base (header, sidebar, footer) ├── assets/ │ ├── js/ │ │ ├── router.js # Roteador que carrega",
+      "url": "/wiki/docs/DEVPORTAL_REESTRUTURACAO_ARQUIVOS_SEPARADOS",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_REESTRUTURACAO_CONTEUDO",
+      "title": "DEVPORTAL REESTRUTURACAO CONTEUDO",
+      "content": "DevPortal - Reestruturação de Conteúdo Data : 2025-01-20 Versão : 1.0 Status : 🟡 EM IMPLEMENTAÇÃO - Reestruturação completa do conteúdo 🎯 Objetivo Reformular a apresentação do conteúdo do DevPortal criando: ✅ Itens e subitens de navegação hierárquicos por assunto ✅ Identificação de padrões de conteúdo ✅ Uma página dedicada por diagrama de sequência (SRP) ✅ Contexto simples e focado em cada página (Simplicidade) ✅ Padronização rigorosa de exposição de conteúdo ✅ Excelência em padrão e orientaçã",
+      "url": "/wiki/docs/DEVPORTAL_REESTRUTURACAO_CONTEUDO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_REESTRUTURACAO_DETALHADA",
+      "title": "DEVPORTAL REESTRUTURACAO DETALHADA",
+      "content": "DevPortal - Reestruturação Detalhada URGENTE Data : 2025-01-20 Status : 🔴 URGENTE Objetivo : Reorganizar estrutura com submenus e páginas dedicadas conforme solicitação 📋 Nova Estrutura Proposta 1. FUNCIONALIDADES (com submenus) ┌─────────────────────────────────────┐ │ FUNCIONALIDADES │ ├─────────────────────────────────────┤ │ 1. Operações │ │ ├─ Método X (página + diagrama) │ │ ├─ Método Y (página + diagrama) │ │ └─ Método Z (página + diagrama) │ │ │ │ 2. Cenários Negócio │ │ ├─ Onboarding ",
+      "url": "/wiki/docs/DEVPORTAL_REESTRUTURACAO_DETALHADA",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_REFERENCIAS_MERCADO",
+      "title": "DEVPORTAL REFERENCIAS MERCADO",
+      "content": "DevPortal - Referências de Mercado e Padrões de Documentação Data : 2025-01-20 Versão : 1.0 Status : ✅ REFERÊNCIAS APLICADAS 🎯 Objetivo Este documento documenta as referências de documentação de APIs de mercado utilizadas para orientar o design e estrutura do Developer Portal da Araponga, garantindo alinhamento com padrões estabelecidos e melhores práticas da indústria. 📚 Referências Principais 1. Stripe Docs URL : https://stripe.com/docs Características Principais : ✅ Navegação lateral fixa c",
+      "url": "/wiki/docs/DEVPORTAL_REFERENCIAS_MERCADO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_REGRA_TESTES_OBRIGATORIO",
+      "title": "DEVPORTAL REGRA TESTES OBRIGATORIO",
+      "content": "DevPortal - Regra de Testes Obrigatória Data : 2025-01-21 Status : ✅ OBRIGATÓRIO ⚠️ REGRA CRÍTICA: Testes Devem Passar Sempre A PARTIR DE AGORA, qualquer alteração no DevPortal DEVE garantir que todos os testes passem antes e depois da alteração. 🎯 Regra Estabelecida ANTES de fazer QUALQUER alteração no DevPortal: ✅ Executar testes : npm test ✅ Garantir que todos passam : Todos os testes devem passar sem erros ✅ Se houver falhas : Corrigir testes ou código até que todos passem ✅ Depois da alter",
+      "url": "/wiki/docs/DEVPORTAL_REGRA_TESTES_OBRIGATORIO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_RESULTADOS_TESTES_NAVEGACAO",
+      "title": "DEVPORTAL RESULTADOS TESTES NAVEGACAO",
+      "content": "DevPortal - Resultados dos Testes de Navegação Data : 2025-01-20 Versão : 1.0 Status : ✅ TESTES RODADOS - Resultados documentados 📊 Resultados dos Testes Total de Testes : 17 Testes Passando : 15 ✅ Testes Falhando : 2 ❌ ✅ Testes Passando (15) Estrutura de Navegação - Menu Lateral vs Menu Central ✅ Menu lateral (sidebar) deve existir ✅ Menu central (phase-tabs) deve existir ✅ Menu lateral deve ter links com href=\"#\" para seções internas ✅ Menu central deve ter tabs com data-phase para phase-pane",
+      "url": "/wiki/docs/DEVPORTAL_RESULTADOS_TESTES_NAVEGACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVPORTAL_TESTES_IMPLEMENTADOS",
+      "title": "DEVPORTAL TESTES IMPLEMENTADOS",
+      "content": "DevPortal - Testes Implementados Data : 2025-01-21 Status : ✅ Implementado 📋 Resumo Implementação completa de testes automatizados para o Developer Portal da API Araponga. O DevPortal é uma aplicação HTML estática com JavaScript vanilla, então os testes validam estrutura HTML, funcionalidades JavaScript e links. 🧪 Estrutura de Testes Criada 1. Configuração package.json : Dependências e scripts de teste jest.config.js : Configuração do Jest com jsdom jest.setup.js : Setup global para testes 2. ",
+      "url": "/wiki/docs/DEVPORTAL_TESTES_IMPLEMENTADOS",
+      "category": "Outros"
+    },
+    {
+      "id": "diagramas-faltantes-analise",
+      "title": "diagramas-faltantes-analise",
+      "content": "Análise: Diagramas de Sequência Faltantes Data : 2025-01-17 Autor : Análise de Cenários Complexos 📊 Diagramas Existentes (6) ✅ auth - Autenticação social → JWT ✅ territory-discovery - Descoberta de territórios próximos ✅ feed-listing - Listagem de feed territorial ✅ post-creation - Criação de post com mídias e GeoAnchors ✅ membership-resident - Visitor → Resident (solicitação e aprovação) ✅ moderation - Reports, triagem e bloqueios 🎯 Cenários Complexos que FALTAM Diagramas 1. Marketplace - Flu",
+      "url": "/wiki/docs/diagramas-faltantes-analise",
+      "category": "Outros"
+    },
+    {
+      "id": "DISCORD_SETUP",
+      "title": "DISCORD SETUP",
+      "content": "💬 Configuração do Discord - Araponga Guia para Configurar o Discord do Time Araponga Versão : 1.1 Data : 2025-01-20 Link do Discord : https://discord.gg/auwqN8Yjgw (permanente, nunca expira) 🎯 Objetivo Criar um espaço de comunicação e colaboração para o time orgânico do Araponga, permitindo: Organização natural em torno de objetivos comuns Comunicação horizontal entre todos os papéis Acolhimento de novos membros Discussões sobre funcionalidades e direção 🏗️ Estrutura de Canais 📍 Categorias P",
+      "url": "/wiki/docs/DISCORD_SETUP",
+      "category": "Outros"
+    },
+    {
+      "id": "ECOSSISTEMA_CONSOLIDACAO_CHECKLIST",
+      "title": "ECOSSISTEMA CONSOLIDACAO CHECKLIST",
+      "content": "✅ Checklist de Implementação - Estratégia de Consolidação Checklist Detalhado para Implementar a Estratégia de Consolidação do Ecossistema Versão : 1.0 Data : 2025-01-20 Baseado em : ECOSSISTEMA_CONSOLIDACAO_ESTRATEGIA.md 📊 Status Geral Última Atualização : 2025-01-20 Fase Atual 🔴 Fase 1: Fundação - Em progresso Progresso Geral ✅ Documentação criada ⏳ Infraestrutura em setup (Discord, GitHub) ⏳ Recursos visuais (planejado) 🔴 Fase 1: Fundação (0-1 mês) 1.1 Discord Configurado e Funcional Estru",
+      "url": "/wiki/docs/ECOSSISTEMA_CONSOLIDACAO_CHECKLIST",
+      "category": "Outros"
+    },
+    {
+      "id": "ECOSSISTEMA_CONSOLIDACAO_ESTRATEGIA",
+      "title": "ECOSSISTEMA CONSOLIDACAO ESTRATEGIA",
+      "content": "🌱 Estratégia de Consolidação do Ecossistema de Desenvolvimento Territorial Plano de Fortalecimento da Comunidade e Preparação para Produção Versão : 1.0 Data : 2025-01-20 Contexto : Pré-produção - Site institucional e repositório ativos Objetivo : Construir comunidade forte e ecossistema de contribuição antes do lançamento da plataforma 📋 Resumo Executivo Este plano estabelece uma estratégia orgânica e consciente para consolidar o ecossistema de desenvolvimento territorial do Araponga, constru",
+      "url": "/wiki/docs/ECOSSISTEMA_CONSOLIDACAO_ESTRATEGIA",
+      "category": "Outros"
+    },
+    {
+      "id": "IMPLEMENTACAO_DESIGN_TOKENS_FINAL",
+      "title": "IMPLEMENTACAO DESIGN TOKENS FINAL",
+      "content": "Implementação de Design Tokens - Status Final Data : 2025-01-20 Versão : 2.0 - 100% COMPLETO ✅ RESUMO EXECUTIVO Status: ✅ 100% IMPLEMENTADO Todas as fases do plano sistemático de reformulação de design foram concluídas com sucesso. Wiki e DevPortal agora compartilham uma identidade visual unificada através de design tokens centralizados. 📊 PROGRESSO POR FASE ✅ Fase 1 (Fundação): 100% Completo Design Tokens Unificados ( frontend/shared/styles/design-tokens.css ) Paleta de cores revisada (Verde t",
+      "url": "/wiki/docs/IMPLEMENTACAO_DESIGN_TOKENS_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "IMPLEMENTACAO_DESIGN_TOKENS_STATUS",
+      "title": "IMPLEMENTACAO DESIGN TOKENS STATUS",
+      "content": "Status da Implementação de Design Tokens Data : 2025-01-20 Versão : 1.1 (Atualizado) ✅ Implementado (Fase 1 - Fundação) 1. Design Tokens Unificados ✅ Arquivo criado : frontend/shared/styles/design-tokens.css ✅ Paleta de cores revisada : Verde (território) + Azul (transparência) ✅ Tipografia : Escala harmônica 1.125 definida ✅ Espaçamento : Sistema base 8px definido ✅ Shadows, Transitions, Grid : Todos os tokens definidos 2. Documentação ✅ docs/PLANO_SISTEMATICO_REFORMULACAO_DESIGN.md - Plano com",
+      "url": "/wiki/docs/IMPLEMENTACAO_DESIGN_TOKENS_STATUS",
+      "category": "Outros"
+    },
+    {
+      "id": "IMPLEMENTACAO_REESTRUTURACAO_DEVPORTAL_PLANO",
+      "title": "IMPLEMENTACAO REESTRUTURACAO DEVPORTAL PLANO",
+      "content": "Plano de Implementação da Reestruturação do DevPortal Data : 2025-01-20 Status : Em Progresso Arquivo : frontend/devportal/index.html (~2795 linhas) 📋 Estratégia de Implementação Devido ao tamanho do arquivo (~2795 linhas), a reestruturação será feita em etapas incrementais : Etapa 1: Estrutura Base ✅ (Em Progresso) Adicionar Phase Tabs no início do &#x3C;main> Criar Phase Panels vazios para cada tab Validar CSS e JavaScript já existentes Etapa 2: Tab 1 - Começando (Pendente) Mover #quickstart ",
+      "url": "/wiki/docs/IMPLEMENTACAO_REESTRUTURACAO_DEVPORTAL_PLANO",
+      "category": "Outros"
+    },
+    {
+      "id": "INCIDENT_PLAYBOOK",
+      "title": "INCIDENT PLAYBOOK",
+      "content": "Playbook de Incidentes - Araponga Este documento contém procedimentos para responder a incidentes no sistema Araponga. 🚨 Classificação de Incidentes Severidade Crítica (P1) Sistema completamente indisponível Perda de dados Segurança comprometida Tempo de Resposta : Imediato Tempo de Resolução : 1 hora Severidade Alta (P2) Funcionalidade crítica indisponível Performance severamente degradada (> 5s latência) Muitos usuários afetados Tempo de Resposta : 15 minutos Tempo de Resolução : 4 horas Seve",
+      "url": "/wiki/docs/INCIDENT_PLAYBOOK",
+      "category": "Outros"
+    },
+    {
+      "id": "INTEGRACAO_ONBOARDING_TECNICO_REESTRUTURACAO",
+      "title": "INTEGRACAO ONBOARDING TECNICO REESTRUTURACAO",
+      "content": "Integração de Onboarding Técnico na Reestruturação do DevPortal Data : 2025-01-20 Status : Concluído - Conteúdo criado e mapeado Próximo Passo : Implementação da estrutura de tabs/panels no HTML 📋 Sumário Executivo As seções de onboarding técnico (Analistas Funcionais e Desenvolvedores) foram criadas e integradas no DevPortal. O conteúdo está funcional e acessível, mapeado na estrutura de reestruturação proposta, e pronto para ser organizado em tabs/panels quando a estrutura de navegação progre",
+      "url": "/wiki/docs/INTEGRACAO_ONBOARDING_TECNICO_REESTRUTURACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "LICOES_APRENDIDAS",
+      "title": "LICOES APRENDIDAS",
+      "content": "Lições Aprendidas - Araponga Última Atualização : 2025-01-20 Total de Lições : 1 Status : Documento Vivo Este documento captura lições aprendidas de revisões técnicas, garantindo que conhecimento adquirido seja permanentemente incorporado às diretrizes do projeto. Processo : Ver docs/PROCESSO_AUTO_APRENDIZADO_REVISOES.md 📚 Lições por Categoria 🔴 Críticas LIC-001 - Cores Hardcoded Proibidas Data : 2025-01-20 Categoria : Crítico Revisão Origem : docs/REVISAO_ARTE_DESIGN_WIKI.md Contexto : Revisã",
+      "url": "/wiki/docs/LICOES_APRENDIDAS",
+      "category": "Outros"
+    },
+    {
+      "id": "MEDIA_IN_CONTENT",
+      "title": "MEDIA IN CONTENT",
+      "content": "Mídias em Conteúdo Versão : 1.0 Data : 2025-01-17 Status : ✅ Implementado 📋 Visão Geral Este documento descreve a integração de mídias em todos os tipos de conteúdo do Araponga: Posts : Múltiplas imagens por post (até 10) Eventos : Imagem de capa + imagens adicionais (até 10) Marketplace : Múltiplas imagens por item (até 10) Chat : Uma imagem por mensagem (máx. 5MB) Status Atual : Apenas imagens estão implementadas. Suporte a vídeos, áudios e documentos está planejado para a Fase 10. 🏗️ Arquit",
+      "url": "/wiki/docs/MEDIA_IN_CONTENT",
+      "category": "Outros"
+    },
+    {
+      "id": "MEDIA_SYSTEM",
+      "title": "MEDIA SYSTEM",
+      "content": "Sistema de Mídia - Documentação Técnica Data : 2025-01-16 Versão : 1.0.0 Status : ✅ Implementado 🎯 Visão Geral O Sistema de Mídia do Araponga fornece infraestrutura completa para armazenamento, processamento e gerenciamento de mídias (imagens, vídeos, áudios, documentos). O sistema foi projetado para ser seguro, escalável e preparado para migração para cloud storage quando necessário. Valores Mantidos : Mídias servem para documentar território e fortalecer comunidade , não para capturar atenção",
+      "url": "/wiki/docs/MEDIA_SYSTEM",
+      "category": "Outros"
+    },
+    {
+      "id": "MENTORIA",
+      "title": "MENTORIA",
+      "content": "🤝 Sistema de Mentoria Orgânica - Araponga Facilitando Acolhimento e Crescimento de Contribuidores Versão : 1.0 Data : 2025-01-20 🎯 Propósito O sistema de mentoria do Araponga é orgânico, voluntário e horizontal . Não há hierarquias rígidas - apenas pessoas que oferecem ajuda e pessoas que buscam orientação. Objetivo : Facilitar o acolhimento de novos contribuidores e o crescimento orgânico da comunidade, mantendo consciência elevada e respeito aos saberes diversos. 🌱 Princípios Orgânico Ningu",
+      "url": "/wiki/docs/MENTORIA",
+      "category": "Outros"
+    },
+    {
+      "id": "METRICS",
+      "title": "METRICS",
+      "content": "Métricas do Araponga Este documento descreve todas as métricas coletadas pelo sistema Araponga. 📊 Visão Geral O Araponga utiliza Prometheus para coleta de métricas e OpenTelemetry para instrumentação. As métricas são expostas no endpoint /metrics e podem ser coletadas por Prometheus para visualização em dashboards (Grafana). 🔧 Configuração Prometheus As métricas são expostas automaticamente no endpoint /metrics na porta configurada (padrão: 9090). Configuração ( appsettings.json ): { \"Metrics\"",
+      "url": "/wiki/docs/METRICS",
+      "category": "Outros"
+    },
+    {
+      "id": "MONITORING",
+      "title": "MONITORING",
+      "content": "Monitoramento do Araponga Este documento descreve dashboards e alertas configurados para monitoramento do Araponga. 📊 Dashboards Dashboard de Performance Objetivo : Monitorar performance da API e latência de requisições. Métricas Principais : Request rate (req/s) Error rate (%) Latência (P50, P95, P99) Throughput (bytes/s) Queries Prometheus : # Request Rate rate(http_requests_received_total[5m]) # Error Rate rate(http_requests_received_total{code=~\"5..\"}[5m]) / rate(http_requests_received_tota",
+      "url": "/wiki/docs/MONITORING",
+      "category": "Outros"
+    },
+    {
+      "id": "ONBOARDING_ANALISTAS_FUNCIONAIS",
+      "title": "ONBOARDING ANALISTAS FUNCIONAIS",
+      "content": "Analistas Funcionais Bem-vindo ao Araponga Você chegou aqui porque observa o território e entende que tecnologia pode servir às necessidades reais das comunidades. Este documento é para você que: Conhece seu território e identifica necessidades práticas Observa como pessoas se relacionam com o lugar onde vivem Quer propor melhorias baseadas em necessidades reais Entende processos e fluxos de organização comunitária Acredita que tecnologia deve servir ao território, não o contrário Não precisa se",
+      "url": "/wiki/docs/ONBOARDING_ANALISTAS_FUNCIONAIS",
+      "category": "Onboarding"
+    },
+    {
+      "id": "ONBOARDING_DEVELOPERS",
+      "title": "ONBOARDING DEVELOPERS",
+      "content": "Desenvolvedores Bem-vindo ao Araponga Você chegou aqui porque entende que tecnologia pode servir à vida e não o contrário. Este documento é para você que: Tem raciocínio lógico e quer aplicar sua inteligência de forma útil Entende requisitos funcionais e quer ver ideias se transformarem em código Vem de outras áreas (construção, matemática, humanidades) e quer descobrir possibilidades Quer aprender a construir aplicações participando de um projeto real Acredita que nossa inteligência deve ser re",
+      "url": "/wiki/docs/ONBOARDING_DEVELOPERS",
+      "category": "Onboarding"
+    },
+    {
+      "id": "ONBOARDING_FAQ",
+      "title": "ONBOARDING FAQ",
+      "content": "❓ FAQ - Perguntas Frequentes sobre Onboarding Guia de Respostas para Dúvidas Comuns Versão : 1.0 Data : 2025-01-20 📋 Índice Rápido Instalação e Setup Primeiros Passos Contribuição Processos e Workflows Problemas Comuns Comunicação Instalação e Setup P: \"dotnet não reconhece comando\" ou \"dotnet: command not found\" R : Você precisa instalar o .NET SDK 8.0 (não apenas Runtime). Windows : Baixe em: https://dotnet.microsoft.com/download/dotnet/8.0 Escolha \"SDK\" (não Runtime) Execute o instalador Rei",
+      "url": "/wiki/docs/ONBOARDING_FAQ",
+      "category": "Onboarding"
+    },
+    {
+      "id": "ONBOARDING_PUBLICO",
+      "title": "ONBOARDING PUBLICO",
+      "content": "Araponga Plataforma digital comunitária orientada ao território Araponga é uma infraestrutura digital onde o território vem primeiro. Construímos tecnologia que fortalece comunidades locais, respeita autonomia e serve à continuidade da vida no lugar. Nossa abordagem é fundamentalmente diferente: Orientada ao território : Localização geográfica como princípio organizador primário Autonomia comunitária : Governança e tomada de decisão locais Transparência : Processos abertos, contribuições visívei",
+      "url": "/wiki/docs/ONBOARDING_PUBLICO",
+      "category": "Onboarding"
+    },
+    {
+      "id": "PLANO_SISTEMATICO_REFORMULACAO_DESIGN",
+      "title": "PLANO SISTEMATICO REFORMULACAO DESIGN",
+      "content": "Plano Sistemático de Reformulação de Design - Araponga Versão : 2.0 Data : 2025-01-20 Status : 🚀 Em Execução Referência de Excelência : closer.earth, Material Design 3, Apple HIG, WCAG 2.1 📋 Sumário Executivo Este documento apresenta um plano sistemático e completo de reformulação do design system do Araponga, alinhado com diretrizes internacionais de design (Material Design 3, Apple HIG, WCAG 2.1) e profundamente enraizado nos valores fundamentais do projeto: território, autonomia, transparên",
+      "url": "/wiki/docs/PLANO_SISTEMATICO_REFORMULACAO_DESIGN",
+      "category": "Outros"
+    },
+    {
+      "id": "PRIORIZACAO_PROPOSTAS",
+      "title": "PRIORIZACAO PROPOSTAS",
+      "content": "📊 Priorização de Propostas Funcionais - Araponga Critérios e Processo para Validar e Priorizar Funcionalidades Versão : 1.0 Data : 2025-01-20 🎯 Propósito Este documento estabelece critérios claros e um processo orgânico para validar e priorizar propostas de funcionalidades no Araponga, garantindo que implementações sirvam ao território e respeitem valores do projeto. ✅ Critérios de Validação Uma Proposta Será Considerada se Atender TODOS os Critérios Obrigatórios: 1. Serve ao Território ✅ OBRI",
+      "url": "/wiki/docs/PRIORIZACAO_PROPOSTAS",
+      "category": "Outros"
+    },
+    {
+      "id": "PROCESSO_AUTO_APRENDIZADO_REVISOES",
+      "title": "PROCESSO AUTO APRENDIZADO REVISOES",
+      "content": "Processo de Auto-Aprendizado Após Revisões Versão : 1.0 Data : 2025-01-20 Status : Processo Estabelecido Aplicação : Todas as revisões de código, design, arquitetura e documentação 📋 Sumário Executivo Este documento define um processo sistemático de auto-aprendizado que captura, categoriza e integra lições aprendidas de revisões técnicas, garantindo que conhecimento adquirido seja permanentemente incorporado às diretrizes e práticas do projeto. Objetivo : Transformar revisões em melhorias contí",
+      "url": "/wiki/docs/PROCESSO_AUTO_APRENDIZADO_REVISOES",
+      "category": "Outros"
+    },
+    {
+      "id": "PROJECT_PHASES_CONFIG",
+      "title": "PROJECT PHASES CONFIG",
+      "content": "Configuração de Fases do Projeto ⚠️ IMPORTANTE : Este arquivo é a fonte única de verdade para o número total de fases do projeto. Todas as referências a \"número de fases\" devem derivar deste arquivo ou ser calculadas dinamicamente. Total de Fases O número total de fases é calculado dinamicamente contando os arquivos FASE*.md no diretório docs/backlog-api/ (excluindo subdiretórios como implementacoes/ ). Atualização Automática : O número de fases é atualizado automaticamente quando: Novos arquivo",
+      "url": "/wiki/docs/PROJECT_PHASES_CONFIG",
+      "category": "Outros"
+    },
+    {
+      "id": "PROJECT_STRUCTURE",
+      "title": "PROJECT STRUCTURE",
+      "content": "📁 Estrutura do Projeto Araponga Guia Visual e Explicativo da Organização do Código Versão : 1.0 Data : 2025-01-20 🎯 Propósito Este documento ajuda você a navegar o código do Araponga, entendendo onde cada coisa está e por quê. Não precisa decorar - use como referência quando precisar! 📂 Estrutura de Diretórios araponga/ ├── backend/ # Código do backend (.NET) │ ├── Araponga.Api # Interface HTTP (controllers, endpoints) │ ├── Araponga.Application # Lógica de negócio (services) │ ├── Araponga.D",
+      "url": "/wiki/docs/PROJECT_STRUCTURE",
+      "category": "Outros"
+    },
+    {
+      "id": "PROPOSAL_DEVPORTAL_NAVEGACAO_FASES",
+      "title": "PROPOSAL DEVPORTAL NAVEGACAO FASES",
+      "content": "Proposta: Navegação Progressiva por Fases - DevPortal Data : 2025-01-20 Versão : 1.0 📋 Problema Atual O DevPortal renderiza todo o conteúdo de uma vez , resultando em: Scroll excessivo (página muito longa) Sobrecarga cognitiva (muita informação simultânea) Falta de progressão clara (não há jornada estruturada) Performance degradada (DOM muito grande) 🎯 Objetivo Reorganizar a navegação do DevPortal para revelar conhecimento em fases progressivas , criando uma jornada clara do básico ao avançado",
+      "url": "/wiki/docs/PROPOSAL_DEVPORTAL_NAVEGACAO_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_ADICIONAR_PAGINACAO",
+      "title": "PR ADICIONAR PAGINACAO",
+      "content": "PR: Adicionar Paginação em Métodos de Listagem Resumo Este PR adiciona suporte a paginação em todos os métodos de listagem da aplicação, implementando métodos paginados que retornam PagedResult&#x3C;T> seguindo o padrão já estabelecido no projeto. Mudanças Principais 1. Métodos Paginados Adicionados nos Services ✅ FeedService: ✅ ListForUserPagedAsync - Paginação para feed pessoal do usuário TerritoryService: ✅ ListAvailablePagedAsync - Paginação para listagem de territórios disponíveis ✅ SearchP",
+      "url": "/wiki/docs/prs/PR_ADICIONAR_PAGINACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_BODY_CAPACIDADES_TECNICAS",
+      "title": "PR BODY CAPACIDADES TECNICAS",
+      "content": "📋 Resumo Este PR adiciona uma nova seção no DevPortal HTML documentando as capacidades técnicas da plataforma Araponga. ✨ Nova Seção: Capacidades Técnicas A seção apresenta três categorias principais: Qualidade de Código e Confiabilidade Paginação completa em 15 endpoints Validação robusta com FluentValidation Cobertura de testes >90% Testes de segurança e performance Refatoração completa de services Performance e Escalabilidade Concorrência otimista com RowVersion Cache distribuído (Redis) Pro",
+      "url": "/wiki/docs/prs/PR_BODY_CAPACIDADES_TECNICAS",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_CONSOLIDADO_PAGINACAO_ENCODING_DEVPORTAL",
+      "title": "PR CONSOLIDADO PAGINACAO ENCODING DEVPORTAL",
+      "content": "PR: Paginação, Correção de Encoding e Configuração do Developer Portal Resumo Este PR consolida três melhorias importantes: Adiciona paginação em todos os métodos de listagem (21 métodos) Corrige encoding UTF-8 no Developer Portal Configura o Developer Portal para ser servido diretamente em devportal.araponga.app Mudanças Principais 1. Paginação em Métodos de Listagem ✅ Adicionados 21 métodos paginados em 11 services, seguindo o padrão PagedResult&#x3C;T> : Services atualizados: FeedService : Li",
+      "url": "/wiki/docs/prs/PR_CONSOLIDADO_PAGINACAO_ENCODING_DEVPORTAL",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_DEVPORTAL_DIAGRAMAS_SEQUENCIA",
+      "title": "PR DEVPORTAL DIAGRAMAS SEQUENCIA",
+      "content": "PR: Integração de Diagramas de Sequência no DevPortal Resumo Este PR integra diagramas de sequência interativos no Developer Portal usando Mermaid.js. Os diagramas são exibidos de forma harmoniosa através de acordeões expansíveis, permitindo que desenvolvedores visualizem os principais fluxos de negócio da aplicação de forma clara e interativa. Problema Resolvido Falta de visualização clara dos fluxos de negócio no DevPortal Documentação textual apenas não permite compreensão completa das intera",
+      "url": "/wiki/docs/prs/PR_DEVPORTAL_DIAGRAMAS_SEQUENCIA",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_DEVPORTAL_FASES_2_3_4",
+      "title": "PR DEVPORTAL FASES 2 3 4",
+      "content": "PR: Atualização DevPortal - Fases 2, 3 e 4 Branch : docs/devportal-fases-2-3-4 Base : main Status : ✅ Pronto para Review 📋 Resumo Este PR atualiza o DevPortal para refletir todas as melhorias implementadas nas Fases 2, 3 e 4 do projeto Araponga. 🎯 Objetivo Garantir que o DevPortal público documente corretamente todas as funcionalidades e melhorias técnicas implementadas nas fases de desenvolvimento. ✨ Alterações Fase 2: Qualidade de Código e Confiabilidade ✅ Adicionado : Menção à \"Paginação e ",
+      "url": "/wiki/docs/prs/PR_DEVPORTAL_FASES_2_3_4",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_DEVPORTAL_IMPROVEMENTS_SECTION",
+      "title": "PR DEVPORTAL IMPROVEMENTS SECTION",
+      "content": "PR: Seção de Melhorias Técnicas no DevPortal Branch : feature/devportal-improvements-section Base : main Status : ✅ Pronto para Review 📋 Resumo Este PR adiciona uma nova seção visual no DevPortal documentando todas as melhorias técnicas implementadas nas Fases 2, 3 e 4, proporcionando transparência sobre as capacidades da plataforma. 🎯 Objetivo Criar uma seção dedicada no DevPortal que documente visualmente as melhorias técnicas implementadas, facilitando para desenvolvedores e stakeholders en",
+      "url": "/wiki/docs/prs/PR_DEVPORTAL_IMPROVEMENTS_SECTION",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FASE10_VIDEOS_SUPORTE",
+      "title": "PR FASE10 VIDEOS SUPORTE",
+      "content": "PR: Suporte a Vídeos em Mídias - Fase 10 🎯 Resumo Este PR implementa suporte completo a vídeos em Posts, Eventos e Marketplace, expandindo a funcionalidade de mídias da Fase 10. Inclui validações de segurança, testes de integração completos, documentação atualizada e atualização do DevPortal com todas as informações sobre vídeos. ✨ Funcionalidades Implementadas 1. Suporte a Vídeos em Posts ✅ Máximo 1 vídeo por post (pode combinar com imagens até 10 mídias no total) ✅ Limite de tamanho: 50MB por",
+      "url": "/wiki/docs/prs/PR_FASE10_VIDEOS_SUPORTE",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FASE2_QUALIDADE_CODIGO",
+      "title": "PR FASE2 QUALIDADE CODIGO",
+      "content": "PR: Fase 2 - Qualidade de Código e Confiabilidade Branch : feature/fase2-qualidade-codigo Data : 2025-01-15 Status : ✅ 100% Completo Autor : Sistema de Implementação Automatizada 📋 Resumo Este PR implementa a Fase 2: Qualidade de Código e Confiabilidade do Plano de Ação 10/10, focando em: ✅ Paginação completa em todos os endpoints ✅ Testes de segurança abrangentes ✅ Testes de performance com SLAs ✅ Refatoração e redução de duplicação ✅ Cache invalidation automático 🎯 Objetivos Alcançados 1. Pa",
+      "url": "/wiki/docs/prs/PR_FASE2_QUALIDADE_CODIGO",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FASE2_QUALIDADE_CODIGO_FINAL",
+      "title": "PR FASE2 QUALIDADE CODIGO FINAL",
+      "content": "PR: Fase 2 - Qualidade de Código e Confiabilidade (Final - 100%) Branch : feature/fase2-qualidade-codigo-final Data : 2025-01-15 Status : ✅ 100% Completo Autor : Sistema de Implementação Automatizada 📋 Resumo Este PR completa a Fase 2: Qualidade de Código e Confiabilidade do Backlog API, com 100% de conclusão e todos os testes passando (371/371) . PR Anterior : O PR anterior ( feature/fase2-qualidade-codigo ) foi mergeado. Este PR contém as implementações finais que completam a Fase 2. 🎯 Objet",
+      "url": "/wiki/docs/prs/PR_FASE2_QUALIDADE_CODIGO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FASE3_PERFORMANCE_ESCALABILIDADE",
+      "title": "PR FASE3 PERFORMANCE ESCALABILIDADE",
+      "content": "PR: Fase 3 - Performance e Escalabilidade Branch : feature/fase3-performance-escalabilidade Status : ✅ 100% Completo Data : 2025-01-15 Testes : 371 passando, 2 pulados (requerem PostgreSQL) 📋 Resumo Executivo Este PR implementa completamente a Fase 3: Performance e Escalabilidade , focando em otimizações de performance, processamento assíncrono, cache distribuído e preparação para escalabilidade horizontal. Principais Implementações ✅ Concorrência Otimista : RowVersion implementado em 4 entidad",
+      "url": "/wiki/docs/prs/PR_FASE3_PERFORMANCE_ESCALABILIDADE",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FASE4_OBSERVABILIDADE_MONITORAMENTO",
+      "title": "PR FASE4 OBSERVABILIDADE MONITORAMENTO",
+      "content": "PR: Fase 4 - Observabilidade e Monitoramento Branch : feature/fase4-observabilidade-monitoramento Base : main Status : ✅ Pronto para Review Fase : Fase 4 - Observabilidade e Monitoramento 📋 Resumo Este PR implementa observabilidade completa no sistema Araponga, incluindo logs centralizados (Serilog + Seq), métricas de negócio e sistema (Prometheus), distributed tracing (OpenTelemetry), e documentação operacional completa (runbook, troubleshooting, incident playbook). 🎯 Objetivos da Fase 4 ✅ Lo",
+      "url": "/wiki/docs/prs/PR_FASE4_OBSERVABILIDADE_MONITORAMENTO",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FASE5_SEGURANCA_AVANCADA",
+      "title": "PR FASE5 SEGURANCA AVANCADA",
+      "content": "PR: Fase 5 - Segurança Avançada Branch : feature/fase5 Base : main Status : ✅ Pronto para Review Fase : Fase 5 - Segurança Avançada 📋 Resumo Este PR implementa segurança avançada no sistema Araponga, incluindo 2FA completo (TOTP), sanitização avançada de inputs, proteção CSRF, secrets management, security headers melhorados, auditoria avançada e documentação de penetration testing. 🎯 Objetivos da Fase 5 ✅ 2FA TOTP completo com validação no disable ✅ Sanitização avançada de inputs (HTML, paths,",
+      "url": "/wiki/docs/prs/PR_FASE5_SEGURANCA_AVANCADA",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FASE7_PAYOUT",
+      "title": "PR FASE7 PAYOUT",
+      "content": "PR: Fase 7 - Sistema de Payout e Gestão Financeira Branch : feature/fase7-payout-gestao-financeira Target : main Status : ✅ PRONTO PARA REVIEW 📋 Resumo Implementação completa do sistema de payout (transferência para vendedores), rastreabilidade financeira completa e gestão financeira da plataforma, permitindo transparência total e autonomia para territórios. 🎯 Objetivos ✅ Rastreabilidade completa de cada centavo (lastro e transparência) ✅ Histórico de mudanças de status ✅ Saldo próprio da plat",
+      "url": "/wiki/docs/prs/PR_FASE7_PAYOUT",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FEATURE_FLAGS_TERRITORIO",
+      "title": "PR FEATURE FLAGS TERRITORIO",
+      "content": "PR: Feature Flags por Território (Hardening) Branch : feat/feature-flags-territory Status : ✅ Build e testes passando 📋 Resumo Este PR fortalece o modelo de feature flags por território , eliminando bypasses e padronizando gates em pontos críticos (Feed/Alertas, Marketplace e Chat/DM), com documentação atualizada e testes de regressão. 🎯 Principais mudanças 1) Guard centralizado por território Adicionado TerritoryFeatureFlagGuard para concentrar decisões de flags e reduzir vazamentos. 2) Feed/",
+      "url": "/wiki/docs/prs/PR_FEATURE_FLAGS_TERRITORIO",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FIX_DEVPORTAL_RENDERIZACAO",
+      "title": "PR FIX DEVPORTAL RENDERIZACAO",
+      "content": "Fix: Corrigir Renderização do Developer Portal Resumo Este PR corrige o problema onde o Developer Portal em devportal.araponga.app mostrava apenas uma mensagem de \"Carregando...\" ao invés do conteúdo completo do portal. O problema ocorreu após a remoção de scripts de redirect que também continham a lógica de renderização do conteúdo. Problema O Developer Portal não estava renderizando o conteúdo completo: https://devportal.araponga.app/devportal/ mostrava apenas: Developer Portal - Carregando...",
+      "url": "/wiki/docs/prs/PR_FIX_DEVPORTAL_RENDERIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FIX_ENCODING_DEVPORTAL",
+      "title": "PR FIX ENCODING DEVPORTAL",
+      "content": "Fix: Corrigir Encoding UTF-8 no Developer Portal Resumo Este PR corrige problemas de encoding UTF-8 no Developer Portal que causavam caracteres acentuados aparecerem incorretamente (ex: \"có\" aparecendo como \"C├│\"). Problema Caracteres acentuados em português estavam aparecendo incorretamente no Developer Portal: \"có\" aparecendo como \"C├│\" Outros caracteres acentuados ilegíveis Causa raiz: Arquivos HTML podem ter sido salvos com encoding incorreto (Windows-1252 ou ISO-8859-1) Servidor pode não es",
+      "url": "/wiki/docs/prs/PR_FIX_ENCODING_DEVPORTAL",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FIX_GITHUB_PAGES_TIMEOUT",
+      "title": "PR FIX GITHUB PAGES TIMEOUT",
+      "content": "Fix: GitHub Pages Deployment Timeout Problema O workflow de deploy do GitHub Pages estava dando timeout após 10 minutos porque o deployment ficava em deployment_queued indefinidamente. Causa O novo sistema de GitHub Pages ( actions/deploy-pages@v4 ) pode ter filas longas ou problemas temporários que causam timeout. Solução Implementada Mudanças no Workflow Separação de Jobs : Dividido em build e deploy para melhor organização Timeout no Job Level : Adicionado timeout-minutes: 5 no job de deploy ",
+      "url": "/wiki/docs/prs/PR_FIX_GITHUB_PAGES_TIMEOUT",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_FIX_VALIDATOR_REDIRECT",
+      "title": "PR FIX VALIDATOR REDIRECT",
+      "content": "Fix: Correcoes de Validator e Redirect Loop Resumo Este PR corrige dois problemas criticos identificados nos testes e no developer portal: Validacao de enums no CreatePostRequestValidator estava falhando Loop infinito de redirect no developer portal Problemas Corrigidos 1. Validacao de Enums (CreatePostRequestValidator) Problema: O validator usava IsInEnum() em strings ( Type e Visibility ) IsInEnum() so funciona com tipos enum, nao com strings Isso causava falha em 4 testes que criavam posts So",
+      "url": "/wiki/docs/prs/PR_FIX_VALIDATOR_REDIRECT",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_IMPLEMENTAR_RECOMENDACOES_PENDENTES",
+      "title": "PR IMPLEMENTAR RECOMENDACOES PENDENTES",
+      "content": "Refatoração: Plano de Implementação das Recomendações Pendentes Resumo Este PR adiciona o plano detalhado de implementação para as recomendações pendentes identificadas na revisão de código e no PR de refatoração anterior. Este é um PR de documentação e planejamento que estabelece a base para futuras implementações. Contexto Após a implementação das recomendações críticas no PR anterior ( PR_REFACTOR_RECOMENDACOES.md ), identificamos 6 recomendações pendentes que precisam ser implementadas em PR",
+      "url": "/wiki/docs/prs/PR_IMPLEMENTAR_RECOMENDACOES_PENDENTES",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_MIGRAR_DEVPORTAL_PARA_DEVELOPER",
+      "title": "PR MIGRAR DEVPORTAL PARA DEVELOPER",
+      "content": "Configurar Developer Portal em devportal.araponga.app Resumo Este PR garante que o Developer Portal seja servido diretamente em devportal.araponga.app sem página intermediária. Mudanças 1. Configuração do Domínio ✅ Workflow do GitHub Pages configurado para usar devportal.araponga.app ✅ Arquivo CNAME configurado em docs/CNAME ✅ Referências no HTML do devportal atualizadas 2. Estrutura Final devportal.araponga.app → Developer Portal (servido diretamente, sem página intermediária) araponga.app → La",
+      "url": "/wiki/docs/prs/PR_MIGRAR_DEVPORTAL_PARA_DEVELOPER",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_MIGRAR_SERVICES_RESULT",
+      "title": "PR MIGRAR SERVICES RESULT",
+      "content": "PR: Migrar Services e Controllers para Result Resumo Este PR implementa a migração completa de todos os services e controllers para usar o padrão Result&#x3C;T> e OperationResult , padronizando o tratamento de erros em toda a aplicação. Além disso, corrige problemas de encoding UTF-8 no developer portal e adiciona documentação completa de todas as funcionalidades. Mudanças Principais 1. Migração para Result ✅ Services migrados (25 métodos): ✅ StoreService (4 métodos): UpsertMyStoreAsync , Update",
+      "url": "/wiki/docs/prs/PR_MIGRAR_SERVICES_RESULT",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_PRODUCAO_READY",
+      "title": "PR PRODUCAO READY",
+      "content": "PR: Production Ready - Implementação Completa Resumo Este PR implementa TODOS os requisitos críticos (bloqueantes) , importantes (recomendados) e desejáveis principais identificados na avaliação completa para produção ( docs/50_PRODUCAO_AVALIACAO_COMPLETA.md ), tornando a aplicação 100% pronta para produção . 🎯 Objetivo Tornar a aplicação production-ready implementando: Requisitos Críticos (Bloqueantes) : Segurança, HTTPS, Rate Limiting, Health Checks Requisitos Importantes (Recomendados) : Obs",
+      "url": "/wiki/docs/prs/PR_PRODUCAO_READY",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_REFACTOR_RECOMENDACOES",
+      "title": "PR REFACTOR RECOMENDACOES",
+      "content": "Refatoracao: Implementar Recomendacoes Criticas da Revisao Resumo Este PR implementa as recomendacoes criticas identificadas na revisao geral do codigo, focando em melhorias de arquitetura, padronizacao e observabilidade. Mudancas Implementadas Fase 1 - Fundacoes 1.1 Padronizacao de Tratamento de Erros ✅ Criado Result&#x3C;T> e OperationResult em Araponga.Application/Common/Result.cs ✅ Estrutura padronizada para retornos de operacoes que podem falhar ✅ Base para migracao futura de todos os servi",
+      "url": "/wiki/docs/prs/PR_REFACTOR_RECOMENDACOES",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_REMOVER_REDIRECTS",
+      "title": "PR REMOVER REDIRECTS",
+      "content": "Refactor: Remover Redirects Automaticos e Simplificar Navegacao Resumo Este PR remove todos os redirects automaticos que estavam causando loops infinitos e simplifica a navegacao para usar apenas links estaticos. O usuario agora escolhe explicitamente onde quer ir. Problema O sistema tinha redirects automaticos complexos que causavam loops infinitos: /?fromLanding=1 -> /devportal/?fromLanding=1 -> /?fromLanding=1 -> ... Logica complexa com sessionStorage e verificacao de referrer Dificil de debu",
+      "url": "/wiki/docs/prs/PR_REMOVER_REDIRECTS",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/PR_USER_PREFERENCES",
+      "title": "PR USER PREFERENCES",
+      "content": "PR: Preferências de Usuário e Privacidade Data : 2025-01-13 Status : ✅ Implementado e Testado Branch : feature/user-preferences 📋 Resumo Implementação completa da funcionalidade de preferências de privacidade e configurações do usuário, permitindo que usuários controlem: Visibilidade do perfil e informações de contato Preferências de notificações por tipo Atualização de informações do perfil 🎯 Funcionalidades Implementadas 1. Preferências de Privacidade Visibilidade do Perfil : Public, Residen",
+      "url": "/wiki/docs/prs/PR_USER_PREFERENCES",
+      "category": "Outros"
+    },
+    {
+      "id": "prs/README",
+      "title": "README",
+      "content": "Pull Requests - Documentação Esta pasta contém a documentação detalhada de todos os Pull Requests implementados no projeto Araponga. 📋 Índice ✅ Qualidade de Código e Confiabilidade PR_FASE2_QUALIDADE_CODIGO.md Fase 2: Qualidade de Código e Confiabilidade (PR anterior - mergeado) PR_FASE2_QUALIDADE_CODIGO_FINAL.md Fase 2: Qualidade de Código e Confiabilidade - Final (100% completo ✅) Paginação completa (15 endpoints) Testes de segurança (14 testes) Testes de performance (7 testes) Refatoração (1",
+      "url": "/wiki/docs/prs/README",
+      "category": "Outros"
+    },
+    {
+      "id": "README",
+      "title": "README",
+      "content": "🐦 Araponga Araponga é uma plataforma digital comunitária orientada ao território. Um espaço onde tecnologia serve à vida local, à convivência e à autonomia das comunidades. Não é uma rede social genérica. É uma extensão digital do território vivo . 🌱 Propósito Vivemos um tempo em que plataformas digitais: capturam atenção, desorganizam comunidades, e desconectam pessoas do lugar onde vivem. O Araponga nasce como um contraponto consciente a esse modelo. Território como referência. Comunidade co",
+      "url": "/wiki/docs/README",
+      "category": "Outros"
+    },
+    {
+      "id": "recommendations/PLANO_REFACTOR_RECOMENDACOES_PENDENTES",
+      "title": "PLANO REFACTOR RECOMENDACOES PENDENTES",
+      "content": "Plano de Implementação: Recomendações Pendentes de Refatoração Resumo Este documento detalha o plano de implementação para as recomendações pendentes identificadas na revisão de código e no PR de refatoração anterior. Recomendações Pendentes 1. Migrar todos os services para usar Result&#x3C;T> ✅ ESTRUTURA CRIADA Status Atual: ✅ Result&#x3C;T> e OperationResult já criados em Araponga.Application/Common/Result.cs ❌ Ainda há 29 métodos usando tuplas (bool success, string? error, T? result) Services",
+      "url": "/wiki/docs/recommendations/PLANO_REFACTOR_RECOMENDACOES_PENDENTES",
+      "category": "Outros"
+    },
+    {
+      "id": "recommendations/README",
+      "title": "README",
+      "content": "Recomendações e Planos Esta pasta contém recomendações de implementação e planos futuros. Estrutura RECOMENDACOES_SEGURANCA_PROXIMOS_PASSOS.md - Recomendações de segurança e próximos passos PLANO_REFACTOR_RECOMENDACOES_PENDENTES.md - Plano de refatoração de recomendações pendentes",
+      "url": "/wiki/docs/recommendations/README",
+      "category": "Outros"
+    },
+    {
+      "id": "recommendations/RECOMENDACOES_SEGURANCA_PROXIMOS_PASSOS",
+      "title": "RECOMENDACOES SEGURANCA PROXIMOS PASSOS",
+      "content": "Recomendações de Segurança e Próximos Passos Data : 2026-01-13 Contexto : Refatoração User-Centric Membership - SystemPermission, MembershipCapability, MembershipSettings Resumo Executivo Este documento apresenta recomendações de segurança e próximos passos para o sistema Araponga, com foco nas novas entidades e serviços introduzidos na refatoração User-Centric Membership. Status Atual : ✅ Código validado e seguro para produção Prioridade : Implementação incremental conforme necessidade 1. Recom",
+      "url": "/wiki/docs/recommendations/RECOMENDACOES_SEGURANCA_PROXIMOS_PASSOS",
+      "category": "Outros"
+    },
+    {
+      "id": "REESTRUTURACAO_DEVPORTAL_STATUS",
+      "title": "REESTRUTURACAO DEVPORTAL STATUS",
+      "content": "Status da Reestruturação do DevPortal Data : 2025-01-20 Branch : feat/devportal-restruturacao-navegacao Status : 🚧 Em Progresso ✅ Preparação Concluída ✅ CSS para tabs/panels/accordions implementado ✅ JavaScript para interatividade implementado ✅ Mapeamento de conteúdo documentado ✅ Plano de implementação criado ✅ Onboarding técnico criado e mapeado 🚧 Implementação em Progresso Etapa 1: Estrutura Base de Tabs/Panels (Em Progresso) Ação necessária : Adicionar Phase Tabs e Panels logo após &#x3C;",
+      "url": "/wiki/docs/REESTRUTURACAO_DEVPORTAL_STATUS",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/70_HIERARQUIA_PERMISSOES_E_AUDITORIA",
+      "title": "HIERARQUIA PERMISSOES E AUDITORIA",
+      "content": "Hierarquia de Permissões e Auditoria Data : 2026-01-16 Branch : feature/hierarquia-permissoes-e-auditoria Status : ✅ Implementado Resumo Executivo Implementação completa da hierarquia de permissões onde SystemAdmin tem implicitamente todas as MembershipCapabilities em todos os territórios, além de operações de configuração ( GrantAsync / RevokeAsync ) com auditoria completa. 1. Hierarquia de Permissões Implícitas 1.1 Conceito SystemAdmin carrega implicitamente todas as MembershipCapabilities em ",
+      "url": "/wiki/docs/refactoring/70_HIERARQUIA_PERMISSOES_E_AUDITORIA",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/CORRECOES_PADROES_DESIGN_APLICADAS",
+      "title": "CORRECOES PADROES DESIGN APLICADAS",
+      "content": "Correções de Padrões de Design Aplicadas 📋 Resumo Este documento descreve as correções aplicadas baseadas na análise de padrões de design ( ANALISE_PADROES_DESIGN_MEMBERSHIP.md ). ✅ Correções Implementadas 1. Método UpdateAsync Genérico Problema : Múltiplas chamadas ao repositório para atualizar uma única entidade. Solução : ✅ Adicionado método UpdateAsync(TerritoryMembership) na interface ITerritoryMembershipRepository ✅ Implementado em InMemoryTerritoryMembershipRepository ✅ Implementado em P",
+      "url": "/wiki/docs/refactoring/CORRECOES_PADROES_DESIGN_APLICADAS",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/MELHORIAS_APLICADAS_TODOS",
+      "title": "MELHORIAS APLICADAS TODOS",
+      "content": "Melhorias Aplicadas - Todas as Recomendações 📋 Resumo Este documento lista todas as melhorias aplicadas baseadas nas recomendações da análise de padrões de design e TODOs identificados. ✅ Melhorias Implementadas 1. Validação de Geolocalização ✅ Arquivo : backend/Araponga.Application/Services/MembershipService.cs Mudanças : VerifyResidencyByGeoAsync agora recebe latitude e longitude como parâmetros Valida se as coordenadas estão dentro de 5km do centro do território Usa fórmula de Haversine para",
+      "url": "/wiki/docs/refactoring/MELHORIAS_APLICADAS_TODOS",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/README",
+      "title": "README",
+      "content": "Documentação de Refatorações Esta pasta contém documentação sobre refatorações realizadas no projeto. Estrutura Refatorações Principais REFACTOR_USER_CENTRIC_MEMBERSHIP.md - Refatoração completa do modelo User-Centric Membership 70_HIERARQUIA_PERMISSOES_E_AUDITORIA.md - Implementação de hierarquia de permissões e auditoria (2026-01-16) REFACTOR_MODEL_SUMMARY.md - Resumo das mudanças no modelo REFACTOR_VALIDATION_CHECKLIST.md - Checklist de validação da refatoração Planos e Melhorias refactor-pla",
+      "url": "/wiki/docs/refactoring/README",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/refactor-plan-asset-territory-store",
+      "title": "refactor-plan-asset-territory-store",
+      "content": "Plano de Refatoração: Asset → TerritoryAsset, TerritoryStore → Store, StoreListing → StoreItem Data : 2025-01-13 Status : 📋 Em Planejamento 📋 Objetivo Refatorar o código para usar nomenclatura consistente: Asset → TerritoryAsset (não existe Asset genérico) TerritoryStore → Store (a loja pertence ao resident, não ao territory como conceito) StoreListing → StoreItem (produtos e serviços da loja são \"items\", alinhado com CartItem/CheckoutItem) 🎯 Regras de Negócio Confirmadas TerritoryAsset : Não",
+      "url": "/wiki/docs/refactoring/refactor-plan-asset-territory-store",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/refactor-plan-membership-2fa",
+      "title": "refactor-plan-membership-2fa",
+      "content": "Plano de Refatoração: Membership e Autenticação (2FA) Data : 2026-01-13 Status : 📋 Em Planejamento 📋 Objetivo Refatorar o modelo de Membership para eliminar ambiguidades entre papel territorial e nível de verificação, e implementar Autenticação de Dois Fatores (2FA) corretamente posicionada no modelo de identidade. Mudanças principais : Separar Role de ResidencyVerification (eliminar ambiguidade) Regra estrutural : 1 Resident por User (máximo) Múltiplos Visitors : User pode ter múltiplos Membe",
+      "url": "/wiki/docs/refactoring/refactor-plan-membership-2fa",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/REFACTOR_MODEL_SUMMARY",
+      "title": "REFACTOR MODEL SUMMARY",
+      "content": "Resumo Executivo - Modelo Refatorado User-Centric 🎯 Objetivo Refatorar o modelo de domínio para separar claramente: Identidade pessoal (User) Vínculo territorial (Membership) Verificação (global vs territorial) Configurações (Settings) Capacidades operacionais (Capabilities) 📊 Modelo Validado 1. User (Pessoa Global) User ├── Identidade pessoal (displayName, email, cpf, etc.) ├── Autenticação (2FA, provider, externalId) ├── UserIdentityVerificationStatus (Unverified, Pending, Verified, Rejected",
+      "url": "/wiki/docs/refactoring/REFACTOR_MODEL_SUMMARY",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/REFACTOR_USER_CENTRIC_MEMBERSHIP",
+      "title": "REFACTOR USER CENTRIC MEMBERSHIP",
+      "content": "Refatoração User-Centric com MembershipSettings Data : 2026-01-XX Status : 📋 Em Planejamento 📋 Contexto No Araponga, o modelo atual mistura identidade pessoal, vínculo territorial, verificação, participação econômica e permissões operacionais. Isso gerou ambiguidades e dificuldade de evolução. Este trabalho refatora o modelo para recentralizar o User e separar corretamente: Identidade pessoal Vínculo territorial Processos de verificação Configurações do membro no território Capacidades operaci",
+      "url": "/wiki/docs/refactoring/REFACTOR_USER_CENTRIC_MEMBERSHIP",
+      "category": "Outros"
+    },
+    {
+      "id": "refactoring/REFACTOR_VALIDATION_CHECKLIST",
+      "title": "REFACTOR VALIDATION CHECKLIST",
+      "content": "Checklist de Validação - Refatoração User-Centric Este documento lista todos os pontos que devem ser validados antes e durante a implementação da refatoração. ✅ Validação Conceitual 1. Separação de Responsabilidades User contém apenas: Identidade pessoal (displayName, email, cpf, etc.) Autenticação (2FA, provider, externalId) Verificação de identidade global ( UserIdentityVerificationStatus ) Papel técnico global (Admin, se existir) TerritoryMembership contém apenas: Vínculo User ↔ Territory Pap",
+      "url": "/wiki/docs/refactoring/REFACTOR_VALIDATION_CHECKLIST",
+      "category": "Outros"
+    },
+    {
+      "id": "REVISAO_ARTE_DESIGN_WIKI",
+      "title": "REVISAO ARTE DESIGN WIKI",
+      "content": "Revisão de Arte e Design - Wiki Araponga Data : 2025-01-20 Versão : 1.0 Status : Análise Completa Base : DESIGN_SYSTEM_IDENTIDADE_VISUAL.md e CURSOR_DESIGN_RULES.md 📋 Resumo Executivo Esta revisão analisa a implementação atual da Wiki contra as diretrizes do Design System do Araponga, identificando conformidades e áreas que precisam de ajustes para garantir coerência visual e alinhamento com os princípios estabelecidos. Status Geral ✅ Conforme : Tipografia (Inter/JetBrains Mono), Estrutura Glas",
+      "url": "/wiki/docs/REVISAO_ARTE_DESIGN_WIKI",
+      "category": "Outros"
+    },
+    {
+      "id": "REVISAO_DESIGN_PROFISSIONAL_CLOSER_EARTH",
+      "title": "REVISAO DESIGN PROFISSIONAL CLOSER EARTH",
+      "content": "Relatório Profissional de Design: Análise Comparativa e Recomendações Data : 2025-01-20 Consultoria : Análise Profissional de Design UI/UX Referência de Excelência : closer.earth Objetivo : Transformar Wiki e DevPortal em referências de design profissional 📋 Sumário Executivo Este relatório apresenta uma análise detalhada comparando as interfaces atuais do Wiki Araponga e Developer Portal com a referência de excelência closer.earth. A análise identifica gaps críticos em design system, hierarqui",
+      "url": "/wiki/docs/REVISAO_DESIGN_PROFISSIONAL_CLOSER_EARTH",
+      "category": "Outros"
+    },
+    {
+      "id": "REVISAO_DEVPORTAL_ESTRUTURA_HIERARQUICA",
+      "title": "REVISAO DEVPORTAL ESTRUTURA HIERARQUICA",
+      "content": "Revisão Completa: DevPortal - Estrutura Hierárquica e Design Data : 2025-01-20 Versão : 2.0 Status : 🟡 EM REVISÃO - Remodelação de estrutura e design 🎯 Objetivos da Revisão Problemas Identificados Layout quebrado em alguns lugares abaixo - Conteúdo ainda renderizando atrás da sidebar Conteúdo \"um linguadão\" - Tudo despejado de uma vez, sem hierarquia clara Falta de harmonia visual - Conteúdo não organizado de forma progressiva Navegação não progressiva - Usuário não consegue aprofundar gradual",
+      "url": "/wiki/docs/REVISAO_DEVPORTAL_ESTRUTURA_HIERARQUICA",
+      "category": "Outros"
+    },
+    {
+      "id": "REVISAO_METADADOS_PADROES_INTERNACIONAIS",
+      "title": "REVISAO METADADOS PADROES INTERNACIONAIS",
+      "content": "Revisão: Metadados de Documentação - Padrões Internacionais Data : 2025-01-20 Versão : 1.0 📋 ANÁLISE ATUAL vs PADRÕES INTERNACIONAIS ❌ Problemas Identificados Metadados como Badges Decorativos ❌ Badges grandes com ícones (📌, 📅, ✓) ❌ Bordas, sombras, hover effects (distraem) ❌ Espaço visual excessivo no topo do conteúdo ❌ Compete com o conteúdo principal Campos Inconsistentes ❌ \"Para:\" não é padrão internacional (geralmente não aparece no conteúdo) ❌ \"Versão: 1.0\" sem esquema semântico claro ❌",
+      "url": "/wiki/docs/REVISAO_METADADOS_PADROES_INTERNACIONAIS",
+      "category": "Outros"
+    },
+    {
+      "id": "REVISAO_UX_UI_DEVPORTAL_REESTRUTURACAO_COMPLETA",
+      "title": "REVISAO UX UI DEVPORTAL REESTRUTURACAO COMPLETA",
+      "content": "Revisão UX/UI Sênior: Reestruturação Completa do DevPortal Data : 2025-01-20 Versão : 1.0 Autor : Revisão Profissional de UX/UI Sênior 📋 Sumário Executivo Esta revisão propõe uma reestruturação completa do DevPortal com foco em navegação progressiva e disclosure hierárquico do conteúdo, evitando sobrecarga cognitiva e permitindo aprofundamento intuitivo do conhecimento superficial ao técnico profundo. 🎯 Objetivos da Reestruturação Progressive Disclosure : Revelar conteúdo em camadas (superfici",
+      "url": "/wiki/docs/REVISAO_UX_UI_DEVPORTAL_REESTRUTURACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "RUNBOOK",
+      "title": "RUNBOOK",
+      "content": "Runbook de Operações - Araponga Este documento contém procedimentos operacionais para o sistema Araponga. 📋 Índice Deploy Rollback Escalação Manutenção Backup e Restore 🚀 Deploy Deploy em Produção Verificar Pré-requisitos : # Verificar variáveis de ambiente env | grep -E \"JWT__SIGNINGKEY|CORS__ALLOWEDORIGINS|ConnectionStrings\" # Verificar health checks curl https://api.araponga.com/health Executar Migrations : dotnet ef database update --project backend/Araponga.Infrastructure --startup-projec",
+      "url": "/wiki/docs/RUNBOOK",
+      "category": "Outros"
+    },
+    {
+      "id": "SECURITY_AUDIT",
+      "title": "SECURITY AUDIT",
+      "content": "Security Audit e Penetration Testing Última Atualização : 2026-01-15 Status : Checklist e Guia de Referência 📋 Checklist de Segurança Autenticação e Autorização JWT com secret forte (variável de ambiente) 2FA TOTP implementado Backup codes para 2FA Validação de tokens JWT Rate limiting configurado CORS configurado adequadamente Proteção de Dados HTTPS obrigatório em produção Security headers configurados (CSP, HSTS, X-Frame-Options, etc) Sanitização de inputs (HTML, paths, URLs) Validação de in",
+      "url": "/wiki/docs/SECURITY_AUDIT",
+      "category": "Segurança"
+    },
+    {
+      "id": "SECURITY_CONFIGURATION",
+      "title": "SECURITY CONFIGURATION",
+      "content": "Configuração de Segurança - Araponga Última atualização : 2025-01-15 Versão : 1.1 📋 Índice Variáveis de Ambiente Obrigatórias Configuração de JWT Configuração de Rate Limiting Configuração de CORS Configuração de HTTPS Checklist de Deploy 🔐 Variáveis de Ambiente Obrigatórias Produção (OBRIGATÓRIAS) # JWT Secret - OBRIGATÓRIO # Mínimo: 32 caracteres # Gere um secret forte usando: openssl rand -base64 32 JWT__SIGNINGKEY=seu-secret-forte-aqui-minimo-32-caracteres-aleatorios # CORS Origins - OBRIG",
+      "url": "/wiki/docs/SECURITY_CONFIGURATION",
+      "category": "Segurança"
+    },
+    {
+      "id": "STATUS_FASES",
+      "title": "STATUS FASES",
+      "content": "Status das Fases - Backlog API Última Atualização : 2025-01-20 Total de Fases : [Calcular dinamicamente com node scripts/get-phase-count.mjs ] Nota : O número total de fases é calculado automaticamente contando arquivos FASE*.md em docs/backlog-api/ . Ver docs/PROJECT_PHASES_CONFIG.md para mais informações. Fases Completas : 8 Fases em Andamento : 0 Fases Pendentes : [Calcular: Total - Completas - Em Andamento] 📊 Visão Geral Status Quantidade Percentual ✅ Completo 8 28% ⏳ Pendente 21 72% 🚧 Em ",
+      "url": "/wiki/docs/STATUS_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "TROUBLESHOOTING",
+      "title": "TROUBLESHOOTING",
+      "content": "Troubleshooting - Araponga Este documento contém soluções para problemas comuns do sistema Araponga. 🔍 Problemas Comuns 1. Aplicação não inicia Sintomas : Aplicação não responde Erro ao iniciar Diagnóstico : # Verificar logs docker logs araponga-api --tail 100 # Verificar variáveis de ambiente env | grep -E \"JWT__SIGNINGKEY|ConnectionStrings\" Soluções : Verificar se JWT__SIGNINGKEY está configurado (obrigatório) Verificar se ConnectionStrings__Postgres está configurado (se usando Postgres) Veri",
+      "url": "/wiki/docs/TROUBLESHOOTING",
+      "category": "Outros"
+    },
+    {
+      "id": "VALIDACAO_DIAGRAMACAO_FINAL",
+      "title": "VALIDACAO DIAGRAMACAO FINAL",
+      "content": "Validação Final de Diagramação - Wiki e DevPortal Data : 2025-01-20 Versão : 1.0 Objetivo : Garantir coesão visual total entre Wiki e DevPortal, seguindo padrões de mercado de sobriedade e calma 🎯 OBJETIVO Validar e padronizar a diagramação das páginas Wiki e DevPortal para garantir: ✅ Coesão visual : Elementos e disposições visuais consistentes ✅ Altos padrões : Seguir tendências de mercado (sobriedade, calma, design limpo) ✅ Inovação : Design limpo e inovador mantendo funcionalidade 📊 ANÁLIS",
+      "url": "/wiki/docs/VALIDACAO_DIAGRAMACAO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "validation/README",
+      "title": "README",
+      "content": "Documentação de Validações Esta pasta contém documentação sobre validações realizadas no projeto. Estrutura VALIDACAO_SEGURANCA.md - Validação completa de segurança para as novas entidades (SystemPermission, MembershipCapability, MembershipSettings)",
+      "url": "/wiki/docs/validation/README",
+      "category": "Outros"
+    },
+    {
+      "id": "validation/VALIDACAO_SEGURANCA",
+      "title": "VALIDACAO SEGURANCA",
+      "content": "Validação de Segurança - Refatoração User-Centric Membership Data : 2026-01-13 Escopo : SystemPermission, MembershipCapability, MembershipSettings, AccessEvaluator Resumo Executivo Validação completa de segurança realizada para as novas entidades e serviços introduzidos na refatoração User-Centric Membership. Todas as brechas identificadas foram corrigidas. Padrões de Segurança Identificados 1. Validação de Entrada ✅ Validação de Guids vazios em todas as entidades ✅ Validação de strings obrigató",
+      "url": "/wiki/docs/validation/VALIDACAO_SEGURANCA",
+      "category": "Outros"
+    },
+    {
+      "id": "validation/VALIDACAO_SEGURANCA_PAYOUT_FASE7",
+      "title": "VALIDACAO SEGURANCA PAYOUT FASE7",
+      "content": "Validação de Segurança - Sistema de Payout e Gestão Financeira (Fase 7) Data : 2026-01-19 Fase : Fase 7 - Sistema de Payout e Gestão Financeira Status : ✅ VALIDAÇÃO COMPLETA 📋 Objetivo Validar a segurança de todas as implementações relacionadas ao sistema de payout e gestão financeira, garantindo que dados financeiros sejam protegidos e operações sensíveis sejam auditadas. 🔐 Checklist de Segurança 1. Autenticação e Autorização ✅ 1.1 Endpoints Protegidos ✅ ✅ GET /api/v1/territories/{territoryId",
+      "url": "/wiki/docs/validation/VALIDACAO_SEGURANCA_PAYOUT_FASE7",
+      "category": "Outros"
+    },
+    {
+      "id": "WIKI_HOME",
+      "title": "WIKI HOME",
+      "content": "🌱 Araponga - Plataforma Digital Comunitária Orientada ao Território Bem-vindo a um projeto que reconhece o território como base de tudo e coloca tecnologia a serviço da vida. 💫 Início da Jornada Você chegou aqui movido por algo maior que curiosidade técnica. Talvez tenha percebido que tecnologia pode servir à vida ao invés de capturá-la. Talvez tenha identificado que comunidades precisam organizar-se digitalmente mantendo autonomia. Talvez acredite que inteligência deve ser reconhecida como va",
+      "url": "/wiki/docs/WIKI_HOME",
+      "category": "Outros"
+    },
+    {
+      "id": "WIKI_SYNC_CHECKLIST",
+      "title": "WIKI SYNC CHECKLIST",
+      "content": "✅ Checklist de Sincronização Wiki Verificação de que todos os documentos de onboarding estão incluídos na Wiki 📋 Documentos de Onboarding ✅ Mapeamento no Script Verifique que estes arquivos estão no mapeamento $mainDocs em script-sync-wiki.ps1 : ONBOARDING_PUBLICO.md → Onboarding-Público ONBOARDING_DEVELOPERS.md → Onboarding-Desenvolvedores ONBOARDING_ANALISTAS_FUNCIONAIS.md → Onboarding-Analistas-Funcionais CARTILHA_COMPLETA.md → Cartilha-Completa DISCORD_SETUP.md → Discord-Setup ✅ Página Inic",
+      "url": "/wiki/docs/WIKI_SYNC_CHECKLIST",
+      "category": "Outros"
+    }
+  ]
+}

@@ -215,6 +215,7 @@ public sealed class MembershipsController : ControllerBase
     /// </summary>
     [HttpPost]
     [Route("/api/v1/memberships/{territoryId:guid}/verify-residency/geo")]
+    [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

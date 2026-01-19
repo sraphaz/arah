@@ -1,14 +1,8 @@
 name: Build, Test & Deploy Wiki to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
-      - master
-    paths:
-      - 'frontend/wiki/**'
-      - 'docs/**'
-      - '.github/workflows/wiki-pages.yml'
+  # Wiki é deployado junto com DevPortal no workflow devportal-pages.yml
+  # Este workflow roda apenas para CI (testes) em PRs
   pull_request:
     branches:
       - main
@@ -90,12 +84,12 @@ jobs:
             exit 1
           fi
           echo "✅ Found $DOC_COUNT markdown files in docs/"
-          
+
           # Verificar se arquivos principais existem
           if [ ! -f "../../docs/00_INDEX.md" ]; then
             echo "⚠️  00_INDEX.md not found"
           fi
-          
+
           if [ ! -f "../../docs/ONBOARDING_PUBLICO.md" ]; then
             echo "⚠️  ONBOARDING_PUBLICO.md not found"
           fi
@@ -130,7 +124,7 @@ jobs:
       - name: Prepare Pages artifacts (wiki as subfolder)
         run: |
           mkdir -p dist/wiki
-          
+
           # Next.js com output: 'export' gera out/
           if [ -d "frontend/wiki/out" ]; then
             cp -R frontend/wiki/out/. dist/wiki/
@@ -139,16 +133,16 @@ jobs:
             echo "❌ Build failed: out/ directory not found"
             exit 1
           fi
-          
+
           # NÃO criar CNAME - será servido em devportal.araponga.app/wiki
           # O wiki será acessível via devportal.araponga.app/wiki
-          
+
           # Verificar se index.html existe
           if [ ! -f "dist/wiki/index.html" ]; then
             echo "❌ No index.html found after export"
             exit 1
           fi
-          
+
           echo "✅ Wiki artifacts prepared in dist/wiki/"
           echo "📄 Files in dist/wiki/:"
           ls -la dist/wiki/ | head -20

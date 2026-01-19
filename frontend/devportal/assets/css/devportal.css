@@ -51,13 +51,20 @@
   --code-bg: #0a0e12;
   --code-border: #1a2129;
 
-  /* Escala de shadows mais completa */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 24px rgba(77, 212, 168, 0.15);
+  /* Sistema de Elevação Unificado (Material Design) - Wiki + DevPortal */
+  --elevation-0: none;
+  --elevation-1: 0 1px 2px rgba(23, 53, 37, 0.05);
+  --elevation-2: 0 2px 8px rgba(23, 53, 37, 0.08);
+  --elevation-3: 0 4px 16px rgba(23, 53, 37, 0.12);
+  --elevation-4: 0 8px 32px rgba(23, 53, 37, 0.16);
+
+  /* Escala de shadows (compatibilidade - usar --elevation-* quando possível) */
+  --shadow-xs: var(--elevation-1);
+  --shadow-sm: var(--elevation-2);
+  --shadow-md: var(--elevation-3);
+  --shadow-lg: var(--elevation-4);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5); /* Para casos especiais */
+  --shadow-glow: 0 0 24px rgba(77, 212, 168, 0.15); /* Efeito especial */
 
   /* Sistema de espaçamento consistente (Base 8px) - Sincronizado com Wiki */
   --space-xs: 0.25rem;   /* 4px */
@@ -280,7 +287,7 @@ input:focus-visible {
   border-radius: var(--radius-sm);
   font-weight: 600;
   z-index: 9999;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-2);
 }
 
 /* Header */
@@ -502,7 +509,7 @@ input:focus-visible {
   gap: 0.5rem;
   transition: var(--transition-slow); /* 300ms - usa token */
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
   position: relative;
   overflow: hidden;
   transform: translateZ(0); /* GPU acceleration */
@@ -562,7 +569,7 @@ input:focus-visible {
   background: var(--bg-muted);
   border-color: var(--accent);
   color: var(--accent);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
 }
 
 /* Layout */
@@ -1090,7 +1097,7 @@ main {
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-radius: var(--glass-radius);
   padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2rem);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--elevation-2);
   /* Sem borda explícita - translúcido sem roubar espaço */
   margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
@@ -1213,7 +1220,7 @@ main {
   border-radius: var(--radius-md);
   background: var(--bg-muted);
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
   /* Padronizado: padding reduzido para melhor organização visual */
   padding: clamp(1rem, 1.5vw, 1.25rem);
   transition: var(--transition-base);
@@ -1231,7 +1238,7 @@ main {
 
 .card:hover {
   border-color: var(--accent-subtle);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-2);
   transform: translateY(-2px);
 }
 
@@ -1381,7 +1388,7 @@ main {
 
 .rationale-card:hover {
   border-color: var(--accent-subtle);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
   transform: translateY(-2px);
 }
 
@@ -1808,7 +1815,7 @@ pre code {
   border-radius: var(--radius-lg);
   padding: 2rem;
   background: var(--bg-card);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
   /* Garante que conteúdo não sobreponha */
   position: relative;
   overflow: visible;
@@ -1859,7 +1866,7 @@ pre code {
 
 .endpoint:hover {
   border-color: var(--accent);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
 }
 
 .endpoint summary {
@@ -1924,7 +1931,7 @@ pre code {
 
 .schema-card:hover {
   border-color: var(--accent);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
 }
 
 .schema-card h4 {
@@ -2420,12 +2427,12 @@ pre code {
 
 .sequence-diagram-toggle:hover {
   border-color: var(--accent);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
 }
 
 .sequence-diagram-toggle[open] {
   border-color: var(--accent);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-2);
 }
 
 .sequence-diagram-summary {
@@ -2663,7 +2670,7 @@ pre code {
   cursor: pointer;
   transition: var(--transition-base); /* 200ms - usa token */
   z-index: 100; /* Aumentado de 10 para garantir que apareça sobre a imagem */
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-1);
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -2674,7 +2681,7 @@ pre code {
 .diagram-fullscreen-btn:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-2);
 }
 
 .diagram-fullscreen-btn:active {
@@ -3119,7 +3126,7 @@ main > .section:not(.phase-panel):not(.phase-panels) {
   background: var(--accent);
   color: var(--bg);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-2);
 }
 
 @media (max-width: 1023px) {

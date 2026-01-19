@@ -97,8 +97,8 @@ export default async function DocsPage() {
           </p>
         </div>
 
-        {/* Categories Grid - Responsivo com quebras semânticas - espaçamento otimizado */}
-        <div className="space-y-10 sm:space-y-12 lg:space-y-14">
+        {/* Categories Grid - Estrutura hierárquica enterprise-level com dois retângulos agrupadores */}
+        <div className="space-y-10 sm:space-y-12 lg:space-y-16">
           {categoryGroups.map((group, groupIndex) => {
             const groupCategories = Object.entries(docStructure).filter(([category]) =>
               group.categories.includes(category)
@@ -106,19 +106,19 @@ export default async function DocsPage() {
 
             return (
               <section key={group.title} id={group.title.toLowerCase().replace(/\s+/g, '-')} className="animation-fade-in scroll-mt-24">
-                {/* Quebra semântica visual - título de grupo */}
-                <h2 className="text-xl sm:text-2xl font-semibold text-forest-700 dark:text-forest-300 mb-6 sm:mb-8 lg:mb-10 pb-3">
+                {/* Título de seção - Tipografia enterprise-level */}
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-forest-900 dark:text-forest-50 mb-8 sm:mb-10 lg:mb-12 pb-4 border-b border-forest-200/60 dark:border-forest-800/60">
                   {group.title}
                 </h2>
 
-                {/* Grid responsivo - aproveita espaço horizontal sem espremer */}
-                {/* Mobile: 1 col, Tablet: 2 cols, Desktop: 3-4 cols conforme espaço */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 xl:gap-7">
+                {/* Dois retângulos agrupadores lado a lado - aproveita espaço horizontal */}
+                {/* Mobile: 1 col, Desktop: 2 cols (dois retângulos lado a lado) */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-10">
                   {groupCategories.map(([category, docs], index) => (
                     <div
                       key={category}
-                      className="animation-slide-up"
-                      style={{ animationDelay: `${(groupIndex * 3 + index) * 0.08}s` }}
+                      className="category-group-card animation-slide-up"
+                      style={{ animationDelay: `${(groupIndex * 2 + index) * 0.1}s` }}
                     >
                       <CategoryCard category={category} docs={docs} />
                     </div>

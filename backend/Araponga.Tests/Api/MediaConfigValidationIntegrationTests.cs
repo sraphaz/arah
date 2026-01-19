@@ -46,7 +46,7 @@ public sealed class MediaConfigValidationIntegrationTests
         {
             client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, Guid.NewGuid().ToString());
         }
-        
+
         var response = await client.PostAsJsonAsync(
             "api/v1/territories/selection",
             new TerritorySelectionRequest(territoryId));
@@ -60,7 +60,7 @@ public sealed class MediaConfigValidationIntegrationTests
             $"api/v1/memberships/{territoryId}/become-resident",
             new BecomeResidentRequest(new[] { residentUserId }, "Test residency request"));
         requestResponse.EnsureSuccessStatusCode();
-        
+
         var requestPayload = await requestResponse.Content.ReadFromJsonAsync<RequestResidencyResponse>();
         if (requestPayload is null)
         {
@@ -70,28 +70,28 @@ public sealed class MediaConfigValidationIntegrationTests
         var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
         var originalAuth = client.DefaultRequestHeaders.Authorization;
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
-        
+
         var approveResponse = await client.PostAsync(
             $"api/v1/join-requests/{requestPayload.JoinRequestId}/approve",
             null);
-        
-        if (approveResponse.StatusCode != HttpStatusCode.OK && 
+
+        if (approveResponse.StatusCode != HttpStatusCode.OK &&
             approveResponse.StatusCode != HttpStatusCode.NotFound &&
             approveResponse.StatusCode != HttpStatusCode.Forbidden)
         {
             approveResponse.EnsureSuccessStatusCode();
         }
-        
+
         client.DefaultRequestHeaders.Authorization = originalAuth;
-        
+
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLatitude, "-23.37");
         client.DefaultRequestHeaders.Add(ApiHeaders.GeoLongitude, "-45.02");
-        
-        var verifyResponse = await client.PostAsync(
+
+        var verifyResponse = await client.PostAsJsonAsync(
             $"api/v1/memberships/{territoryId}/verify-residency/geo",
-            null);
-        
-        if (verifyResponse.StatusCode != HttpStatusCode.OK && 
+            new VerifyResidencyGeoRequest(-23.37, -45.02));
+
+        if (verifyResponse.StatusCode != HttpStatusCode.OK &&
             verifyResponse.StatusCode != HttpStatusCode.NotFound &&
             verifyResponse.StatusCode != HttpStatusCode.Forbidden)
         {
@@ -101,14 +101,25 @@ public sealed class MediaConfigValidationIntegrationTests
 
     private static async Task<Guid> UploadTestImageAsync(HttpClient client, int sizeBytes = 1024)
     {
-        var imageBytes = new byte[sizeBytes];
-        new Random().NextBytes(imageBytes);
-        
+        // Criar um JPEG válido de 1x1 pixel (mínimo válido para ImageSharp)
+        // JPEG header + JFIF segment + image data + EOI marker
+        var jpegBytes = new byte[]
+        {
+            0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,
+            0xFF, 0xDB, 0x00, 0x43, 0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08, 0x07, 0x07, 0x07, 0x09, 0x09, 0x08, 0x0A, 0x0C,
+            0x14, 0x0D, 0x0C, 0x0B, 0x0B, 0x0C, 0x19, 0x12, 0x13, 0x0F, 0x14, 0x1D, 0x1A, 0x1F, 0x1E, 0x1D, 0x1A, 0x1C, 0x1C, 0x20,
+            0x24, 0x2E, 0x27, 0x20, 0x22, 0x2C, 0x23, 0x1C, 0x1C, 0x28, 0x37, 0x29, 0x2C, 0x30, 0x31, 0x34, 0x34, 0x34, 0x1F, 0x27,
+            0x39, 0x3D, 0x38, 0x32, 0x3C, 0x2E, 0x33, 0x34, 0x32, 0xFF, 0xC0, 0x00, 0x0B, 0x08, 0x00, 0x01, 0x00, 0x01, 0x01, 0x01,
+            0x11, 0x00, 0xFF, 0xC4, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x08, 0xFF, 0xC4, 0x00, 0x14, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xDA, 0x00, 0x08, 0x01, 0x01, 0x00, 0x00, 0x3F, 0x00, 0x5F, 0xFF, 0xD9
+        };
+
         using var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(imageBytes);
+        var fileContent = new ByteArrayContent(jpegBytes);
         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
         content.Add(fileContent, "file", "test.jpg");
-        
+
         var response = await client.PostAsync("api/v1/media/upload", content);
         response.EnsureSuccessStatusCode();
         var mediaAsset = await response.Content.ReadFromJsonAsync<MediaAssetResponse>();
@@ -167,17 +178,19 @@ public sealed class MediaConfigValidationIntegrationTests
         await SelectTerritoryAsync(client, ActiveTerritoryId);
         await BecomeResidentAsync(client, ActiveTerritoryId);
 
+        // Fazer upload da imagem ANTES de desabilitar (enquanto imagens estão habilitadas)
+        var imageId = await UploadTestImageAsync(client);
+
         // Desabilitar imagens no território (como curador)
         var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
         await DisableMediaTypeForTerritoryAsync(client, ActiveTerritoryId, "Posts", "Images");
-        
+
         // Voltar para o token do usuário original para o teste
         var userToken = await LoginForTokenAsync(client, "google", "test-config-validation");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
 
-        // Tentar criar post com imagem
-        var imageId = await UploadTestImageAsync(client);
+        // Tentar criar post com imagem (agora deve falhar porque imagens estão desabilitadas)
         var postResponse = await client.PostAsJsonAsync(
             $"api/v1/feed?territoryId={ActiveTerritoryId}",
             new CreatePostRequest(
@@ -262,7 +275,7 @@ public sealed class MediaConfigValidationIntegrationTests
         // Garantir que imagens estão habilitadas
         var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
-        
+
         var enableRequest = new UpdateTerritoryMediaConfigRequest(
             new MediaContentConfigRequest(
                 ImagesEnabled: true,
@@ -284,7 +297,7 @@ public sealed class MediaConfigValidationIntegrationTests
             $"api/v1/territories/{ActiveTerritoryId}/media-config",
             enableRequest);
         enableResponse.EnsureSuccessStatusCode();
-        
+
         // Voltar para o token do usuário original para o teste
         var userToken = await LoginForTokenAsync(client, "google", "test-enabled-media");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);

@@ -9,3 +9,5 @@ export { InfoBox } from "./InfoBox";
 export { Badge } from "./Badge";
 export { CategoryCard } from "./CategoryCard";
 export { DocCard } from "./DocCard";
+export { SocialIcon } from "./SocialIcon";
+export { SocialLink } from "./SocialLink";

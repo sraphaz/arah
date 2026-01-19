@@ -12,6 +12,8 @@ import { ApiDomainDiagram } from "../components/content/ApiDomainDiagram";
 import { AppBanner } from "../components/content/AppBanner";
 import { ContentSectionsProgressive } from "./docs/[slug]/content-sections-progressive";
 import { TableOfContents } from "../components/layout/TableOfContents";
+import { JourneyCard } from "../components/ui/JourneyCard";
+import { getAllJourneys } from "../lib/journeys";
 
 // Helper function para extrair texto de HTML de forma segura
 function getTextContent(html: string): string {
@@ -224,6 +226,21 @@ export default async function HomePage() {
 
             {/* App Banner - Call to Action para Lançamento */}
             <AppBanner />
+
+            {/* Jornadas Guiadas - Sistema de Navegação por Perfil */}
+            <div className="mt-12 mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-forest-900 dark:text-forest-50 mb-4">
+                Escolha seu Caminho
+              </h2>
+              <p className="text-base text-forest-600 dark:text-forest-400 mb-8 max-w-3xl">
+                Navegue pela documentação seguindo um caminho guiado recomendado para seu perfil:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getAllJourneys().map((journey) => (
+                  <JourneyCard key={journey.title} journey={journey} />
+                ))}
+              </div>
+            </div>
 
             {/* Quick Navigation - Grid horizontal enterprise-level */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">

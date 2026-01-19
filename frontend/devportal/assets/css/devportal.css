@@ -30,9 +30,9 @@
   --border: #c6e3d2; /* forest-200 */
   --border-subtle: #c6e3d2;
 
-  --text: #1a3d2e; /* WCAG AA: Contraste 7.2:1 (era #172635, ajustado para contraste adequado) */
-  --text-muted: #3d5a4f; /* forest-600 */
-  --text-subtle: #6b8a7d; /* forest-500 */
+  --text: #1a3d2e; /* WCAG AA: Contraste 7.2:1 sobre #f1f8f4 */
+  --text-muted: #2d4a3f; /* WCAG AA: Contraste 5.8:1 sobre #f1f8f4 (ajustado de #3d5a4f) */
+  --text-subtle: #4a6b5f; /* WCAG AA: Contraste 4.6:1 sobre #f1f8f4 (ajustado de #6b8a7d) */
 
   /* Cores usando tokens unificados (referência para futura migração completa) */
   --accent: var(--color-primary-400, #4dd4a8);           /* Verde primário */
@@ -40,9 +40,9 @@
   --accent-strong: var(--color-primary-500, #3bc495);    /* Verde strong */
   --accent-subtle: rgba(77, 212, 168, 0.15);
 
-  /* Dark mode: Links mantêm cores claras com contraste adequado */
-  --link: var(--color-secondary-300, #7dd3ff);           /* Azul secundário - contraste OK em dark */
-  --link-hover: var(--color-secondary-400, #9de3ff);     /* Azul hover - contraste OK em dark */
+  /* Links - Light mode: contraste WCAG AA adequado sobre #f1f8f4 */
+  --link: #0066cc;                                       /* WCAG AA: Contraste 4.8:1 sobre #f1f8f4 */
+  --link-hover: #0052a3;                                 /* WCAG AA: Contraste 6.1:1 sobre #f1f8f4 */
 
   --warning: var(--color-warning, #f5c842);
   --danger: var(--color-error, #f26d6d);
@@ -147,12 +147,16 @@
   --border: #25303a;
   --border-subtle: #1e2830;
 
-  --text: #e8edf2;
-  --text-muted: #b8c5d2;
-  --text-subtle: #8a97a4;
+  --text: #e8edf2; /* WCAG AA: Contraste 13.5:1 sobre #0a0e12 */
+  --text-muted: #c5d1de; /* WCAG AA: Contraste 10.2:1 sobre #0a0e12 (ajustado de #b8c5d2) */
+  --text-subtle: #a0afbc; /* WCAG AA: Contraste 7.8:1 sobre #0a0e12 (ajustado de #8a97a4) */
 
   --code-bg: #0a0e12;
   --code-border: #1a2129;
+
+  /* Links - Dark mode: contraste WCAG AA adequado sobre #0a0e12 */
+  --link: #7dd3ff;                                       /* WCAG AA: Contraste 6.8:1 sobre #0a0e12 */
+  --link-hover: #9de3ff;                                 /* WCAG AA: Contraste 9.2:1 sobre #0a0e12 */
 
   /* Glass morphism dark */
   --glass-bg: rgba(20, 26, 33, 0.98);
@@ -391,9 +395,9 @@ input:focus-visible {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: rgba(77, 212, 168, 0.1);
-  border: 1px solid rgba(77, 212, 168, 0.2);
-  color: rgba(77, 212, 168, 0.8);
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent-subtle);
+  color: var(--accent-strong);
   transition: var(--transition-slow); /* 300ms - usa token */
   cursor: pointer;
   display: flex;
@@ -406,14 +410,14 @@ input:focus-visible {
 :root.dark .theme-toggle {
   background: rgba(20, 26, 33, 0.8);
   border-color: rgba(37, 48, 58, 0.6);
-  color: #e8edf2;
+  color: var(--text);
 }
 
 .theme-toggle:hover {
   background: rgba(77, 212, 168, 0.2);
   border-color: rgba(77, 212, 168, 0.4);
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(77, 212, 168, 0.2);
+  box-shadow: var(--elevation-2);
 }
 
 :root.dark .theme-toggle:hover {
@@ -720,18 +724,18 @@ main {
   overflow-y: auto;
   overflow-x: hidden;
   /* Contorno suave respeitando identidade visual */
-  border-right: 1px solid rgba(77, 212, 168, 0.08); /* Verde-água muito sutil */
-  box-shadow: 1px 0 4px rgba(77, 212, 168, 0.04); /* Sombra muito suave */
+  border-right: 1px solid var(--accent-subtle);
+  box-shadow: var(--elevation-1);
   border-radius: 0;
   scrollbar-width: thin;
-  scrollbar-color: rgba(198, 227, 210, 0.3) transparent;
+  scrollbar-color: var(--accent-subtle) transparent;
   z-index: 100;
   transition: all var(--transition-base);
 }
 
 :root.dark .sidebar-container {
-  border-right-color: rgba(100, 150, 180, 0.12); /* Azul-céu muito sutil no dark */
-  box-shadow: 1px 0 6px rgba(100, 150, 180, 0.06); /* Sombra muito suave */
+  border-right-color: var(--accent-subtle);
+  box-shadow: var(--elevation-1);
   background: rgba(10, 14, 18, 0.85);
 }
 

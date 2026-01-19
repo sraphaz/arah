@@ -137,26 +137,39 @@ function createBreadcrumbs() {
  * Inicializa breadcrumbs
  */
 function initBreadcrumbs() {
-  // Cria container de breadcrumbs
-  const contentContainer = document.getElementById('page-content') || document.querySelector('.container');
-  if (!contentContainer) return;
+  // Usa container já existente no HTML ou cria se não existir
+  let breadcrumbsContainer = document.getElementById('breadcrumbs-container');
+  
+  if (!breadcrumbsContainer) {
+    // Fallback: cria container dinamicamente se não estiver no HTML
+    const contentContainer = document.getElementById('page-content') || document.querySelector('.container');
+    if (!contentContainer) return;
 
-  const breadcrumbsContainer = document.createElement('div');
-  breadcrumbsContainer.id = 'breadcrumbs-container';
-  breadcrumbsContainer.className = 'breadcrumbs-container';
-  contentContainer.insertBefore(breadcrumbsContainer, contentContainer.firstChild);
+    breadcrumbsContainer = document.createElement('div');
+    breadcrumbsContainer.id = 'breadcrumbs-container';
+    breadcrumbsContainer.className = 'breadcrumbs-container';
+    contentContainer.insertBefore(breadcrumbsContainer, contentContainer.firstChild);
+  }
 
-  // Gera breadcrumbs inicial
+  // Gera breadcrumbs
   createBreadcrumbs();
-
-  // Atualiza breadcrumbs quando hash muda
-  window.addEventListener('hashchange', createBreadcrumbs);
-  window.addEventListener('load', createBreadcrumbs);
 }
 
-// Inicializa quando DOM estiver pronto
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initBreadcrumbs);
-} else {
-  initBreadcrumbs();
+/**
+ * Setup de breadcrumbs - inicializa e configura listeners
+ */
+function setupBreadcrumbs() {
+  // Inicializa quando DOM estiver pronto
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBreadcrumbs);
+  } else {
+    initBreadcrumbs();
+  }
+
+  // Atualiza breadcrumbs quando hash muda (navegação entre seções)
+  window.addEventListener('hashchange', initBreadcrumbs);
+  window.addEventListener('load', initBreadcrumbs);
 }
+
+// Executa setup
+setupBreadcrumbs();

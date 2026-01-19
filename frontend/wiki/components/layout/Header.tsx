@@ -34,6 +34,13 @@ export function Header() {
               Todos os Docs
             </Link>
             <a
+              href="/"
+              className="nav-link"
+              title="DevPortal - Referência de API"
+            >
+              DevPortal
+            </a>
+            <a
               href="https://araponga.app"
               target="_blank"
               rel="noopener noreferrer"

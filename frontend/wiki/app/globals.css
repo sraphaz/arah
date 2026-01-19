@@ -65,6 +65,13 @@
     --content-width-default: 75ch;
     --content-width-wide: 90ch;
 
+    /* Sistema de Elevação Unificado (Material Design) - Wiki + DevPortal */
+    --elevation-0: none;
+    --elevation-1: 0 1px 2px rgba(23, 53, 37, 0.05);
+    --elevation-2: 0 2px 8px rgba(23, 53, 37, 0.08);
+    --elevation-3: 0 4px 16px rgba(23, 53, 37, 0.12);
+    --elevation-4: 0 8px 32px rgba(23, 53, 37, 0.16);
+
     /* Design System - Cores de Acento e Links (usando tokens unificados) */
     --accent: var(--color-primary-400);           /* #4dd4a8 */
     --accent-hover: var(--color-primary-500);     /* #3bc495 */
@@ -87,6 +94,13 @@
     --watermark-opacity: 0.015;
     --body-watermark-opacity: 0.01;
     --gradient-overlay: linear-gradient(180deg, rgba(10, 14, 18, 0.8) 0%, rgba(10, 14, 18, 0.4) 100%);
+
+    /* Sistema de Elevação Unificado - Dark Mode */
+    --elevation-0: none;
+    --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.15);
+    --elevation-2: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --elevation-3: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --elevation-4: 0 8px 32px rgba(0, 0, 0, 0.45);
 
     /* Cores de acento e links em dark mode (usam mesmas variáveis) */
     /* --accent e --link já definidas no :root, funcionam em ambos os modos */
@@ -651,7 +665,7 @@
     @apply border-l-4 border-forest-400 dark:border-dark-accent pl-8 py-6 my-10;
     @apply italic text-forest-700 dark:text-forest-300;
     @apply bg-forest-50/50 dark:bg-forest-900/30 rounded-r-xl;
-    @apply shadow-sm;
+    box-shadow: var(--elevation-1);
     font-size: var(--font-size-lg); /* 18px - usa token */
     line-height: var(--line-height-loose); /* 2 - usa token */
     /* Removido max-width - conteúdo usa toda largura disponível */
@@ -681,7 +695,7 @@
   /* Tables - Enterprise design (Market standards) */
   .markdown-content table {
     @apply w-full border-collapse mb-10 rounded-xl overflow-hidden;
-    @apply shadow-md;
+    box-shadow: var(--elevation-2);
     max-width: 100%;
     margin-top: 1.5rem;
   }
@@ -747,7 +761,8 @@
 
   /* Images - Market standards */
   .markdown-content img {
-    @apply rounded-xl shadow-lg my-10;
+    @apply rounded-xl my-10;
+    box-shadow: var(--elevation-3);
     max-width: 100%;
     height: auto;
     margin-left: auto;
@@ -962,7 +977,8 @@
   /* Highlight boxes for special content */
   .highlight-box {
     @apply bg-forest-50/80 dark:bg-forest-900/30 border-2 border-forest-300 dark:border-forest-700 rounded-xl p-6 my-6;
-    @apply shadow-md hover:shadow-lg transition-shadow duration-300;
+    box-shadow: var(--elevation-2);
+    transition: box-shadow var(--transition-smooth);
     position: relative;
     overflow: hidden;
   }
@@ -1037,7 +1053,8 @@
   }
 
   .expandable-card {
-    @apply shadow-sm hover:shadow-md transition-all duration-300;
+    box-shadow: var(--elevation-1);
+    transition: box-shadow var(--transition-smooth), transform var(--transition-smooth);
   }
 }
 
@@ -1388,7 +1405,8 @@
 }
 
 .app-banner-card {
-  @apply shadow-2xl border-2 border-forest-300/50 dark:border-forest-700/50;
+  box-shadow: var(--elevation-4);
+  @apply border-2 border-forest-300/50 dark:border-forest-700/50;
   background: linear-gradient(135deg, rgba(241, 248, 244, 0.98) 0%, rgba(255, 255, 255, 1) 100%);
   position: relative;
   overflow: hidden;
@@ -1504,7 +1522,7 @@
 
 .app-banner-button-primary:hover {
   background: linear-gradient(135deg, var(--accent-hover) 0%, rgba(110, 246, 202, 1) 100%);
-  box-shadow: 0 15px 35px rgba(77, 212, 168, 0.4);
+  box-shadow: var(--elevation-4), 0 0 32px rgba(77, 212, 168, 0.3);
 }
 
 .app-banner-button-secondary {
@@ -1533,7 +1551,7 @@
 
 .app-banner-image-wrapper {
   @apply relative rounded-2xl overflow-hidden;
-  @apply shadow-2xl;
+  box-shadow: var(--elevation-4);
   @apply border-2 border-forest-200/80 dark:border-forest-800/80;
   @apply transform transition-transform duration-500;
   @apply hover:scale-[1.02];
@@ -1618,7 +1636,8 @@
 /* Print styles */
 @media print {
   .glass-card {
-    @apply shadow-none border border-forest-200 dark:border-forest-800;
+    box-shadow: var(--elevation-0);
+    @apply border border-forest-200 dark:border-forest-800;
     page-break-inside: avoid;
   }
 

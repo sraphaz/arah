@@ -120,20 +120,20 @@ Implementação do plano unificado de melhorias para Wiki e DevPortal conforme a
 
 ### Fase 1 (Restante)
 
-- [ ] Validar contraste com ferramentas automatizadas (WebAIM)
+- [x] Validar contraste com ferramentas automatizadas - **✅ COMPLETO**: script de teste criado e todos os elementos passam WCAG AA
 - [ ] Testar em diferentes dispositivos e navegadores
-- [ ] Garantir que 100% dos elementos passam WCAG AA
+- [x] Garantir que 100% dos elementos passam WCAG AA - **✅ COMPLETO**: validado com script automatizado
 
 ### Fase 2 (Restante)
 
+- [x] Criar sistema de jornadas (Wiki) - **✅ COMPLETO**: aplicado na homepage
 - [ ] Mover conteúdo para phase-panels corretos (DevPortal)
 - [ ] Completar aplicação de SRP (DevPortal)
-- [ ] Criar sistema de jornadas (Wiki) - **PARCIAL**: componente criado, precisa aplicar
 - [ ] Implementar template padronizado (Wiki)
 
-### Fase 3 (Pendente)
+### Fase 3 (Restante)
 
-- [ ] Adicionar breadcrumbs (DevPortal) - **PARCIAL**: componente criado, precisa integrar
+- [x] Adicionar breadcrumbs (DevPortal) - **✅ COMPLETO**: integrado e funcional
 - [ ] Melhorar navegação cruzada
 - [ ] Testar busca em todos documentos
 - [ ] Validar navegação com breadcrumbs

@@ -9,16 +9,16 @@ import { URL } from 'url';
 const BASE_URL = process.env.WIKI_URL || 'https://devportal.araponga.app/wiki';
 const TIMEOUT = 10000;
 
-// Links que devem funcionar (com basePath)
+// Links que devem funcionar (relativos ao BASE_URL que já inclui /wiki)
 const REQUIRED_LINKS = [
-  '/wiki/',
-  '/wiki/docs/',
-  '/wiki/docs/ONBOARDING_PUBLICO/',
-  '/wiki/docs/ONBOARDING_DEVELOPERS/',
-  '/wiki/docs/ONBOARDING_ANALISTAS_FUNCIONAIS/',
-  '/wiki/docs/00_INDEX/',
-  '/wiki/docs/01_PRODUCT_VISION/',
-  '/wiki/docs/DISCORD_SETUP/',
+  '/',
+  '/docs/',
+  '/docs/ONBOARDING_PUBLICO/',
+  '/docs/ONBOARDING_DEVELOPERS/',
+  '/docs/ONBOARDING_ANALISTAS_FUNCIONAIS/',
+  '/docs/00_INDEX/',
+  '/docs/01_PRODUCT_VISION/',
+  '/docs/DISCORD_SETUP/',
 ];
 
 function fetch(url) {
@@ -130,7 +130,7 @@ async function testAllLinks() {
   // Test required internal links
   console.log('📋 Testing Required Internal Links:\n');
   for (const link of REQUIRED_LINKS) {
-    // Corrigir: links já começam com /wiki/, não precisa duplicar
+    // BASE_URL já inclui /wiki, então links relativos devem começar com /
     const fullUrl = link.startsWith('http') ? link : `${BASE_URL}${link}`;
     const result = await testLink(fullUrl);
     if (result.success) {

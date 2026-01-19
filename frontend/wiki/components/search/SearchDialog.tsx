@@ -23,7 +23,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
   useEffect(() => {
     if (isOpen && index.length === 0) {
       setLoading(true);
-      // Em export estático, carrega do arquivo JSON estático ao invés da API
+      // Carrega do arquivo JSON estático gerado no build time
       fetch('/wiki/search-index.json')
         .then(res => {
           if (!res.ok) {
@@ -37,18 +37,9 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
         })
         .catch(err => {
           console.error('Error loading search index:', err);
-          // Em caso de erro, tenta fallback para API (se disponível em dev)
-          fetch('/api/search')
-            .then(res => res.ok ? res.json() : Promise.reject(res))
-            .then(data => {
-              setIndex(data.index || []);
-              setLoading(false);
-            })
-            .catch(() => {
-              console.warn('Search index not available - search will be empty');
-              setIndex([]);
-              setLoading(false);
-            });
+          console.warn('Search index not available - search will be empty');
+          setIndex([]);
+          setLoading(false);
         });
     }
   }, [isOpen, index.length]);

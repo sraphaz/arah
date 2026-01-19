@@ -417,7 +417,7 @@ input:focus-visible {
   background: rgba(77, 212, 168, 0.2);
   border-color: rgba(77, 212, 168, 0.4);
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(77, 212, 168, 0.2);
+  box-shadow: var(--elevation-2);
 }
 
 :root.dark .theme-toggle:hover {

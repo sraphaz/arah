@@ -6,10 +6,14 @@
 import https from 'https';
 import { URL } from 'url';
 
-const BASE_URL = process.env.WIKI_URL || 'https://devportal.araponga.app/wiki';
+// Normaliza BASE_URL para garantir que sempre termine com /wiki
+const rawBaseUrl = process.env.WIKI_URL || 'https://devportal.araponga.app/wiki';
+const BASE_URL = rawBaseUrl.endsWith('/wiki') 
+  ? rawBaseUrl 
+  : rawBaseUrl.replace(/\/$/, '') + '/wiki';
 const TIMEOUT = 10000;
 
-// Links que devem funcionar (relativos ao BASE_URL que já inclui /wiki)
+// Links que devem funcionar (relativos ao BASE_URL, que agora sempre inclui /wiki)
 const REQUIRED_LINKS = [
   '/',
   '/docs/',

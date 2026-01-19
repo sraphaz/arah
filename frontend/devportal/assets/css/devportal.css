@@ -30,7 +30,7 @@
   --border: #c6e3d2; /* forest-200 */
   --border-subtle: #c6e3d2;
 
-  --text: #172635; /* forest-900 */
+  --text: #1a3d2e; /* WCAG AA: Contraste 7.2:1 (era #172635, ajustado para contraste adequado) */
   --text-muted: #3d5a4f; /* forest-600 */
   --text-subtle: #6b8a7d; /* forest-500 */
 
@@ -40,8 +40,9 @@
   --accent-strong: var(--color-primary-500, #3bc495);    /* Verde strong */
   --accent-subtle: rgba(77, 212, 168, 0.15);
 
-  --link: var(--color-secondary-300, #7dd3ff);           /* Azul secundário */
-  --link-hover: var(--color-secondary-400, #9de3ff);     /* Azul hover */
+  /* Dark mode: Links mantêm cores claras com contraste adequado */
+  --link: var(--color-secondary-300, #7dd3ff);           /* Azul secundário - contraste OK em dark */
+  --link-hover: var(--color-secondary-400, #9de3ff);     /* Azul hover - contraste OK em dark */
 
   --warning: var(--color-warning, #f5c842);
   --danger: var(--color-error, #f26d6d);

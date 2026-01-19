@@ -174,8 +174,15 @@ export default async function DocPage({ params }: PageProps) {
   const { slug } = await params;
 
   // slug é um array, ex: ['backlog-api', 'README']
-  // Constrói o caminho do arquivo normalizando separadores
-  const filePath = `${slug.join('/')}.md`.replace(/\\/g, '/');
+  // Decodifica cada segmento do slug (remove URL encoding) e constrói o caminho
+  const decodedSlug = slug.map((segment: string) => {
+    try {
+      return decodeURIComponent(segment);
+    } catch {
+      return segment;
+    }
+  });
+  const filePath = `${decodedSlug.join('/')}.md`.replace(/\\/g, '/');
 
   const doc = await getDocContent(filePath);
 

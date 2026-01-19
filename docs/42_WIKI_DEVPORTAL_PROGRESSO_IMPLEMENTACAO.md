@@ -138,10 +138,10 @@ Implementação do plano unificado de melhorias para Wiki e DevPortal conforme a
 - [ ] Testar busca em todos documentos
 - [ ] Validar navegação com breadcrumbs
 
-### Fase 4 (Pendente)
+### Fase 4 (Em Progresso)
 
 - [ ] Unificar watermarks
-- [ ] Implementar sistema de cores semânticas
+- [x] Implementar sistema de cores semânticas - **✅ COMPLETO**: Componente Callout (Wiki) e CSS semântico (DevPortal)
 - [ ] Aplicar template padronizado (Wiki)
 - [ ] A/B test de backgrounds
 - [ ] Validar identidade visual mantida

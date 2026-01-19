@@ -134,7 +134,7 @@ Implementação do plano unificado de melhorias para Wiki e DevPortal conforme a
 ### Fase 3 (Restante)
 
 - [x] Adicionar breadcrumbs (DevPortal) - **✅ COMPLETO**: integrado e funcional
-- [ ] Melhorar navegação cruzada
+- [x] Melhorar navegação cruzada - **✅ COMPLETO**: links recíprocos adicionados nos headers
 - [ ] Testar busca em todos documentos
 - [ ] Validar navegação com breadcrumbs
 
@@ -169,6 +169,18 @@ Implementação do plano unificado de melhorias para Wiki e DevPortal conforme a
 2. **`scripts/validate-api-links.mjs`**
    - Valida links internos após subdivisão da API
    - Resultado: Todos os links funcionando ✅
+
+3. **`scripts/test-wcag-contrast.mjs`**
+   - Valida contraste WCAG AA de todas as cores
+   - Resultado: Todos os elementos passam (≥4.5:1) ✅
+
+4. **`scripts/test-css-variables.mjs`**
+   - Detecta cores hardcoded vs variáveis CSS
+   - Resultado: Apenas definições de variáveis (esperado) ✅
+
+5. **`scripts/test-all.mjs`**
+   - Script mestre que executa todos os testes
+   - Facilita validação completa em um único comando
 
 ---
 

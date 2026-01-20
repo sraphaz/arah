@@ -7,9 +7,13 @@ import { SearchDialog } from './SearchDialog';
 export function SearchTrigger() {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Fechar com Escape quando aberto
+  // Atalho Cmd/Ctrl + K (funcionalidade mantida, sem referência visual)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsOpen(true);
+      }
       if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
       }

@@ -352,6 +352,38 @@
     width: 80%;
   }
 
+  /* Header Link Icons - Apenas ícones, similar ao DevPortal */
+  .header-link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    color: rgb(107 114 128);
+    transition: all var(--transition-base);
+    text-decoration: none;
+    opacity: 0.85;
+  }
+
+  .dark .header-link-icon {
+    color: rgb(156 163 175);
+  }
+
+  .header-link-icon:hover {
+    color: var(--accent);
+    background: var(--accent-subtle);
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  .header-link-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+  }
+
   /* Category card - Enterprise design */
   /* Category Card - Layout limpo sem bordas pesadas */
   .category-card {

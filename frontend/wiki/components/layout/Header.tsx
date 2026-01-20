@@ -30,25 +30,41 @@ export function Header() {
           </Link>
           <nav className="flex items-center space-x-2 lg:space-x-3">
             <SearchTrigger />
-            {/* Links de navegação - ocultos em mobile, visíveis em desktop */}
-            <div className="hidden lg:flex items-center space-x-3">
-              <Link href="/docs" className="nav-link">
-                Todos os Docs
+            {/* Links de navegação - apenas ícones, ocultos em mobile, visíveis em desktop */}
+            <div className="hidden lg:flex items-center gap-3">
+              <Link
+                href="/docs"
+                className="header-link-icon"
+                aria-label="Todos os Docs"
+                title="Todos os Docs"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
               </Link>
               <a
-                href="/"
-                className="nav-link"
+                href="https://devportal.araponga.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="header-link-icon"
+                aria-label="DevPortal - Referência de API"
                 title="DevPortal - Referência de API"
               >
-                DevPortal
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
               </a>
               <a
                 href="https://araponga.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="nav-link"
+                className="header-link-icon"
+                aria-label="Site Institucional"
+                title="Site Institucional"
               >
-                Site Institucional
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
               </a>
             </div>
             <div className="ml-0 lg:ml-2 lg:pl-3 lg:border-l border-forest-200 dark:border-forest-800">

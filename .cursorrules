@@ -1,6 +1,6 @@
 # Araponga - Cursor Best Practices
 
-**Versão**: 1.6
+**Versão**: 1.7
 **Data**: 2025-01-20
 **Projeto**: Araponga - Plataforma Digital Comunitária Orientada ao Território
 
@@ -677,6 +677,302 @@ function calculateTotalPrice(items: CartItem[]): number {
 - [ ] Testes seguem F.I.R.S.T.?
 - [ ] Classes são pequenas (< 200 linhas)?
 
+### ⚠️ OBRIGATÓRIO: Clean Code para HTML, CSS e JavaScript
+
+**TODO código HTML, CSS e JavaScript DEVE seguir os princípios de Clean Code por padrão.**
+
+#### HTML - Código Limpo
+
+**HTML Semântico:**
+- ✅ Use elementos semânticos (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`)
+- ✅ Use `<button>` para ações, `<a>` para navegação
+- ✅ Use `<form>`, `<input>`, `<label>` corretamente
+- ❌ Evite `<div>` e `<span>` quando há elemento semântico apropriado
+- ❌ Evite elementos obsoletos (`<center>`, `<font>`, `<marquee>`)
+
+**Estrutura e Organização:**
+- ✅ HTML deve ser hierárquico e bem estruturado
+- ✅ Indentação consistente (2 espaços)
+- ✅ Atributos em ordem lógica: `id`, `class`, `data-*`, `aria-*`, `src/href`, `alt/title`
+- ✅ Um elemento por linha (exceto inline elements relacionados)
+- ❌ Evite aninhamento excessivo (máximo 4-5 níveis)
+
+**Acessibilidade:**
+- ✅ Sempre use `alt` em imagens descritivas
+- ✅ Use `aria-label`, `aria-labelledby`, `aria-describedby` quando necessário
+- ✅ Use `role` quando elemento semântico não é suficiente
+- ✅ Use `tabindex` apenas quando necessário (evite `tabindex="0"` em elementos não interativos)
+- ✅ Formulários: `<label>` associado a `<input>` via `for` ou envolvendo
+
+**Nomenclatura:**
+- ✅ Classes: `kebab-case` (ex: `sidebar-container`, `mobile-menu-toggle`)
+- ✅ IDs: `kebab-case` (ex: `mobile-menu-toggle`, `theme-switcher`)
+- ✅ Data attributes: `kebab-case` (ex: `data-section`, `data-phase`)
+- ✅ Nomes descritivos e significativos
+- ❌ Evite abreviações desnecessárias (`btn` → `button`, `nav` → `navigation` se ambíguo)
+
+**Separação de Responsabilidades:**
+- ✅ HTML apenas estrutura e conteúdo
+- ✅ NUNCA coloque CSS inline (exceto crítico para renderização inicial)
+- ✅ NUNCA coloque JavaScript inline (exceto inicialização crítica)
+- ✅ Use arquivos CSS e JS externos
+- ❌ Evite `style=""` e `onclick=""` inline
+
+**Exemplo:**
+```html
+<!-- ✅ GOOD - HTML semântico, bem estruturado -->
+<header class="header" role="banner">
+  <nav class="header-nav" aria-label="Navegação principal">
+    <a href="/" class="header-logo" aria-label="Página inicial">
+      <img src="/logo.svg" alt="Araponga" class="header-logo-image" />
+    </a>
+    <button class="mobile-menu-toggle" aria-label="Abrir menu" aria-expanded="false">
+      <svg class="menu-icon" aria-hidden="true">...</svg>
+    </button>
+  </nav>
+</header>
+
+<!-- ❌ BAD - Divs genéricas, sem semântica, CSS inline -->
+<div style="display: flex; justify-content: space-between;">
+  <div onclick="toggleMenu()">
+    <img src="/logo.svg" />
+  </div>
+</div>
+```
+
+#### CSS - Código Limpo
+
+**Organização e Estrutura:**
+- ✅ Organize por funcionalidade, não por tipo de propriedade
+- ✅ Use comentários para separar seções lógicas
+- ✅ Agrupe propriedades relacionadas (layout, visual, interação)
+- ✅ Ordem lógica: `position`, `display`, `flex/grid`, `dimensions`, `spacing`, `colors`, `typography`, `effects`
+- ✅ Máximo 200 linhas por arquivo (ideal: menos de 100)
+- ❌ Evite arquivos CSS gigantes (>500 linhas)
+
+**Nomenclatura:**
+- ✅ Classes: `kebab-case` (ex: `sidebar-container`, `mobile-menu-toggle`)
+- ✅ Variáveis CSS: `kebab-case` com `--` (ex: `--accent-color`, `--spacing-md`)
+- ✅ Nomes descritivos e significativos
+- ✅ Use BEM quando apropriado (ex: `sidebar__item--active`)
+- ❌ Evite nomes genéricos (`container`, `wrapper`, `box`)
+
+**Especificidade e Cascata:**
+- ✅ Use especificidade mínima necessária
+- ✅ Evite `!important` (use apenas quando absolutamente necessário)
+- ✅ Prefira classes específicas a seletores complexos
+- ✅ Use variáveis CSS para valores reutilizáveis
+- ❌ Evite seletores muito específicos (ex: `.container .wrapper .content .item`)
+
+**Responsividade:**
+- ✅ Mobile-first: base CSS sem media query (mobile), ajustes com `@media (min-width: ...)`
+- ✅ Use variáveis CSS para breakpoints
+- ✅ Agrupe media queries por breakpoint
+- ✅ Use `clamp()` para valores fluidos quando apropriado
+
+**Manutenibilidade:**
+- ✅ Use variáveis CSS para cores, espaçamento, tipografia
+- ✅ Evite valores hardcoded (cores hex, espaçamento fixo)
+- ✅ Comente regras complexas ou não óbvias
+- ✅ Documente "por quê", não "o quê"
+
+**Exemplo:**
+```css
+/* ✅ GOOD - Organizado, variáveis, mobile-first */
+:root {
+  --accent: #4dd4a8;
+  --spacing-md: 1rem;
+  --breakpoint-desktop: 1024px;
+}
+
+.sidebar-container {
+  /* Layout */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+
+  /* Visual */
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--border);
+
+  /* Spacing */
+  padding: var(--spacing-md);
+}
+
+@media (min-width: var(--breakpoint-desktop)) {
+  .sidebar-container {
+    width: 280px;
+  }
+}
+
+/* ❌ BAD - Valores hardcoded, sem organização, !important desnecessário */
+.sidebar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 240px;
+  background: #0a0e12;
+  padding: 16px;
+  border-right: 1px solid rgba(100, 150, 180, 0.12);
+}
+```
+
+#### JavaScript - Código Limpo
+
+**Funções:**
+- ✅ Funções pequenas (< 20 linhas, ideal: < 10)
+- ✅ Uma responsabilidade por função
+- ✅ Nomes descritivos que revelam intenção
+- ✅ Poucos argumentos (< 3, use objetos para mais)
+- ✅ Sem efeitos colaterais (funções puras quando possível)
+- ❌ Evite funções com mais de 50 linhas
+
+**Variáveis e Constantes:**
+- ✅ Use `const` por padrão, `let` quando necessário, evite `var`
+- ✅ Nomes descritivos (`userName` em vez de `u` ou `data`)
+- ✅ Declare próximo ao uso
+- ✅ Use nomes pronunciáveis e pesquisáveis
+- ❌ Evite variáveis globais
+
+**Estrutura e Organização:**
+- ✅ Organize por funcionalidade, não por tipo
+- ✅ Use IIFE ou módulos para evitar poluição global
+- ✅ Separe lógica de apresentação
+- ✅ Use early returns para reduzir aninhamento
+- ✅ Máximo 200 linhas por arquivo (ideal: menos de 100)
+
+**Tratamento de Erros:**
+- ✅ Use `try/catch` para operações que podem falhar
+- ✅ Trate erros explicitamente, não silencie
+- ✅ Use mensagens de erro descritivas
+- ✅ Valide entrada antes de processar
+
+**DOM e Eventos:**
+- ✅ Use `addEventListener` em vez de atributos inline (`onclick`, etc.)
+- ✅ Use `querySelector`/`querySelectorAll` com classes específicas
+- ✅ Remova event listeners quando não necessário (cleanup)
+- ✅ Use event delegation quando apropriado
+- ✅ Prefira `dataset` para data attributes
+
+**Modern JavaScript:**
+- ✅ Use arrow functions quando apropriado
+- ✅ Use template literals em vez de concatenação
+- ✅ Use destructuring quando apropriado
+- ✅ Use async/await em vez de callbacks aninhados
+- ✅ Use `const`/`let` em vez de `var`
+
+**Exemplo:**
+```javascript
+// ✅ GOOD - Funções pequenas, nomes descritivos, sem efeitos colaterais
+(function() {
+  'use strict';
+
+  const DESKTOP_BREAKPOINT = 1024;
+
+  function getBreakpoint() {
+    return parseInt(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--breakpoint-desktop')
+        .trim() || DESKTOP_BREAKPOINT
+    );
+  }
+
+  function isMobile() {
+    return window.innerWidth < getBreakpoint();
+  }
+
+  function openMobileMenu() {
+    const sidebar = document.querySelector('.sidebar-container');
+    if (!sidebar) return;
+
+    sidebar.classList.add('mobile-menu-open');
+    document.body.classList.add('menu-open');
+  }
+
+  function closeMobileMenu() {
+    const sidebar = document.querySelector('.sidebar-container');
+    if (!sidebar) return;
+
+    sidebar.classList.remove('mobile-menu-open');
+    document.body.classList.remove('menu-open');
+  }
+
+  function initMobileMenu() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', () => {
+      const sidebar = document.querySelector('.sidebar-container');
+      const isOpen = sidebar?.classList.contains('mobile-menu-open');
+
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
+    });
+
+    // Fecha menu ao redimensionar para desktop
+    window.addEventListener('resize', () => {
+      if (!isMobile()) {
+        closeMobileMenu();
+      }
+    });
+  }
+
+  // Inicializa quando DOM estiver pronto
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+})();
+
+// ❌ BAD - Função gigante, variáveis globais, código inline, sem tratamento de erros
+var isOpen = false;
+function toggle() {
+  if (window.innerWidth < 1024) {
+    var sidebar = document.querySelector('.sidebar-container');
+    if (sidebar) {
+      if (!isOpen) {
+        sidebar.classList.add('mobile-menu-open');
+        document.body.classList.add('menu-open');
+        isOpen = true;
+      } else {
+        sidebar.classList.remove('mobile-menu-open');
+        document.body.classList.remove('menu-open');
+        isOpen = false;
+      }
+    }
+  }
+}
+```
+
+#### Checklist Clean Code HTML/CSS/JS
+
+**HTML:**
+- [ ] HTML semântico (usa elementos apropriados)?
+- [ ] Estrutura hierárquica clara?
+- [ ] Acessibilidade (aria-labels, roles, alt text)?
+- [ ] Sem CSS/JS inline?
+- [ ] Nomenclatura consistente (kebab-case)?
+
+**CSS:**
+- [ ] Organizado por funcionalidade?
+- [ ] Variáveis CSS para valores reutilizáveis?
+- [ ] Mobile-first?
+- [ ] Sem `!important` desnecessário?
+- [ ] Arquivo < 200 linhas?
+
+**JavaScript:**
+- [ ] Funções pequenas (< 20 linhas)?
+- [ ] Nomes descritivos?
+- [ ] Sem variáveis globais?
+- [ ] Tratamento de erros?
+- [ ] Arquivo < 200 linhas?
+- [ ] Sem código inline no HTML?
+
 ### Nomenclatura
 
 #### Classes e Interfaces
@@ -1114,9 +1410,10 @@ Documentação:
 ---
 
 **Última Atualização**: 2025-01-20
-**Versão**: 1.6
+**Versão**: 1.7
 
 ### Changelog
+- **1.7** (2025-01-20): Adicionadas regras de Clean Code para HTML, CSS e JavaScript
 - **1.6** (2025-01-20): Expandidos princípios de Clean Architecture com detalhes completos (Uncle Bob)
 - **1.5** (2025-01-20): Adicionados padrões de Clean Code (Uncle Bob) como obrigatórios
 - **1.4** (2025-01-20): Adicionados princípios SOLID e YAGNI/KISS como obrigatórios em todo código

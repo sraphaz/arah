@@ -127,7 +127,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Buscar documentação... (Cmd/Ctrl + K)"
+            placeholder="Buscar documentação..."
             className="flex-1 bg-transparent border-0 outline-0 text-forest-900 dark:text-forest-50 placeholder-forest-500 dark:placeholder-forest-400 text-base"
             aria-label="Campo de busca"
           />

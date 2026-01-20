@@ -426,24 +426,27 @@ input:focus-visible {
   transition: opacity var(--transition-slow), transform var(--transition-slow); /* 300ms - usa tokens */
 }
 
+/* Lógica invertida: mostra o ícone que indica a ação (não o estado atual) */
+/* Light mode: mostra lua (porque clicar vai escurecer) */
 .theme-icon-sun {
-  opacity: 1;
-  transform: rotate(0deg);
-}
-
-:root.dark .theme-icon-sun {
   opacity: 0;
   transform: rotate(90deg);
 }
 
+:root.dark .theme-icon-sun {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+/* Dark mode: mostra sol (porque clicar vai clarear) */
 .theme-icon-moon {
-  opacity: 0;
-  transform: rotate(-90deg);
+  opacity: 1;
+  transform: rotate(0deg);
 }
 
 :root.dark .theme-icon-moon {
-  opacity: 1;
-  transform: rotate(0deg);
+  opacity: 0;
+  transform: rotate(-90deg);
 }
 
 .lang-select {
@@ -2181,7 +2184,20 @@ pre code {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+/* Separador sutil entre links e toggle - Similar à Wiki */
+.header-separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(198, 227, 210, 0.4);
+  flex-shrink: 0;
+  margin-left: 0.5rem;
   margin-right: 0.5rem;
+}
+
+:root.dark .header-separator {
+  background: rgba(37, 48, 58, 0.6);
 }
 
 .header-link-icon {

@@ -8,7 +8,7 @@ export function Header() {
     <header className="border-b border-forest-200/80 dark:border-forest-900/80 bg-white/90 dark:bg-forest-950/90 backdrop-blur-xl sticky top-0 z-50 shadow-sm dark:shadow-forest-900/20 transition-all duration-300">
       <div className="container-max py-6">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-4 group transition-transform duration-300 hover:scale-[1.02]">
+          <Link href="/" prefetch={false} className="flex items-center space-x-4 group transition-transform duration-300 hover:scale-[1.02]">
             <div className="relative w-14 h-14 md:w-16 md:h-16 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Image
                 src="/wiki/icon.png"
@@ -34,6 +34,7 @@ export function Header() {
             <div className="hidden lg:flex items-center gap-3">
               <Link
                 href="/docs"
+                prefetch={false}
                 className="header-link-icon"
                 aria-label="Todos os Docs"
                 title="Todos os Docs"

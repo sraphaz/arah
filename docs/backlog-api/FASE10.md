@@ -5,7 +5,7 @@
 **Depende de**: Fase 8 (Infraestrutura de Mídia)  
 **Bloqueia**: Fase 11 (Edição e Gestão)  
 **Estimativa Total**: 192 horas (160h + 32h TDD/BDD)  
-**Status**: ✅ **~85% Completo** - Implementação Principal 100% + Configuração Avançada Completa + Pendências Menores (Otimizações, BDD)
+**Status**: ✅ **~95% Completo** - Implementação Principal 100% + Configuração Avançada Completa + Testes e Otimizações Implementados (BDD pendente, não bloqueante)
 
 ---
 
@@ -279,11 +279,11 @@ Integrar mídias (imagens, vídeos e áudios) em todas as funcionalidades de con
   - [ ] Projeções para reduzir dados transferidos - **não implementado (não crítico)**
 - [x] Validação de performance - **testes de performance adicionados**
 
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/FeedService.cs`
-- `backend/Araponga.Application/Services/EventsService.cs`
-- `backend/Araponga.Application/Services/StoreItemService.cs`
-- `backend/Araponga.Application/Services/ChatService.cs`
+**Arquivos Modificados**:
+- ✅ `backend/Araponga.Infrastructure/Media/CachedMediaStorageService.cs` - **cache implementado**
+- ✅ `backend/Araponga.Infrastructure/Media/MediaStorageFactory.cs` - **cache integrado**
+- ✅ `backend/Araponga.Api/Controllers/FeedController.cs` - **queries em batch implementadas**
+- ✅ `backend/Araponga.Tests/Performance/FeedWithMediaPerformanceTests.cs` - **testes de performance adicionados**
 
 **Critérios de Sucesso**:
 - ✅ Queries otimizadas

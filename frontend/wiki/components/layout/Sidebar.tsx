@@ -1,9 +1,8 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { QuickLinks } from "./QuickLinks";
 
 interface SidebarSection {
   title: string;
@@ -143,11 +142,7 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      {/* Quick Links Section */}
-      <div className="sidebar-quick-links mt-8 pt-8 border-t border-forest-200/80 dark:border-forest-800/80">
-        <QuickLinks />
-      </div>
     </aside>
   );
 }
+

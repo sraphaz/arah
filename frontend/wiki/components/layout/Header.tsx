@@ -28,27 +28,30 @@ export function Header() {
               <p className="text-xs text-forest-500 dark:text-forest-400 font-medium tracking-wide">Documentação Completa</p>
             </div>
           </Link>
-          <nav className="flex items-center space-x-3">
+          <nav className="flex items-center space-x-2 lg:space-x-3">
             <SearchTrigger />
-            <Link href="/docs" className="nav-link">
-              Todos os Docs
-            </Link>
-            <a
-              href="/"
-              className="nav-link"
-              title="DevPortal - Referência de API"
-            >
-              DevPortal
-            </a>
-            <a
-              href="https://araponga.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-link"
-            >
-              Site Institucional
-            </a>
-            <div className="ml-2 pl-3 border-l border-forest-200 dark:border-forest-800">
+            {/* Links de navegação - ocultos em mobile, visíveis em desktop */}
+            <div className="hidden lg:flex items-center space-x-3">
+              <Link href="/docs" className="nav-link">
+                Todos os Docs
+              </Link>
+              <a
+                href="/"
+                className="nav-link"
+                title="DevPortal - Referência de API"
+              >
+                DevPortal
+              </a>
+              <a
+                href="https://araponga.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-link"
+              >
+                Site Institucional
+              </a>
+            </div>
+            <div className="ml-0 lg:ml-2 lg:pl-3 lg:border-l border-forest-200 dark:border-forest-800">
               <ThemeToggle />
             </div>
           </nav>

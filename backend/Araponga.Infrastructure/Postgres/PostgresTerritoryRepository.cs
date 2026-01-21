@@ -178,7 +178,9 @@ public sealed class PostgresTerritoryRepository : ITerritoryRepository
 
     public async Task<int> CountAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.Territories.CountAsync(cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.Territories.CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 
     public async Task<int> CountSearchAsync(
@@ -207,6 +209,8 @@ public sealed class PostgresTerritoryRepository : ITerritoryRepository
             territories = territories.Where(t => t.State == trimmed);
         }
 
-        return await territories.CountAsync(cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var count = await territories.CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

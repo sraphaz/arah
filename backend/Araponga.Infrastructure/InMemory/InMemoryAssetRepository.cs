@@ -167,6 +167,8 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
                 (asset.Description is not null && asset.Description.Contains(search, StringComparison.OrdinalIgnoreCase)));
         }
 
-        return Task.FromResult(query.Count());
+        const int maxInt32 = int.MaxValue;
+        var count = query.Count();
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

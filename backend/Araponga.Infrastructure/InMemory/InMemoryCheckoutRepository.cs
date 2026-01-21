@@ -34,4 +34,23 @@ public sealed class InMemoryCheckoutRepository : ICheckoutRepository
 
         return Task.CompletedTask;
     }
+
+    public Task<IReadOnlyList<Checkout>> ListByUserAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var checkouts = _dataStore.Checkouts
+            .Where(c => c.BuyerUserId == userId)
+            .OrderByDescending(c => c.CreatedAtUtc)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<Checkout>>(checkouts);
+    }
+
+    public Task<IReadOnlyList<Checkout>> ListAllAsync(CancellationToken cancellationToken)
+    {
+        var checkouts = _dataStore.Checkouts
+            .OrderByDescending(c => c.CreatedAtUtc)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<Checkout>>(checkouts);
+    }
 }

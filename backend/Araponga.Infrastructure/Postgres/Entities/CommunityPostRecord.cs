@@ -16,5 +16,7 @@ public sealed class CommunityPostRecord
     public string? ReferenceType { get; set; }
     public Guid? ReferenceId { get; set; }
     public DateTime CreatedAtUtc { get; set; }
+    public DateTime? EditedAtUtc { get; set; }
+    public int EditCount { get; set; }
     public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 }

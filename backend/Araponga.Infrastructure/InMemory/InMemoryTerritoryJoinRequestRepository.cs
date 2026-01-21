@@ -135,9 +135,10 @@ public sealed class InMemoryTerritoryJoinRequestRepository : ITerritoryJoinReque
             .Select(recipient => recipient.JoinRequestId)
             .ToHashSet();
 
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.TerritoryJoinRequests
             .Count(request => requestIds.Contains(request.Id) && request.Status == status);
 
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

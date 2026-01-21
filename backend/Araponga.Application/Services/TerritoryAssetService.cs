@@ -76,7 +76,9 @@ public sealed class TerritoryAssetService
             cancellationToken);
 
         var details = await BuildAssetDetailsAsync(territoryId, assets, cancellationToken);
-        var totalCount = details.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = details.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = details
             .OrderByDescending(d => d.Asset.CreatedAtUtc)
             .Skip(pagination.Skip)
@@ -395,7 +397,10 @@ public sealed class TerritoryAssetService
             .ToDictionary(group => group.Key, group => (IReadOnlyList<AssetGeoAnchor>)group.ToList());
 
         var validationCounts = await _validationRepository.CountByAssetIdsAsync(assetIds, cancellationToken);
-        var eligibleResidentsCount = (await _membershipRepository.ListResidentUserIdsAsync(territoryId, cancellationToken)).Count;
+        var residentUserIds = await _membershipRepository.ListResidentUserIdsAsync(territoryId, cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var residentCount = residentUserIds.Count;
+        var eligibleResidentsCount = residentCount > maxInt32 ? maxInt32 : residentCount;
 
         return assets.Select(asset => new TerritoryAssetDetails(
             asset,

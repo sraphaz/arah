@@ -119,7 +119,9 @@ public sealed class MapService
                 ? allVisible.ToList()
                 : allVisible.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList();
 
-        var totalCount = allFiltered.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = allFiltered.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
 
         return new PagedResult<MapEntity>(filtered, pagination.PageNumber, pagination.PageSize, totalCount);
     }

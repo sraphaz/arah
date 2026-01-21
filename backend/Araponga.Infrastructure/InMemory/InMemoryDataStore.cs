@@ -337,6 +337,9 @@ public sealed class InMemoryDataStore
     public List<CartItem> CartItems { get; }
     public List<Checkout> Checkouts { get; }
     public List<CheckoutItem> CheckoutItems { get; }
+    public List<StoreRating> StoreRatings { get; } = new();
+    public List<StoreItemRating> StoreItemRatings { get; } = new();
+    public List<StoreRatingResponse> StoreRatingResponses { get; } = new();
     public List<PlatformFeeConfig> PlatformFeeConfigs { get; }
     public List<TerritoryPayoutConfig> TerritoryPayoutConfigs { get; } = new();
     

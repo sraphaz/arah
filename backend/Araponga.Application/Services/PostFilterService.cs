@@ -97,7 +97,9 @@ public sealed class PostFilterService
     {
         var filtered = await FilterPostsAsync(posts, territoryId, userId, mapEntityId, assetId, cancellationToken);
 
-        var totalCount = filtered.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = filtered.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = filtered
             .OrderByDescending(p => p.CreatedAtUtc)
             .Skip(pagination.Skip)

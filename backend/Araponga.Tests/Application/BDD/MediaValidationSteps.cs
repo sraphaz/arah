@@ -3,7 +3,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Media;
 using Araponga.Tests.Api;
 using Microsoft.Extensions.DependencyInjection;
-using TechTalk.SpecFlow;
+using Reqnroll;
 using Xunit;
 
 namespace Araponga.Tests.Application.BDD;
@@ -48,7 +48,7 @@ public sealed class MediaValidationSteps
         _scenarioContext["imageSizeMB"] = sizeMB;
         var sizeBytes = (long)sizeMB * 1024L * 1024L;
         _scenarioContext["imageSizeBytes"] = sizeBytes; // Garantir que seja long
-        
+
         // Para testes de validação, não precisamos fazer upload real de imagens muito grandes
         // Apenas armazenar as informações necessárias para validação direta
         // Se a imagem for pequena (<= 10MB), tentar fazer upload para ter um MediaAsset real
@@ -102,7 +102,7 @@ public sealed class MediaValidationSteps
     {
         // Sempre armazenar o MIME type no contexto, mesmo se o upload falhar
         _scenarioContext["testFileMimeType"] = mimeType;
-        
+
         var imageData = new byte[1024];
         imageData[0] = 0xFF;
         imageData[1] = 0xD8;
@@ -125,7 +125,7 @@ public sealed class MediaValidationSteps
     public async Task GivenQueExistemMidias(int count)
     {
         _testMediaIds.Clear(); // Limpar lista antes de adicionar novas mídias
-        
+
         for (int i = 0; i < count; i++)
         {
             var imageData = new byte[1024];
@@ -158,7 +158,7 @@ public sealed class MediaValidationSteps
         // Obter tamanho da imagem do contexto
         var sizeBytes = _scenarioContext.Get<long>("imageSizeBytes");
         var mimeType = "image/jpeg";
-        
+
         // Criar um stream com o tamanho correto da imagem
         var imageData = new byte[sizeBytes];
         // Adicionar headers JPEG válidos
@@ -170,7 +170,7 @@ public sealed class MediaValidationSteps
             imageData[imageData.Length - 2] = 0xFF;
             imageData[imageData.Length - 1] = 0xD9;
         }
-        
+
         using var stream = new MemoryStream(imageData);
         _lastValidationResult = await _validator!.ValidateAsync(
             stream,
@@ -195,7 +195,7 @@ public sealed class MediaValidationSteps
     public void QuandoOSistemaValidaAQuantidade()
     {
         var mediaCount = _scenarioContext.Get<int>("mediaCount");
-        
+
         // Simular validação de quantidade (limite padrão é 10)
         // IMPORTANTE: Se mediaCount > 10, a validação DEVE falhar
         if (mediaCount > 10)
@@ -212,7 +212,7 @@ public sealed class MediaValidationSteps
     public void EntaoAValidacaoDevePassar()
     {
         Assert.NotNull(_lastValidationResult);
-        Assert.True(_lastValidationResult.IsValid, 
+        Assert.True(_lastValidationResult.IsValid,
             $"Validação falhou: {string.Join(", ", _lastValidationResult.Errors)}");
     }
 
@@ -236,7 +236,7 @@ public sealed class MediaValidationSteps
         Assert.NotNull(_lastValidationResult);
         Assert.False(_lastValidationResult.IsValid);
         var errorsList = _lastValidationResult.Errors.ToList();
-        
+
         // Mapear termos em inglês para português
         var errorMappings = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
         {
@@ -244,11 +244,11 @@ public sealed class MediaValidationSteps
             { "size exceeds", new[] { "excede", "exceeds", "size exceeds", "tamanho máximo", "excede o tamanho máximo" } },
             { "Maximum media count exceeded", new[] { "Maximum media count exceeded", "Maximum", "máximo" } }
         };
-        
-        var searchTerms = errorMappings.TryGetValue(expectedError, out var terms) 
-            ? terms 
+
+        var searchTerms = errorMappings.TryGetValue(expectedError, out var terms)
+            ? terms
             : new[] { expectedError };
-        
+
         var found = errorsList.Any(e => searchTerms.Any(term => e.Contains(term, StringComparison.OrdinalIgnoreCase)));
         Assert.True(found,
             $"Erro esperado '{expectedError}' não encontrado nos erros: {string.Join(", ", errorsList)}");

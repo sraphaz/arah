@@ -134,4 +134,14 @@ public sealed class FeedService
     {
         return _feedRepository.GetCountsByPostIdsAsync(postIds, cancellationToken);
     }
+
+    public Task<CommunityPost?> GetPostAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        return _feedRepository.GetPostAsync(postId, cancellationToken);
+    }
+
+    public Task DeletePostAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        return _feedRepository.DeletePostAsync(postId, cancellationToken);
+    }
 }

@@ -68,4 +68,14 @@ public sealed class PostgresStoreRepository : IStoreRepository
         _dbContext.TerritoryStores.Update(store.ToRecord());
         return Task.CompletedTask;
     }
+
+    public async Task<IReadOnlyList<Store>> ListByTerritoryAsync(Guid territoryId, CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.TerritoryStores
+            .AsNoTracking()
+            .Where(s => s.TerritoryId == territoryId)
+            .ToListAsync(cancellationToken);
+
+        return records.Select(record => record.ToDomain()).ToList();
+    }
 }

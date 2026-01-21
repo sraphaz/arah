@@ -303,6 +303,8 @@ public sealed class EventsService
         double? latitude,
         double? longitude,
         string? locationLabel,
+        Guid? coverMediaId,
+        IReadOnlyCollection<Guid>? additionalMediaIds,
         CancellationToken cancellationToken)
     {
         var territoryEvent = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
@@ -334,6 +336,66 @@ public sealed class EventsService
             updatedLongitude,
             updatedLocationLabel,
             DateTime.UtcNow);
+
+        // Atualizar mídias se fornecidas
+        if (coverMediaId is not null || additionalMediaIds is not null)
+        {
+            // Remover attachments existentes
+            await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Event, territoryEvent.Id, cancellationToken);
+
+            var allMediaIds = new List<Guid>();
+            if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
+            {
+                allMediaIds.Add(coverMediaId.Value);
+            }
+
+            var normalizedAdditionalMediaIds = additionalMediaIds?
+                .Where(id => id != Guid.Empty)
+                .Distinct()
+                .ToList();
+
+            if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
+            {
+                allMediaIds.AddRange(normalizedAdditionalMediaIds);
+            }
+
+            // Adicionar novos attachments
+            if (allMediaIds.Count > 0)
+            {
+                var now = DateTime.UtcNow;
+                
+                // Imagem de capa (DisplayOrder = 0)
+                if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
+                {
+                    var coverAttachment = new MediaAttachment(
+                        Guid.NewGuid(),
+                        coverMediaId.Value,
+                        MediaOwnerType.Event,
+                        territoryEvent.Id,
+                        0,
+                        now);
+
+                    await _mediaAttachmentRepository.AddAsync(coverAttachment, cancellationToken);
+                }
+
+                // Imagens adicionais (DisplayOrder = 1+)
+                if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
+                {
+                    foreach (var (mediaId, index) in normalizedAdditionalMediaIds.Select((id, idx) => (id, idx + 1)))
+                    {
+                        var attachment = new MediaAttachment(
+                            Guid.NewGuid(),
+                            mediaId,
+                            MediaOwnerType.Event,
+                            territoryEvent.Id,
+                            index,
+                            now);
+
+                        await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+                    }
+                }
+            }
+        }
 
         await _eventRepository.UpdateAsync(territoryEvent, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
@@ -541,7 +603,9 @@ public sealed class EventsService
             .Select(item => item.Event)
             .ToList();
 
-        var totalCount = filtered.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = filtered.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = filtered
             .Skip(pagination.Skip)
             .Take(pagination.Take)
@@ -593,6 +657,34 @@ public sealed class EventsService
                 participation?.ConfirmedCount ?? 0,
                 displayName);
         }).ToList();
+    }
+
+    public async Task<Result<IReadOnlyList<EventParticipant>>> GetEventParticipantsAsync(
+        Guid eventId,
+        EventParticipationStatus? status,
+        CancellationToken cancellationToken)
+    {
+        var territoryEvent = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
+        if (territoryEvent is null)
+        {
+            return Result<IReadOnlyList<EventParticipant>>.Failure("Event not found.");
+        }
+
+        var participations = await _participationRepository.ListByEventIdAsync(eventId, status, cancellationToken);
+        
+        var participants = new List<EventParticipant>();
+        foreach (var participation in participations)
+        {
+            var displayName = await ResolveDisplayNameAsync(participation.UserId, cancellationToken);
+            participants.Add(new EventParticipant(
+                participation.UserId,
+                displayName ?? "Unknown",
+                participation.Status,
+                participation.CreatedAtUtc,
+                participation.UpdatedAtUtc));
+        }
+
+        return Result<IReadOnlyList<EventParticipant>>.Success(participants);
     }
 
     private async Task<bool> CanManageEventAsync(

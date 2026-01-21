@@ -68,8 +68,10 @@ public sealed class PostgresHealthAlertRepository : IHealthAlertRepository
 
     public async Task<int> CountByTerritoryAsync(Guid territoryId, CancellationToken cancellationToken)
     {
-        return await _dbContext.HealthAlerts
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.HealthAlerts
             .Where(alert => alert.TerritoryId == territoryId)
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

@@ -101,7 +101,8 @@ public sealed class InMemoryMapRepository : IMapRepository
 
     public Task<int> CountByTerritoryAsync(Guid territoryId, CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.MapEntities.Count(entity => entity.TerritoryId == territoryId);
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

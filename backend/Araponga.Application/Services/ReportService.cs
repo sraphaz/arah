@@ -191,7 +191,9 @@ public sealed class ReportService
         CancellationToken cancellationToken)
     {
         var reports = await _reportRepository.ListAsync(territoryId, targetType, status, fromUtc, toUtc, cancellationToken);
-        var totalCount = reports.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = reports.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = reports
             .OrderByDescending(r => r.CreatedAtUtc)
             .Skip(pagination.Skip)

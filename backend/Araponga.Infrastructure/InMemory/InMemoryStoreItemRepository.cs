@@ -180,6 +180,8 @@ public sealed class InMemoryStoreItemRepository : IStoreItemRepository
                 (!string.IsNullOrWhiteSpace(l.Description) && l.Description.Contains(query, StringComparison.OrdinalIgnoreCase)));
         }
 
-        return Task.FromResult(items.Count());
+        const int maxInt32 = int.MaxValue;
+        var count = items.Count();
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

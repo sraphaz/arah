@@ -61,4 +61,18 @@ public interface ITerritoryEventRepository
     
     Task AddAsync(TerritoryEvent territoryEvent, CancellationToken cancellationToken);
     Task UpdateAsync(TerritoryEvent territoryEvent, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Lists events created by a user with pagination.
+    /// </summary>
+    Task<IReadOnlyList<TerritoryEvent>> ListByAuthorPagedAsync(
+        Guid userId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Counts events created by a user.
+    /// </summary>
+    Task<int> CountByAuthorAsync(Guid userId, CancellationToken cancellationToken);
 }

@@ -91,6 +91,8 @@ public sealed class EventsControllerTests
             null,
             null,
             null,
+            null,
+            null,
             null);
 
         var response = await client.PatchAsJsonAsync($"api/v1/events/{eventId}", request);

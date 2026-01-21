@@ -103,15 +103,18 @@ public sealed class NotificationsController : ControllerBase
             notification.CreatedAtUtc,
             notification.ReadAtUtc)).ToList();
 
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pagination.PageSize);
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = totalCount > maxInt32 ? maxInt32 : totalCount;
+        var totalPagesDouble = Math.Ceiling(safeTotalCount / (double)pagination.PageSize);
+        var safeTotalPages = totalPagesDouble > maxInt32 ? maxInt32 : (int)totalPagesDouble;
         var response = new PagedResponse<NotificationResponse>(
             items,
             pagination.PageNumber,
             pagination.PageSize,
-            totalCount,
-            totalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagination.PageNumber > 1,
-            pagination.PageNumber < totalPages);
+            pagination.PageNumber < safeTotalPages);
 
         return Ok(response);
     }

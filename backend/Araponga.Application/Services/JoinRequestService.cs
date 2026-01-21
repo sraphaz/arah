@@ -197,7 +197,9 @@ public sealed class JoinRequestService
                 request.CreatedAtUtc))
             .ToList();
 
-        var totalCount = incomingRequests.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = incomingRequests.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = incomingRequests
             .OrderByDescending(r => r.CreatedAtUtc)
             .Skip(pagination.Skip)

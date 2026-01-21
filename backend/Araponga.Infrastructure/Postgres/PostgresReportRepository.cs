@@ -77,7 +77,8 @@ public sealed class PostgresReportRepository : IReportRepository
         DateTime sinceUtc,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.ModerationReports
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.ModerationReports
             .AsNoTracking()
             .Where(report =>
                 report.TargetType == targetType &&
@@ -86,6 +87,7 @@ public sealed class PostgresReportRepository : IReportRepository
             .Select(report => report.ReporterUserId)
             .Distinct()
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 
     public async Task<IReadOnlyList<ModerationReport>> ListAsync(
@@ -217,7 +219,9 @@ public sealed class PostgresReportRepository : IReportRepository
             query = query.Where(report => report.CreatedAtUtc <= toUtc.Value);
         }
 
-        return await query.CountAsync(cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var count = await query.CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 
     public async Task UpdateStatusAsync(Guid reportId, ReportStatus status, CancellationToken cancellationToken)

@@ -54,7 +54,8 @@ public sealed class InMemoryReportRepository : IReportRepository
             .Distinct()
             .Count();
 
-        return Task.FromResult(count);
+        const int maxInt32 = int.MaxValue;
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task<IReadOnlyList<ModerationReport>> ListAsync(
@@ -166,7 +167,9 @@ public sealed class InMemoryReportRepository : IReportRepository
             query = query.Where(report => report.CreatedAtUtc <= toUtc.Value);
         }
 
-        return Task.FromResult(query.Count());
+        const int maxInt32 = int.MaxValue;
+        var count = query.Count();
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task UpdateStatusAsync(Guid reportId, ReportStatus status, CancellationToken cancellationToken)

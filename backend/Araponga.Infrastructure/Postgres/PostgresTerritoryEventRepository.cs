@@ -232,6 +232,34 @@ public sealed class PostgresTerritoryEventRepository : ITerritoryEventRepository
             query = query.Where(evt => evt.Status == status);
         }
 
-        return await query.CountAsync(cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var count = await query.CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
+    }
+
+    public async Task<IReadOnlyList<TerritoryEvent>> ListByAuthorPagedAsync(
+        Guid userId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.TerritoryEvents
+            .AsNoTracking()
+            .Where(evt => evt.CreatedByUserId == userId)
+            .OrderByDescending(evt => evt.CreatedAtUtc)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+
+        return records.Select(record => record.ToDomain()).ToList();
+    }
+
+    public async Task<int> CountByAuthorAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.TerritoryEvents
+            .Where(evt => evt.CreatedByUserId == userId)
+            .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

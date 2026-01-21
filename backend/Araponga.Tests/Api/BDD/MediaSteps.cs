@@ -18,7 +18,7 @@ using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
 using Araponga.Tests.Api;
 using Microsoft.Extensions.DependencyInjection;
-using TechTalk.SpecFlow;
+using Reqnroll;
 using Xunit;
 
 namespace Araponga.Tests.Api.BDD;
@@ -175,7 +175,7 @@ public sealed class MediaSteps
             // Usuário já existe, re-autenticar para atualizar o header Authorization
             var userId = userName.GetHashCode();
             var externalId = $"bdd-{userName}-{Math.Abs(userId)}";
-            
+
             var token = await LoginForTokenAsync(_client!, "google", externalId);
             _client!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }

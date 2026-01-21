@@ -69,7 +69,7 @@ public sealed class MediaSteps
         var territoryId = Guid.Parse("22222222-2222-2222-2222-222222222222");
         _territories[territoryName] = territoryId;
         _currentTerritoryId = territoryId;
-        
+
         // Garantir que chat está habilitado no território usando InMemoryFeatureFlagService
         var featureFlagService = _factory.Services.GetRequiredService<Araponga.Application.Interfaces.IFeatureFlagService>();
         if (featureFlagService is InMemoryFeatureFlagService inMemoryFeatureFlags)
@@ -86,7 +86,7 @@ public sealed class MediaSteps
             }
             inMemoryFeatureFlags.SetEnabledFlags(territoryId, existingFlags);
         }
-        
+
         return Task.CompletedTask;
     }
 
@@ -96,10 +96,10 @@ public sealed class MediaSteps
         // Usar um ID único mas determinístico para o usuário
         var userId = userName.GetHashCode();
         var externalId = $"bdd-{userName}-{Math.Abs(userId)}";
-        
+
         var token = await LoginForTokenAsync(_client!, "google", externalId);
         _client!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        
+
         var sessionId = Guid.NewGuid().ToString();
         if (!_client.DefaultRequestHeaders.Contains(ApiHeaders.SessionId))
         {
@@ -107,7 +107,7 @@ public sealed class MediaSteps
         }
 
         await SelectTerritoryAsync(_currentTerritoryId!.Value);
-        
+
         // Obter o ID do usuário e criar membership diretamente no dataStore
         var meResponse = await _client.GetAsync("api/v1/users/me/profile");
         if (meResponse.IsSuccessStatusCode)
@@ -117,7 +117,7 @@ public sealed class MediaSteps
             {
                 var userIdGuid = userResponse.Id;
                 _users[userName] = userIdGuid;
-                
+
                 // Tornar usuário verificado (necessário para chat)
                 var dataStore = _factory.GetDataStore();
                 var user = dataStore.Users.FirstOrDefault(u => u.Id == userIdGuid);
@@ -125,15 +125,15 @@ public sealed class MediaSteps
                 {
                     user.UpdateIdentityVerification(Araponga.Domain.Users.UserIdentityVerificationStatus.Verified, DateTime.UtcNow);
                 }
-                
+
                 // Criar/atualizar membership diretamente no InMemoryDataStore para garantir que seja residente
                 var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-                
+
                 var existingMembership = await membershipRepository.GetByUserAndTerritoryAsync(
                     userIdGuid,
                     _currentTerritoryId.Value,
                     CancellationToken.None);
-                
+
                 if (existingMembership is null)
                 {
                     // Criar novo membership como Resident
@@ -146,7 +146,7 @@ public sealed class MediaSteps
                         DateTime.UtcNow,
                         null,
                         DateTime.UtcNow);
-                    
+
                     await membershipRepository.AddAsync(membership, CancellationToken.None);
                 }
                 else if (existingMembership.Role != MembershipRole.Resident)
@@ -167,7 +167,17 @@ public sealed class MediaSteps
     {
         if (!_users.ContainsKey(userName))
         {
+            // Usuário não existe, criar e autenticar
             await GivenQueExisteUmUsuarioComoResidente(userName);
+        }
+        else
+        {
+            // Usuário já existe, re-autenticar para atualizar o header Authorization
+            var userId = userName.GetHashCode();
+            var externalId = $"bdd-{userName}-{Math.Abs(userId)}";
+            
+            var token = await LoginForTokenAsync(_client!, "google", externalId);
+            _client!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
         _currentUser = userName;
     }
@@ -182,14 +192,14 @@ public sealed class MediaSteps
         var mediaId = await UploadTestMediaAsync(imageName, "image/jpeg", 2 * 1024 * 1024);
         _mediaAssets[imageName] = mediaId;
     }
-    
+
     [Given(@"que existe uma imagem de (\d+)MB disponível")]
     public async Task GivenQueExisteUmaImagemDeMBDisponivel(int sizeMB)
     {
         var mediaId = await UploadTestMediaAsync($"imagem-{sizeMB}mb.jpg", "image/jpeg", sizeMB * 1024 * 1024);
         _mediaAssets[$"imagem-{sizeMB}mb.jpg"] = mediaId;
         _scenarioContext["testImageId"] = mediaId; // Para uso em chat
-        
+
         // Para testes de validação de tamanho no chat, precisamos garantir que o SizeBytes
         // do MediaAsset reflita o tamanho original (não o tamanho após otimização).
         // Como MediaAsset é imutável, criamos um novo com o tamanho correto.
@@ -214,21 +224,21 @@ public sealed class MediaSteps
                     originalAsset.CreatedAtUtc,
                     originalAsset.DeletedByUserId,
                     originalAsset.DeletedAtUtc);
-                
+
                 // Substituir no dataStore
                 dataStore.MediaAssets.Remove(originalAsset);
                 dataStore.MediaAssets.Add(newAsset);
             }
         }
     }
-    
+
     [Given(@"que existe um áudio de (\d+)MB disponível")]
     public async Task GivenQueExisteUmAudioDeMBDisponivel(int sizeMB)
     {
         var mediaId = await UploadTestMediaAsync($"audio-{sizeMB}mb.mp3", "audio/mpeg", sizeMB * 1024 * 1024);
         _mediaAssets[$"audio-{sizeMB}mb.mp3"] = mediaId;
         _scenarioContext["testAudioId"] = mediaId; // Para uso em chat
-        
+
         // Para testes de validação de tamanho no chat, precisamos garantir que o SizeBytes
         // do MediaAsset reflita o tamanho original (não o tamanho após processamento).
         // Como MediaAsset é imutável, criamos um novo com o tamanho correto.
@@ -253,7 +263,7 @@ public sealed class MediaSteps
                     originalAsset.CreatedAtUtc,
                     originalAsset.DeletedByUserId,
                     originalAsset.DeletedAtUtc);
-                
+
                 // Substituir no dataStore
                 dataStore.MediaAssets.Remove(originalAsset);
                 dataStore.MediaAssets.Add(newAsset);
@@ -371,8 +381,8 @@ public sealed class MediaSteps
         var success = _scenarioContext.TryGetValue<bool>("uploadSuccess", out var uploadSuccess) && uploadSuccess;
         if (!success)
         {
-            var error = _scenarioContext.TryGetValue<string>("uploadError", out var uploadError) 
-                ? uploadError 
+            var error = _scenarioContext.TryGetValue<string>("uploadError", out var uploadError)
+                ? uploadError
                 : "Erro desconhecido";
             Assert.True(success, $"Upload falhou: {error}");
         }
@@ -397,11 +407,11 @@ public sealed class MediaSteps
             { "additional media items allowed", new[] { "additional media items allowed", "mídias adicionais permitidas" } },
             { "video", new[] { "video", "vídeo", "Videos are not allowed" } }
         };
-        
-        var searchTerms = errorMappings.TryGetValue(expectedError, out var terms) 
-            ? terms 
+
+        var searchTerms = errorMappings.TryGetValue(expectedError, out var terms)
+            ? terms
             : new[] { expectedError };
-        
+
         // Verificar se é erro de upload, post, evento, item ou chat
         if (_scenarioContext.TryGetValue<bool>("uploadSuccess", out var uploadSuccess) && !uploadSuccess)
         {
@@ -436,9 +446,9 @@ public sealed class MediaSteps
         {
             var errorBody = await _lastResponse.Content.ReadAsStringAsync();
             // Verificar se o erro contém a mensagem esperada (pode estar em formato JSON)
-            var found = searchTerms.Any(term => 
+            var found = searchTerms.Any(term =>
                 errorBody.Contains(term, StringComparison.OrdinalIgnoreCase));
-            
+
             Assert.True(
                 found || _lastResponse.StatusCode == HttpStatusCode.BadRequest,
                 $"Erro esperado '{expectedError}' não encontrado. Status: {_lastResponse.StatusCode}, Body: {errorBody}");
@@ -547,7 +557,7 @@ public sealed class MediaSteps
         // Se o endpoint não existir (404), isso também é aceitável para este teste
         // pois o objetivo é verificar que as mídias são removidas quando o post é deletado
         Assert.True(
-            _lastResponse.IsSuccessStatusCode || 
+            _lastResponse.IsSuccessStatusCode ||
             _lastResponse.StatusCode == HttpStatusCode.NoContent ||
             _lastResponse.StatusCode == HttpStatusCode.NotFound, // Endpoint pode não estar implementado
             $"Expected success or not found status, got {_lastResponse.StatusCode}");
@@ -621,7 +631,7 @@ public sealed class MediaSteps
     {
         Assert.NotNull(_lastResponse);
         Assert.Equal(HttpStatusCode.Created, _lastResponse.StatusCode);
-        
+
         // O evento já foi armazenado em CreateEventWithMediaAsync
         Assert.True(_scenarioContext.ContainsKey("createdEvent"), "Evento deveria estar armazenado no contexto");
     }
@@ -685,7 +695,7 @@ public sealed class MediaSteps
             additionalIds.Add(mediaId);
         }
         await CreateEventWithMediaAsync(coverId, additionalIds.ToArray());
-        
+
         // O evento já foi armazenado em CreateEventWithMediaAsync, não precisamos ler novamente
         // Apenas verificar se foi criado com sucesso
         if (!_scenarioContext.ContainsKey("createdEventId"))
@@ -693,7 +703,7 @@ public sealed class MediaSteps
             Assert.Fail("Evento não foi criado com sucesso");
         }
     }
-    
+
     [When(@"o usuário cancela o evento")]
     public async Task WhenOUsuarioCancelaOEvento()
     {
@@ -717,11 +727,11 @@ public sealed class MediaSteps
     {
         // Configurar marketplace opt-in primeiro
         await EnsureMarketplaceOptInAsync();
-        
+
         // Criar ou obter loja
         var storeResponse = await _client!.GetAsync($"api/v1/stores/me?territoryId={_currentTerritoryId}");
         Guid storeId;
-        
+
         if (storeResponse.StatusCode == HttpStatusCode.OK)
         {
             var existingStore = await storeResponse.Content.ReadFromJsonAsync<StoreResponse>();
@@ -742,7 +752,7 @@ public sealed class MediaSteps
                     null,
                     null,
                     "email"));
-            
+
             var createResponse = await _client.PostAsJsonAsync("api/v1/stores", createStoreRequest);
             if (createResponse.StatusCode == HttpStatusCode.OK)
             {
@@ -754,16 +764,16 @@ public sealed class MediaSteps
                 throw new InvalidOperationException($"Falha ao criar loja: {createResponse.StatusCode}");
             }
         }
-        
+
         _scenarioContext["storeId"] = storeId;
         _scenarioContext[$"store_{storeName}"] = storeId;
     }
-    
+
     private async Task EnsureMarketplaceOptInAsync()
     {
         var dataStore = _factory.GetDataStore();
         var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        
+
         // Obter ID do usuário atual
         var meResponse = await _client!.GetAsync("api/v1/users/me/profile");
         if (meResponse.IsSuccessStatusCode)
@@ -776,7 +786,7 @@ public sealed class MediaSteps
                     userId,
                     _currentTerritoryId!.Value,
                     CancellationToken.None);
-                
+
                 if (membership is not null)
                 {
                     // Buscar ou criar MembershipSettings e ativar marketplace opt-in
@@ -834,7 +844,7 @@ public sealed class MediaSteps
     {
         Assert.NotNull(_lastResponse);
         Assert.Equal(HttpStatusCode.Created, _lastResponse.StatusCode);
-        
+
         // O item já foi armazenado em CreateItemWithMediaAsync
         Assert.True(_scenarioContext.ContainsKey("createdItem"), "Item deveria estar armazenado no contexto");
     }
@@ -875,11 +885,11 @@ public sealed class MediaSteps
             // Verificar que existe uma imagem principal
             Assert.NotNull(item.PrimaryImageUrl);
             Assert.NotEmpty(item.PrimaryImageUrl);
-            
+
             // Verificar que existem imagens adicionais
             Assert.NotNull(item.ImageUrls);
             Assert.True(item.ImageUrls!.Count > 0, "Deveria haver imagens adicionais além da principal");
-            
+
             // A primeira mídia enviada deve ser a imagem principal
             // Não podemos comparar URLs exatas pois são geradas dinamicamente,
             // mas verificamos que a estrutura está correta: PrimaryImageUrl existe e ImageUrls contém as demais
@@ -889,7 +899,7 @@ public sealed class MediaSteps
             Assert.Fail("Item não foi criado ou não está disponível no contexto");
         }
     }
-    
+
     [Then(@"a primeira mídia deve ser a imagem principal")]
     public void ThenAPrimeiraMidiaDeveSerAImagemPrincipal()
     {
@@ -945,7 +955,7 @@ public sealed class MediaSteps
             }
         }
         Assert.True(
-            _lastResponse.IsSuccessStatusCode || 
+            _lastResponse.IsSuccessStatusCode ||
             _lastResponse.StatusCode == HttpStatusCode.NoContent,
             $"Expected success status, got {_lastResponse.StatusCode}");
     }
@@ -975,7 +985,7 @@ public sealed class MediaSteps
         await SendChatMessageWithMediaAsync(mediaId);
         // O SendChatMessageWithMediaAsync já armazena o erro em chatError se falhar
     }
-    
+
     [When(@"o usuário tenta enviar uma mensagem com a imagem")]
     public async Task WhenOUsuarioTentaEnviarUmaMensagemComAImagem()
     {
@@ -984,7 +994,7 @@ public sealed class MediaSteps
         await SendChatMessageWithMediaAsync(imageId);
         // O SendChatMessageWithMediaAsync já armazena o erro em chatError se falhar
     }
-    
+
     [When(@"o usuário tenta enviar uma mensagem com o áudio")]
     public async Task WhenOUsuarioTentaEnviarUmaMensagemComOAudio()
     {
@@ -999,7 +1009,7 @@ public sealed class MediaSteps
     {
         Assert.NotNull(_lastResponse);
         Assert.True(_lastResponse.IsSuccessStatusCode);
-        
+
         // Armazenar mensagem no contexto se foi criada
         if (_lastResponse.StatusCode == HttpStatusCode.Created)
         {
@@ -1085,7 +1095,7 @@ public sealed class MediaSteps
         var requestResponse = await _client!.PostAsJsonAsync(
             $"api/v1/memberships/{territoryId}/become-resident",
             new BecomeResidentRequest(new[] { residentUserId }, "Test residency request"));
-        
+
         if (requestResponse.StatusCode != HttpStatusCode.OK)
         {
             // Se falhar, pode ser que já é residente, continuar
@@ -1131,7 +1141,7 @@ public sealed class MediaSteps
     {
         // Criar array de bytes diretamente - mais eficiente e evita problemas de serialização
         byte[] fileBytes;
-        
+
         if (mimeType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
         {
             // JPEG válido mínimo de 1x1 pixel (mínimo válido para ImageSharp)
@@ -1146,7 +1156,7 @@ public sealed class MediaSteps
                 0x00, 0x00, 0x00, 0x08, 0xFF, 0xC4, 0x00, 0x14, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xDA, 0x00, 0x08, 0x01, 0x01, 0x00, 0x00, 0x3F, 0x00, 0x5F, 0xFF, 0xD9
             };
-            
+
             // Se o tamanho desejado for menor ou igual ao JPEG mínimo, usar o mínimo
             if (sizeBytes <= minimalJpeg.Length)
             {
@@ -1157,11 +1167,11 @@ public sealed class MediaSteps
             {
                 // Criar array do tamanho desejado
                 fileBytes = new byte[sizeBytes];
-                
+
                 // Copiar JPEG mínimo até antes do marcador EOI
                 var eoiPosition = minimalJpeg.Length - 2; // Posição do 0xFF 0xD9
                 Array.Copy(minimalJpeg, 0, fileBytes, 0, eoiPosition);
-                
+
                 // Preencher o meio com zeros (já inicializado como zero pelo new byte[])
                 // Apenas garantir que os últimos 2 bytes sejam o EOI
                 fileBytes[sizeBytes - 2] = 0xFF;
@@ -1299,7 +1309,7 @@ public sealed class MediaSteps
                     null,
                     null,
                     "email"));
-            
+
             var createResponse = await _client!.PostAsJsonAsync("api/v1/stores", createStoreRequest);
             if (createResponse.StatusCode == HttpStatusCode.OK)
             {
@@ -1372,16 +1382,16 @@ public sealed class MediaSteps
                 // Se não conseguir obter canais, tentar criar grupo
                 conversationId = Guid.Empty;
             }
-            
+
             // Se ainda não temos uma conversa, criar um grupo
             if (conversationId == Guid.Empty)
             {
                 var createGroupRequest = new CreateGroupRequest("Grupo BDD");
-                
+
                 var conversationResponse = await _client!.PostAsJsonAsync(
                     $"api/v1/territories/{_currentTerritoryId}/chat/groups",
                     createGroupRequest);
-                
+
                 if (conversationResponse.StatusCode == HttpStatusCode.Created)
                 {
                     var conversation = await conversationResponse.Content.ReadFromJsonAsync<ConversationResponse>();
@@ -1404,7 +1414,7 @@ public sealed class MediaSteps
             new SendMessageRequest(
                 "Mensagem de teste BDD",
                 mediaId));
-        
+
         if (_lastResponse.StatusCode == HttpStatusCode.Created)
         {
             var message = await _lastResponse.Content.ReadFromJsonAsync<MessageResponse>();

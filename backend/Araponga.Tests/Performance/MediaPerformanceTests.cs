@@ -229,42 +229,54 @@ public sealed class MediaPerformanceTests : IClassFixture<ApiFactory>, IDisposab
 
     private static (Stream stream, string mimeType, string fileName) GenerateLargeTestImage(int sizeBytes)
     {
-        // Gerar dados de imagem sintéticos (não é uma imagem válida, mas serve para testes de tamanho)
-        var imageData = new byte[sizeBytes];
-        new Random().NextBytes(imageData);
-        
-        // Adicionar cabeçalho JPEG mínimo para passar na validação básica
-        var header = new byte[] { 0xFF, 0xD8, 0xFF };
-        Array.Copy(header, imageData, Math.Min(header.Length, imageData.Length));
-        
+        // Usar o mesmo método de geração de JPEG válido usado em MediaSteps.cs
+        var imageData = GenerateValidJpeg(sizeBytes);
         var stream = new MemoryStream(imageData);
         return (stream, "image/jpeg", "large-test-image.jpg");
     }
 
     private static byte[] GenerateSimpleJpeg(int size)
     {
-        // JPEG mínimo válido: SOI + APP0 + DQT + SOF + DHT + SOS + EOI
-        var jpeg = new List<byte>();
-        
-        // SOI (Start of Image)
-        jpeg.AddRange(new byte[] { 0xFF, 0xD8 });
-        
-        // APP0 (Application Data)
-        jpeg.AddRange(new byte[] { 0xFF, 0xE0 });
-        jpeg.AddRange(new byte[] { 0x00, 0x10 }); // Length
-        jpeg.AddRange(Encoding.ASCII.GetBytes("JFIF\0"));
-        jpeg.AddRange(new byte[5]); // Resto do APP0
-        
-        // Preencher até o tamanho desejado (simples, não é JPEG válido real)
-        while (jpeg.Count < size - 2)
+        // Usar o mesmo método de geração de JPEG válido
+        return GenerateValidJpeg(size);
+    }
+
+    private static byte[] GenerateValidJpeg(int sizeBytes)
+    {
+        // JPEG válido mínimo (mesmo usado em MediaSteps.cs)
+        var minimalJpeg = new byte[]
         {
-            jpeg.Add(0x00);
+            0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,
+            0xFF, 0xDB, 0x00, 0x43, 0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08, 0x07, 0x07, 0x07, 0x09, 0x09, 0x08, 0x0A, 0x0C,
+            0x14, 0x0D, 0x0C, 0x0B, 0x0B, 0x0C, 0x19, 0x12, 0x13, 0x0F, 0x14, 0x1D, 0x1A, 0x1F, 0x1E, 0x1D, 0x1A, 0x1C, 0x1C, 0x20,
+            0x24, 0x2E, 0x27, 0x20, 0x22, 0x2C, 0x23, 0x1C, 0x1C, 0x28, 0x37, 0x29, 0x2C, 0x30, 0x31, 0x34, 0x34, 0x34, 0x1F, 0x27,
+            0x39, 0x3D, 0x38, 0x32, 0x3C, 0x2E, 0x33, 0x34, 0x32, 0xFF, 0xC0, 0x00, 0x0B, 0x08, 0x00, 0x01, 0x00, 0x01, 0x01, 0x01,
+            0x11, 0x00, 0xFF, 0xC4, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x08, 0xFF, 0xC4, 0x00, 0x14, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xDA, 0x00, 0x08, 0x01, 0x01, 0x00, 0x00, 0x3F, 0x00, 0x5F, 0xFF, 0xD9
+        };
+
+        // Se o tamanho desejado for menor ou igual ao JPEG mínimo, usar o mínimo
+        if (sizeBytes <= minimalJpeg.Length)
+        {
+            var result = new byte[sizeBytes];
+            Array.Copy(minimalJpeg, result, sizeBytes);
+            return result;
         }
-        
-        // EOI (End of Image)
-        jpeg.AddRange(new byte[] { 0xFF, 0xD9 });
-        
-        return jpeg.ToArray();
+
+        // Criar array do tamanho desejado
+        var fileBytes = new byte[sizeBytes];
+
+        // Copiar JPEG mínimo até antes do marcador EOI
+        var eoiPosition = minimalJpeg.Length - 2; // Posição do 0xFF 0xD9
+        Array.Copy(minimalJpeg, 0, fileBytes, 0, eoiPosition);
+
+        // Preencher o meio com zeros (já inicializado como zero pelo new byte[])
+        // Apenas garantir que os últimos 2 bytes sejam o EOI
+        fileBytes[sizeBytes - 2] = 0xFF;
+        fileBytes[sizeBytes - 1] = 0xD9;
+
+        return fileBytes;
     }
 
     public void Dispose()

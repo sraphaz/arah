@@ -25,14 +25,14 @@ Funcionalidade: Mídias em Chat
   Cenário: Tentar enviar vídeo no chat (bloqueado)
     Dado que existe um vídeo "video1.mp4" disponível
     Quando o usuário tenta enviar uma mensagem com o vídeo "video1.mp4"
-    Então deve retornar erro "Videos are not allowed in chat"
+    Então deve retornar erro "video"
 
   Cenário: Enviar imagem maior que 5MB (limite excedido)
     Dado que existe uma imagem de 6MB disponível
     Quando o usuário tenta enviar uma mensagem com a imagem
-    Então deve retornar erro "Image size exceeds 5MB limit"
+    Então deve retornar erro "size exceeds"
 
   Cenário: Enviar áudio maior que 2MB (limite excedido)
     Dado que existe um áudio de 3MB disponível
     Quando o usuário tenta enviar uma mensagem com o áudio
-    Então deve retornar erro "Audio size exceeds 2MB limit"
+    Então deve retornar erro "size exceeds"

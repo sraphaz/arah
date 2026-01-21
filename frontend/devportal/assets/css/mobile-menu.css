@@ -1,0 +1,383 @@
+/**
+ * Menu Mobile - DevPortal
+ * Abordagem limpa: classes CSS bem definidas, aplicadas via JS
+ * Sem !important - usa especificidade natural
+ */
+
+/* ============================================
+   BOTÃO TOGGLE DO MENU MOBILE
+   ============================================ */
+
+/* Base: Escondido por padrão (desktop) */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 6rem;
+  right: 1rem;
+  /* Camada 4: acima de tudo (sidebar 1000, overlay 998, conteúdo 1) */
+  z-index: 1001;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: var(--elevation-3);
+  transition: all 300ms ease;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  /* CRÍTICO: Cria novo contexto de empilhamento para garantir que fica acima do blur */
+  isolation: isolate;
+  /* SEM blur no botão - garantia explícita */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  filter: none;
+  /* Garante que botão não é afetado por blur do conteúdo */
+  will-change: transform;
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+.mobile-menu-toggle:hover {
+  opacity: 1;
+  box-shadow: var(--elevation-4);
+  transform: scale(1.05);
+}
+
+.mobile-menu-toggle.active {
+  opacity: 1;
+  background: var(--accent-strong);
+}
+
+.mobile-menu-icon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2;
+  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ============================================
+   ANIMAÇÃO DOS ÍCONES - IGUAL WIKI
+   ============================================ */
+
+.mobile-menu-icon-hamburger {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+.mobile-menu-icon-close {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.mobile-menu-toggle.active .mobile-menu-icon-hamburger {
+  transform: translate(-50%, -50%) rotate(90deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+.mobile-menu-toggle.active .mobile-menu-icon-close {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.mobile-menu-toggle:not(.active) .mobile-menu-icon-close {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.mobile-menu-toggle:not(.active) .mobile-menu-icon-hamburger {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+/* ============================================
+   SIDEBAR CONTAINER - MOBILE
+   ============================================ */
+
+@media (max-width: 1023px) {
+  /* Mostra botão em mobile */
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  /* ============================================
+     CLASSE: .sidebar-mobile-open
+     Aplicada via JS quando menu abre em mobile
+     Sobrescreve estilos de desktop completamente
+     ============================================ */
+  .sidebar-container.sidebar-mobile-open {
+    /* Posicionamento mobile - sobrescreve desktop */
+    position: fixed !important; /* Força fixed mesmo se desktop tiver relative */
+    top: 0 !important;
+    left: 0 !important; /* Remove clamp de desktop */
+    width: clamp(280px, 85vw, 320px) !important;
+    min-width: 280px !important;
+    max-width: 320px !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+
+    /* Camada 3: acima do overlay (998), abaixo do botão (1001) */
+    z-index: 1000 !important;
+
+    /* CRÍTICO: Garante que sidebar aparece imediatamente */
+    visibility: visible !important;
+    opacity: 1 !important;
+    /* Force hardware acceleration para garantir renderização */
+    will-change: transform;
+    /* CRÍTICO: translateZ(0) para criar novo contexto de empilhamento + translateX(0) para aparecer */
+    transform: translateZ(0) translateX(0) !important;
+    /* Garante que sidebar seja renderizada acima do conteúdo com blur */
+    isolation: isolate !important;
+
+    /* Background sólido SEM blur - sobrescreve devportal.css */
+    background: var(--bg-elevated) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+
+    /* Remove estilos de desktop */
+    border-right: none !important;
+    border-radius: 0 !important;
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.2) !important;
+
+    /* Padding mobile */
+    padding: 1rem 0.75rem !important;
+    padding-top: 4rem !important;
+
+    /* Overflow */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    /* Interatividade */
+    pointer-events: auto !important;
+    touch-action: auto !important;
+
+    /* Animação slide - REMOVIDO: duplicado acima com translateZ(0) */
+    /* transform: translateX(0) !important; já está na linha 148 */
+    transition: transform 300ms ease-in-out !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    /* Novo contexto de empilhamento */
+    isolation: isolate !important;
+
+    /* Remove scrollbar customizado de desktop */
+    scrollbar-width: auto !important;
+    scrollbar-color: initial !important;
+  }
+
+  /* Sidebar fechada em mobile - escondida à esquerda */
+  .sidebar-container:not(.sidebar-mobile-open) {
+    transform: translateX(-100%) !important;
+    transition: transform 300ms ease-in-out !important;
+  }
+
+  /* Garante que elementos dentro da sidebar não tenham blur */
+  .sidebar-container.sidebar-mobile-open * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    pointer-events: auto !important;
+  }
+
+  /* Previne scroll do body quando menu está aberto */
+  body.mobile-menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+
+  /* ============================================
+     CAMADA 1: CONTEÚDO PRINCIPAL (FUNDO COM BLUR)
+     ============================================ */
+
+  /*
+   * ESTRUTURA HTML VALIDADA:
+   * <body>
+   *   <header class="header">
+   *     <div class="container hero">
+   *       <div class="return-banner">...</div>
+   *       <span class="hero-tag">...</span>
+   *       <h1>...</h1>
+   *       <p>...</p>
+   *     </div>
+   *   </header>
+   *   <div class="container layout">
+   *     <div class="sidebar-brand-fixed">...</div>
+   *     <nav class="sidebar-container">...</nav>
+   *     <main>...</main>
+   *   </div>
+   * </body>
+   *
+   * CRÍTICO: Aplicar blur apenas nos elementos corretos, excluindo:
+   * - .mobile-menu-toggle (dentro do header)
+   * - .sidebar-container (dentro do .container.layout)
+   * - .sidebar-brand-fixed (dentro do .container.layout)
+   */
+
+  /* Header: aplica blur apenas nos elementos filhos específicos do hero, EXCETO mobile-menu-toggle */
+  /* CRÍTICO: NÃO aplicar blur no container.hero diretamente - isso afeta todos os filhos */
+  /* Aplicar blur apenas nos elementos específicos: .return-banner, .hero-tag, h1, p */
+  body.mobile-menu-open .header .container.hero > .return-banner,
+  body.mobile-menu-open .header .container.hero > .hero-tag,
+  body.mobile-menu-open .header .container.hero > h1,
+  body.mobile-menu-open .header .container.hero > p {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    transition: filter 300ms ease;
+  }
+
+  /* EXCEÇÃO CRÍTICA: mobile-menu-toggle NÃO deve ter blur - garante novo contexto */
+  body.mobile-menu-open .header .mobile-menu-toggle {
+    filter: none !important;
+    -webkit-filter: none !important;
+    /* Cria novo contexto de empilhamento para não ser afetado pelo blur do pai */
+    isolation: isolate !important;
+    position: fixed !important; /* Já está fixed, mas garante que não é afetado */
+    z-index: 1001 !important; /* Garante que fica acima de tudo */
+    /* Force hardware acceleration */
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+  }
+
+  /* Garante que filhos do botão também não tenham blur */
+  body.mobile-menu-open .header .mobile-menu-toggle * {
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  /* Container layout: NÃO aplica blur diretamente (contém sidebar) */
+  /* Apenas main dentro dele recebe blur */
+  body.mobile-menu-open .container.layout > main {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    transition: filter 300ms ease;
+    position: relative;
+    z-index: 1;
+    /* Garante que não bloqueia sidebar ou botão */
+    pointer-events: none;
+  }
+
+  /* Garante que elementos que NÃO devem ter blur estão explícitos */
+  body.mobile-menu-open .mobile-menu-toggle,
+  body.mobile-menu-open .mobile-menu-toggle *,
+  body.mobile-menu-open .sidebar-container,
+  body.mobile-menu-open .sidebar-container *,
+  body.mobile-menu-open .sidebar-brand-fixed,
+  body.mobile-menu-open .sidebar-brand-fixed *,
+  body.mobile-menu-open .mobile-menu-overlay,
+  body.mobile-menu-open .mobile-menu-overlay * {
+    filter: none !important;
+    -webkit-filter: none !important;
+    /* Garante que elementos interativos sejam clicáveis */
+    pointer-events: auto !important;
+  }
+
+  /* ============================================
+     CAMADA 2: OVERLAY ESCURO (SEM BLUR)
+     ============================================ */
+
+  /* Overlay apenas escurece, blur fica no conteúdo (Camada 1) */
+  body.mobile-menu-open .mobile-menu-overlay {
+    z-index: 998; /* Camada 2: abaixo da sidebar (1000) e botão (1001) */
+    /* REMOVIDO: backdrop-filter blur - blur agora fica no conteúdo (Camada 1) */
+    pointer-events: none; /* Não bloqueia sidebar e botão acima */
+  }
+
+  /* ============================================
+     CAMADA 3: SIDEBAR (NÍTIDA)
+     ============================================ */
+
+  body.mobile-menu-open .sidebar-container.sidebar-mobile-open {
+    /* CRÍTICO: z-index para ficar acima do conteúdo com blur e overlay */
+    z-index: 1000 !important; /* Camada 3: acima do overlay (998), abaixo do botão (1001) */
+    /* Garante que sidebar não tenha blur */
+    filter: none !important;
+    -webkit-filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    /* CRÍTICO: Garante que sidebar seja clicável e visível */
+    pointer-events: auto !important;
+    /* Garante que sidebar seja renderizada acima do conteúdo com blur */
+    position: fixed !important;
+    /* Force hardware acceleration para garantir renderização */
+    transform: translateZ(0) translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    /* Cria novo contexto de empilhamento para não ser afetado por blur de elementos pais */
+    isolation: isolate !important;
+    /* Garante que todos os elementos filhos sejam clicáveis */
+    touch-action: auto !important;
+  }
+
+  /* CRÍTICO: Garante que elementos dentro da sidebar sejam clicáveis */
+  body.mobile-menu-open .sidebar-container.sidebar-mobile-open *,
+  body.mobile-menu-open .sidebar-container.sidebar-mobile-open a,
+  body.mobile-menu-open .sidebar-container.sidebar-mobile-open button {
+    pointer-events: auto !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  /* ============================================
+     CAMADA 4: BOTÃO TOGGLE (NÍTIDO)
+     ============================================ */
+
+  body.mobile-menu-open .mobile-menu-toggle {
+    z-index: 1001; /* Camada 4: acima de tudo */
+    /* Garante que botão não tenha blur */
+    filter: none !important;
+    -webkit-filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    pointer-events: auto; /* Garante que botão seja clicável */
+  }
+}
+
+/* ============================================
+   SIDEBAR CONTAINER - DESKTOP
+   ============================================ */
+
+@media (min-width: 1024px) {
+  /* Esconde botão em desktop */
+  .mobile-menu-toggle {
+    display: none;
+  }
+
+  /* Overlay não é necessário em desktop */
+  .mobile-menu-overlay {
+    display: none;
+  }
+
+  /* Em desktop, remove classe mobile (se aplicada por engano) */
+  .sidebar-container.sidebar-mobile-open {
+    transform: none !important;
+    left: clamp(1.25rem, 4vw, 2.5rem) !important;
+    width: 240px !important;
+    min-width: 240px !important;
+    /* Permite backdrop-filter de desktop */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}

@@ -72,8 +72,10 @@ public sealed class PostgresPlatformFeeConfigRepository : IPlatformFeeConfigRepo
 
     public async Task<int> CountActiveAsync(Guid territoryId, CancellationToken cancellationToken)
     {
-        return await _dbContext.PlatformFeeConfigs
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.PlatformFeeConfigs
             .Where(c => c.TerritoryId == territoryId && c.IsActive)
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

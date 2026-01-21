@@ -37,6 +37,7 @@ public interface IFeedRepository
     Task<int> CountByAuthorAsync(Guid authorUserId, CancellationToken cancellationToken);
     Task<CommunityPost?> GetPostAsync(Guid postId, CancellationToken cancellationToken);
     Task AddPostAsync(CommunityPost post, CancellationToken cancellationToken);
+    Task UpdatePostAsync(CommunityPost post, CancellationToken cancellationToken);
     Task UpdateStatusAsync(Guid postId, PostStatus status, CancellationToken cancellationToken);
     Task AddLikeAsync(Guid postId, string actorId, CancellationToken cancellationToken);
     Task AddCommentAsync(PostComment comment, CancellationToken cancellationToken);
@@ -50,4 +51,9 @@ public interface IFeedRepository
     Task<IReadOnlyDictionary<Guid, PostCounts>> GetCountsByPostIdsAsync(
         IReadOnlyCollection<Guid> postIds,
         CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Deletes a post by ID.
+    /// </summary>
+    Task DeletePostAsync(Guid postId, CancellationToken cancellationToken);
 }

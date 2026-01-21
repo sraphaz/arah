@@ -180,7 +180,9 @@ public sealed class InMemoryTerritoryRepository : ITerritoryRepository
 
     public Task<int> CountAsync(CancellationToken cancellationToken)
     {
-        return Task.FromResult(_dataStore.Territories.Count);
+        const int maxInt32 = int.MaxValue;
+        var count = _dataStore.Territories.Count;
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task<int> CountSearchAsync(
@@ -209,6 +211,8 @@ public sealed class InMemoryTerritoryRepository : ITerritoryRepository
                 string.Equals(t.State, state.Trim(), StringComparison.OrdinalIgnoreCase));
         }
 
-        return Task.FromResult(territories.Count());
+        const int maxInt32 = int.MaxValue;
+        var count = territories.Count();
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

@@ -55,6 +55,9 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<CartItemRecord> CartItems => Set<CartItemRecord>();
     public DbSet<CheckoutRecord> Checkouts => Set<CheckoutRecord>();
     public DbSet<CheckoutItemRecord> CheckoutItems => Set<CheckoutItemRecord>();
+    public DbSet<StoreRatingRecord> StoreRatings => Set<StoreRatingRecord>();
+    public DbSet<StoreItemRatingRecord> StoreItemRatings => Set<StoreItemRatingRecord>();
+    public DbSet<StoreRatingResponseRecord> StoreRatingResponses => Set<StoreRatingResponseRecord>();
     public DbSet<PlatformFeeConfigRecord> PlatformFeeConfigs => Set<PlatformFeeConfigRecord>();
     public DbSet<TerritoryPayoutConfigRecord> TerritoryPayoutConfigs => Set<TerritoryPayoutConfigRecord>();
 
@@ -738,6 +741,40 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(c => c.TerritoryId);
             entity.HasIndex(c => new { c.TerritoryId, c.IsActive });
+        });
+
+        modelBuilder.Entity<StoreRatingRecord>(entity =>
+        {
+            entity.ToTable("store_ratings");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.Comment).HasMaxLength(2000);
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(r => r.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.StoreId);
+            entity.HasIndex(r => r.UserId);
+            entity.HasIndex(r => new { r.StoreId, r.UserId }).IsUnique();
+        });
+
+        modelBuilder.Entity<StoreItemRatingRecord>(entity =>
+        {
+            entity.ToTable("store_item_ratings");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.Comment).HasMaxLength(2000);
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(r => r.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.StoreItemId);
+            entity.HasIndex(r => r.UserId);
+            entity.HasIndex(r => new { r.StoreItemId, r.UserId }).IsUnique();
+        });
+
+        modelBuilder.Entity<StoreRatingResponseRecord>(entity =>
+        {
+            entity.ToTable("store_rating_responses");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.ResponseText).HasMaxLength(2000).IsRequired();
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.RatingId).IsUnique();
+            entity.HasIndex(r => r.StoreId);
         });
 
         // -----------------------

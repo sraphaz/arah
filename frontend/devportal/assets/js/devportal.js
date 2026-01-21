@@ -885,6 +885,14 @@
         document.documentElement.classList.toggle('dark', theme === 'dark');
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem(THEME_STORAGE_KEY, theme);
+        
+        // Atualiza aria-label e title dinamicamente (similar à Wiki)
+        if (themeToggle) {
+          var label = theme === 'light' ? 'Ativar modo escuro' : 'Ativar modo claro';
+          var title = theme === 'light' ? 'Modo escuro' : 'Modo claro';
+          themeToggle.setAttribute('aria-label', label);
+          themeToggle.setAttribute('title', title);
+        }
       } catch (e) {
         console.error('[ThemeToggle] Error applying theme:', e);
         // Fallback: aplica dark mode em caso de erro

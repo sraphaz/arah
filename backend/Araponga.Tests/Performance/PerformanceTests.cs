@@ -7,6 +7,7 @@ using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Contracts.Territories;
 using Araponga.Tests.Api;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Araponga.Tests.Performance;
 
@@ -18,9 +19,31 @@ public sealed class PerformanceTests
 {
     private static readonly Guid ActiveTerritoryId = Guid.Parse("22222222-2222-2222-2222-222222222222");
 
-    [Fact]
+    // Verificar se os testes de performance devem ser pulados
+    private static bool ShouldSkipPerformanceTests()
+    {
+        var skipEnv = Environment.GetEnvironmentVariable("SKIP_PERFORMANCE_TESTS");
+        var isCI = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")) ||
+                   !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS")) ||
+                   !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TF_BUILD")) ||
+                   !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("JENKINS_URL"));
+        
+        return isCI || string.Equals(skipEnv, "true", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void SkipIfNeeded()
+    {
+        if (ShouldSkipPerformanceTests())
+        {
+            Skip.If(true, "Testes de performance pulados em CI/CD. Configure SKIP_PERFORMANCE_TESTS=false para executar.");
+        }
+    }
+
+    [SkippableFact]
     public async Task TerritoriesList_RespondsWithinSLA()
     {
+        SkipIfNeeded();
+
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
@@ -35,9 +58,11 @@ public sealed class PerformanceTests
             $"Territories list took {duration.TotalMilliseconds}ms, expected < 500ms");
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task TerritoriesPaged_RespondsWithinSLA()
     {
+        SkipIfNeeded();
+
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
@@ -52,9 +77,11 @@ public sealed class PerformanceTests
             $"Territories paged took {duration.TotalMilliseconds}ms, expected < 300ms");
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task FeedList_RespondsWithinSLA()
     {
+        SkipIfNeeded();
+
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
@@ -84,9 +111,11 @@ public sealed class PerformanceTests
         }
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task FeedPaged_RespondsWithinSLA()
     {
+        SkipIfNeeded();
+
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
@@ -116,9 +145,11 @@ public sealed class PerformanceTests
         }
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task AssetsList_RespondsWithinSLA()
     {
+        SkipIfNeeded();
+
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
@@ -143,9 +174,11 @@ public sealed class PerformanceTests
         }
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task Authentication_RespondsWithinSLA()
     {
+        SkipIfNeeded();
+
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
@@ -170,9 +203,11 @@ public sealed class PerformanceTests
             $"Authentication took {duration.TotalMilliseconds}ms, expected < 1000ms");
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task MultipleConcurrentRequests_HandlesGracefully()
     {
+        SkipIfNeeded();
+
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 

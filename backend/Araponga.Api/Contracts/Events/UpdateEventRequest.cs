@@ -7,4 +7,6 @@ public sealed record UpdateEventRequest(
     DateTime? EndsAtUtc,
     double? Latitude,
     double? Longitude,
-    string? LocationLabel);
+    string? LocationLabel,
+    Guid? CoverMediaId,
+    IReadOnlyCollection<Guid>? AdditionalMediaIds);

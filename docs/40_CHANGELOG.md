@@ -16,6 +16,83 @@
 
 ## 🆕 Mudanças Recentes
 
+### Versão 3.3 (2025-01-20) - Integração TDD/BDD nas Fases do Projeto
+
+#### 🎯 Integração Completa com Backlog
+
+**Documentos Atualizados**:
+- ✅ **[Backlog API - README](./backlog-api/README.md)** - Todas as ondas e fases atualizadas com TDD/BDD, durações ajustadas (+20%), dependência da Fase 0 adicionada
+- ✅ **[Status das Fases](./STATUS_FASES.md)** - Todas as fases (9-43) atualizadas com colunas TDD/BDD, dependências, durações ajustadas
+- ✅ **[FASE9.md](./backlog-api/FASE9.md)** - Seção completa de TDD/BDD adicionada, exemplos Gherkin, estrutura de testes, dependência da Fase 0
+
+**Mudanças no Backlog**:
+- ✅ **Fase 0** documentada como bloqueante para todas as fases futuras (9-43)
+- ✅ **Durações ajustadas**: Todas as fases futuras com +20% de tempo para TDD/BDD
+- ✅ **BDD obrigatório** identificado por fase (governança, financeiro, Web3, DAO)
+- ✅ **Cobertura obrigatória**: >90% para features críticas, >95% para smart contracts
+- ✅ **Dependências atualizadas**: Todas as fases futuras dependem da Fase 0
+
+**Novas Fases Estratégicas (30-43) com TDD/BDD**:
+- ✅ Onda 0 (Governança): +20% de tempo, BDD obrigatório para votação
+- ✅ Onda 0.5 (Financeira): +20% de tempo, BDD obrigatório para subscriptions/ticketing
+- ✅ Onda 0.6 (Web3): +20% de tempo, **>95% cobertura obrigatória** para smart contracts
+- ✅ Onda 0.7 (DAO): +20% de tempo, **>95% cobertura obrigatória** para tokens e governança on-chain
+- ✅ Onda 0.8 (Diferenciação): +20% de tempo, BDD para funcionalidades complexas
+
+**Resumo de Esforço Atualizado**:
+- **Total**: 44 fases (incluindo Fase 0)
+- **Duração original**: ~1121 dias
+- **Duração com TDD/BDD**: ~1345 dias (+20%)
+- **Duração com paralelização**: ~790 dias (aprox. 16 meses)
+
+---
+
+### Versão 3.2 (2025-01-20) - Integração TDD/BDD na Estratégia de Convergência
+
+#### 🎯 Integração Estratégica
+
+**Documentos Atualizados**:
+- ✅ **[Estratégia de Convergência de Mercado](./39_ESTRATEGIA_CONVERGENCIA_MERCADO.md)** - Integrado planejamento TDD/BDD como Fase 0 (bloqueante), ajustadas durações das fases estratégicas (+20%), adicionado TDD/BDD como vantagem competitiva e mitigação de riscos técnicos
+
+**Mudanças Estratégicas**:
+- ✅ **Fase 0 adicionada**: Fundação TDD/BDD (2 semanas) como pré-requisito bloqueante
+- ✅ **Durações ajustadas**: Todas as fases estratégicas (1-5) com +20% de tempo para TDD/BDD
+- ✅ **Cobertura obrigatória**: >90% para features críticas, >95% para smart contracts
+- ✅ **BDD obrigatório**: Features de negócio críticas (Governança, Web3, DAO, Financeiro)
+
+---
+
+### Versão 3.1 (2025-01-20) - Plano TDD/BDD e Reavaliação de Fases
+
+#### 🧪 Implementação de TDD e BDD
+
+**Documentos Criados**:
+- ✅ **[Plano de Implementação TDD/BDD](./23_TDD_BDD_PLANO_IMPLEMENTACAO.md)** - Plano completo de implementação de TDD e BDD considerando backend (.NET), frontend Wiki (Next.js) e DevPortal (HTML/JS)
+
+**Documentos Atualizados**:
+- ✅ **[Análise de Coesão e Testes](./22_COHESION_AND_TESTS.md)** - Adicionada seção completa sobre TDD/BDD com padrões, exemplos e métricas
+- ✅ **[Roadmap Estratégico](./02_ROADMAP.md)** - Adicionada Onda 0 (Fundação TDD/BDD) como fase bloqueante, ajustadas durações das fases futuras (+20% para TDD/BDD)
+- ✅ **[Índice da Documentação](./00_INDEX.md)** - Adicionado link para plano TDD/BDD
+- ✅ **[`.cursorrules`](../.cursorrules)** - Adicionadas diretrizes obrigatórias de TDD e BDD
+
+#### 📋 Mudanças no Roadmap
+
+**Nova Fase Bloqueante**:
+- **Fase 0**: Fundação TDD/BDD (14 dias) - Setup SpecFlow, Jest, documentação, piloto e treinamento
+
+**Ajustes nas Fases Futuras**:
+- Todas as fases futuras terão **+20% de tempo** para implementação TDD/BDD obrigatória
+- Cobertura de testes >90% obrigatória
+- BDD obrigatório para features de negócio críticas
+
+**Exemplos de Ajustes**:
+- Fase 9 (Perfil de Usuário): 21 → 25 dias
+- Fase 10 (Mídias Avançadas): 25 → 30 dias
+- Fase 14 (Governança): 21 → 25 dias
+- Fase 30 (Proof of Sweat): 30 → 36 dias
+
+---
+
 ### Versão 3.0 (2025-01-20) - Estratégia de Convergência de Mercado
 
 #### 🎯 Novos Documentos Estratégicos

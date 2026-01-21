@@ -194,6 +194,8 @@ public sealed class PostgresStoreItemRepository : IStoreItemRepository
                 (l.Description != null && EF.Functions.ILike(l.Description, $"%{query}%")));
         }
 
-        return await items.CountAsync(cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var count = await items.CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

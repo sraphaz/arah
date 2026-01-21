@@ -453,7 +453,9 @@ public static class PostgresMappers
             MapEntityId = post.MapEntityId,
             ReferenceType = post.ReferenceType,
             ReferenceId = post.ReferenceId,
-            CreatedAtUtc = post.CreatedAtUtc
+            CreatedAtUtc = post.CreatedAtUtc,
+            EditedAtUtc = post.EditedAtUtc,
+            EditCount = post.EditCount
         };
     }
 
@@ -471,7 +473,9 @@ public static class PostgresMappers
             record.MapEntityId,
             record.CreatedAtUtc,
             record.ReferenceType,
-            record.ReferenceId);
+            record.ReferenceId,
+            record.EditedAtUtc,
+            record.EditCount > int.MaxValue ? int.MaxValue : record.EditCount);
     }
 
     public static PostCommentRecord ToRecord(this PostComment comment)
@@ -568,6 +572,8 @@ public static class PostgresMappers
 
     public static MapEntity ToDomain(this MapEntityRecord record)
     {
+        const int maxInt32 = int.MaxValue;
+        var confirmationCount = record.ConfirmationCount > maxInt32 ? maxInt32 : record.ConfirmationCount;
         return new MapEntity(
             record.Id,
             record.TerritoryId,
@@ -578,7 +584,7 @@ public static class PostgresMappers
             record.Longitude,
             record.Status,
             record.Visibility,
-            record.ConfirmationCount,
+            confirmationCount,
             record.CreatedAtUtc);
     }
 
@@ -1437,6 +1443,83 @@ public static class PostgresMappers
             record.OwnerType,
             record.OwnerId,
             record.DisplayOrder,
+            record.CreatedAtUtc);
+    }
+
+    // -----------------------
+    // Marketplace Ratings
+    // -----------------------
+    public static StoreRatingRecord ToRecord(this StoreRating rating)
+    {
+        return new StoreRatingRecord
+        {
+            Id = rating.Id,
+            StoreId = rating.StoreId,
+            UserId = rating.UserId,
+            Rating = rating.Rating,
+            Comment = rating.Comment,
+            CreatedAtUtc = rating.CreatedAtUtc,
+            UpdatedAtUtc = rating.UpdatedAtUtc
+        };
+    }
+
+    public static StoreRating ToDomain(this StoreRatingRecord record)
+    {
+        return new StoreRating(
+            record.Id,
+            record.StoreId,
+            record.UserId,
+            record.Rating,
+            record.Comment,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static StoreItemRatingRecord ToRecord(this StoreItemRating rating)
+    {
+        return new StoreItemRatingRecord
+        {
+            Id = rating.Id,
+            StoreItemId = rating.StoreItemId,
+            UserId = rating.UserId,
+            Rating = rating.Rating,
+            Comment = rating.Comment,
+            CreatedAtUtc = rating.CreatedAtUtc,
+            UpdatedAtUtc = rating.UpdatedAtUtc
+        };
+    }
+
+    public static StoreItemRating ToDomain(this StoreItemRatingRecord record)
+    {
+        return new StoreItemRating(
+            record.Id,
+            record.StoreItemId,
+            record.UserId,
+            record.Rating,
+            record.Comment,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static StoreRatingResponseRecord ToRecord(this StoreRatingResponse response)
+    {
+        return new StoreRatingResponseRecord
+        {
+            Id = response.Id,
+            RatingId = response.RatingId,
+            StoreId = response.StoreId,
+            ResponseText = response.ResponseText,
+            CreatedAtUtc = response.CreatedAtUtc
+        };
+    }
+
+    public static StoreRatingResponse ToDomain(this StoreRatingResponseRecord record)
+    {
+        return new StoreRatingResponse(
+            record.Id,
+            record.RatingId,
+            record.StoreId,
+            record.ResponseText,
             record.CreatedAtUtc);
     }
 }

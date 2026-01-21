@@ -308,6 +308,9 @@ public sealed class ModerationController : ControllerBase
             pagination,
             cancellationToken);
 
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<ReportSummaryResponse>(
             pagedResult.Items.Select(report => new ReportSummaryResponse(
                 report.Id,
@@ -319,8 +322,8 @@ public sealed class ModerationController : ControllerBase
                 report.CreatedAtUtc)).ToList(),
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
 

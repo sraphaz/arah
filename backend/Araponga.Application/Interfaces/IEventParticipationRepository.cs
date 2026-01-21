@@ -10,4 +10,8 @@ public interface IEventParticipationRepository
     Task<IReadOnlyList<EventParticipationCounts>> GetCountsAsync(
         IReadOnlyCollection<Guid> eventIds,
         CancellationToken cancellationToken);
+    Task<IReadOnlyList<EventParticipation>> ListByEventIdAsync(
+        Guid eventId,
+        EventParticipationStatus? status,
+        CancellationToken cancellationToken);
 }

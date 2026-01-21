@@ -8,4 +8,5 @@ public interface IPostGeoAnchorRepository
     Task<IReadOnlyList<PostGeoAnchor>> ListByPostIdsAsync(
         IReadOnlyCollection<Guid> postIds,
         CancellationToken cancellationToken);
+    Task DeleteByPostIdAsync(Guid postId, CancellationToken cancellationToken);
 }

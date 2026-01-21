@@ -27,18 +27,26 @@ public sealed class InMemoryAssetValidationRepository : IAssetValidationReposito
 
     public Task<int> CountByAssetIdAsync(Guid assetId, CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.AssetValidations.Count(validation => validation.AssetId == assetId);
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task<IReadOnlyDictionary<Guid, int>> CountByAssetIdsAsync(
         IReadOnlyCollection<Guid> assetIds,
         CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var counts = _dataStore.AssetValidations
             .Where(validation => assetIds.Contains(validation.AssetId))
             .GroupBy(validation => validation.AssetId)
-            .ToDictionary(group => group.Key, group => group.Count());
+            .ToDictionary(
+                group => group.Key,
+                group =>
+                {
+                    var count = group.Count();
+                    return count > maxInt32 ? maxInt32 : count;
+                });
 
         return Task.FromResult<IReadOnlyDictionary<Guid, int>>(counts);
     }

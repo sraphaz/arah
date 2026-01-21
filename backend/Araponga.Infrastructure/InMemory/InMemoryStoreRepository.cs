@@ -57,4 +57,12 @@ public sealed class InMemoryStoreRepository : IStoreRepository
 
         return Task.CompletedTask;
     }
+
+    public Task<IReadOnlyList<Store>> ListByTerritoryAsync(Guid territoryId, CancellationToken cancellationToken)
+    {
+        var stores = _dataStore.TerritoryStores
+            .Where(s => s.TerritoryId == territoryId)
+            .ToList();
+        return Task.FromResult<IReadOnlyList<Store>>(stores);
+    }
 }

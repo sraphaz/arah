@@ -42,4 +42,16 @@ public sealed class PostgresPostGeoAnchorRepository : IPostGeoAnchorRepository
 
         return records.Select(record => record.ToDomain()).ToList();
     }
+
+    public async Task DeleteByPostIdAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.PostGeoAnchors
+            .Where(anchor => anchor.PostId == postId)
+            .ToListAsync(cancellationToken);
+
+        if (records.Count > 0)
+        {
+            _dbContext.PostGeoAnchors.RemoveRange(records);
+        }
+    }
 }

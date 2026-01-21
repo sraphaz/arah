@@ -132,6 +132,9 @@ public sealed class MapController : ControllerBase
             pagination,
             cancellationToken);
 
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<MapEntityResponse>(
             pagedResult.Items.Select(entity => new MapEntityResponse(
                 entity.Id,
@@ -145,8 +148,8 @@ public sealed class MapController : ControllerBase
                 entity.CreatedAtUtc)).ToList(),
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
 
@@ -539,23 +542,27 @@ public sealed class MapController : ControllerBase
         }
 
         // Ordenar por tipo (primeiro campo do MapPinResponse) e aplicar paginação final
-        var totalCount = pins.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = pins.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedPins = pins
             .OrderBy(p => p.PinType)
             .Skip(pagination.Skip)
             .Take(pagination.Take)
             .ToList();
 
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pagination.PageSize);
+        var safeTotalCount = totalCount > maxInt32 ? maxInt32 : totalCount;
+        var totalPagesDouble = Math.Ceiling(safeTotalCount / (double)pagination.PageSize);
+        var safeTotalPages = totalPagesDouble > maxInt32 ? maxInt32 : (int)totalPagesDouble;
 
         var response = new PagedResponse<MapPinResponse>(
             pagedPins,
             pagination.PageNumber,
             pagination.PageSize,
-            totalCount,
-            totalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagination.PageNumber > 1,
-            pagination.PageNumber < totalPages);
+            pagination.PageNumber < safeTotalPages);
 
         return Ok(response);
     }

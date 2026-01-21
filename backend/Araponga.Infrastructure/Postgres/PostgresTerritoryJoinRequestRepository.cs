@@ -166,9 +166,11 @@ public sealed class PostgresTerritoryJoinRequestRepository : ITerritoryJoinReque
             .Select(recipient => recipient.JoinRequestId)
             .ToListAsync(cancellationToken);
 
-        return await _dbContext.TerritoryJoinRequests
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.TerritoryJoinRequests
             .AsNoTracking()
             .Where(request => requestIds.Contains(request.Id) && request.Status == status)
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

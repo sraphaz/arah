@@ -37,4 +37,10 @@ public sealed class InMemoryPostGeoAnchorRepository : IPostGeoAnchorRepository
 
         return Task.FromResult<IReadOnlyList<PostGeoAnchor>>(anchors);
     }
+
+    public Task DeleteByPostIdAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        _dataStore.PostGeoAnchors.RemoveAll(anchor => anchor.PostId == postId);
+        return Task.CompletedTask;
+    }
 }

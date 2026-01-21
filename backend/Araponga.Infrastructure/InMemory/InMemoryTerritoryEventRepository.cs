@@ -220,6 +220,32 @@ public sealed class InMemoryTerritoryEventRepository : ITerritoryEventRepository
             query = query.Where(evt => evt.Status == status);
         }
 
-        return Task.FromResult(query.Count());
+        const int maxInt32 = int.MaxValue;
+        var count = query.Count();
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
+    }
+
+    public Task<IReadOnlyList<TerritoryEvent>> ListByAuthorPagedAsync(
+        Guid userId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken)
+    {
+        var events = _dataStore.TerritoryEvents
+            .Where(evt => evt.CreatedByUserId == userId)
+            .OrderByDescending(evt => evt.CreatedAtUtc)
+            .Skip(skip)
+            .Take(take)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<TerritoryEvent>>(events);
+    }
+
+    public Task<int> CountByAuthorAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        const int maxInt32 = int.MaxValue;
+        var count = _dataStore.TerritoryEvents
+            .Count(evt => evt.CreatedByUserId == userId);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

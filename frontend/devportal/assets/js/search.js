@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Sistema de busca para DevPortal
  * Busca instantânea em seções do DevPortal usando Fuse.js
  */
@@ -206,65 +206,43 @@ function createSearchDialog() {
  * Usa DOM APIs ao invés de innerHTML para evitar vulnerabilidades XSS
  */
 function createSearchTrigger() {
-  const header = document.querySelector('header');
-  if (!header) return;
-
-  const trigger = document.createElement('button');
-  trigger.className = 'search-trigger';
-  trigger.addEventListener('click', openSearch);
-
-  // SVG de busca (criado de forma segura)
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '16');
-  svg.setAttribute('height', '16');
-  svg.setAttribute('viewBox', '0 0 16 16');
-  svg.setAttribute('fill', 'none');
-
-  const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path1.setAttribute('d', 'M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z');
-  path1.setAttribute('stroke', 'currentColor');
-  path1.setAttribute('stroke-width', '2');
-  path1.setAttribute('stroke-linecap', 'round');
-  svg.appendChild(path1);
-
-  const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path2.setAttribute('d', 'M13 13l-3-3');
-  path2.setAttribute('stroke', 'currentColor');
-  path2.setAttribute('stroke-width', '2');
-  path2.setAttribute('stroke-linecap', 'round');
-  svg.appendChild(path2);
-
-  trigger.appendChild(svg);
-
-  // Span de texto
-  const span = document.createElement('span');
-  span.textContent = 'Buscar';
-  trigger.appendChild(span);
-
-  // KBD
-  const kbd = document.createElement('kbd');
-  kbd.textContent = '⌘K';
-  trigger.appendChild(kbd);
-
-  const nav = header.querySelector('nav');
-  if (nav) {
-    nav.insertBefore(trigger, nav.firstChild);
+  const trigger = document.getElementById('search-trigger');
+  if (!trigger) {
+    console.warn('[Search] Botão de busca não encontrado no HTML');
+    return null;
   }
 
-  return trigger;
+  // Remove event listeners anteriores (evita duplicação)
+  const newTrigger = trigger.cloneNode(true);
+  trigger.parentNode.replaceChild(newTrigger, trigger);
+
+  // Conecta o evento de clique
+  newTrigger.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('[Search] Botão clicado, abrindo busca...');
+    openSearch();
+  });
+
+  console.log('[Search] Botão de busca conectado com sucesso');
+  return newTrigger;
 }
 
-/**
- * Abre dialog de busca
- */
 function openSearch() {
+  console.log('[Search] openSearch() chamado');
   const dialog = document.getElementById('search-dialog');
-  if (dialog) {
-    dialog.classList.add('open');
-    const input = dialog.querySelector('#search-input');
-    if (input) {
-      input.focus();
-    }
+  if (!dialog) {
+    console.error('[Search] Dialog de busca não encontrado! Verifique se createSearchDialog() foi chamado.');
+    return;
+  }
+  
+  console.log('[Search] Abrindo dialog...');
+  dialog.classList.add('open');
+  const input = dialog.querySelector('#search-input');
+  if (input) {
+    setTimeout(() => input.focus(), 100);
+  } else {
+    console.warn('[Search] Input de busca não encontrado no dialog');
   }
 }
 
@@ -344,8 +322,13 @@ function showResults(results) {
 }
 
 // Inicializa busca quando DOM estiver pronto
+console.log('[Search] Script carregado, aguardando DOM...');
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initSearch);
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('[Search] DOM carregado, inicializando...');
+    initSearch();
+  });
 } else {
+  console.log('[Search] DOM já pronto, inicializando...');
   initSearch();
 }

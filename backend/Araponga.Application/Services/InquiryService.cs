@@ -101,7 +101,9 @@ public sealed class InquiryService
         CancellationToken cancellationToken)
     {
         var inquiries = await _inquiryRepository.ListByUserAsync(userId, cancellationToken);
-        var totalCount = inquiries.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = inquiries.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = inquiries
             .OrderByDescending(i => i.CreatedAtUtc)
             .Skip(pagination.Skip)
@@ -124,7 +126,9 @@ public sealed class InquiryService
 
         var storeIds = stores.Select(s => s.Id).ToList();
         var inquiries = await _inquiryRepository.ListByStoreIdsAsync(storeIds, cancellationToken);
-        var totalCount = inquiries.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = inquiries.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = inquiries
             .OrderByDescending(i => i.CreatedAtUtc)
             .Skip(pagination.Skip)

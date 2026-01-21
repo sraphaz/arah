@@ -31,4 +31,25 @@ public sealed class PostgresCheckoutRepository : ICheckoutRepository
         _dbContext.Checkouts.Update(checkout.ToRecord());
         return Task.CompletedTask;
     }
+
+    public async Task<IReadOnlyList<Checkout>> ListByUserAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.Checkouts
+            .AsNoTracking()
+            .Where(c => c.BuyerUserId == userId)
+            .OrderByDescending(c => c.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+
+        return records.Select(record => record.ToDomain()).ToList();
+    }
+
+    public async Task<IReadOnlyList<Checkout>> ListAllAsync(CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.Checkouts
+            .AsNoTracking()
+            .OrderByDescending(c => c.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+
+        return records.Select(record => record.ToDomain()).ToList();
+    }
 }

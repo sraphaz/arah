@@ -31,11 +31,13 @@ public sealed class PostgresAssetValidationRepository : IAssetValidationReposito
         return Task.CompletedTask;
     }
 
-    public Task<int> CountByAssetIdAsync(Guid assetId, CancellationToken cancellationToken)
+    public async Task<int> CountByAssetIdAsync(Guid assetId, CancellationToken cancellationToken)
     {
-        return _dbContext.AssetValidations
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.AssetValidations
             .AsNoTracking()
             .CountAsync(validation => validation.AssetId == assetId, cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 
     public async Task<IReadOnlyDictionary<Guid, int>> CountByAssetIdsAsync(
@@ -47,6 +49,7 @@ public sealed class PostgresAssetValidationRepository : IAssetValidationReposito
             return new Dictionary<Guid, int>();
         }
 
+        const int maxInt32 = int.MaxValue;
         var counts = await _dbContext.AssetValidations
             .AsNoTracking()
             .Where(validation => assetIds.Contains(validation.AssetId))
@@ -54,6 +57,8 @@ public sealed class PostgresAssetValidationRepository : IAssetValidationReposito
             .Select(group => new { group.Key, Count = group.Count() })
             .ToListAsync(cancellationToken);
 
-        return counts.ToDictionary(item => item.Key, item => item.Count);
+        return counts.ToDictionary(
+            item => item.Key,
+            item => item.Count > maxInt32 ? maxInt32 : (int)item.Count);
     }
 }

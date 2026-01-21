@@ -63,7 +63,8 @@ public sealed class InMemoryHealthAlertRepository : IHealthAlertRepository
 
     public Task<int> CountByTerritoryAsync(Guid territoryId, CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.HealthAlerts.Count(alert => alert.TerritoryId == territoryId);
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

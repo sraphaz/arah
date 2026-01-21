@@ -5,6 +5,8 @@ namespace Araponga.Application.Common;
 /// </summary>
 public sealed class PagedResult<T>
 {
+    private const int MaxInt32 = int.MaxValue;
+
     public PagedResult(
         IReadOnlyList<T> items,
         int pageNumber,
@@ -14,8 +16,26 @@ public sealed class PagedResult<T>
         Items = items;
         PageNumber = pageNumber;
         PageSize = pageSize;
-        TotalCount = totalCount;
-        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+        
+        // Proteção contra valores que excedem int.MaxValue
+        // Limita totalCount ao máximo seguro para int32
+        TotalCount = totalCount > MaxInt32 ? MaxInt32 : totalCount;
+        
+        // Calcula TotalPages com proteção contra overflow
+        if (pageSize <= 0)
+        {
+            TotalPages = 0;
+        }
+        else if (TotalCount == 0)
+        {
+            TotalPages = 0;
+        }
+        else
+        {
+            var totalPagesDouble = Math.Ceiling(TotalCount / (double)pageSize);
+            TotalPages = totalPagesDouble > MaxInt32 ? MaxInt32 : (int)totalPagesDouble;
+        }
+        
         HasPreviousPage = PageNumber > 1;
         HasNextPage = PageNumber < TotalPages;
     }

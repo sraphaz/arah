@@ -58,12 +58,15 @@ public sealed class TerritoriesController : ControllerBase
     {
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _territoryService.ListAvailablePagedAsync(pagination, cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<TerritoryResponse>(
             pagedResult.Items.Select(ToResponse).ToList(),
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
         return Ok(response);
@@ -147,12 +150,15 @@ public sealed class TerritoriesController : ControllerBase
     {
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _territoryService.SearchPagedAsync(q, city, state, pagination, cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<TerritoryResponse>(
             pagedResult.Items.Select(ToResponse).ToList(),
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
         return Ok(response);
@@ -232,12 +238,15 @@ public sealed class TerritoriesController : ControllerBase
             pagination,
             cancellationToken);
 
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<TerritoryResponse>(
             pagedResult.Items.Select(ToResponse).ToList(),
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
 

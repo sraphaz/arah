@@ -25,6 +25,8 @@
   <link rel="stylesheet" href="./assets/css/content-typography.css" />
   <link rel="stylesheet" href="./assets/css/search.css" />
   <link rel="stylesheet" href="./assets/css/breadcrumbs.css" />
+  <!-- mobile-menu.css deve vir DEPOIS de devportal.css para ter prioridade -->
+  <link rel="stylesheet" href="./assets/css/mobile-menu.css" />
   <style>
     /* ============================================
        ISOLAMENTO CRÍTICO DE CONTEÚDO
@@ -207,17 +209,28 @@
 </head>
 <body>
   <a class="skip-link" href="#conteudo" data-i18n="ui.skip">Pular para conteúdo</a>
-  <!-- Overlay para fechar menu mobile -->
-  <div class="mobile-menu-overlay" aria-hidden="true"></div>
+  <!-- Overlay será criado dinamicamente pelo módulo compartilhado (igual Wiki) -->
 
   <header class="header" role="banner">
     <div class="container hero">
       <div class="return-banner" role="complementary">
         <div class="header-actions" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-left: auto;">
+          <!-- Botão de Busca -->
+          <button id="search-trigger" class="search-trigger" aria-label="Abrir busca (Cmd/Ctrl + K)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path d="M13 13l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>Buscar</span>
+            
+          </button>
           <!-- Botão de Menu Mobile -->
-          <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Abrir menu de navegação" aria-expanded="false">
-            <svg class="mobile-menu-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="sidebar-container">
+            <svg class="mobile-menu-icon mobile-menu-icon-hamburger" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg class="mobile-menu-icon mobile-menu-icon-close" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
           <div class="lang-switcher" aria-label="Selecionar idioma">
@@ -230,27 +243,9 @@
               <option value="hi">हिन्दी</option>
             </select>
           </div>
-          <button id="theme-toggle" class="theme-toggle" aria-label="Alternar tema" title="Alternar tema claro/escuro">
-            <svg class="theme-icon theme-icon-sun" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <svg class="theme-icon theme-icon-moon" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-          </button>
-          <!-- Links Úteis - Externos e Internos -->
+          <!-- Links Úteis - Apenas Wiki, Discord e GitHub -->
           <div class="header-external-links">
-            <a href="#onboarding-analistas" class="header-link-icon" aria-label="Onboarding Analista Funcional" title="Onboarding Analista Funcional">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-            </a>
-            <a href="#onboarding-developers" class="header-link-icon" aria-label="Onboarding Desenvolvedor" title="Onboarding Desenvolvedor">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </a>
-            <a href="https://devportal.araponga.app/wiki/" target="_blank" rel="noopener noreferrer" class="header-link-icon" aria-label="Wiki Araponga" title="Wiki Araponga">
+            <a href="/wiki/" class="header-link-icon" aria-label="Wiki Araponga" title="Wiki Araponga">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
@@ -266,6 +261,16 @@
               </svg>
             </a>
           </div>
+          <!-- Separador sutil entre links e toggle -->
+          <div class="header-separator"></div>
+          <button id="theme-toggle" class="theme-toggle" aria-label="Alternar tema" title="Alternar tema claro/escuro">
+            <svg class="theme-icon theme-icon-sun" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg class="theme-icon theme-icon-moon" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -3799,5 +3804,11 @@ dotnet test</code></pre>
   <!-- Scripts -->
   <script src="./assets/js/search.js"></script>
   <script src="./assets/js/breadcrumbs.js"></script>
+  <!-- Menu Mobile: módulo compartilhado (DEVE vir ANTES do inicializador) -->
+  <script src="../shared/mobile-menu/mobile-menu.js?v=20250120-03"></script>
+  <!-- Menu Mobile: inicializador DevPortal -->
+  <script src="./assets/js/mobile-menu.js?v=20250120-05"></script>
 </body>
 </html>
+
+

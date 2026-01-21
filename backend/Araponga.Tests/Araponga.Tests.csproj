@@ -13,6 +13,9 @@
     <PackageReference Include="coverlet.msbuild" Version="6.0.2" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Otp.NET" Version="1.3.0" />
+    <PackageReference Include="Reqnroll" Version="1.0.0" />
+    <PackageReference Include="Reqnroll.Tools.MsBuild.Generation" Version="1.0.0" />
+    <PackageReference Include="Reqnroll.xUnit" Version="1.0.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
     <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
@@ -31,6 +34,9 @@
 
   <ItemGroup>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="reqnroll.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

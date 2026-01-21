@@ -42,6 +42,7 @@ public static class ServiceCollectionExtensions
 
         // Feed services (refactored)
         services.AddScoped<PostCreationService>();
+        services.AddScoped<PostEditService>();
         services.AddScoped<PostInteractionService>();
         services.AddScoped<PostFilterService>();
         services.AddScoped<FeedService>();
@@ -80,6 +81,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<SellerPayoutService>();
         services.AddScoped<TerritoryPayoutConfigService>();
         services.AddScoped<MediaService>();
+        services.AddScoped<RatingService>();
+        services.AddScoped<MarketplaceSearchService>();
+        services.AddScoped<UserActivityService>();
         services.AddScoped<Araponga.Application.Interfaces.Media.IGlobalMediaLimits, Araponga.Api.Services.GlobalMediaLimitsService>();
         services.AddScoped<Araponga.Application.Services.Media.TerritoryMediaConfigService>();
         services.AddScoped<Araponga.Application.Services.Users.UserMediaPreferencesService>();
@@ -225,6 +229,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IStoreRepository, PostgresStoreRepository>();
         services.AddScoped<IStoreItemRepository, PostgresStoreItemRepository>();
         services.AddScoped<IInquiryRepository, PostgresInquiryRepository>();
+        services.AddScoped<IStoreRatingRepository, PostgresStoreRatingRepository>();
+        services.AddScoped<IStoreItemRatingRepository, PostgresStoreItemRatingRepository>();
+        services.AddScoped<IStoreRatingResponseRepository, PostgresStoreRatingResponseRepository>();
         services.AddScoped<ICartRepository, PostgresCartRepository>();
         services.AddScoped<ICartItemRepository, PostgresCartItemRepository>();
         services.AddScoped<ICheckoutRepository, PostgresCheckoutRepository>();
@@ -294,6 +301,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IStoreRepository, InMemoryStoreRepository>();
         services.AddSingleton<IStoreItemRepository, InMemoryStoreItemRepository>();
         services.AddSingleton<IInquiryRepository, InMemoryInquiryRepository>();
+        services.AddSingleton<IStoreRatingRepository, InMemoryStoreRatingRepository>();
+        services.AddSingleton<IStoreItemRatingRepository, InMemoryStoreItemRatingRepository>();
+        services.AddSingleton<IStoreRatingResponseRepository, InMemoryStoreRatingResponseRepository>();
         services.AddSingleton<ICartRepository, InMemoryCartRepository>();
         services.AddSingleton<ICartItemRepository, InMemoryCartItemRepository>();
         services.AddSingleton<ICheckoutRepository, InMemoryCheckoutRepository>();

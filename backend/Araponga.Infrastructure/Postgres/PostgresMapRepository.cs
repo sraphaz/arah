@@ -60,7 +60,11 @@ public sealed class PostgresMapRepository : IMapRepository
             return;
         }
 
-        record.ConfirmationCount += 1;
+        const int maxInt32 = int.MaxValue;
+        if (record.ConfirmationCount < maxInt32)
+        {
+            record.ConfirmationCount += 1;
+        }
     }
 
     public async Task<IReadOnlyList<MapEntity>> ListByTerritoryPagedAsync(
@@ -81,8 +85,10 @@ public sealed class PostgresMapRepository : IMapRepository
 
     public async Task<int> CountByTerritoryAsync(Guid territoryId, CancellationToken cancellationToken)
     {
-        return await _dbContext.MapEntities
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.MapEntities
             .Where(entity => entity.TerritoryId == territoryId)
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

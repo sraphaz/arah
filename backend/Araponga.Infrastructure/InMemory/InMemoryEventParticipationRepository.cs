@@ -43,15 +43,42 @@ public sealed class InMemoryEventParticipationRepository : IEventParticipationRe
             return Task.FromResult<IReadOnlyList<EventParticipationCounts>>(Array.Empty<EventParticipationCounts>());
         }
 
+        const int maxInt32 = int.MaxValue;
         var counts = _dataStore.EventParticipations
             .Where(p => eventIds.Contains(p.EventId))
             .GroupBy(p => p.EventId)
-            .Select(group => new EventParticipationCounts(
-                group.Key,
-                group.Count(p => p.Status == EventParticipationStatus.Interested),
-                group.Count(p => p.Status == EventParticipationStatus.Confirmed)))
+            .Select(group =>
+            {
+                var interested = group.Count(p => p.Status == EventParticipationStatus.Interested);
+                var confirmed = group.Count(p => p.Status == EventParticipationStatus.Confirmed);
+                return new EventParticipationCounts(
+                    group.Key,
+                    interested > maxInt32 ? maxInt32 : interested,
+                    confirmed > maxInt32 ? maxInt32 : confirmed);
+            })
             .ToList();
 
         return Task.FromResult<IReadOnlyList<EventParticipationCounts>>(counts);
+    }
+
+    public Task<IReadOnlyList<EventParticipation>> ListByEventIdAsync(
+        Guid eventId,
+        EventParticipationStatus? status,
+        CancellationToken cancellationToken)
+    {
+        var query = _dataStore.EventParticipations
+            .Where(p => p.EventId == eventId)
+            .AsEnumerable();
+
+        if (status is not null)
+        {
+            query = query.Where(p => p.Status == status.Value);
+        }
+
+        var participants = query
+            .OrderBy(p => p.CreatedAtUtc)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<EventParticipation>>(participants);
     }
 }

@@ -178,6 +178,8 @@ public sealed class PostgresAssetRepository : ITerritoryAssetRepository
                                          (asset.Description != null && EF.Functions.ILike(asset.Description, pattern)));
         }
 
-        return await query.CountAsync(cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var count = await query.CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

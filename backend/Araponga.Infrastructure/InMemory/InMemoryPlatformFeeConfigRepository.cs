@@ -69,7 +69,8 @@ public sealed class InMemoryPlatformFeeConfigRepository : IPlatformFeeConfigRepo
 
     public Task<int> CountActiveAsync(Guid territoryId, CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.PlatformFeeConfigs.Count(c => c.TerritoryId == territoryId && c.IsActive);
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

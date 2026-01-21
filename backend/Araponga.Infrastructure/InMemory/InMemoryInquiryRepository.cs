@@ -82,8 +82,9 @@ public sealed class InMemoryInquiryRepository : IInquiryRepository
 
     public Task<int> CountByUserAsync(Guid userId, CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.ItemInquiries.Count(i => i.FromUserId == userId);
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task<int> CountByStoreIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
@@ -93,7 +94,8 @@ public sealed class InMemoryInquiryRepository : IInquiryRepository
             return Task.FromResult(0);
         }
 
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.ItemInquiries.Count(i => storeIds.Contains(i.StoreId));
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 }

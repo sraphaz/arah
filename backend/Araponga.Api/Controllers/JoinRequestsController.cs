@@ -155,6 +155,9 @@ public sealed class JoinRequestsController : ControllerBase
 
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _joinRequestService.ListIncomingPagedAsync(userContext.User.Id, pagination, cancellationToken);
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<IncomingJoinRequestResponse>(
             pagedResult.Items.Select(request => new IncomingJoinRequestResponse(
                 request.Id,
@@ -165,8 +168,8 @@ public sealed class JoinRequestsController : ControllerBase
                 request.CreatedAtUtc)).ToList(),
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
 

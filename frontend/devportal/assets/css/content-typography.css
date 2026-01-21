@@ -327,7 +327,8 @@
    RESPONSIVIDADE
    ============================================================ */
 
-@media (max-width: 1023px) {
+/* Mobile/Tablet - Modernizado com variáveis de breakpoint */
+@media (max-width: calc(var(--breakpoint-desktop) - 1px)) {
   /* Mobile: reduzir espaçamento vertical */
   .section {
     padding: clamp(1.5rem, 3vw, 2rem) 0;
@@ -338,7 +339,8 @@
   }
 }
 
-@media (min-width: 1024px) {
+/* Desktop - Modernizado */
+@media (min-width: var(--breakpoint-desktop)) {
   /* Desktop: manter espaçamento generoso */
   .section {
     padding: clamp(2rem, 3vw, 3rem) 0;

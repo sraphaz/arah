@@ -87,9 +87,11 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
 
     public async Task<int> CountByUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _dbContext.ItemInquiries
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.ItemInquiries
             .Where(i => i.FromUserId == userId)
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 
     public async Task<int> CountByStoreIdsAsync(IReadOnlyCollection<Guid> storeIds, CancellationToken cancellationToken)
@@ -99,8 +101,10 @@ public sealed class PostgresInquiryRepository : IInquiryRepository
             return 0;
         }
 
-        return await _dbContext.ItemInquiries
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.ItemInquiries
             .Where(i => storeIds.Contains(i.StoreId))
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 }

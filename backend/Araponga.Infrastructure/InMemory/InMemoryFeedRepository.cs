@@ -108,24 +108,31 @@ public sealed class InMemoryFeedRepository : IFeedRepository
 
     public Task<int> GetLikeCountAsync(Guid postId, CancellationToken cancellationToken)
     {
-        return Task.FromResult(_dataStore.PostLikes.TryGetValue(postId, out var likes) ? likes.Count : 0);
+        const int maxInt32 = int.MaxValue;
+        var count = _dataStore.PostLikes.TryGetValue(postId, out var likes) ? likes.Count : 0;
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task<int> GetShareCountAsync(Guid postId, CancellationToken cancellationToken)
     {
-        return Task.FromResult(_dataStore.PostShares.TryGetValue(postId, out var shares) ? shares.Count : 0);
+        const int maxInt32 = int.MaxValue;
+        var count = _dataStore.PostShares.TryGetValue(postId, out var shares) ? shares.Count : 0;
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task<IReadOnlyDictionary<Guid, PostCounts>> GetCountsByPostIdsAsync(
         IReadOnlyCollection<Guid> postIds,
         CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var result = new Dictionary<Guid, PostCounts>();
         
         foreach (var postId in postIds)
         {
-            var likeCount = _dataStore.PostLikes.TryGetValue(postId, out var likes) ? likes.Count : 0;
-            var shareCount = _dataStore.PostShares.TryGetValue(postId, out var shares) ? shares.Count : 0;
+            var likeCountRaw = _dataStore.PostLikes.TryGetValue(postId, out var likes) ? likes.Count : 0;
+            var shareCountRaw = _dataStore.PostShares.TryGetValue(postId, out var shares) ? shares.Count : 0;
+            var likeCount = likeCountRaw > maxInt32 ? maxInt32 : likeCountRaw;
+            var shareCount = shareCountRaw > maxInt32 ? maxInt32 : shareCountRaw;
             result[postId] = new PostCounts(likeCount, shareCount);
         }
         
@@ -166,13 +173,38 @@ public sealed class InMemoryFeedRepository : IFeedRepository
 
     public Task<int> CountByTerritoryAsync(Guid territoryId, CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.Posts.Count(post => post.TerritoryId == territoryId);
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
     public Task<int> CountByAuthorAsync(Guid authorUserId, CancellationToken cancellationToken)
     {
+        const int maxInt32 = int.MaxValue;
         var count = _dataStore.Posts.Count(post => post.AuthorUserId == authorUserId);
-        return Task.FromResult(count);
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
+    }
+
+    public Task UpdatePostAsync(CommunityPost post, CancellationToken cancellationToken)
+    {
+        var existingPost = _dataStore.Posts.FirstOrDefault(p => p.Id == post.Id);
+        if (existingPost is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        _dataStore.Posts.Remove(existingPost);
+        _dataStore.Posts.Add(post);
+        return Task.CompletedTask;
+    }
+
+    public Task DeletePostAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        var post = _dataStore.Posts.FirstOrDefault(p => p.Id == postId);
+        if (post is not null)
+        {
+            _dataStore.Posts.Remove(post);
+        }
+        return Task.CompletedTask;
     }
 }

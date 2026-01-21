@@ -100,6 +100,8 @@ public sealed class EventsController : ControllerBase
             request.Latitude,
             request.Longitude,
             request.LocationLabel,
+            request.CoverMediaId,
+            request.AdditionalMediaIds,
             cancellationToken);
 
         if (!result.IsSuccess || result.Value is null)
@@ -266,12 +268,15 @@ public sealed class EventsController : ControllerBase
             var mediaUrls = await LoadMediaUrlsForEventAsync(evt.Event.Id, cancellationToken);
             items.Add(ToResponse(evt, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
         }
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<EventResponse>(
             items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
         return Ok(response);
@@ -358,12 +363,15 @@ public sealed class EventsController : ControllerBase
             var mediaUrls = await LoadMediaUrlsForEventAsync(evt.Event.Id, cancellationToken);
             items.Add(ToResponse(evt, mediaUrls.CoverImageUrl, mediaUrls.AdditionalImageUrls));
         }
+        const int maxInt32 = int.MaxValue;
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<EventResponse>(
             items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
 
@@ -432,5 +440,58 @@ public sealed class EventsController : ControllerBase
         }
 
         return (coverImageUrl, additionalImageUrls);
+    }
+
+    /// <summary>
+    /// Lista participantes de um evento.
+    /// </summary>
+    /// <remarks>
+    /// Retorna lista de participantes confirmados ou interessados. Pode filtrar por status.
+    /// </remarks>
+    [HttpGet("{eventId:guid}/participants")]
+    [ProducesResponseType(typeof(IEnumerable<EventParticipantResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<EventParticipantResponse>>> GetEventParticipants(
+        [FromRoute] Guid eventId,
+        [FromQuery] string? status,
+        CancellationToken cancellationToken)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        EventParticipationStatus? parsedStatus = null;
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            if (!Enum.TryParse<EventParticipationStatus>(status, true, out var parsed))
+            {
+                return BadRequest(new { error = "Invalid status. Valid values: Interested, Confirmed." });
+            }
+            parsedStatus = parsed;
+        }
+
+        var result = await _eventsService.GetEventParticipantsAsync(eventId, parsedStatus, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return NotFound(new { error = result.Error });
+            }
+            return BadRequest(new { error = result.Error });
+        }
+
+        var responses = result.Value?.Select(p => new EventParticipantResponse(
+            p.UserId,
+            p.DisplayName,
+            p.Status.ToString().ToUpperInvariant(),
+            p.CreatedAtUtc,
+            p.UpdatedAtUtc)) ?? Array.Empty<EventParticipantResponse>();
+
+        return Ok(responses);
     }
 }

@@ -122,7 +122,9 @@ public sealed class TerritoryService
             .OrderBy(t => t.Name)
             .ToList();
 
-        var totalCount = activeTerritories.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = activeTerritories.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = activeTerritories
             .Skip(pagination.Skip)
             .Take(pagination.Take)
@@ -144,7 +146,9 @@ public sealed class TerritoryService
             .OrderBy(t => t.Name)
             .ToList();
 
-        var totalCount = activeTerritories.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = activeTerritories.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = activeTerritories
             .Skip(pagination.Skip)
             .Take(pagination.Take)
@@ -166,7 +170,9 @@ public sealed class TerritoryService
             .Where(t => t.Status == TerritoryStatus.Active)
             .ToList();
 
-        var totalCount = activeTerritories.Count;
+        const int maxInt32 = int.MaxValue;
+        var count = activeTerritories.Count;
+        var totalCount = count > maxInt32 ? maxInt32 : count;
         var pagedItems = activeTerritories
             .Skip(pagination.Skip)
             .Take(pagination.Take)

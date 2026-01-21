@@ -60,9 +60,11 @@ public sealed class PostgresNotificationInboxRepository : INotificationInboxRepo
 
     public async Task<int> CountByUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _dbContext.UserNotifications
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.UserNotifications
             .Where(notification => notification.UserId == userId)
             .CountAsync(cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
     }
 
     public async Task<bool> MarkAsReadAsync(

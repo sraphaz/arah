@@ -17,6 +17,10 @@
     --watermark-right: -180px;
     --body-watermark-opacity: 0.025;
     --body-watermark-size: 720px;
+    /* Transition Tokens - Padronizado com DevPortal */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-quick: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     --spacing-section: 120px;
@@ -50,7 +54,7 @@
     --letter-spacing-wide: 0.025em;
     --letter-spacing-wider: 0.05em;
 
-    /* Spacing System (Base 8px) */
+    /* Spacing System (Base 8px) - Padronizado com DevPortal */
     --spacing-xxs: 0.25rem;  /* 4px */
     --spacing-xs: 0.5rem;    /* 8px */
     --spacing-sm: 0.75rem;   /* 12px */
@@ -60,10 +64,31 @@
     --spacing-2xl: 3rem;     /* 48px */
     --spacing-3xl: 4rem;     /* 64px */
 
+    /* Aliases para compatibilidade (equivalente a --space-* do DevPortal) */
+    --space-xs: var(--spacing-xxs);
+    --space-sm: var(--spacing-xs);
+    --space-md: var(--spacing-md);
+    --space-lg: var(--spacing-lg);
+    --space-xl: var(--spacing-xl);
+    --space-2xl: var(--spacing-2xl);
+    --space-3xl: var(--spacing-3xl);
+
     /* Content Widths - Optimal reading */
     --content-width-narrow: 65ch;
     --content-width-default: 75ch;
     --content-width-wide: 90ch;
+    --content-max: 1200px; /* Padronizado com DevPortal */
+
+    /* Breakpoints Padronizados - Unificado Wiki + DevPortal */
+    --breakpoint-mobile: 640px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+    --breakpoint-wide: 1280px;
+    --breakpoint-ultrawide: 1536px;
+
+    /* Sidebar Width - Padronizado */
+    --sidebar-width: 256px; /* lg:w-64 = 16rem = 256px */
+    --sidebar-width-mobile: 280px; /* Mobile sidebar width */
 
     /* Sistema de Elevação Unificado (Material Design) - Wiki + DevPortal */
     --elevation-0: none;
@@ -197,10 +222,23 @@
 }
 
 @layer components {
-  /* Container consistent - Responsivo e otimizado */
+  /* Container consistent - Responsivo e otimizado - Padronizado com DevPortal */
   .container-max {
-    @apply mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10;
+    width: min(100%, 100%);
+    margin: 0 auto;
+    /* Padding responsivo usando clamp() - modernizado e fluido */
+    padding-left: clamp(1rem, 4vw, 2.5rem);
+    padding-right: clamp(1rem, 4vw, 2.5rem);
     max-width: 100%;
+  }
+
+  /* Container para conteúdo principal - respeita sidebar em desktop */
+  @media (min-width: 1024px) {
+    .container-max {
+      /* Em desktop, respeita sidebar se aplicável */
+      padding-left: clamp(1.25rem, 4vw, 2.5rem);
+      padding-right: clamp(1.5rem, 3vw, 2rem);
+    }
   }
 
   /* Removido max-width restritivo - conteúdo usa toda largura disponível */
@@ -276,13 +314,17 @@
     padding: clamp(0.75rem, 1.5vw, 1rem) clamp(2rem, 5vw, 3.5rem) clamp(2rem, 4vw, 3rem) clamp(2rem, 5vw, 3.5rem);
   }
 
-  /* Navigation refinada - Enterprise design */
+  /* Navigation refinada - Enterprise design - Padronizado com DevPortal */
   .nav-link {
     @apply text-forest-700 dark:text-forest-200 hover:text-forest-900 dark:hover:text-forest-50 px-4 py-2.5 rounded-xl font-medium;
     @apply transition-all duration-300 ease-out;
     @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/80 hover:shadow-sm;
     position: relative;
     overflow: hidden;
+    /* Garante tamanho mínimo de toque em mobile */
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .nav-link::before {
@@ -308,6 +350,38 @@
 
   .nav-link.active::before {
     width: 80%;
+  }
+
+  /* Header Link Icons - Apenas ícones, similar ao DevPortal */
+  .header-link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    color: rgb(107 114 128);
+    transition: all var(--transition-base);
+    text-decoration: none;
+    opacity: 0.85;
+  }
+
+  .dark .header-link-icon {
+    color: rgb(156 163 175);
+  }
+
+  .header-link-icon:hover {
+    color: var(--accent);
+    background: var(--accent-subtle);
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  .header-link-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
   }
 
   /* Category card - Enterprise design */
@@ -713,7 +787,7 @@
 
   /* Horizontal rules - Modern separators (Market standards) */
   .markdown-content hr {
-    @apply my-20 border-0; /* Mais espaço - quebra visual clara */
+    @apply my-10 border-0; /* Espaçamento reduzido pela metade (2.5rem) */
     /* Removido max-width - conteúdo usa toda largura disponível */
     position: relative;
     height: 1px;
@@ -1119,8 +1193,10 @@
   @apply bg-white/80 dark:bg-forest-950/80 backdrop-blur-xl;
   @apply sticky top-[88px] h-[calc(100vh-88px)];
   @apply overflow-y-auto;
-  /* Desktop (lg+): visível, largura fixa */
-  @apply lg:block lg:w-64 lg:min-w-[256px];
+  /* Desktop (lg+): visível, largura fixa - Padronizado */
+  @apply lg:block;
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
 }
 
 .sidebar-nav {
@@ -1596,18 +1672,21 @@
   }
 }
 
-/* Mobile Responsive - Sidebar - Mobile-first approach */
+/* Mobile Responsive - Sidebar - Mobile-first approach - Modernizado */
 /* Nota: O sidebar-container já usa `hidden lg:block`, então não precisa de media query aqui */
 
 /* Ajusta espaçamento do conteúdo em mobile (quando sidebar está oculta) */
-@media (max-width: 1023px) {
+/* Usando variável de breakpoint padronizada */
+@media (max-width: calc(var(--breakpoint-desktop) - 1px)) {
   main {
-    @apply px-4;
+    /* Padding responsivo usando clamp() - fluido e modernizado */
+    padding-left: clamp(1rem, 4vw, 1.5rem);
+    padding-right: clamp(1rem, 4vw, 1.5rem);
   }
 
   /* TOC em mobile - vira um dropdown no topo */
   .toc-container {
-    @apply mb-8;
+    margin-bottom: var(--spacing-2xl);
     position: static !important;
   }
 
@@ -1616,6 +1695,22 @@
   .markdown-content h3[id]:hover::before,
   .markdown-content h4[id]:hover::before {
     @apply hidden;
+  }
+
+  /* Previne scroll do body quando menu mobile está aberto */
+  body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+}
+
+/* Desktop - Espaçamento otimizado */
+@media (min-width: var(--breakpoint-desktop)) {
+  main {
+    /* Em desktop, respeita sidebar se aplicável */
+    padding-left: clamp(1.5rem, 3vw, 2rem);
+    padding-right: clamp(1.5rem, 3vw, 2rem);
   }
 }
 

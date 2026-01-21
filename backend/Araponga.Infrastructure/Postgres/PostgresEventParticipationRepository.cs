@@ -58,6 +58,7 @@ public sealed class PostgresEventParticipationRepository : IEventParticipationRe
             return Array.Empty<EventParticipationCounts>();
         }
 
+        const int maxInt32 = int.MaxValue;
         var counts = await _dbContext.EventParticipations
             .AsNoTracking()
             .Where(p => eventIds.Contains(p.EventId))
@@ -71,7 +72,38 @@ public sealed class PostgresEventParticipationRepository : IEventParticipationRe
             .ToListAsync(cancellationToken);
 
         return counts
-            .Select(item => new EventParticipationCounts(item.EventId, item.Interested, item.Confirmed))
+            .Select(item => new EventParticipationCounts(
+                item.EventId,
+                item.Interested > maxInt32 ? maxInt32 : item.Interested,
+                item.Confirmed > maxInt32 ? maxInt32 : item.Confirmed))
+            .ToList();
+    }
+
+    public async Task<IReadOnlyList<EventParticipation>> ListByEventIdAsync(
+        Guid eventId,
+        EventParticipationStatus? status,
+        CancellationToken cancellationToken)
+    {
+        var query = _dbContext.EventParticipations
+            .AsNoTracking()
+            .Where(p => p.EventId == eventId);
+
+        if (status is not null)
+        {
+            query = query.Where(p => p.Status == status.Value);
+        }
+
+        var records = await query
+            .OrderBy(p => p.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+
+        return records
+            .Select(record => new EventParticipation(
+                record.EventId,
+                record.UserId,
+                record.Status,
+                record.CreatedAtUtc,
+                record.UpdatedAtUtc))
             .ToList();
     }
 }

@@ -51,7 +51,8 @@ public sealed class MapEntity
         Longitude = longitude;
         Status = status;
         Visibility = visibility;
-        ConfirmationCount = confirmationCount;
+        // Proteção contra valores que excedem int.MaxValue (pode vir do banco de dados)
+        ConfirmationCount = confirmationCount > int.MaxValue ? int.MaxValue : confirmationCount;
         CreatedAtUtc = createdAtUtc;
     }
 

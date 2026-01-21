@@ -3,6 +3,8 @@ using Araponga.Api.Contracts.Common;
 using Araponga.Api.Contracts.Feed;
 using Araponga.Api.Security;
 using Araponga.Application.Common;
+using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Media;
@@ -18,26 +20,35 @@ namespace Araponga.Api.Controllers;
 public sealed class FeedController : ControllerBase
 {
     private readonly FeedService _feedService;
+    private readonly PostEditService _postEditService;
     private readonly EventsService _eventsService;
     private readonly MediaService _mediaService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ActiveTerritoryService _activeTerritoryService;
     private readonly AccessEvaluator _accessEvaluator;
+    private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
 
     public FeedController(
         FeedService feedService,
+        PostEditService postEditService,
         EventsService eventsService,
         MediaService mediaService,
         CurrentUserAccessor currentUserAccessor,
         ActiveTerritoryService activeTerritoryService,
-        AccessEvaluator accessEvaluator)
+        AccessEvaluator accessEvaluator,
+        IPostGeoAnchorRepository postGeoAnchorRepository,
+        IMediaAttachmentRepository mediaAttachmentRepository)
     {
         _feedService = feedService;
+        _postEditService = postEditService;
         _eventsService = eventsService;
         _mediaService = mediaService;
         _currentUserAccessor = currentUserAccessor;
         _activeTerritoryService = activeTerritoryService;
         _accessEvaluator = accessEvaluator;
+        _postGeoAnchorRepository = postGeoAnchorRepository;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
     }
 
     /// <summary>
@@ -89,6 +100,8 @@ public sealed class FeedController : ControllerBase
             var eventSummary = ResolveEventSummary(post, eventLookup);
             var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
 
+            const int maxInt32 = int.MaxValue;
+            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
             response.Add(new FeedItemResponse(
                 post.Id,
                 post.Title,
@@ -103,7 +116,7 @@ public sealed class FeedController : ControllerBase
                 postCounts.ShareCount,
                 post.CreatedAtUtc,
                 mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaUrls.Count));
+                mediaCount));
         }
 
         return Ok(response);
@@ -150,6 +163,7 @@ public sealed class FeedController : ControllerBase
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
         
+        const int maxInt32 = int.MaxValue;
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
         {
@@ -157,6 +171,7 @@ public sealed class FeedController : ControllerBase
             var eventSummary = ResolveEventSummary(post, eventLookup);
             var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
 
+            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
             items.Add(new FeedItemResponse(
                 post.Id,
                 post.Title,
@@ -171,15 +186,17 @@ public sealed class FeedController : ControllerBase
                 postCounts.ShareCount,
                 post.CreatedAtUtc,
                 mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaUrls.Count));
+                mediaCount));
         }
 
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<FeedItemResponse>(
             items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
 
@@ -214,6 +231,8 @@ public sealed class FeedController : ControllerBase
             var eventSummary = ResolveEventSummary(post, eventLookup);
             var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
 
+            const int maxInt32 = int.MaxValue;
+            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
             response.Add(new FeedItemResponse(
                 post.Id,
                 post.Title,
@@ -228,7 +247,7 @@ public sealed class FeedController : ControllerBase
                 postCounts.ShareCount,
                 post.CreatedAtUtc,
                 mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaUrls.Count));
+                mediaCount));
         }
 
         return Ok(response);
@@ -258,6 +277,7 @@ public sealed class FeedController : ControllerBase
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
         
+        const int maxInt32 = int.MaxValue;
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
         {
@@ -265,6 +285,7 @@ public sealed class FeedController : ControllerBase
             var eventSummary = ResolveEventSummary(post, eventLookup);
             var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
 
+            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
             items.Add(new FeedItemResponse(
                 post.Id,
                 post.Title,
@@ -279,15 +300,17 @@ public sealed class FeedController : ControllerBase
                 postCounts.ShareCount,
                 post.CreatedAtUtc,
                 mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaUrls.Count));
+                mediaCount));
         }
 
+        var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
+        var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
         var response = new PagedResponse<FeedItemResponse>(
             items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
-            pagedResult.TotalCount,
-            pagedResult.TotalPages,
+            safeTotalCount,
+            safeTotalPages,
             pagedResult.HasPreviousPage,
             pagedResult.HasNextPage);
 
@@ -360,6 +383,8 @@ public sealed class FeedController : ControllerBase
         var post = result.Value;
         var mediaUrls = await LoadMediaUrlsForPostAsync(post.Id, cancellationToken);
         
+        const int maxInt32 = int.MaxValue;
+        var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
         var response = new FeedItemResponse(
             post.Id,
             post.Title,
@@ -374,7 +399,7 @@ public sealed class FeedController : ControllerBase
             0,
             post.CreatedAtUtc,
             mediaUrls.Count > 0 ? mediaUrls : null,
-            mediaUrls.Count);
+            mediaCount);
 
         return CreatedAtAction(nameof(GetFeed), new { }, response);
     }
@@ -484,6 +509,93 @@ public sealed class FeedController : ControllerBase
             cancellationToken);
 
         return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
+    }
+
+    /// <summary>
+    /// Edita um post do território ativo.
+    /// </summary>
+    /// <remarks>
+    /// Apenas o autor do post pode editá-lo. Permite editar título, conteúdo, mídias e localização.
+    /// </remarks>
+    [HttpPatch("{postId:guid}")]
+    [EnableRateLimiting("write")]
+    [ProducesResponseType(typeof(FeedItemResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult<FeedItemResponse>> EditPost(
+        [FromRoute] Guid postId,
+        [FromQuery] Guid? territoryId,
+        [FromBody] EditPostRequest request,
+        CancellationToken cancellationToken)
+    {
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        // Converter GeoAnchors se fornecidos
+        var geoAnchors = request.GeoAnchors?.Select(anchor => new Application.Models.GeoAnchorInput(
+            anchor.Latitude,
+            anchor.Longitude,
+            anchor.Type)).ToList();
+
+        var result = await _postEditService.EditPostAsync(
+            postId,
+            userContext.User.Id,
+            request.Title,
+            request.Content,
+            request.MediaIds,
+            geoAnchors,
+            cancellationToken);
+
+        if (!result.IsSuccess || result.Value is null)
+        {
+            if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return NotFound(new { error = result.Error });
+            }
+            if (result.Error?.Contains("author", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return Unauthorized(new { error = result.Error });
+            }
+            return BadRequest(new { error = result.Error });
+        }
+
+        var post = result.Value;
+        var mediaUrls = await LoadMediaUrlsForPostAsync(post.Id, cancellationToken);
+        var postCounts = await _feedService.GetCountsByPostIdsAsync(new[] { post.Id }, cancellationToken);
+        var counts = postCounts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
+        var eventLookup = await LoadEventSummariesAsync(new[] { post }, cancellationToken);
+        var eventSummary = ResolveEventSummary(post, eventLookup);
+
+        const int maxInt32 = int.MaxValue;
+        var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
+        var response = new FeedItemResponse(
+            post.Id,
+            post.Title,
+            post.Content,
+            post.Type.ToString().ToUpperInvariant(),
+            post.Visibility.ToString().ToUpperInvariant(),
+            post.Status.ToString().ToUpperInvariant(),
+            post.MapEntityId,
+            eventSummary,
+            post.Type == PostType.Alert,
+            counts.LikeCount,
+            counts.ShareCount,
+            post.CreatedAtUtc,
+            mediaUrls.Count > 0 ? mediaUrls : null,
+            mediaCount);
+
+        return Ok(response);
     }
 
     private async Task<Dictionary<Guid, Application.Models.EventSummary>> LoadEventSummariesAsync(
@@ -619,5 +731,54 @@ public sealed class FeedController : ControllerBase
         }
 
         return await _activeTerritoryService.GetActiveAsync(sessionId, cancellationToken);
+    }
+
+    /// <summary>
+    /// Deleta um post.
+    /// </summary>
+    [HttpDelete("{id:guid}")]
+    [EnableRateLimiting("feed")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeletePost(
+        [FromRoute] Guid id,
+        [FromQuery] Guid? territoryId,
+        CancellationToken cancellationToken)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
+        if (resolvedTerritoryId is null)
+        {
+            return BadRequest(new { error = "territoryId (query) or X-Session-Id header is required." });
+        }
+
+        var post = await _feedService.GetPostAsync(id, cancellationToken);
+        if (post is null)
+        {
+            return NotFound();
+        }
+
+        if (post.AuthorUserId != userContext.User.Id)
+        {
+            return BadRequest(new { error = "Only the post author can delete the post." });
+        }
+
+        // Deletar mídias associadas
+        await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Post, id, cancellationToken);
+
+        // Deletar geo anchors associados
+        await _postGeoAnchorRepository.DeleteByPostIdAsync(id, cancellationToken);
+
+        // Deletar o post
+        await _feedService.DeletePostAsync(id, cancellationToken);
+
+        return NoContent();
     }
 }

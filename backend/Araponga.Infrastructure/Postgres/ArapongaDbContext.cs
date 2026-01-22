@@ -17,6 +17,7 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<TerritoryRecord> Territories => Set<TerritoryRecord>();
     public DbSet<UserRecord> Users => Set<UserRecord>();
     public DbSet<UserPreferencesRecord> UserPreferences => Set<UserPreferencesRecord>();
+    public DbSet<UserDeviceRecord> UserDevices => Set<UserDeviceRecord>();
     public DbSet<TerritoryMembershipRecord> TerritoryMemberships => Set<TerritoryMembershipRecord>();
     public DbSet<MembershipSettingsRecord> MembershipSettings => Set<MembershipSettingsRecord>();
     public DbSet<MembershipCapabilityRecord> MembershipCapabilities => Set<MembershipCapabilityRecord>();
@@ -81,6 +82,12 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<MediaAssetRecord> MediaAssets => Set<MediaAssetRecord>();
     public DbSet<MediaAttachmentRecord> MediaAttachments => Set<MediaAttachmentRecord>();
 
+    // Policies
+    public DbSet<TermsOfServiceRecord> TermsOfServices => Set<TermsOfServiceRecord>();
+    public DbSet<TermsAcceptanceRecord> TermsAcceptances => Set<TermsAcceptanceRecord>();
+    public DbSet<PrivacyPolicyRecord> PrivacyPolicies => Set<PrivacyPolicyRecord>();
+    public DbSet<PrivacyPolicyAcceptanceRecord> PrivacyPolicyAcceptances => Set<PrivacyPolicyAcceptanceRecord>();
+
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
         try
@@ -95,7 +102,7 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
                 "Concurrency conflict detected. The entity was modified by another process. Please retry the operation.",
                 ex);
         }
-        
+
         // Se há uma transação ativa, faz commit da transação
         if (_currentTransaction is not null)
         {
@@ -998,6 +1005,98 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasIndex(a => new { a.OwnerType, a.OwnerId });
             entity.HasIndex(a => a.MediaAssetId);
             entity.HasIndex(a => new { a.OwnerType, a.OwnerId, a.DisplayOrder });
+        });
+
+        modelBuilder.Entity<TermsOfServiceRecord>(entity =>
+        {
+            entity.ToTable("terms_of_services");
+            entity.HasKey(t => t.Id);
+            entity.Property(t => t.Version).HasMaxLength(50).IsRequired();
+            entity.Property(t => t.Title).HasMaxLength(200).IsRequired();
+            entity.Property(t => t.Content).HasColumnType("text").IsRequired();
+            entity.Property(t => t.EffectiveDate).HasColumnType("timestamp with time zone").IsRequired();
+            entity.Property(t => t.ExpirationDate).HasColumnType("timestamp with time zone");
+            entity.Property(t => t.IsActive).IsRequired();
+            entity.Property(t => t.RequiredRoles).HasColumnType("jsonb");
+            entity.Property(t => t.RequiredCapabilities).HasColumnType("jsonb");
+            entity.Property(t => t.RequiredSystemPermissions).HasColumnType("jsonb");
+            entity.Property(t => t.CreatedAtUtc).HasColumnType("timestamp with time zone").IsRequired();
+            entity.Property(t => t.UpdatedAtUtc).HasColumnType("timestamp with time zone").IsRequired();
+            entity.HasIndex(t => t.Version);
+            entity.HasIndex(t => t.IsActive);
+            entity.HasIndex(t => t.EffectiveDate);
+        });
+
+        modelBuilder.Entity<TermsAcceptanceRecord>(entity =>
+        {
+            entity.ToTable("terms_acceptances");
+            entity.HasKey(a => a.Id);
+            entity.Property(a => a.UserId).IsRequired();
+            entity.Property(a => a.TermsOfServiceId).IsRequired();
+            entity.Property(a => a.AcceptedAtUtc).HasColumnType("timestamp with time zone").IsRequired();
+            entity.Property(a => a.IpAddress).HasMaxLength(45);
+            entity.Property(a => a.UserAgent).HasMaxLength(500);
+            entity.Property(a => a.AcceptedVersion).HasMaxLength(50).IsRequired();
+            entity.Property(a => a.IsRevoked).IsRequired();
+            entity.Property(a => a.RevokedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(a => a.UserId);
+            entity.HasIndex(a => a.TermsOfServiceId);
+            entity.HasIndex(a => new { a.UserId, a.TermsOfServiceId });
+            entity.HasIndex(a => new { a.UserId, a.TermsOfServiceId, a.IsRevoked });
+        });
+
+        modelBuilder.Entity<PrivacyPolicyRecord>(entity =>
+        {
+            entity.ToTable("privacy_policies");
+            entity.HasKey(p => p.Id);
+            entity.Property(p => p.Version).HasMaxLength(50).IsRequired();
+            entity.Property(p => p.Title).HasMaxLength(200).IsRequired();
+            entity.Property(p => p.Content).HasColumnType("text").IsRequired();
+            entity.Property(p => p.EffectiveDate).HasColumnType("timestamp with time zone").IsRequired();
+            entity.Property(p => p.ExpirationDate).HasColumnType("timestamp with time zone");
+            entity.Property(p => p.IsActive).IsRequired();
+            entity.Property(p => p.RequiredRoles).HasColumnType("jsonb");
+            entity.Property(p => p.RequiredCapabilities).HasColumnType("jsonb");
+            entity.Property(p => p.RequiredSystemPermissions).HasColumnType("jsonb");
+            entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone").IsRequired();
+            entity.Property(p => p.UpdatedAtUtc).HasColumnType("timestamp with time zone").IsRequired();
+            entity.HasIndex(p => p.Version);
+            entity.HasIndex(p => p.IsActive);
+            entity.HasIndex(p => p.EffectiveDate);
+        });
+
+        modelBuilder.Entity<PrivacyPolicyAcceptanceRecord>(entity =>
+        {
+            entity.ToTable("privacy_policy_acceptances");
+            entity.HasKey(a => a.Id);
+            entity.Property(a => a.UserId).IsRequired();
+            entity.Property(a => a.PrivacyPolicyId).IsRequired();
+            entity.Property(a => a.AcceptedAtUtc).HasColumnType("timestamp with time zone").IsRequired();
+            entity.Property(a => a.IpAddress).HasMaxLength(45);
+            entity.Property(a => a.UserAgent).HasMaxLength(500);
+            entity.Property(a => a.AcceptedVersion).HasMaxLength(50).IsRequired();
+            entity.Property(a => a.IsRevoked).IsRequired();
+            entity.Property(a => a.RevokedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(a => a.UserId);
+            entity.HasIndex(a => a.PrivacyPolicyId);
+            entity.HasIndex(a => new { a.UserId, a.PrivacyPolicyId });
+            entity.HasIndex(a => new { a.UserId, a.PrivacyPolicyId, a.IsRevoked });
+        });
+
+        modelBuilder.Entity<UserDeviceRecord>(entity =>
+        {
+            entity.ToTable("user_devices");
+            entity.HasKey(d => d.Id);
+            entity.Property(d => d.UserId).IsRequired();
+            entity.Property(d => d.DeviceToken).HasMaxLength(500).IsRequired();
+            entity.Property(d => d.Platform).HasMaxLength(50).IsRequired();
+            entity.Property(d => d.DeviceName).HasMaxLength(200);
+            entity.Property(d => d.RegisteredAtUtc).HasColumnType("timestamp with time zone").IsRequired();
+            entity.Property(d => d.LastUsedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(d => d.IsActive).IsRequired();
+            entity.HasIndex(d => d.UserId);
+            entity.HasIndex(d => d.DeviceToken).IsUnique();
+            entity.HasIndex(d => new { d.UserId, d.IsActive });
         });
     }
 }

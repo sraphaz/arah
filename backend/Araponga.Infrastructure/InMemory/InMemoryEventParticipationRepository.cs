@@ -81,4 +81,16 @@ public sealed class InMemoryEventParticipationRepository : IEventParticipationRe
 
         return Task.FromResult<IReadOnlyList<EventParticipation>>(participants);
     }
+
+    public Task<IReadOnlyList<EventParticipation>> GetByUserIdAsync(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var participations = _dataStore.EventParticipations
+            .Where(p => p.UserId == userId)
+            .OrderBy(p => p.CreatedAtUtc)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<EventParticipation>>(participations);
+    }
 }

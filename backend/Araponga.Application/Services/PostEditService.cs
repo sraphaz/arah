@@ -21,6 +21,7 @@ public sealed class PostEditService
     private readonly IFeatureFlagService _featureFlags;
     private readonly TerritoryMediaConfigService _mediaConfigService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly CacheInvalidationService? _cacheInvalidation;
 
     public PostEditService(
         IFeedRepository feedRepository,
@@ -29,7 +30,8 @@ public sealed class PostEditService
         IPostGeoAnchorRepository postGeoAnchorRepository,
         IFeatureFlagService featureFlags,
         TerritoryMediaConfigService mediaConfigService,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        CacheInvalidationService? cacheInvalidation = null)
     {
         _feedRepository = feedRepository;
         _mediaAttachmentRepository = mediaAttachmentRepository;
@@ -38,6 +40,7 @@ public sealed class PostEditService
         _featureFlags = featureFlags;
         _mediaConfigService = mediaConfigService;
         _unitOfWork = unitOfWork;
+        _cacheInvalidation = cacheInvalidation;
     }
 
     /// <summary>
@@ -260,6 +263,9 @@ public sealed class PostEditService
         // Atualizar post no repositório
         await _feedRepository.UpdatePostAsync(post, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Invalidar cache de feed do território após editar post
+        _cacheInvalidation?.InvalidateFeedCache(post.TerritoryId);
 
         return Result<CommunityPost>.Success(post);
     }

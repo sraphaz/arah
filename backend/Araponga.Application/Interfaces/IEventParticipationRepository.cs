@@ -14,4 +14,11 @@ public interface IEventParticipationRepository
         Guid eventId,
         EventParticipationStatus? status,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Lista todas as participações de um usuário.
+    /// </summary>
+    Task<IReadOnlyList<EventParticipation>> GetByUserIdAsync(
+        Guid userId,
+        CancellationToken cancellationToken);
 }

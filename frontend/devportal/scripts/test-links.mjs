@@ -51,8 +51,18 @@ const ids = extractIds(htmlContent);
 
 console.log(`📋 Analisando ${links.length} links e ${ids.size} IDs...\n`);
 
+// Dangerous URL schemes that should be blocked
+const DANGEROUS_SCHEMES = ['javascript:', 'data:', 'vbscript:', 'file:', 'about:'];
+const isDangerousScheme = (href) => {
+  const lowerHref = href.toLowerCase().trim();
+  return DANGEROUS_SCHEMES.some(scheme => lowerHref.startsWith(scheme));
+};
+
 const internalLinks = links.filter(link => link.href.startsWith('#'));
-const externalLinks = links.filter(link => !link.href.startsWith('#') && !link.href.startsWith('javascript:'));
+const externalLinks = links.filter(link => 
+  !link.href.startsWith('#') && 
+  !isDangerousScheme(link.href)
+);
 
 let brokenInternalLinks = [];
 let warnings = [];

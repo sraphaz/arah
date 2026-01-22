@@ -320,6 +320,7 @@ Implementar **IA integrada ao chat** que permite:
 - ✅ Documentação completa
 - ✅ Tratamento de erros robusto
 - ✅ Rate limiting implementado
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (chat IA, consumo por conversa) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração harmoniosa com ChatService existente

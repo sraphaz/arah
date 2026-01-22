@@ -573,6 +573,7 @@ Implementar sistema de **governança comunitária** que permite:
 - ✅ Testes de integração passando
 - ✅ Performance adequada (votações com muitos votos)
 - ✅ Segurança validada (permissões)
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (votações, interesses) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Documentação
 - ✅ Documentação técnica completa

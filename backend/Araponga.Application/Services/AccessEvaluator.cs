@@ -1,6 +1,7 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Membership;
+using Araponga.Domain.Policies;
 using Araponga.Domain.Users;
 
 namespace Araponga.Application.Services;
@@ -13,6 +14,9 @@ public sealed class AccessEvaluator
     private readonly MembershipAccessRules _accessRules;
     private readonly IDistributedCacheService _cache;
     private readonly CacheMetricsService? _metrics;
+    private readonly PolicyRequirementService? _policyRequirementService;
+    private readonly TermsAcceptanceService? _termsAcceptanceService;
+    private readonly PrivacyPolicyAcceptanceService? _privacyAcceptanceService;
 
     public AccessEvaluator(
         ITerritoryMembershipRepository membershipRepository,
@@ -20,7 +24,10 @@ public sealed class AccessEvaluator
         ISystemPermissionRepository systemPermissionRepository,
         MembershipAccessRules accessRules,
         IDistributedCacheService cache,
-        CacheMetricsService? metrics = null)
+        CacheMetricsService? metrics = null,
+        PolicyRequirementService? policyRequirementService = null,
+        TermsAcceptanceService? termsAcceptanceService = null,
+        PrivacyPolicyAcceptanceService? privacyAcceptanceService = null)
     {
         _membershipRepository = membershipRepository;
         _capabilityRepository = capabilityRepository;
@@ -28,6 +35,9 @@ public sealed class AccessEvaluator
         _accessRules = accessRules;
         _cache = cache;
         _metrics = metrics;
+        _policyRequirementService = policyRequirementService;
+        _termsAcceptanceService = termsAcceptanceService;
+        _privacyAcceptanceService = privacyAcceptanceService;
     }
 
     /// <summary>
@@ -219,5 +229,89 @@ public sealed class AccessEvaluator
     public void InvalidateSystemPermissionCache(Guid userId, SystemPermissionType? permissionType = null)
     {
         InvalidateSystemPermissionCacheAsync(userId, permissionType).GetAwaiter().GetResult();
+    }
+
+    /// <summary>
+    /// Verifica se o usuário aceitou todos os termos e políticas obrigatórios.
+    /// </summary>
+    public async Task<Result<bool>> HasAcceptedRequiredPoliciesAsync(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        if (_policyRequirementService is null || _termsAcceptanceService is null || _privacyAcceptanceService is null)
+        {
+            // Se os serviços não estiverem disponíveis, retornar sucesso (não bloquear)
+            return Result<bool>.Success(true);
+        }
+
+        var requirements = await _policyRequirementService.GetRequiredPoliciesForUserAsync(userId, cancellationToken);
+
+        // Verificar aceite de termos
+        var termsResult = await _termsAcceptanceService.HasAcceptedRequiredTermsAsync(
+            userId,
+            requirements.RequiredTerms,
+            cancellationToken);
+
+        if (termsResult.IsFailure)
+        {
+            return Result<bool>.Failure(termsResult.Error ?? "Failed to check terms acceptance.");
+        }
+
+        if (!termsResult.Value)
+        {
+            return Result<bool>.Success(false);
+        }
+
+        // Verificar aceite de políticas de privacidade
+        var privacyResult = await _privacyAcceptanceService.HasAcceptedRequiredPoliciesAsync(
+            userId,
+            requirements.RequiredPrivacyPolicies,
+            cancellationToken);
+
+        if (privacyResult.IsFailure)
+        {
+            return Result<bool>.Failure(privacyResult.Error ?? "Failed to check privacy policy acceptance.");
+        }
+
+        return Result<bool>.Success(privacyResult.Value);
+    }
+
+    /// <summary>
+    /// Obtém os termos e políticas que o usuário ainda precisa aceitar.
+    /// </summary>
+    public async Task<PolicyRequirements?> GetPendingPoliciesAsync(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        if (_policyRequirementService is null || _termsAcceptanceService is null || _privacyAcceptanceService is null)
+        {
+            return null;
+        }
+
+        var requirements = await _policyRequirementService.GetRequiredPoliciesForUserAsync(userId, cancellationToken);
+
+        // Filtrar termos não aceitos
+        var pendingTerms = new List<TermsOfService>();
+        foreach (var terms in requirements.RequiredTerms)
+        {
+            var hasAccepted = await _termsAcceptanceService.HasAcceptedTermsAsync(userId, terms.Id, cancellationToken);
+            if (!hasAccepted)
+            {
+                pendingTerms.Add(terms);
+            }
+        }
+
+        // Filtrar políticas não aceitas
+        var pendingPolicies = new List<PrivacyPolicy>();
+        foreach (var policy in requirements.RequiredPrivacyPolicies)
+        {
+            var hasAccepted = await _privacyAcceptanceService.HasAcceptedPolicyAsync(userId, policy.Id, cancellationToken);
+            if (!hasAccepted)
+            {
+                pendingPolicies.Add(policy);
+            }
+        }
+
+        return new PolicyRequirements(pendingTerms, pendingPolicies);
     }
 }

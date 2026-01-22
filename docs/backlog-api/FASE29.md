@@ -271,6 +271,7 @@ Implementar suporte completo para funcionalidades mobile avançadas que melhoram
 - ✅ Testes de integração: todos passando
 - ✅ Testes de performance: dentro dos limites
 - ✅ Documentação atualizada
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (analytics mobile, push, deep linking) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ---
 

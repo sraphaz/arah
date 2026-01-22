@@ -792,6 +792,7 @@ A aplicação deve suportar **múltiplos métodos de pagamento** de forma unific
 - ✅ Testes de rate limiting completos
 - ✅ Testes de segurança completos
 - ✅ Todos os testes passando
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (tradicional + cripto, transações) com banco real — requisito "Testável" (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Documentação
 - ✅ Documentação técnica completa

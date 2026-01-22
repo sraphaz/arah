@@ -42,11 +42,12 @@ public sealed class RequestLoggingMiddleware
             stopwatch.Stop();
             var statusCode = context.Response.StatusCode;
 
+            // Use sanitized values to prevent log injection
             _logger.LogInformation(
                 "Request: {Method} {Path} {StatusCode} {DurationMs}ms CorrelationId: {CorrelationId}",
-                method, path, statusCode, stopwatch.ElapsedMilliseconds, correlationId);
+                sanitizedMethod, sanitizedPath, statusCode, stopwatch.ElapsedMilliseconds, correlationId);
 
-            _observabilityLogger?.LogRequest(method, path, statusCode, stopwatch.ElapsedMilliseconds);
+            _observabilityLogger?.LogRequest(sanitizedMethod, sanitizedPath, statusCode, stopwatch.ElapsedMilliseconds);
         }
     }
 }

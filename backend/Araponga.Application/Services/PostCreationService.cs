@@ -31,6 +31,7 @@ public sealed class PostCreationService
     private readonly IEventBus _eventBus;
     private readonly IUnitOfWork _unitOfWork;
     private readonly CacheInvalidationService? _cacheInvalidation;
+    private readonly AccessEvaluator? _accessEvaluator;
 
     public PostCreationService(
         IFeedRepository feedRepository,
@@ -46,7 +47,8 @@ public sealed class PostCreationService
         IAuditLogger auditLogger,
         IEventBus eventBus,
         IUnitOfWork unitOfWork,
-        CacheInvalidationService? cacheInvalidation = null)
+        CacheInvalidationService? cacheInvalidation = null,
+        AccessEvaluator? accessEvaluator = null)
     {
         _feedRepository = feedRepository;
         _mapRepository = mapRepository;
@@ -62,6 +64,7 @@ public sealed class PostCreationService
         _eventBus = eventBus;
         _unitOfWork = unitOfWork;
         _cacheInvalidation = cacheInvalidation;
+        _accessEvaluator = accessEvaluator;
     }
 
     public async Task<Result<CommunityPost>> CreatePostAsync(
@@ -78,6 +81,27 @@ public sealed class PostCreationService
         IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
+        // Verificar aceite de políticas obrigatórias
+        if (_accessEvaluator is not null)
+        {
+            var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
+            if (policiesResult.IsFailure || !policiesResult.Value)
+            {
+                var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
+                var errorMessage = "You must accept the required terms of service and privacy policies before creating posts.";
+                if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
+                {
+                    var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
+                    var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
+                    if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
+                    {
+                        errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating posts.";
+                    }
+                }
+                return Result<CommunityPost>.Failure(errorMessage);
+            }
+        }
+
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
         {
             return Result<CommunityPost>.Failure("Title and content are required.");

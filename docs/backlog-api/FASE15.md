@@ -880,6 +880,7 @@ Implementar funcionalidades de **Inteligência Artificial** para:
 - ✅ Testes de integração passando
 - ✅ Performance adequada (latência < 2s para APIs de IA)
 - ✅ Segurança validada (dados não expostos)
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (categorização, moderação, persistência) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Documentação
 - ✅ Documentação técnica completa

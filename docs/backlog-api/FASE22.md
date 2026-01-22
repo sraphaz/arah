@@ -333,6 +333,7 @@ Implementar **integrações com aplicativos externos** que:
 - ✅ Documentação completa
 - ✅ Feature flags implementados
 - ✅ Validações e segurança implementadas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (postagem cross-platform, assinaturas, persistência) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração com Fase 6 (Pagamentos) funcionando

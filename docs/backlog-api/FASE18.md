@@ -496,6 +496,7 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 - ✅ Documentação completa
 - ✅ Feature flags implementados
 - ✅ Validações e segurança implementadas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (observações, sensores, ações, indicadores) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração com Fase 17 (Gamificação) funcionando

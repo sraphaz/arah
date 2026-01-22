@@ -568,6 +568,7 @@ Implementar sistema de **banco de sementes e mudas territorial** que permite:
 - ✅ Testes com cobertura adequada
 - ✅ Documentação completa
 - ✅ Validações e permissões implementadas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (banco de sementes, catálogo, WorkQueue) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração com TerritoryAsset funcionando

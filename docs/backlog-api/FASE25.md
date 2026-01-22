@@ -438,6 +438,7 @@ Implementar infraestrutura base para **serviços digitais integrados** que permi
 - ✅ Documentação completa
 - ✅ Segurança implementada
 - ✅ Validações completas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (credenciais, consumo, serviços digitais) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração com UserPreferences (Fase 9) funcionando

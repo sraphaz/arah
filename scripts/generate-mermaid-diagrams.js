@@ -26,19 +26,32 @@ let match;
 while ((match = mermaidRegex.exec(htmlContent)) !== null) {
   const diagramId = match[1];
   const diagramCode = match[2].trim();
-  
-  // Limpar código: remover entidades HTML e tags XML
-  const cleanedCode = diagramCode
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&amp;/g, '&')
-    .replace(/&#x27;/g, "'")
-    .replace(/&#39;/g, "'")
-    .replace(/<\/?[a-z][^>]*>/gi, '') // Remove tags XML/HTML
-    .replace(/<\/[a-zA-Z][^>]*$/gm, '') // Remove tags incompletas no final da linha
-    .trim();
-  
+
+  // Limpar código: remover entidades HTML e caracteres de tag de forma segura
+  // Decodificar entidades primeiro; em seguida remover < e > para evitar injeção de tags
+  function unescapeHtmlEntities(text) {
+    // Primeiro, processar entidades HTML de forma segura (uma única regex + callback evita double unescaping)
+    let result = text.replace(/&(?:amp|lt|gt|quot|#x27|#39|#x2F|#x60|#x3D);/g, (match) => {
+      switch (match) {
+        case '&amp;': return '&';
+        case '&lt;': return '<';
+        case '&gt;': return '>';
+        case '&quot;': return '"';
+        case '&#x27;': case '&#39;': return "'";
+        case '&#x2F;': return '/';
+        case '&#x60;': return '`';
+        case '&#x3D;': return '=';
+        default: return match; // Se não reconhecer, mantém original para evitar corrupção
+      }
+    });
+    // Em seguida, remover todos os caracteres de início/fim de tag (< e >)
+    // Garante que nenhuma tag (ex.: <script>) permaneça após o desescape; código Mermaid puro, não HTML
+    result = result.replace(/[<>]/g, '');
+    return result;
+  }
+
+  const cleanedCode = unescapeHtmlEntities(diagramCode).trim();
+
   diagrams.push({
     id: diagramId,
     code: cleanedCode,

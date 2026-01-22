@@ -541,6 +541,7 @@ Implementar sistema de **compra coletiva de alimentos** que:
 - ✅ Documentação completa
 - ✅ Feature flags implementados
 - ✅ Validações e segurança implementadas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (compra coletiva, marketplace, votações) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração com Fase 6 (Marketplace) funcionando

@@ -106,4 +106,24 @@ public sealed class PostgresEventParticipationRepository : IEventParticipationRe
                 record.UpdatedAtUtc))
             .ToList();
     }
+
+    public async Task<IReadOnlyList<EventParticipation>> GetByUserIdAsync(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.EventParticipations
+            .AsNoTracking()
+            .Where(p => p.UserId == userId)
+            .OrderBy(p => p.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+
+        return records
+            .Select(record => new EventParticipation(
+                record.EventId,
+                record.UserId,
+                record.Status,
+                record.CreatedAtUtc,
+                record.UpdatedAtUtc))
+            .ToList();
+    }
 }

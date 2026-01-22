@@ -68,6 +68,24 @@ public sealed class StoreItemService
         IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
+        // Verificar aceite de políticas obrigatórias
+        var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
+        if (policiesResult.IsFailure || !policiesResult.Value)
+        {
+            var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
+            var errorMessage = "You must accept the required terms of service and privacy policies before creating items.";
+            if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
+            {
+                var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
+                var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
+                if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
+                {
+                    errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating items.";
+                }
+            }
+            return Result<StoreItem>.Failure(errorMessage);
+        }
+
         if (string.IsNullOrWhiteSpace(title))
         {
             return Result<StoreItem>.Failure("Title is required.");

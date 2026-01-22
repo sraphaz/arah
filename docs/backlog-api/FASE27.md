@@ -384,6 +384,7 @@ Implementar sistema de **negociação territorial de serviços digitais** que pe
 - ✅ Testes com cobertura adequada
 - ✅ Documentação completa
 - ✅ Validações e permissões implementadas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (negociação territorial, quotas, subsídios) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração com TerritoryFund (Fase 20) funcionando

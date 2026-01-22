@@ -518,6 +518,37 @@ A aplicação é um **monolito acoplado** onde:
 
 ---
 
+#### 25.4 Estratégia Testcontainers + PostgreSQL
+**Estimativa**: 8 horas (1 dia)  
+**Status**: ❌ Não implementado
+
+**Contexto**: Estabelecer **Testcontainers + PostgreSQL** para testes de integração com banco real, em paralelo ao InMemory atual. Reduz diferença dev/prod, resolve problemas de contexto (ex.: auth em testes tipo DevicesController) e permite rodar ConcurrencyTests no CI sem Postgres externo.
+
+**Tarefas**:
+- [ ] Adicionar pacote `Testcontainers.PostgreSql` ao projeto de testes
+- [ ] Criar `ApiFactoryPostgres` (ou similar) que implementa `IAsyncLifetime`:
+  - [ ] `InitializeAsync`: subir `PostgreSqlContainer`, obter connection string
+  - [ ] `ConfigureWebHost`: `Persistence__Provider=Postgres`, `ConnectionStrings__Postgres` do container
+  - [ ] Garantir migrações (EnsureCreated ou ApplyMigrations) no banco do container
+  - [ ] `Dispose`/`DisposeAsync`: parar container
+- [ ] Migrar **parcialmente** para Postgres (adoção recomendada):
+  - [ ] `DevicesControllerTests` (em especial o teste que falha em InMemory)
+  - [ ] `ConcurrencyTests` (substituir `DatabaseFixture` + Postgres externo por container)
+  - [ ] Opcional: outros testes de API críticos que dependem de transações/consistência
+- [ ] Manter InMemory para a maioria dos testes (unit + integração leve)
+- [ ] CI: manter `ubuntu-latest` (Docker já disponível); aceitar aumento de ~30s–1min no tempo de testes
+- [ ] Documentar uso em `docs/TESTCONTAINERS_POSTGRES_IMPACTO.md` (já existente)
+
+**Referência**: [TESTCONTAINERS_POSTGRES_IMPACTO.md](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)
+
+**Critérios de Sucesso**:
+- ✅ `ApiFactoryPostgres` criado e funcionando
+- ✅ Testes migrados (Devices, Concurrency) passando com Postgres em container
+- ✅ CI executando esses testes sem Postgres como serviço
+- ✅ InMemory preservado para o restante da suite
+
+---
+
 ## 📊 Resumo da Fase 9
 
 | Tarefa | Estimativa | Status | Prioridade |
@@ -534,7 +565,8 @@ A aplicação é um **monolito acoplado** onde:
 | Documentação de Arquitetura | 16h | ❌ Pendente | 🟢 Média |
 | Docker Compose e Kubernetes | 16h | ❌ Pendente | 🟢 Média |
 | Testes de Integração e Carga | 12h | ❌ Pendente | 🟢 Média |
-| **Total** | **180h (35 dias)** | | |
+| Estratégia Testcontainers + PostgreSQL (§25.4) | 8h | ❌ Pendente | 🟢 Média |
+| **Total** | **188h (~36 dias)** | | |
 
 ---
 
@@ -553,6 +585,7 @@ A aplicação é um **monolito acoplado** onde:
 - ✅ Duplicação mínima
 - ✅ Testes passando em ambos os modelos
 - ✅ Performance comparável
+- ✅ **Estratégia Testcontainers + PostgreSQL** estabelecida (ver §25.4); testes de integração críticos com banco real onde indicado
 
 ### Documentação
 - ✅ Arquitetura documentada (monolito e distribuído)

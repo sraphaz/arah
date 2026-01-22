@@ -12,6 +12,7 @@ using Araponga.Domain.Membership;
 using Araponga.Domain.Configuration;
 using Araponga.Domain.Chat;
 using Araponga.Domain.Evidence;
+using Araponga.Domain.Policies;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
@@ -342,17 +343,23 @@ public sealed class InMemoryDataStore
     public List<StoreRatingResponse> StoreRatingResponses { get; } = new();
     public List<PlatformFeeConfig> PlatformFeeConfigs { get; }
     public List<TerritoryPayoutConfig> TerritoryPayoutConfigs { get; } = new();
-    
+
     // Financial
     public List<FinancialTransaction> FinancialTransactions { get; } = new();
     public List<TransactionStatusHistory> TransactionStatusHistories { get; } = new();
     public List<SellerBalance> SellerBalances { get; } = new();
+
+    // Policies
+    public List<TermsOfService> TermsOfServices { get; } = new();
+    public List<TermsAcceptance> TermsAcceptances { get; } = new();
+    public List<PrivacyPolicy> PrivacyPolicies { get; } = new();
+    public List<PrivacyPolicyAcceptance> PrivacyPolicyAcceptances { get; } = new();
     public List<SellerTransaction> SellerTransactions { get; } = new();
     public List<PlatformFinancialBalance> PlatformFinancialBalances { get; } = new();
     public List<PlatformRevenueTransaction> PlatformRevenueTransactions { get; } = new();
     public List<PlatformExpenseTransaction> PlatformExpenseTransactions { get; } = new();
     public List<ReconciliationRecord> ReconciliationRecords { get; } = new();
-    
+
     public Dictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();
     public Dictionary<Guid, List<PostComment>> PostComments { get; } = new();

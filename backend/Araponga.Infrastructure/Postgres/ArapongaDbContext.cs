@@ -88,6 +88,9 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<PrivacyPolicyRecord> PrivacyPolicies => Set<PrivacyPolicyRecord>();
     public DbSet<PrivacyPolicyAcceptanceRecord> PrivacyPolicyAcceptances => Set<PrivacyPolicyAcceptanceRecord>();
 
+    // Email
+    public DbSet<EmailQueueItemRecord> EmailQueueItems => Set<EmailQueueItemRecord>();
+
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
         try

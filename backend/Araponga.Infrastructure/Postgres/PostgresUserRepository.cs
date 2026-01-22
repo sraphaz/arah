@@ -70,4 +70,19 @@ public sealed class PostgresUserRepository : IUserRepository
 
         return records.Select(record => record.ToDomain()).ToList();
     }
+
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return null;
+        }
+
+        var record = await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                user => user.Email != null && user.Email.ToLower() == email.ToLower(),
+                cancellationToken);
+        return record?.ToDomain();
+    }
 }

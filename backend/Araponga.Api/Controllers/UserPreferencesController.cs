@@ -122,6 +122,60 @@ public sealed class UserPreferencesController : ControllerBase
         return Ok(MapToResponse(preferences));
     }
 
+    /// <summary>
+    /// Atualiza as preferências de email do usuário autenticado.
+    /// </summary>
+    [HttpPut("email")]
+    [EnableRateLimiting("write")]
+    [ProducesResponseType(typeof(UserPreferencesResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult<UserPreferencesResponse>> UpdateEmailPreferences(
+        [FromBody] UpdateEmailPreferencesRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var currentPreferences = await _preferencesService.GetPreferencesAsync(
+            userContext.User.Id,
+            cancellationToken);
+
+        var receiveEmails = request.ReceiveEmails ?? currentPreferences.EmailPreferences.ReceiveEmails;
+        var emailFrequency = currentPreferences.EmailPreferences.EmailFrequency;
+        var emailTypes = currentPreferences.EmailPreferences.EmailTypes;
+
+        if (request.EmailFrequency != null)
+        {
+            if (!Enum.TryParse<EmailFrequency>(request.EmailFrequency, ignoreCase: true, out var parsedFrequency))
+            {
+                return BadRequest(new { error = "Invalid emailFrequency. Must be one of: Immediate, Daily, Weekly." });
+            }
+            emailFrequency = parsedFrequency;
+        }
+
+        if (request.EmailTypes.HasValue)
+        {
+            emailTypes = (EmailTypes)request.EmailTypes.Value;
+        }
+
+        var emailPreferences = new EmailPreferences(
+            receiveEmails,
+            emailFrequency,
+            emailTypes);
+
+        var preferences = await _preferencesService.UpdateEmailPreferencesAsync(
+            userContext.User.Id,
+            emailPreferences,
+            cancellationToken);
+
+        return Ok(MapToResponse(preferences));
+    }
+
     private static UserPreferencesResponse MapToResponse(UserPreferences preferences)
     {
         return new UserPreferencesResponse(
@@ -138,6 +192,10 @@ public sealed class UserPreferencesController : ControllerBase
                 preferences.NotificationPreferences.MarketplaceEnabled,
                 preferences.NotificationPreferences.ModerationEnabled,
                 preferences.NotificationPreferences.MembershipRequestsEnabled),
+            new EmailPreferencesResponse(
+                preferences.EmailPreferences.ReceiveEmails,
+                preferences.EmailPreferences.EmailFrequency.ToString(),
+                (int)preferences.EmailPreferences.EmailTypes),
             preferences.CreatedAtUtc,
             preferences.UpdatedAtUtc);
     }

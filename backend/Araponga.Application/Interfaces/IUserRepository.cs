@@ -44,4 +44,12 @@ public interface IUserRepository
     Task<IReadOnlyList<User>> ListByIdsAsync(
         IReadOnlyCollection<Guid> userIds,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Busca um usuário pelo email.
+    /// </summary>
+    /// <param name="email">Email do usuário.</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Usuário encontrado ou null se não existir.</returns>
+    Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
 }

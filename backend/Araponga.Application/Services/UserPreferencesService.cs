@@ -69,4 +69,23 @@ public sealed class UserPreferencesService
 
         return preferences;
     }
+
+    public async Task<UserPreferences> UpdateEmailPreferencesAsync(
+        Guid userId,
+        EmailPreferences emailPreferences,
+        CancellationToken cancellationToken)
+    {
+        var preferences = await _preferencesRepository.GetOrCreateDefaultAsync(
+            userId,
+            cancellationToken);
+
+        preferences.UpdateEmailPreferences(
+            emailPreferences,
+            DateTime.UtcNow);
+
+        await _preferencesRepository.UpdateAsync(preferences, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return preferences;
+    }
 }

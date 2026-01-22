@@ -1,5 +1,6 @@
 using Araponga.Domain.Assets;
 using Araponga.Domain.Chat;
+using Araponga.Domain.Email;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Financial;
@@ -715,6 +716,9 @@ public static class PostgresMappers
             NotificationsMarketplaceEnabled = preferences.NotificationPreferences.MarketplaceEnabled,
             NotificationsModerationEnabled = preferences.NotificationPreferences.ModerationEnabled,
             NotificationsMembershipRequestsEnabled = preferences.NotificationPreferences.MembershipRequestsEnabled,
+            EmailReceiveEmails = preferences.EmailPreferences.ReceiveEmails,
+            EmailFrequency = (int)preferences.EmailPreferences.EmailFrequency,
+            EmailTypes = (int)preferences.EmailPreferences.EmailTypes,
             CreatedAtUtc = preferences.CreatedAtUtc,
             UpdatedAtUtc = preferences.UpdatedAtUtc
         };
@@ -731,6 +735,11 @@ public static class PostgresMappers
             record.NotificationsModerationEnabled,
             record.NotificationsMembershipRequestsEnabled);
 
+        var emailPreferences = new EmailPreferences(
+            record.EmailReceiveEmails,
+            (EmailFrequency)record.EmailFrequency,
+            (EmailTypes)record.EmailTypes);
+
         return new UserPreferences(
             record.UserId,
             record.ProfileVisibility,
@@ -738,6 +747,7 @@ public static class PostgresMappers
             record.ShareLocation,
             record.ShowMemberships,
             notificationPreferences,
+            emailPreferences,
             record.CreatedAtUtc,
             record.UpdatedAtUtc);
     }
@@ -1744,5 +1754,54 @@ public static class PostgresMappers
         }
 
         return device;
+    }
+
+    public static EmailQueueItemRecord ToRecord(this EmailQueueItem item)
+    {
+        return new EmailQueueItemRecord
+        {
+            Id = item.Id,
+            To = item.To,
+            Subject = item.Subject,
+            Body = item.Body,
+            IsHtml = item.IsHtml,
+            TemplateName = item.TemplateName,
+            TemplateDataJson = item.TemplateDataJson,
+            Priority = (int)item.Priority,
+            ScheduledFor = item.ScheduledFor,
+            Attempts = item.Attempts,
+            Status = (int)item.Status,
+            CreatedAtUtc = item.CreatedAtUtc,
+            ProcessedAtUtc = item.ProcessedAtUtc,
+            ErrorMessage = item.ErrorMessage,
+            NextRetryAtUtc = item.NextRetryAtUtc
+        };
+    }
+
+    public static EmailQueueItem ToDomain(this EmailQueueItemRecord record)
+    {
+        // Usar construtor privado via reflection ou criar via método factory
+        // Por enquanto, vamos criar usando o construtor público e depois restaurar estado
+        var item = new EmailQueueItem(
+            record.Id,
+            record.To,
+            record.Subject,
+            record.Body ?? string.Empty,
+            record.IsHtml,
+            record.TemplateName,
+            record.TemplateDataJson,
+            (EmailQueuePriority)record.Priority,
+            record.ScheduledFor);
+
+        // Restaurar estado usando método público
+        item.RestoreState(
+            (EmailQueueStatus)record.Status,
+            record.Attempts,
+            record.ErrorMessage,
+            record.NextRetryAtUtc,
+            record.ProcessedAtUtc,
+            record.CreatedAtUtc);
+
+        return item;
     }
 }

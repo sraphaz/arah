@@ -5,6 +5,7 @@ using Araponga.Application.Interfaces.Users;
 using Araponga.Application.Services;
 using Araponga.Application.Events;
 using Araponga.Infrastructure.Eventing;
+using Araponga.Infrastructure.Email;
 using Araponga.Infrastructure.FileStorage;
 using Araponga.Infrastructure.InMemory;
 using Araponga.Infrastructure.Media;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Araponga.Api.Extensions;
 
@@ -92,6 +94,14 @@ public static class ServiceCollectionExtensions
         services.AddScoped<Araponga.Application.Services.Media.TerritoryMediaConfigService>();
         services.AddScoped<Araponga.Application.Services.Users.UserMediaPreferencesService>();
         services.AddScoped<Araponga.Application.Services.Media.MediaStorageConfigService>();
+        services.AddScoped<Araponga.Application.Interfaces.IEmailTemplateService>(sp =>
+        {
+            var env = sp.GetRequiredService<IWebHostEnvironment>();
+            var templatesPath = Path.Combine(env.ContentRootPath, "Templates", "Email");
+            var logger = sp.GetRequiredService<ILogger<Araponga.Application.Services.EmailTemplateService>>();
+            return new Araponga.Application.Services.EmailTemplateService(logger, templatesPath);
+        });
+        services.AddScoped<Araponga.Application.Services.EmailQueueService>();
 
         // Policies services
         services.AddScoped<TermsOfServiceService>();
@@ -155,6 +165,8 @@ public static class ServiceCollectionExtensions
             services.AddPostgresRepositories(configuration);
             services.AddHostedService<OutboxDispatcherWorker>();
             services.AddHostedService<Araponga.Infrastructure.Background.PayoutProcessingWorker>();
+            services.AddHostedService<Araponga.Infrastructure.Email.EmailQueueWorker>();
+            services.AddHostedService<Araponga.Infrastructure.Email.EventReminderWorker>();
         }
         else
         {
@@ -306,12 +318,28 @@ public static class ServiceCollectionExtensions
 
         // Push Notifications
         services.AddScoped<IUserDeviceRepository, PostgresUserDeviceRepository>();
-        
+
         // Push Notification Provider (opcional - configurar Firebase:ServerKey para habilitar)
         var firebaseServerKey = configuration["Firebase:ServerKey"];
         if (!string.IsNullOrWhiteSpace(firebaseServerKey))
         {
             services.AddScoped<IPushNotificationProvider, Araponga.Infrastructure.Notifications.FirebasePushNotificationProvider>();
+        }
+
+        // Email Configuration
+        services.Configure<EmailConfiguration>(configuration.GetSection("Email"));
+        services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+        // Email Queue
+        var emailPersistenceProvider = configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+        if (string.Equals(emailPersistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddScoped<IEmailQueueRepository, PostgresEmailQueueRepository>();
+        }
+        else
+        {
+            services.AddSingleton<IEmailQueueRepository>(sp =>
+                new InMemoryEmailQueueRepository(sp.GetRequiredService<InMemoryDataStore>()));
         }
 
         return services;

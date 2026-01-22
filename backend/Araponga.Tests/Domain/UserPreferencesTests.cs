@@ -16,6 +16,7 @@ public sealed class UserPreferencesTests
                 false,
                 true,
                 NotificationPreferences.Default(),
+                EmailPreferences.Default(),
                 DateTime.UtcNow,
                 DateTime.UtcNow));
 

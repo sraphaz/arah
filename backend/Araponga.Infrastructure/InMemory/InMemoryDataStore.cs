@@ -17,6 +17,7 @@ using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Araponga.Domain.Work;
+using Araponga.Domain.Email;
 
 namespace Araponga.Infrastructure.InMemory;
 
@@ -392,4 +393,7 @@ public sealed class InMemoryDataStore
     public List<TerritoryMediaConfig> TerritoryMediaConfigs { get; } = new();
     public List<UserMediaPreferences> UserMediaPreferences { get; } = new();
     public List<MediaStorageConfig> MediaStorageConfigs { get; } = new();
+
+    // Email
+    public List<EmailQueueItem> EmailQueueItems { get; } = new();
 }

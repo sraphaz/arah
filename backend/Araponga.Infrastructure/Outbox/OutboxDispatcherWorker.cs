@@ -2,8 +2,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
+using Araponga.Application.Services;
+using Araponga.Domain.Users;
 using Araponga.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -69,12 +72,23 @@ public sealed class OutboxDispatcherWorker : BackgroundService
         }
 
         var preferencesRepository = scope.ServiceProvider.GetRequiredService<IUserPreferencesRepository>();
+        var emailQueueService = scope.ServiceProvider.GetService<EmailQueueService>();
+        var userRepository = scope.ServiceProvider.GetService<IUserRepository>();
+        var configuration = scope.ServiceProvider.GetService<Microsoft.Extensions.Configuration.IConfiguration>();
+        var baseUrl = configuration?["BaseUrl"] ?? "https://araponga.com";
 
         foreach (var message in messages)
         {
             try
             {
-                await HandleMessageAsync(message, inboxRepository, preferencesRepository, stoppingToken);
+                await HandleMessageAsync(
+                    message,
+                    inboxRepository,
+                    preferencesRepository,
+                    emailQueueService,
+                    userRepository,
+                    baseUrl,
+                    stoppingToken);
                 message.ProcessedAtUtc = DateTime.UtcNow;
                 message.LastError = null;
                 message.ProcessAfterUtc = null;
@@ -102,6 +116,9 @@ public sealed class OutboxDispatcherWorker : BackgroundService
         Infrastructure.Postgres.Entities.OutboxMessageRecord message,
         INotificationInboxRepository inboxRepository,
         IUserPreferencesRepository preferencesRepository,
+        EmailQueueService? emailQueueService,
+        IUserRepository? userRepository,
+        string baseUrl,
         CancellationToken cancellationToken)
     {
         if (!string.Equals(message.Type, "notification.dispatch", StringComparison.OrdinalIgnoreCase))
@@ -155,6 +172,128 @@ public sealed class OutboxDispatcherWorker : BackgroundService
                 message.Id);
 
             await inboxRepository.AddAsync(notification, cancellationToken);
+
+            // Enfileirar email se apropriado
+            if (emailQueueService != null && EmailNotificationMapper.ShouldSendEmail(payload.Kind))
+            {
+                // Verificar preferências de email do usuário
+                var userPrefs = await preferencesRepository.GetByUserIdAsync(recipient, cancellationToken);
+                if (userPrefs != null && userPrefs.EmailPreferences.ReceiveEmails)
+                {
+                    // Verificar se o tipo de email está habilitado
+                    var emailType = GetEmailTypeForNotification(payload.Kind);
+                    if (emailType != null && userPrefs.EmailPreferences.EmailTypes.HasFlag(emailType.Value))
+                    {
+                        await EnqueueEmailForNotificationAsync(
+                            emailQueueService,
+                            userRepository,
+                            recipient,
+                            payload,
+                            baseUrl,
+                            cancellationToken);
+                    }
+                }
+            }
+        }
+    }
+
+    private static EmailTypes? GetEmailTypeForNotification(string notificationKind)
+    {
+        return notificationKind switch
+        {
+            "event.created" or "event.reminder" => EmailTypes.Events,
+            "marketplace.order.confirmed" => EmailTypes.Marketplace,
+            "alert.critical" => EmailTypes.CriticalAlerts,
+            _ => null
+        };
+    }
+
+    private static async Task EnqueueEmailForNotificationAsync(
+        EmailQueueService emailQueueService,
+        IUserRepository? userRepository,
+        Guid userId,
+        NotificationDispatchPayload payload,
+        string baseUrl,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Buscar usuário para obter email e nome
+            var user = userRepository != null
+                ? await userRepository.GetByIdAsync(userId, cancellationToken)
+                : null;
+
+            if (user == null || string.IsNullOrWhiteSpace(user.Email))
+            {
+                return; // Usuário não encontrado ou sem email
+            }
+
+            var templateName = EmailNotificationMapper.GetEmailTemplate(payload.Kind);
+            if (templateName == null)
+            {
+                return; // Não há template para este tipo de notificação
+            }
+
+            var baseTemplateData = EmailNotificationMapper.CreateTemplateData(payload.Kind, payload, baseUrl);
+            if (baseTemplateData == null)
+            {
+                return; // Não foi possível criar dados do template
+            }
+
+            // Criar nova instância com UserName atualizado
+            object? templateData = baseTemplateData switch
+            {
+                EventReminderEmailTemplateData eventData => new EventReminderEmailTemplateData
+                {
+                    UserName = user.DisplayName,
+                    BaseUrl = eventData.BaseUrl,
+                    EventName = eventData.EventName,
+                    EventDate = eventData.EventDate,
+                    Location = eventData.Location,
+                    EventLink = eventData.EventLink
+                },
+                MarketplaceOrderEmailTemplateData orderData => new MarketplaceOrderEmailTemplateData
+                {
+                    UserName = user.DisplayName,
+                    BaseUrl = orderData.BaseUrl,
+                    OrderId = orderData.OrderId,
+                    Items = orderData.Items,
+                    Total = orderData.Total,
+                    SellerName = orderData.SellerName,
+                    OrderLink = orderData.OrderLink
+                },
+                CriticalAlertEmailTemplateData alertData => new CriticalAlertEmailTemplateData
+                {
+                    UserName = user.DisplayName,
+                    BaseUrl = alertData.BaseUrl,
+                    AlertType = alertData.AlertType,
+                    AlertTitle = alertData.AlertTitle,
+                    AlertDescription = alertData.AlertDescription,
+                    RecommendedActions = alertData.RecommendedActions,
+                    MoreInfoLink = alertData.MoreInfoLink
+                },
+                _ => baseTemplateData
+            };
+
+            var priority = EmailNotificationMapper.GetEmailPriority(payload.Kind);
+
+            var emailMessage = new EmailMessage
+            {
+                To = user.Email,
+                Subject = payload.Title,
+                Body = string.Empty, // Não usado quando TemplateName é fornecido
+                TemplateName = templateName,
+                TemplateData = templateData,
+                IsHtml = true
+            };
+
+            await emailQueueService.EnqueueEmailAsync(emailMessage, priority, null, cancellationToken);
+        }
+        catch (Exception)
+        {
+            // Log mas não falha o processamento da notificação in-app
+            // O email é opcional, a notificação in-app é essencial
+            // Exceções são silenciadas para não quebrar o fluxo de notificações
         }
     }
 

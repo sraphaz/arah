@@ -26,46 +26,38 @@ let match;
 while ((match = mermaidRegex.exec(htmlContent)) !== null) {
   const diagramId = match[1];
   const diagramCode = match[2].trim();
-  
+
   // Limpar código: remover entidades HTML e tags XML de forma segura
   // Usar uma função de desescape que processa todas as entidades de uma vez
+  // Isso evita problemas de double escaping
   function unescapeHtmlEntities(text) {
-    // Criar um elemento temporário para usar o parser nativo do navegador/Node
-    // Isso evita problemas de double escaping
-    const entityMap = {
-      '&lt;': '<',
-      '&gt;': '>',
-      '&quot;': '"',
-      '&amp;': '&',
-      '&#x27;': "'",
-      '&#39;': "'",
-      '&#x2F;': '/',
-      '&#x60;': '`',
-      '&#x3D;': '='
-    };
-    
-    // Processar em ordem reversa para evitar re-substituições
-    // Começar com &amp; primeiro para evitar double unescape
-    let result = text;
-    result = result.replace(/&amp;/g, '&');
-    result = result.replace(/&lt;/g, '<');
-    result = result.replace(/&gt;/g, '>');
-    result = result.replace(/&quot;/g, '"');
-    result = result.replace(/&#x27;/g, "'");
-    result = result.replace(/&#39;/g, "'");
-    result = result.replace(/&#x2F;/g, '/');
-    result = result.replace(/&#x60;/g, '`');
-    result = result.replace(/&#x3D;/g, '=');
-    
-    // Remover tags XML/HTML após desescapar
-    result = result.replace(/<\/?[a-z][^>]*>/gi, '');
+    // Primeiro, remover tags XML/HTML antes de processar entidades
+    // Isso evita que tags contenham entidades que seriam processadas incorretamente
+    let result = text.replace(/<\/?[a-z][^>]*>/gi, '');
     result = result.replace(/<\/[a-zA-Z][^>]*$/gm, '');
+    
+    // Agora processar entidades HTML de forma segura usando uma única regex
+    // com callback para evitar double unescaping
+    // A regex captura todas as entidades conhecidas de uma vez
+    result = result.replace(/&(?:amp|lt|gt|quot|#x27|#39|#x2F|#x60|#x3D);/g, (match) => {
+      switch (match) {
+        case '&amp;': return '&';
+        case '&lt;': return '<';
+        case '&gt;': return '>';
+        case '&quot;': return '"';
+        case '&#x27;': case '&#39;': return "'";
+        case '&#x2F;': return '/';
+        case '&#x60;': return '`';
+        case '&#x3D;': return '=';
+        default: return match; // Se não reconhecer, mantém original para evitar corrupção
+      }
+    });
     
     return result;
   }
-  
+
   const cleanedCode = unescapeHtmlEntities(diagramCode).trim();
-  
+
   diagrams.push({
     id: diagramId,
     code: cleanedCode,

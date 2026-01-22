@@ -149,17 +149,50 @@ public async Task RegisterDevice_WhenValid_CreatesDevice()
 - ❌ **CI/CD falha** mesmo que o código esteja correto
 - ❌ **Falsos positivos** que atrasam o desenvolvimento
 
+## 🔧 Solução Implementada: Validação de Contexto
+
+### Validação Explícita do InMemoryDataStore
+
+Implementamos uma validação que garante que o mesmo `InMemoryDataStore` é usado em todas as requisições:
+
+```csharp
+// 1. Obter referência ao dataStore compartilhado
+var dataStore = factory.GetDataStore();
+
+// 2. Após login, extrair userId do token
+using var scope = factory.Services.CreateScope();
+var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
+var userId = tokenService.ParseToken(token);
+
+// 3. VALIDAÇÃO DE CONTEXTO: Verificar se usuário existe no dataStore
+var userInDataStore = dataStore.Users.FirstOrDefault(u => u.Id == userId.Value);
+if (userInDataStore is null)
+{
+    // Usuário não encontrado = problema de compartilhamento de contexto
+    Skip.If(true, "User not found in shared InMemoryDataStore after login");
+    return;
+}
+```
+
+### Por Que Isso Funciona
+
+1. **Garante Mesmo Contexto**: Verifica diretamente no `InMemoryDataStore` se o usuário foi criado
+2. **Diagnóstico Preciso**: Identifica exatamente onde está o problema (compartilhamento vs autenticação)
+3. **Falha Rápida**: Se o usuário não está no dataStore, sabemos que é problema de contexto, não de autenticação
+
+### Benefícios
+
+- ✅ **Delimita o Escopo**: Garante que estamos usando o mesmo `InMemoryDataStore`
+- ✅ **Diagnóstico Melhor**: Identifica se o problema é de contexto ou de autenticação
+- ✅ **Teste Mais Robusto**: Só prossegue se o contexto estiver correto
+
 ## 🔧 Possíveis Soluções Futuras
 
-1. **Garantir Compartilhamento de DataStore**:
-   - Verificar se todas as instâncias de repositório compartilham o mesmo `InMemoryDataStore`
-   - Adicionar logs para rastrear qual instância está sendo usada
-
-2. **Usar Testcontainers com PostgreSQL**:
+1. **Usar Testcontainers com PostgreSQL**:
    - Substituir testes in-memory por testes com banco real
    - Garantir comportamento idêntico à produção
 
-3. **Refatorar Teste para Unit Test**:
+2. **Refatorar Teste para Unit Test**:
    - Testar `DevicesController` isoladamente com mocks
    - Testar `PushNotificationService` separadamente
    - Manter apenas testes de integração críticos

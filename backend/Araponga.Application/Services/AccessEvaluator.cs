@@ -46,20 +46,34 @@ public sealed class AccessEvaluator
     /// </summary>
     public async Task<bool> IsResidentAsync(Guid userId, Guid territoryId, CancellationToken cancellationToken)
     {
-        var cacheKey = $"membership:resident:{userId}:{territoryId}";
-        var cached = await _cache.GetAsync<bool?>(cacheKey, cancellationToken);
-        if (cached.HasValue)
+        try
         {
-            _metrics?.RecordCacheAccess(cacheKey, hit: true);
-            return cached.Value;
+            if (_cache is null)
+            {
+                // Se não há cache, verificar diretamente
+                return await _accessRules.IsVerifiedResidentAsync(userId, territoryId, cancellationToken);
+            }
+
+            var cacheKey = $"membership:resident:{userId}:{territoryId}";
+            var cached = await _cache.GetAsync<bool?>(cacheKey, cancellationToken);
+            if (cached.HasValue)
+            {
+                _metrics?.RecordCacheAccess(cacheKey, hit: true);
+                return cached.Value;
+            }
+
+            _metrics?.RecordCacheAccess(cacheKey, hit: false);
+
+            var isVerifiedResident = await _accessRules.IsVerifiedResidentAsync(userId, territoryId, cancellationToken);
+
+            await _cache.SetAsync(cacheKey, (bool?)isVerifiedResident, Constants.Cache.MembershipExpiration, cancellationToken);
+            return isVerifiedResident;
         }
-
-        _metrics?.RecordCacheAccess(cacheKey, hit: false);
-
-        var isVerifiedResident = await _accessRules.IsVerifiedResidentAsync(userId, territoryId, cancellationToken);
-
-        await _cache.SetAsync(cacheKey, (bool?)isVerifiedResident, Constants.Cache.MembershipExpiration, cancellationToken);
-        return isVerifiedResident;
+        catch
+        {
+            // Em caso de erro, verificar diretamente sem cache
+            return await _accessRules.IsVerifiedResidentAsync(userId, territoryId, cancellationToken);
+        }
     }
 
     /// <summary>
@@ -101,20 +115,28 @@ public sealed class AccessEvaluator
         MembershipCapabilityType capabilityType,
         CancellationToken cancellationToken)
     {
-        // SystemAdmin tem implicitamente todas as capabilities em todos os territórios
-        var isSystemAdmin = await IsSystemAdminAsync(userId, cancellationToken);
-        if (isSystemAdmin)
+        try
         {
-            return true;
-        }
+            // SystemAdmin tem implicitamente todas as capabilities em todos os territórios
+            var isSystemAdmin = await IsSystemAdminAsync(userId, cancellationToken);
+            if (isSystemAdmin)
+            {
+                return true;
+            }
 
-        var membership = await _membershipRepository.GetByUserAndTerritoryAsync(userId, territoryId, cancellationToken);
-        if (membership is null)
+            var membership = await _membershipRepository.GetByUserAndTerritoryAsync(userId, territoryId, cancellationToken);
+            if (membership is null)
+            {
+                return false;
+            }
+
+            return await _capabilityRepository.HasCapabilityAsync(membership.Id, capabilityType, cancellationToken);
+        }
+        catch
         {
+            // Em caso de erro, retornar false (mais seguro)
             return false;
         }
-
-        return await _capabilityRepository.HasCapabilityAsync(membership.Id, capabilityType, cancellationToken);
     }
 
     /// <summary>
@@ -145,21 +167,45 @@ public sealed class AccessEvaluator
         SystemPermissionType permissionType,
         CancellationToken cancellationToken)
     {
-        var cacheKey = $"system:permission:{userId}:{permissionType}";
-        var cached = await _cache.GetAsync<bool?>(cacheKey, cancellationToken);
-        if (cached.HasValue)
+        try
         {
-            _metrics?.RecordCacheAccess(cacheKey, hit: true);
-            return cached.Value;
+            if (_cache is null)
+            {
+                // Se não há cache, verificar diretamente no repositório
+                if (_systemPermissionRepository is null)
+                {
+                    return false;
+                }
+                return await _systemPermissionRepository
+                    .HasActivePermissionAsync(userId, permissionType, cancellationToken);
+            }
+
+            var cacheKey = $"system:permission:{userId}:{permissionType}";
+            var cached = await _cache.GetAsync<bool?>(cacheKey, cancellationToken);
+            if (cached.HasValue)
+            {
+                _metrics?.RecordCacheAccess(cacheKey, hit: true);
+                return cached.Value;
+            }
+
+            _metrics?.RecordCacheAccess(cacheKey, hit: false);
+
+            if (_systemPermissionRepository is null)
+            {
+                return false;
+            }
+
+            var hasPermission = await _systemPermissionRepository
+                .HasActivePermissionAsync(userId, permissionType, cancellationToken);
+
+            await _cache.SetAsync(cacheKey, (bool?)hasPermission, Constants.Cache.SystemPermissionExpiration, cancellationToken);
+            return hasPermission;
         }
-
-        _metrics?.RecordCacheAccess(cacheKey, hit: false);
-
-        var hasPermission = await _systemPermissionRepository
-            .HasActivePermissionAsync(userId, permissionType, cancellationToken);
-
-        await _cache.SetAsync(cacheKey, (bool?)hasPermission, Constants.Cache.SystemPermissionExpiration, cancellationToken);
-        return hasPermission;
+        catch
+        {
+            // Em caso de erro, retornar false (mais seguro)
+            return false;
+        }
     }
 
     /// <summary>

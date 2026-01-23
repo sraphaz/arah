@@ -32,6 +32,7 @@ public sealed class PostCreationService
     private readonly IUnitOfWork _unitOfWork;
     private readonly CacheInvalidationService? _cacheInvalidation;
     private readonly AccessEvaluator? _accessEvaluator;
+    private readonly TerritoryModerationService? _moderationService;
 
     public PostCreationService(
         IFeedRepository feedRepository,
@@ -48,7 +49,8 @@ public sealed class PostCreationService
         IEventBus eventBus,
         IUnitOfWork unitOfWork,
         CacheInvalidationService? cacheInvalidation = null,
-        AccessEvaluator? accessEvaluator = null)
+        AccessEvaluator? accessEvaluator = null,
+        TerritoryModerationService? moderationService = null)
     {
         _feedRepository = feedRepository;
         _mapRepository = mapRepository;
@@ -65,6 +67,7 @@ public sealed class PostCreationService
         _unitOfWork = unitOfWork;
         _cacheInvalidation = cacheInvalidation;
         _accessEvaluator = accessEvaluator;
+        _moderationService = moderationService;
     }
 
     public async Task<Result<CommunityPost>> CreatePostAsync(
@@ -240,6 +243,29 @@ public sealed class PostCreationService
                         return Result<CommunityPost>.Failure($"Audio MIME type '{audio.MimeType}' is not allowed for posts.");
                     }
                 }
+            }
+        }
+
+        // Verificar regras de moderação comunitária
+        if (_moderationService is not null)
+        {
+            // Criar post temporário para validação
+            var tempPost = new CommunityPost(
+                Guid.NewGuid(),
+                territoryId,
+                userId,
+                title,
+                content,
+                type,
+                visibility,
+                status,
+                mapEntityId,
+                DateTime.UtcNow);
+
+            var moderationResult = await _moderationService.ApplyRulesAsync(tempPost, cancellationToken);
+            if (moderationResult.IsFailure)
+            {
+                return Result<CommunityPost>.Failure(moderationResult.Error ?? "Post violates territory moderation rules.");
             }
         }
 

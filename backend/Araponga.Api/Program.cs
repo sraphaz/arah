@@ -466,7 +466,7 @@ app.UseExceptionHandler(errorApp =>
             logger.LogError(exception, "Unhandled exception at {Path}", feature?.Path);
         }
 
-        var includeDetails = app.Environment.IsDevelopment();
+        var includeDetails = app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing");
         var statusCode = exception is ArgumentException
             ? StatusCodes.Status400BadRequest
             : StatusCodes.Status500InternalServerError;
@@ -475,11 +475,20 @@ app.UseExceptionHandler(errorApp =>
         {
             Title = "Unexpected error",
             Status = statusCode,
-            Detail = includeDetails ? exception?.Message : "An unexpected error occurred.",
+            Detail = includeDetails ? (exception?.Message ?? "An unexpected error occurred.") : "An unexpected error occurred.",
             Instance = feature?.Path
         };
         problem.Extensions["traceId"] = context.TraceIdentifier;
         problem.Extensions["path"] = feature?.Path;
+        if (includeDetails && exception is not null)
+        {
+            problem.Extensions["exceptionType"] = exception.GetType().FullName;
+            problem.Extensions["stackTrace"] = exception.StackTrace;
+            if (exception.InnerException is not null)
+            {
+                problem.Extensions["innerException"] = exception.InnerException.Message;
+            }
+        }
 
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";

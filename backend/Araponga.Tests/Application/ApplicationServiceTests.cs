@@ -1115,6 +1115,7 @@ public sealed class ApplicationServiceTests
             null,
             null,
             pagination,
+            filterByInterests: false,
             CancellationToken.None);
 
         Assert.Equal(10, page1.Items.Count);
@@ -1130,6 +1131,7 @@ public sealed class ApplicationServiceTests
             null,
             null,
             pagination2,
+            filterByInterests: false,
             CancellationToken.None);
 
         Assert.Equal(10, page2.Items.Count);

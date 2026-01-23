@@ -1,5 +1,6 @@
 using Araponga.Api.Contracts.Users;
 using Araponga.Api.Security;
+using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -13,13 +14,22 @@ namespace Araponga.Api.Controllers;
 public sealed class UserProfileController : ControllerBase
 {
     private readonly UserProfileService _profileService;
+    private readonly IUserInterestRepository _interestRepository;
+    private readonly IVoteRepository? _voteRepository;
+    private readonly IVotingRepository? _votingRepository;
     private readonly CurrentUserAccessor _currentUserAccessor;
 
     public UserProfileController(
         UserProfileService profileService,
-        CurrentUserAccessor currentUserAccessor)
+        IUserInterestRepository interestRepository,
+        CurrentUserAccessor currentUserAccessor,
+        IVoteRepository? voteRepository = null,
+        IVotingRepository? votingRepository = null)
     {
         _profileService = profileService;
+        _interestRepository = interestRepository;
+        _voteRepository = voteRepository;
+        _votingRepository = votingRepository;
         _currentUserAccessor = currentUserAccessor;
     }
 
@@ -42,7 +52,10 @@ public sealed class UserProfileController : ControllerBase
             userContext.User.Id,
             cancellationToken);
 
-        return Ok(MapToResponse(user));
+        var interests = await _interestRepository.ListByUserIdAsync(userContext.User.Id, cancellationToken);
+        var interestTags = interests.Select(i => i.InterestTag).ToList();
+
+        return Ok(MapToResponse(user, interestTags));
     }
 
     /// <summary>
@@ -74,7 +87,10 @@ public sealed class UserProfileController : ControllerBase
             request.DisplayName,
             cancellationToken);
 
-        return Ok(MapToResponse(user));
+        var interests = await _interestRepository.ListByUserIdAsync(userContext.User.Id, cancellationToken);
+        var interestTags = interests.Select(i => i.InterestTag).ToList();
+
+        return Ok(MapToResponse(user, interestTags));
     }
 
     /// <summary>
@@ -102,10 +118,62 @@ public sealed class UserProfileController : ControllerBase
             request.Address,
             cancellationToken);
 
-        return Ok(MapToResponse(user));
+        var interests = await _interestRepository.ListByUserIdAsync(userContext.User.Id, cancellationToken);
+        var interestTags = interests.Select(i => i.InterestTag).ToList();
+
+        return Ok(MapToResponse(user, interestTags));
     }
 
-    private static UserProfileResponse MapToResponse(Domain.Users.User user)
+    /// <summary>
+    /// Obtém o histórico de participação em governança do usuário autenticado.
+    /// </summary>
+    [HttpGet("governance")]
+    [ProducesResponseType(typeof(UserProfileGovernanceResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UserProfileGovernanceResponse>> GetGovernanceHistory(
+        CancellationToken cancellationToken)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        var votingHistory = new List<VotingHistoryItem>();
+        var moderationContributions = 0;
+
+        if (_voteRepository is not null && _votingRepository is not null)
+        {
+            var votes = await _voteRepository.ListByUserIdAsync(userContext.User.Id, cancellationToken);
+            
+            foreach (var vote in votes)
+            {
+                var voting = await _votingRepository.GetByIdAsync(vote.VotingId, cancellationToken);
+                if (voting is not null)
+                {
+                    votingHistory.Add(new VotingHistoryItem(
+                        vote.VotingId,
+                        voting.Title,
+                        voting.Type.ToString(),
+                        vote.SelectedOption,
+                        vote.CreatedAtUtc));
+                }
+            }
+        }
+
+        // Contar contribuições para moderação (simplificado - pode ser expandido)
+        // Por enquanto, contamos apenas votações de moderação participadas
+        moderationContributions = votingHistory.Count(v => v.VotingType == "ModerationRule");
+
+        var response = new UserProfileGovernanceResponse(
+            userContext.User.Id,
+            votingHistory,
+            moderationContributions);
+
+        return Ok(response);
+    }
+
+    private static UserProfileResponse MapToResponse(Domain.Users.User user, IReadOnlyList<string> interests)
     {
         return new UserProfileResponse(
             user.Id,
@@ -113,6 +181,7 @@ public sealed class UserProfileController : ControllerBase
             user.Email,
             user.PhoneNumber,
             user.Address,
-            user.CreatedAtUtc);
+            user.CreatedAtUtc,
+            interests);
     }
 }

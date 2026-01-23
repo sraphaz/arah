@@ -22,6 +22,7 @@ public sealed class StoreItemService
     private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IUnitOfWork _unitOfWork;
     private readonly CacheInvalidationService? _cacheInvalidation;
+    private readonly TerritoryModerationService? _moderationService;
 
     public StoreItemService(
         IStoreItemRepository itemRepository,
@@ -34,7 +35,8 @@ public sealed class StoreItemService
         MembershipAccessRules accessRules,
         TerritoryFeatureFlagGuard featureGuard,
         IUnitOfWork unitOfWork,
-        CacheInvalidationService? cacheInvalidation = null)
+        CacheInvalidationService? cacheInvalidation = null,
+        TerritoryModerationService? moderationService = null)
     {
         _itemRepository = itemRepository;
         _storeRepository = storeRepository;
@@ -47,6 +49,7 @@ public sealed class StoreItemService
         _featureGuard = featureGuard;
         _unitOfWork = unitOfWork;
         _cacheInvalidation = cacheInvalidation;
+        _moderationService = moderationService;
     }
 
     public async Task<Result<StoreItem>> CreateItemAsync(
@@ -199,6 +202,36 @@ public sealed class StoreItemService
                         return Result<StoreItem>.Failure($"Audio MIME type '{audio.MimeType}' is not allowed for marketplace items.");
                     }
                 }
+            }
+        }
+
+        // Verificar regras de moderação comunitária
+        if (_moderationService is not null)
+        {
+            // Criar item temporário para validação
+            var tempItem = new StoreItem(
+                Guid.NewGuid(),
+                territoryId,
+                storeId,
+                type,
+                title,
+                description,
+                category,
+                tags,
+                pricingType,
+                priceAmount,
+                currency,
+                unit,
+                latitude,
+                longitude,
+                status,
+                DateTime.UtcNow,
+                DateTime.UtcNow);
+
+            var moderationResult = await _moderationService.ApplyRulesAsync(tempItem, cancellationToken);
+            if (moderationResult.IsFailure)
+            {
+                return Result<StoreItem>.Failure(moderationResult.Error ?? "Item violates territory moderation rules.");
             }
         }
 

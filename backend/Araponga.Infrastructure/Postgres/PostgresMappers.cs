@@ -71,6 +71,8 @@ public static class PostgresMappers
             TwoFactorVerifiedAtUtc = user.TwoFactorVerifiedAtUtc,
             IdentityVerificationStatus = user.IdentityVerificationStatus,
             IdentityVerifiedAtUtc = user.IdentityVerifiedAtUtc,
+            AvatarMediaAssetId = user.AvatarMediaAssetId,
+            Bio = user.Bio,
             CreatedAtUtc = user.CreatedAtUtc
         };
     }
@@ -93,6 +95,8 @@ public static class PostgresMappers
             record.TwoFactorVerifiedAtUtc,
             record.IdentityVerificationStatus,
             record.IdentityVerifiedAtUtc,
+            record.AvatarMediaAssetId,
+            record.Bio,
             record.CreatedAtUtc);
     }
 

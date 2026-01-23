@@ -67,6 +67,7 @@ public sealed class FeedController : ControllerBase
         [FromQuery] Guid? territoryId,
         [FromQuery] Guid? mapEntityId,
         [FromQuery] Guid? assetId,
+        [FromQuery] bool filterByInterests = false,
         CancellationToken cancellationToken)
     {
         var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
@@ -86,6 +87,7 @@ public sealed class FeedController : ControllerBase
             userContext.User?.Id,
             mapEntityId,
             assetId,
+            filterByInterests,
             cancellationToken);
 
         var eventLookup = await LoadEventSummariesAsync(posts, cancellationToken);
@@ -133,6 +135,7 @@ public sealed class FeedController : ControllerBase
         [FromQuery] Guid? territoryId,
         [FromQuery] Guid? mapEntityId,
         [FromQuery] Guid? assetId,
+        [FromQuery] bool filterByInterests = false,
         CancellationToken cancellationToken,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 20)
@@ -148,9 +151,6 @@ public sealed class FeedController : ControllerBase
         {
             return Unauthorized();
         }
-
-        var filterByInterests = Request.Query.ContainsKey("filterByInterests") &&
-                                 bool.TryParse(Request.Query["filterByInterests"], out var filter) && filter;
 
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _feedService.ListForTerritoryPagedAsync(

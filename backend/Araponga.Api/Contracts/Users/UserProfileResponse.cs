@@ -7,4 +7,6 @@ public sealed record UserProfileResponse(
     string? PhoneNumber,
     string? Address,
     DateTime CreatedAtUtc,
-    IReadOnlyList<string> Interests);
+    IReadOnlyList<string> Interests,
+    string? AvatarUrl = null,
+    string? Bio = null);

@@ -1,10 +1,5 @@
 namespace Araponga.Application.Interfaces;
 
-<<<<<<< HEAD
-public interface IEmailSender
-{
-    Task SendEmailAsync(
-=======
 /// <summary>
 /// Interface para envio de emails.
 /// </summary>
@@ -20,14 +15,11 @@ public interface IEmailSender
     /// <param name="cancellationToken">Token de cancelamento.</param>
     /// <returns>Resultado da operação.</returns>
     Task<Common.OperationResult> SendEmailAsync(
->>>>>>> origin/feature/fase14-governanca-votacao
         string to,
         string subject,
         string body,
         bool isHtml,
         CancellationToken cancellationToken);
-<<<<<<< HEAD
-=======
 
     /// <summary>
     /// Envia um email usando um template.
@@ -54,5 +46,4 @@ public interface IEmailSender
     Task<Common.OperationResult> SendEmailAsync(
         Models.EmailMessage message,
         CancellationToken cancellationToken);
->>>>>>> origin/feature/fase14-governanca-votacao
 }

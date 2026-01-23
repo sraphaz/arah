@@ -131,11 +131,7 @@
 - **Bloqueadores**: Fase 9
 
 ### Onda 4: Otimizações e IA (12, 15) 🟡
-<<<<<<< HEAD
-- **Status**: 50% Completo (1/2 fases)
-=======
 - **Status**: 42.5% Completo (0.85/2 fases) - Fase 12 em andamento (85%)
->>>>>>> origin/feature/fase14-governanca-votacao
 - **Prioridade**: ALTA
 - **Bloqueadores**: Fase 11, 14
 

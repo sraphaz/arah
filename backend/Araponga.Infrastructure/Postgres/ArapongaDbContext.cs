@@ -188,6 +188,9 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             // Identity verification fields
             entity.Property(u => u.IdentityVerificationStatus).HasConversion<int>().IsRequired();
             entity.Property(u => u.IdentityVerifiedAtUtc).HasColumnType("timestamp with time zone");
+            // Profile fields
+            entity.Property(u => u.AvatarMediaAssetId);
+            entity.Property(u => u.Bio).HasMaxLength(500);
             entity.Property(u => u.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => new { u.AuthProvider, u.ExternalId }).IsUnique();

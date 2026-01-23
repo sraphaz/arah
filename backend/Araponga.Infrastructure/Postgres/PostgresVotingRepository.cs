@@ -41,7 +41,7 @@ public sealed class PostgresVotingRepository : IVotingRepository
         var record = await _dbContext.Votings
             .AsNoTracking()
             .FirstOrDefaultAsync(v => v.Id == votingId, cancellationToken);
-        
+
         return record?.ToDomain();
     }
 

@@ -52,7 +52,7 @@ public sealed class FeedService
         var totalCount = await _feedRepository.CountByTerritoryAsync(territoryId, cancellationToken);
         var posts = await _feedRepository.ListByTerritoryPagedAsync(territoryId, pagination.Skip, pagination.Take, cancellationToken);
         var filtered = await _postFilterService.FilterPostsAsync(posts, territoryId, userId, mapEntityId, assetId, cancellationToken);
-        
+
         // Aplicar filtro de interesses se solicitado e se serviço disponível
         if (filterByInterests && _interestFilterService is not null && userId.HasValue)
         {
@@ -62,7 +62,7 @@ public sealed class FeedService
                 territoryId,
                 cancellationToken);
         }
-        
+
         return new Common.PagedResult<CommunityPost>(filtered, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 

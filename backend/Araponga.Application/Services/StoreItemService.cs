@@ -275,10 +275,10 @@ public sealed class StoreItemService
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
-        
+
         // Invalidar cache de items da store
         _cacheInvalidation?.InvalidateItemCache(storeId, item.Id);
-        
+
         return Result<StoreItem>.Success(item);
     }
 
@@ -339,10 +339,10 @@ public sealed class StoreItemService
 
         await _itemRepository.UpdateAsync(item, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        
+
         // Invalidar cache de items da store
         _cacheInvalidation?.InvalidateItemCache(item.StoreId, item.Id);
-        
+
         return Result<StoreItem>.Success(item);
     }
 
@@ -375,10 +375,10 @@ public sealed class StoreItemService
         await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.StoreItem, item.Id, cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
-        
+
         // Invalidar cache de items da store
         _cacheInvalidation?.InvalidateItemCache(item.StoreId, item.Id);
-        
+
         return Result<StoreItem>.Success(item);
     }
 

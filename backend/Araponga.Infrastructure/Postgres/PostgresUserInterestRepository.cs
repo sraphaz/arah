@@ -34,7 +34,7 @@ public sealed class PostgresUserInterestRepository : IUserInterestRepository
             .FirstOrDefaultAsync(
                 i => i.UserId == userId && i.InterestTag == normalizedTag,
                 cancellationToken);
-        
+
         if (record is not null)
         {
             _dbContext.UserInterests.Remove(record);
@@ -55,7 +55,7 @@ public sealed class PostgresUserInterestRepository : IUserInterestRepository
     public async Task<IReadOnlyList<Guid>> ListUserIdsByInterestAsync(string interestTag, Guid territoryId, CancellationToken cancellationToken)
     {
         var normalizedTag = interestTag.Trim().ToLowerInvariant();
-        
+
         // Buscar usuários que têm o interesse E são membros do território
         var userIds = await _dbContext.UserInterests
             .AsNoTracking()

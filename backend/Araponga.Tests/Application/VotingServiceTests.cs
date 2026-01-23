@@ -22,11 +22,11 @@ public sealed class VotingServiceTests
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
-        
+
         // Usar territoryB e residentUser do InMemoryDataStore
         var territoryId = dataStore.Territories[1].Id; // territoryB
         var userId = dataStore.Users[0].Id; // residentUser
-        
+
         // Criar membership explicitamente para garantir que existe
         var newMembership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -39,7 +39,7 @@ public sealed class VotingServiceTests
             DateTime.UtcNow);
         await membershipRepo.AddAsync(newMembership, CancellationToken.None);
         await unitOfWork.CommitAsync(CancellationToken.None);
-        
+
         // Verificar que o membership foi criado
         var membership = await membershipRepo.GetByUserAndTerritoryAsync(userId, territoryId, CancellationToken.None);
         Assert.NotNull(membership);
@@ -79,11 +79,11 @@ public sealed class VotingServiceTests
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
-        
+
         // Usar territoryB e residentUser do InMemoryDataStore
         var territoryId = dataStore.Territories[1].Id; // territoryB
         var userId = dataStore.Users[0].Id; // residentUser
-        
+
         // Criar membership explicitamente para garantir que existe
         var newMembership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -96,7 +96,7 @@ public sealed class VotingServiceTests
             DateTime.UtcNow);
         await membershipRepo.AddAsync(newMembership, CancellationToken.None);
         await unitOfWork.CommitAsync(CancellationToken.None);
-        
+
         // Verificar que o membership foi criado
         var membership = await membershipRepo.GetByUserAndTerritoryAsync(userId, territoryId, CancellationToken.None);
         Assert.NotNull(membership);
@@ -113,10 +113,10 @@ public sealed class VotingServiceTests
             null,
             null,
             CancellationToken.None);
-        
+
         Assert.True(votingResult.IsSuccess);
         var voting = votingResult.Value!;
-        
+
         // Abrir votação e salvar
         voting.Open();
         await votingRepo.UpdateAsync(voting, CancellationToken.None);

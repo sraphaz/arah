@@ -145,7 +145,7 @@ public sealed class UserProfileController : ControllerBase
         if (_voteRepository is not null && _votingRepository is not null)
         {
             var votes = await _voteRepository.ListByUserIdAsync(userContext.User.Id, cancellationToken);
-            
+
             foreach (var vote in votes)
             {
                 var voting = await _votingRepository.GetByIdAsync(vote.VotingId, cancellationToken);

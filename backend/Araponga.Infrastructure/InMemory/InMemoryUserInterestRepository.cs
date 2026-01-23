@@ -23,7 +23,7 @@ public sealed class InMemoryUserInterestRepository : IUserInterestRepository
         var normalizedTag = interestTag.Trim().ToLowerInvariant();
         var interest = _dataStore.UserInterests
             .FirstOrDefault(i => i.UserId == userId && i.InterestTag == normalizedTag);
-        
+
         if (interest is not null)
         {
             _dataStore.UserInterests.Remove(interest);
@@ -45,7 +45,7 @@ public sealed class InMemoryUserInterestRepository : IUserInterestRepository
     public Task<IReadOnlyList<Guid>> ListUserIdsByInterestAsync(string interestTag, Guid territoryId, CancellationToken cancellationToken)
     {
         var normalizedTag = interestTag.Trim().ToLowerInvariant();
-        
+
         // Buscar usuários que têm o interesse E são membros do território
         var userIds = _dataStore.UserInterests
             .Where(i => i.InterestTag == normalizedTag)
@@ -63,7 +63,7 @@ public sealed class InMemoryUserInterestRepository : IUserInterestRepository
         var normalizedTag = interestTag.Trim().ToLowerInvariant();
         var exists = _dataStore.UserInterests
             .Any(i => i.UserId == userId && i.InterestTag == normalizedTag);
-        
+
         return Task.FromResult(exists);
     }
 

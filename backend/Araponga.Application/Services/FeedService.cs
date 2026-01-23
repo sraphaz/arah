@@ -13,17 +13,20 @@ public sealed class FeedService
     private readonly PostCreationService _postCreationService;
     private readonly PostInteractionService _postInteractionService;
     private readonly PostFilterService _postFilterService;
+    private readonly InterestFilterService? _interestFilterService;
 
     public FeedService(
         IFeedRepository feedRepository,
         PostCreationService postCreationService,
         PostInteractionService postInteractionService,
-        PostFilterService postFilterService)
+        PostFilterService postFilterService,
+        InterestFilterService? interestFilterService = null)
     {
         _feedRepository = feedRepository;
         _postCreationService = postCreationService;
         _postInteractionService = postInteractionService;
         _postFilterService = postFilterService;
+        _interestFilterService = interestFilterService;
     }
 
     public async Task<IReadOnlyList<CommunityPost>> ListForTerritoryAsync(
@@ -43,12 +46,23 @@ public sealed class FeedService
         Guid? mapEntityId,
         Guid? assetId,
         Common.PaginationParameters pagination,
-        CancellationToken cancellationToken)
+        bool filterByInterests = false,
+        CancellationToken cancellationToken = default)
     {
         var totalCount = await _feedRepository.CountByTerritoryAsync(territoryId, cancellationToken);
         var posts = await _feedRepository.ListByTerritoryPagedAsync(territoryId, pagination.Skip, pagination.Take, cancellationToken);
         var filtered = await _postFilterService.FilterPostsAsync(posts, territoryId, userId, mapEntityId, assetId, cancellationToken);
-        
+
+        // Aplicar filtro de interesses se solicitado e se serviço disponível
+        if (filterByInterests && _interestFilterService is not null && userId.HasValue)
+        {
+            filtered = await _interestFilterService.FilterFeedByInterestsAsync(
+                filtered,
+                userId.Value,
+                territoryId,
+                cancellationToken);
+        }
+
         return new Common.PagedResult<CommunityPost>(filtered, pagination.PageNumber, pagination.PageSize, totalCount);
     }
 

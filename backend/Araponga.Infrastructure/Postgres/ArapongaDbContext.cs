@@ -18,6 +18,11 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<UserRecord> Users => Set<UserRecord>();
     public DbSet<UserPreferencesRecord> UserPreferences => Set<UserPreferencesRecord>();
     public DbSet<UserDeviceRecord> UserDevices => Set<UserDeviceRecord>();
+    public DbSet<UserInterestRecord> UserInterests => Set<UserInterestRecord>();
+    public DbSet<VotingRecord> Votings => Set<VotingRecord>();
+    public DbSet<VoteRecord> Votes => Set<VoteRecord>();
+    public DbSet<TerritoryModerationRuleRecord> TerritoryModerationRules => Set<TerritoryModerationRuleRecord>();
+    public DbSet<TerritoryCharacterizationRecord> TerritoryCharacterizations => Set<TerritoryCharacterizationRecord>();
     public DbSet<TerritoryMembershipRecord> TerritoryMemberships => Set<TerritoryMembershipRecord>();
     public DbSet<MembershipSettingsRecord> MembershipSettings => Set<MembershipSettingsRecord>();
     public DbSet<MembershipCapabilityRecord> MembershipCapabilities => Set<MembershipCapabilityRecord>();
@@ -201,6 +206,78 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
                 .HasForeignKey<UserPreferencesRecord>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             entity.HasIndex(p => p.UserId).IsUnique();
+        });
+
+        modelBuilder.Entity<UserInterestRecord>(entity =>
+        {
+            entity.ToTable("user_interests");
+            entity.HasKey(i => i.Id);
+            entity.Property(i => i.InterestTag).HasMaxLength(50).IsRequired();
+            entity.Property(i => i.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(i => i.UserId);
+            entity.HasIndex(i => i.InterestTag);
+            entity.HasIndex(i => new { i.UserId, i.InterestTag }).IsUnique();
+            entity.HasOne<UserRecord>()
+                .WithMany()
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<VotingRecord>(entity =>
+        {
+            entity.ToTable("votings");
+            entity.HasKey(v => v.Id);
+            entity.Property(v => v.Type).HasConversion<int>().IsRequired();
+            entity.Property(v => v.Visibility).HasConversion<int>().IsRequired();
+            entity.Property(v => v.Status).HasConversion<int>().IsRequired();
+            entity.Property(v => v.Title).HasMaxLength(200).IsRequired();
+            entity.Property(v => v.Description).HasMaxLength(2000).IsRequired();
+            entity.Property(v => v.OptionsJson).IsRequired();
+            entity.Property(v => v.StartsAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(v => v.EndsAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(v => v.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(v => v.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(v => v.TerritoryId);
+            entity.HasIndex(v => v.CreatedByUserId);
+            entity.HasIndex(v => v.Status);
+            entity.HasIndex(v => new { v.TerritoryId, v.Status });
+        });
+
+        modelBuilder.Entity<VoteRecord>(entity =>
+        {
+            entity.ToTable("votes");
+            entity.HasKey(v => v.Id);
+            entity.Property(v => v.SelectedOption).HasMaxLength(200).IsRequired();
+            entity.Property(v => v.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(v => v.VotingId);
+            entity.HasIndex(v => v.UserId);
+            entity.HasIndex(v => new { v.VotingId, v.UserId }).IsUnique();
+            entity.HasOne<VotingRecord>()
+                .WithMany()
+                .HasForeignKey(v => v.VotingId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<TerritoryModerationRuleRecord>(entity =>
+        {
+            entity.ToTable("territory_moderation_rules");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.RuleType).HasConversion<int>().IsRequired();
+            entity.Property(r => r.RuleJson).IsRequired();
+            entity.Property(r => r.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(r => r.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => r.TerritoryId);
+            entity.HasIndex(r => r.CreatedByVotingId);
+            entity.HasIndex(r => new { r.TerritoryId, r.IsActive });
+        });
+
+        modelBuilder.Entity<TerritoryCharacterizationRecord>(entity =>
+        {
+            entity.ToTable("territory_characterizations");
+            entity.HasKey(c => c.TerritoryId);
+            entity.Property(c => c.TagsJson).IsRequired();
+            entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(c => c.TerritoryId).IsUnique();
         });
 
         modelBuilder.Entity<TerritoryMembershipRecord>(entity =>

@@ -70,6 +70,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CartService>();
         services.AddScoped<UserPreferencesService>();
         services.AddScoped<UserProfileService>();
+        services.AddScoped<UserInterestService>();
+        services.AddScoped<VotingService>();
+        services.AddScoped<TerritoryModerationService>();
+        services.AddScoped<InterestFilterService>();
+        services.AddScoped<TerritoryCharacterizationService>();
         services.AddScoped<DataExportService>();
         services.AddScoped<AccountDeletionService>();
         services.AddScoped<AnalyticsService>();
@@ -290,6 +295,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IReconciliationRecordRepository, PostgresReconciliationRecordRepository>();
 
         services.AddScoped<IUserPreferencesRepository, PostgresUserPreferencesRepository>();
+        services.AddScoped<IUserInterestRepository, PostgresUserInterestRepository>();
+        services.AddScoped<IVotingRepository, PostgresVotingRepository>();
+        services.AddScoped<IVoteRepository, PostgresVoteRepository>();
+        services.AddScoped<ITerritoryModerationRuleRepository, PostgresTerritoryModerationRuleRepository>();
+        services.AddScoped<ITerritoryCharacterizationRepository, PostgresTerritoryCharacterizationRepository>();
         services.AddScoped<IMembershipSettingsRepository, PostgresMembershipSettingsRepository>();
         services.AddScoped<IMembershipCapabilityRepository, PostgresMembershipCapabilityRepository>();
         services.AddScoped<ISystemPermissionRepository, PostgresSystemPermissionRepository>();
@@ -394,6 +404,11 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IReconciliationRecordRepository, InMemoryReconciliationRecordRepository>();
 
         services.AddSingleton<IUserPreferencesRepository, InMemoryUserPreferencesRepository>();
+        services.AddSingleton<IUserInterestRepository, InMemoryUserInterestRepository>();
+        services.AddSingleton<IVotingRepository, InMemoryVotingRepository>();
+        services.AddSingleton<IVoteRepository, InMemoryVoteRepository>();
+        services.AddSingleton<ITerritoryModerationRuleRepository, InMemoryTerritoryModerationRuleRepository>();
+        services.AddSingleton<ITerritoryCharacterizationRepository, InMemoryTerritoryCharacterizationRepository>();
         services.AddSingleton<IMembershipSettingsRepository, InMemoryMembershipSettingsRepository>();
         services.AddSingleton<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddSingleton<ISystemPermissionRepository, InMemorySystemPermissionRepository>();

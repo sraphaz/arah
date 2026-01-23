@@ -478,6 +478,7 @@ public sealed class MapController : ControllerBase
                 null,
                 null,
                 pagination,
+                filterByInterests: false,
                 cancellationToken);
 
             var postIds = postsPaged.Items.Select(post => post.Id).ToList();

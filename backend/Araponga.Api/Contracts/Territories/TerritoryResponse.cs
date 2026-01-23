@@ -9,5 +9,6 @@ public sealed record TerritoryResponse(
     string State,
     double Latitude,
     double Longitude,
-    DateTime CreatedAtUtc
+    DateTime CreatedAtUtc,
+    IReadOnlyList<string> Tags
 );

@@ -92,7 +92,7 @@ public sealed class FeedController : ControllerBase
         var postIds = posts.Select(p => p.Id).ToList();
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
-        
+
         var response = new List<FeedItemResponse>();
         foreach (var post in posts)
         {
@@ -149,6 +149,9 @@ public sealed class FeedController : ControllerBase
             return Unauthorized();
         }
 
+        var filterByInterests = Request.Query.ContainsKey("filterByInterests") &&
+                                 bool.TryParse(Request.Query["filterByInterests"], out var filter) && filter;
+
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _feedService.ListForTerritoryPagedAsync(
             resolvedTerritoryId.Value,
@@ -156,13 +159,14 @@ public sealed class FeedController : ControllerBase
             mapEntityId,
             assetId,
             pagination,
+            filterByInterests,
             cancellationToken);
 
         var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);
         var postIds = pagedResult.Items.Select(p => p.Id).ToList();
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
-        
+
         const int maxInt32 = int.MaxValue;
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
@@ -223,7 +227,7 @@ public sealed class FeedController : ControllerBase
         var postIds = posts.Select(p => p.Id).ToList();
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
-        
+
         var response = new List<FeedItemResponse>();
         foreach (var post in posts)
         {
@@ -276,7 +280,7 @@ public sealed class FeedController : ControllerBase
         var postIds = pagedResult.Items.Select(p => p.Id).ToList();
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
-        
+
         const int maxInt32 = int.MaxValue;
         var items = new List<FeedItemResponse>();
         foreach (var post in pagedResult.Items)
@@ -382,7 +386,7 @@ public sealed class FeedController : ControllerBase
 
         var post = result.Value;
         var mediaUrls = await LoadMediaUrlsForPostAsync(post.Id, cancellationToken);
-        
+
         const int maxInt32 = int.MaxValue;
         var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
         var response = new FeedItemResponse(
@@ -677,7 +681,7 @@ public sealed class FeedController : ControllerBase
 
         // Buscar attachments em batch
         var attachmentsByPost = new Dictionary<Guid, List<Domain.Media.MediaAsset>>();
-        
+
         foreach (var postId in postIds)
         {
             var mediaAssets = await _mediaService.ListMediaByOwnerAsync(MediaOwnerType.Post, postId, cancellationToken);

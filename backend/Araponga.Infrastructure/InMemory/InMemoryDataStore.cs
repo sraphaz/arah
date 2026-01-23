@@ -394,6 +394,15 @@ public sealed class InMemoryDataStore
     public List<UserMediaPreferences> UserMediaPreferences { get; } = new();
     public List<MediaStorageConfig> MediaStorageConfigs { get; } = new();
 
+    // User Interests
+    public List<UserInterest> UserInterests { get; } = new();
+
+    // Governance
+    public List<Domain.Governance.Voting> Votings { get; } = new();
+    public List<Domain.Governance.Vote> Votes { get; } = new();
+    public List<Domain.Governance.TerritoryModerationRule> TerritoryModerationRules { get; } = new();
+    public List<Domain.Territories.TerritoryCharacterization> TerritoryCharacterizations { get; } = new();
+
     // Email
     public List<EmailQueueItem> EmailQueueItems { get; } = new();
 }

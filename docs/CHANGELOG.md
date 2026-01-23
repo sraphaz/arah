@@ -9,6 +9,59 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado - Fase 14: Governança Comunitária e Sistema de Votação (2025-01-21)
+
+#### Funcionalidades
+- ✅ **Sistema de Interesses do Usuário**
+  - Usuários podem definir interesses (tags/categorias)
+  - Máximo 10 interesses por usuário
+  - Interesses aparecem no perfil
+  - Endpoints: `GET/POST/DELETE /api/v1/users/me/interests`
+
+- ✅ **Sistema de Votação Comunitária**
+  - Votações para decisões coletivas (5 tipos: ThemePrioritization, ModerationRule, TerritoryCharacterization, FeatureFlag, CommunityPolicy)
+  - Controle de visibilidade (AllMembers, ResidentsOnly, CuratorsOnly)
+  - Aplicação automática de resultados
+  - Endpoints completos: criar, listar, votar, fechar, obter resultados
+
+- ✅ **Moderação Dinâmica Comunitária**
+  - Regras de moderação definidas pela comunidade via votações
+  - Aplicação automática na criação de conteúdo (posts, items)
+  - Tipos de regras: ContentType, ProhibitedWords, Behavior, MarketplacePolicy, EventPolicy
+  - Regras podem ser criadas via votações ou diretamente por curadores
+
+- ✅ **Feed Filtrado por Interesses**
+  - Filtro opcional de feed por interesses do usuário
+  - Feed cronológico completo permanece como padrão
+  - Query parameter `filterByInterests` no endpoint de feed
+
+- ✅ **Caracterização do Território**
+  - Tags que descrevem o território
+  - Podem ser definidas via votações
+  - Aparecem nas respostas de território
+
+- ✅ **Histórico de Participação no Perfil**
+  - Histórico de votações participadas
+  - Contribuições para moderação comunitária
+  - Endpoint: `GET /api/v1/users/me/profile/governance`
+
+#### Validações e Segurança
+- ✅ Validators FluentValidation para todos os requests
+- ✅ Validação de permissões (resident/curador conforme tipo de votação)
+- ✅ Validação de visibilidade e elegibilidade para votar
+
+#### Testes
+- ✅ Testes unitários: `UserInterestServiceTests`, `VotingServiceTests`
+- ✅ Testes de integração: `GovernanceIntegrationTests`
+- ✅ Cobertura >85% para funcionalidades de governança
+
+#### Documentação
+- ✅ `docs/GOVERNANCE_SYSTEM.md` - Visão geral do sistema
+- ✅ `docs/VOTING_SYSTEM.md` - Documentação detalhada do sistema de votação
+- ✅ `docs/COMMUNITY_MODERATION.md` - Moderação comunitária
+
+---
+
 ### Adicionado - Fase 12 (2026-01-21)
 
 #### Funcionalidades

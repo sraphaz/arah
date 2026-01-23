@@ -1,4 +1,5 @@
 using Araponga.Application.Interfaces;
+using Araponga.Domain.Governance;
 using Araponga.Domain.Users;
 
 namespace Araponga.Application.Services;
@@ -6,13 +7,22 @@ namespace Araponga.Application.Services;
 public sealed class UserProfileService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IUserInterestRepository _interestRepository;
+    private readonly IVoteRepository? _voteRepository;
+    private readonly IVotingRepository? _votingRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public UserProfileService(
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUserInterestRepository interestRepository,
+        IUnitOfWork unitOfWork,
+        IVoteRepository? voteRepository = null,
+        IVotingRepository? votingRepository = null)
     {
         _userRepository = userRepository;
+        _interestRepository = interestRepository;
+        _voteRepository = voteRepository;
+        _votingRepository = votingRepository;
         _unitOfWork = unitOfWork;
     }
 

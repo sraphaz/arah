@@ -8,21 +8,16 @@ public sealed class CreateAssetRequestValidator : AbstractValidator<CreateAssetR
     public CreateAssetRequestValidator()
     {
         RuleFor(x => x.TerritoryId)
-            .NotEmpty().WithMessage("TerritoryId é obrigatório.");
+            .ValidGuid();
 
         RuleFor(x => x.Type)
-            .NotEmpty().WithMessage("Tipo é obrigatório.")
-            .MaximumLength(100).WithMessage("Tipo deve ter no máximo 100 caracteres.");
+            .NotEmptyWithMaxLength(100);
 
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Nome é obrigatório.")
-            .MaximumLength(200).WithMessage("Nome deve ter no máximo 200 caracteres.");
+            .NotEmptyWithMaxLength(200);
 
-        When(x => !string.IsNullOrWhiteSpace(x.Description), () =>
-        {
-            RuleFor(x => x.Description)
-                .MaximumLength(1000).WithMessage("Descrição deve ter no máximo 1000 caracteres.");
-        });
+        RuleFor(x => x.Description)
+            .MaxLengthWhenNotEmpty(1000);
 
         RuleFor(x => x.GeoAnchors)
             .NotEmpty().WithMessage("Pelo menos um GeoAnchor é obrigatório.")
@@ -37,10 +32,10 @@ public sealed class CreateAssetRequestValidator : AbstractValidator<CreateAssetR
                 .ChildRules(anchor =>
                 {
                     anchor.RuleFor(a => a.Latitude)
-                        .InclusiveBetween(-90, 90).WithMessage("Latitude deve estar entre -90 e 90.");
+                        .Latitude();
 
                     anchor.RuleFor(a => a.Longitude)
-                        .InclusiveBetween(-180, 180).WithMessage("Longitude deve estar entre -180 e 180.");
+                        .Longitude();
                 });
         });
     }

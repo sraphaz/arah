@@ -15,6 +15,13 @@
 ---
 
 ## 🆕 Mudanças Recentes
+### Versao 3.4 (2026-01-23) - Recuperacao de acesso e health checks
+
+- Adicionados endpoints de recuperacao de acesso via email (`/api/v1/auth/password-reset` e `/api/v1/auth/password-reset/confirm`).
+- Health checks estendidos com cache, storage, event bus e endpoint `/health/live`.
+- Validacoes comuns e regras de geolocalizacao centralizadas.
+- Excecoes tipadas adicionadas e mapeadas para ProblemDetails.
+- Documentacao de fases e API atualizada para refletir o status atual.
 
 ### Versão 3.3 (2025-01-20) - Integração TDD/BDD nas Fases do Projeto
 
@@ -205,3 +212,4 @@
 **Última Atualização**: 2025-01-20  
 **Versão**: 3.0  
 **Status**: ✅ MVP Completo | 📊 Estratégia Atualizada
+

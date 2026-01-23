@@ -8,10 +8,10 @@ public sealed class CreateItemRequestValidator : AbstractValidator<CreateItemReq
     public CreateItemRequestValidator()
     {
         RuleFor(x => x.TerritoryId)
-            .NotEmpty().WithMessage("TerritoryId é obrigatório.");
+            .ValidGuid();
 
         RuleFor(x => x.StoreId)
-            .NotEmpty().WithMessage("StoreId é obrigatório.");
+            .ValidGuid();
 
         RuleFor(x => x.Type)
             .NotEmpty().WithMessage("Tipo é obrigatório.")
@@ -26,20 +26,13 @@ public sealed class CreateItemRequestValidator : AbstractValidator<CreateItemReq
             .WithMessage("Tipo inválido. Valores válidos: Product, Service (case-insensitive).");
 
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("Título é obrigatório.")
-            .MaximumLength(200).WithMessage("Título deve ter no máximo 200 caracteres.");
+            .NotEmptyWithMaxLength(200);
 
-        When(x => !string.IsNullOrWhiteSpace(x.Description), () =>
-        {
-            RuleFor(x => x.Description)
-                .MaximumLength(2000).WithMessage("Descrição deve ter no máximo 2000 caracteres.");
-        });
+        RuleFor(x => x.Description)
+            .MaxLengthWhenNotEmpty(2000);
 
-        When(x => !string.IsNullOrWhiteSpace(x.Category), () =>
-        {
-            RuleFor(x => x.Category)
-                .MaximumLength(100).WithMessage("Categoria deve ter no máximo 100 caracteres.");
-        });
+        RuleFor(x => x.Category)
+            .MaxLengthWhenNotEmpty(100);
 
         RuleFor(x => x.PricingType)
             .NotEmpty().WithMessage("Tipo de preço é obrigatório.")
@@ -62,17 +55,11 @@ public sealed class CreateItemRequestValidator : AbstractValidator<CreateItemReq
                 .GreaterThan(0).WithMessage("Valor do preço deve ser maior que zero.");
         });
 
-        When(x => x.Latitude.HasValue, () =>
-        {
-            RuleFor(x => x.Latitude!.Value)
-                .InclusiveBetween(-90, 90).WithMessage("Latitude deve estar entre -90 e 90.");
-        });
+        RuleFor(x => x.Latitude)
+            .OptionalLatitude();
 
-        When(x => x.Longitude.HasValue, () =>
-        {
-            RuleFor(x => x.Longitude!.Value)
-                .InclusiveBetween(-180, 180).WithMessage("Longitude deve estar entre -180 e 180.");
-        });
+        RuleFor(x => x.Longitude)
+            .OptionalLongitude();
 
         RuleFor(x => x.MediaIds)
             .Must(mediaIds => mediaIds == null || mediaIds.Count <= 10)

@@ -1,3 +1,4 @@
+using Araponga.Application.Exceptions;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Users;
 
@@ -23,7 +24,7 @@ public sealed class UserProfileService
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null)
         {
-            throw new ArgumentException($"User {userId} not found.", nameof(userId));
+            throw new NotFoundException("User", userId);
         }
 
         return user;
@@ -37,7 +38,7 @@ public sealed class UserProfileService
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null)
         {
-            throw new ArgumentException($"User {userId} not found.", nameof(userId));
+            throw new NotFoundException("User", userId);
         }
 
         // Criar novo User com displayName atualizado
@@ -75,7 +76,7 @@ public sealed class UserProfileService
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null)
         {
-            throw new ArgumentException($"User {userId} not found.", nameof(userId));
+            throw new NotFoundException("User", userId);
         }
 
         var updatedUser = new User(

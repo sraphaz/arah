@@ -87,19 +87,19 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 
 ---
 
-#### 1.4 Health Checks Completos ⚠️
+#### 1.4 Health Checks Completos ✅
 **Estimativa**: 16 horas (2 dias)  
-**Status**: ⚠️ Parcial
+**Status**: ✅ Completo
 
 **Tarefas**:
-- [ ] Criar `DatabaseHealthCheck` para PostgreSQL
-- [ ] Criar `StorageHealthCheck` para S3/MinIO
-- [ ] Criar `CacheHealthCheck` para IMemoryCache/Redis
-- [ ] Adicionar health check de Event Bus
-- [ ] Configurar health checks no `Program.cs`
-- [ ] Criar endpoints `/health/ready` (readiness)
-- [ ] Criar endpoints `/health/live` (liveness)
-- [ ] Documentar health checks
+- [x] Criar `DatabaseHealthCheck` para PostgreSQL
+- [x] Criar `StorageHealthCheck` para S3/Local
+- [x] Criar `CacheHealthCheck` para IMemoryCache/Redis
+- [x] Adicionar health check de Event Bus
+- [x] Configurar health checks no `Program.cs`
+- [x] Criar endpoints `/health/ready` (readiness)
+- [x] Criar endpoints `/health/live` (liveness)
+- [x] Documentar health checks
 
 **Arquivos a Criar**:
 - `backend/Araponga.Api/HealthChecks/` (novo diretório)
@@ -119,16 +119,16 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 
 ---
 
-#### 1.5 Connection Pooling Explícito ⚠️
+#### 1.5 Connection Pooling Explícito ✅
 **Estimativa**: 8 horas (1 dia)  
-**Status**: ⚠️ Parcial
+**Status**: ✅ Completo
 
 **Tarefas**:
-- [ ] Configurar connection string com pooling (MinPoolSize: 5, MaxPoolSize: 100)
-- [ ] Adicionar retry policies no EF Core (maxRetryCount: 3)
-- [ ] Configurar command timeout (30s)
+- [x] Configurar connection string com pooling (MinPoolSize: 5, MaxPoolSize: 100)
+- [x] Adicionar retry policies no EF Core (maxRetryCount: 3)
+- [x] Configurar command timeout (30s)
 - [ ] Adicionar métricas de conexões
-- [ ] Documentar configuração
+- [x] Documentar configuração
 
 **Arquivos a Modificar**:
 - `backend/Araponga.Api/appsettings.json`
@@ -138,7 +138,7 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 - ✅ Pool configurado (MinPoolSize: 5, MaxPoolSize: 100)
 - ✅ Retry policies configuradas (maxRetryCount: 3)
 - ✅ Command timeout configurado (30s)
-- ✅ Métricas de conexões funcionando
+- ⚠️ Métricas de conexões ainda pendentes
 
 ---
 
@@ -147,12 +147,12 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 **Status**: ⚠️ Parcial
 
 **Tarefas**:
-- [ ] Criar migration `AddPerformanceIndexes`
-- [ ] Adicionar índice em `territory_memberships` (user_id, territory_id)
-- [ ] Adicionar índice em `community_posts` (territory_id, status, created_at_utc)
-- [ ] Adicionar índice em `moderation_reports` (target_type, target_id, created_at_utc)
-- [ ] Adicionar índice em `notifications` (user_id, created_at_utc)
-- [ ] Adicionar índice em `chat_messages` (conversation_id, created_at_utc)
+- [x] Criar migration `AddPerformanceIndexes`
+- [x] Adicionar índice em `territory_memberships` (user_id, territory_id)
+- [x] Adicionar índice em `community_posts` (territory_id, status, created_at_utc)
+- [x] Adicionar índice em `moderation_reports` (target_type, target_id, created_at_utc)
+- [x] Adicionar índice em `notifications` (user_id, created_at_utc)
+- [x] Adicionar índice em `chat_messages` (conversation_id, created_at_utc)
 - [ ] Testar performance antes/depois
 - [ ] Validar em staging
 
@@ -203,21 +203,21 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 
 ---
 
-#### 2.2 Exception Mapping com Exceções Tipadas ❌
+#### 2.2 Exception Mapping com Exceções Tipadas ⚠️
 **Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Pendente
+**Status**: ⚠️ Parcial
 
 **Tarefas**:
-- [ ] Criar `DomainException` base
-- [ ] Criar `ValidationException`
-- [ ] Criar `NotFoundException`
-- [ ] Criar `UnauthorizedException`
-- [ ] Criar `ConflictException`
-- [ ] Criar `ForbiddenException`
-- [ ] Atualizar exception handler com mapeamento completo
+- [x] Criar `DomainException` base
+- [x] Criar `ValidationException`
+- [x] Criar `NotFoundException`
+- [x] Criar `UnauthorizedException`
+- [x] Criar `ConflictException`
+- [x] Criar `ForbiddenException`
+- [x] Atualizar exception handler com mapeamento completo
 - [ ] Migrar services para usar exceções tipadas
 - [ ] Atualizar testes
-- [ ] Documentar estratégia
+- [x] Documentar estratégia
 
 **Arquivos a Criar**:
 - `backend/Araponga.Application/Exceptions/DomainException.cs`
@@ -235,7 +235,7 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 - ✅ Todas as exceções tipadas criadas
 - ✅ Exception handler mapeia todas as exceções
 - ✅ Services usam exceções tipadas
-- ✅ Testes atualizados
+- ⚠️ Testes ainda pendentes
 - ✅ Documentação completa
 
 ---
@@ -245,22 +245,22 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 **Status**: ⚠️ Parcial
 
 **Tarefas**:
-- [ ] Identificar services ainda usando tuplas
-- [ ] Migrar `TerritoryService` para Result<T>
-- [ ] Migrar `MembershipService` para Result<T>
-- [ ] Migrar `MapService` para Result<T>
-- [ ] Migrar `EventsService` para Result<T>
-- [ ] Migrar `ReportService` para Result<T>
-- [ ] Migrar `StoreService` para Result<T>
-- [ ] Migrar `PostCreationService` para Result<T>
-- [ ] Migrar `PostInteractionService` para Result<T>
-- [ ] Migrar `FeedService` para Result<T>
-- [ ] Migrar `InquiryService` para Result<T>
-- [ ] Migrar `HealthService` para Result<T>
-- [ ] Migrar `AssetService` para Result<T>
-- [ ] Atualizar controllers para usar Result<T>
+- [x] Identificar services ainda usando tuplas
+- [x] Migrar `TerritoryService` para Result<T>
+- [x] Migrar `MembershipService` para Result<T>
+- [x] Migrar `MapService` para Result<T>
+- [x] Migrar `EventsService` para Result<T>
+- [x] Migrar `ReportService` para Result<T>
+- [x] Migrar `StoreService` para Result<T>
+- [x] Migrar `PostCreationService` para Result<T>
+- [x] Migrar `PostInteractionService` para Result<T>
+- [x] Migrar `FeedService` para Result<T>
+- [x] Migrar `InquiryService` para Result<T>
+- [x] Migrar `HealthService` para Result<T>
+- [x] Migrar `AssetService` para Result<T>
+- [x] Atualizar controllers para usar Result<T>
 - [ ] Atualizar testes
-- [ ] Documentar padrão
+- [x] Documentar padrão
 
 **Arquivos a Modificar**:
 - Todos os services que ainda usam tuplas
@@ -304,11 +304,11 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 | JWT Secret Management | 4h | ✅ Completo | 🔴 Crítica |
 | Rate Limiting Completo | 6h | ✅ Completo | 🔴 Crítica |
 | HTTPS e Security Headers | 4h | ✅ Completo | 🔴 Crítica |
-| Health Checks Completos | 16h | ⚠️ Parcial | 🔴 Crítica |
+| Health Checks Completos | 16h | ✅ Completo | 🔴 Crítica |
 | Connection Pooling | 8h | ⚠️ Parcial | 🔴 Crítica |
 | Índices de Banco | 16h | ⚠️ Parcial | 🔴 Crítica |
 | Validação Completa | 16h | ✅ Completo | 🔴 Crítica |
-| Exception Handling | 24h | ❌ Pendente | 🔴 Crítica |
+| Exception Handling | 24h | ⚠️ Parcial | 🔴 Crítica |
 | Migração Result<T> | 16h | ⚠️ Parcial | 🔴 Crítica |
 | CORS Configurado | 2h | ✅ Completo | 🔴 Crítica |
 | **Total** | **112h (14 dias)** | | |
@@ -323,24 +323,23 @@ Resolver todos os bloqueantes críticos e estabelecer base sólida para produç�
 - ✅ HTTPS obrigatório em produção
 - ✅ Security headers presentes
 - ✅ Validators para endpoints críticos
+- ✅ Health checks com dependências críticas
 - ✅ CORS configurado por ambiente
 
 ### Pendente ⚠️
-- ⚠️ Health checks completos (dependências críticas)
-- ⚠️ Connection pooling explícito
-- ⚠️ Índices de banco de dados
-- ❌ Exception handling completo
-- ⚠️ Migração Result<T> completa
+- ⚠️ Connection pooling explícito (métricas pendentes)
+- ⚠️ Índices de banco de dados (validação em staging pendente)
+- ⚠️ Exception handling completo (migração ampla + testes pendentes)
+- ⚠️ Migração Result<T> completa (testes pendentes)
 
 ---
 
 ## 🎯 Próximos Passos
 
-1. **Completar Health Checks** - Criar health checks para todas as dependências
-2. **Completar Connection Pooling** - Configurar pooling explícito
-3. **Completar Índices** - Criar migration com índices de performance
-4. **Implementar Exception Handling** - Criar exceções tipadas e atualizar handler
-5. **Completar Migração Result<T>** - Migrar todos os services restantes
+1. **Completar Connection Pooling** - Adicionar métricas de conexões
+2. **Completar Índices** - Validar performance em staging
+3. **Implementar Exception Handling** - Migrar services e atualizar testes
+4. **Completar Migração Result<T>** - Atualizar testes
 
 ---
 

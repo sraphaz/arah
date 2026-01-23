@@ -83,6 +83,12 @@ backlog-api/
 - **[FASE7.md](./FASE7.md)** - Sistema de Payout e Gestão Financeira (28 dias) ✅ Completo
 - **[FASE8.md](./FASE8.md)** - Infraestrutura de Mídia (15 dias) ✅ Implementado
 
+### Fases Complementares (Itens Faltantes)
+
+- **[FASE14_5.md](./FASE14_5.md)** - Itens Faltantes e Complementos Fases 1-14 (30-40 dias) 🟡 Importante
+
+**Nota**: A Fase 1.5 foi consolidada na Fase 14.5 para centralizar todas as pendências das fases 1-14.
+
 ### Onda 1: MVP Essencial (65 dias) 🔴 CRÍTICO
 - **[FASE9.md](./FASE9.md)** - Perfil de Usuário Completo (15 dias) 🔴 Crítica
 - **[FASE10.md](./FASE10.md)** - Mídias em Conteúdo (20 dias) 🔴 Crítica
@@ -141,7 +147,8 @@ Com base em análise comparativa com plataformas líderes de mercado (ex: Closer
 
 | Fase | Título | Prioridade | Duração | Status |
 |------|--------|------------|---------|--------|
-| **Fase 14** | Governança Comunitária e Votação | 🔴 P0 | 21 dias | ⏳ Planejado |
+| **Fase 14** | Governança Comunitária e Votação | 🔴 P0 | 21 dias | ✅ Implementado |
+| **Fase 14.5** | Governança — Itens Faltantes | 🟡 P1 | 8–10 dias | ⏳ Planejado |
 | **Fase 30** | Proof of Sweat (Tradicional) | 🔴 P0 | 30 dias | ⏳ Novo |
 | **Fase 31** | Dashboard de Métricas Comunitárias | 🟡 P1 | 14 dias | ⏳ Novo |
 
@@ -155,7 +162,7 @@ Com base em análise comparativa com plataformas líderes de mercado (ex: Closer
 |------|--------|------------|---------|--------|
 | **Fase 32** | Subscriptions & Recurring Payments | 🔴 P0 | 45 dias | ⏳ Novo |
 | **Fase 33** | Ticketing para Eventos | 🟡 P1 | 21 dias | ⏳ Novo |
-| **Fase 13** | Conector de Emails | 🔴 P0 | 14 dias | ⏳ Planejado |
+| **Fase 13** | Conector de Emails | 🔴 P0 | 14 dias | 🚧 Em andamento |
 
 **Resultado**: Sustentabilidade financeira melhorada através de receitas recorrentes e monetização de eventos.
 
@@ -235,7 +242,8 @@ Com base em análise comparativa com plataformas líderes de mercado (ex: Closer
 
 | Fase | Duração | Prioridade | Status |
 |------|---------|------------|--------|
-| **Fase 14: Governança/Votação** | 21 dias | 🔴 P0 | ⏳ Pendente |
+| **Fase 14: Governança/Votação** | 21 dias | 🔴 P0 | ✅ Implementado |
+| **Fase 14.5: Itens Faltantes** | 8–10 dias | 🟡 P1 | ⏳ Pendente |
 | **Fase 30: Proof of Sweat** | 30 dias | 🔴 P0 | ⏳ Novo |
 | **Fase 31: Dashboard Métricas** | 14 dias | 🟡 P1 | ⏳ Novo |
 
@@ -253,7 +261,7 @@ Com base em análise comparativa com plataformas líderes de mercado (ex: Closer
 |------|---------|------------|--------|
 | **Fase 32: Subscriptions** | 45 dias | 🔴 P0 | ⏳ Novo |
 | **Fase 33: Ticketing** | 21 dias | 🟡 P1 | ⏳ Novo |
-| **Fase 13: Emails** | 14 dias | 🔴 P0 | ⏳ Pendente |
+| **Fase 13: Emails** | 14 dias | 🔴 P0 | 🚧 Em andamento |
 
 **Resultado**: Sustentabilidade financeira melhorada através de receitas recorrentes.
 
@@ -459,3 +467,4 @@ O backlog foi expandido com novas fases estratégicas identificadas através de 
 - [Estratégia de Convergência de Mercado](../39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) - Plano estratégico completo
 - [Mapa de Funcionalidades](../38_MAPA_FUNCIONALIDADES_MERCADO.md) - Mapeamento vs. mercado
 - [Roadmap Estratégico](../02_ROADMAP.md) - Planejamento atualizado
+

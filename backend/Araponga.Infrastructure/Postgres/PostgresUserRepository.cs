@@ -32,6 +32,19 @@ public sealed class PostgresUserRepository : IUserRepository
         return record?.ToDomain();
     }
 
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var normalizedEmail = email.Trim().ToLowerInvariant();
+
+        var record = await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                user => user.Email != null && user.Email.ToLower() == normalizedEmail,
+                cancellationToken);
+
+        return record?.ToDomain();
+    }
+
     public Task AddAsync(User user, CancellationToken cancellationToken)
     {
         _dbContext.Users.Add(user.ToRecord());

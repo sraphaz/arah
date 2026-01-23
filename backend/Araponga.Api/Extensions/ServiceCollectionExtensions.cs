@@ -50,6 +50,7 @@ public static class ServiceCollectionExtensions
         // Other services
         services.AddScoped<TerritoryService>();
         services.AddScoped<AuthService>();
+        services.AddScoped<PasswordResetService>();
         services.AddScoped<MembershipService>();
         services.AddScoped<ResidencyRequestService>();
         services.AddScoped<JoinRequestService>();
@@ -138,6 +139,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<Araponga.Application.Interfaces.IObservabilityLogger, InMemoryObservabilityLogger>();
         services.AddSingleton<ITokenService, JwtTokenService>();
         services.AddSingleton<Araponga.Infrastructure.Security.ISecretsService, Araponga.Infrastructure.Security.EnvironmentSecretsService>();
+        services.AddSingleton<IEmailSender, Araponga.Infrastructure.Email.LoggingEmailSender>();
         
         var storageProvider = configuration.GetValue<string>("Storage:Provider") ?? "Local";
         if (string.Equals(storageProvider, "S3", StringComparison.OrdinalIgnoreCase))

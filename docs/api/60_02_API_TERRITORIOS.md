@@ -55,7 +55,7 @@
 - Path param: ID do território
 
 **Regras de negócio**:
-- Retorna apenas dados geográficos
+- Retorna dados geográficos e **`Tags`** (caracterização do território), definidas pela comunidade via votações ou curadoria ([Governança](./60_19_API_GOVERNANCA.md))
 - Retorna 404 se território não existir
 
 ### Sugerir Território (`POST /api/v1/territories/suggestions`)
@@ -100,8 +100,11 @@
 
 ---
 
+**Nota**: Endpoints que retornam `TerritoryResponse` (listagem, nearby, search, selection) incluem o campo **`Tags`** (caracterização do território) quando disponível.
+
 ## 📚 Documentação Relacionada
 
+- **[Governança](./60_19_API_GOVERNANCA.md)** - Caracterização do território (tags) e votações
 - **[Vínculos e Membros](./60_03_API_MEMBERSHIPS.md)** - Próximo passo após selecionar território
 - **[Visão Geral](./60_00_API_VISAO_GERAL.md)** - Princípios fundamentais
 - **DevPortal**: [Territórios](../devportal/#territorios) - Exemplos práticos

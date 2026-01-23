@@ -1,5 +1,6 @@
 using Araponga.Domain.Assets;
 using Araponga.Domain.Chat;
+using Araponga.Domain.Email;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Financial;
@@ -8,6 +9,7 @@ using Araponga.Domain.Map;
 using Araponga.Domain.Marketplace;
 using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
+using Araponga.Domain.Policies;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
@@ -714,6 +716,9 @@ public static class PostgresMappers
             NotificationsMarketplaceEnabled = preferences.NotificationPreferences.MarketplaceEnabled,
             NotificationsModerationEnabled = preferences.NotificationPreferences.ModerationEnabled,
             NotificationsMembershipRequestsEnabled = preferences.NotificationPreferences.MembershipRequestsEnabled,
+            EmailReceiveEmails = preferences.EmailPreferences.ReceiveEmails,
+            EmailFrequency = (int)preferences.EmailPreferences.EmailFrequency,
+            EmailTypes = (int)preferences.EmailPreferences.EmailTypes,
             CreatedAtUtc = preferences.CreatedAtUtc,
             UpdatedAtUtc = preferences.UpdatedAtUtc
         };
@@ -730,6 +735,11 @@ public static class PostgresMappers
             record.NotificationsModerationEnabled,
             record.NotificationsMembershipRequestsEnabled);
 
+        var emailPreferences = new EmailPreferences(
+            record.EmailReceiveEmails,
+            (EmailFrequency)record.EmailFrequency,
+            (EmailTypes)record.EmailTypes);
+
         return new UserPreferences(
             record.UserId,
             record.ProfileVisibility,
@@ -737,6 +747,7 @@ public static class PostgresMappers
             record.ShareLocation,
             record.ShowMemberships,
             notificationPreferences,
+            emailPreferences,
             record.CreatedAtUtc,
             record.UpdatedAtUtc);
     }
@@ -1521,5 +1532,365 @@ public static class PostgresMappers
             record.StoreId,
             record.ResponseText,
             record.CreatedAtUtc);
+    }
+
+    // -----------------------
+    // Policies
+    // -----------------------
+
+    public static TermsOfServiceRecord ToRecord(this TermsOfService terms)
+    {
+        return new TermsOfServiceRecord
+        {
+            Id = terms.Id,
+            Version = terms.Version,
+            Title = terms.Title,
+            Content = terms.Content,
+            EffectiveDate = terms.EffectiveDate,
+            ExpirationDate = terms.ExpirationDate,
+            IsActive = terms.IsActive,
+            RequiredRoles = terms.RequiredRoles,
+            RequiredCapabilities = terms.RequiredCapabilities,
+            RequiredSystemPermissions = terms.RequiredSystemPermissions,
+            CreatedAtUtc = terms.CreatedAtUtc,
+            UpdatedAtUtc = terms.UpdatedAtUtc
+        };
+    }
+
+    public static TermsOfService ToDomain(this TermsOfServiceRecord record)
+    {
+        var terms = new TermsOfService(
+            record.Id,
+            record.Version,
+            record.Title,
+            record.Content,
+            record.EffectiveDate,
+            record.ExpirationDate,
+            record.IsActive,
+            record.RequiredRoles,
+            record.RequiredCapabilities,
+            record.RequiredSystemPermissions,
+            record.CreatedAtUtc);
+
+        // Atualizar UpdatedAtUtc usando reflection
+        var updatedAtProp = typeof(TermsOfService).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        if (updatedAtProp?.SetMethod != null)
+        {
+            updatedAtProp.SetValue(terms, record.UpdatedAtUtc);
+        }
+
+        return terms;
+    }
+
+    public static TermsAcceptanceRecord ToRecord(this TermsAcceptance acceptance)
+    {
+        return new TermsAcceptanceRecord
+        {
+            Id = acceptance.Id,
+            UserId = acceptance.UserId,
+            TermsOfServiceId = acceptance.TermsOfServiceId,
+            AcceptedAtUtc = acceptance.AcceptedAtUtc,
+            IpAddress = acceptance.IpAddress,
+            UserAgent = acceptance.UserAgent,
+            AcceptedVersion = acceptance.AcceptedVersion,
+            IsRevoked = acceptance.IsRevoked,
+            RevokedAtUtc = acceptance.RevokedAtUtc
+        };
+    }
+
+    public static TermsAcceptance ToDomain(this TermsAcceptanceRecord record)
+    {
+        var acceptance = new TermsAcceptance(
+            record.Id,
+            record.UserId,
+            record.TermsOfServiceId,
+            record.AcceptedAtUtc,
+            record.AcceptedVersion,
+            record.IpAddress,
+            record.UserAgent);
+
+        // Atualizar IsRevoked e RevokedAtUtc usando reflection se necessário
+        if (record.IsRevoked)
+        {
+            var isRevokedProp = typeof(TermsAcceptance).GetProperty("IsRevoked", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var revokedAtProp = typeof(TermsAcceptance).GetProperty("RevokedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (isRevokedProp?.SetMethod != null)
+            {
+                isRevokedProp.SetValue(acceptance, true);
+            }
+            if (revokedAtProp?.SetMethod != null && record.RevokedAtUtc.HasValue)
+            {
+                revokedAtProp.SetValue(acceptance, record.RevokedAtUtc.Value);
+            }
+        }
+
+        return acceptance;
+    }
+
+    public static PrivacyPolicyRecord ToRecord(this PrivacyPolicy policy)
+    {
+        return new PrivacyPolicyRecord
+        {
+            Id = policy.Id,
+            Version = policy.Version,
+            Title = policy.Title,
+            Content = policy.Content,
+            EffectiveDate = policy.EffectiveDate,
+            ExpirationDate = policy.ExpirationDate,
+            IsActive = policy.IsActive,
+            RequiredRoles = policy.RequiredRoles,
+            RequiredCapabilities = policy.RequiredCapabilities,
+            RequiredSystemPermissions = policy.RequiredSystemPermissions,
+            CreatedAtUtc = policy.CreatedAtUtc,
+            UpdatedAtUtc = policy.UpdatedAtUtc
+        };
+    }
+
+    public static PrivacyPolicy ToDomain(this PrivacyPolicyRecord record)
+    {
+        var policy = new PrivacyPolicy(
+            record.Id,
+            record.Version,
+            record.Title,
+            record.Content,
+            record.EffectiveDate,
+            record.ExpirationDate,
+            record.IsActive,
+            record.RequiredRoles,
+            record.RequiredCapabilities,
+            record.RequiredSystemPermissions,
+            record.CreatedAtUtc);
+
+        // Atualizar UpdatedAtUtc usando reflection
+        var updatedAtProp = typeof(PrivacyPolicy).GetProperty("UpdatedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        if (updatedAtProp?.SetMethod != null)
+        {
+            updatedAtProp.SetValue(policy, record.UpdatedAtUtc);
+        }
+
+        return policy;
+    }
+
+    public static PrivacyPolicyAcceptanceRecord ToRecord(this PrivacyPolicyAcceptance acceptance)
+    {
+        return new PrivacyPolicyAcceptanceRecord
+        {
+            Id = acceptance.Id,
+            UserId = acceptance.UserId,
+            PrivacyPolicyId = acceptance.PrivacyPolicyId,
+            AcceptedAtUtc = acceptance.AcceptedAtUtc,
+            IpAddress = acceptance.IpAddress,
+            UserAgent = acceptance.UserAgent,
+            AcceptedVersion = acceptance.AcceptedVersion,
+            IsRevoked = acceptance.IsRevoked,
+            RevokedAtUtc = acceptance.RevokedAtUtc
+        };
+    }
+
+    public static PrivacyPolicyAcceptance ToDomain(this PrivacyPolicyAcceptanceRecord record)
+    {
+        var acceptance = new PrivacyPolicyAcceptance(
+            record.Id,
+            record.UserId,
+            record.PrivacyPolicyId,
+            record.AcceptedAtUtc,
+            record.AcceptedVersion,
+            record.IpAddress,
+            record.UserAgent);
+
+        // Atualizar IsRevoked e RevokedAtUtc usando reflection se necessário
+        if (record.IsRevoked)
+        {
+            var isRevokedProp = typeof(PrivacyPolicyAcceptance).GetProperty("IsRevoked", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var revokedAtProp = typeof(PrivacyPolicyAcceptance).GetProperty("RevokedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (isRevokedProp?.SetMethod != null)
+            {
+                isRevokedProp.SetValue(acceptance, true);
+            }
+            if (revokedAtProp?.SetMethod != null && record.RevokedAtUtc.HasValue)
+            {
+                revokedAtProp.SetValue(acceptance, record.RevokedAtUtc.Value);
+            }
+        }
+
+        return acceptance;
+    }
+
+    public static UserDeviceRecord ToRecord(this UserDevice device)
+    {
+        return new UserDeviceRecord
+        {
+            Id = device.Id,
+            UserId = device.UserId,
+            DeviceToken = device.DeviceToken,
+            Platform = device.Platform,
+            DeviceName = device.DeviceName,
+            RegisteredAtUtc = device.RegisteredAtUtc,
+            LastUsedAtUtc = device.LastUsedAtUtc,
+            IsActive = device.IsActive
+        };
+    }
+
+    public static UserDevice ToDomain(this UserDeviceRecord record)
+    {
+        var device = new UserDevice(
+            record.Id,
+            record.UserId,
+            record.DeviceToken,
+            record.Platform,
+            record.DeviceName,
+            record.RegisteredAtUtc);
+
+        // Atualizar LastUsedAtUtc e IsActive usando reflection
+        var lastUsedProp = typeof(UserDevice).GetProperty("LastUsedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        if (lastUsedProp?.SetMethod != null && record.LastUsedAtUtc.HasValue)
+        {
+            lastUsedProp.SetValue(device, record.LastUsedAtUtc.Value);
+        }
+
+        if (!record.IsActive)
+        {
+            device.MarkAsInactive();
+        }
+
+        return device;
+    }
+
+    public static EmailQueueItemRecord ToRecord(this EmailQueueItem item)
+    {
+        return new EmailQueueItemRecord
+        {
+            Id = item.Id,
+            To = item.To,
+            Subject = item.Subject,
+            Body = item.Body,
+            IsHtml = item.IsHtml,
+            TemplateName = item.TemplateName,
+            TemplateDataJson = item.TemplateDataJson,
+            Priority = (int)item.Priority,
+            ScheduledFor = item.ScheduledFor,
+            Attempts = item.Attempts,
+            Status = (int)item.Status,
+            CreatedAtUtc = item.CreatedAtUtc,
+            ProcessedAtUtc = item.ProcessedAtUtc,
+            ErrorMessage = item.ErrorMessage,
+            NextRetryAtUtc = item.NextRetryAtUtc
+        };
+    }
+
+    public static EmailQueueItem ToDomain(this EmailQueueItemRecord record)
+    {
+        // Usar construtor privado via reflection ou criar via método factory
+        // Por enquanto, vamos criar usando o construtor público e depois restaurar estado
+        var item = new EmailQueueItem(
+            record.Id,
+            record.To,
+            record.Subject,
+            record.Body ?? string.Empty,
+            record.IsHtml,
+            record.TemplateName,
+            record.TemplateDataJson,
+            (EmailQueuePriority)record.Priority,
+            record.ScheduledFor);
+
+        // Restaurar estado usando método público
+        item.RestoreState(
+            (EmailQueueStatus)record.Status,
+            record.Attempts,
+            record.ErrorMessage,
+            record.NextRetryAtUtc,
+            record.ProcessedAtUtc,
+            record.CreatedAtUtc);
+
+        return item;
+    }
+
+    public static VotingRecord ToRecord(this Domain.Governance.Voting voting)
+    {
+        return new VotingRecord
+        {
+            Id = voting.Id,
+            TerritoryId = voting.TerritoryId,
+            CreatedByUserId = voting.CreatedByUserId,
+            Type = voting.Type,
+            Title = voting.Title,
+            Description = voting.Description,
+            OptionsJson = JsonSerializer.Serialize(voting.Options),
+            Visibility = voting.Visibility,
+            Status = voting.Status,
+            StartsAtUtc = voting.StartsAtUtc,
+            EndsAtUtc = voting.EndsAtUtc,
+            CreatedAtUtc = voting.CreatedAtUtc,
+            UpdatedAtUtc = voting.UpdatedAtUtc
+        };
+    }
+
+    public static Domain.Governance.Voting ToDomain(this VotingRecord record)
+    {
+        var options = JsonSerializer.Deserialize<List<string>>(record.OptionsJson) ?? new List<string>();
+        return new Domain.Governance.Voting(
+            record.Id,
+            record.TerritoryId,
+            record.CreatedByUserId,
+            record.Type,
+            record.Title,
+            record.Description,
+            options,
+            record.Visibility,
+            record.Status,
+            record.StartsAtUtc,
+            record.EndsAtUtc,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
+    }
+
+    public static VoteRecord ToRecord(this Domain.Governance.Vote vote)
+    {
+        return new VoteRecord
+        {
+            Id = vote.Id,
+            VotingId = vote.VotingId,
+            UserId = vote.UserId,
+            SelectedOption = vote.SelectedOption,
+            CreatedAtUtc = vote.CreatedAtUtc
+        };
+    }
+
+    public static Domain.Governance.Vote ToDomain(this VoteRecord record)
+    {
+        return new Domain.Governance.Vote(
+            record.Id,
+            record.VotingId,
+            record.UserId,
+            record.SelectedOption,
+            record.CreatedAtUtc);
+    }
+
+    public static TerritoryModerationRuleRecord ToRecord(this Domain.Governance.TerritoryModerationRule rule)
+    {
+        return new TerritoryModerationRuleRecord
+        {
+            Id = rule.Id,
+            TerritoryId = rule.TerritoryId,
+            CreatedByVotingId = rule.CreatedByVotingId,
+            RuleType = rule.RuleType,
+            RuleJson = rule.RuleJson,
+            IsActive = rule.IsActive,
+            CreatedAtUtc = rule.CreatedAtUtc,
+            UpdatedAtUtc = rule.UpdatedAtUtc
+        };
+    }
+
+    public static Domain.Governance.TerritoryModerationRule ToDomain(this TerritoryModerationRuleRecord record)
+    {
+        return new Domain.Governance.TerritoryModerationRule(
+            record.Id,
+            record.TerritoryId,
+            record.CreatedByVotingId,
+            record.RuleType,
+            record.RuleJson,
+            record.IsActive,
+            record.CreatedAtUtc,
+            record.UpdatedAtUtc);
     }
 }

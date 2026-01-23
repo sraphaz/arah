@@ -567,6 +567,7 @@ Implementar sistema de **gamificação harmoniosa** que:
 - ✅ Testes de integração passando
 - ✅ Performance adequada
 - ✅ Segurança validada
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (contribuições, pontos, persistência) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Ética e Harmonia
 - ✅ Não manipula comportamento

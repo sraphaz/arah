@@ -438,6 +438,7 @@ Implementar sistema de **moeda territorial** que:
 - ✅ Feature flags implementados
 - ✅ Validações e segurança implementadas
 - ✅ Auditoria completa de transações
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (moeda, carteiras, transações, fundos) com banco real — **crítico** para consistência (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
 - ✅ Integração com Fase 6 (Marketplace) funcionando

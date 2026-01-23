@@ -1,7 +1,10 @@
 using Araponga.Api.Contracts.Auth;
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Models;
 using Araponga.Application.Services;
+using Araponga.Domain.Email;
+using Araponga.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -242,6 +245,80 @@ public sealed class AuthController : ControllerBase
             token);
 
         return Ok(response);
+    }
+
+    /// <summary>
+    /// Solicita recuperação de senha via email.
+    /// </summary>
+    [HttpPost("forgot-password")]
+    [EnableRateLimiting("auth")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult> ForgotPassword(
+        [FromBody] ForgotPasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return BadRequest(new { error = "Email is required." });
+        }
+
+        // Sempre retornar sucesso (security best practice - não revelar se email existe)
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                using var scope = HttpContext.RequestServices.CreateScope();
+                var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+                var emailQueueService = scope.ServiceProvider.GetRequiredService<EmailQueueService>();
+                var configuration = scope.ServiceProvider.GetService<Microsoft.Extensions.Configuration.IConfiguration>();
+                var baseUrl = configuration?["BaseUrl"] ?? "https://araponga.com";
+
+                var user = await userRepository.GetByEmailAsync(request.Email, cancellationToken);
+                if (user is null || string.IsNullOrWhiteSpace(user.Email))
+                {
+                    // Não revelar se email existe ou não
+                    return;
+                }
+
+                // Gerar token de reset (simplificado - em produção, usar um sistema mais robusto)
+                var resetToken = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32))
+                    .Replace("+", "-")
+                    .Replace("/", "_")
+                    .Replace("=", "");
+                var resetLink = $"{baseUrl}/reset-password?token={resetToken}&email={Uri.EscapeDataString(user.Email)}";
+                var expirationMinutes = 60;
+
+                var templateData = new PasswordResetEmailTemplateData
+                {
+                    UserName = user.DisplayName,
+                    BaseUrl = baseUrl,
+                    ResetLink = resetLink,
+                    ExpirationMinutes = expirationMinutes
+                };
+
+                var emailMessage = new EmailMessage
+                {
+                    To = user.Email,
+                    Subject = "Recuperação de Senha - Araponga",
+                    TemplateName = "password-reset",
+                    TemplateData = templateData,
+                    Body = string.Empty
+                };
+
+                await emailQueueService.EnqueueEmailAsync(
+                    emailMessage,
+                    EmailQueuePriority.High,
+                    cancellationToken: cancellationToken);
+            }
+            catch (Exception)
+            {
+                // Logar erro silenciosamente - não revelar falha ao usuário
+            }
+        }, cancellationToken);
+
+        return Ok(new { message = "If the email exists, a password reset link has been sent." });
     }
 
     /// <summary>

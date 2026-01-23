@@ -21,6 +21,16 @@
           "System.Text.Json": "4.7.2"
         }
       },
+      "MailKit": {
+        "type": "Direct",
+        "requested": "[4.14.1, )",
+        "resolved": "4.14.1",
+        "contentHash": "Rawu+h3lSSjKra0AxR+IUB99VQ7jWI+MvxThekqLhf+ic7VQ7a69lmPFW+LXuRYHla4ADcn3x16Gsvju3LTq9w==",
+        "dependencies": {
+          "MimeKit": "4.14.0",
+          "System.Formats.Asn1": "8.0.1"
+        }
+      },
       "Microsoft.EntityFrameworkCore": {
         "type": "Direct",
         "requested": "[8.0.8, )",
@@ -134,6 +144,11 @@
           "Azure.Core": "1.41.0",
           "System.IO.Hashing": "6.0.0"
         }
+      },
+      "BouncyCastle.Cryptography": {
+        "type": "Transitive",
+        "resolved": "2.6.1",
+        "contentHash": "vZsG2YILhthgRqO+ZVgRff4ZFKKTl0v7kqaVBLCtRvpREhfBP33pcWrdA3PRYgWuFL1RxiUFvjMUHTdBZlJcoA=="
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
@@ -421,6 +436,15 @@
         "resolved": "9.0.0",
         "contentHash": "N3qEBzmLMYiASUlKxxFIISP4AiwuPTHF5uCh+2CWSwwzAJiIYx0kBJsS30cp1nvhSySFAVi30jecD307jV+8Kg=="
       },
+      "MimeKit": {
+        "type": "Transitive",
+        "resolved": "4.14.0",
+        "contentHash": "g0LtsMC8DCTkc030C3UgVqbltOJmV5cz4AX8ASowz2ZA+lxopXSYtC1XXYmenxy606aWFLwi5Xy4cC/zyYjbjQ==",
+        "dependencies": {
+          "BouncyCastle.Cryptography": "2.6.1",
+          "System.Security.Cryptography.Pkcs": "8.0.1"
+        }
+      },
       "Npgsql": {
         "type": "Transitive",
         "resolved": "8.0.4",
@@ -470,6 +494,11 @@
         "resolved": "8.0.0",
         "contentHash": "fdYxcRjQqTTacKId/2IECojlDSFvp7LP5N78+0z/xH7v/Tuw5ZAxu23Y6PTCRinqyu2ePx+Gn1098NC6jM6d+A=="
       },
+      "System.Formats.Asn1": {
+        "type": "Transitive",
+        "resolved": "8.0.1",
+        "contentHash": "XqKba7Mm/koKSjKMfW82olQdmfbI5yqeoLV/tidRp7fbh5rmHAQ5raDI/7SU0swTzv+jgqtUGkzmFxuUg0it1A=="
+      },
       "System.IO.Hashing": {
         "type": "Transitive",
         "resolved": "6.0.0",
@@ -493,6 +522,11 @@
         "type": "Transitive",
         "resolved": "4.5.0",
         "contentHash": "QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ=="
+      },
+      "System.Security.Cryptography.Pkcs": {
+        "type": "Transitive",
+        "resolved": "8.0.1",
+        "contentHash": "CoCRHFym33aUSf/NtWSVSZa99dkd0Hm7OCZUxORBjRB16LNhIEOf8THPqzIYlvKM0nNDAPTRBa1FxEECrgaxxA=="
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",

@@ -31,6 +31,8 @@ public sealed class PostCreationService
     private readonly IEventBus _eventBus;
     private readonly IUnitOfWork _unitOfWork;
     private readonly CacheInvalidationService? _cacheInvalidation;
+    private readonly AccessEvaluator? _accessEvaluator;
+    private readonly TerritoryModerationService? _moderationService;
 
     public PostCreationService(
         IFeedRepository feedRepository,
@@ -46,7 +48,9 @@ public sealed class PostCreationService
         IAuditLogger auditLogger,
         IEventBus eventBus,
         IUnitOfWork unitOfWork,
-        CacheInvalidationService? cacheInvalidation = null)
+        CacheInvalidationService? cacheInvalidation = null,
+        AccessEvaluator? accessEvaluator = null,
+        TerritoryModerationService? moderationService = null)
     {
         _feedRepository = feedRepository;
         _mapRepository = mapRepository;
@@ -62,6 +66,8 @@ public sealed class PostCreationService
         _eventBus = eventBus;
         _unitOfWork = unitOfWork;
         _cacheInvalidation = cacheInvalidation;
+        _accessEvaluator = accessEvaluator;
+        _moderationService = moderationService;
     }
 
     public async Task<Result<CommunityPost>> CreatePostAsync(
@@ -78,6 +84,27 @@ public sealed class PostCreationService
         IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
+        // Verificar aceite de políticas obrigatórias
+        if (_accessEvaluator is not null)
+        {
+            var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
+            if (policiesResult.IsFailure || !policiesResult.Value)
+            {
+                var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
+                var errorMessage = "You must accept the required terms of service and privacy policies before creating posts.";
+                if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
+                {
+                    var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
+                    var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
+                    if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
+                    {
+                        errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating posts.";
+                    }
+                }
+                return Result<CommunityPost>.Failure(errorMessage);
+            }
+        }
+
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
         {
             return Result<CommunityPost>.Failure("Title and content are required.");
@@ -216,6 +243,29 @@ public sealed class PostCreationService
                         return Result<CommunityPost>.Failure($"Audio MIME type '{audio.MimeType}' is not allowed for posts.");
                     }
                 }
+            }
+        }
+
+        // Verificar regras de moderação comunitária
+        if (_moderationService is not null)
+        {
+            // Criar post temporário para validação
+            var tempPost = new CommunityPost(
+                Guid.NewGuid(),
+                territoryId,
+                userId,
+                title,
+                content,
+                type,
+                visibility,
+                status,
+                mapEntityId,
+                DateTime.UtcNow);
+
+            var moderationResult = await _moderationService.ApplyRulesAsync(tempPost, cancellationToken);
+            if (moderationResult.IsFailure)
+            {
+                return Result<CommunityPost>.Failure(moderationResult.Error ?? "Post violates territory moderation rules.");
             }
         }
 

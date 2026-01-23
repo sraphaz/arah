@@ -17,14 +17,17 @@ public sealed class TerritoriesController : ControllerBase
 {
     private readonly TerritoryService _territoryService;
     private readonly ActiveTerritoryService _activeTerritoryService;
+    private readonly TerritoryCharacterizationService? _characterizationService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     public TerritoriesController(
         TerritoryService territoryService,
         ActiveTerritoryService activeTerritoryService,
-        CurrentUserAccessor currentUserAccessor)
+        CurrentUserAccessor currentUserAccessor,
+        TerritoryCharacterizationService? characterizationService = null)
     {
         _territoryService = territoryService;
         _activeTerritoryService = activeTerritoryService;
+        _characterizationService = characterizationService;
         _currentUserAccessor = currentUserAccessor;
     }
 
@@ -42,7 +45,17 @@ public sealed class TerritoriesController : ControllerBase
     public async Task<ActionResult<IEnumerable<TerritoryResponse>>> List(CancellationToken cancellationToken)
     {
         var territories = await _territoryService.ListAvailableAsync(cancellationToken);
-        var response = territories.Select(ToResponse);
+        var response = new List<TerritoryResponse>();
+        foreach (var territory in territories)
+        {
+            var tags = Array.Empty<string>();
+            if (_characterizationService is not null)
+            {
+                var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+                tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+            }
+            response.Add(ToResponse(territory, tags));
+        }
         return Ok(response);
     }
 
@@ -61,8 +74,19 @@ public sealed class TerritoriesController : ControllerBase
         const int maxInt32 = int.MaxValue;
         var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
         var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
+        var items = new List<TerritoryResponse>();
+        foreach (var territory in pagedResult.Items)
+        {
+            var tags = Array.Empty<string>();
+            if (_characterizationService is not null)
+            {
+                var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+                tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+            }
+            items.Add(ToResponse(territory, tags));
+        }
         var response = new PagedResponse<TerritoryResponse>(
-            pagedResult.Items.Select(ToResponse).ToList(),
+            items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
             safeTotalCount,
@@ -87,7 +111,19 @@ public sealed class TerritoriesController : ControllerBase
         }
 
         var territory = await _territoryService.GetByIdAsync(id, cancellationToken);
-        return territory is null ? NotFound() : Ok(ToResponse(territory));
+        if (territory is null)
+        {
+            return NotFound();
+        }
+
+        var tags = Array.Empty<string>();
+        if (_characterizationService is not null)
+        {
+            var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+            tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+        }
+
+        return Ok(ToResponse(territory, tags));
     }
 
     /// <summary>
@@ -115,7 +151,13 @@ public sealed class TerritoriesController : ControllerBase
             return BadRequest(new { error = result.Error ?? "Invalid territory data." });
         }
 
-        var response = ToResponse(result.Territory);
+        var tags = Array.Empty<string>();
+        if (_characterizationService is not null)
+        {
+            var characterization = await _characterizationService.GetCharacterizationAsync(result.Territory.Id, cancellationToken);
+            tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+        }
+        var response = ToResponse(result.Territory, tags);
         return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
 
@@ -131,7 +173,17 @@ public sealed class TerritoriesController : ControllerBase
         CancellationToken cancellationToken)
     {
         var territories = await _territoryService.SearchAsync(q, city, state, cancellationToken);
-        var response = territories.Select(ToResponse);
+        var response = new List<TerritoryResponse>();
+        foreach (var territory in territories)
+        {
+            var tags = Array.Empty<string>();
+            if (_characterizationService is not null)
+            {
+                var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+                tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+            }
+            response.Add(ToResponse(territory, tags));
+        }
         return Ok(response);
     }
 
@@ -153,8 +205,19 @@ public sealed class TerritoriesController : ControllerBase
         const int maxInt32 = int.MaxValue;
         var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
         var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
+        var items = new List<TerritoryResponse>();
+        foreach (var territory in pagedResult.Items)
+        {
+            var tags = Array.Empty<string>();
+            if (_characterizationService is not null)
+            {
+                var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+                tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+            }
+            items.Add(ToResponse(territory, tags));
+        }
         var response = new PagedResponse<TerritoryResponse>(
-            pagedResult.Items.Select(ToResponse).ToList(),
+            items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
             safeTotalCount,
@@ -199,7 +262,17 @@ public sealed class TerritoriesController : ControllerBase
             resolvedRadius,
             resolvedLimit,
             cancellationToken);
-        var response = territories.Select(ToResponse);
+        var response = new List<TerritoryResponse>();
+        foreach (var territory in territories)
+        {
+            var tags = Array.Empty<string>();
+            if (_characterizationService is not null)
+            {
+                var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+                tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+            }
+            response.Add(ToResponse(territory, tags));
+        }
         return Ok(response);
     }
 
@@ -241,8 +314,19 @@ public sealed class TerritoriesController : ControllerBase
         const int maxInt32 = int.MaxValue;
         var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
         var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
+        var items = new List<TerritoryResponse>();
+        foreach (var territory in pagedResult.Items)
+        {
+            var tags = Array.Empty<string>();
+            if (_characterizationService is not null)
+            {
+                var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+                tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+            }
+            items.Add(ToResponse(territory, tags));
+        }
         var response = new PagedResponse<TerritoryResponse>(
-            pagedResult.Items.Select(ToResponse).ToList(),
+            items,
             pagedResult.PageNumber,
             pagedResult.PageSize,
             safeTotalCount,
@@ -303,7 +387,29 @@ public sealed class TerritoriesController : ControllerBase
         return Ok(new TerritorySelectionResponse(sessionId, territoryId.Value));
     }
 
-    private static TerritoryResponse ToResponse(Territory territory)
+    private async Task<TerritoryResponse> ToResponseAsync(Territory territory, CancellationToken cancellationToken)
+    {
+        var tags = Array.Empty<string>();
+        if (_characterizationService is not null)
+        {
+            var characterization = await _characterizationService.GetCharacterizationAsync(territory.Id, cancellationToken);
+            tags = characterization?.Tags.ToArray() ?? Array.Empty<string>();
+        }
+
+        return new TerritoryResponse(
+            territory.Id,
+            territory.Name,
+            territory.Description,
+            territory.Status.ToString().ToUpperInvariant(),
+            territory.City,
+            territory.State,
+            territory.Latitude,
+            territory.Longitude,
+            territory.CreatedAtUtc,
+            tags);
+    }
+
+    private static TerritoryResponse ToResponse(Territory territory, IReadOnlyList<string> tags)
     {
         return new TerritoryResponse(
             territory.Id,
@@ -314,7 +420,8 @@ public sealed class TerritoriesController : ControllerBase
             territory.State,
             territory.Latitude,
             territory.Longitude,
-            territory.CreatedAtUtc);
+            territory.CreatedAtUtc,
+            tags);
     }
 
     private bool TryGetSessionId(out string sessionId)

@@ -1,0 +1,20 @@
+<h2>Lembrete: {{EventName}}</h2>
+
+<p>Olá, {{UserName}}!</p>
+
+<p>Este é um lembrete de que você está interessado(a) no evento <strong>{{EventName}}</strong>.</p>
+
+<p><strong>Data e Hora:</strong> {{EventDate}}</p>
+
+{{#if Location}}
+<p><strong>Localização:</strong> {{Location}}</p>
+{{/if}}
+
+{{#if EventLink}}
+<p>Para mais informações ou para confirmar sua participação, acesse:</p>
+<p><a href="{{EventLink}}" class="button">Ver Evento</a></p>
+{{/if}}
+
+<p>Esperamos vê-lo(a) lá!</p>
+
+<p>Equipe Araponga</p>

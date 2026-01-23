@@ -45,6 +45,24 @@ public sealed class StoreService
         string? preferredContactMethod,
         CancellationToken cancellationToken)
     {
+        // Verificar aceite de políticas obrigatórias
+        var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
+        if (policiesResult.IsFailure || !policiesResult.Value)
+        {
+            var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
+            var errorMessage = "You must accept the required terms of service and privacy policies before creating stores.";
+            if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
+            {
+                var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
+                var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
+                if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
+                {
+                    errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating stores.";
+                }
+            }
+            return Result<Store>.Failure(errorMessage);
+        }
+
         // Verificar regras de marketplace
         if (!await _accessRules.CanCreateStoreOrItemInMarketplaceAsync(userId, territoryId, cancellationToken))
         {

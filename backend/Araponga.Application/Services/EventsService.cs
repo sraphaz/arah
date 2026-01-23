@@ -78,6 +78,24 @@ public sealed class EventsService
             return Result<EventSummary>.Failure("User ID is required.");
         }
 
+        // Verificar aceite de políticas obrigatórias
+        var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
+        if (policiesResult.IsFailure || !policiesResult.Value)
+        {
+            var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
+            var errorMessage = "You must accept the required terms of service and privacy policies before creating events.";
+            if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
+            {
+                var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
+                var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
+                if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
+                {
+                    errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating events.";
+                }
+            }
+            return Result<EventSummary>.Failure(errorMessage);
+        }
+
         if (string.IsNullOrWhiteSpace(title))
         {
             return Result<EventSummary>.Failure("Title is required.");
@@ -363,7 +381,7 @@ public sealed class EventsService
             if (allMediaIds.Count > 0)
             {
                 var now = DateTime.UtcNow;
-                
+
                 // Imagem de capa (DisplayOrder = 0)
                 if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
                 {
@@ -671,7 +689,7 @@ public sealed class EventsService
         }
 
         var participations = await _participationRepository.ListByEventIdAsync(eventId, status, cancellationToken);
-        
+
         var participants = new List<EventParticipant>();
         foreach (var participation in participations)
         {
@@ -699,7 +717,7 @@ public sealed class EventsService
 
         // Obter territoryId do evento
         var territoryId = territoryEvent.TerritoryId;
-        
+
         // Verificar se tem capacidade de Curator no território
         return await _accessEvaluator.HasCapabilityAsync(
             actorUserId,

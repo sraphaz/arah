@@ -506,6 +506,18 @@
     return (I18N[lang] && I18N[lang][key]) || I18N.pt[key] || key;
   }
 
+  function sanitizeHtml(html) {
+    // Create a temporary div to parse and sanitize HTML
+    var temp = document.createElement('div');
+    temp.textContent = html; // Use textContent first to escape all HTML
+    var escaped = temp.innerHTML;
+    
+    // Only allow specific safe HTML tags if needed
+    // For now, treat all HTML as plain text to prevent XSS
+    // If HTML is truly needed, use a proper sanitization library like DOMPurify
+    return escaped;
+  }
+
   function applyI18n(lang) {
     setDocumentLang(lang);
 
@@ -518,7 +530,10 @@
     var htmlNodes = document.querySelectorAll('[data-i18n-html]');
     htmlNodes.forEach(function (el) {
       var key = el.getAttribute('data-i18n-html');
-      el.innerHTML = t(lang, key);
+      var value = t(lang, key);
+      // Sanitize HTML to prevent XSS attacks
+      var sanitized = sanitizeHtml(value);
+      el.innerHTML = sanitized;
     });
 
     // Atualiza botões "Copiar" já renderizados

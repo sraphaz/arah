@@ -3,7 +3,9 @@ using System.Text;
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
+using Araponga.Domain.Email;
 using Araponga.Domain.Users;
+using Microsoft.Extensions.DependencyInjection;
 using OtpNet;
 
 namespace Araponga.Application.Services;
@@ -13,15 +15,21 @@ public sealed class AuthService
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IServiceProvider? _serviceProvider;
 
     // Cache temporário para challenges 2FA (em produção, usar Redis ou similar)
     private static readonly Dictionary<string, (Guid userId, DateTime expiresAt)> _twoFactorChallenges = new();
 
-    public AuthService(IUserRepository userRepository, ITokenService tokenService, IUnitOfWork unitOfWork)
+    public AuthService(
+        IUserRepository userRepository,
+        ITokenService tokenService,
+        IUnitOfWork unitOfWork,
+        IServiceProvider? serviceProvider = null)
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
         _unitOfWork = unitOfWork;
+        _serviceProvider = serviceProvider;
     }
 
     /// <summary>
@@ -80,6 +88,46 @@ public sealed class AuthService
 
         await _userRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Enfileirar email de boas-vindas (opcional - não bloqueia o login)
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var emailQueueService = _serviceProvider?.GetService<EmailQueueService>();
+                var baseUrl = "https://araponga.com"; // Pode ser configurado via ambiente
+
+                if (emailQueueService != null && !string.IsNullOrWhiteSpace(user.Email))
+                {
+                    var templateData = new WelcomeEmailTemplateData
+                    {
+                        UserName = user.DisplayName,
+                        BaseUrl = baseUrl,
+                        ActivationLink = null // Opcional - pode ser implementado depois
+                    };
+
+                    var emailMessage = new EmailMessage
+                    {
+                        To = user.Email,
+                        Subject = "Bem-vindo ao Araponga!",
+                        Body = string.Empty,
+                        TemplateName = "welcome",
+                        TemplateData = templateData,
+                        IsHtml = true
+                    };
+
+                    await emailQueueService.EnqueueEmailAsync(
+                        emailMessage,
+                        EmailQueuePriority.Normal,
+                        null,
+                        CancellationToken.None);
+                }
+            }
+            catch
+            {
+                // Silenciar erros de email - não deve bloquear o login
+            }
+        }, cancellationToken);
 
         return Result<(User user, string token)>.Success((user, _tokenService.IssueToken(user.Id)));
     }

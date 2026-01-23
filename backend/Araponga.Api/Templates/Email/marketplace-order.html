@@ -1,0 +1,26 @@
+<h2>Pedido Confirmado</h2>
+
+<p>Olá, {{UserName}}!</p>
+
+<p>Seu pedido foi confirmado com sucesso!</p>
+
+<p><strong>Número do Pedido:</strong> {{OrderId}}</p>
+<p><strong>Vendedor:</strong> {{SellerName}}</p>
+
+<h3>Itens do Pedido:</h3>
+<ul>
+{{#each Items}}
+    <li>{{Name}} - Quantidade: {{Quantity}} - Preço Unitário: {{UnitPrice}} - Total: {{TotalPrice}}</li>
+{{/each}}
+</ul>
+
+<p><strong>Total do Pedido:</strong> {{Total}}</p>
+
+{{#if OrderLink}}
+<p>Para acompanhar seu pedido, acesse:</p>
+<p><a href="{{OrderLink}}" class="button">Ver Pedido</a></p>
+{{/if}}
+
+<p>Obrigado por comprar no Araponga!</p>
+
+<p>Equipe Araponga</p>

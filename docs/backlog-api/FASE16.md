@@ -605,6 +605,7 @@ Implementar sistema de **entregas territoriais** que permite:
 - ✅ Testes de integração passando
 - ✅ Performance adequada (otimização < 5s)
 - ✅ Segurança validada (permissões)
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (entregas, marketplace, rotas) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Documentação
 - ✅ Documentação técnica completa

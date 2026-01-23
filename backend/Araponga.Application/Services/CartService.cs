@@ -1,7 +1,9 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
+using Araponga.Domain.Email;
 using Araponga.Domain.Marketplace;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Araponga.Application.Services;
 
@@ -17,6 +19,7 @@ public sealed class CartService
     private readonly IPlatformFeeConfigRepository _platformFeeConfigRepository;
     private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IServiceProvider? _serviceProvider;
 
     public CartService(
         ICartRepository cartRepository,
@@ -28,7 +31,8 @@ public sealed class CartService
         IInquiryRepository inquiryRepository,
         IPlatformFeeConfigRepository platformFeeConfigRepository,
         TerritoryFeatureFlagGuard featureGuard,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IServiceProvider? serviceProvider = null)
     {
         _cartRepository = cartRepository;
         _cartItemRepository = cartItemRepository;
@@ -40,6 +44,7 @@ public sealed class CartService
         _platformFeeConfigRepository = platformFeeConfigRepository;
         _featureGuard = featureGuard;
         _unitOfWork = unitOfWork;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task<Result<CartDetails>> GetCartAsync(Guid territoryId, Guid userId, CancellationToken cancellationToken)
@@ -364,6 +369,70 @@ public sealed class CartService
         cart.Touch(DateTime.UtcNow);
         await _cartRepository.UpdateAsync(cart, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        // Enfileirar emails de confirmação de pedido (opcional - não bloqueia checkout)
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var emailQueueService = _serviceProvider?.GetService<EmailQueueService>();
+                var userRepository = _serviceProvider?.GetService<IUserRepository>();
+                var storeRepository = _serviceProvider?.GetService<IStoreRepository>();
+                var baseUrl = "https://araponga.com";
+
+                if (emailQueueService != null && userRepository != null && storeRepository != null)
+                {
+                    var user = await userRepository.GetByIdAsync(userId, CancellationToken.None);
+                    if (user != null && !string.IsNullOrWhiteSpace(user.Email))
+                    {
+                        foreach (var bundle in checkoutBundles)
+                        {
+                            var store = await storeRepository.GetByIdAsync(bundle.Checkout.StoreId, CancellationToken.None);
+                            if (store != null)
+                            {
+                                var items = bundle.Items.Select(i => new OrderItem
+                                {
+                                    Name = i.TitleSnapshot,
+                                    Quantity = i.Quantity,
+                                    UnitPrice = i.UnitPrice ?? 0
+                                }).ToList();
+
+                                var templateData = new MarketplaceOrderEmailTemplateData
+                                {
+                                    UserName = user.DisplayName,
+                                    BaseUrl = baseUrl,
+                                    OrderId = bundle.Checkout.Id,
+                                    Items = items,
+                                    Total = bundle.Checkout.TotalAmount ?? 0,
+                                    SellerName = store.DisplayName,
+                                    OrderLink = $"{baseUrl}/orders/{bundle.Checkout.Id}"
+                                };
+
+                                var emailMessage = new EmailMessage
+                                {
+                                    To = user.Email,
+                                    Subject = "Pedido Confirmado - Araponga",
+                                    Body = string.Empty,
+                                    TemplateName = "marketplace-order",
+                                    TemplateData = templateData,
+                                    IsHtml = true
+                                };
+
+                                await emailQueueService.EnqueueEmailAsync(
+                                    emailMessage,
+                                    EmailQueuePriority.High,
+                                    null,
+                                    CancellationToken.None);
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Silenciar erros de email - não deve bloquear o checkout
+            }
+        }, cancellationToken);
 
         var result = new CheckoutResult(checkoutBundles, inquiries, summaries);
         return Result<CheckoutResult>.Success(result);

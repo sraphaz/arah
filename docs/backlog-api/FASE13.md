@@ -438,6 +438,7 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 - ✅ Testes de integração passando
 - ✅ Retry policy funcionando
 - ✅ Rate limiting funcionando
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (queue, outbox) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Documentação
 - ✅ Documentação técnica completa

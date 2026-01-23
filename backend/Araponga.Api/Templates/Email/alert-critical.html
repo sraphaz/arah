@@ -1,0 +1,28 @@
+<h2 style="color: #d32f2f;">Alerta Crítico: {{AlertTitle}}</h2>
+
+<p>Olá, {{UserName}}!</p>
+
+<p>Este é um alerta crítico do seu território.</p>
+
+<p><strong>Tipo de Alerta:</strong> {{AlertType}}</p>
+<p><strong>Título:</strong> {{AlertTitle}}</p>
+
+<p>{{AlertDescription}}</p>
+
+{{#if RecommendedActions}}
+<h3>Ações Recomendadas:</h3>
+<ul>
+{{#each RecommendedActions}}
+    <li>{{this}}</li>
+{{/each}}
+</ul>
+{{/if}}
+
+{{#if MoreInfoLink}}
+<p>Para mais informações, acesse:</p>
+<p><a href="{{MoreInfoLink}}" class="button">Mais Informações</a></p>
+{{/if}}
+
+<p><strong>Por favor, compartilhe esta informação com sua comunidade.</strong></p>
+
+<p>Equipe Araponga</p>

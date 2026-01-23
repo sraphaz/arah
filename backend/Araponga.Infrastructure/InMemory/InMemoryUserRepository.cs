@@ -73,4 +73,18 @@ public sealed class InMemoryUserRepository : IUserRepository
 
         return Task.FromResult<IReadOnlyList<User>>(users);
     }
+
+    public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return Task.FromResult<User?>(null);
+        }
+
+        var user = _dataStore.Users.FirstOrDefault(u =>
+            !string.IsNullOrWhiteSpace(u.Email) &&
+            string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase));
+
+        return Task.FromResult(user);
+    }
 }

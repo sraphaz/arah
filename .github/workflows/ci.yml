@@ -30,4 +30,38 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
       - name: Test
-        run: dotnet test backend/Araponga.Tests/Araponga.Tests.csproj --no-build --configuration Release --verbosity normal
+        run: |
+          dotnet test backend/Araponga.Tests/Araponga.Tests.csproj \
+            --no-build \
+            --configuration Release \
+            --verbosity normal
+      - name: Test with Coverage
+        continue-on-error: true
+        run: |
+          dotnet test backend/Araponga.Tests/Araponga.Tests.csproj \
+            --no-build \
+            --configuration Release \
+            --verbosity normal \
+            --collect:"XPlat Code Coverage" \
+            --results-directory:"${{ runner.temp }}/test-results" \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+      - name: Upload Coverage Reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ${{ runner.temp }}/test-results/**/coverage.cobertura.xml
+          fail_ci_if_error: false
+          flags: unittests
+      - name: Security Scan (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'

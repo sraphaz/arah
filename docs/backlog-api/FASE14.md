@@ -4,7 +4,7 @@
 **Prioridade**: 🔴 CRÍTICA (Essencial para soberania territorial)  
 **Depende de**: Nenhuma (pode ser feito em paralelo)  
 **Estimativa Total**: 120 horas  
-**Status**: ⏳ Pendente
+**Status**: ✅ Implementado
 
 ---
 
@@ -26,13 +26,14 @@ Implementar sistema de **governança comunitária** que permite:
 
 ## 📋 Contexto e Requisitos
 
-### Estado Atual
+### Estado Atual (pós-implementação)
 - ✅ Feed cronológico territorial implementado
 - ✅ Sistema de moderação básico (reports, bloqueios)
 - ✅ Feature flags por território
-- ❌ Usuários não podem personalizar o que veem
-- ❌ Não existe sistema de votação
-- ❌ Moderação não é dinâmica/comunitária
+- ✅ Interesses do usuário e feed filtrado (opcional, `filterByInterests`)
+- ✅ Sistema de votação comunitária (5 tipos, visibilidade)
+- ✅ Moderação dinâmica (regras aplicadas em posts e items)
+- ✅ Caracterização do território (tags) e histórico no perfil
 
 ### Requisitos Funcionais
 
@@ -82,18 +83,18 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 15.1 Modelo de Domínio - Interesses
 **Estimativa**: 8 horas (1 dia)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar modelo `UserInterest`:
-  - [ ] `Id`, `UserId`, `InterestTag` (string)
-  - [ ] `CreatedAtUtc`
-  - [ ] Validação: tag não vazia, máx. 50 caracteres
-- [ ] Criar enum ou lista de interesses predefinidos (opcional):
-  - [ ] "Meio Ambiente", "Eventos", "Marketplace", "Saúde", "Educação", "Cultura", "Esportes", "Arte", "Música", "Tecnologia"
-- [ ] Criar `IUserInterestRepository`
-- [ ] Implementar repositórios (Postgres, InMemory)
-- [ ] Criar migration
+- [x] Criar modelo `UserInterest`:
+  - [x] `Id`, `UserId`, `InterestTag` (string)
+  - [x] `CreatedAtUtc`
+  - [x] Validação: tag não vazia, máx. 50 caracteres
+- [x] Criar enum ou lista de interesses predefinidos (opcional):
+  - [x] "Meio Ambiente", "Eventos", "Marketplace", "Saúde", "Educação", "Cultura", "Esportes", "Arte", "Música", "Tecnologia"
+- [x] Criar `IUserInterestRepository`
+- [x] Implementar repositórios (Postgres, InMemory)
+- [x] Criar migration
 
 **Arquivos a Criar**:
 - `backend/Araponga.Domain/Users/UserInterest.cs`
@@ -111,19 +112,19 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 15.2 Serviço de Interesses
 **Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar `UserInterestService`:
-  - [ ] `AddInterestAsync(Guid userId, string interestTag)`
-  - [ ] `RemoveInterestAsync(Guid userId, string interestTag)`
-  - [ ] `ListInterestsAsync(Guid userId)`
-  - [ ] `ListUsersByInterestAsync(string interestTag, Guid territoryId)`
-- [ ] Validações:
-  - [ ] Tag não vazia, máx. 50 caracteres
-  - [ ] Máx. 10 interesses por usuário
-  - [ ] Normalização de tags (trim, lowercase)
-- [ ] Testes unitários
+- [x] Criar `UserInterestService`:
+  - [x] `AddInterestAsync(Guid userId, string interestTag)`
+  - [x] `RemoveInterestAsync(Guid userId, string interestTag)`
+  - [x] `ListInterestsAsync(Guid userId)`
+  - [x] `ListUsersByInterestAsync(string interestTag, Guid territoryId)`
+- [x] Validações:
+  - [x] Tag não vazia, máx. 50 caracteres
+  - [x] Máx. 10 interesses por usuário
+  - [x] Normalização de tags (trim, lowercase)
+- [x] Testes unitários
 
 **Arquivos a Criar**:
 - `backend/Araponga.Application/Services/UserInterestService.cs`
@@ -138,25 +139,25 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 15.3 Controller e Integração com Perfil
 **Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar `UserInterestsController`:
-  - [ ] `GET /api/v1/users/me/interests` (listar interesses)
-  - [ ] `POST /api/v1/users/me/interests` (adicionar interesse)
-  - [ ] `DELETE /api/v1/users/me/interests/{tag}` (remover interesse)
-- [ ] Atualizar `UserProfileResponse`:
-  - [ ] Adicionar campo `Interests` (IReadOnlyList<string>)
-- [ ] Atualizar `UserProfileService`:
-  - [ ] Incluir interesses ao buscar perfil
-- [ ] Validação (FluentValidation)
-- [ ] Testes de integração
+- [x] Criar `UserInterestsController`:
+  - [x] `GET /api/v1/users/me/interests` (listar interesses)
+  - [x] `POST /api/v1/users/me/interests` (adicionar interesse)
+  - [x] `DELETE /api/v1/users/me/interests/{tag}` (remover interesse)
+- [x] Atualizar `UserProfileResponse`:
+  - [x] Adicionar campo `Interests` (IReadOnlyList<string>)
+- [x] Atualizar `UserProfileService`:
+  - [x] Incluir interesses ao buscar perfil
+- [x] Validação (FluentValidation)
+- [x] Testes de integração (em `GovernanceIntegrationTests`)
 
 **Arquivos a Criar**:
 - `backend/Araponga.Api/Controllers/UserInterestsController.cs`
 - `backend/Araponga.Api/Contracts/Users/AddInterestRequest.cs`
 - `backend/Araponga.Api/Validators/AddInterestRequestValidator.cs`
-- `backend/Araponga.Tests/Integration/UserInterestsIntegrationTests.cs`
+- `backend/Araponga.Tests/Api/GovernanceIntegrationTests.cs` (cobre interesses)
 
 **Arquivos a Modificar**:
 - `backend/Araponga.Api/Contracts/Users/UserProfileResponse.cs`
@@ -173,34 +174,34 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 16.1 Modelo de Domínio - Votação
 **Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar enum `VotingType`:
-  - [ ] `ThemePrioritization` (priorização de temas)
-  - [ ] `ModerationRule` (regra de moderação)
-  - [ ] `TerritoryCharacterization` (caracterização do território)
-  - [ ] `FeatureFlag` (feature flag territorial)
-  - [ ] `CommunityPolicy` (política comunitária)
-- [ ] Criar enum `VotingStatus`:
-  - [ ] `Draft`, `Open`, `Closed`, `Approved`, `Rejected`
-- [ ] Criar enum `VotingVisibility`:
-  - [ ] `AllMembers`, `ResidentsOnly`, `CuratorsOnly`
-- [ ] Criar modelo `Voting`:
-  - [ ] `Id`, `TerritoryId`, `CreatedByUserId`
-  - [ ] `Type` (VotingType)
-  - [ ] `Title`, `Description`
-  - [ ] `Options` (lista de opções de voto)
-  - [ ] `Visibility` (VotingVisibility)
-  - [ ] `Status` (VotingStatus)
-  - [ ] `StartsAtUtc`, `EndsAtUtc`
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `Vote`:
-  - [ ] `Id`, `VotingId`, `UserId`
-  - [ ] `SelectedOption` (string)
-  - [ ] `CreatedAtUtc`
-- [ ] Criar repositórios
-- [ ] Criar migrations
+- [x] Criar enum `VotingType`:
+  - [x] `ThemePrioritization` (priorização de temas)
+  - [x] `ModerationRule` (regra de moderação)
+  - [x] `TerritoryCharacterization` (caracterização do território)
+  - [x] `FeatureFlag` (feature flag territorial)
+  - [x] `CommunityPolicy` (política comunitária)
+- [x] Criar enum `VotingStatus`:
+  - [x] `Draft`, `Open`, `Closed`, `Approved`, `Rejected`
+- [x] Criar enum `VotingVisibility`:
+  - [x] `AllMembers`, `ResidentsOnly`, `CuratorsOnly`
+- [x] Criar modelo `Voting`:
+  - [x] `Id`, `TerritoryId`, `CreatedByUserId`
+  - [x] `Type` (VotingType)
+  - [x] `Title`, `Description`
+  - [x] `Options` (lista de opções de voto)
+  - [x] `Visibility` (VotingVisibility)
+  - [x] `Status` (VotingStatus)
+  - [x] `StartsAtUtc`, `EndsAtUtc`
+  - [x] `CreatedAtUtc`, `UpdatedAtUtc`
+- [x] Criar modelo `Vote`:
+  - [x] `Id`, `VotingId`, `UserId`
+  - [x] `SelectedOption` (string)
+  - [x] `CreatedAtUtc`
+- [x] Criar repositórios
+- [x] Criar migrations
 
 **Arquivos a Criar**:
 - `backend/Araponga.Domain/Governance/Voting.cs`
@@ -223,29 +224,29 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 16.2 Serviço de Votação
 **Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar `VotingService`:
-  - [ ] `CreateVotingAsync(Guid territoryId, Guid userId, VotingType type, string title, string description, IReadOnlyList<string> options, VotingVisibility visibility, DateTime? startsAt, DateTime? endsAt)`
-  - [ ] `ListVotingsAsync(Guid territoryId, VotingStatus? status, Guid? userId)`
-  - [ ] `GetVotingAsync(Guid votingId, Guid? userId)`
-  - [ ] `VoteAsync(Guid votingId, Guid userId, string selectedOption)`
-  - [ ] `CloseVotingAsync(Guid votingId, Guid userId)` (apenas criador ou curador)
-  - [ ] `GetResultsAsync(Guid votingId)` (contagem de votos)
-- [ ] Validações:
-  - [ ] Apenas residents/curadores podem criar votações (depende do tipo)
-  - [ ] Usuário só pode votar uma vez
-  - [ ] Votação deve estar aberta
-  - [ ] Usuário deve ter permissão (visibility)
-  - [ ] Opção selecionada deve existir
-- [ ] Aplicação de resultados:
-  - [ ] Se `ThemePrioritization`: atualizar ordem de temas no feed (opcional)
-  - [ ] Se `ModerationRule`: criar/atualizar regra de moderação
-  - [ ] Se `TerritoryCharacterization`: adicionar tags ao território
-  - [ ] Se `FeatureFlag`: habilitar/desabilitar feature flag
-  - [ ] Se `CommunityPolicy`: criar política comunitária
-- [ ] Testes unitários
+- [x] Criar `VotingService`:
+  - [x] `CreateVotingAsync(...)` 
+  - [x] `ListVotingsAsync(...)`
+  - [x] `GetVotingAsync(...)`
+  - [x] `VoteAsync(...)`
+  - [x] `CloseVotingAsync(...)` (apenas criador ou curador)
+  - [x] `GetResultsAsync(...)` (contagem de votos)
+- [x] Validações:
+  - [x] Apenas residents/curadores podem criar votações (depende do tipo)
+  - [x] Usuário só pode votar uma vez
+  - [x] Votação deve estar aberta
+  - [x] Usuário deve ter permissão (visibility)
+  - [x] Opção selecionada deve existir
+- [x] Aplicação de resultados:
+  - [x] Se `ThemePrioritization`: atualizar ordem de temas no feed (opcional)
+  - [x] Se `ModerationRule`: criar/atualizar regra de moderação
+  - [x] Se `TerritoryCharacterization`: adicionar tags ao território
+  - [x] Se `FeatureFlag`: habilitar/desabilitar feature flag
+  - [x] Se `CommunityPolicy`: criar política comunitária
+- [x] Testes unitários
 
 **Arquivos a Criar**:
 - `backend/Araponga.Application/Services/VotingService.cs`
@@ -261,19 +262,19 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 16.3 Controller de Votação
 **Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar `VotingsController`:
-  - [ ] `POST /api/v1/territories/{territoryId}/votings` (criar votação)
-  - [ ] `GET /api/v1/territories/{territoryId}/votings` (listar votações)
-  - [ ] `GET /api/v1/votings/{id}` (obter votação)
-  - [ ] `POST /api/v1/votings/{id}/vote` (votar)
-  - [ ] `POST /api/v1/votings/{id}/close` (fechar votação)
-  - [ ] `GET /api/v1/votings/{id}/results` (resultados)
-- [ ] Criar requests/responses
-- [ ] Validação (FluentValidation)
-- [ ] Testes de integração
+- [x] Criar `VotingsController`:
+  - [x] `POST /api/v1/territories/{territoryId}/votings` (criar votação)
+  - [x] `GET /api/v1/territories/{territoryId}/votings` (listar votações)
+  - [x] `GET /api/v1/territories/{territoryId}/votings/{id}` (obter votação)
+  - [x] `POST /api/v1/territories/{territoryId}/votings/{id}/vote` (votar)
+  - [x] `POST /api/v1/territories/{territoryId}/votings/{id}/close` (fechar votação)
+  - [x] `GET /api/v1/territories/{territoryId}/votings/{id}/results` (resultados)
+- [x] Criar requests/responses (Governance contracts)
+- [x] Validação (FluentValidation)
+- [x] Testes de integração (em `GovernanceIntegrationTests`)
 
 **Arquivos a Criar**:
 - `backend/Araponga.Api/Controllers/VotingsController.cs`
@@ -282,7 +283,7 @@ Implementar sistema de **governança comunitária** que permite:
 - `backend/Araponga.Api/Contracts/Governance/VoteRequest.cs`
 - `backend/Araponga.Api/Contracts/Governance/VotingResultsResponse.cs`
 - `backend/Araponga.Api/Validators/CreateVotingRequestValidator.cs`
-- `backend/Araponga.Tests/Integration/VotingsIntegrationTests.cs`
+- `backend/Araponga.Tests/Api/GovernanceIntegrationTests.cs` (cobre votação)
 
 **Critérios de Sucesso**:
 - ✅ Endpoints funcionando
@@ -295,29 +296,29 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 17.1 Moderação Dinâmica Comunitária
 **Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar modelo `TerritoryModerationRule`:
-  - [ ] `Id`, `TerritoryId`, `CreatedByVotingId?` (nullable, se criado por votação)
-  - [ ] `RuleType` (ContentType, ProhibitedWords, Behavior, MarketplacePolicy, EventPolicy)
-  - [ ] `Rule` (JSON com configuração da regra)
-  - [ ] `IsActive` (bool)
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar `ITerritoryModerationRuleRepository`
-- [ ] Implementar repositórios
-- [ ] Criar `TerritoryModerationService`:
-  - [ ] `CreateRuleAsync(Guid territoryId, Guid userId, RuleType type, object rule)`
-  - [ ] `ListRulesAsync(Guid territoryId, bool? isActive)`
-  - [ ] `ApplyRulesAsync(Post post)` (verificar se post viola regras)
-  - [ ] `ApplyRulesAsync(StoreItem item)` (verificar se item viola regras)
-- [ ] Integração com `PostCreationService`:
-  - [ ] Verificar regras antes de criar post
-  - [ ] Retornar erro se violar regra
-- [ ] Integração com `StoreItemService`:
-  - [ ] Verificar regras antes de criar item
-- [ ] Criar migration
-- [ ] Testes unitários
+- [x] Criar modelo `TerritoryModerationRule`:
+  - [x] `Id`, `TerritoryId`, `CreatedByVotingId?` (nullable, se criado por votação)
+  - [x] `RuleType` (ContentType, ProhibitedWords, Behavior, MarketplacePolicy, EventPolicy)
+  - [x] `Rule` (JSON com configuração da regra)
+  - [x] `IsActive` (bool)
+  - [x] `CreatedAtUtc`, `UpdatedAtUtc`
+- [x] Criar `ITerritoryModerationRuleRepository`
+- [x] Implementar repositórios
+- [x] Criar `TerritoryModerationService`:
+  - [x] `CreateRuleAsync(...)`
+  - [x] `ListRulesAsync(...)`
+  - [x] `ApplyRulesAsync(Post post)` (verificar se post viola regras)
+  - [x] `ApplyRulesAsync(StoreItem item)` (verificar se item viola regras)
+- [x] Integração com `PostCreationService`:
+  - [x] Verificar regras antes de criar post
+  - [x] Retornar erro se violar regra
+- [x] Integração com `StoreItemService`:
+  - [x] Verificar regras antes de criar item
+- [x] Criar migration
+- [x] Testes unitários
 
 **Arquivos a Criar**:
 - `backend/Araponga.Domain/Governance/TerritoryModerationRule.cs`
@@ -341,22 +342,21 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 17.2 Feed Filtrado por Interesses
 **Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar `InterestFilterService`:
-  - [ ] `FilterFeedByInterestsAsync(IReadOnlyList<CommunityPost> posts, IReadOnlyList<string> userInterests)`
-  - [ ] Lógica: posts que têm tags/categorias que correspondem aos interesses
-  - [ ] Opcional: manter feed completo disponível
-- [ ] Atualizar `FeedController`:
-  - [ ] Adicionar query parameter `filterByInterests` (bool, default: false)
-  - [ ] Se `true`: aplicar filtro de interesses
-  - [ ] Se `false`: retornar feed completo (cronológico)
-- [ ] Atualizar `FeedService`:
-  - [ ] Aceitar parâmetro `filterByInterests`
-  - [ ] Chamar `InterestFilterService` se necessário
-- [ ] **Importante**: Feed cronológico permanece como padrão, filtro é opcional
-- [ ] Testes de integração
+- [x] Criar `InterestFilterService`:
+  - [x] `FilterFeedByInterestsAsync(posts, userId, territoryId)` — filtra por correspondência **título/conteúdo** com interesses (tags explícitas em posts: ver Fase 14.5)
+  - [x] Opcional: manter feed completo disponível
+- [x] Atualizar `FeedController`:
+  - [x] Adicionar query parameter `filterByInterests` (bool, default: false)
+  - [x] Se `true`: aplicar filtro de interesses
+  - [x] Se `false`: retornar feed completo (cronológico)
+- [x] Atualizar `FeedService`:
+  - [x] Aceitar parâmetro `filterByInterests`
+  - [x] Chamar `InterestFilterService` se necessário
+- [x] **Importante**: Feed cronológico permanece como padrão, filtro é opcional
+- [ ] Teste de integração dedicado para `filterByInterests=true` → **Fase 14.5**
 
 **Arquivos a Criar**:
 - `backend/Araponga.Application/Services/InterestFilterService.cs`
@@ -365,7 +365,7 @@ Implementar sistema de **governança comunitária** que permite:
 **Arquivos a Modificar**:
 - `backend/Araponga.Api/Controllers/FeedController.cs`
 - `backend/Araponga.Application/Services/FeedService.cs`
-- `backend/Araponga.Tests/Integration/FeedFilterIntegrationTests.cs`
+- `backend/Araponga.Tests/Api/` — teste dedicado em **Fase 14.5**
 
 **Critérios de Sucesso**:
 - ✅ Filtro de interesses funcionando
@@ -377,24 +377,24 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 17.3 Caracterização do Território
 **Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Criar modelo `TerritoryCharacterization`:
-  - [ ] `TerritoryId`, `Tags` (IReadOnlyList<string>)
-  - [ ] `UpdatedAtUtc`
-  - [ ] Tags podem ser definidas por votações
-- [ ] Criar `ITerritoryCharacterizationRepository`
-- [ ] Implementar repositórios
-- [ ] Criar `TerritoryCharacterizationService`:
-  - [ ] `UpdateCharacterizationAsync(Guid territoryId, IReadOnlyList<string> tags)`
-  - [ ] `GetCharacterizationAsync(Guid territoryId)`
-- [ ] Integração com `VotingService`:
-  - [ ] Se votação `TerritoryCharacterization` aprovada: atualizar caracterização
-- [ ] Atualizar `TerritoryResponse`:
-  - [ ] Adicionar campo `Tags` (caracterização)
-- [ ] Criar migration
-- [ ] Testes
+- [x] Criar modelo `TerritoryCharacterization`:
+  - [x] `TerritoryId`, `Tags` (IReadOnlyList<string>)
+  - [x] `UpdatedAtUtc`
+  - [x] Tags podem ser definidas por votações
+- [x] Criar `ITerritoryCharacterizationRepository`
+- [x] Implementar repositórios
+- [x] Criar `TerritoryCharacterizationService`:
+  - [x] `UpdateCharacterizationAsync(...)`
+  - [x] `GetCharacterizationAsync(...)`
+- [x] Integração com `VotingService`:
+  - [x] Se votação `TerritoryCharacterization` aprovada: atualizar caracterização
+- [x] Atualizar `TerritoryResponse`:
+  - [x] Adicionar campo `Tags` (caracterização)
+- [x] Criar migration
+- [x] Testes
 
 **Arquivos a Criar**:
 - `backend/Araponga.Domain/Territories/TerritoryCharacterization.cs`
@@ -417,17 +417,13 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 17.4 Histórico de Participação no Perfil
 **Estimativa**: 8 horas (1 dia)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado
 
 **Tarefas**:
-- [ ] Atualizar `UserProfileResponse`:
-  - [ ] Adicionar campo `VotingHistory` (opcional, lista de votações participadas)
-  - [ ] Adicionar campo `ModerationContributions` (opcional, contagem de contribuições)
-- [ ] Atualizar `UserProfileService`:
-  - [ ] Buscar histórico de votações do usuário
-  - [ ] Buscar contribuições para moderação (propostas de regras, reports, etc.)
-- [ ] Endpoint opcional: `GET /api/v1/users/{id}/profile/governance` (histórico completo)
-- [ ] Testes
+- [x] `UserProfileGovernanceResponse` (separado): `VotingHistory`, `ModerationContributions`
+- [x] Endpoint `GET /api/v1/users/me/profile/governance` (histórico completo)
+- [x] Buscar histórico de votações e contribuições para moderação
+- [x] Testes
 
 **Arquivos a Modificar**:
 - `backend/Araponga.Api/Contracts/Users/UserProfileResponse.cs`
@@ -443,33 +439,27 @@ Implementar sistema de **governança comunitária** que permite:
 
 #### 17.5 Testes e Documentação
 **Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ Implementado (itens pendentes → **Fase 14.5**)
 
 **Tarefas**:
-- [ ] Testes de integração completos:
-  - [ ] Sistema de interesses
-  - [ ] Sistema de votação
-  - [ ] Moderação dinâmica
-  - [ ] Feed filtrado
-  - [ ] Caracterização do território
-- [ ] Testes de performance (votações com muitos votos)
-- [ ] Testes de segurança (permissões)
-- [ ] Documentação técnica:
-  - [ ] `docs/GOVERNANCE_SYSTEM.md`
-  - [ ] `docs/VOTING_SYSTEM.md`
-  - [ ] `docs/COMMUNITY_MODERATION.md`
-- [ ] Atualizar `docs/CHANGELOG.md`
-- [ ] Atualizar Swagger
+- [x] Testes de integração: `GovernanceIntegrationTests` (interesses, votação)
+- [ ] Testes de integração dedicados: feed filtrado, moderação, caracterização → **Fase 14.5**
+- [ ] Testes de performance (votações com muitos votos) → **Fase 14.5**
+- [ ] Testes de segurança (permissões) reforçados → **Fase 14.5**
+- [x] Documentação técnica:
+  - [x] `docs/GOVERNANCE_SYSTEM.md`
+  - [x] `docs/VOTING_SYSTEM.md`
+  - [x] `docs/COMMUNITY_MODERATION.md`
+- [x] Atualizar `docs/CHANGELOG.md`
+- [ ] Verificar/atualizar Swagger → **Fase 14.5**
 
-**Arquivos a Criar**:
-- `backend/Araponga.Tests/Integration/GovernanceCompleteIntegrationTests.cs`
-- `docs/GOVERNANCE_SYSTEM.md`
-- `docs/VOTING_SYSTEM.md`
-- `docs/COMMUNITY_MODERATION.md`
+**Arquivos**:
+- [x] `backend/Araponga.Tests/Api/GovernanceIntegrationTests.cs`
+- [x] `docs/GOVERNANCE_SYSTEM.md`, `VOTING_SYSTEM.md`, `COMMUNITY_MODERATION.md`
 
 **Critérios de Sucesso**:
 - ✅ Testes passando
-- ✅ Cobertura >85%
+- ✅ Cobertura >85% (validar)
 - ✅ Documentação completa
 
 ---
@@ -478,18 +468,20 @@ Implementar sistema de **governança comunitária** que permite:
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Modelo de Domínio - Interesses | 8h | ❌ Pendente | 🔴 Crítica |
-| Serviço de Interesses | 12h | ❌ Pendente | 🔴 Crítica |
-| Controller e Integração com Perfil | 12h | ❌ Pendente | 🔴 Crítica |
-| Modelo de Domínio - Votação | 12h | ❌ Pendente | 🔴 Crítica |
-| Serviço de Votação | 20h | ❌ Pendente | 🔴 Crítica |
-| Controller de Votação | 12h | ❌ Pendente | 🔴 Crítica |
-| Moderação Dinâmica Comunitária | 20h | ❌ Pendente | 🔴 Crítica |
-| Feed Filtrado por Interesses | 16h | ❌ Pendente | 🔴 Crítica |
-| Caracterização do Território | 12h | ❌ Pendente | 🟡 Importante |
-| Histórico de Participação no Perfil | 8h | ❌ Pendente | 🟡 Importante |
-| Testes e Documentação | 12h | ❌ Pendente | 🟡 Importante |
+| Modelo de Domínio - Interesses | 8h | ✅ Implementado | 🔴 Crítica |
+| Serviço de Interesses | 12h | ✅ Implementado | 🔴 Crítica |
+| Controller e Integração com Perfil | 12h | ✅ Implementado | 🔴 Crítica |
+| Modelo de Domínio - Votação | 12h | ✅ Implementado | 🔴 Crítica |
+| Serviço de Votação | 20h | ✅ Implementado | 🔴 Crítica |
+| Controller de Votação | 12h | ✅ Implementado | 🔴 Crítica |
+| Moderação Dinâmica Comunitária | 20h | ✅ Implementado | 🔴 Crítica |
+| Feed Filtrado por Interesses | 16h | ✅ Implementado | 🔴 Crítica |
+| Caracterização do Território | 12h | ✅ Implementado | 🟡 Importante |
+| Histórico de Participação no Perfil | 8h | ✅ Implementado | 🟡 Importante |
+| Testes e Documentação | 12h | ✅ Implementado | 🟡 Importante |
 | **Total** | **120h (21 dias)** | | |
+
+**Itens pendentes (testes dedicados, performance, segurança, Swagger)** → ver **[Fase 14.5](FASE14_5.md)**.
 
 ---
 
@@ -573,6 +565,7 @@ Implementar sistema de **governança comunitária** que permite:
 - ✅ Testes de integração passando
 - ✅ Performance adequada (votações com muitos votos)
 - ✅ Segurança validada (permissões)
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (votações, interesses) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Documentação
 - ✅ Documentação técnica completa
@@ -626,6 +619,7 @@ Implementar sistema de **governança comunitária** que permite:
 
 ---
 
-**Status**: ⏳ **FASE 14 PENDENTE**  
+**Status**: ✅ **FASE 14 IMPLEMENTADA**  
 **Depende de**: Nenhuma  
-**Crítico para**: Soberania Territorial e Governança Comunitária
+**Crítico para**: Soberania Territorial e Governança Comunitária  
+**Itens faltantes**: Ver [Fase 14.5](FASE14_5.md)

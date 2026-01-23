@@ -22,6 +22,7 @@ public sealed class StoreItemService
     private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IUnitOfWork _unitOfWork;
     private readonly CacheInvalidationService? _cacheInvalidation;
+    private readonly TerritoryModerationService? _moderationService;
 
     public StoreItemService(
         IStoreItemRepository itemRepository,
@@ -34,7 +35,8 @@ public sealed class StoreItemService
         MembershipAccessRules accessRules,
         TerritoryFeatureFlagGuard featureGuard,
         IUnitOfWork unitOfWork,
-        CacheInvalidationService? cacheInvalidation = null)
+        CacheInvalidationService? cacheInvalidation = null,
+        TerritoryModerationService? moderationService = null)
     {
         _itemRepository = itemRepository;
         _storeRepository = storeRepository;
@@ -47,6 +49,7 @@ public sealed class StoreItemService
         _featureGuard = featureGuard;
         _unitOfWork = unitOfWork;
         _cacheInvalidation = cacheInvalidation;
+        _moderationService = moderationService;
     }
 
     public async Task<Result<StoreItem>> CreateItemAsync(
@@ -68,6 +71,24 @@ public sealed class StoreItemService
         IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
+        // Verificar aceite de políticas obrigatórias
+        var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
+        if (policiesResult.IsFailure || !policiesResult.Value)
+        {
+            var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
+            var errorMessage = "You must accept the required terms of service and privacy policies before creating items.";
+            if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
+            {
+                var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
+                var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
+                if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
+                {
+                    errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating items.";
+                }
+            }
+            return Result<StoreItem>.Failure(errorMessage);
+        }
+
         if (string.IsNullOrWhiteSpace(title))
         {
             return Result<StoreItem>.Failure("Title is required.");
@@ -184,6 +205,36 @@ public sealed class StoreItemService
             }
         }
 
+        // Verificar regras de moderação comunitária
+        if (_moderationService is not null)
+        {
+            // Criar item temporário para validação
+            var tempItem = new StoreItem(
+                Guid.NewGuid(),
+                territoryId,
+                storeId,
+                type,
+                title,
+                description,
+                category,
+                tags,
+                pricingType,
+                priceAmount,
+                currency,
+                unit,
+                latitude,
+                longitude,
+                status,
+                DateTime.UtcNow,
+                DateTime.UtcNow);
+
+            var moderationResult = await _moderationService.ApplyRulesAsync(tempItem, cancellationToken);
+            if (moderationResult.IsFailure)
+            {
+                return Result<StoreItem>.Failure(moderationResult.Error ?? "Item violates territory moderation rules.");
+            }
+        }
+
         var now = DateTime.UtcNow;
         var item = new StoreItem(
             Guid.NewGuid(),
@@ -224,10 +275,10 @@ public sealed class StoreItemService
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
-        
+
         // Invalidar cache de items da store
         _cacheInvalidation?.InvalidateItemCache(storeId, item.Id);
-        
+
         return Result<StoreItem>.Success(item);
     }
 
@@ -288,10 +339,10 @@ public sealed class StoreItemService
 
         await _itemRepository.UpdateAsync(item, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        
+
         // Invalidar cache de items da store
         _cacheInvalidation?.InvalidateItemCache(item.StoreId, item.Id);
-        
+
         return Result<StoreItem>.Success(item);
     }
 
@@ -324,10 +375,10 @@ public sealed class StoreItemService
         await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.StoreItem, item.Id, cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
-        
+
         // Invalidar cache de items da store
         _cacheInvalidation?.InvalidateItemCache(item.StoreId, item.Id);
-        
+
         return Result<StoreItem>.Success(item);
     }
 

@@ -9,6 +9,7 @@ public sealed class UserPreferences
         bool shareLocation,
         bool showMemberships,
         NotificationPreferences notificationPreferences,
+        EmailPreferences emailPreferences,
         DateTime createdAtUtc,
         DateTime updatedAtUtc)
     {
@@ -23,6 +24,7 @@ public sealed class UserPreferences
         ShareLocation = shareLocation;
         ShowMemberships = showMemberships;
         NotificationPreferences = notificationPreferences;
+        EmailPreferences = emailPreferences;
         CreatedAtUtc = createdAtUtc;
         UpdatedAtUtc = updatedAtUtc;
     }
@@ -33,6 +35,7 @@ public sealed class UserPreferences
     public bool ShareLocation { get; private set; }
     public bool ShowMemberships { get; private set; }
     public NotificationPreferences NotificationPreferences { get; private set; }
+    public EmailPreferences EmailPreferences { get; private set; }
     public DateTime CreatedAtUtc { get; }
     public DateTime UpdatedAtUtc { get; private set; }
 
@@ -58,6 +61,14 @@ public sealed class UserPreferences
         UpdatedAtUtc = updatedAtUtc;
     }
 
+    public void UpdateEmailPreferences(
+        EmailPreferences preferences,
+        DateTime updatedAtUtc)
+    {
+        EmailPreferences = preferences;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+
     public static UserPreferences CreateDefault(Guid userId, DateTime createdAtUtc)
     {
         return new UserPreferences(
@@ -67,6 +78,7 @@ public sealed class UserPreferences
             shareLocation: false,
             showMemberships: true,
             NotificationPreferences.Default(),
+            EmailPreferences.Default(),
             createdAtUtc,
             createdAtUtc);
     }

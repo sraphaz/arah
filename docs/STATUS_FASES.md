@@ -1,11 +1,11 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2025-01-20  
+**Última Atualização**: 2026-01-20  
 **Total de Fases**: [Calcular dinamicamente com `node scripts/get-phase-count.mjs`]  
 **Nota**: O número total de fases é calculado automaticamente contando arquivos `FASE*.md` em `docs/backlog-api/`. Ver `docs/PROJECT_PHASES_CONFIG.md` para mais informações.  
 **Fases Completas**: 8  
 **Fases em Andamento**: 2 (Fase 12 - 85% completo, Fase 13 - MVP recuperacao)  
-**Fases Complementares**: 2 (Fase 1.5, Fase 14.5)  
+**Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Em Andamento - Complementares]
 
 ---
@@ -131,7 +131,11 @@
 - **Bloqueadores**: Fase 9
 
 ### Onda 4: Otimizações e IA (12, 15) 🟡
+<<<<<<< HEAD
 - **Status**: 50% Completo (1/2 fases)
+=======
+- **Status**: 42.5% Completo (0.85/2 fases) - Fase 12 em andamento (85%)
+>>>>>>> origin/feature/fase14-governanca-votacao
 - **Prioridade**: ALTA
 - **Bloqueadores**: Fase 11, 14
 
@@ -204,7 +208,27 @@
 
 ---
 
-**Última Atualização**: 2025-01-20  
+**Última Atualização**: 2026-01-20  
 **Próxima Revisão**: Após conclusão de cada fase
 
+---
 
+## 📋 Fase 12 - Status Detalhado
+
+**Status**: 🚧 **EM ANDAMENTO** (85% completo)  
+**Documentação**: [FASE12_STATUS.md](./backlog-api/FASE12_STATUS.md)
+
+### ✅ Componentes Completos:
+- ✅ Sistema de Políticas de Termos e Critérios de Aceite (100%)
+- ✅ Exportação de Dados (LGPD) (100%)
+- ✅ Analytics e Métricas de Negócio (100%)
+- ✅ Testes de Performance (100%)
+- ✅ Cobertura de Testes (100% - 716/718 testes passando, 2 pulados)
+- ✅ CI/CD Pipeline (100%)
+- ✅ Documentação de Operação (100%)
+- ⚠️ Otimizações de Performance (60% - compression e JSON implementados)
+
+### ⚠️ Componentes Pendentes (Opcionais):
+- ⚠️ Notificações Push (melhoria opcional)
+- ⚠️ Otimizações Incrementais de Performance (queries, cache - baseado em métricas de produção)
+- ⚠️ Documentação Final (Changelog consolidado - parcial)

@@ -6,4 +6,5 @@ public sealed record UserProfileResponse(
     string? Email,
     string? PhoneNumber,
     string? Address,
-    DateTime CreatedAtUtc);
+    DateTime CreatedAtUtc,
+    IReadOnlyList<string> Interests);

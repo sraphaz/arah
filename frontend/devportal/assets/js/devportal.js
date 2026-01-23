@@ -525,8 +525,23 @@
     if (!ALLOWED_HTML_KEYS[key] || value === key) {
       el.textContent = value;
     } else {
-      el.innerHTML = value;
+      // Sanitize HTML to prevent XSS attacks
+      // Only allow safe HTML tags and attributes
+      var sanitized = sanitizeHtml(value);
+      el.innerHTML = sanitized;
     }
+  }
+
+  function sanitizeHtml(html) {
+    // Create a temporary div to parse and sanitize HTML
+    var temp = document.createElement('div');
+    temp.textContent = html; // Use textContent first to escape all HTML
+    var escaped = temp.innerHTML;
+    
+    // Only allow specific safe HTML tags if needed
+    // For now, treat all HTML as plain text to prevent XSS
+    // If HTML is truly needed, use a proper sanitization library like DOMPurify
+    return escaped;
   }
 
   function applyI18n(lang) {

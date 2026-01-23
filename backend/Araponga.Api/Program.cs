@@ -238,6 +238,15 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueLimit = 10;
     });
     
+    // Read operations - moderate limits (100 req/min)
+    options.AddFixedWindowLimiter("read", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 100;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 10;
+    });
+    
     // Write operations - stricter limits (30 req/min)
     options.AddFixedWindowLimiter("write", limiterOptions =>
     {
@@ -316,8 +325,35 @@ builder.Services.AddAuthentication(options =>
 .AddScheme<AuthenticationSchemeOptions, JwtAuthenticationHandler>(
     "Bearer", _ => { });
 
+// Response Compression (gzip/brotli)
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider>();
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
+    options.MimeTypes = Microsoft.AspNetCore.ResponseCompression.ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/json", "application/xml", "text/plain", "text/css", "application/javascript" });
+});
+
+builder.Services.Configure<Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Optimal;
+});
+
+builder.Services.Configure<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Optimal;
+});
+
 // Controllers with FluentValidation
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Otimizar serialização JSON
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.WriteIndented = false; // Reduzir tamanho em produção
+    });
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
@@ -437,7 +473,7 @@ app.UseExceptionHandler(errorApp =>
             logger.LogError(exception, "Unhandled exception at {Path}", feature?.Path);
         }
 
-        var includeDetails = app.Environment.IsDevelopment();
+        var includeDetails = app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing");
         var statusCode = exception switch
         {
             ValidationException => StatusCodes.Status400BadRequest,
@@ -454,11 +490,20 @@ app.UseExceptionHandler(errorApp =>
         {
             Title = "Unexpected error",
             Status = statusCode,
-            Detail = includeDetails ? exception?.Message : "An unexpected error occurred.",
+            Detail = includeDetails ? (exception?.Message ?? "An unexpected error occurred.") : "An unexpected error occurred.",
             Instance = feature?.Path
         };
         problem.Extensions["traceId"] = context.TraceIdentifier;
         problem.Extensions["path"] = feature?.Path;
+        if (includeDetails && exception is not null)
+        {
+            problem.Extensions["exceptionType"] = exception.GetType().FullName;
+            problem.Extensions["stackTrace"] = exception.StackTrace;
+            if (exception.InnerException is not null)
+            {
+                problem.Extensions["innerException"] = exception.InnerException.Message;
+            }
+        }
 
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";
@@ -534,6 +579,9 @@ app.UseStaticFiles(new StaticFileOptions
         }
     }
 });
+
+// Response Compression - deve vir antes de outros middlewares que escrevem resposta
+app.UseResponseCompression();
 
 // CORS
 app.UseCors("Default");

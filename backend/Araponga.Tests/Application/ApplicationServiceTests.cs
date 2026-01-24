@@ -441,6 +441,7 @@ public sealed class ApplicationServiceTests
             blockerId,
             null,
             null,
+            false,
             CancellationToken.None);
 
         Assert.Empty(posts);
@@ -914,6 +915,7 @@ public sealed class ApplicationServiceTests
             Guid.NewGuid(),
             entityId,
             null,
+            false,
             CancellationToken.None);
 
         Assert.Contains(filtered, item => item.MapEntityId == entityId);
@@ -1240,5 +1242,117 @@ public sealed class ApplicationServiceTests
         Assert.Equal(1, result.PageNumber);
         Assert.Equal(5, result.PageSize);
         Assert.True(result.TotalCount >= 6);
+    }
+
+    [Fact]
+    public async Task EventsService_GetEventParticipantsAsync_ReturnsParticipants()
+    {
+        var dataStore = new InMemoryDataStore();
+        var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
+        var participationRepository = new InMemoryEventParticipationRepository(dataStore);
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var cache = CacheTestHelper.CreateDistributedCacheService();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var featureFlags = new InMemoryFeatureFlagService();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
+        var service = new EventsService(
+            eventRepository,
+            participationRepository,
+            feedRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
+            mediaConfigService,
+            accessEvaluator,
+            userRepository,
+            unitOfWork);
+
+        var eventId = Guid.NewGuid();
+        var territoryEvent = new TerritoryEvent(
+            eventId,
+            ActiveTerritoryId,
+            "Evento Teste",
+            "Detalhes",
+            DateTime.UtcNow.AddDays(5),
+            null,
+            -23.2,
+            -45.2,
+            null,
+            Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+        await eventRepository.AddAsync(territoryEvent, CancellationToken.None);
+
+        var userId1 = Guid.NewGuid();
+        var userId2 = Guid.NewGuid();
+
+        // Criar participações
+        await participationRepository.UpsertAsync(
+            new EventParticipation(eventId, userId1, EventParticipationStatus.Confirmed, DateTime.UtcNow, DateTime.UtcNow),
+            CancellationToken.None);
+        await participationRepository.UpsertAsync(
+            new EventParticipation(eventId, userId2, EventParticipationStatus.Interested, DateTime.UtcNow, DateTime.UtcNow),
+            CancellationToken.None);
+
+        // Act
+        var result = await service.GetEventParticipantsAsync(eventId, null, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal(2, result.Value.Count);
+    }
+
+    [Fact]
+    public async Task EventsService_GetEventParticipantsAsync_WhenEventNotFound_ReturnsFailure()
+    {
+        var dataStore = new InMemoryDataStore();
+        var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
+        var participationRepository = new InMemoryEventParticipationRepository(dataStore);
+        var feedRepository = new InMemoryFeedRepository(dataStore);
+        var cache = CacheTestHelper.CreateDistributedCacheService();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(dataStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var featureFlags = new InMemoryFeatureFlagService();
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Araponga.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var mediaConfigService = new Araponga.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlags,
+            unitOfWork,
+            globalMediaLimits);
+        var service = new EventsService(
+            eventRepository,
+            participationRepository,
+            feedRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
+            mediaConfigService,
+            accessEvaluator,
+            userRepository,
+            unitOfWork);
+
+        // Act
+        var result = await service.GetEventParticipantsAsync(Guid.NewGuid(), null, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains("not found", result.Error, StringComparison.OrdinalIgnoreCase);
     }
 }

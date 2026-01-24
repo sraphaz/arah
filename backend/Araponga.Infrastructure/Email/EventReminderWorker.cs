@@ -1,7 +1,6 @@
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
-using Araponga.Domain.Events;
 using Araponga.Domain.Email;
 using Araponga.Domain.Events;
 using Araponga.Domain.Users;

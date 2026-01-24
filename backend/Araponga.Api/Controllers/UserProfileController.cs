@@ -130,6 +130,13 @@ public sealed class UserProfileController : ControllerBase
     /// <summary>
     /// Obtém o histórico de participação em governança do usuário autenticado.
     /// </summary>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Histórico de votações e contribuições para moderação.</returns>
+    /// <remarks>
+    /// Retorna:
+    /// - Lista de votações em que o usuário participou
+    /// - Contagem de contribuições para moderação (votações de tipo ModerationRule)
+    /// </remarks>
     [HttpGet("governance")]
     [ProducesResponseType(typeof(UserProfileGovernanceResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

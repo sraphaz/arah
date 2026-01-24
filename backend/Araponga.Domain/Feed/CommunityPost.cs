@@ -16,7 +16,8 @@ public sealed class CommunityPost
         string? referenceType = null,
         Guid? referenceId = null,
         DateTime? editedAtUtc = null,
-        int editCount = 0)
+        int editCount = 0,
+        IReadOnlyList<string>? tags = null)
     {
         if (territoryId == Guid.Empty)
         {
@@ -53,6 +54,14 @@ public sealed class CommunityPost
         EditedAtUtc = editedAtUtc;
         // Proteção contra valores que excedem int.MaxValue (pode vir do banco de dados)
         EditCount = editCount > int.MaxValue ? int.MaxValue : editCount;
+        
+        // Normalizar tags: trim, lowercase, remover vazias, máximo 10 tags
+        Tags = tags?
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Select(t => t.Trim().ToLowerInvariant())
+            .Distinct()
+            .Take(10)
+            .ToList() ?? new List<string>();
     }
 
     public Guid Id { get; }
@@ -69,11 +78,12 @@ public sealed class CommunityPost
     public DateTime CreatedAtUtc { get; }
     public DateTime? EditedAtUtc { get; private set; }
     public int EditCount { get; private set; }
+    public IReadOnlyList<string> Tags { get; private set; }
 
     /// <summary>
     /// Edita o post, atualizando título, conteúdo e incrementando contador de edições.
     /// </summary>
-    public void Edit(string title, string content)
+    public void Edit(string title, string content, IReadOnlyList<string>? tags = null)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
@@ -87,6 +97,18 @@ public sealed class CommunityPost
 
         Title = title.Trim();
         Content = content.Trim();
+        
+        // Atualizar tags se fornecidas
+        if (tags is not null)
+        {
+            Tags = tags
+                .Where(t => !string.IsNullOrWhiteSpace(t))
+                .Select(t => t.Trim().ToLowerInvariant())
+                .Distinct()
+                .Take(10)
+                .ToList();
+        }
+        
         EditedAtUtc = DateTime.UtcNow;
         if (EditCount < int.MaxValue)
         {

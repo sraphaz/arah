@@ -74,6 +74,7 @@ public sealed class OutboxDispatcherWorker : BackgroundService
         var preferencesRepository = scope.ServiceProvider.GetRequiredService<IUserPreferencesRepository>();
         var emailQueueService = scope.ServiceProvider.GetService<EmailQueueService>();
         var userRepository = scope.ServiceProvider.GetService<IUserRepository>();
+        var notificationConfigService = scope.ServiceProvider.GetService<Araponga.Application.Services.Notifications.NotificationConfigService>();
         var configuration = scope.ServiceProvider.GetService<Microsoft.Extensions.Configuration.IConfiguration>();
         var baseUrl = configuration?["BaseUrl"] ?? "https://araponga.com";
 
@@ -87,6 +88,7 @@ public sealed class OutboxDispatcherWorker : BackgroundService
                     preferencesRepository,
                     emailQueueService,
                     userRepository,
+                    notificationConfigService,
                     baseUrl,
                     stoppingToken);
                 message.ProcessedAtUtc = DateTime.UtcNow;
@@ -118,6 +120,7 @@ public sealed class OutboxDispatcherWorker : BackgroundService
         IUserPreferencesRepository preferencesRepository,
         EmailQueueService? emailQueueService,
         IUserRepository? userRepository,
+        object? notificationConfigService,
         string baseUrl,
         CancellationToken cancellationToken)
     {
@@ -136,8 +139,32 @@ public sealed class OutboxDispatcherWorker : BackgroundService
             ? null
             : JsonSerializer.Serialize(payload.Data, JsonOptions);
 
+        // Obter configuração de notificações (territorial ou global)
+        // Nota: Para obter territoryId, precisaríamos extrair do payload.Data se disponível
+        // Por enquanto, usamos config global como fallback
+        Araponga.Application.Common.Result<Araponga.Domain.Notifications.NotificationConfig>? notificationConfig = null;
+        if (notificationConfigService is Araponga.Application.Services.Notifications.NotificationConfigService service)
+        {
+            notificationConfig = await service.GetConfigAsync(null, cancellationToken); // Global por padrão
+        }
+
         foreach (var recipient in payload.Recipients.Distinct())
         {
+            // Verificar configuração avançada de notificações primeiro
+            if (notificationConfig?.IsSuccess == true && notificationConfig.Value is not null)
+            {
+                var config = notificationConfig.Value;
+                
+                // Verificar se o tipo de notificação está habilitado na config
+                if (config.NotificationTypes.TryGetValue(payload.Kind, out var typeConfig))
+                {
+                    if (!typeConfig.Enabled || !config.Enabled)
+                    {
+                        continue; // Tipo desabilitado na config
+                    }
+                }
+            }
+
             // Verificar preferências do usuário antes de enviar notificação
             var preferences = await preferencesRepository.GetByUserIdAsync(recipient, cancellationToken);
             if (preferences is not null)
@@ -174,7 +201,20 @@ public sealed class OutboxDispatcherWorker : BackgroundService
             await inboxRepository.AddAsync(notification, cancellationToken);
 
             // Enfileirar email se apropriado
-            if (emailQueueService != null && EmailNotificationMapper.ShouldSendEmail(payload.Kind))
+            // Verificar configuração avançada para canais permitidos
+            var shouldSendEmail = EmailNotificationMapper.ShouldSendEmail(payload.Kind);
+            if (notificationConfig?.IsSuccess == true && notificationConfig.Value is not null)
+            {
+                var config = notificationConfig.Value;
+                if (config.NotificationTypes.TryGetValue(payload.Kind, out var typeConfig))
+                {
+                    // Verificar se Email está nos canais permitidos
+                    shouldSendEmail = shouldSendEmail && 
+                        typeConfig.AllowedChannels.Contains("Email", StringComparer.OrdinalIgnoreCase);
+                }
+            }
+
+            if (emailQueueService != null && shouldSendEmail)
             {
                 // Verificar preferências de email do usuário
                 var userPrefs = await preferencesRepository.GetByUserIdAsync(recipient, cancellationToken);
@@ -184,11 +224,20 @@ public sealed class OutboxDispatcherWorker : BackgroundService
                     var emailType = GetEmailTypeForNotification(payload.Kind);
                     if (emailType != null && userPrefs.EmailPreferences.EmailTypes.HasFlag(emailType.Value))
                     {
+                        // Usar template da config se disponível
+                        string? templateName = null;
+                        if (notificationConfig?.IsSuccess == true && notificationConfig.Value is not null)
+                        {
+                            notificationConfig.Value.Templates.TryGetValue(payload.Kind, out templateName);
+                        }
+                        templateName ??= EmailNotificationMapper.GetEmailTemplate(payload.Kind);
+
                         await EnqueueEmailForNotificationAsync(
                             emailQueueService,
                             userRepository,
                             recipient,
                             payload,
+                            templateName,
                             baseUrl,
                             cancellationToken);
                     }
@@ -213,6 +262,7 @@ public sealed class OutboxDispatcherWorker : BackgroundService
         IUserRepository? userRepository,
         Guid userId,
         NotificationDispatchPayload payload,
+        string? templateName,
         string baseUrl,
         CancellationToken cancellationToken)
     {
@@ -228,8 +278,9 @@ public sealed class OutboxDispatcherWorker : BackgroundService
                 return; // Usuário não encontrado ou sem email
             }
 
-            var templateName = EmailNotificationMapper.GetEmailTemplate(payload.Kind);
-            if (templateName == null)
+            // Usar templateName passado como parâmetro (da config) ou fallback para padrão
+            var finalTemplateName = templateName ?? EmailNotificationMapper.GetEmailTemplate(payload.Kind);
+            if (finalTemplateName == null)
             {
                 return; // Não há template para este tipo de notificação
             }
@@ -282,7 +333,7 @@ public sealed class OutboxDispatcherWorker : BackgroundService
                 To = user.Email,
                 Subject = payload.Title,
                 Body = string.Empty, // Não usado quando TemplateName é fornecido
-                TemplateName = templateName,
+                TemplateName = finalTemplateName,
                 TemplateData = templateData,
                 IsHtml = true
             };

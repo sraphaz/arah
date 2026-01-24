@@ -53,5 +53,16 @@ public sealed class CreatePostRequestValidator : AbstractValidator<CreatePostReq
                 .Must(mediaIds => mediaIds.Distinct().Count() == mediaIds.Count)
                 .WithMessage("MediaIds cannot contain duplicate values.");
         });
+
+        RuleFor(x => x.Tags)
+            .Must(tags => tags == null || tags.Count <= 10)
+            .WithMessage("Maximum 10 tags allowed per post.");
+
+        When(x => x.Tags != null, () =>
+        {
+            RuleForEach(x => x.Tags)
+                .Must(tag => !string.IsNullOrWhiteSpace(tag) && tag.Length <= 50)
+                .WithMessage("Each tag must be between 1 and 50 characters.");
+        });
     }
 }

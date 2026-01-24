@@ -27,16 +27,6 @@ public sealed class InMemoryUserRepository : IUserRepository
         return Task.FromResult(user);
     }
 
-    public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
-    {
-        var normalizedEmail = email.Trim();
-        var user = _dataStore.Users.FirstOrDefault(u =>
-            !string.IsNullOrWhiteSpace(u.Email) &&
-            string.Equals(u.Email, normalizedEmail, StringComparison.OrdinalIgnoreCase));
-
-        return Task.FromResult(user);
-    }
-
     public Task AddAsync(User user, CancellationToken cancellationToken)
     {
         _dataStore.Users.Add(user);

@@ -71,6 +71,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CartService>();
         services.AddScoped<UserPreferencesService>();
         services.AddScoped<UserProfileService>();
+        services.AddScoped<UserProfileStatsService>();
         services.AddScoped<UserInterestService>();
         services.AddScoped<VotingService>();
         services.AddScoped<TerritoryModerationService>();
@@ -80,6 +81,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<AccountDeletionService>();
         services.AddScoped<AnalyticsService>();
         services.AddScoped<PushNotificationService>();
+        services.AddScoped<Araponga.Application.Services.Notifications.NotificationConfigService>();
         services.AddScoped<SystemPermissionService>();
         services.AddScoped<MembershipCapabilityService>();
         services.AddScoped<SystemConfigCacheService>();
@@ -134,6 +136,10 @@ public static class ServiceCollectionExtensions
         // Payout Gateway
         services.AddScoped<IPayoutGateway, Araponga.Infrastructure.Payments.MockPayoutGateway>();
 
+        // Email Configuration (aplicável a ambos InMemory e Postgres)
+        // Deve ser registrado aqui, não em AddPostgresRepositories, pois precisa estar disponível em testes
+        services.AddScoped<IEmailSender, SmtpEmailSender>();
+
         return services;
     }
 
@@ -157,7 +163,10 @@ public static class ServiceCollectionExtensions
 
         if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
         {
-            services.AddDbContext<ArapongaDbContext>(options =>
+        // Connection Pool Metrics Service
+        services.AddSingleton<ConnectionPoolMetricsService>();
+        
+        services.AddDbContext<ArapongaDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("Postgres"), npgsqlOptions =>
                 {
                     npgsqlOptions.EnableRetryOnFailure(
@@ -180,6 +189,9 @@ public static class ServiceCollectionExtensions
             services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
             services.AddInMemoryRepositories();
         }
+
+        // Email Configuration (aplicável a ambos InMemory e Postgres)
+        services.Configure<EmailConfiguration>(configuration.GetSection("Email"));
 
         services.AddSingleton<Araponga.Application.Interfaces.IObservabilityLogger, InMemoryObservabilityLogger>();
         services.AddSingleton<ITokenService, JwtTokenService>();
@@ -301,6 +313,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVoteRepository, PostgresVoteRepository>();
         services.AddScoped<ITerritoryModerationRuleRepository, PostgresTerritoryModerationRuleRepository>();
         services.AddScoped<ITerritoryCharacterizationRepository, PostgresTerritoryCharacterizationRepository>();
+        services.AddScoped<Araponga.Application.Interfaces.Notifications.INotificationConfigRepository, PostgresNotificationConfigRepository>();
         services.AddScoped<IMembershipSettingsRepository, PostgresMembershipSettingsRepository>();
         services.AddScoped<IMembershipCapabilityRepository, PostgresMembershipCapabilityRepository>();
         services.AddScoped<ISystemPermissionRepository, PostgresSystemPermissionRepository>();
@@ -336,10 +349,6 @@ public static class ServiceCollectionExtensions
         {
             services.AddScoped<IPushNotificationProvider, Araponga.Infrastructure.Notifications.FirebasePushNotificationProvider>();
         }
-
-        // Email Configuration
-        services.Configure<EmailConfiguration>(configuration.GetSection("Email"));
-        services.AddScoped<IEmailSender, SmtpEmailSender>();
 
         // Email Queue
         var emailPersistenceProvider = configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
@@ -410,6 +419,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IVoteRepository, InMemoryVoteRepository>();
         services.AddSingleton<ITerritoryModerationRuleRepository, InMemoryTerritoryModerationRuleRepository>();
         services.AddSingleton<ITerritoryCharacterizationRepository, InMemoryTerritoryCharacterizationRepository>();
+        services.AddSingleton<Araponga.Application.Interfaces.Notifications.INotificationConfigRepository, InMemoryNotificationConfigRepository>();
         services.AddSingleton<IMembershipSettingsRepository, InMemoryMembershipSettingsRepository>();
         services.AddSingleton<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddSingleton<ISystemPermissionRepository, InMemorySystemPermissionRepository>();

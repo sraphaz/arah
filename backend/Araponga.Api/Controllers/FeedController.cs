@@ -67,8 +67,8 @@ public sealed class FeedController : ControllerBase
         [FromQuery] Guid? territoryId,
         [FromQuery] Guid? mapEntityId,
         [FromQuery] Guid? assetId,
-        [FromQuery] bool filterByInterests = false,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        [FromQuery] bool filterByInterests = false)
     {
         var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
         if (resolvedTerritoryId is null)
@@ -118,7 +118,8 @@ public sealed class FeedController : ControllerBase
                 postCounts.ShareCount,
                 post.CreatedAtUtc,
                 mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaCount));
+                mediaCount,
+                post.Tags?.Count > 0 ? post.Tags : null));
         }
 
         return Ok(response);
@@ -135,8 +136,8 @@ public sealed class FeedController : ControllerBase
         [FromQuery] Guid? territoryId,
         [FromQuery] Guid? mapEntityId,
         [FromQuery] Guid? assetId,
-        [FromQuery] bool filterByInterests = false,
         CancellationToken cancellationToken,
+        [FromQuery] bool filterByInterests = false,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 20)
     {
@@ -251,7 +252,8 @@ public sealed class FeedController : ControllerBase
                 postCounts.ShareCount,
                 post.CreatedAtUtc,
                 mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaCount));
+                mediaCount,
+                post.Tags?.Count > 0 ? post.Tags : null));
         }
 
         return Ok(response);
@@ -377,7 +379,8 @@ public sealed class FeedController : ControllerBase
                 anchor.Type)).ToList(),
             request.AssetIds,
             request.MediaIds,
-            cancellationToken);
+            cancellationToken,
+            request.Tags);
 
         if (!result.IsSuccess || result.Value is null)
         {
@@ -388,7 +391,8 @@ public sealed class FeedController : ControllerBase
         var mediaUrls = await LoadMediaUrlsForPostAsync(post.Id, cancellationToken);
 
         const int maxInt32 = int.MaxValue;
-        var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
+        var mediaCountValue = mediaUrls?.Count ?? 0;
+        var mediaCount = mediaCountValue > maxInt32 ? maxInt32 : mediaCountValue;
         var response = new FeedItemResponse(
             post.Id,
             post.Title,
@@ -402,8 +406,9 @@ public sealed class FeedController : ControllerBase
             0,
             0,
             post.CreatedAtUtc,
-            mediaUrls.Count > 0 ? mediaUrls : null,
-            mediaCount);
+            mediaCountValue > 0 ? mediaUrls : null,
+            mediaCount,
+            post.Tags?.Count > 0 ? post.Tags : null);
 
         return CreatedAtAction(nameof(GetFeed), new { }, response);
     }
@@ -559,7 +564,8 @@ public sealed class FeedController : ControllerBase
             request.Content,
             request.MediaIds,
             geoAnchors,
-            cancellationToken);
+            cancellationToken,
+            request.Tags);
 
         if (!result.IsSuccess || result.Value is null)
         {
@@ -582,7 +588,8 @@ public sealed class FeedController : ControllerBase
         var eventSummary = ResolveEventSummary(post, eventLookup);
 
         const int maxInt32 = int.MaxValue;
-        var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
+        var mediaCountValue = mediaUrls?.Count ?? 0;
+        var mediaCount = mediaCountValue > maxInt32 ? maxInt32 : mediaCountValue;
         var response = new FeedItemResponse(
             post.Id,
             post.Title,
@@ -596,8 +603,9 @@ public sealed class FeedController : ControllerBase
             counts.LikeCount,
             counts.ShareCount,
             post.CreatedAtUtc,
-            mediaUrls.Count > 0 ? mediaUrls : null,
-            mediaCount);
+            mediaCountValue > 0 ? mediaUrls : null,
+            mediaCount,
+            post.Tags?.Count > 0 ? post.Tags : null);
 
         return Ok(response);
     }

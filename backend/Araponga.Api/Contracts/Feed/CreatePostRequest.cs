@@ -8,5 +8,6 @@ public sealed record CreatePostRequest(
     Guid? MapEntityId,
     IReadOnlyCollection<GeoAnchorRequest>? GeoAnchors,
     IReadOnlyCollection<Guid>? AssetIds,
-    IReadOnlyCollection<Guid>? MediaIds
+    IReadOnlyCollection<Guid>? MediaIds,
+    IReadOnlyCollection<string>? Tags = null
 );

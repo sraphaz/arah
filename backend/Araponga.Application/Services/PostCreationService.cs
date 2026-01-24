@@ -82,7 +82,8 @@ public sealed class PostCreationService
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors,
         IReadOnlyCollection<Guid>? assetIds,
         IReadOnlyCollection<Guid>? mediaIds,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? tags = null)
     {
         // Verificar aceite de políticas obrigatórias
         if (_accessEvaluator is not null)
@@ -260,7 +261,8 @@ public sealed class PostCreationService
                 visibility,
                 status,
                 mapEntityId,
-                DateTime.UtcNow);
+                DateTime.UtcNow,
+                tags: tags?.ToList());
 
             var moderationResult = await _moderationService.ApplyRulesAsync(tempPost, cancellationToken);
             if (moderationResult.IsFailure)
@@ -279,7 +281,8 @@ public sealed class PostCreationService
             visibility,
             status,
             mapEntityId,
-            DateTime.UtcNow);
+            DateTime.UtcNow,
+            tags: tags?.ToList());
 
         await _feedRepository.AddPostAsync(post, cancellationToken);
 

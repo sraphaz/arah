@@ -29,6 +29,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using Araponga.Application.Metrics;
+using Araponga.Application.Services;
+using Araponga.Infrastructure.Postgres;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -294,6 +296,17 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
 // Infrastructure (repositories, unit of work, etc.) - must be called before adding database health check
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Configure connection pool metrics after infrastructure is registered
+if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddSingleton<ConnectionPoolMetricsService>(sp =>
+    {
+        var dbContext = sp.GetRequiredService<ArapongaDbContext>();
+        var logger = sp.GetRequiredService<ILogger<ConnectionPoolMetricsService>>();
+        return new ConnectionPoolMetricsService(dbContext, logger);
+    });
+}
+
 // Add database health check after infrastructure is registered
 if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
 {
@@ -446,6 +459,21 @@ builder.Services.AddHsts(options =>
 
 var app = builder.Build();
 
+// Configure connection pool metrics if using Postgres
+if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+{
+    try
+    {
+        var metricsService = app.Services.GetRequiredService<ConnectionPoolMetricsService>();
+        ConnectionPoolMetricsService.ConfigureMetrics(metricsService);
+    }
+    catch (Exception ex)
+    {
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Failed to configure connection pool metrics");
+    }
+}
+
 // Prometheus Metrics Endpoint
 app.UseMetricServer();
 app.UseHttpMetrics();
@@ -476,7 +504,7 @@ app.UseExceptionHandler(errorApp =>
         var includeDetails = app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing");
         var statusCode = exception switch
         {
-            ValidationException => StatusCodes.Status400BadRequest,
+            Araponga.Application.Exceptions.ValidationException => StatusCodes.Status400BadRequest,
             NotFoundException => StatusCodes.Status404NotFound,
             UnauthorizedException => StatusCodes.Status401Unauthorized,
             ForbiddenException => StatusCodes.Status403Forbidden,

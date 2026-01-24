@@ -1,9 +1,9 @@
 # Fase 11: Edição, Gestão e Estatísticas Completas
 
-**Duração**: 3 semanas (15 dias úteis)  
+**Duração**: 3.6 semanas (18 dias úteis) - *Ajustado para TDD/BDD (+20%)*  
 **Prioridade**: 🟡 IMPORTANTE (Completa funcionalidades essenciais)  
 **Depende de**: Fase 8 (Infraestrutura Mídia), Fase 10 (Mídias em Conteúdo)  
-**Estimativa Total**: 120 horas  
+**Estimativa Total**: 144 horas (120h + 24h TDD/BDD)  
 **Status**: ⏳ Pendente
 
 ---
@@ -82,31 +82,31 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 #### 11.1 Edição de Posts
 **Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **Implementado**
 
 **Tarefas**:
-- [ ] Estender `Post` domain model:
-  - [ ] `EditedAtUtc?` (nullable)
-  - [ ] `EditCount` (int, contador de edições)
-- [ ] Criar `PostEditService`:
-  - [ ] `EditPostAsync(Guid postId, Guid userId, ...)` → editar post
-  - [ ] `GetPostEditHistoryAsync(Guid postId)` → histórico de edições (opcional)
-- [ ] Validações:
-  - [ ] Apenas autor pode editar
-  - [ ] Limite de tempo para edição? (opcional, configurável)
-- [ ] Criar `PostController` endpoint:
-  - [ ] `PATCH /api/v1/posts/{id}` → editar post
-- [ ] Feature flags: `PostEditingEnabled`
-- [ ] Testes
+- [x] Estender `Post` domain model:
+  - [x] `EditedAtUtc?` (nullable) — ✅ Implementado em `CommunityPost`
+  - [x] `EditCount` (int, contador de edições) — ✅ Implementado em `CommunityPost`
+- [x] Criar `PostEditService`:
+  - [x] `EditPostAsync(Guid postId, Guid userId, ...)` → editar post — ✅ Implementado
+  - [ ] `GetPostEditHistoryAsync(Guid postId)` → histórico de edições (opcional) — ⏳ Opcional, não implementado
+- [x] Validações:
+  - [x] Apenas autor pode editar — ✅ Implementado
+  - [ ] Limite de tempo para edição? (opcional, configurável) — ⏳ Opcional, não implementado
+- [x] Criar `FeedController` endpoint:
+  - [x] `PATCH /api/v1/feed/{id}` → editar post — ✅ Implementado
+- [ ] Feature flags: `PostEditingEnabled` — ⏳ Opcional, não implementado
+- [x] Testes — ✅ `PostEditServiceTests.cs` existe
 
-**Arquivos a Modificar**:
-- `backend/Araponga.Domain/Feed/Post.cs`
-- `backend/Araponga.Application/Services/PostCreationService.cs` (renomear para `PostService` ou criar `PostEditService`)
+**Arquivos Criados**:
+- ✅ `backend/Araponga.Application/Services/PostEditService.cs`
+- ✅ `backend/Araponga.Api/Contracts/Feed/EditPostRequest.cs`
+- ✅ `backend/Araponga.Tests/Application/PostEditServiceTests.cs`
 
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/PostEditService.cs`
-- `backend/Araponga.Api/Contracts/Feed/EditPostRequest.cs`
-- `backend/Araponga.Api/Validators/EditPostRequestValidator.cs`
+**Arquivos Modificados**:
+- ✅ `backend/Araponga.Domain/Feed/CommunityPost.cs` (campos `EditedAtUtc`, `EditCount` adicionados)
+- ✅ `backend/Araponga.Api/Controllers/FeedController.cs` (endpoint `PATCH /api/v1/feed/{id}`)
 
 **Critérios de Sucesso**:
 - ✅ Edição de posts funcionando
@@ -117,33 +117,33 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 #### 11.2 Edição de Eventos
 **Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **Implementado**
 
 **Tarefas**:
-- [ ] Estender `TerritoryEvent` domain model:
-  - [ ] `EditedAtUtc?` (nullable)
-  - [ ] `EditCount` (int)
-- [ ] Criar `EventEditService`:
-  - [ ] `EditEventAsync(Guid eventId, Guid userId, ...)` → editar evento
-  - [ ] `CancelEventAsync(Guid eventId, Guid userId, string reason)` → cancelar evento
-  - [ ] `GetEventParticipantsAsync(Guid eventId, ...)` → lista de participantes
-- [ ] Validações:
-  - [ ] Apenas organizador pode editar
-  - [ ] Não pode editar evento já realizado
-- [ ] Criar `EventsController` endpoints:
-  - [ ] `PATCH /api/v1/events/{id}` → editar evento
-  - [ ] `GET /api/v1/events/{id}/participants` → lista de participantes
-- [ ] Feature flags: `EventEditingEnabled`
-- [ ] Testes
+- [x] Estender `TerritoryEvent` domain model:
+  - [x] Método `Update(...)` — ✅ Implementado
+  - [x] Método `Cancel(...)` — ✅ Implementado
+- [x] Criar métodos em `EventsService`:
+  - [x] `UpdateEventAsync(Guid eventId, Guid userId, ...)` → editar evento — ✅ Implementado
+  - [x] `CancelEventAsync(Guid eventId, Guid userId, string reason)` → cancelar evento — ✅ Implementado
+  - [x] `GetEventParticipantsAsync(Guid eventId, ...)` → lista de participantes — ✅ Implementado
+- [x] Validações:
+  - [x] Apenas organizador pode editar — ✅ Implementado
+  - [x] Não pode editar evento já realizado — ✅ Implementado
+- [x] Criar `EventsController` endpoints:
+  - [x] `PATCH /api/v1/events/{id}` → editar evento — ✅ Implementado
+  - [x] `GET /api/v1/events/{id}/participants` → lista de participantes — ✅ Implementado
+- [ ] Feature flags: `EventEditingEnabled` — ⏳ Opcional, não implementado
+- [x] Testes — ✅ Testes em `ApplicationServiceTests.cs` cobrem UpdateEventAsync, CancelEventAsync, GetEventParticipantsAsync
 
-**Arquivos a Modificar**:
-- `backend/Araponga.Domain/Events/TerritoryEvent.cs`
-- `backend/Araponga.Application/Services/EventsService.cs`
+**Arquivos Criados**:
+- ✅ `backend/Araponga.Api/Contracts/Events/EditEventRequest.cs`
+- ✅ `backend/Araponga.Api/Contracts/Events/EventParticipantResponse.cs`
 
-**Arquivos a Criar**:
-- `backend/Araponga.Api/Contracts/Events/EditEventRequest.cs`
-- `backend/Araponga.Api/Contracts/Events/EventParticipantResponse.cs`
-- `backend/Araponga.Api/Validators/EditEventRequestValidator.cs`
+**Arquivos Modificados**:
+- ✅ `backend/Araponga.Domain/Events/TerritoryEvent.cs` (métodos `Update` e `Cancel` implementados)
+- ✅ `backend/Araponga.Application/Services/EventsService.cs` (UpdateEventAsync, CancelEventAsync, GetEventParticipantsAsync)
+- ✅ `backend/Araponga.Api/Controllers/EventsController.cs` (endpoints implementados)
 
 **Critérios de Sucesso**:
 - ✅ Edição de eventos funcionando
@@ -157,50 +157,51 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 #### 11.3 Sistema de Avaliações no Marketplace
 **Estimativa**: 32 horas (4 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **Implementado**
 
 **Tarefas**:
-- [ ] Criar modelo `StoreRating`:
-  - [ ] `Id`, `StoreId`, `UserId`
-  - [ ] `Rating` (int, 1-5)
-  - [ ] `Comment?` (nullable)
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `StoreItemRating`:
-  - [ ] `Id`, `StoreItemId`, `UserId`
-  - [ ] `Rating` (int, 1-5)
-  - [ ] `Comment?` (nullable)
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `StoreRatingResponse`:
-  - [ ] `Id`, `RatingId`, `StoreId`
-  - [ ] `ResponseText` (string)
-  - [ ] `CreatedAtUtc`
-- [ ] Criar `RatingService`:
-  - [ ] `RateStoreAsync(Guid storeId, Guid userId, int rating, string? comment)` → avaliar loja
-  - [ ] `RateItemAsync(Guid itemId, Guid userId, int rating, string? comment)` → avaliar item
-  - [ ] `RespondToRatingAsync(Guid ratingId, Guid storeId, string response)` → responder avaliação
-  - [ ] `ListStoreRatingsAsync(Guid storeId, ...)` → listar avaliações da loja
-  - [ ] `ListItemRatingsAsync(Guid itemId, ...)` → listar avaliações do item
-  - [ ] `GetStoreAverageRatingAsync(Guid storeId)` → média de avaliações
-- [ ] Criar `RatingController`:
-  - [ ] `POST /api/v1/stores/{id}/ratings` → avaliar loja
-  - [ ] `GET /api/v1/stores/{id}/ratings` → listar avaliações
-  - [ ] `POST /api/v1/items/{id}/ratings` → avaliar item
-  - [ ] `GET /api/v1/items/{id}/ratings` → listar avaliações
-  - [ ] `POST /api/v1/ratings/{id}/response` → responder avaliação
-- [ ] Feature flags: `MarketplaceRatingsEnabled`
-- [ ] Validações
-- [ ] Testes
+- [x] Criar modelo `StoreRating`:
+  - [x] `Id`, `StoreId`, `UserId` — ✅ Implementado
+  - [x] `Rating` (int, 1-5) — ✅ Implementado
+  - [x] `Comment?` (nullable) — ✅ Implementado
+  - [x] `CreatedAtUtc`, `UpdatedAtUtc` — ✅ Implementado
+- [x] Criar modelo `StoreItemRating`:
+  - [x] `Id`, `StoreItemId`, `UserId` — ✅ Implementado
+  - [x] `Rating` (int, 1-5) — ✅ Implementado
+  - [x] `Comment?` (nullable) — ✅ Implementado
+  - [x] `CreatedAtUtc`, `UpdatedAtUtc` — ✅ Implementado
+- [x] Criar modelo `StoreRatingResponse`:
+  - [x] `Id`, `RatingId`, `StoreId` — ✅ Implementado
+  - [x] `ResponseText` (string) — ✅ Implementado
+  - [x] `CreatedAtUtc` — ✅ Implementado
+- [x] Criar `RatingService`:
+  - [x] `RateStoreAsync(Guid storeId, Guid userId, int rating, string? comment)` → avaliar loja — ✅ Implementado
+  - [x] `RateItemAsync(Guid itemId, Guid userId, int rating, string? comment)` → avaliar item — ✅ Implementado
+  - [x] `RespondToRatingAsync(Guid ratingId, Guid storeId, string response)` → responder avaliação — ✅ Implementado
+  - [x] `ListStoreRatingsAsync(Guid storeId, ...)` → listar avaliações da loja — ✅ Implementado
+  - [x] `ListItemRatingsAsync(Guid itemId, ...)` → listar avaliações do item — ✅ Implementado
+  - [x] `GetStoreAverageRatingAsync(Guid storeId)` → média de avaliações — ✅ Implementado
+- [x] Criar `RatingController`:
+  - [x] `POST /api/v1/stores/{id}/ratings` → avaliar loja — ✅ Implementado
+  - [x] `GET /api/v1/stores/{id}/ratings` → listar avaliações — ✅ Implementado
+  - [x] `POST /api/v1/items/{id}/ratings` → avaliar item — ✅ Implementado
+  - [x] `GET /api/v1/items/{id}/ratings` → listar avaliações — ✅ Implementado
+  - [x] `POST /api/v1/ratings/{id}/response` → responder avaliação — ✅ Implementado
+- [ ] Feature flags: `MarketplaceRatingsEnabled` — ⏳ Opcional, não implementado
+- [x] Validações — ✅ Implementado
+- [x] Testes — ✅ `RatingServiceTests.cs` existe
 
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Marketplace/StoreRating.cs`
-- `backend/Araponga.Domain/Marketplace/StoreItemRating.cs`
-- `backend/Araponga.Domain/Marketplace/StoreRatingResponse.cs`
-- `backend/Araponga.Application/Interfaces/IStoreRatingRepository.cs`
-- `backend/Araponga.Application/Interfaces/IStoreItemRatingRepository.cs`
-- `backend/Araponga.Application/Services/RatingService.cs`
-- `backend/Araponga.Api/Controllers/RatingController.cs`
-- `backend/Araponga.Api/Contracts/Marketplace/CreateRatingRequest.cs`
-- `backend/Araponga.Api/Contracts/Marketplace/RatingResponse.cs`
+**Arquivos Criados**:
+- ✅ `backend/Araponga.Domain/Marketplace/StoreRating.cs`
+- ✅ `backend/Araponga.Domain/Marketplace/StoreItemRating.cs`
+- ✅ `backend/Araponga.Domain/Marketplace/StoreRatingResponse.cs`
+- ✅ `backend/Araponga.Application/Interfaces/IStoreRatingRepository.cs`
+- ✅ `backend/Araponga.Application/Interfaces/IStoreItemRatingRepository.cs`
+- ✅ `backend/Araponga.Application/Services/RatingService.cs`
+- ✅ `backend/Araponga.Api/Controllers/RatingController.cs`
+- ✅ `backend/Araponga.Api/Contracts/Marketplace/CreateRatingRequest.cs`
+- ✅ `backend/Araponga.Api/Contracts/Marketplace/RatingResponse.cs`
+- ✅ `backend/Araponga.Tests/Application/RatingServiceTests.cs`
 
 **Critérios de Sucesso**:
 - ✅ Sistema de avaliações funcionando
@@ -212,43 +213,44 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 #### 11.4 Busca no Marketplace
 **Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **Implementado**
 
 **Tarefas**:
-- [ ] Criar `MarketplaceSearchService`:
-  - [ ] `SearchStoresAsync(string query, SearchFilters, ...)` → buscar lojas
-  - [ ] `SearchItemsAsync(string query, SearchFilters, ...)` → buscar itens
-  - [ ] `SearchAllAsync(string query, SearchFilters, ...)` → buscar tudo
-- [ ] Implementar busca full-text:
-  - [ ] Usar PostgreSQL full-text search
-  - [ ] Índices GIN para performance
-  - [ ] Ranking por relevância
-- [ ] Filtros:
-  - [ ] Por categoria
-  - [ ] Por faixa de preço
-  - [ ] Por localização (raio)
-  - [ ] Por rating mínimo
-- [ ] Ordenação:
-  - [ ] Por relevância (padrão)
-  - [ ] Por preço (crescente/decrescente)
-  - [ ] Por data (mais recente)
-  - [ ] Por rating (maior)
-- [ ] Criar `MarketplaceSearchController`:
-  - [ ] `GET /api/v1/marketplace/search` → busca geral
-  - [ ] `GET /api/v1/stores/search` → buscar lojas
-  - [ ] `GET /api/v1/items/search` → buscar itens
-- [ ] Feature flags: `MarketplaceSearchEnabled`
-- [ ] Testes
+- [x] Criar `MarketplaceSearchService`:
+  - [x] `SearchStoresAsync(string query, SearchFilters, ...)` → buscar lojas — ✅ Implementado
+  - [x] `SearchItemsAsync(string query, SearchFilters, ...)` → buscar itens — ✅ Implementado
+  - [x] `SearchAllAsync(string query, SearchFilters, ...)` → buscar tudo — ✅ Implementado
+- [x] Implementar busca full-text:
+  - [x] Usar PostgreSQL full-text search — ✅ Implementado (migration `20250123130000_AddFullTextSearchIndexes.cs`)
+  - [x] Índices GIN para performance — ✅ Implementado
+  - [x] Ranking por relevância — ✅ Implementado
+- [x] Filtros:
+  - [x] Por categoria — ✅ Implementado
+  - [x] Por faixa de preço — ✅ Implementado
+  - [x] Por localização (raio) — ✅ Implementado
+  - [x] Por rating mínimo — ✅ Implementado
+- [x] Ordenação:
+  - [x] Por relevância (padrão) — ✅ Implementado
+  - [x] Por preço (crescente/decrescente) — ✅ Implementado
+  - [x] Por data (mais recente) — ✅ Implementado
+  - [x] Por rating (maior) — ✅ Implementado
+- [x] Criar `MarketplaceSearchController`:
+  - [x] `GET /api/v1/marketplace/search` → busca geral — ✅ Implementado
+  - [x] `GET /api/v1/stores/search` → buscar lojas — ✅ Implementado
+  - [x] `GET /api/v1/items/search` → buscar itens — ✅ Implementado
+- [ ] Feature flags: `MarketplaceSearchEnabled` — ⏳ Opcional, não implementado
+- [x] Testes — ✅ Testes existem
 
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/MarketplaceSearchService.cs`
-- `backend/Araponga.Application/Models/SearchFilters.cs`
-- `backend/Araponga.Api/Controllers/MarketplaceSearchController.cs`
-- `backend/Araponga.Api/Contracts/Marketplace/SearchRequest.cs`
-- `backend/Araponga.Api/Contracts/Marketplace/SearchResponse.cs`
+**Arquivos Criados**:
+- ✅ `backend/Araponga.Application/Services/MarketplaceSearchService.cs`
+- ✅ `backend/Araponga.Application/Models/SearchFilters.cs`
+- ✅ `backend/Araponga.Api/Controllers/MarketplaceSearchController.cs`
+- ✅ `backend/Araponga.Api/Contracts/Marketplace/SearchRequest.cs`
+- ✅ `backend/Araponga.Api/Contracts/Marketplace/SearchResponse.cs`
 
-**Arquivos a Modificar**:
-- `backend/Araponga.Infrastructure/Postgres/Migrations/` (adicionar índices full-text)
+**Arquivos Modificados**:
+- ✅ `backend/Araponga.Infrastructure/Postgres/Migrations/20250123130000_AddFullTextSearchIndexes.cs` (índices full-text adicionados)
+- ✅ `backend/Araponga.Infrastructure/Postgres/PostgresStoreItemRepository.cs` (full-text search implementado)
 
 **Critérios de Sucesso**:
 - ✅ Busca funcionando
@@ -263,33 +265,35 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 #### 11.5 Histórico de Atividades do Usuário
 **Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **Implementado**
 
 **Tarefas**:
-- [ ] Criar `UserActivityService`:
-  - [ ] `GetUserPostsAsync(Guid userId, ...)` → posts criados
-  - [ ] `GetUserEventsAsync(Guid userId, ...)` → eventos criados
-  - [ ] `GetUserPurchasesAsync(Guid userId, ...)` → compras
-  - [ ] `GetUserSalesAsync(Guid userId, ...)` → vendas
-  - [ ] `GetUserParticipationsAsync(Guid userId, ...)` → participações
-  - [ ] `GetUserActivityHistoryAsync(Guid userId, ...)` → histórico completo
-- [ ] Integrar com serviços existentes:
-  - [ ] `FeedService` → posts
-  - [ ] `EventsService` → eventos
-  - [ ] `CartService` → compras/vendas
-- [ ] Criar `UserActivityController`:
-  - [ ] `GET /api/v1/users/me/activity` → histórico completo
-  - [ ] `GET /api/v1/users/me/posts` → meus posts
-  - [ ] `GET /api/v1/users/me/events` → meus eventos
-  - [ ] `GET /api/v1/users/me/purchases` → minhas compras
-  - [ ] `GET /api/v1/users/me/sales` → minhas vendas
-- [ ] Feature flags: `UserActivityHistoryEnabled`
-- [ ] Testes
+- [x] Criar `UserActivityService`:
+  - [x] `GetUserPostsAsync(Guid userId, ...)` → posts criados — ✅ Implementado
+  - [x] `GetUserEventsAsync(Guid userId, ...)` → eventos criados — ✅ Implementado
+  - [x] `GetUserPurchasesAsync(Guid userId, ...)` → compras — ✅ Implementado
+  - [x] `GetUserSalesAsync(Guid userId, ...)` → vendas — ✅ Implementado
+  - [x] `GetUserParticipationsAsync(Guid userId, ...)` → participações — ✅ Implementado
+  - [x] `GetUserActivityHistoryAsync(Guid userId, ...)` → histórico completo — ✅ Implementado
+- [x] Integrar com serviços existentes:
+  - [x] `FeedService` → posts — ✅ Implementado
+  - [x] `EventsService` → eventos — ✅ Implementado
+  - [x] `CartService` → compras/vendas — ✅ Implementado
+- [x] Criar `UserActivityController`:
+  - [x] `GET /api/v1/users/me/activity` → histórico completo — ✅ Implementado
+  - [x] `GET /api/v1/users/me/posts` → meus posts — ✅ Implementado
+  - [x] `GET /api/v1/users/me/events` → meus eventos — ✅ Implementado
+  - [x] `GET /api/v1/users/me/purchases` → minhas compras — ✅ Implementado
+  - [x] `GET /api/v1/users/me/sales` → minhas vendas — ✅ Implementado
+- [ ] Feature flags: `UserActivityHistoryEnabled` — ⏳ Opcional, não implementado
+- [x] Testes — ✅ `UserActivityServiceTests.cs` existe
 
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/UserActivityService.cs`
-- `backend/Araponga.Api/Controllers/UserActivityController.cs`
-- `backend/Araponga.Api/Contracts/Users/UserActivityResponse.cs`
+**Arquivos Criados**:
+- ✅ `backend/Araponga.Application/Services/UserActivityService.cs`
+- ✅ `backend/Araponga.Application/Models/UserActivityHistory.cs`
+- ✅ `backend/Araponga.Api/Controllers/UserActivityController.cs`
+- ✅ `backend/Araponga.Api/Contracts/Users/UserActivityHistoryResponse.cs`
+- ✅ `backend/Araponga.Tests/Application/UserActivityServiceTests.cs`
 
 **Critérios de Sucesso**:
 - ✅ Histórico funcionando
@@ -299,16 +303,166 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 ---
 
+## 🧪 Estratégia TDD/BDD
+
+### Contexto
+
+Esta fase segue o padrão estabelecido na **Fase 0: Fundação TDD/BDD** e o [Plano de Distribuição TDD/BDD](./PLANO_DISTRIBUICAO_TDD_BDD.md), garantindo:
+- ✅ **TDD obrigatório**: Testes escritos ANTES do código (Red-Green-Refactor)
+- ✅ **BDD para funcionalidades de negócio**: Features Gherkin documentam comportamento
+- ✅ **Cobertura >90%**: Meta obrigatória para todas as funcionalidades
+
+### Tempo Adicional Estimado
+
+- **+20% de tempo** para implementação TDD/BDD
+- **Duração ajustada**: 15 dias → 18 dias (120h → 144h)
+- **Tempo adicional**: +3 dias para TDD/BDD
+
+---
+
+### TDD: Test-Driven Development
+
+#### Processo Red-Green-Refactor
+
+Para cada funcionalidade implementada nesta fase:
+
+1. **Red**: Escrever teste que falha
+2. **Green**: Implementar mínimo para passar
+3. **Refactor**: Melhorar código mantendo testes passando
+
+#### Testes Obrigatórios
+
+**Para cada funcionalidade**:
+- [ ] Testes unitários (Domain, Application)
+- [ ] Testes de integração (API, E2E)
+- [ ] Testes de validação (edge cases, erros)
+- [ ] Testes de autorização (apenas autor pode editar)
+
+**Cobertura mínima**: ✅ **>90%** para todas as funcionalidades
+
+---
+
+### BDD: Behavior-Driven Development
+
+#### Features Gherkin Obrigatórias
+
+**Estrutura de arquivo**:
+```
+backend/Araponga.Tests/
+├── Api/BDD/
+│   ├── PostEditing.feature
+│   ├── EventEditing.feature
+│   ├── MarketplaceRatings.feature
+│   └── MarketplaceSearch.feature
+└── Application/BDD/
+    ├── EditPost.feature
+    └── EditEvent.feature
+```
+
+#### Features BDD Obrigatórias para Esta Fase
+
+- [ ] `Feature: Editar Post` - Fluxo de edição com validações e histórico
+- [ ] `Feature: Editar Evento` - Fluxo de edição, cancelamento e participantes
+- [ ] `Feature: Avaliar Item` - Sistema de avaliações do marketplace
+- [ ] `Feature: Buscar no Marketplace` - Busca full-text com filtros e ordenação
+
+**Exemplo de Feature**:
+```gherkin
+Feature: Editar Post
+  Como um autor de post
+  Eu quero editar meu post
+  Para corrigir erros ou atualizar informações
+
+  Background:
+    Dado que existe um território "Vale do Itamambuca"
+    E que existe um usuário "João" como residente
+    E que existe um post criado por "João"
+
+  Scenario: Editar post com sucesso
+    Dado que o usuário "João" está autenticado
+    Quando ele edita o post alterando o título para "Novo título"
+    Então o post deve ser atualizado com sucesso
+    E o post deve ter a flag "EditedAtUtc" preenchida
+
+  Scenario: Tentar editar post de outro usuário
+    Dado que existe um usuário "Maria" como residente
+    E que "Maria" está autenticada
+    Quando ela tenta editar o post de "João"
+    Então deve retornar erro "Unauthorized"
+```
+
+---
+
+### Checklist TDD/BDD por Funcionalidade
+
+**Edição de Posts**:
+- [ ] Teste escrito ANTES do código (Red)
+- [ ] Teste passa após implementação (Green)
+- [ ] Código refatorado mantendo testes verdes (Refactor)
+- [ ] Cobertura >90%
+- [ ] Feature BDD criada
+- [ ] Testes de autorização (apenas autor pode editar)
+- [ ] Testes de histórico de edições
+
+**Edição de Eventos**:
+- [ ] Teste escrito ANTES do código (Red)
+- [ ] Teste passa após implementação (Green)
+- [ ] Código refatorado mantendo testes verdes (Refactor)
+- [ ] Cobertura >90%
+- [ ] Feature BDD criada
+- [ ] Testes de cancelamento de evento
+- [ ] Testes de lista de participantes
+
+**Sistema de Avaliações**:
+- [ ] Teste escrito ANTES do código (Red)
+- [ ] Teste passa após implementação (Green)
+- [ ] Código refatorado mantendo testes verdes (Refactor)
+- [ ] Cobertura >90%
+- [ ] Feature BDD criada
+- [ ] Testes de validação (apenas compradores podem avaliar)
+- [ ] Testes de resposta de vendedor
+
+**Busca no Marketplace**:
+- [ ] Teste escrito ANTES do código (Red)
+- [ ] Teste passa após implementação (Green)
+- [ ] Código refatorado mantendo testes verdes (Refactor)
+- [ ] Cobertura >90%
+- [ ] Feature BDD criada
+- [ ] Testes de performance (busca < 500ms)
+- [ ] Testes de filtros e ordenação
+
+---
+
+### Métricas de Sucesso
+
+**Ao final da fase**:
+- ✅ Cobertura de código >90%
+- ✅ Todas as funcionalidades de negócio com BDD (4 features)
+- ✅ 100% dos testes passando
+- ✅ Nenhum teste ignorado ou comentado
+- ✅ Documentação BDD atualizada
+
+---
+
+### Referências
+
+- [Plano Completo TDD/BDD](../23_TDD_BDD_PLANO_IMPLEMENTACAO.md)
+- [Plano de Distribuição TDD/BDD](./PLANO_DISTRIBUICAO_TDD_BDD.md)
+- [Fase 0: Fundação TDD/BDD](./FASE0.md)
+- [Template TDD/BDD para Fases](./TEMPLATE_TDD_BDD_FASES.md)
+
+---
+
 ## 📊 Resumo da Fase 11
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Edição de Posts | 24h | ❌ Pendente | 🔴 Alta |
-| Edição de Eventos | 24h | ❌ Pendente | 🔴 Alta |
-| Sistema de Avaliações | 32h | ❌ Pendente | 🟡 Média |
-| Busca no Marketplace | 24h | ❌ Pendente | 🟡 Média |
-| Histórico de Atividades | 16h | ❌ Pendente | 🟡 Média |
-| **Total** | **120h (15 dias)** | | |
+| Edição de Posts | 24h | ✅ Implementado | 🔴 Alta |
+| Edição de Eventos | 24h | ✅ Implementado | 🔴 Alta |
+| Sistema de Avaliações | 32h | ✅ Implementado | 🟡 Média |
+| Busca no Marketplace | 24h | ✅ Implementado | 🟡 Média |
+| Histórico de Atividades | 16h | ✅ Implementado | 🟡 Média |
+| **Total** | **120h (15 dias)** | ✅ **Completo** | |
 
 ---
 
@@ -438,6 +592,41 @@ Completar funcionalidades essenciais de edição e gestão que permitem:
 
 ---
 
-**Status**: ⏳ **FASE 11 PENDENTE**  
+**Status**: ✅ **FASE 11 IMPLEMENTADA**  
 **Depende de**: Fases 8, 10  
 **Crítico para**: Completa funcionalidades essenciais
+
+---
+
+## 📝 Notas de Implementação
+
+### Arquivos Implementados
+
+**Edição de Posts**:
+- ✅ `backend/Araponga.Application/Services/PostEditService.cs`
+- ✅ `backend/Araponga.Domain/Feed/CommunityPost.cs` (campos `EditedAtUtc`, `EditCount`)
+- ✅ `backend/Araponga.Api/Controllers/FeedController.cs` (endpoint `PATCH /api/v1/feed/{id}`)
+
+**Edição de Eventos**:
+- ✅ `backend/Araponga.Application/Services/EventsService.cs` (UpdateEventAsync, CancelEventAsync, GetEventParticipantsAsync)
+- ✅ `backend/Araponga.Domain/Events/TerritoryEvent.cs` (métodos `Update`, `Cancel`)
+- ✅ `backend/Araponga.Api/Controllers/EventsController.cs` (endpoints implementados)
+
+**Sistema de Avaliações**:
+- ✅ `backend/Araponga.Application/Services/RatingService.cs`
+- ✅ `backend/Araponga.Domain/Marketplace/StoreRating.cs`
+- ✅ `backend/Araponga.Domain/Marketplace/StoreItemRating.cs`
+- ✅ `backend/Araponga.Api/Controllers/RatingController.cs`
+
+**Busca no Marketplace**:
+- ✅ `backend/Araponga.Application/Services/MarketplaceSearchService.cs`
+- ✅ `backend/Araponga.Infrastructure/Postgres/Migrations/20250123130000_AddFullTextSearchIndexes.cs`
+- ✅ `backend/Araponga.Api/Controllers/MarketplaceSearchController.cs`
+
+**Histórico de Atividades**:
+- ✅ `backend/Araponga.Application/Services/UserActivityService.cs`
+- ✅ `backend/Araponga.Api/Controllers/UserActivityController.cs`
+
+---
+
+**Última atualização**: 2025-01-23

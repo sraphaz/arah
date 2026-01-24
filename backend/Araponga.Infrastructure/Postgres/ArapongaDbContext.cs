@@ -23,6 +23,7 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
     public DbSet<VoteRecord> Votes => Set<VoteRecord>();
     public DbSet<TerritoryModerationRuleRecord> TerritoryModerationRules => Set<TerritoryModerationRuleRecord>();
     public DbSet<TerritoryCharacterizationRecord> TerritoryCharacterizations => Set<TerritoryCharacterizationRecord>();
+    public DbSet<NotificationConfigRecord> NotificationConfigs => Set<NotificationConfigRecord>();
     public DbSet<TerritoryMembershipRecord> TerritoryMemberships => Set<TerritoryMembershipRecord>();
     public DbSet<MembershipSettingsRecord> MembershipSettings => Set<MembershipSettingsRecord>();
     public DbSet<MembershipCapabilityRecord> MembershipCapabilities => Set<MembershipCapabilityRecord>();
@@ -283,6 +284,23 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasIndex(c => c.TerritoryId).IsUnique();
         });
 
+        modelBuilder.Entity<NotificationConfigRecord>(entity =>
+        {
+            entity.ToTable("notification_configs");
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.NotificationTypesJson).HasColumnType("jsonb").IsRequired();
+            entity.Property(c => c.AvailableChannelsJson).HasColumnType("jsonb").IsRequired();
+            entity.Property(c => c.TemplatesJson).HasColumnType("jsonb").IsRequired();
+            entity.Property(c => c.DefaultChannelsJson).HasColumnType("jsonb").IsRequired();
+            entity.Property(c => c.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(c => c.UpdatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(c => c.TerritoryId).IsUnique()
+                .HasFilter("\"TerritoryId\" IS NOT NULL");
+            entity.HasIndex(c => new { c.TerritoryId })
+                .IsUnique()
+                .HasFilter("\"TerritoryId\" IS NULL"); // Índice único para config global
+        });
+
         modelBuilder.Entity<TerritoryMembershipRecord>(entity =>
         {
             entity.ToTable("territory_memberships");
@@ -436,6 +454,7 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.Property(p => p.Visibility).HasConversion<int>();
             entity.Property(p => p.Status).HasConversion<int>();
             entity.Property(p => p.ReferenceType).HasMaxLength(40);
+            entity.Property(p => p.TagsJson).HasColumnType("jsonb"); // JSONB para busca eficiente
             entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(p => p.RowVersion).IsRowVersion();
             entity.HasIndex(p => p.TerritoryId);
@@ -444,6 +463,10 @@ public sealed class ArapongaDbContext : DbContext, IUnitOfWork
             entity.HasIndex(p => p.AuthorUserId);
             entity.HasIndex(p => p.MapEntityId);
             entity.HasIndex(p => new { p.ReferenceType, p.ReferenceId });
+            // Índice GIN para busca eficiente em tags JSONB
+            entity.HasIndex(p => p.TagsJson)
+                .HasMethod("gin")
+                .HasFilter("\"TagsJson\" IS NOT NULL");
         });
 
         modelBuilder.Entity<PostCommentRecord>(entity =>

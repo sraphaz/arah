@@ -461,12 +461,26 @@ public static class PostgresMappers
             ReferenceId = post.ReferenceId,
             CreatedAtUtc = post.CreatedAtUtc,
             EditedAtUtc = post.EditedAtUtc,
-            EditCount = post.EditCount
+            EditCount = post.EditCount,
+            TagsJson = post.Tags.Count > 0 ? JsonSerializer.Serialize(post.Tags) : null
         };
     }
 
     public static CommunityPost ToDomain(this CommunityPostRecord record)
     {
+        IReadOnlyList<string>? tags = null;
+        if (!string.IsNullOrWhiteSpace(record.TagsJson))
+        {
+            try
+            {
+                tags = JsonSerializer.Deserialize<List<string>>(record.TagsJson);
+            }
+            catch
+            {
+                // Se falhar ao deserializar, tags permanece null
+            }
+        }
+        
         return new CommunityPost(
             record.Id,
             record.TerritoryId,
@@ -481,7 +495,8 @@ public static class PostgresMappers
             record.ReferenceType,
             record.ReferenceId,
             record.EditedAtUtc,
-            record.EditCount > int.MaxValue ? int.MaxValue : record.EditCount);
+            record.EditCount > int.MaxValue ? int.MaxValue : record.EditCount,
+            tags);
     }
 
     public static PostCommentRecord ToRecord(this PostComment comment)

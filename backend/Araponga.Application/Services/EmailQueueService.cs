@@ -55,10 +55,7 @@ public sealed class EmailQueueService
 
             await _queueRepository.AddAsync(queueItem, cancellationToken);
 
-            _logger.LogInformation(
-                "Email queued. Id: {EmailId}, Priority: {Priority}",
-                queueItem.Id,
-                priority);
+            _logger.LogInformation("Email queued. Id: {EmailId}", queueItem.Id);
 
             return OperationResult.Success();
         }

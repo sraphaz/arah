@@ -63,10 +63,6 @@ public sealed class EmailQueueWorker : BackgroundService
         // Rate limiting
         if (_emailsSentThisMinute >= _maxEmailsPerMinute)
         {
-            _logger.LogWarning(
-                "Rate limit reached. Emails sent this minute: {Count}, Max: {Max}",
-                _emailsSentThisMinute,
-                _maxEmailsPerMinute);
             return;
         }
 

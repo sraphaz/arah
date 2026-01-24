@@ -22,8 +22,7 @@ public sealed class LoggingEmailSender : IEmailSender
         CancellationToken cancellationToken)
     {
         _logger.LogInformation(
-            "Email enviado (simulado). To={To} Subject={Subject} IsHtml={IsHtml} BodyLength={BodyLength}",
-            MaskEmail(to),
+            "Email enviado (simulado). Subject={Subject} IsHtml={IsHtml} BodyLength={BodyLength}",
             subject,
             isHtml,
             body?.Length ?? 0);
@@ -39,8 +38,7 @@ public sealed class LoggingEmailSender : IEmailSender
         CancellationToken cancellationToken)
     {
         _logger.LogInformation(
-            "Email enviado (simulado) com template. To={To} Subject={Subject} Template={Template}",
-            MaskEmail(to),
+            "Email enviado (simulado) com template. Subject={Subject} Template={Template}",
             subject,
             templateName);
 
@@ -52,19 +50,11 @@ public sealed class LoggingEmailSender : IEmailSender
         CancellationToken cancellationToken)
     {
         _logger.LogInformation(
-            "Email enviado (simulado) via EmailMessage. To={To} Subject={Subject} IsHtml={IsHtml} BodyLength={BodyLength}",
-            MaskEmail(message.To),
+            "Email enviado (simulado) via EmailMessage. Subject={Subject} IsHtml={IsHtml} BodyLength={BodyLength}",
             message.Subject,
             message.IsHtml,
             message.Body?.Length ?? 0);
 
         return Task.FromResult(OperationResult.Success());
-    }
-
-    private static string MaskEmail(string email)
-    {
-        // Do not log any value derived from the email address to prevent PII exposure.
-        // Return a generic placeholder regardless of input.
-        return "***";
     }
 }

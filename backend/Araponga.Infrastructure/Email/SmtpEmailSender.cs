@@ -208,11 +208,4 @@ public sealed class SmtpEmailSender : IEmailSender
             }
         }
     }
-
-    private static string MaskEmail(string email)
-    {
-        // Do not log any value derived from the email address to prevent PII exposure.
-        // Return a generic placeholder regardless of input.
-        return "***";
-    }
 }

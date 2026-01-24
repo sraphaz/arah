@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
@@ -65,22 +63,8 @@ public sealed class LoggingEmailSender : IEmailSender
 
     private static string MaskEmail(string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-            return "***";
-
-        // Use a non-reversible hash of the email to prevent log forging and PII exposure
-        // Remove control characters first to prevent log injection
-        var sanitized = new string(email.Where(c => !char.IsControl(c)).ToArray()).Trim();
-        
-        if (string.IsNullOrEmpty(sanitized))
-            return "***";
-
-        // Generate SHA-256 hash of the email
-        var emailBytes = Encoding.UTF8.GetBytes(sanitized);
-        var hashBytes = SHA256.HashData(emailBytes);
-        var hashHex = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
-
-        // Return hash prefix for correlation without exposing the email
-        return $"email#{hashHex.Substring(0, 8)}";
+        // Do not log any value derived from the email address to prevent PII exposure.
+        // Return a generic placeholder regardless of input.
+        return "***";
     }
 }

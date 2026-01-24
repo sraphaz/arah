@@ -1,6 +1,4 @@
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
@@ -68,9 +66,8 @@ public sealed class SmtpEmailSender : IEmailSender
         if (_templateService == null)
         {
             _logger.LogError(
-                "EmailTemplateService is not available. Template: {TemplateName}, To: {To}",
-                templateName,
-                MaskEmail(to));
+                "EmailTemplateService is not available. Template: {TemplateName}",
+                templateName);
             return OperationResult.Failure(
                 "Template-based email sending requires EmailTemplateService to be registered.");
         }
@@ -92,9 +89,8 @@ public sealed class SmtpEmailSender : IEmailSender
         {
             _logger.LogError(
                 ex,
-                "Failed to render email template. Template: {TemplateName}, To: {To}",
-                templateName,
-                MaskEmail(to));
+                "Failed to render email template. Template: {TemplateName}",
+                templateName);
             return OperationResult.Failure($"Failed to render email template: {ex.Message}");
         }
     }
@@ -135,8 +131,7 @@ public sealed class SmtpEmailSender : IEmailSender
             await SendMimeMessageAsync(mimeMessage, cancellationToken);
 
             _logger.LogInformation(
-                "Email sent successfully. To: {To}, Subject: {Subject}",
-                MaskEmail(message.To),
+                "Email sent successfully. Subject: {Subject}",
                 message.Subject);
 
             return OperationResult.Success();
@@ -145,8 +140,7 @@ public sealed class SmtpEmailSender : IEmailSender
         {
             _logger.LogError(
                 ex,
-                "Failed to send email. To: {To}, Subject: {Subject}",
-                MaskEmail(message.To),
+                "Failed to send email. Subject: {Subject}",
                 message.Subject);
 
             return OperationResult.Failure($"Failed to send email: {ex.Message}");
@@ -217,22 +211,8 @@ public sealed class SmtpEmailSender : IEmailSender
 
     private static string MaskEmail(string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-            return "***";
-
-        // Use a non-reversible hash of the email to prevent log forging and PII exposure
-        // Remove control characters first to prevent log injection
-        var sanitized = new string(email.Where(c => !char.IsControl(c)).ToArray()).Trim();
-        
-        if (string.IsNullOrEmpty(sanitized))
-            return "***";
-
-        // Generate SHA-256 hash of the email
-        var emailBytes = Encoding.UTF8.GetBytes(sanitized);
-        var hashBytes = SHA256.HashData(emailBytes);
-        var hashHex = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
-
-        // Return hash prefix for correlation without exposing the email
-        return $"email#{hashHex.Substring(0, 8)}";
+        // Do not log any value derived from the email address to prevent PII exposure.
+        // Return a generic placeholder regardless of input.
+        return "***";
     }
 }

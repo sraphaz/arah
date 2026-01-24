@@ -68,8 +68,22 @@
 
 ---
 
+### Moderação dinâmica comunitária (Fase 14)
+
+**Descrição**: Regras de moderação definidas pela comunidade por território, aplicadas automaticamente na criação de posts e itens do marketplace.
+
+**Como funciona**:
+- **Regras** (`TerritoryModerationRule`): Podem ser criadas por curadores ou via votações ([Governança](./60_19_API_GOVERNANCA.md)). Tipos: ContentType, ProhibitedWords, Behavior, MarketplacePolicy, EventPolicy.
+- **Aplicação**: `PostCreationService` e `StoreItemService` verificam regras ativas antes de criar conteúdo; retornam erro se houver violação.
+- **Gestão**: Curadores criam/ativam regras; a comunidade pode propor e votar regras (votação tipo `ModerationRule`).
+
+**Documentação detalhada**: `docs/COMMUNITY_MODERATION.md`, `docs/GOVERNANCE_SYSTEM.md`.
+
+---
+
 ## 📚 Documentação Relacionada
 
+- **[Governança](./60_19_API_GOVERNANCA.md)** - Votações e moderação dinâmica comunitária
 - **[Regras de Visibilidade](./60_17_API_VISIBILIDADE.md)** - Sanções e restrições
 - **[Admin: System Config](./60_14_API_ADMIN.md)** - Configurações de moderação
 - **[Paginação](./60_00_API_PAGINACAO.md)** - Versão paginada: `GET /api/v1/reports/paged`

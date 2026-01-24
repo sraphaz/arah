@@ -137,6 +137,346 @@ public sealed class VotingServiceTests
         }
     }
 
+    [Fact]
+    public async Task CloseVotingAsync_WhenCreator_ReturnsSuccess()
+    {
+        // Arrange
+        var dataStore = new InMemoryDataStore();
+        var votingRepo = new InMemoryVotingRepository(dataStore);
+        var voteRepo = new InMemoryVoteRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new VotingService(
+            votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
+
+        var territoryId = dataStore.Territories[1].Id;
+        var userId = dataStore.Users[0].Id;
+
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            userId,
+            territoryId,
+            MembershipRole.Resident,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow);
+        await membershipRepo.AddAsync(membership, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        var votingResult = await service.CreateVotingAsync(
+            territoryId,
+            userId,
+            VotingType.ThemePrioritization,
+            "Test Voting",
+            "Test Description",
+            new[] { "Option1", "Option2" },
+            VotingVisibility.AllMembers,
+            null,
+            null,
+            CancellationToken.None);
+
+        Assert.True(votingResult.IsSuccess);
+        var voting = votingResult.Value!;
+        voting.Open();
+        await votingRepo.UpdateAsync(voting, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        // Act
+        var result = await service.CloseVotingAsync(voting.Id, userId, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        var updatedVoting = await votingRepo.GetByIdAsync(voting.Id, CancellationToken.None);
+        Assert.NotNull(updatedVoting);
+        Assert.Equal(VotingStatus.Closed, updatedVoting.Status);
+    }
+
+    [Fact]
+    public async Task GetResultsAsync_WhenVotingHasVotes_ReturnsResults()
+    {
+        // Arrange
+        var dataStore = new InMemoryDataStore();
+        var votingRepo = new InMemoryVotingRepository(dataStore);
+        var voteRepo = new InMemoryVoteRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new VotingService(
+            votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
+
+        var territoryId = dataStore.Territories[1].Id;
+        var userId = dataStore.Users[0].Id;
+
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            userId,
+            territoryId,
+            MembershipRole.Resident,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow);
+        await membershipRepo.AddAsync(membership, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        var votingResult = await service.CreateVotingAsync(
+            territoryId,
+            userId,
+            VotingType.ThemePrioritization,
+            "Results Test",
+            "Test",
+            new[] { "Option1", "Option2" },
+            VotingVisibility.AllMembers,
+            null,
+            null,
+            CancellationToken.None);
+
+        Assert.True(votingResult.IsSuccess);
+        var voting = votingResult.Value!;
+        voting.Open();
+        await votingRepo.UpdateAsync(voting, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        // Adicionar alguns votos
+        await voteRepo.AddAsync(new Vote(Guid.NewGuid(), voting.Id, Guid.NewGuid(), "Option1", DateTime.UtcNow), CancellationToken.None);
+        await voteRepo.AddAsync(new Vote(Guid.NewGuid(), voting.Id, Guid.NewGuid(), "Option1", DateTime.UtcNow), CancellationToken.None);
+        await voteRepo.AddAsync(new Vote(Guid.NewGuid(), voting.Id, Guid.NewGuid(), "Option2", DateTime.UtcNow), CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        // Act
+        var result = await service.GetResultsAsync(voting.Id, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal(2, result.Value["Option1"]);
+        Assert.Equal(1, result.Value["Option2"]);
+    }
+
+    [Fact]
+    public async Task VoteAsync_WhenVotingClosed_ReturnsFailure()
+    {
+        // Arrange
+        var dataStore = new InMemoryDataStore();
+        var votingRepo = new InMemoryVotingRepository(dataStore);
+        var voteRepo = new InMemoryVoteRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new VotingService(
+            votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
+
+        var territoryId = dataStore.Territories[1].Id;
+        var userId = dataStore.Users[0].Id;
+
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            userId,
+            territoryId,
+            MembershipRole.Resident,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow);
+        await membershipRepo.AddAsync(membership, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        var votingResult = await service.CreateVotingAsync(
+            territoryId,
+            userId,
+            VotingType.ThemePrioritization,
+            "Closed Test",
+            "Test",
+            new[] { "Option1", "Option2" },
+            VotingVisibility.AllMembers,
+            null,
+            null,
+            CancellationToken.None);
+
+        Assert.True(votingResult.IsSuccess);
+        var voting = votingResult.Value!;
+        voting.Open();
+        voting.Close(); // Fechar imediatamente
+        await votingRepo.UpdateAsync(voting, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        // Act
+        var result = await service.VoteAsync(voting.Id, userId, "Option1", CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains("not open", result.Error ?? "", StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task VoteAsync_WhenInvalidOption_ReturnsFailure()
+    {
+        // Arrange
+        var dataStore = new InMemoryDataStore();
+        var votingRepo = new InMemoryVotingRepository(dataStore);
+        var voteRepo = new InMemoryVoteRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new VotingService(
+            votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
+
+        var territoryId = dataStore.Territories[1].Id;
+        var userId = dataStore.Users[0].Id;
+
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            userId,
+            territoryId,
+            MembershipRole.Resident,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow);
+        await membershipRepo.AddAsync(membership, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        var votingResult = await service.CreateVotingAsync(
+            territoryId,
+            userId,
+            VotingType.ThemePrioritization,
+            "Invalid Option Test",
+            "Test",
+            new[] { "Option1", "Option2" },
+            VotingVisibility.AllMembers,
+            null,
+            null,
+            CancellationToken.None);
+
+        Assert.True(votingResult.IsSuccess);
+        var voting = votingResult.Value!;
+        voting.Open();
+        await votingRepo.UpdateAsync(voting, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        // Act
+        var result = await service.VoteAsync(voting.Id, userId, "InvalidOption", CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains("not valid", result.Error ?? "", StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ListVotingsAsync_WhenTerritoryHasVotings_ReturnsList()
+    {
+        // Arrange
+        var dataStore = new InMemoryDataStore();
+        var votingRepo = new InMemoryVotingRepository(dataStore);
+        var voteRepo = new InMemoryVoteRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new VotingService(
+            votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
+
+        var territoryId = dataStore.Territories[1].Id;
+        var userId = dataStore.Users[0].Id;
+
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            userId,
+            territoryId,
+            MembershipRole.Resident,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow);
+        await membershipRepo.AddAsync(membership, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        // Criar duas votações
+        var voting1 = await service.CreateVotingAsync(
+            territoryId, userId, VotingType.ThemePrioritization,
+            "Voting 1", "Test", new[] { "A", "B" },
+            VotingVisibility.AllMembers, null, null, CancellationToken.None);
+        Assert.True(voting1.IsSuccess);
+
+        var voting2 = await service.CreateVotingAsync(
+            territoryId, userId, VotingType.ThemePrioritization,
+            "Voting 2", "Test", new[] { "C", "D" },
+            VotingVisibility.AllMembers, null, null, CancellationToken.None);
+        Assert.True(voting2.IsSuccess);
+
+        // Act
+        var votings = await service.ListVotingsAsync(territoryId, null, null, CancellationToken.None);
+
+        // Assert
+        Assert.True(votings.Count >= 2);
+    }
+
+    [Fact]
+    public async Task GetVotingAsync_WhenExists_ReturnsVoting()
+    {
+        // Arrange
+        var dataStore = new InMemoryDataStore();
+        var votingRepo = new InMemoryVotingRepository(dataStore);
+        var voteRepo = new InMemoryVoteRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new VotingService(
+            votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
+
+        var territoryId = dataStore.Territories[1].Id;
+        var userId = dataStore.Users[0].Id;
+
+        var membership = new TerritoryMembership(
+            Guid.NewGuid(),
+            userId,
+            territoryId,
+            MembershipRole.Resident,
+            ResidencyVerification.None,
+            null,
+            null,
+            DateTime.UtcNow);
+        await membershipRepo.AddAsync(membership, CancellationToken.None);
+        await unitOfWork.CommitAsync(CancellationToken.None);
+
+        var votingResult = await service.CreateVotingAsync(
+            territoryId, userId, VotingType.ThemePrioritization,
+            "Get Test", "Test", new[] { "A", "B" },
+            VotingVisibility.AllMembers, null, null, CancellationToken.None);
+        Assert.True(votingResult.IsSuccess);
+        var votingId = votingResult.Value!.Id;
+
+        // Act
+        var result = await service.GetVotingAsync(votingId, userId, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal(votingId, result.Value.Id);
+    }
+
+    [Fact]
+    public async Task GetVotingAsync_WhenNotExists_ReturnsFailure()
+    {
+        // Arrange
+        var dataStore = new InMemoryDataStore();
+        var votingRepo = new InMemoryVotingRepository(dataStore);
+        var voteRepo = new InMemoryVoteRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var service = new VotingService(
+            votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
+
+        // Act
+        var result = await service.GetVotingAsync(Guid.NewGuid(), null, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains("not found", result.Error ?? "", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static AccessEvaluator CreateAccessEvaluator(InMemoryDataStore dataStore)
     {
         var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);

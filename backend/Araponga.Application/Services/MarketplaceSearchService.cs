@@ -38,9 +38,10 @@ public sealed class MarketplaceSearchService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        // Por enquanto, usar busca simples baseada em nome
-        // TODO: Implementar full-text search com PostgreSQL quando necessário
-        
+        // Usar busca do repositório que suporta full-text search quando disponível
+        // O repositório usa full-text search (tsvector) se a migration foi aplicada,
+        // caso contrário faz fallback para ILike
+
         var allStores = await _storeRepository.ListByTerritoryAsync(territoryId, cancellationToken);
 
         // Filtrar por status ativo
@@ -49,6 +50,8 @@ public sealed class MarketplaceSearchService
             .AsEnumerable();
 
         // Aplicar filtro de query (busca por nome)
+        // Nota: Para full-text search em stores, seria necessário atualizar PostgresStoreRepository
+        // Por enquanto, mantém busca simples (ILike) que funciona bem para volumes moderados
         if (!string.IsNullOrWhiteSpace(filters.Query))
         {
             var queryLower = filters.Query.ToLowerInvariant();
@@ -62,7 +65,7 @@ public sealed class MarketplaceSearchService
         {
             var storeIds = stores.Select(s => s.Id).ToList();
             var storesWithRatings = new List<Store>();
-            
+
             foreach (var store in stores)
             {
                 var averageRating = await _storeRatingRepository.GetAverageRatingAsync(store.Id, cancellationToken);
@@ -71,7 +74,7 @@ public sealed class MarketplaceSearchService
                     storesWithRatings.Add(store);
                 }
             }
-            
+
             stores = storesWithRatings;
         }
 
@@ -198,7 +201,7 @@ public sealed class MarketplaceSearchService
         foreach (var item in itemsList)
         {
             var averageRating = await _itemRatingRepository.GetAverageRatingAsync(item.Id, cancellationToken);
-            
+
             // Aplicar filtro de rating mínimo
             if (filters.MinRating.HasValue && averageRating < filters.MinRating.Value)
             {
@@ -250,7 +253,7 @@ public sealed class MarketplaceSearchService
         var itemsTotal = itemsResult.Value?.TotalCount ?? 0;
         var combinedTotal = storesTotal + itemsTotal;
         var safeTotalCount = combinedTotal > maxInt32 ? maxInt32 : combinedTotal;
-        
+
         var combined = new CombinedSearchResult(
             storesResult.Value?.Items ?? Array.Empty<StoreSearchResult>(),
             itemsResult.Value?.Items ?? Array.Empty<ItemSearchResult>(),

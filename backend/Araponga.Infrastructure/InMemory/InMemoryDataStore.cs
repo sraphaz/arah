@@ -79,6 +79,8 @@ public sealed class InMemoryDataStore
             null,
             UserIdentityVerificationStatus.Unverified,
             null,
+            null,
+            null,
             DateTime.UtcNow);
 
         var curatorUser = new User(
@@ -97,6 +99,8 @@ public sealed class InMemoryDataStore
             null,
             UserIdentityVerificationStatus.Unverified,
             null,
+            null,
+            null,
             DateTime.UtcNow);
 
         var adminUser = new User(
@@ -114,6 +118,8 @@ public sealed class InMemoryDataStore
             null,
             null,
             UserIdentityVerificationStatus.Unverified,
+            null,
+            null,
             null,
             DateTime.UtcNow);
 
@@ -405,4 +411,7 @@ public sealed class InMemoryDataStore
 
     // Email
     public List<EmailQueueItem> EmailQueueItems { get; } = new();
+
+    // Notifications
+    public List<Domain.Notifications.NotificationConfig> NotificationConfigs { get; } = new();
 }

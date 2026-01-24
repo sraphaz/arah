@@ -18,5 +18,6 @@ public sealed class CommunityPostRecord
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? EditedAtUtc { get; set; }
     public int EditCount { get; set; }
+    public string? TagsJson { get; set; } // JSON array de tags
     public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 }

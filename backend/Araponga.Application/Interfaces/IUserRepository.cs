@@ -34,7 +34,7 @@ public interface IUserRepository
     /// <param name="user">Usuário com dados atualizados.</param>
     /// <param name="cancellationToken">Token de cancelamento.</param>
     Task UpdateAsync(User user, CancellationToken cancellationToken);
-    
+
     /// <summary>
     /// Busca múltiplos usuários pelos seus IDs em uma única operação (batch).
     /// </summary>

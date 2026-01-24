@@ -308,6 +308,7 @@ public sealed class MapController : ControllerBase
                 userContext.User?.Id,
                 null,
                 null,
+                false,
                 cancellationToken);
 
             var postIds = posts.Select(post => post.Id).ToList();

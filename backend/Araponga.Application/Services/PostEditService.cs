@@ -53,7 +53,8 @@ public sealed class PostEditService
         string content,
         IReadOnlyCollection<Guid>? mediaIds,
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? tags = null)
     {
         // Validar entrada
         if (string.IsNullOrWhiteSpace(title))
@@ -206,7 +207,7 @@ public sealed class PostEditService
         }
 
         // Editar post usando método do domínio
-        post.Edit(title, content);
+        post.Edit(title, content, tags?.ToList());
 
         // Atualizar geo anchors se fornecidos
         if (geoAnchors is not null)

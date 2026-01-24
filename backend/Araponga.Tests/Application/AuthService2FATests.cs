@@ -84,6 +84,8 @@ public sealed class AuthService2FATests
             DateTime.UtcNow,
             UserIdentityVerificationStatus.Unverified,
             null,
+            null,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -214,6 +216,8 @@ public sealed class AuthService2FATests
             DateTime.UtcNow,
             UserIdentityVerificationStatus.Unverified,
             null,
+            null,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -296,6 +300,8 @@ public sealed class AuthService2FATests
             DateTime.UtcNow,
             UserIdentityVerificationStatus.Unverified,
             null,
+            null,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -358,6 +364,8 @@ public sealed class AuthService2FATests
             DateTime.UtcNow,
             UserIdentityVerificationStatus.Unverified,
             null,
+            null,
+            null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);
 
@@ -413,6 +421,8 @@ public sealed class AuthService2FATests
             "HASH",
             DateTime.UtcNow,
             UserIdentityVerificationStatus.Unverified,
+            null,
+            null,
             null,
             DateTime.UtcNow);
         await userRepository.AddAsync(user, CancellationToken.None);

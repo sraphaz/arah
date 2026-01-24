@@ -34,10 +34,23 @@ public sealed class FeedService
         Guid? userId,
         Guid? mapEntityId,
         Guid? assetId,
-        CancellationToken cancellationToken)
+        bool filterByInterests = false,
+        CancellationToken cancellationToken = default)
     {
         var posts = await _feedRepository.ListByTerritoryAsync(territoryId, cancellationToken);
-        return await _postFilterService.FilterPostsAsync(posts, territoryId, userId, mapEntityId, assetId, cancellationToken);
+        var filtered = await _postFilterService.FilterPostsAsync(posts, territoryId, userId, mapEntityId, assetId, cancellationToken);
+
+        // Aplicar filtro de interesses se solicitado e se serviço disponível
+        if (filterByInterests && _interestFilterService is not null && userId.HasValue)
+        {
+            filtered = await _interestFilterService.FilterFeedByInterestsAsync(
+                filtered,
+                userId.Value,
+                territoryId,
+                cancellationToken);
+        }
+
+        return filtered;
     }
 
     public async Task<Common.PagedResult<CommunityPost>> ListForTerritoryPagedAsync(
@@ -96,11 +109,12 @@ public sealed class FeedService
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors,
         IReadOnlyCollection<Guid>? assetIds,
         IReadOnlyCollection<Guid>? mediaIds,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? tags = null)
     {
         return _postCreationService.CreatePostAsync(
             territoryId, userId, title, content, type, visibility, status,
-            mapEntityId, geoAnchors, assetIds, mediaIds, cancellationToken);
+            mapEntityId, geoAnchors, assetIds, mediaIds, cancellationToken, tags);
     }
 
     public Task<bool> LikeAsync(

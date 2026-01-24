@@ -1,7 +1,6 @@
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
-using Araponga.Domain.Events;
 using Araponga.Domain.Email;
 using Araponga.Domain.Events;
 using Araponga.Domain.Users;
@@ -185,11 +184,6 @@ public sealed class EventReminderWorker : BackgroundService
             {
                 _logger.LogError(ex, "Error processing reminder for event {EventId}", evt.Id);
             }
-        }
-
-        if (emailsSent > 0)
-        {
-            _logger.LogInformation("Sent {Count} event reminder emails", emailsSent);
         }
     }
 }

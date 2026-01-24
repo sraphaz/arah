@@ -14,5 +14,6 @@ public sealed record FeedItemResponse(
     int ShareCount,
     DateTime CreatedAtUtc,
     IReadOnlyCollection<string>? MediaUrls = null,
-    int MediaCount = 0
+    int MediaCount = 0,
+    IReadOnlyCollection<string>? Tags = null
 );

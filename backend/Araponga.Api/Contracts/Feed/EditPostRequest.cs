@@ -4,5 +4,6 @@ public sealed record EditPostRequest(
     string Title,
     string Content,
     IReadOnlyCollection<GeoAnchorRequest>? GeoAnchors,
-    IReadOnlyCollection<Guid>? MediaIds
+    IReadOnlyCollection<Guid>? MediaIds,
+    IReadOnlyCollection<string>? Tags = null
 );

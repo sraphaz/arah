@@ -21,7 +21,7 @@ public sealed class User
         string authProvider,
         string externalId,
         DateTime createdAtUtc)
-        : this(id, displayName, email, cpf, foreignDocument, phoneNumber, address, authProvider, externalId, false, null, null, null, UserIdentityVerificationStatus.Unverified, null, createdAtUtc)
+        : this(id, displayName, email, cpf, foreignDocument, phoneNumber, address, authProvider, externalId, false, null, null, null, UserIdentityVerificationStatus.Unverified, null, null, null, createdAtUtc)
     {
     }
 
@@ -43,6 +43,8 @@ public sealed class User
     /// <param name="twoFactorVerifiedAtUtc">Data/hora UTC em que o 2FA foi verificado (opcional).</param>
     /// <param name="identityVerificationStatus">Status da verificação de identidade global do usuário.</param>
     /// <param name="identityVerifiedAtUtc">Data/hora UTC em que a identidade foi verificada (opcional).</param>
+    /// <param name="avatarMediaAssetId">ID do MediaAsset usado como avatar (opcional).</param>
+    /// <param name="bio">Biografia/descrição pessoal do usuário (opcional, máx. 500 caracteres).</param>
     /// <param name="createdAtUtc">Data/hora UTC de criação do usuário.</param>
     public User(
         Guid id,
@@ -60,6 +62,8 @@ public sealed class User
         DateTime? twoFactorVerifiedAtUtc,
         UserIdentityVerificationStatus identityVerificationStatus,
         DateTime? identityVerifiedAtUtc,
+        Guid? avatarMediaAssetId,
+        string? bio,
         DateTime createdAtUtc)
     {
         if (string.IsNullOrWhiteSpace(displayName))
@@ -102,9 +106,14 @@ public sealed class User
         TwoFactorEnabled = twoFactorEnabled;
         TwoFactorSecret = twoFactorSecret;
         TwoFactorRecoveryCodesHash = twoFactorRecoveryCodesHash;
+        TwoFactorEnabled = twoFactorEnabled;
+        TwoFactorSecret = twoFactorSecret;
+        TwoFactorRecoveryCodesHash = twoFactorRecoveryCodesHash;
         TwoFactorVerifiedAtUtc = twoFactorVerifiedAtUtc;
         IdentityVerificationStatus = identityVerificationStatus;
         IdentityVerifiedAtUtc = identityVerifiedAtUtc;
+        AvatarMediaAssetId = avatarMediaAssetId;
+        Bio = NormalizeBio(bio);
         CreatedAtUtc = createdAtUtc;
     }
 
@@ -187,6 +196,16 @@ public sealed class User
     public DateTime? IdentityVerifiedAtUtc { get; private set; }
 
     /// <summary>
+    /// ID do MediaAsset usado como avatar do usuário (opcional).
+    /// </summary>
+    public Guid? AvatarMediaAssetId { get; private set; }
+
+    /// <summary>
+    /// Biografia/descrição pessoal do usuário (opcional, máx. 500 caracteres).
+    /// </summary>
+    public string? Bio { get; private set; }
+
+    /// <summary>
     /// Data/hora UTC de criação do usuário no sistema.
     /// </summary>
     public DateTime CreatedAtUtc { get; }
@@ -227,6 +246,40 @@ public sealed class User
         IdentityVerifiedAtUtc = verifiedAtUtc;
     }
 
+    /// <summary>
+    /// Atualiza o avatar do usuário.
+    /// </summary>
+    /// <param name="avatarMediaAssetId">ID do MediaAsset a ser usado como avatar (null para remover).</param>
+    public void UpdateAvatar(Guid? avatarMediaAssetId)
+    {
+        AvatarMediaAssetId = avatarMediaAssetId;
+    }
+
+    /// <summary>
+    /// Atualiza a biografia do usuário.
+    /// </summary>
+    /// <param name="bio">Nova biografia (null ou vazio para remover, máx. 500 caracteres).</param>
+    /// <exception cref="ArgumentException">Se a biografia exceder 500 caracteres.</exception>
+    public void UpdateBio(string? bio)
+    {
+        var normalized = NormalizeBio(bio);
+        if (normalized is not null && normalized.Length > 500)
+        {
+            throw new ArgumentException("Bio must not exceed 500 characters.", nameof(bio));
+        }
+        Bio = normalized;
+    }
+
     private static string? NormalizeOptional(string? value)
         => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+
+    private static string? NormalizeBio(string? bio)
+    {
+        if (string.IsNullOrWhiteSpace(bio))
+        {
+            return null;
+        }
+        var trimmed = bio.Trim();
+        return trimmed.Length == 0 ? null : trimmed;
+    }
 }

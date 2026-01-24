@@ -24,5 +24,9 @@ public sealed class UserRecord
     public UserIdentityVerificationStatus IdentityVerificationStatus { get; set; }
     public DateTime? IdentityVerifiedAtUtc { get; set; }
     
+    // Profile fields
+    public Guid? AvatarMediaAssetId { get; set; }
+    public string? Bio { get; set; }
+    
     public DateTime CreatedAtUtc { get; set; }
 }

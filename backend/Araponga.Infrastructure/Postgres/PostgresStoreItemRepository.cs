@@ -81,9 +81,24 @@ public sealed class PostgresStoreItemRepository : IStoreItemRepository
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            items = items.Where(l =>
-                EF.Functions.ILike(l.Title, $"%{query}%") ||
-                (l.Description != null && EF.Functions.ILike(l.Description, $"%{query}%")));
+            // Usar full-text search se a coluna search_vector existir (criada pela migration)
+            // Fallback para ILike se full-text não estiver disponível
+            var searchQuery = query.Trim();
+            try
+            {
+                // Tentar usar full-text search com tsvector (mais performático)
+                items = items.Where(l =>
+                    EF.Functions.ToTsVector("portuguese", 
+                        (l.Title ?? "") + " " + (l.Description ?? ""))
+                        .Matches(EF.Functions.PlainToTsQuery("portuguese", searchQuery)));
+            }
+            catch
+            {
+                // Fallback para ILike se full-text não estiver disponível
+                items = items.Where(l =>
+                    EF.Functions.ILike(l.Title, $"%{searchQuery}%") ||
+                    (l.Description != null && EF.Functions.ILike(l.Description, $"%{searchQuery}%")));
+            }
         }
 
         var records = await items
@@ -141,9 +156,22 @@ public sealed class PostgresStoreItemRepository : IStoreItemRepository
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            items = items.Where(l =>
-                EF.Functions.ILike(l.Title, $"%{query}%") ||
-                (l.Description != null && EF.Functions.ILike(l.Description, $"%{query}%")));
+            // Usar full-text search se disponível
+            var searchQuery = query.Trim();
+            try
+            {
+                items = items.Where(l =>
+                    EF.Functions.ToTsVector("portuguese", 
+                        (l.Title ?? "") + " " + (l.Description ?? ""))
+                        .Matches(EF.Functions.PlainToTsQuery("portuguese", searchQuery)));
+            }
+            catch
+            {
+                // Fallback para ILike
+                items = items.Where(l =>
+                    EF.Functions.ILike(l.Title, $"%{searchQuery}%") ||
+                    (l.Description != null && EF.Functions.ILike(l.Description, $"%{searchQuery}%")));
+            }
         }
 
         var records = await items
@@ -189,9 +217,22 @@ public sealed class PostgresStoreItemRepository : IStoreItemRepository
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            items = items.Where(l =>
-                EF.Functions.ILike(l.Title, $"%{query}%") ||
-                (l.Description != null && EF.Functions.ILike(l.Description, $"%{query}%")));
+            // Usar full-text search se disponível
+            var searchQuery = query.Trim();
+            try
+            {
+                items = items.Where(l =>
+                    EF.Functions.ToTsVector("portuguese", 
+                        (l.Title ?? "") + " " + (l.Description ?? ""))
+                        .Matches(EF.Functions.PlainToTsQuery("portuguese", searchQuery)));
+            }
+            catch
+            {
+                // Fallback para ILike
+                items = items.Where(l =>
+                    EF.Functions.ILike(l.Title, $"%{searchQuery}%") ||
+                    (l.Description != null && EF.Functions.ILike(l.Description, $"%{searchQuery}%")));
+            }
         }
 
         const int maxInt32 = int.MaxValue;

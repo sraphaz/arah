@@ -66,9 +66,8 @@ public sealed class SmtpEmailSender : IEmailSender
         if (_templateService == null)
         {
             _logger.LogError(
-                "EmailTemplateService is not available. Template: {TemplateName}, To: {To}",
-                templateName,
-                to);
+                "EmailTemplateService is not available. Template: {TemplateName}",
+                templateName);
             return OperationResult.Failure(
                 "Template-based email sending requires EmailTemplateService to be registered.");
         }
@@ -90,9 +89,8 @@ public sealed class SmtpEmailSender : IEmailSender
         {
             _logger.LogError(
                 ex,
-                "Failed to render email template. Template: {TemplateName}, To: {To}",
-                templateName,
-                to);
+                "Failed to render email template. Template: {TemplateName}",
+                templateName);
             return OperationResult.Failure($"Failed to render email template: {ex.Message}");
         }
     }
@@ -133,8 +131,7 @@ public sealed class SmtpEmailSender : IEmailSender
             await SendMimeMessageAsync(mimeMessage, cancellationToken);
 
             _logger.LogInformation(
-                "Email sent successfully. To: {To}, Subject: {Subject}",
-                message.To,
+                "Email sent successfully. Subject: {Subject}",
                 message.Subject);
 
             return OperationResult.Success();
@@ -143,8 +140,7 @@ public sealed class SmtpEmailSender : IEmailSender
         {
             _logger.LogError(
                 ex,
-                "Failed to send email. To: {To}, Subject: {Subject}",
-                message.To,
+                "Failed to send email. Subject: {Subject}",
                 message.Subject);
 
             return OperationResult.Failure($"Failed to send email: {ex.Message}");

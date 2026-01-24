@@ -1,8 +1,11 @@
 using System.Reflection;
 using Araponga.Api.Configuration;
 using Araponga.Api.Extensions;
+using Araponga.Api.HealthChecks;
 using Araponga.Api.Middleware;
 using Araponga.Api.Security;
+using Araponga.Application.Configuration;
+using Araponga.Application.Exceptions;
 using Araponga.Infrastructure.Outbox;
 using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
@@ -26,6 +29,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using Araponga.Application.Metrics;
+using Araponga.Application.Services;
+using Araponga.Infrastructure.Postgres;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +104,7 @@ if (builder.Environment.IsProduction() && jwtSigningKey.Length < 32)
 var jwtSection = builder.Configuration.GetSection("Jwt");
 builder.Services.Configure<JwtOptions>(jwtSection);
 builder.Services.Configure<PresencePolicyOptions>(builder.Configuration.GetSection("PresencePolicy"));
+builder.Services.Configure<PasswordResetOptions>(builder.Configuration.GetSection("Auth:PasswordReset"));
 
 // CORS Configuration
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ??
@@ -275,25 +281,39 @@ builder.Services.AddRateLimiter(options =>
 
 // Health Checks Configuration
 var healthChecksBuilder = builder.Services.AddHealthChecks()
-    .AddCheck("self", () => HealthCheckResult.Healthy("API is healthy"));
+    .AddCheck("self", () => HealthCheckResult.Healthy("API is healthy"), tags: new[] { "self", "live" })
+    .AddCheck<CacheHealthCheck>("cache", tags: new[] { "cache", "ready" })
+    .AddCheck<StorageHealthCheck>("storage", tags: new[] { "storage", "ready" })
+    .AddCheck<EventBusHealthCheck>("event_bus", tags: new[] { "eventbus", "ready" });
 
 var persistenceProvider = builder.Configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
 if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
 {
     // DbContext will be registered in AddInfrastructure
-    // Health check for database will be added after infrastructure is registered
+    // Database health check will be added after infrastructure is registered
 }
 
 // Infrastructure (repositories, unit of work, etc.) - must be called before adding database health check
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Configure connection pool metrics after infrastructure is registered
+if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddSingleton<ConnectionPoolMetricsService>(sp =>
+    {
+        var dbContext = sp.GetRequiredService<ArapongaDbContext>();
+        var logger = sp.GetRequiredService<ILogger<ConnectionPoolMetricsService>>();
+        return new ConnectionPoolMetricsService(dbContext, logger);
+    });
+}
+
 // Add database health check after infrastructure is registered
 if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
 {
-    healthChecksBuilder.AddDbContextCheck<ArapongaDbContext>(
-        name: "database",
+    healthChecksBuilder.AddCheck<DatabaseHealthCheck>(
+        "database",
         failureStatus: HealthStatus.Unhealthy,
-        tags: new[] { "db", "postgres" });
+        tags: new[] { "db", "ready", "postgres" });
 }
 
 // Anti-forgery tokens for CSRF protection
@@ -439,6 +459,21 @@ builder.Services.AddHsts(options =>
 
 var app = builder.Build();
 
+// Configure connection pool metrics if using Postgres
+if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+{
+    try
+    {
+        var metricsService = app.Services.GetRequiredService<ConnectionPoolMetricsService>();
+        ConnectionPoolMetricsService.ConfigureMetrics(metricsService);
+    }
+    catch (Exception ex)
+    {
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Failed to configure connection pool metrics");
+    }
+}
+
 // Prometheus Metrics Endpoint
 app.UseMetricServer();
 app.UseHttpMetrics();
@@ -467,9 +502,17 @@ app.UseExceptionHandler(errorApp =>
         }
 
         var includeDetails = app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing");
-        var statusCode = exception is ArgumentException
-            ? StatusCodes.Status400BadRequest
-            : StatusCodes.Status500InternalServerError;
+        var statusCode = exception switch
+        {
+            Araponga.Application.Exceptions.ValidationException => StatusCodes.Status400BadRequest,
+            NotFoundException => StatusCodes.Status404NotFound,
+            UnauthorizedException => StatusCodes.Status401Unauthorized,
+            ForbiddenException => StatusCodes.Status403Forbidden,
+            ConflictException => StatusCodes.Status409Conflict,
+            ArgumentException => StatusCodes.Status400BadRequest,
+            InvalidOperationException => StatusCodes.Status409Conflict,
+            _ => StatusCodes.Status500InternalServerError
+        };
 
         var problem = new ProblemDetails
         {
@@ -592,7 +635,7 @@ app.UseAuthorization();
 // Health Checks
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
-    Predicate = check => check.Tags.Contains("self"),
+    Predicate = _ => true,
     ResponseWriter = async (context, report) =>
     {
         context.Response.ContentType = "application/json";
@@ -614,7 +657,29 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
-    Predicate = check => check.Tags.Contains("db") || check.Tags.Contains("self"),
+    Predicate = check => check.Tags.Contains("ready"),
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var result = System.Text.Json.JsonSerializer.Serialize(new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(entry => new
+            {
+                name = entry.Key,
+                status = entry.Value.Status.ToString(),
+                exception = entry.Value.Exception?.Message,
+                duration = entry.Value.Duration.TotalMilliseconds
+            }),
+            totalDuration = report.TotalDuration.TotalMilliseconds
+        });
+        await context.Response.WriteAsync(result);
+    }
+});
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("live"),
     ResponseWriter = async (context, report) =>
     {
         context.Response.ContentType = "application/json";

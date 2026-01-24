@@ -47,7 +47,7 @@
 
 **Como usar**:
 - Exige autenticação
-- Query params: `skip`, `take` (paginação), `mapEntityId`, `assetId` (filtros)
+- Query params: `skip`, `take` (paginação), `mapEntityId`, `assetId` (filtros), **`filterByInterests`** (bool, opcional, default: false)
 - Header `X-Session-Id` para identificar território ativo
 
 **Regras de negócio**:
@@ -55,6 +55,7 @@
   - Visitantes (VISITOR): Veem apenas posts `PUBLIC`
   - Moradores verificados (RESIDENT + `ResidencyVerification != NONE`): Veem posts `PUBLIC` e `RESIDENTS_ONLY`
   - Moradores não verificados (RESIDENT + `ResidencyVerification = NONE`): Veem apenas posts `PUBLIC`
+- **Filtro por interesses** (`filterByInterests=true`): Mantém apenas posts cujo título ou conteúdo contenha palavras que coincidem com os interesses do usuário ([Governança](./60_19_API_GOVERNANCA.md)). Feed cronológico completo permanece como padrão; o filtro é opcional.
 - **Bloqueios**: Posts de usuários bloqueados não aparecem
 - **Paginação**: Padrão 20 itens por página
 - **Ordenação**: Mais recentes primeiro
@@ -122,6 +123,7 @@
 
 ## 📚 Documentação Relacionada
 
+- **[Governança](./60_19_API_GOVERNANCA.md)** - Interesses do usuário e filtro opcional do feed (`filterByInterests`)
 - **[Mídias em Conteúdo](./60_15_API_MIDIAS.md)** - Adicionar imagens, vídeos e áudios aos posts
 - **[Regras de Visibilidade](./60_17_API_VISIBILIDADE.md)** - Entender visibilidade PUBLIC vs RESIDENTS_ONLY
 - **[Moderação](./60_12_API_MODERACAO.md)** - Reportar posts inadequados

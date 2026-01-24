@@ -27,11 +27,29 @@ public sealed class VotingsController : ControllerBase
     /// <summary>
     /// Cria uma nova votação no território.
     /// </summary>
+    /// <param name="territoryId">ID do território onde a votação será criada.</param>
+    /// <param name="request">Dados da votação a ser criada.</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Votação criada.</returns>
+    /// <remarks>
+    /// Tipos de votação disponíveis:
+    /// - ThemePrioritization: Priorização de temas no feed
+    /// - ModerationRule: Criação de regra de moderação (requer permissão de curador)
+    /// - FeatureFlag: Habilitar/desabilitar feature (requer permissão de curador)
+    /// - TerritoryCharacterization: Caracterização do território
+    /// - CommunityPolicy: Política comunitária
+    /// 
+    /// Visibilidades disponíveis:
+    /// - AllMembers: Todos os membros podem votar
+    /// - ResidentsOnly: Apenas residents podem votar
+    /// - CuratorsOnly: Apenas curadores podem votar
+    /// </remarks>
     [HttpPost]
     [EnableRateLimiting("write")]
     [ProducesResponseType(typeof(VotingResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<VotingResponse>> CreateVoting(
         Guid territoryId,
@@ -68,6 +86,11 @@ public sealed class VotingsController : ControllerBase
 
         if (result.IsFailure)
         {
+            // Verificar se é erro de permissão
+            if (result.Error?.Contains("permission", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return Forbid();
+            }
             return BadRequest(new { error = result.Error });
         }
 
@@ -80,6 +103,10 @@ public sealed class VotingsController : ControllerBase
     /// <summary>
     /// Lista votações do território.
     /// </summary>
+    /// <param name="territoryId">ID do território.</param>
+    /// <param name="status">Filtro opcional por status (Open, Closed, Cancelled).</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Lista de votações do território.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<VotingResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -113,6 +140,10 @@ public sealed class VotingsController : ControllerBase
     /// <summary>
     /// Obtém uma votação pelo ID.
     /// </summary>
+    /// <param name="territoryId">ID do território.</param>
+    /// <param name="votingId">ID da votação.</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Detalhes da votação.</returns>
     [HttpGet("{votingId}")]
     [ProducesResponseType(typeof(VotingResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -140,11 +171,25 @@ public sealed class VotingsController : ControllerBase
     /// <summary>
     /// Registra um voto em uma votação.
     /// </summary>
+    /// <param name="territoryId">ID do território.</param>
+    /// <param name="votingId">ID da votação.</param>
+    /// <param name="request">Opção selecionada para votar.</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Voto registrado com sucesso.</returns>
+    /// <remarks>
+    /// Regras:
+    /// - A votação deve estar aberta (status Open)
+    /// - O usuário só pode votar uma vez por votação
+    /// - O usuário deve ter permissão baseada na visibilidade da votação (AllMembers, ResidentsOnly, CuratorsOnly)
+    /// - A opção selecionada deve existir na lista de opções da votação
+    /// </remarks>
     [HttpPost("{votingId}/vote")]
     [EnableRateLimiting("write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult> Vote(
         Guid territoryId,
@@ -166,6 +211,16 @@ public sealed class VotingsController : ControllerBase
 
         if (result.IsFailure)
         {
+            // Verificar se é erro de permissão
+            if (result.Error?.Contains("permission", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return Forbid();
+            }
+            // Verificar se é erro de conflito (já votou)
+            if (result.Error?.Contains("already voted", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return Conflict(new { error = result.Error });
+            }
             return BadRequest(new { error = result.Error });
         }
 
@@ -175,11 +230,22 @@ public sealed class VotingsController : ControllerBase
     /// <summary>
     /// Fecha uma votação (apenas criador ou curador).
     /// </summary>
+    /// <param name="territoryId">ID do território.</param>
+    /// <param name="votingId">ID da votação a ser fechada.</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Votação fechada com sucesso.</returns>
+    /// <remarks>
+    /// Permissões:
+    /// - O criador da votação pode fechá-la
+    /// - Curadores do território podem fechar qualquer votação
+    /// - Após fechada, a votação não aceita mais votos e os resultados são aplicados automaticamente
+    /// </remarks>
     [HttpPost("{votingId}/close")]
     [EnableRateLimiting("write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult> CloseVoting(
         Guid territoryId,
@@ -195,6 +261,13 @@ public sealed class VotingsController : ControllerBase
         var result = await _votingService.CloseVotingAsync(votingId, userContext.User.Id, cancellationToken);
         if (result.IsFailure)
         {
+            // Verificar se é erro de permissão
+            if (result.Error?.Contains("permission", StringComparison.OrdinalIgnoreCase) == true ||
+                result.Error?.Contains("creator", StringComparison.OrdinalIgnoreCase) == true ||
+                result.Error?.Contains("curator", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return Forbid();
+            }
             return BadRequest(new { error = result.Error });
         }
 
@@ -204,6 +277,10 @@ public sealed class VotingsController : ControllerBase
     /// <summary>
     /// Obtém os resultados de uma votação.
     /// </summary>
+    /// <param name="territoryId">ID do território.</param>
+    /// <param name="votingId">ID da votação.</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    /// <returns>Resultados da votação com contagem de votos por opção.</returns>
     [HttpGet("{votingId}/results")]
     [ProducesResponseType(typeof(VotingResultsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

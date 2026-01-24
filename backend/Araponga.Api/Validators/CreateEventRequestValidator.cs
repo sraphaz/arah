@@ -8,17 +8,13 @@ public sealed class CreateEventRequestValidator : AbstractValidator<CreateEventR
     public CreateEventRequestValidator()
     {
         RuleFor(x => x.TerritoryId)
-            .NotEmpty().WithMessage("TerritoryId is required.");
+            .ValidGuid();
 
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("Title is required.")
-            .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
+            .NotEmptyWithMaxLength(200);
 
-        When(x => !string.IsNullOrWhiteSpace(x.Description), () =>
-        {
-            RuleFor(x => x.Description)
-                .MaximumLength(2000).WithMessage("Description must not exceed 2000 characters.");
-        });
+        RuleFor(x => x.Description)
+            .MaxLengthWhenNotEmpty(2000);
 
         RuleFor(x => x.StartsAtUtc)
             .NotEmpty().WithMessage("StartsAtUtc is required.")
@@ -33,16 +29,13 @@ public sealed class CreateEventRequestValidator : AbstractValidator<CreateEventR
         });
 
         RuleFor(x => x.Latitude)
-            .InclusiveBetween(-90, 90).WithMessage("Latitude must be between -90 and 90.");
+            .Latitude();
 
         RuleFor(x => x.Longitude)
-            .InclusiveBetween(-180, 180).WithMessage("Longitude must be between -180 and 180.");
+            .Longitude();
 
-        When(x => !string.IsNullOrWhiteSpace(x.LocationLabel), () =>
-        {
-            RuleFor(x => x.LocationLabel)
-                .MaximumLength(200).WithMessage("LocationLabel must not exceed 200 characters.");
-        });
+        RuleFor(x => x.LocationLabel)
+            .MaxLengthWhenNotEmpty(200);
 
         RuleFor(x => x.AdditionalMediaIds)
             .Must(mediaIds => mediaIds == null || mediaIds.Count <= 5)

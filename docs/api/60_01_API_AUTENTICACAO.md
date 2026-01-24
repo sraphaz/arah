@@ -33,6 +33,32 @@
 - **400 Bad Request**: Validação falhou (campos obrigatórios ausentes, CPF inválido, etc.)
 - **429 Too Many Requests**: Rate limit excedido
 
+### Recuperacao de Acesso (`POST /api/v1/auth/password-reset`)
+
+**Descricao**: solicita envio de token de recuperacao por email para permitir acesso seguro.
+
+**Regras de negocio**:
+- Sempre responde 200 mesmo quando o email nao existe (nao revela cadastro).
+- Token expira conforme `Auth:PasswordReset:TokenTtlMinutes`.
+- Quando `Auth:PasswordReset:ResetUrlBase` esta configurado, o email envia um link com o token.
+
+**Resposta**:
+- **200 OK**: mensagem informativa
+- **400 Bad Request**: email invalido
+
+---
+
+### Confirmacao de Recuperacao (`POST /api/v1/auth/password-reset/confirm`)
+
+**Descricao**: confirma token de recuperacao e retorna um JWT valido.
+
+**Regras de negocio**:
+- Token e de uso unico e expira automaticamente.
+- Tokens invalidos ou expirados retornam erro.
+
+**Resposta**:
+- **200 OK**: token JWT
+- **400 Bad Request**: token invalido ou expirado
 ---
 
 ## 📚 Documentação Relacionada
@@ -44,3 +70,4 @@
 ---
 
 **Voltar para**: [Índice da Documentação da API](./60_API_LÓGICA_NEGÓCIO_INDEX.md)
+

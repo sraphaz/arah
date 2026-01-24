@@ -40,15 +40,24 @@ public sealed class InterestFilterService
         var interestTags = userInterests.Select(i => i.InterestTag.ToLowerInvariant()).ToHashSet();
 
         // Filtrar posts que têm tags correspondentes aos interesses
-        // Por enquanto, vamos filtrar por palavras-chave no título e conteúdo
-        // (futuramente pode ser expandido para usar tags/categorias explícitas nos posts)
+        // Primeiro verifica tags explícitas, depois título/conteúdo como fallback
         var filtered = posts
             .Where(post =>
             {
+                // Verificar tags explícitas primeiro (mais preciso)
+                if (post.Tags.Count > 0)
+                {
+                    var postTags = post.Tags.Select(t => t.ToLowerInvariant()).ToHashSet();
+                    if (interestTags.Overlaps(postTags))
+                    {
+                        return true;
+                    }
+                }
+
+                // Fallback: verificar se algum interesse aparece no título ou conteúdo
                 var titleLower = post.Title?.ToLowerInvariant() ?? "";
                 var contentLower = post.Content?.ToLowerInvariant() ?? "";
 
-                // Verificar se algum interesse aparece no título ou conteúdo
                 return interestTags.Any(tag =>
                     titleLower.Contains(tag) || contentLower.Contains(tag));
             })

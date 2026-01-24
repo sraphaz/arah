@@ -60,10 +60,11 @@ Este documento foi reorganizado em subdocumentos para melhor navegação e manut
 19. **[Feature Flags](./60_16_API_FEATURE_FLAGS.md)** - Sistema de feature flags por território
 20. **[Regras de Visibilidade e Permissões](./60_17_API_VISIBILIDADE.md)** - Regras de acesso e visibilidade de conteúdo
 21. **[Preferências de Usuário](./60_18_API_PREFERENCIAS.md)** - Configurações e preferências do usuário
+22. **[Governança Comunitária](./60_19_API_GOVERNANCA.md)** - Interesses, votações, caracterização, histórico de participação
 
 #### 📊 Referência Rápida
 
-22. **[Resumo de Endpoints Principais](./60_99_API_RESUMO_ENDPOINTS.md)** - Lista consolidada de todos os endpoints
+23. **[Resumo de Endpoints Principais](./60_99_API_RESUMO_ENDPOINTS.md)** - Lista consolidada de todos os endpoints
 
 ---
 

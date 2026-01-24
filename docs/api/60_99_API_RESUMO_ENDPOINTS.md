@@ -98,6 +98,18 @@
 - `POST /api/v1/users/{id}/block` - Bloquear usuário
 - `DELETE /api/v1/users/{id}/block` - Desbloquear usuário
 
+### Governança comunitária
+- `GET /api/v1/users/me/interests` - Listar interesses
+- `POST /api/v1/users/me/interests` - Adicionar interesse
+- `DELETE /api/v1/users/me/interests/{tag}` - Remover interesse
+- `GET /api/v1/users/me/profile/governance` - Histórico de participação (votações, moderação)
+- `POST /api/v1/territories/{territoryId}/votings` - Criar votação
+- `GET /api/v1/territories/{territoryId}/votings` - Listar votações
+- `GET /api/v1/territories/{territoryId}/votings/{votingId}` - Obter votação
+- `POST /api/v1/territories/{territoryId}/votings/{votingId}/vote` - Votar
+- `POST /api/v1/territories/{territoryId}/votings/{votingId}/close` - Fechar votação
+- `GET /api/v1/territories/{territoryId}/votings/{votingId}/results` - Resultados
+
 ### Join Requests
 - `POST /api/v1/territories/{id}/join-requests` - Criar solicitação
 - `GET /api/v1/join-requests/incoming` - Listar recebidas
@@ -173,3 +185,4 @@ Para detalhes completos de cada endpoint, consulte os subdocumentos específicos
 ---
 
 **Voltar para**: [Índice da Documentação da API](./60_API_LÓGICA_NEGÓCIO_INDEX.md)
+

@@ -4,8 +4,9 @@
 **Total de Fases**: [Calcular dinamicamente com `node scripts/get-phase-count.mjs`]  
 **Nota**: O número total de fases é calculado automaticamente contando arquivos `FASE*.md` em `docs/backlog-api/`. Ver `docs/PROJECT_PHASES_CONFIG.md` para mais informações.  
 **Fases Completas**: 8  
-**Fases em Andamento**: 1 (Fase 12 - 30% completo)  
-**Fases Pendentes**: [Calcular: Total - Completas - Em Andamento]
+**Fases em Andamento**: 2 (Fase 12 - 85% completo, Fase 13 - MVP recuperacao)  
+**Fases Complementares**: 1 (Fase 14.5)  
+**Fases Pendentes**: [Calcular: Total - Completas - Em Andamento - Complementares]
 
 ---
 
@@ -14,8 +15,8 @@
 | Status | Quantidade | Percentual |
 |--------|------------|------------|
 | ✅ Completo | 8 | 28% |
-| ⏳ Pendente | 20 | 69% |
-| 🚧 Em Andamento | 1 | 3% |
+| ⏳ Pendente | 19 | 66% |
+| 🚧 Em Andamento | 2 | 7% |
 
 ---
 
@@ -31,6 +32,14 @@
 | 6 | Sistema de Pagamentos | ✅ Completo | 2025-01 | [FASE6.md](./backlog-api/FASE6.md) |
 | 7 | Sistema de Payout | ✅ Completo | 2025-01 | [FASE7.md](./backlog-api/FASE7.md) |
 | 8 | Infraestrutura de Mídia | ✅ Completo | 2025-01-16 | [FASE8.md](./backlog-api/FASE8.md) |
+
+## 🔄 Fases Complementares (Itens Faltantes)
+
+| Fase | Nome | Prioridade | Status | Dependências |
+|------|------|------------|--------|--------------|
+| **14.5** | **Itens Faltantes e Complementos Fases 1-14** | 🟡 Importante | ⏳ Pendente | Fases 1-14 (parcialmente implementadas) |
+
+**Nota**: A Fase 1.5 foi consolidada na Fase 14.5 para centralizar todas as pendências.
 
 ---
 
@@ -48,8 +57,9 @@
 
 | Fase | Nome | Prioridade | Status | Dependências |
 |------|------|------------|--------|--------------|
-| 13 | Conector de Emails | 🔴 CRÍTICO | ⏳ Pendente | Fase 9 |
-| 14 | Governança Comunitária | 🔴 CRÍTICO | ⏳ Pendente | Fase 13 |
+| 13 | Conector de Emails | 🔴 CRÍTICO | 🚧 Em Andamento | Fase 9 |
+| 14 | Governança Comunitária | 🔴 CRÍTICO | ✅ Implementado | Nenhuma |
+| **14.5** | **Governança — Itens Faltantes** | 🟡 Importante | ⏳ Pendente | Fase 14 |
 
 ---
 
@@ -58,7 +68,7 @@
 | Fase | Nome | Prioridade | Status | Dependências | Progresso |
 |------|------|------------|--------|--------------|-----------|
 | 12 | Otimizações Finais | 🟡 ALTA | 🚧 Em Andamento | Fase 11 | 85% | [Status Detalhado](./backlog-api/FASE12_STATUS.md) |
-| 15 | Inteligência Artificial | 🟡 ALTA | ⏳ Pendente | Fase 14 | - |
+| 15 | Inteligência Artificial | 🟡 ALTA | ⏳ Pendente | Fase 14, 14.5 | - |
 
 ---
 
@@ -116,9 +126,9 @@
 - **Bloqueadores**: Nenhum (dependências completas)
 
 ### Onda 3: Comunicação e Governança (13-14) 🔴
-- **Status**: 0% Completo (0/2 fases)
+- **Status**: 50% Completo (1/2 fases)
 - **Prioridade**: CRÍTICO
-- **Bloqueadores**: Fase 9, 13
+- **Bloqueadores**: Fase 9
 
 ### Onda 4: Otimizações e IA (12, 15) 🟡
 - **Status**: 42.5% Completo (0.85/2 fases) - Fase 12 em andamento (85%)
@@ -167,9 +177,12 @@
    - Dependências: Fase 9
    - Bloqueador para: Fase 14
 
-5. **Fase 14: Governança Comunitária** 🔴
-   - Dependências: Fase 13
-   - Bloqueador para: Fase 15
+5. **Fase 14: Governança Comunitária** 🔴 ✅ Implementado
+   - Dependências: Nenhuma
+   - Bloqueador para: Fase 14.5, Fase 15
+6. **Fase 14.5: Governança — Itens Faltantes** 🟡
+   - Dependências: Fase 14
+   - Itens: testes dedicados (feed filtrado, performance, segurança), Swagger, cobertura. Ver [FASE14_5.md](./backlog-api/FASE14_5.md).
 
 ---
 

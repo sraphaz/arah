@@ -1178,7 +1178,8 @@
           "Microsoft.Extensions.Caching.StackExchangeRedis": "[8.0.11, )",
           "Microsoft.Extensions.Hosting": "[8.0.0, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )",
-          "SixLabors.ImageSharp": "[3.1.12, )"
+          "SixLabors.ImageSharp": "[3.1.12, )",
+          "System.Text.Json": "[8.0.5, )"
         }
       },
       "araponga.shared": {

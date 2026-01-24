@@ -68,7 +68,7 @@ public sealed class SmtpEmailSender : IEmailSender
             _logger.LogError(
                 "EmailTemplateService is not available. Template: {TemplateName}, To: {To}",
                 templateName,
-                to);
+                MaskEmail(to));
             return OperationResult.Failure(
                 "Template-based email sending requires EmailTemplateService to be registered.");
         }
@@ -92,7 +92,7 @@ public sealed class SmtpEmailSender : IEmailSender
                 ex,
                 "Failed to render email template. Template: {TemplateName}, To: {To}",
                 templateName,
-                to);
+                MaskEmail(to));
             return OperationResult.Failure($"Failed to render email template: {ex.Message}");
         }
     }
@@ -134,7 +134,7 @@ public sealed class SmtpEmailSender : IEmailSender
 
             _logger.LogInformation(
                 "Email sent successfully. To: {To}, Subject: {Subject}",
-                message.To,
+                MaskEmail(message.To),
                 message.Subject);
 
             return OperationResult.Success();
@@ -144,7 +144,7 @@ public sealed class SmtpEmailSender : IEmailSender
             _logger.LogError(
                 ex,
                 "Failed to send email. To: {To}, Subject: {Subject}",
-                message.To,
+                MaskEmail(message.To),
                 message.Subject);
 
             return OperationResult.Failure($"Failed to send email: {ex.Message}");
@@ -211,5 +211,24 @@ public sealed class SmtpEmailSender : IEmailSender
                 await client.DisconnectAsync(true, cancellationToken);
             }
         }
+    }
+
+    private static string MaskEmail(string email)
+    {
+        if (string.IsNullOrEmpty(email) || email.Length < 3)
+            return "***";
+
+        var parts = email.Split('@');
+        if (parts.Length != 2)
+            return "***";
+
+        var localPart = parts[0];
+        var domain = parts[1];
+
+        var maskedLocal = localPart.Length > 1
+            ? localPart[0] + new string('*', Math.Max(1, localPart.Length - 2)) + localPart[^1]
+            : "***";
+
+        return $"{maskedLocal}@{domain}";
     }
 }

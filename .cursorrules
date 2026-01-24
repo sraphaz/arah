@@ -8,6 +8,11 @@
 
 ## 📚 Arquivos de Referência para Contexto
 
+### Estrutura e Organização da Documentação
+- `docs/STRUCTURE.md` - 🆕 Estrutura da documentação, onde colocar cada tipo de arquivo
+- `DOCUMENTATION_REORGANIZATION_PLAN.md` - 🆕 Plano completo de reorganização (fases e checklist)
+- `WIKI_COMPATIBILITY_GUARANTEE.md` - 🆕 Garantia de compatibilidade do wiki com a reorganização
+
 ### Design e Identidade Visual
 - `docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md` - Identidade visual completa, cores, tipografia, componentes
 - `docs/CURSOR_DESIGN_RULES.md` - Regras práticas de design (mobile-first obrigatório, variáveis CSS, escala 8px)
@@ -67,7 +72,175 @@
 
 ---
 
-## 🏗️ Arquitetura e Estrutura
+## 📂 ORGANIZAÇÃO DE ARQUIVOS - REGRA CRÍTICA ⚠️
+
+### ✅ OBRIGATÓRIO: Nenhum Lixo na Raiz
+
+**A raiz do repositório DEVE conter APENAS:**
+- `README.md` - Documentação principal
+- `CONTRIBUTING.md` - Guia de contribuição
+- `CODE_OF_CONDUCT.md` - Código de conduta
+- `SECURITY.md` - Política de segurança
+- `LICENSE` - Licença MIT
+- `LICENSE.pt-BR` - Licença em português
+- `.editorconfig` - Configuração de formatação
+- `global.json` - Versão .NET
+- `.cursorrules` - Regras de Cursor
+- `.github/` - Workflows e templates
+- `backend/` - Código do backend
+- `frontend/` - Código do frontend
+- `docs/` - Documentação centralizada
+- `design/` - Wireframes e design
+- `scripts/` - Scripts utilitários
+- `docker-compose.yml`, `Dockerfile` - Configuração Docker
+- `package.json`, `package-lock.json` - Dependências Node.js
+
+### ❌ PROIBIDO: O Que Nunca Criar na Raiz
+
+❌ **NUNCA criar:**
+- `pr_body_*.txt` - Arquivos temporários de PR
+- `PR_*.md` - Descrições de PR duplicadas
+- `RESUMO_*.md` - Resumos temporários
+- `verificacao_*.md` - Verificações temporárias
+- `PREPARACAO_*.md` - Preparação temporária
+- `CORRECAO_*.md` - Correções documentadas
+- Qualquer arquivo `*.txt` ou `*.md` temporário
+
+### ✅ PARA CADA TIPO DE ARQUIVO:
+
+#### Documentação de Features/Fases
+- ✅ **COLOCAR EM:** `/docs/backlog-api/FASE*.md`
+- ✅ **EXEMPLO:** `/docs/backlog-api/FASE14_5.md`
+- ❌ NÃO colocar na raiz como `FASE14_5.md`
+
+#### Documentação de Setup/Desenvolvimento
+- ✅ **COLOCAR EM:** `/docs/DEVELOPMENT.md`, `/docs/SETUP.md`, `/docs/API.md`
+- ✅ **EXEMPLO:** `/docs/DEVELOPMENT.md` para guia de desenvolvimento
+- ❌ NÃO colocar na raiz como `DEVELOPER_GUIDE.md`
+
+#### Scripts com Documentação
+- ✅ **COLOCAR EM:** `/scripts/script-name.js` + `/scripts/script-name.md`
+- ✅ **EXEMPLO:** `/scripts/discord-setup.js` + `/scripts/discord-setup-guide.md`
+- ❌ NÃO colocar na raiz
+
+#### Wireframes e Design
+- ✅ **COLOCAR EM:** `/design/`
+- ✅ **SUBDIRETÓRIOS:** `/design/Architecture/`, `/design/Backlog/`, `/design/Wireframes/`
+- ❌ NÃO colocar na raiz
+
+#### Descrições de PR
+- ✅ **COLOCAR EM:** Descrição da PR no GitHub
+- ✅ **REFERIR A:** `/docs/` para links e contexto
+- ❌ NÃO criar arquivos `pr_body_*.txt` ou `PR_*.md`
+
+### 📋 Checklist Antes de Criar Arquivo
+
+Antes de criar QUALQUER arquivo `.md` ou `.txt`, faça essa pergunta:
+
+1. **Este arquivo é documentação técnica?**
+   - SIM → Vai para `/docs/`
+   - NÃO → Próxima pergunta
+
+2. **Este arquivo é um script utilitário?**
+   - SIM → Vai para `/scripts/`
+   - NÃO → Próxima pergunta
+
+3. **Este arquivo é design/wireframe?**
+   - SIM → Vai para `/design/`
+   - NÃO → Próxima pergunta
+
+4. **Este arquivo é temporário ou para uma PR?**
+   - SIM → ❌ **NÃO CRIE** ou coloque em `/docs/` se for importante
+   - NÃO → Próxima pergunta
+
+5. **Este arquivo é README, CONTRIBUTING, ou LICENSE?**
+   - SIM → Pode ir na raiz
+   - NÃO → ❌ **PROVAVELMENTE DEVERIA IR EM `/docs/`**
+
+### 🏗️ Estrutura Esperada Após Reorganização
+
+```
+/
+├── README.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── SECURITY.md
+├── LICENSE
+├── LICENSE.pt-BR
+├── .editorconfig
+├── .cursorrules
+├── global.json
+├── package.json
+├── package-lock.json
+├── docker-compose.yml
+├── Dockerfile
+│
+├── .github/          # Workflows
+├── .config/          # Configurações (dotnet-tools.json)
+├── .vscode/          # Configurações VS Code
+│
+├── backend/          # Código backend
+├── frontend/         # Código frontend
+│
+├── docs/             # ✅ DOCUMENTAÇÃO CENTRALIZADA
+│   ├── README.md
+│   ├── DEVELOPMENT.md
+│   ├── SETUP.md
+│   ├── API.md
+│   ├── STRUCTURE.md
+│   ├── ARCHITECTURE.md
+│   ├── CHANGELOG.md
+│   ├── backlog-api/
+│   │   ├── FASE1.md
+│   │   ├── FASE2.md
+│   │   └── ...
+│   ├── COMMUNITY_MODERATION.md
+│   ├── GOVERNANCE_SYSTEM.md
+│   ├── VOTING_SYSTEM.md
+│   ├── ONBOARDING_PUBLICO/
+│   ├── ONBOARDING_DEVELOPERS/
+│   └── ... (subdirs com numeração)
+│
+├── scripts/          # Scripts utilitários
+│   ├── discord-setup.js
+│   ├── discord-setup-guide.md
+│   └── ...
+│
+└── design/           # Design e wireframes
+    ├── Architecture/
+    ├── Backlog/
+    └── Wireframes/
+```
+
+### 🎯 Benefícios dessa Organização
+
+✅ **Raiz limpa** - Apenas o essencial
+✅ **Documentação centralizada** - Tudo em `/docs/`
+✅ **Wiki funciona** - Wiki busca em `/docs/`, nada quebra
+✅ **Fácil de navegar** - Estrutura clara e previsível
+✅ **Sem arquivos temporários** - Nada polui o repositório
+✅ **Escalável** - Fácil adicionar nova documentação
+
+### 📝 Exemplos Práticos
+
+**❌ Errado:**
+```
+/
+├── PR_FASE14_5.md (❌ na raiz)
+├── pr_body_temp.txt (❌ na raiz)
+├── RESUMO_IMPLEMENTACAO.md (❌ na raiz)
+```
+
+**✅ Correto:**
+```
+/docs/
+├── backlog-api/FASE14_5.md (✅ em /docs/)
+├── DEVELOPMENT.md (✅ em /docs/)
+/scripts/
+├── discord-setup-guide.md (✅ em /scripts/)
+```
+
+---
 
 ### ⚠️ OBRIGATÓRIO: Clean Architecture (Uncle Bob)
 

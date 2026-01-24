@@ -56,16 +56,15 @@ public sealed class EmailQueueService
             await _queueRepository.AddAsync(queueItem, cancellationToken);
 
             _logger.LogInformation(
-                "Email queued. Id: {EmailId}, To: {To}, Priority: {Priority}",
+                "Email queued. Id: {EmailId}, Priority: {Priority}",
                 queueItem.Id,
-                message.To,
                 priority);
 
             return OperationResult.Success();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to enqueue email. To: {To}", message.To);
+            _logger.LogError(ex, "Failed to enqueue email");
             return OperationResult.Failure($"Failed to enqueue email: {ex.Message}");
         }
     }

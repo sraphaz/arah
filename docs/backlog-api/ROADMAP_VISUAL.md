@@ -80,12 +80,12 @@
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│     ONDA 6: AUTONOMIA DIGITAL (143d) 🟡 ALTA                   │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│  │ Fase 26  │  │ Fase 27  │  │ Fase 28  │  │ Fase 29  │       │
-│  │ Hub      │  │ Chat IA  │  │ Negociação│ │ Sementes │       │
-│  │ (21d)    │  │ (14d)    │  │ (28d)    │  │ (21d)    │       │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
+│     ONDA 6: AUTONOMIA DIGITAL (122d) 🟡 ALTA                   │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                     │
+│  │ Fase 26  │  │ Fase 27  │  │ Fase 28  │                     │
+│  │ Hub      │  │ Chat IA  │  │ Negociação│                     │
+│  │ (21d)    │  │ (14d)    │  │ (28d)    │                     │
+│  └──────────┘  └──────────┘  └──────────┘                     │
 │  ┌──────────┐  ┌──────────┐                                   │
 │  │ Fase 30  │  │ Fase 31  │                                   │
 │  │ Mobile   │  │ Subscriptions│                               │
@@ -152,21 +152,21 @@
                             │ (Paralelo - Mês 18+)
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│        ONDA 10: DIFERENCIAÇÃO AVANÇADA (175d) 🟢 MÉDIA          │
+│        ONDA 10: DIFERENCIAÇÃO AVANÇADA (196d) 🟢 MÉDIA          │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐                     │
 │  │ Fase 44  │  │ Fase 45  │  │ Fase 46  │                     │
 │  │ Arquitetura│ │ Integrações│ │ Learning │                     │
 │  │ Modular  │  │ (35d)    │  │ Hub      │                     │
 │  │ (35d)    │  │          │  │ (60d)    │                     │
 │  └──────────┘  └──────────┘  └──────────┘                     │
-│  ┌──────────┐                                                  │
-│  │ Fase 47  │                                                  │
-│  │ Rental   │                                                  │
-│  │ System   │                                                  │
-│  │ (45d)    │                                                  │
-│  └──────────┘                                                  │
+│  ┌──────────┐  ┌──────────┐                                   │
+│  │ Fase 47  │  │ Fase 48  │                                   │
+│  │ Rental   │  │ Sementes │                                   │
+│  │ System   │  │ (21d)    │                                   │
+│  │ (45d)    │  │          │                                   │
+│  └──────────┘  └──────────┘                                   │
 │                                                                 │
-│  Resultado: Diferenciação avançada                             │
+│  Resultado: Diferenciação avançada + Recursos compartilhados    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -230,13 +230,12 @@
 
 ---
 
-### Mês 12-18: Autonomia Digital (143 dias) 🟡 ALTA
+### Mês 12-18: Autonomia Digital (122 dias) 🟡 ALTA
 
 **Onda 6: Autonomia Digital**
 - Fase 26: Hub Serviços Digitais (21 dias) ⭐ Renumerada (era 30)
 - Fase 27: Chat com IA (14 dias) ⭐ Renumerada (era 31)
 - Fase 28: Negociação Territorial (28 dias) ⭐ Renumerada (era 32)
-- Fase 29: Banco de Sementes (21 dias) ⭐ Renumerada (era 33)
 - Fase 30: Mobile Avançado (14 dias) ⭐ Renumerada (era 34)
 - **Fase 31**: Subscriptions & Recurring Payments (45 dias) ⬇️ Movida da Onda 2, Renumerada (era 15)
 
@@ -282,15 +281,16 @@
 
 ---
 
-### Mês 18+: Diferenciação Avançada (175 dias) 🟢 MÉDIA
+### Mês 18+: Diferenciação Avançada (196 dias) 🟢 MÉDIA
 
 **Onda 10: Diferenciação Avançada**
 - Fase 44: Arquitetura Modular (35 dias) ⭐ Renumerada (era 35, depois 43)
 - Fase 45: Integrações Externas (35 dias) ⭐ Renumerada (era 43, depois 44)
 - Fase 46: Learning Hub (60 dias) ⭐ Renumerada (era 44, depois 45)
 - Fase 47: Rental System (45 dias) ⭐ Renumerada (era 45, depois 46)
+- **Fase 48**: Banco de Sementes e Mudas (21 dias) ⬇️ Movida da Onda 6, Renumerada (era 29, depois 33)
 
-**Resultado**: Diferenciação avançada
+**Resultado**: Diferenciação avançada + Recursos compartilhados
 
 ---
 
@@ -350,11 +350,11 @@
 | **3** | 17, 18, 19 | 105d | 🔴 P0 | Economia Local (valor imediato) |
 | **4** | 20, 21, 22 | 84d | 🟡 P1 | Economia Local Completa |
 | **5** | 23, 24, 25 | 77d | 🟡 P1 | Conformidade e Soberania |
-| **6** | 26, 27, 28, 29, 30, 31 | 143d | 🟡 P1 | Autonomia Digital + Sustentabilidade |
+| **6** | 26, 27, 28, 30, 31 | 122d | 🟡 P1 | Autonomia Digital + Sustentabilidade |
 | **7** | 32, 33, 34, 35, 36 | 147d | 🟡 P1 | Web3 (quando houver demanda) |
 | **8** | 37, 38, 39, 40, 41 | 231d | 🟡 P1 | DAO (quando houver demanda) |
 | **9** | 42, 43 | 58d | 🟡 P1 | Gamificação (depois) |
-| **10** | 44, 45, 46, 47 | 175d | 🟢 P2 | Diferenciação Avançada |
+| **10** | 44, 45, 46, 47, 48 | 196d | 🟢 P2 | Diferenciação Avançada + Recursos |
 
 ---
 

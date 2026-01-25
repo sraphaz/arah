@@ -234,7 +234,7 @@ O roadmap estratégico foi reorganizado com base em análise comparativa de merc
 | **Fase 24** | Saúde Territorial e Monitoramento | 🟡 P1 | 35 dias | ⏳ Planejado |
 | **Fase 25** | Dashboard de Métricas | 🟡 P1 | 14 dias | ⏳ Novo |
 
-**Nota**: Gamificação (Fase 42) foi movida para Onda 10, depois de funcionalidades core.
+**Nota**: Gamificação (Fase 42) foi movida para Onda 9, depois de funcionalidades core.
 
 ### Onda 9: Gamificação e Incentivos (Mês 18+) 🟡 ALTA
 
@@ -244,15 +244,6 @@ O roadmap estratégico foi reorganizado com base em análise comparativa de merc
 |------|--------|------------|---------|--------|
 | **Fase 42** | Gamificação Harmoniosa | 🟡 P1 | 28 dias | ⏳ Planejado ⬇️ Reposicionada |
 | **Fase 43** | Proof of Sweat (Tradicional) | 🟡 P1 | 30 dias | ⏳ Novo ⬇️ Reposicionada |
-
-### Onda 10: Gamificação e Incentivos (Mês 18+) 🟢 BAIXA
-
-**Objetivo**: Implementar gamificação como decoração/incentivo (DEPOIS de funcionalidades core).
-
-| Fase | Título | Prioridade | Duração | Status |
-|------|--------|------------|---------|--------|
-| **Fase 42** | Gamificação Harmoniosa | 🟡 P1 | 28 dias | ⏳ Planejado ⬇️ Reposicionada |
-| **Fase 43** | Proof of Sweat (Tradicional) | 🟡 P1 | 30 dias | ⏳ Novo ⬇️ Reposicionada (Onda 9) |
 
 **Resultado Esperado**: Gamificação implementada DEPOIS de funcionalidades que enriquecem o produto, servindo como incentivo para uso de funcionalidades já implementadas.
 
@@ -287,7 +278,7 @@ O roadmap estratégico foi reorganizado com base em análise comparativa de merc
 | **Sustentabilidade** | Mês 6 | Subscriptions (Fase 15) + Ticketing (Fase 39) | Médio-Alto |
 | **Web3 Ready** | Mês 12+ | Blockchain (Fases 31-34) + Wallets (Fase 33) | Médio (quando houver demanda) |
 | **DAO Completa** | Mês 18+ | Tokens (Fase 36) + Governança Tokenizada (Fase 37) | Médio (quando houver demanda) |
-| **Diferenciação** | Mês 18+ | Learning Hub (Fase 45) + Rental System (Fase 46) + IA (Fase 23, 40) | Médio |
+| **Diferenciação** | Mês 18+ | Learning Hub (Fase 46) + Rental System (Fase 47) + IA (Fase 23, 40) | Médio |
 
 ---
 

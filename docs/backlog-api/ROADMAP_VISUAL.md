@@ -87,7 +87,7 @@
 │  │ (21d)    │  │ (14d)    │  │ (28d)    │  │ (21d)    │       │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
 │  ┌──────────┐  ┌──────────┐                                   │
-│  │ Fase 30  │  │ Fase 15  │                                   │
+│  │ Fase 30  │  │ Fase 31  │                                   │
 │  │ Mobile   │  │ Subscriptions│                               │
 │  │ (14d)    │  │ (45d)    │                                   │
 │  └──────────┘  └──────────┘                                   │
@@ -100,13 +100,13 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │        ONDA 7: PREPARAÇÃO WEB3 (147d) 🟡 ALTA                   │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│  │ Fase 31  │→ │ Fase 32  │→ │ Fase 33  │→ │ Fase 34  │       │
+│  │ Fase 32  │→ │ Fase 33  │→ │ Fase 34  │→ │ Fase 35  │       │
 │  │ Avaliação│  │ Abstração│  │ Wallet   │  │ Smart    │       │
 │  │ Blockchain│ │ Blockchain│ │ (30d)    │  │ Contracts│       │
 │  │ (14d)    │  │ (30d)    │  │          │  │ (45d)    │       │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
 │  ┌──────────┐                                                  │
-│  │ Fase 35  │                                                  │
+│  │ Fase 36  │                                                  │
 │  │ Cripto   │                                                  │
 │  │ (28d)    │                                                  │
 │  └──────────┘                                                  │
@@ -117,15 +117,15 @@
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│        ONDA 8: DAO E TOKENIZAÇÃO (120d) 🟡 ALTA                  │
+│        ONDA 8: DAO E TOKENIZAÇÃO (231d) 🟡 ALTA                 │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│  │ Fase 36  │→ │ Fase 37  │  │ Fase 38  │  │ Fase 39  │       │
+│  │ Fase 37  │→ │ Fase 38  │  │ Fase 39  │  │ Fase 40  │       │
 │  │ Tokens   │  │ Governança│ │ Proof    │  │ Ticketing│       │
 │  │ On-chain │  │ Tokenizada│ │ Presence │  │ (21d)    │       │
 │  │ (60d)    │  │ (30d)    │  │ (30d)    │  │          │       │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
 │  ┌──────────┐                                                  │
-│  │ Fase 40  │                                                  │
+│  │ Fase 41  │                                                  │
 │  │ Agente IA│                                                  │
 │  │ (90d)    │                                                  │
 │  └──────────┘                                                  │
@@ -139,7 +139,7 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │        ONDA 9: GAMIFICAÇÃO E INCENTIVOS (58d) 🟡 ALTA          │
 │  ┌──────────┐              ┌──────────┐                        │
-│  │ Fase 41  │              │ Fase 42  │                        │
+│  │ Fase 42  │              │ Fase 43  │                        │
 │  │ Gamificação│            │ Proof    │                        │
 │  │ (28d)    │              │ Sweat    │                        │
 │  └──────────┘              │ (30d)    │                        │
@@ -152,15 +152,15 @@
                             │ (Paralelo - Mês 18+)
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│        ONDA 10: DIFERENCIAÇÃO AVANÇADA (140d) 🟢 MÉDIA          │
+│        ONDA 10: DIFERENCIAÇÃO AVANÇADA (175d) 🟢 MÉDIA          │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐                     │
-│  │ Fase 43  │  │ Fase 44  │  │ Fase 45  │                     │
+│  │ Fase 44  │  │ Fase 45  │  │ Fase 46  │                     │
 │  │ Arquitetura│ │ Integrações│ │ Learning │                     │
 │  │ Modular  │  │ (35d)    │  │ Hub      │                     │
 │  │ (35d)    │  │          │  │ (60d)    │                     │
 │  └──────────┘  └──────────┘  └──────────┘                     │
 │  ┌──────────┐                                                  │
-│  │ Fase 46  │                                                  │
+│  │ Fase 47  │                                                  │
 │  │ Rental   │                                                  │
 │  │ System   │                                                  │
 │  │ (45d)    │                                                  │
@@ -238,7 +238,7 @@
 - Fase 28: Negociação Territorial (28 dias) ⭐ Renumerada (era 32)
 - Fase 29: Banco de Sementes (21 dias) ⭐ Renumerada (era 33)
 - Fase 30: Mobile Avançado (14 dias) ⭐ Renumerada (era 34)
-- **Fase 15**: Subscriptions & Recurring Payments (45 dias) ⬇️ Movida da Onda 2
+- **Fase 31**: Subscriptions & Recurring Payments (45 dias) ⬇️ Movida da Onda 2, Renumerada (era 15)
 
 **Resultado**: Autonomia digital completa + Sustentabilidade financeira
 
@@ -247,11 +247,11 @@
 ### Mês 12+: Preparação Web3 (147 dias) 🟡 ALTA
 
 **Onda 7: Preparação Web3**
-- Fase 31: Avaliação Blockchain (14 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 16)
-- Fase 32: Abstração Blockchain (30 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 17)
-- Fase 33: Integração Wallet (30 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 18)
-- Fase 34: Smart Contracts (45 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 19)
-- Fase 35: Criptomoedas (28 dias) ⭐ Renumerada (era 36)
+- Fase 32: Avaliação Blockchain (14 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 16, depois 31)
+- Fase 33: Abstração Blockchain (30 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 17, depois 32)
+- Fase 34: Integração Wallet (30 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 18, depois 33)
+- Fase 35: Smart Contracts (45 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 19, depois 34)
+- Fase 36: Criptomoedas (28 dias) ⭐ Renumerada (era 36, depois 35)
 
 **Resultado**: Base técnica Web3 (quando houver demanda)
 
@@ -260,11 +260,11 @@
 ### Mês 18+: DAO e Tokenização (231 dias) 🟡 ALTA
 
 **Onda 8: DAO e Tokenização**
-- Fase 36: Tokens On-chain (60 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 20)
-- Fase 37: Governança Tokenizada (30 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 21)
-- Fase 38: Proof of Presence On-chain (30 dias) ⭐ Renumerada (era 39)
-- Fase 39: Ticketing Eventos (21 dias) ⭐ Renumerada (era 38)
-- Fase 40: Agente IA (90 dias) ⭐ Renumerada (era 40)
+- Fase 37: Tokens On-chain (60 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 20, depois 36)
+- Fase 38: Governança Tokenizada (30 dias) ⬇️ **P0→P1** ⭐ Renumerada (era 21, depois 37)
+- Fase 39: Proof of Presence On-chain (30 dias) ⭐ Renumerada (era 39, depois 38)
+- Fase 40: Ticketing Eventos (21 dias) ⭐ Renumerada (era 38, depois 39)
+- Fase 41: Agente IA (90 dias) ⭐ Renumerada (era 40, depois 41)
 
 **Resultado**: DAO completa (quando houver demanda)
 
@@ -273,8 +273,8 @@
 ### Mês 18+: Gamificação e Incentivos (58 dias) 🟡 ALTA
 
 **Onda 9: Gamificação e Incentivos**
-- Fase 41: Gamificação Harmoniosa (28 dias)
-- Fase 42: Proof of Sweat (30 dias)
+- Fase 42: Gamificação Harmoniosa (28 dias) ⭐ Renumerada (era 41, depois 42)
+- Fase 43: Proof of Sweat (30 dias) ⭐ Renumerada (era 42, depois 43)
 
 **Resultado**: Gamificação e incentivos (decoração)
 
@@ -285,10 +285,10 @@
 ### Mês 18+: Diferenciação Avançada (175 dias) 🟢 MÉDIA
 
 **Onda 10: Diferenciação Avançada**
-- Fase 43: Arquitetura Modular (35 dias) ⭐ Renumerada (era 35)
-- Fase 44: Integrações Externas (35 dias) ⭐ Renumerada (era 43)
-- Fase 45: Learning Hub (60 dias) ⭐ Renumerada (era 44)
-- Fase 46: Rental System (45 dias) ⭐ Renumerada (era 45)
+- Fase 44: Arquitetura Modular (35 dias) ⭐ Renumerada (era 35, depois 43)
+- Fase 45: Integrações Externas (35 dias) ⭐ Renumerada (era 43, depois 44)
+- Fase 46: Learning Hub (60 dias) ⭐ Renumerada (era 44, depois 45)
+- Fase 47: Rental System (45 dias) ⭐ Renumerada (era 45, depois 46)
 
 **Resultado**: Diferenciação avançada
 
@@ -350,11 +350,11 @@
 | **3** | 17, 18, 19 | 105d | 🔴 P0 | Economia Local (valor imediato) |
 | **4** | 20, 21, 22 | 84d | 🟡 P1 | Economia Local Completa |
 | **5** | 23, 24, 25 | 77d | 🟡 P1 | Conformidade e Soberania |
-| **6** | 26, 27, 28, 29, 30, 15 | 143d | 🟡 P1 | Autonomia Digital + Sustentabilidade |
-| **7** | 31, 32, 33, 34, 35 | 147d | 🟡 P1 | Web3 (quando houver demanda) |
-| **8** | 36, 37, 38, 39, 40 | 231d | 🟡 P1 | DAO (quando houver demanda) |
-| **9** | 41, 42 | 58d | 🟡 P1 | Gamificação (depois) |
-| **10** | 43, 44, 45, 46 | 175d | 🟢 P2 | Diferenciação Avançada |
+| **6** | 26, 27, 28, 29, 30, 31 | 143d | 🟡 P1 | Autonomia Digital + Sustentabilidade |
+| **7** | 32, 33, 34, 35, 36 | 147d | 🟡 P1 | Web3 (quando houver demanda) |
+| **8** | 37, 38, 39, 40, 41 | 231d | 🟡 P1 | DAO (quando houver demanda) |
+| **9** | 42, 43 | 58d | 🟡 P1 | Gamificação (depois) |
+| **10** | 44, 45, 46, 47 | 175d | 🟢 P2 | Diferenciação Avançada |
 
 ---
 

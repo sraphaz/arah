@@ -1,11 +1,12 @@
-# Fase 23: Sistema de Compra Coletiva e Organização Comunitária de Alimentos
+# Fase 17: Sistema de Compra Coletiva e Organização Comunitária de Alimentos
 
 **Duração**: 4 semanas (28 dias úteis)  
-**Prioridade**: 🔴 ALTA (Economia local e soberania alimentar)  
-**Depende de**: Fase 6 (Marketplace), Fase 14 (Governança/Votação), Fase 20 (Moeda Territorial)  
-**Integra com**: Fase 16 (Entregas) - opcional, pode ser feito depois  
+**Prioridade**: 🔴 CRÍTICA (Economia local e soberania alimentar)  
+**Depende de**: Fase 6 (Marketplace), Fase 14 (Governança/Votação), Fase 22 (Moeda Territorial)  
+**Integra com**: Fase 21 (Entregas) - opcional, pode ser feito depois  
 **Estimativa Total**: 160 horas  
-**Status**: ⏳ Pendente
+**Status**: ⏳ Pendente  
+**Nota**: Renumerada de Fase 23 para Fase 17, priorizada de P1 para P0 (Onda 3: Economia Local)
 
 ---
 
@@ -17,9 +18,9 @@ Implementar sistema de **compra coletiva de alimentos** que:
 - Implementa agenda de compras comunitárias
 - Sistema de opt-in/opt-out para participantes
 - Integração com sistema de votação (Fase 14) para decisões coletivas
-- Integração com sistema de entregas (Fase 16) para distribuição
-- Integração com moeda territorial (Fase 20) para pagamentos
-- Gamificação de participação (Fase 17)
+- Integração com sistema de entregas (Fase 21) para distribuição
+- Integração com moeda territorial (Fase 22) para pagamentos
+- Gamificação de participação (Fase 42)
 
 **Princípios**:
 - ✅ **Economia Local**: Fortalece produtores locais
@@ -35,9 +36,9 @@ Implementar sistema de **compra coletiva de alimentos** que:
 ### Estado Atual
 - ✅ Sistema de marketplace (Fase 6)
 - ✅ Sistema de votação (Fase 14)
-- ✅ Sistema de entregas (Fase 16)
-- ✅ Sistema de moeda territorial (Fase 20)
-- ✅ Sistema de gamificação (Fase 17)
+- ✅ Sistema de entregas (Fase 21)
+- ✅ Sistema de moeda territorial (Fase 22)
+- ✅ Sistema de gamificação (Fase 42)
 - ❌ Não existe sistema de compra coletiva
 - ❌ Não existe sistema de organização comunitária de alimentos
 - ❌ Não existe agenda de compras comunitárias
@@ -78,7 +79,7 @@ Implementar sistema de **compra coletiva de alimentos** que:
 - ✅ Votação para aprovar organizadores
 
 #### 6. Integração com Entregas
-- ✅ Organizar entrega coletiva (Fase 16)
+- ✅ Organizar entrega coletiva (Fase 21)
 - ✅ Rota otimizada para entregas
 - ✅ Pontos de entrega comunitários
 - ✅ Entregadores podem ser participantes
@@ -452,7 +453,7 @@ Implementar sistema de **compra coletiva de alimentos** que:
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Integrar com `DeliveryService` (Fase 16):
+- [ ] Integrar com `DeliveryService` (Fase 21):
   - [ ] Criar entrega coletiva quando compra é confirmada
   - [ ] Organizar rota otimizada para entregas
   - [ ] Definir pontos de entrega comunitários
@@ -482,11 +483,11 @@ Implementar sistema de **compra coletiva de alimentos** que:
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Integrar com `WalletService` (Fase 20):
+- [ ] Integrar com `WalletService` (Fase 22):
   - [ ] Pagamento em moeda territorial
   - [ ] Desconto para pagamento em moeda territorial
   - [ ] Fundos territoriais podem subsidiar compras
-- [ ] Integrar com `ContributionService` (Fase 17):
+- [ ] Integrar com `ContributionService` (Fase 42):
   - [ ] Participação em compra coletiva gera contribuição
   - [ ] Organizar compra coletiva gera mais pontos
   - [ ] Comprar de produtor local gera mais pontos
@@ -508,7 +509,7 @@ Implementar sistema de **compra coletiva de alimentos** que:
 
 ---
 
-## 📊 Resumo da Fase 23
+## 📊 Resumo da Fase 17
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
@@ -524,7 +525,7 @@ Implementar sistema de **compra coletiva de alimentos** que:
 
 ---
 
-## ✅ Critérios de Sucesso da Fase 23
+## ✅ Critérios de Sucesso da Fase 17
 
 ### Funcionalidades
 - ✅ Sistema completo de produtores funcionando
@@ -546,8 +547,8 @@ Implementar sistema de **compra coletiva de alimentos** que:
 ### Integração
 - ✅ Integração com Fase 6 (Marketplace) funcionando
 - ✅ Integração com Fase 14 (Votação) funcionando
-- ✅ Integração com Fase 16 (Entregas) funcionando
-- ✅ Integração com Fase 20 (Moeda Territorial) funcionando
+- ✅ Integração com Fase 21 (Entregas) funcionando
+- ✅ Integração com Fase 22 (Moeda Territorial) funcionando
 - ✅ Integração com Fase 17 (Gamificação) funcionando
 
 ---
@@ -556,7 +557,7 @@ Implementar sistema de **compra coletiva de alimentos** que:
 
 - **Fase 6**: Marketplace (base para produtos)
 - **Fase 14**: Governança/Votação (decisões coletivas)
-- **Fase 16**: Entregas (distribuição)
+- **Fase 21**: Entregas (distribuição)
 - **Fase 17**: Gamificação (contribuições)
 - **Fase 20**: Moeda Territorial (pagamentos)
 

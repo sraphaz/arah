@@ -1,11 +1,12 @@
-# Fase 17: Sistema de Gamificação Harmoniosa
+# Fase 42: Sistema de Gamificação Harmoniosa
 
 **Duração**: 4 semanas (28 dias úteis)  
-**Prioridade**: 🔴 ALTA (Engajamento comunitário sustentável)  
+**Prioridade**: 🟡 ALTA (Engajamento comunitário sustentável)  
 **Depende de**: Fase 9 (Perfil de Usuário), Fase 14 (Governança)  
-**Integra com**: Fase 18 (Saúde Territorial) - pode ser desenvolvido em paralelo  
+**Integra com**: Fase 24 (Saúde Territorial) - pode ser desenvolvido em paralelo  
 **Estimativa Total**: 160 horas  
-**Status**: ⏳ Pendente
+**Status**: ⏳ Pendente  
+**Nota**: Renumerada de Fase 17 para Fase 42, reposicionada para Onda 9 (Gamificação e Incentivos) - depois de funcionalidades core
 
 ---
 

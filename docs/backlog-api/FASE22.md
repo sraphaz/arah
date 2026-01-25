@@ -1,10 +1,11 @@
-# Fase 22: Integrações Externas e Conectividade
+# Fase 23: Inteligência Artificial
 
-**Duração**: 5 semanas (35 dias úteis)  
-**Prioridade**: 🟡 ALTA (Facilita transição e adoção)  
-**Depende de**: Fase 6 (Pagamentos), Fase 12 (Termos), Fase 13 (Emails)  
-**Estimativa Total**: 200 horas  
-**Status**: ⏳ Pendente
+**Duração**: 4 semanas (28 dias úteis)  
+**Prioridade**: 🟡 ALTA (Conformidade e inteligência)  
+**Depende de**: Fase 12 (Otimizações), Fase 14 (Governança)  
+**Estimativa Total**: 160 horas  
+**Status**: ⏳ Pendente  
+**Nota**: Este arquivo precisa ser atualizado - Fase 22 agora é Moeda Territorial, Fase 23 é IA, Fase 44 é Integrações Externas
 
 ---
 

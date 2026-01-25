@@ -1,10 +1,11 @@
-# Fase 15: Inteligência Artificial
+# Fase 15: Subscriptions & Recurring Payments
 
-**Duração**: 4 semanas (28 dias úteis)  
-**Prioridade**: 🔴 ALTA (Moderação e busca inteligente)  
-**Depende de**: Nenhuma (pode ser feito em paralelo)  
-**Estimativa Total**: 208 horas  
-**Status**: ⏳ Pendente
+**Duração**: 9 semanas (45 dias úteis)  
+**Prioridade**: 🔴 CRÍTICA (Sustentabilidade financeira)  
+**Depende de**: Fase 6 (Pagamentos), Fase 7 (Payout)  
+**Estimativa Total**: 360 horas  
+**Status**: ⏳ Pendente  
+**Nota**: Este arquivo precisa ser atualizado - Fase 15 agora é Subscriptions (renumerada para Fase 31 na Onda 6). Fase 23 é IA.
 
 ---
 

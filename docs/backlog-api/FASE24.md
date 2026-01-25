@@ -1,10 +1,11 @@
-# Fase 24: Sistema de Trocas Comunitárias
+# Fase 20: Sistema de Trocas Comunitárias
 
 **Duração**: 3 semanas (21 dias úteis)  
 **Prioridade**: 🟡 ALTA (Economia circular e autonomia comunitária)  
-**Depende de**: Fase 6 (Marketplace), Fase 17 (Gamificação), Fase 20 (Moeda Territorial)  
+**Depende de**: Fase 6 (Marketplace), Fase 42 (Gamificação), Fase 22 (Moeda Territorial)  
 **Estimativa Total**: 120 horas  
-**Status**: ⏳ Pendente
+**Status**: ⏳ Pendente  
+**Nota**: Renumerada de Fase 24 para Fase 20 (Onda 4: Economia Local Completa)
 
 ---
 
@@ -14,7 +15,7 @@ Implementar sistema de **trocas comunitárias** que:
 - Permite usuários trocarem produtos e serviços sem usar dinheiro
 - Facilita economia circular local (troca direta)
 - Integra com sistema de moeda territorial (trocas podem usar moeda como complemento)
-- Gamifica participação em trocas (Fase 17)
+- Gamifica participação em trocas (Fase 42)
 - Organiza trocas comunitárias (eventos de troca)
 - Sistema de matching (sugestões de trocas compatíveis)
 
@@ -31,8 +32,8 @@ Implementar sistema de **trocas comunitárias** que:
 
 ### Estado Atual
 - ✅ Sistema de marketplace (Fase 6)
-- ✅ Sistema de gamificação (Fase 17)
-- ✅ Sistema de moeda territorial (Fase 20)
+- ✅ Sistema de gamificação (Fase 42)
+- ✅ Sistema de moeda territorial (Fase 22)
 - ❌ Não existe sistema de trocas
 - ❌ Não existe sistema de matching de trocas
 - ❌ Não existe sistema de eventos de troca
@@ -67,7 +68,7 @@ Implementar sistema de **trocas comunitárias** que:
 #### 5. Integração com Moeda Territorial
 - ✅ Trocas podem ter complemento em moeda territorial
 - ✅ Exemplo: "Troco X por Y + 10 moedas territoriais"
-- ✅ Pagamento do complemento via carteira (Fase 20)
+- ✅ Pagamento do complemento via carteira (Fase 22)
 
 #### 6. Gamificação
 - ✅ Participação em troca gera contribuição
@@ -80,7 +81,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ### Semana 1-2: Modelo de Domínio e Ofertas de Troca
 
-#### 24.1 Modelo de Domínio - Trocas
+#### 20.1 Modelo de Domínio - Trocas
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
@@ -172,7 +173,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ### Semana 2: Sistema de Ofertas e Propostas
 
-#### 24.2 Sistema de Ofertas de Troca
+#### 20.2 Sistema de Ofertas de Troca
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
@@ -209,7 +210,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ---
 
-#### 24.3 Sistema de Propostas de Troca
+#### 20.3 Sistema de Propostas de Troca
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
@@ -253,7 +254,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ### Semana 3: Matching e Eventos de Trocas
 
-#### 24.4 Sistema de Matching de Trocas
+#### 20.4 Sistema de Matching de Trocas
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
@@ -290,7 +291,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ---
 
-#### 24.5 Sistema de Eventos de Trocas
+#### 20.5 Sistema de Eventos de Trocas
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
@@ -329,16 +330,16 @@ Implementar sistema de **trocas comunitárias** que:
 
 ### Semana 3: Integrações
 
-#### 24.6 Integração com Moeda Territorial e Gamificação
+#### 20.6 Integração com Moeda Territorial e Gamificação
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Integrar com `WalletService` (Fase 20):
+- [ ] Integrar com `WalletService` (Fase 22):
   - [ ] Processar complemento em moeda territorial
   - [ ] Transferência de moeda quando proposta é aceita
   - [ ] Reembolso se troca é cancelada
-- [ ] Integrar com `ContributionService` (Fase 17):
+- [ ] Integrar com `ContributionService` (Fase 42):
   - [ ] Participação em troca gera contribuição
   - [ ] Organizar evento de troca gera mais pontos
   - [ ] Trocas bem-sucedidas geram mais pontos
@@ -368,7 +369,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ---
 
-## 📊 Resumo da Fase 24
+## 📊 Resumo da Fase 20
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
@@ -382,7 +383,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ---
 
-## ✅ Critérios de Sucesso da Fase 24
+## ✅ Critérios de Sucesso da Fase 20
 
 ### Funcionalidades
 - ✅ Sistema completo de ofertas de troca funcionando
@@ -401,8 +402,8 @@ Implementar sistema de **trocas comunitárias** que:
 
 ### Integração
 - ✅ Integração com Fase 6 (Marketplace) funcionando
-- ✅ Integração com Fase 17 (Gamificação) funcionando
-- ✅ Integração com Fase 20 (Moeda Territorial) funcionando
+- ✅ Integração com Fase 42 (Gamificação) funcionando
+- ✅ Integração com Fase 22 (Moeda Territorial) funcionando
 - ✅ Integração com sistema de eventos existente funcionando
 
 ---
@@ -410,8 +411,8 @@ Implementar sistema de **trocas comunitárias** que:
 ## 🔗 Dependências
 
 - **Fase 6**: Marketplace (base para produtos/serviços)
-- **Fase 17**: Gamificação (contribuições por trocas)
-- **Fase 20**: Moeda Territorial (complemento em moeda)
+- **Fase 42**: Gamificação (contribuições por trocas)
+- **Fase 22**: Moeda Territorial (complemento em moeda)
 
 ---
 
@@ -471,6 +472,7 @@ Implementar sistema de **trocas comunitárias** que:
 
 ---
 
-**Status**: ⏳ **FASE 24 PENDENTE**  
-**Depende de**: Fases 6, 17, 20  
-**Crítico para**: Economia Circular e Autonomia Comunitária
+**Status**: ⏳ **FASE 20 PENDENTE**  
+**Depende de**: Fases 6, 42, 22  
+**Crítico para**: Economia Circular e Autonomia Comunitária  
+**Nota**: Esta fase foi renumerada de Fase 24 para Fase 20 conforme reorganização estratégica

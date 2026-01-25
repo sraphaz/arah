@@ -1,10 +1,11 @@
-# Fase 29: Suporte Mobile Avançado
+# Fase 48: Banco de Sementes e Mudas Territorial
 
-**Duração**: 2 semanas (14 dias úteis) ⭐ NOVA  
-**Prioridade**: 🟡 ALTA (Melhora experiência mobile)  
-**Depende de**: Fase 9 (Perfil + Segurança), Fase 10 (Mídias + Sync) ⭐  
-**Estimativa Total**: 56-70 horas  
-**Status**: ⏳ Pendente
+**Duração**: 3 semanas (21 dias úteis)  
+**Prioridade**: 🟢 MÉDIA (Recursos compartilhados)  
+**Depende de**: Fase 6 (Marketplace), Fase 14 (Governança)  
+**Estimativa Total**: 120 horas  
+**Status**: ⏳ Pendente  
+**Nota**: Renumerada de Fase 29 para Fase 48, reposicionada para Onda 10 (Diferenciação Avançada). Fase 30 agora é Mobile Avançado.
 
 ---
 

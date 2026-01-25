@@ -1,10 +1,11 @@
-# Fase 20: Sistema de Moeda Territorial (Mint e Economia Local)
+# Fase 22: Sistema de Moeda Territorial (Mint e Economia Local)
 
 **Duração**: 5 semanas (35 dias úteis)  
 **Prioridade**: 🟡 ALTA (Economia circular e autonomia territorial)  
-**Depende de**: Fase 6 (Pagamentos), Fase 7 (Payout), Fase 14 (Governança), Fase 17 (Gamificação), Fase 18 (Saúde Territorial)  
+**Depende de**: Fase 6 (Pagamentos), Fase 7 (Payout), Fase 14 (Governança), Fase 42 (Gamificação), Fase 24 (Saúde Territorial)  
 **Estimativa Total**: 200 horas  
-**Status**: ⏳ Pendente
+**Status**: ⏳ Pendente  
+**Nota**: Renumerada de Fase 20 para Fase 22 (Onda 4: Economia Local Completa)
 
 ---
 
@@ -14,8 +15,8 @@ Implementar sistema de **moeda territorial** que:
 - Permite cada território ter sua própria moeda digital
 - Recompensa atividades que agregam valor ao território (mint por contribuições)
 - Facilita economia circular local (marketplace, entregas, serviços)
-- Integra com sistema de gamificação (Fase 17)
-- Integra com atividades territoriais (Fase 18)
+- Integra com sistema de gamificação (Fase 42)
+- Integra com atividades territoriais (Fase 24)
 - Suporta fundos territoriais para projetos comunitários
 - Permite conversão com moedas fiat e criptomoedas (preparação para Fase 21)
 
@@ -34,8 +35,8 @@ Implementar sistema de **moeda territorial** que:
 - ✅ MER prevê estrutura completa (`TERRITORY_CURRENCY`, `USER_WALLET`, `WALLET_TRANSACTION`, `TERRITORY_FUND`, `FUND_ALLOCATION`)
 - ✅ Sistema de pagamentos (Fase 6)
 - ✅ Sistema de payout (Fase 7)
-- ✅ Sistema de gamificação (Fase 17)
-- ✅ Sistema de atividades territoriais (Fase 18)
+- ✅ Sistema de gamificação (Fase 42)
+- ✅ Sistema de atividades territoriais (Fase 24)
 - ❌ Não existe sistema de moeda territorial
 - ❌ Não existe sistema de mint
 - ❌ Não existe sistema de carteiras digitais
@@ -193,13 +194,13 @@ Implementar sistema de **moeda territorial** que:
   - [ ] `MintByContributionAsync(Guid territoryId, Guid userId, Guid contributionId)` → mint por contribuição
   - [ ] `CheckMintLimitsAsync(Guid territoryId, ...)` → verificar limites
   - [ ] `CalculateMintAmountAsync(Guid territoryId, ActivityType type, ...)` → calcular quantidade
-- [ ] Integrar com Fase 18 (Saúde Territorial):
+- [ ] Integrar com Fase 24 (Saúde Territorial):
   - [ ] `WasteCollectionService` → mint ao reportar coleta
   - [ ] `TreePlantingService` → mint ao reportar plantio
   - [ ] `TerritoryActionService` → mint ao participar/organizar ação
   - [ ] `HealthObservationService` → mint ao criar observação confirmada
   - [ ] `SensorDeviceService` → mint ao confirmar leitura
-- [ ] Integrar com Fase 17 (Gamificação):
+- [ ] Integrar com Fase 42 (Gamificação):
   - [ ] `ContributionService` → mint baseado em contribuições
 - [ ] Integrar com Fase 6 (Marketplace):
   - [ ] `CartService` → mint opcional por venda (configurável)
@@ -353,9 +354,9 @@ Implementar sistema de **moeda territorial** que:
   - [ ] Conversão moeda → fiat no payout
 - [ ] Integrar com Fase 16 (Entregas):
   - [ ] Pagamento por entrega em moeda territorial
-- [ ] Integrar com Fase 17 (Gamificação):
+- [ ] Integrar com Fase 42 (Gamificação):
   - [ ] Mint baseado em contribuições
-- [ ] Integrar com Fase 18 (Saúde Territorial):
+- [ ] Integrar com Fase 24 (Saúde Territorial):
   - [ ] Mint por atividades territoriais
 - [ ] Integrar com Fase 14 (Governança):
   - [ ] Votação para criar/alterar moeda
@@ -406,7 +407,7 @@ Implementar sistema de **moeda territorial** que:
 
 ---
 
-## 📊 Resumo da Fase 20
+## 📊 Resumo da Fase 22
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
@@ -421,7 +422,7 @@ Implementar sistema de **moeda territorial** que:
 
 ---
 
-## ✅ Critérios de Sucesso da Fase 20
+## ✅ Critérios de Sucesso da Fase 22
 
 ### Funcionalidades
 - ✅ Sistema completo de moeda territorial funcionando
@@ -445,8 +446,8 @@ Implementar sistema de **moeda territorial** que:
 - ✅ Integração com Fase 7 (Payout) funcionando
 - ✅ Integração com Fase 14 (Governança) funcionando
 - ✅ Integração com Fase 16 (Entregas) funcionando
-- ✅ Integração com Fase 17 (Gamificação) funcionando
-- ✅ Integração com Fase 18 (Saúde Territorial) funcionando
+- ✅ Integração com Fase 42 (Gamificação) funcionando
+- ✅ Integração com Fase 24 (Saúde Territorial) funcionando
 - ✅ Preparação para Fase 21 (Criptomoedas)
 
 ---
@@ -457,8 +458,8 @@ Implementar sistema de **moeda territorial** que:
 - **Fase 7**: Payout (conversão para fiat)
 - **Fase 14**: Governança (votação para criar/alterar moeda)
 - **Fase 16**: Entregas (pagamento por entrega)
-- **Fase 17**: Gamificação (mint por contribuições)
-- **Fase 18**: Saúde Territorial (mint por atividades)
+- **Fase 42**: Gamificação (mint por contribuições)
+- **Fase 24**: Saúde Territorial (mint por atividades)
 
 ---
 

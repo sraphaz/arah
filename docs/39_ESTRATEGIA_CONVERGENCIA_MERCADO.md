@@ -110,7 +110,7 @@ A diferenciação do Araponga (território-first, comunidade-first) permanece v�
 
 #### Longo Prazo (12-18 meses)
 - ✅ Diferenciação com Learning Hub
-- ✅ Booking System
+- ✅ Rental System
 - ✅ Agente IA (soberano)
 
 ---
@@ -252,8 +252,8 @@ Implementar funcionalidades que diferenciam o Araponga no mercado.
    - Marketplace de conhecimento
    - Monetização de cursos
 
-2. **Booking System** - 45 dias
-   - Gestão de acomodações
+2. **Rental System** - 45 dias
+   - Gestão de recursos diversos (salas, equipamentos, espaços, veículos)
    - Calendário de reservas
    - Check-in/check-out automatizado
    - Notificações automáticas
@@ -291,7 +291,7 @@ Plataforma completa e diferenciada, com funcionalidades avançadas.
    - DAO Completa - Reavaliar prioridade (pode ser P1)
    - Tokens On-chain - Reavaliar prioridade (pode ser P1)
    - Learning Hub - Manter P2
-   - Booking System - Manter P2
+   - Rental System - Manter P2
 
 ### Ajustes em Fases Existentes
 

@@ -1,743 +1,420 @@
-# Fase 43: Arquitetura Modular e Deploy Dual (Monolito/Distribuído)
+# Fase 19: Sistema de Demandas e Ofertas
 
-**Duração**: 5 semanas (35 dias úteis)  
-**Prioridade**: 🟡 MÉDIA  
-**Bloqueia**: Escalabilidade horizontal e deploy flexível  
-**Estimativa Total**: 180 horas  
+**Duração**: 3 semanas (21 dias úteis)  
+**Prioridade**: 🔴 CRÍTICA (Economia local e autonomia comunitária)  
+**Depende de**: Fase 6 (Marketplace), Fase 7 (Pagamentos)  
+**Integra com**: Fase 20 (Trocas) - pode ser desenvolvido em paralelo  
+**Estimativa Total**: 120 horas  
 **Status**: ⏳ Pendente  
-**Nota**: Renumerada de Fase 19 para Fase 43 (Onda 9: Gamificação e Diferenciação). Fase 19 agora é Demandas e Ofertas.
+**Nota**: Renumerada de Fase 31 para Fase 19, priorizada de P1 para P0 (Onda 3: Economia Local)
 
 ---
 
 ## 🎯 Objetivo
 
-Criar arquitetura modular que permita **duas versões** da aplicação:
-1. **Versão Monolito**: Aplicação única, todos os módulos no mesmo processo (simples, ideal para início)
-2. **Versão Distribuída**: Módulos separados em serviços independentes (escalável, ideal para crescimento)
+Implementar sistema de **demandas e ofertas** que permite:
+- Moradores cadastrarem **demandas** de itens ou serviços que precisam
+- Outros moradores/visitantes fazerem **ofertas** para suprir essas demandas
+- Negociação entre demandante e ofertante (aceitar, negociar, recusar)
+- Integração com sistema de pagamentos para ofertas aceitas
+- Visibilidade territorial (demandas podem ser públicas ou apenas para moradores)
 
-Ambas as versões devem compartilhar o máximo de código possível (Domain, Application, Infrastructure compartilhados).
+**Princípios**:
+- ✅ **Economia Local**: Facilita economia local e circular
+- ✅ **Bidirectional**: Complementa Marketplace (procura → oferta vs. oferta → procura)
+- ✅ **Autonomia Comunitária**: Comunidade resolve suas próprias necessidades
+- ✅ **Transparência**: Demandas e ofertas são visíveis (ou para moradores)
+- ✅ **Flexibilidade**: Negociação permite ajustes antes de aceitar
 
 ---
 
 ## 📋 Contexto e Requisitos
 
-### Problema Atual
-A aplicação é um **monolito acoplado** onde:
-- Todos os módulos estão no mesmo processo
-- Todos compartilham o mesmo banco de dados
-- Event Bus é em memória (não funciona entre instâncias)
-- Não é possível escalar módulos independentemente
-- Não é possível desativar módulos sem desabilitar toda a aplicação
+### Estado Atual
+- ✅ Sistema de marketplace (Fase 6) - oferta → procura
+- ✅ Sistema de pagamentos (Fase 7)
+- ✅ Sistema de inquiries (consultas sobre itens)
+- ❌ Não existe sistema de demandas (procura → oferta)
+- ❌ Não existe sistema de ofertas para demandas
 
-### Requisitos Funcionais
-- ✅ Código compartilhado maximizado (Domain, Application, Infrastructure)
-- ✅ Configuração flexível (escolher modelo via configuração)
-- ✅ Migração gradual (módulo por módulo)
-- ✅ Mesma API em ambos os modelos
-- ✅ Mesma funcionalidade em ambos os modelos
-- ✅ Desativação de módulos sem consumir recursos
+### Diferenciação de Funcionalidades Existentes
 
----
-
-## 🏗️ Arquitetura Proposta
-
-### Visão Geral
-
-```
-┌─────────────────────────────────────────────────────┐
-│                   Versão Monolito                    │
-│  ┌──────────────────────────────────────────────┐  │
-│  │  Araponga.Api (Todos os módulos)              │  │
-│  │  ├── Core Module                              │  │
-│  │  ├── Feed Module                              │  │
-│  │  ├── Marketplace Module                       │  │
-│  │  ├── Chat Module                              │  │
-│  │  └── ... (todos os módulos)                   │  │
-│  └──────────────────────────────────────────────┘  │
-│                        │                             │
-│                        ▼                             │
-│              ┌─────────────────┐                     │
-│              │   PostgreSQL    │                     │
-│              │  (compartilhado) │                    │
-│              └─────────────────┘                     │
-└─────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────┐
-│                Versão Distribuída                    │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐            │
-│  │  API    │  │  API    │  │  API    │            │
-│  │ Gateway │  │Gateway  │  │Gateway  │            │
-│  └────┬────┘  └────┬────┘  └────┬────┘            │
-│       │            │             │                   │
-│  ┌────▼────┐  ┌────▼────┐  ┌────▼────┐            │
-│  │  Core   │  │  Feed   │  │Marketplace│          │
-│  │ Service │  │ Service │  │  Service │            │
-│  └────┬────┘  └────┬────┘  └────┬────┘            │
-│       │            │             │                   │
-│       └────────────┴─────────────┘                   │
-│                   │                                   │
-│                   ▼                                   │
-│       ┌──────────────────────────┐                   │
-│       │   Message Broker         │                   │
-│       │   (RabbitMQ/Azure SB)    │                   │
-│       └──────────────────────────┘                   │
-│                   │                                   │
-│       ┌───────────┴───────────┐                     │
-│       │                       │                       │
-│  ┌────▼────┐          ┌──────▼─────┐               │
-│  │ Core DB │          │Marketplace │                │
-│  │         │          │    DB      │                │
-│  └─────────┘          └────────────┘                │
-└─────────────────────────────────────────────────────┘
-```
+| Funcionalidade | Direção | Foco |
+|----------------|---------|------|
+| **Marketplace (Fase 6)** | Oferta → Procura | Vendedor oferece, comprador procura |
+| **Trocas (Fase 20)** | Troca Direta | Troca de item/serviço por outro |
+| **Compra Coletiva (Fase 17)** | Organização Coletiva | Compra em grupo de produtores |
+| **Demandas/Ofertas (Fase 19)** | Procura → Oferta | Comprador precisa, vendedor oferece |
 
 ---
 
-## 🚩 Módulos Funcionais Identificados
+## 📋 Requisitos Funcionais
 
-| Módulo | Controllers | Services | Repositories | Depende de |
-|--------|-----------|----------|--------------|------------|
-| **Core** | Auth, Territories, Memberships | AuthService, TerritoryService, MembershipService | User, Territory, Membership | Nenhuma (base) |
-| **Feed** | FeedController | FeedService, PostCreationService, PostInteractionService | FeedRepository | Core, Map (read-only), Notifications |
-| **Marketplace** | Stores, Items, Cart, PlatformFees | StoreService, StoreItemService, CartService, PaymentService | Store, StoreItem, Cart, Checkout | Core, Notifications |
-| **Chat** | ChatController, TerritoryChatController | ChatService | ChatConversation, ChatMessage | Core |
-| **Events** | EventsController | EventsService | TerritoryEvent, EventParticipation | Core, Map (read-only), Notifications |
-| **Map** | MapController | MapService | MapEntity, MapEntityRelation | Core, Feed (read-only) |
-| **Moderation** | ModerationController | ModerationCaseService, ReportService | Report, Sanction, WorkItem | Core, Feed (read-only) |
-| **Notifications** | NotificationsController | - | NotificationInbox, Outbox | Core (todos usam) |
-| **Alerts** | AlertsController | - | HealthAlert | Core |
-| **Assets** | AssetsController | TerritoryAssetService | TerritoryAsset | Core |
-| **Admin** | Admin*Controllers | SystemConfigService, WorkQueueService | SystemConfig, WorkItem | Core |
+### 1. Sistema de Demandas
+
+#### 1.1 Criar Demanda
+- ✅ Morador pode criar demanda de item ou serviço
+- ✅ Campos obrigatórios:
+  - Título da demanda
+  - Descrição detalhada
+  - Tipo (ITEM, SERVICE)
+  - Categoria (opcional)
+  - Localização (georreferenciamento)
+  - Prazo desejado (opcional)
+  - Orçamento estimado (opcional)
+- ✅ Campos opcionais:
+  - Tags
+  - Imagens (até 5)
+  - Especificações técnicas
+- ✅ Visibilidade: PUBLIC, RESIDENT_ONLY
+- ✅ Status: ACTIVE, FULFILLED, CANCELLED, EXPIRED
+
+#### 1.2 Gerenciar Demandas
+- ✅ Listar demandas do território (com filtros)
+- ✅ Buscar demandas (por texto, categoria, tipo)
+- ✅ Visualizar demanda específica
+- ✅ Editar demanda (apenas criador, se ACTIVE)
+- ✅ Cancelar demanda (apenas criador)
+- ✅ Marcar como fulfilled (apenas criador, após aceitar oferta)
+
+#### 1.3 Permissões
+- ✅ Apenas moradores verificados podem criar demandas
+- ✅ Visitantes podem visualizar demandas públicas
+- ✅ Visitantes podem fazer ofertas (se permitido pelo território)
+
+### 2. Sistema de Ofertas
+
+#### 2.1 Criar Oferta
+- ✅ Morador/visitante pode fazer oferta para uma demanda
+- ✅ Campos obrigatórios:
+  - Demanda ID
+  - Descrição da oferta
+  - Preço proposto
+  - Prazo de entrega/prestação
+- ✅ Campos opcionais:
+  - Condições especiais
+  - Imagens (até 3)
+  - Disponibilidade
+- ✅ Status: PENDING, ACCEPTED, REJECTED, NEGOTIATING, CANCELLED
+
+#### 2.2 Gerenciar Ofertas
+- ✅ Listar ofertas de uma demanda
+- ✅ Visualizar oferta específica
+- ✅ Editar oferta (apenas ofertante, se PENDING ou NEGOTIATING)
+- ✅ Cancelar oferta (apenas ofertante)
+
+### 3. Sistema de Negociação
+
+#### 3.1 Ações do Demandante
+- ✅ Aceitar oferta (marca oferta como ACCEPTED, cria transação)
+- ✅ Rejeitar oferta (marca oferta como REJECTED)
+- ✅ Iniciar negociação (marca oferta como NEGOTIATING, permite mensagens)
+- ✅ Fazer contraproposta (via mensagens na negociação)
+
+#### 3.2 Ações do Ofertante
+- ✅ Responder negociação (via mensagens)
+- ✅ Aceitar contraproposta (marca como ACCEPTED)
+- ✅ Rejeitar contraproposta (marca como REJECTED)
+- ✅ Cancelar oferta (marca como CANCELLED)
+
+#### 3.3 Mensagens de Negociação
+- ✅ Chat entre demandante e ofertante
+- ✅ Histórico de mensagens na negociação
+- ✅ Notificações de novas mensagens
+
+### 4. Integração com Pagamentos
+
+#### 4.1 Processamento de Oferta Aceita
+- ✅ Quando oferta é aceita, cria transação de pagamento
+- ✅ Integração com sistema de pagamentos (Fase 7)
+- ✅ Escrow (se configurado) até entrega/prestação confirmada
+- ✅ Payout para ofertante após confirmação
+
+#### 4.2 Fluxo de Pagamento
+- ✅ Demandante paga oferta aceita
+- ✅ Pagamento fica em escrow (se configurado)
+- ✅ Demandante confirma entrega/prestação
+- ✅ Pagamento é liberado para ofertante
+- ✅ Se houver disputa, sistema de resolução (WorkItem)
+
+### 5. Notificações
+
+#### 5.1 Notificações para Demandante
+- ✅ Nova oferta recebida
+- ✅ Oferta aceita/rejeitada (se ofertante cancelou)
+- ✅ Nova mensagem na negociação
+- ✅ Oferta cancelada pelo ofertante
+
+#### 5.2 Notificações para Ofertante
+- ✅ Oferta aceita/rejeitada
+- ✅ Negociação iniciada
+- ✅ Nova mensagem na negociação
+- ✅ Contraproposta recebida
+
+### 6. Visibilidade e Filtros
+
+#### 6.1 Filtros de Busca
+- ✅ Por tipo (ITEM, SERVICE)
+- ✅ Por categoria
+- ✅ Por status (ACTIVE, FULFILLED, etc.)
+- ✅ Por localização (raio)
+- ✅ Por orçamento (faixa de valores)
+- ✅ Por prazo (urgente, esta semana, este mês)
+
+#### 6.2 Visibilidade Territorial
+- ✅ Demandas PUBLIC: visíveis para todos
+- ✅ Demandas RESIDENT_ONLY: visíveis apenas para moradores
+- ✅ Ofertas: visíveis apenas para demandante e ofertante
 
 ---
 
 ## 📋 Tarefas Detalhadas
 
-### Semana 21: Fundação Modular (Modular Monolith)
+### Semana 1: Modelo de Domínio e Repositórios
 
-#### 21.1 Interface de Módulo e Registry
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
+#### 19.1 Modelo de Domínio (16 horas)
+- [ ] Criar `Demand` domain model
+  - Id, TerritoryId, CreatedBy, Title, Description, Type, Category
+  - Location (Latitude, Longitude), Tags, Images
+  - Budget, Deadline, Specifications
+  - Visibility, Status, CreatedAt, UpdatedAt
+- [ ] Criar `DemandOffer` domain model
+  - Id, DemandId, OfferedBy, Description, Price, DeliveryTime
+  - Conditions, Images, Availability
+  - Status, CreatedAt, UpdatedAt
+- [ ] Criar `DemandNegotiation` domain model
+  - Id, DemandOfferId, Messages (lista de mensagens)
+  - Status, CreatedAt, UpdatedAt
+- [ ] Criar enums: `DemandType`, `DemandStatus`, `OfferStatus`, `NegotiationStatus`
+- [ ] Criar value objects: `DemandLocation`, `DemandBudget`
 
-**Tarefas**:
-- [ ] Criar `IModule` interface
-- [ ] Criar `ModuleBase` abstract class
-- [ ] Criar `ModuleRegistry` para gerenciar módulos
-- [ ] Implementar registro condicional de módulos
-- [ ] Implementar desativação de módulos via configuração
-- [ ] Documentar interface de módulo
+#### 19.2 Repositórios (12 horas)
+- [ ] Criar `IDemandRepository`
+  - GetByIdAsync, GetByTerritoryAsync, GetByUserAsync
+  - CreateAsync, UpdateAsync, DeleteAsync
+- [ ] Criar `IDemandOfferRepository`
+  - GetByIdAsync, GetByDemandAsync, GetByUserAsync
+  - CreateAsync, UpdateAsync, DeleteAsync
+- [ ] Criar `IDemandNegotiationRepository`
+  - GetByOfferAsync, CreateAsync, UpdateAsync
+- [ ] Implementar repositórios em Infrastructure
 
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Modules/IModule.cs`
-- `backend/Araponga.Application/Modules/ModuleBase.cs`
-- `backend/Araponga.Application/Modules/ModuleRegistry.cs`
+#### 19.3 Migrations (4 horas)
+- [ ] Criar migration para `DEMAND` table
+- [ ] Criar migration para `DEMAND_OFFER` table
+- [ ] Criar migration para `DEMAND_NEGOTIATION` table
+- [ ] Criar migration para `DEMAND_NEGOTIATION_MESSAGE` table
+- [ ] Testar migrations
 
-**Critérios de Sucesso**:
-- ✅ Interface de módulo criada
-- ✅ Registry funcionando
-- ✅ Módulos podem ser desativados via configuração
-- ✅ Documentação completa
+### Semana 2: Serviços e Lógica de Negócio
 
----
+#### 19.4 DemandService (20 horas)
+- [ ] Criar `IDemandService` e `DemandService`
+- [ ] Implementar `CreateDemandAsync`
+  - Validar permissões (morador verificado)
+  - Validar campos obrigatórios
+  - Criar demanda com status ACTIVE
+- [ ] Implementar `GetDemandsAsync`
+  - Filtros: tipo, categoria, status, localização, orçamento
+  - Paginação
+  - Respeitar visibilidade (PUBLIC vs RESIDENT_ONLY)
+- [ ] Implementar `GetDemandByIdAsync`
+  - Validar visibilidade
+- [ ] Implementar `UpdateDemandAsync`
+  - Apenas criador, apenas se ACTIVE
+- [ ] Implementar `CancelDemandAsync`
+  - Apenas criador
+  - Cancelar ofertas pendentes
+- [ ] Implementar `MarkDemandAsFulfilledAsync`
+  - Apenas criador, após aceitar oferta
 
-#### 21.2 Organização de Módulos por Funcionalidade
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
+#### 19.5 DemandOfferService (16 horas)
+- [ ] Criar `IDemandOfferService` e `DemandOfferService`
+- [ ] Implementar `CreateOfferAsync`
+  - Validar permissões (morador ou visitante, se permitido)
+  - Validar demanda existe e está ACTIVE
+  - Validar não há oferta já aceita
+  - Criar oferta com status PENDING
+- [ ] Implementar `GetOffersByDemandAsync`
+  - Apenas demandante e ofertante podem ver ofertas
+- [ ] Implementar `GetOfferByIdAsync`
+- [ ] Implementar `UpdateOfferAsync`
+  - Apenas ofertante, apenas se PENDING ou NEGOTIATING
+- [ ] Implementar `CancelOfferAsync`
+  - Apenas ofertante
 
-**Tarefas**:
-- [ ] Criar módulo `CoreModule`
-- [ ] Criar módulo `FeedModule`
-- [ ] Criar módulo `MarketplaceModule`
-- [ ] Criar módulo `ChatModule`
-- [ ] Criar módulo `EventsModule`
-- [ ] Criar módulo `MapModule`
-- [ ] Criar módulo `ModerationModule`
-- [ ] Criar módulo `AlertsModule`
-- [ ] Criar módulo `AssetsModule`
-- [ ] Criar módulo `NotificationsModule`
-- [ ] Criar módulo `AdminModule`
-- [ ] Organizar controllers por módulo (opcional: mover para pastas de módulo)
+#### 19.6 DemandNegotiationService (12 horas)
+- [ ] Criar `IDemandNegotiationService` e `DemandNegotiationService`
+- [ ] Implementar `StartNegotiationAsync`
+  - Demandante inicia negociação
+  - Marca oferta como NEGOTIATING
+  - Cria negociação
+- [ ] Implementar `SendMessageAsync`
+  - Adiciona mensagem à negociação
+  - Notifica outro participante
+- [ ] Implementar `AcceptOfferAsync`
+  - Demandante aceita oferta
+  - Marca oferta como ACCEPTED
+  - Cria transação de pagamento
+- [ ] Implementar `RejectOfferAsync`
+  - Demandante rejeita oferta
+  - Marca oferta como REJECTED
 
-**Arquivos a Criar**:
-- `backend/Araponga.Api/Modules/CoreModule.cs`
-- `backend/Araponga.Api/Modules/FeedModule.cs`
-- `backend/Araponga.Api/Modules/MarketplaceModule.cs`
-- `backend/Araponga.Api/Modules/ChatModule.cs`
-- `backend/Araponga.Api/Modules/EventsModule.cs`
-- `backend/Araponga.Api/Modules/MapModule.cs`
-- `backend/Araponga.Api/Modules/ModerationModule.cs`
-- `backend/Araponga.Api/Modules/AlertsModule.cs`
-- `backend/Araponga.Api/Modules/AssetsModule.cs`
-- `backend/Araponga.Api/Modules/NotificationsModule.cs`
-- `backend/Araponga.Api/Modules/AdminModule.cs`
+### Semana 3: API, Integrações e Testes
 
-**Critérios de Sucesso**:
-- ✅ Módulos criados para todas as funcionalidades
-- ✅ Cada módulo registra seus serviços e controllers
-- ✅ Módulos podem ser desativados independentemente
-- ✅ Documentação completa
+#### 19.7 API Controllers (16 horas)
+- [ ] Criar `DemandsController`
+  - POST /api/v1/demands (criar demanda)
+  - GET /api/v1/demands (listar demandas)
+  - GET /api/v1/demands/{id} (obter demanda)
+  - PUT /api/v1/demands/{id} (atualizar demanda)
+  - DELETE /api/v1/demands/{id} (cancelar demanda)
+  - POST /api/v1/demands/{id}/fulfill (marcar como fulfilled)
+- [ ] Criar `DemandOffersController`
+  - POST /api/v1/demands/{demandId}/offers (criar oferta)
+  - GET /api/v1/demands/{demandId}/offers (listar ofertas)
+  - GET /api/v1/demands/{demandId}/offers/{id} (obter oferta)
+  - PUT /api/v1/demands/{demandId}/offers/{id} (atualizar oferta)
+  - DELETE /api/v1/demands/{demandId}/offers/{id} (cancelar oferta)
+- [ ] Criar `DemandNegotiationsController`
+  - POST /api/v1/demands/{demandId}/offers/{offerId}/negotiate (iniciar negociação)
+  - POST /api/v1/demands/{demandId}/offers/{offerId}/negotiate/messages (enviar mensagem)
+  - POST /api/v1/demands/{demandId}/offers/{offerId}/accept (aceitar oferta)
+  - POST /api/v1/demands/{demandId}/offers/{offerId}/reject (rejeitar oferta)
 
----
+#### 19.8 Integração com Pagamentos (12 horas)
+- [ ] Integrar com `PaymentService` (Fase 7)
+- [ ] Criar transação quando oferta é aceita
+- [ ] Implementar escrow (se configurado)
+- [ ] Implementar confirmação de entrega/prestação
+- [ ] Implementar liberação de pagamento
+- [ ] Integrar com `PayoutService` (Fase 7)
 
-#### 21.3 Configuração e Desativação de Módulos
-**Estimativa**: 8 horas (1 dia)  
-**Status**: ❌ Não implementado
+#### 19.9 Notificações (8 horas)
+- [ ] Notificar demandante quando nova oferta é criada
+- [ ] Notificar ofertante quando oferta é aceita/rejeitada
+- [ ] Notificar participantes quando nova mensagem na negociação
+- [ ] Notificar quando oferta é cancelada
 
-**Tarefas**:
-- [ ] Criar configuração `Modules` em `appsettings.json`
-- [ ] Atualizar `Program.cs` para usar `ModuleRegistry`
-- [ ] Implementar validação de dependências entre módulos
-- [ ] Implementar desativação em cascata (se módulo base desativado)
-- [ ] Criar health checks por módulo
-- [ ] Documentar configuração
+#### 19.10 Testes (16 horas)
+- [ ] Testes unitários para `DemandService`
+- [ ] Testes unitários para `DemandOfferService`
+- [ ] Testes unitários para `DemandNegotiationService`
+- [ ] Testes de integração para API
+- [ ] Testes de integração com pagamentos
+- [ ] Testes de permissões e visibilidade
 
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/Program.cs`
-- `backend/Araponga.Api/appsettings.json`
-
-**Arquivos a Criar**:
-- `backend/Araponga.Api/appsettings.Development.json` (exemplo)
-- `backend/Araponga.Api/appsettings.Production.json` (exemplo)
-
-**Critérios de Sucesso**:
-- ✅ Configuração de módulos funcionando
-- ✅ Validação de dependências implementada
-- ✅ Health checks por módulo funcionando
-- ✅ Documentação completa
-
----
-
-### Semana 22: Abstração de Event Bus e Message Broker
-
-#### 22.1 Abstração de Event Bus
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Verificar `IEventBus` interface existente
-- [ ] Criar `MessageBrokerEventBus` para distribuído
-- [ ] Manter `InMemoryEventBus` para monolito
-- [ ] Criar factory para escolher implementação
-- [ ] Migrar eventos para usar abstração
-- [ ] Testar ambas as implementações
-
-**Arquivos a Criar**:
-- `backend/Araponga.Infrastructure/Messaging/IMessageBroker.cs`
-- `backend/Araponga.Infrastructure/Messaging/MessageBrokerEventBus.cs`
-- `backend/Araponga.Application/Events/EventBusFactory.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Infrastructure/Eventing/InMemoryEventBus.cs` (se necessário)
-- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
-
-**Critérios de Sucesso**:
-- ✅ Event Bus funciona em monolito (InMemory)
-- ✅ Event Bus funciona em distribuído (Message Broker)
-- ✅ Escolha via configuração
-- ✅ Testes passando
-
----
-
-#### 22.2 Message Broker (RabbitMQ)
-**Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Escolher Message Broker (RabbitMQ recomendado)
-- [ ] Implementar `RabbitMQMessageBroker`
-- [ ] Implementar retry e dead letter queue
-- [ ] Implementar circuit breaker
-- [ ] Implementar mensagens serializadas (JSON)
-- [ ] Testes de integração
-- [ ] Documentar configuração
-
-**Arquivos a Criar**:
-- `backend/Araponga.Infrastructure/Messaging/RabbitMQMessageBroker.cs`
-- `backend/Araponga.Infrastructure/Messaging/MessageBrokerOptions.cs`
-- `backend/Araponga.Infrastructure/Messaging/RetryPolicy.cs`
-- `backend/Araponga.Infrastructure/Messaging/CircuitBreaker.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/appsettings.json` (configuração)
-
-**Critérios de Sucesso**:
-- ✅ Message Broker funcionando
-- ✅ Retry e dead letter queue funcionando
-- ✅ Circuit breaker funcionando
-- ✅ Testes de integração passando
-- ✅ Documentação completa
+#### 19.11 Documentação (4 horas)
+- [ ] Documentar API no DevPortal
+- [ ] Criar exemplos de uso
+- [ ] Documentar fluxos de negociação
+- [ ] Documentar integração com pagamentos
 
 ---
 
-### Semana 23: API Gateway e Service Discovery
+## 🏗️ Arquitetura
 
-#### 23.1 API Gateway (YARP)
-**Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
+### Modelo de Domínio
 
-**Tarefas**:
-- [ ] Escolher API Gateway (YARP recomendado - .NET native)
-- [ ] Criar projeto `Araponga.Gateway`
-- [ ] Configurar roteamento por serviço
-- [ ] Implementar load balancing
-- [ ] Implementar circuit breaker no gateway
-- [ ] Implementar rate limiting no gateway
-- [ ] Documentar configuração
+```
+Demand
+├── Id
+├── TerritoryId
+├── CreatedBy (UserId)
+├── Title
+├── Description
+├── Type (ITEM, SERVICE)
+├── Category
+├── Location (Latitude, Longitude)
+├── Tags
+├── Images (lista)
+├── Budget (opcional)
+├── Deadline (opcional)
+├── Specifications (opcional)
+├── Visibility (PUBLIC, RESIDENT_ONLY)
+├── Status (ACTIVE, FULFILLED, CANCELLED, EXPIRED)
+├── CreatedAt
+└── UpdatedAt
 
-**Arquivos a Criar**:
-- `backend/Araponga.Gateway/Araponga.Gateway.csproj`
-- `backend/Araponga.Gateway/Program.cs`
-- `backend/Araponga.Gateway/Configuration/GatewayConfig.cs`
-- `backend/Araponga.Gateway/Middleware/GatewayMiddleware.cs`
-- `backend/Araponga.Gateway/appsettings.json`
+DemandOffer
+├── Id
+├── DemandId
+├── OfferedBy (UserId)
+├── Description
+├── Price
+├── DeliveryTime
+├── Conditions (opcional)
+├── Images (lista, opcional)
+├── Availability (opcional)
+├── Status (PENDING, ACCEPTED, REJECTED, NEGOTIATING, CANCELLED)
+├── CreatedAt
+└── UpdatedAt
 
-**Critérios de Sucesso**:
-- ✅ API Gateway funcionando
-- ✅ Roteamento por serviço funcionando
-- ✅ Load balancing funcionando
-- ✅ Circuit breaker implementado
-- ✅ Documentação completa
-
----
-
-#### 23.2 Service Discovery
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Escolher Service Discovery (Consul ou Kubernetes DNS)
-- [ ] Implementar `IServiceDiscovery` interface
-- [ ] Implementar `ConsulServiceDiscovery` (ou Kubernetes)
-- [ ] Integrar com API Gateway
-- [ ] Implementar health checks para service discovery
-- [ ] Documentar configuração
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Interfaces/IServiceDiscovery.cs`
-- `backend/Araponga.Infrastructure/ServiceDiscovery/ConsulServiceDiscovery.cs`
-- `backend/Araponga.Infrastructure/ServiceDiscovery/ServiceDiscoveryOptions.cs`
-
-**Critérios de Sucesso**:
-- ✅ Service Discovery funcionando
-- ✅ Integração com API Gateway funcionando
-- ✅ Health checks funcionando
-- ✅ Documentação completa
-
----
-
-### Semana 24: Separar Primeiro Serviço (Notifications)
-
-#### 24.1 Serviço Notifications
-**Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar projeto `Araponga.Api.Notifications`
-- [ ] Mover `NotificationsController` para novo projeto
-- [ ] Criar banco de dados separado (ou schema separado)
-- [ ] Implementar API REST para Notifications
-- [ ] Criar `INotificationsApiClient` interface
-- [ ] Implementar `NotificationsApiClient` para outros serviços usarem
-- [ ] Atualizar outros módulos para usar API de Notifications
-- [ ] Testes end-to-end
-- [ ] Documentar serviço
-
-**Arquivos a Criar**:
-- `backend/Araponga.Api.Notifications/Araponga.Api.Notifications.csproj`
-- `backend/Araponga.Api.Notifications/Program.cs`
-- `backend/Araponga.Api.Notifications/Controllers/NotificationsController.cs`
-- `backend/Araponga.Api.Notifications/appsettings.json`
-- `backend/Araponga.Application/Interfaces/INotificationsApiClient.cs`
-- `backend/Araponga.Infrastructure/Clients/NotificationsApiClient.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/Modules/NotificationsModule.cs` (remover do monolito)
-
-**Critérios de Sucesso**:
-- ✅ Notifications como serviço independente
-- ✅ Outros módulos usam API de Notifications
-- ✅ Funciona em monolito (via módulo) e distribuído (via API)
-- ✅ Testes end-to-end passando
-- ✅ Documentação completa
-
----
-
-#### 24.2 Migração de Dependências
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Atualizar `FeedService` para usar `INotificationsApiClient`
-- [ ] Atualizar `MarketplaceService` para usar `INotificationsApiClient`
-- [ ] Atualizar `EventsService` para usar `INotificationsApiClient`
-- [ ] Atualizar `ModerationService` para usar `INotificationsApiClient`
-- [ ] Criar factory para escolher implementação (local vs API)
-- [ ] Testes de integração
-- [ ] Documentar migração
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/FeedService.cs`
-- `backend/Araponga.Application/Services/PaymentService.cs`
-- `backend/Araponga.Application/Services/EventsService.cs`
-- `backend/Araponga.Application/Services/ReportService.cs`
-
-**Critérios de Sucesso**:
-- ✅ Dependências migradas
-- ✅ Factory funcionando
-- ✅ Testes passando
-- ✅ Documentação completa
-
----
-
-### Semana 25: Documentação e Deploy Dual
-
-#### 25.1 Documentação de Arquitetura Dual
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `docs/ARCHITECTURE_DUAL.md`
-  - [ ] Arquitetura monolito vs distribuída
-  - [ ] Diagramas de ambas as arquiteturas
-  - [ ] Fluxo de comunicação em ambos os modelos
-  - [ ] Decisões arquiteturais
-- [ ] Criar `docs/DEPLOY_MONOLITH.md`
-  - [ ] Guia completo de deploy monolito
-  - [ ] Requisitos de sistema
-  - [ ] Configuração passo a passo
-  - [ ] Docker compose para monolito
-- [ ] Criar `docs/DEPLOY_DISTRIBUTED.md`
-  - [ ] Guia completo de deploy distribuído
-  - [ ] Requisitos de sistema
-  - [ ] Configuração passo a passo
-  - [ ] Docker compose para distribuído
-  - [ ] Kubernetes manifests
-- [ ] Criar `docs/MIGRATION_GUIDE.md`
-  - [ ] Como migrar de monolito para distribuído
-  - [ ] Passo a passo de migração
-  - [ ] Rollback procedures
-  - [ ] Troubleshooting
-
-**Arquivos a Criar**:
-- `docs/ARCHITECTURE_DUAL.md`
-- `docs/DEPLOY_MONOLITH.md`
-- `docs/DEPLOY_DISTRIBUTED.md`
-- `docs/MIGRATION_GUIDE.md`
-
-**Critérios de Sucesso**:
-- ✅ Documentação completa de ambas as arquiteturas
-- ✅ Guias de deploy criados
-- ✅ Guia de migração completo
-- ✅ Diagramas incluídos
-
----
-
-#### 25.2 Docker Compose e Kubernetes
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `docker-compose.monolith.yml`
-  - [ ] Serviço API (monolito)
-  - [ ] PostgreSQL
-  - [ ] Redis (opcional)
-  - [ ] Health checks
-- [ ] Criar `docker-compose.distributed.yml`
-  - [ ] API Gateway
-  - [ ] Core Service
-  - [ ] Feed Service
-  - [ ] Marketplace Service
-  - [ ] Notifications Service
-  - [ ] RabbitMQ
-  - [ ] PostgreSQL (compartilhado ou separado)
-  - [ ] Redis
-  - [ ] Service Discovery (Consul ou Kubernetes)
-- [ ] Criar Kubernetes manifests
-  - [ ] Deployments para cada serviço
-  - [ ] Services (ClusterIP, LoadBalancer)
-  - [ ] ConfigMaps e Secrets
-  - [ ] Ingress para API Gateway
-  - [ ] Health checks
-- [ ] Criar scripts de deploy
-  - [ ] `scripts/deploy-monolith.sh`
-  - [ ] `scripts/deploy-distributed.sh`
-- [ ] Documentar deploy
-
-**Arquivos a Criar**:
-- `docker-compose.monolith.yml`
-- `docker-compose.distributed.yml`
-- `k8s/manifests/core-deployment.yaml`
-- `k8s/manifests/feed-deployment.yaml`
-- `k8s/manifests/marketplace-deployment.yaml`
-- `k8s/manifests/notifications-deployment.yaml`
-- `k8s/manifests/gateway-deployment.yaml`
-- `k8s/manifests/postgres-deployment.yaml`
-- `k8s/manifests/rabbitmq-deployment.yaml`
-- `scripts/deploy-monolith.sh`
-- `scripts/deploy-distributed.sh`
-
-**Critérios de Sucesso**:
-- ✅ Docker compose para monolito funcionando
-- ✅ Docker compose para distribuído funcionando
-- ✅ Kubernetes manifests criados
-- ✅ Scripts de deploy funcionando
-- ✅ Documentação completa
-
----
-
-#### 25.3 Testes de Integração e Carga
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar testes de integração para monolito
-  - [ ] Testar desativação de módulos
-  - [ ] Testar health checks por módulo
-  - [ ] Testar comunicação entre módulos
-- [ ] Criar testes de integração para distribuído
-  - [ ] Testar comunicação via API Gateway
-  - [ ] Testar comunicação via Message Broker
-  - [ ] Testar service discovery
-  - [ ] Testar circuit breaker
-- [ ] Criar testes de carga
-  - [ ] Teste de carga em monolito
-  - [ ] Teste de carga em distribuído
-  - [ ] Comparar performance
-- [ ] Documentar resultados
-
-**Arquivos a Criar**:
-- `backend/Araponga.Tests/Integration/MonolithIntegrationTests.cs`
-- `backend/Araponga.Tests/Integration/DistributedIntegrationTests.cs`
-- `backend/Araponga.Tests/Performance/MonolithLoadTests.cs`
-- `backend/Araponga.Tests/Performance/DistributedLoadTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Testes de integração passando
-- ✅ Testes de carga realizados
-- ✅ Performance comparada
-- ✅ Documentação completa
-
----
-
-#### 25.4 Estratégia Testcontainers + PostgreSQL
-**Estimativa**: 8 horas (1 dia)  
-**Status**: ❌ Não implementado
-
-**Contexto**: Estabelecer **Testcontainers + PostgreSQL** para testes de integração com banco real, em paralelo ao InMemory atual. Reduz diferença dev/prod, resolve problemas de contexto (ex.: auth em testes tipo DevicesController) e permite rodar ConcurrencyTests no CI sem Postgres externo.
-
-**Tarefas**:
-- [ ] Adicionar pacote `Testcontainers.PostgreSql` ao projeto de testes
-- [ ] Criar `ApiFactoryPostgres` (ou similar) que implementa `IAsyncLifetime`:
-  - [ ] `InitializeAsync`: subir `PostgreSqlContainer`, obter connection string
-  - [ ] `ConfigureWebHost`: `Persistence__Provider=Postgres`, `ConnectionStrings__Postgres` do container
-  - [ ] Garantir migrações (EnsureCreated ou ApplyMigrations) no banco do container
-  - [ ] `Dispose`/`DisposeAsync`: parar container
-- [ ] Migrar **parcialmente** para Postgres (adoção recomendada):
-  - [ ] `DevicesControllerTests` (em especial o teste que falha em InMemory)
-  - [ ] `ConcurrencyTests` (substituir `DatabaseFixture` + Postgres externo por container)
-  - [ ] Opcional: outros testes de API críticos que dependem de transações/consistência
-- [ ] Manter InMemory para a maioria dos testes (unit + integração leve)
-- [ ] CI: manter `ubuntu-latest` (Docker já disponível); aceitar aumento de ~30s–1min no tempo de testes
-- [ ] Documentar uso em `docs/TESTCONTAINERS_POSTGRES_IMPACTO.md` (já existente)
-
-**Referência**: [TESTCONTAINERS_POSTGRES_IMPACTO.md](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)
-
-**Critérios de Sucesso**:
-- ✅ `ApiFactoryPostgres` criado e funcionando
-- ✅ Testes migrados (Devices, Concurrency) passando com Postgres em container
-- ✅ CI executando esses testes sem Postgres como serviço
-- ✅ InMemory preservado para o restante da suite
-
----
-
-## 📊 Resumo da Fase 9
-
-| Tarefa | Estimativa | Status | Prioridade |
-|--------|------------|--------|------------|
-| Interface de Módulo e Registry | 12h | ❌ Pendente | 🟢 Média |
-| Organização de Módulos | 16h | ❌ Pendente | 🟢 Média |
-| Configuração de Módulos | 8h | ❌ Pendente | 🟢 Média |
-| Abstração de Event Bus | 12h | ❌ Pendente | 🟢 Média |
-| Message Broker (RabbitMQ) | 20h | ❌ Pendente | 🟢 Média |
-| API Gateway (YARP) | 20h | ❌ Pendente | 🟢 Média |
-| Service Discovery | 12h | ❌ Pendente | 🟢 Média |
-| Serviço Notifications | 24h | ❌ Pendente | 🟢 Média |
-| Migração de Dependências | 12h | ❌ Pendente | 🟢 Média |
-| Documentação de Arquitetura | 16h | ❌ Pendente | 🟢 Média |
-| Docker Compose e Kubernetes | 16h | ❌ Pendente | 🟢 Média |
-| Testes de Integração e Carga | 12h | ❌ Pendente | 🟢 Média |
-| Estratégia Testcontainers + PostgreSQL (§25.4) | 8h | ❌ Pendente | 🟢 Média |
-| **Total** | **188h (~36 dias)** | | |
-
----
-
-## ✅ Critérios de Sucesso da Fase 9
-
-### Funcionalidades
-- ✅ Versão monolito funcionando
-- ✅ Versão distribuída funcionando
-- ✅ Mesma API em ambos os modelos
-- ✅ Mesma funcionalidade em ambos os modelos
-- ✅ Módulos podem ser desativados independentemente
-- ✅ Migração entre modelos possível
-
-### Qualidade
-- ✅ Código compartilhado maximizado (Domain, Application, Infrastructure)
-- ✅ Duplicação mínima
-- ✅ Testes passando em ambos os modelos
-- ✅ Performance comparável
-- ✅ **Estratégia Testcontainers + PostgreSQL** estabelecida (ver §25.4); testes de integração críticos com banco real onde indicado
-
-### Documentação
-- ✅ Arquitetura documentada (monolito e distribuído)
-- ✅ Guias de deploy criados
-- ✅ Guia de migração completo
-- ✅ Docker compose para ambos os modelos
-- ✅ Kubernetes manifests criados
-
-### Operação
-- ✅ Deploy monolito funcionando
-- ✅ Deploy distribuído funcionando
-- ✅ Service discovery funcionando
-- ✅ Message Broker funcionando
-- ✅ API Gateway funcionando
-
----
-
-## 🔗 Dependências
-
-- **Fase 4**: Observabilidade completa (para monitorar ambos os modelos)
-- **Fase 7**: Sistema de Payout (Notifications depende de eventos de pagamento)
-
----
-
-## 📝 Notas de Implementação
-
-### Estrutura de Módulos
-
-**Exemplo de Módulo**:
-```csharp
-public class FeedModule : ModuleBase
-{
-    public override string Name => "Feed";
-    public override string Version => "1.0.0";
-    public override ModuleType Type => ModuleType.Both; // Monolith, Distributed, Both
-    
-    public override void RegisterServices(IServiceCollection services, IConfiguration configuration)
-    {
-        if (!IsEnabled) return;
-        
-        services.AddScoped<FeedService>();
-        services.AddScoped<PostCreationService>();
-        services.AddScoped<PostInteractionService>();
-        services.AddScoped<PostFilterService>();
-    }
-    
-    public override void RegisterControllers(IMvcBuilder mvcBuilder)
-    {
-        if (!IsEnabled) return;
-        
-        // Em monolito: registrar controllers diretamente
-        if (Type == ModuleType.Monolith || Type == ModuleType.Both)
-        {
-            mvcBuilder.AddApplicationPart(typeof(FeedController).Assembly);
-        }
-    }
-}
+DemandNegotiation
+├── Id
+├── DemandOfferId
+├── Messages (lista de mensagens)
+│   ├── SentBy (UserId)
+│   ├── Content
+│   ├── CreatedAt
+├── Status (ACTIVE, ACCEPTED, REJECTED, CANCELLED)
+├── CreatedAt
+└── UpdatedAt
 ```
 
-### Configuração (Monolito)
+### Fluxo Principal
 
-```json
-{
-  "Deployment": {
-    "Model": "Monolith"
-  },
-  "Modules": {
-    "Core": {
-      "Enabled": true,
-      "Required": true
-    },
-    "Feed": {
-      "Enabled": true
-    },
-    "Marketplace": {
-      "Enabled": true
-    },
-    "Chat": {
-      "Enabled": false  // Desativado
-    }
-  },
-  "EventBus": {
-    "Provider": "InMemory"
-  }
-}
 ```
-
-### Configuração (Distribuído)
-
-```json
-{
-  "Deployment": {
-    "Model": "Distributed"
-  },
-  "Services": {
-    "Core": {
-      "BaseUrl": "http://core-service:5000"
-    },
-    "Notifications": {
-      "BaseUrl": "http://notifications-service:5001"
-    }
-  },
-  "MessageBroker": {
-    "Provider": "RabbitMQ",
-    "ConnectionString": "amqp://guest:guest@rabbitmq:5672"
-  }
-}
-```
-
-### Program.cs (Monolito)
-
-```csharp
-var builder = WebApplication.CreateBuilder(args);
-var deploymentModel = builder.Configuration.GetValue<string>("Deployment:Model", "Monolith");
-
-if (deploymentModel == "Monolith")
-{
-    var moduleRegistry = new ModuleRegistry(builder.Configuration);
-    moduleRegistry.Register<CoreModule>();
-    moduleRegistry.Register<FeedModule>();
-    moduleRegistry.Register<MarketplaceModule>();
-    // ... outros módulos
-    
-    moduleRegistry.ConfigureServices(builder.Services);
-    moduleRegistry.ConfigureControllers(builder.Services.AddControllers());
-    moduleRegistry.ConfigureHealthChecks(builder.Services.AddHealthChecks());
-}
-```
-
-### Program.cs (Serviço Distribuído)
-
-```csharp
-var builder = WebApplication.CreateBuilder(args);
-
-// Registrar apenas módulo específico (ex: FeedModule)
-var feedModule = new FeedModule(builder.Configuration);
-feedModule.RegisterServices(builder.Services, builder.Configuration);
-feedModule.RegisterControllers(builder.Services.AddControllers());
-
-// Configurar Message Broker
-builder.Services.AddSingleton<IMessageBroker, RabbitMQMessageBroker>();
-builder.Services.AddSingleton<IEventBus, MessageBrokerEventBus>();
-
-// Configurar API de Core (para validação)
-builder.Services.AddHttpClient<ICoreApiClient, CoreApiClient>(client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["Services:Core:BaseUrl"]);
-});
+1. Morador cria Demanda (ACTIVE)
+   ↓
+2. Outro morador/visitante faz Oferta (PENDING)
+   ↓
+3. Demandante pode:
+   - Aceitar → Cria transação de pagamento → Oferta (ACCEPTED)
+   - Rejeitar → Oferta (REJECTED)
+   - Negociar → Oferta (NEGOTIATING) → Mensagens → Aceitar/Rejeitar
+   ↓
+4. Se aceita:
+   - Pagamento processado
+   - Entrega/prestação confirmada
+   - Pagamento liberado para ofertante
+   - Demanda marcada como FULFILLED
 ```
 
 ---
 
-**Status**: ⏳ **FASE 19 PENDENTE**  
-**Prioridade**: 🟢 FUTURO (Escalabilidade futura)
+## 🚩 Feature Flags
+
+### Feature Flag: `DEMANDS_ENABLED`
+
+- **Tipo**: Territorial
+- **Default**: `false`
+- **Descrição**: Habilita/desabilita sistema de demandas no território
+- **Comportamento**: Quando desabilitado, endpoints retornam `404`
+
+---
+
+## ✅ Critérios de Sucesso
+
+- ✅ Moradores podem criar demandas de itens/serviços
+- ✅ Outros podem fazer ofertas para demandas
+- ✅ Sistema de negociação funcional
+- ✅ Integração com pagamentos funcionando
+- ✅ Notificações enviadas corretamente
+- ✅ Visibilidade respeitada (PUBLIC vs RESIDENT_ONLY)
+- ✅ Testes com cobertura >90%
+- ✅ Documentação completa
+
+---
+
+## 🔗 Referências
+
+- [Fase 6: Marketplace](./FASE6.md)
+- [Fase 7: Pagamentos](./FASE7.md)
+- [Fase 20: Trocas Comunitárias](./FASE20.md)
+- [Análise de Reorganização](../ANALISE_DEMANDAS_OFERTAS_REORGANIZACAO.md)
+
+---
+
+**Status**: ⏳ Pendente  
+**Próximos Passos**: Aprovação e início da implementação

@@ -1,537 +1,511 @@
-# Fase 42: Sistema de Gamificação Harmoniosa
+# Fase 17: Sistema de Compra Coletiva e Organização Comunitária de Alimentos
 
 **Duração**: 4 semanas (28 dias úteis)  
-**Prioridade**: 🟡 ALTA (Engajamento comunitário sustentável)  
-**Depende de**: Fase 9 (Perfil de Usuário), Fase 14 (Governança)  
-**Integra com**: Fase 24 (Saúde Territorial) - pode ser desenvolvido em paralelo  
+**Prioridade**: 🔴 CRÍTICA (Economia local e soberania alimentar)  
+**Depende de**: Fase 6 (Marketplace), Fase 14 (Governança/Votação), Fase 22 (Moeda Territorial)  
+**Integra com**: Fase 21 (Entregas) - opcional, pode ser feito depois  
 **Estimativa Total**: 160 horas  
 **Status**: ⏳ Pendente  
-**Nota**: Renumerada de Fase 17 para Fase 42, reposicionada para Onda 9 (Gamificação e Incentivos) - depois de funcionalidades core
+**Nota**: Renumerada de Fase 23 para Fase 17, priorizada de P1 para P0 (Onda 3: Economia Local)
 
 ---
 
 ## 🎯 Objetivo
 
-Implementar sistema de **gamificação harmoniosa** que:
-- Reforça **contribuição comunitária real** (não engajamento vazio)
-- Respeita **interesses do território** (personalização por território)
-- É **suave e não invasivo** (não manipula comportamento)
-- Foca no **mais importante**: união comunitária e soberania territorial
-- Segue **melhores padrões** de gamificação ética
+Implementar sistema de **compra coletiva de alimentos** que:
+- Conecta produtores locais (moradores ou visitantes) com consumidores do território
+- Organiza a comunidade para indicar interesse de compra
+- Implementa agenda de compras comunitárias
+- Sistema de opt-in/opt-out para participantes
+- Integração com sistema de votação (Fase 14) para decisões coletivas
+- Integração com sistema de entregas (Fase 21) para distribuição
+- Integração com moeda territorial (Fase 22) para pagamentos
+- Gamificação de participação (Fase 42)
 
 **Princípios**:
-- ✅ **Contribuição Real**: Pontos baseados em ações que agregam valor
-- ✅ **Contexto Territorial**: Gamificação adaptada aos interesses do território
-- ✅ **Harmonia**: Não compete com o propósito principal (união comunitária)
-- ✅ **Transparência**: Usuário entende como ganha pontos
-- ✅ **Sem Manipulação**: Não usa técnicas de "engajamento" extrativistas
+- ✅ **Economia Local**: Fortalece produtores locais
+- ✅ **Soberania Alimentar**: Comunidade decide o que comprar
+- ✅ **Organização Comunitária**: Decisões coletivas via votação
+- ✅ **Transparência**: Todos veem o que está sendo comprado
+- ✅ **Sustentabilidade**: Reduz desperdício e transporte
 
 ---
 
 ## 📋 Contexto e Requisitos
 
 ### Estado Atual
-- ✅ Sistema de posts, eventos, marketplace, mapa
-- ✅ Sistema de perfil de usuário (Fase 9)
-- ✅ Sistema de governança e votações (Fase 14)
-- ✅ Sistema de interesses do território (Fase 14)
-- ❌ Não existe sistema de gamificação
-- ❌ Não existe rastreamento de contribuições
+- ✅ Sistema de marketplace (Fase 6)
+- ✅ Sistema de votação (Fase 14)
+- ✅ Sistema de entregas (Fase 21)
+- ✅ Sistema de moeda territorial (Fase 22)
+- ✅ Sistema de gamificação (Fase 42)
+- ❌ Não existe sistema de compra coletiva
+- ❌ Não existe sistema de organização comunitária de alimentos
+- ❌ Não existe agenda de compras comunitárias
 
 ### Requisitos Funcionais
 
-#### 1. Sistema de Contribuições
-- ✅ Rastrear ações que agregam valor:
-  - Criar post relevante (com GeoAnchor)
-  - Criar evento comunitário
-  - Participar de evento
-  - Criar MapEntity (localização útil)
-  - Confirmar MapEntity (confirmação colaborativa)
-  - Criar item no marketplace
-  - Vender no marketplace
-  - Comprar no marketplace (economia local)
-  - Ser entregador (entregas territoriais)
-  - Participar de votação
-  - Criar votação relevante
-  - Moderar conteúdo (curadores)
-  - Reportar conteúdo inadequado
-- ✅ Pontos baseados em **valor agregado**, não quantidade
-- ✅ Qualidade > Quantidade (IA pode ajudar a avaliar)
+#### 1. Sistema de Produtores
+- ✅ Registrar produtor (morador ou visitante)
+- ✅ Cadastrar produtos (tipo, quantidade, preço, sazonalidade)
+- ✅ Disponibilidade (quando está disponível)
+- ✅ Localização do produtor
+- ✅ Métodos de pagamento (moeda territorial, fiat, ambos)
 
-#### 2. Interesses do Território
-- ✅ Gamificação adaptada aos interesses do território
-- ✅ Ações alinhadas aos interesses ganham mais pontos
-- ✅ Exemplo: Se território tem interesse "Sustentabilidade":
-  - Post sobre reciclagem → +10 pontos
-  - Post genérico → +5 pontos
-- ✅ Interesses definidos pela comunidade (Fase 14)
+#### 2. Sistema de Compra Coletiva
+- ✅ Criar rodada de compra coletiva (organizador)
+- ✅ Definir produtos disponíveis (do catálogo de produtores)
+- ✅ Definir prazo para indicação de interesse
+- ✅ Definir quantidade mínima para viabilizar compra
+- ✅ Status: PLANNING, COLLECTING_INTERESTS, CONFIRMED, IN_DELIVERY, COMPLETED, CANCELLED
 
-#### 3. Níveis e Reconhecimento
-- ✅ Níveis baseados em contribuição (não competitivos)
-- ✅ Badges/Conquistas por tipos de contribuição
-- ✅ Reconhecimento comunitário (não ranking público)
-- ✅ Sem comparação direta entre usuários (evita competição tóxica)
+#### 3. Sistema de Interesse de Compra
+- ✅ Usuários indicam interesse (opt-in)
+- ✅ Quantidade desejada por produto
+- ✅ Confirmação de interesse (antes do prazo)
+- ✅ Cancelamento de interesse (antes do prazo)
+- ✅ Notificações sobre status da compra
 
-#### 4. Visualização Suave
-- ✅ Estatísticas no perfil (já existe em Fase 9)
-- ✅ Badges discretos (não invasivos)
-- ✅ Notificações ocasionais (não spam)
-- ✅ Feed não manipulado (cronológico mantido)
+#### 4. Sistema de Agenda de Compras
+- ✅ Agenda de rodadas de compra (mensal, quinzenal, semanal)
+- ✅ Calendário de compras comunitárias
+- ✅ Lembretes automáticos
+- ✅ Histórico de compras
 
-#### 5. Ética e Transparência
-- ✅ Usuário vê como ganha pontos
-- ✅ Histórico de contribuições
-- ✅ Sem "surpresas" ou manipulação
-- ✅ Foco em contribuição, não em "engajamento"
+#### 5. Integração com Votação
+- ✅ Votação para escolher produtos (quais produtos comprar)
+- ✅ Votação para escolher produtores (qual produtor escolher)
+- ✅ Votação para definir frequência de compras
+- ✅ Votação para aprovar organizadores
+
+#### 6. Integração com Entregas
+- ✅ Organizar entrega coletiva (Fase 21)
+- ✅ Rota otimizada para entregas
+- ✅ Pontos de entrega comunitários
+- ✅ Entregadores podem ser participantes
+
+#### 7. Integração com Moeda Territorial
+- ✅ Pagamento em moeda territorial
+- ✅ Desconto para pagamento em moeda territorial
+- ✅ Fundos territoriais podem subsidiar compras
+
+#### 8. Gamificação
+- ✅ Participação em compra coletiva gera contribuição
+- ✅ Organizar compra coletiva gera mais pontos
+- ✅ Comprar de produtor local gera mais pontos
 
 ---
 
 ## 📋 Tarefas Detalhadas
 
-### Semana 26: Modelo de Domínio e Contribuições
+### Semana 1-2: Modelo de Domínio e Produtores
 
-#### 26.1 Modelo de Domínio - Contribuições
-**Estimativa**: 16 horas (2 dias)  
+#### 17.1 Modelo de Domínio - Compra Coletiva
+**Estimativa**: 32 horas (4 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar enum `ContributionType`:
-  - [ ] `PostCreated` (post com GeoAnchor)
-  - [ ] `EventCreated` (evento comunitário)
-  - [ ] `EventParticipated` (participação em evento)
-  - [ ] `MapEntityCreated` (criação de entidade do mapa)
-  - [ ] `MapEntityConfirmed` (confirmação de entidade)
-  - [ ] `MarketplaceItemCreated` (item no marketplace)
-  - [ ] `MarketplaceSale` (venda no marketplace)
-  - [ ] `MarketplacePurchase` (compra no marketplace)
-  - [ ] `DeliveryCompleted` (entrega completada)
-  - [ ] `VotingParticipated` (participação em votação)
-  - [ ] `VotingCreated` (criação de votação relevante)
-  - [ ] `ModerationAction` (moderação por curador)
-  - [ ] `ReportSubmitted` (report útil)
-  - [ ] **`WasteCollection`** (coleta de resíduos) 🔴 NOVO
-  - [ ] **`TreePlanting`** (plantio de árvores) 🔴 NOVO
-  - [ ] **`TerritoryAction`** (mutirão, manutenção, restauração) 🔴 NOVO
-  - [ ] **`HealthObservation`** (observação de saúde territorial) 🔴 NOVO
-  - [ ] **`SensorReading`** (leitura de sensor confirmada) 🔴 NOVO
-  - [ ] **`NaturalAssetMaintenance`** (manutenção de recurso natural) 🔴 NOVO
-- [ ] Criar modelo `Contribution`:
+- [ ] Criar enum `ProducerType`:
+  - [ ] `RESIDENT` (morador)
+  - [ ] `VISITOR` (visitante)
+- [ ] Criar enum `ProductCategory`:
+  - [ ] `VEGETABLES` (vegetais)
+  - [ ] `FRUITS` (frutas)
+  - [ ] `GRAINS` (grãos)
+  - [ ] `DAIRY` (laticínios)
+  - [ ] `MEAT` (carnes)
+  - [ ] `HONEY` (mel)
+  - [ ] `HERBS` (ervas)
+  - [ ] `OTHER` (outros)
+- [ ] Criar enum `CollectivePurchaseStatus`:
+  - [ ] `PLANNING` (planejando)
+  - [ ] `COLLECTING_INTERESTS` (coletando interesses)
+  - [ ] `CONFIRMED` (confirmada)
+  - [ ] `IN_DELIVERY` (em entrega)
+  - [ ] `COMPLETED` (completada)
+  - [ ] `CANCELLED` (cancelada)
+- [ ] Criar enum `PurchaseInterestStatus`:
+  - [ ] `PENDING` (pendente)
+  - [ ] `CONFIRMED` (confirmado)
+  - [ ] `CANCELLED` (cancelado)
+- [ ] Criar modelo `Producer`:
   - [ ] `Id`, `UserId`, `TerritoryId`
-  - [ ] `Type` (ContributionType)
-  - [ ] `Points` (int, pontos ganhos)
-  - [ ] `RelatedEntityId` (Guid?, nullable, ID da entidade relacionada)
-  - [ ] `RelatedEntityType` (string?, nullable, tipo da entidade)
-  - [ ] `InterestAlignment` (decimal?, nullable, 0-1, alinhamento com interesses)
-  - [ ] `QualityScore` (decimal?, nullable, 0-1, qualidade avaliada por IA)
-  - [ ] `Description` (string?, nullable, descrição da contribuição)
-  - [ ] `CreatedAtUtc`
-- [ ] Criar modelo `UserContributionStats`:
-  - [ ] `UserId`, `TerritoryId`
-  - [ ] `TotalPoints` (int, pontos totais)
-  - [ ] `Level` (int, nível baseado em pontos)
-  - [ ] `ContributionsCount` (int, número de contribuições)
-  - [ ] `LastContributionAtUtc` (DateTime?, nullable)
-  - [ ] `UpdatedAtUtc`
-- [ ] Criar modelo `Badge`:
-  - [ ] `Id`, `Name`, `Description`
-  - [ ] `IconUrl` (string?, nullable)
-  - [ ] `Category` (string, categoria: Community, Marketplace, Events, Map, etc.)
-  - [ ] `Criteria` (JSON, critérios para ganhar)
+  - [ ] `ProducerType` (ProducerType)
+  - [ ] `BusinessName?` (nullable, nome do negócio)
+  - [ ] `Description?` (nullable)
+  - [ ] `LocationLat`, `LocationLng`
+  - [ ] `ContactPhone?` (nullable)
+  - [ ] `ContactEmail?` (nullable)
+  - [ ] `AcceptsTerritoryCurrency` (bool)
+  - [ ] `AcceptsFiat` (bool)
   - [ ] `IsActive` (bool)
-- [ ] Criar modelo `UserBadge`:
-  - [ ] `Id`, `UserId`, `BadgeId`
-  - [ ] `EarnedAtUtc` (DateTime)
-  - [ ] `TerritoryId?` (Guid?, nullable, badge territorial)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `ProducerProduct`:
+  - [ ] `Id`, `ProducerId`
+  - [ ] `Name` (string)
+  - [ ] `Category` (ProductCategory)
+  - [ ] `Description?` (nullable)
+  - [ ] `Unit` (string: kg, unidade, dúzia, etc.)
+  - [ ] `PricePerUnit` (decimal, preço por unidade)
+  - [ ] `PriceInTerritoryCurrency?` (nullable, preço em moeda territorial)
+  - [ ] `MinQuantity` (decimal, quantidade mínima)
+  - [ ] `MaxQuantity?` (nullable, quantidade máxima)
+  - [ ] `IsAvailable` (bool)
+  - [ ] `Seasonality?` (nullable, sazonalidade)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `CollectivePurchase`:
+  - [ ] `Id`, `TerritoryId`, `OrganizerUserId`
+  - [ ] `Title` (string)
+  - [ ] `Description?` (nullable)
+  - [ ] `Status` (CollectivePurchaseStatus)
+  - [ ] `InterestDeadline` (DateTime, prazo para indicar interesse)
+  - [ ] `DeliveryDate` (DateTime?, nullable, data de entrega)
+  - [ ] `MinTotalQuantity?` (nullable, quantidade mínima total para viabilizar)
+  - [ ] `DeliveryLocationLat?` (nullable)
+  - [ ] `DeliveryLocationLng?` (nullable)
+  - [ ] `DeliveryPointName?` (nullable, nome do ponto de entrega)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `CollectivePurchaseProduct`:
+  - [ ] `Id`, `CollectivePurchaseId`, `ProducerProductId`
+  - [ ] `RequestedQuantity` (decimal, quantidade solicitada)
+  - [ ] `ConfirmedQuantity?` (nullable, quantidade confirmada)
+  - [ ] `PricePerUnit` (decimal, preço na compra)
+  - [ ] `IsConfirmed` (bool)
+- [ ] Criar modelo `PurchaseInterest`:
+  - [ ] `Id`, `CollectivePurchaseId`, `UserId`
+  - [ ] `Status` (PurchaseInterestStatus)
+  - [ ] `ConfirmedAtUtc?` (nullable)
+  - [ ] `CancelledAtUtc?` (nullable)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `PurchaseInterestItem`:
+  - [ ] `Id`, `PurchaseInterestId`, `CollectivePurchaseProductId`
+  - [ ] `Quantity` (decimal, quantidade desejada)
+  - [ ] `ConfirmedQuantity?` (nullable, quantidade confirmada)
+- [ ] Criar modelo `CollectivePurchaseSchedule`:
+  - [ ] `Id`, `TerritoryId`, `OrganizerUserId`
+  - [ ] `Name` (string, ex: "Compra Mensal de Orgânicos")
+  - [ ] `Frequency` (string: WEEKLY, BIWEEKLY, MONTHLY, CUSTOM)
+  - [ ] `NextPurchaseDate` (DateTime, próxima compra)
+  - [ ] `IsActive` (bool)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
 - [ ] Criar repositórios
 - [ ] Criar migrations
 
 **Arquivos a Criar**:
-- `backend/Araponga.Domain/Gamification/Contribution.cs`
-- `backend/Araponga.Domain/Gamification/ContributionType.cs`
-- `backend/Araponga.Domain/Gamification/UserContributionStats.cs`
-- `backend/Araponga.Domain/Gamification/Badge.cs`
-- `backend/Araponga.Domain/Gamification/UserBadge.cs`
-- `backend/Araponga.Application/Interfaces/IContributionRepository.cs`
-- `backend/Araponga.Application/Interfaces/IUserContributionStatsRepository.cs`
-- `backend/Araponga.Application/Interfaces/IBadgeRepository.cs`
-- `backend/Araponga.Application/Interfaces/IUserBadgeRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresContributionRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresUserContributionStatsRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresBadgeRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresUserBadgeRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/Migrations/YYYYMMDDHHMMSS_AddGamificationSystem.cs`
+- `backend/Araponga.Domain/CollectivePurchase/Producer.cs`
+- `backend/Araponga.Domain/CollectivePurchase/ProducerType.cs`
+- `backend/Araponga.Domain/CollectivePurchase/ProducerProduct.cs`
+- `backend/Araponga.Domain/CollectivePurchase/ProductCategory.cs`
+- `backend/Araponga.Domain/CollectivePurchase/CollectivePurchase.cs`
+- `backend/Araponga.Domain/CollectivePurchase/CollectivePurchaseStatus.cs`
+- `backend/Araponga.Domain/CollectivePurchase/CollectivePurchaseProduct.cs`
+- `backend/Araponga.Domain/CollectivePurchase/PurchaseInterest.cs`
+- `backend/Araponga.Domain/CollectivePurchase/PurchaseInterestStatus.cs`
+- `backend/Araponga.Domain/CollectivePurchase/PurchaseInterestItem.cs`
+- `backend/Araponga.Domain/CollectivePurchase/CollectivePurchaseSchedule.cs`
+- `backend/Araponga.Application/Interfaces/IProducerRepository.cs`
+- `backend/Araponga.Application/Interfaces/IProducerProductRepository.cs`
+- `backend/Araponga.Application/Interfaces/ICollectivePurchaseRepository.cs`
+- `backend/Araponga.Application/Interfaces/IPurchaseInterestRepository.cs`
+- `backend/Araponga.Application/Interfaces/ICollectivePurchaseScheduleRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresProducerRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresProducerProductRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresCollectivePurchaseRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresPurchaseInterestRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresCollectivePurchaseScheduleRepository.cs`
 
 **Critérios de Sucesso**:
 - ✅ Modelos criados
 - ✅ Repositórios implementados
-- ✅ Migrations aplicadas
+- ✅ Migrations criadas
+- ✅ Testes de repositório passando
 
 ---
 
-#### 26.2 Serviço de Contribuições
-**Estimativa**: 20 horas (2.5 dias)  
+### Semana 2-3: Sistema de Produtores e Compra Coletiva
+
+#### 17.2 Sistema de Produtores
+**Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `ContributionService`:
-  - [ ] `RecordContributionAsync(Guid userId, Guid territoryId, ContributionType type, Guid? relatedEntityId, string? relatedEntityType, CancellationToken)` → registrar contribuição
-  - [ ] `CalculatePointsAsync(ContributionType type, Guid territoryId, decimal? interestAlignment, decimal? qualityScore)` → calcular pontos
-  - [ ] `GetUserStatsAsync(Guid userId, Guid territoryId, CancellationToken)` → obter estatísticas
-  - [ ] `GetUserContributionsAsync(Guid userId, Guid territoryId, int? limit, CancellationToken)` → listar contribuições
-  - [ ] `GetUserLevelAsync(int totalPoints)` → calcular nível
-- [ ] Lógica de cálculo de pontos:
-  - [ ] Base: pontos por tipo de contribuição
-  - [ ] Multiplicador de interesse: se alinhado aos interesses do território → +50%
-  - [ ] Multiplicador de qualidade: se qualidade alta (IA) → +25%
-  - [ ] Exemplo:
-    - Post genérico: 5 pontos
-    - Post alinhado a interesse: 7.5 pontos (5 * 1.5)
-    - Post alinhado + alta qualidade: 9.4 pontos (5 * 1.5 * 1.25)
-- [ ] Integração com `InterestFilterService` (Fase 14):
-  - [ ] Calcular alinhamento com interesses do território
-- [ ] Integração com `AIService` (Fase 23, opcional):
-  - [ ] Avaliar qualidade do conteúdo (opcional, não bloqueante)
-- [ ] Atualizar `UserContributionStats` automaticamente:
-  - [ ] Ao registrar contribuição: atualizar stats
-  - [ ] Calcular nível baseado em pontos
-- [ ] Validações:
-  - [ ] Usuário deve ser resident do território
-  - [ ] Não registrar contribuições duplicadas (mesmo tipo + mesma entidade)
-- [ ] Testes unitários
+- [ ] Criar `ProducerService`:
+  - [ ] `RegisterProducerAsync(Guid userId, Guid territoryId, ...)` → registrar produtor
+  - [ ] `UpdateProducerAsync(Guid producerId, ...)` → atualizar produtor
+  - [ ] `ListProducersAsync(Guid territoryId, ...)` → listar produtores
+  - [ ] `GetProducerAsync(Guid producerId)` → obter produtor
+  - [ ] `DeactivateProducerAsync(Guid producerId)` → desativar produtor
+- [ ] Criar `ProducerProductService`:
+  - [ ] `AddProductAsync(Guid producerId, ...)` → adicionar produto
+  - [ ] `UpdateProductAsync(Guid productId, ...)` → atualizar produto
+  - [ ] `ListProductsAsync(Guid producerId, ...)` → listar produtos
+  - [ ] `GetProductAsync(Guid productId)` → obter produto
+  - [ ] `SetProductAvailabilityAsync(Guid productId, bool isAvailable)` → definir disponibilidade
+- [ ] Criar `ProducerController`:
+  - [ ] `POST /api/v1/producers` → registrar produtor
+  - [ ] `GET /api/v1/producers` → listar produtores
+  - [ ] `GET /api/v1/producers/{id}` → obter produtor
+  - [ ] `PATCH /api/v1/producers/{id}` → atualizar produtor
+  - [ ] `POST /api/v1/producers/{id}/products` → adicionar produto
+  - [ ] `GET /api/v1/producers/{id}/products` → listar produtos
+  - [ ] `PATCH /api/v1/producers/products/{productId}` → atualizar produto
+- [ ] Feature flags: `ProducersEnabled`, `ProducerProductsEnabled`
+- [ ] Validações
+- [ ] Testes
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/ContributionService.cs`
-- `backend/Araponga.Application/Models/ContributionPointsConfig.cs` (configuração de pontos)
-- `backend/Araponga.Tests/Application/ContributionServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/PostCreationService.cs` (registrar contribuição ao criar post)
-- `backend/Araponga.Application/Services/EventsService.cs` (registrar ao criar evento)
-- `backend/Araponga.Application/Services/MapEntityService.cs` (registrar ao criar/confirmar entidade)
-- `backend/Araponga.Application/Services/StoreItemService.cs` (registrar ao criar item)
-- `backend/Araponga.Application/Services/DeliveryService.cs` (registrar ao completar entrega)
-- `backend/Araponga.Application/Services/VotingService.cs` (registrar ao participar/criar votação)
+- `backend/Araponga.Application/Services/ProducerService.cs`
+- `backend/Araponga.Application/Services/ProducerProductService.cs`
+- `backend/Araponga.Api/Controllers/ProducerController.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/RegisterProducerRequest.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/ProducerResponse.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/AddProductRequest.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/ProducerProductResponse.cs`
+- `backend/Araponga.Api/Validators/RegisterProducerRequestValidator.cs`
+- `backend/Araponga.Api/Validators/AddProductRequestValidator.cs`
 
 **Critérios de Sucesso**:
-- ✅ Serviço implementado
-- ✅ Cálculo de pontos funcionando
-- ✅ Integração com interesses funcionando
-- ✅ Stats atualizados automaticamente
+- ✅ Sistema de produtores funcionando
+- ✅ Sistema de produtos funcionando
+- ✅ API funcionando
 - ✅ Testes passando
 
 ---
 
-#### 26.3 Sistema de Badges
-**Estimativa**: 12 horas (1.5 dias)  
+#### 17.3 Sistema de Compra Coletiva
+**Estimativa**: 32 horas (4 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `BadgeService`:
-  - [ ] `CheckAndAwardBadgesAsync(Guid userId, Guid territoryId, CancellationToken)` → verificar e conceder badges
-  - [ ] `GetUserBadgesAsync(Guid userId, Guid? territoryId, CancellationToken)` → listar badges do usuário
-  - [ ] `GetBadgeCriteriaAsync(Guid badgeId, CancellationToken)` → obter critérios
-- [ ] Badges padrão:
-  - [ ] **Community Builder**: 10 posts criados
-  - [ ] **Event Organizer**: 5 eventos criados
-  - [ ] **Map Explorer**: 10 MapEntities criados
-  - [ ] **Map Validator**: 20 MapEntities confirmados
-  - [ ] **Marketplace Seller**: 10 vendas
-  - [ ] **Marketplace Buyer**: 10 compras
-  - [ ] **Delivery Hero**: 20 entregas completadas
-  - [ ] **Active Voter**: 10 participações em votações
-  - [ ] **Community Leader**: 5 votações criadas
-  - [ ] **Moderator**: 50 ações de moderação
-  - [ ] **Territory Guardian**: 10 reports úteis
-  - [ ] **Level 5 Contributor**: Alcançar nível 5
-  - [ ] **Level 10 Contributor**: Alcançar nível 10
-  - [ ] **Level 20 Contributor**: Alcançar nível 20
-- [ ] Critérios configuráveis (JSON):
-  - [ ] Tipo de contribuição
-  - [ ] Quantidade mínima
-  - [ ] Período (opcional, ex: "nos últimos 30 dias")
-  - [ ] Território específico (opcional)
-- [ ] Verificação automática:
-  - [ ] Ao registrar contribuição: verificar badges
-  - [ ] Background job (opcional): verificar badges periodicamente
-- [ ] Notificações discretas:
-  - [ ] Notificar quando badge é conquistado (não spam)
+- [ ] Criar `CollectivePurchaseService`:
+  - [ ] `CreatePurchaseAsync(Guid territoryId, Guid organizerUserId, ...)` → criar compra coletiva
+  - [ ] `AddProductToPurchaseAsync(Guid purchaseId, Guid producerProductId, ...)` → adicionar produto
+  - [ ] `ListPurchasesAsync(Guid territoryId, ...)` → listar compras
+  - [ ] `GetPurchaseAsync(Guid purchaseId)` → obter compra
+  - [ ] `UpdatePurchaseStatusAsync(Guid purchaseId, CollectivePurchaseStatus status)` → atualizar status
+  - [ ] `ConfirmPurchaseAsync(Guid purchaseId)` → confirmar compra (quando atinge quantidade mínima)
+  - [ ] `CancelPurchaseAsync(Guid purchaseId, string reason)` → cancelar compra
+- [ ] Lógica de confirmação:
+  - [ ] Verificar se quantidade mínima foi atingida
+  - [ ] Confirmar quantidades com produtor
+  - [ ] Atualizar status para CONFIRMED
+  - [ ] Notificar participantes
+- [ ] Criar `CollectivePurchaseController`:
+  - [ ] `POST /api/v1/collective-purchases` → criar compra
+  - [ ] `GET /api/v1/collective-purchases` → listar compras
+  - [ ] `GET /api/v1/collective-purchases/{id}` → obter compra
+  - [ ] `POST /api/v1/collective-purchases/{id}/products` → adicionar produto
+  - [ ] `PATCH /api/v1/collective-purchases/{id}/status` → atualizar status
+  - [ ] `POST /api/v1/collective-purchases/{id}/confirm` → confirmar compra
+  - [ ] `POST /api/v1/collective-purchases/{id}/cancel` → cancelar compra
+- [ ] Feature flags: `CollectivePurchasesEnabled`
+- [ ] Validações
 - [ ] Testes
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/BadgeService.cs`
-- `backend/Araponga.Application/Models/BadgeCriteria.cs`
-- `backend/Araponga.Infrastructure/Postgres/SeedData/BadgesSeedData.cs` (badges padrão)
-- `backend/Araponga.Tests/Application/BadgeServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/ContributionService.cs` (chamar verificação de badges)
+- `backend/Araponga.Application/Services/CollectivePurchaseService.cs`
+- `backend/Araponga.Api/Controllers/CollectivePurchaseController.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/CreateCollectivePurchaseRequest.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/CollectivePurchaseResponse.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/AddProductToPurchaseRequest.cs`
+- `backend/Araponga.Api/Validators/CreateCollectivePurchaseRequestValidator.cs`
 
 **Critérios de Sucesso**:
-- ✅ Badges padrão criados
-- ✅ Verificação automática funcionando
+- ✅ Sistema de compra coletiva funcionando
+- ✅ Lógica de confirmação funcionando
+- ✅ API funcionando
+- ✅ Testes passando
+
+---
+
+### Semana 3-4: Interesse de Compra e Agenda
+
+#### 17.4 Sistema de Interesse de Compra
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `PurchaseInterestService`:
+  - [ ] `ExpressInterestAsync(Guid purchaseId, Guid userId, ...)` → expressar interesse (opt-in)
+  - [ ] `UpdateInterestAsync(Guid interestId, ...)` → atualizar interesse
+  - [ ] `ConfirmInterestAsync(Guid interestId)` → confirmar interesse
+  - [ ] `CancelInterestAsync(Guid interestId)` → cancelar interesse (opt-out)
+  - [ ] `ListInterestsAsync(Guid purchaseId, ...)` → listar interesses
+  - [ ] `GetInterestAsync(Guid interestId)` → obter interesse
+  - [ ] `GetUserInterestAsync(Guid purchaseId, Guid userId)` → obter interesse do usuário
+- [ ] Lógica de confirmação automática:
+  - [ ] Quando compra é confirmada, confirmar todos os interesses pendentes
+  - [ ] Calcular quantidades confirmadas
+  - [ ] Notificar participantes
+- [ ] Integrar com sistema de notificações:
+  - [ ] Notificar quando compra é criada
+  - [ ] Notificar quando prazo está próximo
+  - [ ] Notificar quando compra é confirmada
+  - [ ] Notificar quando compra é cancelada
+- [ ] Criar `PurchaseInterestController`:
+  - [ ] `POST /api/v1/collective-purchases/{purchaseId}/interests` → expressar interesse
+  - [ ] `GET /api/v1/collective-purchases/{purchaseId}/interests` → listar interesses
+  - [ ] `GET /api/v1/collective-purchases/{purchaseId}/interests/me` → obter interesse do usuário
+  - [ ] `PATCH /api/v1/purchase-interests/{id}` → atualizar interesse
+  - [ ] `POST /api/v1/purchase-interests/{id}/confirm` → confirmar interesse
+  - [ ] `DELETE /api/v1/purchase-interests/{id}` → cancelar interesse
+- [ ] Feature flags: `PurchaseInterestsEnabled`
+- [ ] Validações
+- [ ] Testes
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/PurchaseInterestService.cs`
+- `backend/Araponga.Api/Controllers/PurchaseInterestController.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/ExpressInterestRequest.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/PurchaseInterestResponse.cs`
+- `backend/Araponga.Api/Validators/ExpressInterestRequestValidator.cs`
+
+**Critérios de Sucesso**:
+- ✅ Sistema de interesse funcionando
+- ✅ Opt-in/opt-out funcionando
+- ✅ Confirmação automática funcionando
 - ✅ Notificações funcionando
 - ✅ Testes passando
 
 ---
 
-### Semana 27: Integração e Personalização Territorial
+#### 17.5 Sistema de Agenda de Compras
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ❌ Não implementado
 
-#### 27.1 Integração com Interesses do Território
+**Tarefas**:
+- [ ] Criar `CollectivePurchaseScheduleService`:
+  - [ ] `CreateScheduleAsync(Guid territoryId, Guid organizerUserId, ...)` → criar agenda
+  - [ ] `UpdateScheduleAsync(Guid scheduleId, ...)` → atualizar agenda
+  - [ ] `ListSchedulesAsync(Guid territoryId, ...)` → listar agendas
+  - [ ] `GetScheduleAsync(Guid scheduleId)` → obter agenda
+  - [ ] `GenerateNextPurchaseAsync(Guid scheduleId)` → gerar próxima compra
+  - [ ] `DeactivateScheduleAsync(Guid scheduleId)` → desativar agenda
+- [ ] Background job para gerar compras automaticamente:
+  - [ ] Verificar agendas ativas
+  - [ ] Gerar compra quando `NextPurchaseDate` chega
+  - [ ] Atualizar `NextPurchaseDate` baseado na frequência
+- [ ] Sistema de lembretes:
+  - [ ] Lembretes antes do prazo de interesse
+  - [ ] Lembretes antes da entrega
+- [ ] Criar `CollectivePurchaseScheduleController`:
+  - [ ] `POST /api/v1/collective-purchase-schedules` → criar agenda
+  - [ ] `GET /api/v1/collective-purchase-schedules` → listar agendas
+  - [ ] `GET /api/v1/collective-purchase-schedules/{id}` → obter agenda
+  - [ ] `PATCH /api/v1/collective-purchase-schedules/{id}` → atualizar agenda
+  - [ ] `POST /api/v1/collective-purchase-schedules/{id}/generate-next` → gerar próxima compra
+  - [ ] `DELETE /api/v1/collective-purchase-schedules/{id}` → desativar agenda
+- [ ] Feature flags: `CollectivePurchaseSchedulesEnabled`
+- [ ] Validações
+- [ ] Testes
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/CollectivePurchaseScheduleService.cs`
+- `backend/Araponga.Api/Controllers/CollectivePurchaseScheduleController.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/CreateScheduleRequest.cs`
+- `backend/Araponga.Api/Contracts/CollectivePurchase/CollectivePurchaseScheduleResponse.cs`
+- `backend/Araponga.Application/BackgroundJobs/CollectivePurchaseScheduleJob.cs`
+
+**Critérios de Sucesso**:
+- ✅ Sistema de agenda funcionando
+- ✅ Geração automática de compras funcionando
+- ✅ Lembretes funcionando
+- ✅ Testes passando
+
+---
+
+### Semana 4: Integrações
+
+#### 17.6 Integração com Votação
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Integração com `InterestFilterService` (Fase 14):
-  - [ ] Ao registrar contribuição: calcular alinhamento com interesses
-  - [ ] Usar interesses do território para multiplicar pontos
-- [ ] Lógica de alinhamento:
-  - [ ] Se contribuição está relacionada a interesse do território → alinhamento = 1.0
-  - [ ] Se parcialmente relacionada → alinhamento = 0.5
-  - [ ] Se não relacionada → alinhamento = 0.0
-  - [ ] Multiplicador: 1.0 + (alinhamento * 0.5) → máximo 1.5x
-- [ ] Exemplos:
-  - [ ] Território tem interesse "Sustentabilidade"
-  - [ ] Post sobre reciclagem → alinhamento 1.0 → +50% pontos
-  - [ ] Post sobre tecnologia → alinhamento 0.0 → pontos normais
-- [ ] Badges territoriais (opcional):
-  - [ ] Badges específicos por interesse do território
-  - [ ] Exemplo: "Sustentabilidade Champion" (10 posts sobre sustentabilidade)
-- [ ] Testes
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/ContributionService.cs`
-- `backend/Araponga.Application/Services/InterestFilterService.cs` (se necessário)
-
-**Critérios de Sucesso**:
-- ✅ Alinhamento com interesses funcionando
-- ✅ Multiplicador de pontos aplicado
-- ✅ Testes passando
-
----
-
-#### 27.2 Integração com IA (Opcional)
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado (opcional)
-
-**Tarefas**:
-- [ ] Integração com `AIService` (Fase 23, opcional):
-  - [ ] Avaliar qualidade do conteúdo (posts, eventos)
-  - [ ] Score de qualidade: 0.0 - 1.0
-  - [ ] Multiplicador: 1.0 + (qualityScore * 0.25) → máximo 1.25x
-- [ ] Critérios de qualidade (IA):
-  - [ ] Relevância territorial
-  - [ ] Originalidade
-  - [ ] Valor informativo
-  - [ ] Clareza
-- [ ] Cache de avaliações:
-  - [ ] Avaliar apenas uma vez por conteúdo
-  - [ ] Cache por 7 dias
-- [ ] Não bloqueante:
-  - [ ] Se IA não disponível: usar pontos base (sem multiplicador)
-  - [ ] Não atrasar registro de contribuição
-- [ ] Testes
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/ContributionService.cs`
-- `backend/Araponga.Application/Services/AIService.cs` (adicionar método de avaliação de qualidade)
-
-**Critérios de Sucesso**:
-- ✅ Integração com IA funcionando (se disponível)
-- ✅ Cache funcionando
-- ✅ Não bloqueante
-- ✅ Testes passando
-
----
-
-#### 27.3 Níveis e Progressão
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Sistema de níveis:
-  - [ ] Fórmula: `Level = floor(sqrt(TotalPoints / 100)) + 1`
-  - [ ] Exemplo:
-    - 0-99 pontos → Nível 1
-    - 100-399 pontos → Nível 2
-    - 400-899 pontos → Nível 3
-    - 900-1599 pontos → Nível 4
-    - 1600-2499 pontos → Nível 5
-    - ... (progressão exponencial suave)
-- [ ] Visualização:
-  - [ ] Barra de progresso para próximo nível
-  - [ ] Pontos necessários para próximo nível
-  - [ ] Percentual de progresso
-- [ ] Reconhecimento discreto:
-  - [ ] Nível visível no perfil (não invasivo)
-  - [ ] Badge de nível (opcional)
-- [ ] Sem ranking público:
-  - [ ] Usuário vê seu próprio nível
-  - [ ] Não há ranking global ou territorial
-  - [ ] Foco em progresso pessoal, não competição
+- [ ] Integrar com `VotingService` (Fase 14):
+  - [ ] Votação para escolher produtos (quais produtos incluir na compra)
+  - [ ] Votação para escolher produtores (qual produtor escolher para cada produto)
+  - [ ] Votação para definir frequência de compras
+  - [ ] Votação para aprovar organizadores
+- [ ] Criar `CollectivePurchaseVotingService`:
+  - [ ] `CreateProductVotingAsync(Guid purchaseId, ...)` → criar votação de produtos
+  - [ ] `CreateProducerVotingAsync(Guid purchaseId, Guid productId, ...)` → criar votação de produtor
+  - [ ] `ProcessVotingResultsAsync(Guid votingId)` → processar resultados
+- [ ] Integrar resultados de votação na compra:
+  - [ ] Adicionar produtos escolhidos
+  - [ ] Associar produtores escolhidos
+- [ ] Feature flags: `CollectivePurchaseVotingEnabled`
 - [ ] Testes
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/LevelService.cs`
-- `backend/Araponga.Application/Models/LevelProgress.cs`
-- `backend/Araponga.Tests/Application/LevelServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/ContributionService.cs` (calcular nível ao atualizar stats)
+- `backend/Araponga.Application/Services/CollectivePurchaseVotingService.cs`
+- `backend/Araponga.Api/Controllers/CollectivePurchaseVotingController.cs`
 
 **Critérios de Sucesso**:
-- ✅ Sistema de níveis funcionando
-- ✅ Progressão suave
-- ✅ Visualização discreta
+- ✅ Integração com votação funcionando
+- ✅ Votações sendo criadas automaticamente
+- ✅ Resultados sendo processados
 - ✅ Testes passando
 
 ---
 
-#### 27.4 Controller e API
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `ContributionsController`:
-  - [ ] `GET /api/v1/contributions/stats` (estatísticas do usuário)
-  - [ ] `GET /api/v1/contributions` (histórico de contribuições)
-  - [ ] `GET /api/v1/contributions/badges` (badges do usuário)
-  - [ ] `GET /api/v1/contributions/level` (nível e progresso)
-- [ ] Criar requests/responses
-- [ ] Validação (FluentValidation)
-- [ ] Integração com perfil:
-  - [ ] Atualizar `UserProfileResponse` para incluir stats
-- [ ] Testes de integração
-
-**Arquivos a Criar**:
-- `backend/Araponga.Api/Controllers/ContributionsController.cs`
-- `backend/Araponga.Api/Contracts/Gamification/ContributionStatsResponse.cs`
-- `backend/Araponga.Api/Contracts/Gamification/ContributionResponse.cs`
-- `backend/Araponga.Api/Contracts/Gamification/BadgeResponse.cs`
-- `backend/Araponga.Api/Contracts/Gamification/LevelProgressResponse.cs`
-- `backend/Araponga.Tests/Integration/ContributionsIntegrationTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/Contracts/Users/UserProfileResponse.cs` (adicionar stats)
-
-**Critérios de Sucesso**:
-- ✅ Endpoints funcionando
-- ✅ Integração com perfil funcionando
-- ✅ Testes passando
-
----
-
-### Semana 28: Visualização e Finalização
-
-#### 28.1 Visualização Suave no Frontend
+#### 17.7 Integração com Entregas
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Componente de estatísticas no perfil:
-  - [ ] Nível atual
-  - [ ] Pontos totais
-  - [ ] Barra de progresso para próximo nível
-  - [ ] Badges conquistados (grid discreto)
-- [ ] Componente de histórico de contribuições:
-  - [ ] Lista de contribuições recentes
-  - [ ] Tipo de contribuição
-  - [ ] Pontos ganhos
-  - [ ] Data
-- [ ] Notificações discretas:
-  - [ ] Badge conquistado (toast suave)
-  - [ ] Nível alcançado (toast suave)
-  - [ ] Não spam (máximo 1 notificação por dia)
-- [ ] Design harmonioso:
-  - [ ] Não compete com conteúdo principal
-  - [ ] Cores suaves
-  - [ ] Ícones discretos
-  - [ ] Não invasivo
-- [ ] Testes E2E
-
-**Arquivos a Criar**:
-- `frontend/portal/components/gamification/ContributionStats.tsx`
-- `frontend/portal/components/gamification/BadgeGrid.tsx`
-- `frontend/portal/components/gamification/ContributionHistory.tsx`
-- `frontend/portal/components/gamification/LevelProgress.tsx`
-
-**Arquivos a Modificar**:
-- `frontend/portal/pages/Profile.tsx` (adicionar seção de gamificação)
-
-**Critérios de Sucesso**:
-- ✅ Componentes criados
-- ✅ Visualização suave e harmoniosa
-- ✅ Testes E2E passando
-
----
-
-#### 28.2 Configuração de Pontos por Território
-**Estimativa**: 8 horas (1 dia)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `TerritoryGamificationConfig`:
-  - [ ] `TerritoryId`
-  - [ ] `PointsConfig` (JSON, configuração de pontos por tipo)
-  - [ ] `MultiplierConfig` (JSON, multiplicadores de interesse/qualidade)
-  - [ ] `BadgesEnabled` (bool)
-  - [ ] `LevelsEnabled` (bool)
-- [ ] Configuração padrão:
-  - [ ] Todos os territórios começam com configuração padrão
-  - [ ] Curadores podem personalizar (opcional)
-- [ ] Validação:
-  - [ ] Pontos devem ser >= 0
-  - [ ] Multiplicadores devem ser >= 1.0
+- [ ] Integrar com `DeliveryService` (Fase 21):
+  - [ ] Criar entrega coletiva quando compra é confirmada
+  - [ ] Organizar rota otimizada para entregas
+  - [ ] Definir pontos de entrega comunitários
+  - [ ] Entregadores podem ser participantes
+- [ ] Criar `CollectivePurchaseDeliveryService`:
+  - [ ] `CreateDeliveryForPurchaseAsync(Guid purchaseId)` → criar entrega
+  - [ ] `OrganizeDeliveryRouteAsync(Guid deliveryId)` → organizar rota
+  - [ ] `AssignDeliveryPersonAsync(Guid deliveryId, Guid deliveryPersonId)` → atribuir entregador
+- [ ] Integrar com sistema de pagamento:
+  - [ ] Pagamento por entrega em moeda territorial
+- [ ] Feature flags: `CollectivePurchaseDeliveryEnabled`
 - [ ] Testes
 
 **Arquivos a Criar**:
-- `backend/Araponga.Domain/Gamification/TerritoryGamificationConfig.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryGamificationConfigRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresTerritoryGamificationConfigRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/Migrations/YYYYMMDDHHMMSS_AddTerritoryGamificationConfig.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/ContributionService.cs` (usar configuração do território)
+- `backend/Araponga.Application/Services/CollectivePurchaseDeliveryService.cs`
 
 **Critérios de Sucesso**:
-- ✅ Configuração por território funcionando
-- ✅ Personalização por curadores funcionando
+- ✅ Integração com entregas funcionando
+- ✅ Entregas sendo criadas automaticamente
+- ✅ Rotas sendo organizadas
 - ✅ Testes passando
 
 ---
 
-#### 28.3 Testes e Documentação
+#### 17.8 Integração com Moeda Territorial e Gamificação
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Testes de integração completos:
-  - [ ] Registro de contribuições
-  - [ ] Cálculo de pontos com interesses
-  - [ ] Sistema de badges
-  - [ ] Sistema de níveis
-  - [ ] Integração com serviços existentes
-- [ ] Testes de performance:
-  - [ ] Registro de contribuições em lote
-  - [ ] Cálculo de alinhamento com interesses
-- [ ] Testes de segurança:
-  - [ ] Apenas residents podem ganhar pontos
-  - [ ] Validação de ownership
-- [ ] Documentação técnica:
-  - [ ] `docs/GAMIFICATION_SYSTEM.md`
-  - [ ] Como funciona o sistema
-  - [ ] Como calcular pontos
-  - [ ] Como personalizar por território
-- [ ] Atualizar `docs/CHANGELOG.md`
-- [ ] Atualizar Swagger
+- [ ] Integrar com `WalletService` (Fase 22):
+  - [ ] Pagamento em moeda territorial
+  - [ ] Desconto para pagamento em moeda territorial
+  - [ ] Fundos territoriais podem subsidiar compras
+- [ ] Integrar com `ContributionService` (Fase 42):
+  - [ ] Participação em compra coletiva gera contribuição
+  - [ ] Organizar compra coletiva gera mais pontos
+  - [ ] Comprar de produtor local gera mais pontos
+- [ ] Criar `CollectivePurchasePaymentService`:
+  - [ ] `ProcessPaymentAsync(Guid purchaseId, Guid userId, ...)` → processar pagamento
+  - [ ] `CalculateTotalAsync(Guid purchaseId, Guid userId)` → calcular total
+  - [ ] `ApplyTerritoryCurrencyDiscountAsync(...)` → aplicar desconto
+- [ ] Feature flags: `CollectivePurchaseTerritoryCurrencyEnabled`
+- [ ] Testes
 
 **Arquivos a Criar**:
-- `backend/Araponga.Tests/Integration/GamificationCompleteIntegrationTests.cs`
-- `docs/GAMIFICATION_SYSTEM.md`
+- `backend/Araponga.Application/Services/CollectivePurchasePaymentService.cs`
 
 **Critérios de Sucesso**:
+- ✅ Integração com moeda territorial funcionando
+- ✅ Integração com gamificação funcionando
+- ✅ Pagamentos funcionando
 - ✅ Testes passando
-- ✅ Cobertura >85%
-- ✅ Documentação completa
 
 ---
 
@@ -539,190 +513,115 @@ Implementar sistema de **gamificação harmoniosa** que:
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Modelo de Domínio - Contribuições | 16h | ❌ Pendente | 🔴 Crítica |
-| Serviço de Contribuições | 20h | ❌ Pendente | 🔴 Crítica |
-| Sistema de Badges | 12h | ❌ Pendente | 🔴 Crítica |
-| Integração com Interesses | 16h | ❌ Pendente | 🔴 Crítica |
-| Integração com IA (Opcional) | 12h | ❌ Pendente | 🟡 Importante |
-| Níveis e Progressão | 12h | ❌ Pendente | 🔴 Crítica |
-| Controller e API | 12h | ❌ Pendente | 🔴 Crítica |
-| Visualização Suave | 16h | ❌ Pendente | 🟡 Importante |
-| Configuração por Território | 8h | ❌ Pendente | 🟡 Importante |
-| Testes e Documentação | 16h | ❌ Pendente | 🟡 Importante |
-| **Total** | **120h (21 dias)** | | |
+| Modelo de Domínio | 32h | ❌ Pendente | 🔴 Alta |
+| Sistema de Produtores | 24h | ❌ Pendente | 🔴 Alta |
+| Sistema de Compra Coletiva | 32h | ❌ Pendente | 🔴 Alta |
+| Sistema de Interesse | 32h | ❌ Pendente | 🔴 Alta |
+| Sistema de Agenda | 24h | ❌ Pendente | 🟡 Média |
+| Integração com Votação | 16h | ❌ Pendente | 🔴 Alta |
+| Integração com Entregas | 16h | ❌ Pendente | 🔴 Alta |
+| Integração Moeda/Gamificação | 16h | ❌ Pendente | 🟡 Média |
+| **Total** | **160h (28 dias)** | | |
 
 ---
 
 ## ✅ Critérios de Sucesso da Fase 17
 
 ### Funcionalidades
-- ✅ Sistema de contribuições funcionando
-- ✅ Cálculo de pontos com interesses funcionando
-- ✅ Sistema de badges funcionando
-- ✅ Sistema de níveis funcionando
-- ✅ Visualização suave e harmoniosa
-- ✅ Integração com serviços existentes funcionando
+- ✅ Sistema completo de produtores funcionando
+- ✅ Sistema de compra coletiva funcionando
+- ✅ Sistema de interesse (opt-in/opt-out) funcionando
+- ✅ Sistema de agenda funcionando
+- ✅ Integração com votação funcionando
+- ✅ Integração com entregas funcionando
+- ✅ Integração com moeda territorial funcionando
+- ✅ Integração com gamificação funcionando
 
 ### Qualidade
-- ✅ Cobertura de testes >85%
-- ✅ Testes de integração passando
-- ✅ Performance adequada
-- ✅ Segurança validada
-- Considerar **Testcontainers + PostgreSQL** para testes de integração (contribuições, pontos, persistência) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
+- ✅ Testes com cobertura adequada
+- ✅ Documentação completa
+- ✅ Feature flags implementados
+- ✅ Validações e segurança implementadas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (compra coletiva, marketplace, votações) com banco real (estratégia na Fase 43; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
-### Ética e Harmonia
-- ✅ Não manipula comportamento
-- ✅ Foca em contribuição real
-- ✅ Transparente para o usuário
-- ✅ Não compete com propósito principal
-
-### Documentação
-- ✅ Documentação técnica completa
-- ✅ Changelog atualizado
-- ✅ Swagger atualizado
+### Integração
+- ✅ Integração com Fase 6 (Marketplace) funcionando
+- ✅ Integração com Fase 14 (Votação) funcionando
+- ✅ Integração com Fase 21 (Entregas) funcionando
+- ✅ Integração com Fase 22 (Moeda Territorial) funcionando
+- ✅ Integração com Fase 42 (Gamificação) funcionando
 
 ---
 
 ## 🔗 Dependências
 
-- **Fase 9**: Perfil de Usuário (estatísticas)
-- **Fase 14**: Governança e Interesses (alinhamento com interesses)
-- **Opcional**: Fase 23 (IA) - Avaliação de qualidade
+- **Fase 6**: Marketplace (base para produtos)
+- **Fase 14**: Governança/Votação (decisões coletivas)
+- **Fase 21**: Entregas (distribuição)
+- **Fase 22**: Moeda Territorial (pagamentos)
+- **Fase 42**: Gamificação (contribuições)
 
 ---
 
 ## 📝 Notas de Implementação
 
-### Princípios de Gamificação Harmoniosa
+### Fluxo de Compra Coletiva
 
-**Contribuição Real**:
-- ✅ Pontos baseados em ações que agregam valor
-- ✅ Qualidade > Quantidade
-- ✅ Não recompensa "engajamento vazio"
+1. **Organizador cria compra coletiva**
+   - Define produtos disponíveis
+   - Define prazo para interesse
+   - Define quantidade mínima
 
-**Contexto Territorial**:
-- ✅ Gamificação adaptada aos interesses do território
-- ✅ Ações alinhadas ganham mais pontos
-- ✅ Badges territoriais (opcional)
+2. **Comunidade indica interesse (opt-in)**
+   - Usuários indicam interesse
+   - Quantidade desejada por produto
+   - Confirmação antes do prazo
 
-**Harmonia**:
-- ✅ Não compete com propósito principal (união comunitária)
-- ✅ Visualização suave e discreta
-- ✅ Não manipula feed (cronológico mantido)
+3. **Votação (opcional)**
+   - Votação para escolher produtos
+   - Votação para escolher produtores
 
-**Transparência**:
-- ✅ Usuário entende como ganha pontos
-- ✅ Histórico de contribuições visível
-- ✅ Sem "surpresas" ou manipulação
+4. **Confirmação**
+   - Quando quantidade mínima é atingida
+   - Confirmar quantidades com produtor
+   - Confirmar interesses dos participantes
 
-### Sistema de Pontos
+5. **Entrega**
+   - Criar entrega coletiva
+   - Organizar rota otimizada
+   - Definir pontos de entrega
 
-**Pontos Base por Tipo**:
-- Post criado: 5 pontos
-- Evento criado: 10 pontos
-- Participação em evento: 3 pontos
-- MapEntity criado: 5 pontos
-- MapEntity confirmado: 2 pontos
-- Item no marketplace: 5 pontos
-- Venda no marketplace: 10 pontos
-- Compra no marketplace: 5 pontos
-- Entrega completada: 15 pontos
-- Participação em votação: 3 pontos
-- Votação criada: 10 pontos
-- Ação de moderação: 5 pontos
-- Report útil: 3 pontos
-- **Coleta de resíduos: 10-20 pontos** 🔴 NOVO (depende do volume/tipo)
-- **Plantio de árvore: 15-25 pontos** 🔴 NOVO (depende do tipo/espécie)
-- **Mutirão: 20-30 pontos** 🔴 NOVO (depende da duração/impacto)
-- **Observação de saúde: 5-15 pontos** 🔴 NOVO (depende da severidade)
-- **Monitoramento (sensor): 3-10 pontos** 🔴 NOVO (depende da frequência)
-- **Manutenção de recurso: 10-20 pontos** 🔴 NOVO (depende do tipo)
+6. **Pagamento**
+   - Pagamento em moeda territorial ou fiat
+   - Desconto para moeda territorial
+   - Fundos territoriais podem subsidiar
 
-**Multiplicadores**:
-- Alinhamento com interesses: +50% (máx. 1.5x)
-- Qualidade alta (IA): +25% (máx. 1.25x)
-- Combinado: até 1.875x (1.5 * 1.25)
+7. **Gamificação**
+   - Participação gera contribuição
+   - Organizar gera mais pontos
+   - Comprar local gera mais pontos
 
-### Sistema de Níveis
+### Agenda de Compras
 
-**Fórmula**:
-```
-Level = floor(sqrt(TotalPoints / 100)) + 1
-```
+**Frequências**:
+- Semanal: Toda semana no mesmo dia
+- Quinzenal: A cada 15 dias
+- Mensal: Todo mês no mesmo dia
+- Custom: Definido pelo organizador
 
-**Progressão**:
-- Nível 1: 0-99 pontos
-- Nível 2: 100-399 pontos
-- Nível 3: 400-899 pontos
-- Nível 4: 900-1599 pontos
-- Nível 5: 1600-2499 pontos
-- Nível 10: 8100-9999 pontos
-- Nível 20: 36100-39999 pontos
+**Lembretes**:
+- 7 dias antes do prazo de interesse
+- 3 dias antes do prazo de interesse
+- 1 dia antes da entrega
 
-**Características**:
-- Progressão exponencial suave
-- Sem "grind" excessivo
-- Reconhecimento por contribuição real
+### Privacidade
 
-### Badges Padrão
-
-**Comunidade**:
-- Community Builder (10 posts)
-- Event Organizer (5 eventos)
-- Active Voter (10 votações)
-- Community Leader (5 votações criadas)
-
-**Mapa**:
-- Map Explorer (10 MapEntities criados)
-- Map Validator (20 MapEntities confirmados)
-
-**Marketplace**:
-- Marketplace Seller (10 vendas)
-- Marketplace Buyer (10 compras)
-
-**Entregas**:
-- Delivery Hero (20 entregas)
-
-**Moderação**:
-- Moderator (50 ações)
-- Territory Guardian (10 reports úteis)
-
-**Níveis**:
-- Level 5/10/20 Contributor
-
-**Atividades Territoriais** 🔴 NOVO:
-- Waste Collector (10 coletas)
-- Tree Planter (10 plantios)
-- Territory Guardian (5 mutirões)
-- Health Monitor (20 observações)
-- Sensor Keeper (50 leituras confirmadas)
-- Natural Asset Keeper (10 manutenções)
-
-### Integração com Serviços Existentes
-
-**Hooks Automáticos**:
-- `PostCreationService`: Registrar contribuição ao criar post
-- `EventsService`: Registrar ao criar evento e participar
-- `MapEntityService`: Registrar ao criar/confirmar entidade
-- `StoreItemService`: Registrar ao criar item
-- `CartService`: Registrar ao vender/comprar
-- `DeliveryService`: Registrar ao completar entrega
-- `VotingService`: Registrar ao participar/criar votação
-- `ReportService`: Registrar ao submeter report útil
-- `ModerationService`: Registrar ao moderar (curadores)
-- **`TerritoryHealthService`**: Registrar ao criar observação de saúde 🔴 NOVO
-- **`TerritoryActionService`**: Registrar ao participar/criar mutirão 🔴 NOVO
-- **`WasteCollectionService`**: Registrar ao reportar coleta de resíduos 🔴 NOVO
-- **`TreePlantingService`**: Registrar ao reportar plantio 🔴 NOVO
-- **`NaturalAssetService`**: Registrar ao fazer manutenção 🔴 NOVO
-
-**Não Invasivo**:
-- Registro assíncrono (não bloqueia operação principal)
-- Falhas não afetam funcionalidade principal
-- Logging para debugging
+- Interesses são privados (apenas organizador vê)
+- Agregados são públicos (quantidade total por produto)
+- Histórico pessoal é privado
 
 ---
 
 **Status**: ⏳ **FASE 17 PENDENTE**  
-**Depende de**: Fases 9, 14 (Perfil, Governança)  
-**Crítico para**: Engajamento Comunitário Sustentável
+**Depende de**: Fases 6, 14, 21, 22, 42  
+**Crítico para**: Economia Local e Soberania Alimentar

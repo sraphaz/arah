@@ -109,7 +109,7 @@ O Araponga incorpora padrões de mercado estabelecidos (DAO, tokenização, Web3
 ### ⏳ Planejado - Diferenciação (Mês 12-18)
 
 - [⏳ Fase 41] **Learning Hub** - Sistema de cursos, certificações, monetização de conhecimento
-- [⏳ Fase 42] **Booking System** - Reservas de hóspedes/voluntários, gestão de acomodações
+- [⏳ Fase 43] **Rental System** - Aluguel de recursos diversos (salas, equipamentos, espaços, veículos)
 - [⏳ Fase 43] **Agente IA (Versão Básica)** - Chatbot, sugestões automáticas, moderação assistida
 
 ### ⏳ Planejado - Otimizações (Mês 6-18)

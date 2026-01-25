@@ -1,553 +1,709 @@
-# Fase 24: Saúde Territorial e Monitoramento
+# Fase 18: Sistema de Hospedagem Territorial
 
-**Duração**: 5 semanas (35 dias úteis)  
-**Prioridade**: 🟡 ALTA (Soberania territorial e autonomia comunitária)  
-**Depende de**: Fase 9 (Perfil de Usuário)  
-**Integra com**: Fase 42 (Gamificação) - pode ser desenvolvido em paralelo  
-**Estimativa Total**: 200 horas  
-**Status**: ⏳ Pendente  
-**Nota**: Renumerada de Fase 18 para Fase 24 (Onda 5: Conformidade e Soberania). Fase 18 agora é Hospedagem Territorial.
+**Duração**: 8 semanas (56 dias úteis)  
+**Prioridade**: 🔴 CRÍTICA (Economia local e diferencial competitivo)  
+**Depende de**: Fase 6-7 (Marketplace/Pagamentos) - ✅ Já implementado  
+**Integra com**: Fase 14 (Governança/Votação) - opcional para aprovação comunitária  
+**Estimativa Total**: 360 horas  
+**Status**: ⏳ Planejado  
+**Nota**: Renumerada de Fase 30 para Fase 18, priorizada de P1 para P0 (Onda 3: Economia Local)  
+**Referência**: [Proposta de Implementação](../PROPOSTA_IMPLEMENTACAO_HOSPEDAGEM.md) | [Análise de Inserção](../ANALISE_INSERCAO_HOSPEDAGEM_ROADMAP.md)
 
 ---
 
 ## 🎯 Objetivo
 
-Implementar sistema completo de **saúde territorial e monitoramento** que:
-- Permite comunidades monitorarem a saúde do seu território (água, ar, solo, biodiversidade, resíduos)
-- Facilita observações colaborativas de saúde
-- Integra sensores físicos para monitoramento automatizado
-- Calcula indicadores de saúde territorial
-- Organiza ações territoriais (mutirões, plantio, coleta, manutenção)
-- **Gamifica atividades territoriais** (integração com Fase 42)
-- **Gera moeda territorial** por atividades (integração com Fase 22)
+Implementar sistema de **hospedagem territorial** que permite:
+- Moradores validados cadastrarem propriedades privadas
+- Configurar múltiplas formas de hospedagem por propriedade (casa inteira, quarto, cama compartilhada)
+- Gerenciar agenda de disponibilidade (núcleo do sistema)
+- Visitantes solicitarem estadias com aprovação humana (manual ou condicional)
+- Sistema de pagamentos com escrow e split (Owner, Limpeza, Plataforma)
+- Check-in/Check-out com liberação de pagamentos
 
 **Princípios**:
-- ✅ **Colaboração Comunitária**: Observações e ações são comunitárias
-- ✅ **Transparência**: Dados de saúde são públicos (ou para moradores)
-- ✅ **Ação Local**: Foco em ações que melhoram o território
-- ✅ **Gamificação Harmoniosa**: Atividades geram contribuições e moeda (Fase 42)
-- ✅ **Autonomia**: Comunidades decidem o que monitorar e como agir
+- ✅ **Privacidade por Padrão**: Propriedades privadas até terem hospedagem ativa
+- ✅ **Agenda como Núcleo**: Toda lógica gira em torno da agenda
+- ✅ **Aprovação Humana**: Sempre requer consentimento (com auto-aprovação condicional)
+- ✅ **Papéis Contextuais**: Host e Limpeza são específicos por configuração
+- ✅ **Economia Local**: Fortalece circulação de recursos no território
+- ✅ **Soberania Territorial**: Moradores validados, regulação territorial
+
+**Diferenciais do Araponga**:
+- Território-first (não global como Airbnb)
+- Morador validado como pré-requisito
+- Aprovação humana sempre presente
+- Privacidade por padrão
 
 ---
 
 ## 📋 Contexto e Requisitos
 
 ### Estado Atual
-- ✅ MER prevê estrutura completa (`HEALTH_OBSERVATION`, `TERRITORY_ACTION`, `SENSOR_DEVICE`, etc.)
-- ✅ `HealthService` básico (apenas alertas simples)
-- ✅ `HealthAlert` domain model básico
-- ❌ Não existe sistema completo de observações de saúde
-- ❌ Não existe sistema de sensores
-- ❌ Não existe sistema de indicadores
-- ❌ Não existe sistema de ações territoriais
-- ❌ Não existe gamificação de atividades territoriais
+- ✅ Sistema de pagamentos completo (Fase 6-7)
+  - FinancialTransaction, escrow, split
+  - Payout para vendedores
+  - Platform fees configuráveis
+- ✅ Sistema de aprovação humana (WorkItem)
+  - Fila genérica de revisão
+  - Suporta diferentes tipos
+- ✅ Sistema de notificações completo
+  - OutboxMessage e UserNotification
+- ✅ Feature flags por território
+- ✅ Membership e validação robusta
+  - ResidencyVerification (Flags)
+  - MembershipCapability
+- ❌ Não existe sistema de hospedagem
+- ❌ Não existe sistema de agenda de propriedades
+- ❌ Não existe sistema de solicitações de estadia
 
 ### Requisitos Funcionais
 
-#### 1. Sistema de Observações de Saúde
-- ✅ Criar observação de saúde (água, ar, solo, biodiversidade, resíduos, segurança, mobilidade, bem-estar)
-- ✅ Georreferenciamento (localização precisa)
-- ✅ Severidade: INFO, WARNING, URGENT
-- ✅ Visibilidade: PUBLIC, RESIDENT_ONLY
-- ✅ Status: OPEN, UNDER_REVIEW, CONFIRMED, RESOLVED, REJECTED
-- ✅ Confirmações colaborativas (outros usuários podem confirmar)
-- ✅ Relacionamento com recursos naturais (`NATURAL_ASSET`)
-- ✅ **Gamificação**: Observação confirmada gera contribuição (Fase 42)
+#### 1. Property (Propriedade)
+- ✅ Morador Validado pode criar propriedade (privada)
+- ✅ Propriedade é privada por padrão
+- ✅ Visível apenas para Owner até ter hospedagem ativa
+- ✅ Pode existir indefinidamente sem hospedagem
+- ✅ Dados: nome, descrição, localização, endereço
 
-#### 2. Sistema de Sensores
-- ✅ Registrar sensores físicos (pluviômetro, qualidade do ar, nível de água, etc.)
-- ✅ Tipos: RAIN_GAUGE, WATER_LEVEL, AIR_QUALITY, WATER_QUALITY, WEATHER
-- ✅ Status: ACTIVE, MAINTENANCE, RETIRED
-- ✅ Leituras automáticas (via API externa ou manual)
-- ✅ Relacionamento com métricas de saúde
-- ✅ **Gamificação**: Leitura confirmada gera contribuição (Fase 42)
+#### 2. HostingConfiguration (Configuração de Hospedagem)
+- ✅ Uma Property pode ter múltiplas HostingConfigurations
+- ✅ Tipo de acomodação: Casa Inteira, Quarto Privado, Cama Compartilhada
+- ✅ Capacidade máxima
+- ✅ Regras da casa, check-in/check-out, política de cancelamento
+- ✅ Modalidades: Diária, Semanal, Mensal, Anual, Pacotes
+- ✅ Política de aprovação: Manual ou Auto-aprovação Condicional
+- ✅ Status: Active, Inactive
+- ✅ Visibilidade pública: Ativa + ao menos uma data disponível
 
-#### 3. Indicadores de Saúde Territorial
-- ✅ Calcular indicadores agregados (diário, semanal, mensal)
-- ✅ Métodos: AVG, MAX, INDEX_FORMULA
-- ✅ Visualização de tendências
-- ✅ Alertas automáticos quando indicadores pioram
-- ✅ Dashboard de saúde territorial
+#### 3. HostingCalendar (Agenda - NÚCLEO)
+- ✅ Agenda exclusiva por HostingConfiguration
+- ✅ Estados por data: Available, BlockedByResident, PendingApproval, Reserved
+- ✅ Agenda inicia totalmente bloqueada
+- ✅ Host/Owner deve abrir datas explicitamente
+- ✅ Padrões recorrentes (bloqueios, aberturas)
+- ✅ Regras: antecedência mínima, janela máxima de abertura
+- ✅ Datas reservadas não podem ser sobrescritas
 
-#### 4. Ações Territoriais
-- ✅ Criar ação territorial (mutirão, manutenção, educação, restauração, monitoramento)
-- ✅ Organizar ação (data, hora, localização)
-- ✅ Participação de usuários
-- ✅ Status: PLANNED, IN_PROGRESS, DONE, CANCELLED
-- ✅ Relacionamento com observações (ação responde a observação)
-- ✅ **Gamificação**: Participação gera contribuição (Fase 42)
-- ✅ **Moeda**: Participação pode gerar moeda territorial (Fase 22)
+#### 4. HostingRole (Papéis Contextuais)
+- ✅ Owner: Dono da propriedade (sempre o criador)
+- ✅ Host: Responsável por aprovar/rejeitar (pode ser delegado)
+- ✅ Cleaning: Responsável pela limpeza
+- ✅ Papéis são contextuais (por HostingConfiguration)
+- ✅ Um morador pode acumular múltiplos papéis
+- ✅ Host e Cleaning devem ser Moradores Validados do mesmo território
 
-#### 5. Atividades Específicas
-- ✅ **Coleta de Resíduos**: Reportar coleta (tipo, volume, localização)
-- ✅ **Plantio**: Reportar plantio (espécie, quantidade, localização)
-- ✅ **Manutenção de Recursos Naturais**: Reportar manutenção (tipo, recurso)
-- ✅ **Gamificação**: Cada atividade gera contribuição e pontos (Fase 42)
-- ✅ **Moeda**: Cada atividade pode gerar moeda territorial (Fase 22)
+#### 5. StayRequest / Stay (Solicitação de Estadia)
+- ✅ Visitante cria StayRequest (não precisa ser morador)
+- ✅ Estado inicial: PendingApproval
+- ✅ Bloqueia datas na agenda (PendingApproval)
+- ✅ Calcula valor total
+- ✅ Auto-aprovação condicional (se critérios atendidos)
+- ✅ Aprovação manual via WorkItem
+- ✅ Quando aprovada: cria Stay, cria FinancialTransaction (escrow), atualiza agenda (Reserved)
+
+#### 6. Check-in / Check-out e Pagamento
+- ✅ Check-in: marca estadia, notifica Host e Limpeza, libera primeira parcela (se configurado)
+- ✅ Check-out: marca saída, notifica Limpeza, libera pagamento completo (split: Owner, Limpeza, Plataforma)
+- ✅ Cancelamento: reembolso conforme política, libera datas na agenda
 
 ---
 
 ## 📋 Tarefas Detalhadas
 
-### Semana 1-2: Modelo de Domínio e Observações de Saúde
+### Semana 1-2: Fundação - Modelo de Domínio
 
-#### 18.1 Modelo de Domínio - Saúde Territorial
+#### 18.1 Modelo de Domínio - Property e HostingConfiguration
 **Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
+**Status**: ⏳ Planejado
 
 **Tarefas**:
-- [ ] Criar enum `HealthDomain`:
-  - [ ] `WATER` (água)
-  - [ ] `AIR` (ar)
-  - [ ] `SOIL` (solo)
-  - [ ] `BIODIVERSITY` (biodiversidade)
-  - [ ] `WASTE` (resíduos)
-  - [ ] `SAFETY` (segurança)
-  - [ ] `MOBILITY` (mobilidade)
-  - [ ] `WELLBEING` (bem-estar)
-- [ ] Criar enum `HealthSeverity`:
-  - [ ] `INFO` (informativo)
-  - [ ] `WARNING` (aviso)
-  - [ ] `URGENT` (urgente)
-- [ ] Criar enum `HealthObservationStatus`:
-  - [ ] `OPEN` (aberta)
-  - [ ] `UNDER_REVIEW` (em revisão)
-  - [ ] `CONFIRMED` (confirmada)
-  - [ ] `RESOLVED` (resolvida)
-  - [ ] `REJECTED` (rejeitada)
-- [ ] Criar modelo `HealthDomain`:
-  - [ ] `Id`, `Name`, `Description`, `CreatedAtUtc`
-- [ ] Criar modelo `HealthMetric`:
-  - [ ] `Id`, `DomainId`, `Key` (ex: "water.turbidity_ntu")
-  - [ ] `Name`, `Unit` (NTU, PPM, UG_M3, MM, CM, INDEX)
-  - [ ] `ValueType` (DECIMAL, INTEGER, BOOLEAN, TEXT, INDEX)
-  - [ ] `Description`, `CreatedAtUtc`
-- [ ] Criar modelo `HealthObservation`:
-  - [ ] `Id`, `TerritoryId`, `DomainId`, `MetricId?` (nullable)
-  - [ ] `ReporterUserId?` (nullable, pode ser anônimo)
-  - [ ] `RelatedNaturalAssetId?` (nullable)
-  - [ ] `Severity` (HealthSeverity)
-  - [ ] `Visibility` (PUBLIC, RESIDENT_ONLY)
-  - [ ] `LocationLat`, `LocationLng`
-  - [ ] `Description` (text)
-  - [ ] `Status` (HealthObservationStatus)
-  - [ ] `ObservedAt`, `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `HealthObservationConfirmation`:
-  - [ ] `Id`, `ObservationId`, `UserId`
-  - [ ] `Action` (CONFIRM, DISCONFIRM, ADD_CONTEXT, REPORT)
-  - [ ] `Note`, `CreatedAtUtc`
-- [ ] Criar repositórios
-- [ ] Criar migrations
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Health/HealthDomain.cs`
-- `backend/Araponga.Domain/Health/HealthSeverity.cs`
-- `backend/Araponga.Domain/Health/HealthObservationStatus.cs`
-- `backend/Araponga.Domain/Health/HealthMetric.cs`
-- `backend/Araponga.Domain/Health/HealthObservation.cs`
-- `backend/Araponga.Domain/Health/HealthObservationConfirmation.cs`
-- `backend/Araponga.Application/Interfaces/IHealthDomainRepository.cs`
-- `backend/Araponga.Application/Interfaces/IHealthMetricRepository.cs`
-- `backend/Araponga.Application/Interfaces/IHealthObservationRepository.cs`
-- `backend/Araponga.Application/Interfaces/IHealthObservationConfirmationRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresHealthDomainRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresHealthMetricRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresHealthObservationRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresHealthObservationConfirmationRepository.cs`
-
-**Critérios de Sucesso**:
-- ✅ Modelos criados
-- ✅ Repositórios implementados
-- ✅ Migrations criadas
-- ✅ Testes de repositório passando
-
----
-
-#### 18.2 Sistema de Observações de Saúde
-**Estimativa**: 32 horas (4 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `HealthObservationService`:
-  - [ ] `CreateObservationAsync(Guid territoryId, Guid? userId, HealthDomain domain, ...)` → criar observação
-  - [ ] `ListObservationsAsync(Guid territoryId, HealthDomain? domain, ...)` → listar observações
-  - [ ] `GetObservationAsync(Guid observationId)` → obter observação
-  - [ ] `ConfirmObservationAsync(Guid observationId, Guid userId, ...)` → confirmar observação
-  - [ ] `UpdateStatusAsync(Guid observationId, HealthObservationStatus status)` → atualizar status
-- [ ] Integrar com `ContributionService` (Fase 17):
-  - [ ] Ao criar observação: registrar contribuição `HealthObservation`
-  - [ ] Ao confirmar observação: registrar contribuição (pontos menores)
-- [ ] Criar `HealthObservationController`:
-  - [ ] `POST /api/v1/health/observations` → criar observação
-  - [ ] `GET /api/v1/health/observations` → listar observações
-  - [ ] `GET /api/v1/health/observations/{id}` → obter observação
-  - [ ] `POST /api/v1/health/observations/{id}/confirm` → confirmar observação
-  - [ ] `PATCH /api/v1/health/observations/{id}/status` → atualizar status (curadores)
-- [ ] Feature flags: `HealthObservationsEnabled`, `HealthObservationsPublic`
-- [ ] Validações
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/HealthObservationService.cs`
-- `backend/Araponga.Api/Controllers/HealthObservationController.cs`
-- `backend/Araponga.Api/Contracts/Health/CreateHealthObservationRequest.cs`
-- `backend/Araponga.Api/Contracts/Health/HealthObservationResponse.cs`
-- `backend/Araponga.Api/Validators/CreateHealthObservationRequestValidator.cs`
-
-**Critérios de Sucesso**:
-- ✅ Serviço implementado
-- ✅ API funcionando
-- ✅ Integração com gamificação funcionando
-- ✅ Testes passando
-
----
-
-### Semana 2-3: Sensores e Indicadores
-
-#### 18.3 Sistema de Sensores
-**Estimativa**: 32 horas (4 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar enum `SensorDeviceType`:
-  - [ ] `RAIN_GAUGE` (pluviômetro)
-  - [ ] `WATER_LEVEL` (nível de água)
-  - [ ] `AIR_QUALITY` (qualidade do ar)
-  - [ ] `WATER_QUALITY` (qualidade da água)
-  - [ ] `WEATHER` (clima)
-- [ ] Criar enum `SensorDeviceStatus`:
-  - [ ] `ACTIVE` (ativo)
-  - [ ] `MAINTENANCE` (manutenção)
-  - [ ] `RETIRED` (desativado)
-- [ ] Criar modelo `SensorDevice`:
-  - [ ] `Id`, `TerritoryId`, `Name`
-  - [ ] `DeviceType` (SensorDeviceType)
-  - [ ] `Status` (SensorDeviceStatus)
-  - [ ] `LocationLat`, `LocationLng`
-  - [ ] `ExternalRef?` (nullable, referência externa)
-  - [ ] `InstalledAt`, `CreatedAtUtc`
-- [ ] Criar modelo `SensorReading`:
-  - [ ] `Id`, `DeviceId`, `MetricId`
-  - [ ] `ValueDecimal?`, `ValueInt?`, `ValueBool?`, `ValueText?`
-  - [ ] `MeasuredAt`, `CreatedAtUtc`
-- [ ] Criar `SensorDeviceService`:
-  - [ ] `RegisterDeviceAsync(...)` → registrar sensor
-  - [ ] `RecordReadingAsync(...)` → registrar leitura
-  - [ ] `ListDevicesAsync(Guid territoryId)` → listar sensores
-  - [ ] `ListReadingsAsync(Guid deviceId, ...)` → listar leituras
-- [ ] Integrar com `ContributionService` (Fase 17):
-  - [ ] Leitura confirmada gera contribuição `SensorReading`
-- [ ] Criar `SensorDeviceController`:
-  - [ ] `POST /api/v1/sensors/devices` → registrar sensor
-  - [ ] `GET /api/v1/sensors/devices` → listar sensores
-  - [ ] `POST /api/v1/sensors/devices/{id}/readings` → registrar leitura
-  - [ ] `GET /api/v1/sensors/devices/{id}/readings` → listar leituras
-- [ ] Feature flags: `SensorsEnabled`, `SensorReadingsPublic`
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Health/SensorDevice.cs`
-- `backend/Araponga.Domain/Health/SensorDeviceType.cs`
-- `backend/Araponga.Domain/Health/SensorDeviceStatus.cs`
-- `backend/Araponga.Domain/Health/SensorReading.cs`
-- `backend/Araponga.Application/Interfaces/ISensorDeviceRepository.cs`
-- `backend/Araponga.Application/Interfaces/ISensorReadingRepository.cs`
-- `backend/Araponga.Application/Services/SensorDeviceService.cs`
-- `backend/Araponga.Api/Controllers/SensorDeviceController.cs`
-
-**Critérios de Sucesso**:
-- ✅ Sistema de sensores funcionando
-- ✅ Leituras sendo registradas
-- ✅ Integração com gamificação funcionando
-- ✅ Testes passando
-
----
-
-#### 18.4 Sistema de Indicadores de Saúde
-**Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar enum `IndicatorPeriod`:
-  - [ ] `DAILY` (diário)
-  - [ ] `WEEKLY` (semanal)
-  - [ ] `MONTHLY` (mensal)
-- [ ] Criar enum `CalculationMethod`:
-  - [ ] `AVG` (média)
-  - [ ] `MAX` (máximo)
-  - [ ] `INDEX_FORMULA` (fórmula de índice)
-- [ ] Criar modelo `TerritoryHealthIndicator`:
-  - [ ] `Id`, `TerritoryId`, `MetricId`
-  - [ ] `Period` (IndicatorPeriod)
-  - [ ] `PeriodStart`, `PeriodEnd`
-  - [ ] `ValueDecimal`
-  - [ ] `CalculationMethod` (CalculationMethod)
-  - [ ] `CreatedAtUtc`
-- [ ] Criar `HealthIndicatorService`:
-  - [ ] `CalculateIndicatorsAsync(Guid territoryId, IndicatorPeriod period)` → calcular indicadores
-  - [ ] `GetIndicatorsAsync(Guid territoryId, ...)` → obter indicadores
-  - [ ] `GetIndicatorTrendAsync(Guid territoryId, Guid metricId, ...)` → obter tendência
-- [ ] Background job para calcular indicadores periodicamente
-- [ ] Sistema de alertas quando indicadores pioram
-- [ ] Criar `HealthIndicatorController`:
-  - [ ] `GET /api/v1/health/indicators` → listar indicadores
-  - [ ] `GET /api/v1/health/indicators/{metricId}/trend` → obter tendência
-- [ ] Feature flags: `HealthIndicatorsEnabled`, `HealthIndicatorsPublic`
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Health/TerritoryHealthIndicator.cs`
-- `backend/Araponga.Domain/Health/IndicatorPeriod.cs`
-- `backend/Araponga.Domain/Health/CalculationMethod.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryHealthIndicatorRepository.cs`
-- `backend/Araponga.Application/Services/HealthIndicatorService.cs`
-- `backend/Araponga.Api/Controllers/HealthIndicatorController.cs`
-
-**Critérios de Sucesso**:
-- ✅ Indicadores sendo calculados
-- ✅ Tendências disponíveis
-- ✅ Alertas funcionando
-- ✅ Testes passando
-
----
-
-### Semana 3-4: Ações Territoriais
-
-#### 18.5 Sistema de Ações Territoriais
-**Estimativa**: 40 horas (5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar enum `TerritoryActionType`:
-  - [ ] `MUTIRAO` (mutirão)
-  - [ ] `MAINTENANCE` (manutenção)
-  - [ ] `EDUCATION` (educação)
-  - [ ] `RESTORATION` (restauração)
-  - [ ] `MONITORING` (monitoramento)
-- [ ] Criar enum `TerritoryActionStatus`:
-  - [ ] `PLANNED` (planejado)
-  - [ ] `IN_PROGRESS` (em progresso)
-  - [ ] `DONE` (concluído)
-  - [ ] `CANCELLED` (cancelado)
-- [ ] Criar modelo `TerritoryAction`:
-  - [ ] `Id`, `TerritoryId`, `RelatedObservationId?` (nullable)
-  - [ ] `OrganizerUserId` (organizador)
-  - [ ] `Type` (TerritoryActionType)
-  - [ ] `Title`, `Description` (text)
-  - [ ] `StartDateTime`, `EndDateTime`
-  - [ ] `Visibility` (PUBLIC, RESIDENT_ONLY)
-  - [ ] `Status` (TerritoryActionStatus)
+- [ ] Criar enum `PropertyVisibility`:
+  - [ ] `Private` (privada, apenas Owner)
+  - [ ] `Public` (pública, quando tem hospedagem ativa)
+- [ ] Criar enum `PropertyStatus`:
+  - [ ] `Active` (ativa)
+  - [ ] `Inactive` (inativa)
+- [ ] Criar enum `AccommodationType`:
+  - [ ] `EntirePlace` (casa inteira)
+  - [ ] `PrivateRoom` (quarto privado)
+  - [ ] `SharedRoom` (cama em quarto compartilhado)
+- [ ] Criar enum `RentalModality`:
+  - [ ] `Daily` (diária)
+  - [ ] `Weekly` (semanal)
+  - [ ] `Monthly` (mensal)
+  - [ ] `Annual` (anual)
+  - [ ] `Packages` (pacotes)
+- [ ] Criar enum `ApprovalPolicy`:
+  - [ ] `ManualOnly` (apenas manual)
+  - [ ] `ConditionalAutoApprove` (auto-aprovação condicional)
+- [ ] Criar enum `HostingConfigurationStatus`:
+  - [ ] `Active` (ativa)
+  - [ ] `Inactive` (inativa)
+- [ ] Criar modelo `Property`:
+  - [ ] `Id`, `OwnerUserId`, `TerritoryId`
+  - [ ] `Visibility` (PropertyVisibility, Private por padrão)
+  - [ ] `Name`, `Description?`, `Latitude?`, `Longitude?`, `Address?`
+  - [ ] `Status` (PropertyStatus)
   - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `TerritoryActionParticipant`:
-  - [ ] `Id`, `ActionId`, `UserId`
-  - [ ] `JoinedAtUtc`, `ConfirmedAtUtc?` (nullable)
-- [ ] Criar `TerritoryActionService`:
-  - [ ] `CreateActionAsync(...)` → criar ação
-  - [ ] `ListActionsAsync(Guid territoryId, ...)` → listar ações
-  - [ ] `JoinActionAsync(Guid actionId, Guid userId)` → participar
-  - [ ] `ConfirmParticipationAsync(Guid actionId, Guid userId)` → confirmar participação
-  - [ ] `UpdateStatusAsync(Guid actionId, TerritoryActionStatus status)` → atualizar status
-- [ ] Integrar com `ContributionService` (Fase 17):
-  - [ ] Participação gera contribuição `TerritoryAction`
-  - [ ] Organizar ação gera mais pontos
-- [ ] Criar `TerritoryActionController`:
-  - [ ] `POST /api/v1/territory-actions` → criar ação
-  - [ ] `GET /api/v1/territory-actions` → listar ações
-  - [ ] `POST /api/v1/territory-actions/{id}/join` → participar
-  - [ ] `POST /api/v1/territory-actions/{id}/confirm` → confirmar participação
-  - [ ] `PATCH /api/v1/territory-actions/{id}/status` → atualizar status
-- [ ] Feature flags: `TerritoryActionsEnabled`, `TerritoryActionsPublic`
-- [ ] Testes
+  - [ ] Métodos: `UpdateVisibility()`, `IsVisibleToPublic()`
+- [ ] Criar modelo `HostingConfiguration`:
+  - [ ] `Id`, `PropertyId`, `TerritoryId`
+  - [ ] `Type` (AccommodationType)
+  - [ ] `MaxCapacity` (int)
+  - [ ] `HouseRules?`, `CheckInTime?`, `CheckOutTime?`
+  - [ ] `CancellationPolicy` (enum)
+  - [ ] `Modality` (RentalModality)
+  - [ ] `ApprovalPolicy` (ApprovalPolicy)
+  - [ ] `AutoApproveCriteria?` (JSON com critérios)
+  - [ ] `Status` (HostingConfigurationStatus)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+  - [ ] Métodos: `IsPubliclyVisible()`, `Activate()`, `Deactivate()`
 
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Health/TerritoryAction.cs`
-- `backend/Araponga.Domain/Health/TerritoryActionType.cs`
-- `backend/Araponga.Domain/Health/TerritoryActionStatus.cs`
-- `backend/Araponga.Domain/Health/TerritoryActionParticipant.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryActionRepository.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryActionParticipantRepository.cs`
-- `backend/Araponga.Application/Services/TerritoryActionService.cs`
-- `backend/Araponga.Api/Controllers/TerritoryActionController.cs`
-
-**Critérios de Sucesso**:
-- ✅ Sistema de ações funcionando
-- ✅ Participação funcionando
-- ✅ Integração com gamificação funcionando
-- ✅ Testes passando
-
----
-
-### Semana 4-5: Atividades Específicas e Integração
-
-#### 18.6 Sistema de Coleta de Resíduos
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
+#### 18.2 Modelo de Domínio - HostingCalendar (Núcleo)
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ⏳ Planejado
 
 **Tarefas**:
-- [ ] Criar modelo `WasteCollection`:
-  - [ ] `Id`, `TerritoryId`, `UserId`
-  - [ ] `WasteType` (string: ORGANIC, RECYCLABLE, HAZARDOUS, etc.)
-  - [ ] `Volume` (decimal, em kg ou litros)
-  - [ ] `LocationLat`, `LocationLng`
-  - [ ] `Description?` (nullable)
-  - [ ] `CollectedAt`, `CreatedAtUtc`
-- [ ] Criar `WasteCollectionService`:
-  - [ ] `ReportCollectionAsync(...)` → reportar coleta
-  - [ ] `ListCollectionsAsync(Guid territoryId, ...)` → listar coletas
-- [ ] Integrar com `ContributionService` (Fase 17):
-  - [ ] Coleta gera contribuição `WasteCollection` (10-20 pontos)
-- [ ] Criar `WasteCollectionController`:
-  - [ ] `POST /api/v1/waste-collections` → reportar coleta
-  - [ ] `GET /api/v1/waste-collections` → listar coletas
-- [ ] Feature flags: `WasteCollectionEnabled`
-- [ ] Testes
+- [ ] Criar enum `CalendarDateState`:
+  - [ ] `Available` (disponível)
+  - [ ] `BlockedByResident` (bloqueada pelo morador)
+  - [ ] `PendingApproval` (solicitação pendente)
+  - [ ] `Reserved` (reservada)
+- [ ] Criar enum `BlockReason`:
+  - [ ] `Manual` (bloqueio manual)
+  - [ ] `Recurring` (padrão recorrente)
+  - [ ] `Maintenance` (manutenção)
+- [ ] Criar modelo `HostingCalendar`:
+  - [ ] `Id`, `HostingConfigurationId`
+  - [ ] `Dates` (Dictionary<DateOnly, CalendarDateState>)
+  - [ ] `Patterns` (List<CalendarPattern>)
+  - [ ] `Rules` (CalendarRules: antecedência mínima, janela máxima)
+  - [ ] Métodos: `OpenDate()`, `BlockDate()`, `ReserveDate()`, `ReleaseDate()`
+  - [ ] Métodos: `IsDateAvailable()`, `GetAvailableDates()`
+  - [ ] **Regra**: Agenda inicia totalmente bloqueada
+- [ ] Criar modelo `CalendarPattern`:
+  - [ ] `Id`, `CalendarId`
+  - [ ] `Type` (RecurringBlock, RecurringOpen)
+  - [ ] `DayOfWeek?`, `DayOfMonth?`, `StartDate`, `EndDate?`
+  - [ ] `Reason?` (string)
+- [ ] Criar modelo `CalendarRules`:
+  - [ ] `MinAdvanceDays` (int, antecedência mínima)
+  - [ ] `MaxAdvanceDays` (int, janela máxima)
+  - [ ] `DefaultBlockReason` (BlockReason)
 
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Health/WasteCollection.cs`
-- `backend/Araponga.Application/Interfaces/IWasteCollectionRepository.cs`
-- `backend/Araponga.Application/Services/WasteCollectionService.cs`
-- `backend/Araponga.Api/Controllers/WasteCollectionController.cs`
-
----
-
-#### 18.7 Sistema de Plantio
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar modelo `TreePlanting`:
-  - [ ] `Id`, `TerritoryId`, `UserId`
-  - [ ] `Species` (string, espécie)
-  - [ ] `Quantity` (int, quantidade)
-  - [ ] `LocationLat`, `LocationLng`
-  - [ ] `Description?` (nullable)
-  - [ ] `PlantedAt`, `CreatedAtUtc`
-- [ ] Criar `TreePlantingService`:
-  - [ ] `ReportPlantingAsync(...)` → reportar plantio
-  - [ ] `ListPlantingsAsync(Guid territoryId, ...)` → listar plantios
-- [ ] Integrar com `ContributionService` (Fase 17):
-  - [ ] Plantio gera contribuição `TreePlanting` (15-25 pontos)
-- [ ] Criar `TreePlantingController`:
-  - [ ] `POST /api/v1/tree-plantings` → reportar plantio
-  - [ ] `GET /api/v1/tree-plantings` → listar plantios
-- [ ] Feature flags: `TreePlantingEnabled`
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Health/TreePlanting.cs`
-- `backend/Araponga.Application/Interfaces/ITreePlantingRepository.cs`
-- `backend/Araponga.Application/Services/TreePlantingService.cs`
-- `backend/Araponga.Api/Controllers/TreePlantingController.cs`
-
----
-
-#### 18.8 Integração com Gamificação e Moeda
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
+#### 18.3 Modelo de Domínio - HostingRole e Gestão pela Plataforma
+**Estimativa**: 32 horas (4 dias) - **Aumentado para incluir gestão pela plataforma**  
+**Status**: ⏳ Planejado
 
 **Tarefas**:
-- [ ] Integrar todos os serviços com `ContributionService` (Fase 17):
-  - [ ] `HealthObservationService` → contribuição ao criar/confirmar
-  - [ ] `SensorDeviceService` → contribuição ao confirmar leitura
-  - [ ] `TerritoryActionService` → contribuição ao participar/organizar
-  - [ ] `WasteCollectionService` → contribuição ao reportar coleta
-  - [ ] `TreePlantingService` → contribuição ao reportar plantio
-- [ ] Preparar integração com `CurrencyMintService` (Fase 20):
-  - [ ] Estrutura para mint por atividades (será implementado na Fase 20)
-- [ ] Testes de integração
-- [ ] Documentação
+- [ ] Criar enum `HostingRoleType`:
+  - [ ] `Owner` (dono)
+  - [ ] `Host` (responsável por aprovar)
+  - [ ] `Cleaning` (responsável pela limpeza)
+- [ ] Criar modelo `HostingRole`:
+  - [ ] `Id`, `HostingConfigurationId`, `MembershipId`
+  - [ ] `Type` (HostingRoleType)
+  - [ ] `GrantedAtUtc`, `GrantedByUserId`
+  - [ ] `RevokedAtUtc?`, `RevokedByUserId?`
+  - [ ] Métodos: `Revoke()`, `IsActive()`
+  - [ ] **Regra**: Owner é sempre o criador da Property
+  - [ ] **Regra**: Host e Cleaning devem ser Moradores Validados do mesmo território
+- [ ] Criar modelo `HostInvitation`:
+  - [ ] `Id`, `HostingConfigurationId`, `InvitedMembershipId`, `InvitedByUserId`
+  - [ ] `Status` (HostInvitationStatus: Pending, Accepted, Rejected, Expired)
+  - [ ] `ExpiresAtUtc` (7 dias após criação)
+  - [ ] Métodos: `Accept()`, `Reject()`, `IsExpired()`
+  - [ ] **Regra**: Ao aceitar, cria `HostingRole` automaticamente
+- [ ] Criar modelo `HostOffer`:
+  - [ ] `Id`, `MembershipId`, `TerritoryId`
+  - [ ] `AvailableFrom`, `AvailableUntil?`, `AvailableDaysOfWeek`
+  - [ ] `SupportedTypes` (AccommodationType), `MaxPropertiesManaged?`
+  - [ ] `Status` (HostOfferStatus: Active, Inactive, Paused)
+  - [ ] `IsPubliclyVisible` (visível para moradores)
+  - [ ] Métodos: `Activate()`, `Deactivate()`, `Pause()`, `IsAvailableFor()`
+- [ ] Criar modelo `CleaningOffer`:
+  - [ ] `Id`, `MembershipId`, `TerritoryId`
+  - [ ] `AvailableDaysOfWeek`, `PreferredStartTime?`, `PreferredEndTime?`
+  - [ ] `SupportedTypes`, `MaxPropertiesPerDay?`
+  - [ ] `Status` (CleaningOfferStatus: Active, Inactive, Paused)
+  - [ ] `IsPubliclyVisible` (visível para moradores)
+  - [ ] Métodos: `Activate()`, `Deactivate()`, `Pause()`, `IsAvailableFor()`
+- [ ] Criar modelo `CleaningServiceRequest`:
+  - [ ] `Id`, `StayId`, `HostingConfigurationId`, `PropertyId`, `TerritoryId`
+  - [ ] `ServiceDate` (data do checkout), `CheckoutTime`, `PreferredServiceTime?`
+  - [ ] `Status` (CleaningServiceRequestStatus: Open, Assigned, InProgress, Completed, Cancelled)
+  - [ ] `AssignedCleaningMembershipId?`, `EstimatedAmount?`, `FinalAmount?`
+  - [ ] Métodos: `AssignTo()`, `MarkInProgress()`, `MarkCompleted()`, `Cancel()`
+  - [ ] **Regra**: Criada automaticamente quando Stay é confirmada
+- [ ] Criar modelo `CleaningServiceApplication`:
+  - [ ] `Id`, `CleaningServiceRequestId`, `ApplicantMembershipId`, `TerritoryId`
+  - [ ] `ProposedAmount?`, `Message?`
+  - [ ] `Status` (CleaningApplicationStatus: Pending, Accepted, Rejected, Withdrawn)
+  - [ ] Métodos: `Accept()`, `Reject()`, `Withdraw()`
+  - [ ] **Regra**: Ao aceitar, atualiza CleaningServiceRequest para Assigned
 
-**Critérios de Sucesso**:
-- ✅ Todas as atividades geram contribuições
-- ✅ Pontos sendo calculados corretamente
-- ✅ Integração preparada para moeda territorial
-- ✅ Testes passando
+#### 18.4 Feature Flag e Validações
+**Estimativa**: 8 horas (1 dia)  
+**Status**: ⏳ Planejado
 
----
+**Tarefas**:
+- [ ] Adicionar `HostingEnabled` ao enum `FeatureFlag`
+- [ ] Adicionar `EnsureHostingEnabled()` ao `TerritoryFeatureFlagGuard`
+- [ ] Criar `HostingAccessRules` helper:
+  - [ ] `CanCreateProperty()` - valida Morador Validado
+  - [ ] `CanCreateHostingConfiguration()` - valida Owner
+  - [ ] `CanManageCalendar()` - valida Owner ou Host
+  - [ ] `CanApproveStayRequest()` - valida Host
 
-## 📊 Resumo da Fase 18
-
-| Tarefa | Estimativa | Status | Prioridade |
-|--------|------------|--------|------------|
-| Modelo de Domínio - Saúde | 24h | ❌ Pendente | 🔴 Alta |
-| Observações de Saúde | 32h | ❌ Pendente | 🔴 Alta |
-| Sistema de Sensores | 32h | ❌ Pendente | 🔴 Alta |
-| Indicadores de Saúde | 24h | ❌ Pendente | 🔴 Alta |
-| Ações Territoriais | 40h | ❌ Pendente | 🔴 Alta |
-| Coleta de Resíduos | 16h | ❌ Pendente | 🟡 Média |
-| Plantio | 16h | ❌ Pendente | 🟡 Média |
-| Integração Gamificação/Moeda | 16h | ❌ Pendente | 🔴 Alta |
-| **Total** | **200h (35 dias)** | | |
-
----
-
-## ✅ Critérios de Sucesso da Fase 18
-
-### Funcionalidades
-- ✅ Sistema completo de observações de saúde funcionando
-- ✅ Sistema de sensores funcionando
-- ✅ Indicadores de saúde sendo calculados
-- ✅ Ações territoriais funcionando
-- ✅ Coleta de resíduos e plantio funcionando
-- ✅ Integração com gamificação funcionando
-- ✅ Integração preparada para moeda territorial
-
-### Qualidade
-- ✅ Testes com cobertura adequada
-- ✅ Documentação completa
-- ✅ Feature flags implementados
-- ✅ Validações e segurança implementadas
-- Considerar **Testcontainers + PostgreSQL** para testes de integração (observações, sensores, ações, indicadores) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
-
-### Integração
-- ✅ Integração com Fase 17 (Gamificação) funcionando
-- ✅ Preparação para Fase 20 (Moeda Territorial)
-- ✅ Integração com recursos naturais (MER)
-
----
-
-## 🔗 Dependências
-
-- **Fase 9**: Perfil de Usuário (para exibir contribuições)
-- **Fase 17**: Gamificação (para gerar contribuições e pontos)
-- **Fase 20**: Moeda Territorial (para gerar moeda por atividades)
+**Total Semana 1-2**: 96 horas (12 dias)
 
 ---
 
-## 📝 Notas de Implementação
+### Semana 3-4: Repositórios e Infraestrutura
 
-### Gamificação de Atividades
+#### 18.5 Repositórios de Domínio
+**Estimativa**: 48 horas (6 dias) - **Aumentado para incluir novos repositórios**  
+**Status**: ⏳ Planejado
 
-**Pontos por Atividade**:
-- Observação de saúde: 5-15 pontos (depende da severidade)
-- Confirmação de observação: 2-5 pontos
-- Leitura de sensor confirmada: 3-10 pontos
-- Participação em ação territorial: 20-30 pontos
-- Organizar ação territorial: +10 pontos
-- Coleta de resíduos: 10-20 pontos (depende do volume/tipo)
-- Plantio de árvore: 15-25 pontos (depende do tipo/espécie)
+**Tarefas**:
+- [ ] Criar interface `IPropertyRepository`:
+  - [ ] `GetByIdAsync()`, `GetByOwnerAsync()`, `GetPublicPropertiesAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `IHostingConfigurationRepository`:
+  - [ ] `GetByIdAsync()`, `GetByPropertyAsync()`, `GetPublicConfigurationsAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `IHostingCalendarRepository`:
+  - [ ] `GetByConfigurationAsync()`, `GetAvailableDatesAsync()`
+  - [ ] `UpdateDateStateAsync()`, `UpdateDatesAsync()`
+- [ ] Criar interface `IHostingRoleRepository`:
+  - [ ] `GetByConfigurationAsync()`, `GetByMembershipAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `IHostInvitationRepository`:
+  - [ ] `GetByIdAsync()`, `GetByConfigurationAsync()`, `GetByInvitedMembershipAsync()`
+  - [ ] `GetPendingInvitationsAsync()`, `GetExpiredInvitationsAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `IHostOfferRepository`:
+  - [ ] `GetByIdAsync()`, `GetByMembershipAsync()`, `GetPublicOffersAsync()`
+  - [ ] `SearchAvailableOffersAsync()` (por território, datas, tipos)
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `ICleaningOfferRepository`:
+  - [ ] `GetByIdAsync()`, `GetByMembershipAsync()`, `GetPublicOffersAsync()`
+  - [ ] `SearchAvailableOffersAsync()` (por território, data, horário)
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `ICleaningServiceRequestRepository`:
+  - [ ] `GetByIdAsync()`, `GetByStayAsync()`, `GetOpenRequestsAsync()`
+  - [ ] `GetByAssignedCleaningAsync()`, `GetByPropertyAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `ICleaningServiceApplicationRepository`:
+  - [ ] `GetByIdAsync()`, `GetByRequestAsync()`, `GetByApplicantAsync()`
+  - [ ] `GetPendingApplicationsAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Implementar repositórios InMemory
+- [ ] Implementar repositórios Postgres (com migrations)
 
-**Multiplicadores**:
-- Alinhamento com interesses do território: +50%
-- Qualidade alta (IA): +25%
-- Combinado: até 1.875x
+#### 18.6 Migrations e Schema
+**Estimativa**: 24 horas (3 dias) - **Aumentado para incluir novas tabelas**  
+**Status**: ⏳ Planejado
 
-### Integração com Moeda Territorial (Fase 20)
+**Tarefas**:
+- [ ] Criar migration `AddHostingModule`:
+  - [ ] Tabela `properties`
+  - [ ] Tabela `hosting_configurations`
+  - [ ] Tabela `hosting_calendars`
+  - [ ] Tabela `hosting_calendar_dates` (para performance)
+  - [ ] Tabela `hosting_calendar_patterns`
+  - [ ] Tabela `hosting_roles`
+  - [ ] Tabela `host_invitations`
+  - [ ] Tabela `host_offers`
+  - [ ] Tabela `cleaning_offers`
+  - [ ] Tabela `cleaning_service_requests`
+  - [ ] Tabela `cleaning_service_applications`
+  - [ ] Índices:
+    - [ ] `properties(owner_user_id, territory_id)`
+    - [ ] `hosting_configurations(property_id)`
+    - [ ] `hosting_calendar_dates(configuration_id, date)`
+    - [ ] `host_offers(membership_id, territory_id, status)`
+    - [ ] `cleaning_offers(membership_id, territory_id, status)`
+    - [ ] `cleaning_service_requests(stay_id, status, service_date)`
+    - [ ] `cleaning_service_applications(request_id, applicant_membership_id, status)`
 
-**Preparação**:
-- Estrutura de dados para mint por atividades
-- Políticas de mint configuráveis por território
-- Integração será implementada na Fase 20
-
-### Privacidade e Visibilidade
-
-- Observações podem ser PUBLIC ou RESIDENT_ONLY
-- Sensores podem ter leituras públicas ou privadas
-- Ações territoriais podem ser públicas ou apenas para moradores
-- Respeitar preferências de privacidade do usuário
+**Total Semana 3-4**: 72 horas (9 dias)
 
 ---
 
-**Status**: ⏳ **FASE 18 PENDENTE**  
-**Depende de**: Fases 9, 17 (Perfil, Gamificação)  
-**Crítico para**: Soberania Territorial e Autonomia Comunitária
+### Semana 5-6: StayRequest e Stay
+
+#### 18.7 Modelo de Domínio - StayRequest e Stay
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Criar enum `StayRequestStatus`:
+  - [ ] `PendingApproval`, `AutoApproved`, `Approved`, `Rejected`, `Cancelled`, `Completed`
+- [ ] Criar enum `ApprovalSource`:
+  - [ ] `Manual`, `AutoApproved`
+- [ ] Criar enum `StayStatus`:
+  - [ ] `Confirmed`, `CheckedIn`, `CheckedOut`, `Cancelled`
+- [ ] Criar enum `StayPaymentStatus`:
+  - [ ] `Pending`, `Partial`, `Completed`, `Refunded`
+- [ ] Criar modelo `StayRequest`:
+  - [ ] `Id`, `VisitorUserId`, `HostingConfigurationId`, `TerritoryId`
+  - [ ] `CheckInDate`, `CheckOutDate` (DateOnly)
+  - [ ] `TotalAmount`, `Currency`
+  - [ ] `Status` (StayRequestStatus)
+  - [ ] `ApprovalSource`, `ApprovedByUserId?`, `ApprovedAtUtc?`
+  - [ ] `RejectedAtUtc?`, `RejectionReason?`
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+  - [ ] Métodos: `Approve()`, `AutoApprove()`, `Reject()`, `Cancel()`
+- [ ] Criar modelo `Stay`:
+  - [ ] `Id`, `StayRequestId`, `VisitorUserId`, `HostingConfigurationId`, `PropertyId`, `TerritoryId`
+  - [ ] `CheckInDate`, `CheckOutDate`
+  - [ ] `TotalAmount`, `Currency`, `PaymentStatus`
+  - [ ] `Status` (StayStatus)
+  - [ ] `CreatedAtUtc`, `CheckedInAtUtc?`, `CheckedOutAtUtc?`
+  - [ ] Métodos: `MarkCheckedIn()`, `MarkCheckedOut()`, `Cancel()`
+
+#### 18.8 Repositórios - StayRequest e Stay
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Criar interface `IStayRequestRepository`:
+  - [ ] `GetByIdAsync()`, `GetByVisitorAsync()`, `GetByConfigurationAsync()`
+  - [ ] `GetPendingApprovalAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Criar interface `IStayRepository`:
+  - [ ] `GetByIdAsync()`, `GetByVisitorAsync()`, `GetByConfigurationAsync()`
+  - [ ] `AddAsync()`, `UpdateAsync()`
+- [ ] Implementar repositórios InMemory e Postgres
+- [ ] Criar migration para `stay_requests` e `stays`
+
+#### 18.9 Integração com WorkItem para Aprovação
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Adicionar `StayRequestApproval` ao enum `WorkItemType`
+- [ ] Criar `StayRequestApprovalService`:
+  - [ ] `CreateApprovalWorkItemAsync()` - cria WorkItem quando requer aprovação manual
+  - [ ] `ProcessApprovalAsync()` - processa aprovação via WorkItem
+  - [ ] `ProcessRejectionAsync()` - processa rejeição via WorkItem
+- [ ] Integrar com `WorkQueueService` existente
+
+**Total Semana 5-6**: 56 horas (7 dias)
+
+---
+
+### Semana 7-8: Pagamentos e Check-in/out
+
+#### 18.10 Integração com FinancialTransaction
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Adicionar `HostingPayment` ao enum `TransactionType`
+- [ ] Criar `HostingPaymentService`:
+  - [ ] `CreateEscrowTransactionAsync()` - cria escrow quando Stay é criado
+  - [ ] `ProcessCheckInPaymentAsync()` - libera primeira parcela (se configurado)
+  - [ ] `ProcessCheckOutPaymentAsync()` - libera pagamento completo com split
+  - [ ] `ProcessRefundAsync()` - processa reembolso conforme política
+- [ ] Criar `HostingPaymentSplitConfig`:
+  - [ ] Configuração por território: Owner %, Limpeza %, Plataforma %
+  - [ ] Limpeza pode ser fixo ou percentual
+  - [ ] Reutilizar padrão do Marketplace
+
+#### 18.11 Check-in e Check-out
+**Estimativa**: 24 horas (3 dias) - **Aumentado para incluir CleaningServiceRequest**  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Criar `StayManagementService`:
+  - [ ] `MarkCheckedInAsync()` - marca check-in, notifica Host e Limpeza (se já atribuído), libera primeira parcela
+  - [ ] `MarkCheckedOutAsync()` - marca check-out, cria CleaningServiceRequest (se não atribuído), notifica Limpeza, libera pagamento completo, libera datas
+  - [ ] `CancelStayAsync()` - cancela estadia, cancela CleaningServiceRequest (se existir), processa reembolso, libera datas
+- [ ] Integrar com `HostingCalendar` para liberar datas
+- [ ] Integrar com notificações
+- [ ] **Nova funcionalidade**: Criar `CleaningServiceRequest` automaticamente quando Stay é confirmada (com data/horário de checkout)
+
+#### 18.11.1 Serviços de Gestão de Host e Cleaning
+**Estimativa**: 32 horas (4 dias) - **Nova seção**  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Criar `HostInvitationService`:
+  - [ ] `SendInvitationAsync()` - Owner envia convite para morador ser Host
+  - [ ] `AcceptInvitationAsync()` - Morador aceita convite, cria HostingRole
+  - [ ] `RejectInvitationAsync()` - Morador rejeita convite
+  - [ ] `ExpireInvitationsAsync()` - Job para expirar convites antigos
+- [ ] Criar `HostOfferService`:
+  - [ ] `CreateOfferAsync()` - Morador cria oferta de hosting
+  - [ ] `SearchAvailableOffersAsync()` - Busca ofertas disponíveis (para Owners)
+  - [ ] `UpdateOfferAsync()` - Atualiza disponibilidade
+  - [ ] `ActivateOfferAsync()`, `DeactivateOfferAsync()`, `PauseOfferAsync()`
+- [ ] Criar `CleaningOfferService`:
+  - [ ] `CreateOfferAsync()` - Morador cria oferta de limpeza
+  - [ ] `SearchAvailableOffersAsync()` - Busca ofertas disponíveis (para Owners/Hosts)
+  - [ ] `UpdateOfferAsync()` - Atualiza disponibilidade
+  - [ ] `ActivateOfferAsync()`, `DeactivateOfferAsync()`, `PauseOfferAsync()`
+- [ ] Criar `CleaningServiceRequestService`:
+  - [ ] `CreateRequestAsync()` - Criado automaticamente quando Stay é confirmada
+  - [ ] `GetOpenRequestsAsync()` - Lista solicitações abertas (para moradores com CleaningOffer)
+  - [ ] `NotifyEligibleCleanersAsync()` - Notifica moradores com CleaningOffer ativa
+- [ ] Criar `CleaningServiceApplicationService`:
+  - [ ] `ApplyForServiceAsync()` - Morador se candidata a serviço de limpeza
+  - [ ] `AcceptApplicationAsync()` - Owner/Host aceita candidatura, atribui serviço
+  - [ ] `RejectApplicationAsync()` - Owner/Host rejeita candidatura
+  - [ ] `WithdrawApplicationAsync()` - Morador retira candidatura
+  - [ ] `MarkServiceInProgressAsync()` - Marca serviço em execução (no check-out)
+  - [ ] `MarkServiceCompletedAsync()` - Marca serviço concluído, processa pagamento
+
+**Total Semana 7-8**: 80 horas (10 dias)
+
+---
+
+### Semana 9: Notificações e Busca
+
+#### 18.12 Notificações
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Adicionar tipos de notificação:
+  - [ ] `HostingRequest` (nova solicitação)
+  - [ ] `HostingApproved` (solicitação aprovada)
+  - [ ] `HostingRejected` (solicitação rejeitada)
+  - [ ] `HostingCheckIn` (check-in realizado)
+  - [ ] `HostingCheckOut` (check-out realizado)
+  - [ ] `HostingCleaningRequired` (limpeza necessária)
+- [ ] Criar handlers de notificação:
+  - [ ] Notificar Host quando há nova solicitação
+  - [ ] Notificar Visitante quando aprovada/rejeitada
+  - [ ] Notificar Limpeza em check-in/check-out
+  - [ ] Notificar Owner em eventos importantes
+
+#### 18.13 Busca de Propriedades Disponíveis
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Criar `HostingSearchService`:
+  - [ ] `SearchAvailablePropertiesAsync()` - busca propriedades disponíveis
+  - [ ] Filtros: Territory, datas (check-in/check-out), tipo, capacidade, preço
+  - [ ] Apenas HostingConfigurations ativas + datas Available
+  - [ ] Paginação
+- [ ] Criar índices para performance:
+  - [ ] `hosting_configurations(status, territory_id)`
+  - [ ] `hosting_calendar_dates(configuration_id, date, state)`
+
+**Total Semana 9**: 32 horas (4 dias)
+
+---
+
+### Semana 10: API e Testes
+
+#### 18.14 Controllers e Endpoints
+**Estimativa**: 40 horas (5 dias) - **Aumentado para incluir novos endpoints**  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Criar `PropertiesController`:
+  - [ ] `POST /api/v1/properties` - criar propriedade
+  - [ ] `GET /api/v1/properties` - listar propriedades do usuário
+  - [ ] `GET /api/v1/properties/{id}` - obter propriedade
+  - [ ] `PUT /api/v1/properties/{id}` - atualizar propriedade
+- [ ] Criar `HostingConfigurationsController`:
+  - [ ] `POST /api/v1/properties/{propertyId}/configurations` - criar configuração
+  - [ ] `GET /api/v1/properties/{propertyId}/configurations` - listar configurações
+  - [ ] `PUT /api/v1/configurations/{id}` - atualizar configuração
+  - [ ] `POST /api/v1/configurations/{id}/activate` - ativar
+  - [ ] `POST /api/v1/configurations/{id}/deactivate` - desativar
+- [ ] Criar `HostingCalendarController`:
+  - [ ] `GET /api/v1/configurations/{id}/calendar` - obter agenda
+  - [ ] `POST /api/v1/configurations/{id}/calendar/open` - abrir datas
+  - [ ] `POST /api/v1/configurations/{id}/calendar/block` - bloquear datas
+  - [ ] `GET /api/v1/configurations/{id}/calendar/available` - datas disponíveis
+- [ ] Criar `HostingRolesController`:
+  - [ ] `POST /api/v1/configurations/{id}/roles` - delegar papel
+  - [ ] `GET /api/v1/configurations/{id}/roles` - listar papéis
+  - [ ] `DELETE /api/v1/roles/{id}` - revogar papel
+- [ ] Criar `StayRequestsController`:
+  - [ ] `POST /api/v1/stay-requests` - criar solicitação
+  - [ ] `GET /api/v1/stay-requests` - listar solicitações (Host/Visitor)
+  - [ ] `GET /api/v1/stay-requests/{id}` - obter solicitação
+  - [ ] `POST /api/v1/stay-requests/{id}/approve` - aprovar (Host)
+  - [ ] `POST /api/v1/stay-requests/{id}/reject` - rejeitar (Host)
+  - [ ] `POST /api/v1/stay-requests/{id}/cancel` - cancelar
+- [ ] Criar `StaysController`:
+  - [ ] `GET /api/v1/stays` - listar estadias
+  - [ ] `GET /api/v1/stays/{id}` - obter estadia
+  - [ ] `POST /api/v1/stays/{id}/check-in` - check-in
+  - [ ] `POST /api/v1/stays/{id}/check-out` - check-out
+  - [ ] `POST /api/v1/stays/{id}/cancel` - cancelar
+- [ ] Criar `HostingSearchController`:
+  - [ ] `GET /api/v1/hosting/search` - buscar propriedades disponíveis
+  - [ ] Filtros: territoryId, checkIn, checkOut, type, capacity, maxPrice
+- [ ] Criar `HostInvitationsController`:
+  - [ ] `POST /api/v1/configurations/{id}/host-invitations` - enviar convite para Host
+  - [ ] `GET /api/v1/configurations/{id}/host-invitations` - listar convites
+  - [ ] `POST /api/v1/host-invitations/{id}/accept` - aceitar convite
+  - [ ] `POST /api/v1/host-invitations/{id}/reject` - rejeitar convite
+- [ ] Criar `HostOffersController`:
+  - [ ] `POST /api/v1/host-offers` - criar oferta de hosting
+  - [ ] `GET /api/v1/host-offers` - listar ofertas (próprias ou públicas)
+  - [ ] `GET /api/v1/host-offers/search` - buscar ofertas disponíveis
+  - [ ] `PUT /api/v1/host-offers/{id}` - atualizar oferta
+  - [ ] `POST /api/v1/host-offers/{id}/activate` - ativar oferta
+  - [ ] `POST /api/v1/host-offers/{id}/deactivate` - desativar oferta
+- [ ] Criar `CleaningOffersController`:
+  - [ ] `POST /api/v1/cleaning-offers` - criar oferta de limpeza
+  - [ ] `GET /api/v1/cleaning-offers` - listar ofertas (próprias ou públicas)
+  - [ ] `GET /api/v1/cleaning-offers/search` - buscar ofertas disponíveis
+  - [ ] `PUT /api/v1/cleaning-offers/{id}` - atualizar oferta
+  - [ ] `POST /api/v1/cleaning-offers/{id}/activate` - ativar oferta
+  - [ ] `POST /api/v1/cleaning-offers/{id}/deactivate` - desativar oferta
+- [ ] Criar `CleaningServiceRequestsController`:
+  - [ ] `GET /api/v1/cleaning-service-requests` - listar solicitações (abertas, atribuídas, próprias)
+  - [ ] `GET /api/v1/cleaning-service-requests/{id}` - obter solicitação
+  - [ ] `POST /api/v1/cleaning-service-requests/{id}/assign` - atribuir serviço (Owner/Host)
+  - [ ] `POST /api/v1/cleaning-service-requests/{id}/complete` - marcar concluído
+  - [ ] `POST /api/v1/cleaning-service-requests/{id}/cancel` - cancelar
+- [ ] Criar `CleaningServiceApplicationsController`:
+  - [ ] `POST /api/v1/cleaning-service-requests/{id}/applications` - candidatar-se a serviço
+  - [ ] `GET /api/v1/cleaning-service-requests/{id}/applications` - listar candidaturas
+  - [ ] `POST /api/v1/cleaning-applications/{id}/accept` - aceitar candidatura (Owner/Host)
+  - [ ] `POST /api/v1/cleaning-applications/{id}/reject` - rejeitar candidatura (Owner/Host)
+  - [ ] `POST /api/v1/cleaning-applications/{id}/withdraw` - retirar candidatura
+
+#### 18.15 Testes
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ⏳ Planejado
+
+**Tarefas**:
+- [ ] Testes de domínio:
+  - [ ] Property (visibilidade, regras)
+  - [ ] HostingConfiguration (ativação, visibilidade)
+  - [ ] HostingCalendar (estados, bloqueios, reservas)
+  - [ ] HostingRole (delegação, revogação)
+  - [ ] StayRequest (aprovação, auto-aprovação, rejeição)
+  - [ ] Stay (check-in, check-out, cancelamento)
+- [ ] Testes de aplicação:
+  - [ ] PropertyService (criação, atualização)
+  - [ ] HostingConfigurationService (criação, ativação)
+  - [ ] HostingCalendarService (abrir, bloquear, reservar)
+  - [ ] StayRequestService (criação, aprovação)
+  - [ ] StayManagementService (check-in, check-out)
+  - [ ] HostingPaymentService (escrow, split, reembolso)
+  - [ ] HostingSearchService (busca, filtros)
+- [ ] Testes de API (E2E):
+  - [ ] Fluxo completo: criar propriedade → configurar → ativar → solicitar → aprovar → check-in → check-out
+  - [ ] Testes de concorrência (múltiplas solicitações simultâneas)
+  - [ ] Testes de edge cases (datas inválidas, valores zero, etc.)
+
+**Total Semana 10**: 72 horas (9 dias)
+
+---
+
+## 📊 Resumo de Estimativas
+
+| Semana | Tarefas | Horas | Dias |
+|--------|---------|-------|------|
+| 1-2 | Fundação - Modelo de Domínio | 96h | 12d | ⬆️ +16h (gestão Host/Cleaning) |
+| 3-4 | Repositórios e Infraestrutura | 72h | 9d | ⬆️ +24h (novos repositórios) |
+| 5-6 | StayRequest e Stay | 56h | 7d | - |
+| 7-8 | Pagamentos e Check-in/out + Gestão Host/Cleaning | 80h | 10d | ⬆️ +32h (novos serviços) |
+| 9 | Notificações e Busca | 32h | 4d | - |
+| 10 | API e Testes | 72h | 9d | ⬆️ +16h (novos controllers) |
+| **TOTAL** | **10 semanas** | **408h** | **51d** | ⬆️ +88h (+11 dias) |
+
+**Buffer para imprevistos**: +5 dias (10% de buffer)  
+**Total com Buffer**: **56 dias úteis (11 semanas)**
+
+---
+
+## 🔌 Integrações com Sistema Existente
+
+### 1. Feature Flags
+- ✅ Adicionar `HostingEnabled` ao enum `FeatureFlag`
+- ✅ Usar `TerritoryFeatureFlagGuard.EnsureHostingEnabled()`
+
+### 2. Notificações
+- ✅ Reutilizar `OutboxMessage` e `UserNotification`
+- ✅ Novos tipos: `HostingRequest`, `HostingApproved`, `HostingRejected`, `HostingCheckIn`, `HostingCheckOut`, `HostingCleaningRequired`
+
+### 3. WorkItem para Aprovação
+- ✅ Adicionar `StayRequestApproval` ao enum `WorkItemType`
+- ✅ Reutilizar `WorkQueueService` existente
+
+### 4. Pagamentos
+- ✅ Adicionar `HostingPayment` ao enum `TransactionType`
+- ✅ Reutilizar `FinancialTransaction` e split do Marketplace
+- ✅ Criar `HostingPaymentSplitConfig` (similar ao Marketplace)
+
+### 5. Regras de Acesso
+- ✅ Criar `HostingAccessRules` (similar ao Marketplace)
+- ✅ Validar Morador Validado para criar Property
+- ✅ Validar Owner/Host para gerenciar configuração
+
+---
+
+## ⚠️ Riscos e Mitigações
+
+### Risco 1: Complexidade da Agenda
+**Mitigação**: 
+- Agenda como entidade separada e bem testada
+- Estados explícitos e imutáveis
+- Testes de concorrência extensivos
+- Índices no banco para performance
+
+### Risco 2: Confusão com Marketplace
+**Mitigação**:
+- Domínio completamente separado (`Araponga.Domain/Hosting/`)
+- Nomenclatura distinta (Property ≠ Store, StayRequest ≠ Checkout)
+- Documentação clara das diferenças
+
+### Risco 3: Performance da Agenda
+**Mitigação**:
+- Índices no banco (HostingConfigurationId + Date)
+- Cache de datas disponíveis
+- Paginação em buscas
+
+### Risco 4: Split de Pagamento Complexo
+**Mitigação**:
+- Reutilizar padrão do Marketplace
+- Configuração flexível por território
+- Testes de edge cases (valores zero, percentuais totais)
+
+---
+
+## 📝 Critérios de Aceitação
+
+### MVP Completo
+- [ ] Morador Validado pode criar Property (privada)
+- [ ] Morador pode criar HostingConfiguration
+- [ ] Agenda funciona corretamente (abrir, bloquear, reservar)
+- [ ] Visitante pode criar StayRequest
+- [ ] Host pode aprovar/rejeitar via WorkItem
+- [ ] Auto-aprovação condicional funciona
+- [ ] Check-in/Check-out funciona
+- [ ] Pagamento com escrow e split funciona
+- [ ] Notificações são enviadas corretamente
+- [ ] Busca de propriedades disponíveis funciona
+- [ ] Testes com cobertura >90%
+
+---
+
+## 🔗 Referências
+
+- [Proposta de Implementação de Hospedagem](../PROPOSTA_IMPLEMENTACAO_HOSPEDAGEM.md)
+- [Análise de Inserção no Roadmap](../ANALISE_INSERCAO_HOSPEDAGEM_ROADMAP.md)
+- [Marketplace (Fase 6-7)](./FASE6.md) - Referência de padrões
+- [Sistema de Pagamentos (Fase 7)](./FASE7.md) - Escrow e split
+- [WorkItem para Aprovação](../33_ADMIN_SYSTEM_CONFIG_WORKQUEUE.md)
+
+---
+
+**Status**: ⏳ **PLANEJADO**  
+**Prioridade**: 🔴 **P0 (Crítica)**  
+**Onda**: **3 - Economia Local**  
+**Timeline**: **Mês 6-9** (após Fase 17, antes de Fase 19)

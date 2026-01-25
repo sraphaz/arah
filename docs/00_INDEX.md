@@ -198,7 +198,7 @@ Documentos adicionais são organizados em pastas:
 
 ### Estratégia de Convergência de Mercado (2025-01-20)
 - **Análise Comparativa**: Análise profunda do Closer.earth e padrões de mercado estabelecidos
-- **Novas Fases Estratégicas**: 14 novas fases identificadas (Fases 30-43) para convergência com padrões de investimento
+- **Novas Fases Estratégicas**: 15 novas fases identificadas (Fase 30 documentada + Fases 31-44 conceituais) para convergência com padrões de investimento
 - **Priorização Atualizada**: Reorganização completa de prioridades baseada em gaps críticos vs. mercado
 - **Roadmap Revisado**: Roadmap estratégico reorganizado em 9 ondas com foco em valor entregue
 - **Mapa de Funcionalidades**: Mapeamento completo de funcionalidades implementadas, planejadas e previstas
@@ -211,7 +211,7 @@ Documentos adicionais são organizados em pastas:
 - **Fase 33**: Ticketing para Eventos - Monetização de eventos
 - **Fases 34-37**: Preparação Web3 - Blockchain, wallets, smart contracts
 - **Fases 38-40**: DAO e Tokenização - Tokens on-chain, governança tokenizada
-- **Fases 41-43**: Diferenciação - Learning Hub, Booking System, Agente IA
+- **Fases 41-44**: Diferenciação - Learning Hub, Rental System, Agente IA
 
 ### Hierarquia de Permissões e Auditoria (2025-01-16)
 - **SystemAdmin implícito**: SystemAdmin tem todas as MembershipCapabilities em todos os territórios

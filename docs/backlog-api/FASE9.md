@@ -1,6 +1,6 @@
 # Fase 9: Perfil de Usuário Completo
 
-**Duração**: 3 semanas (15 dias úteis)  
+**Duração**: 3 semanas (21 dias úteis)  
 **Prioridade**: 🔴 CRÍTICA (Bloqueante para transição)  
 **Depende de**: Fase 8 (Infraestrutura de Mídia)  
 **Estimativa Total**: 120 horas  
@@ -433,7 +433,7 @@ Completar funcionalidades de perfil de usuário para permitir transição suave 
 | Testes de Integração | 12h | ❌ Pendente | 🟡 Importante |
 | Otimizações | 8h | ❌ Pendente | 🟢 Melhoria |
 | Documentação | 8h | ❌ Pendente | 🟢 Melhoria |
-| **Total** | **120h (15 dias)** | | |
+| **Total** | **120h (21 dias)** | | |
 
 ---
 

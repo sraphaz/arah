@@ -1,846 +1,967 @@
 # Fase 15: Subscriptions & Recurring Payments
 
-**Duração**: 9 semanas (45 dias úteis)  
+**Duração**: 12 semanas (60 dias úteis)  
 **Prioridade**: 🔴 CRÍTICA (Sustentabilidade financeira)  
 **Depende de**: Fase 6 (Pagamentos), Fase 7 (Payout)  
-**Estimativa Total**: 360 horas  
+**Estimativa Total**: 480 horas  
 **Status**: ⏳ Pendente  
-**Nota**: Esta fase está na Onda 1 (Fundação de Governança e Sustentabilidade), antes da Fase 16 (Finalização). O conteúdo deste arquivo precisa ser reescrito para Subscriptions (atualmente contém conteúdo de IA).
+**Nota**: Esta fase está na Onda 1 (Fundação de Governança e Sustentabilidade), antes da Fase 16 (Finalização). Crítica para sustentabilidade financeira da plataforma.
 
 ---
 
 ## 🎯 Objetivo
 
-Implementar funcionalidades de **Inteligência Artificial** para:
-- Moderação automática (detecção de conteúdo inadequado)
-- Busca inteligente (semântica, não apenas palavras-chave)
-- Categorização automática de conteúdo
-- Recomendações contextuais (sem manipular feed)
-- Análise de conteúdo
+Implementar sistema completo de **assinaturas e pagamentos recorrentes** que:
+- **Garante acesso básico gratuito** para visitantes e residentes (alinhado com valores da plataforma)
+- Permite criação de planos de assinatura (tiers: FREE, Básico, Intermediário, Premium)
+- **Libera funcionalidades progressivamente** conforme o plano do usuário
+- Gerencia pagamentos recorrentes automáticos
+- Integra com gateway de pagamento (Stripe Subscriptions)
+- Processa webhooks para renovações, cancelamentos e falhas
+- Fornece dashboard de assinantes para administradores
+- Suporta upgrades/downgrades de planos
+- Implementa períodos de trial (opcional)
+- Gerencia cupons e descontos
 
-**Princípios de IA no Araponga**:
-- ✅ **Transparência**: Usuário sabe quando IA está sendo usada
-- ✅ **Privacidade**: Dados não são compartilhados sem consentimento
-- ✅ **Não Manipulação**: Feed cronológico permanece, IA apenas auxilia
-- ✅ **Controle do Usuário**: Pode desabilitar funcionalidades de IA
-- ✅ **Ética**: IA serve à comunidade, não à extração de dados
+**Princípios**:
+- ✅ **Acesso Básico Gratuito**: Funcionalidades essenciais sempre disponíveis (feed, posts básicos, eventos, marketplace básico)
+- ✅ **Inclusão**: Ninguém é excluído por não poder pagar
+- ✅ **Transparência**: Usuário sempre sabe o status da assinatura e funcionalidades disponíveis
+- ✅ **Flexibilidade**: Múltiplos planos e opções de pagamento
+- ✅ **Confiabilidade**: Processamento robusto de renovações
+- ✅ **Sustentabilidade**: Base para receitas recorrentes sem excluir usuários
 
 ---
 
 ## 📋 Contexto e Requisitos
 
 ### Estado Atual
-- ✅ Moderação básica (reports, bloqueios, thresholds)
-- ✅ Busca básica (texto simples)
-- ❌ Não existe moderação automática
-- ❌ Não existe busca semântica
-- ❌ Não existe categorização automática
+- ✅ Sistema de pagamentos básico (Fase 6)
+- ✅ Sistema de payout (Fase 7)
+- ✅ Integração com gateway de pagamento (Stripe)
+- ❌ Não existe sistema de assinaturas
+- ❌ Não existe pagamentos recorrentes
+- ❌ Não existe gestão de planos
 
 ### Requisitos Funcionais
 
-#### 1. Moderação Automática
-- ✅ Detecção de conteúdo inadequado (texto, imagens)
-- ✅ Análise de sentimento (detectar toxicidade)
-- ✅ Categorização automática de reports
-- ✅ Sugestões para moderadores humanos
-- ✅ Integração com sistema de moderação existente
+#### 1. Planos de Assinatura
+- ✅ **Plano FREE (Gratuito)**: Padrão para visitantes e residentes
+  - ✅ Funcionalidades básicas sempre disponíveis (feed, posts, eventos, marketplace básico)
+  - ✅ Limites razoáveis para uso básico
+  - ✅ Sem necessidade de pagamento
+  - ✅ **Global por padrão**, mas pode ser customizado por território
+- ✅ Criar planos pagos (tiers: Básico, Intermediário, Premium)
+- ✅ **Planos Globais**: Aplicam a todos os territórios (SystemAdmin)
+- ✅ **Planos Territoriais**: Específicos de um território (Curadores podem gerenciar)
+- ✅ Definir preços e ciclos (mensal, trimestral, anual)
+- ✅ **Sistema de liberação de funcionalidades** por plano
+- ✅ Definir recursos/limites por plano (capacidade de funcionalidades)
+- ✅ Ativar/desativar planos
+- ✅ **Hierarquia**: Planos territoriais sobrescrevem planos globais quando existem
 
-#### 2. Busca Inteligente
-- ✅ Busca semântica (não apenas palavras-chave)
-- ✅ Sugestões de busca
-- ✅ Correção automática de erros de digitação
-- ✅ Busca em posts, eventos, marketplace, usuários
+#### 2. Gestão de Assinaturas
+- ✅ Criar assinatura para usuário
+- ✅ Atualizar assinatura (upgrade/downgrade)
+- ✅ Cancelar assinatura
+- ✅ Reativar assinatura cancelada
+- ✅ Histórico de assinaturas
 
-#### 3. Categorização Automática
-- ✅ Categorizar posts automaticamente
-- ✅ Sugerir tags relevantes
-- ✅ Identificar tópicos principais
-- ✅ Integração com sistema de interesses (Fase 14)
+#### 3. Pagamentos Recorrentes
+- ✅ Processar renovações automáticas
+- ✅ Lidar com falhas de pagamento
+- ✅ Retry automático de pagamentos falhos
+- ✅ Notificações de falhas
+- ✅ Suspensão automática após múltiplas falhas
 
-#### 4. Recomendações Contextuais
-- ✅ Sugerir territórios próximos relevantes
-- ✅ Sugerir eventos baseados em interesses (opcional)
-- ✅ Sugerir itens do marketplace relevantes
-- ⚠️ **Importante**: Feed cronológico permanece, sugestões são opcionais
+#### 4. Webhooks e Integrações
+- ✅ Webhooks do gateway (Stripe)
+- ✅ Processar eventos: subscription.created, subscription.updated, subscription.deleted
+- ✅ Processar eventos: invoice.payment_succeeded, invoice.payment_failed
+- ✅ Sincronização de status
 
-#### 5. Tradução Automática (Opcional)
-- ✅ Traduzir posts para idioma do usuário
-- ✅ Manter original disponível
+#### 5. Períodos de Trial
+- ✅ Trial gratuito (opcional)
+- ✅ Duração configurável
+- ✅ Conversão automática ao final do trial
+- ✅ Notificações antes do fim do trial
 
-#### 6. Análise de Conteúdo
-- ✅ Extrair informações de posts (localização, eventos)
-- ✅ Identificar entidades (pessoas, lugares, organizações)
+#### 6. Cupons e Descontos
+- ✅ Criar cupons de desconto
+- ✅ Aplicar cupons a assinaturas
+- ✅ Descontos percentuais ou fixos
+- ✅ Validade e limites de uso
 
-#### 7. Classificação Inteligente de Conteúdo Gerado por IA 🔴 NOVO
-- ✅ Detecção automática de conteúdo gerado por IA (texto, imagens)
-- ✅ Classificação de probabilidade (0-100% de ser gerado por IA)
-- ✅ Marcação transparente de conteúdo gerado por IA
-- ✅ Opções de filtro para usuários (mostrar/ocultar conteúdo gerado por IA)
-- ✅ Integração com sistema de moderação (alertas para moderadores)
-- ✅ Estatísticas de conteúdo gerado por IA por território
-- ✅ Respeito à privacidade (não expor dados sensíveis)
+#### 7. Dashboard e Relatórios
+- ✅ Dashboard de assinantes
+- ✅ Métricas de receita recorrente (MRR)
+- ✅ Taxa de churn
+- ✅ Assinaturas ativas/canceladas
+- ✅ Relatórios exportáveis
 
-#### 8. Inteligência de Relevância de Publicações 🔴 NOVO
-- ✅ Cálculo de score de relevância para posts (0-100)
-- ✅ Fatores de relevância:
-  - Alinhamento com interesses do território (Fase 14)
-  - Proximidade geográfica (GeoAnchors)
-  - Qualidade do conteúdo (IA)
-  - Interações comunitárias (likes, shares, comentários)
-  - Recência (posts recentes têm boost)
-  - Autoridade do autor (contribuições anteriores)
-- ✅ Score armazenado mas **não usado para ordenar feed cronológico**
-- ✅ Opção opcional de visualização por relevância (separada do feed cronológico)
-- ✅ Badge discreto para posts altamente relevantes
-- ✅ API para obter posts mais relevantes (endpoint separado)
-- ✅ Transparência: usuário sabe quando está vendo por relevância
-- ⚠️ **Princípio**: Feed cronológico permanece como padrão, relevância é opcional
+#### 8. Sistema de Liberação de Funcionalidades
+- ✅ Verificar plano do usuário antes de acessar funcionalidades
+- ✅ Bloquear funcionalidades premium para planos gratuitos
+- ✅ Mostrar mensagens educativas sobre upgrade
+- ✅ Feature flags por plano (integração com sistema existente)
+- ✅ API para verificar permissões de funcionalidades
+
+#### 9. Sistema Administrativo de Planos e Funcionalidades
+- ✅ **Interface administrativa** para criar/editar planos
+  - ✅ **SystemAdmin**: Pode criar/editar planos globais e de qualquer território
+  - ✅ **Curadores**: Podem criar/editar planos do seu território
+- ✅ **Planos configuráveis por território**:
+  - ✅ Planos globais (aplicam a todos os territórios)
+  - ✅ Planos territoriais (específicos de um território)
+  - ✅ Hierarquia: Planos territoriais sobrescrevem globais
+- ✅ **Seleção de funcionalidades** por plano (checkboxes, seleção múltipla)
+- ✅ **Definição de valores** por plano (preço, ciclos de cobrança)
+- ✅ **Ativar/desativar planos** sem deletar
+- ✅ **Validação de integridade**: Garantir que funcionalidades básicas sempre estejam no FREE (global e territorial)
+- ✅ **Gerenciamento de cupons** via interface administrativa (global e territorial)
+- ✅ **Regras de negócio**: Validações automáticas para manter consistência
+- ✅ **Histórico de mudanças** em planos (auditoria)
 
 ---
 
 ## 📋 Tarefas Detalhadas
 
-### Semana 18: Infraestrutura de IA
+### Semana 1-2: Modelo de Domínio e Planos
 
-#### 18.1 Interface e Abstração
-**Estimativa**: 8 horas (1 dia)  
+#### 15.1 Modelo de Domínio - Assinaturas
+**Estimativa**: 32 horas (4 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar interface `IAIService`:
-  - [ ] `ModerateContentAsync(string text, CancellationToken)` → `ModerationResult`
-  - [ ] `SearchSemanticAsync(string query, SearchOptions, CancellationToken)` → `SearchResults`
-  - [ ] `CategorizeAsync(string text, CancellationToken)` → `CategorizationResult`
-  - [ ] `TranslateAsync(string text, string targetLanguage, CancellationToken)` → `string`
-  - [ ] `ExtractEntitiesAsync(string text, CancellationToken)` → `EntityExtractionResult`
-  - [ ] `DetectAIGeneratedContentAsync(string text, string? imageUrl, CancellationToken)` → `AIGeneratedContentResult`
-  - [ ] `CalculateRelevanceScoreAsync(Post post, Guid userId, Guid territoryId, CancellationToken)` → `RelevanceScoreResult`
-- [ ] Criar modelos de resultado:
-  - [ ] `ModerationResult` (toxicidade, categorias, confiança)
-  - [ ] `SearchResults` (resultados semânticos)
-  - [ ] `CategorizationResult` (categorias, tags, tópicos)
-  - [ ] `EntityExtractionResult` (pessoas, lugares, organizações)
-  - [ ] `AIGeneratedContentResult` (probabilidade, confiança, tipo de IA detectado)
-  - [ ] `RelevanceScoreResult` (score 0-100, fatores, confiança)
+- [ ] Criar enum `SubscriptionPlanTier`:
+  - [ ] `FREE = 0` (gratuito - padrão para visitantes e residentes)
+  - [ ] `BASIC = 1` (básico pago)
+  - [ ] `INTERMEDIATE = 2` (intermediário pago)
+  - [ ] `PREMIUM = 3` (premium pago)
+  - [ ] `ENTERPRISE = 4` (empresarial, custom)
+- [ ] Criar enum `FeatureCapability` (capacidades de funcionalidades):
+  - [ ] `FeedBasic` (feed básico - sempre no FREE)
+  - [ ] `PostsBasic` (posts básicos - sempre no FREE)
+  - [ ] `PostsUnlimited` (posts ilimitados)
+  - [ ] `EventsBasic` (eventos básicos - sempre no FREE)
+  - [ ] `EventsUnlimited` (eventos ilimitados)
+  - [ ] `MarketplaceBasic` (marketplace básico - sempre no FREE)
+  - [ ] `MarketplaceAdvanced` (marketplace avançado)
+  - [ ] `ChatBasic` (chat básico - sempre no FREE)
+  - [ ] `Analytics` (analytics e métricas)
+  - [ ] `AIIntegration` (integração com IA)
+  - [ ] `PrioritySupport` (suporte prioritário)
+  - [ ] `CustomBranding` (branding customizado)
+  - [ ] `APIAccess` (acesso à API)
+  - [ ] `AdvancedGovernance` (governança avançada)
+  - [ ] `TerritoryPremium` (recursos premium territoriais)
+- [ ] Criar enum `FeatureCategory` (categorias de funcionalidades):
+  - [ ] `Core` (funcionalidades core - sempre no FREE)
+  - [ ] `Enhanced` (funcionalidades melhoradas)
+  - [ ] `Premium` (funcionalidades premium)
+  - [ ] `Enterprise` (funcionalidades empresariais)
+- [ ] Criar enum `SubscriptionBillingCycle`:
+  - [ ] `MONTHLY` (mensal)
+  - [ ] `QUARTERLY` (trimestral)
+  - [ ] `YEARLY` (anual)
+- [ ] Criar enum `SubscriptionStatus`:
+  - [ ] `ACTIVE` (ativa)
+  - [ ] `CANCELED` (cancelada)
+  - [ ] `PAST_DUE` (atrasada)
+  - [ ] `UNPAID` (não paga)
+  - [ ] `TRIALING` (em trial)
+  - [ ] `EXPIRED` (expirada)
+- [ ] Criar enum `PlanScope`:
+  - [ ] `Global = 1` (plano global, aplica a todos os territórios)
+  - [ ] `Territory = 2` (plano territorial, específico de um território)
+- [ ] Criar modelo `SubscriptionPlan`:
+  - [ ] `Id`, `Name`, `Description`
+  - [ ] `Tier` (SubscriptionPlanTier)
+  - [ ] `Scope` (PlanScope, Global ou Territory)
+  - [ ] `TerritoryId?` (Guid?, nullable, se Scope = Territory, ID do território)
+  - [ ] `PricePerCycle` (decimal, nullable para FREE, preço por ciclo)
+  - [ ] `BillingCycle` (SubscriptionBillingCycle, nullable para FREE)
+  - [ ] `Features` (JSON, recursos/limites do plano)
+  - [ ] `Capabilities` (List<FeatureCapability>, funcionalidades liberadas)
+  - [ ] `Limits` (JSON, limites específicos: maxPosts, maxEvents, maxStorage, etc.)
+  - [ ] `IsDefault` (bool, se é o plano padrão - FREE sempre é default)
+  - [ ] `TrialDays?` (int?, nullable, dias de trial - apenas para planos pagos)
+  - [ ] `IsActive` (bool, pode ser desativado mas não deletado)
+  - [ ] `CreatedByUserId` (Guid, quem criou o plano)
+  - [ ] `StripePriceId?` (string?, nullable, ID do preço no Stripe - apenas para planos pagos)
+  - [ ] `StripeProductId?` (string?, nullable, ID do produto no Stripe - apenas para planos pagos)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `SubscriptionPlanHistory` (auditoria):
+  - [ ] `Id`, `PlanId`, `ChangedByUserId`
+  - [ ] `ChangeType` (enum: Created, Updated, Activated, Deactivated, CapabilitiesChanged, PriceChanged)
+  - [ ] `PreviousState` (JSON, estado anterior)
+  - [ ] `NewState` (JSON, novo estado)
+  - [ ] `ChangeReason?` (string?, nullable, motivo da mudança)
+  - [ ] `ChangedAtUtc`
+- [ ] Criar modelo `Subscription`:
+  - [ ] `Id`, `UserId`, `TerritoryId?` (nullable, para assinaturas territoriais)
+  - [ ] `PlanId` (SubscriptionPlan)
+  - [ ] `Status` (SubscriptionStatus)
+  - [ ] `CurrentPeriodStart` (DateTime)
+  - [ ] `CurrentPeriodEnd` (DateTime)
+  - [ ] `TrialStart?` (DateTime?, nullable)
+  - [ ] `TrialEnd?` (DateTime?, nullable)
+  - [ ] `CanceledAt?` (DateTime?, nullable)
+  - [ ] `CancelAtPeriodEnd` (bool, cancelar ao fim do período)
+  - [ ] `StripeSubscriptionId?` (string?, nullable, ID no Stripe)
+  - [ ] `StripeCustomerId?` (string?, nullable, ID do cliente no Stripe)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `SubscriptionPayment`:
+  - [ ] `Id`, `SubscriptionId`
+  - [ ] `Amount` (decimal)
+  - [ ] `Currency` (string, padrão: BRL)
+  - [ ] `Status` (enum: Pending, Succeeded, Failed, Refunded)
+  - [ ] `PaymentDate` (DateTime)
+  - [ ] `PeriodStart` (DateTime)
+  - [ ] `PeriodEnd` (DateTime)
+  - [ ] `StripeInvoiceId?` (string?, nullable)
+  - [ ] `StripePaymentIntentId?` (string?, nullable)
+  - [ ] `FailureReason?` (string?, nullable)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `Coupon`:
+  - [ ] `Id`, `Code` (string, único)
+  - [ ] `Name`, `Description`
+  - [ ] `DiscountType` (enum: Percentage, FixedAmount)
+  - [ ] `DiscountValue` (decimal)
+  - [ ] `ValidFrom` (DateTime)
+  - [ ] `ValidUntil?` (DateTime?, nullable)
+  - [ ] `MaxUses?` (int?, nullable, máximo de usos)
+  - [ ] `UsedCount` (int, contador de usos)
+  - [ ] `IsActive` (bool)
+  - [ ] `StripeCouponId?` (string?, nullable)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `SubscriptionCoupon`:
+  - [ ] `Id`, `SubscriptionId`, `CouponId`
+  - [ ] `AppliedAtUtc` (DateTime)
+- [ ] Criar repositórios
+- [ ] Criar migrations
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Interfaces/IAIService.cs`
-- `backend/Araponga.Application/Models/AI/ModerationResult.cs`
-- `backend/Araponga.Application/Models/AI/SearchResults.cs`
-- `backend/Araponga.Application/Models/AI/CategorizationResult.cs`
-- `backend/Araponga.Application/Models/AI/EntityExtractionResult.cs`
-- `backend/Araponga.Application/Models/AI/AIGeneratedContentResult.cs`
-- `backend/Araponga.Application/Models/AI/RelevanceScoreResult.cs`
+- `backend/Araponga.Domain/Subscriptions/SubscriptionPlan.cs`
+- `backend/Araponga.Domain/Subscriptions/SubscriptionPlanTier.cs`
+- `backend/Araponga.Domain/Subscriptions/PlanScope.cs`
+- `backend/Araponga.Domain/Subscriptions/SubscriptionBillingCycle.cs`
+- `backend/Araponga.Domain/Subscriptions/Subscription.cs`
+- `backend/Araponga.Domain/Subscriptions/SubscriptionStatus.cs`
+- `backend/Araponga.Domain/Subscriptions/SubscriptionPayment.cs`
+- `backend/Araponga.Domain/Subscriptions/Coupon.cs`
+- `backend/Araponga.Domain/Subscriptions/SubscriptionCoupon.cs`
+- `backend/Araponga.Application/Interfaces/ISubscriptionPlanRepository.cs`
+- `backend/Araponga.Application/Interfaces/ISubscriptionPlanRepository.cs` (métodos: `GetGlobalPlansAsync`, `GetTerritoryPlansAsync`, `GetPlansForTerritoryAsync`)
+- `backend/Araponga.Application/Interfaces/ISubscriptionRepository.cs`
+- `backend/Araponga.Application/Interfaces/ISubscriptionPaymentRepository.cs`
+- `backend/Araponga.Application/Interfaces/ICouponRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresSubscriptionPlanRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresSubscriptionRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresSubscriptionPaymentRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresCouponRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/Migrations/YYYYMMDDHHMMSS_AddSubscriptionsSystem.cs`
 
 **Critérios de Sucesso**:
-- ✅ Interface criada
 - ✅ Modelos criados
-- ✅ Abstração clara e extensível
+- ✅ Repositórios implementados
+- ✅ Migrations aplicadas
+- ✅ Testes de repositório passando
 
 ---
 
-#### 18.2 Implementação OpenAI
-**Estimativa**: 20 horas (2.5 dias)  
+### Semana 2-3: Integração com Stripe
+
+#### 15.2 Integração com Stripe Subscriptions
+**Estimativa**: 40 horas (5 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Instalar pacote `OpenAI` (ou similar)
-- [ ] Criar `OpenAIService`:
-  - [ ] Implementar `IAIService`
-  - [ ] Configuração via `IConfiguration`:
-    - [ ] `AI:OpenAI:ApiKey` (secret)
-    - [ ] `AI:OpenAI:Model` (gpt-4, gpt-3.5-turbo, etc.)
-  - [ ] Moderação: usar `Moderation API`
-  - [ ] Busca: usar `Embeddings API` + busca vetorial
-  - [ ] Categorização: usar `Chat Completion API`
-  - [ ] Tradução: usar `Chat Completion API`
-  - [ ] Extração de entidades: usar `Chat Completion API`
-- [ ] Tratamento de erros (rate limits, timeouts)
-- [ ] Retry policy
-- [ ] Logging (sem expor dados sensíveis)
+- [ ] Instalar pacote `Stripe.net`
+- [ ] Criar `StripeSubscriptionService`:
+  - [ ] `CreateSubscriptionAsync(Guid userId, Guid planId, string? couponCode, CancellationToken)` → criar assinatura no Stripe
+  - [ ] `UpdateSubscriptionAsync(Guid subscriptionId, Guid newPlanId, CancellationToken)` → atualizar plano
+  - [ ] `CancelSubscriptionAsync(Guid subscriptionId, bool cancelAtPeriodEnd, CancellationToken)` → cancelar assinatura
+  - [ ] `ReactivateSubscriptionAsync(Guid subscriptionId, CancellationToken)` → reativar assinatura
+  - [ ] `GetSubscriptionAsync(string stripeSubscriptionId, CancellationToken)` → obter assinatura do Stripe
+- [ ] Sincronização com Stripe:
+  - [ ] Criar produtos e preços no Stripe ao criar plano
+  - [ ] Sincronizar status de assinaturas
+  - [ ] Sincronizar pagamentos
+- [ ] Configuração:
+  - [ ] `Stripe:SecretKey` (secret)
+  - [ ] `Stripe:PublishableKey` (config)
+  - [ ] `Stripe:WebhookSecret` (secret, para validação de webhooks)
+- [ ] Tratamento de erros:
+  - [ ] Rate limits
+  - [ ] Timeouts
+  - [ ] Retry policy
+- [ ] Testes unitários
 
 **Arquivos a Criar**:
-- `backend/Araponga.Infrastructure/AI/OpenAIService.cs`
-- `backend/Araponga.Infrastructure/AI/OpenAIConfiguration.cs`
+- `backend/Araponga.Infrastructure/Payments/StripeSubscriptionService.cs`
+- `backend/Araponga.Infrastructure/Payments/StripeConfiguration.cs`
+- `backend/Araponga.Tests/Infrastructure/StripeSubscriptionServiceTests.cs`
 
 **Arquivos a Modificar**:
 - `backend/Araponga.Api/Program.cs` (registrar serviço)
+- `backend/Araponga.Api/appsettings.json` (adicionar configuração Stripe)
 
 **Critérios de Sucesso**:
-- ✅ Integração OpenAI funcionando
-- ✅ Todas as funcionalidades implementadas
-- ✅ Tratamento de erros funcionando
+- ✅ Integração Stripe funcionando
+- ✅ Criação de assinaturas funcionando
+- ✅ Atualização de assinaturas funcionando
+- ✅ Cancelamento funcionando
+- ✅ Sincronização funcionando
+- ✅ Testes passando
 
 ---
 
-#### 18.3 Implementação Azure (Opcional)
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado  
-**Prioridade**: 🟢 Opcional (alternativa ao OpenAI)
-
-**Tarefas**:
-- [ ] Instalar pacote `Azure.AI.TextAnalytics`
-- [ ] Criar `AzureAIService`:
-  - [ ] Implementar `IAIService`
-  - [ ] Configuração via `IConfiguration`:
-    - [ ] `AI:Azure:Endpoint`
-    - [ ] `AI:Azure:ApiKey`
-  - [ ] Moderação: usar `Content Moderator`
-  - [ ] Busca: usar `Cognitive Search`
-  - [ ] Categorização: usar `Text Analytics`
-  - [ ] Tradução: usar `Translator`
-  - [ ] Extração de entidades: usar `Text Analytics`
-
-**Arquivos a Criar**:
-- `backend/Araponga.Infrastructure/AI/AzureAIService.cs`
-
-**Critérios de Sucesso**:
-- ✅ Integração Azure funcionando
-- ✅ Todas as funcionalidades implementadas
-
----
-
-### Semana 19: Moderação Automática
-
-#### 19.1 Serviço de Moderação Automática
-**Estimativa**: 16 horas (2 dias)  
+#### 15.3 Webhooks do Stripe
+**Estimativa**: 32 horas (4 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `ModerationService`:
-  - [ ] `ModeratePostAsync(Post post)` → `ModerationResult`
-  - [ ] `ModerateImageAsync(Stream imageStream)` → `ModerationResult`
-  - [ ] `CategorizeReportAsync(Report report)` → `ReportCategory`
-- [ ] Integração com `PostCreationService`:
-  - [ ] Moderar post antes de criar (se feature flag ativo)
-  - [ ] Se conteúdo inadequado: retornar erro ou marcar para revisão
-- [ ] Integração com `ReportService`:
-  - [ ] Categorizar report automaticamente
-  - [ ] Sugerir ação para moderador
-- [ ] Feature flag: `AIModerationEnabled` (por território)
+- [ ] Criar `StripeWebhookController`:
+  - [ ] `POST /api/v1/webhooks/stripe` → receber webhooks
+  - [ ] Validação de assinatura (usar `StripeSignature`)
+  - [ ] Processar eventos assincronamente
+- [ ] Processar eventos:
+  - [ ] `customer.subscription.created` → criar assinatura local
+  - [ ] `customer.subscription.updated` → atualizar assinatura
+  - [ ] `customer.subscription.deleted` → cancelar assinatura
+  - [ ] `invoice.payment_succeeded` → registrar pagamento
+  - [ ] `invoice.payment_failed` → marcar pagamento como falho
+  - [ ] `customer.subscription.trial_will_end` → notificar fim do trial
+- [ ] Background jobs para processar eventos:
+  - [ ] Usar Hangfire ou similar
+  - [ ] Retry automático em caso de falha
+- [ ] Logging e auditoria:
+  - [ ] Registrar todos os eventos recebidos
+  - [ ] Logging de erros
+- [ ] Testes de integração
+
+**Arquivos a Criar**:
+- `backend/Araponga.Api/Controllers/StripeWebhookController.cs`
+- `backend/Araponga.Application/Services/StripeWebhookService.cs`
+- `backend/Araponga.Application/BackgroundJobs/StripeWebhookProcessingJob.cs`
+- `backend/Araponga.Tests/Integration/StripeWebhookIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Api/Program.cs` (configurar webhook endpoint)
+
+**Critérios de Sucesso**:
+- ✅ Webhooks sendo recebidos
+- ✅ Eventos sendo processados
+- ✅ Assinaturas sendo sincronizadas
+- ✅ Pagamentos sendo registrados
+- ✅ Testes passando
+
+---
+
+### Semana 3-4: Serviços de Assinatura
+
+#### 15.4 Serviço de Assinaturas
+**Estimativa**: 40 horas (5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `SubscriptionService`:
+  - [ ] `GetOrCreateUserSubscriptionAsync(Guid userId, Guid? territoryId, CancellationToken)` → obter ou criar assinatura FREE (padrão)
+  - [ ] `GetAvailablePlansForTerritoryAsync(Guid territoryId, CancellationToken)` → obter planos disponíveis (territoriais + globais)
+  - [ ] `CreateSubscriptionAsync(Guid userId, Guid territoryId, Guid planId, string? couponCode, CancellationToken)` → criar assinatura paga
+  - [ ] `UpdateSubscriptionAsync(Guid subscriptionId, Guid newPlanId, CancellationToken)` → atualizar plano (upgrade/downgrade)
+  - [ ] `CancelSubscriptionAsync(Guid subscriptionId, bool cancelAtPeriodEnd, CancellationToken)` → cancelar assinatura (volta para FREE)
+  - [ ] `ReactivateSubscriptionAsync(Guid subscriptionId, CancellationToken)` → reativar assinatura
+  - [ ] `GetUserSubscriptionAsync(Guid userId, Guid? territoryId, CancellationToken)` → obter assinatura do usuário (retorna FREE se não tiver pago)
+  - [ ] `GetSubscriptionAsync(Guid subscriptionId, CancellationToken)` → obter assinatura
+  - [ ] `ListSubscriptionsAsync(Guid? userId, Guid? territoryId, SubscriptionStatus? status, CancellationToken)` → listar assinaturas
+- [ ] **Resolução de Planos por Território**:
+  - [ ] Ao buscar planos, verificar primeiro planos territoriais
+  - [ ] Se não houver plano territorial, usar plano global
+  - [ ] FREE sempre disponível (global e pode ter versão territorial)
+- [ ] **Atribuição automática de plano FREE**:
+  - [ ] Ao criar novo usuário, atribuir automaticamente plano FREE global
+  - [ ] Se território tem FREE customizado, usar ele quando usuário interagir com território
+  - [ ] Se usuário não tem assinatura, considerar como FREE
+  - [ ] FREE não precisa de registro no Stripe (é local apenas)
+- [ ] Lógica de upgrade/downgrade:
+  - [ ] Calcular proratação (crédito/débito)
+  - [ ] Aplicar desconto proporcional
+  - [ ] Atualizar período atual
+- [ ] Lógica de cancelamento:
+  - [ ] Cancelar imediatamente ou ao fim do período
+  - [ ] Manter acesso até fim do período (se `cancelAtPeriodEnd = true`)
+  - [ ] Notificar usuário
+- [ ] Validações:
+  - [ ] Usuário não pode ter múltiplas assinaturas ativas (exceto FREE que é implícito)
+  - [ ] Plano deve estar ativo
+  - [ ] Cupom deve ser válido (se fornecido)
+  - [ ] FREE não pode ser cancelado (é o estado padrão)
+  - [ ] Ao cancelar assinatura paga, voltar para FREE automaticamente
 - [ ] Testes unitários
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/ModerationService.cs`
-- `backend/Araponga.Tests/Application/ModerationServiceTests.cs`
+- `backend/Araponga.Application/Services/SubscriptionService.cs`
+- `backend/Araponga.Tests/Application/SubscriptionServiceTests.cs`
 
 **Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/PostCreationService.cs`
-- `backend/Araponga.Application/Services/ReportService.cs`
+- `backend/Araponga.Application/Services/StripeSubscriptionService.cs` (integrar)
 
 **Critérios de Sucesso**:
-- ✅ Moderação automática funcionando
-- ✅ Integração com criação de posts funcionando
-- ✅ Categorização de reports funcionando
+- ✅ Criação de assinaturas funcionando
+- ✅ Upgrade/downgrade funcionando
+- ✅ Cancelamento funcionando
+- ✅ Reativação funcionando
+- ✅ Validações funcionando
 - ✅ Testes passando
 
 ---
 
-#### 19.2 Integração com Sistema de Moderação
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Atualizar `ModerationCase`:
-  - [ ] Adicionar campo `AICategory` (categoria sugerida por IA)
-  - [ ] Adicionar campo `AIConfidence` (confiança da IA)
-  - [ ] Adicionar campo `AISuggestedAction` (ação sugerida)
-- [ ] Atualizar `ModerationCaseService`:
-  - [ ] Incluir sugestões de IA ao criar caso
-  - [ ] Moderador pode aceitar/rejeitar sugestão
-- [ ] Atualizar `ModerationController`:
-  - [ ] Incluir sugestões de IA na resposta
-- [ ] Testes de integração
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Domain/Moderation/ModerationCase.cs`
-- `backend/Araponga.Application/Services/ModerationCaseService.cs`
-- `backend/Araponga.Api/Controllers/ModerationController.cs`
-
-**Critérios de Sucesso**:
-- ✅ Sugestões de IA aparecendo
-- ✅ Moderadores podem usar sugestões
-- ✅ Testes passando
-
----
-
-### Semana 20: Busca Inteligente
-
-#### 20.1 Serviço de Busca Semântica
-**Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `SearchService`:
-  - [ ] `SearchPostsAsync(string query, SearchOptions)` → busca semântica em posts
-  - [ ] `SearchEventsAsync(string query, SearchOptions)` → busca semântica em eventos
-  - [ ] `SearchMarketplaceAsync(string query, SearchOptions)` → busca semântica em marketplace
-  - [ ] `SuggestSearchAsync(string partialQuery)` → sugestões de busca
-- [ ] Implementar busca vetorial:
-  - [ ] Gerar embeddings de conteúdo (posts, eventos, itens)
-  - [ ] Armazenar embeddings (PostgreSQL com pgvector ou banco separado)
-  - [ ] Buscar por similaridade de embeddings
-- [ ] Correção automática de erros:
-  - [ ] Detectar erros de digitação
-  - [ ] Sugerir correções
-- [ ] Feature flag: `AISearchEnabled` (por território)
-- [ ] Testes unitários
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/SearchService.cs`
-- `backend/Araponga.Application/Interfaces/IEmbeddingRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresEmbeddingRepository.cs`
-- `backend/Araponga.Tests/Application/SearchServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Infrastructure/Postgres/ArapongaDbContext.cs` (adicionar tabela de embeddings)
-- `backend/Araponga.Infrastructure/Postgres/Migrations/YYYYMMDDHHMMSS_AddEmbeddings.cs`
-
-**Critérios de Sucesso**:
-- ✅ Busca semântica funcionando
-- ✅ Sugestões funcionando
-- ✅ Correção de erros funcionando
-- ✅ Testes passando
-
----
-
-#### 20.2 Integração com Controllers
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Atualizar `FeedController`:
-  - [ ] Adicionar endpoint `GET /api/v1/feed/search?q={query}` (busca semântica)
-  - [ ] Adicionar endpoint `GET /api/v1/feed/search/suggestions?q={partial}` (sugestões)
-- [ ] Atualizar `EventsController`:
-  - [ ] Adicionar endpoint `GET /api/v1/events/search?q={query}`
-- [ ] Atualizar `ItemsController`:
-  - [ ] Atualizar endpoint `GET /api/v1/items/search` para usar busca semântica (se feature flag ativo)
-- [ ] Testes de integração
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/Controllers/FeedController.cs`
-- `backend/Araponga.Api/Controllers/EventsController.cs`
-- `backend/Araponga.Api/Controllers/ItemsController.cs`
-
-**Critérios de Sucesso**:
-- ✅ Endpoints de busca funcionando
-- ✅ Sugestões funcionando
-- ✅ Testes passando
-
----
-
-### Semana 21: Categorização e Recomendações
-
-#### 21.1 Categorização Automática
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `CategorizationService`:
-  - [ ] `CategorizePostAsync(Post post)` → `CategorizationResult`
-  - [ ] `SuggestTagsAsync(Post post)` → `IReadOnlyList<string>`
-  - [ ] `IdentifyTopicsAsync(Post post)` → `IReadOnlyList<string>`
-- [ ] Integração com `PostCreationService`:
-  - [ ] Categorizar post automaticamente ao criar (se feature flag ativo)
-  - [ ] Sugerir tags (usuário pode aceitar/rejeitar)
-- [ ] Integração com sistema de interesses (Fase 14):
-  - [ ] Tags sugeridas podem virar interesses do usuário (opcional)
-- [ ] Armazenar categorias/tags em `Post` (novos campos)
-- [ ] Criar migration
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/CategorizationService.cs`
-- `backend/Araponga.Tests/Application/CategorizationServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Domain/Feed/CommunityPost.cs` (adicionar campos de categoria/tags)
-- `backend/Araponga.Application/Services/PostCreationService.cs`
-- `backend/Araponga.Infrastructure/Postgres/Migrations/YYYYMMDDHHMMSS_AddPostCategories.cs`
-
-**Critérios de Sucesso**:
-- ✅ Categorização funcionando
-- ✅ Sugestão de tags funcionando
-- ✅ Integração com criação de posts funcionando
-- ✅ Testes passando
-
----
-
-#### 21.2 Recomendações Contextuais
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `RecommendationService`:
-  - [ ] `RecommendTerritoriesAsync(Guid userId, GeoCoordinate location)` → territórios relevantes
-  - [ ] `RecommendEventsAsync(Guid userId, IReadOnlyList<string> interests)` → eventos relevantes
-  - [ ] `RecommendMarketplaceItemsAsync(Guid userId, IReadOnlyList<string> interests)` → itens relevantes
-- [ ] **Importante**: Recomendações são **opcionais** e **não manipulam feed**
-- [ ] Endpoints opcionais:
-  - [ ] `GET /api/v1/recommendations/territories`
-  - [ ] `GET /api/v1/recommendations/events`
-  - [ ] `GET /api/v1/recommendations/marketplace`
-- [ ] Feature flag: `AIRecommendationsEnabled` (por território e por usuário)
-- [ ] Preferências do usuário: pode desabilitar recomendações
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/RecommendationService.cs`
-- `backend/Araponga.Api/Controllers/RecommendationsController.cs`
-- `backend/Araponga.Tests/Application/RecommendationServiceTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Recomendações funcionando
-- ✅ Feed cronológico não é afetado
-- ✅ Preferências respeitadas
-- ✅ Testes passando
-
----
-
-#### 21.3 Tradução Automática (Opcional)
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado  
-**Prioridade**: 🟢 Opcional
-
-**Tarefas**:
-- [ ] Criar `TranslationService`:
-  - [ ] `TranslatePostAsync(Post post, string targetLanguage)` → `Post` traduzido
-  - [ ] `TranslateTextAsync(string text, string targetLanguage)` → `string`
-- [ ] Integração com `FeedController`:
-  - [ ] Query parameter `translateTo` (opcional)
-  - [ ] Se fornecido: traduzir posts para idioma do usuário
-  - [ ] Manter original disponível
-- [ ] Detectar idioma do post automaticamente
-- [ ] Feature flag: `AITranslationEnabled` (por território)
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/TranslationService.cs`
-- `backend/Araponga.Tests/Application/TranslationServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/Controllers/FeedController.cs`
-
-**Critérios de Sucesso**:
-- ✅ Tradução funcionando
-- ✅ Original mantido
-- ✅ Testes passando
-
----
-
-#### 21.4 Análise de Conteúdo
-**Estimativa**: 12 horas (1.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `ContentAnalysisService`:
-  - [ ] `ExtractLocationAsync(Post post)` → localização mencionada
-  - [ ] `ExtractEventsAsync(Post post)` → eventos mencionados
-  - [ ] `ExtractEntitiesAsync(Post post)` → pessoas, lugares, organizações
-- [ ] Integração com `PostCreationService`:
-  - [ ] Extrair informações automaticamente (opcional)
-  - [ ] Sugerir GeoAnchors baseados em localização mencionada
-- [ ] Armazenar entidades extraídas (opcional, para busca futura)
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/ContentAnalysisService.cs`
-- `backend/Araponga.Tests/Application/ContentAnalysisServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/PostCreationService.cs`
-
-**Critérios de Sucesso**:
-- ✅ Extração de informações funcionando
-- ✅ Sugestões de GeoAnchors funcionando
-- ✅ Testes passando
-
----
-
-#### 21.5 Classificação Inteligente de Conteúdo Gerado por IA 🔴 NOVO
+#### 15.5 Serviço de Cupons
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `AIGeneratedContentDetectionService`:
-  - [ ] `DetectAIGeneratedTextAsync(string text, CancellationToken)` → `AIGeneratedContentResult`
-  - [ ] `DetectAIGeneratedImageAsync(string imageUrl, CancellationToken)` → `AIGeneratedContentResult`
-  - [ ] `ClassifyAIGeneratedContentAsync(Post post, CancellationToken)` → `AIGeneratedContentResult`
-- [ ] Integração com `IAIService`:
-  - [ ] Usar modelos de detecção de IA (GPTZero, OpenAI Detector, ou modelo próprio)
-  - [ ] Análise de padrões de texto (perplexidade, burstiness)
-  - [ ] Análise de imagens (detecção de artefatos de IA, metadados)
-  - [ ] Probabilidade de 0-100% de ser gerado por IA
-  - [ ] Confiança da detecção (0-100%)
-  - [ ] Tipo de IA detectado (ChatGPT, DALL-E, Midjourney, etc.)
-- [ ] Modelo de domínio `AIGeneratedContentClassification`:
-  - [ ] `Id`, `PostId`, `TerritoryId`
-  - [ ] `IsAIGenerated` (bool, probabilidade > threshold)
-  - [ ] `Probability` (decimal, 0-100%)
-  - [ ] `Confidence` (decimal, 0-100%)
-  - [ ] `AIType` (string?, tipo de IA detectado)
-  - [ ] `DetectionMethod` (string, método usado)
-  - [ ] `DetectedAtUtc` (DateTime)
-  - [ ] `UpdatedAtUtc` (DateTime)
-- [ ] Integração com `PostCreationService`:
-  - [ ] Detectar automaticamente ao criar post (opcional, via feature flag)
-  - [ ] Armazenar classificação no banco
-  - [ ] Não bloquear criação (apenas classificar)
-- [ ] Integração com `FeedService`:
-  - [ ] Incluir flag `IsAIGenerated` em `FeedItemResponse`
-  - [ ] Incluir flag `IsBlockedByAIContent` em `FeedItemResponse` (se bloqueado)
-  - [ ] Aplicar bloqueio automaticamente baseado em feature flags
-  - [ ] Opção de filtro manual: mostrar/ocultar conteúdo gerado por IA (além do bloqueio automático)
-- [ ] Integração com `ModerationService`:
-  - [ ] Alertar moderadores se conteúdo gerado por IA + probabilidade alta
-  - [ ] Se `BlockingMode = Block` no território → bloquear automaticamente
-  - [ ] Se `BlockingMode = Warn` → apenas alertar, não bloquear
-  - [ ] Se `BlockingMode = None` → apenas classificar, não bloquear
-  - [ ] Dashboard de moderação: mostrar estatísticas de conteúdo bloqueado por IA
-- [ ] Feature flags territoriais:
-  - [ ] `AIGeneratedContentDetectionEnabled` (habilitar/desabilitar detecção no território)
-  - [ ] `AIGeneratedContentBlockingEnabled` (habilitar/desabilitar bloqueio no território)
-  - [ ] `AIGeneratedContentBlockingThreshold` (decimal, 0-100, threshold para bloquear - padrão: 80%)
-  - [ ] `AIGeneratedContentBlockingMode` (enum: `None`, `Warn`, `Block`) - modo de bloqueio:
-    - [ ] `None`: Apenas detecta e marca (não bloqueia)
-    - [ ] `Warn`: Marca e alerta, mas permite visualização
-    - [ ] `Block`: Bloqueia completamente do feed (oculta)
-- [ ] Feature flags por usuário (preferências):
-  - [ ] `BlockAIGeneratedContent` (bool, bloquear conteúdo gerado por IA)
-  - [ ] `AIGeneratedContentBlockingThreshold` (decimal, 0-100, threshold pessoal - padrão: 80%)
-  - [ ] `ShowAIGeneratedContent` (bool, mostrar conteúdo gerado por IA - oposto de bloqueio)
-  - [ ] Adicionar em `UserPreferences`
-- [ ] Lógica de bloqueio (respeita ambos os níveis):
-  - [ ] Se território bloqueia (`BlockingMode = Block`) → conteúdo é oculto do feed
-  - [ ] Se usuário bloqueia (`BlockAIGeneratedContent = true`) → conteúdo é oculto do feed do usuário
-  - [ ] Se ambos permitem mas probabilidade > threshold → apenas marca (não bloqueia)
-  - [ ] Prioridade: Bloqueio territorial > Bloqueio do usuário > Permissão
-- [ ] Integração com `FeedService`:
-  - [ ] Aplicar filtro de bloqueio ao listar feed
-  - [ ] Respeitar feature flags territoriais e preferências do usuário
-  - [ ] Logging de bloqueios (para auditoria)
-- [ ] Estatísticas:
-  - [ ] `GetAIGeneratedContentStatsAsync(Guid territoryId)` → estatísticas por território
-  - [ ] Percentual de conteúdo gerado por IA
-  - [ ] Tendências ao longo do tempo
-- [ ] Transparência:
-  - [ ] Badge visual discreto em posts gerados por IA (se probabilidade > 80%)
-  - [ ] Tooltip explicativo: "Conteúdo pode ter sido gerado por IA"
-  - [ ] Link para política de transparência
-- [ ] Testes:
-  - [ ] Testes unitários (diferentes tipos de conteúdo)
-  - [ ] Testes de integração
-  - [ ] Testes de performance (latência)
+- [ ] Criar `CouponService`:
+  - [ ] `CreateCouponAsync(Coupon coupon, CancellationToken)` → criar cupom
+  - [ ] `ValidateCouponAsync(string code, CancellationToken)` → validar cupom
+  - [ ] `ApplyCouponToSubscriptionAsync(Guid subscriptionId, string couponCode, CancellationToken)` → aplicar cupom
+  - [ ] `RemoveCouponFromSubscriptionAsync(Guid subscriptionId, CancellationToken)` → remover cupom
+  - [ ] `ListCouponsAsync(bool? isActive, CancellationToken)` → listar cupons
+- [ ] Validação de cupons:
+  - [ ] Verificar validade (data)
+  - [ ] Verificar limite de usos
+  - [ ] Verificar se está ativo
+- [ ] Integração com Stripe:
+  - [ ] Criar cupom no Stripe ao criar localmente
+  - [ ] Aplicar cupom na assinatura do Stripe
+- [ ] Testes
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/AIGeneratedContentDetectionService.cs`
-- `backend/Araponga.Domain/AI/AIGeneratedContentClassification.cs`
-- `backend/Araponga.Application/Interfaces/IAIGeneratedContentClassificationRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresAIGeneratedContentClassificationRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/Migrations/YYYYMMDDHHMMSS_AddAIGeneratedContentClassification.cs`
-- `backend/Araponga.Tests/Application/AIGeneratedContentDetectionServiceTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Interfaces/IAIService.cs` (adicionar método de detecção)
-- `backend/Araponga.Application/Services/PostCreationService.cs` (integrar detecção e bloqueio)
-- `backend/Araponga.Application/Services/FeedService.cs` (aplicar bloqueio baseado em feature flags)
-- `backend/Araponga.Application/Services/ModerationService.cs` (alertas e bloqueio automático)
-- `backend/Araponga.Application/Services/FeatureFlagService.cs` (adicionar feature flags de bloqueio)
-- `backend/Araponga.Domain/Users/UserPreferences.cs` (adicionar preferências de bloqueio)
-- `backend/Araponga.Api/Contracts/Feed/FeedItemResponse.cs` (adicionar flags)
-- `backend/Araponga.Api/Controllers/FeedController.cs` (aplicar bloqueio)
-- `backend/Araponga.Api/Controllers/UserPreferencesController.cs` (gerenciar preferências de bloqueio)
+- `backend/Araponga.Application/Services/CouponService.cs`
+- `backend/Araponga.Tests/Application/CouponServiceTests.cs`
 
 **Critérios de Sucesso**:
-- ✅ Detecção de conteúdo gerado por IA funcionando
-- ✅ Classificação armazenada no banco
-- ✅ Feature flags territoriais funcionando
-- ✅ Feature flags por usuário funcionando
-- ✅ Bloqueio automático funcionando (respeitando ambos os níveis)
-- ✅ Flag visível em posts (se probabilidade alta)
-- ✅ Conteúdo bloqueado oculto do feed
-- ✅ Filtro manual funcionando no feed
-- ✅ Preferências do usuário funcionando
-- ✅ Estatísticas funcionando
-- ✅ Dashboard de moderação funcionando
-- ✅ Transparência garantida
+- ✅ Criação de cupons funcionando
+- ✅ Validação funcionando
+- ✅ Aplicação de cupons funcionando
+- ✅ Integração com Stripe funcionando
 - ✅ Testes passando
-
-**Princípios Éticos**:
-- ✅ **Transparência**: Usuário sabe quando conteúdo é gerado por IA
-- ✅ **Controle Comunitário**: Território pode decidir bloquear conteúdo gerado por IA
-- ✅ **Escolha do Usuário**: Usuário pode escolher bloquear individualmente
-- ✅ **Privacidade**: Não expor dados sensíveis na detecção
-- ✅ **Decisão Configurável**: Bloqueio pode ser configurado por território e usuário
-- ✅ **Modos Flexíveis**: Diferentes níveis de bloqueio (None, Warn, Block)
-- ✅ **Auditoria**: Logging de bloqueios para transparência
 
 ---
 
-#### 21.6 Inteligência de Relevância de Publicações 🔴 NOVO
+### Semana 4-5: Processamento de Pagamentos e Renovações
+
+#### 15.6 Processamento de Renovações
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Background job para processar renovações:
+  - [ ] Verificar assinaturas próximas do fim do período
+  - [ ] Processar renovação via Stripe
+  - [ ] Atualizar período da assinatura
+  - [ ] Registrar pagamento
+- [ ] Lógica de falhas de pagamento:
+  - [ ] Detectar falha de pagamento (via webhook)
+  - [ ] Retry automático (configurável: 3 tentativas)
+  - [ ] Notificar usuário após cada falha
+  - [ ] Suspender assinatura após múltiplas falhas
+- [ ] Notificações:
+  - [ ] Notificar antes do fim do período (7 dias, 3 dias, 1 dia)
+  - [ ] Notificar sobre falhas de pagamento
+  - [ ] Notificar sobre suspensão
+- [ ] Testes
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/BackgroundJobs/SubscriptionRenewalJob.cs`
+- `backend/Araponga.Application/Services/SubscriptionRenewalService.cs`
+- `backend/Araponga.Tests/Application/SubscriptionRenewalServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Renovações automáticas funcionando
+- ✅ Retry de falhas funcionando
+- ✅ Notificações funcionando
+- ✅ Suspensão automática funcionando
+- ✅ Testes passando
+
+---
+
+#### 15.7 Gestão de Trials
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `PostRelevanceService`:
-  - [ ] `CalculateRelevanceScoreAsync(Post post, Guid userId, Guid territoryId, CancellationToken)` → `RelevanceScoreResult`
-  - [ ] `CalculateRelevanceScoresBatchAsync(IReadOnlyList<Post> posts, Guid userId, Guid territoryId, CancellationToken)` → `Dictionary<Guid, RelevanceScoreResult>`
-  - [ ] `GetMostRelevantPostsAsync(Guid territoryId, Guid userId, int limit, CancellationToken)` → `IReadOnlyList<Post>`
-- [ ] Fatores de relevância (pesos configuráveis):
-  - [ ] **Interesses do Território** (30%): Alinhamento com interesses do território (Fase 14)
-  - [ ] **Proximidade Geográfica** (20%): Distância do usuário aos GeoAnchors do post
-  - [ ] **Qualidade do Conteúdo** (15%): Score de qualidade calculado por IA
-  - [ ] **Interações Comunitárias** (15%): Likes, shares, comentários (normalizado por tempo)
-  - [ ] **Recência** (10%): Boost para posts recentes (decay exponencial)
-  - [ ] **Autoridade do Autor** (10%): Histórico de contribuições do autor (Fase 17)
-- [ ] Modelo de domínio `PostRelevanceScore`:
-  - [ ] `Id`, `PostId`, `UserId`, `TerritoryId`
-  - [ ] `Score` (decimal, 0-100)
-  - [ ] `InterestAlignment` (decimal, 0-1)
-  - [ ] `GeographicProximity` (decimal, 0-1)
-  - [ ] `ContentQuality` (decimal, 0-1)
-  - [ ] `CommunityInteractions` (decimal, 0-1)
-  - [ ] `RecencyBoost` (decimal, 0-1)
-  - [ ] `AuthorAuthority` (decimal, 0-1)
-  - [ ] `CalculatedAtUtc` (DateTime)
-  - [ ] `ExpiresAtUtc` (DateTime, cache TTL: 24h)
-- [ ] Integração com `PostCreationService`:
-  - [ ] Calcular score automaticamente ao criar post (opcional, via feature flag)
-  - [ ] Armazenar score no banco
-  - [ ] Não bloquear criação (apenas calcular)
-- [ ] Integração com `FeedService`:
-  - [ ] Incluir `RelevanceScore` em `FeedItemResponse` (opcional)
-  - [ ] Badge discreto para posts altamente relevantes (score > 80)
-  - [ ] **Importante**: Feed cronológico permanece como padrão
-- [ ] Novo endpoint opcional:
-  - [ ] `GET /api/v1/feed/relevant?territoryId={id}&limit={n}` → posts mais relevantes
-  - [ ] Query parameter `sort=relevance` (opcional, não padrão)
-  - [ ] Transparência: header `X-Sort-Mode: relevance` na resposta
-- [ ] Feature flags:
-  - [ ] `PostRelevanceScoringEnabled` (habilitar/desabilitar cálculo de relevância)
-  - [ ] `PostRelevanceSortEnabled` (habilitar ordenação por relevância como opção)
-- [ ] Preferências do usuário:
-  - [ ] `DefaultFeedSort` (enum: `Chronological`, `Relevance`) - padrão: `Chronological`
-  - [ ] Adicionar em `UserPreferences`
-- [ ] Cache e performance:
-  - [ ] Cache de scores (TTL: 24 horas)
-  - [ ] Recalcular scores periodicamente (background job, diário)
-  - [ ] Recalcular scores quando: post recebe interação, interesses do território mudam
-- [ ] Estatísticas:
-  - [ ] `GetRelevanceStatsAsync(Guid territoryId)` → estatísticas de relevância
-  - [ ] Distribuição de scores
-  - [ ] Posts mais relevantes do território
-- [ ] Transparência:
-  - [ ] Badge visual discreto: "Post altamente relevante" (se score > 80)
-  - [ ] Tooltip explicativo: "Relevância baseada em interesses do território, proximidade e qualidade"
-  - [ ] Link para política de transparência
-- [ ] Testes:
-  - [ ] Testes unitários (cálculo de score com diferentes fatores)
-  - [ ] Testes de integração
-  - [ ] Testes de performance (cálculo em lote)
+- [ ] Lógica de trial:
+  - [ ] Iniciar trial ao criar assinatura (se plano tem trial)
+  - [ ] Calcular data de fim do trial
+  - [ ] Converter automaticamente ao fim do trial
+  - [ ] Notificar antes do fim do trial (3 dias, 1 dia)
+- [ ] Integração com Stripe:
+  - [ ] Criar assinatura com trial no Stripe
+  - [ ] Processar conversão ao fim do trial
+- [ ] Validações:
+  - [ ] Usuário só pode ter um trial por plano
+  - [ ] Trial não pode ser aplicado a assinatura existente
+- [ ] Testes
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/PostRelevanceService.cs`
-- `backend/Araponga.Domain/AI/PostRelevanceScore.cs`
-- `backend/Araponga.Application/Interfaces/IPostRelevanceScoreRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresPostRelevanceScoreRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/Migrations/YYYYMMDDHHMMSS_AddPostRelevanceScore.cs`
-- `backend/Araponga.Application/Models/AI/RelevanceScoreFactors.cs`
-- `backend/Araponga.Tests/Application/PostRelevanceServiceTests.cs`
+- `backend/Araponga.Application/Services/SubscriptionTrialService.cs`
+- `backend/Araponga.Tests/Application/SubscriptionTrialServiceTests.cs`
 
 **Arquivos a Modificar**:
-- `backend/Araponga.Application/Interfaces/IAIService.cs` (adicionar método de relevância)
-- `backend/Araponga.Application/Services/PostCreationService.cs` (integrar cálculo de relevância)
-- `backend/Araponga.Application/Services/FeedService.cs` (incluir score e opção de ordenação)
-- `backend/Araponga.Domain/Users/UserPreferences.cs` (adicionar preferência de ordenação)
-- `backend/Araponga.Api/Contracts/Feed/FeedItemResponse.cs` (adicionar score opcional)
-- `backend/Araponga.Api/Controllers/FeedController.cs` (endpoint de relevância e query param)
+- `backend/Araponga.Application/Services/SubscriptionService.cs` (integrar trial)
 
 **Critérios de Sucesso**:
-- ✅ Cálculo de relevância funcionando
-- ✅ Score armazenado no banco
-- ✅ Feed cronológico permanece como padrão
-- ✅ Opção de ordenação por relevância funcionando (opcional)
-- ✅ Badge para posts altamente relevantes funcionando
-- ✅ Preferências do usuário funcionando
-- ✅ Cache funcionando
-- ✅ Estatísticas funcionando
-- ✅ Transparência garantida
+- ✅ Trials funcionando
+- ✅ Conversão automática funcionando
+- ✅ Notificações funcionando
+- ✅ Validações funcionando
 - ✅ Testes passando
-
-**Princípios Éticos**:
-- ✅ **Feed Cronológico Primeiro**: Feed cronológico permanece como padrão
-- ✅ **Transparência**: Usuário sabe quando está vendo por relevância
-- ✅ **Escolha do Usuário**: Usuário pode escolher ordenação (cronológica ou relevância)
-- ✅ **Não Manipulação**: Relevância não manipula feed sem consentimento
-- ✅ **Contexto Territorial**: Relevância baseada em interesses e contexto do território
 
 ---
 
-#### 21.7 Testes e Documentação
-**Estimativa**: 16 horas (2 dias)  
+### Semana 5-6: Sistema Administrativo e Validações
+
+#### 15.8 Sistema Administrativo de Planos e Funcionalidades
+**Estimativa**: 40 horas (5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `SubscriptionPlanAdminService`:
+  - [ ] `CreateGlobalPlanAsync(Guid adminUserId, CreatePlanRequest request, CancellationToken)` → criar plano global (SystemAdmin)
+  - [ ] `CreateTerritoryPlanAsync(Guid territoryId, Guid curatorUserId, CreatePlanRequest request, CancellationToken)` → criar plano territorial (Curador)
+  - [ ] `UpdatePlanAsync(Guid planId, Guid userId, UpdatePlanRequest request, CancellationToken)` → atualizar plano (valida permissões)
+  - [ ] `UpdatePlanCapabilitiesAsync(Guid planId, Guid userId, List<FeatureCapability> capabilities, CancellationToken)` → atualizar funcionalidades
+  - [ ] `UpdatePlanLimitsAsync(Guid planId, Guid userId, Dictionary<string, object> limits, CancellationToken)` → atualizar limites
+  - [ ] `ActivatePlanAsync(Guid planId, Guid userId, CancellationToken)` → ativar plano
+  - [ ] `DeactivatePlanAsync(Guid planId, Guid userId, string? reason, CancellationToken)` → desativar plano
+  - [ ] `GetPlansForTerritoryAsync(Guid territoryId, CancellationToken)` → obter planos disponíveis para território (globais + territoriais)
+  - [ ] `GetPlanHistoryAsync(Guid planId, CancellationToken)` → obter histórico de mudanças
+- [ ] **Validação de Permissões**:
+  - [ ] SystemAdmin pode criar/editar planos globais e de qualquer território
+  - [ ] Curadores podem criar/editar apenas planos do seu território
+  - [ ] Validar permissões antes de qualquer operação
+- [ ] **Validações de Integridade**:
+  - [ ] `ValidatePlanIntegrityAsync(SubscriptionPlan plan, CancellationToken)` → validar integridade do plano
+  - [ ] Garantir que funcionalidades básicas (`FeedBasic`, `PostsBasic`, `EventsBasic`, `MarketplaceBasic`, `ChatBasic`) **sempre** estejam no plano FREE (global e territorial)
+  - [ ] Impedir remoção de funcionalidades básicas do FREE
+  - [ ] Validar que planos pagos não tenham preço zero
+  - [ ] Validar que FREE sempre tenha preço zero
+  - [ ] Validar que FREE global não pode ser desativado
+  - [ ] Validar que FREE territorial pode ser desativado (mas não deletado)
+  - [ ] Validar que FREE não pode ser deletado (global ou territorial)
+  - [ ] Validar limites razoáveis (não permitir limites muito restritivos)
+  - [ ] Validar que território existe (se plano territorial)
+  - [ ] Validar que não há conflito de nomes (mesmo nome no mesmo território)
+- [ ] **Regras de Negócio**:
+  - [ ] Ao criar plano, validar integridade antes de salvar
+  - [ ] Ao atualizar plano, verificar se quebra funcionalidades básicas
+  - [ ] Ao desativar plano, verificar se há assinaturas ativas (aviso, não bloquear)
+  - [ ] **Hierarquia de Planos**: Ao buscar planos para território, retornar planos territoriais primeiro, depois globais
+  - [ ] **Resolução de Planos**: Se território tem plano customizado, usar ele; senão, usar plano global
+  - [ ] Registrar todas as mudanças em `SubscriptionPlanHistory`
+- [ ] **Sistema de Funcionalidades**:
+  - [ ] `GetAvailableCapabilitiesAsync(CancellationToken)` → listar todas as funcionalidades disponíveis
+  - [ ] `GetCapabilityInfoAsync(FeatureCapability capability, CancellationToken)` → informações sobre funcionalidade
+  - [ ] `ValidateCapabilitySelectionAsync(List<FeatureCapability> capabilities, SubscriptionPlanTier tier, CancellationToken)` → validar seleção
+- [ ] Testes unitários e de integração
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/SubscriptionPlanAdminService.cs`
+- `backend/Araponga.Application/Services/SubscriptionPlanValidationService.cs`
+- `backend/Araponga.Application/Models/SubscriptionPlanHistory.cs`
+- `backend/Araponga.Application/Interfaces/ISubscriptionPlanHistoryRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresSubscriptionPlanHistoryRepository.cs`
+- `backend/Araponga.Tests/Application/SubscriptionPlanAdminServiceTests.cs`
+- `backend/Araponga.Tests/Application/SubscriptionPlanValidationServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Criação de planos customizados funcionando
+- ✅ Seleção de funcionalidades funcionando
+- ✅ Validações de integridade funcionando
+- ✅ Funcionalidades básicas sempre protegidas no FREE
+- ✅ Histórico de mudanças sendo registrado
+- ✅ Testes passando
+
+---
+
+#### 15.9 Sistema Administrativo de Cupons
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `CouponAdminService`:
+  - [ ] `CreateCouponAsync(Guid adminUserId, CreateCouponRequest request, CancellationToken)` → criar cupom
+  - [ ] `UpdateCouponAsync(Guid couponId, Guid adminUserId, UpdateCouponRequest request, CancellationToken)` → atualizar cupom
+  - [ ] `ActivateCouponAsync(Guid couponId, Guid adminUserId, CancellationToken)` → ativar cupom
+  - [ ] `DeactivateCouponAsync(Guid couponId, Guid adminUserId, CancellationToken)` → desativar cupom
+  - [ ] `GetCouponUsageStatsAsync(Guid couponId, CancellationToken)` → estatísticas de uso
+  - [ ] `ListCouponsAsync(bool? isActive, CancellationToken)` → listar cupons
+- [ ] Validações:
+  - [ ] Código único
+  - [ ] Validade de datas
+  - [ ] Limites de uso
+  - [ ] Desconto válido (percentual 0-100%, valor fixo positivo)
+- [ ] Integração com Stripe:
+  - [ ] Criar cupom no Stripe ao criar localmente
+  - [ ] Sincronizar status
+- [ ] Testes
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/CouponAdminService.cs`
+- `backend/Araponga.Tests/Application/CouponAdminServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Criação de cupons funcionando
+- ✅ Gerenciamento de cupons funcionando
+- ✅ Validações funcionando
+- ✅ Integração com Stripe funcionando
+- ✅ Testes passando
+
+---
+
+### Semana 6-7: Controllers e API
+
+#### 15.10 Sistema de Verificação de Funcionalidades
+**Estimativa**: 24 horas (3 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `SubscriptionCapabilityService`:
+  - [ ] `CheckCapabilityAsync(Guid userId, Guid? territoryId, FeatureCapability capability, CancellationToken)` → verificar se usuário tem capacidade (considera plano territorial ou global)
+  - [ ] `GetUserCapabilitiesAsync(Guid userId, Guid? territoryId, CancellationToken)` → obter todas as capacidades do usuário
+  - [ ] `CheckLimitAsync(Guid userId, Guid? territoryId, string limitType, int requestedAmount, CancellationToken)` → verificar limite
+  - [ ] `GetUserLimitsAsync(Guid userId, Guid? territoryId, CancellationToken)` → obter limites do usuário
+  - [ ] `ResolveUserPlanAsync(Guid userId, Guid? territoryId, CancellationToken)` → resolver plano do usuário (territorial ou global)
+- [ ] Integrar com sistema de feature flags existente:
+  - [ ] Verificar plano antes de liberar funcionalidades
+  - [ ] Mensagens educativas sobre upgrade quando necessário
+- [ ] Middleware para verificação automática:
+  - [ ] Atributo `[RequiresCapability(FeatureCapability.X)]` para endpoints
+  - [ ] Retornar 403 com mensagem educativa se não tiver capacidade
+- [ ] Validações:
+  - [ ] FREE sempre tem acesso às funcionalidades básicas
+  - [ ] Não bloquear funcionalidades essenciais
+- [ ] Testes unitários
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/SubscriptionCapabilityService.cs`
+- `backend/Araponga.Application/Attributes/RequiresCapabilityAttribute.cs`
+- `backend/Araponga.Api/Middleware/SubscriptionCapabilityMiddleware.cs`
+- `backend/Araponga.Tests/Application/SubscriptionCapabilityServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Verificação de capacidades funcionando
+- ✅ Limites sendo respeitados
+- ✅ Mensagens educativas funcionando
+- ✅ Funcionalidades básicas sempre acessíveis
+- ✅ Testes passando
+
+---
+
+#### 15.11 Controllers Administrativos
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `AdminSubscriptionPlansController` (SystemAdmin):
+  - [ ] `GET /api/v1/admin/subscription-plans` → listar todos os planos (globais e territoriais)
+  - [ ] `GET /api/v1/admin/subscription-plans/global` → listar apenas planos globais
+  - [ ] `GET /api/v1/admin/subscription-plans/territory/{territoryId}` → listar planos de um território
+  - [ ] `GET /api/v1/admin/subscription-plans/{id}` → obter plano detalhado
+  - [ ] `POST /api/v1/admin/subscription-plans/global` → criar plano global
+  - [ ] `POST /api/v1/admin/subscription-plans/territory/{territoryId}` → criar plano territorial (SystemAdmin pode criar para qualquer território)
+  - [ ] `PUT /api/v1/admin/subscription-plans/{id}` → atualizar plano
+  - [ ] `PATCH /api/v1/admin/subscription-plans/{id}/capabilities` → atualizar funcionalidades do plano
+  - [ ] `PATCH /api/v1/admin/subscription-plans/{id}/limits` → atualizar limites do plano
+  - [ ] `PATCH /api/v1/admin/subscription-plans/{id}/activate` → ativar plano
+  - [ ] `PATCH /api/v1/admin/subscription-plans/{id}/deactivate` → desativar plano
+  - [ ] `GET /api/v1/admin/subscription-plans/{id}/history` → histórico de mudanças
+  - [ ] `GET /api/v1/admin/subscription-plans/capabilities` → listar funcionalidades disponíveis
+- [ ] Criar `TerritorySubscriptionPlansController` (Curadores):
+  - [ ] `GET /api/v1/territories/{territoryId}/subscription-plans` → listar planos do território (territoriais + globais)
+  - [ ] `GET /api/v1/territories/{territoryId}/subscription-plans/{id}` → obter plano do território
+  - [ ] `POST /api/v1/territories/{territoryId}/subscription-plans` → criar plano territorial (apenas curadores do território)
+  - [ ] `PUT /api/v1/territories/{territoryId}/subscription-plans/{id}` → atualizar plano territorial
+  - [ ] `PATCH /api/v1/territories/{territoryId}/subscription-plans/{id}/capabilities` → atualizar funcionalidades
+  - [ ] `PATCH /api/v1/territories/{territoryId}/subscription-plans/{id}/activate` → ativar plano
+  - [ ] `PATCH /api/v1/territories/{territoryId}/subscription-plans/{id}/deactivate` → desativar plano
+- [ ] Criar `AdminCouponsController` (SystemAdmin apenas):
+  - [ ] `GET /api/v1/admin/coupons` → listar cupons
+  - [ ] `GET /api/v1/admin/coupons/{id}` → obter cupom
+  - [ ] `POST /api/v1/admin/coupons` → criar cupom
+  - [ ] `PUT /api/v1/admin/coupons/{id}` → atualizar cupom
+  - [ ] `PATCH /api/v1/admin/coupons/{id}/activate` → ativar cupom
+  - [ ] `PATCH /api/v1/admin/coupons/{id}/deactivate` → desativar cupom
+  - [ ] `GET /api/v1/admin/coupons/{id}/usage-stats` → estatísticas de uso
+- [ ] Validações (FluentValidation):
+  - [ ] `CreatePlanRequestValidator` (validar integridade, escopo, território)
+  - [ ] `UpdatePlanRequestValidator`
+  - [ ] `UpdateCapabilitiesRequestValidator` (garantir funcionalidades básicas no FREE)
+  - [ ] `CreateCouponRequestValidator`
+- [ ] Autorização:
+  - [ ] SystemAdmin pode criar/editar planos globais e de qualquer território
+  - [ ] Curadores podem criar/editar apenas planos do seu território
+  - [ ] SystemAdmin pode criar/editar cupons globais e territoriais
+  - [ ] Curadores podem criar/editar cupons do seu território
+- [ ] Testes de integração
+
+**Arquivos a Criar**:
+- `backend/Araponga.Api/Controllers/AdminSubscriptionPlansController.cs` (SystemAdmin)
+- `backend/Araponga.Api/Controllers/TerritorySubscriptionPlansController.cs` (Curadores)
+- `backend/Araponga.Api/Controllers/AdminCouponsController.cs` (SystemAdmin)
+- `backend/Araponga.Api/Controllers/TerritoryCouponsController.cs` (Curadores)
+- `backend/Araponga.Api/Contracts/Admin/CreatePlanRequest.cs`
+- `backend/Araponga.Api/Contracts/Admin/UpdatePlanRequest.cs`
+- `backend/Araponga.Api/Contracts/Admin/UpdateCapabilitiesRequest.cs`
+- `backend/Araponga.Api/Contracts/Admin/PlanHistoryResponse.cs`
+- `backend/Araponga.Api/Contracts/Admin/CapabilityInfoResponse.cs`
+- `backend/Araponga.Api/Validators/CreatePlanRequestValidator.cs`
+- `backend/Araponga.Api/Validators/UpdatePlanRequestValidator.cs`
+- `backend/Araponga.Tests/Integration/AdminSubscriptionPlansIntegrationTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Endpoints administrativos funcionando
+- ✅ Validações de integridade funcionando
+- ✅ Autorização funcionando
+- ✅ Funcionalidades básicas protegidas
+- ✅ Testes passando
+
+---
+
+#### 15.12 Controllers Públicos e Endpoints
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `SubscriptionPlansController`:
+  - [ ] `GET /api/v1/subscription-plans` → listar planos (inclui FREE)
+  - [ ] `GET /api/v1/subscription-plans/{id}` → obter plano
+  - [ ] `POST /api/v1/subscription-plans` → criar plano (Admin)
+  - [ ] `PATCH /api/v1/subscription-plans/{id}` → atualizar plano (Admin)
+  - [ ] `DELETE /api/v1/subscription-plans/{id}` → desativar plano (Admin, não pode desativar FREE)
+- [ ] Criar `SubscriptionsController`:
+  - [ ] `POST /api/v1/subscriptions` → criar assinatura (não necessário para FREE)
+  - [ ] `GET /api/v1/subscriptions/me` → obter minha assinatura (retorna FREE se não tiver pago)
+  - [ ] `GET /api/v1/subscriptions` → listar assinaturas (Admin)
+  - [ ] `GET /api/v1/subscriptions/{id}` → obter assinatura
+  - [ ] `PATCH /api/v1/subscriptions/{id}` → atualizar assinatura (upgrade/downgrade)
+  - [ ] `POST /api/v1/subscriptions/{id}/cancel` → cancelar assinatura (volta para FREE)
+  - [ ] `POST /api/v1/subscriptions/{id}/reactivate` → reativar assinatura
+- [ ] Criar `SubscriptionCapabilitiesController`:
+  - [ ] `GET /api/v1/subscriptions/me/capabilities` → minhas capacidades
+  - [ ] `GET /api/v1/subscriptions/me/limits` → meus limites
+  - [ ] `POST /api/v1/subscriptions/check-capability` → verificar capacidade específica
+- [ ] Criar `CouponsController`:
+  - [ ] `GET /api/v1/coupons` → listar cupons (Admin)
+  - [ ] `GET /api/v1/coupons/{code}` → validar cupom
+  - [ ] `POST /api/v1/coupons` → criar cupom (Admin)
+  - [ ] `PATCH /api/v1/coupons/{id}` → atualizar cupom (Admin)
+- [ ] Criar requests/responses
+- [ ] Validação (FluentValidation)
+- [ ] Testes de integração
+
+**Arquivos a Criar**:
+- `backend/Araponga.Api/Controllers/SubscriptionPlansController.cs`
+- `backend/Araponga.Api/Controllers/SubscriptionsController.cs`
+- `backend/Araponga.Api/Controllers/CouponsController.cs`
+- `backend/Araponga.Api/Contracts/Subscriptions/CreateSubscriptionRequest.cs`
+- `backend/Araponga.Api/Contracts/Subscriptions/SubscriptionResponse.cs`
+- `backend/Araponga.Api/Contracts/Subscriptions/SubscriptionPlanResponse.cs`
+- `backend/Araponga.Api/Contracts/Subscriptions/CouponResponse.cs`
+- `backend/Araponga.Api/Validators/CreateSubscriptionRequestValidator.cs`
+
+**Critérios de Sucesso**:
+- ✅ Endpoints funcionando
+- ✅ Validações funcionando
+- ✅ Autorização funcionando
+- ✅ Testes passando
+
+---
+
+### Semana 6-7: Dashboard e Relatórios
+
+#### 15.13 Dashboard de Assinantes
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `SubscriptionAnalyticsService`:
+  - [ ] `GetMRRAsync(DateTime? startDate, DateTime? endDate, CancellationToken)` → Monthly Recurring Revenue
+  - [ ] `GetChurnRateAsync(DateTime? startDate, DateTime? endDate, CancellationToken)` → taxa de churn
+  - [ ] `GetActiveSubscriptionsCountAsync(CancellationToken)` → número de assinaturas ativas
+  - [ ] `GetNewSubscriptionsCountAsync(DateTime? startDate, DateTime? endDate, CancellationToken)` → novas assinaturas
+  - [ ] `GetCanceledSubscriptionsCountAsync(DateTime? startDate, DateTime? endDate, CancellationToken)` → canceladas
+  - [ ] `GetRevenueByPlanAsync(DateTime? startDate, DateTime? endDate, CancellationToken)` → receita por plano
+- [ ] Criar `SubscriptionAnalyticsController`:
+  - [ ] `GET /api/v1/admin/subscriptions/analytics` → métricas gerais
+  - [ ] `GET /api/v1/admin/subscriptions/analytics/mrr` → MRR
+  - [ ] `GET /api/v1/admin/subscriptions/analytics/churn` → churn rate
+  - [ ] `GET /api/v1/admin/subscriptions/analytics/revenue` → receita por plano
+- [ ] Exportação de relatórios:
+  - [ ] Exportar CSV de assinaturas
+  - [ ] Exportar relatório de receita
+- [ ] Testes
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/SubscriptionAnalyticsService.cs`
+- `backend/Araponga.Api/Controllers/SubscriptionAnalyticsController.cs`
+- `backend/Araponga.Tests/Application/SubscriptionAnalyticsServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Métricas sendo calculadas
+- ✅ Dashboard funcionando
+- ✅ Exportação funcionando
+- ✅ Testes passando
+
+---
+
+### Semana 7-8: Frontend e Notificações
+
+#### 15.14 Interface de Assinaturas (Frontend)
+**Estimativa**: 40 horas (5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Página de planos:
+  - [ ] Listar planos disponíveis
+  - [ ] Comparação de recursos
+  - [ ] Botão de assinar
+- [ ] Página de minha assinatura:
+  - [ ] Status atual
+  - [ ] Plano atual
+  - [ ] Próxima cobrança
+  - [ ] Histórico de pagamentos
+  - [ ] Opções de upgrade/downgrade
+  - [ ] Cancelar assinatura
+- [ ] Fluxo de checkout:
+  - [ ] Seleção de plano
+  - [ ] Aplicação de cupom (opcional)
+  - [ ] Informações de pagamento
+  - [ ] Confirmação
+- [ ] Notificações:
+  - [ ] Notificações de renovação
+  - [ ] Notificações de falha de pagamento
+  - [ ] Notificações de fim de trial
+- [ ] Testes E2E
+
+**Arquivos a Criar**:
+- `frontend/portal/pages/SubscriptionPlans.tsx`
+- `frontend/portal/pages/MySubscription.tsx`
+- `frontend/portal/pages/Checkout.tsx`
+- `frontend/portal/components/subscriptions/PlanCard.tsx`
+- `frontend/portal/components/subscriptions/SubscriptionStatus.tsx`
+- `frontend/portal/components/subscriptions/PaymentHistory.tsx`
+
+**Critérios de Sucesso**:
+- ✅ Interface funcionando
+- ✅ Fluxo de checkout funcionando
+- ✅ Notificações funcionando
+- ✅ Testes E2E passando
+
+---
+
+### Semana 8-9: Testes e Documentação
+
+#### 15.15 Interface Administrativa (Frontend)
+**Estimativa**: 40 horas (5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Página de gerenciamento de planos globais (SystemAdmin):
+  - [ ] Listar planos globais
+  - [ ] Criar novo plano global
+  - [ ] Editar plano global existente
+  - [ ] **Seleção de funcionalidades** (checkboxes por categoria)
+  - [ ] **Definição de limites** (inputs para maxPosts, maxEvents, maxStorage, etc.)
+  - [ ] **Definição de preço** (valor, ciclo de cobrança)
+  - [ ] Ativar/desativar planos
+  - [ ] Visualizar histórico de mudanças
+  - [ ] Validações em tempo real (mostrar erros de integridade)
+- [ ] Página de gerenciamento de planos territoriais (Curadores):
+  - [ ] Listar planos do território (territoriais + globais como referência)
+  - [ ] Criar novo plano territorial
+  - [ ] Editar plano territorial existente
+  - [ ] **Seleção de funcionalidades** (checkboxes por categoria)
+  - [ ] **Definição de limites** (inputs para maxPosts, maxEvents, maxStorage, etc.)
+  - [ ] **Definição de preço** (valor, ciclo de cobrança) - pode ser diferente do global
+  - [ ] Ativar/desativar planos
+  - [ ] Visualizar histórico de mudanças
+  - [ ] Validações em tempo real (mostrar erros de integridade)
+  - [ ] **Indicador visual**: Mostrar quais planos são globais vs territoriais
+- [ ] Página de gerenciamento de cupons (SystemAdmin):
+  - [ ] Listar cupons
+  - [ ] Criar cupom
+  - [ ] Editar cupom
+  - [ ] Ativar/desativar cupons
+  - [ ] Visualizar estatísticas de uso
+- [ ] Validações no frontend:
+  - [ ] Impedir remover funcionalidades básicas do FREE
+  - [ ] Validar preços (FREE = 0, outros > 0)
+  - [ ] Validar limites razoáveis
+  - [ ] Mostrar avisos antes de desativar plano com assinaturas ativas
+- [ ] Testes E2E
+
+**Arquivos a Criar**:
+- `frontend/portal/pages/admin/SubscriptionPlans.tsx` (SystemAdmin - planos globais)
+- `frontend/portal/pages/admin/CreatePlan.tsx` (SystemAdmin - criar plano global)
+- `frontend/portal/pages/admin/EditPlan.tsx` (SystemAdmin - editar plano global)
+- `frontend/portal/pages/territories/{territoryId}/subscription-plans.tsx` (Curadores - planos territoriais)
+- `frontend/portal/pages/territories/{territoryId}/subscription-plans/create.tsx` (Curadores - criar plano territorial)
+- `frontend/portal/pages/admin/Coupons.tsx` (SystemAdmin - cupons globais)
+- `frontend/portal/pages/territories/{territoryId}/coupons.tsx` (Curadores - cupons territoriais)
+- `frontend/portal/components/admin/PlanForm.tsx`
+- `frontend/portal/components/admin/CapabilitySelector.tsx`
+- `frontend/portal/components/admin/LimitsEditor.tsx`
+- `frontend/portal/components/admin/PlanHistory.tsx`
+- `frontend/portal/components/admin/PlanScopeSelector.tsx` (Global vs Territory)
+
+**Critérios de Sucesso**:
+- ✅ Interface administrativa funcionando
+- ✅ Criação de planos customizados funcionando
+- ✅ Seleção de funcionalidades funcionando
+- ✅ Validações em tempo real funcionando
+- ✅ Testes E2E passando
+
+---
+
+#### 15.16 Testes e Documentação
+**Estimativa**: 40 horas (5 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
 - [ ] Testes de integração completos:
-  - [ ] Moderação automática
-  - [ ] Busca semântica
-  - [ ] Categorização
-  - [ ] Recomendações
-  - [ ] Tradução
-  - [ ] Classificação de conteúdo gerado por IA
-  - [ ] Inteligência de relevância de publicações
-- [ ] Testes de performance (latência de APIs de IA)
-- [ ] Testes de segurança (não expor dados sensíveis)
+  - [ ] Criação de assinaturas
+  - [ ] Renovações automáticas
+  - [ ] Webhooks do Stripe
+  - [ ] Upgrade/downgrade
+  - [ ] Cancelamento
+  - [ ] Cupons
+  - [ ] Trials
+- [ ] Testes de performance:
+  - [ ] Processamento de webhooks em lote
+  - [ ] Cálculo de métricas
+- [ ] Testes de segurança:
+  - [ ] Validação de webhooks
+  - [ ] Autorização de endpoints
 - [ ] Documentação técnica:
-  - [ ] `docs/AI_SYSTEM.md`
-  - [ ] Configuração de provedores (OpenAI, Azure)
-  - [ ] Feature flags
-  - [ ] Princípios éticos de IA
+  - [ ] `docs/SUBSCRIPTIONS_SYSTEM.md`
+  - [ ] Como funciona o sistema
+  - [ ] Configuração do Stripe
+  - [ ] Webhooks
 - [ ] Atualizar `docs/CHANGELOG.md`
 - [ ] Atualizar Swagger
 
 **Arquivos a Criar**:
-- `backend/Araponga.Tests/Integration/AICompleteIntegrationTests.cs`
-- `docs/AI_SYSTEM.md`
+- `backend/Araponga.Tests/Integration/SubscriptionsCompleteIntegrationTests.cs`
+- `docs/SUBSCRIPTIONS_SYSTEM.md`
 
 **Critérios de Sucesso**:
 - ✅ Testes passando
-- ✅ Cobertura >80%
+- ✅ Cobertura >85%
 - ✅ Documentação completa
-
----
-
-#### 15.X Configuração de Rate Limiting
-**Estimativa**: 24 horas (3 dias)  
-**Status**: ⏳ Pendente  
-**Prioridade**: 🔴 Alta
-
-**Contexto**: Rate limiting atualmente configurado em `appsettings.json` com valores globais (`PermitLimit: 60, WindowSeconds: 60`). Esta tarefa permite configuração por território e por tipo de endpoint para proteção mais granular.
-
-**Tarefas**:
-- [ ] Criar modelo de domínio `RateLimitConfig`:
-  - [ ] `Id`, `TerritoryId` (nullable para config global)
-  - [ ] `EndpointType` (enum: All, Posts, Uploads, ApiGeneral, Chat, etc.)
-  - [ ] `PermitLimit` (int, requisições permitidas)
-  - [ ] `WindowSeconds` (int, janela de tempo)
-  - [ ] `QueueLimit` (int, limite de fila)
-  - [ ] `Enabled` (bool)
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar `IRateLimitConfigRepository` e implementações (Postgres, InMemory)
-- [ ] Criar `RateLimitConfigService`:
-  - [ ] `GetConfigAsync(Guid? territoryId, string endpointType, CancellationToken)`
-  - [ ] `CreateOrUpdateConfigAsync(RateLimitConfig, CancellationToken)`
-  - [ ] `GetActiveConfigAsync(Guid? territoryId, string endpointType, CancellationToken)` → retorna territorial ou global
-- [ ] Criar middleware `RateLimitMiddleware`:
-  - [ ] Usar `RateLimitConfigService` para obter configuração
-  - [ ] Aplicar rate limiting dinamicamente
-  - [ ] Integrar com `Microsoft.AspNetCore.RateLimiting` ou implementação custom
-- [ ] Criar `RateLimitConfigController`:
-  - [ ] `GET /api/v1/territories/{territoryId}/rate-limit-config` (Curator)
-  - [ ] `PUT /api/v1/territories/{territoryId}/rate-limit-config` (Curator)
-  - [ ] `GET /api/v1/admin/rate-limit-config` (global, SystemAdmin)
-  - [ ] `PUT /api/v1/admin/rate-limit-config` (global, SystemAdmin)
-- [ ] Interface administrativa (DevPortal):
-  - [ ] Seção para configuração de rate limiting
-  - [ ] Visualização de configurações por endpoint
-  - [ ] Alertas para limites muito baixos/altos
-- [ ] Testes de integração
-- [ ] Documentação
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Configuration/RateLimitConfig.cs`
-- `backend/Araponga.Application/Interfaces/Configuration/IRateLimitConfigRepository.cs`
-- `backend/Araponga.Application/Services/Configuration/RateLimitConfigService.cs`
-- `backend/Araponga.Api/Middleware/RateLimitMiddleware.cs`
-- `backend/Araponga.Api/Controllers/RateLimitConfigController.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresRateLimitConfigRepository.cs`
-- `backend/Araponga.Infrastructure/InMemory/InMemoryRateLimitConfigRepository.cs`
-- `backend/Araponga.Tests/Api/RateLimitConfigIntegrationTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/Program.cs` (registrar middleware e serviços)
-- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
-- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
-- `backend/Araponga.Api/wwwroot/devportal/index.html`
-
-**Critérios de Sucesso**:
-- ✅ Rate limiting configurável por território
-- ✅ Configuração por tipo de endpoint funcionando
-- ✅ Fallback para `appsettings.json` funcionando
-- ✅ Ajustes em tempo real (sem restart)
-- ✅ Interface administrativa disponível
-- ✅ Testes passando
-- ✅ Documentação atualizada
-
-**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
-
----
-
-#### 15.Y Configuração de Autenticação (JWT)
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ⏳ Pendente  
-**Prioridade**: 🟡 Média
-
-**Contexto**: Configuração JWT atualmente em `appsettings.json` (`Issuer`, `Audience`, `ExpirationMinutes`). Esta tarefa permite configuração via painel administrativo para ajustes de segurança sem deploy.
-
-**Tarefas**:
-- [ ] Criar modelo de domínio `JwtConfig`:
-  - [ ] `Id` (configuração global única)
-  - [ ] `Issuer` (string)
-  - [ ] `Audience` (string)
-  - [ ] `AccessTokenExpirationMinutes` (int)
-  - [ ] `RefreshTokenExpirationDays` (int, opcional)
-  - [ ] `IsActive` (bool)
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar `IJwtConfigRepository` e implementações (Postgres, InMemory)
-- [ ] Criar `JwtConfigService`:
-  - [ ] `GetActiveConfigAsync(CancellationToken)` → retorna config ativa
-  - [ ] `CreateOrUpdateConfigAsync(JwtConfig, CancellationToken)`
-  - [ ] `ActivateConfigAsync(Guid configId, CancellationToken)` → desativa outras configs
-- [ ] Atualizar `JwtTokenService`:
-  - [ ] Usar `JwtConfigService` ao gerar tokens
-  - [ ] Fallback para `appsettings.json` se não configurado
-  - [ ] Suporte a refresh tokens (se configurado)
-- [ ] Criar `JwtConfigController`:
-  - [ ] `GET /api/v1/admin/jwt-config/active` (SystemAdmin)
-  - [ ] `GET /api/v1/admin/jwt-config` (listar todas, SystemAdmin)
-  - [ ] `POST /api/v1/admin/jwt-config` (criar, SystemAdmin)
-  - [ ] `PUT /api/v1/admin/jwt-config/{configId}` (atualizar, SystemAdmin)
-  - [ ] `POST /api/v1/admin/jwt-config/{configId}/activate` (ativar, SystemAdmin)
-- [ ] Interface administrativa (DevPortal):
-  - [ ] Seção para configuração de JWT
-  - [ ] Alertas para expirações muito curtas/longas
-  - [ ] Visualização de configuração ativa
-- [ ] Testes de integração
-- [ ] Documentação
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Configuration/JwtConfig.cs`
-- `backend/Araponga.Application/Interfaces/Configuration/IJwtConfigRepository.cs`
-- `backend/Araponga.Application/Services/Configuration/JwtConfigService.cs`
-- `backend/Araponga.Api/Controllers/JwtConfigController.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresJwtConfigRepository.cs`
-- `backend/Araponga.Infrastructure/InMemory/InMemoryJwtConfigRepository.cs`
-- `backend/Araponga.Tests/Api/JwtConfigIntegrationTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Infrastructure/Security/JwtTokenService.cs`
-- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
-- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
-- `backend/Araponga.Api/wwwroot/devportal/index.html`
-
-**Critérios de Sucesso**:
-- ✅ Configuração JWT via painel administrativo
-- ✅ Ajustes de expiração sem deploy
-- ✅ Fallback para `appsettings.json` funcionando
-- ✅ Suporte a múltiplas configurações (ativação seletiva)
-- ✅ Interface administrativa disponível
-- ✅ Testes passando
-- ✅ Documentação atualizada
-
-**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
 
 ---
 
@@ -848,44 +969,61 @@ Implementar funcionalidades de **Inteligência Artificial** para:
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Interface e Abstração | 8h | ❌ Pendente | 🔴 Crítica |
-| Implementação OpenAI | 20h | ❌ Pendente | 🔴 Crítica |
-| Implementação Azure | 16h | ❌ Pendente | 🟢 Opcional |
-| Serviço de Moderação Automática | 16h | ❌ Pendente | 🔴 Crítica |
-| Integração com Sistema de Moderação | 12h | ❌ Pendente | 🔴 Crítica |
-| Serviço de Busca Semântica | 20h | ❌ Pendente | 🔴 Crítica |
-| Integração com Controllers | 12h | ❌ Pendente | 🔴 Crítica |
-| Categorização Automática | 16h | ❌ Pendente | 🟡 Importante |
-| Recomendações Contextuais | 16h | ❌ Pendente | 🟡 Importante |
-| Tradução Automática | 12h | ❌ Pendente | 🟢 Opcional |
-| Análise de Conteúdo | 12h | ❌ Pendente | 🟡 Importante |
-| Testes e Documentação | 16h | ❌ Pendente | 🟡 Importante |
-| **Total** | **160h (28 dias)** | | |
+| Modelo de Domínio | 32h | ❌ Pendente | 🔴 Crítica |
+| Integração com Stripe | 40h | ❌ Pendente | 🔴 Crítica |
+| Webhooks do Stripe | 32h | ❌ Pendente | 🔴 Crítica |
+| Serviço de Assinaturas | 40h | ❌ Pendente | 🔴 Crítica |
+| Serviço de Cupons | 24h | ❌ Pendente | 🟡 Importante |
+| Processamento de Renovações | 32h | ❌ Pendente | 🔴 Crítica |
+| Gestão de Trials | 24h | ❌ Pendente | 🟡 Importante |
+| Sistema Administrativo de Planos | 48h | ❌ Pendente | 🔴 Crítica |
+| Sistema Administrativo de Cupons | 24h | ❌ Pendente | 🟡 Importante |
+| Verificação de Funcionalidades | 24h | ❌ Pendente | 🔴 Crítica |
+| Controllers Administrativos | 32h | ❌ Pendente | 🔴 Crítica |
+| Controllers Públicos | 32h | ❌ Pendente | 🔴 Crítica |
+| Dashboard e Relatórios | 32h | ❌ Pendente | 🟡 Importante |
+| Interface Frontend Pública | 40h | ❌ Pendente | 🟡 Importante |
+| Interface Administrativa (Global + Territorial) | 48h | ❌ Pendente | 🔴 Crítica |
+| Testes e Documentação | 40h | ❌ Pendente | 🟡 Importante |
+| **Total** | **480h (60 dias)** | | |
 
 ---
 
 ## ✅ Critérios de Sucesso da Fase 15
 
 ### Funcionalidades
-- ✅ Moderação automática funcionando
-- ✅ Busca semântica funcionando
-- ✅ Categorização automática funcionando
-- ✅ Recomendações contextuais funcionando (opcionais)
-- ✅ Classificação de conteúdo gerado por IA funcionando
-- ✅ Inteligência de relevância de publicações funcionando
-- ✅ Tradução automática funcionando (opcional)
-- ✅ Análise de conteúdo funcionando
+- ✅ **Plano FREE funcionando** (padrão para todos)
+- ✅ **Funcionalidades básicas sempre acessíveis** (feed, posts, eventos, marketplace básico)
+- ✅ Sistema completo de assinaturas funcionando
+- ✅ **Sistema de verificação de funcionalidades** funcionando
+- ✅ **Liberação progressiva de funcionalidades** por plano
+- ✅ **Sistema administrativo completo** para criar/gerenciar planos
+- ✅ **Seleção de funcionalidades** por plano via interface
+- ✅ **Validações de integridade** garantindo funcionalidades básicas no FREE
+- ✅ **Gerenciamento de cupons** via interface administrativa
+- ✅ Pagamentos recorrentes automáticos funcionando
+- ✅ Integração com Stripe funcionando
+- ✅ Webhooks sendo processados
+- ✅ Upgrade/downgrade funcionando
+- ✅ Cancelamento funcionando (volta para FREE)
+- ✅ Trials funcionando
+- ✅ Cupons funcionando
+- ✅ Dashboard de métricas funcionando
 
 ### Qualidade
-- ✅ Cobertura de testes >80%
+- ✅ Cobertura de testes >85%
 - ✅ Testes de integração passando
-- ✅ Performance adequada (latência < 2s para APIs de IA)
-- ✅ Segurança validada (dados não expostos)
-- Considerar **Testcontainers + PostgreSQL** para testes de integração (categorização, moderação, persistência) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
+- ✅ Performance adequada
+- ✅ Segurança validada
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (assinaturas, pagamentos, persistência) com banco real (estratégia na Fase 43; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
+
+### Integração
+- ✅ Integração com Fase 6 (Pagamentos) funcionando
+- ✅ Integração com Fase 7 (Payout) funcionando
+- ✅ Sincronização com Stripe funcionando
 
 ### Documentação
 - ✅ Documentação técnica completa
-- ✅ Princípios éticos documentados
 - ✅ Changelog atualizado
 - ✅ Swagger atualizado
 
@@ -893,94 +1031,271 @@ Implementar funcionalidades de **Inteligência Artificial** para:
 
 ## 🔗 Dependências
 
-- **Nenhuma**: Pode ser feito em paralelo com outras fases
-- **Opcional**: Fase 14 (Governança) - categorização pode usar interesses do usuário
+- **Fase 6**: Sistema de Pagamentos (base para integração)
+- **Fase 7**: Sistema de Payout (para pagamentos a vendedores)
 
 ---
 
 ## 📝 Notas de Implementação
 
-### Configuração OpenAI
+### Planos Padrão
 
-```json
-{
-  "AI": {
-    "OpenAI": {
-      "ApiKey": "[secret]",
-      "Model": "gpt-4",
-      "ModerationModel": "text-moderation-latest",
-      "EmbeddingModel": "text-embedding-3-small"
-    },
-    "Enabled": true,
-    "RateLimit": {
-      "RequestsPerMinute": 60,
-      "TokensPerMinute": 90000
-    }
-  }
-}
+**FREE (Gratuito)** - **Padrão para todos**:
+- Preço: **R$ 0,00** (sempre gratuito)
+- **Funcionalidades Básicas (Sempre Disponíveis)**:
+  - ✅ Feed comunitário (visualizar e criar posts básicos)
+  - ✅ Eventos (criar e participar de eventos)
+  - ✅ Marketplace básico (visualizar e criar itens simples)
+  - ✅ Chat territorial (participar de conversas)
+  - ✅ Visualização de territórios e mapas
+  - ✅ Participação em votações
+  - ✅ Perfil básico
+- **Limites Razonáveis**:
+  - Posts: 10/mês
+  - Eventos: 3/mês
+  - Itens no marketplace: 5 ativos
+  - Armazenamento: 100MB
+- **Princípio**: Ninguém é excluído. Funcionalidades essenciais sempre disponíveis.
+
+**Básico** (R$ 29,90/mês):
+- Tudo do FREE +
+- Posts ilimitados
+- Eventos ilimitados
+- Marketplace completo
+- Armazenamento: 1GB
+- Analytics básico
+
+**Intermediário** (R$ 59,90/mês):
+- Tudo do Básico +
+- Analytics avançado
+- Integração com IA (limitada)
+- Armazenamento: 5GB
+- Suporte prioritário
+
+**Premium** (R$ 99,90/mês):
+- Tudo do Intermediário +
+- Integração com IA completa
+- Recursos premium territoriais
+- Armazenamento: 20GB
+- Suporte prioritário 24/7
+- API access
+- Custom branding (opcional)
+
+### Ciclos de Cobrança
+
+- Mensal: Cobrança a cada 30 dias
+- Trimestral: Cobrança a cada 90 dias (desconto de 10%)
+- Anual: Cobrança a cada 365 dias (desconto de 20%)
+
+### Plano FREE (Gratuito)
+
+**Princípios Fundamentais**:
+- ✅ **Sempre disponível** para visitantes e residentes
+- ✅ **Não pode ser desativado** ou removido
+- ✅ **Funcionalidades básicas sempre acessíveis** (protegidas por validação)
+- ✅ **Ninguém é excluído** por não poder pagar
+- ✅ **Validação automática** impede remoção de funcionalidades básicas
+
+**Funcionalidades Básicas Protegidas** (sempre no FREE):
+- `FeedBasic` - Feed comunitário
+- `PostsBasic` - Posts básicos (10/mês)
+- `EventsBasic` - Eventos básicos (3/mês)
+- `MarketplaceBasic` - Marketplace básico (5 itens ativos)
+- `ChatBasic` - Chat territorial
+
+**Sistema de Proteção**:
+- Validação automática ao criar/editar planos
+- Interface administrativa impede remover funcionalidades básicas do FREE
+- API valida integridade antes de salvar
+- Histórico de mudanças registra tentativas de violação
+
+**Funcionalidades Básicas (Sempre Gratuitas)**:
+- Feed comunitário (visualizar e criar posts básicos)
+- Eventos (criar e participar)
+- Marketplace básico (visualizar e criar itens simples)
+- Chat territorial (participar de conversas)
+- Visualização de territórios e mapas
+- Participação em votações
+- Perfil básico
+
+**Limites Razonáveis**:
+- Posts: 10/mês (suficiente para participação básica)
+- Eventos: 3/mês (suficiente para organização básica)
+- Itens no marketplace: 5 ativos (suficiente para trocas básicas)
+- Armazenamento: 100MB (suficiente para conteúdo básico)
+
+### Trials
+
+- Duração padrão: 14 dias
+- Configurável por plano
+- Apenas uma vez por usuário por plano
+- **Apenas para planos pagos** (FREE não precisa de trial)
+
+### Webhooks do Stripe
+
+**Eventos Importantes**:
+- `customer.subscription.created` → Nova assinatura
+- `customer.subscription.updated` → Assinatura atualizada
+- `customer.subscription.deleted` → Assinatura cancelada
+- `invoice.payment_succeeded` → Pagamento bem-sucedido
+- `invoice.payment_failed` → Falha no pagamento
+- `customer.subscription.trial_will_end` → Trial terminando em breve
+
+### Métricas
+
+**MRR (Monthly Recurring Revenue)**:
+- Soma de todas as assinaturas ativas mensais
+- + (Trimestrais / 3)
+- + (Anuais / 12)
+
+**Churn Rate**:
+- (Cancelamentos no período / Assinaturas ativas no início do período) * 100
+
+### Sistema Administrativo de Planos e Funcionalidades
+
+**Visão Geral**:
+O sistema permite que SystemAdmin crie e gerencie planos customizados com total flexibilidade, mas com validações automáticas que garantem a integridade das regras fundamentais da plataforma.
+
+**Fluxo de Criação de Plano**:
+1. **SystemAdmin ou Curador** acessa interface administrativa
+2. **Escolhe escopo**: Global (SystemAdmin) ou Territorial (Curador do território)
+3. Cria novo plano ou edita existente
+4. Define nome, descrição, tier, preço, ciclo de cobrança
+5. **Seleciona funcionalidades** (checkboxes organizadas por categoria)
+6. **Define limites** (maxPosts, maxEvents, maxStorage, etc.)
+7. Sistema valida integridade automaticamente:
+   - Se é FREE: verifica se tem todas as funcionalidades básicas
+   - Se é pago: verifica se preço > 0
+   - Valida limites razoáveis
+   - Se territorial: valida que território existe e usuário tem permissão
+8. Se válido, salva e sincroniza com Stripe (se pago)
+9. Registra mudança no histórico
+
+**Hierarquia de Planos**:
+- **Planos Globais**: Aplicam a todos os territórios por padrão
+- **Planos Territoriais**: Sobrescrevem planos globais quando existem
+- **Resolução**: Ao buscar planos para um território:
+  1. Primeiro verifica se há planos territoriais
+  2. Se não houver, usa planos globais
+  3. FREE sempre disponível (global ou territorial)
+
+**Validações de Integridade**:
+
+**Para Plano FREE**:
+- ✅ Deve ter preço = 0
+- ✅ Deve ter todas as funcionalidades básicas: `FeedBasic`, `PostsBasic`, `EventsBasic`, `MarketplaceBasic`, `ChatBasic`
+- ✅ FREE global não pode ser desativado
+- ✅ FREE territorial pode ser desativado (mas não deletado)
+- ✅ Não pode ser deletado (global ou territorial)
+- ✅ Limites devem ser razoáveis (não muito restritivos)
+- ✅ FREE global sempre existe (criado automaticamente)
+- ✅ FREE territorial é opcional (curador pode criar versão customizada)
+
+**Para Planos Pagos**:
+- ✅ Deve ter preço > 0
+- ✅ Deve ter ciclo de cobrança definido
+- ✅ Pode ter qualquer combinação de funcionalidades
+- ✅ Pode ser ativado/desativado
+- ✅ Ao desativar, avisa se há assinaturas ativas
+- ✅ **Planos Globais**: Aplicam a todos os territórios
+- ✅ **Planos Territoriais**: Aplicam apenas ao território específico
+- ✅ Território pode ter preços diferentes dos globais
+- ✅ Território pode ter funcionalidades diferentes dos globais
+
+**Sistema de Funcionalidades**:
+
+**Categorias**:
+- **Core** (sempre no FREE): Feed, Posts básicos, Eventos básicos, Marketplace básico, Chat
+- **Enhanced**: Posts ilimitados, Eventos ilimitados, Marketplace avançado
+- **Premium**: Analytics, IA, Suporte prioritário
+- **Enterprise**: API access, Custom branding, Governança avançada
+
+**Seleção de Funcionalidades**:
+- Interface mostra todas as funcionalidades disponíveis
+- Organizadas por categoria
+- Checkboxes para seleção múltipla
+- Validação em tempo real mostra erros
+- Preview do plano antes de salvar
+
+**Gerenciamento de Cupons**:
+- Criar cupons com código, desconto, validade
+- Ativar/desativar cupons
+- Visualizar estatísticas de uso
+- Integração automática com Stripe
+
+**Histórico e Auditoria**:
+- Todas as mudanças em planos são registradas
+- Inclui: quem mudou, quando, o que mudou, motivo (opcional)
+- Permite rastreabilidade completa
+- Útil para debugging e compliance
+
+### Planos Configuráveis por Território
+
+**Conceito**:
+Cada território pode ter seus próprios planos customizados, permitindo flexibilidade para diferentes contextos econômicos e necessidades locais, mantendo planos globais como padrão.
+
+**Hierarquia de Planos**:
+
+1. **Planos Globais** (SystemAdmin):
+   - Aplicam a todos os territórios por padrão
+   - Criados e gerenciados apenas por SystemAdmin
+   - FREE global sempre existe e não pode ser removido
+   - Exemplo: "Básico Global" (R$ 29,90/mês) aplica a todos os territórios
+
+2. **Planos Territoriais** (Curadores):
+   - Específicos de um território
+   - Criados e gerenciados por curadores do território
+   - Sobrescrevem planos globais quando existem
+   - Exemplo: "Básico São Paulo" (R$ 25,00/mês) sobrescreve "Básico Global" apenas para São Paulo
+
+**Resolução de Planos**:
+
+Quando um usuário interage com um território:
+1. Sistema verifica se há planos **territoriais** para aquele território
+2. Se houver plano territorial, usa ele
+3. Se não houver, usa plano **global**
+4. FREE sempre disponível (global ou territorial)
+
+**Exemplo Prático**:
+
+```
+Território: "Vila Madalena, São Paulo"
+
+Planos Disponíveis:
+├─ FREE (Global) - R$ 0,00
+├─ Básico (Territorial) - R$ 25,00/mês ← Sobrescreve global
+├─ Premium (Global) - R$ 99,90/mês ← Usa global (não tem territorial)
+└─ Enterprise (Territorial) - R$ 150,00/mês ← Específico do território
 ```
 
-### Configuração Azure (Opcional)
+**Permissões**:
 
-```json
-{
-  "AI": {
-    "Azure": {
-      "Endpoint": "https://[resource].cognitiveservices.azure.com/",
-      "ApiKey": "[secret]"
-    },
-    "Enabled": false
-  }
-}
-```
+- **SystemAdmin**:
+  - Pode criar/editar planos globais
+  - Pode criar/editar planos de qualquer território
+  - Acesso completo
 
-### Feature Flags
+- **Curadores**:
+  - Podem criar/editar apenas planos do seu território
+  - Podem ver planos globais como referência
+  - Não podem modificar planos globais
 
-#### Feature Flags Territoriais
+**Validações por Território**:
 
-- `AIModerationEnabled` (por território) - Moderação automática
-- `AISearchEnabled` (por território) - Busca semântica
-- `AICategorizationEnabled` (por território) - Categorização automática
-- `AIRecommendationsEnabled` (por território e por usuário) - Recomendações
-- `AITranslationEnabled` (por território) - Tradução automática
-- `AIGeneratedContentDetectionEnabled` (por território) - Detecção de conteúdo gerado por IA
-- `AIGeneratedContentBlockingEnabled` (por território) - Habilitar bloqueio de conteúdo gerado por IA
-- `AIGeneratedContentBlockingThreshold` (por território, decimal 0-100) - Threshold para bloquear (padrão: 80%)
-- `AIGeneratedContentBlockingMode` (por território, enum) - Modo de bloqueio:
-  - `None`: Apenas detecta e marca (não bloqueia)
-  - `Warn`: Marca e alerta, mas permite visualização
-  - `Block`: Bloqueia completamente do feed (oculta)
+- FREE territorial deve ter todas as funcionalidades básicas (igual ao global)
+- Planos territoriais podem ter preços diferentes dos globais
+- Planos territoriais podem ter funcionalidades diferentes dos globais
+- Não pode haver conflito de nomes (mesmo nome no mesmo território)
+- Território deve existir antes de criar plano territorial
 
-#### Feature Flags por Usuário (Preferências)
+**Cupons por Território**:
 
-- `BlockAIGeneratedContent` (bool) - Usuário bloqueia conteúdo gerado por IA
-- `AIGeneratedContentBlockingThreshold` (decimal 0-100) - Threshold pessoal (padrão: 80%)
-- `ShowAIGeneratedContent` (bool) - Mostrar conteúdo gerado por IA (oposto de bloqueio)
-
-#### Lógica de Bloqueio
-
-**Prioridade de Bloqueio**:
-1. **Bloqueio Territorial** (`BlockingMode = Block`) → Conteúdo oculto para todos no território
-2. **Bloqueio do Usuário** (`BlockAIGeneratedContent = true`) → Conteúdo oculto apenas para o usuário
-3. **Permissão** → Conteúdo visível (com marcação se probabilidade > threshold)
-
-**Exemplos**:
-- Território: `BlockingMode = Block`, Threshold = 80% → Posts com probabilidade > 80% são ocultos
-- Usuário: `BlockAIGeneratedContent = true`, Threshold = 70% → Posts com probabilidade > 70% são ocultos para este usuário
-- Ambos permitem: Posts são visíveis, mas marcados se probabilidade > threshold
-
-### Princípios Éticos
-
-1. **Transparência**: Usuário sempre sabe quando IA está sendo usada
-2. **Privacidade**: Dados não são compartilhados sem consentimento explícito
-3. **Não Manipulação**: Feed cronológico nunca é alterado por IA (relevância é opcional)
-4. **Controle**: Usuário pode desabilitar todas as funcionalidades de IA
-5. **Controle Comunitário**: Território pode decidir bloquear conteúdo gerado por IA
-6. **Escolha Individual**: Usuário pode escolher bloquear conteúdo gerado por IA
-7. **Ética**: IA serve à comunidade, não à extração de dados
-8. **Flexibilidade**: Diferentes níveis de bloqueio (None, Warn, Block) para diferentes necessidades
+- Cupons também podem ser globais ou territoriais
+- Cupons territoriais aplicam apenas ao território específico
+- Hierarquia similar: cupons territoriais têm prioridade sobre globais
 
 ---
 
 **Status**: ⏳ **FASE 15 PENDENTE**  
-**Depende de**: Nenhuma (opcional: Fase 14 para integração com interesses)
+**Depende de**: Fases 6, 7 (Pagamentos, Payout)  
+**Crítico para**: Sustentabilidade Financeira

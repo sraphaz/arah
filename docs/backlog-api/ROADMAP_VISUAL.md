@@ -1,9 +1,10 @@
 # Roadmap Visual Estratégico
 
 **Data**: 2026-01-25  
-**Versão**: 3.1 - Numeração Coerente  
+**Versão**: 3.2 - Numeração Coerente Atualizada  
 **Última Atualização**: 2026-01-25  
-**Nota**: Numeração reorganizada para garantir que fases menores sejam implementadas antes de fases maiores
+**Nota**: Numeração reorganizada para garantir que fases menores sejam implementadas antes de fases maiores.  
+**Referências**: [Mapa Completo das Fases](./MAPA_FASES.md) | [Guia de Reorganização](./GUIA_REORGANIZACAO_FASES.md)
 
 ---
 
@@ -211,9 +212,9 @@
 ### Mês 9-12: Economia Local Completa (84 dias) 🟡 ALTA
 
 **Onda 4: Economia Local Completa**
-- Fase 20: Trocas Comunitárias (21 dias) ⭐ Renumerada (era 27)
+- Fase 20: Trocas Comunitárias (21 dias) ⭐ Renumerada (era 24)
 - Fase 21: Entregas Territoriais (28 dias) ⭐ Renumerada (era 28)
-- Fase 22: Moeda Territorial (35 dias) ⭐ Renumerada (era 29)
+- Fase 22: Moeda Territorial (35 dias) ⭐ Renumerada (era 20)
 
 **Resultado**: Economia local completa
 
@@ -222,9 +223,9 @@
 ### Mês 6-12: Conformidade e Soberania (77 dias) 🟡 ALTA
 
 **Onda 5: Conformidade e Soberania**
-- Fase 23: Inteligência Artificial (28 dias) ⭐ Renumerada (era 22)
-- Fase 24: Saúde Territorial (35 dias) ⭐ Renumerada (era 23)
-- Fase 25: Dashboard Métricas (14 dias) ⭐ Renumerada (era 37)
+- Fase 23: Inteligência Artificial (28 dias) ⭐ Renumerada (era 15)
+- Fase 24: Saúde Territorial (35 dias) ⭐ Renumerada (era 18)
+- Fase 25: Dashboard Métricas (14 dias) ⭐ Nova (criar conteúdo)
 
 **Resultado**: Conformidade e soberania territorial
 
@@ -233,10 +234,10 @@
 ### Mês 12-18: Autonomia Digital (77 dias) 🟡 ALTA
 
 **Onda 6: Autonomia Digital**
-- Fase 26: Hub Serviços Digitais (21 dias) ⭐ Renumerada (era 30)
-- Fase 27: Chat com IA (14 dias) ⭐ Renumerada (era 31)
-- Fase 28: Negociação Territorial (28 dias) ⭐ Renumerada (era 32)
-- Fase 30: Mobile Avançado (14 dias) ⭐ Renumerada (era 34)
+- Fase 26: Hub Serviços Digitais (21 dias) ⭐ Renumerada (era 25)
+- Fase 27: Chat com IA (14 dias) ⭐ Renumerada (era 26)
+- Fase 28: Negociação Territorial (28 dias) ⭐ Renumerada (era 27)
+- Fase 30: Mobile Avançado (14 dias) ⭐ Renumerada (era 29)
 
 **Resultado**: Autonomia digital completa
 
@@ -268,26 +269,25 @@
 
 ---
 
-### Mês 18+: Gamificação e Incentivos (58 dias) 🟡 ALTA
+### Mês 18+: Gamificação e Diferenciação (93 dias) 🟡 ALTA
 
-**Onda 9: Gamificação e Incentivos**
-- Fase 42: Gamificação Harmoniosa (28 dias) ⭐ Renumerada (era 41, depois 42)
-- Fase 43: Proof of Sweat (30 dias) ⭐ Renumerada (era 42, depois 43)
+**Onda 9: Gamificação e Diferenciação**
+- Fase 42: Gamificação Harmoniosa (28 dias) ⭐ Renumerada (era 17)
+- Fase 43: Arquitetura Modular (35 dias) ⭐ Renumerada (era 19)
 
-**Resultado**: Gamificação e incentivos (decoração)
+**Resultado**: Gamificação e diferenciação (decoração)
 
 **Nota**: Reposicionada para depois de funcionalidades core
 
 ---
 
-### Mês 18+: Diferenciação Avançada (196 dias) 🟢 MÉDIA
+### Mês 18+: Extensões e Diferenciação (161 dias) 🟢 MÉDIA
 
-**Onda 10: Diferenciação Avançada**
-- Fase 44: Arquitetura Modular (35 dias) ⭐ Renumerada (era 35, depois 43)
-- Fase 45: Integrações Externas (35 dias) ⭐ Renumerada (era 43, depois 44)
-- Fase 46: Learning Hub (60 dias) ⭐ Renumerada (era 44, depois 45)
-- Fase 47: Rental System (45 dias) ⭐ Renumerada (era 45, depois 46)
-- **Fase 48**: Banco de Sementes e Mudas (21 dias) ⬇️ Movida da Onda 6, Renumerada (era 29, depois 33)
+**Onda 10: Extensões e Diferenciação**
+- Fase 44: Integrações Externas (35 dias) ⭐ Renumerada (era 22)
+- Fase 45: Learning Hub (60 dias) ⭐ Nova
+- Fase 46: Rental System (45 dias) ⭐ Nova
+- **Fase 48**: Banco de Sementes e Mudas (21 dias) ⬇️ Movida da Onda 6, Renumerada (era 28, 29)
 
 **Resultado**: Diferenciação avançada + Recursos compartilhados
 

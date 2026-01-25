@@ -1,198 +1,140 @@
-# Fase 48: Banco de Sementes e Mudas Territorial
+# Fase 28: Negociação Territorial e Assinatura Coletiva de Serviços Digitais
 
 **Duração**: 3 semanas (21 dias úteis)  
-**Prioridade**: 🟢 MÉDIA (Soberania alimentar e economia circular)  
-**Depende de**: TerritoryAsset (existe), Marketplace (existe), Fase 42 (Gamificação), WorkQueue (existe)  
-**Estimativa Total**: 120 horas  
+**Prioridade**: 🟡 ALTA (Economia de escala e inclusão)  
+**Depende de**: Fase 26 (Serviços Digitais Base), Fase 22 (Moeda Territorial), Fase 14 (Votação)  
+**Estimativa Total**: 120-144 horas  
 **Status**: ⏳ Pendente  
-**Nota**: Renumerada de Fase 28 para Fase 48, reposicionada para Onda 10 (Diferenciação Avançada). Referências atualizadas: Fase 17→42.
+**Nota**: Renumerada de Fase 27 para Fase 28 (Onda 6: Autonomia Digital). Referências atualizadas: Fase 26 (Serviços Digitais), Fase 22 (Moeda Territorial), Fase 14 (Votação).
 
 ---
 
 ## 🎯 Objetivo
 
-Implementar sistema de **banco de sementes e mudas territorial** que permite:
-- Catalogação e preservação de variedades locais
-- Doação e troca de sementes entre membros
-- Integração com marketplace para trocas
-- Rastreabilidade de origem e multiplicação
-- Eventos de troca comunitários
-- Integração harmoniosa com gamificação, workqueue, notificações, alertas, postagens e chat
+Implementar sistema de **negociação territorial de serviços digitais** que permite:
+- Territórios negociarem/comprar quotas de serviços digitais
+- Disponibilizar serviços para membros através de assinatura coletiva
+- Subsidiar acesso para membros que não podem pagar individualmente
+- Governança comunitária (votação para aprovar negociações)
+- Dashboard territorial de serviços e consumo
 
 **Princípios**:
-- ✅ **Soberania Alimentar**: Preservação de variedades locais
-- ✅ **Economia Circular**: Troca sem dinheiro
-- ✅ **Rastreabilidade**: Origem e multiplicação registradas
-- ✅ **Cuidado Coletivo**: Recurso compartilhado pelo território
-- ✅ **Integração Harmoniosa**: Todos os sistemas trabalham juntos
+- ✅ **Economia de Escala**: Negociação coletiva reduz custos
+- ✅ **Inclusão**: Acesso para quem não pode pagar
+- ✅ **Governança**: Comunidade decide alocação
+- ✅ **Transparência**: Uso e custos visíveis
+- ✅ **Autonomia**: Território controla seus recursos
 
 ---
 
 ## 📋 Contexto e Requisitos
 
 ### Estado Atual
-- ✅ TerritoryAsset existe (base para SeedBank)
-- ✅ Marketplace existe (troca de sementes)
-- ✅ WorkQueue existe (revisão de doações)
-- ✅ Notificações existe (alertas e notificações)
-- ✅ Alertas existe (alertas territoriais)
-- ✅ Postagens existe (posts no feed)
-- ✅ Chat existe (comunicação)
-- ✅ Gamificação planejada (Fase 42)
-- ❌ Não existe sistema de banco de sementes
-- ❌ Não existe catalogação de sementes
-- ❌ Não existe rastreabilidade de sementes
+- ✅ Fase 26 (Serviços Digitais Base) fornece infraestrutura
+- ✅ Fase 22 (Moeda Territorial) fornece fundos territoriais
+- ✅ Fase 14 (Votação) fornece governança comunitária
+- ✅ Feature flags territoriais funcionando
+- ❌ Territórios não podem negociar serviços
+- ❌ Não existe pool de quotas compartilhado
+- ❌ Não existe sistema de subsídios
 
 ### Requisitos Funcionais
 
-#### 1. Banco de Sementes como TerritoryAsset
-- ✅ SeedBank especializa TerritoryAsset
-- ✅ Tipos de banco (COLLECTIVE, INDIVIDUAL, PRESERVATION)
-- ✅ Localização física do banco
-- ✅ Guardião/curador do banco
-- ✅ Status do banco (ACTIVE, FULL, LOW_STOCK, CLOSED)
+#### 1. Negociação Territorial de Serviços
+- ✅ Acordos de serviço por território
+- ✅ Quotas negociadas (tokens, requests, bytes, etc.)
+- ✅ Períodos de validade (mensal, anual, etc.)
+- ✅ Integração com TerritoryFund para pagamento
+- ✅ Votação para aprovar negociações (Fase 14)
 
-#### 2. Catálogo de Sementes
-- ✅ Informações da semente (espécie, variedade, origem)
-- ✅ Características (tipo, estação, clima)
-- ✅ Qualidade e viabilidade (germinação, validade)
-- ✅ Estoque e disponibilidade
-- ✅ Rastreabilidade (quem doou, quando, multiplicação)
+#### 2. Pool de Quotas Territoriais
+- ✅ Distribuição de quota negociada entre membros
+- ✅ Políticas de distribuição (EQUAL, NEED_BASED, RESIDENT_ONLY, etc.)
+- ✅ Reserva de quota para alocações específicas
+- ✅ Rastreamento de uso e disponibilidade
 
-#### 3. Sistema de Doações
-- ✅ Usuários doam sementes para o banco
-- ✅ Revisão via WorkQueue
-- ✅ Aceitação/rejeição por curadores
-- ✅ Geração de contribuições (gamificação)
+#### 3. Alocação de Quotas para Membros
+- ✅ Alocação automática (política EQUAL)
+- ✅ Alocação baseada em necessidade (política NEED_BASED)
+- ✅ Solicitação e aprovação de quotas (política VOTATION_BASED)
+- ✅ Histórico de alocações
 
-#### 4. Sistema de Solicitações
-- ✅ Usuários solicitam sementes do banco
-- ✅ Aprovação automática ou por votação
-- ✅ Retirada de sementes
-- ✅ Compromisso de devolução (opcional)
+#### 4. Subsídios para Membros
+- ✅ Identificação de membros sem quota pessoal
+- ✅ Alocação automática de quota territorial (política NEED_BASED)
+- ✅ Priorização de subsídios
+- ✅ Rastreamento de subsídios
 
-#### 5. Integração com Marketplace
-- ✅ Sementes como ItemType.SEED
-- ✅ Preço 0 para doações
-- ✅ Trocas via marketplace
-- ✅ Moeda territorial para venda (opcional)
-
-#### 6. Integração com WorkQueue
-- ✅ WorkItem para revisão de doações
-- ✅ WorkItem para solicitações raras
-- ✅ Fluxo de aprovação
-
-#### 7. Integração com Gamificação
-- ✅ Doação de sementes: +10-25 pontos
-- ✅ Multiplicação de sementes: +15 pontos
-- ✅ Evento de troca organizado: +50 pontos
-
-#### 8. Integração com Notificações
-- ✅ `seed.donation.received` (doação aceita)
-- ✅ `seed.request.approved` (solicitação aprovada)
-- ✅ `seed.event.created` (evento de troca criado)
-
-#### 9. Integração com Alertas
-- ✅ Alerta de estoque baixo
-- ✅ Alerta de nova variedade disponível
-- ✅ Alerta de evento de troca próximo
-
-#### 10. Integração com Postagens
-- ✅ Post pode referenciar SeedCatalog
-- ✅ Plantio gera post automaticamente
-- ✅ Sementes aparecem no feed
-
-#### 11. Integração com Chat
-- ✅ Compartilhar informações sobre sementes
-- ✅ Eventos de troca via chat
-- ✅ Contexto territorial no chat
-
-#### 12. Eventos de Trocas
-- ✅ SeedSwapEvent (especialização de Event)
-- ✅ Integração com sistema de eventos
-- ✅ Catálogo de sementes no evento
+#### 5. Dashboard Territorial
+- ✅ Serviços negociados pelo território
+- ✅ Quota disponível por serviço
+- ✅ Uso e consumo por membro
+- ✅ Custos e subsídios
 
 ---
 
 ## 📋 Tarefas Detalhadas
 
-### Semana 1-2: Modelo de Dados e SeedBank
+### Semana 1: Modelo de Dados e Negociação
 
-#### 28.1 Modelo de Domínio - Banco de Sementes
-**Estimativa**: 32 horas (4 dias)  
+#### 28.1 Modelo de Domínio - Negociação Territorial
+**Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar enum `SeedBankType`:
-  - [ ] `Collective = 1` (banco comunitário)
-  - [ ] `Individual = 2` (banco pessoal)
-  - [ ] `Preservation = 3` (preservação)
-- [ ] Criar enum `SeedBankStatus`:
-  - [ ] `Active = 1`, `Full = 2`, `LowStock = 3`, `Closed = 4`
-- [ ] Criar enum `SeedType`:
-  - [ ] `Vegetable = 1`, `Fruit = 2`, `Grain = 3`, `Herb = 4`
-  - [ ] `Flower = 5`, `Native = 6`, `Medicinal = 7`, `Tree = 8`, `Other = 99`
-- [ ] Criar enum `SeedQuality`:
-  - [ ] `Excellent = 1` (>90%), `Good = 2` (70-90%), `Fair = 3` (50-70%), `Poor = 4` (<50%)
-- [ ] Criar enum `DonationStatus`:
-  - [ ] `Pending = 1`, `Accepted = 2`, `Rejected = 3`
-- [ ] Criar enum `RequestStatus`:
-  - [ ] `Pending = 1`, `Approved = 2`, `Rejected = 3`, `Completed = 4`, `Cancelled = 5`
-- [ ] Criar enum `PlantingStatus`:
-  - [ ] `Planted = 1`, `Germinating = 2`, `Growing = 3`, `Harvested = 4`, `Failed = 5`
-- [ ] Criar modelo `SeedBank`:
-  - [ ] Especializa `TerritoryAsset` (Type = "seed_bank")
-  - [ ] `SeedBankType`, `Location` (string?), `ManagedByUserId` (Guid?)
-  - [ ] `BankStatus` (SeedBankStatus)
-- [ ] Criar modelo `SeedCatalog`:
-  - [ ] `Id`, `SeedBankId`, `TerritoryId`
-  - [ ] `SpeciesName`, `CommonName`, `Variety`, `Origin`
-  - [ ] `Type` (SeedType), `GrowingSeason`, `ClimateZone`, `Description`
-  - [ ] `DonatedByUserId`, `DonatedAtUtc`, `DonationNotes`, `Generation`
-  - [ ] `TotalQuantity`, `AvailableQuantity`, `ReservedQuantity`, `Unit`
-  - [ ] `Quality`, `HarvestDate`, `ExpiryDate`, `GerminationRate`
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`, `IsActive`
-- [ ] Criar modelo `SeedDonation`:
-  - [ ] `Id`, `SeedBankId`, `SeedCatalogId?`, `TerritoryId`, `DonorUserId`
-  - [ ] `Quantity`, `Unit`, `Type`, `SpeciesName`, `CommonName`, `Variety`, `Origin`
-  - [ ] `HarvestDate`, `ExpiryDate`, `GerminationRate`, `Quality`, `Notes`
-  - [ ] `Status`, `ReviewedByUserId`, `ReviewedAtUtc`, `RejectionReason`
-  - [ ] `ContributionId?`, `ContributionPoints?`
+- [ ] Criar enum `AgreementStatus`:
+  - [ ] `Pending = 1` (aguardando aprovação/pagamento)
+  - [ ] `Active = 2` (ativo e disponível)
+  - [ ] `Expired = 3` (expirado)
+  - [ ] `Cancelled = 4` (cancelado)
+  - [ ] `Suspended = 5` (suspenso)
+- [ ] Criar enum `AgreementType`:
+  - [ ] `Purchase = 1` (compra única)
+  - [ ] `Subscription = 2` (assinatura recorrente)
+  - [ ] `Grant = 3` (doação/concessão)
+- [ ] Criar enum `QuotaDistributionPolicy`:
+  - [ ] `Equal = 1` (divide igual entre membros)
+  - [ ] `NeedBased = 2` (prioriza quem mais precisa)
+  - [ ] `ResidentOnly = 3` (apenas moradores)
+  - [ ] `VotationBased = 4` (distribuição por votação)
+  - [ ] `FirstComeFirstServed = 5` (primeiro a chegar)
+- [ ] Criar modelo `TerritoryServiceAgreement`:
+  - [ ] `Id`, `TerritoryId`, `Category`, `Provider`
+  - [ ] `AgreementType`, `TotalQuotaUnits`, `UnitsType`
+  - [ ] `CostPerUnit`, `TotalCost`, `Currency`
+  - [ ] `ValidFromUtc`, `ValidUntilUtc`, `IsRecurring`
+  - [ ] `FundId` (nullable, fundo usado para pagar)
+  - [ ] `PaidByUserId` (nullable), `PaidAtUtc` (nullable)
+  - [ ] `ApprovedByVoteId` (nullable, votação que aprovou)
+  - [ ] `CreatedByUserId`, `Status`, `CreatedAtUtc`
+- [ ] Criar modelo `TerritoryServiceQuotaPool`:
+  - [ ] `Id`, `AgreementId`, `TerritoryId`
+  - [ ] `TotalQuotaUnits`, `UsedQuotaUnits`, `ReservedQuotaUnits`
+  - [ ] `DistributionPolicy`, `RequiresVoteApproval` (bool)
+  - [ ] `MaxUnitsPerUser` (int?, nullable)
+  - [ ] `MaxUnitsPerRequest` (int?, nullable)
+  - [ ] `PeriodStartUtc`, `PeriodEndUtc`
   - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `SeedRequest`:
-  - [ ] `Id`, `SeedBankId`, `SeedCatalogId`, `TerritoryId`, `RequesterUserId`
-  - [ ] `RequestedQuantity`, `Purpose`, `Notes`
-  - [ ] `Status`, `ApprovedByUserId`, `ApprovedByVoteId`, `ApprovedAtUtc`, `RejectionReason`
-  - [ ] `UsageLogId?`, `ActualQuantityGiven`, `WithdrawnAtUtc`, `WithdrawnByUserId`
-  - [ ] `RequiresReturn`, `ReturnQuantity`, `ReturnDueDate`, `ReturnDonationId`
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `SeedPlanting`:
-  - [ ] `Id`, `SeedRequestId`, `SeedCatalogId`, `TerritoryId`, `PlanterUserId`
-  - [ ] `PlantedAtUtc`, `LocationLat`, `LocationLng`, `LocationDescription`, `QuantityPlanted`
-  - [ ] `Status`, `GerminatedCount`, `HarvestedQuantity`, `HarvestDateUtc`
-  - [ ] `WillReturnSeeds`, `ReturnDonationId`
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelos relacionados:
+  - [ ] `TerritoryQuotaAllocation` (alocação para usuário)
+  - [ ] `TerritoryQuotaUsageRequest` (solicitação de uso)
 - [ ] Criar repositórios
 - [ ] Criar migrations
 
 **Arquivos a Criar**:
-- `backend/Araponga.Domain/Seeds/SeedBank.cs`
-- `backend/Araponga.Domain/Seeds/SeedCatalog.cs`
-- `backend/Araponga.Domain/Seeds/SeedDonation.cs`
-- `backend/Araponga.Domain/Seeds/SeedRequest.cs`
-- `backend/Araponga.Domain/Seeds/SeedPlanting.cs`
-- `backend/Araponga.Domain/Seeds/SeedBankType.cs`
-- `backend/Araponga.Domain/Seeds/SeedBankStatus.cs`
-- `backend/Araponga.Domain/Seeds/SeedType.cs`
-- `backend/Araponga.Domain/Seeds/SeedQuality.cs`
-- `backend/Araponga.Domain/Seeds/DonationStatus.cs`
-- `backend/Araponga.Domain/Seeds/RequestStatus.cs`
-- `backend/Araponga.Domain/Seeds/PlantingStatus.cs`
-- `backend/Araponga.Application/Interfaces/ISeedBankRepository.cs`
-- `backend/Araponga.Application/Interfaces/ISeedCatalogRepository.cs`
-- `backend/Araponga.Application/Interfaces/ISeedDonationRepository.cs`
-- `backend/Araponga.Application/Interfaces/ISeedRequestRepository.cs`
-- `backend/Araponga.Application/Interfaces/ISeedPlantingRepository.cs`
+- `backend/Araponga.Domain/DigitalServices/TerritoryServiceAgreement.cs`
+- `backend/Araponga.Domain/DigitalServices/TerritoryServiceQuotaPool.cs`
+- `backend/Araponga.Domain/DigitalServices/TerritoryQuotaAllocation.cs`
+- `backend/Araponga.Domain/DigitalServices/TerritoryQuotaUsageRequest.cs`
+- `backend/Araponga.Domain/DigitalServices/AgreementStatus.cs`
+- `backend/Araponga.Domain/DigitalServices/AgreementType.cs`
+- `backend/Araponga.Domain/DigitalServices/QuotaDistributionPolicy.cs`
+- `backend/Araponga.Domain/DigitalServices/AllocationStatus.cs`
+- `backend/Araponga.Domain/DigitalServices/RequestStatus.cs`
+- `backend/Araponga.Application/Interfaces/ITerritoryServiceAgreementRepository.cs`
+- `backend/Araponga.Application/Interfaces/ITerritoryServiceQuotaPoolRepository.cs`
+- `backend/Araponga.Application/Interfaces/ITerritoryQuotaAllocationRepository.cs`
+- `backend/Araponga.Application/Interfaces/ITerritoryQuotaUsageRequestRepository.cs`
 
 **Critérios de Sucesso**:
 - ✅ Modelos criados
@@ -202,339 +144,215 @@ Implementar sistema de **banco de sementes e mudas territorial** que permite:
 
 ---
 
-#### 28.2 Sistema de Banco de Sementes
-**Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `SeedBankService`:
-  - [ ] `CreateSeedBankAsync(Guid territoryId, Guid userId, ...)` → criar banco
-  - [ ] `ListSeedBanksAsync(Guid territoryId)` → listar bancos
-  - [ ] `GetSeedBankAsync(Guid bankId)` → obter banco
-  - [ ] `UpdateSeedBankStatusAsync(Guid bankId, SeedBankStatus status, Guid userId)` → atualizar status
-- [ ] Integrar com `TerritoryAssetService`:
-  - [ ] SeedBank cria TerritoryAsset automaticamente
-  - [ ] Type = "seed_bank"
-  - [ ] Aparece no mapa territorial
-- [ ] Validações:
-  - [ ] Apenas residents/curadores podem criar bancos
-  - [ ] Banco deve ter guardião
-- [ ] Testes unitários
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/SeedBankService.cs`
-- `backend/Araponga.Tests/Application/SeedBankServiceTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Serviço de banco funcionando
-- ✅ Integração com TerritoryAsset funcionando
-- ✅ Testes passando
-
----
-
-### Semana 2-3: Doações, Solicitações e Integrações
-
-#### 28.3 Sistema de Doações de Sementes
-**Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `SeedDonationService`:
-  - [ ] `DonateSeedsAsync(Guid bankId, Guid userId, ...)` → doar sementes
-  - [ ] `ListDonationsAsync(Guid bankId, DonationStatus? status)` → listar doações
-  - [ ] `ReviewDonationAsync(Guid donationId, Guid reviewerUserId, bool accept, string? reason)` → revisar doação
-  - [ ] `AcceptDonationAsync(Guid donationId, Guid reviewerUserId)` → aceitar doação
-  - [ ] `RejectDonationAsync(Guid donationId, Guid reviewerUserId, string reason)` → rejeitar doação
-- [ ] Integração com WorkQueue:
-  - [ ] Criar WorkItem ao receber doação
-  - [ ] Type = `SEED_DONATION_REVIEW`
-  - [ ] Curadores revisam via WorkQueue
-- [ ] Integração com Gamificação (Fase 42):
-  - [ ] Doação aceita gera contribuição
-  - [ ] `ContributionType.SeedDonation` (+10 pontos)
-  - [ ] Variedade rara: +25 pontos
-- [ ] Integração com Notificações:
-  - [ ] Notificar doador quando doação aceita/rejeitada
-  - [ ] Tipo: `seed.donation.received`
-- [ ] Atualizar catálogo:
-  - [ ] Criar novo SeedCatalog se não existir
-  - [ ] Atualizar estoque se existir
-- [ ] Testes unitários
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/SeedDonationService.cs`
-- `backend/Araponga.Tests/Application/SeedDonationServiceTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Sistema de doações funcionando
-- ✅ Integração com WorkQueue funcionando
-- ✅ Integração com Gamificação funcionando
-- ✅ Notificações funcionando
-- ✅ Testes passando
-
----
-
-#### 28.4 Sistema de Solicitações de Sementes
-**Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `SeedRequestService`:
-  - [ ] `RequestSeedsAsync(Guid bankId, Guid catalogId, Guid userId, ...)` → solicitar sementes
-  - [ ] `ListRequestsAsync(Guid bankId, RequestStatus? status)` → listar solicitações
-  - [ ] `ApproveRequestAsync(Guid requestId, Guid approverUserId)` → aprovar solicitação
-  - [ ] `RejectRequestAsync(Guid requestId, Guid approverUserId, string reason)` → rejeitar
-  - [ ] `CompleteRequestAsync(Guid requestId, Guid userId, int actualQuantity)` → completar retirada
-- [ ] Políticas de aprovação:
-  - [ ] Auto-aprovação se estoque disponível e política permitir
-  - [ ] Requer aprovação de curador se política exigir
-  - [ ] Requer votação se variedade rara (integração futura Fase 14)
-- [ ] Integração com WorkQueue:
-  - [ ] Criar WorkItem para solicitações raras
-  - [ ] Type = `SEED_REQUEST_REVIEW`
-- [ ] Integração com Notificações:
-  - [ ] Notificar solicitante quando aprovada/rejeitada
-  - [ ] Tipo: `seed.request.approved`
-- [ ] Atualizar estoque:
-  - [ ] Reservar quantidade ao aprovar
-  - [ ] Decrementar ao completar retirada
-- [ ] Compromisso de devolução:
-  - [ ] Registrar se usuário comprometeu devolver
-  - [ ] Criar alerta para data de devolução
-- [ ] Testes unitários
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/SeedRequestService.cs`
-- `backend/Araponga.Tests/Application/SeedRequestServiceTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Sistema de solicitações funcionando
-- ✅ Políticas de aprovação funcionando
-- ✅ Integração com WorkQueue funcionando
-- ✅ Notificações funcionando
-- ✅ Testes passando
-
----
-
-#### 28.5 Integração com Marketplace
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Adicionar `ItemType.Seed` ao enum `ItemType`:
-  - [ ] Sementes como novo tipo de item
-- [ ] Criar `SeedMarketplaceService`:
-  - [ ] `ListSeedsInMarketplaceAsync(Guid territoryId, ...)` → listar sementes no marketplace
-  - [ ] `AddSeedToMarketplaceAsync(Guid catalogId, Guid userId, decimal? price, ...)` → adicionar ao marketplace
-  - [ ] Integração com sistema de items existente
-- [ ] Preços:
-  - [ ] Preço 0 para doações
-  - [ ] Preço opcional para venda (moeda territorial - Fase 20)
-- [ ] Atualizar `StoreItem`:
-  - [ ] Permitir ItemType.Seed
-  - [ ] Referenciar SeedCatalog
-- [ ] Integração com checkout:
-  - [ ] Atualizar estoque ao vender semente
-  - [ ] Notificar banco de sementes
-- [ ] Testes de integração
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/SeedMarketplaceService.cs`
-- `backend/Araponga.Tests/Integration/SeedMarketplaceIntegrationTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Domain/Marketplace/ItemType.cs` (adicionar Seed)
-- `backend/Araponga.Application/Services/StoreItemService.cs` (suporte a Seed)
-
-**Critérios de Sucesso**:
-- ✅ Sementes no marketplace funcionando
-- ✅ Trocas via marketplace funcionando
-- ✅ Integração com checkout funcionando
-- ✅ Testes passando
-
----
-
-### Semana 3-4: Rastreabilidade e Integrações Finais
-
-#### 28.6 Sistema de Plantio e Rastreabilidade
+#### 28.2 Sistema de Negociação Territorial
 **Estimativa**: 20 horas (2.5 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `SeedPlantingService`:
-  - [ ] `RegisterPlantingAsync(Guid requestId, Guid userId, ...)` → registrar plantio
-  - [ ] `UpdatePlantingStatusAsync(Guid plantingId, PlantingStatus status, ...)` → atualizar status
-  - [ ] `RecordHarvestAsync(Guid plantingId, int harvestedQuantity, ...)` → registrar colheita
-  - [ ] `ListPlantingsAsync(Guid territoryId, Guid? userId)` → listar plantios
-- [ ] Rastreabilidade:
-  - [ ] Registrar origem da semente (SeedRequest)
-  - [ ] Registrar localização do plantio (geo)
-  - [ ] Registrar resultado (germinação, colheita)
-  - [ ] Rastrear gerações (quantas vezes foi multiplicada)
-- [ ] Integração com Postagens:
-  - [ ] Plantio pode gerar post automaticamente
-  - [ ] Post referencia SeedPlanting
-  - [ ] Aparece no feed territorial
-- [ ] Compromisso de devolução:
-  - [ ] Verificar se usuário comprometeu devolver
-  - [ ] Criar SeedDonation quando devolver
-  - [ ] Gerar contribuição ao devolver
-- [ ] Integração com Gamificação:
-  - [ ] Plantio bem-sucedido: +15 pontos (Fase 17)
-  - [ ] Multiplicação de sementes: +15 pontos
+- [ ] Criar `TerritoryServiceNegotiationService`:
+  - [ ] `ProposeAgreementAsync(Guid territoryId, Guid proposerUserId, ...)` → propor negociação
+  - [ ] `CreateAgreementFromVoteAsync(Guid votingId, Guid territoryId)` → criar acordo após votação
+  - [ ] `PurchaseServiceWithFundAsync(Guid agreementId, Guid fundId, ...)` → comprar com fundo
+  - [ ] `ListAgreementsAsync(Guid territoryId, AgreementStatus? status)` → listar acordos
+  - [ ] `GetAgreementAsync(Guid agreementId)` → obter acordo
+  - [ ] `CancelAgreementAsync(Guid agreementId, Guid userId)` → cancelar acordo
+- [ ] Integrar com Fase 14 (Votação):
+  - [ ] Criar votação para aprovar negociação
+  - [ ] Se aprovada, criar acordo
+  - [ ] Tipo de votação: `ServicePurchase`
+- [ ] Integrar com Fase 22 (TerritoryFund):
+  - [ ] Verificar saldo do fundo
+  - [ ] Debitar fundo ao comprar serviço
+  - [ ] Criar transação no fundo
+- [ ] Validações:
+  - [ ] Apenas residents/curadores podem propor
+  - [ ] Fundo deve ter saldo suficiente
+  - [ ] Acordo deve ser válido
+- [ ] Criar pool de quota automaticamente:
+  - [ ] Quando acordo é ativado, criar pool
+  - [ ] Aplicar política de distribuição
 - [ ] Testes unitários
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/SeedPlantingService.cs`
-- `backend/Araponga.Tests/Application/SeedPlantingServiceTests.cs`
+- `backend/Araponga.Application/Services/TerritoryServiceNegotiationService.cs`
+- `backend/Araponga.Tests/Application/TerritoryServiceNegotiationServiceTests.cs`
 
 **Critérios de Sucesso**:
-- ✅ Sistema de plantio funcionando
-- ✅ Rastreabilidade funcionando
-- ✅ Integração com postagens funcionando
+- ✅ Sistema de negociação funcionando
+- ✅ Integração com votação funcionando
+- ✅ Integração com TerritoryFund funcionando
+- ✅ Criação de pool funcionando
 - ✅ Testes passando
 
 ---
 
-#### 28.7 Eventos de Trocas de Sementes
+### Semana 2: Pool de Quotas e Alocação
+
+#### 28.3 Sistema de Pool de Quotas
+**Estimativa**: 20 horas (2.5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `TerritoryQuotaPoolService`:
+  - [ ] `GetOrCreatePoolAsync(Guid agreementId, Guid territoryId)` → obter/criar pool
+  - [ ] `GetAvailableQuotaAsync(Guid poolId)` → quota disponível
+  - [ ] `ReserveQuotaAsync(Guid poolId, int units)` → reservar quota
+  - [ ] `ReleaseQuotaAsync(Guid poolId, int units)` → liberar quota
+  - [ ] `UseQuotaAsync(Guid poolId, Guid userId, int units, ...)` → usar quota
+  - [ ] `GetPoolStatsAsync(Guid poolId)` → estatísticas do pool
+- [ ] Políticas de distribuição:
+  - [ ] `EQUAL`: Dividir igual entre membros ativos
+  - [ ] `NEED_BASED`: Priorizar membros sem quota pessoal
+  - [ ] `RESIDENT_ONLY`: Apenas moradores
+  - [ ] `VOTATION_BASED`: Requer aprovação por votação
+  - [ ] `FIRST_COME_FIRST_SERVED`: Primeiro a solicitar
+- [ ] Integração com uso de serviços:
+  - [ ] Verificar quota territorial antes de quota pessoal
+  - [ ] Usar quota territorial se disponível
+  - [ ] Fallback para quota pessoal
+- [ ] Atualizar pool:
+  - [ ] Decrementar ao usar
+  - [ ] Atualizar estatísticas
+- [ ] Testes unitários
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/TerritoryQuotaPoolService.cs`
+- `backend/Araponga.Tests/Application/TerritoryQuotaPoolServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Pool de quotas funcionando
+- ✅ Políticas de distribuição funcionando
+- ✅ Integração com uso de serviços funcionando
+- ✅ Testes passando
+
+---
+
+#### 28.4 Sistema de Alocação e Subsídios
+**Estimativa**: 20 horas (2.5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `TerritoryQuotaAllocationService`:
+  - [ ] `AllocateQuotaAsync(Guid poolId, Guid userId, int units, string reason, ...)` → alocar quota
+  - [ ] `ListAllocationsAsync(Guid poolId, Guid? userId)` → listar alocações
+  - [ ] `GetUserAllocationAsync(Guid poolId, Guid userId)` → alocação do usuário
+  - [ ] `RevokeAllocationAsync(Guid allocationId, Guid userId, string reason)` → revogar alocação
+- [ ] Alocação automática (política EQUAL):
+  - [ ] Dividir quota igualmente entre membros ativos
+  - [ ] Atualizar alocações ao adicionar/remover membros
+- [ ] Alocação baseada em necessidade (política NEED_BASED):
+  - [ ] Identificar membros sem quota pessoal
+  - [ ] Priorizar membros com maior necessidade
+  - [ ] Alocação automática ao solicitar serviço
+- [ ] Alocação por votação (política VOTATION_BASED):
+  - [ ] Criar solicitação de alocação
+  - [ ] Requer aprovação por votação (Fase 14)
+  - [ ] Alocar se aprovada
+- [ ] Rastreamento de subsídios:
+  - [ ] Marcar alocações como subsídio
+  - [ ] Registrar quem recebeu subsídio
+  - [ ] Dashboard de subsídios
+- [ ] Testes unitários
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/TerritoryQuotaAllocationService.cs`
+- `backend/Araponga.Tests/Application/TerritoryQuotaAllocationServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Sistema de alocação funcionando
+- ✅ Políticas de alocação funcionando
+- ✅ Subsídios rastreados
+- ✅ Testes passando
+
+---
+
+### Semana 3: Integração e Dashboard
+
+#### 28.5 Integração com Uso de Serviços Digitais
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar modelo `SeedSwapEvent`:
-  - [ ] Especializa `Event` (tipo de evento)
-  - [ ] `SeedBankId?` (banco organizador)
-  - [ ] `ParticipatingSeedBanks` (List<Guid>)
-  - [ ] `IsOrganizedByTerritory` (bool)
-  - [ ] `ExpectedParticipants` (int?)
-  - [ ] `AvailableSeedCatalogs` (List<Guid>)
-  - [ ] `RequiresPreRegistration` (bool)
-  - [ ] `SwapRules` (string?)
-  - [ ] `AllowsSale` (bool)
-  - [ ] `UsesTerritoryCurrency` (bool, Fase 20)
-- [ ] Criar `SeedSwapEventService`:
-  - [ ] `CreateEventAsync(Guid territoryId, Guid organizerUserId, ...)` → criar evento
-  - [ ] `ListEventsAsync(Guid territoryId, ...)` → listar eventos
-  - [ ] `AddSeedsToEventAsync(Guid eventId, List<Guid> catalogIds)` → adicionar sementes
-- [ ] Integração com Events existente:
-  - [ ] SeedSwapEvent aparece na lista de eventos
-  - [ ] Participações funcionam normalmente
-  - [ ] Aparece no feed e mapa
-- [ ] Integração com Gamificação:
-  - [ ] Organizar evento: +50 pontos (Fase 17)
-  - [ ] Participar de evento: +10 pontos
-- [ ] Integração com Notificações:
-  - [ ] Notificar quando evento criado
-  - [ ] Tipo: `seed.event.created`
-- [ ] Integração com Alertas:
-  - [ ] Alerta quando evento próximo (3 dias antes)
+- [ ] Atualizar `DigitalServiceManager` (Fase 26):
+  - [ ] Verificar quota territorial antes de quota pessoal
+  - [ ] Usar quota territorial se disponível
+  - [ ] Rastrear uso em quota territorial
+- [ ] Atualizar `ChatAIService` (Fase 27):
+  - [ ] Verificar quota territorial antes de executar IA
+  - [ ] Usar quota territorial se disponível
+  - [ ] Indicar uso de quota territorial na resposta
+- [ ] Priorização de quotas:
+  - [ ] 1. Quota territorial (se disponível)
+  - [ ] 2. Quota pessoal do usuário
+  - [ ] 3. Bloquear se nenhuma disponível
+- [ ] Rastreamento:
+  - [ ] Registrar uso em `DigitalServiceUsageLog` com `TerritoryId`
+  - [ ] Associar com `TerritoryQuotaPool`
+  - [ ] Atualizar estatísticas do pool
+- [ ] Notificações:
+  - [ ] Notificar quando pool próximo ao esgotamento
+  - [ ] Notificar quando subsídio é alocado
 - [ ] Testes de integração
 
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Seeds/SeedSwapEvent.cs`
-- `backend/Araponga.Application/Services/SeedSwapEventService.cs`
-- `backend/Araponga.Tests/Integration/SeedSwapEventIntegrationTests.cs`
-
 **Arquivos a Modificar**:
-- `backend/Araponga.Domain/Events/Event.cs` (extensão opcional)
+- `backend/Araponga.Application/Services/DigitalServiceManager.cs`
+- `backend/Araponga.Application/Services/ChatAIService.cs` (se existir)
 
 **Critérios de Sucesso**:
-- ✅ Eventos de troca funcionando
-- ✅ Integração com Events funcionando
-- ✅ Gamificação funcionando
-- ✅ Notificações funcionando
+- ✅ Integração funcionando
+- ✅ Priorização de quotas funcionando
+- ✅ Rastreamento funcionando
 - ✅ Testes passando
 
 ---
 
-#### 28.8 Integração com Alertas e Notificações
-**Estimativa**: 12 horas (1.5 dias)  
+#### 28.6 Dashboard Territorial e Controllers
+**Estimativa**: 20 horas (2.5 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `SeedBankAlertService`:
-  - [ ] `CheckStockLevelsAsync(Guid bankId)` → verificar estoques
-  - [ ] `CreateLowStockAlertAsync(Guid bankId, Guid catalogId)` → alerta de estoque baixo
-  - [ ] `CreateNewVarietyAlertAsync(Guid bankId, Guid catalogId)` → alerta de nova variedade
-- [ ] Integração com Alertas:
-  - [ ] Alerta de estoque baixo (<10 unidades)
-  - [ ] Alerta de nova variedade disponível
-  - [ ] Alerta de evento de troca próximo
-- [ ] Integração com Notificações:
-  - [ ] Novos tipos de notificação:
-    - [ ] `seed.donation.received` (doação aceita)
-    - [ ] `seed.request.approved` (solicitação aprovada)
-    - [ ] `seed.event.created` (evento criado)
-    - [ ] `seed.stock.low` (estoque baixo)
-    - [ ] `seed.variety.available` (nova variedade)
-- [ ] Notificações automáticas:
-  - [ ] Notificar doador quando doação aceita
-  - [ ] Notificar solicitante quando solicitação aprovada
-  - [ ] Notificar membros quando evento criado
-  - [ ] Notificar guardião quando estoque baixo
-- [ ] Testes de integração
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/SeedBankAlertService.cs`
-- `backend/Araponga.Tests/Integration/SeedBankAlertIntegrationTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Domain/Users/NotificationPreferences.cs` (adicionar preferências de sementes - opcional)
-
-**Critérios de Sucesso**:
-- ✅ Alertas funcionando
-- ✅ Notificações funcionando
-- ✅ Integração harmoniosa
-- ✅ Testes passando
-
----
-
-#### 28.9 Controllers e Dashboard
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `SeedBankController`:
-  - [ ] `POST /api/v1/seed-banks` → criar banco
-  - [ ] `GET /api/v1/territories/{territoryId}/seed-banks` → listar bancos
-  - [ ] `GET /api/v1/seed-banks/{bankId}` → obter banco
-  - [ ] `PATCH /api/v1/seed-banks/{bankId}/status` → atualizar status
-- [ ] Criar `SeedCatalogController`:
-  - [ ] `GET /api/v1/seed-banks/{bankId}/catalogs` → listar catálogo
-  - [ ] `GET /api/v1/seed-catalogs/{catalogId}` → obter semente
-- [ ] Criar `SeedDonationController`:
-  - [ ] `POST /api/v1/seed-banks/{bankId}/donations` → doar sementes
-  - [ ] `GET /api/v1/seed-banks/{bankId}/donations` → listar doações
-  - [ ] `PATCH /api/v1/seed-donations/{donationId}/review` → revisar doação
-- [ ] Criar `SeedRequestController`:
-  - [ ] `POST /api/v1/seed-banks/{bankId}/requests` → solicitar sementes
-  - [ ] `GET /api/v1/seed-banks/{bankId}/requests` → listar solicitações
-  - [ ] `PATCH /api/v1/seed-requests/{requestId}/approve` → aprovar
-  - [ ] `POST /api/v1/seed-requests/{requestId}/complete` → completar retirada
-- [ ] Criar `SeedPlantingController`:
-  - [ ] `POST /api/v1/seed-plantings` → registrar plantio
-  - [ ] `GET /api/v1/seed-plantings` → listar plantios
-  - [ ] `PATCH /api/v1/seed-plantings/{plantingId}/status` → atualizar status
-- [ ] Feature flags: `SeedBankEnabled`, `SeedBankCollectiveEnabled`
+- [ ] Criar `TerritoryServiceDashboardService`:
+  - [ ] `GetTerritoryServicesAsync(Guid territoryId)` → serviços negociados
+  - [ ] `GetServiceUsageStatsAsync(Guid territoryId, Guid? serviceId)` → estatísticas de uso
+  - [ ] `GetSubsidiesReportAsync(Guid territoryId)` → relatório de subsídios
+  - [ ] `GetCostAnalysisAsync(Guid territoryId, DateTime? periodStart, DateTime? periodEnd)` → análise de custos
+- [ ] Dashboard inclui:
+  - [ ] Serviços negociados (ativos, expirados)
+  - [ ] Quota disponível por serviço
+  - [ ] Uso por membro
+  - [ ] Top consumidores
+  - [ ] Subsídios concedidos
+  - [ ] Custos e ROI
+- [ ] Criar `TerritoryServiceAgreementController`:
+  - [ ] `POST /api/v1/territories/{territoryId}/service-agreements` → propor negociação
+  - [ ] `GET /api/v1/territories/{territoryId}/service-agreements` → listar acordos
+  - [ ] `GET /api/v1/service-agreements/{agreementId}` → obter acordo
+  - [ ] `POST /api/v1/service-agreements/{agreementId}/purchase` → comprar com fundo
+  - [ ] `POST /api/v1/service-agreements/{agreementId}/cancel` → cancelar acordo
+- [ ] Criar `TerritoryQuotaPoolController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/quota-pools` → listar pools
+  - [ ] `GET /api/v1/quota-pools/{poolId}` → obter pool
+  - [ ] `GET /api/v1/quota-pools/{poolId}/allocations` → listar alocações
+  - [ ] `POST /api/v1/quota-pools/{poolId}/allocations` → criar alocação (se política permitir)
+- [ ] Criar `TerritoryServiceDashboardController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/services/dashboard` → dashboard completo
+- [ ] Feature flags: `DigitalServicesEnabled`, `TerritoryServiceNegotiationEnabled`
 - [ ] Validações e permissões
 - [ ] Testes de integração
 
 **Arquivos a Criar**:
-- `backend/Araponga.Api/Controllers/SeedBankController.cs`
-- `backend/Araponga.Api/Controllers/SeedCatalogController.cs`
-- `backend/Araponga.Api/Controllers/SeedDonationController.cs`
-- `backend/Araponga.Api/Controllers/SeedRequestController.cs`
-- `backend/Araponga.Api/Controllers/SeedPlantingController.cs`
-- `backend/Araponga.Api/Contracts/Seeds/SeedBankResponse.cs`
-- `backend/Araponga.Api/Contracts/Seeds/SeedCatalogResponse.cs`
-- `backend/Araponga.Api/Contracts/Seeds/SeedDonationRequest.cs`
-- `backend/Araponga.Api/Contracts/Seeds/SeedRequestRequest.cs`
-- `backend/Araponga.Api/Contracts/Seeds/SeedPlantingRequest.cs`
+- `backend/Araponga.Application/Services/TerritoryServiceDashboardService.cs`
+- `backend/Araponga.Api/Controllers/TerritoryServiceAgreementController.cs`
+- `backend/Araponga.Api/Controllers/TerritoryQuotaPoolController.cs`
+- `backend/Araponga.Api/Controllers/TerritoryServiceDashboardController.cs`
+- `backend/Araponga.Api/Contracts/TerritoryServices/ServiceAgreementResponse.cs`
+- `backend/Araponga.Api/Contracts/TerritoryServices/QuotaPoolResponse.cs`
+- `backend/Araponga.Api/Contracts/TerritoryServices/DashboardResponse.cs`
 
 **Critérios de Sucesso**:
+- ✅ Dashboard funcionando
 - ✅ Controllers funcionando
 - ✅ Validações funcionando
-- ✅ Feature flags funcionando
 - ✅ Testes passando
 
 ---
@@ -543,100 +361,82 @@ Implementar sistema de **banco de sementes e mudas territorial** que permite:
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Modelo de Domínio | 32h | ❌ Pendente | 🔴 Alta |
-| Sistema de Banco | 24h | ❌ Pendente | 🔴 Alta |
-| Sistema de Doações | 24h | ❌ Pendente | 🔴 Alta |
-| Sistema de Solicitações | 24h | ❌ Pendente | 🔴 Alta |
-| Integração Marketplace | 16h | ❌ Pendente | 🟡 Média |
-| Plantio e Rastreabilidade | 20h | ❌ Pendente | 🟡 Média |
-| Eventos de Trocas | 16h | ❌ Pendente | 🟡 Média |
-| Alertas e Notificações | 12h | ❌ Pendente | 🟡 Média |
-| Controllers e Dashboard | 16h | ❌ Pendente | 🔴 Alta |
-| **Total** | **184h (28 dias)** | | |
+| Modelo de Domínio | 24h | ❌ Pendente | 🔴 Alta |
+| Sistema de Negociação | 20h | ❌ Pendente | 🔴 Alta |
+| Pool de Quotas | 20h | ❌ Pendente | 🔴 Alta |
+| Alocação e Subsídios | 20h | ❌ Pendente | 🔴 Alta |
+| Integração com Uso | 16h | ❌ Pendente | 🔴 Alta |
+| Dashboard e Controllers | 20h | ❌ Pendente | 🔴 Alta |
+| **Total** | **120h (21 dias)** | | |
 
 ---
 
 ## ✅ Critérios de Sucesso da Fase 28
 
 ### Funcionalidades
-- ✅ Sistema completo de banco de sementes funcionando
-- ✅ Doações e solicitações funcionando
-- ✅ Rastreabilidade funcionando
-- ✅ Eventos de troca funcionando
-- ✅ Todas as integrações funcionando harmoniosamente
+- ✅ Sistema de negociação territorial funcionando
+- ✅ Pool de quotas compartilhado funcionando
+- ✅ Políticas de distribuição funcionando
+- ✅ Sistema de subsídios funcionando
+- ✅ Dashboard territorial funcionando
+- ✅ Integração com uso de serviços funcionando
 
 ### Qualidade
 - ✅ Testes com cobertura adequada
 - ✅ Documentação completa
 - ✅ Validações e permissões implementadas
-- Considerar **Testcontainers + PostgreSQL** para testes de integração (banco de sementes, catálogo, WorkQueue) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (negociação territorial, quotas, subsídios) com banco real (estratégia na Fase 43; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
-- ✅ Integração com TerritoryAsset funcionando
-- ✅ Integração com Marketplace funcionando
-- ✅ Integração com WorkQueue funcionando
-- ✅ Integração com Gamificação (Fase 42) funcionando
-- ✅ Integração com Notificações funcionando
-- ✅ Integração com Alertas funcionando
-- ✅ Integração com Postagens funcionando
-- ✅ Integração com Chat funcionando
-- ✅ Integração com Events funcionando
+- ✅ Integração com TerritoryFund (Fase 22) funcionando
+- ✅ Integração com Votação (Fase 14) funcionando
+- ✅ Integração com Serviços Digitais (Fase 26) funcionando
+- ✅ Integração com Chat com IA (Fase 27) funcionando
 
 ---
 
 ## 🔗 Dependências
 
-- **TerritoryAsset**: Base para SeedBank
-- **Marketplace**: Trocas de sementes
-- **WorkQueue**: Revisão de doações
-- **Fase 42**: Gamificação (contribuições por sementes)
-- **Events**: Eventos de troca (já existe)
-- **Notificações**: Alertas e notificações (já existe)
-- **Alertas**: Alertas territoriais (já existe)
-- **Postagens**: Posts no feed (já existe)
-- **Chat**: Comunicação (já existe)
+- **Fase 26**: Serviços Digitais Base (infraestrutura, rastreamento)
+- **Fase 22**: TerritoryFund (pagamento de serviços)
+- **Fase 14**: Votação (aprovação de negociações)
 
 ---
 
 ## 📝 Notas de Implementação
 
-### Integração Harmoniosa com Sistemas Existentes
+### Fluxo de Negociação Territorial
 
-**TerritoryAsset**:
-- SeedBank é um tipo especializado de TerritoryAsset
-- Type = "seed_bank"
-- Aparece no mapa territorial
-- Pode ter GeoAnchors
+**Exemplo**:
+1. Curador propõe: "Comprar 2M tokens OpenAI/mês"
+2. Comunidade vota (Fase 14)
+3. Se aprovada, acordo é criado
+4. Território paga com TerritoryFund (Fase 22)
+5. Pool de quota é criado automaticamente
+6. Quota é distribuída conforme política
+7. Membros usam quota territorial
+8. Dashboard mostra uso e custos
 
-**Marketplace**:
-- Sementes aparecem como ItemType.Seed
-- Preço 0 para doações
-- Preço opcional para venda (moeda territorial)
-- Integração completa com checkout
+### Políticas de Distribuição
 
-**WorkQueue**:
-- Doações criam WorkItem para revisão
-- Solicitações raras criam WorkItem
-- Curadores revisam via WorkQueue existente
+**EQUAL**:
+- Divide quota igualmente entre membros ativos
+- Atualização automática ao adicionar/remover membros
+- Exemplo: 2M tokens ÷ 100 membros = 20K tokens/membro
 
-**Gamificação**:
-- Doações geram contribuições
-- Plantios bem-sucedidos geram contribuições
-- Eventos geram contribuições
-- Integração com ContributionService (Fase 42)
+**NEED_BASED**:
+- Identifica membros sem quota pessoal
+- Prioriza membros com maior necessidade
+- Alocação automática ao solicitar serviço
+- Subsídio rastreado
 
-**Notificações e Alertas**:
-- Novos tipos de notificação
-- Alertas automáticos
-- Integração com sistema existente
-
-**Postagens e Chat**:
-- Plantios podem gerar posts
-- Eventos aparecem no feed
-- Chat pode compartilhar informações sobre sementes
+**VOTATION_BASED**:
+- Requer aprovação por votação para cada alocação
+- Maior controle e transparência
+- Processo mais lento, mas mais democrático
 
 ---
 
 **Status**: ⏳ **FASE 28 PENDENTE**  
-**Depende de**: TerritoryAsset, Marketplace, WorkQueue, Fase 42  
-**Crítico para**: Soberania Alimentar e Economia Circular
+**Depende de**: Fases 26, 22, 14  
+**Crítico para**: Economia de Escala e Inclusão Digital

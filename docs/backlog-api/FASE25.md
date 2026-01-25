@@ -1,341 +1,305 @@
-# Fase 26: Hub de Serviços Digitais Base
+# Fase 25: Dashboard de Métricas Comunitárias
 
-**Duração**: 3 semanas (21 dias úteis)  
-**Prioridade**: 🟡 ALTA (Base para autonomia digital)  
-**Depende de**: Fase 1 (Segurança), Fase 9 (UserPreferences)  
-**Estimativa Total**: 96-120 horas  
+**Duração**: 2 semanas (14 dias úteis)  
+**Prioridade**: 🟡 ALTA (Transparência e governança)  
+**Depende de**: Fase 4 (Observabilidade), Fase 14 (Governança)  
+**Estimativa Total**: 112 horas  
 **Status**: ⏳ Pendente  
-**Nota**: Renumerada de Fase 25 para Fase 26 (Onda 6: Autonomia Digital). Fase 25 agora é Dashboard Métricas.
+**Nota**: Nova fase criada para Onda 5 (Conformidade e Soberania). Fase 25 agora é Dashboard Métricas, Fase 26 é Hub de Serviços Digitais.
 
 ---
 
 ## 🎯 Objetivo
 
-Implementar infraestrutura base para **serviços digitais integrados** que permite:
-- Usuários conectarem suas próprias contas de serviços digitais (IA, storage, tradução, etc.)
-- Rastreamento de consumo consciente de recursos
-- Feature flags territorial e por usuário
-- Extrato de consumo visível e transparente
-- Base para expansão futura de serviços
+Implementar **dashboard de métricas comunitárias** que permite:
+- Territórios visualizarem métricas de atividade e engajamento
+- Transparência sobre uso e participação da comunidade
+- Métricas de governança (votações, participação)
+- Métricas de economia local (marketplace, transações)
+- Métricas de saúde territorial (observações, ações)
+- Comparação temporal e entre territórios
+- Exportação de relatórios
 
 **Princípios**:
-- ✅ **Autonomia**: Usuários usam seus próprios serviços
-- ✅ **Transparência**: Consumo visível e rastreável
-- ✅ **Controle**: Feature flags territorial + usuário
-- ✅ **Extensibilidade**: Arquitetura genérica para múltiplos serviços
-- ✅ **Consciência**: Extrato de consumo educa sobre uso
+- ✅ **Transparência**: Métricas públicas ou para moradores
+- ✅ **Governança**: Apoia tomada de decisão comunitária
+- ✅ **Simplicidade**: Visualizações claras e compreensíveis
+- ✅ **Privacidade**: Respeitar preferências de privacidade
+- ✅ **Ação**: Métricas que levam a ações concretas
 
 ---
 
 ## 📋 Contexto e Requisitos
 
 ### Estado Atual
-- ✅ Sistema de chat implementado
-- ✅ Feature flags territoriais funcionando
-- ✅ UserPreferences existe (Fase 9)
-- ✅ Sistema de notificações implementado
-- ❌ Não existe sistema de serviços digitais
-- ❌ Não existe rastreamento de consumo de serviços
-- ❌ Não existe infraestrutura para integrações externas
+- ✅ Fase 4 (Observabilidade) fornece métricas técnicas
+- ✅ Sistema de métricas de negócio existe (Prometheus)
+- ✅ Fase 14 (Governança) fornece dados de votações
+- ✅ Sistema de marketplace existe (transações)
+- ✅ Sistema de feed existe (posts, interações)
+- ❌ Não existe dashboard de métricas comunitárias
+- ❌ Não existe visualização de métricas territoriais
+- ❌ Não existe comparação entre territórios
 
 ### Requisitos Funcionais
 
-#### 1. Modelo de Dados Genérico para Serviços Digitais
-- ✅ Categorias de serviços (AI, Storage, Translation, MediaProcessing, etc.)
-- ✅ Provedores de serviços (OpenAI, Google, AWS, etc.)
-- ✅ Configuração de serviço por usuário (credenciais, quotas)
-- ✅ Log de consumo de serviços
-- ✅ Agregação de consumo por período
+#### 1. Métricas de Atividade
+- ✅ Posts criados (diário, semanal, mensal)
+- ✅ Eventos criados
+- ✅ Membros ativos
+- ✅ Interações (curtidas, comentários, compartilhamentos)
+- ✅ Taxa de engajamento
 
-#### 2. Sistema de Rastreamento de Consumo
-- ✅ Log de cada uso de serviço
-- ✅ Métricas por provedor (tokens, requests, bytes, etc.)
-- ✅ Custo estimado por uso
-- ✅ Agregação mensal/diária
-- ✅ Alertas de quota próxima ao limite
+#### 2. Métricas de Governança
+- ✅ Votações realizadas
+- ✅ Taxa de participação em votações
+- ✅ Propostas aprovadas/rejeitadas
+- ✅ Tempo médio de votação
+- ✅ Participação por tipo de votação
 
-#### 3. Feature Flags para Serviços Digitais
-- ✅ Feature flags territoriais (`DigitalServicesEnabled`)
-- ✅ Feature flags por categoria (`DigitalServicesAIEnabled`)
-- ✅ Feature flags por usuário (armazenado em UserPreferences)
-- ✅ Habilitação gradual por território
+#### 3. Métricas de Economia Local
+- ✅ Transações no marketplace
+- ✅ Volume financeiro (receitas, despesas)
+- ✅ Itens vendidos/comprados
+- ✅ Taxa de conversão (views → compras)
+- ✅ Top vendedores
 
-#### 4. Extrato de Consumo Consciente
-- ✅ Dashboard de consumo por usuário
-- ✅ Visão por categoria de serviço
-- ✅ Visão por provedor
-- ✅ Período configurável (mensal, semanal, diário)
-- ✅ Custos estimados quando disponível
-- ✅ Alertas de limite
+#### 4. Métricas de Saúde Territorial
+- ✅ Observações de saúde criadas
+- ✅ Ações territoriais realizadas
+- ✅ Participação em mutirões
+- ✅ Sensores ativos
+- ✅ Indicadores de saúde (quando Fase 24 implementada)
 
-#### 5. Segurança e Privacidade
-- ✅ Credenciais criptografadas no banco
-- ✅ Isolamento de dados entre usuários
-- ✅ Auditoria de uso
-- ✅ Validação de credenciais antes de uso
-- ✅ Revogação segura de credenciais
+#### 5. Métricas de Engajamento
+- ✅ Usuários ativos (DAU, WAU, MAU)
+- ✅ Taxa de retenção
+- ✅ Novos membros
+- ✅ Membros que participam regularmente
+- ✅ Top contribuidores
+
+#### 6. Visualizações e Comparações
+- ✅ Gráficos temporais (linha, barra)
+- ✅ Comparação entre períodos
+- ✅ Comparação entre territórios (opcional, agregado)
+- ✅ Filtros por período (diário, semanal, mensal, anual)
+- ✅ Exportação de dados (CSV, PDF)
 
 ---
 
 ## 📋 Tarefas Detalhadas
 
-### Semana 1: Modelo de Dados e Infraestrutura Base
+### Semana 1: Modelo de Dados e Agregações
 
-#### 25.1 Modelo de Domínio - Serviços Digitais
+#### 25.1 Modelo de Dados - Métricas Territoriais
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar enum `DigitalServiceCategory`:
-  - [ ] `ArtificialIntelligence = 1` (IA - chat, análise, geração)
-  - [ ] `Storage = 2` (Armazenamento em nuvem)
-  - [ ] `Translation = 3` (Tradução de texto)
-  - [ ] `MediaProcessing = 4` (Processamento de mídia)
-  - [ ] `Analytics = 5` (Análise de dados)
-  - [ ] `Communication = 6` (Comunicação - SMS, email)
-  - [ ] `Mapping = 7` (Mapas - já existe, pode expandir)
-  - [ ] `Custom = 99` (Serviços customizados)
-- [ ] Criar enum `ServiceProvider`:
-  - [ ] `OpenAI = 1`, `AnthropicClaude = 2`, `GoogleGemini = 3`, `AzureOpenAI = 4`
-  - [ ] `AWS_S3 = 10`, `GoogleCloudStorage = 11`, `AzureBlob = 12`
-  - [ ] `GoogleTranslate = 20`, `AzureTranslator = 21`, `DeepL = 22`
-  - [ ] `Custom = 99`
-- [ ] Criar modelo `UserDigitalServiceConfig`:
-  - [ ] `Id`, `UserId`, `Category`, `Provider`
-  - [ ] `ApiKeyEncrypted` (nullable, criptografado)
-  - [ ] `OAuthTokenEncrypted` (nullable, criptografado)
-  - [ ] `EndpointUrl` (nullable, para serviços customizados)
-  - [ ] `IsDefault` (bool, provedor padrão para categoria)
-  - [ ] `IsEnabled` (bool, usuário pode desabilitar)
-  - [ ] `CustomSettings` (Dictionary<string, string>?)
-  - [ ] `MonthlyLimitUnits` (int?, limite mensal configurado)
-  - [ ] `LimitResetDate` (DateTime?, data de reset)
-  - [ ] `CreatedAtUtc`, `LastUsedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelo `DigitalServiceUsageLog`:
-  - [ ] `Id`, `UserId`, `TerritoryId?` (opcional)
-  - [ ] `UserServiceConfigId`, `Category`, `Provider`
-  - [ ] `ContextType` (string?, "chat", "translation", etc.)
-  - [ ] `ContextId` (Guid?, ID do contexto)
-  - [ ] `UnitsConsumed` (int), `UnitsType` (string?, "tokens", "requests", "bytes")
-  - [ ] `EstimatedCost` (decimal?), `ProcessingTime` (TimeSpan?)
-  - [ ] `Success` (bool), `ErrorMessage` (string?)
-  - [ ] `UsedAtUtc`
-- [ ] Criar modelo `DigitalServiceConsumption` (agregação):
-  - [ ] `UserId`, `Category`, `Provider?` (nullable = todos)
-  - [ ] `PeriodStartUtc`, `PeriodEndUtc`
-  - [ ] `TotalUnitsConsumed`, `TotalEstimatedCost`, `TotalRequests`
-  - [ ] `SuccessfulRequests`, `FailedRequests`
-  - [ ] `ByProvider` (Dictionary<ServiceProvider, DigitalServiceConsumption>?)
+- [ ] Criar enum `MetricType`:
+  - [ ] `Activity = 1` (atividade: posts, eventos)
+  - [ ] `Governance = 2` (governança: votações)
+  - [ ] `Economy = 3` (economia: marketplace, transações)
+  - [ ] `Health = 4` (saúde territorial)
+  - [ ] `Engagement = 5` (engajamento: DAU, WAU, MAU)
+- [ ] Criar enum `MetricPeriod`:
+  - [ ] `Daily = 1`, `Weekly = 2`, `Monthly = 3`, `Yearly = 4`
+- [ ] Criar modelo `TerritoryMetric`:
+  - [ ] `Id`, `TerritoryId`, `MetricType`, `MetricKey` (string, ex: "posts.created")
+  - [ ] `Period`, `PeriodStartUtc`, `PeriodEndUtc`
+  - [ ] `Value` (decimal), `ValueInt` (int?), `ValueString` (string?)
+  - [ ] `Metadata` (JSON, dados adicionais)
+  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
+- [ ] Criar modelo `TerritoryMetricComparison`:
+  - [ ] `TerritoryId`, `MetricType`, `MetricKey`
+  - [ ] `CurrentPeriod`, `PreviousPeriod`
+  - [ ] `ChangePercent`, `ChangeAbsolute`
+  - [ ] `Trend` (UP, DOWN, STABLE)
 - [ ] Criar repositórios
 - [ ] Criar migrations
 
 **Arquivos a Criar**:
-- `backend/Araponga.Domain/DigitalServices/DigitalServiceCategory.cs`
-- `backend/Araponga.Domain/DigitalServices/ServiceProvider.cs`
-- `backend/Araponga.Domain/DigitalServices/UserDigitalServiceConfig.cs`
-- `backend/Araponga.Domain/DigitalServices/DigitalServiceUsageLog.cs`
-- `backend/Araponga.Domain/DigitalServices/DigitalServiceConsumption.cs`
-- `backend/Araponga.Application/Interfaces/IDigitalServiceConfigRepository.cs`
-- `backend/Araponga.Application/Interfaces/IDigitalServiceUsageRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresDigitalServiceConfigRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresDigitalServiceUsageRepository.cs`
-- `backend/Araponga.Infrastructure/Postgres/Entities/UserDigitalServiceConfigRecord.cs`
-- `backend/Araponga.Infrastructure/Postgres/Entities/DigitalServiceUsageLogRecord.cs`
+- `backend/Araponga.Domain/Metrics/MetricType.cs`
+- `backend/Araponga.Domain/Metrics/MetricPeriod.cs`
+- `backend/Araponga.Domain/Metrics/TerritoryMetric.cs`
+- `backend/Araponga.Domain/Metrics/TerritoryMetricComparison.cs`
+- `backend/Araponga.Application/Interfaces/ITerritoryMetricRepository.cs`
+- `backend/Araponga.Infrastructure/Postgres/PostgresTerritoryMetricRepository.cs`
 
 **Critérios de Sucesso**:
 - ✅ Modelos criados
 - ✅ Repositórios implementados
 - ✅ Migrations criadas
-- ✅ Credenciais criptografadas no banco
 - ✅ Testes de repositório passando
 
 ---
 
-#### 25.2 Sistema de Criptografia de Credenciais
-**Estimativa**: 16 horas (2 dias)  
+#### 25.2 Sistema de Agregação de Métricas
+**Estimativa**: 32 horas (4 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `ICredentialEncryptionService`:
-  - [ ] `EncryptAsync(string plaintext)` → string criptografada
-  - [ ] `DecryptAsync(string encrypted)` → string descriptografada
-- [ ] Implementar criptografia usando AES-256-GCM
-- [ ] Gerenciar chaves de criptografia (via configuração segura)
-- [ ] Rotação de chaves (preparação futura)
-- [ ] Integrar com `UserDigitalServiceConfig`:
-  - [ ] Criptografar ao salvar
-  - [ ] Descriptografar ao usar
-- [ ] Testes de segurança
+- [ ] Criar `TerritoryMetricsAggregationService`:
+  - [ ] `AggregateActivityMetricsAsync(Guid territoryId, MetricPeriod period)` → métricas de atividade
+  - [ ] `AggregateGovernanceMetricsAsync(Guid territoryId, MetricPeriod period)` → métricas de governança
+  - [ ] `AggregateEconomyMetricsAsync(Guid territoryId, MetricPeriod period)` → métricas de economia
+  - [ ] `AggregateHealthMetricsAsync(Guid territoryId, MetricPeriod period)` → métricas de saúde
+  - [ ] `AggregateEngagementMetricsAsync(Guid territoryId, MetricPeriod period)` → métricas de engajamento
+- [ ] Agregações de atividade:
+  - [ ] Contar posts criados no período
+  - [ ] Contar eventos criados
+  - [ ] Contar interações (curtidas, comentários)
+  - [ ] Calcular taxa de engajamento
+- [ ] Agregações de governança:
+  - [ ] Contar votações realizadas
+  - [ ] Calcular taxa de participação
+  - [ ] Contar propostas aprovadas/rejeitadas
+  - [ ] Calcular tempo médio de votação
+- [ ] Agregações de economia:
+  - [ ] Contar transações
+  - [ ] Somar volume financeiro
+  - [ ] Contar itens vendidos/comprados
+  - [ ] Calcular taxa de conversão
+- [ ] Agregações de saúde (quando Fase 24 implementada):
+  - [ ] Contar observações de saúde
+  - [ ] Contar ações territoriais
+  - [ ] Contar participações em mutirões
+- [ ] Agregações de engajamento:
+  - [ ] Calcular DAU (Daily Active Users)
+  - [ ] Calcular WAU (Weekly Active Users)
+  - [ ] Calcular MAU (Monthly Active Users)
+  - [ ] Calcular taxa de retenção
+- [ ] Background job para calcular métricas periodicamente:
+  - [ ] Calcular métricas diárias (todos os dias)
+  - [ ] Calcular métricas semanais (toda segunda-feira)
+  - [ ] Calcular métricas mensais (primeiro dia do mês)
+- [ ] Testes unitários
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Interfaces/ICredentialEncryptionService.cs`
-- `backend/Araponga.Infrastructure/Security/CredentialEncryptionService.cs`
-- `backend/Araponga.Tests/Infrastructure/CredentialEncryptionServiceTests.cs`
+- `backend/Araponga.Application/Services/TerritoryMetricsAggregationService.cs`
+- `backend/Araponga.Application/Jobs/TerritoryMetricsAggregationJob.cs`
+- `backend/Araponga.Tests/Application/TerritoryMetricsAggregationServiceTests.cs`
 
 **Critérios de Sucesso**:
-- ✅ Credenciais criptografadas no banco
-- ✅ Descriptografia funcionando
-- ✅ Testes de segurança passando
-- ✅ Chaves não expostas
+- ✅ Agregações funcionando
+- ✅ Background job funcionando
+- ✅ Métricas sendo calculadas corretamente
+- ✅ Testes passando
 
 ---
 
-### Semana 2: Sistema de Rastreamento e Consumo
+### Semana 2: API, Visualizações e Exportação
 
-#### 25.3 Serviço de Gerenciamento de Serviços Digitais
+#### 25.3 Controller de Métricas
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `DigitalServiceManager`:
-  - [ ] `AddServiceConfigAsync(Guid userId, DigitalServiceCategory category, ServiceProvider provider, ...)` → adicionar configuração
-  - [ ] `ListServiceConfigsAsync(Guid userId, DigitalServiceCategory? category)` → listar configurações
-  - [ ] `UpdateServiceConfigAsync(Guid configId, Guid userId, ...)` → atualizar configuração
-  - [ ] `RemoveServiceConfigAsync(Guid configId, Guid userId)` → remover configuração
-  - [ ] `ValidateCredentialsAsync(UserDigitalServiceConfig config)` → validar credenciais
-- [ ] Criar `DigitalServiceUsageTracker`:
-  - [ ] `TrackUsageAsync(Guid userId, Guid? territoryId, Guid configId, ...)` → registrar uso
-  - [ ] `GetConsumptionAsync(Guid userId, ...)` → obter consumo agregado
-  - [ ] `CheckQuotaAsync(Guid userId, Guid configId, int unitsToConsume)` → verificar quota
-- [ ] Integrar validação de credenciais:
-  - [ ] Validar antes de salvar
-  - [ ] Validar periodicamente (background job futuro)
+- [ ] Criar `TerritoryMetricsController`:
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/activity` → métricas de atividade
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/governance` → métricas de governança
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/economy` → métricas de economia
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/health` → métricas de saúde
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/engagement` → métricas de engajamento
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/summary` → resumo geral
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/comparison` → comparação entre períodos
+- [ ] Parâmetros de query:
+  - [ ] `period` (daily, weekly, monthly, yearly)
+  - [ ] `startDate`, `endDate` (período customizado)
+  - [ ] `compareWith` (previous, same_period_last_year)
 - [ ] Validações:
-  - [ ] Usuário pode ter múltiplas configs por categoria
-  - [ ] Apenas uma config pode ser padrão por categoria
-  - [ ] Credenciais devem ser válidas antes de salvar
-- [ ] Testes unitários
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/DigitalServiceManager.cs`
-- `backend/Araponga.Application/Services/DigitalServiceUsageTracker.cs`
-- `backend/Araponga.Tests/Application/DigitalServiceManagerTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Serviço de gerenciamento funcionando
-- ✅ Rastreamento de uso funcionando
-- ✅ Validação de credenciais funcionando
-- ✅ Testes passando
-
----
-
-#### 25.4 Sistema de Extrato de Consumo Consciente
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `DigitalServiceConsumptionService`:
-  - [ ] `GetUserConsumptionAsync(Guid userId, DateTime? periodStart, DateTime? periodEnd, ...)` → consumo agregado
-  - [ ] `GetConsumptionByCategoryAsync(Guid userId, DigitalServiceCategory category, ...)` → consumo por categoria
-  - [ ] `GetConsumptionByProviderAsync(Guid userId, ServiceProvider provider, ...)` → consumo por provedor
-  - [ ] `GetConsumptionHistoryAsync(Guid userId, ...)` → histórico de uso
-- [ ] Agregações:
-  - [ ] Consumo mensal por categoria
-  - [ ] Consumo mensal por provedor
-  - [ ] Top categorias mais usadas
-  - [ ] Top provedores mais usados
-  - [ ] Custos estimados totais
-- [ ] Alertas:
-  - [ ] Verificar quotas ao obter consumo
-  - [ ] Identificar quando próximo ao limite (80%, 90%, 100%)
-- [ ] Criar `DigitalServiceConsumptionController`:
-  - [ ] `GET /api/v1/digital-services/me/consumption` → consumo agregado
-  - [ ] `GET /api/v1/digital-services/me/consumption/by-category` → por categoria
-  - [ ] `GET /api/v1/digital-services/me/consumption/by-provider` → por provedor
-  - [ ] `GET /api/v1/digital-services/me/consumption/history` → histórico
-- [ ] Feature flags: `DigitalServicesEnabled`
-- [ ] Testes
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/DigitalServiceConsumptionService.cs`
-- `backend/Araponga.Api/Controllers/DigitalServiceConsumptionController.cs`
-- `backend/Araponga.Api/Contracts/DigitalServices/ConsumptionResponse.cs`
-- `backend/Araponga.Api/Contracts/DigitalServices/ConsumptionHistoryResponse.cs`
-
-**Critérios de Sucesso**:
-- ✅ Extrato de consumo funcionando
-- ✅ Agregações corretas
-- ✅ Alertas de quota funcionando
-- ✅ API funcionando
-- ✅ Testes passando
-
----
-
-### Semana 3: Feature Flags e Integrações
-
-#### 25.5 Feature Flags e Integração com UserPreferences
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Adicionar feature flags ao enum `FeatureFlag`:
-  - [ ] `DigitalServicesEnabled = 25` (master switch territorial)
-  - [ ] `DigitalServicesAIEnabled = 26` (IA habilitada)
-  - [ ] `DigitalServicesTranslationEnabled = 27` (tradução habilitada)
-  - [ ] `DigitalServicesMediaProcessingEnabled = 28` (processamento de mídia)
-- [ ] Adicionar preferências a `UserPreferences`:
-  - [ ] `DigitalServicesEnabled` (bool, master switch por usuário)
-  - [ ] `DigitalServicesAIConfig` (List<Guid>, IDs de configs de IA)
-- [ ] Atualizar `UserPreferencesService`:
-  - [ ] Permitir atualizar preferências de serviços digitais
-- [ ] Atualizar `UserPreferencesController`:
-  - [ ] `PUT /api/v1/users/me/preferences/digital-services` → atualizar preferências
-- [ ] Validar feature flags antes de executar serviços:
-  - [ ] Verificar flag territorial
-  - [ ] Verificar flag por categoria
-  - [ ] Verificar preferência do usuário
-- [ ] Testes
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Application/Models/FeatureFlag.cs`
-- `backend/Araponga.Domain/Users/UserPreferences.cs`
-- `backend/Araponga.Application/Services/UserPreferencesService.cs`
-- `backend/Araponga.Api/Controllers/UserPreferencesController.cs`
-
-**Critérios de Sucesso**:
-- ✅ Feature flags implementadas
-- ✅ Preferências de usuário funcionando
-- ✅ Validação de flags funcionando
-- ✅ Testes passando
-
----
-
-#### 25.6 Controller de Configuração de Serviços
-**Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `DigitalServiceConfigController`:
-  - [ ] `GET /api/v1/digital-services/me/configs` → listar configurações
-  - [ ] `POST /api/v1/digital-services/me/configs` → adicionar configuração
-  - [ ] `GET /api/v1/digital-services/me/configs/{configId}` → obter configuração
-  - [ ] `PUT /api/v1/digital-services/me/configs/{configId}` → atualizar configuração
-  - [ ] `DELETE /api/v1/digital-services/me/configs/{configId}` → remover configuração
-  - [ ] `POST /api/v1/digital-services/me/configs/{configId}/validate` → validar credenciais
-  - [ ] `POST /api/v1/digital-services/me/configs/{configId}/set-default` → definir como padrão
-- [ ] Validações (FluentValidation):
-  - [ ] `AddServiceConfigRequestValidator`
-  - [ ] `UpdateServiceConfigRequestValidator`
-- [ ] Feature flags: `DigitalServicesEnabled`
-- [ ] Segurança:
-  - [ ] Credenciais nunca retornadas na API (apenas confirmação)
-  - [ ] Apenas usuário pode gerenciar suas configs
-  - [ ] Validação de entrada
+  - [ ] Verificar visibilidade (público ou apenas moradores)
+  - [ ] Validar período
+  - [ ] Validar permissões
+- [ ] Feature flags: `TerritoryMetricsEnabled`, `TerritoryMetricsPublic`
 - [ ] Testes de integração
 
 **Arquivos a Criar**:
-- `backend/Araponga.Api/Controllers/DigitalServiceConfigController.cs`
-- `backend/Araponga.Api/Contracts/DigitalServices/AddServiceConfigRequest.cs`
-- `backend/Araponga.Api/Contracts/DigitalServices/UpdateServiceConfigRequest.cs`
-- `backend/Araponga.Api/Contracts/DigitalServices/ServiceConfigResponse.cs`
-- `backend/Araponga.Api/Validators/AddServiceConfigRequestValidator.cs`
-- `backend/Araponga.Api/Validators/UpdateServiceConfigRequestValidator.cs`
-- `backend/Araponga.Tests/Integration/DigitalServiceConfigIntegrationTests.cs`
+- `backend/Araponga.Api/Controllers/TerritoryMetricsController.cs`
+- `backend/Araponga.Api/Contracts/Metrics/ActivityMetricsResponse.cs`
+- `backend/Araponga.Api/Contracts/Metrics/GovernanceMetricsResponse.cs`
+- `backend/Araponga.Api/Contracts/Metrics/EconomyMetricsResponse.cs`
+- `backend/Araponga.Api/Contracts/Metrics/HealthMetricsResponse.cs`
+- `backend/Araponga.Api/Contracts/Metrics/EngagementMetricsResponse.cs`
+- `backend/Araponga.Api/Contracts/Metrics/MetricsSummaryResponse.cs`
+- `backend/Araponga.Api/Contracts/Metrics/MetricsComparisonResponse.cs`
+- `backend/Araponga.Tests/Integration/TerritoryMetricsIntegrationTests.cs`
 
 **Critérios de Sucesso**:
-- ✅ API de configuração funcionando
+- ✅ API funcionando
 - ✅ Validações funcionando
-- ✅ Segurança implementada
+- ✅ Feature flags funcionando
+- ✅ Testes passando
+
+---
+
+#### 25.4 Sistema de Comparação e Tendências
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `TerritoryMetricsComparisonService`:
+  - [ ] `ComparePeriodsAsync(Guid territoryId, MetricType type, MetricPeriod period, ...)` → comparar períodos
+  - [ ] `GetTrendAsync(Guid territoryId, string metricKey, ...)` → obter tendência
+  - [ ] `CalculateChangePercentAsync(decimal current, decimal previous)` → calcular mudança percentual
+- [ ] Comparações:
+  - [ ] Período atual vs período anterior
+  - [ ] Período atual vs mesmo período do ano anterior
+  - [ ] Identificar tendências (UP, DOWN, STABLE)
+- [ ] Visualizações de tendência:
+  - [ ] Últimos 7 dias
+  - [ ] Últimos 30 dias
+  - [ ] Últimos 12 meses
+- [ ] Alertas de mudanças significativas:
+  - [ ] Mudança > 20% (positiva ou negativa)
+  - [ ] Notificar curadores (opcional)
+- [ ] Testes unitários
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/TerritoryMetricsComparisonService.cs`
+- `backend/Araponga.Tests/Application/TerritoryMetricsComparisonServiceTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Comparações funcionando
+- ✅ Tendências sendo calculadas
+- ✅ Alertas funcionando
+- ✅ Testes passando
+
+---
+
+#### 25.5 Exportação de Relatórios
+**Estimativa**: 16 horas (2 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `TerritoryMetricsExportService`:
+  - [ ] `ExportToCsvAsync(Guid territoryId, MetricType? type, ...)` → exportar CSV
+  - [ ] `ExportToPdfAsync(Guid territoryId, MetricType? type, ...)` → exportar PDF
+  - [ ] `GenerateReportAsync(Guid territoryId, ...)` → gerar relatório completo
+- [ ] Formato CSV:
+  - [ ] Dados tabulares
+  - [ ] Headers descritivos
+  - [ ] Formatação de datas
+- [ ] Formato PDF:
+  - [ ] Relatório formatado
+  - [ ] Gráficos incluídos (se possível)
+  - [ ] Logo e branding
+- [ ] Endpoints de exportação:
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/export/csv`
+  - [ ] `GET /api/v1/territories/{territoryId}/metrics/export/pdf`
+- [ ] Validações e permissões
+- [ ] Testes de integração
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/TerritoryMetricsExportService.cs`
+- `backend/Araponga.Infrastructure/Export/CsvExporter.cs`
+- `backend/Araponga.Infrastructure/Export/PdfExporter.cs`
+- `backend/Araponga.Tests/Integration/TerritoryMetricsExportIntegrationTests.cs`
+
+**Critérios de Sucesso**:
+- ✅ Exportação CSV funcionando
+- ✅ Exportação PDF funcionando
+- ✅ Relatórios formatados corretamente
 - ✅ Testes passando
 
 ---
@@ -344,162 +308,101 @@ Implementar infraestrutura base para **serviços digitais integrados** que permi
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Modelo de Domínio | 24h | ❌ Pendente | 🔴 Alta |
-| Criptografia de Credenciais | 16h | ❌ Pendente | 🔴 Alta |
-| Gerenciamento de Serviços | 24h | ❌ Pendente | 🔴 Alta |
-| Extrato de Consumo | 16h | ❌ Pendente | 🔴 Alta |
-| Feature Flags | 16h | ❌ Pendente | 🔴 Alta |
-| Controller de Configuração | 16h | ❌ Pendente | 🔴 Alta |
-| **Total** | **112h (21 dias)** | | |
-
----
-
-#### 25.X Configuração de Observabilidade (Complementar)
-**Estimativa**: 20 horas (2.5 dias)  
-**Status**: ⏳ Pendente  
-**Prioridade**: 🟢 Baixa
-
-**Contexto**: Configuração de logging, métricas e tracing atualmente em `appsettings.json` (Seq, Prometheus, OpenTelemetry, Jaeger). Esta tarefa permite configuração via painel administrativo para ajustes sem deploy e diferentes níveis por território.
-
-**Tarefas**:
-- [ ] Criar modelo de domínio `ObservabilityConfig`:
-  - [ ] `Id`, `TerritoryId` (nullable para config global)
-  - [ ] `LoggingProvider` (enum: Seq, File, Console, ApplicationInsights, etc.)
-  - [ ] `LoggingLevel` (enum: Trace, Debug, Information, Warning, Error)
-  - [ ] `MetricsProvider` (enum: Prometheus, ApplicationInsights, etc.)
-  - [ ] `TracingProvider` (enum: Jaeger, OpenTelemetry, ApplicationInsights, etc.)
-  - [ ] `ProviderSettings` (JSON, configurações específicas de cada provider)
-  - [ ] `Enabled` (bool)
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar `IObservabilityConfigRepository` e implementações (Postgres, InMemory)
-- [ ] Criar `ObservabilityConfigService`:
-  - [ ] `GetConfigAsync(Guid? territoryId, CancellationToken)` → busca config territorial ou global
-  - [ ] `CreateOrUpdateConfigAsync(ObservabilityConfig, CancellationToken)`
-  - [ ] `GetActiveLoggingConfigAsync(CancellationToken)` → retorna config global ativa para logging
-- [ ] Atualizar configuração de Serilog/OpenTelemetry:
-  - [ ] Usar `ObservabilityConfigService` ao inicializar logging
-  - [ ] Aplicar níveis de log configurados (quando por território, usar no contexto do request)
-  - [ ] Configurar providers dinamicamente
-- [ ] Criar `ObservabilityConfigController`:
-  - [ ] `GET /api/v1/territories/{territoryId}/observability-config` (Curator, opcional)
-  - [ ] `PUT /api/v1/territories/{territoryId}/observability-config` (Curator, opcional)
-  - [ ] `GET /api/v1/admin/observability-config/active` (SystemAdmin)
-  - [ ] `GET /api/v1/admin/observability-config` (listar todas, SystemAdmin)
-  - [ ] `POST /api/v1/admin/observability-config` (criar, SystemAdmin)
-  - [ ] `PUT /api/v1/admin/observability-config/{configId}` (atualizar, SystemAdmin)
-  - [ ] `POST /api/v1/admin/observability-config/{configId}/activate` (ativar, SystemAdmin)
-- [ ] Interface administrativa (DevPortal):
-  - [ ] Seção para configuração de observabilidade
-  - [ ] Visualização de providers disponíveis
-  - [ ] Configuração de níveis de log
-- [ ] Testes de integração
-- [ ] Documentação
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/Configuration/ObservabilityConfig.cs`
-- `backend/Araponga.Application/Interfaces/Configuration/IObservabilityConfigRepository.cs`
-- `backend/Araponga.Application/Services/Configuration/ObservabilityConfigService.cs`
-- `backend/Araponga.Api/Controllers/ObservabilityConfigController.cs`
-- `backend/Araponga.Infrastructure/Postgres/PostgresObservabilityConfigRepository.cs`
-- `backend/Araponga.Infrastructure/InMemory/InMemoryObservabilityConfigRepository.cs`
-- `backend/Araponga.Tests/Api/ObservabilityConfigIntegrationTests.cs`
-
-**Arquivos a Modificar**:
-- `backend/Araponga.Api/Program.cs` (configuração de Serilog/OpenTelemetry)
-- `backend/Araponga.Infrastructure/InMemory/InMemoryDataStore.cs`
-- `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs`
-- `backend/Araponga.Api/wwwroot/devportal/index.html`
-
-**Critérios de Sucesso**:
-- ✅ Configuração de observabilidade via painel administrativo
-- ✅ Ajustes de providers sem deploy
-- ✅ Níveis de log configuráveis (opcional por território)
-- ✅ Fallback para `appsettings.json` funcionando
-- ✅ Interface administrativa disponível
-- ✅ Testes passando
-- ✅ Documentação atualizada
-
-**Referência**: Consulte `FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md` para contexto completo.
-
-**Nota**: Esta funcionalidade pode ser implementada pós-MVP se não for crítica para lançamento inicial.
+| Modelo de Dados | 24h | ❌ Pendente | 🔴 Alta |
+| Sistema de Agregação | 32h | ❌ Pendente | 🔴 Alta |
+| Controller de Métricas | 24h | ❌ Pendente | 🔴 Alta |
+| Sistema de Comparação | 16h | ❌ Pendente | 🟡 Média |
+| Exportação de Relatórios | 16h | ❌ Pendente | 🟡 Média |
+| **Total** | **112h (14 dias)** | | |
 
 ---
 
 ## ✅ Critérios de Sucesso da Fase 25
 
 ### Funcionalidades
-- ✅ Sistema completo de configuração de serviços digitais
-- ✅ Rastreamento de consumo funcionando
-- ✅ Extrato de consumo visível ao usuário
-- ✅ Feature flags territoriais e por usuário funcionando
-- ✅ Credenciais criptografadas e seguras
+- ✅ Dashboard completo de métricas comunitárias funcionando
+- ✅ Métricas de atividade, governança, economia, saúde e engajamento
+- ✅ Comparações entre períodos funcionando
+- ✅ Exportação de relatórios funcionando
+- ✅ Visualizações temporais funcionando
 
 ### Qualidade
 - ✅ Testes com cobertura adequada
 - ✅ Documentação completa
-- ✅ Segurança implementada
-- ✅ Validações completas
-- Considerar **Testcontainers + PostgreSQL** para testes de integração (credenciais, consumo, serviços digitais) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
+- ✅ Performance otimizada (agregações em background)
+- ✅ Validações e permissões implementadas
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (métricas, agregações) com banco real (estratégia na Fase 43; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
-- ✅ Integração com UserPreferences (Fase 9) funcionando
-- ✅ Feature flags integradas ao sistema existente
-- ✅ Base preparada para Fase 26 (Chat com IA)
+- ✅ Integração com Fase 4 (Observabilidade) funcionando
+- ✅ Integração com Fase 14 (Governança) funcionando
+- ✅ Integração com Marketplace funcionando
+- ✅ Integração com Feed funcionando
+- ✅ Preparação para Fase 24 (Saúde Territorial)
 
 ---
 
 ## 🔗 Dependências
 
-- **Fase 1**: Segurança (criptografia, validações)
-- **Fase 9**: UserPreferences (preferências de serviços digitais)
+- **Fase 4**: Observabilidade (métricas técnicas, base de dados)
+- **Fase 14**: Governança (dados de votações)
+- **Marketplace**: Dados de transações
+- **Feed**: Dados de posts e interações
 
 ---
 
 ## 📝 Notas de Implementação
 
-### Arquitetura de Serviços Digitais
+### Métricas de Atividade
 
-**Padrão Adapter**:
-- Cada serviço digital terá um adapter (`IDigitalServiceAdapter`)
-- Adapters serão implementados nas fases seguintes
-- Fase 25 apenas cria a infraestrutura base
+**Posts Criados**:
+- Contar posts criados no período
+- Filtrar por tipo (text, image, video)
+- Agrupar por autor (opcional, agregado)
 
-**Exemplo de Uso Futuro**:
-```csharp
-// Fase 26 implementará adapters de IA
-var aiAdapter = _adapterFactory.GetAdapter<AIServiceAdapter>(provider);
-var result = await aiAdapter.ExecuteAsync(request, userConfig, cancellationToken);
-await _usageTracker.TrackUsageAsync(userId, territoryId, configId, ...);
-```
+**Eventos Criados**:
+- Contar eventos criados
+- Contar participações
+- Taxa de participação (participações / eventos)
 
-### Criptografia de Credenciais
+**Interações**:
+- Curtidas, comentários, compartilhamentos
+- Taxa de engajamento = (interações / posts) * 100
 
-**Abordagem**:
-- AES-256-GCM para criptografia simétrica
-- Chave de criptografia via variável de ambiente
-- Credenciais nunca descriptografadas exceto durante uso
-- API nunca retorna credenciais descriptografadas
+### Métricas de Governança
 
-**Segurança**:
-- Chave de criptografia não deve estar no código
-- Rotação de chaves (implementação futura)
-- Auditoria de acesso a credenciais
+**Votações**:
+- Total de votações realizadas
+- Taxa de participação = (votos / membros elegíveis) * 100
+- Propostas aprovadas vs rejeitadas
+- Tempo médio de votação
 
-### Rastreamento de Consumo
+### Métricas de Economia
 
-**Granularidade**:
-- Cada uso de serviço é registrado
-- Agregação em tempo real para extrato
-- Histórico preservado para auditoria
+**Transações**:
+- Total de transações
+- Volume financeiro (receitas, despesas)
+- Itens vendidos/comprados
+- Taxa de conversão = (compras / views) * 100
 
-**Métricas**:
-- Unidades consumidas (tokens, requests, bytes, etc.)
-- Custo estimado (quando disponível)
-- Tempo de processamento
-- Taxa de sucesso/falha
+### Métricas de Engajamento
+
+**Usuários Ativos**:
+- DAU (Daily Active Users): usuários únicos por dia
+- WAU (Weekly Active Users): usuários únicos por semana
+- MAU (Monthly Active Users): usuários únicos por mês
+- Taxa de retenção = (usuários que retornaram / usuários totais) * 100
+
+### Performance
+
+**Otimizações**:
+- Agregações calculadas em background (não em tempo real)
+- Cache de métricas (5-15 minutos)
+- Índices no banco para queries rápidas
+- Paginação para grandes volumes de dados
 
 ---
 
 **Status**: ⏳ **FASE 25 PENDENTE**  
-**Depende de**: Fases 1, 9  
-**Crítico para**: Autonomia Digital e Consumo Consciente
+**Depende de**: Fases 4, 14  
+**Crítico para**: Transparência e Governança Comunitária

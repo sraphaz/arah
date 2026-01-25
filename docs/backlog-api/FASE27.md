@@ -1,358 +1,294 @@
-# Fase 28: Negociação Territorial e Assinatura Coletiva de Serviços Digitais
+# Fase 27: Chat com IA e Consumo Consciente
 
-**Duração**: 3 semanas (21 dias úteis)  
-**Prioridade**: 🟡 ALTA (Economia de escala e inclusão)  
-**Depende de**: Fase 26 (Serviços Digitais Base), Fase 22 (Moeda Territorial), Fase 14 (Votação)  
-**Estimativa Total**: 120-144 horas  
+**Duração**: 2 semanas (14 dias úteis)  
+**Prioridade**: 🟡 ALTA (Valor diferenciado e autonomia)  
+**Depende de**: Fase 26 (Serviços Digitais Base), Chat (existe)  
+**Estimativa Total**: 64-80 horas  
 **Status**: ⏳ Pendente  
-**Nota**: Renumerada de Fase 27 para Fase 28 (Onda 6: Autonomia Digital). Referências atualizadas: Fase 25→26, Fase 20→22.
+**Nota**: Renumerada de Fase 26 para Fase 27 (Onda 6: Autonomia Digital).
 
 ---
 
 ## 🎯 Objetivo
 
-Implementar sistema de **negociação territorial de serviços digitais** que permite:
-- Territórios negociarem/comprar quotas de serviços digitais
-- Disponibilizar serviços para membros através de assinatura coletiva
-- Subsidiar acesso para membros que não podem pagar individualmente
-- Governança comunitária (votação para aprovar negociações)
-- Dashboard territorial de serviços e consumo
+Implementar **IA integrada ao chat** que permite:
+- Usuários usarem IA em conversas do chat
+- Seleção de diferentes provedores de IA (OpenAI, Claude, Gemini, etc.)
+- Rastreamento de consumo por conversa
+- Feature flags territorial e por usuário
+- Consumo consciente com extrato visível
+- Integração harmoniosa com sistema de chat existente
 
 **Princípios**:
-- ✅ **Economia de Escala**: Negociação coletiva reduz custos
-- ✅ **Inclusão**: Acesso para quem não pode pagar
-- ✅ **Governança**: Comunidade decide alocação
-- ✅ **Transparência**: Uso e custos visíveis
-- ✅ **Autonomia**: Território controla seus recursos
+- ✅ **Autonomia**: Usuários usam suas próprias contas de IA
+- ✅ **Transparência**: Consumo rastreado e visível
+- ✅ **Controle**: Feature flags permitem controle granular
+- ✅ **Harmonia**: Integração suave com chat existente
+- ✅ **Consciência**: Extrato educa sobre uso de recursos
 
 ---
 
 ## 📋 Contexto e Requisitos
 
 ### Estado Atual
+- ✅ Sistema de chat implementado (canais, grupos, DM)
 - ✅ Fase 26 (Serviços Digitais Base) fornece infraestrutura
-- ✅ Fase 22 (Moeda Territorial) fornece fundos territoriais
-- ✅ Fase 14 (Votação) fornece governança comunitária
+- ✅ UserPreferences existe (Fase 9)
 - ✅ Feature flags territoriais funcionando
-- ❌ Territórios não podem negociar serviços
-- ❌ Não existe pool de quotas compartilhado
-- ❌ Não existe sistema de subsídios
+- ❌ IA não está integrada ao chat
+- ❌ Não existe seleção de provedores de IA
+- ❌ Não existe rastreamento de consumo por conversa
 
 ### Requisitos Funcionais
 
-#### 1. Negociação Territorial de Serviços
-- ✅ Acordos de serviço por território
-- ✅ Quotas negociadas (tokens, requests, bytes, etc.)
-- ✅ Períodos de validade (mensal, anual, etc.)
-- ✅ Integração com TerritoryFund para pagamento
-- ✅ Votação para aprovar negociações (Fase 14)
+#### 1. Integração de IA no Chat
+- ✅ Endpoint para enviar mensagem com IA
+- ✅ Resposta de IA na conversa
+- ✅ Seleção de provedor de IA antes/ durante conversa
+- ✅ Histórico de mensagens com IA
+- ✅ Indicação visual de mensagens com IA
 
-#### 2. Pool de Quotas Territoriais
-- ✅ Distribuição de quota negociada entre membros
-- ✅ Políticas de distribuição (EQUAL, NEED_BASED, RESIDENT_ONLY, etc.)
-- ✅ Reserva de quota para alocações específicas
-- ✅ Rastreamento de uso e disponibilidade
+#### 2. Adapters de Provedores de IA
+- ✅ OpenAI (GPT-3.5, GPT-4)
+- ✅ Anthropic Claude (Claude 2, Claude 3)
+- ✅ Google Gemini (Gemini Pro)
+- ✅ Azure OpenAI (compatibilidade OpenAI)
+- ✅ Arquitetura extensível para novos provedores
 
-#### 3. Alocação de Quotas para Membros
-- ✅ Alocação automática (política EQUAL)
-- ✅ Alocação baseada em necessidade (política NEED_BASED)
-- ✅ Solicitação e aprovação de quotas (política VOTATION_BASED)
-- ✅ Histórico de alocações
+#### 3. Rastreamento de Consumo por Conversa
+- ✅ Cada mensagem de IA registra consumo
+- ✅ Tokens input/output registrados
+- ✅ Custo estimado por mensagem
+- ✅ Consumo agregado por conversa
+- ✅ Consumo visível no extrato
 
-#### 4. Subsídios para Membros
-- ✅ Identificação de membros sem quota pessoal
-- ✅ Alocação automática de quota territorial (política NEED_BASED)
-- ✅ Priorização de subsídios
-- ✅ Rastreamento de subsídios
+#### 4. Feature Flags e Controle
+- ✅ Feature flag territorial (`ChatAIEnabled`)
+- ✅ Feature flag por categoria (`DigitalServicesAIEnabled`)
+- ✅ Preferência do usuário (`DigitalServicesEnabled`)
+- ✅ Habilitação gradual por território
 
-#### 5. Dashboard Territorial
-- ✅ Serviços negociados pelo território
-- ✅ Quota disponível por serviço
-- ✅ Uso e consumo por membro
-- ✅ Custos e subsídios
+#### 5. Quotas e Limites
+- ✅ Quota mensal configurável por usuário
+- ✅ Alertas quando próximo ao limite (80%, 90%, 100%)
+- ✅ Bloqueio quando quota esgotada
+- ✅ Mensagem informativa sobre quota
 
 ---
 
 ## 📋 Tarefas Detalhadas
 
-### Semana 1: Modelo de Dados e Negociação
+### Semana 1: Adapters de IA e Integração com Chat
 
-#### 27.1 Modelo de Domínio - Negociação Territorial
+#### 27.1 Adapters de Provedores de IA
 **Estimativa**: 24 horas (3 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar enum `AgreementStatus`:
-  - [ ] `Pending = 1` (aguardando aprovação/pagamento)
-  - [ ] `Active = 2` (ativo e disponível)
-  - [ ] `Expired = 3` (expirado)
-  - [ ] `Cancelled = 4` (cancelado)
-  - [ ] `Suspended = 5` (suspenso)
-- [ ] Criar enum `AgreementType`:
-  - [ ] `Purchase = 1` (compra única)
-  - [ ] `Subscription = 2` (assinatura recorrente)
-  - [ ] `Grant = 3` (doação/concessão)
-- [ ] Criar enum `QuotaDistributionPolicy`:
-  - [ ] `Equal = 1` (divide igual entre membros)
-  - [ ] `NeedBased = 2` (prioriza quem mais precisa)
-  - [ ] `ResidentOnly = 3` (apenas moradores)
-  - [ ] `VotationBased = 4` (distribuição por votação)
-  - [ ] `FirstComeFirstServed = 5` (primeiro a chegar)
-- [ ] Criar modelo `TerritoryServiceAgreement`:
-  - [ ] `Id`, `TerritoryId`, `Category`, `Provider`
-  - [ ] `AgreementType`, `TotalQuotaUnits`, `UnitsType`
-  - [ ] `CostPerUnit`, `TotalCost`, `Currency`
-  - [ ] `ValidFromUtc`, `ValidUntilUtc`, `IsRecurring`
-  - [ ] `FundId` (nullable, fundo usado para pagar)
-  - [ ] `PaidByUserId` (nullable), `PaidAtUtc` (nullable)
-  - [ ] `ApprovedByVoteId` (nullable, votação que aprovou)
-  - [ ] `CreatedByUserId`, `Status`, `CreatedAtUtc`
-- [ ] Criar modelo `TerritoryServiceQuotaPool`:
-  - [ ] `Id`, `AgreementId`, `TerritoryId`
-  - [ ] `TotalQuotaUnits`, `UsedQuotaUnits`, `ReservedQuotaUnits`
-  - [ ] `DistributionPolicy`, `RequiresVoteApproval` (bool)
-  - [ ] `MaxUnitsPerUser` (int?, nullable)
-  - [ ] `MaxUnitsPerRequest` (int?, nullable)
-  - [ ] `PeriodStartUtc`, `PeriodEndUtc`
-  - [ ] `CreatedAtUtc`, `UpdatedAtUtc`
-- [ ] Criar modelos relacionados:
-  - [ ] `TerritoryQuotaAllocation` (alocação para usuário)
-  - [ ] `TerritoryQuotaUsageRequest` (solicitação de uso)
-- [ ] Criar repositórios
-- [ ] Criar migrations
-
-**Arquivos a Criar**:
-- `backend/Araponga.Domain/DigitalServices/TerritoryServiceAgreement.cs`
-- `backend/Araponga.Domain/DigitalServices/TerritoryServiceQuotaPool.cs`
-- `backend/Araponga.Domain/DigitalServices/TerritoryQuotaAllocation.cs`
-- `backend/Araponga.Domain/DigitalServices/TerritoryQuotaUsageRequest.cs`
-- `backend/Araponga.Domain/DigitalServices/AgreementStatus.cs`
-- `backend/Araponga.Domain/DigitalServices/AgreementType.cs`
-- `backend/Araponga.Domain/DigitalServices/QuotaDistributionPolicy.cs`
-- `backend/Araponga.Domain/DigitalServices/AllocationStatus.cs`
-- `backend/Araponga.Domain/DigitalServices/RequestStatus.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryServiceAgreementRepository.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryServiceQuotaPoolRepository.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryQuotaAllocationRepository.cs`
-- `backend/Araponga.Application/Interfaces/ITerritoryQuotaUsageRequestRepository.cs`
-
-**Critérios de Sucesso**:
-- ✅ Modelos criados
-- ✅ Repositórios implementados
-- ✅ Migrations criadas
-- ✅ Testes de repositório passando
-
----
-
-#### 27.2 Sistema de Negociação Territorial
-**Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `TerritoryServiceNegotiationService`:
-  - [ ] `ProposeAgreementAsync(Guid territoryId, Guid proposerUserId, ...)` → propor negociação
-  - [ ] `CreateAgreementFromVoteAsync(Guid votingId, Guid territoryId)` → criar acordo após votação
-  - [ ] `PurchaseServiceWithFundAsync(Guid agreementId, Guid fundId, ...)` → comprar com fundo
-  - [ ] `ListAgreementsAsync(Guid territoryId, AgreementStatus? status)` → listar acordos
-  - [ ] `GetAgreementAsync(Guid agreementId)` → obter acordo
-  - [ ] `CancelAgreementAsync(Guid agreementId, Guid userId)` → cancelar acordo
-- [ ] Integrar com Fase 14 (Votação):
-  - [ ] Criar votação para aprovar negociação
-  - [ ] Se aprovada, criar acordo
-  - [ ] Tipo de votação: `ServicePurchase`
-- [ ] Integrar com Fase 20 (TerritoryFund):
-  - [ ] Verificar saldo do fundo
-  - [ ] Debitar fundo ao comprar serviço
-  - [ ] Criar transação no fundo
-- [ ] Validações:
-  - [ ] Apenas residents/curadores podem propor
-  - [ ] Fundo deve ter saldo suficiente
-  - [ ] Acordo deve ser válido
-- [ ] Criar pool de quota automaticamente:
-  - [ ] Quando acordo é ativado, criar pool
-  - [ ] Aplicar política de distribuição
+- [ ] Criar interface `IAIServiceAdapter`:
+  - [ ] `ExecuteAsync<TRequest, TResponse>(TRequest request, UserDigitalServiceConfig config, CancellationToken)` → executar chamada de IA
+  - [ ] `EstimateCostAsync(TRequest request, UserDigitalServiceConfig config)` → estimar custo
+  - [ ] `GetQuotaInfoAsync(UserDigitalServiceConfig config)` → informações de quota
+- [ ] Implementar `OpenAIServiceAdapter`:
+  - [ ] Integração com API OpenAI (GPT-3.5, GPT-4)
+  - [ ] Rastreamento de tokens input/output
+  - [ ] Estimativa de custo
+  - [ ] Tratamento de erros
+- [ ] Implementar `AnthropicClaudeServiceAdapter`:
+  - [ ] Integração com API Anthropic (Claude 2, Claude 3)
+  - [ ] Rastreamento de tokens
+  - [ ] Estimativa de custo
+- [ ] Implementar `GoogleGeminiServiceAdapter`:
+  - [ ] Integração com API Google Gemini
+  - [ ] Rastreamento de tokens
+  - [ ] Estimativa de custo
+- [ ] Implementar `AzureOpenAIServiceAdapter`:
+  - [ ] Compatibilidade com OpenAI via Azure
+  - [ ] Rastreamento de tokens
+- [ ] Criar `AIServiceAdapterFactory`:
+  - [ ] `GetAdapterAsync(ServiceProvider provider)` → obter adapter
+  - [ ] Cache de adapters
 - [ ] Testes unitários
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/TerritoryServiceNegotiationService.cs`
-- `backend/Araponga.Tests/Application/TerritoryServiceNegotiationServiceTests.cs`
+- `backend/Araponga.Application/Interfaces/IAIServiceAdapter.cs`
+- `backend/Araponga.Infrastructure/DigitalServices/AI/OpenAIServiceAdapter.cs`
+- `backend/Araponga.Infrastructure/DigitalServices/AI/AnthropicClaudeServiceAdapter.cs`
+- `backend/Araponga.Infrastructure/DigitalServices/AI/GoogleGeminiServiceAdapter.cs`
+- `backend/Araponga.Infrastructure/DigitalServices/AI/AzureOpenAIServiceAdapter.cs`
+- `backend/Araponga.Application/Services/AIServiceAdapterFactory.cs`
+- `backend/Araponga.Tests/Infrastructure/AIServiceAdapterTests.cs`
 
 **Critérios de Sucesso**:
-- ✅ Sistema de negociação funcionando
-- ✅ Integração com votação funcionando
-- ✅ Integração com TerritoryFund funcionando
-- ✅ Criação de pool funcionando
+- ✅ Adapters implementados
+- ✅ Integração com APIs funcionando
+- ✅ Rastreamento de tokens funcionando
+- ✅ Estimativa de custo funcionando
 - ✅ Testes passando
 
 ---
 
-### Semana 2: Pool de Quotas e Alocação
-
-#### 27.3 Sistema de Pool de Quotas
-**Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `TerritoryQuotaPoolService`:
-  - [ ] `GetOrCreatePoolAsync(Guid agreementId, Guid territoryId)` → obter/criar pool
-  - [ ] `GetAvailableQuotaAsync(Guid poolId)` → quota disponível
-  - [ ] `ReserveQuotaAsync(Guid poolId, int units)` → reservar quota
-  - [ ] `ReleaseQuotaAsync(Guid poolId, int units)` → liberar quota
-  - [ ] `UseQuotaAsync(Guid poolId, Guid userId, int units, ...)` → usar quota
-  - [ ] `GetPoolStatsAsync(Guid poolId)` → estatísticas do pool
-- [ ] Políticas de distribuição:
-  - [ ] `EQUAL`: Dividir igual entre membros ativos
-  - [ ] `NEED_BASED`: Priorizar membros sem quota pessoal
-  - [ ] `RESIDENT_ONLY`: Apenas moradores
-  - [ ] `VOTATION_BASED`: Requer aprovação por votação
-  - [ ] `FIRST_COME_FIRST_SERVED`: Primeiro a solicitar
-- [ ] Integração com uso de serviços:
-  - [ ] Verificar quota territorial antes de quota pessoal
-  - [ ] Usar quota territorial se disponível
-  - [ ] Fallback para quota pessoal
-- [ ] Atualizar pool:
-  - [ ] Decrementar ao usar
-  - [ ] Atualizar estatísticas
-- [ ] Testes unitários
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/TerritoryQuotaPoolService.cs`
-- `backend/Araponga.Tests/Application/TerritoryQuotaPoolServiceTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Pool de quotas funcionando
-- ✅ Políticas de distribuição funcionando
-- ✅ Integração com uso de serviços funcionando
-- ✅ Testes passando
-
----
-
-#### 27.4 Sistema de Alocação e Subsídios
-**Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
-
-**Tarefas**:
-- [ ] Criar `TerritoryQuotaAllocationService`:
-  - [ ] `AllocateQuotaAsync(Guid poolId, Guid userId, int units, string reason, ...)` → alocar quota
-  - [ ] `ListAllocationsAsync(Guid poolId, Guid? userId)` → listar alocações
-  - [ ] `GetUserAllocationAsync(Guid poolId, Guid userId)` → alocação do usuário
-  - [ ] `RevokeAllocationAsync(Guid allocationId, Guid userId, string reason)` → revogar alocação
-- [ ] Alocação automática (política EQUAL):
-  - [ ] Dividir quota igualmente entre membros ativos
-  - [ ] Atualizar alocações ao adicionar/remover membros
-- [ ] Alocação baseada em necessidade (política NEED_BASED):
-  - [ ] Identificar membros sem quota pessoal
-  - [ ] Priorizar membros com maior necessidade
-  - [ ] Alocação automática ao solicitar serviço
-- [ ] Alocação por votação (política VOTATION_BASED):
-  - [ ] Criar solicitação de alocação
-  - [ ] Requer aprovação por votação (Fase 14)
-  - [ ] Alocar se aprovada
-- [ ] Rastreamento de subsídios:
-  - [ ] Marcar alocações como subsídio
-  - [ ] Registrar quem recebeu subsídio
-  - [ ] Dashboard de subsídios
-- [ ] Testes unitários
-
-**Arquivos a Criar**:
-- `backend/Araponga.Application/Services/TerritoryQuotaAllocationService.cs`
-- `backend/Araponga.Tests/Application/TerritoryQuotaAllocationServiceTests.cs`
-
-**Critérios de Sucesso**:
-- ✅ Sistema de alocação funcionando
-- ✅ Políticas de alocação funcionando
-- ✅ Subsídios rastreados
-- ✅ Testes passando
-
----
-
-### Semana 3: Integração e Dashboard
-
-#### 27.5 Integração com Uso de Serviços Digitais
+#### 27.2 Serviço de IA no Chat
 **Estimativa**: 16 horas (2 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Atualizar `DigitalServiceManager` (Fase 25):
-  - [ ] Verificar quota territorial antes de quota pessoal
-  - [ ] Usar quota territorial se disponível
-  - [ ] Rastrear uso em quota territorial
-- [ ] Atualizar `ChatAIService` (Fase 26):
-  - [ ] Verificar quota territorial antes de executar IA
-  - [ ] Usar quota territorial se disponível
-  - [ ] Indicar uso de quota territorial na resposta
-- [ ] Priorização de quotas:
-  - [ ] 1. Quota territorial (se disponível)
-  - [ ] 2. Quota pessoal do usuário
-  - [ ] 3. Bloquear se nenhuma disponível
-- [ ] Rastreamento:
-  - [ ] Registrar uso em `DigitalServiceUsageLog` com `TerritoryId`
-  - [ ] Associar com `TerritoryQuotaPool`
-  - [ ] Atualizar estatísticas do pool
-- [ ] Notificações:
-  - [ ] Notificar quando pool próximo ao esgotamento
-  - [ ] Notificar quando subsídio é alocado
-- [ ] Testes de integração
+- [ ] Criar `ChatAIService`:
+  - [ ] `SendMessageWithAIAsync(Guid conversationId, Guid userId, string message, ServiceProvider? provider, ...)` → enviar mensagem com IA
+  - [ ] `GetAvailableProvidersAsync(Guid userId, Guid territoryId)` → listar provedores disponíveis
+  - [ ] `GetConversationAIConsumptionAsync(Guid conversationId, Guid userId)` → consumo por conversa
+  - [ ] `CheckAIAvailabilityAsync(Guid userId, Guid territoryId)` → verificar disponibilidade
+- [ ] Integrar com `ChatService` existente:
+  - [ ] Mensagens de IA aparecem no histórico da conversa
+  - [ ] Indicação visual de mensagem com IA
+  - [ ] Contexto de conversa incluído (histórico)
+- [ ] Validações:
+  - [ ] Feature flags (territorial + usuário)
+  - [ ] Quota disponível
+  - [ ] Provedor configurado pelo usuário
+  - [ ] Conversa existe e usuário tem acesso
+- [ ] Tratamento de erros:
+  - [ ] Fallback quando provedor indisponível
+  - [ ] Mensagem de erro amigável
+  - [ ] Log de erros para debugging
+- [ ] Rastreamento de consumo:
+  - [ ] Registrar uso em `DigitalServiceUsageLog`
+  - [ ] Associar com `ConversationId`
+  - [ ] ContextType = "chat_ai"
+- [ ] Testes unitários
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/ChatAIService.cs`
+- `backend/Araponga.Tests/Application/ChatAIServiceTests.cs`
 
 **Arquivos a Modificar**:
-- `backend/Araponga.Application/Services/DigitalServiceManager.cs`
-- `backend/Araponga.Application/Services/ChatAIService.cs` (se existir)
+- `backend/Araponga.Application/Services/ChatService.cs` (integração opcional)
 
 **Critérios de Sucesso**:
-- ✅ Integração funcionando
-- ✅ Priorização de quotas funcionando
-- ✅ Rastreamento funcionando
+- ✅ Serviço de IA funcionando
+- ✅ Integração com chat funcionando
+- ✅ Rastreamento de consumo funcionando
+- ✅ Validações funcionando
 - ✅ Testes passando
 
 ---
 
-#### 27.6 Dashboard Territorial e Controllers
-**Estimativa**: 20 horas (2.5 dias)  
+### Semana 2: API, Quotas e Extrato
+
+#### 27.3 Controller de IA no Chat
+**Estimativa**: 12 horas (1.5 dias)  
 **Status**: ❌ Não implementado
 
 **Tarefas**:
-- [ ] Criar `TerritoryServiceDashboardService`:
-  - [ ] `GetTerritoryServicesAsync(Guid territoryId)` → serviços negociados
-  - [ ] `GetServiceUsageStatsAsync(Guid territoryId, Guid? serviceId)` → estatísticas de uso
-  - [ ] `GetSubsidiesReportAsync(Guid territoryId)` → relatório de subsídios
-  - [ ] `GetCostAnalysisAsync(Guid territoryId, DateTime? periodStart, DateTime? periodEnd)` → análise de custos
-- [ ] Dashboard inclui:
-  - [ ] Serviços negociados (ativos, expirados)
-  - [ ] Quota disponível por serviço
-  - [ ] Uso por membro
-  - [ ] Top consumidores
-  - [ ] Subsídios concedidos
-  - [ ] Custos e ROI
-- [ ] Criar `TerritoryServiceAgreementController`:
-  - [ ] `POST /api/v1/territories/{territoryId}/service-agreements` → propor negociação
-  - [ ] `GET /api/v1/territories/{territoryId}/service-agreements` → listar acordos
-  - [ ] `GET /api/v1/service-agreements/{agreementId}` → obter acordo
-  - [ ] `POST /api/v1/service-agreements/{agreementId}/purchase` → comprar com fundo
-  - [ ] `POST /api/v1/service-agreements/{agreementId}/cancel` → cancelar acordo
-- [ ] Criar `TerritoryQuotaPoolController`:
-  - [ ] `GET /api/v1/territories/{territoryId}/quota-pools` → listar pools
-  - [ ] `GET /api/v1/quota-pools/{poolId}` → obter pool
-  - [ ] `GET /api/v1/quota-pools/{poolId}/allocations` → listar alocações
-  - [ ] `POST /api/v1/quota-pools/{poolId}/allocations` → criar alocação (se política permitir)
-- [ ] Criar `TerritoryServiceDashboardController`:
-  - [ ] `GET /api/v1/territories/{territoryId}/services/dashboard` → dashboard completo
-- [ ] Feature flags: `DigitalServicesEnabled`, `TerritoryServiceNegotiationEnabled`
-- [ ] Validações e permissões
+- [ ] Criar `ChatAIController`:
+  - [ ] `POST /api/v1/chat/conversations/{conversationId}/ai-message` → enviar mensagem com IA
+  - [ ] `GET /api/v1/chat/conversations/{conversationId}/ai-consumption` → consumo de IA na conversa
+  - [ ] `GET /api/v1/chat/ai/providers` → listar provedores disponíveis
+- [ ] Atualizar `ChatController` (opcional):
+  - [ ] Adicionar campo `HasAIAvailable` nas respostas de conversa
+- [ ] Validações (FluentValidation):
+  - [ ] `SendAIMessageRequestValidator`
+- [ ] Feature flags: `ChatAIEnabled`, `DigitalServicesAIEnabled`
+- [ ] Rate limiting:
+  - [ ] Limitar chamadas de IA (ex: 30 req/min)
 - [ ] Testes de integração
 
 **Arquivos a Criar**:
-- `backend/Araponga.Application/Services/TerritoryServiceDashboardService.cs`
-- `backend/Araponga.Api/Controllers/TerritoryServiceAgreementController.cs`
-- `backend/Araponga.Api/Controllers/TerritoryQuotaPoolController.cs`
-- `backend/Araponga.Api/Controllers/TerritoryServiceDashboardController.cs`
-- `backend/Araponga.Api/Contracts/TerritoryServices/ServiceAgreementResponse.cs`
-- `backend/Araponga.Api/Contracts/TerritoryServices/QuotaPoolResponse.cs`
-- `backend/Araponga.Api/Contracts/TerritoryServices/DashboardResponse.cs`
+- `backend/Araponga.Api/Controllers/ChatAIController.cs`
+- `backend/Araponga.Api/Contracts/Chat/SendAIMessageRequest.cs`
+- `backend/Araponga.Api/Contracts/Chat/AIMessageResponse.cs`
+- `backend/Araponga.Api/Contracts/Chat/ConversationAIConsumptionResponse.cs`
+- `backend/Araponga.Api/Validators/SendAIMessageRequestValidator.cs`
+- `backend/Araponga.Tests/Integration/ChatAIIntegrationTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Api/Controllers/ChatController.cs` (opcional)
 
 **Critérios de Sucesso**:
-- ✅ Dashboard funcionando
-- ✅ Controllers funcionando
+- ✅ API funcionando
 - ✅ Validações funcionando
+- ✅ Rate limiting funcionando
+- ✅ Testes passando
+
+---
+
+#### 27.4 Sistema de Quotas e Alertas
+**Estimativa**: 12 horas (1.5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `AIConsumptionQuotaService`:
+  - [ ] `CheckQuotaBeforeRequestAsync(Guid userId, Guid configId, int estimatedTokens)` → verificar quota
+  - [ ] `GetRemainingQuotaAsync(Guid userId, Guid configId)` → quota restante
+  - [ ] `GetQuotaStatusAsync(Guid userId, Guid configId)` → status da quota (OK, WARNING, EXHAUSTED)
+- [ ] Integrar verificações de quota:
+  - [ ] Verificar antes de executar chamada de IA
+  - [ ] Bloquear se quota esgotada
+  - [ ] Mensagem informativa sobre quota
+- [ ] Alertas de quota:
+  - [ ] Notificação quando quota em 80% (`digital_service.quota.warning`)
+  - [ ] Notificação quando quota em 90% (`digital_service.quota.critical`)
+  - [ ] Notificação quando quota esgotada (`digital_service.quota.exhausted`)
+- [ ] Integrar com sistema de notificações:
+  - [ ] Criar tipos de notificação (Fase 26 preparou)
+  - [ ] Enviar notificações via outbox
+- [ ] Dashboard de quota:
+  - [ ] Mostrar quota restante no extrato de consumo
+  - [ ] Indicadores visuais (verde/amarelo/vermelho)
+- [ ] Testes
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/AIConsumptionQuotaService.cs`
+- `backend/Araponga.Tests/Application/AIConsumptionQuotaServiceTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Application/Services/DigitalServiceUsageTracker.cs` (integração)
+
+**Critérios de Sucesso**:
+- ✅ Verificação de quota funcionando
+- ✅ Bloqueio quando quota esgotada
+- ✅ Alertas funcionando
+- ✅ Notificações funcionando
+- ✅ Testes passando
+
+---
+
+#### 27.5 Extrato de Consumo de IA
+**Estimativa**: 12 horas (1.5 dias)  
+**Status**: ❌ Não implementado
+
+**Tarefas**:
+- [ ] Criar `AIConsumptionReportService`:
+  - [ ] `GetConsumptionByConversationAsync(Guid conversationId, Guid userId)` → consumo por conversa
+  - [ ] `GetConsumptionSummaryAsync(Guid userId, DateTime? periodStart, DateTime? periodEnd)` → resumo de consumo
+  - [ ] `GetTopConversationsByConsumptionAsync(Guid userId, int limit)` → conversas mais consumidoras
+- [ ] Extrato de consumo:
+  - [ ] Total de tokens consumidos (input + output)
+  - [ ] Custo estimado total
+  - [ ] Número de mensagens com IA
+  - [ ] Provedor mais usado
+  - [ ] Conversa mais consumidora
+- [ ] Integrar com `DigitalServiceConsumptionController` (Fase 26):
+  - [ ] Endpoints de consumo já existem
+  - [ ] Adicionar filtros específicos para IA
+- [ ] Dashboard visual (preparação para frontend):
+  - [ ] Estatísticas de consumo de IA
+  - [ ] Gráficos de uso ao longo do tempo
+  - [ ] Comparação entre provedores
+- [ ] Testes
+
+**Arquivos a Criar**:
+- `backend/Araponga.Application/Services/AIConsumptionReportService.cs`
+- `backend/Araponga.Api/Contracts/DigitalServices/AIConsumptionSummaryResponse.cs`
+- `backend/Araponga.Tests/Application/AIConsumptionReportServiceTests.cs`
+
+**Arquivos a Modificar**:
+- `backend/Araponga.Api/Controllers/DigitalServiceConsumptionController.cs` (adicionar filtros de IA)
+
+**Critérios de Sucesso**:
+- ✅ Relatórios de consumo funcionando
+- ✅ Extrato de IA visível
+- ✅ Estatísticas corretas
 - ✅ Testes passando
 
 ---
@@ -361,82 +297,94 @@ Implementar sistema de **negociação territorial de serviços digitais** que pe
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Modelo de Domínio | 24h | ❌ Pendente | 🔴 Alta |
-| Sistema de Negociação | 20h | ❌ Pendente | 🔴 Alta |
-| Pool de Quotas | 20h | ❌ Pendente | 🔴 Alta |
-| Alocação e Subsídios | 20h | ❌ Pendente | 🔴 Alta |
-| Integração com Uso | 16h | ❌ Pendente | 🔴 Alta |
-| Dashboard e Controllers | 20h | ❌ Pendente | 🔴 Alta |
-| **Total** | **120h (21 dias)** | | |
+| Adapters de IA | 24h | ❌ Pendente | 🔴 Alta |
+| Serviço de IA no Chat | 16h | ❌ Pendente | 🔴 Alta |
+| Controller de IA | 12h | ❌ Pendente | 🔴 Alta |
+| Sistema de Quotas | 12h | ❌ Pendente | 🔴 Alta |
+| Extrato de Consumo | 12h | ❌ Pendente | 🔴 Alta |
+| **Total** | **76h (14 dias)** | | |
 
 ---
 
 ## ✅ Critérios de Sucesso da Fase 27
 
 ### Funcionalidades
-- ✅ Sistema de negociação territorial funcionando
-- ✅ Pool de quotas compartilhado funcionando
-- ✅ Políticas de distribuição funcionando
-- ✅ Sistema de subsídios funcionando
-- ✅ Dashboard territorial funcionando
-- ✅ Integração com uso de serviços funcionando
+- ✅ IA integrada ao chat funcionando
+- ✅ Múltiplos provedores de IA suportados
+- ✅ Seleção de provedor funcionando
+- ✅ Rastreamento de consumo por conversa
+- ✅ Quotas e limites funcionando
+- ✅ Extrato de consumo de IA visível
 
 ### Qualidade
 - ✅ Testes com cobertura adequada
 - ✅ Documentação completa
-- ✅ Validações e permissões implementadas
-- Considerar **Testcontainers + PostgreSQL** para testes de integração (negociação territorial, quotas, subsídios) com banco real (estratégia na Fase 19; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
+- ✅ Tratamento de erros robusto
+- ✅ Rate limiting implementado
+- Considerar **Testcontainers + PostgreSQL** para testes de integração (chat IA, consumo por conversa) com banco real (estratégia na Fase 43; [TESTCONTAINERS_POSTGRES_IMPACTO](../../TESTCONTAINERS_POSTGRES_IMPACTO.md)).
 
 ### Integração
-- ✅ Integração com TerritoryFund (Fase 20) funcionando
-- ✅ Integração com Votação (Fase 14) funcionando
-- ✅ Integração com Serviços Digitais (Fase 25) funcionando
-- ✅ Integração com Chat com IA (Fase 26) funcionando
+- ✅ Integração harmoniosa com ChatService existente
+- ✅ Uso da infraestrutura da Fase 26
+- ✅ Feature flags funcionando
+- ✅ Notificações de quota funcionando
 
 ---
 
 ## 🔗 Dependências
 
-- **Fase 25**: Serviços Digitais Base (infraestrutura, rastreamento)
-- **Fase 20**: TerritoryFund (pagamento de serviços)
-- **Fase 14**: Votação (aprovação de negociações)
+- **Fase 26**: Serviços Digitais Base (infraestrutura, rastreamento, extrato)
+- **Chat**: Sistema de chat existente (conversas, mensagens)
 
 ---
 
 ## 📝 Notas de Implementação
 
-### Fluxo de Negociação Territorial
+### Integração com Chat Existente
 
-**Exemplo**:
-1. Curador propõe: "Comprar 2M tokens OpenAI/mês"
-2. Comunidade vota (Fase 14)
-3. Se aprovada, acordo é criado
-4. Território paga com TerritoryFund (Fase 20)
-5. Pool de quota é criado automaticamente
-6. Quota é distribuída conforme política
-7. Membros usam quota territorial
-8. Dashboard mostra uso e custos
+**Abordagem**:
+- IA não altera estrutura existente de `ChatMessage`
+- Mensagens de IA são mensagens normais com flag `IsAIGenerated`
+- Histórico de conversa inclui mensagens de IA
+- Contexto para IA inclui últimas N mensagens
 
-### Políticas de Distribuição
+**Estrutura de Mensagem com IA**:
+```csharp
+ChatMessage {
+    Id, ConversationId, UserId, Content, CreatedAtUtc,
+    IsAIGenerated = true,
+    AIProvider = ServiceProvider.OpenAI,
+    AITokensInput = 100,
+    AITokensOutput = 50,
+    AIEstimatedCost = 0.002m
+}
+```
 
-**EQUAL**:
-- Divide quota igualmente entre membros ativos
-- Atualização automática ao adicionar/remover membros
-- Exemplo: 2M tokens ÷ 100 membros = 20K tokens/membro
+### Contexto de Conversa para IA
 
-**NEED_BASED**:
-- Identifica membros sem quota pessoal
-- Prioriza membros com maior necessidade
-- Alocação automática ao solicitar serviço
-- Subsídio rastreado
+**Histórico**:
+- Incluir últimas 10-20 mensagens como contexto
+- Excluir mensagens de IA muito antigas (configurável)
+- Manter contexto dentro de limite de tokens
 
-**VOTATION_BASED**:
-- Requer aprovação por votação para cada alocação
-- Maior controle e transparência
-- Processo mais lento, mas mais democrático
+**Personalização**:
+- Usuário pode configurar tamanho do contexto
+- Usuário pode configurar comportamento da IA (futuro)
+
+### Provedores de IA
+
+**Ordem de Prioridade**:
+1. Provedor selecionado pelo usuário
+2. Provedor padrão do usuário
+3. Fallback para outro provedor disponível
+
+**Tratamento de Erros**:
+- Se provedor falhar, tentar fallback
+- Se todos falharem, retornar erro amigável
+- Log de erros para debugging
 
 ---
 
 **Status**: ⏳ **FASE 27 PENDENTE**  
-**Depende de**: Fases 25, 20, 14  
-**Crítico para**: Economia de Escala e Inclusão Digital
+**Depende de**: Fase 26, Chat  
+**Crítico para**: Valor Diferenciado e Autonomia Digital

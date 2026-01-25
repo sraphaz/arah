@@ -149,7 +149,7 @@ Este documento apresenta um mapeamento completo das funcionalidades do Araponga,
 | Funcionalidade | Prioridade | Estimativa | Dependências |
 |----------------|------------|------------|--------------|
 | **Learning Hub** | 🟢 P2 | 60 dias | Sistema de cursos |
-| **Booking System** | 🟢 P2 | 45 dias | Reservas e check-in |
+| **Rental System** | 🟢 P2 | 45 dias | Aluguel de recursos diversos |
 | **Agente IA** | 🟢 P2 | 90 dias | Infraestrutura IA |
 | **Controle de Equipamentos** | ⚪ P3 | 21 dias | Inventory system |
 
@@ -185,7 +185,7 @@ Este documento apresenta um mapeamento completo das funcionalidades do Araponga,
 | IA & Automações | ✅ | ⏳ | Implementação | 🟢 P2 |
 | **Extensões** |
 | Learning Hub | ✅ | ❌ | Completo | 🟢 P2 |
-| Booking System | ✅ | ❌ | Completo | 🟢 P2 |
+| Rental System | ✅ | ❌ | Completo | 🟢 P2 |
 | Inventory | ✅ | ⚠️ | Completo | 🟢 P2 |
 
 ### Gaps Críticos Identificados
@@ -310,7 +310,7 @@ Este documento apresenta um mapeamento completo das funcionalidades do Araponga,
 | Funcionalidade | Prioridade | Estimativa | Dependências |
 |----------------|------------|------------|--------------|
 | Learning Hub | 🟢 P2 | 60 dias | Sistema de cursos |
-| Booking System | 🟢 P2 | 45 dias | Reservas |
+| Rental System | 🟢 P2 | 45 dias | Aluguel de recursos |
 | Agente IA (Básico) | 🟢 P2 | 90 dias | Infra IA |
 
 **Resultado**: Plataforma completa e diferenciada.
@@ -346,7 +346,7 @@ Mês 9-12: DAO e Tokenização
 
 Mês 12-18: Diferenciação
 ├─ Learning Hub
-├─ Booking System
+├─ Rental System
 └─ Agente IA (Básico)
 ```
 

@@ -137,7 +137,7 @@
 
 **Onda 0.8: Diferenciação** (Mês 12-18)
 - **Fase 41**: Learning Hub - 60 dias
-- **Fase 42**: Booking System - 45 dias
+- **Fase 43**: Rental System - 45 dias
 - **Fase 43**: Agente IA (Versão Básica) - 90 dias
 
 #### 🔄 Reorganização de Prioridades

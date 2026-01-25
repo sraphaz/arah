@@ -525,6 +525,24 @@ public class ChatEdgeCasesTests
     }
 
     [Fact]
+    public void ChatMessage_Edit_WithEmptyNewText_ThrowsArgumentException()
+    {
+        var message = new ChatMessage(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            TestUserId,
+            MessageContentType.Text,
+            "Original",
+            null,
+            TestDate,
+            null,
+            null,
+            null);
+
+        Assert.Throws<ArgumentException>(() => message.Edit("  ", TestDate.AddHours(1)));
+    }
+
+    [Fact]
     public void ChatMessage_Edit_WithNonTextContentType_ThrowsInvalidOperationException()
     {
         var message = new ChatMessage(

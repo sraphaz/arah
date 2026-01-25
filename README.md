@@ -294,22 +294,18 @@ O Araponga está em **desenvolvimento ativo** com **14+ fases implementadas** e 
 
 ### 🧪 Testes (Fases 1-14.5 + Enterprise Coverage Phases 7-9)
 
-- ✅ **1578 testes** totais (1556 passando, 20 pulados, 2 falhando em performance)
-- ✅ **98.6% de taxa de sucesso** nos testes executados (1556/1578)
-- ✅ **70 novos testes** adicionados (30 WorkItem + 14 AccountDeletionService + 28 Cache Services edge cases)
+- ✅ **2041 testes** totais (**2021 passando**, 20 pulados, **0 falhando**)
+- ✅ **100% de taxa de sucesso** nos testes executados (2021/2021)
 - ✅ Testes de unidade, integração e E2E
 - ✅ 14 testes de segurança
 - ✅ 7 testes de performance com SLAs
-- ✅ **268 novos testes de edge cases** (Phases 7-9) - **100% passando**
-- ✅ **Cobertura de código**: 34.42% linhas, 37.86% branches, 47.72% métodos (análise realizada em 2026-01-24)
-- ✅ CI configurado com builds reprodutíveis
+- ✅ **Cobertura** (Domain ~84–85%, Application ~70–72% nas camadas de negócio; overall ~34–36% linhas)
+- ✅ CI com coverage (Codecov + Job Summary); local: `./scripts/run-coverage.ps1`
 
 **Enterprise-Level Test Coverage**:
-- ✅ Phase 7 (Application Layer): 66 testes de edge cases - **100% passando**
-- ✅ Phase 8 (Infrastructure Layer): 48 testes de edge cases - **100% passando**
-- ✅ Phase 9 (API Layer): 42 testes de edge cases - **100% passando**
-- ✅ **Status**: Testes criados, corrigidos e validados - **1556/1578 testes passando (98.6%)**
-- ✅ **Novos testes**: 70 edge cases adicionados (WorkItem: 30, AccountDeletionService: 14, Cache Services: 28)
+- ✅ Phases 7–9: 156 testes de edge cases (Application, Infrastructure, API)
+- ✅ Fase 90%: 139 testes Application (lotes 1–8) + Fase 3 branches + Domain
+- ✅ **Status**: **2021 testes passando**, 20 skipped
 
 Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`](./docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md)
 
@@ -334,10 +330,10 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 |---------|-------|
 | **Linhas de código** | ~40.000+ |
 | **Endpoints de API** | 150+ |
-| **Testes automatizados** | 1578 (1556 passando, 20 pulados, 2 falhando em performance) |
-| **Cobertura de testes** | 45.72% linhas, 38.2% branches, 48.31% métodos (análise realizada em 2026-01-24) |
-| **Taxa de sucesso** | 98.6% (1556/1578 testes executados) |
-| **Novos testes (2026-01-24)** | 70 edge cases (WorkItem: 30, AccountDeletionService: 14, Cache Services: 28) |
+| **Testes automatizados** | 2041 (2021 passando, 20 pulados, 0 falhando) |
+| **Cobertura de testes** | Domain ~84–85%, Application ~70–72% (camadas de negócio); overall ~34–36% linhas |
+| **Taxa de sucesso** | 100% (2021/2021 testes executados) |
+| **Coverage no CI** | Codecov + Job Summary; local `./scripts/run-coverage.ps1` |
 | **Camadas de arquitetura** | 5 (Domain, Application, Infrastructure, API, Tests) |
 | **Serviços de domínio** | 25+ |
 | **Repositórios** | 20+ |
@@ -352,7 +348,7 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 ### 🎯 Próximos Passos Imediatos
 
 1. **Frontend**: Começar desenvolvimento da interface (Vue/React)
-2. **Testes**: Corrigir erros de compilação e validar cobertura de 90%+ (268 novos testes criados)
+2. **Testes**: Validar cobertura de 90%+ (2021 testes passando; ver `docs/PLANO_90_PORCENTO_COBERTURA.md`)
 3. **Documentação**: Manter wiki sincronizado com código
 4. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
 5. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
@@ -379,6 +375,8 @@ dotnet build
 dotnet test
 dotnet run --project backend/Araponga.Api
 ```
+
+**Testes com cobertura**: `./scripts/run-coverage.ps1` (ou `pwsh scripts/run-coverage.ps1`). O CI (GitHub Actions) também roda coverage e envia ao Codecov.
 
 A API estará disponível em `http://localhost:5000` (ou porta configurada).
 

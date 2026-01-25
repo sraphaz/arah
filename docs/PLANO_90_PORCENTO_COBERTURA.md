@@ -1,29 +1,44 @@
 # 🎯 Plano para Atingir 90% de Cobertura em Todas as Camadas
 
-**Última Atualização**: 2026-01-24  
-**Status Atual** (medido): 
-- Domain Layer: **82.23% linhas, 74.39% branches**
-- Application Layer: **66.37% linhas, 50.39% branches**
+**Última Atualização**: 2026-01-25  
+**Status Atual** (medido após Fase 4 + Fase 2 lotes 1–8 + Fase 3 branches): 
+- Domain Layer: **~84–85% linhas, ~76% branches**
+- Application Layer: **~70–72% linhas, ~54% branches**
+- **Suíte**: 2021 passando, 20 skipped, 0 failed.
 
 **Meta**: 90%+ em todas as camadas  
 **Gap**: 
-- Domain: ~8% linhas, ~16% branches
-- Application: ~24% linhas, ~40% branches
+- Domain: ~5% linhas, ~14% branches
+- Application: ~20% linhas, ~36% branches
 
 **Estimativa**: 360-500 testes adicionais (ver plano detalhado)
 
+**Progresso 90% (2026-01-24)**:
+- ✅ **Fase 4 Domain**: +55 testes (TerritoryMembership, MapEntityCategory, MapEntity, TerritoryCharacterization, Event Update title). Domain: 82%→84.5% linhas, 74%→76% branches.
+- ✅ **Fase 2 (lote 1)**: UserProfileServiceEdgeCasesTests (7), AnalyticsServiceEdgeCasesTests (5). Application: 66%→70% linhas, 50%→54% branches.
+- ✅ **Fase 2 (lote 2)**: DataExportServiceEdgeCasesTests (3), UserBlockServiceEdgeCasesTests (6), VotingServiceEdgeCasesTests (7), AuditServiceEdgeCasesTests (3), CacheInvalidationServiceEdgeCasesTests (9). +28 testes.
+- ✅ **Fase 2 (lote 3)**: InputSanitizationServiceEdgeCasesTests (16), DocumentEvidenceServiceEdgeCasesTests (7), HealthServiceEdgeCasesTests (6), NotificationConfigServiceEdgeCasesTests (5). +32 testes.
+- ✅ **Fase 2 (lote 4)**: InterestFilterServiceEdgeCasesTests (2), UserInterestServiceEdgeCasesTests (5), SystemConfigServiceEdgeCasesTests (4), ActiveTerritoryServiceEdgeCasesTests (4). +15 testes.
+- ✅ **Fase 2 (lote 5)**: TerritoryServiceEdgeCasesTests (8), PostFilterServiceEdgeCasesTests (3), PostEditServiceEdgeCasesTests (3). +14 testes.
+- ✅ **Fase 2 (lote 6)**: PostInteractionServiceEdgeCasesTests (6), MapServiceEdgeCasesTests (3). +9 testes.
+- ✅ **Fase 2 (lote 7)**: PushNotificationServiceEdgeCasesTests (5), MarketplaceSearchServiceEdgeCasesTests (3), RatingServiceEdgeCasesTests (6), ReportServiceEdgeCasesTests (2), WorkQueueServiceEdgeCasesTests (3). +19 testes.
+- ✅ **Fase 2 (lote 8)**: InquiryServiceEdgeCasesTests (3), CartServiceEdgeCasesTests (2), TermsAcceptanceServiceEdgeCasesTests (3), PolicyRequirementServiceEdgeCasesTests (2). +10 testes.
+- ✅ **Fase 3 (branches)**: PostFilterService mapEntityId filter (+1), MapService resident vs public (+1).
+- ✅ **Domain (branches)**: EventParticipation UpdateStatus FromConfirmedToInterested (+1), ChatMessage Edit empty newText (+1).
+- **Total de testes**: 2021 passando, 20 skipped.
+
 ---
 
-## 📊 Situação Atual (Medida em 2026-01-24)
+## 📊 Situação Atual (Medida em 2026-01-25)
 
 | Camada | Cobertura Linhas | Cobertura Branches | Meta | Gap Linhas | Gap Branches | Prioridade |
 |--------|------------------|-------------------|------|------------|--------------|------------|
-| Domain Layer | 82.23% | 74.39% | 90%+ | ~8% | ~16% | 🟡 Média |
-| Application Layer | 66.37% | 50.39% | 90%+ | ~24% | ~40% | 🔴 Alta |
+| Domain Layer | ~84–85% | ~76% | 90%+ | ~5% | ~14% | 🟡 Média |
+| Application Layer | ~70–72% | ~54% | 90%+ | ~20% | ~36% | 🔴 Alta |
 | Infrastructure Layer | ~75% (estimada) | ~75% (estimada) | 90%+ | ~15% | ~15% | 🔴 Alta |
 | API Layer | ~80% (estimada) | ~80% (estimada) | 90%+ | ~10% | ~10% | 🟡 Média |
 
-**Nota**: Application Layer tem gap significativo, especialmente em branches (50.39%). Prioridade máxima.
+**Nota**: Application Layer tem gap significativo em branches. Prioridade máxima. **Coverage**: `./scripts/run-coverage.ps1` localmente; CI envia ao Codecov e exibe resumo no Job Summary.
 
 ---
 

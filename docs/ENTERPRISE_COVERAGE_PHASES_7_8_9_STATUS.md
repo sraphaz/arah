@@ -1,9 +1,11 @@
 # 🚀 Enterprise-Level Test Coverage - Phases 7, 8 e 9 - Status
 
-**Última Atualização**: 2026-01-24  
+**Última Atualização**: 2026-01-25  
 **Status Geral**: ✅ Completo e Validado  
-**Progresso**: Phases 7, 8 e 9 completas (100% de todos os componentes)  
-**Testes**: ✅ 1556/1578 passando (98.6%), 20 pulados, 2 falhando em performance
+**Progresso**: Phases 7, 8 e 9 completas; Fase 4 Domain + Fase 2 lotes 1–8 + Fase 3 branches.  
+**Testes**: ✅ 2021 passando, 20 skipped, 0 failed. **Cobertura**: Domain ~84–85%; Application ~70–72%.
+
+**Como rodar coverage**: localmente `./scripts/run-coverage.ps1`; no CI (`.github/workflows/ci.yml`) os testes rodam com coverage, o resumo vai para o Job Summary e o relatório é enviado ao Codecov.
 
 ---
 
@@ -46,6 +48,24 @@
 | UserMediaPreferencesService | `UserMediaPreferencesServiceEdgeCasesTests.cs` | 11 testes | ✅ Completo |
 
 **Total Novos Testes**: 70 testes de edge cases para serviços menores
+
+### ✅ Fase 90% - Domain (Fase 4) + Application (Fase 2) — 2026-01-24
+
+| Tipo | Arquivos | Testes | Status |
+|------|----------|--------|--------|
+| Domain | `TerritoryMembershipEdgeCasesTests`, `MapEntityCategoryEdgeCasesTests`, `MapEntityEdgeCasesTests`, `TerritoryCharacterizationEdgeCasesTests` (Territories), `EventEdgeCasesTests` (Update title) | ~55 | ✅ |
+| Application (lote 1) | `UserProfileServiceEdgeCasesTests`, `AnalyticsServiceEdgeCasesTests` | 12 | ✅ |
+| Application (lote 2) | `DataExportServiceEdgeCasesTests`, `UserBlockServiceEdgeCasesTests`, `VotingServiceEdgeCasesTests`, `AuditServiceEdgeCasesTests`, `CacheInvalidationServiceEdgeCasesTests` | 28 | ✅ |
+| Application (lote 3) | `InputSanitizationServiceEdgeCasesTests`, `DocumentEvidenceServiceEdgeCasesTests`, `HealthServiceEdgeCasesTests`, `NotificationConfigServiceEdgeCasesTests` | 32 | ✅ |
+| Application (lote 4) | `InterestFilterServiceEdgeCasesTests`, `UserInterestServiceEdgeCasesTests`, `SystemConfigServiceEdgeCasesTests`, `ActiveTerritoryServiceEdgeCasesTests` | 15 | ✅ |
+| Application (lote 5) | `TerritoryServiceEdgeCasesTests`, `PostFilterServiceEdgeCasesTests`, `PostEditServiceEdgeCasesTests` | 14 | ✅ |
+| Application (lote 6) | `PostInteractionServiceEdgeCasesTests`, `MapServiceEdgeCasesTests` | 9 | ✅ |
+| Application (lote 7) | `PushNotificationServiceEdgeCasesTests`, `MarketplaceSearchServiceEdgeCasesTests`, `RatingServiceEdgeCasesTests`, `ReportServiceEdgeCasesTests`, `WorkQueueServiceEdgeCasesTests` | 19 | ✅ |
+| Application (lote 8) | `InquiryServiceEdgeCasesTests`, `CartServiceEdgeCasesTests`, `TermsAcceptanceServiceEdgeCasesTests`, `PolicyRequirementServiceEdgeCasesTests` | 10 | ✅ |
+| Fase 3 (branches) | PostFilterService mapEntityId, MapService resident; Domain: EventParticipation, ChatMessage | +4 | ✅ |
+
+**Total Fase 90% (Application)**: 139 testes. **Suíte**: 2021 passando, 20 skipped, 0 failed.
+**Cobertura** (rodar `./scripts/run-coverage.ps1` ou ver Job Summary no CI): Domain ~84–85%; Application ~70–72%. **Data**: 2026-01-25.
 
 ---
 
@@ -191,7 +211,7 @@
 - [x] FinancialService edge cases implemented (10 testes)
 - [x] VerificationService edge cases implemented (10 testes)
 - [x] JoinRequestService edge cases implemented (8 testes)
-- [x] Todos os testes passando (98.7% - 1488/1508 total, 0 falhando)
+- [x] Todos os testes passando (2021 passando, 20 skipped, 0 falhando)
 - [x] Build succeeds (0 errors) ✅
 - [x] All tests pass (100% dos testes executados passando) ✅
 - [x] Correções aplicadas: EventBus, ChatService, EventService, VerificationService, MediaService ✅
@@ -234,18 +254,17 @@
 
 ---
 
-**Status**: ✅ **PHASES 7, 8 e 9 COMPLETAS E VALIDADAS + NOVOS TESTES DE EDGE CASES**  
+**Status**: ✅ **PHASES 7, 8 e 9 COMPLETAS + FASE 90% LOTES 1–8 + FASE 3 BRANCHES**  
 **Build Status**: ✅ **0 erros de compilação**  
-**Test Status**: ✅ **1762/1791 testes passando (98.4%), 20 pulados, 9 falhando (não relacionados aos novos testes)**  
-**Cobertura de Código Geral**: **34.51% linhas, 38.14% branches** (análise realizada em 2026-01-24)  
-**Nota**: A cobertura geral inclui todo o código do projeto (incluindo infraestrutura HTTP, migrations, configuração).  
-**Cobertura Real em Camadas de Negócio** (análise focada realizada em 2026-01-24): 
-- **Domain Layer**: **82.23% linhas, 74.39% branches** ✅ (meta: 90%+)
-- **Application Layer**: **66.37% linhas, 50.39% branches** ⚠️ (meta: 90%+, gap: ~24%)
-- Infrastructure (crítica): ~50-60% (estimada)
+**Test Status**: ✅ **2021 testes passando, 20 skipped, 0 failed** (100% sucesso nos executados)  
+**Cobertura Geral**: ~34–36% linhas (todo o projeto).  
+**Cobertura em Camadas de Negócio** (2026-01-25): 
+- **Domain Layer**: **~84–85% linhas, ~76% branches** ✅ (meta: 90%+)
+- **Application Layer**: **~70–72% linhas, ~54% branches** ⚠️ (meta: 90%+, gap: ~20% linhas, ~36% branches)
+- Infrastructure: ~50–60% (estimada)
 
-**Gap para 90%**: ~110-160 testes adicionais focados em camadas de negócio.  
-Ver análise detalhada: [`docs/ANALISE_COBERTURA_GAP.md`](./ANALISE_COBERTURA_GAP.md)
+**Gap para 90%**: ~110–160 testes adicionais focados em camadas de negócio.  
+Ver: [`RESUMO_GAP_90_PORCENTO.md`](./RESUMO_GAP_90_PORCENTO.md), [`PLANO_90_PORCENTO_COBERTURA.md`](./PLANO_90_PORCENTO_COBERTURA.md).
 
 ---
 
@@ -265,31 +284,22 @@ Ver análise detalhada: [`docs/ANALISE_COBERTURA_GAP.md`](./ANALISE_COBERTURA_GA
 - Todos os 3 componentes completos
 
 ### 📈 Total Geral
-- **268 testes** criados nas Phases 7, 8 e 9
+- **268 testes** nas Phases 7, 8 e 9
 - **112 testes** da Phase 6
-- **70 testes** adicionados para serviços menores (2026-01-24)
-- **Total acumulado**: 450+ testes de edge cases
+- **70 testes** serviços menores; **139 testes** Fase 90% (lotes 1–8 + Fase 3 branches)
+- **Suíte atual**: 2021 passando, 20 skipped, 0 failed
 
-### 📊 Análise de Cobertura Atualizada (2026-01-24)
+### 📊 Análise de Cobertura (2026-01-25)
 
 #### Domain Layer
-- **Cobertura de Linhas**: 82.23% ✅
-- **Cobertura de Branches**: 74.39% ✅
-- **Status**: Próximo da meta de 90%
-- **Gap**: ~8% linhas, ~16% branches
+- **Linhas**: ~84–85% ✅ | **Branches**: ~76% ✅
+- **Gap**: ~5% linhas, ~14% branches para 90%
 
 #### Application Layer
-- **Cobertura de Linhas**: 66.37% ⚠️
-- **Cobertura de Branches**: 50.39% ⚠️
-- **Status**: Abaixo da meta de 90%
-- **Gap**: ~24% linhas, ~40% branches
-- **Observação**: Com os 70 novos testes de edge cases, espera-se aumento na cobertura
+- **Linhas**: ~70–72% ⚠️ | **Branches**: ~54% ⚠️
+- **Gap**: ~20% linhas, ~36% branches para 90%
 
-#### Próximos Passos Recomendados
-1. **Application Layer**: Focar em aumentar cobertura de branches (atualmente 50.39%)
-2. **Domain Layer**: Aumentar cobertura de branches para 90%+
-3. **Análise Detalhada**: Identificar métodos/classes específicas com baixa cobertura
-
-**Ver análise detalhada do gap para 90%**:
-- [`RESUMO_GAP_90_PORCENTO.md`](./RESUMO_GAP_90_PORCENTO.md) - Resumo executivo
-- [`PLANO_90_PORCENTO_COBERTURA_DETALHADO.md`](./PLANO_90_PORCENTO_COBERTURA_DETALHADO.md) - Plano completo
+#### Próximos passos
+1. **Application**: Aumentar cobertura de branches
+2. **Domain**: Levar branches a 90%+
+3. Ver [`RESUMO_GAP_90_PORCENTO.md`](./RESUMO_GAP_90_PORCENTO.md) e [`PLANO_90_PORCENTO_COBERTURA_DETALHADO.md`](./PLANO_90_PORCENTO_COBERTURA_DETALHADO.md)

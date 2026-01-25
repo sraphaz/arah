@@ -23,12 +23,12 @@
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│        ONDA 2: GOVERNANÇA E SUSTENTABILIDADE (100d) 🔴 CRÍTICO   │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│  │ Fase 12  │  │ Fase 13  │→ │ Fase 14  │→ │ Fase 15  │       │
-│  │ Otimizações│ │ Emails   │  │ Governança│ │ Subscriptions│   │
-│  │ (28d)    │  │ (14d)    │  │ (21d)    │  │ (45d)    │       │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
+│        ONDA 2: GOVERNANÇA E SUSTENTABILIDADE (83d) 🔴 CRÍTICO   │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                     │
+│  │ Fase 12  │  │ Fase 13  │→ │ Fase 14  │                     │
+│  │ Otimizações│ │ Emails   │  │ Governança│                     │
+│  │ (28d)    │  │ (14d)    │  │ (21d)    │                     │
+│  └──────────┘  └──────────┘  └──────────┘                     │
 │                            │                                    │
 │                            ▼                                    │
 │                    ┌──────────┐                                 │
@@ -80,19 +80,19 @@
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│     ONDA 6: AUTONOMIA DIGITAL (98d) 🟡 ALTA                    │
+│     ONDA 6: AUTONOMIA DIGITAL (143d) 🟡 ALTA                   │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
 │  │ Fase 26  │  │ Fase 27  │  │ Fase 28  │  │ Fase 29  │       │
 │  │ Hub      │  │ Chat IA  │  │ Negociação│ │ Sementes │       │
 │  │ (21d)    │  │ (14d)    │  │ (28d)    │  │ (21d)    │       │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
-│  ┌──────────┐                                                  │
-│  │ Fase 30  │                                                  │
-│  │ Mobile   │                                                  │
-│  │ (14d)    │                                                  │
-│  └──────────┘                                                  │
+│  ┌──────────┐  ┌──────────┐                                   │
+│  │ Fase 30  │  │ Fase 15  │                                   │
+│  │ Mobile   │  │ Subscriptions│                               │
+│  │ (14d)    │  │ (45d)    │                                   │
+│  └──────────┘  └──────────┘                                   │
 │                                                                 │
-│  Resultado: Autonomia digital completa                         │
+│  Resultado: Autonomia digital completa + Sustentabilidade       │
 └─────────────────────────────────────────────────────────────────┘
                             │
                             │ (Paralelo - Mês 12+)
@@ -185,13 +185,12 @@
 
 ---
 
-### Mês 0-6: Governança e Sustentabilidade (100 dias) 🔴 CRÍTICO
+### Mês 0-6: Governança e Sustentabilidade (83 dias) 🔴 CRÍTICO
 
 **Onda 2: Governança e Sustentabilidade**
 - Fase 12: Otimizações Finais (28 dias)
 - Fase 13: Conector de Emails (14 dias)
 - Fase 14: Governança/Votação (21 dias)
-- Fase 15: Subscriptions (45 dias)
 - **Fase 16**: Finalização Completa (20 dias) ⭐ Renumerada (era 14.8)
 
 **Resultado**: Governança + Sustentabilidade + Base completa
@@ -231,7 +230,7 @@
 
 ---
 
-### Mês 12-18: Autonomia Digital (98 dias) 🟡 ALTA
+### Mês 12-18: Autonomia Digital (143 dias) 🟡 ALTA
 
 **Onda 6: Autonomia Digital**
 - Fase 26: Hub Serviços Digitais (21 dias) ⭐ Renumerada (era 30)
@@ -239,8 +238,9 @@
 - Fase 28: Negociação Territorial (28 dias) ⭐ Renumerada (era 32)
 - Fase 29: Banco de Sementes (21 dias) ⭐ Renumerada (era 33)
 - Fase 30: Mobile Avançado (14 dias) ⭐ Renumerada (era 34)
+- **Fase 15**: Subscriptions & Recurring Payments (45 dias) ⬇️ Movida da Onda 2
 
-**Resultado**: Autonomia digital completa
+**Resultado**: Autonomia digital completa + Sustentabilidade financeira
 
 ---
 
@@ -346,11 +346,11 @@
 | Onda | Fases | Duração | Prioridade | Foco |
 |------|-------|---------|------------|------|
 | **1** | 9, 10, 11 | 61d | 🔴 P0 | MVP Essencial |
-| **2** | 12, 13, 14, 15, 16 | 128d | 🔴 P0 | Governança + Sustentabilidade |
+| **2** | 12, 13, 14, 16 | 83d | 🔴 P0 | Governança + Sustentabilidade |
 | **3** | 17, 18, 19 | 105d | 🔴 P0 | Economia Local (valor imediato) |
 | **4** | 20, 21, 22 | 84d | 🟡 P1 | Economia Local Completa |
 | **5** | 23, 24, 25 | 77d | 🟡 P1 | Conformidade e Soberania |
-| **6** | 26, 27, 28, 29, 30 | 98d | 🟡 P1 | Autonomia Digital |
+| **6** | 26, 27, 28, 29, 30, 15 | 143d | 🟡 P1 | Autonomia Digital + Sustentabilidade |
 | **7** | 31, 32, 33, 34, 35 | 147d | 🟡 P1 | Web3 (quando houver demanda) |
 | **8** | 36, 37, 38, 39, 40 | 231d | 🟡 P1 | DAO (quando houver demanda) |
 | **9** | 41, 42 | 58d | 🟡 P1 | Gamificação (depois) |

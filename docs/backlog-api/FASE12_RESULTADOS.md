@@ -123,8 +123,9 @@ A Fase 12 (Otimizações Finais e Conclusão) foi implementada com **~98% de con
 - ✅ Testes para `UserPreferencesService` (UserPreferencesServiceEdgeCasesTests, 9 testes)
 - ✅ Testes para `FeatureFlagService` (FeatureFlagServiceEdgeCasesTests, 7 testes)
 - ✅ Testes para `MediaStorageConfigService` (MediaStorageConfigServiceEdgeCasesTests, 9 testes)
+- ✅ **Próximos passos (branch `feature/fase12-proximos-passos`)**: `UserProfileStatsServiceTests` (7 testes), `TerritoryMediaConfigServiceEdgeCasesTests` (6 testes) — **+13 testes**
 
-**Estimativa Restante**: 12-20 horas
+**Estimativa Restante**: 8-16 horas
 
 ---
 
@@ -218,5 +219,6 @@ A **Fase 12 está ~98% completa**. Todas as funcionalidades críticas estão imp
 - **Compression**: `backend/Araponga.Api/Program.cs` (linhas 341-359, 612)
 - **Testes Analytics**: `AnalyticsServiceTests.cs`, `AnalyticsServiceEdgeCasesTests.cs`
 - **Testes cobertura**: `FeatureFlagServiceEdgeCasesTests.cs`, `MediaStorageConfigServiceEdgeCasesTests.cs`, `UserPreferencesServiceEdgeCasesTests.cs`
+- **Próximos passos**: `UserProfileStatsServiceTests.cs`, `TerritoryMediaConfigServiceEdgeCasesTests.cs` (branch `feature/fase12-proximos-passos`)
 
 **Última atualização**: 2026-01-25

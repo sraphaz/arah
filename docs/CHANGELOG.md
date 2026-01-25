@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado - Fase 12 Próximos Passos (2026-01-25, branch `feature/fase12-proximos-passos`)
+
+- ✅ **UserProfileStatsServiceTests** (7 testes): `GetStatsAsync` com repositórios null/parciais, agregação de posts/eventos/participações/memberships, exclusão de Visitor sem verificação.
+- ✅ **TerritoryMediaConfigServiceEdgeCasesTests** (6 testes): `GetConfigAsync` (cria default, retorna existente), `UpdateConfigAsync` (mismatch território → exceção, válido → salva), `GetEffectiveContentLimitsAsync` / `GetEffectiveChatLimitsAsync`.
+- ✅ **FASE12_RESULTADOS.md**: atualizado com ações realizadas e referência à branch e aos novos testes.
+
+---
+
 ### Alterado - Fase 12 Documentação (2026-01-25)
 
 - ✅ **FASE12.md**: status atualizado para ~98%; "Resumo da Fase 10" e "Critérios da Fase 10" corrigidos para Fase 12; tabelas de implementação alinhadas.

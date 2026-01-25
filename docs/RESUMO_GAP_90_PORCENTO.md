@@ -1,25 +1,26 @@
 # 📊 Resumo: O que falta para 90% de Cobertura
 
-**Data**: 2026-01-24  
-**Status Atual Medido**:
-- **Domain Layer**: 82.23% linhas, 74.39% branches
-- **Application Layer**: 66.37% linhas, 50.39% branches
+**Data**: 2026-01-25  
+**Status Atual Medido** (após Fase 4 + Fase 2 lotes 1–8 + Fase 3 branches):
+- **Domain Layer**: ~84–85% linhas, ~76% branches
+- **Application Layer**: ~70–72% linhas, ~54% branches
+- **Suíte**: 2021 passando, 20 skipped, 0 failed.
 
 ---
 
 ## 🎯 Gap para 90%
 
 ### Domain Layer
-- **Gap Linhas**: ~8% (82.23% → 90%)
-- **Gap Branches**: ~16% (74.39% → 90%)
+- **Gap Linhas**: ~5% (~84–85% → 90%)
+- **Gap Branches**: ~14% (~76% → 90%)
 - **Prioridade**: 🟡 Média
-- **Testes Necessários**: ~30-40 testes focados em branches
+- **Testes Necessários**: ~20-30 testes focados em branches (Fase 4 parcialmente feita)
 
 ### Application Layer
-- **Gap Linhas**: ~24% (66.37% → 90%)
-- **Gap Branches**: ~40% (50.39% → 90%) ⚠️ **CRÍTICO**
+- **Gap Linhas**: ~20% (~70–72% → 90%)
+- **Gap Branches**: ~36% (~54% → 90%) ⚠️ **CRÍTICO**
 - **Prioridade**: 🔴 Alta
-- **Testes Necessários**: ~360-500 testes
+- **Testes Necessários**: ~300-450 testes (Fase 2 em progresso)
 
 ---
 
@@ -46,8 +47,7 @@
 - UserBlockService
 
 **Serviços de Marketplace**:
-- StoreItemService, CartService, InquiryService
-- MarketplaceSearchService
+- StoreItemService, **CartService** ✅ (lote 8), **InquiryService** ✅ (lote 8), MarketplaceSearchService
 
 **Serviços de Sistema**:
 - SystemPermissionService, MembershipCapabilityService

@@ -30,14 +30,7 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore --configuration Release
-      - name: Test
-        run: |
-          dotnet test backend/Araponga.Tests/Araponga.Tests.csproj \
-            --no-build \
-            --configuration Release \
-            --verbosity normal
       - name: Test with Coverage
-        continue-on-error: true
         run: |
           dotnet test backend/Araponga.Tests/Araponga.Tests.csproj \
             --no-build \
@@ -46,9 +39,22 @@ jobs:
             --collect:"XPlat Code Coverage" \
             --results-directory:"${{ runner.temp }}/test-results" \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+      - name: Coverage summary
+        run: |
+          F=$(find "${{ runner.temp }}/test-results" -name "coverage.cobertura.xml" 2>/dev/null | head -1)
+          if [ -n "$F" ]; then
+            LR=$(grep -m1 'line-rate=' "$F" | sed -n 's/.*line-rate="\([0-9.]*\)".*/\1/p') || true
+            BR=$(grep -m1 'branch-rate=' "$F" | sed -n 's/.*branch-rate="\([0-9.]*\)".*/\1/p') || true
+            LR=${LR:-0}; BR=${BR:-0}
+            echo "## Coverage summary" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            printf "| Lines | %.1f%% |\n" $(echo "$LR" | awk '{print $1*100}') >> $GITHUB_STEP_SUMMARY
+            printf "| Branches | %.1f%% |\n" $(echo "$BR" | awk '{print $1*100}') >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Coverage Reports
         uses: codecov/codecov-action@v4
-        if: always()
+        if: success()
         with:
           files: ${{ runner.temp }}/test-results/**/coverage.cobertura.xml
           fail_ci_if_error: false

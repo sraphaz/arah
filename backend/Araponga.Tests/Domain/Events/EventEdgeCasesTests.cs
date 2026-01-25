@@ -298,6 +298,66 @@ public class EventEdgeCasesTests
     }
 
     [Fact]
+    public void TerritoryEvent_Update_WithNullTitle_ThrowsArgumentException()
+    {
+        var evt = new TerritoryEvent(
+            Guid.NewGuid(),
+            TestTerritoryId,
+            "Test Event",
+            null,
+            TestDate.AddDays(1),
+            null,
+            0,
+            0,
+            null,
+            TestUserId,
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            TestDate,
+            TestDate);
+
+        Assert.Throws<ArgumentException>(() => evt.Update(
+            null!,
+            null,
+            TestDate.AddDays(1),
+            null,
+            0,
+            0,
+            null,
+            TestDate.AddHours(1)));
+    }
+
+    [Fact]
+    public void TerritoryEvent_Update_WithEmptyTitle_ThrowsArgumentException()
+    {
+        var evt = new TerritoryEvent(
+            Guid.NewGuid(),
+            TestTerritoryId,
+            "Test Event",
+            null,
+            TestDate.AddDays(1),
+            null,
+            0,
+            0,
+            null,
+            TestUserId,
+            MembershipRole.Resident,
+            EventStatus.Scheduled,
+            TestDate,
+            TestDate);
+
+        Assert.Throws<ArgumentException>(() => evt.Update(
+            "   ",
+            null,
+            TestDate.AddDays(1),
+            null,
+            0,
+            0,
+            null,
+            TestDate.AddHours(1)));
+    }
+
+    [Fact]
     public void TerritoryEvent_Update_WithInvalidLatitude_ThrowsArgumentException()
     {
         var evt = new TerritoryEvent(
@@ -514,5 +574,20 @@ public class EventEdgeCasesTests
         participation.UpdateStatus(EventParticipationStatus.Confirmed, newDate);
 
         Assert.Equal(newDate, participation.UpdatedAtUtc);
+    }
+
+    [Fact]
+    public void EventParticipation_UpdateStatus_FromConfirmedToInterested_UpdatesSuccessfully()
+    {
+        var participation = new EventParticipation(
+            Guid.NewGuid(),
+            TestUserId,
+            EventParticipationStatus.Confirmed,
+            TestDate,
+            TestDate);
+
+        participation.UpdateStatus(EventParticipationStatus.Interested, TestDate.AddHours(1));
+
+        Assert.Equal(EventParticipationStatus.Interested, participation.Status);
     }
 }

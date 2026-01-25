@@ -22,6 +22,10 @@
 # Rider
 .idea/
 
+# Test / coverage artifacts
+**/TestResults/
+**/coverage/
+
 # OS
 .DS_Store
 Thumbs.db

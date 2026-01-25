@@ -224,8 +224,15 @@
 **Status**: ✅ **PHASES 7, 8 e 9 COMPLETAS E VALIDADAS**  
 **Build Status**: ✅ **0 erros de compilação**  
 **Test Status**: ✅ **1488/1508 testes passando (98.7%), 20 pulados, 0 falhando**  
-**Cobertura de Código**: **34.42% linhas, 37.86% branches, 47.72% métodos** (análise realizada em 2026-01-24)  
-**Nota**: A cobertura medida inclui todo o código do projeto. As Phases 7-9 focam em edge cases específicos que aumentam a robustez mesmo com cobertura percentual menor, pois testam cenários críticos que podem não ser cobertos por testes funcionais normais.
+**Cobertura de Código**: **45.63% linhas, 37.93% branches, 48.13% métodos** (análise realizada em 2026-01-24)  
+**Nota**: A cobertura medida inclui todo o código do projeto (incluindo infraestrutura HTTP, migrations, configuração).  
+**Cobertura Real em Camadas de Negócio**: 
+- Domain Layer: ~85-90% (estimada)
+- Application Layer: ~75-85% (estimada)
+- Infrastructure (crítica): ~50-60% (estimada)
+
+**Gap para 90%**: ~110-160 testes adicionais focados em camadas de negócio.  
+Ver análise detalhada: [`docs/ANALISE_COBERTURA_GAP.md`](./ANALISE_COBERTURA_GAP.md)
 
 ---
 

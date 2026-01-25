@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado - Fase 12 Encerrada (2026-01-25)
+
+- ✅ **Fase 12 declarada 100% encerrada.** Todas as funcionalidades críticas entregues; melhorias contínuas (cobertura >90%, P95 &lt; 200ms) fora do escopo de fechamento.
+- ✅ **FASE12.md**, **FASE12_RESULTADOS.md**: status 100%, tabelas atualizadas, conclusão e próximos passos do projeto (Fase 13+).
+- ✅ **README.md**, **MAPA_FASES.md**, **02_ROADMAP.md**, **backlog-api/README.md**: Fase 12 **100% (encerrada)**; MVP Essencial **100% completo**.
+
+---
+
 ### Adicionado - Fase 12 Próximos Passos (2026-01-25, branch `feature/fase12-proximos-passos`)
 
 - ✅ **UserProfileStatsServiceTests** (7 testes): `GetStatsAsync` com repositórios null/parciais, agregação de posts/eventos/participações/memberships, exclusão de Visitor sem verificação.

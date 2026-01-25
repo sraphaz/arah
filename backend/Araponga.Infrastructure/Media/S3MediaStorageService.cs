@@ -33,8 +33,15 @@ public sealed class S3MediaStorageService : IMediaStorageService, IDisposable
         {
             RegionEndpoint = !string.IsNullOrWhiteSpace(_options.S3Region)
                 ? RegionEndpoint.GetBySystemName(_options.S3Region)
-                : RegionEndpoint.USEast1
+                : RegionEndpoint.USEast1,
+            ForcePathStyle = _options.S3ForcePathStyle
         };
+
+        // Configurar endpoint customizado (para MinIO e outros S3-compatible)
+        if (!string.IsNullOrWhiteSpace(_options.S3ServiceUrl))
+        {
+            config.ServiceURL = _options.S3ServiceUrl.Trim();
+        }
 
         // Criar credenciais se fornecidas
         if (!string.IsNullOrWhiteSpace(_options.S3AccessKeyId) && !string.IsNullOrWhiteSpace(_options.S3SecretAccessKey))

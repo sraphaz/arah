@@ -1,0 +1,151 @@
+version: "3.9"
+
+services:
+  # PostgreSQL com PostGIS para dados geográficos
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: araponga-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-araponga}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-araponga}
+      POSTGRES_DB: ${POSTGRES_DB:-araponga}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - araponga_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-araponga} -d ${POSTGRES_DB:-araponga}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - araponga-network
+
+  # Redis para cache distribuído
+  redis:
+    image: redis:7-alpine
+    container_name: araponga-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-araponga}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - araponga_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - araponga-network
+
+  # MinIO para storage S3-compatible (desenvolvimento/pré-produção)
+  minio:
+    image: minio/minio:latest
+    container_name: araponga-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - araponga_minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - araponga-network
+
+  # MinIO Client para criar bucket automaticamente
+  minio-setup:
+    image: minio/mc:latest
+    container_name: araponga-minio-setup
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      /usr/bin/mc alias set myminio http://minio:9000 ${MINIO_ROOT_USER:-minioadmin} ${MINIO_ROOT_PASSWORD:-minioadmin};
+      /usr/bin/mc mb myminio/${MINIO_BUCKET_NAME:-araponga-media} --ignore-existing;
+      /usr/bin/mc anonymous set download myminio/${MINIO_BUCKET_NAME:-araponga-media};
+      exit 0;
+      "
+    networks:
+      - araponga-network
+
+  # API Araponga
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: araponga-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      # ASP.NET Core
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      
+      # Database
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=${POSTGRES_DB:-araponga};Username=${POSTGRES_USER:-araponga};Password=${POSTGRES_PASSWORD:-araponga};Pooling=true;Minimum Pool Size=5;Maximum Pool Size=100;Command Timeout=30
+      Persistence__Provider: Postgres
+      Persistence__ApplyMigrations: "true"
+      
+      # Redis Cache
+      ConnectionStrings__Redis: ${REDIS_CONNECTION_STRING:-redis:6379,password=${REDIS_PASSWORD:-araponga},abortConnect=false}
+      
+      # JWT (OBRIGATÓRIO - gere um secret forte)
+      JWT__SIGNINGKEY: ${JWT_SIGNINGKEY:-CHANGE_THIS_IN_PRODUCTION_USE_AT_LEAST_32_CHARACTERS_SECRET_KEY}
+      
+      # CORS (desenvolvimento permite wildcard, produção deve especificar origens)
+      Cors__AllowedOrigins__0: ${CORS_ALLOWED_ORIGIN_0:-*}
+      
+      # Media Storage - MinIO (S3-compatible)
+      MediaStorage__Provider: ${MEDIA_STORAGE_PROVIDER:-S3}
+      MediaStorage__S3BucketName: ${MINIO_BUCKET_NAME:-araponga-media}
+      MediaStorage__S3Region: ${MINIO_REGION:-us-east-1}
+      MediaStorage__S3AccessKeyId: ${MINIO_ROOT_USER:-minioadmin}
+      MediaStorage__S3SecretAccessKey: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      MediaStorage__S3Prefix: ${MINIO_PREFIX:-media}
+      # Configuração para usar MinIO como endpoint customizado (S3-compatible)
+      MediaStorage__S3ServiceUrl: http://minio:9000
+      MediaStorage__S3ForcePathStyle: "true"
+      
+      # Rate Limiting
+      RateLimiting__PermitLimit: ${RATE_LIMIT_PERMIT:-60}
+      RateLimiting__WindowSeconds: ${RATE_LIMIT_WINDOW:-60}
+      RateLimiting__QueueLimit: ${RATE_LIMIT_QUEUE:-0}
+      
+      # Logging
+      Serilog__WriteTo__0__Name: Console
+      Serilog__WriteTo__1__Name: File
+      Serilog__WriteTo__1__Args__path: logs/araponga-.log
+    ports:
+      - "${API_PORT:-8080}:8080"
+    volumes:
+      - ./logs:/app/logs
+      - ./wwwroot/media:/app/wwwroot/media
+    networks:
+      - araponga-network
+    restart: unless-stopped
+
+volumes:
+  araponga_pgdata:
+    driver: local
+  araponga_redis_data:
+    driver: local
+  araponga_minio_data:
+    driver: local
+
+networks:
+  araponga-network:
+    driver: bridge

@@ -87,6 +87,8 @@ public sealed class MediaStorageOptions
     public string? S3AccessKeyId { get; set; }
     public string? S3SecretAccessKey { get; set; }
     public string? S3Prefix { get; set; } // Prefixo opcional para organização
+    public string? S3ServiceUrl { get; set; } // Endpoint customizado (ex: MinIO http://localhost:9000)
+    public bool S3ForcePathStyle { get; set; } = false; // Para MinIO e outros S3-compatible
 
     // Azure Blob Configuration
     public string? AzureBlobConnectionString { get; set; }

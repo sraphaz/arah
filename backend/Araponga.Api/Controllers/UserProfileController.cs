@@ -14,6 +14,7 @@ namespace Araponga.Api.Controllers;
 public sealed class UserProfileController : ControllerBase
 {
     private readonly UserProfileService _profileService;
+    private readonly UserProfileStatsService? _statsService;
     private readonly IUserInterestRepository _interestRepository;
     private readonly IVoteRepository? _voteRepository;
     private readonly IVotingRepository? _votingRepository;
@@ -26,9 +27,11 @@ public sealed class UserProfileController : ControllerBase
         CurrentUserAccessor currentUserAccessor,
         IVoteRepository? voteRepository = null,
         IVotingRepository? votingRepository = null,
-        MediaService? mediaService = null)
+        MediaService? mediaService = null,
+        UserProfileStatsService? statsService = null)
     {
         _profileService = profileService;
+        _statsService = statsService;
         _interestRepository = interestRepository;
         _voteRepository = voteRepository;
         _votingRepository = votingRepository;
@@ -240,6 +243,45 @@ public sealed class UserProfileController : ControllerBase
         var interestTags = interests.Select(i => i.InterestTag).ToList();
 
         return Ok(await MapToResponseAsync(user, interestTags, cancellationToken));
+    }
+
+    /// <summary>
+    /// Obtém as estatísticas de contribuição territorial do usuário autenticado.
+    /// </summary>
+    [HttpGet("stats")]
+    [ProducesResponseType(typeof(UserProfileStatsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UserProfileStatsResponse>> GetMyProfileStats(
+        CancellationToken cancellationToken)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        if (_statsService is null)
+        {
+            return Ok(new UserProfileStatsResponse(
+                userContext.User.Id,
+                0,
+                0,
+                0,
+                0,
+                0));
+        }
+
+        var stats = await _statsService.GetStatsAsync(userContext.User.Id, cancellationToken);
+
+        var response = new UserProfileStatsResponse(
+            stats.UserId,
+            stats.PostsCreated,
+            stats.EventsCreated,
+            stats.EventsParticipated,
+            stats.TerritoriesMember,
+            stats.EntitiesConfirmed);
+
+        return Ok(response);
     }
 
     private async Task<UserProfileResponse> MapToResponseAsync(

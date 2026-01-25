@@ -136,8 +136,10 @@ backend/
 **[Índice Completo da Documentação](./docs/00_INDEX.md)** — Navegação estruturada
 
 ### Fases e Roadmap
-- [**Backlog de Fases (1-31 + 14.5, 14.8)** →  `docs/backlog-api/`](./docs/backlog-api/) — **32 fases planejadas, 14.5 implementadas, 14.8 pendente**
+- [**Backlog de Fases (48 fases completas)** →  `docs/backlog-api/`](./docs/backlog-api/) — **48 fases planejadas, 8 completas (Fases 1-8), 40 pendentes**
+- [**Resumo Detalhado de Todas as Fases** → `docs/backlog-api/README.md`](./docs/backlog-api/README.md) — Resumo completo organizado por ondas estratégicas
 - [Roadmap Completo](./docs/02_ROADMAP.md) — Visão de longo prazo
+- [Mapa Completo das Fases](./docs/backlog-api/MAPA_FASES.md) — Mapa centralizado de todas as fases
 - [Estrutura da Documentação](./docs/STRUCTURE.md) — Onde encontrar cada documento
 
 ### Visão e Produto
@@ -169,27 +171,26 @@ backend/
 
 ---
 
-## 🚀 Estado do Projeto - 29 Fases de Desenvolvimento
+## 🚀 Estado do Projeto - 48 Fases de Desenvolvimento
 
-O Araponga está em **desenvolvimento ativo** com **14+ fases implementadas** e validadas. O projeto segue um modelo de desenvolvimento disciplinado com foco em arquitetura sólida.
+O Araponga está em **desenvolvimento ativo** com **8 fases completas** (Fases 1-8) implementadas e validadas. O projeto segue um modelo de desenvolvimento disciplinado com foco em arquitetura sólida e evolução estratégica.
 
 ### 📊 Progresso do Desenvolvimento
 
 | Fases | Status | Descrição |
 |-------|--------|-----------|
-| **Fases 1-14** | ✅ **IMPLEMENTADAS** | Core features, feed, marketplace, governança, segurança |
-| **Fase 14.5** | ✅ **IMPLEMENTADA** | Verificação de aderência, melhorias de performance, refinamentos |
-| **Fase 14.8** | ⏳ **PENDENTE** | Finalização completa das fases 1-15 (Sistema de Políticas de Termos, validações) ⭐ NOVA |
-| **Fases 15-31** | 📋 **PLANEJADAS** | Futuras evoluções (veja roadmap completo) |
+| **Fases 1-8** | ✅ **COMPLETAS** | Fundação crítica: segurança, qualidade, performance, observabilidade, pagamentos, mídia |
+| **Fase 9** | ⏳ **PRÓXIMA** | Perfil de Usuário Completo (próxima fase a ser iniciada) |
+| **Fases 10-48** | 📋 **PLANEJADAS** | MVP essencial, governança, economia local, Web3, DAO, diferenciação |
 
-**Total de fases planejadas**: 32 (incluindo 14.5 e 14.8)  
-**Fases implementadas**: 14.5  
-**Fase 14.8 pendente**: Finalização completa antes de Fase 15  
-**Progresso**: ~45% do roadmap
+**Total de fases planejadas**: 48 fases  
+**Fases completas**: 8 (Fases 1-8) ✅  
+**Fases pendentes**: 40 (Fases 9-48) ⏳  
+**Progresso**: ~17% do roadmap completo (~127 dias de ~1,327 dias totais)
 
 ---
 
-### ✅ Funcionalidades Implementadas (Fases 1-14.5)
+### ✅ Funcionalidades Implementadas (Fases 1-8 - Fundação Crítica)
 
 #### Fase 1: Infraestrutura e Autenticação
 - ✅ Backend com Clean Architecture
@@ -294,7 +295,7 @@ O Araponga está em **desenvolvimento ativo** com **14+ fases implementadas** e 
 
 ---
 
-### 🧪 Testes (Fases 1-14.5 + Enterprise Coverage Phases 7-9)
+### 🧪 Testes (Fases 1-8 + Enterprise Coverage Phases 7-9)
 
 - ✅ **2041 testes** totais (**2021 passando**, 20 pulados, **0 falhando**)
 - ✅ **100% de taxa de sucesso** nos testes executados (2021/2021)
@@ -313,16 +314,70 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 
 ---
 
-### 📋 Fases 15-29: Próximas Evoluções (Planejadas)
+### 📋 Resumo das 48 Fases Organizadas por Ondas Estratégicas
 
-| Fase | Foco | Estimativa |
-|------|------|-----------|
-| **15-18** | Admin/Observabilidade avançada, friends/stories, otimizações | Q2-Q3 2025 |
-| **19-22** | Economias locais, moedas, trocas avançadas | Q3-Q4 2025 |
-| **23-26** | Governança distribuída, DAOs, participação ampliada | Q4 2025-Q1 2026 |
-| **27-29** | Integrações regenerativas, dados soberados, escalabilidade | Q1-Q2 2026 |
+#### ✅ Fases 1-8: Fundação Crítica (Completas)
+- **Fase 1**: Segurança e Fundação Crítica (14d) ✅
+- **Fase 2**: Qualidade de Código (14d) ✅
+- **Fase 3**: Performance e Escalabilidade (14d) ✅
+- **Fase 4**: Observabilidade (14d) ✅
+- **Fase 5**: Segurança Avançada (14d) ✅
+- **Fase 6**: Sistema de Pagamentos (14d) ✅
+- **Fase 7**: Sistema de Payout (28d) ✅
+- **Fase 8**: Infraestrutura de Mídia (15d) ✅
 
-**Roadmap completo**: [`docs/backlog-api/`](./docs/backlog-api/) com FASE1.md até FASE29.md
+#### 🔴 Onda 1: MVP Essencial (Fases 9-12) - P0 Crítico
+- **Fase 9**: Perfil de Usuário Completo (21d) ⏳ **PRÓXIMA**
+- **Fase 10**: Mídias Avançadas (25d) ⏳
+- **Fase 11**: Edição e Gestão (15d) ⏳
+- **Fase 12**: Otimizações Finais (28d) ⏳
+
+#### 🔴 Onda 2: Governança e Sustentabilidade (Fases 13-16) - P0 Crítico
+- **Fase 13**: Conector de Emails (14d) ⏳
+- **Fase 14**: Governança/Votação (21d) ⏳
+- **Fase 15**: Subscriptions & Recurring Payments (45d) ⏳
+- **Fase 16**: Finalização Completa Fases 1-15 (20d) ⏳
+
+#### 🔴 Onda 3: Economia Local (Fases 17-19) - P0 Crítico
+- **Fase 17**: Compra Coletiva (28d) ⏳
+- **Fase 18**: Hospedagem Territorial (56d) ⏳
+- **Fase 19**: Demandas e Ofertas (21d) ⏳
+
+#### 🟡 Onda 4: Economia Local Completa (Fases 20-22) - P1 Alta
+- **Fase 20**: Trocas Comunitárias (21d) ⏳
+- **Fase 21**: Entregas Territoriais (28d) ⏳
+- **Fase 22**: Moeda Territorial (35d) ⏳
+
+#### 🟡 Onda 5: Conformidade e Soberania (Fases 23-25) - P1 Alta
+- **Fase 23**: Inteligência Artificial (28d) ⏳
+- **Fase 24**: Saúde Territorial (35d) ⏳
+- **Fase 25**: Dashboard Métricas (14d) ⏳
+
+#### 🟡 Onda 6: Autonomia Digital (Fases 26-30) - P1 Alta
+- **Fase 26**: Hub Serviços Digitais (21d) ⏳
+- **Fase 27**: Chat com IA (14d) ⏳
+- **Fase 28**: Negociação Territorial (28d) ⏳
+- **Fase 30**: Mobile Avançado (14d) ⏳
+
+#### 🟡 Onda 7: Preparação Web3 (Fases 31-35) - P1 Quando Houver Demanda
+- **Fase 31**: Avaliação Blockchain (14d) ⏳
+- **Fases 32-35**: Abstração, Wallets, Smart Contracts, Criptomoedas (133d) ⏳
+
+#### 🟡 Onda 8: DAO e Tokenização (Fases 36-40) - P1 Quando Houver Demanda
+- **Fases 36-40**: Tokens, Governança Tokenizada, Proof of Presence, Ticketing, Agente IA (231d) ⏳
+
+#### 🟡 Onda 9: Gamificação e Diferenciação (Fases 41-43) - P1/P2
+- **Fase 42**: Gamificação Harmoniosa (28d) ⏳
+- **Fase 41**: Proof of Sweat (30d) ⏳
+- **Fase 43**: Arquitetura Modular (35d) ⏳
+
+#### 🟢 Onda 10: Extensões e Diferenciação (Fases 44-48) - P2 Média
+- **Fase 44**: Integrações Externas (35d) ⏳
+- **Fase 45**: Learning Hub (60d) ⏳
+- **Fase 46**: Rental System (45d) ⏳
+- **Fase 48**: Banco de Sementes (21d) ⏳
+
+**Roadmap completo e detalhado**: [`docs/backlog-api/README.md`](./docs/backlog-api/README.md) com resumo completo de todas as 48 fases
 
 ---
 
@@ -341,21 +396,25 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 | **Repositórios** | 20+ |
 | **Migrations do BD** | 40+ |
 | **Security validators** | 14 |
-| **Fases planejadas** | 29 |
-| **Fases implementadas** | 14.5 |
-| **Progresso do roadmap** | ~50% |
+| **Fases planejadas** | 48 |
+| **Fases completas** | 8 (Fases 1-8) |
+| **Fases pendentes** | 40 (Fases 9-48) |
+| **Progresso do roadmap** | ~17% (127 dias de ~1,327 dias totais) |
 
 ---
 
 ### 🎯 Próximos Passos Imediatos
 
-1. **Frontend**: Começar desenvolvimento da interface (Vue/React)
-2. **Testes**: Validar cobertura de 90%+ (2021 testes passando; ver `docs/PLANO_90_PORCENTO_COBERTURA.md`)
-3. **Documentação**: Manter wiki sincronizado com código
-4. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
-5. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
+1. **Fase 9**: Iniciar implementação de Perfil de Usuário Completo (próxima fase crítica)
+2. **Frontend**: Começar desenvolvimento da interface (Vue/React)
+3. **Testes**: Validar cobertura de 90%+ (2021 testes passando; ver `docs/PLANO_90_PORCENTO_COBERTURA.md`)
+4. **Documentação**: Manter wiki sincronizado com código
+5. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
+6. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
 
 O projeto está em **evolução disciplinada**, com foco em solidez e escalabilidade antes de crescimento agressivo.
+
+**Próxima Fase**: [Fase 9 - Perfil de Usuário Completo](./docs/backlog-api/FASE9.md) (21 dias, P0 Crítica)
 
 ---
 

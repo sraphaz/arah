@@ -39,13 +39,13 @@ public sealed class InMemoryUserPreferencesRepository : IUserPreferencesReposito
 
     public Task UpdateAsync(UserPreferences preferences, CancellationToken cancellationToken)
     {
-        // InMemory: a referência já está na lista, então não precisa fazer nada
-        // Mas vamos garantir que existe
+        // InMemory: remover o existente e adicionar o novo
         var existing = _dataStore.UserPreferences.FirstOrDefault(p => p.UserId == preferences.UserId);
-        if (existing is null)
+        if (existing is not null)
         {
-            _dataStore.UserPreferences.Add(preferences);
+            _dataStore.UserPreferences.Remove(existing);
         }
+        _dataStore.UserPreferences.Add(preferences);
 
         return Task.CompletedTask;
     }

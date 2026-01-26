@@ -9,17 +9,20 @@ public sealed class SubscriptionPlanAdminService
     private readonly ISubscriptionPlanRepository _planRepository;
     private readonly ISubscriptionPlanHistoryRepository _historyRepository;
     private readonly ITerritoryRepository _territoryRepository;
+    private readonly ISubscriptionRepository _subscriptionRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public SubscriptionPlanAdminService(
         ISubscriptionPlanRepository planRepository,
         ISubscriptionPlanHistoryRepository historyRepository,
         ITerritoryRepository territoryRepository,
+        ISubscriptionRepository subscriptionRepository,
         IUnitOfWork unitOfWork)
     {
         _planRepository = planRepository;
         _historyRepository = historyRepository;
         _territoryRepository = territoryRepository;
+        _subscriptionRepository = subscriptionRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -302,6 +305,19 @@ public sealed class SubscriptionPlanAdminService
         if (plan == null)
         {
             return Result<SubscriptionPlan>.Failure($"Plan {planId} not found.");
+        }
+
+        // Verificar se há assinaturas ativas para este plano
+        var activeSubscriptions = await _subscriptionRepository.ListAsync(
+            userId: null,
+            territoryId: null,
+            status: SubscriptionStatus.ACTIVE,
+            cancellationToken);
+        
+        var hasActiveSubscriptions = activeSubscriptions.Any(s => s.PlanId == planId);
+        if (hasActiveSubscriptions)
+        {
+            return Result<SubscriptionPlan>.Failure("Cannot deactivate plan with active subscriptions.");
         }
 
         try

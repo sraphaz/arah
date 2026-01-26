@@ -321,7 +321,7 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
     /// </summary>
     [HttpGet("capabilities")]
     [ProducesResponseType(typeof(IEnumerable<CapabilityInfoResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<CapabilityInfoResponse>>> GetCapabilities(
+    public Task<ActionResult<IEnumerable<CapabilityInfoResponse>>> GetCapabilities(
         CancellationToken cancellationToken)
     {
         var capabilities = Enum.GetValues<FeatureCapability>();
@@ -332,7 +332,7 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
             Description = GetDescription(c)
         }).ToList();
 
-        return Ok(response);
+        return Task.FromResult<ActionResult<IEnumerable<CapabilityInfoResponse>>>(Ok(response));
     }
 
     private static SubscriptionPlanResponse ToResponse(SubscriptionPlan plan)

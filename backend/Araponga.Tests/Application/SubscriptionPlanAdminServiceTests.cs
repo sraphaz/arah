@@ -13,6 +13,7 @@ public sealed class SubscriptionPlanAdminServiceTests
     private readonly Mock<ISubscriptionPlanRepository> _planRepositoryMock;
     private readonly Mock<ISubscriptionPlanHistoryRepository> _historyRepositoryMock;
     private readonly Mock<ITerritoryRepository> _territoryRepositoryMock;
+    private readonly Mock<ISubscriptionRepository> _subscriptionRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly SubscriptionPlanAdminService _service;
 
@@ -21,12 +22,14 @@ public sealed class SubscriptionPlanAdminServiceTests
         _planRepositoryMock = new Mock<ISubscriptionPlanRepository>();
         _historyRepositoryMock = new Mock<ISubscriptionPlanHistoryRepository>();
         _territoryRepositoryMock = new Mock<ITerritoryRepository>();
+        _subscriptionRepositoryMock = new Mock<ISubscriptionRepository>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
 
         _service = new SubscriptionPlanAdminService(
             _planRepositoryMock.Object,
             _historyRepositoryMock.Object,
             _territoryRepositoryMock.Object,
+            _subscriptionRepositoryMock.Object,
             _unitOfWorkMock.Object);
     }
 
@@ -219,9 +222,9 @@ public sealed class SubscriptionPlanAdminServiceTests
         _planRepositoryMock
             .Setup(r => r.GetByIdAsync(planId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingPlan);
-        _planRepositoryMock
-            .Setup(r => r.HasActiveSubscriptionsAsync(planId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+        _subscriptionRepositoryMock
+            .Setup(r => r.ListAsync(null, null, SubscriptionStatus.ACTIVE, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<Subscription>()); // Nenhuma assinatura ativa
         _planRepositoryMock
             .Setup(r => r.UpdateAsync(It.IsAny<SubscriptionPlan>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
@@ -233,7 +236,7 @@ public sealed class SubscriptionPlanAdminServiceTests
             .Returns(Task.CompletedTask);
 
         // Act
-        var result = await _service.DeactivatePlanAsync(planId, userId, CancellationToken.None);
+        var result = await _service.DeactivatePlanAsync(planId, userId, null, CancellationToken.None);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -247,16 +250,28 @@ public sealed class SubscriptionPlanAdminServiceTests
         var planId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var existingPlan = CreateBasicPlan(planId);
+        var activeSubscription = new Subscription(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            null,
+            planId,
+            SubscriptionStatus.ACTIVE,
+            DateTime.UtcNow,
+            DateTime.UtcNow.AddMonths(1),
+            null,
+            null,
+            null,
+            null);
 
         _planRepositoryMock
             .Setup(r => r.GetByIdAsync(planId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingPlan);
-        _planRepositoryMock
-            .Setup(r => r.HasActiveSubscriptionsAsync(planId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+        _subscriptionRepositoryMock
+            .Setup(r => r.ListAsync(null, null, SubscriptionStatus.ACTIVE, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<Subscription> { activeSubscription });
 
         // Act
-        var result = await _service.DeactivatePlanAsync(planId, userId, CancellationToken.None);
+        var result = await _service.DeactivatePlanAsync(planId, userId, null, CancellationToken.None);
 
         // Assert
         Assert.True(result.IsFailure);

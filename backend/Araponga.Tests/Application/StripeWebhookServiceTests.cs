@@ -195,7 +195,7 @@ public sealed class StripeWebhookServiceTests
             .Setup(r => r.GetByStripeSubscriptionIdAsync("sub_123", It.IsAny<CancellationToken>()))
             .ReturnsAsync(subscription);
         _outboxMock
-            .Setup(o => o.AddAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()))
+            .Setup(o => o.EnqueueAsync(It.IsAny<Araponga.Application.Models.OutboxMessage>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         _unitOfWorkMock
             .Setup(u => u.CommitAsync(It.IsAny<CancellationToken>()))
@@ -206,7 +206,7 @@ public sealed class StripeWebhookServiceTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        _outboxMock.Verify(o => o.AddAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Once);
+        _outboxMock.Verify(o => o.EnqueueAsync(It.IsAny<Araponga.Application.Models.OutboxMessage>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -434,12 +434,16 @@ public sealed class StripeWebhookServiceTests
 
     private static SubscriptionPayment CreatePayment(Guid subscriptionId, decimal amount)
     {
+        var now = DateTime.UtcNow;
         return new SubscriptionPayment(
             Guid.NewGuid(),
             subscriptionId,
             amount,
+            "BRL",
             SubscriptionPaymentStatus.Succeeded,
-            DateTime.UtcNow,
+            now,
+            now,
+            now.AddMonths(1),
             "in_123",
             null);
     }

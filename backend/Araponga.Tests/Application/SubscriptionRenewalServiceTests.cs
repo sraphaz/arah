@@ -51,12 +51,17 @@ public sealed class SubscriptionRenewalServiceTests
 
         var gatewayMock = new Mock<ISubscriptionGateway>();
         gatewayMock
-            .Setup(g => g.RenewSubscriptionAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Result<SubscriptionGatewayResult>.Success(new SubscriptionGatewayResult
+            .Setup(g => g.GetSubscriptionAsync(subscription.StripeSubscriptionId!, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new SubscriptionGatewayInfo
             {
-                Success = true,
-                SubscriptionId = subscription.StripeSubscriptionId!
-            }));
+                GatewaySubscriptionId = subscription.StripeSubscriptionId!,
+                GatewayCustomerId = subscription.StripeCustomerId!,
+                Status = SubscriptionStatus.ACTIVE,
+                CurrentPeriodStart = subscription.CurrentPeriodStart,
+                CurrentPeriodEnd = subscription.CurrentPeriodEnd.AddMonths(1),
+                TrialEnd = null,
+                CancelAtPeriodEnd = false
+            });
 
         _gatewayFactoryMock
             .Setup(f => f.GetGateway())
@@ -310,9 +315,9 @@ public sealed class SubscriptionRenewalServiceTests
             DateTime.UtcNow.AddMonths(-1),
             DateTime.UtcNow.AddDays(2), // Expira em 2 dias
             null,
+            null,
             "sub_123",
-            "cus_456",
-            null);
+            "cus_456");
     }
 
     private static Subscription CreateSubscriptionNotDueForRenewal(Guid planId)
@@ -326,8 +331,8 @@ public sealed class SubscriptionRenewalServiceTests
             DateTime.UtcNow,
             DateTime.UtcNow.AddMonths(1), // Ainda tem 1 mês
             null,
+            null,
             "sub_123",
-            "cus_456",
-            null);
+            "cus_456");
     }
 }

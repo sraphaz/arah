@@ -225,9 +225,9 @@ public sealed class SubscriptionServiceTests
             DateTime.UtcNow.AddDays(-15),
             DateTime.UtcNow.AddDays(15),
             null,
+            null,
             "sub_123",
-            "cus_456",
-            null);
+            "cus_456");
 
         _subscriptionRepositoryMock
             .Setup(r => r.GetByIdAsync(subscription.Id, It.IsAny<CancellationToken>()))
@@ -239,9 +239,8 @@ public sealed class SubscriptionServiceTests
         var gatewayMock = new Mock<ISubscriptionGateway>();
         gatewayMock
             .Setup(g => g.UpdateSubscriptionAsync(subscription.Id, newPlanId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Result<SubscriptionGatewayResult>.Success(new SubscriptionGatewayResult
+            .ReturnsAsync(OperationResult<SubscriptionGatewayResult>.Success(new SubscriptionGatewayResult
             {
-                Success = true,
                 GatewaySubscriptionId = "sub_123",
                 GatewayCustomerId = "cus_456",
                 CurrentPeriodStart = subscription.CurrentPeriodStart,
@@ -313,9 +312,9 @@ public sealed class SubscriptionServiceTests
             DateTime.UtcNow.AddDays(-15), // Meio do período
             DateTime.UtcNow.AddDays(15),
             null,
+            null,
             "sub_123",
-            "cus_456",
-            null);
+            "cus_456");
 
         _subscriptionRepositoryMock
             .Setup(r => r.GetByIdAsync(subscription.Id, It.IsAny<CancellationToken>()))
@@ -327,9 +326,8 @@ public sealed class SubscriptionServiceTests
         var gatewayMock = new Mock<ISubscriptionGateway>();
         gatewayMock
             .Setup(g => g.UpdateSubscriptionAsync(subscription.Id, newPlanId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Result<SubscriptionGatewayResult>.Success(new SubscriptionGatewayResult
+            .ReturnsAsync(OperationResult<SubscriptionGatewayResult>.Success(new SubscriptionGatewayResult
             {
-                Success = true,
                 GatewaySubscriptionId = "sub_123",
                 GatewayCustomerId = "cus_456",
                 CurrentPeriodStart = subscription.CurrentPeriodStart,
@@ -369,10 +367,10 @@ public sealed class SubscriptionServiceTests
             SubscriptionStatus.CANCELED,
             DateTime.UtcNow.AddMonths(-1),
             DateTime.UtcNow,
+            null,
             DateTime.UtcNow.AddDays(-5),
             "sub_123",
-            "cus_456",
-            null);
+            "cus_456");
 
         _subscriptionRepositoryMock
             .Setup(r => r.GetByIdAsync(subscriptionId, It.IsAny<CancellationToken>()))

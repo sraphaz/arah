@@ -122,7 +122,7 @@ public sealed class SubscriptionTrialServiceTests
             .Setup(r => r.UpdateAsync(It.IsAny<Subscription>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         _outboxMock
-            .Setup(o => o.EnqueueAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()))
+            .Setup(o => o.EnqueueAsync(It.IsAny<Araponga.Application.Models.OutboxMessage>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         _unitOfWorkMock
             .Setup(u => u.CommitAsync(It.IsAny<CancellationToken>()))
@@ -133,7 +133,7 @@ public sealed class SubscriptionTrialServiceTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        _outboxMock.Verify(o => o.EnqueueAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Once);
+        _outboxMock.Verify(o => o.EnqueueAsync(It.IsAny<Araponga.Application.Models.OutboxMessage>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
 

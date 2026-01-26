@@ -257,12 +257,16 @@ public sealed class MercadoPagoWebhookServiceTests
 
     private static SubscriptionPayment CreatePayment(Guid subscriptionId, decimal amount, string? externalId = null)
     {
+        var now = DateTime.UtcNow;
         return new SubscriptionPayment(
             Guid.NewGuid(),
             subscriptionId,
             amount,
+            "BRL",
             SubscriptionPaymentStatus.Succeeded,
-            DateTime.UtcNow,
+            now,
+            now,
+            now.AddMonths(1),
             externalId,
             null);
     }

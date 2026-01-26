@@ -495,8 +495,11 @@ public sealed class SubscriptionAnalyticsServiceTests
             Guid.NewGuid(),
             subscriptionId,
             amount,
+            "BRL",
             SubscriptionPaymentStatus.Succeeded,
             paymentDate,
+            paymentDate,
+            paymentDate.AddMonths(1),
             null,
             null);
     }

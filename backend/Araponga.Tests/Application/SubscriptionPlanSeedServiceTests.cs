@@ -129,6 +129,7 @@ public sealed class SubscriptionPlanSeedServiceTests
         // Assert
         _planRepositoryMock.Verify(r => r.AddAsync(
             It.Is<SubscriptionPlan>(p => 
+                p.Limits != null &&
                 p.Limits.ContainsKey("maxPosts") &&
                 p.Limits.ContainsKey("maxEvents") &&
                 p.Limits.ContainsKey("maxMarketplaceItems") &&

@@ -209,7 +209,7 @@ public sealed class StripeSubscriptionService : ISubscriptionGateway, IStripeSub
             {
                 if (t.Result.IsFailure)
                 {
-                    return OperationResult<SubscriptionGatewayResult>.Failure(t.Result.Error);
+                    return OperationResult<SubscriptionGatewayResult>.Failure(t.Result.Error ?? "Unknown error");
                 }
 
                 var stripeResult = t.Result.Value!;
@@ -236,7 +236,7 @@ public sealed class StripeSubscriptionService : ISubscriptionGateway, IStripeSub
             {
                 if (t.Result.IsFailure)
                 {
-                    return OperationResult<SubscriptionGatewayResult>.Failure(t.Result.Error);
+                    return OperationResult<SubscriptionGatewayResult>.Failure(t.Result.Error ?? "Unknown error");
                 }
 
                 var stripeResult = t.Result.Value!;

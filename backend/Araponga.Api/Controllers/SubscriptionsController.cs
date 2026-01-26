@@ -48,7 +48,7 @@ public sealed class SubscriptionsController : ControllerBase
             territoryId,
             cancellationToken);
 
-        return Ok(ToResponse(subscription));
+        return Ok(await ToResponseAsync(subscription, cancellationToken));
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public sealed class SubscriptionsController : ControllerBase
         return CreatedAtAction(
             nameof(Get),
             new { id = result.Value!.Id },
-            ToResponse(result.Value));
+            await ToResponseAsync(result.Value, cancellationToken));
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public sealed class SubscriptionsController : ControllerBase
             return Forbid();
         }
 
-        return Ok(ToResponse(subscription));
+        return Ok(await ToResponseAsync(subscription, cancellationToken));
     }
 
     /// <summary>
@@ -150,7 +150,7 @@ public sealed class SubscriptionsController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        return Ok(await ToResponseAsync(result.Value!, cancellationToken));
     }
 
     /// <summary>
@@ -230,17 +230,19 @@ public sealed class SubscriptionsController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        return Ok(await ToResponseAsync(result.Value!, cancellationToken));
     }
 
-    private static SubscriptionResponse ToResponse(Subscription subscription)
+    private async Task<SubscriptionResponse> ToResponseAsync(Subscription subscription, CancellationToken cancellationToken)
     {
+        var plan = await _subscriptionService.GetPlanByIdAsync(subscription.PlanId, cancellationToken);
         return new SubscriptionResponse
         {
             Id = subscription.Id,
             UserId = subscription.UserId,
             TerritoryId = subscription.TerritoryId,
             PlanId = subscription.PlanId,
+            Tier = plan?.Tier.ToString() ?? SubscriptionPlanTier.FREE.ToString(),
             Status = subscription.Status.ToString(),
             CurrentPeriodStart = subscription.CurrentPeriodStart,
             CurrentPeriodEnd = subscription.CurrentPeriodEnd,

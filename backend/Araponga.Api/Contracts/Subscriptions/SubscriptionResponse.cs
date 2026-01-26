@@ -6,6 +6,7 @@ public sealed class SubscriptionResponse
     public Guid UserId { get; set; }
     public Guid? TerritoryId { get; set; }
     public Guid PlanId { get; set; }
+    public string Tier { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public DateTime CurrentPeriodStart { get; set; }
     public DateTime CurrentPeriodEnd { get; set; }

@@ -203,14 +203,14 @@ public sealed class MercadoPagoWebhookService
         }
     }
 
-    private async Task<OperationResult> HandlePaymentCreatedAsync(
+    private Task<OperationResult> HandlePaymentCreatedAsync(
         JsonElement eventData,
         CancellationToken cancellationToken)
     {
         // Mercado Pago envia payment.created antes de payment.approved
         // Por enquanto, apenas loga
         _logger.LogInformation("Payment created event received from Mercado Pago");
-        return OperationResult.Success();
+        return Task.FromResult(OperationResult.Success());
     }
 
     private async Task<OperationResult> HandlePaymentApprovedAsync(

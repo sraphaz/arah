@@ -32,6 +32,7 @@ public sealed class SubscriptionIntegrationTests
         return payload!.Token;
     }
 
+
     [Fact]
     public async Task GetMySubscription_ReturnsFreePlan_WhenNoActiveSubscription()
     {

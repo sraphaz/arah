@@ -5,7 +5,6 @@ using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Subscriptions;
 using Araponga.Domain.Users;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;
@@ -14,7 +13,6 @@ namespace Araponga.Api.Controllers;
 [Route("api/v1/subscriptions")]
 [Produces("application/json")]
 [Tags("Subscriptions")]
-[Authorize]
 public sealed class SubscriptionsController : ControllerBase
 {
     private readonly SubscriptionService _subscriptionService;

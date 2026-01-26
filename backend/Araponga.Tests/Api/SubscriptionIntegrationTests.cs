@@ -202,13 +202,14 @@ public sealed class SubscriptionIntegrationTests
         Assert.NotNull(subscription);
 
         // Tentar cancelar
-        var cancelResponse = await client.PostAsync(
-            $"api/v1/subscriptions/{subscription.Id}/cancel?cancelAtPeriodEnd=false",
-            null);
+        var cancelRequest = new { cancelAtPeriodEnd = false };
+        var cancelResponse = await client.PostAsJsonAsync(
+            $"api/v1/subscriptions/{subscription.Id}/cancel",
+            cancelRequest);
 
-        // Pode retornar 200 (sucesso) ou 400 (não pode cancelar FREE)
+        // Pode retornar 204 (NoContent - sucesso) ou 400 (não pode cancelar FREE)
         Assert.True(
-            cancelResponse.StatusCode == HttpStatusCode.OK ||
+            cancelResponse.StatusCode == HttpStatusCode.NoContent ||
             cancelResponse.StatusCode == HttpStatusCode.BadRequest);
     }
 }

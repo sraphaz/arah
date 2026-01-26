@@ -445,6 +445,14 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IUserPreferencesRepository, InMemoryUserPreferencesRepository>();
         services.AddSingleton<IUserInterestRepository, InMemoryUserInterestRepository>();
         services.AddSingleton<IVotingRepository, InMemoryVotingRepository>();
+
+        // Subscriptions
+        services.AddSingleton<ISubscriptionPlanRepository, InMemorySubscriptionPlanRepository>();
+        services.AddSingleton<ISubscriptionRepository, InMemorySubscriptionRepository>();
+        services.AddSingleton<ISubscriptionPaymentRepository, InMemorySubscriptionPaymentRepository>();
+        services.AddSingleton<ICouponRepository, InMemoryCouponRepository>();
+        services.AddSingleton<ISubscriptionCouponRepository, InMemorySubscriptionCouponRepository>();
+        services.AddSingleton<ISubscriptionPlanHistoryRepository, InMemorySubscriptionPlanHistoryRepository>();
         services.AddSingleton<IVoteRepository, InMemoryVoteRepository>();
         services.AddSingleton<ITerritoryModerationRuleRepository, InMemoryTerritoryModerationRuleRepository>();
         services.AddSingleton<ITerritoryCharacterizationRepository, InMemoryTerritoryCharacterizationRepository>();

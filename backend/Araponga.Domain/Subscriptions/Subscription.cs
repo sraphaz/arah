@@ -120,6 +120,12 @@ public sealed class Subscription
         UpdatedAtUtc = DateTime.UtcNow;
     }
     
+    public void UpdatePlan(Guid planId)
+    {
+        PlanId = planId;
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
+    
     public void StartTrial(DateTime trialStart, DateTime trialEnd)
     {
         TrialStart = trialStart;

@@ -267,6 +267,7 @@ public sealed class SubscriptionService
                     return Result<Subscription>.Failure($"Failed to update subscription in {gateway.GatewayName}: {gatewayResult.Error}");
                 }
 
+                subscription.UpdatePlan(newPlanId);
                 subscription.UpdateStripeIds(
                     gatewayResult.Value!.GatewaySubscriptionId,
                     gatewayResult.Value.GatewayCustomerId);
@@ -279,6 +280,7 @@ public sealed class SubscriptionService
         else
         {
             // Atualizar localmente apenas
+            subscription.UpdatePlan(newPlanId);
             subscription.UpdateStatus(SubscriptionStatus.ACTIVE);
             var periodEnd = CalculatePeriodEnd(subscription.CurrentPeriodStart, newPlan.BillingCycle ?? SubscriptionBillingCycle.MONTHLY);
             subscription.UpdatePeriod(subscription.CurrentPeriodStart, periodEnd);

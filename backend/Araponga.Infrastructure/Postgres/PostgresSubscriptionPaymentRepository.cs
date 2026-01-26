@@ -71,6 +71,19 @@ public sealed class PostgresSubscriptionPaymentRepository : ISubscriptionPayment
         return record?.ToDomain();
     }
 
+    public async Task<IReadOnlyList<SubscriptionPayment>> GetByDateRangeAsync(
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.SubscriptionPayments
+            .AsNoTracking()
+            .Where(p => p.PaymentDate >= startDate && p.PaymentDate <= endDate)
+            .OrderByDescending(p => p.PaymentDate)
+            .ToListAsync(cancellationToken);
+        return records.Select(r => r.ToDomain()).ToList();
+    }
+
     public Task AddAsync(SubscriptionPayment payment, CancellationToken cancellationToken)
     {
         _dbContext.SubscriptionPayments.Add(payment.ToRecord());

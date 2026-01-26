@@ -45,8 +45,23 @@ public sealed class SubscriptionAnalyticsService
 
         var mrr = 0m;
 
+        // Filtrar subscriptions que estavam ativas durante o período solicitado
         foreach (var subscription in activeSubscriptions)
         {
+            // Considerar apenas subscriptions que estavam ativas no período
+            // Uma subscription está ativa no período se:
+            // - Foi criada antes ou durante o período E
+            // - Não foi cancelada antes do início do período OU foi cancelada mas cancelAtPeriodEnd é true
+            var wasActiveInPeriod = subscription.CreatedAtUtc <= end &&
+                (subscription.CanceledAt == null || 
+                 subscription.CanceledAt >= start || 
+                 (subscription.CancelAtPeriodEnd && subscription.CurrentPeriodEnd >= start));
+            
+            if (!wasActiveInPeriod)
+            {
+                continue;
+            }
+
             var plan = await _planRepository.GetByIdAsync(subscription.PlanId, cancellationToken);
             if (plan == null || plan.Tier == SubscriptionPlanTier.FREE || !plan.PricePerCycle.HasValue)
             {
@@ -177,11 +192,10 @@ public sealed class SubscriptionAnalyticsService
         var start = startDate ?? DateTime.UtcNow.AddMonths(-1);
         var end = endDate ?? DateTime.UtcNow;
 
-        var payments = await _paymentRepository.GetByUserIdAsync(Guid.Empty, cancellationToken);
-        var successfulPayments = payments
-            .Where(p => p.Status == SubscriptionPaymentStatus.Succeeded &&
-                       p.PaymentDate >= start &&
-                       p.PaymentDate <= end)
+        // Buscar todos os pagamentos no período especificado
+        var allPayments = await _paymentRepository.GetByDateRangeAsync(start, end, cancellationToken);
+        var successfulPayments = allPayments
+            .Where(p => p.Status == SubscriptionPaymentStatus.Succeeded)
             .ToList();
 
         var revenueByPlan = new Dictionary<Guid, decimal>();

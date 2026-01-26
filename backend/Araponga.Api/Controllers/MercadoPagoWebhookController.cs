@@ -169,7 +169,9 @@ public sealed class MercadoPagoWebhookController : ControllerBase
                 return false;
             }
 
-            _logger.LogDebug("Mercado Pago webhook signature validated successfully. Request ID: {RequestId}", requestId);
+            // Sanitize user-provided requestId before logging to prevent log forging
+            var safeRequestId = requestId?.Replace("\r", string.Empty).Replace("\n", string.Empty);
+            _logger.LogDebug("Mercado Pago webhook signature validated successfully. Request ID: {RequestId}", safeRequestId);
             return true;
         }
         catch (Exception ex)

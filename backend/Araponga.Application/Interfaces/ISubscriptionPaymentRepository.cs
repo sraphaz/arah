@@ -9,6 +9,7 @@ public interface ISubscriptionPaymentRepository
     Task<IReadOnlyList<SubscriptionPayment>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken);
     Task<SubscriptionPayment?> GetByStripeInvoiceIdAsync(string stripeInvoiceId, CancellationToken cancellationToken);
     Task<SubscriptionPayment?> GetBySubscriptionAndPeriodAsync(Guid subscriptionId, DateTime periodStart, DateTime periodEnd, CancellationToken cancellationToken);
+    Task<IReadOnlyList<SubscriptionPayment>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken);
     Task AddAsync(SubscriptionPayment payment, CancellationToken cancellationToken);
     Task UpdateAsync(SubscriptionPayment payment, CancellationToken cancellationToken);
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken);

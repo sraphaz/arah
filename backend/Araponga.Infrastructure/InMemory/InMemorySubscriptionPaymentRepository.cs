@@ -57,6 +57,15 @@ public sealed class InMemorySubscriptionPaymentRepository : ISubscriptionPayment
         return Task.FromResult(payment);
     }
 
+    public Task<IReadOnlyList<SubscriptionPayment>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
+    {
+        var payments = _dataStore.SubscriptionPayments
+            .Where(p => p.PaymentDate >= startDate && p.PaymentDate <= endDate)
+            .OrderByDescending(p => p.PaymentDate)
+            .ToList();
+        return Task.FromResult<IReadOnlyList<SubscriptionPayment>>(payments);
+    }
+
     public Task AddAsync(SubscriptionPayment payment, CancellationToken cancellationToken)
     {
         _dataStore.SubscriptionPayments.Add(payment);

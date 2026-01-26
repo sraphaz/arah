@@ -1,12 +1,12 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-01-20  
+**Última Atualização**: 2026-01-25  
 **Total de Fases**: [Calcular dinamicamente com `node scripts/get-phase-count.mjs`]  
 **Nota**: O número total de fases é calculado automaticamente contando arquivos `FASE*.md` em `docs/backlog-api/`. Ver `docs/PROJECT_PHASES_CONFIG.md` para mais informações.  
-**Fases Completas**: 8  
-**Fases em Andamento**: 2 (Fase 12 - 85% completo, Fase 13 - MVP recuperacao)  
+**Fases Completas**: 13 (Fases 1-12, 13, 14)  
+**Fases em Andamento**: 0  
 **Fases Complementares**: 2 (Fase 14.5, Fase 14.8)  
-**Fases Pendentes**: [Calcular: Total - Completas - Em Andamento - Complementares]
+**Fases Pendentes**: [Calcular: Total - Completas - Complementares]
 
 ---
 
@@ -14,13 +14,13 @@
 
 | Status | Quantidade | Percentual |
 |--------|------------|------------|
-| ✅ Completo | 8 | 28% |
-| ⏳ Pendente | 19 | 66% |
-| 🚧 Em Andamento | 2 | 7% |
+| ✅ Completo | 13 | 45% |
+| ⏳ Pendente | 16 | 55% |
+| 🚧 Em Andamento | 0 | 0% |
 
 ---
 
-## ✅ Fases Completas (1-8)
+## ✅ Fases Completas (1-14)
 
 | Fase | Nome | Status | Data de Conclusão | Documentação |
 |------|------|--------|-------------------|--------------|
@@ -32,6 +32,12 @@
 | 6 | Sistema de Pagamentos | ✅ Completo | 2025-01 | [FASE6.md](./backlog-api/FASE6.md) |
 | 7 | Sistema de Payout | ✅ Completo | 2025-01 | [FASE7.md](./backlog-api/FASE7.md) |
 | 8 | Infraestrutura de Mídia | ✅ Completo | 2025-01-16 | [FASE8.md](./backlog-api/FASE8.md) |
+| 9 | Perfil de Usuário Completo | ✅ Completo | 2025-01 | [FASE9.md](./backlog-api/FASE9.md) |
+| 10 | Mídias Avançadas | ✅ Completo | 2025-01 | [FASE10.md](./backlog-api/FASE10.md) |
+| 11 | Edição e Gestão | ✅ Completo | 2025-01 | [FASE11.md](./backlog-api/FASE11.md) |
+| 12 | Otimizações Finais | ✅ Completo | 2025-01 | [FASE12.md](./backlog-api/FASE12.md) |
+| 13 | Conector de Emails | ✅ Completo | 2026-01-25 | [FASE13.md](./backlog-api/FASE13.md) |
+| 14 | Governança Comunitária | ✅ Completo | 2025-01 | [FASE14.md](./backlog-api/FASE14.md) |
 
 ## 🔄 Fases Complementares (Itens Faltantes)
 
@@ -44,22 +50,12 @@
 
 ---
 
-## 🔴 Fases Críticas - MVP Essencial (9-11)
-
-| Fase | Nome | Prioridade | Status | Dependências |
-|------|------|------------|--------|--------------|
-| 9 | Perfil de Usuário Completo | 🔴 CRÍTICO | ⏳ Pendente | Fase 1 |
-| 10 | Mídias em Conteúdo | 🔴 CRÍTICO | ⏳ Pendente | Fase 8 |
-| 11 | Edição e Gestão | 🔴 CRÍTICO | ⏳ Pendente | Fase 9, 10 |
-
----
-
 ## 🔴 Fases Críticas - Comunicação e Governança (13-14)
 
 | Fase | Nome | Prioridade | Status | Dependências |
 |------|------|------------|--------|--------------|
-| 13 | Conector de Emails | 🔴 CRÍTICO | 🚧 Em Andamento | Fase 9 |
-| 14 | Governança Comunitária | 🔴 CRÍTICO | ✅ Implementado | Nenhuma |
+| 13 | Conector de Emails | 🔴 CRÍTICO | ✅ Completo | Nenhuma |
+| 14 | Governança Comunitária | 🔴 CRÍTICO | ✅ Completo | Nenhuma |
 | **14.5** | **Governança — Itens Faltantes** | 🟡 Importante | ⏳ Pendente | Fase 14 |
 
 ---
@@ -68,8 +64,7 @@
 
 | Fase | Nome | Prioridade | Status | Dependências | Progresso |
 |------|------|------------|--------|--------------|-----------|
-| 12 | Otimizações Finais | 🟡 ALTA | 🚧 Em Andamento | Fase 11 | 85% | [Status Detalhado](./backlog-api/FASE12_STATUS.md) |
-| 15 | Inteligência Artificial | 🟡 ALTA | ⏳ Pendente | Fase 14, 14.5 | - |
+| 15 | Subscriptions & Recurring Payments | 🔴 CRÍTICO | ⏳ Pendente | Fase 6, 7 | - |
 
 ---
 

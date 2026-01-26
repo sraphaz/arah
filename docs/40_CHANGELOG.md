@@ -15,6 +15,61 @@
 ---
 
 ## 🆕 Mudanças Recentes
+### Versão 3.5 (2026-01-25) - Fase 13: Conector de Envio de Emails - COMPLETA ✅
+
+**Status**: ✅ **Fase 13 Finalizada (100%)**
+
+#### 📧 Sistema de Envio de Emails Completo
+
+**Infraestrutura**:
+- ✅ Interface `IEmailSender` e modelo `EmailMessage` implementados
+- ✅ `SmtpEmailSender` com suporte a MailKit e configuração flexível
+- ✅ Sistema de templates de email (`EmailTemplateService`) com suporte a placeholders, condicionais e loops
+- ✅ Queue assíncrona de envio (`EmailQueueService` e `EmailQueueWorker`)
+- ✅ Retry policy com exponential backoff (até 4 tentativas)
+- ✅ Dead letter queue para falhas persistentes
+- ✅ Rate limiting (100 emails/minuto)
+
+**Templates de Email**:
+- ✅ `welcome.html` - Email de boas-vindas
+- ✅ `password-reset.html` - Recuperação de senha
+- ✅ `event-reminder.html` - Lembretes de eventos
+- ✅ `marketplace-order.html` - Confirmação de pedidos
+- ✅ `alert-critical.html` - Alertas críticos
+- ✅ Layout base (`_layout.html`) responsivo
+
+**Integração**:
+- ✅ Integração completa com sistema de notificações (`OutboxDispatcherWorker`)
+- ✅ `EmailNotificationMapper` para mapear tipos de notificação para templates
+- ✅ Verificação automática de preferências de email do usuário
+- ✅ Priorização de emails (Critical, High, Normal, Low)
+
+**Preferências de Email**:
+- ✅ Modelo de domínio `EmailPreferences` com `EmailFrequency` e `EmailTypes`
+- ✅ Endpoint `PUT /api/v1/users/me/preferences/email` implementado
+- ✅ Suporte a opt-in/opt-out por tipo de email
+- ✅ Frequências: Imediato, Diário, Semanal
+
+**Casos de Uso**:
+- ✅ Email de boas-vindas ao criar conta (`AuthService`)
+- ✅ Email de recuperação de senha (`PasswordResetService`)
+- ✅ Emails de notificações importantes (eventos, marketplace, alertas críticos)
+- ✅ Respeito às preferências do usuário
+
+**Testes**:
+- ✅ Testes unitários (`EmailServiceEdgeCasesTests`, `EmailTemplateServiceEdgeCasesTests`, `EmailQueueServiceEdgeCasesTests`)
+- ✅ Testes de integração E2E (`EmailIntegrationTests`)
+- ✅ Cobertura de edge cases (Unicode, validações, retry logic)
+
+**Documentação**:
+- ✅ `docs/EMAIL_SYSTEM.md` - Documentação técnica completa
+- ✅ `docs/FASE13_STATUS_IMPLEMENTACAO.md` - Status detalhado da implementação
+- ✅ Configuração documentada (SMTP, templates, queue)
+
+**Nota**: SendGrid (opcional) pode ser implementado posteriormente se necessário para produção.
+
+---
+
 ### Versao 3.4 (2026-01-23) - Recuperacao de acesso e health checks
 
 - Adicionados endpoints de recuperacao de acesso via email (`/api/v1/auth/password-reset` e `/api/v1/auth/password-reset/confirm`).

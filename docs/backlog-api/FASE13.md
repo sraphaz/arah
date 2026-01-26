@@ -4,7 +4,7 @@
 **Prioridade**: 🔴 ALTA (Comunicação essencial)  
 **Depende de**: Nenhuma (pode ser feito em paralelo)  
 **Estimativa Total**: 80 horas  
-**Status**: Parcial (recuperacao de acesso via email no MVP)
+**Status**: ⏳ Pendente
 
 ---
 
@@ -22,9 +22,9 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 ## 📋 Contexto e Requisitos
 
 ### Estado Atual
-- ✅ Sistema de notificacoes in-app implementado
-- ⚠️ Envio basico de emails via logging (MVP)
-- ❌ Envio real por SMTP/SendGrid pendente
+- ✅ Sistema de notificações in-app implementado
+- ❌ Não existe capacidade de enviar emails
+- ❌ Usuários não recebem emails da plataforma
 
 ### Requisitos Funcionais
 - ✅ Enviar email de boas-vindas ao criar conta
@@ -46,11 +46,11 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 
 #### 13.1 Interface e Abstração
 **Estimativa**: 8 horas (1 dia)  
-**Status**: ⚠️ Parcial
+**Status**: ❌ Não implementado
 
 **Tarefas**:
-- [x] Criar interface `IEmailSender`:
-  - [x] `SendEmailAsync(string to, string subject, string body, bool isHtml, CancellationToken)`
+- [ ] Criar interface `IEmailSender`:
+  - [ ] `SendEmailAsync(string to, string subject, string body, bool isHtml, CancellationToken)`
   - [ ] `SendEmailAsync(string to, string subject, string templateName, object templateData, CancellationToken)`
 - [ ] Criar modelo `EmailMessage`:
   - [ ] `To`, `Subject`, `Body`, `IsHtml`, `From`, `ReplyTo`
@@ -70,10 +70,9 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 
 #### 13.2 Implementação SMTP
 **Estimativa**: 12 horas (1.5 dias)  
-**Status**: ⚠️ Parcial (logging)
+**Status**: ❌ Não implementado
 
 **Tarefas**:
-- [x] Criar `LoggingEmailSender` (log-only, MVP)
 - [ ] Criar `SmtpEmailSender`:
   - [ ] Implementar `IEmailSender`
   - [ ] Usar `System.Net.Mail.SmtpClient` ou `MailKit`
@@ -90,7 +89,6 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 - [ ] Logging de envios
 
 **Arquivos a Criar**:
-- `backend/Araponga.Infrastructure/Email/LoggingEmailSender.cs`
 - `backend/Araponga.Infrastructure/Email/SmtpEmailSender.cs`
 - `backend/Araponga.Infrastructure/Email/EmailConfiguration.cs`
 
@@ -274,12 +272,11 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
   - [ ] Integrar em `AuthService.CreateUserAsync`
   - [ ] Template `welcome.html`
   - [ ] Dados: nome do usuário, link para ativação (opcional)
-- [x] **Email de Recuperação de Acesso**:
-  - [x] Criar endpoint `POST /api/v1/auth/password-reset`
-  - [x] Criar endpoint `POST /api/v1/auth/password-reset/confirm`
-  - [x] Gerar token de recovery e armazenar em cache distribuído
+- [ ] **Email de Recuperação de Senha**:
+  - [ ] Criar endpoint `POST /api/v1/auth/forgot-password`
+  - [ ] Gerar token de reset
   - [ ] Template `password-reset.html`
-  - [x] Dados: link de reset e expiração (texto simples)
+  - [ ] Dados: link de reset, expiração
 - [ ] **Email de Lembrete de Evento**:
   - [ ] Background job para verificar eventos próximos (24h antes)
   - [ ] Template `event-reminder.html`
@@ -350,14 +347,14 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
-| Interface e Abstração | 8h | ⚠️ Parcial | 🔴 Crítica |
-| Implementação SMTP | 12h | ⚠️ Parcial | 🔴 Crítica |
+| Interface e Abstração | 8h | ❌ Pendente | 🔴 Crítica |
+| Implementação SMTP | 12h | ❌ Pendente | 🔴 Crítica |
 | Implementação SendGrid | 12h | ❌ Pendente | 🟢 Opcional |
 | Sistema de Templates | 16h | ❌ Pendente | 🔴 Crítica |
 | Queue de Envio Assíncrono | 16h | ❌ Pendente | 🔴 Crítica |
 | Integração com Notificações | 12h | ❌ Pendente | 🔴 Crítica |
 | Preferências de Email | 8h | ❌ Pendente | 🟡 Importante |
-| Casos de Uso Específicos | 12h | ⚠️ Parcial | 🔴 Crítica |
+| Casos de Uso Específicos | 12h | ❌ Pendente | 🔴 Crítica |
 | Testes e Documentação | 8h | ❌ Pendente | 🟡 Importante |
 | **Total** | **80h (14 dias)** | | |
 
@@ -365,7 +362,7 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 
 #### 13.X Configuração de Políticas de Presença
 **Estimativa**: 16 horas (2 dias)  
-**Status**: Parcial (recuperacao de acesso via email no MVP)  
+**Status**: ⏳ Pendente  
 **Prioridade**: 🟢 Baixa
 
 **Contexto**: Política de presença atualmente fixa em `appsettings.json` (`PresencePolicy: Policy: "ResidentOnly"`). Esta tarefa permite configuração por território para políticas mais flexíveis.
@@ -504,12 +501,6 @@ Implementar um **conector de envio de emails** para que a plataforma possa envia
 
 ---
 
-**Status**: ⚠️ **FASE 13 PARCIAL**  
-**Depende de**: Nenhuma
-
-
-
-
-
-
-
+**Status**: ✅ **FASE 13 COMPLETA**  
+**Depende de**: Nenhuma  
+**Data de Conclusão**: 2026-01-25

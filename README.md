@@ -173,7 +173,7 @@ backend/
 
 ## 🚀 Estado do Projeto - 48 Fases de Desenvolvimento
 
-O Araponga está em **desenvolvimento ativo** com **12 fases completas** (Fases 1-12) implementadas e validadas. O projeto segue um modelo de desenvolvimento disciplinado com foco em arquitetura sólida e evolução estratégica.
+O Araponga está em **desenvolvimento ativo** com **14 fases completas** (Fases 1-14) implementadas e validadas. O projeto segue um modelo de desenvolvimento disciplinado com foco em arquitetura sólida e evolução estratégica.
 
 ### 📊 Progresso do Desenvolvimento
 
@@ -181,12 +181,13 @@ O Araponga está em **desenvolvimento ativo** com **12 fases completas** (Fases 
 |-------|--------|-----------|
 | **Fases 1-8** | ✅ **COMPLETAS** | Fundação crítica: segurança, qualidade, performance, observabilidade, pagamentos, mídia |
 | **Fases 9-12** | ✅ **MVP ESSENCIAL COMPLETO** | Perfil de Usuário, Mídias Avançadas, Edição e Gestão, Otimizações Finais (100%, Fase 12 encerrada) |
-| **Fases 13-48** | 📋 **PLANEJADAS** | Governança, economia local, Web3, DAO, diferenciação |
+| **Fases 13-14** | ✅ **COMPLETAS** | Conector de Emails (100%), Governança Comunitária (100%) |
+| **Fases 15-48** | 📋 **PLANEJADAS** | Subscriptions, economia local, Web3, DAO, diferenciação |
 
 **Total de fases planejadas**: 48 fases  
-**Fases completas**: 12 (Fases 1-12) ✅  
-**Fases pendentes**: 36 (Fases 13-48) ⏳  
-**Progresso**: ~25% do roadmap completo (~216 dias de ~1,327 dias totais)
+**Fases completas**: 14 (Fases 1-14) ✅  
+**Fases pendentes**: 34 (Fases 15-48) ⏳  
+**Progresso**: ~29% do roadmap completo (~250 dias de ~1,327 dias totais)
 
 ---
 
@@ -338,10 +339,10 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 
 **Total MVP Essencial**: ✅ **100% COMPLETO** (Fase 12 encerrada)
 
-#### 🔴 Onda 2: Governança e Sustentabilidade (Fases 13-16) - P0 Crítico
-- **Fase 13**: Conector de Emails (14d) ⏳
-- **Fase 14**: Governança/Votação (21d) ⏳
-- **Fase 15**: Subscriptions & Recurring Payments (45d) ⏳
+#### ✅ Onda 2: Governança e Sustentabilidade (Fases 13-16) - P0 Crítico
+- **Fase 13**: Conector de Emails (14d) ✅ **100%** (completa)
+- **Fase 14**: Governança/Votação (21d) ✅ **100%** (completa)
+- **Fase 15**: Subscriptions & Recurring Payments (60d) ⏳
 - **Fase 16**: Finalização Completa Fases 1-15 (20d) ⏳
 
 #### 🔴 Onda 3: Economia Local (Fases 17-19) - P0 Crítico
@@ -412,18 +413,20 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 ### 🎯 Próximos Passos Imediatos
 
 1. **Fase 13**: Iniciar implementação de Conector de Envio de Emails (próxima fase crítica)
-2. **Fase 14**: Governança/Votação (P0 Crítico)
+2. **Fase 14**: Governança/Votação (P0 Crítico) - ✅ **Já Implementado**
 3. **Fase 15**: Subscriptions & Recurring Payments (P0 Crítico)
-4. **Frontend**: Começar desenvolvimento da interface (Vue/React)
-5. **Testes**: Validar cobertura de 90%+ (2021+ testes passando)
-6. **Documentação**: Manter wiki sincronizado com código
-7. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
-8. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
+4. **Fase 16**: Finalização Completa Fases 1-15 (P0 Crítico)
+5. **Frontend**: Começar desenvolvimento da interface (Vue/React)
+6. **Testes**: Validar cobertura de 90%+ (2021+ testes passando)
+7. **Documentação**: Manter wiki sincronizado com código
+8. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
+9. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
 
 O projeto está em **evolução disciplinada**, com foco em solidez e escalabilidade antes de crescimento agressivo.
 
-**Status Atual**: ✅ **MVP Essencial Completo (100%, Fase 12 encerrada)**  
-**Próxima Fase**: [Fase 13 - Conector de Envio de Emails](./docs/backlog-api/FASE13.md) (14 dias, P0 Crítica)
+**Status Atual**: ✅ **Fases 1-14 Completas (100%)** - MVP Essencial + Comunicação + Governança  
+**Próxima Fase**: [Fase 15 - Subscriptions & Recurring Payments](./docs/backlog-api/FASE15.md) (60 dias, P0 Crítica)  
+**📋 Plano de Implantação**: [Plano Completo Fases 13-15](./docs/PLANO_IMPLANTACAO_FASES_13_15.md) - Cronograma detalhado até Fase 15
 
 ---
 

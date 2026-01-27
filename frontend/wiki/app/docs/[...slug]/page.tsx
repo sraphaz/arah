@@ -9,6 +9,7 @@ import remarkGfm from "remark-gfm";
 import sanitizeHtml from "sanitize-html";
 import { TableOfContents } from "../../../components/layout/TableOfContents";
 import { ContentSections } from "../[slug]/content-sections";
+import { YamlDownloadButton } from "../../../components/YamlDownloadButton";
 
 // Helper function para extrair texto de HTML de forma segura
 function getTextContent(html: string): string {
@@ -266,31 +267,7 @@ export default async function DocPage({ params }: PageProps) {
 
               {/* Botão de Download para YAML */}
               {yamlDoc && (
-                <div className="mb-6 flex flex-wrap gap-4 items-center">
-                  <button
-                    onClick={() => {
-                      // Cria blob e faz download via JavaScript (compatível com static export)
-                      const blob = new Blob([yamlDoc.content], { type: 'application/x-yaml' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = yamlDoc.fileName;
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                      URL.revokeObjectURL(url);
-                    }}
-                    className="btn-secondary inline-flex items-center gap-2"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Baixar {yamlDoc.fileName}
-                  </button>
-                  <span className="text-sm text-forest-600 dark:text-forest-400">
-                    Arquivo YAML - Contrato OpenAPI
-                  </span>
-                </div>
+                <YamlDownloadButton fileName={yamlDoc.fileName} content={yamlDoc.content} />
               )}
 
               {/* Document Content - Refinado com Progressive Disclosure */}

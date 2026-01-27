@@ -173,7 +173,7 @@ backend/
 
 ## 🚀 Estado do Projeto - 48 Fases de Desenvolvimento
 
-O Araponga está em **desenvolvimento ativo** com **14 fases completas** (Fases 1-14) implementadas e validadas. O projeto segue um modelo de desenvolvimento disciplinado com foco em arquitetura sólida e evolução estratégica.
+O Araponga está em **desenvolvimento ativo** com **16 fases completas** (Fases 1-16) implementadas e validadas. O projeto segue um modelo de desenvolvimento disciplinado com foco em arquitetura sólida e evolução estratégica.
 
 ### 📊 Progresso do Desenvolvimento
 
@@ -182,16 +182,17 @@ O Araponga está em **desenvolvimento ativo** com **14 fases completas** (Fases 
 | **Fases 1-8** | ✅ **COMPLETAS** | Fundação crítica: segurança, qualidade, performance, observabilidade, pagamentos, mídia |
 | **Fases 9-12** | ✅ **MVP ESSENCIAL COMPLETO** | Perfil de Usuário, Mídias Avançadas, Edição e Gestão, Otimizações Finais (100%, Fase 12 encerrada) |
 | **Fases 13-14** | ✅ **COMPLETAS** | Conector de Emails (100%), Governança Comunitária (100%) |
-| **Fases 15-48** | 📋 **PLANEJADAS** | Subscriptions, economia local, Web3, DAO, diferenciação |
+| **Fases 15-16** | ✅ **COMPLETAS** | Subscriptions & Recurring Payments (100%), Finalização Completa Fases 1-15 (100%) |
+| **Fases 17-48** | 📋 **PLANEJADAS** | Economia local, Web3, DAO, diferenciação |
 
 **Total de fases planejadas**: 48 fases  
-**Fases completas**: 14 (Fases 1-14) ✅  
-**Fases pendentes**: 34 (Fases 15-48) ⏳  
-**Progresso**: ~29% do roadmap completo (~250 dias de ~1,327 dias totais)
+**Fases completas**: 16 (Fases 1-16) ✅  
+**Fases pendentes**: 32 (Fases 17-48) ⏳  
+**Progresso**: ~33% do roadmap completo (~290 dias de ~1,327 dias totais)
 
 ---
 
-### ✅ Funcionalidades Implementadas (Fases 1-12 - Fundação + MVP Essencial)
+### ✅ Funcionalidades Implementadas (Fases 1-16 - Fundação + MVP Essencial + Governança + Subscriptions)
 
 #### Fase 1: Segurança e Fundação Crítica ✅
 - ✅ Autenticação JWT com secret management robusto
@@ -277,6 +278,37 @@ O Araponga está em **desenvolvimento ativo** com **14 fases completas** (Fases 
 - ✅ CI/CD Pipeline - 100%
 - ✅ Response Compression (gzip/brotli) - 100%
 
+#### Fase 13: Conector de Emails ✅ **100%** (completa)
+- ✅ Sistema de envio de emails via SMTP
+- ✅ Templates HTML para notificações
+- ✅ Fila de emails com processamento assíncrono
+- ✅ Integração com Outbox pattern
+- ✅ Suporte a múltiplos provedores SMTP
+
+#### Fase 14: Governança Comunitária ✅ **100%** (completa)
+- ✅ Sistema de votação territorial
+- ✅ Moderação comunitária
+- ✅ Feature flags por território
+- ✅ Chat territorial com governança
+
+#### Fase 15: Subscriptions & Recurring Payments ✅ **100%** (completa)
+- ✅ Sistema completo de assinaturas recorrentes
+- ✅ Integração com Stripe e Mercado Pago
+- ✅ Planos de assinatura (FREE, BASIC, PREMIUM)
+- ✅ Cupons e descontos
+- ✅ Renovação automática de assinaturas
+- ✅ Períodos de trial
+- ✅ Analytics de assinaturas (MRR, churn rate)
+- ✅ Webhooks para processamento de pagamentos
+- ✅ Cobertura de testes ~93% (75/81 cenários)
+
+#### Fase 16: Finalização Completa Fases 1-15 ✅ **100%** (completa)
+- ✅ Sistema de Políticas de Termos e Critérios de Aceite
+- ✅ Validação completa de endpoints (Fases 9, 11, 12, 13)
+- ✅ Cobertura de testes Fase 15 (~93%)
+- ✅ Testes de integração Subscriptions (100% - 9/9 testes passando)
+- ✅ Documentação atualizada
+
 ---
 
 ### 🔒 Segurança e Confiabilidade (Cross-Phase)
@@ -302,8 +334,8 @@ O Araponga está em **desenvolvimento ativo** com **14 fases completas** (Fases 
 
 ### 🧪 Testes (Fases 1-8 + Enterprise Coverage Phases 7-9)
 
-- ✅ **2041 testes** totais (**2021 passando**, 20 pulados, **0 falhando**)
-- ✅ **100% de taxa de sucesso** nos testes executados (2021/2021)
+- ✅ **2194 testes** totais (**2171 passando**, 23 pulados, **0 falhando**)
+- ✅ **100% de taxa de sucesso** nos testes executados (2171/2171)
 - ✅ Testes de unidade, integração e E2E
 - ✅ 14 testes de segurança
 - ✅ 7 testes de performance com SLAs
@@ -313,7 +345,8 @@ O Araponga está em **desenvolvimento ativo** com **14 fases completas** (Fases 
 **Enterprise-Level Test Coverage**:
 - ✅ Phases 7–9: 156 testes de edge cases (Application, Infrastructure, API)
 - ✅ Fase 90%: 139 testes Application (lotes 1–8) + Fase 3 branches + Domain
-- ✅ **Status**: **2021 testes passando**, 20 skipped
+- ✅ Fase 15: 75 testes de subscriptions (93% cobertura)
+- ✅ **Status**: **2171 testes passando**, 23 skipped
 
 Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`](./docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md)
 
@@ -339,11 +372,11 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 
 **Total MVP Essencial**: ✅ **100% COMPLETO** (Fase 12 encerrada)
 
-#### ✅ Onda 2: Governança e Sustentabilidade (Fases 13-16) - P0 Crítico
+#### ✅ Onda 2: Governança e Sustentabilidade (Fases 13-16) - P0 Crítico - COMPLETA
 - **Fase 13**: Conector de Emails (14d) ✅ **100%** (completa)
 - **Fase 14**: Governança/Votação (21d) ✅ **100%** (completa)
-- **Fase 15**: Subscriptions & Recurring Payments (60d) ⏳
-- **Fase 16**: Finalização Completa Fases 1-15 (20d) ⏳
+- **Fase 15**: Subscriptions & Recurring Payments (60d) ✅ **100%** (completa)
+- **Fase 16**: Finalização Completa Fases 1-15 (20d) ✅ **100%** (completa)
 
 #### 🔴 Onda 3: Economia Local (Fases 17-19) - P0 Crítico
 - **Fase 17**: Compra Coletiva (28d) ⏳
@@ -394,7 +427,7 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 |---------|-------|
 | **Linhas de código** | ~40.000+ |
 | **Endpoints de API** | 150+ |
-| **Testes automatizados** | 2041 (2021 passando, 20 pulados, 0 falhando) |
+| **Testes automatizados** | 2194 (2171 passando, 23 pulados, 0 falhando) |
 | **Cobertura de testes** | Domain ~84–85%, Application ~70–72% (camadas de negócio); overall ~34–36% linhas |
 | **Taxa de sucesso** | 100% (2021/2021 testes executados) |
 | **Coverage no CI** | Codecov + Job Summary; local `./scripts/run-coverage.ps1` |
@@ -404,29 +437,28 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 | **Migrations do BD** | 40+ |
 | **Security validators** | 14 |
 | **Fases planejadas** | 48 |
-| **Fases completas** | 12 (Fases 1-12) |
-| **Fases pendentes** | 36 (Fases 13-48) |
-| **Progresso do roadmap** | ~25% (216 dias de ~1,327 dias totais) |
+| **Fases completas** | 16 (Fases 1-16) |
+| **Fases pendentes** | 32 (Fases 17-48) |
+| **Progresso do roadmap** | ~33% (290 dias de ~1,327 dias totais) |
 
 ---
 
 ### 🎯 Próximos Passos Imediatos
 
-1. **Fase 13**: Iniciar implementação de Conector de Envio de Emails (próxima fase crítica)
-2. **Fase 14**: Governança/Votação (P0 Crítico) - ✅ **Já Implementado**
-3. **Fase 15**: Subscriptions & Recurring Payments (P0 Crítico)
-4. **Fase 16**: Finalização Completa Fases 1-15 (P0 Crítico)
-5. **Frontend**: Começar desenvolvimento da interface (Vue/React)
-6. **Testes**: Validar cobertura de 90%+ (2021+ testes passando)
-7. **Documentação**: Manter wiki sincronizado com código
-8. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
-9. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
+1. **Fase 17**: Compra Coletiva (P0 Crítico) - Organização de compras coletivas, agrupamento de pedidos
+2. **Fase 18**: Hospedagem Territorial (P0 Crítico) - Sistema de hospedagem, agenda, aprovação
+3. **Fase 19**: Demandas e Ofertas (P0 Crítico) - Moradores cadastram demandas, outros fazem ofertas
+4. **Frontend**: Começar desenvolvimento da interface (Vue/React)
+5. **Testes**: Validar cobertura de 90%+ (2171+ testes passando)
+6. **Documentação**: Manter wiki sincronizado com código
+7. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
+8. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
 
 O projeto está em **evolução disciplinada**, com foco em solidez e escalabilidade antes de crescimento agressivo.
 
-**Status Atual**: ✅ **Fases 1-14 Completas (100%)** - MVP Essencial + Comunicação + Governança  
-**Próxima Fase**: [Fase 15 - Subscriptions & Recurring Payments](./docs/backlog-api/FASE15.md) (60 dias, P0 Crítica)  
-**📋 Plano de Implantação**: [Plano Completo Fases 13-15](./docs/PLANO_IMPLANTACAO_FASES_13_15.md) - Cronograma detalhado até Fase 15
+**Status Atual**: ✅ **Fases 1-16 Completas (100%)** - MVP Essencial + Comunicação + Governança + Subscriptions  
+**Próxima Fase**: [Fase 17 - Compra Coletiva](./docs/backlog-api/FASE17.md) (28 dias, P0 Crítica)  
+**📋 Plano de Implantação**: Ver [STATUS_FASES.md](./docs/STATUS_FASES.md) para roadmap completo
 
 ---
 

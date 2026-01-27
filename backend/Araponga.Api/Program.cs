@@ -30,7 +30,6 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using Araponga.Application.Metrics;
 using Araponga.Application.Services;
-using Araponga.Infrastructure.Postgres;
 
 var builder = WebApplication.CreateBuilder(args);
 

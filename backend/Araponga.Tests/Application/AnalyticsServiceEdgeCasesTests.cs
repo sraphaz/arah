@@ -24,6 +24,8 @@ public sealed class AnalyticsServiceEdgeCasesTests
     private readonly Mock<ICheckoutRepository> _checkoutRepo;
     private readonly Mock<ISellerTransactionRepository> _sellerTxRepo;
     private readonly Mock<IUserRepository> _userRepo;
+    private readonly Mock<IStoreRepository> _storeRepo;
+    private readonly Mock<IStoreItemRepository> _storeItemRepo;
     private readonly AnalyticsService _service;
 
     public AnalyticsServiceEdgeCasesTests()
@@ -35,6 +37,8 @@ public sealed class AnalyticsServiceEdgeCasesTests
         _checkoutRepo = new Mock<ICheckoutRepository>();
         _sellerTxRepo = new Mock<ISellerTransactionRepository>();
         _userRepo = new Mock<IUserRepository>();
+        _storeRepo = new Mock<IStoreRepository>();
+        _storeItemRepo = new Mock<IStoreItemRepository>();
         _service = new AnalyticsService(
             _territoryRepo.Object,
             _membershipRepo.Object,
@@ -42,7 +46,9 @@ public sealed class AnalyticsServiceEdgeCasesTests
             _eventRepo.Object,
             _checkoutRepo.Object,
             _sellerTxRepo.Object,
-            _userRepo.Object);
+            _userRepo.Object,
+            _storeRepo.Object,
+            _storeItemRepo.Object);
     }
 
     [Fact]

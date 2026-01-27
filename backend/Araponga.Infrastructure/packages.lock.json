@@ -116,6 +116,16 @@
         "resolved": "3.1.12",
         "contentHash": "iAg6zifihXEFS/t7fiHhZBGAdCp3FavsF4i2ZIDp0JfeYeDVzvmlbY1CNhhIKimaIzrzSi5M/NBFcWvZT2rB/A=="
       },
+      "Stripe.net": {
+        "type": "Direct",
+        "requested": "[47.0.0, )",
+        "resolved": "47.0.0",
+        "contentHash": "GPGZPYtxGd/T/DbOdn8YY4rTVuC6yt7Jbc4SwrJJzWnMFlB4eU4uukpj8P7QEdEqxbwLvFWM9QnCIUKR8pAD1Q==",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "System.Configuration.ConfigurationManager": "8.0.0"
+        }
+      },
       "System.Text.Json": {
         "type": "Direct",
         "requested": "[8.0.5, )",
@@ -451,6 +461,11 @@
           "System.Security.Cryptography.Pkcs": "8.0.1"
         }
       },
+      "Newtonsoft.Json": {
+        "type": "Transitive",
+        "resolved": "13.0.3",
+        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+      },
       "Npgsql": {
         "type": "Transitive",
         "resolved": "8.0.4",
@@ -488,6 +503,15 @@
         "dependencies": {
           "System.Memory.Data": "1.0.2",
           "System.Text.Json": "4.7.2"
+        }
+      },
+      "System.Configuration.ConfigurationManager": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "JlYi9XVvIREURRUlGMr1F6vOFLk7YSY4p1vHo4kX3tQ0AGrjqlRWHDi66ImHhy6qwXBG3BJ6Y1QlYQ+Qz6Xgww==",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "8.0.0",
+          "System.Security.Cryptography.ProtectedData": "8.0.0"
         }
       },
       "System.Diagnostics.DiagnosticSource": {
@@ -533,6 +557,11 @@
         "type": "Transitive",
         "resolved": "8.0.1",
         "contentHash": "CoCRHFym33aUSf/NtWSVSZa99dkd0Hm7OCZUxORBjRB16LNhIEOf8THPqzIYlvKM0nNDAPTRBa1FxEECrgaxxA=="
+      },
+      "System.Security.Cryptography.ProtectedData": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "+TUFINV2q2ifyXauQXRwy4CiBhqvDEDZeVJU7qfxya4aRYOKzVBpN+4acx25VcPB9ywUN6C0n8drWl110PhZEg=="
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",

@@ -53,6 +53,36 @@ function processMarkdownLinks(html: string, basePath: string = '/wiki'): string 
   );
 }
 
+async function getYamlContent(filePath: string) {
+  try {
+    const docsPath = join(process.cwd(), "..", "..", "docs", filePath);
+    const fileContents = await readFile(docsPath, "utf8");
+    
+    // Helper para remover prefixos numéricos (00_, 01_, etc.) do nome do arquivo
+    function removeNumericPrefix(text: string): string {
+      return text.replace(/^\d+_/, "");
+    }
+
+    const fileName = filePath.split('/').pop() || '';
+    const fileNameWithoutExt = fileName.replace(/\.(yaml|yml)$/, "");
+    const titleWithoutPrefix = removeNumericPrefix(fileNameWithoutExt);
+    const fallbackTitle = titleWithoutPrefix.replace(/_/g, " ");
+
+    // Não precisa fazer escape manual - React já faz escape automaticamente ao renderizar
+    // O conteúdo será renderizado dentro de <code> que React escapa automaticamente
+
+    return {
+      content: fileContents,
+      title: fallbackTitle,
+      isYaml: true,
+      fileName: fileName,
+    };
+  } catch (error) {
+    console.error(`Error reading YAML file ${filePath}:`, error);
+    return null;
+  }
+}
+
 async function getDocContent(filePath: string) {
   try {
     const docsPath = join(process.cwd(), "..", "..", "docs", filePath);

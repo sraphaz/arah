@@ -1,0 +1,1597 @@
+openapi: 3.0.3
+info:
+  title: Araponga BFF API - Backend for Frontend
+  description: |
+    API BFF (Backend for Frontend) que expõe operações em forma de jornadas (user journeys),
+    criando uma camada de abstração entre interfaces visuais e o backend.
+    
+    Esta API encapsula responsabilidades de UX/UI e reduz significativamente o número de
+    chamadas necessárias para completar uma jornada do usuário.
+    
+    **Versão da API**: v2
+    **Base Path**: `/api/v2/journeys`
+  version: 2.0.0
+  contact:
+    name: Araponga API Support
+    email: api@araponga.com
+
+servers:
+  - url: https://api.araponga.com/api/v2/journeys
+    description: Produção
+  - url: https://staging-api.araponga.com/api/v2/journeys
+    description: Staging
+  - url: http://localhost:5000/api/v2/journeys
+    description: Desenvolvimento Local
+
+tags:
+  - name: Onboarding
+    description: Jornadas de onboarding e primeiro acesso
+  - name: Feed
+    description: Jornadas relacionadas ao feed comunitário
+  - name: Events
+    description: Jornadas relacionadas a eventos
+  - name: Marketplace
+    description: Jornadas relacionadas ao marketplace
+  - name: Territories
+    description: Jornadas relacionadas a territórios
+  - name: Chat
+    description: Jornadas relacionadas ao chat
+  - name: Profile
+    description: Jornadas relacionadas ao perfil do usuário
+
+paths:
+  # ============================================
+  # ONBOARDING JOURNEYS
+  # ============================================
+  /onboarding/complete:
+    post:
+      tags:
+        - Onboarding
+      summary: Completa o onboarding do usuário
+      description: |
+        Realiza o onboarding completo do usuário em uma única chamada:
+        - Autentica o usuário
+        - Lista territórios disponíveis
+        - Seleciona território ativo
+        - Entra como VISITOR
+        - Retorna feed inicial
+        - Sugere próximas ações
+      operationId: completeOnboarding
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteOnboardingRequest'
+            example:
+              authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              selectedTerritoryId: "550e8400-e29b-41d4-a716-446655440000"
+              location:
+                latitude: -23.5505
+                longitude: -46.6333
+      responses:
+        '200':
+          description: Onboarding completado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteOnboardingResponse'
+              example:
+                user:
+                  id: "123e4567-e89b-12d3-a456-426614174000"
+                  displayName: "João Silva"
+                  email: "joao@example.com"
+                  membership: "VISITOR"
+                territory:
+                  id: "550e8400-e29b-41d4-a716-446655440000"
+                  name: "Vila Madalena"
+                  description: "Bairro boêmio de São Paulo"
+                  active: true
+                initialFeed:
+                  items: []
+                  pagination:
+                    pageNumber: 1
+                    pageSize: 20
+                    totalCount: 0
+                    totalPages: 0
+                    hasPreviousPage: false
+                    hasNextPage: false
+                suggestedActions:
+                  - action: "REQUEST_RESIDENCY"
+                    title: "Solicitar Residência"
+                    description: "Torne-se morador para acessar conteúdo exclusivo"
+                    priority: "HIGH"
+                  - action: "EXPLORE_MAP"
+                    title: "Explorar Mapa"
+                    description: "Descubra pontos de interesse no território"
+                    priority: "MEDIUM"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /onboarding/suggested-territories:
+    get:
+      tags:
+        - Onboarding
+      summary: Obtém territórios sugeridos para o usuário
+      description: |
+        Retorna territórios sugeridos baseados na localização do usuário e preferências.
+      operationId: getSuggestedTerritories
+      parameters:
+        - name: latitude
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+            minimum: -90
+            maximum: 90
+          description: Latitude da localização do usuário
+        - name: longitude
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+            minimum: -180
+            maximum: 180
+          description: Longitude da localização do usuário
+        - name: radiusKm
+          in: query
+          required: false
+          schema:
+            type: number
+            format: double
+            default: 10
+            minimum: 1
+            maximum: 100
+          description: Raio de busca em quilômetros
+      responses:
+        '200':
+          description: Lista de territórios sugeridos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestedTerritoriesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ============================================
+  # FEED JOURNEYS
+  # ============================================
+  /feed/territory-feed:
+    get:
+      tags:
+        - Feed
+      summary: Obtém feed do território formatado para UI
+      description: |
+        Retorna o feed do território com todos os dados agregados:
+        - Posts com contadores (likes, shares, comments)
+        - Mídias de cada post
+        - Eventos relacionados
+        - Interações do usuário atual
+        - Metadados para filtros
+      operationId: getTerritoryFeed
+      parameters:
+        - name: territoryId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do território
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Número da página
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Tamanho da página
+        - name: filterByInterests
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Filtrar por interesses do usuário
+        - name: mapEntityId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Filtrar por entidade do mapa
+        - name: assetId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Filtrar por asset
+      responses:
+        '200':
+          description: Feed do território formatado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerritoryFeedJourneyResponse'
+              example:
+                items:
+                  - post:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      title: "Feira de Artesanato"
+                      content: "Venha participar da nossa feira de artesanato no próximo sábado!"
+                      type: "POST"
+                      visibility: "PUBLIC"
+                      status: "PUBLISHED"
+                      mapEntityId: null
+                      createdAtUtc: "2026-01-27T10:00:00Z"
+                      tags: ["evento", "comunidade"]
+                    counts:
+                      likes: 15
+                      shares: 3
+                      comments: 5
+                    media:
+                      - url: "https://cdn.araponga.com/media/abc123.jpg"
+                        type: "IMAGE"
+                        thumbnailUrl: "https://cdn.araponga.com/media/abc123_thumb.jpg"
+                    event: null
+                    author:
+                      id: "456e7890-e89b-12d3-a456-426614174001"
+                      displayName: "Maria Santos"
+                      avatarUrl: "https://cdn.araponga.com/avatars/maria.jpg"
+                    userInteractions:
+                      liked: false
+                      shared: false
+                      commented: false
+                    metadata:
+                      canEdit: false
+                      canDelete: false
+                      canShare: true
+                      canComment: true
+                pagination:
+                  pageNumber: 1
+                  pageSize: 20
+                  totalCount: 42
+                  totalPages: 3
+                  hasPreviousPage: false
+                  hasNextPage: true
+                filters:
+                  availableTypes:
+                    - "POST"
+                    - "ALERT"
+                    - "EVENT"
+                  availableTags:
+                    - "evento"
+                    - "comunidade"
+                    - "alerta"
+                  availableVisibilities:
+                    - "PUBLIC"
+                    - "RESIDENTS_ONLY"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /feed/create-post:
+    post:
+      tags:
+        - Feed
+      summary: Cria post com mídias em uma única chamada
+      description: |
+        Cria um post com upload de mídias em uma única chamada.
+        Faz upload das mídias, cria o post e retorna o post formatado para UI.
+      operationId: createPost
+      parameters:
+        - name: territoryId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do território
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePostJourneyRequest'
+            encoding:
+              mediaFiles:
+                contentType: image/jpeg,image/png,image/webp,video/mp4
+      responses:
+        '201':
+          description: Post criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePostJourneyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /feed/interact:
+    post:
+      tags:
+        - Feed
+      summary: Interage com um post (like, comment, share)
+      description: |
+        Permite interagir com um post (curtir, comentar ou compartilhar) e retorna
+        o estado atualizado do post.
+      operationId: interactWithPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostInteractionRequest'
+      responses:
+        '200':
+          description: Interação realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostInteractionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================
+  # EVENTS JOURNEYS
+  # ============================================
+  /events/territory-events:
+    get:
+      tags:
+        - Events
+      summary: Lista eventos do território formatados para UI
+      description: |
+        Retorna eventos do território com todos os dados agregados:
+        - Detalhes do evento
+        - Participantes (interessados e confirmados)
+        - Mídias
+        - Estado de participação do usuário
+      operationId: getTerritoryEvents
+      parameters:
+        - name: territoryId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do território
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Data inicial (filtro)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Data final (filtro)
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [SCHEDULED, ONGOING, COMPLETED, CANCELLED]
+          description: Status do evento
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Lista de eventos formatada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerritoryEventsJourneyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /events/create-event:
+    post:
+      tags:
+        - Events
+      summary: Cria evento com mídias em uma única chamada
+      description: |
+        Cria um evento com upload de mídias em uma única chamada.
+      operationId: createEvent
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateEventJourneyRequest'
+      responses:
+        '201':
+          description: Evento criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateEventJourneyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /events/participate:
+    post:
+      tags:
+        - Events
+      summary: Participa de um evento (interesse ou confirmação)
+      description: |
+        Marca interesse ou confirma participação em um evento e retorna
+        o estado atualizado do evento.
+      operationId: participateInEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventParticipationRequest'
+      responses:
+        '200':
+          description: Participação registrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================
+  # MARKETPLACE JOURNEYS
+  # ============================================
+  /marketplace/search:
+    get:
+      tags:
+        - Marketplace
+      summary: Busca itens no marketplace formatados para UI
+      description: |
+        Busca itens no marketplace com todos os dados agregados:
+        - Itens formatados
+        - Lojas
+        - Filtros disponíveis
+        - Sugestões
+      operationId: searchMarketplace
+      parameters:
+        - name: territoryId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Termo de busca
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [PRODUCT, SERVICE]
+        - name: minPrice
+          in: query
+          required: false
+          schema:
+            type: number
+            format: decimal
+        - name: maxPrice
+          in: query
+          required: false
+          schema:
+            type: number
+            format: decimal
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Resultados da busca formatados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceSearchJourneyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /marketplace/add-to-cart:
+    post:
+      tags:
+        - Marketplace
+      summary: Adiciona item ao carrinho e retorna carrinho atualizado
+      description: |
+        Adiciona um item ao carrinho e retorna o carrinho completo atualizado
+        com sugestões de produtos relacionados.
+      operationId: addToCart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToCartRequest'
+      responses:
+        '200':
+          description: Item adicionado ao carrinho
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddToCartResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /marketplace/checkout:
+    post:
+      tags:
+        - Marketplace
+      summary: Finaliza compra do carrinho
+      description: |
+        Finaliza a compra do carrinho, processa pagamento e retorna
+        confirmação da ordem.
+      operationId: checkout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+      responses:
+        '200':
+          description: Compra finalizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          description: Pagamento falhou
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    # ============================================
+    # ONBOARDING SCHEMAS
+    # ============================================
+    CompleteOnboardingRequest:
+      type: object
+      required:
+        - selectedTerritoryId
+      properties:
+        authToken:
+          type: string
+          description: Token de autenticação (opcional se já autenticado)
+        selectedTerritoryId:
+          type: string
+          format: uuid
+          description: ID do território selecionado
+        location:
+          $ref: '#/components/schemas/Location'
+      example:
+        authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        selectedTerritoryId: "550e8400-e29b-41d4-a716-446655440000"
+        location:
+          latitude: -23.5505
+          longitude: -46.6333
+
+    CompleteOnboardingResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserSummary'
+        territory:
+          $ref: '#/components/schemas/TerritorySummary'
+        initialFeed:
+          $ref: '#/components/schemas/TerritoryFeedJourneyResponse'
+        suggestedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SuggestedAction'
+
+    SuggestedTerritoriesResponse:
+      type: object
+      properties:
+        territories:
+          type: array
+          items:
+            $ref: '#/components/schemas/TerritorySummary'
+
+    SuggestedAction:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [REQUEST_RESIDENCY, EXPLORE_MAP, CREATE_POST, JOIN_EVENT, BROWSE_MARKETPLACE]
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [HIGH, MEDIUM, LOW]
+
+    # ============================================
+    # FEED SCHEMAS
+    # ============================================
+    CreatePostJourneyRequest:
+      type: object
+      required:
+        - title
+        - content
+        - type
+        - visibility
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        type:
+          type: string
+          enum: [POST, ALERT, EVENT]
+        visibility:
+          type: string
+          enum: [PUBLIC, RESIDENTS_ONLY]
+        mediaFiles:
+          type: array
+          items:
+            type: string
+            format: binary
+          description: Arquivos de mídia (imagens ou vídeos)
+          maxItems: 10
+        tags:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+        mapEntityId:
+          type: string
+          format: uuid
+        geoAnchors:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoAnchor'
+        assetIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    CreatePostJourneyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        post:
+          $ref: '#/components/schemas/FeedItemJourney'
+        mediaUrls:
+          type: array
+          items:
+            type: string
+        suggestions:
+          $ref: '#/components/schemas/PostSuggestions'
+
+    TerritoryFeedJourneyResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeedItemJourney'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        filters:
+          $ref: '#/components/schemas/FeedFilters'
+
+    FeedItemJourney:
+      type: object
+      properties:
+        post:
+          $ref: '#/components/schemas/PostSummary'
+        counts:
+          $ref: '#/components/schemas/PostCounts'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaItem'
+        event:
+          $ref: '#/components/schemas/EventSummary'
+          nullable: true
+        author:
+          $ref: '#/components/schemas/UserSummary'
+        userInteractions:
+          $ref: '#/components/schemas/UserInteractions'
+        metadata:
+          $ref: '#/components/schemas/PostMetadata'
+
+    PostSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+          enum: [POST, ALERT, EVENT]
+        visibility:
+          type: string
+          enum: [PUBLIC, RESIDENTS_ONLY]
+        status:
+          type: string
+          enum: [PUBLISHED, DRAFT, ARCHIVED]
+        mapEntityId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAtUtc:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+
+    PostCounts:
+      type: object
+      properties:
+        likes:
+          type: integer
+          minimum: 0
+        shares:
+          type: integer
+          minimum: 0
+        comments:
+          type: integer
+          minimum: 0
+
+    UserInteractions:
+      type: object
+      properties:
+        liked:
+          type: boolean
+        shared:
+          type: boolean
+        commented:
+          type: boolean
+
+    PostMetadata:
+      type: object
+      properties:
+        canEdit:
+          type: boolean
+        canDelete:
+          type: boolean
+        canShare:
+          type: boolean
+        canComment:
+          type: boolean
+
+    PostInteractionRequest:
+      type: object
+      required:
+        - postId
+        - action
+      properties:
+        postId:
+          type: string
+          format: uuid
+        action:
+          type: string
+          enum: [LIKE, UNLIKE, COMMENT, SHARE]
+        comment:
+          type: string
+          description: Conteúdo do comentário (obrigatório se action=COMMENT)
+          maxLength: 1000
+
+    PostInteractionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        post:
+          $ref: '#/components/schemas/FeedItemJourney'
+        updatedCounts:
+          $ref: '#/components/schemas/PostCounts'
+
+    PostSuggestions:
+      type: object
+      properties:
+        similarPosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostSummary'
+        suggestedTags:
+          type: array
+          items:
+            type: string
+
+    FeedFilters:
+      type: object
+      properties:
+        availableTypes:
+          type: array
+          items:
+            type: string
+        availableTags:
+          type: array
+          items:
+            type: string
+        availableVisibilities:
+          type: array
+          items:
+            type: string
+
+    # ============================================
+    # EVENTS SCHEMAS
+    # ============================================
+    CreateEventJourneyRequest:
+      type: object
+      required:
+        - territoryId
+        - title
+        - startsAtUtc
+      properties:
+        territoryId:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        startsAtUtc:
+          type: string
+          format: date-time
+        endsAtUtc:
+          type: string
+          format: date-time
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        locationLabel:
+          type: string
+          maxLength: 200
+        coverMediaFile:
+          type: string
+          format: binary
+          description: Arquivo de mídia de capa
+        additionalMediaFiles:
+          type: array
+          items:
+            type: string
+            format: binary
+          maxItems: 9
+
+    CreateEventJourneyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        event:
+          $ref: '#/components/schemas/EventJourney'
+        mediaUrls:
+          type: object
+          properties:
+            coverImageUrl:
+              type: string
+            additionalImageUrls:
+              type: array
+              items:
+                type: string
+
+    TerritoryEventsJourneyResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventJourney'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    EventJourney:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/EventSummary'
+        participants:
+          $ref: '#/components/schemas/EventParticipants'
+        media:
+          type: object
+          properties:
+            coverImageUrl:
+              type: string
+            additionalImageUrls:
+              type: array
+              items:
+                type: string
+        userParticipation:
+          $ref: '#/components/schemas/UserParticipation'
+        suggestions:
+          $ref: '#/components/schemas/EventSuggestions'
+
+    EventSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        territoryId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        startsAtUtc:
+          type: string
+          format: date-time
+        endsAtUtc:
+          type: string
+          format: date-time
+          nullable: true
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        locationLabel:
+          type: string
+        createdByUserId:
+          type: string
+          format: uuid
+        createdByDisplayName:
+          type: string
+        createdByMembership:
+          type: string
+        status:
+          type: string
+          enum: [SCHEDULED, ONGOING, COMPLETED, CANCELLED]
+        interestedCount:
+          type: integer
+        confirmedCount:
+          type: integer
+
+    EventParticipants:
+      type: object
+      properties:
+        interested:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventParticipant'
+        confirmed:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventParticipant'
+
+    EventParticipant:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [INTERESTED, CONFIRMED]
+
+    UserParticipation:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [NONE, INTERESTED, CONFIRMED]
+        confirmed:
+          type: boolean
+
+    EventParticipationRequest:
+      type: object
+      required:
+        - eventId
+        - action
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        action:
+          type: string
+          enum: [INTEREST, CONFIRM, CANCEL]
+
+    EventParticipationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        event:
+          $ref: '#/components/schemas/EventJourney'
+        userParticipation:
+          $ref: '#/components/schemas/UserParticipation'
+
+    EventSuggestions:
+      type: object
+      properties:
+        similarEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventSummary'
+        nearbyEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventSummary'
+
+    # ============================================
+    # MARKETPLACE SCHEMAS
+    # ============================================
+    MarketplaceSearchJourneyResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketplaceItemJourney'
+        stores:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreSummary'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        filters:
+          $ref: '#/components/schemas/MarketplaceFilters'
+        suggestions:
+          $ref: '#/components/schemas/MarketplaceSuggestions'
+
+    MarketplaceItemJourney:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/ItemSummary'
+        store:
+          $ref: '#/components/schemas/StoreSummary'
+        media:
+          type: object
+          properties:
+            primaryImageUrl:
+              type: string
+            imageUrls:
+              type: array
+              items:
+                type: string
+        availability:
+          type: object
+          properties:
+            inStock:
+              type: boolean
+            quantity:
+              type: integer
+              nullable: true
+
+    ItemSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        territoryId:
+          type: string
+          format: uuid
+        storeId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [PRODUCT, SERVICE]
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        pricingType:
+          type: string
+          enum: [FIXED, NEGOTIABLE, FREE]
+        priceAmount:
+          type: number
+          format: decimal
+        currency:
+          type: string
+        unit:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, ARCHIVED]
+
+    StoreSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        territoryId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        ownerUserId:
+          type: string
+          format: uuid
+        ownerDisplayName:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, ARCHIVED]
+
+    AddToCartRequest:
+      type: object
+      required:
+        - territoryId
+        - itemId
+        - quantity
+      properties:
+        territoryId:
+          type: string
+          format: uuid
+        itemId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          minimum: 1
+        notes:
+          type: string
+          maxLength: 500
+
+    AddToCartResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        cart:
+          $ref: '#/components/schemas/CartJourney'
+        item:
+          $ref: '#/components/schemas/MarketplaceItemJourney'
+        total:
+          $ref: '#/components/schemas/CartTotal'
+        suggestions:
+          $ref: '#/components/schemas/CartSuggestions'
+
+    CartJourney:
+      type: object
+      properties:
+        cartId:
+          type: string
+          format: uuid
+        territoryId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemJourney'
+        total:
+          $ref: '#/components/schemas/CartTotal'
+
+    CartItemJourney:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        item:
+          $ref: '#/components/schemas/ItemSummary'
+        store:
+          $ref: '#/components/schemas/StoreSummary'
+        quantity:
+          type: integer
+        notes:
+          type: string
+        isPurchasable:
+          type: boolean
+
+    CartTotal:
+      type: object
+      properties:
+        subtotal:
+          type: number
+          format: decimal
+        platformFee:
+          type: number
+          format: decimal
+        total:
+          type: number
+          format: decimal
+        currency:
+          type: string
+
+    CartSuggestions:
+      type: object
+      properties:
+        frequentlyBoughtTogether:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemSummary'
+        similarItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemSummary'
+
+    CheckoutRequest:
+      type: object
+      required:
+        - territoryId
+        - paymentMethod
+      properties:
+        territoryId:
+          type: string
+          format: uuid
+        paymentMethod:
+          type: string
+          enum: [CREDIT_CARD, DEBIT_CARD, PIX, BANK_TRANSFER]
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        message:
+          type: string
+          maxLength: 1000
+
+    CheckoutResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        order:
+          $ref: '#/components/schemas/OrderSummary'
+        payment:
+          $ref: '#/components/schemas/PaymentSummary'
+        confirmation:
+          $ref: '#/components/schemas/OrderConfirmation'
+
+    OrderSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        territoryId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED]
+        total:
+          $ref: '#/components/schemas/CartTotal'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemJourney'
+        createdAtUtc:
+          type: string
+          format: date-time
+
+    PaymentSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        method:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED]
+        amount:
+          type: number
+          format: decimal
+        currency:
+          type: string
+
+    OrderConfirmation:
+      type: object
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        confirmationNumber:
+          type: string
+        estimatedDelivery:
+          type: string
+          format: date-time
+          nullable: true
+        trackingUrl:
+          type: string
+          nullable: true
+
+    MarketplaceFilters:
+      type: object
+      properties:
+        availableCategories:
+          type: array
+          items:
+            type: string
+        availableTypes:
+          type: array
+          items:
+            type: string
+        priceRange:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+
+    MarketplaceSuggestions:
+      type: object
+      properties:
+        trendingItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemSummary'
+        recommendedItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemSummary'
+
+    # ============================================
+    # COMMON SCHEMAS
+    # ============================================
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        membership:
+          type: string
+          enum: [VISITOR, RESIDENT, CURATOR, MODERATOR, SYSTEM_ADMIN]
+        avatarUrl:
+          type: string
+          nullable: true
+
+    TerritorySummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        active:
+          type: boolean
+
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+
+    GeoAnchor:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        type:
+          type: string
+          enum: [POINT, CIRCLE, POLYGON]
+
+    MediaItem:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        type:
+          type: string
+          enum: [IMAGE, VIDEO, AUDIO, DOCUMENT]
+        thumbnailUrl:
+          type: string
+          format: uri
+          nullable: true
+        width:
+          type: integer
+          nullable: true
+        height:
+          type: integer
+          nullable: true
+        duration:
+          type: integer
+          description: Duração em segundos (para vídeos/áudios)
+          nullable: true
+
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+        totalCount:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        complement:
+          type: string
+        neighborhood:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zipCode:
+          type: string
+        country:
+          type: string
+          default: "BR"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+  responses:
+    BadRequest:
+      description: Requisição inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Invalid request parameters"
+            code: "INVALID_REQUEST"
+            timestamp: "2026-01-27T10:00:00Z"
+
+    Unauthorized:
+      description: Não autenticado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Authentication required"
+            code: "UNAUTHORIZED"
+            timestamp: "2026-01-27T10:00:00Z"
+
+    TooManyRequests:
+      description: Muitas requisições
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Rate limit exceeded"
+            code: "RATE_LIMIT_EXCEEDED"
+            timestamp: "2026-01-27T10:00:00Z"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT obtido via `/api/v1/auth/social`
+
+security:
+  - BearerAuth: []

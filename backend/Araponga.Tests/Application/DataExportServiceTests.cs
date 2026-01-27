@@ -120,7 +120,7 @@ public sealed class DataExportServiceTests
         Assert.Equal(userId, result.Value.User.Id);
         Assert.Equal("Test User", result.Value.User.DisplayName);
         Assert.Equal("test@example.com", result.Value.User.Email);
-        Assert.NotNull(result.Value.ExportedAtUtc);
+        Assert.NotEqual(default(DateTime), result.Value.ExportedAtUtc);
     }
 
     [Fact]

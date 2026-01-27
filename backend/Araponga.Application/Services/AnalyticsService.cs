@@ -17,6 +17,8 @@ public sealed class AnalyticsService
     private readonly ICheckoutRepository _checkoutRepository;
     private readonly ISellerTransactionRepository _sellerTransactionRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IStoreRepository _storeRepository;
+    private readonly IStoreItemRepository _itemRepository;
 
     public AnalyticsService(
         ITerritoryRepository territoryRepository,
@@ -25,7 +27,9 @@ public sealed class AnalyticsService
         ITerritoryEventRepository eventRepository,
         ICheckoutRepository checkoutRepository,
         ISellerTransactionRepository sellerTransactionRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IStoreRepository storeRepository,
+        IStoreItemRepository itemRepository)
     {
         _territoryRepository = territoryRepository;
         _membershipRepository = membershipRepository;
@@ -34,6 +38,8 @@ public sealed class AnalyticsService
         _checkoutRepository = checkoutRepository;
         _sellerTransactionRepository = sellerTransactionRepository;
         _userRepository = userRepository;
+        _storeRepository = storeRepository;
+        _itemRepository = itemRepository;
     }
 
     /// <summary>
@@ -190,10 +196,87 @@ public sealed class AnalyticsService
         var totalPayoutsAmount = payouts.Sum(p => p.Amount);
         var totalPayoutsCount = payouts.Count;
 
+        // Contar stores
+        int totalStores = 0;
+        if (territoryId.HasValue)
+        {
+            var stores = await _storeRepository.ListByTerritoryAsync(territoryId.Value, cancellationToken);
+            if (stores != null)
+            {
+                totalStores = stores.Count(s => 
+                    (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
+                    (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
+            }
+        }
+        else
+        {
+            // Para stats globais, precisamos iterar por territórios
+            var territories = await _territoryRepository.ListAsync(cancellationToken);
+            if (territories != null)
+            {
+                foreach (var territory in territories)
+                {
+                    var stores = await _storeRepository.ListByTerritoryAsync(territory.Id, cancellationToken);
+                    if (stores != null)
+                    {
+                        totalStores += stores.Count(s => 
+                            (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
+                            (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
+                    }
+                }
+            }
+        }
+
+        // Contar items
+        int totalItems = 0;
+        if (territoryId.HasValue)
+        {
+            // Usar SearchAsync com critérios vazios para obter todos os items do território
+            var items = await _itemRepository.SearchAsync(
+                territoryId.Value,
+                type: null,
+                query: null,
+                category: null,
+                tags: null,
+                status: null,
+                cancellationToken);
+            if (items != null)
+            {
+                totalItems = items.Count(i => 
+                    (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
+                    (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
+            }
+        }
+        else
+        {
+            // Para stats globais, precisamos iterar por territórios
+            var territories = await _territoryRepository.ListAsync(cancellationToken);
+            if (territories != null)
+            {
+                foreach (var territory in territories)
+                {
+                    var items = await _itemRepository.SearchAsync(
+                        territory.Id,
+                        type: null,
+                        query: null,
+                        category: null,
+                        tags: null,
+                        status: null,
+                        cancellationToken);
+                    if (items != null)
+                    {
+                        totalItems += items.Count(i => 
+                            (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
+                            (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
+                    }
+                }
+            }
+        }
+
         return new MarketplaceStats
         {
-            TotalStores = 0, // TODO: Implementar contagem de lojas
-            TotalItems = 0, // TODO: Implementar contagem de itens
+            TotalStores = totalStores,
+            TotalItems = totalItems,
             TotalSalesAmount = totalSalesAmount,
             TotalSalesCount = totalSalesCount,
             TotalPayoutsAmount = totalPayoutsAmount,
@@ -280,11 +363,24 @@ public sealed class AnalyticsService
         return Task.FromResult<IReadOnlyList<PayoutInfo>>(Array.Empty<PayoutInfo>());
     }
 
-    private Task<int> EstimateTotalUsersAsync(CancellationToken cancellationToken)
+    private async Task<int> EstimateTotalUsersAsync(CancellationToken cancellationToken)
     {
         // Nota: Implementação simplificada
         // Em produção, precisaríamos de um método CountAsync no IUserRepository
-        return Task.FromResult(0);
+        // Por enquanto, estimamos baseado em memberships únicos
+        var territories = await _territoryRepository.ListAsync(cancellationToken);
+        var uniqueUserIds = new HashSet<Guid>();
+        
+        foreach (var territory in territories)
+        {
+            var residentIds = await _membershipRepository.ListResidentUserIdsAsync(territory.Id, cancellationToken);
+            foreach (var userId in residentIds)
+            {
+                uniqueUserIds.Add(userId);
+            }
+        }
+        
+        return uniqueUserIds.Count;
     }
 }
 

@@ -724,6 +724,37 @@
     font-size: inherit;
   }
 
+  /* YAML syntax highlighting - básico mas funcional */
+  .markdown-content pre code.language-yaml {
+    color: #e0e0e0;
+  }
+
+  .markdown-content pre code.language-yaml .hljs-keyword,
+  .markdown-content pre code.language-yaml .hljs-attr {
+    color: #82aaff;
+  }
+
+  .markdown-content pre code.language-yaml .hljs-string {
+    color: #c3e88d;
+  }
+
+  .markdown-content pre code.language-yaml .hljs-number {
+    color: #f78c6c;
+  }
+
+  .markdown-content pre code.language-yaml .hljs-comment {
+    color: #546e7a;
+    font-style: italic;
+  }
+
+  .markdown-content pre code.language-yaml .hljs-literal {
+    color: #ff5370;
+  }
+
+  .dark .markdown-content pre code.language-yaml {
+    color: #e0e0e0;
+  }
+
   /* Blockquotes - Enterprise design (Market standards) */
   .markdown-content blockquote {
     @apply border-l-4 border-forest-400 dark:border-dark-accent pl-8 py-6 my-10;

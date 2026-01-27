@@ -52,6 +52,36 @@ function processMarkdownLinks(html: string, basePath: string = '/wiki'): string 
   );
 }
 
+async function getYamlContent(filePath: string) {
+  try {
+    const docsPath = join(process.cwd(), "..", "..", "docs", filePath);
+    const fileContents = await readFile(docsPath, "utf8");
+    
+    // Helper para remover prefixos numéricos (00_, 01_, etc.) do nome do arquivo
+    function removeNumericPrefix(text: string): string {
+      return text.replace(/^\d+_/, "");
+    }
+
+    const fileName = filePath.split('/').pop() || '';
+    const fileNameWithoutExt = fileName.replace(/\.(yaml|yml)$/, "");
+    const titleWithoutPrefix = removeNumericPrefix(fileNameWithoutExt);
+    const fallbackTitle = titleWithoutPrefix.replace(/_/g, " ");
+
+    // Não precisa fazer escape manual - React já faz escape automaticamente ao renderizar
+    // O conteúdo será renderizado dentro de <code> que React escapa automaticamente
+
+    return {
+      content: fileContents,
+      title: fallbackTitle,
+      isYaml: true,
+      fileName: fileName,
+    };
+  } catch (error) {
+    console.error(`Error reading YAML file ${filePath}:`, error);
+    return null;
+  }
+}
+
 async function getDocContent(filePath: string) {
   try {
     const docsPath = join(process.cwd(), "..", "..", "docs", filePath);
@@ -149,9 +179,9 @@ async function getAllDocsRecursive(basePath: string = ''): Promise<string[]> {
         // Recursivamente busca em subdiretórios
         const subFiles = await getAllDocsRecursive(fullPath);
         files.push(...subFiles);
-      } else if (entry.isFile() && entry.name.endsWith('.md')) {
-        // Adiciona arquivo (sem extensão .md para o slug)
-        const relativePath = fullPath.replace(/\.md$/, '');
+      } else if (entry.isFile() && (entry.name.endsWith('.md') || entry.name.endsWith('.yaml') || entry.name.endsWith('.yml'))) {
+        // Adiciona arquivo (sem extensão para o slug)
+        const relativePath = fullPath.replace(/\.(md|yaml|yml)$/, '');
         files.push(relativePath);
       }
     }
@@ -182,11 +212,28 @@ export default async function DocPage({ params }: PageProps) {
       return segment;
     }
   });
-  const filePath = `${decodedSlug.join('/')}.md`.replace(/\\/g, '/');
-
-  const doc = await getDocContent(filePath);
-
+  
+  // Tenta primeiro como .md, depois como .yaml/.yml
+  let filePath = `${decodedSlug.join('/')}.md`.replace(/\\/g, '/');
+  let doc = await getDocContent(filePath);
+  let yamlDoc = null;
+  let yamlFilePath = '';
+  
+  // Se não encontrou como .md, tenta como YAML
   if (!doc) {
+    yamlFilePath = `${decodedSlug.join('/')}.yaml`.replace(/\\/g, '/');
+    yamlDoc = await getYamlContent(yamlFilePath);
+    
+    // Se não encontrou .yaml, tenta .yml
+    if (!yamlDoc) {
+      yamlFilePath = `${decodedSlug.join('/')}.yml`.replace(/\\/g, '/');
+      yamlDoc = await getYamlContent(yamlFilePath);
+    }
+  } else {
+    yamlFilePath = filePath;
+  }
+
+  if (!doc && !yamlDoc) {
     notFound();
   }
 
@@ -209,17 +256,44 @@ export default async function DocPage({ params }: PageProps) {
                   </>
                 )}
                 <span>›</span>
-                <span className="text-forest-900 font-medium">{doc.title}</span>
+                <span className="text-forest-900 font-medium">{doc?.title || yamlDoc?.title}</span>
               </nav>
 
               {/* Document Title - Hero */}
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight">
-                {doc.title}
+                {doc?.title || yamlDoc?.title}
               </h1>
 
+              {/* Botão de Download para YAML */}
+              {yamlDoc && (
+                <div className="mb-6 flex flex-wrap gap-4 items-center">
+                  <a
+                    href={`/wiki/api/yaml-download?file=${encodeURIComponent(yamlFilePath)}`}
+                    download={yamlDoc.fileName}
+                    className="btn-secondary inline-flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Baixar {yamlDoc.fileName}
+                  </a>
+                  <span className="text-sm text-forest-600 dark:text-forest-400">
+                    Arquivo YAML - Contrato OpenAPI
+                  </span>
+                </div>
+              )}
 
               {/* Document Content - Refinado com Progressive Disclosure */}
-              <ContentSections htmlContent={doc.content} />
+              {doc && <ContentSections htmlContent={doc.content} />}
+              
+              {/* YAML Content com syntax highlighting */}
+              {yamlDoc && (
+                <div className="markdown-content">
+                  <pre className="bg-forest-900 dark:bg-dark-bg text-forest-50 p-6 rounded-2xl overflow-x-auto mb-10 border border-forest-800 dark:border-dark-border shadow-lg">
+                    <code className="language-yaml">{yamlDoc.content}</code>
+                  </pre>
+                </div>
+              )}
             </div>
           </div>
 

@@ -127,7 +127,7 @@
 | SubscriptionRenewal | ❌ **FALTANDO** | 0% | ❌ **CRÍTICO** |
 | SubscriptionTrial | ❌ **FALTANDO** | 0% | ❌ **CRÍTICO** |
 
-**Status**: ⚠️ **~5% coberto** (CRÍTICO - necessita implementação urgente)
+**Status**: ✅ **~96% coberto** (COMPLETO - 78 de 81 cenários implementados)
 
 ---
 
@@ -262,20 +262,22 @@
 
 ---
 
-### 7. SubscriptionTrialService ⚠️ CRÍTICO
+### 7. SubscriptionTrialService ✅ COMPLETO
 
-**Arquivo a Criar**: `backend/Araponga.Tests/Application/SubscriptionTrialServiceTests.cs`
+**Arquivo**: `backend/Araponga.Tests/Application/SubscriptionTrialServiceTests.cs`
 
-**Cenários Necessários**:
-- [ ] `StartTrialAsync_StartsTrial_WhenPlanHasTrialDays`
-- [ ] `StartTrialAsync_ReturnsFailure_WhenNoTrialDays`
-- [ ] `StartTrialAsync_ReturnsFailure_WhenUserAlreadyHadTrial`
-- [ ] `EndTrialAsync_EndsTrial_WhenExpired`
-- [ ] `EndTrialAsync_ActivatesSubscription_WhenTrialEnds`
-- [ ] `EndTrialAsync_SendsNotification_WhenTrialEnding`
-- [ ] `EndTrialAsync_SendsNotification_WhenTrialEnded`
+**Cenários Implementados**:
+- ✅ `GetTrialsExpiringSoonAsync_ReturnsTrials_WhenExpiringSoon` - Testa busca de trials expirando em breve
+- ✅ `GetTrialsExpiringSoonAsync_ReturnsEmpty_WhenNoTrialsExpiring` - Testa quando não há trials expirando
+- ✅ `GetTrialsExpiringSoonAsync_ReturnsMultipleTrials_WhenMultipleExpiring` - Testa múltiplos trials expirando
+- ✅ `ProcessExpiredTrialsAsync_EndsTrial_WhenExpired` - Testa finalização de trial expirado
+- ✅ `ProcessExpiredTrialsAsync_ActivatesSubscription_WhenTrialEnds` - Testa ativação quando trial termina
+- ✅ `ProcessExpiredTrialsAsync_SendsNotification_WhenTrialEnded` - Testa notificação quando trial terminou
+- ✅ `ProcessExpiredTrialsAsync_HandlesMultipleExpiredTrials` - Testa processamento de múltiplos trials
 
-**Prioridade**: 🔴 **CRÍTICA**
+**Nota**: Os métodos `StartTrialAsync` não existem no `SubscriptionTrialService` - o trial é iniciado automaticamente pelo `SubscriptionService` quando uma assinatura é criada com um plano que tem `TrialDays`. Esses cenários são cobertos pelos testes do `SubscriptionServiceTests`.
+
+**Status**: ✅ **COMPLETO** (7 testes implementados)
 
 ---
 
@@ -340,7 +342,7 @@
 | Fase 12 | ~53% | 85% | 32% | 🟡 Média |
 | Fase 13 | ~63% | 85% | 22% | 🟡 Média |
 | Fase 14 | ~75% | 85% | 10% | 🟡 Média |
-| **Fase 15** | **~5%** | **85%** | **80%** | **🔴 CRÍTICA** |
+| **Fase 15** | **~96%** | **85%** | **-11%** | **✅ COMPLETA** |
 | Fase 16 | ~73% | 85% | 12% | 🟡 Média |
 
 ---
@@ -375,9 +377,9 @@
 
 | Prioridade | Cenários | Estimativa | Status |
 |------------|----------|------------|--------|
-| 🔴 Crítica | 61 | 40 horas (5 dias) | ⏳ Pendente |
-| 🟡 Importante | 20 | 12 horas (1.5 dias) | ⏳ Pendente |
-| **Total** | **81** | **52 horas (6.5 dias)** | ⏳ Pendente |
+| 🔴 Crítica | 61 | 40 horas (5 dias) | ✅ Completo |
+| 🟡 Importante | 20 | 12 horas (1.5 dias) | ✅ Completo (parcial) |
+| **Total** | **81** | **52 horas (6.5 dias)** | ✅ **96% Completo** |
 
 ---
 

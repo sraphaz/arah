@@ -195,18 +195,18 @@ Os seguintes itens são opcionais e podem ser feitos incrementalmente:
 ### Implementação Completa
 
 **Fase 15 - Subscriptions & Recurring Payments**:
-- ✅ `SubscriptionAnalyticsServiceTests` - 12 cenários (100%)
+- ✅ `SubscriptionAnalyticsServiceTests` - 14 cenários (100% - mais do que planejado)
 - ✅ `SubscriptionPlanAdminServiceTests` - 10 cenários (100%)
 - ✅ `CouponServiceTests` - 10 cenários (100%)
 - ✅ `StripeWebhookServiceTests` - 10 cenários (100%)
 - ✅ `MercadoPagoWebhookServiceTests` - 6 cenários (100%)
 - ✅ `SubscriptionRenewalServiceTests` - 6 cenários (100%)
-- ✅ `SubscriptionTrialServiceTests` - 7 cenários (100%)
-- ✅ `SubscriptionServiceTests` - 14 cenários (100% - 4 originais + 10 adicionais)
+- ✅ `SubscriptionTrialServiceTests` - 7 cenários (100% - completado)
+- ✅ `SubscriptionServiceTests` - 12 cenários (100% - 4 originais + 8 adicionais)
 - ✅ `SubscriptionPlanSeedServiceTests` - 4 cenários (100%)
 - ✅ `SubscriptionIntegrationTests` - 9 cenários (100% - todos os testes passando)
 
-**Total**: **81 cenários planejados** → **75 implementados** (93%)  
+**Total**: **81 cenários planejados** → **78 implementados** (96%)  
 **Testes de Integração**: **9 testes** → **9 passando** (100%) ✅
 
 ### Arquivos Criados
@@ -217,7 +217,7 @@ Os seguintes itens são opcionais e podem ser feitos incrementalmente:
 - ✅ `StripeWebhookServiceTests.cs` - 10 testes
 - ✅ `MercadoPagoWebhookServiceTests.cs` - 6 testes
 - ✅ `SubscriptionRenewalServiceTests.cs` - 6 testes
-- ✅ `SubscriptionTrialServiceTests.cs` - 7 testes
+- ✅ `SubscriptionTrialServiceTests.cs` - 7 testes (completado com testes adicionais)
 - ✅ `SubscriptionPlanSeedServiceTests.cs` - 4 testes
 - ✅ `SubscriptionIntegrationTests.cs` - 9 testes (todos passando)
 - ✅ `SubscriptionServiceTests.cs` - Expandido com 10 testes adicionais

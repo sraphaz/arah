@@ -79,6 +79,119 @@ Definir níveis de abstração necessários para evolução **Monolito → APIs 
 
 ---
 
+## 👥 Limitações de Usuários por Instância
+
+### Fase 1: Monolito (Atual)
+
+**Limitações Principais**:
+- ⚠️ **Escalabilidade Vertical**: Limitada pelos recursos da máquina (CPU, RAM, disco)
+- ⚠️ **Banco de Dados Compartilhado**: Todos os módulos competem pelos mesmos recursos
+- ⚠️ **Sem Escalabilidade Horizontal**: Uma única instância processa todas as requisições
+- ⚠️ **Gargalo Único**: Falha em um ponto afeta todo o sistema
+
+**Capacidade Estimada (Free Tier)**:
+- **Usuários Simultâneos**: ~50-100 (dependendo do hardware)
+- **Usuários Totais**: ~500-1.000 (com uso moderado)
+- **Requisições/segundo**: ~10-20 req/s
+- **Armazenamento**: Limitado pelo disco local
+
+**Fatores Limitantes**:
+- PostgreSQL local: Performance limitada pelo hardware
+- IMemoryCache: Limitado pela RAM disponível
+- LocalFileStorage: Limitado pelo espaço em disco
+- SMTP Gmail: 500 emails/dia (limitação crítica)
+
+**Estratégia de Escala**:
+- ❌ Não escalável horizontalmente
+- ✅ Apenas escalabilidade vertical (mais CPU/RAM)
+- ⚠️ Requer upgrade de hardware para crescer
+
+---
+
+### Fase 2: APIs Modulares (Próximo)
+
+**Limitações Principais**:
+- ⚠️ **Banco Compartilhado**: Ainda é um ponto único de falha e gargalo
+- ⚠️ **Free Tiers Limitados**: Limitações de recursos gratuitos
+- ✅ **Escalabilidade Parcial**: Cada API pode escalar independentemente
+- ⚠️ **Comunicação HTTP**: Overhead de rede entre APIs
+
+**Capacidade Estimada (Free Tier)**:
+- **Usuários Simultâneos**: ~200-500 (distribuído entre APIs)
+- **Usuários Totais**: ~2.000-5.000 (com uso moderado)
+- **Requisições/segundo**: ~50-100 req/s (distribuídas)
+- **Armazenamento**: 5GB (Azure Blob) - limitado
+
+**Fatores Limitantes**:
+- **Supabase (500MB)**: Limite de dados no banco compartilhado
+- **Azure Blob (5GB)**: Limite de armazenamento de arquivos
+- **AWS SES (62K/mês)**: Limite de emails mensais
+- **AWS SQS (1M/mês)**: Limite de mensagens de eventos
+- **Redis Cloud (30MB)**: Cache limitado
+
+**Estratégia de Escala**:
+- ✅ Escalabilidade horizontal por API (pode ter múltiplas instâncias de cada API)
+- ⚠️ Banco ainda é gargalo (escalabilidade vertical apenas)
+- ✅ Load balancing entre instâncias da mesma API
+- ⚠️ Requer upgrade para paid tiers para crescer além dos limites
+
+**Limitações por Recurso**:
+| Recurso | Limite Free Tier | Impacto na Capacidade |
+|---------|------------------|----------------------|
+| Supabase DB | 500MB | ~2.000-5.000 usuários ativos |
+| Azure Blob | 5GB | ~10.000-20.000 arquivos |
+| AWS SES | 62K/mês | ~2.000 emails/dia |
+| AWS SQS | 1M/mês | ~33K eventos/dia |
+| Redis Cache | 30MB | Cache limitado para sessões |
+
+---
+
+### Fase 3: Microserviços (Futuro)
+
+**Limitações Principais**:
+- ✅ **Escalabilidade Independente**: Cada serviço escala conforme necessidade
+- ⚠️ **Free Tiers Múltiplos**: Limitações somadas de cada serviço
+- ✅ **Bancos Separados**: Elimina gargalo único do banco
+- ⚠️ **Complexidade Operacional**: Mais serviços para gerenciar
+- ⚠️ **Latência de Rede**: Comunicação entre serviços adiciona latência
+
+**Capacidade Estimada (Free Tier)**:
+- **Usuários Simultâneos**: ~500-1.000 (distribuído entre serviços)
+- **Usuários Totais**: ~10.000-20.000 (com uso moderado)
+- **Requisições/segundo**: ~200-500 req/s (distribuídas)
+- **Armazenamento**: 10GB (Backblaze B2) - mais generoso
+
+**Fatores Limitantes**:
+- **Neon (512MB × N serviços)**: Limite por serviço, mas total maior
+- **Backblaze B2 (10GB)**: Mais espaço que Azure Blob
+- **AWS SES (62K/mês)**: Mesmo limite (compartilhado)
+- **AWS SQS (1M/mês)**: Mesmo limite (compartilhado)
+- **Redis Cloud (30MB)**: Cache compartilhado
+
+**Estratégia de Escala**:
+- ✅ Escalabilidade horizontal completa (cada serviço escala independentemente)
+- ✅ Bancos separados eliminam gargalo único
+- ✅ Auto-scaling por serviço conforme demanda
+- ✅ Alta disponibilidade (falha em um serviço não derruba tudo)
+- ⚠️ Requer orquestração (Kubernetes, Docker Swarm) para produção
+
+**Limitações por Recurso (Free Tier)**:
+| Recurso | Limite Free Tier | Impacto na Capacidade |
+|---------|------------------|----------------------|
+| Neon DB (×3) | 512MB × 3 = 1.5GB | ~10.000-20.000 usuários ativos |
+| Backblaze B2 | 10GB | ~50.000-100.000 arquivos |
+| AWS SES | 62K/mês | ~2.000 emails/dia (compartilhado) |
+| AWS SQS | 1M/mês | ~33K eventos/dia (compartilhado) |
+| Redis Cache | 30MB | Cache compartilhado (gargalo) |
+
+**Capacidade com Paid Tiers (~$60/mês)**:
+- **Usuários Simultâneos**: ~5.000-10.000
+- **Usuários Totais**: ~50.000-100.000
+- **Requisições/segundo**: ~1.000-2.000 req/s
+- **Armazenamento**: Ilimitado (com custos incrementais)
+
+---
+
 ## 💰 Otimização de Custos
 
 ### Fase 1: Monolito
@@ -143,11 +256,22 @@ Definir níveis de abstração necessários para evolução **Monolito → APIs 
 - ✅ **Flexibilidade** para trocar provedores
 - ✅ **Preparado** para escalar
 
+### Limitações de Escala
+- ⚠️ **Fase 1**: ~500-1.000 usuários (gargalo único)
+- ⚠️ **Fase 2**: ~2.000-5.000 usuários (banco compartilhado)
+- ✅ **Fase 3**: ~10.000-20.000 usuários (free tier) ou ~50.000-100.000 (paid)
+
 ---
 
 ## 📚 Documentação Completa
 
 Ver documento completo: `NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS.md`
+
+**Conteúdo adicional no documento completo**:
+- 📊 Análise detalhada de limitações de usuários por instância
+- 📊 Tabela comparativa entre fases
+- 📊 Decisão: quando migrar entre fases
+- 📊 Análise detalhada de cada recurso e seus limites
 
 ---
 

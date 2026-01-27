@@ -192,6 +192,12 @@ public sealed class SecurityTests
 
         var token = await LoginForTokenAsync(client, "google", "validation-asset");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "validation-asset-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new Araponga.Api.Contracts.Territories.TerritorySelectionRequest(ActiveTerritoryId));
 
         // Latitude inválida deve retornar 400 (validação do FluentValidation)
         var response = await client.PostAsJsonAsync(
@@ -550,6 +556,12 @@ public sealed class SecurityTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "resident-assets-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new Araponga.Api.Contracts.Territories.TerritorySelectionRequest(ActiveTerritoryId));
 
         var response = await client.PostAsJsonAsync(
             "api/v1/assets",
@@ -579,6 +591,12 @@ public sealed class SecurityTests
 
         var token = await LoginForTokenAsync(client, "google", "visitor-assets-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "visitor-assets-test-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new Araponga.Api.Contracts.Territories.TerritorySelectionRequest(ActiveTerritoryId));
 
         var response = await client.PostAsJsonAsync(
             "api/v1/assets",

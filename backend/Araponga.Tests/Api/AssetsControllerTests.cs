@@ -1,7 +1,9 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Araponga.Api;
 using Araponga.Api.Contracts.Assets;
+using Araponga.Api.Contracts.Territories;
 using Xunit;
 
 namespace Araponga.Tests.Api;
@@ -143,6 +145,12 @@ public sealed class AssetsControllerTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "assets-validation-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
 
         var request = new CreateAssetRequest(
             ActiveTerritoryId,
@@ -167,6 +175,12 @@ public sealed class AssetsControllerTests
 
         var token = await LoginForTokenAsync(client, "google", "visitor-assets");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "visitor-assets-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
 
         var request = new CreateAssetRequest(
             ActiveTerritoryId,

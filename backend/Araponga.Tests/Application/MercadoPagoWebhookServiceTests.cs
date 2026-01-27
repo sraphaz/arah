@@ -135,6 +135,12 @@ public sealed class MercadoPagoWebhookServiceTests
         _subscriptionRepositoryMock
             .Setup(r => r.GetByStripeSubscriptionIdAsync("mp_sub_123", It.IsAny<CancellationToken>()))
             .ReturnsAsync(subscription);
+        _paymentRepositoryMock
+            .Setup(r => r.GetByStripeInvoiceIdAsync("123", It.IsAny<CancellationToken>())) // ID numérico do Mercado Pago
+            .ReturnsAsync((SubscriptionPayment?)null); // Pagamento não existe ainda
+        _paymentRepositoryMock
+            .Setup(r => r.AddAsync(It.IsAny<SubscriptionPayment>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
         _subscriptionRepositoryMock
             .Setup(r => r.UpdateAsync(It.IsAny<Subscription>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
@@ -147,6 +153,8 @@ public sealed class MercadoPagoWebhookServiceTests
 
         // Assert
         Assert.True(result.IsSuccess);
+        _subscriptionRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Subscription>(), It.IsAny<CancellationToken>()), Times.Once);
+        _paymentRepositoryMock.Verify(r => r.AddAsync(It.IsAny<SubscriptionPayment>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -173,14 +181,20 @@ public sealed class MercadoPagoWebhookServiceTests
         var subscription = CreateActiveSubscription(Guid.NewGuid());
         subscription.UpdateStripeIds("mp_sub_123", "mp_cus_456");
 
-        var existingPayment = CreatePayment(subscription.Id, 29.90m, "mp_pay_123");
+        var existingPayment = CreatePayment(subscription.Id, 29.90m, "123"); // ID numérico do Mercado Pago
 
         _subscriptionRepositoryMock
             .Setup(r => r.GetByStripeSubscriptionIdAsync("mp_sub_123", It.IsAny<CancellationToken>()))
             .ReturnsAsync(subscription);
         _paymentRepositoryMock
-            .Setup(r => r.GetByStripeInvoiceIdAsync("mp_pay_123", It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByStripeInvoiceIdAsync("123", It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingPayment); // Já existe pagamento
+        _paymentRepositoryMock
+            .Setup(r => r.UpdateAsync(It.IsAny<SubscriptionPayment>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        _unitOfWorkMock
+            .Setup(u => u.CommitAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
         // Act
         var result = await _service.ProcessEventAsync(eventType, eventData, CancellationToken.None);
@@ -188,6 +202,7 @@ public sealed class MercadoPagoWebhookServiceTests
         // Assert
         Assert.True(result.IsSuccess);
         _paymentRepositoryMock.Verify(r => r.AddAsync(It.IsAny<SubscriptionPayment>(), It.IsAny<CancellationToken>()), Times.Never);
+        _paymentRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<SubscriptionPayment>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     private static JsonElement CreateMercadoPagoSubscriptionCreatedEvent(string subscriptionId, string payerId, string status)
@@ -215,13 +230,17 @@ public sealed class MercadoPagoWebhookServiceTests
 
     private static JsonElement CreateMercadoPagoPaymentApprovedEvent(string paymentId, string subscriptionId, decimal amount)
     {
+        var dateCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+        // Mercado Pago usa ID numérico para pagamentos
+        var paymentIdNum = long.TryParse(paymentId.Replace("mp_pay_", ""), out var num) ? num : 123;
+        var amountStr = amount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         var json = $$"""
         {
-            "id": "{{paymentId}}",
+            "id": {{paymentIdNum}},
             "subscription_id": "{{subscriptionId}}",
-            "transaction_amount": {{amount}},
+            "transaction_amount": {{amountStr}},
             "status": "approved",
-            "date_created": "{{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.fffZ}}"
+            "date_created": "{{dateCreated}}"
         }
         """;
         return JsonDocument.Parse(json).RootElement;
@@ -229,11 +248,14 @@ public sealed class MercadoPagoWebhookServiceTests
 
     private static JsonElement CreateMercadoPagoPaymentRejectedEvent(string paymentId, string subscriptionId)
     {
+        // Mercado Pago usa ID numérico para pagamentos
+        var paymentIdNum = long.TryParse(paymentId.Replace("mp_pay_", ""), out var num) ? num : 123;
         var json = $$"""
         {
-            "id": "{{paymentId}}",
+            "id": {{paymentIdNum}},
             "subscription_id": "{{subscriptionId}}",
-            "status": "rejected"
+            "status": "rejected",
+            "status_detail": "cc_rejected_insufficient_amount"
         }
         """;
         return JsonDocument.Parse(json).RootElement;

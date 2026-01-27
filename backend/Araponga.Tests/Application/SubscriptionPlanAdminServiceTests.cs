@@ -94,7 +94,7 @@ public sealed class SubscriptionPlanAdminServiceTests
 
         // Assert
         Assert.True(result.IsFailure);
-        Assert.Contains("basic capabilities", result.Error!, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("FeedBasic", result.Error!, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -208,7 +208,7 @@ public sealed class SubscriptionPlanAdminServiceTests
 
         // Assert
         Assert.True(result.IsFailure);
-        Assert.Contains("basic capabilities", result.Error!, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("FeedBasic", result.Error!, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

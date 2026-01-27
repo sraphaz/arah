@@ -39,6 +39,17 @@ public sealed class CouponService
             return Result<Coupon>.Failure("Coupon code already exists.");
         }
 
+        // Validar discountValue antes de criar o Coupon
+        if (discountType == CouponDiscountType.Percentage && (discountValue < 0 || discountValue > 100))
+        {
+            return Result<Coupon>.Failure("Percentage discount must be between 0 and 100.");
+        }
+        
+        if (discountType == CouponDiscountType.FixedAmount && discountValue < 0)
+        {
+            return Result<Coupon>.Failure("Fixed amount discount cannot be negative.");
+        }
+
         var coupon = new Coupon(
             Guid.NewGuid(),
             code,

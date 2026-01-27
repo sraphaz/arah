@@ -66,6 +66,12 @@ public sealed class AssetsControllerTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "get-assets-filter-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
 
         var assetId = Guid.NewGuid();
         var response = await client.GetAsync($"api/v1/assets?territoryId={ActiveTerritoryId}&assetId={assetId}");
@@ -84,6 +90,12 @@ public sealed class AssetsControllerTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "get-assets-status-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
 
         var response = await client.GetAsync($"api/v1/assets?territoryId={ActiveTerritoryId}&status=ACTIVE");
 
@@ -106,6 +118,12 @@ public sealed class AssetsControllerTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "get-assets-invalid-status-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
 
         var response = await client.GetAsync($"api/v1/assets?territoryId={ActiveTerritoryId}&status=INVALID");
 
@@ -122,6 +140,12 @@ public sealed class AssetsControllerTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "get-assets-paged-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
 
         var response = await client.GetAsync($"api/v1/assets/paged?territoryId={ActiveTerritoryId}&pageNumber=1&pageSize=10");
 
@@ -229,6 +253,12 @@ public sealed class AssetsControllerTests
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "archive-asset-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
 
         var assetId = Guid.NewGuid();
         var response = await client.PostAsync($"api/v1/assets/{assetId}/archive?territoryId={ActiveTerritoryId}", null);

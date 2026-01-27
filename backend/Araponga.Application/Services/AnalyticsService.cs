@@ -201,20 +201,29 @@ public sealed class AnalyticsService
         if (territoryId.HasValue)
         {
             var stores = await _storeRepository.ListByTerritoryAsync(territoryId.Value, cancellationToken);
-            totalStores = stores.Count(s => 
-                (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
-                (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
+            if (stores != null)
+            {
+                totalStores = stores.Count(s => 
+                    (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
+                    (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
+            }
         }
         else
         {
             // Para stats globais, precisamos iterar por territórios
             var territories = await _territoryRepository.ListAsync(cancellationToken);
-            foreach (var territory in territories)
+            if (territories != null)
             {
-                var stores = await _storeRepository.ListByTerritoryAsync(territory.Id, cancellationToken);
-                totalStores += stores.Count(s => 
-                    (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
-                    (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
+                foreach (var territory in territories)
+                {
+                    var stores = await _storeRepository.ListByTerritoryAsync(territory.Id, cancellationToken);
+                    if (stores != null)
+                    {
+                        totalStores += stores.Count(s => 
+                            (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
+                            (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
+                    }
+                }
             }
         }
 
@@ -231,27 +240,36 @@ public sealed class AnalyticsService
                 tags: null,
                 status: null,
                 cancellationToken);
-            totalItems = items.Count(i => 
-                (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
-                (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
+            if (items != null)
+            {
+                totalItems = items.Count(i => 
+                    (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
+                    (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
+            }
         }
         else
         {
             // Para stats globais, precisamos iterar por territórios
             var territories = await _territoryRepository.ListAsync(cancellationToken);
-            foreach (var territory in territories)
+            if (territories != null)
             {
-                var items = await _itemRepository.SearchAsync(
-                    territory.Id,
-                    type: null,
-                    query: null,
-                    category: null,
-                    tags: null,
-                    status: null,
-                    cancellationToken);
-                totalItems += items.Count(i => 
-                    (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
-                    (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
+                foreach (var territory in territories)
+                {
+                    var items = await _itemRepository.SearchAsync(
+                        territory.Id,
+                        type: null,
+                        query: null,
+                        category: null,
+                        tags: null,
+                        status: null,
+                        cancellationToken);
+                    if (items != null)
+                    {
+                        totalItems += items.Count(i => 
+                            (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
+                            (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
+                    }
+                }
             }
         }
 

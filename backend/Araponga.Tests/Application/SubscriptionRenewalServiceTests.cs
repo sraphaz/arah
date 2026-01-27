@@ -185,8 +185,9 @@ public sealed class SubscriptionRenewalServiceTests
         // Assert
         Assert.True(result.IsSuccess);
         // O período deve ser atualizado (verificado via mock)
+        // Usar o valor original capturado no início do teste
         _subscriptionRepositoryMock.Verify(r => r.UpdateAsync(
-            It.Is<Subscription>(s => s.CurrentPeriodEnd > subscription.CurrentPeriodEnd),
+            It.Is<Subscription>(s => s.CurrentPeriodEnd > originalPeriodEnd),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 

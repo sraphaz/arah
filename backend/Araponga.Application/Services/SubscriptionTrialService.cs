@@ -128,7 +128,9 @@ public sealed class SubscriptionTrialService
             // Para planos pagos, o gateway deve processar a cobrança
             // Por enquanto, apenas finaliza o trial e marca como ativa
             // O gateway processará a primeira cobrança via webhook
+            // EndTrial() atualiza o status para ACTIVE se TrialEnd <= DateTime.UtcNow
             subscription.EndTrial();
+            // Garantir que está ativa (EndTrial() pode não atualizar se TrialEnd não foi definido corretamente)
             subscription.UpdateStatus(SubscriptionStatus.ACTIVE);
 
             await _subscriptionRepository.UpdateAsync(subscription, cancellationToken);

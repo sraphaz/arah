@@ -2,6 +2,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Subscriptions;
 using Moq;
+using System.Reflection;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -70,7 +71,20 @@ public sealed class SubscriptionAnalyticsServiceTests
         // Arrange
         var planId = Guid.NewGuid();
         var plan = CreateMonthlyPlan(planId, 29.90m);
-        var subscription1 = CreateActiveSubscription(planId, DateTime.UtcNow.AddMonths(-2));
+        // subscription1 expira antes do início do período de análise
+        var subscription1 = new Subscription(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            null,
+            planId,
+            SubscriptionStatus.ACTIVE,
+            DateTime.UtcNow.AddMonths(-2),
+            DateTime.UtcNow.AddMonths(-1).AddDays(-1), // Expira antes do startDate
+            null,
+            null,
+            null,
+            null);
+        // subscription2 está ativa durante o período
         var subscription2 = CreateActiveSubscription(planId, DateTime.UtcNow);
 
         _subscriptionRepositoryMock
@@ -88,7 +102,7 @@ public sealed class SubscriptionAnalyticsServiceTests
         var mrr = await _service.GetMRRAsync(startDate, endDate, CancellationToken.None);
 
         // Assert
-        // Apenas subscription2 está no período
+        // Apenas subscription2 está no período (subscription1 expirou antes)
         Assert.Equal(29.90m, mrr);
     }
 
@@ -319,8 +333,11 @@ public sealed class SubscriptionAnalyticsServiceTests
         var payment2 = CreatePayment(subscription1.Id, 29.90m, DateTime.UtcNow.AddDays(-10));
         var payment3 = CreatePayment(subscription2.Id, 49.90m, DateTime.UtcNow.AddDays(-5));
 
+        var startDate = DateTime.UtcNow.AddMonths(-1);
+        var endDate = DateTime.UtcNow;
+
         _paymentRepositoryMock
-            .Setup(r => r.GetByUserIdAsync(Guid.Empty, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByDateRangeAsync(startDate, endDate, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<SubscriptionPayment> { payment1, payment2, payment3 });
 
         _subscriptionRepositoryMock
@@ -329,9 +346,6 @@ public sealed class SubscriptionAnalyticsServiceTests
         _subscriptionRepositoryMock
             .Setup(r => r.GetByIdAsync(subscription2.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(subscription2);
-
-        var startDate = DateTime.UtcNow.AddMonths(-1);
-        var endDate = DateTime.UtcNow;
 
         // Act
         var revenue = await _service.GetRevenueByPlanAsync(startDate, endDate, CancellationToken.None);
@@ -346,12 +360,15 @@ public sealed class SubscriptionAnalyticsServiceTests
     public async Task GetRevenueByPlanAsync_ReturnsEmpty_WhenNoSubscriptions()
     {
         // Arrange
+        var startDate = DateTime.UtcNow.AddMonths(-1);
+        var endDate = DateTime.UtcNow;
+
         _paymentRepositoryMock
-            .Setup(r => r.GetByUserIdAsync(Guid.Empty, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByDateRangeAsync(startDate, endDate, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<SubscriptionPayment>());
 
         // Act
-        var revenue = await _service.GetRevenueByPlanAsync(cancellationToken: CancellationToken.None);
+        var revenue = await _service.GetRevenueByPlanAsync(startDate, endDate, CancellationToken.None);
 
         // Assert
         Assert.Empty(revenue);
@@ -366,16 +383,17 @@ public sealed class SubscriptionAnalyticsServiceTests
         var paymentInRange = CreatePayment(subscription.Id, 29.90m, DateTime.UtcNow.AddDays(-5));
         var paymentOutOfRange = CreatePayment(subscription.Id, 29.90m, DateTime.UtcNow.AddMonths(-2));
 
+        var startDate = DateTime.UtcNow.AddMonths(-1);
+        var endDate = DateTime.UtcNow;
+
+        // GetByDateRangeAsync já filtra por data, então só retorna paymentInRange
         _paymentRepositoryMock
-            .Setup(r => r.GetByUserIdAsync(Guid.Empty, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<SubscriptionPayment> { paymentInRange, paymentOutOfRange });
+            .Setup(r => r.GetByDateRangeAsync(startDate, endDate, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<SubscriptionPayment> { paymentInRange });
 
         _subscriptionRepositoryMock
             .Setup(r => r.GetByIdAsync(subscription.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(subscription);
-
-        var startDate = DateTime.UtcNow.AddMonths(-1);
-        var endDate = DateTime.UtcNow;
 
         // Act
         var revenue = await _service.GetRevenueByPlanAsync(startDate, endDate, CancellationToken.None);
@@ -475,18 +493,38 @@ public sealed class SubscriptionAnalyticsServiceTests
 
     private static Subscription CreateCanceledSubscription(Guid planId, DateTime? canceledAt = null)
     {
-        return new Subscription(
+        var subscription = new Subscription(
             Guid.NewGuid(),
             Guid.NewGuid(),
             null,
             planId,
-            SubscriptionStatus.CANCELED,
+            SubscriptionStatus.ACTIVE,
             DateTime.UtcNow.AddMonths(-2),
             DateTime.UtcNow.AddMonths(-1),
-            canceledAt ?? DateTime.UtcNow.AddDays(-5),
+            null,
             null,
             null,
             null);
+        
+        // Usar reflection para definir CanceledAt, já que não há método público
+        var canceledAtValue = canceledAt ?? DateTime.UtcNow.AddDays(-5);
+        var canceledAtProperty = typeof(Subscription).GetProperty("CanceledAt", 
+            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        if (canceledAtProperty != null && canceledAtProperty.CanWrite)
+        {
+            canceledAtProperty.SetValue(subscription, canceledAtValue);
+        }
+        
+        // Definir status como CANCELED
+        subscription.Cancel(false);
+        
+        // Redefinir CanceledAt para a data desejada após Cancel()
+        if (canceledAtProperty != null && canceledAtProperty.CanWrite)
+        {
+            canceledAtProperty.SetValue(subscription, canceledAtValue);
+        }
+        
+        return subscription;
     }
 
     private static SubscriptionPayment CreatePayment(Guid subscriptionId, decimal amount, DateTime paymentDate)

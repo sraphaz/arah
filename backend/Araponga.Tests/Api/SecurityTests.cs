@@ -530,6 +530,12 @@ public sealed class SecurityTests
 
         var token = await LoginForTokenAsync(client, "google", "xss-search-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "xss-search-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new Araponga.Api.Contracts.Territories.TerritorySelectionRequest(ActiveTerritoryId));
 
         // Tentar XSS em parâmetro de busca
         var xssPayload = "<script>alert('XSS')</script>";
@@ -667,6 +673,12 @@ public sealed class SecurityTests
 
         var token = await LoginForTokenAsync(client, "google", "nosql-injection-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "nosql-injection-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new Araponga.Api.Contracts.Territories.TerritorySelectionRequest(ActiveTerritoryId));
 
         // Tentar NoSQL injection em parâmetro de query
         var nosqlPayload = "'; db.users.drop(); --";
@@ -693,6 +705,12 @@ public sealed class SecurityTests
 
         var token = await LoginForTokenAsync(client, "google", "command-injection-test");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "command-injection-session");
+
+        // Selecionar território
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new Araponga.Api.Contracts.Territories.TerritorySelectionRequest(ActiveTerritoryId));
 
         // Tentar command injection em parâmetro
         var commandPayload = "; rm -rf /";

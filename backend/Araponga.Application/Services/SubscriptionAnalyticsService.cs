@@ -52,10 +52,14 @@ public sealed class SubscriptionAnalyticsService
             // Uma subscription está ativa no período se:
             // - Foi criada antes ou durante o período E
             // - Não foi cancelada antes do início do período OU foi cancelada mas cancelAtPeriodEnd é true
+            // E estava ativa durante pelo menos parte do período (CurrentPeriodStart <= end && CurrentPeriodEnd >= start)
+            // Para MRR, consideramos subscriptions que estavam ativas em qualquer momento do período
             var wasActiveInPeriod = subscription.CreatedAtUtc <= end &&
                 (subscription.CanceledAt == null || 
                  subscription.CanceledAt >= start || 
-                 (subscription.CancelAtPeriodEnd && subscription.CurrentPeriodEnd >= start));
+                 (subscription.CancelAtPeriodEnd && subscription.CurrentPeriodEnd >= start)) &&
+                subscription.CurrentPeriodStart <= end &&
+                subscription.CurrentPeriodEnd >= start;
             
             if (!wasActiveInPeriod)
             {
@@ -100,7 +104,9 @@ public sealed class SubscriptionAnalyticsService
             status: SubscriptionStatus.ACTIVE,
             cancellationToken);
 
-        var activeCount = activeAtStart.Count(s => s.CreatedAtUtc <= start);
+        // Contar assinaturas que estavam ativas no início do período
+        // Uma assinatura estava ativa no início se foi criada antes ou durante o período
+        var activeCount = activeAtStart.Count(s => s.CurrentPeriodStart <= start);
 
         if (activeCount == 0)
         {
@@ -154,8 +160,8 @@ public sealed class SubscriptionAnalyticsService
             cancellationToken);
 
         return allSubscriptions.Count(s =>
-            s.CreatedAtUtc >= start &&
-            s.CreatedAtUtc <= end);
+            s.CurrentPeriodStart >= start &&
+            s.CurrentPeriodStart <= end);
     }
 
     /// <summary>

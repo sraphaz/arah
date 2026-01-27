@@ -14,6 +14,7 @@ using Araponga.Domain.Chat;
 using Araponga.Domain.Evidence;
 using Araponga.Domain.Policies;
 using Araponga.Domain.Social.JoinRequests;
+using Araponga.Domain.Subscriptions;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Araponga.Domain.Work;
@@ -215,6 +216,38 @@ public sealed class InMemoryDataStore
             null,
             null));
 
+        // Inicializar plano FREE padrão para testes
+        var freePlanId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        SubscriptionPlans.Add(new SubscriptionPlan(
+            freePlanId,
+            "FREE",
+            "Plano gratuito com funcionalidades básicas sempre disponíveis",
+            SubscriptionPlanTier.FREE,
+            PlanScope.Global,
+            null, // TerritoryId = null para plano global
+            0m, // Preço zero
+            null, // BillingCycle = null para FREE
+            new List<FeatureCapability>
+            {
+                FeatureCapability.FeedBasic,
+                FeatureCapability.PostsBasic,
+                FeatureCapability.EventsBasic,
+                FeatureCapability.MarketplaceBasic,
+                FeatureCapability.ChatBasic
+            },
+            new Dictionary<string, object>
+            {
+                ["maxPosts"] = 10,
+                ["maxEvents"] = 3,
+                ["maxMarketplaceItems"] = 5,
+                ["maxStorageMB"] = 100
+            },
+            isDefault: true,
+            trialDays: null,
+            createdByUserId: Guid.Empty, // Sistema
+            stripePriceId: null,
+            stripeProductId: null));
+
         TerritoryEvents = new List<TerritoryEvent>
         {
             new(
@@ -414,4 +447,12 @@ public sealed class InMemoryDataStore
 
     // Notifications
     public List<Domain.Notifications.NotificationConfig> NotificationConfigs { get; } = new();
+
+    // Subscriptions
+    public List<SubscriptionPlan> SubscriptionPlans { get; } = new();
+    public List<Subscription> Subscriptions { get; } = new();
+    public List<SubscriptionPayment> SubscriptionPayments { get; } = new();
+    public List<SubscriptionCoupon> SubscriptionCoupons { get; } = new();
+    public List<Coupon> Coupons { get; } = new();
+    public List<SubscriptionPlanHistory> SubscriptionPlanHistories { get; } = new();
 }

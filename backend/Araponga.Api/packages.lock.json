@@ -217,6 +217,16 @@
           "Serilog.Sinks.File": "5.0.0"
         }
       },
+      "Stripe.net": {
+        "type": "Direct",
+        "requested": "[47.0.0, )",
+        "resolved": "47.0.0",
+        "contentHash": "GPGZPYtxGd/T/DbOdn8YY4rTVuC6yt7Jbc4SwrJJzWnMFlB4eU4uukpj8P7QEdEqxbwLvFWM9QnCIUKR8pAD1Q==",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "System.Configuration.ConfigurationManager": "8.0.0"
+        }
+      },
       "Swashbuckle.AspNetCore": {
         "type": "Direct",
         "requested": "[6.6.2, )",
@@ -821,6 +831,11 @@
           "System.CodeDom": "4.4.0"
         }
       },
+      "Newtonsoft.Json": {
+        "type": "Transitive",
+        "resolved": "13.0.3",
+        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+      },
       "Npgsql": {
         "type": "Transitive",
         "resolved": "8.0.4",
@@ -1059,6 +1074,15 @@
           "System.Composition.Runtime": "6.0.0"
         }
       },
+      "System.Configuration.ConfigurationManager": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "JlYi9XVvIREURRUlGMr1F6vOFLk7YSY4p1vHo4kX3tQ0AGrjqlRWHDi66ImHhy6qwXBG3BJ6Y1QlYQ+Qz6Xgww==",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "8.0.0",
+          "System.Security.Cryptography.ProtectedData": "8.0.0"
+        }
+      },
       "System.Diagnostics.DiagnosticSource": {
         "type": "Transitive",
         "resolved": "10.0.0",
@@ -1121,6 +1145,11 @@
         "resolved": "8.0.1",
         "contentHash": "CoCRHFym33aUSf/NtWSVSZa99dkd0Hm7OCZUxORBjRB16LNhIEOf8THPqzIYlvKM0nNDAPTRBa1FxEECrgaxxA=="
       },
+      "System.Security.Cryptography.ProtectedData": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "+TUFINV2q2ifyXauQXRwy4CiBhqvDEDZeVJU7qfxya4aRYOKzVBpN+4acx25VcPB9ywUN6C0n8drWl110PhZEg=="
+      },
       "System.Text.Encoding.CodePages": {
         "type": "Transitive",
         "resolved": "6.0.0",
@@ -1179,6 +1208,7 @@
           "Microsoft.Extensions.Hosting": "[8.0.0, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )",
           "SixLabors.ImageSharp": "[3.1.12, )",
+          "Stripe.net": "[47.0.0, )",
           "System.Text.Json": "[8.0.5, )"
         }
       },

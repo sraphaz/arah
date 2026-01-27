@@ -74,7 +74,7 @@ Após as fases anteriores, a aplicação está em **9.2/10**. Restam gaps menore
 
 #### 26.1.1 Sistema de Políticas de Termos e Critérios de Aceite 🔴 NOVO
 **Estimativa**: 28 horas (3.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **IMPLEMENTADO** (Fase 16)
 
 **Tarefas**:
 - [ ] Criar modelo de domínio `TermsOfService`:
@@ -153,7 +153,7 @@ Após as fases anteriores, a aplicação está em **9.2/10**. Restam gaps menore
 
 #### 26.1.2 Serviço de Políticas e Aceite
 **Estimativa**: 24 horas (3 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **IMPLEMENTADO** (Fase 16)
 
 **Tarefas**:
 - [ ] Criar `TermsOfServiceService`:
@@ -204,7 +204,7 @@ Após as fases anteriores, a aplicação está em **9.2/10**. Restam gaps menore
 
 #### 26.1.3 Controllers e API
 **Estimativa**: 16 horas (2 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **IMPLEMENTADO** (Fase 16)
 
 **Tarefas**:
 - [ ] Criar `TermsOfServiceController`:
@@ -242,16 +242,16 @@ Após as fases anteriores, a aplicação está em **9.2/10**. Restam gaps menore
 - `backend/Araponga.Tests/Integration/TermsOfServiceIntegrationTests.cs`
 
 **Critérios de Sucesso**:
-- ✅ Endpoints funcionando
+- ✅ Endpoints funcionando (`TermsOfServiceController`, `PrivacyPolicyController`)
 - ✅ Validações funcionando
-- ✅ Middleware funcionando (se implementado)
+- ✅ Integração com AccessEvaluator funcionando (verificação automática)
 - ✅ Testes passando
 
 ---
 
 #### 26.1.4 Políticas por Papel e Critérios de Aceite
 **Estimativa**: 20 horas (2.5 dias)  
-**Status**: ❌ Não implementado
+**Status**: ✅ **IMPLEMENTADO** (Fase 16)
 
 **Tarefas**:
 - [ ] Definir termos obrigatórios por papel:

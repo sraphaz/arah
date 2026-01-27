@@ -595,7 +595,53 @@ Após validação completa das fases 1-14.5, identificamos:
 
 ---
 
-#### 14.8.15 Testes Finais e Validação Completa
+#### 14.8.15 Validação de Cobertura de Testes - Fase 15 ⚠️ NOVO
+**Estimativa**: 52 horas (6.5 dias)  
+**Prioridade**: 🔴 Crítica  
+**Status**: ⏳ Pendente
+
+**Tarefas**:
+- [ ] Implementar testes para SubscriptionAnalyticsService (12 cenários)
+- [ ] Implementar testes para SubscriptionPlanAdminService (10 cenários)
+- [ ] Implementar testes para CouponService (10 cenários)
+- [ ] Implementar testes para StripeWebhookService (10 cenários)
+- [ ] Implementar testes para MercadoPagoWebhookService (6 cenários)
+- [ ] Implementar testes para SubscriptionRenewalService (6 cenários)
+- [ ] Implementar testes para SubscriptionTrialService (7 cenários)
+- [ ] Adicionar testes adicionais para SubscriptionService (10 cenários)
+- [ ] Implementar testes para SubscriptionPlanSeedService (4 cenários)
+- [ ] Implementar testes de integração para Subscriptions (6 cenários)
+- [ ] Validar cobertura de Fase 15 > 85%
+
+**Total**: 81 cenários de teste (61 críticos + 20 importantes)
+
+**Arquivos a Criar**:
+- `backend/Araponga.Tests/Application/SubscriptionAnalyticsServiceTests.cs`
+- `backend/Araponga.Tests/Application/SubscriptionPlanAdminServiceTests.cs`
+- `backend/Araponga.Tests/Application/CouponServiceTests.cs`
+- `backend/Araponga.Tests/Application/StripeWebhookServiceTests.cs`
+- `backend/Araponga.Tests/Application/MercadoPagoWebhookServiceTests.cs`
+- `backend/Araponga.Tests/Application/SubscriptionRenewalServiceTests.cs`
+- `backend/Araponga.Tests/Application/SubscriptionTrialServiceTests.cs`
+- `backend/Araponga.Tests/Application/SubscriptionPlanSeedServiceTests.cs`
+- `backend/Araponga.Tests/Api/SubscriptionIntegrationTests.cs`
+
+**Arquivos a Atualizar**:
+- `backend/Araponga.Tests/Application/SubscriptionServiceTests.cs` (adicionar 10 cenários)
+
+**Critérios de Sucesso**:
+- ✅ Todos os 81 cenários implementados
+- ✅ Cobertura de Fase 15 > 85%
+- ✅ Todos os testes passando
+- ✅ Testes de integração funcionando
+
+Ver documentação completa:
+- [`FASE16_VALIDACAO_COBERTURA_TESTES.md`](./FASE16_VALIDACAO_COBERTURA_TESTES.md)
+- [`FASE16_CENARIOS_TESTE_FASE15.md`](./FASE16_CENARIOS_TESTE_FASE15.md)
+
+---
+
+#### 14.8.16 Testes Finais e Validação Completa
 **Estimativa**: 16 horas (2 dias)  
 **Prioridade**: 🔴 Crítica  
 **Status**: ⏳ Pendente
@@ -608,6 +654,7 @@ Após validação completa das fases 1-14.5, identificamos:
 - [ ] Validar cobertura de testes:
   - [ ] Cobertura > 85% para código novo
   - [ ] Cobertura > 85% para código existente (validar)
+  - [ ] Cobertura > 85% para Fase 15 (após implementação dos 81 cenários)
 - [ ] Validação manual:
   - [ ] Testar fluxo completo de aceite de termos
   - [ ] Testar todos os endpoints validados
@@ -650,8 +697,9 @@ Após validação completa das fases 1-14.5, identificamos:
 | Otimizações Finais | 16h | 🟡 Importante | ⏳ Pendente |
 | Documentação Operacional | 12h | 🟡 Importante | ⏳ Pendente |
 | Atualização Documentação | 8h | 🟡 Importante | ⏳ Pendente |
+| Validação Cobertura Testes Fase 15 | 52h | 🔴 Crítica | ⏳ Pendente |
 | Testes Finais | 16h | 🔴 Crítica | ⏳ Pendente |
-| **Total** | **160h (20 dias)** | | |
+| **Total** | **212h (26.5 dias)** | | |
 
 ---
 

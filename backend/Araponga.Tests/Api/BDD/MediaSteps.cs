@@ -1109,7 +1109,8 @@ public sealed class MediaSteps
         }
 
         // Aprovar JoinRequest usando o recipient resident
-        var residentToken = await LoginForTokenAsync(_client!, "google", "resident-external");
+        if (_client == null) throw new InvalidOperationException("Client not initialized");
+        var residentToken = await LoginForTokenAsync(_client, "google", "resident-external");
         var originalAuth = _client.DefaultRequestHeaders.Authorization;
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
 

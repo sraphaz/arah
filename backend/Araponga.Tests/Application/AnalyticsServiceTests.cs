@@ -20,6 +20,8 @@ public sealed class AnalyticsServiceTests
     private readonly Mock<ICheckoutRepository> _checkoutRepositoryMock;
     private readonly Mock<ISellerTransactionRepository> _sellerTransactionRepositoryMock;
     private readonly Mock<IUserRepository> _userRepositoryMock;
+    private readonly Mock<IStoreRepository> _storeRepositoryMock;
+    private readonly Mock<IStoreItemRepository> _storeItemRepositoryMock;
     private readonly AnalyticsService _service;
 
     public AnalyticsServiceTests()
@@ -31,6 +33,8 @@ public sealed class AnalyticsServiceTests
         _checkoutRepositoryMock = new Mock<ICheckoutRepository>();
         _sellerTransactionRepositoryMock = new Mock<ISellerTransactionRepository>();
         _userRepositoryMock = new Mock<IUserRepository>();
+        _storeRepositoryMock = new Mock<IStoreRepository>();
+        _storeItemRepositoryMock = new Mock<IStoreItemRepository>();
 
         _service = new AnalyticsService(
             _territoryRepositoryMock.Object,
@@ -39,7 +43,9 @@ public sealed class AnalyticsServiceTests
             _eventRepositoryMock.Object,
             _checkoutRepositoryMock.Object,
             _sellerTransactionRepositoryMock.Object,
-            _userRepositoryMock.Object);
+            _userRepositoryMock.Object,
+            _storeRepositoryMock.Object,
+            _storeItemRepositoryMock.Object);
     }
 
     [Fact]

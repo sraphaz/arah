@@ -1,0 +1,973 @@
+{
+	"info": {
+		"_postman_id": "araponga-bff-api",
+		"name": "Araponga BFF API - Journeys",
+		"description": "Coleção completa da API BFF (Backend for Frontend) do Araponga.\n\nEsta coleção contém todos os endpoints de jornadas (user journeys) que encapsulam operações complexas em chamadas únicas.\n\n**Versão**: 2.0.0\n**Base URL**: `/api/v2/journeys`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Onboarding",
+			"item": [
+				{
+					"name": "Complete Onboarding",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"selectedTerritoryId\": \"{{territory_id}}\",\n  \"location\": {\n    \"latitude\": -23.5505,\n    \"longitude\": -46.6333\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/onboarding/complete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"onboarding",
+								"complete"
+							]
+						},
+						"description": "Completa o onboarding do usuário em uma única chamada:\n- Autentica o usuário\n- Lista territórios disponíveis\n- Seleciona território ativo\n- Entra como VISITOR\n- Retorna feed inicial\n- Sugere próximas ações"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Suggested Territories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/onboarding/suggested-territories?latitude=-23.5505&longitude=-46.6333&radiusKm=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"onboarding",
+								"suggested-territories"
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "-23.5505",
+									"description": "Latitude da localização do usuário"
+								},
+								{
+									"key": "longitude",
+									"value": "-46.6333",
+									"description": "Longitude da localização do usuário"
+								},
+								{
+									"key": "radiusKm",
+									"value": "10",
+									"description": "Raio de busca em quilômetros (opcional, padrão: 10)"
+								}
+							]
+						},
+						"description": "Obtém territórios sugeridos baseados na localização do usuário e preferências."
+					},
+					"response": []
+				}
+			],
+			"description": "Jornadas de onboarding e primeiro acesso"
+		},
+		{
+			"name": "Feed",
+			"item": [
+				{
+					"name": "Get Territory Feed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/feed/territory-feed?territoryId={{territory_id}}&pageNumber=1&pageSize=20&filterByInterests=false",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"feed",
+								"territory-feed"
+							],
+							"query": [
+								{
+									"key": "territoryId",
+									"value": "{{territory_id}}",
+									"description": "ID do território (obrigatório)"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página (padrão: 1)"
+								},
+								{
+									"key": "pageSize",
+									"value": "20",
+									"description": "Tamanho da página (padrão: 20, máx: 100)"
+								},
+								{
+									"key": "filterByInterests",
+									"value": "false",
+									"description": "Filtrar por interesses do usuário (padrão: false)"
+								},
+								{
+									"key": "mapEntityId",
+									"value": "",
+									"description": "Filtrar por entidade do mapa (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "assetId",
+									"value": "",
+									"description": "Filtrar por asset (opcional)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Obtém feed do território formatado para UI com todos os dados agregados:\n- Posts com contadores (likes, shares, comments)\n- Mídias de cada post\n- Eventos relacionados\n- Interações do usuário atual\n- Metadados para filtros"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v2/journeys/feed/territory-feed?territoryId={{territory_id}}&pageNumber=1&pageSize=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"journeys",
+										"feed",
+										"territory-feed"
+									],
+									"query": [
+										{
+											"key": "territoryId",
+											"value": "{{territory_id}}"
+										},
+										{
+											"key": "pageNumber",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"items\": [\n    {\n      \"post\": {\n        \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n        \"title\": \"Feira de Artesanato\",\n        \"content\": \"Venha participar da nossa feira de artesanato no próximo sábado!\",\n        \"type\": \"POST\",\n        \"visibility\": \"PUBLIC\",\n        \"status\": \"PUBLISHED\",\n        \"mapEntityId\": null,\n        \"createdAtUtc\": \"2026-01-27T10:00:00Z\",\n        \"tags\": [\"evento\", \"comunidade\"]\n      },\n      \"counts\": {\n        \"likes\": 15,\n        \"shares\": 3,\n        \"comments\": 5\n      },\n      \"media\": [\n        {\n          \"url\": \"https://cdn.araponga.com/media/abc123.jpg\",\n          \"type\": \"IMAGE\",\n          \"thumbnailUrl\": \"https://cdn.araponga.com/media/abc123_thumb.jpg\"\n        }\n      ],\n      \"event\": null,\n      \"author\": {\n        \"id\": \"456e7890-e89b-12d3-a456-426614174001\",\n        \"displayName\": \"Maria Santos\",\n        \"avatarUrl\": \"https://cdn.araponga.com/avatars/maria.jpg\"\n      },\n      \"userInteractions\": {\n        \"liked\": false,\n        \"shared\": false,\n        \"commented\": false\n      },\n      \"metadata\": {\n        \"canEdit\": false,\n        \"canDelete\": false,\n        \"canShare\": true,\n        \"canComment\": true\n      }\n    }\n  ],\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalCount\": 42,\n    \"totalPages\": 3,\n    \"hasPreviousPage\": false,\n    \"hasNextPage\": true\n  },\n  \"filters\": {\n    \"availableTypes\": [\"POST\", \"ALERT\", \"EVENT\"],\n    \"availableTags\": [\"evento\", \"comunidade\", \"alerta\"],\n    \"availableVisibilities\": [\"PUBLIC\", \"RESIDENTS_ONLY\"]\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Novo Post de Exemplo",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Este é um exemplo de post criado via API BFF",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "POST",
+									"type": "text",
+									"description": "POST, ALERT ou EVENT"
+								},
+								{
+									"key": "visibility",
+									"value": "PUBLIC",
+									"type": "text",
+									"description": "PUBLIC ou RESIDENTS_ONLY"
+								},
+								{
+									"key": "tags[0]",
+									"value": "exemplo",
+									"type": "text",
+									"description": "Tags (opcional)"
+								},
+								{
+									"key": "tags[1]",
+									"value": "comunidade",
+									"type": "text"
+								},
+								{
+									"key": "mediaFiles",
+									"type": "file",
+									"src": [],
+									"description": "Arquivos de mídia (máx 10)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/feed/create-post?territoryId={{territory_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"feed",
+								"create-post"
+							],
+							"query": [
+								{
+									"key": "territoryId",
+									"value": "{{territory_id}}",
+									"description": "ID do território (obrigatório)"
+								}
+							]
+						},
+						"description": "Cria um post com upload de mídias em uma única chamada.\nFaz upload das mídias, cria o post e retorna o post formatado para UI."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Novo Post",
+											"type": "text"
+										},
+										{
+											"key": "content",
+											"value": "Conteúdo do post",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "POST",
+											"type": "text"
+										},
+										{
+											"key": "visibility",
+											"value": "PUBLIC",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v2/journeys/feed/create-post?territoryId={{territory_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"journeys",
+										"feed",
+										"create-post"
+									],
+									"query": [
+										{
+											"key": "territoryId",
+											"value": "{{territory_id}}"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"success\": true,\n  \"post\": {\n    \"id\": \"789e0123-e89b-12d3-a456-426614174002\",\n    \"title\": \"Novo Post\",\n    \"content\": \"Conteúdo do post\",\n    \"type\": \"POST\",\n    \"visibility\": \"PUBLIC\",\n    \"status\": \"PUBLISHED\",\n    \"createdAtUtc\": \"2026-01-27T10:00:00Z\"\n  },\n  \"mediaUrls\": [\n    \"https://cdn.araponga.com/media/xyz789.jpg\"\n  ],\n  \"suggestions\": {\n    \"similarPosts\": [],\n    \"suggestedTags\": [\"comunidade\", \"evento\"]\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Interact with Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"postId\": \"{{post_id}}\",\n  \"action\": \"LIKE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/feed/interact",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"feed",
+								"interact"
+							]
+						},
+						"description": "Interage com um post (like, comment, share) e retorna o estado atualizado do post.\n\n**Actions disponíveis**:\n- `LIKE` - Curtir post\n- `UNLIKE` - Descurtir post\n- `COMMENT` - Comentar (requer campo `comment`)\n- `SHARE` - Compartilhar post"
+					},
+					"response": [
+						{
+							"name": "Like Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"postId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"action\": \"LIKE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v2/journeys/feed/interact",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"journeys",
+										"feed",
+										"interact"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"success\": true,\n  \"post\": {\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"title\": \"Feira de Artesanato\",\n    \"content\": \"Venha participar da nossa feira de artesanato no próximo sábado!\",\n    \"type\": \"POST\",\n    \"visibility\": \"PUBLIC\",\n    \"status\": \"PUBLISHED\",\n    \"createdAtUtc\": \"2026-01-27T10:00:00Z\"\n  },\n  \"updatedCounts\": {\n    \"likes\": 16,\n    \"shares\": 3,\n    \"comments\": 5\n  }\n}"
+						},
+						{
+							"name": "Comment Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"postId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"action\": \"COMMENT\",\n  \"comment\": \"Ótimo evento! Vou participar.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v2/journeys/feed/interact",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"journeys",
+										"feed",
+										"interact"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"success\": true,\n  \"post\": {\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"title\": \"Feira de Artesanato\",\n    \"content\": \"Venha participar da nossa feira de artesanato no próximo sábado!\",\n    \"type\": \"POST\",\n    \"visibility\": \"PUBLIC\",\n    \"status\": \"PUBLISHED\",\n    \"createdAtUtc\": \"2026-01-27T10:00:00Z\"\n  },\n  \"updatedCounts\": {\n    \"likes\": 15,\n    \"shares\": 3,\n    \"comments\": 6\n  }\n}"
+						}
+					]
+				}
+			],
+			"description": "Jornadas relacionadas ao feed comunitário"
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Get Territory Events",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/events/territory-events?territoryId={{territory_id}}&pageNumber=1&pageSize=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"events",
+								"territory-events"
+							],
+							"query": [
+								{
+									"key": "territoryId",
+									"value": "{{territory_id}}",
+									"description": "ID do território (obrigatório)"
+								},
+								{
+									"key": "from",
+									"value": "",
+									"description": "Data inicial (opcional, formato: ISO 8601)",
+									"disabled": true
+								},
+								{
+									"key": "to",
+									"value": "",
+									"description": "Data final (opcional, formato: ISO 8601)",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "",
+									"description": "Status do evento: SCHEDULED, ONGOING, COMPLETED, CANCELLED",
+									"disabled": true
+								},
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página (padrão: 1)"
+								},
+								{
+									"key": "pageSize",
+									"value": "20",
+									"description": "Tamanho da página (padrão: 20, máx: 100)"
+								}
+							]
+						},
+						"description": "Lista eventos do território formatados para UI com todos os dados agregados:\n- Detalhes do evento\n- Participantes (interessados e confirmados)\n- Mídias\n- Estado de participação do usuário"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "territoryId",
+									"value": "{{territory_id}}",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "Feira de Artesanato",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Venha participar da nossa feira de artesanato com produtos locais!",
+									"type": "text"
+								},
+								{
+									"key": "startsAtUtc",
+									"value": "2026-02-01T10:00:00Z",
+									"type": "text",
+									"description": "Data/hora de início (ISO 8601)"
+								},
+								{
+									"key": "endsAtUtc",
+									"value": "2026-02-01T18:00:00Z",
+									"type": "text",
+									"description": "Data/hora de término (opcional, ISO 8601)"
+								},
+								{
+									"key": "latitude",
+									"value": "-23.5505",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "-46.6333",
+									"type": "text"
+								},
+								{
+									"key": "locationLabel",
+									"value": "Praça Central",
+									"type": "text"
+								},
+								{
+									"key": "coverMediaFile",
+									"type": "file",
+									"src": [],
+									"description": "Arquivo de mídia de capa (opcional)"
+								},
+								{
+									"key": "additionalMediaFiles",
+									"type": "file",
+									"src": [],
+									"description": "Arquivos de mídia adicionais (máx 9, opcional)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/events/create-event",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"events",
+								"create-event"
+							]
+						},
+						"description": "Cria um evento com upload de mídias em uma única chamada."
+					},
+					"response": []
+				},
+				{
+					"name": "Participate in Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"eventId\": \"{{event_id}}\",\n  \"action\": \"INTEREST\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/events/participate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"events",
+								"participate"
+							]
+						},
+						"description": "Participa de um evento (interesse ou confirmação) e retorna o estado atualizado do evento.\n\n**Actions disponíveis**:\n- `INTEREST` - Marcar interesse\n- `CONFIRM` - Confirmar participação\n- `CANCEL` - Cancelar participação"
+					},
+					"response": []
+				}
+			],
+			"description": "Jornadas relacionadas a eventos"
+		},
+		{
+			"name": "Marketplace",
+			"item": [
+				{
+					"name": "Search Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/marketplace/search?territoryId={{territory_id}}&pageNumber=1&pageSize=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"marketplace",
+								"search"
+							],
+							"query": [
+								{
+									"key": "territoryId",
+									"value": "{{territory_id}}",
+									"description": "ID do território (obrigatório)"
+								},
+								{
+									"key": "query",
+									"value": "",
+									"description": "Termo de busca (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "",
+									"description": "Categoria (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "",
+									"description": "Tipo: PRODUCT ou SERVICE (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "minPrice",
+									"value": "",
+									"description": "Preço mínimo (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "maxPrice",
+									"value": "",
+									"description": "Preço máximo (opcional)",
+									"disabled": true
+								},
+								{
+									"key": "pageNumber",
+									"value": "1",
+									"description": "Número da página (padrão: 1)"
+								},
+								{
+									"key": "pageSize",
+									"value": "20",
+									"description": "Tamanho da página (padrão: 20)"
+								}
+							]
+						},
+						"description": "Busca itens no marketplace formatados para UI com todos os dados agregados:\n- Itens formatados\n- Lojas\n- Filtros disponíveis\n- Sugestões"
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"territoryId\": \"{{territory_id}}\",\n  \"itemId\": \"{{item_id}}\",\n  \"quantity\": 1,\n  \"notes\": \"Por favor, entregar na porta\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/marketplace/add-to-cart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"marketplace",
+								"add-to-cart"
+							]
+						},
+						"description": "Adiciona um item ao carrinho e retorna o carrinho completo atualizado com sugestões de produtos relacionados."
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"territoryId\": \"{{territory_id}}\",\n  \"paymentMethod\": \"PIX\",\n  \"shippingAddress\": {\n    \"street\": \"Rua Exemplo\",\n    \"number\": \"123\",\n    \"complement\": \"Apto 45\",\n    \"neighborhood\": \"Centro\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"zipCode\": \"01234-567\",\n    \"country\": \"BR\"\n  },\n  \"message\": \"Por favor, entregar no período da manhã\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v2/journeys/marketplace/checkout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"journeys",
+								"marketplace",
+								"checkout"
+							]
+						},
+						"description": "Finaliza a compra do carrinho, processa pagamento e retorna confirmação da ordem.\n\n**Payment Methods disponíveis**:\n- `CREDIT_CARD` - Cartão de Crédito\n- `DEBIT_CARD` - Cartão de Débito\n- `PIX` - PIX\n- `BANK_TRANSFER` - Transferência Bancária"
+					},
+					"response": []
+				}
+			],
+			"description": "Jornadas relacionadas ao marketplace"
+		},
+		{
+			"name": "Auth (v1)",
+			"item": [
+				{
+					"name": "Social Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"provider\": \"GOOGLE\",\n  \"token\": \"seu_google_token_aqui\",\n  \"cpf\": \"12345678900\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/social",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"social"
+							]
+						},
+						"description": "Autentica o usuário via login social e retorna token JWT para usar nos endpoints BFF.\n\n**Providers disponíveis**:\n- `GOOGLE` - Google OAuth\n- `FACEBOOK` - Facebook OAuth\n- `APPLE` - Apple Sign In"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"provider\": \"GOOGLE\",\n  \"token\": \"seu_google_token\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/social",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"social"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"expiresAt\": \"2026-01-28T10:00:00Z\",\n  \"user\": {\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"displayName\": \"João Silva\",\n    \"email\": \"joao@example.com\"\n  }\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints de autenticação (API v1) - necessário para obter token JWT"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://api.araponga.com",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string",
+			"description": "Token JWT obtido via /api/v1/auth/social"
+		},
+		{
+			"key": "territory_id",
+			"value": "",
+			"type": "string",
+			"description": "ID do território ativo"
+		},
+		{
+			"key": "post_id",
+			"value": "",
+			"type": "string",
+			"description": "ID do post (para interações)"
+		},
+		{
+			"key": "event_id",
+			"value": "",
+			"type": "string",
+			"description": "ID do evento (para participação)"
+		},
+		{
+			"key": "item_id",
+			"value": "",
+			"type": "string",
+			"description": "ID do item do marketplace"
+		}
+	]
+}

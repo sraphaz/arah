@@ -67,16 +67,11 @@ async function getYamlContent(filePath: string) {
     const titleWithoutPrefix = removeNumericPrefix(fileNameWithoutExt);
     const fallbackTitle = titleWithoutPrefix.replace(/_/g, " ");
 
-    // Escapa HTML para segurança
-    const escapedContent = fileContents
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    // Não precisa fazer escape manual - React já faz escape automaticamente ao renderizar
+    // O conteúdo será renderizado dentro de <code> que React escapa automaticamente
 
     return {
-      content: escapedContent,
+      content: fileContents,
       title: fallbackTitle,
       isYaml: true,
       fileName: fileName,

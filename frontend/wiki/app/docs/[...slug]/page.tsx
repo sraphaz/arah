@@ -61,6 +61,15 @@ function processMarkdownLinks(html: string, basePath: string = '/wiki'): string 
 async function getDocContent(filePath: string) {
   try {
     const docsPath = join(process.cwd(), "..", "..", "docs", filePath);
+    
+    // Verifica se o arquivo existe antes de tentar ler (evita logs de erro desnecessários)
+    try {
+      await stat(docsPath);
+    } catch {
+      // Arquivo não existe - retorna null silenciosamente (pode ser YAML)
+      return null;
+    }
+    
     const fileContents = await readFile(docsPath, "utf8");
     const { content, data } = matter(fileContents);
 
@@ -128,8 +137,11 @@ async function getDocContent(filePath: string) {
       frontMatter: data,
       title: data.title || firstH1Title || fallbackTitle,
     };
-  } catch (error) {
-    console.error(`Error reading ${filePath}:`, error);
+  } catch (error: any) {
+    // Só loga erro se não for ENOENT (arquivo não encontrado é esperado)
+    if (error?.code !== 'ENOENT') {
+      console.error(`Error reading ${filePath}:`, error);
+    }
     return null;
   }
 }
@@ -137,6 +149,15 @@ async function getDocContent(filePath: string) {
 async function getYamlContent(filePath: string) {
   try {
     const docsPath = join(process.cwd(), "..", "..", "docs", filePath);
+    
+    // Verifica se o arquivo existe antes de tentar ler (evita logs de erro desnecessários)
+    try {
+      await stat(docsPath);
+    } catch {
+      // Arquivo não existe - retorna null silenciosamente
+      return null;
+    }
+    
     const fileContents = await readFile(docsPath, "utf8");
     
     const fileName = filePath.split('/').pop() || '';
@@ -153,8 +174,11 @@ async function getYamlContent(filePath: string) {
       isYaml: true,
       fileName: fileName,
     };
-  } catch (error) {
-    console.error(`Error reading YAML file ${filePath}:`, error);
+  } catch (error: any) {
+    // Só loga erro se não for ENOENT (arquivo não encontrado é esperado)
+    if (error?.code !== 'ENOENT') {
+      console.error(`Error reading YAML file ${filePath}:`, error);
+    }
     return null;
   }
 }

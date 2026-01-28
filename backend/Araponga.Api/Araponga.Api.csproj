@@ -50,6 +50,7 @@
       <NoWarn>NU1601</NoWarn>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Stripe.net" Version="47.0.0" />
   </ItemGroup>
 
   <ItemGroup>

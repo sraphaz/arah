@@ -17,7 +17,7 @@
     {
       "id": "02_ROADMAP",
       "title": "ROADMAP",
-      "content": "Roadmap Estratégico - Araponga Planejamento de Desenvolvimento e Evolução da Plataforma Versão : 3.1 Data : 2025-01-20 Última Atualização : 2026-01-25 Status : ✅ MVP Essencial Completo (Fases 1-12) | 📊 Estratégia de Convergência em Andamento 📋 Visão Executiva O roadmap do Araponga apresenta uma estratégia de desenvolvimento progressivo que evolui de um MVP sólido para uma plataforma completa de organização comunitária territorial com governança descentralizada e economia circular tokenizada. O",
+      "content": "Roadmap Estratégico - Araponga Planejamento de Desenvolvimento e Evolução da Plataforma Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 Status : ✅ MVP Completo + Fases 1-8 Implementadas | 📊 Estratégia de Convergência em Andamento 📋 Visão Executiva O roadmap do Araponga apresenta uma estratégia de desenvolvimento progressivo que evolui de um MVP sólido para uma plataforma completa de organização comunitária territorial com governança descentralizada e economia circular tokenizada",
       "url": "/wiki/docs/02_ROADMAP",
       "category": "Visão e Produto"
     },
@@ -248,7 +248,7 @@
     {
       "id": "40_CHANGELOG",
       "title": "CHANGELOG",
-      "content": "Changelog - Araponga Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 📋 Índice Mudanças Recentes Versões Anteriores Histórico Completo 🆕 Mudanças Recentes Versão 3.5 (2026-01-25) - Fase 13: Conector de Envio de Emails - COMPLETA ✅ Status : ✅ Fase 13 Finalizada (100%) 📧 Sistema de Envio de Emails Completo Infraestrutura : ✅ Interface IEmailSender e modelo EmailMessage implementados ✅ SmtpEmailSender com suporte a MailKit e configuração flexível ✅ Sistema de templates de email ( E",
+      "content": "Changelog - Araponga Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 📋 Índice Mudanças Recentes Versões Anteriores Histórico Completo 🆕 Mudanças Recentes Versao 3.4 (2026-01-23) - Recuperacao de acesso e health checks Adicionados endpoints de recuperacao de acesso via email ( /api/v1/auth/password-reset e /api/v1/auth/password-reset/confirm ). Health checks estendidos com cache, storage, event bus e endpoint /health/live . Validacoes comuns e regras de geolocalizacao centralizad",
       "url": "/wiki/docs/40_CHANGELOG",
       "category": "Outros"
     },
@@ -344,27 +344,6 @@
       "category": "Outros"
     },
     {
-      "id": "ANALISE_COERENCIA_FASES_DETALHADA",
-      "title": "ANALISE COERENCIA FASES DETALHADA",
-      "content": "Análise Detalhada de Coerência: FASE*.md vs. Roadmap Data : 2026-01-25 Status : 🔄 Em Análise Objetivo : Validar coerência completa entre documentos FASE*.md e roadmap estratégico 📊 Mapeamento: Arquivo Físico vs. Conteúdo vs. Roadmap Arquivo Físico Título no Arquivo Fase Esperada (Roadmap) Status Problema FASE9.md Fase 9: Perfil ✅ Fase 9 ✅ OK - FASE10.md Fase 10: Mídias ✅ Fase 10 ✅ OK - FASE11.md Fase 11: Edição ✅ Fase 11 ✅ OK - FASE12.md Fase 12: Otimizações ✅ Fase 12 ✅ OK - FASE13.md Fase 13:",
-      "url": "/wiki/docs/ANALISE_COERENCIA_FASES_DETALHADA",
-      "category": "Outros"
-    },
-    {
-      "id": "ANALISE_COESAO_FASES_15_FINAL",
-      "title": "ANALISE COESAO FASES 15 FINAL",
-      "content": "Análise de Coesão: Fases 15 até Final Data : 2026-01-25 Status : 📋 Análise Completa e Recomendações Objetivo : Avaliar coesão, identificar duplicidades e necessidade de reposicionamento das fases 15 em diante 📊 Resumo Executivo Análise realizada : Todas as fases de 15 até 44 (incluindo conceituais) Duplicidades identificadas : 2 potenciais Reposicionamentos recomendados : 3 fases Renomeações : Booking System → Rental System Coesão geral : 🟡 Boa, com melhorias recomendadas 🔍 Análise Detalhada",
-      "url": "/wiki/docs/ANALISE_COESAO_FASES_15_FINAL",
-      "category": "Outros"
-    },
-    {
-      "id": "ANALISE_DEMANDAS_OFERTAS_REORGANIZACAO",
-      "title": "ANALISE DEMANDAS OFERTAS REORGANIZACAO",
-      "content": "Análise: Sistema de Demandas/Ofertas e Reorganização do Roadmap Data : 2026-01-25 Status : 📋 Análise e Proposta de Reorganização Objetivo : Posicionar nova funcionalidade de Demandas/Ofertas no backlog Reavaliar roadmap priorizando funcionalidades que enriquecem o produto Reposicionar Gamificação como decoração/incentivo (depois de funcionalidades core) 🆕 Nova Funcionalidade: Sistema de Demandas e Ofertas Descrição Funcionalidade : Morador cadastra demandas de item ou serviço, e outros morador",
-      "url": "/wiki/docs/ANALISE_DEMANDAS_OFERTAS_REORGANIZACAO",
-      "category": "Outros"
-    },
-    {
       "id": "ANALISE_DESIGN_SISTEMATICA_MELHORIAS",
       "title": "ANALISE DESIGN SISTEMATICA MELHORIAS",
       "content": "Análise Sistemática de Design — Propostas de Melhoria Versão : 1.0 Data : 2025-01-20 Escopo : Wiki Araponga e DevPortal Baseado em : DESIGN_SYSTEM_IDENTIDADE_VISUAL.md Sumário Executivo Esta análise sistemática avalia o design atual dos portais Wiki e DevPortal contra as diretrizes de identidade visual estabelecidas e propõe melhorias específicas para alcançar padrões internacionais de excelência. Cada seção identifica gaps, oportunidades e implementações detalhadas. 1. Análise de Tipografia 1.1",
@@ -383,13 +362,6 @@
       "title": "ANALISE DEVPORTAL REORGANIZACAO",
       "content": "Análise DevPortal - Reorganização e Correções Data : 2025-01-21 Status : 🔴 Problemas Identificados Problemas Encontrados 1. Estrutura HTML Quebrada Seções fora dos phase-panels : Linhas 1155-1700+ contêm seções que estão fora dos phase-panels , sendo escondidas pelo CSS mas causando problemas de estrutura Conteúdo duplicado : \"Como o Araponga funciona\" aparece dentro de phase-panel (linha 666) e fora (linha 1156) Seções sem IDs corretos : #visao-geral e #como-funciona referenciados na sidebar m",
       "url": "/wiki/docs/ANALISE_DEVPORTAL_REORGANIZACAO",
-      "category": "Outros"
-    },
-    {
-      "id": "ANALISE_INSERCAO_HOSPEDAGEM_ROADMAP",
-      "title": "ANALISE INSERCAO HOSPEDAGEM ROADMAP",
-      "content": "📊 Análise: Inserção de Hospedagem no Roadmap Estratégico Data : 2026-01-25 Status : 📋 Análise Estratégica Objetivo : Determinar prioridade e posicionamento ideal da funcionalidade de Hospedagem no roadmap de 29+ fases 🎯 Resumo Executivo Recomendação : Inserir Hospedagem como Fase 30 na Onda 7: Economia Circular , com prioridade 🟡 P1 (Alta) , após Fase 23 (Compra Coletiva) e antes de Fase 24 (Trocas Comunitárias). Justificativa da Numeração : ✅ Fase 30 é a primeira disponível : O roadmap poss",
-      "url": "/wiki/docs/ANALISE_INSERCAO_HOSPEDAGEM_ROADMAP",
       "category": "Outros"
     },
     {
@@ -582,20 +554,6 @@
       "category": "Outros"
     },
     {
-      "id": "AVALIACAO_BFF_BACKEND_FOR_FRONTEND",
-      "title": "AVALIACAO BFF BACKEND FOR FRONTEND",
-      "content": "Avaliação: Backend for Frontend (BFF) - Araponga Data : 2026-01-27 Status : 📋 Avaliação Estratégica Objetivo : Avaliar criação de BFF que reflita as principais jornadas da API atual, expondo operações em forma de jornadas e criando camada de abstração entre interfaces visuais e backend 🎯 Objetivo Criar um Backend for Frontend (BFF) que: Reflita as principais jornadas da API atual Exponha gentilmente as operações em forma de jornadas (user journeys) Crie camada de abstração entre aplicações de ",
-      "url": "/wiki/docs/AVALIACAO_BFF_BACKEND_FOR_FRONTEND",
-      "category": "Outros"
-    },
-    {
-      "id": "AVALIACAO_BFF_RESUMO",
-      "title": "AVALIACAO BFF RESUMO",
-      "content": "Resumo: Avaliação BFF (Backend for Frontend) - Araponga Data : 2026-01-27 Status : 📋 Resumo Executivo Documento Completo : AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md 🎯 Objetivo Avaliar criação de Backend for Frontend (BFF) que: Reflita as principais jornadas da API atual Exponha operações em forma de jornadas (user journeys) Crie camada de abstração entre interfaces visuais e backend Encapsule responsabilidades de UX/UI Use arquitetura modular existente 📊 Situação Atual Problemas Identificados Múl",
-      "url": "/wiki/docs/AVALIACAO_BFF_RESUMO",
-      "category": "Outros"
-    },
-    {
       "id": "AVALIACAO_COMPLETA_APLICACAO",
       "title": "AVALIACAO COMPLETA APLICACAO",
       "content": "Avaliação Completa da Aplicação Araponga Data : 2025-01-13 Versão Avaliada : MVP Escopo : Backend completo, Frontend, Arquitetura, Negócio, Código, Patterns, Segurança, Escalabilidade 📋 Índice Resumo Executivo Avaliação de Negócio Avaliação de Arquitetura Avaliação de Código e Patterns Avaliação de Segurança Avaliação de Performance e Escalabilidade Avaliação de Qualidade Princípios SOLID, YAGN, DRY, Lean Complexidade e Manutenibilidade Pontos de Falha e Vulnerabilidades Gaps Técnicos e de Negó",
@@ -607,13 +565,6 @@
       "title": "AVALIACAO DESACOPLAMENTO ARQUITETURA",
       "content": "Avaliação de Desacoplamento da Arquitetura e Suite de Testes Versão : 2.0 Data : 2026-01-26 Status : 📋 Análise Completa Tipo : Documentação Técnica de Arquitetura 📋 Índice Resumo Executivo Análise de Desacoplamento por Camada Análise de Módulos Análise da Suite de Testes Gaps e Falhas de Modelagem Sugestões e Melhorias Roadmap de Refatoração 🎯 Resumo Executivo Situação Atual Pontos Fortes ✅: Clean Architecture bem aplicada : Separação clara entre Domain, Application, Infrastructure e Api Doma",
       "url": "/wiki/docs/AVALIACAO_DESACOPLAMENTO_ARQUITETURA",
-      "category": "Outros"
-    },
-    {
-      "id": "AVALIACAO_ORDEM_BACKLOG_HOSPEDAGEM",
-      "title": "AVALIACAO ORDEM BACKLOG HOSPEDAGEM",
-      "content": "Avaliação da Ordem do Backlog - Sistema de Hospedagem Data : 2026-01-25 Status : 📋 Análise e Recomendações Objetivo : Avaliar a ordem das funcionalidades do backlog e reposicionar se necessário, considerando a demanda pelo tipo de funcionalidade oferecida 📊 Análise da Ordem Atual Fase 30: Sistema de Hospedagem Territorial Posição Atual : Onda 4 (Economia Local), após Fase 23 (Compra Coletiva), antes de Fase 24 (Trocas Comunitárias) Ordem na Onda 4 (Atualizada) : Fase 23: Sistema de Compra Cole",
-      "url": "/wiki/docs/AVALIACAO_ORDEM_BACKLOG_HOSPEDAGEM",
       "category": "Outros"
     },
     {
@@ -656,13 +607,6 @@
       "title": "ATUALIZACAO ORDEM FASES",
       "content": "Atualização: Nova Ordem das Fases 8-14 Data : 2025-01-13 Motivo : Otimização estratégica baseada em eficiência, urgência e necessidade Status : ⏳ Aguardando Aprovação 🔄 Mapeamento de Renumeração Antes → Depois Fase Antiga Nome Nova Fase Novo Nome Motivo Fase 8 Suporte a Criptomoedas Fase 13 Suporte a Criptomoedas Valor incremental, pode ser depois Fase 9 Arquitetura Modular Fase 14 Arquitetura Modular Arquitetural, não crítico para MVP Fase 10 Otimizações Finais Fase 12 Otimizações Finais Melho",
       "url": "/wiki/docs/backlog-api/ATUALIZACAO_ORDEM_FASES",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/AVALIACAO_COMPLETA_FASES_1_16",
-      "title": "AVALIACAO COMPLETA FASES 1 16",
-      "content": "Avaliação Completa - Fases 1 a 16 Data de Avaliação : 2026-01-26 Objetivo : Verificar completude de todas as fases 1-16 e identificar pendências para 100% 📊 Resumo Executivo Métrica Valor Fases Totais 16 Fases Completas 16 (100%) Funcionalidades Críticas 100% ✅ Cobertura de Testes ~93% (Fase 15) ✅ Testes de Integração 100% (Subscriptions) ✅ Progresso Geral ~98% ✅ Status Geral : ✅ FASES 1-16 COMPLETAS (Funcionalidades Críticas: 100%, Testes de Integração: 100%, Itens Pendentes: Resolvidos) ✅ Fas",
-      "url": "/wiki/docs/backlog-api/AVALIACAO_COMPLETA_FASES_1_16",
       "category": "Outros"
     },
     {
@@ -766,15 +710,8 @@
     {
       "id": "backlog-api/FASE12",
       "title": "FASE12",
-      "content": "Fase 12: Otimizações Finais e Conclusão Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 IMPORTANTE (Conformidade legal e operacional) Bloqueia : Alcançar nota 10/10 em todas as categorias Estimativa Total : 224 horas Status : ✅ 100% ENCERRADA (funcionalmente completa; melhorias contínuas de cobertura/P95 fora do escopo) 🎯 Objetivo Finalizar todas as melhorias pendentes para alcançar 10/10 em todas as categorias, completando gaps de funcionalidades, testes, documentação e operação. 📋 Contex",
+      "content": "Fase 12: Otimizações Finais e Conclusão Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 IMPORTANTE (Conformidade legal e operacional) Bloqueia : Alcançar nota 10/10 em todas as categorias Estimativa Total : 224 horas Status : ⏳ Pendente 🎯 Objetivo Finalizar todas as melhorias pendentes para alcançar 10/10 em todas as categorias, completando gaps de funcionalidades, testes, documentação e operação. 📋 Contexto e Requisitos Estado Atual Após as fases anteriores, a aplicação está em 9.2/10 . R",
       "url": "/wiki/docs/backlog-api/FASE12",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE12_RESULTADOS",
-      "title": "FASE12 RESULTADOS",
-      "content": "Fase 12: Resultados Finais de Implementação Data : 2026-01-25 Status : ✅ 100% ENCERRADA Versão : 1.1 📊 Resumo Executivo A Fase 12 (Otimizações Finais e Conclusão) foi encerrada em 100% . Todas as funcionalidades críticas estão implementadas e em operação. Melhorias contínuas de cobertura (>90%) e P95 &#x3C; 200ms ficam fora do escopo de fechamento da fase. ✅ Funcionalidades Implementadas (100%) 1. Exportação de Dados (LGPD) ✅ 100% ✅ DataExportService completo ✅ AccountDeletionService completo ✅",
-      "url": "/wiki/docs/backlog-api/FASE12_RESULTADOS",
       "category": "Outros"
     },
     {
@@ -794,7 +731,7 @@
     {
       "id": "backlog-api/FASE13",
       "title": "FASE13",
-      "content": "Fase 13: Conector de Envio de Emails Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 ALTA (Comunicação essencial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 80 horas Status : ⏳ Pendente 🎯 Objetivo Implementar um conector de envio de emails para que a plataforma possa enviar emails aos usuários em situações específicas (boas-vindas, recuperação de conta, notificações importantes, alertas críticos). Importante : ❌ NÃO é uma caixa de entrada de emails na plataforma ✅ ",
+      "content": "Fase 13: Conector de Envio de Emails Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 ALTA (Comunicação essencial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 80 horas Status : Parcial (recuperacao de acesso via email no MVP) 🎯 Objetivo Implementar um conector de envio de emails para que a plataforma possa enviar emails aos usuários em situações específicas (boas-vindas, recuperação de conta, notificações importantes, alertas críticos). Importante : ❌ NÃO é uma caixa",
       "url": "/wiki/docs/backlog-api/FASE13",
       "category": "Outros"
     },
@@ -834,52 +771,10 @@
       "category": "Outros"
     },
     {
-      "id": "backlog-api/FASE15_COMPLETUDE_RESUMO",
-      "title": "FASE15 COMPLETUDE RESUMO",
-      "content": "Fase 15: Resumo de Completude - Subscriptions &#x26; Recurring Payments Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA (Funcionalidades Críticas: 100%) ✅ Componentes Implementados e Completos 1. Modelo de Domínio ✅ ✅ SubscriptionPlan - Planos de assinatura (Global e Territorial) ✅ Subscription - Assinaturas de usuários ✅ SubscriptionPayment - Pagamentos recorrentes ✅ Coupon - Cupons de desconto ✅ SubscriptionCoupon - Aplicação de cupons ✅ SubscriptionPlanHistory - Histórico de mudanças ✅ Enu",
-      "url": "/wiki/docs/backlog-api/FASE15_COMPLETUDE_RESUMO",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE15_IMPLEMENTACAO_STATUS",
-      "title": "FASE15 IMPLEMENTACAO STATUS",
-      "content": "Fase 15: Status de Implementação - Subscriptions &#x26; Recurring Payments Data : 2026-01-26 Status : ✅ COMPLETA (~98% completo - funcionalidades críticas 100%) ✅ Implementações Completas 1. Validação de Assinatura nos Webhooks ✅ Stripe Webhook : ✅ Validação de assinatura usando Stripe.net SDK ✅ Suporte para ambiente de desenvolvimento (skip validation se secret não configurado) ✅ Logging detalhado de validações ✅ Tratamento de erros robusto Mercado Pago Webhook : ✅ Validação de assinatura usand",
-      "url": "/wiki/docs/backlog-api/FASE15_IMPLEMENTACAO_STATUS",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE15_INTEGRACOES_REAIS",
-      "title": "FASE15 INTEGRACOES REAIS",
-      "content": "Fase 15: Integrações Reais com Gateways de Pagamento Data : 2026-01-25 Status : ✅ Implementado com Fallback para Mock 📋 Visão Geral As integrações com Stripe e Mercado Pago foram implementadas com suporte automático para: ✅ Integração Real : Quando credenciais estão configuradas ✅ Mock Mode : Quando credenciais não estão configuradas (desenvolvimento) 🔧 Configuração Stripe Variáveis de Ambiente : Stripe__SecretKey=sk_test_... # ou sk_live_... para produção Stripe__WebhookSecret=whsec_... Confi",
-      "url": "/wiki/docs/backlog-api/FASE15_INTEGRACOES_REAIS",
-      "category": "Outros"
-    },
-    {
       "id": "backlog-api/FASE16",
       "title": "FASE16",
-      "content": "Fase 16: Finalização Completa das Fases 1-15 Duração : ~3-4 semanas (20 dias úteis) Prioridade : 🔴 CRÍTICA (Completar base antes de prosseguir) Depende de : Fases 1-15 (maioria implementada) Estimativa Total : 160 horas Status : ✅ COMPLETA (~98% - Funcionalidades Críticas: 100%) Nota : Renumerada de Fase 14.8 para Fase 16 (Onda 2: Governança e Sustentabilidade) Validação de Cobertura de Testes : ⚠️ CRÍTICO - Fase 15 tem apenas ~5% de cobertura (81 cenários necessários) 🎯 Objetivo Implementar t",
+      "content": "Fase 16: Finalização Completa das Fases 1-15 Duração : ~3-4 semanas (20 dias úteis) Prioridade : 🔴 CRÍTICA (Completar base antes de prosseguir) Depende de : Fases 1-15 (maioria implementada) Estimativa Total : 160 horas Status : ⏳ Pendente Nota : Renumerada de Fase 14.8 para Fase 16 (Onda 2: Governança e Sustentabilidade) 🎯 Objetivo Implementar todos os itens que ficaram pendentes ou não plenamente cobertos nas fases 1 até 15, garantindo que todas as funcionalidades planejadas estejam completa",
       "url": "/wiki/docs/backlog-api/FASE16",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_CENARIOS_TESTE_FASE15",
-      "title": "FASE16 CENARIOS TESTE FASE15",
-      "content": "Fase 16: Cenários de Teste Necessários - Fase 15 Data : 2026-01-26 Status : ⏳ PENDENTE Prioridade : 🔴 CRÍTICA 📊 Resumo Cobertura Atual Fase 15 : ~5% Cobertura Alvo : >85% Cenários Necessários : 81 (61 críticos + 20 importantes) Estimativa : 52 horas (6.5 dias) 🔴 Cenários Críticos (61) 1. SubscriptionAnalyticsServiceTests (12 cenários) Arquivo : backend/Araponga.Tests/Application/SubscriptionAnalyticsServiceTests.cs [Fact] public async Task GetMRRAsync_ReturnsCorrectMRR_WhenSubscriptionsExist(",
-      "url": "/wiki/docs/backlog-api/FASE16_CENARIOS_TESTE_FASE15",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_COMPLETA",
-      "title": "FASE16 COMPLETA",
-      "content": "Fase 16: Finalização Completa Fases 1-15 - ✅ COMPLETA Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA (~98% - Funcionalidades Críticas: 100%, Cobertura de Testes: 93%, Testes de Integração: 100%) 🎉 Resumo Executivo A Fase 16 foi completada com sucesso! Todas as funcionalidades críticas foram implementadas, validadas e documentadas. ✅ Principais Entregas Sistema de Políticas de Termos ✅ Sistema completo implementado e integrado Bloqueio automático de funcionalidades quando termos não aceitos ",
-      "url": "/wiki/docs/backlog-api/FASE16_COMPLETA",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_COMPLETUDE_FINAL",
-      "title": "FASE16 COMPLETUDE FINAL",
-      "content": "Fase 16: Completude Final - Finalização Completa Fases 1-15 Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA (~98% - Funcionalidades Críticas: 100%) ✅ Componentes Implementados e Validados 1. Sistema de Políticas de Termos ✅ Status : ✅ COMPLETO E INTEGRADO ✅ Modelo de domínio completo ( TermsOfService , TermsAcceptance , PrivacyPolicy , PrivacyPolicyAcceptance ) ✅ Serviços implementados ( TermsOfServiceService , TermsAcceptanceService , PolicyRequirementService ) ✅ Controllers implementados ( ",
-      "url": "/wiki/docs/backlog-api/FASE16_COMPLETUDE_FINAL",
       "category": "Outros"
     },
     {
@@ -887,69 +782,6 @@
       "title": "FASE16 COMPLIANCE",
       "content": "Fase 16: Compliance e Retenção de Dados Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 ALTA (Compliance e custos) Depende de : Fase 10 (Mídias), Fase 11 (Moderação) Estimativa Total : 168 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema completo de retenção de dados configurável que permite: Políticas de retenção diferentes por tipo de entidade (Posts, Reports, Media, Logs, etc.) Configuração por território (respeitando legislação local: GDPR, LGPD, etc.) Limpeza automática de dado",
       "url": "/wiki/docs/backlog-api/FASE16_COMPLIANCE",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_ENTREGA_FINAL",
-      "title": "FASE16 ENTREGA FINAL",
-      "content": "Fase 16: Entrega Final - Finalização Completa Fases 1-15 Data de Entrega : 2026-01-26 Status : ✅ ENTREGUE (Funcionalidades Críticas: 100%) 🎉 Resumo Executivo A Fase 16 foi completada com sucesso! Todas as funcionalidades críticas foram implementadas e validadas. ✅ O Que Foi Entregue Sistema de Políticas de Termos ✅ Sistema completo implementado e integrado Bloqueio automático de funcionalidades quando termos não aceitos Conformidade legal (LGPD) garantida Validação Completa de Endpoints ✅ Fase ",
-      "url": "/wiki/docs/backlog-api/FASE16_ENTREGA_FINAL",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_PLANO_ACAO",
-      "title": "FASE16 PLANO ACAO",
-      "content": "Fase 16: Plano de Ação - Finalização Completa Fases 1-15 Data de Início : 2026-01-26 Status : 🚧 EM ANDAMENTO Prioridade : 🔴 CRÍTICA ✅ Estado Atual Verificado Sistema de Políticas de Termos ✅ ✅ Modelo de domínio TermsOfService implementado ✅ Modelo de domínio TermsAcceptance implementado ✅ Modelo de domínio PrivacyPolicy implementado ✅ Serviços TermsOfServiceService , TermsAcceptanceService , PolicyRequirementService implementados ✅ Controller TermsOfServiceController implementado ✅ Controller ",
-      "url": "/wiki/docs/backlog-api/FASE16_PLANO_ACAO",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_RESUMO_EXECUTIVO",
-      "title": "FASE16 RESUMO EXECUTIVO",
-      "content": "Fase 16: Resumo Executivo - Finalização Completa Fases 1-15 Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA (~98% - Funcionalidades Críticas: 100%) 🎯 Objetivo Alcançado Implementar todos os itens que ficaram pendentes ou não plenamente cobertos nas fases 1 até 15, garantindo que todas as funcionalidades planejadas estejam completamente implementadas, testadas e validadas. Resultado : ✅ OBJETIVO ALCANÇADO ✅ Componentes Completos 1. Sistema de Políticas de Termos ✅ Status : ✅ COMPLETO E INTEGR",
-      "url": "/wiki/docs/backlog-api/FASE16_RESUMO_EXECUTIVO",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_RESUMO_FINAL",
-      "title": "FASE16 RESUMO FINAL",
-      "content": "Fase 16: Resumo Final - Finalização Completa Fases 1-15 Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA (~98% - Funcionalidades Críticas: 100%) 🎉 Resumo Executivo A Fase 16 foi completada com sucesso! Todas as funcionalidades críticas foram implementadas, validadas e documentadas. ✅ Principais Entregas Sistema de Políticas de Termos ✅ Sistema completo implementado e integrado Bloqueio automático de funcionalidades quando termos não aceitos Conformidade legal (LGPD) garantida Validação Comple",
-      "url": "/wiki/docs/backlog-api/FASE16_RESUMO_FINAL",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_RESUMO_VALIDACAO",
-      "title": "FASE16 RESUMO VALIDACAO",
-      "content": "Fase 16: Resumo de Validação - Finalização Completa Fases 1-15 Data : 2026-01-26 Status : ✅ VALIDAÇÃO COMPLETA (~95% dos endpoints implementados) ✅ Validação de Endpoints - Resultados Fase 9 - Perfil de Usuário ✅ Endpoint Status Arquivo Observações PUT /api/v1/users/me/profile/avatar ✅ Implementado UserProfileController.UpdateAvatar Linha 192-217 PUT /api/v1/users/me/profile/bio ✅ Implementado UserProfileController.UpdateBio Linha 222-246 GET /api/v1/users/me/profile ✅ Implementado UserProfileCo",
-      "url": "/wiki/docs/backlog-api/FASE16_RESUMO_VALIDACAO",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_STATUS_IMPLEMENTACAO",
-      "title": "FASE16 STATUS IMPLEMENTACAO",
-      "content": "Fase 16: Status de Implementação - Finalização Completa Fases 1-15 Data : 2026-01-26 Status : 🚧 EM ANDAMENTO (~15% completo) ✅ Componentes Já Implementados 1. Sistema de Políticas de Termos ✅ Status : ✅ COMPLETO E INTEGRADO Implementação : ✅ Modelo de domínio TermsOfService implementado ✅ Modelo de domínio TermsAcceptance implementado ✅ Modelo de domínio PrivacyPolicy implementado ✅ Modelo de domínio PrivacyPolicyAcceptance implementado ✅ Serviços TermsOfServiceService , TermsAcceptanceService ",
-      "url": "/wiki/docs/backlog-api/FASE16_STATUS_IMPLEMENTACAO",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_TESTES_RECUPERACAO_RESUMO",
-      "title": "FASE16 TESTES RECUPERACAO RESUMO",
-      "content": "Fase 16: Recuperação de Testes - Resumo Data : 2026-01-26 Status : ✅ COMPLETO 🎯 Objetivo Recuperar e completar os testes faltantes da Fase 15 (Subscriptions &#x26; Recurring Payments) que estavam travados. ✅ Trabalho Realizado 1. Análise do Estado Atual Situação Identificada : Fase 15 tinha ~93% de cobertura (75/81 cenários) SubscriptionTrialServiceTests tinha apenas 4 testes, mas o documento pedia 7 Documentação desatualizada indicava que faltavam testes Testes Existentes Verificados : ✅ Subsc",
-      "url": "/wiki/docs/backlog-api/FASE16_TESTES_RECUPERACAO_RESUMO",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_VALIDACAO_COBERTURA_TESTES",
-      "title": "FASE16 VALIDACAO COBERTURA TESTES",
-      "content": "Fase 16: Validação de Cobertura de Testes - Fases 1-15 Data : 2026-01-26 Status : 🚧 EM ANDAMENTO 📊 Resumo Executivo Cobertura Atual : ~45.72% linhas, 38.2% branches, 48.31% métodos Total de Testes : 1578 testes (1556 passando, 20 pulados, 2 falhando) Taxa de Sucesso : 98.6% Objetivo : Validar cobertura de testes até a Fase 15 e identificar cenários necessários. ✅ Cobertura de Testes por Fase Fases 1-8: Base Técnica ✅ Fase Componentes Testes Existentes Cobertura Status Fase 1 Segurança, Autenti",
-      "url": "/wiki/docs/backlog-api/FASE16_VALIDACAO_COBERTURA_TESTES",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASE16_VALIDACAO_ENDPOINTS",
-      "title": "FASE16 VALIDACAO ENDPOINTS",
-      "content": "Fase 16: Validação de Endpoints - Fases 9, 11, 12, 13 Data : 2026-01-26 Status : 🚧 EM ANDAMENTO ✅ Fase 9 - Perfil de Usuário Endpoints Verificados Endpoint Status Observações PUT /api/v1/users/me/profile/avatar ✅ Implementado UserProfileController.UpdateAvatar PUT /api/v1/users/me/profile/bio ✅ Implementado UserProfileController.UpdateBio GET /api/v1/users/me/profile ✅ Implementado UserProfileController.GetMyProfile GET /api/v1/users/me/profile/stats ✅ Implementado UserProfileController.GetMyPr",
-      "url": "/wiki/docs/backlog-api/FASE16_VALIDACAO_ENDPOINTS",
       "category": "Outros"
     },
     {
@@ -1146,13 +978,6 @@
       "title": "FASE9",
       "content": "Fase 9: Perfil de Usuário Completo Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 CRÍTICA (Bloqueante para transição) Depende de : Fase 8 (Infraestrutura de Mídia) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Completar funcionalidades de perfil de usuário para permitir transição suave de outras plataformas, mantendo valores de soberania territorial e união comunitária . Funcionalidades : Avatar/Foto de perfil Bio/Descrição pessoal Visualizar perfil de outros usuários Estatís",
       "url": "/wiki/docs/backlog-api/FASE9",
-      "category": "Outros"
-    },
-    {
-      "id": "backlog-api/FASES_15_16_COMPLETAS",
-      "title": "FASES 15 16 COMPLETAS",
-      "content": "Fases 15 e 16: Completude Final - Subscriptions &#x26; Finalização Data de Conclusão : 2026-01-26 Status : ✅ FASES 15 E 16 COMPLETAS 🎉 Resumo Executivo As Fases 15 e 16 foram completadas com sucesso! Todas as funcionalidades críticas foram implementadas, validadas e documentadas. ✅ Fase 15: Subscriptions &#x26; Recurring Payments Status : ✅ COMPLETA (~98% - Funcionalidades Críticas: 100%) Componentes Implementados Sistema Completo de Assinaturas ✅ Modelo de domínio completo Integração com Strip",
-      "url": "/wiki/docs/backlog-api/FASES_15_16_COMPLETAS",
       "category": "Outros"
     },
     {
@@ -1492,41 +1317,6 @@
       "category": "Outros"
     },
     {
-      "id": "BFF_CONTRACT_SUMMARY",
-      "title": "BFF CONTRACT SUMMARY",
-      "content": "Resumo de Contratos BFF - Referência Rápida Data : 2026-01-27 Versão : 2.0.0 Base URL : /api/v2/journeys 📋 Endpoints Principais Onboarding POST /onboarding/complete Completa onboarding em uma chamada. Request : { \"selectedTerritoryId\": \"uuid\", \"location\": { \"latitude\": -23.5505, \"longitude\": -46.6333 } } Response : { \"user\": { \"id\": \"uuid\", \"displayName\": \"...\", \"membership\": \"VISITOR\" }, \"territory\": { \"id\": \"uuid\", \"name\": \"...\", \"active\": true }, \"initialFeed\": { \"items\": [], \"pagination\": {",
-      "url": "/wiki/docs/BFF_CONTRACT_SUMMARY",
-      "category": "Outros"
-    },
-    {
-      "id": "BFF_FLUTTER_EXAMPLE",
-      "title": "BFF FLUTTER EXAMPLE",
-      "content": "Exemplo de Implementação Flutter - BFF API Data : 2026-01-27 Versão : 2.0.0 Framework : Flutter/Dart Este documento contém um exemplo completo e funcional de implementação do BFF em Flutter. 📁 Estrutura de Arquivos lib/ ├── models/ │ ├── bff_models.dart │ └── feed_models.dart ├── services/ │ ├── bff_api_service.dart │ └── auth_service.dart ├── widgets/ │ └── feed_screen.dart └── main.dart 📦 1. Modelos (Models) lib/models/bff_models.dart // Modelos base para respostas BFF class TerritoryFeedJou",
-      "url": "/wiki/docs/BFF_FLUTTER_EXAMPLE",
-      "category": "Outros"
-    },
-    {
-      "id": "BFF_FLUTTER_QUICKSTART",
-      "title": "BFF FLUTTER QUICKSTART",
-      "content": "Quick Start - Flutter BFF API Data : 2026-01-27 Versão : 2.0.0 Exemplo mínimo e direto para começar a usar a API BFF em Flutter. 🚀 Exemplo Mínimo 1. Adicionar Dependências # pubspec.yaml dependencies: http: ^0.13.5 2. Código Mínimo import 'dart:convert'; import 'package:http/http.dart' as http; class BffService { final String baseUrl; final String? token; BffService({required this.baseUrl, this.token}); // Obter feed do território Future&#x3C;Map&#x3C;String, dynamic>> getFeed(String territoryI",
-      "url": "/wiki/docs/BFF_FLUTTER_QUICKSTART",
-      "category": "Outros"
-    },
-    {
-      "id": "BFF_FRONTEND_IMPLEMENTATION_GUIDE",
-      "title": "BFF FRONTEND IMPLEMENTATION GUIDE",
-      "content": "Guia de Implementação Frontend - BFF API Data : 2026-01-27 Versão da API : v2 Base URL : /api/v2/journeys Contrato OpenAPI : BFF_API_CONTRACT.yaml 📋 Índice Visão Geral Autenticação Exemplos de Uso Migração da API v1 para v2 Tratamento de Erros Boas Práticas 🎯 Visão Geral A API BFF (Backend for Frontend) foi criada para: ✅ Reduzir chamadas de rede : De 5-10 chamadas para 1 por jornada ✅ Simplificar lógica no frontend : Dados já formatados para UI ✅ Melhorar UX : Sugestões contextuais e dados ag",
-      "url": "/wiki/docs/BFF_FRONTEND_IMPLEMENTATION_GUIDE",
-      "category": "Outros"
-    },
-    {
-      "id": "BFF_POSTMAN_README",
-      "title": "BFF POSTMAN README",
-      "content": "Guia de Uso - Postman Collection BFF API Data : 2026-01-27 Versão : 2.0.0 Este guia explica como importar e usar a coleção do Postman para testar a API BFF. 📥 Importar no Postman 1. Importar Coleção Abra o Postman Clique em Import (canto superior esquerdo) Selecione o arquivo BFF_Postman_Collection.json Clique em Import 2. Importar Ambientes (Opcional mas Recomendado) Importe os arquivos de ambiente para facilitar a troca entre ambientes: Produção : BFF_Postman_Environment.json Staging : BFF_Po",
-      "url": "/wiki/docs/BFF_POSTMAN_README",
-      "category": "Outros"
-    },
-    {
       "id": "CARTILHA_COMPLETA",
       "title": "CARTILHA COMPLETA",
       "content": "📘 Cartilha Completa - Araponga Guia Detalhado para Todos os Papéis na Construção do Araponga Versão : 1.0 Data : 2025-01-20 📋 Índice Introdução Estrutura do Time Papéis e Responsabilidades Fluxos de Trabalho Ferramentas e Recursos Comunicação e Colaboração Discord - Organização do Time GitHub - Controle de Código Processo de Contribuição Valores na Prática Introdução Esta cartilha é um guia completo para todas as pessoas que querem contribuir com o Araponga, independente do papel ou nível de e",
@@ -1536,7 +1326,7 @@
     {
       "id": "CHANGELOG",
       "title": "CHANGELOG",
-      "content": "Changelog - Araponga Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. O formato é baseado em Keep a Changelog , e este projeto adere ao Semantic Versioning . [Unreleased] Alterado - Fase 12 Encerrada (2026-01-25) ✅ Fase 12 declarada 100% encerrada. Todas as funcionalidades críticas entregues; melhorias contínuas (cobertura >90%, P95 &#x3C; 200ms) fora do escopo de fechamento. ✅ FASE12.md , FASE12_RESULTADOS.md : status 100%, tabelas atualizadas, conclusão e próximos pas",
+      "content": "Changelog - Araponga Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. O formato é baseado em Keep a Changelog , e este projeto adere ao Semantic Versioning . [Unreleased] Adicionado - Fase 14: Governança Comunitária e Sistema de Votação (2025-01-21) Funcionalidades ✅ Sistema de Interesses do Usuário Usuários podem definir interesses (tags/categorias) Máximo 10 interesses por usuário Interesses aparecem no perfil Endpoints: GET/POST/DELETE /api/v1/users/me/interests ✅ Si",
       "url": "/wiki/docs/CHANGELOG",
       "category": "Outros"
     },
@@ -1891,20 +1681,6 @@
       "category": "Outros"
     },
     {
-      "id": "FASE13_FINALIZACAO",
-      "title": "FASE13 FINALIZACAO",
-      "content": "Fase 13: Conector de Envio de Emails - Finalização Data de Finalização : 2026-01-25 Status : ✅ 100% COMPLETA Branch : feature/fase13-15-implementacao 🎯 Resumo da Finalização A Fase 13: Conector de Envio de Emails foi finalizada completamente em 2026-01-25. Todos os componentes críticos foram implementados, testados e documentados. ✅ Componentes Finalizados 13.1 Interface e Abstração ✅ ✅ IEmailSender interface criada ✅ EmailMessage modelo criado ✅ Suporte a templates e dados de template 13.2 Imp",
-      "url": "/wiki/docs/FASE13_FINALIZACAO",
-      "category": "Outros"
-    },
-    {
-      "id": "FASE13_STATUS_IMPLEMENTACAO",
-      "title": "FASE13 STATUS IMPLEMENTACAO",
-      "content": "Status de Implementação - Fase 13: Conector de Envio de Emails Data : 2026-01-25 Status Geral : ✅ 100% COMPLETO Branch : feature/fase13-15-implementacao 📊 Resumo de Status Componente Status Progresso Notas 13.1 Interface e Abstração ✅ Completo 100% IEmailSender, EmailMessage já existem 13.2 Implementação SMTP ✅ Completo 100% SmtpEmailSender implementado 13.3 SendGrid (Opcional) ⏳ Opcional 0% Opcional, pode ser feito depois se necessário 13.4 Sistema de Templates ✅ Completo 100% EmailTemplateSer",
-      "url": "/wiki/docs/FASE13_STATUS_IMPLEMENTACAO",
-      "category": "Outros"
-    },
-    {
       "id": "FASE14_5_IMPLEMENTACAO_RESUMO",
       "title": "FASE14 5 IMPLEMENTACAO RESUMO",
       "content": "Fase 14.5: Resumo de Implementação Data : 2025-01-23 Status : ✅ Implementações Concluídas 📊 Resumo Executivo Todas as tarefas pendentes da Fase 14.5 foram implementadas ou documentadas: ✅ Fase 1 : Documentação completa (métricas, índices, exception handling, Result) ✅ Fase 11 : Full-text search implementado no marketplace ✅ Fase 14 : Planos de implementação documentados (tags explícitas, configuração de notificações) ✅ Implementações Realizadas 1. Fase 1: Segurança e Fundação Crítica 1.1 Connec",
@@ -2003,13 +1779,6 @@
       "category": "Outros"
     },
     {
-      "id": "FASES_31_44_CONCEITUAIS",
-      "title": "FASES 31 44 CONCEITUAIS",
-      "content": "Fases 31-44: Fases Estratégicas Conceituais Data : 2026-01-25 Status : 📋 Conceituais (sem documentos detalhados) Objetivo : Explicar o que são as fases 31-44 mencionadas no roadmap estratégico 📋 Contexto As fases 31-44 são mencionadas no roadmap estratégico ( docs/02_ROADMAP.md ) e na Estratégia de Convergência de Mercado ( docs/39_ESTRATEGIA_CONVERGENCIA_MERCADO.md ), mas não possuem documentos detalhados (arquivos FASE31.md até FASE44.md ). Elas foram identificadas como necessárias para elev",
-      "url": "/wiki/docs/FASES_31_44_CONCEITUAIS",
-      "category": "Outros"
-    },
-    {
       "id": "FASE_TECNICA_MODULARIZACAO",
       "title": "FASE TECNICA MODULARIZACAO",
       "content": "Fase Técnica: Modularização da Aplicação Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA Tipo : Refatoração Arquitetural 🎯 Objetivo Implementar um sistema de módulos que permite habilitar/desabilitar funcionalidades da aplicação via configuração, preparando o código para futura migração para microserviços ou arquitetura modular. 📋 Resumo Executivo A modularização foi implementada com sucesso, permitindo: ✅ Configuração por Módulos : Habilitar/desabilitar módulos via appsettings.json ✅ Depen",
@@ -2042,13 +1811,6 @@
       "title": "FEED TAGS IMPLEMENTATION PLAN",
       "content": "Plano de Implementação: Tags Explícitas em Posts Última Atualização : 2025-01-23 Status : 📋 Planejado (Opcional) 📋 Resumo Este documento descreve o plano para adicionar tags/categorias explícitas aos posts, permitindo filtragem mais precisa do feed por interesses. 🎯 Objetivo Permitir que posts tenham tags explícitas (ex: \"meio ambiente\", \"eventos\", \"saúde\") que podem ser usadas para filtrar o feed de forma mais precisa do que a busca por palavras-chave no título/conteúdo. 📐 Design Modelo de ",
       "url": "/wiki/docs/FEED_TAGS_IMPLEMENTATION_PLAN",
-      "category": "Outros"
-    },
-    {
-      "id": "GAPS_FASES_10_12_COBERTURA",
-      "title": "GAPS FASES 10 12 COBERTURA",
-      "content": "Gaps para 100% - Fases 10 e 12 + Cobertura de Testes Data : 2026-01-25 Status : Análise de gaps e cobertura atual 📊 Cobertura de Testes Atual Status Geral Métrica Valor Status Total de Testes 2021+ testes ✅ Taxa de Sucesso 100% (2021/2021) ✅ Cobertura Geral ~85% (Domain/Application) ⚠️ Meta: >90% Cobertura por Linhas ~45.72% ⚠️ Meta: >90% Cobertura por Branches ~38.2% ⚠️ Meta: >90% Cobertura por Métodos ~48.31% ⚠️ Meta: >90% Cobertura por Camada Camada Cobertura Atual Meta Gap Domain Layer ~85%",
-      "url": "/wiki/docs/GAPS_FASES_10_12_COBERTURA",
       "category": "Outros"
     },
     {
@@ -2192,20 +1954,6 @@
       "category": "Outros"
     },
     {
-      "id": "NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS",
-      "title": "NIVEIS ABSTRACAO EVOLUCAO MICROSERVICOS",
-      "content": "Níveis de Abstração para Evolução até Microserviços Data : 2026-01-27 Status : 📋 Proposta Estratégica Objetivo : Definir níveis de abstração necessários para evolução Monolito → APIs Modulares → Microserviços, otimizando uso de recursos gratuitos/baratos 🎯 Objetivo Propor níveis de abstração que: Facilitem migração gradual (Monolito → APIs Modulares → Microserviços) Otimizem custos usando recursos gratuitos/baratos em cada fase Permitam evolução sem reescrita de código Mantenham flexibilidade ",
-      "url": "/wiki/docs/NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS",
-      "category": "Outros"
-    },
-    {
-      "id": "NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS_RESUMO",
-      "title": "NIVEIS ABSTRACAO EVOLUCAO MICROSERVICOS RESUMO",
-      "content": "Resumo: Níveis de Abstração para Evolução até Microserviços Data : 2026-01-27 Status : 📋 Proposta Estratégica 🎯 Objetivo Definir níveis de abstração necessários para evolução Monolito → APIs Modulares → Microserviços , otimizando uso de recursos gratuitos/baratos em cada fase. 📊 Evolução Arquitetural Fase 1: Monolito (Atual) ✅ Uma API ✅ Um banco de dados ✅ Comunicação in-process Custo : $0/mês (100% gratuito) Fase 2: APIs Modulares (Próximo) ✅ Múltiplas APIs ✅ Banco compartilhado (schemas) ✅ ",
-      "url": "/wiki/docs/NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS_RESUMO",
-      "category": "Outros"
-    },
-    {
       "id": "NOTIFICATION_CONFIG_ADVANCED",
       "title": "NOTIFICATION CONFIG ADVANCED",
       "content": "Configuração Avançada de Notificações - Araponga Última Atualização : 2025-01-23 Status : 📋 Planejado (Opcional) 📋 Resumo Este documento descreve o plano para implementar configuração avançada de notificações por território e globalmente, permitindo controle granular sobre tipos, canais e templates de notificações. 🎯 Objetivo Permitir que administradores configurem: Quais tipos de notificações são enviados Quais canais são usados (in-app, email, push) Templates personalizados por território R",
@@ -2239,13 +1987,6 @@
       "content": "Araponga Plataforma digital comunitária orientada ao território Araponga é uma infraestrutura digital onde o território vem primeiro. Construímos tecnologia que fortalece comunidades locais, respeita autonomia e serve à continuidade da vida no lugar. Nossa abordagem é fundamentalmente diferente: Orientada ao território : Localização geográfica como princípio organizador primário Autonomia comunitária : Governança e tomada de decisão locais Transparência : Processos abertos, contribuições visívei",
       "url": "/wiki/docs/ONBOARDING_PUBLICO",
       "category": "Onboarding"
-    },
-    {
-      "id": "OPERACAO_BASICA",
-      "title": "OPERACAO BASICA",
-      "content": "Documentação Operacional - Araponga API Data de Criação : 2026-01-26 Versão : 1.0 Ambiente : Produção 📋 Índice Visão Geral Deploy e Configuração Inicial Configuração de Ambiente Monitoramento e Observabilidade Manutenção e Operação Escalabilidade Segurança Operacional Troubleshooting Procedimentos de Emergência Checklist de Produção 🎯 Visão Geral Esta documentação fornece informações básicas para operação da API Araponga em produção. Componentes Principais API REST : ASP.NET Core 8 Banco de Da",
-      "url": "/wiki/docs/OPERACAO_BASICA",
-      "category": "Outros"
     },
     {
       "id": "OPERATIONS_MANUAL",
@@ -2294,13 +2035,6 @@
       "title": "PLANO ACAO 10 10 RESULTADOS",
       "content": "Plano de Ação 10/10 - Resultados Data de Conclusão : 2026-01-21 Status : 🟢 85% Completo — Objetivos principais atingidos 📊 Resumo Executivo O Plano de Ação 10/10 tinha como objetivo alcançar nota 10/10 em todas as categorias de avaliação. A Fase 12 foi responsável por fechar as lacunas finais. Resultado Final Categoria Nota Alcançada Status Funcionalidades 9.5/10 🟢 Excelente Testes 10/10 ✅ Perfeito Documentação 9/10 🟢 Excelente Operação 8.5/10 🟢 Muito Bom Performance 8/10 🟢 Muito Bom Média",
       "url": "/wiki/docs/PLANO_ACAO_10_10_RESULTADOS",
-      "category": "Outros"
-    },
-    {
-      "id": "PLANO_IMPLANTACAO_FASES_13_15",
-      "title": "PLANO IMPLANTACAO FASES 13 15",
-      "content": "Plano de Implantação - Fases 13 a 15 Data de Criação : 2026-01-25 Última Atualização : 2026-01-25 Objetivo : Plano detalhado de implementação das Fases 13, 14, 15 e 16 (Finalização) Duração Total Estimada : ~100 dias úteis (~5 meses) Status : 📋 Planejado 📊 Visão Geral Estado Atual do Projeto Componente Status Progresso Fases 1-8 ✅ Completo 100% Fases 9-12 ✅ Completo 100% (MVP Essencial) Fase 13 ⏳ Pendente 0% Fase 14 ✅ Implementado 100% Fase 15 ⏳ Pendente 0% Fase 16 ⏳ Pendente 0% Objetivo das F",
-      "url": "/wiki/docs/PLANO_IMPLANTACAO_FASES_13_15",
       "category": "Outros"
     },
     {
@@ -2378,13 +2112,6 @@
       "title": "PROPOSAL DEVPORTAL NAVEGACAO FASES",
       "content": "Proposta: Navegação Progressiva por Fases - DevPortal Data : 2025-01-20 Versão : 1.0 📋 Problema Atual O DevPortal renderiza todo o conteúdo de uma vez , resultando em: Scroll excessivo (página muito longa) Sobrecarga cognitiva (muita informação simultânea) Falta de progressão clara (não há jornada estruturada) Performance degradada (DOM muito grande) 🎯 Objetivo Reorganizar a navegação do DevPortal para revelar conhecimento em fases progressivas , criando uma jornada clara do básico ao avançado",
       "url": "/wiki/docs/PROPOSAL_DEVPORTAL_NAVEGACAO_FASES",
-      "category": "Outros"
-    },
-    {
-      "id": "PROPOSTA_IMPLEMENTACAO_HOSPEDAGEM",
-      "title": "PROPOSTA IMPLEMENTACAO HOSPEDAGEM",
-      "content": "🏠 Proposta de Implementação: Domínio de Hospedagem Data : 2026-01-25 Status : 📋 Proposta Referência : Airbnb (adaptado aos princípios do Araponga) 📋 Resumo Executivo Esta proposta detalha a implementação do domínio de Hospedagem no Araponga, inspirada no modelo do Airbnb mas adaptada aos princípios territoriais e comunitários da plataforma. A implementação reutiliza infraestrutura existente (notificações, pagamentos, aprovação humana) e introduz conceitos específicos de hospedagem (propriedad",
-      "url": "/wiki/docs/PROPOSTA_IMPLEMENTACAO_HOSPEDAGEM",
       "category": "Outros"
     },
     {
@@ -2724,24 +2451,10 @@
       "category": "Outros"
     },
     {
-      "id": "RELEASE_MVP_ESSENCIAL",
-      "title": "RELEASE MVP ESSENCIAL",
-      "content": "🚀 Release: MVP Essencial Completo (Fases 9-12) Data : 2026-01-25 Versão : 1.0.0-MVP Status : ✅ PRONTO PARA PRODUÇÃO 📊 Resumo Executivo Este release marca a conclusão do MVP Essencial (Onda 1: Fases 9-12), implementando todas as funcionalidades críticas para um produto mínimo viável completo e funcional. ✅ Funcionalidades Implementadas Fase 9: Perfil de Usuário Completo ✅ 100% ✅ Endpoint de estatísticas do próprio perfil ✅ Avatar e bio funcionais ✅ Visualização de perfis com privacidade ✅ Siste",
-      "url": "/wiki/docs/RELEASE_MVP_ESSENCIAL",
-      "category": "Outros"
-    },
-    {
       "id": "REORGANIZACAO_NUMERACAO_COERENTE",
       "title": "REORGANIZACAO NUMERACAO COERENTE",
       "content": "Reorganização de Numeração Coerente das Fases Data : 2026-01-25 Status : 🔄 Em Reorganização Objetivo : Garantir que fases com números menores sejam implementadas antes de fases com números maiores 🎯 Princípio Fundamental Regra : Uma fase com número menor DEVE ser implementada antes de uma fase com número maior. Exceção : Fases 1-8 já implementadas (manter numeração original). 📊 Ordem de Implementação Corrigida Fases 1-8: ✅ Implementadas (Manter) Fase Título Status 1 Segurança e Fundação Críti",
       "url": "/wiki/docs/REORGANIZACAO_NUMERACAO_COERENTE",
-      "category": "Outros"
-    },
-    {
-      "id": "REPOSICIONAMENTO_MOEDA_TERRITORIAL",
-      "title": "REPOSICIONAMENTO MOEDA TERRITORIAL",
-      "content": "Reposicionamento: Moeda Territorial Data : 2026-01-25 Status : ✅ Aprovado e Implementado Objetivo : Reposicionar Fase 20 (Moeda Territorial) para depois dos serviços, priorizando ecossistema robusto 📋 Decisão Reposicionar Fase 20 (Moeda Territorial) para depois dos serviços de economia circular. Ordem Anterior Fase 20: Moeda Territorial (35 dias) Fase 23: Compra Coletiva (28 dias) Fase 30: Hospedagem Territorial (56 dias) Fase 24: Trocas Comunitárias (21 dias) Ordem Nova ✅ Fase 23: Compra Colet",
-      "url": "/wiki/docs/REPOSICIONAMENTO_MOEDA_TERRITORIAL",
       "category": "Outros"
     },
     {
@@ -2756,13 +2469,6 @@
       "title": "RESUMO EXECUTIVO PHASES 1 5",
       "content": "📊 Resumo Executivo - Enterprise Coverage Phases 1-5 Data : 2026-01-24 Status : ✅ COMPLETO E PRONTO PARA PR 🎯 Resultados Alcançados Estatísticas Principais ✅ 435 testes de edge cases implementados ✅ 100% taxa de sucesso (1233/1233 testes passando) ✅ Zero regressions introduzidas ✅ Cobertura aumentada : ~60% → ~79% (+19 pontos percentuais) Cobertura por Camada Camada Antes Depois Ganho Domain Layer ~40% ~85% +45% Application Layer ~70% ~75% +5% Infrastructure Layer ~60% ~75% +15% API Layer ~70% ",
       "url": "/wiki/docs/RESUMO_EXECUTIVO_PHASES_1_5",
-      "category": "Outros"
-    },
-    {
-      "id": "RESUMO_EXECUTIVO_PLANO_FASES_13_15",
-      "title": "RESUMO EXECUTIVO PLANO FASES 13 15",
-      "content": "Resumo Executivo - Plano de Implantação Fases 13-15 Data : 2026-01-25 Duração Total : ~95 dias úteis (~4.5 meses) Status : 📋 Planejado 🎯 Visão Geral Objetivo Implementar Onda 2: Governança e Sustentabilidade , completando as funcionalidades críticas de comunicação, governança participativa e sustentabilidade financeira. Fases Incluídas Fase Nome Duração Status Prioridade 13 Conector de Envio de Emails 14d ⏳ Pendente 🔴 P0 14 Governança/Votação 21d ✅ Implementado 🔴 P0 15 Subscriptions &#x26; R",
-      "url": "/wiki/docs/RESUMO_EXECUTIVO_PLANO_FASES_13_15",
       "category": "Outros"
     },
     {
@@ -2805,20 +2511,6 @@
       "title": "RESUMO REAVALIACAO BLOCKCHAIN",
       "content": "Resumo: Reavaliação de Prioridade Blockchain Data : 2026-01-25 Status : ✅ Reavaliado e Reposicionado Objetivo : Documentar a reavaliação e reposicionamento das fases de blockchain 🔍 Por que Blockchain foi Priorizado como P0 Originalmente? Justificativa Original A priorização original (P0) foi baseada em: 📊 Análise de Mercado : Comparação com Closer.earth e padrões de investimento internacional 💰 Padrões de Investimento : Projetos que recebem milhões de euros têm Web3 nativo 🎯 Convergência Es",
       "url": "/wiki/docs/RESUMO_REAVALIACAO_BLOCKCHAIN",
-      "category": "Outros"
-    },
-    {
-      "id": "RESUMO_REORGANIZACAO_DEMANDAS_GAMIFICACAO",
-      "title": "RESUMO REORGANIZACAO DEMANDAS GAMIFICACAO",
-      "content": "Resumo: Reorganização com Demandas/Ofertas e Gamificação Data : 2026-01-25 Status : ✅ Implementado Objetivo : Documentar reorganização do roadmap com nova funcionalidade de Demandas/Ofertas e reposicionamento de Gamificação 🆕 Nova Funcionalidade: Fase 31 - Demandas e Ofertas Descrição Sistema onde moradores cadastram demandas de itens ou serviços, e outros moradores/visitantes fazem ofertas para suprir essas demandas. O criador da demanda pode aceitar, negociar ou recusar ofertas. Característic",
-      "url": "/wiki/docs/RESUMO_REORGANIZACAO_DEMANDAS_GAMIFICACAO",
-      "category": "Outros"
-    },
-    {
-      "id": "RESUMO_VALIDACAO_COERENCIA_FASES",
-      "title": "RESUMO VALIDACAO COERENCIA FASES",
-      "content": "Resumo: Validação de Coerência FASE*.md vs. Roadmap Data : 2026-01-25 Status : 🔄 Em Progresso 📊 Problemas Identificados 1. Arquivos com Título Incorreto Arquivo Título Atual Deveria Ser Status FASE14_8.md Fase 14.8 ✅ Fase 16 ✅ Corrigido FASE16.md Fase 16 (Entregas) ✅ Fase 16 (Finalização) ✅ Corrigido FASE17.md Fase 42 (Gamificação) ⚠️ Fase 17 (Compra Coletiva) ⏳ Pendente FASE18.md Fase 24 (Saúde) ⚠️ Fase 18 (Hospedagem) ⏳ Pendente FASE19.md Fase 43 (Arquitetura) ⚠️ Fase 19 (Demandas/Ofertas) ⏳",
-      "url": "/wiki/docs/RESUMO_VALIDACAO_COERENCIA_FASES",
       "category": "Outros"
     },
     {
@@ -2901,7 +2593,7 @@
     {
       "id": "STATUS_FASES",
       "title": "STATUS FASES",
-      "content": "Status das Fases - Backlog API Última Atualização : 2026-01-26 Fase 16 : ✅ Completa (Finalização Completa Fases 1-15) Total de Fases : [Calcular dinamicamente com node scripts/get-phase-count.mjs ] Nota : O número total de fases é calculado automaticamente contando arquivos FASE*.md em docs/backlog-api/ . Ver docs/PROJECT_PHASES_CONFIG.md para mais informações. Fases Completas : 15 (Fases 1-12, 13, 14, 15, 16) Fases em Andamento : 0 Fases Complementares : 1 (Fase 14.5) Fases Pendentes : [Calcula",
+      "content": "Status das Fases - Backlog API Última Atualização : 2026-01-20 Total de Fases : [Calcular dinamicamente com node scripts/get-phase-count.mjs ] Nota : O número total de fases é calculado automaticamente contando arquivos FASE*.md em docs/backlog-api/ . Ver docs/PROJECT_PHASES_CONFIG.md para mais informações. Fases Completas : 8 Fases em Andamento : 2 (Fase 12 - 85% completo, Fase 13 - MVP recuperacao) Fases Complementares : 2 (Fase 14.5, Fase 14.8) Fases Pendentes : [Calcular: Total - Completas -",
       "url": "/wiki/docs/STATUS_FASES",
       "category": "Outros"
     },
@@ -2934,13 +2626,6 @@
       "category": "Outros"
     },
     {
-      "id": "TESTES_PLANO_AJUSTES_DESACOPLAMENTO",
-      "title": "TESTES PLANO AJUSTES DESACOPLAMENTO",
-      "content": "Análise e Plano de Ajustes - Suite de Testes para Desacoplamento Versão : 1.0 Data : 2026-01-26 Status : 📋 Análise Completa Tipo : Documentação Técnica de Testes 📋 Índice Resumo Executivo Análise da Situação Atual Padrões de Design Identificados Reutilização de Classes Níveis de Testabilidade Plano de Ajustes Roadmap de Implementação 🎯 Resumo Executivo Situação Atual Total de Testes : 1578 testes (1556 passando, 98.6% taxa de sucesso) Cobertura : 45.72% linhas, 38.2% branches, 48.31% métodos ",
-      "url": "/wiki/docs/TESTES_PLANO_AJUSTES_DESACOPLAMENTO",
-      "category": "Outros"
-    },
-    {
       "id": "TESTE_DEVICES_CONTROLLER_EXPLICACAO",
       "title": "TESTE DEVICES CONTROLLER EXPLICACAO",
       "content": "Explicação: Problema de Autenticação no Teste RegisterDevice_WhenValid_CreatesDevice 📋 O Que Foi Feito 1. Teste Original O teste RegisterDevice_WhenValid_CreatesDevice foi criado para validar que: Um usuário pode fazer login via social (Google) Após login, pode registrar um dispositivo (token push notification) O dispositivo é criado corretamente com os dados fornecidos 2. Implementação do Teste [SkippableFact] public async Task RegisterDevice_WhenValid_CreatesDevice() { // 1. Cria factory e cl",
@@ -2959,13 +2644,6 @@
       "title": "VALIDACAO ATUALIZACAO FASES",
       "content": "Validação e Atualização de Arquivos FASE*.md Data : 2026-01-25 Status : 🔄 Em Progresso Objetivo : Validar e atualizar todos os arquivos FASE*.md com numeração coerente 📋 Checklist de Atualização Arquivos Atualizados ✅ FASE24.md → Atualizado para Fase 20 (Trocas Comunitárias) Título atualizado Referências: Fase 17 → Fase 42, Fase 20 → Fase 22 Subseções: 24.1-24.6 → 20.1-20.6 FASE20.md → Atualizado para Fase 22 (Moeda Territorial) Título atualizado Referências: Fase 17 → Fase 42, Fase 18 → Fase ",
       "url": "/wiki/docs/VALIDACAO_ATUALIZACAO_FASES",
-      "category": "Outros"
-    },
-    {
-      "id": "VALIDACAO_COERENCIA_FASES_ROADMAP",
-      "title": "VALIDACAO COERENCIA FASES ROADMAP",
-      "content": "Validação de Coerência: FASE*.md vs. Roadmap Data : 2026-01-25 Status : 🔄 Em Validação Objetivo : Validar coerência entre documentos FASE*.md e roadmap estratégico 📋 Mapeamento Esperado (Roadmap → Arquivos) Onda 1: MVP Essencial Fase Título Arquivo Esperado Status 9 Perfil de Usuário FASE9.md ⏳ Validar 10 Mídias Avançadas FASE10.md ⏳ Validar 11 Edição e Gestão FASE11.md ⏳ Validar 12 Otimizações Finais FASE12.md ⏳ Validar Onda 2: Governança e Sustentabilidade Fase Título Arquivo Esperado Status",
-      "url": "/wiki/docs/VALIDACAO_COERENCIA_FASES_ROADMAP",
       "category": "Outros"
     },
     {

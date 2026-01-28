@@ -9,6 +9,30 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado - Fase 12 Encerrada (2026-01-25)
+
+- ✅ **Fase 12 declarada 100% encerrada.** Todas as funcionalidades críticas entregues; melhorias contínuas (cobertura >90%, P95 &lt; 200ms) fora do escopo de fechamento.
+- ✅ **FASE12.md**, **FASE12_RESULTADOS.md**: status 100%, tabelas atualizadas, conclusão e próximos passos do projeto (Fase 13+).
+- ✅ **README.md**, **MAPA_FASES.md**, **02_ROADMAP.md**, **backlog-api/README.md**: Fase 12 **100% (encerrada)**; MVP Essencial **100% completo**.
+
+---
+
+### Adicionado - Fase 12 Próximos Passos (2026-01-25, branch `feature/fase12-proximos-passos`)
+
+- ✅ **UserProfileStatsServiceTests** (7 testes): `GetStatsAsync` com repositórios null/parciais, agregação de posts/eventos/participações/memberships, exclusão de Visitor sem verificação.
+- ✅ **TerritoryMediaConfigServiceEdgeCasesTests** (6 testes): `GetConfigAsync` (cria default, retorna existente), `UpdateConfigAsync` (mismatch território → exceção, válido → salva), `GetEffectiveContentLimitsAsync` / `GetEffectiveChatLimitsAsync`.
+- ✅ **FASE12_RESULTADOS.md**: atualizado com ações realizadas e referência à branch e aos novos testes.
+
+---
+
+### Alterado - Fase 12 Documentação (2026-01-25)
+
+- ✅ **FASE12.md**: status atualizado para ~98%; "Resumo da Fase 10" e "Critérios da Fase 10" corrigidos para Fase 12; tabelas de implementação alinhadas.
+- ✅ **FASE12_RESULTADOS.md**: documento completo com métricas finais, referências, links para FASE12/README/MAPA_FASES/02_ROADMAP e implementação (compression, testes Analytics, FeatureFlag, MediaStorageConfig, UserPreferences).
+- ✅ **README.md**, **MAPA_FASES.md**, **02_ROADMAP.md**, **backlog-api/README.md**: Fase 12 atualizada para ~98%; inclusão de Response Compression (gzip/brotli) na descrição.
+
+---
+
 ### Adicionado - Fase 14: Governança Comunitária e Sistema de Votação (2025-01-21)
 
 #### Funcionalidades

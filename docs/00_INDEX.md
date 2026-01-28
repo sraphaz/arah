@@ -47,6 +47,20 @@ Documentos sobre moderação, observabilidade e operações.
 - **[Sistema de Mídia](./MEDIA_SYSTEM.md)** - Documentação técnica do sistema de mídia (armazenamento, processamento, APIs)
 - **[Planejamento: Preferências de Usuário](./61_USER_PREFERENCES_PLAN.md)** - Planejamento completo da funcionalidade de preferências de privacidade e configurações do usuário
 
+### Backend for Frontend (BFF)
+Documentação da API BFF que expõe operações em forma de jornadas (user journeys), criando uma camada de abstração entre interfaces visuais e o backend.
+
+- **[Avaliação BFF - Documento Completo](./AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md)** ⭐ - Avaliação estratégica completa da criação do BFF com análise de viabilidade, arquitetura e implementação
+- **[Avaliação BFF - Resumo Executivo](./AVALIACAO_BFF_RESUMO.md)** 📋 - Resumo executivo para decisão rápida sobre implementação do BFF
+- **[Contrato OpenAPI BFF](./BFF_API_CONTRACT.yaml)** 📄 - Contrato OpenAPI 3.0.3 completo com todos os endpoints, schemas e exemplos
+- **[Resumo de Contratos BFF](./BFF_CONTRACT_SUMMARY.md)** 📝 - Referência rápida dos contratos e endpoints principais
+- **[Guia de Implementação Frontend](./BFF_FRONTEND_IMPLEMENTATION_GUIDE.md)** 💻 - Guia completo para implementação do frontend com exemplos práticos
+- **[Exemplo Flutter Completo](./BFF_FLUTTER_EXAMPLE.md)** 📱 - Exemplo completo e funcional em Flutter/Dart com modelos, serviços e widgets
+- **[Quick Start Flutter](./BFF_FLUTTER_QUICKSTART.md)** 🚀 - Exemplo mínimo para começar rapidamente com Flutter
+- **[Coleção Postman](./BFF_Postman_Collection.json)** 🧪 - Coleção completa do Postman com todos os endpoints prontos para teste
+- **[Ambientes Postman](./BFF_Postman_Environment.json)** ⚙️ - Ambientes Postman (Production, Staging, Local) pré-configurados
+- **[Guia de Uso Postman](./BFF_POSTMAN_README.md)** 📖 - Guia completo de uso da coleção Postman
+
 ### Segurança
 Documentos sobre segurança, configuração e implementação de medidas de segurança.
 
@@ -144,6 +158,9 @@ Documentação detalhada de todos os Pull Requests implementados.
 **Operações:**
 - Moderação → `30_MODERATION.md`
 - Observabilidade → `31_ADMIN_OBSERVABILITY.md`
+- API BFF → `AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md`
+- Contrato BFF → `BFF_API_CONTRACT.yaml`
+- Exemplo Flutter → `BFF_FLUTTER_EXAMPLE.md`
 
 ## Convenções de Nomenclatura
 
@@ -195,6 +212,14 @@ Documentos adicionais são organizados em pastas:
 | `CONTRIBUTING.md` | `41_CONTRIBUTING.md` |
 
 ## Mudanças Recentes no Projeto
+
+### Backend for Frontend (BFF) - Documentação Completa (2026-01-27)
+- **Avaliação Estratégica**: Documentação completa da avaliação e proposta de implementação do BFF
+- **Contratos OpenAPI**: Contrato OpenAPI 3.0.3 completo com todos os endpoints de jornadas
+- **Guias de Implementação**: Guias completos para frontend (Flutter) com exemplos práticos
+- **Ferramentas de Teste**: Coleção Postman completa com ambientes pré-configurados
+- **Desenvolvimento Paralelo**: Documentação permite desenvolvimento paralelo do frontend enquanto backend é implementado
+- Ver detalhes em: [Avaliação BFF](./AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md) | [Contrato OpenAPI](./BFF_API_CONTRACT.yaml) | [Exemplo Flutter](./BFF_FLUTTER_EXAMPLE.md)
 
 ### Estratégia de Convergência de Mercado (2025-01-20)
 - **Análise Comparativa**: Análise profunda do Closer.earth e padrões de mercado estabelecidos

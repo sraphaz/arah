@@ -19,18 +19,15 @@ public sealed class AuthController : ControllerBase
     private readonly AuthService _authService;
     private readonly ITokenService _tokenService;
     private readonly CurrentUserAccessor _currentUserAccessor;
-    private readonly PasswordResetService _passwordResetService;
 
     public AuthController(
         AuthService authService,
         ITokenService tokenService,
-        CurrentUserAccessor currentUserAccessor,
-        PasswordResetService passwordResetService)
+        CurrentUserAccessor currentUserAccessor)
     {
         _authService = authService;
         _tokenService = tokenService;
         _currentUserAccessor = currentUserAccessor;
-        _passwordResetService = passwordResetService;
     }
 
     /// <summary>
@@ -255,13 +252,13 @@ public sealed class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-    public async Task<ActionResult> ForgotPassword(
+    public Task<ActionResult> ForgotPassword(
         [FromBody] ForgotPasswordRequest request,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Email))
         {
-            return BadRequest(new { error = "Email is required." });
+            return Task.FromResult<ActionResult>(BadRequest(new { error = "Email is required." }));
         }
 
         // Sempre retornar sucesso (security best practice - não revelar se email existe)
@@ -318,7 +315,7 @@ public sealed class AuthController : ControllerBase
             }
         }, cancellationToken);
 
-        return Ok(new { message = "If the email exists, a password reset link has been sent." });
+        return Task.FromResult<ActionResult>(Ok(new { message = "If the email exists, a password reset link has been sent." }));
     }
 
     /// <summary>
@@ -350,50 +347,5 @@ public sealed class AuthController : ControllerBase
         }
 
         return Ok(new { message = "2FA disabled successfully." });
-    }
-
-    /// <summary>
-    /// Solicita recuperação de acesso via email.
-    /// </summary>
-    [HttpPost("password-reset")]
-    [EnableRateLimiting("auth")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-    public async Task<IActionResult> RequestPasswordReset(
-        [FromBody] PasswordResetRequest request,
-        CancellationToken cancellationToken)
-    {
-        var result = await _passwordResetService.RequestAsync(request.Email, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(new { error = result.Error });
-        }
-
-        return Ok(new
-        {
-            message = "Se o email existir, enviamos instruções de recuperação."
-        });
-    }
-
-    /// <summary>
-    /// Confirma token de recuperação e retorna um token JWT.
-    /// </summary>
-    [HttpPost("password-reset/confirm")]
-    [EnableRateLimiting("auth")]
-    [ProducesResponseType(typeof(PasswordResetConfirmResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-    public async Task<ActionResult<PasswordResetConfirmResponse>> ConfirmPasswordReset(
-        [FromBody] PasswordResetConfirmRequest request,
-        CancellationToken cancellationToken)
-    {
-        var result = await _passwordResetService.ConfirmAsync(request.Token, cancellationToken);
-        if (result.IsFailure)
-        {
-            return BadRequest(new { error = result.Error });
-        }
-
-        return Ok(new PasswordResetConfirmResponse(result.Value!));
     }
 }

@@ -66,6 +66,20 @@ Este documento foi reorganizado em subdocumentos para melhor navegação e manut
 
 23. **[Resumo de Endpoints Principais](./60_99_API_RESUMO_ENDPOINTS.md)** - Lista consolidada de todos os endpoints
 
+#### 🎯 Backend for Frontend (BFF)
+
+24. **[Avaliação BFF](../AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md)** ⭐ - Avaliação estratégica completa da API BFF
+25. **[Avaliação BFF - Resumo](../AVALIACAO_BFF_RESUMO.md)** 📋 - Resumo executivo para decisão rápida
+26. **[Contrato OpenAPI BFF](../BFF_API_CONTRACT.yaml)** 📄 - Contrato OpenAPI 3.0.3 completo (v2/journeys)
+27. **[Resumo de Contratos BFF](../BFF_CONTRACT_SUMMARY.md)** 📝 - Referência rápida dos contratos BFF
+28. **[Guia de Implementação Frontend](../BFF_FRONTEND_IMPLEMENTATION_GUIDE.md)** 💻 - Guia completo para frontend
+29. **[Exemplo Flutter Completo](../BFF_FLUTTER_EXAMPLE.md)** 📱 - Exemplo completo em Flutter/Dart
+30. **[Quick Start Flutter](../BFF_FLUTTER_QUICKSTART.md)** 🚀 - Exemplo mínimo para começar
+31. **[Coleção Postman BFF](../BFF_Postman_Collection.json)** 🧪 - Coleção Postman completa
+32. **[Guia de Uso Postman](../BFF_POSTMAN_README.md)** 📖 - Guia de uso da coleção Postman
+
+> **Nota**: A API BFF (v2) expõe operações em forma de jornadas (user journeys), reduzindo significativamente o número de chamadas necessárias. A API v1 continua disponível e funcional.
+
 ---
 
 ## 🚀 Como Usar Esta Documentação
@@ -97,6 +111,7 @@ Este documento foi reorganizado em subdocumentos para melhor navegação e manut
 - **DevPortal**: `devportal.araponga.app/` - Portal de desenvolvedor com exemplos práticos
 - **Wiki**: `devportal.araponga.app/wiki/` - Documentação completa do projeto
 - **GitHub**: `github.com/sraphaz/araponga` - Código-fonte
+- **API BFF**: [Avaliação BFF](../AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md) | [Contrato OpenAPI](../BFF_API_CONTRACT.yaml) | [Exemplo Flutter](../BFF_FLUTTER_EXAMPLE.md) - API v2 com jornadas otimizadas
 
 ---
 

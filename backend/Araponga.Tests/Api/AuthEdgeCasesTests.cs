@@ -39,7 +39,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "");
+        request.Headers["Authorization"] = "";
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 

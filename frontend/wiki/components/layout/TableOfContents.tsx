@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface TOCItem {
   id: string;
@@ -11,6 +11,7 @@ interface TOCItem {
 export function TableOfContents() {
   const [toc, setToc] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Extract headings from markdown content - busca em todo o documento
@@ -65,6 +66,39 @@ export function TableOfContents() {
     // Track scroll position to highlight active heading using IntersectionObserver
     if (toc.length === 0) return;
 
+    // Função para fazer scroll do item ativo no TOC para dentro da área visível
+    // Usa debounce para evitar scrolls muito frequentes
+    const scrollActiveItemIntoView = (id: string) => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = setTimeout(() => {
+        const tocContainer = document.querySelector('.toc-container');
+        if (!tocContainer) return;
+
+        const activeItem = tocContainer.querySelector(`[data-toc-id="${id}"]`) as HTMLElement;
+        if (!activeItem) return;
+
+        const containerRect = tocContainer.getBoundingClientRect();
+        const itemRect = activeItem.getBoundingClientRect();
+
+        // Verifica se o item está fora da área visível do container (com margem de segurança)
+        const margin = 20; // Margem de segurança em pixels
+        const isAboveView = itemRect.top < containerRect.top + margin;
+        const isBelowView = itemRect.bottom > containerRect.bottom - margin;
+
+        if (isAboveView || isBelowView) {
+          // Scroll suave para trazer o item para o centro visível
+          const scrollOffset = itemRect.top - containerRect.top + tocContainer.scrollTop - (containerRect.height / 2) + (itemRect.height / 2);
+          tocContainer.scrollTo({
+            top: Math.max(0, scrollOffset), // Garante que não seja negativo
+            behavior: 'smooth',
+          });
+        }
+      }, 150); // Debounce de 150ms
+    };
+
     const observerOptions = {
       root: null,
       rootMargin: "-140px 0px -60% 0px", // Considera heading ativo quando está próximo do topo (ajustado para sticky header)
@@ -87,13 +121,18 @@ export function TableOfContents() {
 
       if (visibleHeading) {
         setActiveId(visibleHeading.id);
+        // Scroll automático do item ativo no TOC se estiver fora da área visível
+        scrollActiveItemIntoView(visibleHeading.id);
         return;
       }
 
       // Se não há heading visível, pega o último que passou do topo (mais próximo do topo)
       const pastTop = headingsWithPosition.filter(h => h.top < 140);
       if (pastTop.length > 0) {
-        setActiveId(pastTop[pastTop.length - 1].id);
+        const activeId = pastTop[pastTop.length - 1].id;
+        setActiveId(activeId);
+        // Scroll automático do item ativo no TOC se estiver fora da área visível
+        scrollActiveItemIntoView(activeId);
       }
     }, observerOptions);
 
@@ -128,6 +167,8 @@ export function TableOfContents() {
 
       if (current && current !== activeId) {
         setActiveId(current);
+        // Scroll automático do item ativo no TOC se estiver fora da área visível
+        scrollActiveItemIntoView(current);
       }
     };
 
@@ -137,6 +178,10 @@ export function TableOfContents() {
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = null;
+      }
     };
   }, [toc]);
 
@@ -173,6 +218,7 @@ export function TableOfContents() {
           return (
             <li
               key={item.id}
+              data-toc-id={item.id}
               className={`toc-item toc-item-level-${item.level} ${
                 activeId === item.id ? "toc-item-active" : ""
               } ${isGroupStart ? "toc-group-start" : ""} ${isGroupEnd ? "toc-group-end" : ""}`}

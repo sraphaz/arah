@@ -44,6 +44,24 @@ const docStructure = {
     { name: "Changelog", path: "40_CHANGELOG.md" },
     { name: "Contribuindo", path: "41_CONTRIBUTING.md" },
   ],
+  "Documentação Funcional": [
+    { name: "Índice da Documentação Funcional", path: "funcional/README.md" },
+    { name: "Plataforma Araponga", path: "funcional/00_PLATAFORMA_ARAPONGA.md" },
+    { name: "Autenticação e Identidade", path: "funcional/01_AUTENTICACAO_IDENTIDADE.md" },
+    { name: "Territórios e Memberships", path: "funcional/02_TERRITORIOS_MEMBERSHIPS.md" },
+    { name: "Feed Comunitário", path: "funcional/03_FEED_COMUNITARIO.md" },
+    { name: "Eventos", path: "funcional/04_EVENTOS.md" },
+    { name: "Mapa Territorial", path: "funcional/05_MAPA_TERRITORIAL.md" },
+    { name: "Marketplace", path: "funcional/06_MARKETPLACE.md" },
+    { name: "Chat", path: "funcional/07_CHAT.md" },
+    { name: "Alertas", path: "funcional/08_ALERTAS.md" },
+    { name: "Assets", path: "funcional/09_ASSETS.md" },
+    { name: "Moderação", path: "funcional/10_MODERACAO.md" },
+    { name: "Notificações", path: "funcional/11_NOTIFICACOES.md" },
+    { name: "Subscriptions", path: "funcional/12_SUBSCRIPTIONS.md" },
+    { name: "Governança e Votação", path: "funcional/13_GOVERNANCA_VOTACAO.md" },
+    { name: "Admin", path: "funcional/14_ADMIN.md" },
+  ],
 };
 
 async function getAllDocs() {
@@ -74,6 +92,7 @@ export default async function DocsPage() {
   const referenceCategories = [
     "Segurança",
     "Referência",
+    "Documentação Funcional",
   ];
 
   const categoryGroups = [

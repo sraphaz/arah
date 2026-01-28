@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,6 +32,7 @@ const sidebarSections: SidebarSection[] = [
     items: [
       { title: "Índice Completo", href: "/docs/00_INDEX", description: "Todos os documentos" },
       { title: "Lista de Documentos", href: "/docs", description: "Navegar todos os docs" },
+      { title: "Documentação Funcional", href: "/docs/funcional/00_PLATAFORMA_ARAPONGA", description: "Visão funcional completa da plataforma" },
     ],
   },
   {

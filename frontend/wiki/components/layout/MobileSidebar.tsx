@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -32,6 +32,7 @@ const sidebarSections: MobileSidebarSection[] = [
     items: [
       { title: "Índice Completo", href: "/docs/00_INDEX", description: "Todos os documentos" },
       { title: "Lista de Documentos", href: "/docs", description: "Navegar todos os docs" },
+      { title: "Documentação Funcional", href: "/docs/funcional/00_PLATAFORMA_ARAPONGA", description: "Visão funcional completa da plataforma" },
     ],
   },
 ];

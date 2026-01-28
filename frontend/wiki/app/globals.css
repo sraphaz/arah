@@ -1297,8 +1297,34 @@
 /* Table of Contents - Enterprise design - Margem reduzida */
 .toc-container {
   @apply glass-card p-4;
-  @apply sticky top-24;
+  /* Altura máxima baseada na viewport menos header e margens */
+  /* top-24 = 96px (6rem), adiciona 32px de margem = 128px total */
+  max-height: calc(100vh - 128px);
+  @apply overflow-y-auto;
+  /* Scroll suave e customizado */
+  scrollbar-width: thin;
+  scrollbar-color: var(--forest-400) transparent;
+  /* Garante que o scroll interno funcione */
+  overscroll-behavior: contain;
   /* Removido padding excessivo - aproveita melhor espaço */
+}
+
+/* Custom scrollbar para TOC (WebKit browsers) */
+.toc-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.toc-container::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.toc-container::-webkit-scrollbar-thumb {
+  @apply bg-forest-400/40 dark:bg-forest-600/40;
+  border-radius: 3px;
+}
+
+.toc-container::-webkit-scrollbar-thumb:hover {
+  @apply bg-forest-500/60 dark:bg-forest-500/60;
 }
 
 .toc-header {
@@ -1716,6 +1742,7 @@
   }
 
   /* TOC em mobile - vira um dropdown no topo */
+  /* Nota: Em desktop, o TOC tem scroll interno quando necessário */
   .toc-container {
     margin-bottom: var(--spacing-2xl);
     position: static !important;

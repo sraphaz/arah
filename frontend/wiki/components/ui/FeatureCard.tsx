@@ -61,7 +61,7 @@ export function FeatureCard({ icon, title, description, color = "forest", href }
 
   if (href) {
     return (
-      <Link href={href} className="block">
+      <Link href={href} prefetch={false} className="block">
         {cardContent}
       </Link>
     );

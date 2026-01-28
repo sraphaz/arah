@@ -24,11 +24,14 @@ const nextConfig = {
   trailingSlash: true,
   // Asset prefix também precisa do basePath
   assetPrefix: '/wiki',
-  // Desabilita prefetch automático para evitar duplicação de basePath
-  // Bug conhecido do Next.js: https://github.com/vercel/next.js/issues/73427
+  // Desabilita RSC (React Server Components) para evitar problemas com basePath
+  // e prefetch de arquivos .txt que não existem em modo estático
   experimental: {
     optimizePackageImports: [],
   },
+  // Configuração para evitar problemas com RSC e basePath
+  // Em modo estático, RSC não funciona corretamente com basePath
+  reactStrictMode: true,
 };
 
 export default nextConfig;

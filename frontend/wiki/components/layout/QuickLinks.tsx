@@ -86,7 +86,7 @@ export function QuickLinks() {
                 </svg>
               </a>
             ) : (
-              <Link href={link.href} className="quick-link group">
+              <Link href={link.href} prefetch={false} className="quick-link group">
                 <span className="quick-link-icon">
                   {link.socialPlatform ? (
                     <SocialIcon platform={link.socialPlatform} size={24} className="opacity-90 group-hover:opacity-100 transition-opacity" />

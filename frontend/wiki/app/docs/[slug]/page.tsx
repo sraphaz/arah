@@ -208,9 +208,9 @@ export default async function DocPage({ params }: PageProps) {
                 <div className="glass-card__content">
                   {/* Breadcrumb Refinado */}
                   <nav className="breadcrumb mb-4">
-                    <Link href="/">Boas-Vindas</Link>
+                    <Link href="/" prefetch={false}>Boas-Vindas</Link>
                     <span>›</span>
-                    <Link href="/docs">Documentação</Link>
+                    <Link href="/docs" prefetch={false}>Documentação</Link>
                     <span>›</span>
                     <span className="text-forest-900 font-medium">{doc.title}</span>
                   </nav>
@@ -230,12 +230,14 @@ export default async function DocPage({ params }: PageProps) {
               <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
                 <Link
                   href="/"
+                  prefetch={false}
                   className="btn-secondary text-center"
                 >
                   ← Voltar às Boas-Vindas
                 </Link>
                 <Link
                   href="/docs"
+                  prefetch={false}
                   className="btn-secondary text-center"
                 >
                   Ver Todos os Docs →

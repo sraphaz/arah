@@ -45,7 +45,7 @@ export function SocialLink({
   }
 
   return (
-    <Link href={href} className={`${baseClasses} ${className}`}>
+    <Link href={href} prefetch={false} className={`${baseClasses} ${className}`}>
       {content}
     </Link>
   );

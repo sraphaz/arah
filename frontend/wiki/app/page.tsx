@@ -180,7 +180,7 @@ export default async function HomePage() {
               Bem-vindo à documentação completa do Araponga.
             </p>
             <div className="mt-8">
-              <Link href="/docs" className="btn-primary">
+              <Link href="/docs" prefetch={false} className="btn-primary">
                 Ver Documentação
               </Link>
             </div>

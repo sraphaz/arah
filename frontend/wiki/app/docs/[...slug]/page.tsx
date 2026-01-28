@@ -263,13 +263,13 @@ export default async function DocPage({ params }: PageProps) {
             <div className="glass-card__content">
               {/* Breadcrumb Refinado */}
               <nav className="breadcrumb mb-8">
-                <Link href="/wiki">Boas-Vindas</Link>
+                <Link href="/">Boas-Vindas</Link>
                 <span>›</span>
-                <Link href="/wiki/docs">Documentação</Link>
+                <Link href="/docs">Documentação</Link>
                 {(slug[0]?.startsWith('ONBOARDING_') || slug.some(s => s?.startsWith('ONBOARDING_'))) && (
                   <>
                     <span>›</span>
-                    <Link href="/wiki/docs">Onboarding</Link>
+                    <Link href="/docs">Onboarding</Link>
                   </>
                 )}
                 <span>›</span>
@@ -303,13 +303,13 @@ export default async function DocPage({ params }: PageProps) {
           {/* Navigation Links - Refinado */}
           <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
             <Link
-              href="/wiki"
+              href="/"
               className="btn-secondary text-center"
             >
               ← Voltar às Boas-Vindas
             </Link>
             <Link
-              href="/wiki/docs"
+              href="/docs"
               className="btn-secondary text-center"
             >
               Ver Todos os Docs →

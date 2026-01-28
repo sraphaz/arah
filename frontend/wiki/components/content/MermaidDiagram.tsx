@@ -219,7 +219,7 @@ export function MermaidDiagram({ code, id }: MermaidDiagramProps) {
             className="fixed top-4 right-4 z-[10000] bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg transition-all hover:scale-110"
             aria-label="Fechar"
           >
-            ×
+            ï¿½
           </button>
 
           {/* Controles de zoom */}

@@ -4,10 +4,10 @@
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Total de Fases**: [Calcular dinamicamente com `node scripts/get-phase-count.mjs`]  
 **Nota**: O número total de fases é calculado automaticamente contando arquivos `FASE*.md` em `docs/backlog-api/`. Ver `docs/PROJECT_PHASES_CONFIG.md` para mais informações.  
-**Fases Completas**: 15 (Fases 1-12, 13, 14, 15, 16)  
+**Fases Completas**: 16 (Fases 1-12, 13, 14, 15, 16)  
 **Fases em Andamento**: 0  
 **Fases Complementares**: 1 (Fase 14.5)  
-**Fases Pendentes**: [Calcular: Total - Completas - Complementares]
+**Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
 
 ---
 
@@ -15,9 +15,19 @@
 
 | Status | Quantidade | Percentual |
 |--------|------------|------------|
-| ✅ Completo | 15 | 52% |
-| ⏳ Pendente | 14 | 48% |
+| ✅ Completo | 16 | 55% |
+| ⏳ Pendente | 15 | 45% |
 | 🚧 Em Andamento | 0 | 0% |
+
+---
+
+## ✅ Fases Completas (1-16)
+
+## ⏳ Fases Pendentes
+
+| Fase | Nome | Prioridade | Status | Documentação |
+|------|------|------------|--------|--------------|
+| 17 | Backend for Frontend (BFF) - Aplicação Externa com OAuth2 | 🟡 ALTA | ⏳ Pendente | [FASE17_BFF.md](./backlog-api/FASE17_BFF.md) |
 
 ---
 
@@ -41,6 +51,7 @@
 | 14 | Governança Comunitária | ✅ Completo | 2025-01 | [FASE14.md](./backlog-api/FASE14.md) |
 | 15 | Subscriptions & Recurring Payments | ✅ Completo | 2026-01-26 | [FASE15.md](./backlog-api/FASE15.md) |
 | 16 | Finalização Completa Fases 1-15 | ✅ Completo | 2026-01-26 | [FASE16.md](./backlog-api/FASE16.md) |
+| 17 | Backend for Frontend (BFF) - Aplicação Externa com OAuth2 | ⏳ Pendente | - | [FASE17_BFF.md](./backlog-api/FASE17_BFF.md) |
 
 ## 🔄 Fases Complementares (Itens Faltantes)
 
@@ -101,6 +112,14 @@
 | 26 | Chat com IA e Consumo Consciente | 🟢 MÉDIA | ⏳ Pendente | Fase 25 |
 | 27 | Negociação Territorial | 🟢 MÉDIA | ⏳ Pendente | Fase 26 |
 | 28 | Banco de Sementes e Mudas | 🟢 MÉDIA | ⏳ Pendente | Fase 27 |
+
+---
+
+## 🟡 Fases Técnicas - Arquitetura e Performance (17)
+
+| Fase | Nome | Prioridade | Status | Dependências |
+|------|------|------------|--------|--------------|
+| 17 | Backend for Frontend (BFF) - Aplicação Externa com OAuth2 | 🟡 ALTA | ⏳ Pendente | Fase 1, 4, 6, 8 |
 
 ---
 
@@ -202,7 +221,7 @@
 
 ---
 
-**Última Atualização**: 2026-01-20  
+**Última Atualização**: 2026-01-28  
 **Próxima Revisão**: Após conclusão de cada fase
 
 ---

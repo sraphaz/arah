@@ -202,7 +202,13 @@ Araponga.Api.Bff/
 
 ### Integração com Arquitetura Modular
 
-O BFF será um **módulo adicional** na arquitetura modular:
+**⚠️ ATUALIZAÇÃO ARQUITETURAL**: Após reavaliação, o BFF será implementado como **aplicação externa** (não como módulo interno).
+
+**Estratégia de Evolução**:
+
+#### Fase 1 (Inicial): BFF como Módulo Interno
+
+O BFF pode começar como módulo interno para simplicidade:
 
 ```csharp
 namespace Araponga.Modules.Bff;
@@ -239,11 +245,39 @@ public class BffModule : ModuleBase
 }
 ```
 
-**Vantagens**:
-- ✅ Pode ser habilitado/desabilitado via configuração
-- ✅ Respeita dependências entre módulos
-- ✅ Pode evoluir independentemente
-- ✅ Não quebra API existente (coexistência)
+**Vantagens (Fase 1)**:
+- ✅ Simplicidade e zero custo adicional
+- ✅ Comunicação in-process (sem latência de rede)
+- ✅ Um único deploy
+- ✅ Coexiste com API v1
+
+#### Fase 2 (Evolução): BFF como Aplicação Externa
+
+Quando migrar para APIs Modulares ou precisar de escalabilidade independente:
+
+**Arquitetura**:
+```
+Araponga.Api.Bff/ (aplicação separada)
+├── OAuth2 Authorization Server
+├── Journey Controllers
+├── Journey Services
+└── API Client (consome API principal via HTTP)
+```
+
+**Integração com Módulos**:
+- ✅ BFF consome APIs modulares via HTTP
+- ✅ Autenticação própria (OAuth2 Client Credentials)
+- ✅ Registro de múltiplos apps consumidores
+- ✅ Escalabilidade independente
+- ✅ Separação de responsabilidades
+
+**Vantagens (Fase 2)**:
+- ✅ Escalabilidade independente
+- ✅ Separação de responsabilidades
+- ✅ Preparado para microserviços
+- ✅ Evolução independente
+
+**Ver documentação completa**: [`REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md`](./REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md)
 
 ---
 
@@ -951,14 +985,26 @@ A criação de um **Backend for Frontend (BFF)** é **altamente recomendada** pa
 5. ✅ **Permite evolução independente** do frontend e backend
 6. ✅ **Mantém compatibilidade** com API existente
 
+**⚠️ IMPORTANTE - Reavaliação Arquitetural**:
+
+Esta proposta inicial sugeria o BFF como **módulo interno**. No entanto, foi realizada uma **reavaliação arquitetural** considerando a evolução planejada (Monolito → APIs Modulares → Microserviços).
+
+**Ver documentação atualizada**: [`REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md`](./REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md)
+
+**Recomendação Atualizada**: **Estratégia Híbrida - Evolução Gradual**
+- **Fase 1 (Atual)**: BFF como módulo interno (simplicidade, zero custo)
+- **Fase 2 (APIs Modulares)**: Migrar BFF para aplicação externa (escalabilidade independente)
+- **Fase 3 (Microserviços)**: BFF já como aplicação externa (consome múltiplos serviços)
+
 **Próximos Passos**:
 1. Aprovar proposta
-2. Criar projeto BFF
-3. Implementar jornadas prioritárias (Fase 1)
+2. Implementar BFF como módulo interno (Fase 1)
+3. Implementar jornadas prioritárias
 4. Testar com frontend
-5. Expandir para jornadas secundárias (Fase 2)
+5. Planejar migração para aplicação externa (quando migrar para APIs Modulares)
 
 ---
 
-**Última Atualização**: 2026-01-27  
-**Status**: 📋 Proposta Completa - Pronto para Implementação
+**Última Atualização**: 2026-01-28  
+**Status**: 📋 Proposta Completa - Reavaliada e Atualizada  
+**Ver Reavaliação**: [`REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md`](./REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md)

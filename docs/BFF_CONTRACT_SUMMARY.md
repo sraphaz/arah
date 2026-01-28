@@ -362,13 +362,71 @@ Finaliza compra.
 
 ## 🔐 Autenticação
 
-### Header Obrigatório
+### OAuth2 Client Credentials Flow
+
+O BFF usa **OAuth2 Client Credentials Flow** para autenticação de aplicações.
+
+#### 1. Registrar Cliente (Admin)
 
 ```http
-Authorization: Bearer <token_jwt>
+POST /api/v1/admin/clients
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+
+{
+  "name": "Flutter Mobile App",
+  "description": "Aplicativo mobile Flutter",
+  "scopes": ["journeys:read", "journeys:write"],
+  "redirectUris": ["araponga://callback"]
+}
 ```
 
-### Obter Token
+**Response**:
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "clientId": "550e8400e29b41d4a716446655440000",
+  "clientSecret": "super-secret-key-here",
+  "name": "Flutter Mobile App",
+  "scopes": ["journeys:read", "journeys:write"],
+  "isActive": true
+}
+```
+
+**⚠️ IMPORTANTE**: O `clientSecret` só é retornado uma vez!
+
+#### 2. Obter Token de Acesso
+
+```http
+POST /oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+&client_id=550e8400e29b41d4a716446655440000
+&client_secret=super-secret-key-here
+&scope=journeys:read journeys:write
+```
+
+**Response**:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "journeys:read journeys:write"
+}
+```
+
+#### 3. Usar Token no BFF
+
+```http
+Authorization: Bearer <bff_access_token>
+X-User-Token: <user_token>  // Opcional: para operações autenticadas
+```
+
+### Token do Usuário (Opcional)
+
+Para operações que requerem autenticação do usuário, repasse o token do usuário:
 
 ```http
 POST /api/v1/auth/social
@@ -380,6 +438,8 @@ Content-Type: application/json
   "cpf": "..." // optional
 }
 ```
+
+Use o token retornado no header `X-User-Token` nas requisições ao BFF.
 
 ---
 

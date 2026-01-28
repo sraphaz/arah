@@ -52,40 +52,104 @@ A API BFF (Backend for Frontend) foi criada para:
 
 ## 🔐 Autenticação
 
-### Token JWT
+### OAuth2 Client Credentials Flow
 
-A API BFF usa o mesmo sistema de autenticação da API v1:
+A API BFF usa **OAuth2 Client Credentials Flow** para autenticação de aplicações. Cada aplicação cliente (Flutter App, Web App, etc.) precisa:
+
+1. **Registrar-se como cliente OAuth2** (via Admin)
+2. **Obter token de acesso** usando `clientId` e `clientSecret`
+3. **Usar token** em todas as requisições ao BFF
+
+### 1. Registro de Cliente (Admin)
+
+**⚠️ IMPORTANTE**: O registro de clientes é feito por um administrador do sistema via API Admin.
 
 ```http
-Authorization: Bearer <token_jwt>
-```
-
-**Obter Token**:
-```http
-POST /api/v1/auth/social
+POST /api/v1/admin/clients
+Authorization: Bearer <admin_token>
 Content-Type: application/json
 
 {
-  "provider": "GOOGLE",
-  "token": "...",
-  "cpf": "..." // opcional
+  "name": "Flutter Mobile App",
+  "description": "Aplicativo mobile Flutter",
+  "scopes": ["journeys:read", "journeys:write"],
+  "redirectUris": ["araponga://callback"]
 }
 ```
 
 **Response**:
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "expiresAt": "2026-01-28T10:00:00Z"
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "clientId": "550e8400e29b41d4a716446655440000",
+  "clientSecret": "super-secret-key-here",
+  "name": "Flutter Mobile App",
+  "description": "Aplicativo mobile Flutter",
+  "scopes": ["journeys:read", "journeys:write"],
+  "redirectUris": ["araponga://callback"],
+  "isActive": true,
+  "createdAtUtc": "2026-01-28T10:00:00Z"
 }
+```
+
+**⚠️ IMPORTANTE**: O `clientSecret` só é retornado **uma vez** no momento do registro. Guarde-o com segurança!
+
+### 2. Obter Token de Acesso
+
+```http
+POST /oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+&client_id=550e8400e29b41d4a716446655440000
+&client_secret=super-secret-key-here
+&scope=journeys:read journeys:write
+```
+
+**Response**:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "journeys:read journeys:write"
+}
+```
+
+### 3. Usar Token no BFF
+
+```http
+GET /api/v2/journeys/feed/territory-feed?territoryId=...
+Authorization: Bearer <bff_access_token>
+X-User-Token: <user_token>  // Opcional: token do usuário para operações autenticadas
 ```
 
 ### Headers Obrigatórios
 
 ```http
-Authorization: Bearer <token>
+Authorization: Bearer <bff_access_token>  // Token OAuth2 do cliente
 Content-Type: application/json
-X-Session-Id: <session_id> // Opcional, para usuários não autenticados
+X-User-Token: <user_token>  // Opcional: token JWT do usuário (para operações autenticadas)
+```
+
+### Fluxo Completo
+
+```
+1. App registra-se como cliente OAuth2 (via Admin)
+   → Recebe clientId e clientSecret
+
+2. App obtém token de acesso do BFF
+   POST /oauth/token (client_credentials)
+   → Recebe access_token
+
+3. App usa token em requisições ao BFF
+   GET /api/v2/journeys/... 
+   Authorization: Bearer <access_token>
+
+4. BFF repassa token do usuário para API principal
+   GET /api/v1/feed/...
+   Authorization: Bearer <user_token>
+   X-BFF-Client-Id: <client_id>
 ```
 
 ---
@@ -669,13 +733,71 @@ class CreatePostRequest {
 
 ---
 
+## 🔗 Integração com Módulos da API Principal
+
+### Visão Geral
+
+O BFF atua como uma **camada de agregação e transformação** entre o frontend e os módulos da API principal. Ele:
+
+1. **Consome múltiplos módulos** via HTTP (quando aplicação externa)
+2. **Agrega dados** de diferentes fontes
+3. **Transforma respostas** para formato otimizado para UI
+4. **Orquestra jornadas** complexas do usuário
+
+### Módulos Integrados
+
+O BFF integra-se com os seguintes módulos da API principal:
+
+| Módulo | Endpoints Consumidos | Jornadas |
+|--------|---------------------|----------|
+| **Feed** | `/api/v1/feed/*` | Feed do território, criar post, interações |
+| **Events** | `/api/v1/events/*` | Listar eventos, criar evento, participar |
+| **Marketplace** | `/api/v1/marketplace/*` | Buscar itens, carrinho, checkout |
+| **Territories** | `/api/v1/territories/*` | Onboarding, seleção de território |
+| **Map** | `/api/v1/map/*` | Entidades do mapa, georreferenciamento |
+| **Chat** | `/api/v1/chat/*` | Conversas, mensagens |
+| **Media** | `/api/v1/media/*` | Upload de mídias, processamento |
+| **Notifications** | `/api/v1/notifications/*` | Notificações do usuário |
+
+### Diretrizes de Integração
+
+#### 1. Respeitar Dependências entre Módulos
+
+O BFF deve respeitar as dependências entre módulos:
+
+- ✅ **Feed** depende de: Media, Events, Territories
+- ✅ **Events** depende de: Media, Territories
+- ✅ **Marketplace** depende de: Media, Territories, Financial
+- ✅ **Chat** depende de: Users, Territories
+
+#### 2. Tratamento de Erros
+
+Quando um módulo falha, o BFF deve:
+
+- ✅ **Retornar dados parciais** quando possível
+- ✅ **Usar circuit breaker** para evitar cascata de falhas
+- ✅ **Logar erros** para diagnóstico
+- ✅ **Retornar erro claro** ao frontend
+
+#### 3. Cache e Performance
+
+- ✅ **Cache de dados agregados** (TTL curto)
+- ✅ **Batch requests** quando possível
+- ✅ **Paralelização** de chamadas independentes
+- ✅ **Lazy loading** de dados opcionais
+
+---
+
 ## 📚 Recursos Adicionais
 
+- **Fase Técnica**: [FASE17_BFF.md](./backlog-api/FASE17_BFF.md)
 - **Contrato OpenAPI**: [BFF_API_CONTRACT.yaml](./BFF_API_CONTRACT.yaml)
 - **Avaliação BFF**: [AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md](./AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md)
+- **Reavaliação Arquitetural**: [REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md](./REAVALIACAO_BFF_MODULO_VS_APLICACAO_EXTERNA.md)
+- **Plano de Extração**: [PLANO_EXTRACAO_BFF_APLICACAO_EXTERNA.md](./PLANO_EXTRACAO_BFF_APLICACAO_EXTERNA.md)
 - **API v1 (Referência)**: [60_99_API_RESUMO_ENDPOINTS.md](./api/60_99_API_RESUMO_ENDPOINTS.md)
 
 ---
 
-**Última Atualização**: 2026-01-27  
-**Status**: 📋 Guia Completo - Pronto para Implementação
+**Última Atualização**: 2026-01-28  
+**Status**: 📋 Guia Completo - Atualizado com OAuth2 e Integração com Módulos

@@ -19,6 +19,11 @@ function getTextContent(html: string): string {
   });
 }
 
+// Helper para remover prefixos numéricos (00_, 01_, etc.) do nome do arquivo
+function removeNumericPrefix(text: string): string {
+  return text.replace(/^\d+_/, "");
+}
+
 interface PageProps {
   params: Promise<{ slug: string[] }>;
 }
@@ -142,11 +147,6 @@ async function getDocContent(filePath: string) {
     // Processa links no HTML renderizado para incluir basePath
     htmlContent = processMarkdownLinks(htmlContent, '/wiki');
 
-    // Helper para remover prefixos numéricos (00_, 01_, etc.) do nome do arquivo
-    function removeNumericPrefix(text: string): string {
-      return text.replace(/^\d+_/, "");
-    }
-
     // Gera título: usa frontmatter title, ou primeiro H1 do markdown, ou nome do arquivo
     const fileName = filePath.split('/').pop() || '';
     const fileNameWithoutExt = fileName.replace(".md", "");
@@ -169,11 +169,6 @@ async function getYamlContent(filePath: string) {
     const docsPath = join(process.cwd(), "..", "..", "docs", filePath);
     const fileContents = await readFile(docsPath, "utf8");
     
-    // Helper para remover prefixos numéricos (00_, 01_, etc.) do nome do arquivo
-    function removeNumericPrefix(text: string): string {
-      return text.replace(/^\d+_/, "");
-    }
-
     const fileName = filePath.split('/').pop() || '';
     const fileNameWithoutExt = fileName.replace(/\.(yaml|yml)$/, "");
     const titleWithoutPrefix = removeNumericPrefix(fileNameWithoutExt);

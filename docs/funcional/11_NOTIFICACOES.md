@@ -3,7 +3,7 @@
 **Versão**: 1.0  
 **Data**: 2026-01-28  
 **Status**: Funcionalidade Implementada  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -82,8 +82,8 @@ Usuário visualiza no inbox → Marca como lida
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[API - Notificações](../api/60_11_API_NOTIFICACOES.md)** - Documentação técnica
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[API - Notificações](api/60_11_API_NOTIFICACOES.md)** - Documentação técnica
 
 ---
 

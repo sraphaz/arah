@@ -5,7 +5,7 @@
 **Status**: ⏳ **PLANEJADA - NÃO IMPLEMENTADA**  
 **Fase**: 45  
 **Prioridade**: 🟢 Média (Extensões)  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -84,8 +84,8 @@ Permitir que:
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Territórios e Memberships](./02_TERRITORIOS_MEMBERSHIPS.md)** - Validação necessária
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Territórios e Memberships](funcional/02_TERRITORIOS_MEMBERSHIPS.md)** - Validação necessária
 
 ---
 

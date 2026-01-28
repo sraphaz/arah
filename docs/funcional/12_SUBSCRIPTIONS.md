@@ -3,7 +3,7 @@
 **Versão**: 1.0  
 **Data**: 2026-01-28  
 **Status**: Funcionalidade Implementada  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -116,9 +116,9 @@ Plano Atualizado
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Marketplace](./06_MARKETPLACE.md)** - Integração com pagamentos
-- **[Fase 15 - Subscriptions](../backlog-api/FASE15.md)** - Detalhes técnicos
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Marketplace](funcional/06_MARKETPLACE.md)** - Integração com pagamentos
+- **[Fase 15 - Subscriptions](backlog-api/FASE15.md)** - Detalhes técnicos
 
 ---
 

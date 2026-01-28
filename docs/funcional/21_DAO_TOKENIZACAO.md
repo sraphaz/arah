@@ -5,7 +5,7 @@
 **Status**: ⏳ **PLANEJADA - NÃO IMPLEMENTADA**  
 **Fases**: 36-40  
 **Prioridade**: 🟡 Alta (Quando Houver Demanda)  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -80,9 +80,9 @@ DAO pode ser implementada depois quando houver demanda real, priorizando funcion
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Web3 e Blockchain](./20_WEB3_BLOCKCHAIN.md)** - Infraestrutura
-- **[Governança e Votação](./13_GOVERNANCA_VOTACAO.md)** - Base tradicional
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Web3 e Blockchain](funcional/20_WEB3_BLOCKCHAIN.md)** - Infraestrutura
+- **[Governança e Votação](funcional/13_GOVERNANCA_VOTACAO.md)** - Base tradicional
 
 ---
 

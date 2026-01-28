@@ -3,7 +3,7 @@
 **Versão**: 1.0  
 **Data**: 2026-01-28  
 **Status**: Funcionalidade Implementada  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -70,9 +70,9 @@ Permitir que usuários:
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Territórios e Memberships](./02_TERRITORIOS_MEMBERSHIPS.md)** - Permissões baseadas em Membership
-- **[API - Chat](../api/60_10_API_CHAT.md)** - Documentação técnica
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Territórios e Memberships](funcional/02_TERRITORIOS_MEMBERSHIPS.md)** - Permissões baseadas em Membership
+- **[API - Chat](api/60_10_API_CHAT.md)** - Documentação técnica
 
 ---
 

@@ -3,7 +3,7 @@
 **Versão**: 1.0  
 **Data**: 2026-01-28  
 **Status**: Funcionalidade Implementada  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -61,10 +61,10 @@ Permitir que usuários:
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Marketplace](./06_MARKETPLACE.md)** - Diferenciação: Assets não são vendáveis
-- **[Mapa Territorial](./05_MAPA_TERRITORIAL.md)** - Assets aparecem no mapa
-- **[API - Assets](../api/60_08_API_ASSETS.md)** - Documentação técnica
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Marketplace](funcional/06_MARKETPLACE.md)** - Diferenciação: Assets não são vendáveis
+- **[Mapa Territorial](funcional/05_MAPA_TERRITORIAL.md)** - Assets aparecem no mapa
+- **[API - Assets](api/60_08_API_ASSETS.md)** - Documentação técnica
 
 ---
 

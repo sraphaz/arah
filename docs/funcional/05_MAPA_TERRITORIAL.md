@@ -3,7 +3,7 @@
 **Versão**: 1.0  
 **Data**: 2026-01-28  
 **Status**: Funcionalidade Implementada  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -81,10 +81,10 @@ Visualiza detalhes do conteúdo
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Feed Comunitário](./03_FEED_COMUNITARIO.md)** - Posts no mapa
-- **[Eventos](./04_EVENTOS.md)** - Eventos no mapa
-- **[API - Mapa](../api/60_06_API_MAPA.md)** - Documentação técnica
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Feed Comunitário](funcional/03_FEED_COMUNITARIO.md)** - Posts no mapa
+- **[Eventos](funcional/04_EVENTOS.md)** - Eventos no mapa
+- **[API - Mapa](api/60_06_API_MAPA.md)** - Documentação técnica
 
 ---
 

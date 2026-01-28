@@ -10,6 +10,7 @@ import sanitizeHtml from "sanitize-html";
 import { TableOfContents } from "../../../components/layout/TableOfContents";
 import { ContentSections } from "../[slug]/content-sections";
 import { YamlDownloadButton } from "../../../components/YamlDownloadButton";
+import { MermaidContent } from "../../../components/content/MermaidContent";
 
 // Helper function para extrair texto de HTML de forma segura
 function getTextContent(html: string): string {
@@ -125,6 +126,26 @@ async function getDocContent(filePath: string) {
 
     // Processa links no HTML renderizado para incluir basePath
     htmlContent = processMarkdownLinks(htmlContent, '/wiki');
+
+    // Processa blocos Mermaid: substitui <pre><code class="language-mermaid"> por placeholders
+    // que serão substituídos por componentes React no MermaidContent
+    htmlContent = htmlContent.replace(
+      /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/gi,
+      (match, code) => {
+        const encodedCode = encodeURIComponent(code.trim());
+        return `<div data-mermaid-code="${encodedCode}"></div>`;
+      }
+    );
+
+    // Processa blocos Mermaid: substitui <pre><code class="language-mermaid"> por placeholders
+    // que serão substituídos por componentes React no MermaidContent
+    htmlContent = htmlContent.replace(
+      /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/gi,
+      (match, code) => {
+        const encodedCode = encodeURIComponent(code.trim());
+        return `<div data-mermaid-code="${encodedCode}"></div>`;
+      }
+    );
 
     // Gera título: usa frontmatter title, ou primeiro H1 do markdown, ou nome do arquivo
     const fileName = filePath.split('/').pop() || '';
@@ -263,13 +284,13 @@ export default async function DocPage({ params }: PageProps) {
             <div className="glass-card__content">
               {/* Breadcrumb Refinado */}
               <nav className="breadcrumb mb-8">
-                <Link href="/wiki">Boas-Vindas</Link>
+                <Link href="/">Boas-Vindas</Link>
                 <span>›</span>
-                <Link href="/wiki/docs">Documentação</Link>
+                <Link href="/docs">Documentação</Link>
                 {(slug[0]?.startsWith('ONBOARDING_') || slug.some(s => s?.startsWith('ONBOARDING_'))) && (
                   <>
                     <span>›</span>
-                    <Link href="/wiki/docs">Onboarding</Link>
+                    <Link href="/docs">Onboarding</Link>
                   </>
                 )}
                 <span>›</span>
@@ -286,8 +307,8 @@ export default async function DocPage({ params }: PageProps) {
                 <YamlDownloadButton fileName={yamlDoc.fileName} content={yamlDoc.content} />
               )}
 
-              {/* Document Content - Refinado com Progressive Disclosure */}
-              {doc && <ContentSections htmlContent={doc.content} />}
+              {/* Document Content - Refinado com Progressive Disclosure e suporte a Mermaid */}
+              {doc && <MermaidContent htmlContent={doc.content} />}
               
               {/* YAML Content com syntax highlighting */}
               {yamlDoc && (
@@ -303,13 +324,13 @@ export default async function DocPage({ params }: PageProps) {
           {/* Navigation Links - Refinado */}
           <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
             <Link
-              href="/wiki"
+              href="/"
               className="btn-secondary text-center"
             >
               ← Voltar às Boas-Vindas
             </Link>
             <Link
-              href="/wiki/docs"
+              href="/docs"
               className="btn-secondary text-center"
             >
               Ver Todos os Docs →

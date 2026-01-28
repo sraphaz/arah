@@ -5,7 +5,7 @@
 **Status**: ⏳ **PLANEJADA - NÃO IMPLEMENTADA**  
 **Fase**: 18  
 **Prioridade**: 🔴 Crítica (Economia Local)  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -178,9 +178,9 @@ Se Não: Envia para Aprovação Manual
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Territórios e Memberships](./02_TERRITORIOS_MEMBERSHIPS.md)** - Validação de moradores
-- **[Fase 18 - Hospedagem Territorial](../backlog-api/FASE18.md)** - Detalhes técnicos do planejamento
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Territórios e Memberships](funcional/02_TERRITORIOS_MEMBERSHIPS.md)** - Validação de moradores
+- **[Fase 18 - Hospedagem Territorial](backlog-api/FASE18.md)** - Detalhes técnicos do planejamento
 
 ---
 

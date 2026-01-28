@@ -3,7 +3,7 @@
 **Versão**: 1.0  
 **Data**: 2026-01-28  
 **Status**: Funcionalidade Implementada  
-**Parte de**: [Documentação Funcional da Plataforma](./00_PLATAFORMA_ARAPONGA.md)
+**Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_ARAPONGA.md)
 
 ---
 
@@ -546,12 +546,12 @@ Um **Membership** representa a relação entre uma pessoa e um território:
 
 ## 📚 Documentação Relacionada
 
-- **[Plataforma Araponga](./00_PLATAFORMA_ARAPONGA.md)** - Visão geral
-- **[Autenticação e Identidade](./01_AUTENTICACAO_IDENTIDADE.md)** - Pré-requisito
-- **[Feed Comunitário](./03_FEED_COMUNITARIO.md)** - Conteúdo territorial
-- **[Governança e Votação](./13_GOVERNANCA_VOTACAO.md)** - Aprovação de residências
-- **[API - Territórios](../api/60_02_API_TERRITORIOS.md)** - Documentação técnica
-- **[API - Memberships](../api/60_03_API_MEMBERSHIPS.md)** - Documentação técnica
+- **[Plataforma Araponga](funcional/00_PLATAFORMA_ARAPONGA.md)** - Visão geral
+- **[Autenticação e Identidade](funcional/01_AUTENTICACAO_IDENTIDADE.md)** - Pré-requisito
+- **[Feed Comunitário](funcional/03_FEED_COMUNITARIO.md)** - Conteúdo territorial
+- **[Governança e Votação](funcional/13_GOVERNANCA_VOTACAO.md)** - Aprovação de residências
+- **[API - Territórios](api/60_02_API_TERRITORIOS.md)** - Documentação técnica
+- **[API - Memberships](api/60_03_API_MEMBERSHIPS.md)** - Documentação técnica
 
 ---
 

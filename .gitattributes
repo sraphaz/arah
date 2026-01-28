@@ -1,0 +1,28 @@
+# Garantir que arquivos TypeScript/TSX sejam tratados como texto e preservem UTF-8
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.mjs text eol=lf
+
+# Arquivos de código fonte
+*.cs text eol=lf
+*.csproj text eol=lf
+
+# Arquivos de configuração
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Arquivos binários
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

@@ -78,36 +78,73 @@ A plataforma Araponga é organizada em **domínios funcionais** que trabalham de
 
 ### Mapa de Domínios
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    ARAPONGA PLATAFORM                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Autenticação  │  │  Territórios │  │  Memberships │      │
-│  │  e Identidade│  │              │  │              │      │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘      │
-│         │                  │                 │              │
-│  ┌──────▼──────────────────▼─────────────────▼───────┐      │
-│  │           Conteúdo e Interação                     │      │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐        │      │
-│  │  │   Feed   │  │  Eventos │  │   Mapa   │        │      │
-│  │  └──────────┘  └──────────┘  └──────────┘        │      │
-│  └───────────────────────────────────────────────────┘      │
-│                                                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Marketplace │  │     Chat     │  │   Alertas    │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│                                                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │    Assets    │  │  Moderação   │  │ Notificações │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│                                                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Subscriptions│  │  Governança  │  │    Admin     │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│                                                               │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph PLATFORM["ARAPONGA PLATFORM"]
+        direction TB
+        
+        subgraph LAYER1["Camada Base"]
+            direction LR
+            AUTH["Autenticação<br/>e Identidade"]
+            TERR["Territórios"]
+            MEMB["Memberships"]
+        end
+        
+        subgraph CONTENT["Conteúdo e Interação"]
+            direction LR
+            FEED["Feed"]
+            EVENTS["Eventos"]
+            MAP["Mapa"]
+        end
+        
+        subgraph LAYER2["Economia e Comunicação"]
+            direction LR
+            MARKET["Marketplace"]
+            CHAT["Chat"]
+            ALERTS["Alertas"]
+        end
+        
+        subgraph LAYER3["Recursos e Gestão"]
+            direction LR
+            ASSETS["Assets"]
+            MOD["Moderação"]
+            NOTIF["Notificações"]
+        end
+        
+        subgraph LAYER4["Sustentabilidade e Governança"]
+            direction LR
+            SUBS["Subscriptions"]
+            GOV["Governança"]
+            ADMIN["Admin"]
+        end
+        
+        LAYER1 --> CONTENT
+        LAYER1 --> LAYER2
+        LAYER1 --> LAYER3
+        LAYER1 --> LAYER4
+    end
+    
+    style PLATFORM fill:#1a1a1a,stroke:#4dd4a8,stroke-width:3px,color:#fff
+    style LAYER1 fill:#2a2a2a,stroke:#7dd3ff,stroke-width:2px,color:#fff
+    style CONTENT fill:#2a2a2a,stroke:#7dd3ff,stroke-width:2px,color:#fff
+    style LAYER2 fill:#2a2a2a,stroke:#7dd3ff,stroke-width:2px,color:#fff
+    style LAYER3 fill:#2a2a2a,stroke:#7dd3ff,stroke-width:2px,color:#fff
+    style LAYER4 fill:#2a2a2a,stroke:#7dd3ff,stroke-width:2px,color:#fff
+    style AUTH fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style TERR fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style MEMB fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style FEED fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style EVENTS fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style MAP fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style MARKET fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style CHAT fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style ALERTS fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style ASSETS fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style MOD fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style NOTIF fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style SUBS fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style GOV fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
+    style ADMIN fill:#3a3a3a,stroke:#4dd4a8,stroke-width:1px,color:#fff
 ```
 
 ### Domínios Principais

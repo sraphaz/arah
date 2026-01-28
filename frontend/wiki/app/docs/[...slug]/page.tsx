@@ -10,6 +10,7 @@ import sanitizeHtml from "sanitize-html";
 import { TableOfContents } from "../../../components/layout/TableOfContents";
 import { ContentSections } from "../[slug]/content-sections";
 import { YamlDownloadButton } from "../../../components/YamlDownloadButton";
+import { MermaidContent } from "../../../components/content/MermaidContent";
 
 // Helper function para extrair texto de HTML de forma segura
 function getTextContent(html: string): string {
@@ -125,6 +126,16 @@ async function getDocContent(filePath: string) {
 
     // Processa links no HTML renderizado para incluir basePath
     htmlContent = processMarkdownLinks(htmlContent, '/wiki');
+
+    // Processa blocos Mermaid: substitui <pre><code class="language-mermaid"> por placeholders
+    // que serão substituídos por componentes React no MermaidContent
+    htmlContent = htmlContent.replace(
+      /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/gi,
+      (match, code) => {
+        const encodedCode = encodeURIComponent(code.trim());
+        return `<div data-mermaid-code="${encodedCode}"></div>`;
+      }
+    );
 
     // Gera título: usa frontmatter title, ou primeiro H1 do markdown, ou nome do arquivo
     const fileName = filePath.split('/').pop() || '';
@@ -286,8 +297,8 @@ export default async function DocPage({ params }: PageProps) {
                 <YamlDownloadButton fileName={yamlDoc.fileName} content={yamlDoc.content} />
               )}
 
-              {/* Document Content - Refinado com Progressive Disclosure */}
-              {doc && <ContentSections htmlContent={doc.content} />}
+              {/* Document Content - Refinado com Progressive Disclosure e suporte a Mermaid */}
+              {doc && <MermaidContent htmlContent={doc.content} />}
               
               {/* YAML Content com syntax highlighting */}
               {yamlDoc && (

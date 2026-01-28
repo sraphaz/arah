@@ -21,7 +21,8 @@ export function MermaidContent({ htmlContent }: MermaidContentProps) {
     let mermaidIndex = 0;
 
     // Processa o HTML procurando por divs com data-mermaid-code
-    const mermaidRegex = /<div\s+data-mermaid-block="[^"]*"\s+data-mermaid-code="([^"]*)"[^>]*><\/div>/gi;
+    // Suporta tanto com data-mermaid-block quanto sem (formato atual)
+    const mermaidRegex = /<div\s+(?:data-mermaid-block="[^"]*"\s+)?data-mermaid-code="([^"]*)"[^>]*><\/div>/gi;
     let match;
     let lastIndex = 0;
 

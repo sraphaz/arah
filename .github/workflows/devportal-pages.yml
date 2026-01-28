@@ -37,7 +37,21 @@ jobs:
           # Gera índice de busca antes do build
           npm run generate-search-index
           NEXT_EXPORT=true npm run build
-        continue-on-error: true
+          
+          # Verificar se o build foi bem-sucedido
+          if [ ! -d "out" ]; then
+            echo "❌ ERRO: Build da Wiki falhou - diretório out/ não encontrado"
+            exit 1
+          fi
+          
+          if [ ! -f "out/index.html" ]; then
+            echo "❌ ERRO: Build da Wiki falhou - index.html não encontrado em out/"
+            exit 1
+          fi
+          
+          echo "✅ Build da Wiki bem-sucedido"
+          echo "📄 Arquivos gerados em out/:"
+          ls -la out/ | head -10
 
       - name: Prepare artifacts (DevPortal na raiz, Wiki em /wiki)
         run: |
@@ -76,14 +90,31 @@ jobs:
 
             # Verificar se index.html do Wiki foi copiado
             if [ ! -f "dist/wiki/index.html" ]; then
-              echo "⚠️  Wiki index.html não encontrado, mas continuando..."
-            else
-              echo "✅ Wiki index.html encontrado em dist/wiki/"
+              echo "❌ ERRO: Wiki index.html não encontrado em dist/wiki/"
+              ls -la dist/wiki/ | head -10
+              exit 1
             fi
+            echo "✅ Wiki index.html encontrado em dist/wiki/"
+            
+            # Verificar se docs/ foi copiado
+            if [ ! -d "dist/wiki/docs" ]; then
+              echo "❌ ERRO: Wiki docs/ não encontrado em dist/wiki/"
+              exit 1
+            fi
+            echo "✅ Wiki docs/ encontrado em dist/wiki/"
+            
+            # Verificar se _next/ foi copiado (assets estáticos)
+            if [ ! -d "dist/wiki/_next" ]; then
+              echo "❌ ERRO: Wiki _next/ não encontrado em dist/wiki/"
+              exit 1
+            fi
+            echo "✅ Wiki _next/ encontrado em dist/wiki/"
+            
             echo "✅ Wiki copiado para dist/wiki/"
           else
-            echo "⚠️  Wiki build não encontrado (frontend/wiki/out não existe), pulando..."
-            echo "ℹ️  Wiki será acessível apenas se build for bem-sucedido"
+            echo "❌ ERRO: Wiki build não encontrado (frontend/wiki/out não existe)"
+            echo "   O build da Wiki deve ter falhado na etapa anterior"
+            exit 1
           fi
 
           # ============================================

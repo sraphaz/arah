@@ -87,7 +87,7 @@
     {
       "id": "22_COHESION_AND_TESTS",
       "title": "COHESION AND TESTS",
-      "content": "Análise de Coesão e Cobertura de Testes Resumo Executivo Este documento avalia a coesão entre as funcionalidades implementadas e a especificação do projeto Araponga, além de mapear a cobertura de testes existente. Status Geral : ✅ Alta coesão - A implementação está bem alinhada com a especificação MVP, com algumas funcionalidades adicionais implementadas. Última Atualização : 2025-01-15 (Fase 2 - 100% Completa) Status Atual dos Testes (Fase 2 - Completo) Total de Testes : 371/371 passando (100%)",
+      "content": "Análise de Coesão e Cobertura de Testes Resumo Executivo Este documento avalia a coesão entre as funcionalidades implementadas e a especificação do projeto Araponga, além de mapear a cobertura de testes existente. Status Geral : ✅ Alta coesão - A implementação está bem alinhada com a especificação MVP, com algumas funcionalidades adicionais implementadas. Última Atualização : 2025-01-15 (Fase 2 - 100% Completa) Status Atual dos Testes (Fase 2 + Enterprise Coverage Phases 7-9) Total de Testes : 1",
       "url": "/wiki/docs/22_COHESION_AND_TESTS",
       "category": "Desenvolvimento"
     },
@@ -248,7 +248,7 @@
     {
       "id": "40_CHANGELOG",
       "title": "CHANGELOG",
-      "content": "Changelog - Araponga Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 📋 Índice Mudanças Recentes Versões Anteriores Histórico Completo 🆕 Mudanças Recentes Versão 3.0 (2025-01-20) - Estratégia de Convergência de Mercado 🎯 Novos Documentos Estratégicos Documentos Criados : ✅ Mapa de Funcionalidades - Mercado - Mapeamento completo de funcionalidades implementadas, planejadas e previstas para atingir níveis de mercado, comparação detalhada com Closer.earth e plataformas líderes ✅ Es",
+      "content": "Changelog - Araponga Versão : 3.0 Data : 2025-01-20 Última Atualização : 2025-01-20 📋 Índice Mudanças Recentes Versões Anteriores Histórico Completo 🆕 Mudanças Recentes Versao 3.4 (2026-01-23) - Recuperacao de acesso e health checks Adicionados endpoints de recuperacao de acesso via email ( /api/v1/auth/password-reset e /api/v1/auth/password-reset/confirm ). Health checks estendidos com cache, storage, event bus e endpoint /health/live . Validacoes comuns e regras de geolocalizacao centralizad",
       "url": "/wiki/docs/40_CHANGELOG",
       "category": "Outros"
     },
@@ -264,6 +264,13 @@
       "title": "WIKI DEVPORTAL ANALISE UNIFICADA",
       "content": "Análise Estratégica Unificada - Wiki e DevPortal Araponga Consultoria de Alto Padrão: Design, Narrativa, Estrutura e Separação de Responsabilidades Versão : 1.0 Data : 2025-01-20 Tipo : Análise Estratégica Unificada Escopo : Wiki + DevPortal - Design, Narrativa, UX, Estrutura, Responsabilidades Status : 🔴 PRIORIDADE CRÍTICA - Plano de Ação Pronto para Implementação 📋 Sumário Executivo Este documento apresenta uma análise estratégica unificada da Wiki Araponga ( /wiki/ ) e do DevPortal ( / ), i",
       "url": "/wiki/docs/42_WIKI_DEVPORTAL_ANALISE_UNIFICADA",
+      "category": "Outros"
+    },
+    {
+      "id": "42_WIKI_DEVPORTAL_PROGRESSO_IMPLEMENTACAO",
+      "title": "WIKI DEVPORTAL PROGRESSO IMPLEMENTACAO",
+      "content": "Wiki e DevPortal - Progresso de Implementação Data : 2025-01-20 Última Atualização : 2025-01-20 Status : Em Progresso 📊 Resumo Executivo Implementação do plano unificado de melhorias para Wiki e DevPortal conforme análise detalhada em 42_WIKI_DEVPORTAL_ANALISE_UNIFICADA.md . Progresso Geral : ~40% da Fase 1 e Fase 2 completadas ✅ Tarefas Concluídas Fase 1: Fundação Visual (Semanas 1-2) 🔴 P0 ✅ 1.1 Contraste WCAG AA Status : ✅ COMPLETO Corrigir contraste WCAG AA no DevPortal Light Mode: --text-m",
+      "url": "/wiki/docs/42_WIKI_DEVPORTAL_PROGRESSO_IMPLEMENTACAO",
       "category": "Outros"
     },
     {
@@ -309,10 +316,31 @@
       "category": "Outros"
     },
     {
+      "id": "ABSTRACOES_SERVICOS_GRATUITOS_BARATOS",
+      "title": "ABSTRACOES SERVICOS GRATUITOS BARATOS",
+      "content": "Abstrações para Serviços de Infraestrutura Gratuitos/Baratos Data : 2026-01-27 Status : 📋 Análise e Proposta Objetivo : Investigar e implementar abstrações que permitam usar serviços de infraestrutura de zero custo ou menor custo possível 🎯 Objetivo Criar abstrações adequadas que permitam: Trocar provedores sem alterar código de aplicação Usar serviços gratuitos quando disponíveis Escalar para serviços pagos quando necessário Reduzir custos de infraestrutura ao mínimo 📊 Situação Atual ✅ Abstr",
+      "url": "/wiki/docs/ABSTRACOES_SERVICOS_GRATUITOS_BARATOS",
+      "category": "Outros"
+    },
+    {
+      "id": "ABSTRACOES_SERVICOS_GRATUITOS_BARATOS_RESUMO",
+      "title": "ABSTRACOES SERVICOS GRATUITOS BARATOS RESUMO",
+      "content": "Resumo: Abstrações para Serviços Gratuitos/Baratos Data : 2026-01-27 Status : 📋 Análise Completa 🎯 Objetivo Investigar e implementar abstrações que permitam usar serviços de infraestrutura de zero custo ou menor custo possível , mantendo flexibilidade para escalar. ✅ Situação Atual Abstrações Já Implementadas Serviço Interface Implementações Gratuitas Status Cache IDistributedCacheService IMemoryCache ✅ ✅ Bom Storage IFileStorage LocalFileStorage ✅ ✅ Bom Email IEmailSender SmtpEmailSender ✅ ✅ ",
+      "url": "/wiki/docs/ABSTRACOES_SERVICOS_GRATUITOS_BARATOS_RESUMO",
+      "category": "Outros"
+    },
+    {
       "id": "ALINHAMENTO_FASES_25_28",
       "title": "ALINHAMENTO FASES 25 28",
       "content": "Alinhamento Estratégico: Fases 25-28 com Plano Atual Data : 2025-01-17 Versão : 1.0 Status : ✅ Completo 📋 Resumo Executivo As Fases 25-29 foram cuidadosamente planejadas para se integrarem harmoniosamente com o plano completo de 29 fases, promovendo: Autonomia Digital : Usuários usam seus próprios serviços Consumo Consciente : Transparência total de uso e custos Economia de Escala : Negociação coletiva reduz custos Inclusão Digital : Subsídios para membros sem recursos Soberania Alimentar : Pre",
       "url": "/wiki/docs/ALINHAMENTO_FASES_25_28",
+      "category": "Outros"
+    },
+    {
+      "id": "ANALISE_COBERTURA_GAP",
+      "title": "ANALISE COBERTURA GAP",
+      "content": "📊 Análise do Gap de Cobertura: 45.63% → 90% Data : 2026-01-24 Cobertura Atual : 45.63% linhas, 37.93% branches, 48.13% métodos Meta : 90%+ em camadas de negócio Gap : 44.37 pontos percentuais 🔍 Problema Identificado A análise de cobertura está incluindo todo o código do projeto , o que dilui a métrica: Código Incluído (mas não crítico para cobertura de negócio) API Layer (~289 arquivos) Controllers (lógica de infraestrutura HTTP) Middleware (logging, security headers) Extensions (configuração ",
+      "url": "/wiki/docs/ANALISE_COBERTURA_GAP",
       "category": "Outros"
     },
     {
@@ -341,6 +369,13 @@
       "title": "README",
       "content": "Análises Esta pasta contém análises técnicas do projeto. Estrutura ANALISE_PADROES_DESIGN_MEMBERSHIP.md - Análise de padrões de design relacionados a Membership (quando disponível)",
       "url": "/wiki/docs/analysis/README",
+      "category": "Outros"
+    },
+    {
+      "id": "analysis/RELATORIO_ADERENCIA_FASES_1_13",
+      "title": "RELATORIO ADERENCIA FASES 1 13",
+      "content": "Relatório de Aderência da Documentação às Fases 1–13 Escopo e fontes analisadas Planos detalhados das fases: docs/backlog-api/FASE1.md a docs/backlog-api/FASE13.md . Documentacao de implementacao parcial do email: docs/backlog-api/FASE13.md , docs/api/60_01_API_AUTENTICACAO.md . Evidências no código (amostras relevantes por fase): Perfil de usuário: backend/Araponga.Api/Controllers/UserProfileController.cs . Mídia: backend/Araponga.Api/Controllers/MediaController.cs , backend/Araponga.Tests/Perf",
+      "url": "/wiki/docs/analysis/RELATORIO_ADERENCIA_FASES_1_13",
       "category": "Outros"
     },
     {
@@ -491,6 +526,13 @@
       "category": "API"
     },
     {
+      "id": "api/60_19_API_GOVERNANCA",
+      "title": "19 API GOVERNANCA",
+      "content": "Governança Comunitária - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 1.0 Data : 2025-01-23 🏛️ Governança Comunitária A API de governança permite interesses do usuário, votações comunitárias, caracterização do território e histórico de participação. Ver também Moderação (moderação dinâmica comunitária). Interesses do Usuário Listar Interesses ( GET /api/v1/users/me/interests ) Descrição : Lista os interesses (tags) do usuário autenticado. Como usar : Exige aut",
+      "url": "/wiki/docs/api/60_19_API_GOVERNANCA",
+      "category": "API"
+    },
+    {
       "id": "api/60_99_API_RESUMO_ENDPOINTS",
       "title": "99 API RESUMO ENDPOINTS",
       "content": "Resumo de Endpoints Principais - API Araponga Parte de : API Araponga - Lógica de Negócio e Usabilidade Versão : 2.0 Data : 2025-01-20 📚 Resumo de Endpoints Principais Autenticação POST /api/v1/auth/social - Login/Cadastro social Territórios GET /api/v1/territories - Listar territórios GET /api/v1/territories/nearby - Territórios próximos GET /api/v1/territories/search - Buscar territórios GET /api/v1/territories/{id} - Consultar território POST /api/v1/territories/suggestions - Sugerir territó",
@@ -505,10 +547,31 @@
       "category": "API"
     },
     {
+      "id": "API",
+      "title": "API",
+      "content": "API Endpoints Principais Autenticação POST /api/v1/auth/register - Registrar usuário POST /api/v1/auth/login - Login POST /api/v1/auth/refresh-token - Renovar token Feed GET /api/v1/feed - Listar posts GET /api/v1/feed/filtered - Feed filtrado por interesses POST /api/v1/feed/posts - Criar post GET /api/v1/feed/posts/{id} - Obter post PUT /api/v1/feed/posts/{id} - Editar post DELETE /api/v1/feed/posts/{id} - Deletar post Territórios GET /api/v1/territories - Listar territórios GET /api/v1/territ",
+      "url": "/wiki/docs/API",
+      "category": "Outros"
+    },
+    {
       "id": "AVALIACAO_COMPLETA_APLICACAO",
       "title": "AVALIACAO COMPLETA APLICACAO",
       "content": "Avaliação Completa da Aplicação Araponga Data : 2025-01-13 Versão Avaliada : MVP Escopo : Backend completo, Frontend, Arquitetura, Negócio, Código, Patterns, Segurança, Escalabilidade 📋 Índice Resumo Executivo Avaliação de Negócio Avaliação de Arquitetura Avaliação de Código e Patterns Avaliação de Segurança Avaliação de Performance e Escalabilidade Avaliação de Qualidade Princípios SOLID, YAGN, DRY, Lean Complexidade e Manutenibilidade Pontos de Falha e Vulnerabilidades Gaps Técnicos e de Negó",
       "url": "/wiki/docs/AVALIACAO_COMPLETA_APLICACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "AVALIACAO_DESACOPLAMENTO_ARQUITETURA",
+      "title": "AVALIACAO DESACOPLAMENTO ARQUITETURA",
+      "content": "Avaliação de Desacoplamento da Arquitetura e Suite de Testes Versão : 2.0 Data : 2026-01-26 Status : 📋 Análise Completa Tipo : Documentação Técnica de Arquitetura 📋 Índice Resumo Executivo Análise de Desacoplamento por Camada Análise de Módulos Análise da Suite de Testes Gaps e Falhas de Modelagem Sugestões e Melhorias Roadmap de Refatoração 🎯 Resumo Executivo Situação Atual Pontos Fortes ✅: Clean Architecture bem aplicada : Separação clara entre Domain, Application, Infrastructure e Api Doma",
+      "url": "/wiki/docs/AVALIACAO_DESACOPLAMENTO_ARQUITETURA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/ANALISE_ADERENCIA_FASES_1_14",
+      "title": "ANALISE ADERENCIA FASES 1 14",
+      "content": "Análise de Aderência: Fases 1-14 Data : 2025-01-23 Objetivo : Verificar a aderência entre o que foi planejado nas fases 1-14 e o que está implementado no código 📊 Resumo Executivo Status Geral ✅ Fases 1-14 : Maioria das funcionalidades implementadas ⚠️ Gaps Identificados : Itens de validação, testes e documentação 📝 Documentação : Algumas fases precisam de atualização para refletir implementação real 🔍 Análise por Fase Fase 1: Segurança e Fundação Crítica ✅ Implementado JWT Secret Management ",
+      "url": "/wiki/docs/backlog-api/ANALISE_ADERENCIA_FASES_1_14",
       "category": "Outros"
     },
     {
@@ -533,10 +596,24 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/ATUALIZACAO_FASE11_E_MELHORIAS",
+      "title": "ATUALIZACAO FASE11 E MELHORIAS",
+      "content": "Atualização FASE11.md e Melhorias (Result e Exception Handling) Data : 2025-01-23 Status : ✅ Parcialmente Completo ✅ Concluído 1. Atualização FASE11.md (Alta Prioridade) ✅ Status : ✅ Completo ✅ Todas as tarefas marcadas como \"✅ Implementado\" ✅ Referências aos arquivos criados adicionadas ✅ Resumo da fase atualizado ✅ Status geral alterado de \"⏳ Pendente\" para \"✅ IMPLEMENTADO\" Arquivos Modificados : ✅ docs/backlog-api/FASE11.md ⚠️ Verificações Realizadas 2. Testes Result (Média Prioridade) Status",
+      "url": "/wiki/docs/backlog-api/ATUALIZACAO_FASE11_E_MELHORIAS",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/ATUALIZACAO_ORDEM_FASES",
       "title": "ATUALIZACAO ORDEM FASES",
       "content": "Atualização: Nova Ordem das Fases 8-14 Data : 2025-01-13 Motivo : Otimização estratégica baseada em eficiência, urgência e necessidade Status : ⏳ Aguardando Aprovação 🔄 Mapeamento de Renumeração Antes → Depois Fase Antiga Nome Nova Fase Novo Nome Motivo Fase 8 Suporte a Criptomoedas Fase 13 Suporte a Criptomoedas Valor incremental, pode ser depois Fase 9 Arquitetura Modular Fase 14 Arquitetura Modular Arquitetural, não crítico para MVP Fase 10 Otimizações Finais Fase 12 Otimizações Finais Melho",
       "url": "/wiki/docs/backlog-api/ATUALIZACAO_ORDEM_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/CHECKLIST_PRE_PR_FASE14_5",
+      "title": "CHECKLIST PRE PR FASE14 5",
+      "content": "Checklist Pré-PR: Fase 14.5 Data : 2025-01-23 Objetivo : Verificar se todos os itens críticos da Fase 14.5 estão completos antes de criar o PR ✅ Itens Críticos (Obrigatórios) Fase 1: Segurança e Fundação Connection Pooling — ✅ Configurado e documentado Índices DB — ✅ Criados e documentados Exception Handling — ✅ Padrão adequado (verificado) Result — ✅ Services migrados, testes verificados Fase 9: Perfil de Usuário Avatar e Bio — ✅ Implementado Visualizar Perfil de Outros — ✅ Implementado Estatís",
+      "url": "/wiki/docs/backlog-api/CHECKLIST_PRE_PR_FASE14_5",
       "category": "Outros"
     },
     {
@@ -556,7 +633,7 @@
     {
       "id": "backlog-api/FASE10",
       "title": "FASE10",
-      "content": "Fase 10: Mídias em Conteúdo Duração : 4 semanas (20 dias úteis) Prioridade : 🔴 CRÍTICA (Bloqueante para edição) Depende de : Fase 8 (Infraestrutura de Mídia) Bloqueia : Fase 11 (Edição e Gestão) Estimativa Total : 160 horas Status : ✅ Implementação Principal Completa + ⚙️ Configuração Avançada por Território (Em Implementação) 🎯 Objetivo Integrar mídias (imagens, vídeos e áudios) em todas as funcionalidades de conteúdo, permitindo: Múltiplas mídias por post (imagens, vídeos e áudios, máximo 1 ",
+      "content": "Fase 10: Mídias em Conteúdo Duração : 4.8 semanas (24 dias úteis) - Ajustado para TDD/BDD (+20%) Prioridade : 🔴 CRÍTICA (Bloqueante para edição) Depende de : Fase 8 (Infraestrutura de Mídia) Bloqueia : Fase 11 (Edição e Gestão) Estimativa Total : 192 horas (160h + 32h TDD/BDD) Status : ✅ ~98% Completo - Implementação Principal 100% + Configuração Avançada Completa + Testes, Otimizações e BDD Implementados 🎯 Objetivo Integrar mídias (imagens, vídeos e áudios) em todas as funcionalidades de cont",
       "url": "/wiki/docs/backlog-api/FASE10",
       "category": "Outros"
     },
@@ -619,8 +696,15 @@
     {
       "id": "backlog-api/FASE11",
       "title": "FASE11",
-      "content": "Fase 11: Edição, Gestão e Estatísticas Completas Duração : 3 semanas (15 dias úteis) Prioridade : 🟡 IMPORTANTE (Completa funcionalidades essenciais) Depende de : Fase 8 (Infraestrutura Mídia), Fase 10 (Mídias em Conteúdo) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Completar funcionalidades essenciais de edição e gestão que permitem: Editar posts e eventos (correção de erros, atualização de informações) Sistema de avaliações no marketplace (lojas e itens) Busca no marketplace (",
+      "content": "Fase 11: Edição, Gestão e Estatísticas Completas Duração : 3.6 semanas (18 dias úteis) - Ajustado para TDD/BDD (+20%) Prioridade : 🟡 IMPORTANTE (Completa funcionalidades essenciais) Depende de : Fase 8 (Infraestrutura Mídia), Fase 10 (Mídias em Conteúdo) Estimativa Total : 144 horas (120h + 24h TDD/BDD) Status : ⏳ Pendente 🎯 Objetivo Completar funcionalidades essenciais de edição e gestão que permitem: Editar posts e eventos (correção de erros, atualização de informações) Sistema de avaliações",
       "url": "/wiki/docs/backlog-api/FASE11",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE11_VERIFICACAO",
+      "title": "FASE11 VERIFICACAO",
+      "content": "Verificação da Fase 11: Edição, Gestão e Estatísticas Completas Data da Verificação : 2025-01-13 Status Geral : 🟡 PARCIALMENTE IMPLEMENTADA (40% completo) 📊 Resumo Executivo Funcionalidade Status Implementação Testes BDD Prioridade 11.1 Edição de Posts ❌ Não implementado 0% ❌ Não existe 🔴 Alta 11.2 Edição de Eventos ✅ Implementado 80% ❌ Não existe 🔴 Alta 11.3 Sistema de Avaliações ❌ Não implementado 0% ❌ Não existe 🟡 Média 11.4 Busca no Marketplace ✅ Implementado 90% ❌ Não existe 🟡 Média 1",
+      "url": "/wiki/docs/backlog-api/FASE11_VERIFICACAO",
       "category": "Outros"
     },
     {
@@ -631,30 +715,65 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/FASE12_STATUS",
+      "title": "FASE12 STATUS",
+      "content": "Status de Implementação - Fase 12: Otimizações Finais e Conclusão Última Atualização : 2026-01-21 Status Geral : 🟢 QUASE COMPLETO (85% completo) 📊 Resumo Executivo Componente Status Progresso Prioridade Sistema de Políticas e Termos ✅ COMPLETO 100% 🔴 Crítica Exportação de Dados (LGPD) ✅ COMPLETO 100% 🟡 Importante Analytics e Métricas ✅ COMPLETO 100% 🟢 Melhoria Notificações Push ❌ Pendente 0% 🟢 Melhoria Testes de Performance ✅ COMPLETO 100% 🟡 Importante Otimizações de Performance ⚠️ PARCIA",
+      "url": "/wiki/docs/backlog-api/FASE12_STATUS",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE12_STATUS_COMPLETO",
+      "title": "FASE12 STATUS COMPLETO",
+      "content": "Fase 12: Status Completo de Implementação Data : 2026-01-25 Status : ✅ ~95% COMPLETA Versão : 1.0 📊 Resumo Executivo A Fase 12 (Otimizações Finais e Conclusão) está ~95% completa . Todas as funcionalidades críticas estão implementadas e funcionando. Restam apenas melhorias incrementais e documentação de status. ✅ Funcionalidades Implementadas 1. Exportação de Dados (LGPD) ✅ 100% COMPLETA Status : ✅ Implementado e Funcional Funcionalidades : ✅ DataExportService - Exportação completa de dados do ",
+      "url": "/wiki/docs/backlog-api/FASE12_STATUS_COMPLETO",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/FASE13",
       "title": "FASE13",
-      "content": "Fase 13: Conector de Envio de Emails Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 ALTA (Comunicação essencial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 80 horas Status : ⏳ Pendente 🎯 Objetivo Implementar um conector de envio de emails para que a plataforma possa enviar emails aos usuários em situações específicas (boas-vindas, recuperação de conta, notificações importantes, alertas críticos). Importante : ❌ NÃO é uma caixa de entrada de emails na plataforma ✅ ",
+      "content": "Fase 13: Conector de Envio de Emails Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 ALTA (Comunicação essencial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 80 horas Status : Parcial (recuperacao de acesso via email no MVP) 🎯 Objetivo Implementar um conector de envio de emails para que a plataforma possa enviar emails aos usuários em situações específicas (boas-vindas, recuperação de conta, notificações importantes, alertas críticos). Importante : ❌ NÃO é uma caixa",
       "url": "/wiki/docs/backlog-api/FASE13",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE14",
       "title": "FASE14",
-      "content": "Fase 14: Governança Comunitária e Sistema de Votação Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 CRÍTICA (Essencial para soberania territorial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de governança comunitária que permite: Usuários definirem interesses que personalizam o que veem no feed Moderação dinâmica definida pela comunidade através de votações Sistema de votação para decisões coletivas (prio",
+      "content": "Fase 14: Governança Comunitária e Sistema de Votação Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 CRÍTICA (Essencial para soberania territorial) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 120 horas Status : ✅ Implementado 🎯 Objetivo Implementar sistema de governança comunitária que permite: Usuários definirem interesses que personalizam o que veem no feed Moderação dinâmica definida pela comunidade através de votações Sistema de votação para decisões coletivas (",
       "url": "/wiki/docs/backlog-api/FASE14",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE14_5",
+      "title": "FASE14 5",
+      "content": "Fase 14.5: Itens Faltantes e Complementos das Fases 1-14 Duração : ~2-3 semanas (10-15 dias úteis) — Ajustado: maioria implementada Prioridade : 🟡 Importante (complementa fases 1-14) Depende de : Fases 1-14 (maioria implementada) Estimativa Total : 40-60 horas (restantes) Status : ⚠️ Parcial (maioria implementada, itens de validação/testes/documentação pendentes) 🎯 Objetivo Implementar todos os itens que ficaram pendentes ou não plenamente cobertos nas fases 1 até 14, garantindo que todas as f",
+      "url": "/wiki/docs/backlog-api/FASE14_5",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE14_5_IMPLEMENTACAO_FINAL",
+      "title": "FASE14 5 IMPLEMENTACAO FINAL",
+      "content": "Fase 14.5: Implementação Final dos Itens Faltantes Data : 2025-01-23 Status : ✅ Implementado ✅ Itens Implementados 1. Métricas Connection Pooling em Tempo Real ✅ Status : ✅ Implementado Arquivos Criados : ✅ backend/Araponga.Application/Services/ConnectionPoolMetricsService.cs ✅ Métricas ObservableGauge adicionadas em ArapongaMetrics.cs Funcionalidades : ✅ GetActiveConnections() - Consulta pg_stat_activity para conexões ativas ✅ GetIdleConnections() - Consulta pg_stat_activity para conexões idle ",
+      "url": "/wiki/docs/backlog-api/FASE14_5_IMPLEMENTACAO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE14_8",
+      "title": "FASE14 8",
+      "content": "Fase 16: Finalização Completa das Fases 1-15 Duração : ~3-4 semanas (20 dias úteis) Prioridade : 🔴 CRÍTICA (Completar base antes de prosseguir) Depende de : Fases 1-15 (maioria implementada) Estimativa Total : 160 horas Status : ⏳ Pendente Nota : Renumerada de Fase 14.8 para Fase 16 (Onda 2: Governança e Sustentabilidade) 🎯 Objetivo Implementar todos os itens que ficaram pendentes ou não plenamente cobertos nas fases 1 até 15, garantindo que todas as funcionalidades planejadas estejam completa",
+      "url": "/wiki/docs/backlog-api/FASE14_8",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE15",
       "title": "FASE15",
-      "content": "Fase 15: Inteligência Artificial Duração : 4 semanas (28 dias úteis) Prioridade : 🔴 ALTA (Moderação e busca inteligente) Depende de : Nenhuma (pode ser feito em paralelo) Estimativa Total : 208 horas Status : ⏳ Pendente 🎯 Objetivo Implementar funcionalidades de Inteligência Artificial para: Moderação automática (detecção de conteúdo inadequado) Busca inteligente (semântica, não apenas palavras-chave) Categorização automática de conteúdo Recomendações contextuais (sem manipular feed) Análise de",
+      "content": "Fase 15: Subscriptions &#x26; Recurring Payments Duração : 12 semanas (60 dias úteis) Prioridade : 🔴 CRÍTICA (Sustentabilidade financeira) Depende de : Fase 6 (Pagamentos), Fase 7 (Payout) Estimativa Total : 480 horas Status : ⏳ Pendente Nota : Esta fase está na Onda 1 (Fundação de Governança e Sustentabilidade), antes da Fase 16 (Finalização). Crítica para sustentabilidade financeira da plataforma. 🎯 Objetivo Implementar sistema completo de assinaturas e pagamentos recorrentes que: Garante ac",
       "url": "/wiki/docs/backlog-api/FASE15",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE16",
       "title": "FASE16",
-      "content": "Fase 16: Sistema de Entregas Territoriais Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 ALTA (Autonomia comunitária e otimização de recursos) Depende de : Fase 6 (Marketplace), Fase 7 (Payout) Estimativa Total : 160 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de entregas territoriais que permite: Usuários se cadastrarem como entregadores do território Otimização de rotas para economizar recursos naturais e tempo Integração com marketplace (entregas de pedidos) Rastreamento de",
+      "content": "Fase 16: Finalização Completa das Fases 1-15 Duração : ~3-4 semanas (20 dias úteis) Prioridade : 🔴 CRÍTICA (Completar base antes de prosseguir) Depende de : Fases 1-15 (maioria implementada) Estimativa Total : 160 horas Status : ⏳ Pendente Nota : Renumerada de Fase 14.8 para Fase 16 (Onda 2: Governança e Sustentabilidade) 🎯 Objetivo Implementar todos os itens que ficaram pendentes ou não plenamente cobertos nas fases 1 até 15, garantindo que todas as funcionalidades planejadas estejam completa",
       "url": "/wiki/docs/backlog-api/FASE16",
       "category": "Outros"
     },
@@ -668,22 +787,29 @@
     {
       "id": "backlog-api/FASE17",
       "title": "FASE17",
-      "content": "Fase 17: Sistema de Gamificação Harmoniosa Duração : 4 semanas (28 dias úteis) Prioridade : 🔴 ALTA (Engajamento comunitário sustentável) Depende de : Fase 9 (Perfil de Usuário), Fase 14 (Governança) Integra com : Fase 18 (Saúde Territorial) - pode ser desenvolvido em paralelo Estimativa Total : 160 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de gamificação harmoniosa que: Reforça contribuição comunitária real (não engajamento vazio) Respeita interesses do território (personalizaçã",
+      "content": "Fase 17: Sistema de Compra Coletiva e Organização Comunitária de Alimentos Duração : 4 semanas (28 dias úteis) Prioridade : 🔴 CRÍTICA (Economia local e soberania alimentar) Depende de : Fase 6 (Marketplace), Fase 14 (Governança/Votação), Fase 22 (Moeda Territorial) Integra com : Fase 21 (Entregas) - opcional, pode ser feito depois Estimativa Total : 160 horas Status : ⏳ Pendente Nota : Renumerada de Fase 23 para Fase 17, priorizada de P1 para P0 (Onda 3: Economia Local) 🎯 Objetivo Implementar ",
       "url": "/wiki/docs/backlog-api/FASE17",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE18",
       "title": "FASE18",
-      "content": "Fase 18: Saúde Territorial e Monitoramento Duração : 5 semanas (35 dias úteis) Prioridade : 🔴 ALTA (Soberania territorial e autonomia comunitária) Depende de : Fase 9 (Perfil de Usuário) Integra com : Fase 17 (Gamificação) - pode ser desenvolvido em paralelo Estimativa Total : 200 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema completo de saúde territorial e monitoramento que: Permite comunidades monitorarem a saúde do seu território (água, ar, solo, biodiversidade, resíduos) Facilit",
+      "content": "Fase 18: Sistema de Hospedagem Territorial Duração : 8 semanas (56 dias úteis) Prioridade : 🔴 CRÍTICA (Economia local e diferencial competitivo) Depende de : Fase 6-7 (Marketplace/Pagamentos) - ✅ Já implementado Integra com : Fase 14 (Governança/Votação) - opcional para aprovação comunitária Estimativa Total : 360 horas Status : ⏳ Planejado Nota : Renumerada de Fase 30 para Fase 18, priorizada de P1 para P0 (Onda 3: Economia Local) Referência : Proposta de Implementação | Análise de Inserção 🎯",
       "url": "/wiki/docs/backlog-api/FASE18",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE19",
       "title": "FASE19",
-      "content": "Fase 19: Arquitetura Modular e Deploy Dual (Monolito/Distribuído) Duração : 5 semanas (35 dias úteis) Prioridade : 🟢 MÉDIA Bloqueia : Escalabilidade horizontal e deploy flexível Estimativa Total : 180 horas Status : ⏳ Pendente 🎯 Objetivo Criar arquitetura modular que permita duas versões da aplicação: Versão Monolito : Aplicação única, todos os módulos no mesmo processo (simples, ideal para início) Versão Distribuída : Módulos separados em serviços independentes (escalável, ideal para crescime",
+      "content": "Fase 19: Sistema de Demandas e Ofertas Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 CRÍTICA (Economia local e autonomia comunitária) Depende de : Fase 6 (Marketplace), Fase 7 (Pagamentos) Integra com : Fase 20 (Trocas) - pode ser desenvolvido em paralelo Estimativa Total : 120 horas Status : ⏳ Pendente Nota : Renumerada de Fase 31 para Fase 19, priorizada de P1 para P0 (Onda 3: Economia Local) 🎯 Objetivo Implementar sistema de demandas e ofertas que permite: Moradores cadastrarem demanda",
       "url": "/wiki/docs/backlog-api/FASE19",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE1_5",
+      "title": "FASE1 5",
+      "content": "Fase 1.5: Itens Faltantes das Fases 1-14 Nota : Todos os itens faltantes das fases 1-14 foram consolidados na Fase 14.5 . 📋 Consolidação A Fase 1.5 foi criada inicialmente para listar todos os itens faltantes das fases 1-14. Para melhor organização e planejamento, todos esses itens foram movidos para a Fase 14.5 , que agora centraliza: Itens faltantes da Fase 1 (Connection Pooling, Índices, Exception Handling, Result) Itens faltantes da Fase 9 (Avatar, Bio, Perfil, Estatísticas) Itens faltantes",
+      "url": "/wiki/docs/backlog-api/FASE1_5",
       "category": "Outros"
     },
     {
@@ -696,70 +822,70 @@
     {
       "id": "backlog-api/FASE20",
       "title": "FASE20",
-      "content": "Fase 20: Sistema de Moeda Territorial (Mint e Economia Local) Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 ALTA (Economia circular e autonomia territorial) Depende de : Fase 6 (Pagamentos), Fase 7 (Payout), Fase 14 (Governança), Fase 17 (Gamificação), Fase 18 (Saúde Territorial) Estimativa Total : 200 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de moeda territorial que: Permite cada território ter sua própria moeda digital Recompensa atividades que agregam valor ao territóri",
+      "content": "Fase 20: Sistema de Trocas Comunitárias Duração : 3 semanas (21 dias úteis) Prioridade : 🟡 ALTA (Economia circular e autonomia comunitária) Depende de : Fase 6 (Marketplace), Fase 42 (Gamificação), Fase 22 (Moeda Territorial) Estimativa Total : 120 horas Status : ⏳ Pendente Nota : Renumerada de Fase 24 para Fase 20 (Onda 4: Economia Local Completa) 🎯 Objetivo Implementar sistema de trocas comunitárias que: Permite usuários trocarem produtos e serviços sem usar dinheiro Facilita economia circul",
       "url": "/wiki/docs/backlog-api/FASE20",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE21",
       "title": "FASE21",
-      "content": "Fase 21: Suporte a Criptomoedas (Crypto Ready) Duração : 4 semanas (28 dias úteis) Prioridade : 🟢 MÉDIA Bloqueia : Aceitar pagamentos em criptomoedas Estimativa Total : 152 horas Status : ⏳ Pendente 🎯 Objetivo Tornar a aplicação \"crypto ready\" para aceitar pagamentos tanto em gateways tradicionais (Stripe, MercadoPago) quanto em criptomoedas (Bitcoin, Ethereum, stablecoins), mantendo o mesmo modelo justo, transparente e seguro. 📋 Contexto e Requisitos Visão Geral A aplicação deve suportar múl",
+      "content": "Fase 21: Sistema de Entregas Territoriais Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 ALTA (Autonomia comunitária e otimização de recursos) Depende de : Fase 6 (Marketplace), Fase 7 (Payout) Estimativa Total : 160 horas Status : ⏳ Pendente Nota : Renumerada de Fase 16 para Fase 21 (Onda 4: Economia Local Completa) 🎯 Objetivo Implementar sistema de entregas territoriais que permite: Usuários se cadastrarem como entregadores do território Otimização de rotas para economizar recursos natur",
       "url": "/wiki/docs/backlog-api/FASE21",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE22",
       "title": "FASE22",
-      "content": "Fase 22: Integrações Externas e Conectividade Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 ALTA (Facilita transição e adoção) Depende de : Fase 6 (Pagamentos), Fase 12 (Termos), Fase 13 (Emails) Estimativa Total : 200 horas Status : ⏳ Pendente 🎯 Objetivo Implementar integrações com aplicativos externos que: Permite postagem cross-platform (Instagram, Facebook, WhatsApp) Conecta com WhatsApp para notificações e comunicação Integra Apple Pay e Google Pay para pagamentos rápidos Implementa ",
+      "content": "Fase 22: Sistema de Moeda Territorial (Mint e Economia Local) Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 ALTA (Economia circular e autonomia territorial) Depende de : Fase 6 (Pagamentos), Fase 7 (Payout), Fase 14 (Governança), Fase 42 (Gamificação), Fase 24 (Saúde Territorial) Estimativa Total : 200 horas Status : ⏳ Pendente Nota : Renumerada de Fase 20 para Fase 22 (Onda 4: Economia Local Completa) 🎯 Objetivo Implementar sistema de moeda territorial que: Permite cada território ter su",
       "url": "/wiki/docs/backlog-api/FASE22",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE23",
       "title": "FASE23",
-      "content": "Fase 23: Sistema de Compra Coletiva e Organização Comunitária de Alimentos Duração : 4 semanas (28 dias úteis) Prioridade : 🔴 ALTA (Economia local e soberania alimentar) Depende de : Fase 6 (Marketplace), Fase 14 (Governança/Votação), Fase 20 (Moeda Territorial) Integra com : Fase 16 (Entregas) - opcional, pode ser feito depois Estimativa Total : 160 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de compra coletiva de alimentos que: Conecta produtores locais (moradores ou visitantes)",
+      "content": "Fase 23: Inteligência Artificial Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 ALTA (Conformidade e inteligência) Depende de : Fase 12 (Otimizações), Fase 14 (Governança) Estimativa Total : 160 horas Status : ⏳ Pendente Nota : Renumerada de Fase 22 para Fase 23 (Onda 4: Conformidade e Inteligência) 🎯 Objetivo Implementar funcionalidades de Inteligência Artificial para: Moderação automática (detecção de conteúdo inadequado) Busca inteligente (semântica, não apenas palavras-chave) Categoriz",
       "url": "/wiki/docs/backlog-api/FASE23",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE24",
       "title": "FASE24",
-      "content": "Fase 24: Sistema de Trocas Comunitárias Duração : 3 semanas (21 dias úteis) Prioridade : 🟡 ALTA (Economia circular e autonomia comunitária) Depende de : Fase 6 (Marketplace), Fase 17 (Gamificação), Fase 20 (Moeda Territorial) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de trocas comunitárias que: Permite usuários trocarem produtos e serviços sem usar dinheiro Facilita economia circular local (troca direta) Integra com sistema de moeda territorial (trocas pod",
+      "content": "Fase 24: Saúde Territorial e Monitoramento Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 ALTA (Soberania territorial e autonomia comunitária) Depende de : Fase 9 (Perfil de Usuário) Integra com : Fase 42 (Gamificação) - pode ser desenvolvido em paralelo Estimativa Total : 200 horas Status : ⏳ Pendente Nota : Renumerada de Fase 18 para Fase 24 (Onda 5: Conformidade e Soberania). Fase 18 agora é Hospedagem Territorial. 🎯 Objetivo Implementar sistema completo de saúde territorial e monitoram",
       "url": "/wiki/docs/backlog-api/FASE24",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE25",
       "title": "FASE25",
-      "content": "Fase 25: Hub de Serviços Digitais Base Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 ALTA (Base para autonomia digital) Depende de : Fase 1 (Segurança), Fase 9 (UserPreferences) Estimativa Total : 96-120 horas Status : ⏳ Pendente 🎯 Objetivo Implementar infraestrutura base para serviços digitais integrados que permite: Usuários conectarem suas próprias contas de serviços digitais (IA, storage, tradução, etc.) Rastreamento de consumo consciente de recursos Feature flags territorial e por us",
+      "content": "Fase 25: Dashboard de Métricas Comunitárias Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA (Transparência e governança) Depende de : Fase 4 (Observabilidade), Fase 14 (Governança) Estimativa Total : 112 horas Status : ⏳ Pendente Nota : Nova fase criada para Onda 5 (Conformidade e Soberania). Fase 25 agora é Dashboard Métricas, Fase 26 é Hub de Serviços Digitais. 🎯 Objetivo Implementar dashboard de métricas comunitárias que permite: Territórios visualizarem métricas de atividade e enga",
       "url": "/wiki/docs/backlog-api/FASE25",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE26",
       "title": "FASE26",
-      "content": "Fase 26: Chat com IA e Consumo Consciente Duração : 2 semanas (14 dias úteis) Prioridade : 🔴 ALTA (Valor diferenciado e autonomia) Depende de : Fase 25 (Serviços Digitais Base), Chat (existe) Estimativa Total : 64-80 horas Status : ⏳ Pendente 🎯 Objetivo Implementar IA integrada ao chat que permite: Usuários usarem IA em conversas do chat Seleção de diferentes provedores de IA (OpenAI, Claude, Gemini, etc.) Rastreamento de consumo por conversa Feature flags territorial e por usuário Consumo con",
+      "content": "Fase 26: Hub de Serviços Digitais Base Duração : 3 semanas (21 dias úteis) Prioridade : 🟡 ALTA (Base para autonomia digital) Depende de : Fase 1 (Segurança), Fase 9 (UserPreferences) Estimativa Total : 96-120 horas Status : ⏳ Pendente Nota : Renumerada de Fase 25 para Fase 26 (Onda 6: Autonomia Digital). Fase 25 agora é Dashboard Métricas. 🎯 Objetivo Implementar infraestrutura base para serviços digitais integrados que permite: Usuários conectarem suas próprias contas de serviços digitais (IA,",
       "url": "/wiki/docs/backlog-api/FASE26",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE27",
       "title": "FASE27",
-      "content": "Fase 27: Negociação Territorial e Assinatura Coletiva de Serviços Digitais Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 ALTA (Economia de escala e inclusão) Depende de : Fase 25 (Serviços Digitais Base), Fase 20 (TerritoryFund), Fase 14 (Votação) Estimativa Total : 120-144 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de negociação territorial de serviços digitais que permite: Territórios negociarem/comprar quotas de serviços digitais Disponibilizar serviços para membros atrav",
+      "content": "Fase 27: Chat com IA e Consumo Consciente Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA (Valor diferenciado e autonomia) Depende de : Fase 26 (Serviços Digitais Base), Chat (existe) Estimativa Total : 64-80 horas Status : ⏳ Pendente Nota : Renumerada de Fase 26 para Fase 27 (Onda 6: Autonomia Digital). 🎯 Objetivo Implementar IA integrada ao chat que permite: Usuários usarem IA em conversas do chat Seleção de diferentes provedores de IA (OpenAI, Claude, Gemini, etc.) Rastreamento de c",
       "url": "/wiki/docs/backlog-api/FASE27",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE28",
       "title": "FASE28",
-      "content": "Fase 28: Banco de Sementes e Mudas Territorial Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 MÉDIA-ALTA (Soberania alimentar e economia circular) Depende de : TerritoryAsset (existe), Marketplace (existe), Fase 17 (Gamificação), WorkQueue (existe) Estimativa Total : 144-180 horas Status : ⏳ Pendente 🎯 Objetivo Implementar sistema de banco de sementes e mudas territorial que permite: Catalogação e preservação de variedades locais Doação e troca de sementes entre membros Integração com mark",
+      "content": "Fase 28: Negociação Territorial e Assinatura Coletiva de Serviços Digitais Duração : 3 semanas (21 dias úteis) Prioridade : 🟡 ALTA (Economia de escala e inclusão) Depende de : Fase 26 (Serviços Digitais Base), Fase 22 (Moeda Territorial), Fase 14 (Votação) Estimativa Total : 120-144 horas Status : ⏳ Pendente Nota : Renumerada de Fase 27 para Fase 28 (Onda 6: Autonomia Digital). Referências atualizadas: Fase 26 (Serviços Digitais), Fase 22 (Moeda Territorial), Fase 14 (Votação). 🎯 Objetivo Impl",
       "url": "/wiki/docs/backlog-api/FASE28",
       "category": "Outros"
     },
     {
       "id": "backlog-api/FASE29",
       "title": "FASE29",
-      "content": "Fase 29: Suporte Mobile Avançado Duração : 2 semanas (14 dias úteis) ⭐ NOVA Prioridade : 🟡 ALTA (Melhora experiência mobile) Depende de : Fase 9 (Perfil + Segurança), Fase 10 (Mídias + Sync) ⭐ Estimativa Total : 56-70 horas Status : ⏳ Pendente 🎯 Objetivo Implementar suporte completo para funcionalidades mobile avançadas que melhoram significativamente a experiência do usuário no app Flutter, incluindo: Analytics mobile (app version, platform, device info) Deep linking avançado (universal links",
+      "content": "Fase 48: Banco de Sementes e Mudas Territorial Duração : 3 semanas (21 dias úteis) Prioridade : 🟢 MÉDIA (Recursos compartilhados) Depende de : Fase 6 (Marketplace), Fase 14 (Governança) Estimativa Total : 120 horas Status : ⏳ Pendente Nota : Renumerada de Fase 29 para Fase 48, reposicionada para Onda 10 (Diferenciação Avançada). Fase 30 agora é Mobile Avançado. 🎯 Objetivo Implementar suporte completo para funcionalidades mobile avançadas que melhoram significativamente a experiência do usuário",
       "url": "/wiki/docs/backlog-api/FASE29",
       "category": "Outros"
     },
@@ -771,10 +897,52 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/FASE30",
+      "title": "FASE30",
+      "content": "Fase 30: Mobile Avançado Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA (Experiência mobile otimizada) Depende de : Fase 9 (Push tokens), Sistema de Notificações Estimativa Total : 56 horas Status : ⏳ Pendente Nota : Renumerada de Fase 29 para Fase 30 (Onda 6: Autonomia Digital). 🎯 Objetivo Implementar suporte completo para funcionalidades mobile avançadas que melhoram significativamente a experiência do usuário no app Flutter, incluindo: Analytics mobile (app version, platform, devic",
+      "url": "/wiki/docs/backlog-api/FASE30",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE31",
+      "title": "FASE31",
+      "content": "Fase 31: Avaliação e Escolha de Blockchain Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA (Preparação Web3) Depende de : Nenhuma (fase de avaliação) Estimativa Total : 112 horas Status : ⏳ Pendente Nota : Renumerada de Fase 16 para Fase 31, reposicionada de P0 para P1 (Onda 7: Preparação Web3). Implementação apenas quando houver demanda real. 🎯 Objetivo Realizar avaliação completa e escolha de blockchain para suportar funcionalidades Web3 do Araponga, incluindo: Análise comparativa de",
+      "url": "/wiki/docs/backlog-api/FASE31",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/FASE4",
       "title": "FASE4",
       "content": "Fase 4: Observabilidade e Monitoramento Duração : 2 semanas (14 dias úteis) Prioridade : 🟡 ALTA Bloqueia : Operação eficiente em produção Estimativa Total : 80 horas Status : ✅ 100% Completo 🎯 Objetivo Observabilidade completa com métricas, logs e tracing. 📋 Tarefas Detalhadas Semana 7: Logging e Métricas 7.1 Logs Centralizados Estimativa : 24 horas (3 dias) Status : ✅ 100% Completo Tarefas : Escolher plataforma (Seq, Application Insights, ou ELK) Configurar Serilog sink para plataforma escol",
       "url": "/wiki/docs/backlog-api/FASE4",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE42",
+      "title": "FASE42",
+      "content": "Fase 42: Sistema de Gamificação Harmoniosa Duração : 4 semanas (28 dias úteis) Prioridade : 🟡 ALTA (Engajamento comunitário sustentável) Depende de : Fase 9 (Perfil de Usuário), Fase 14 (Governança/Interesses) Opcional : Fase 23 (IA) - Avaliação de qualidade Estimativa Total : 120 horas Status : ⏳ Pendente Nota : Renumerada de Fase 17 para Fase 42 (Onda 9: Gamificação e Incentivos). Fase 17 agora é Compra Coletiva. 🎯 Objetivo Implementar sistema de gamificação harmoniosa que: Reforça contribui",
+      "url": "/wiki/docs/backlog-api/FASE42",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE43",
+      "title": "FASE43",
+      "content": "Fase 43: Arquitetura Modular e Deploy Dual (Monolito/Distribuído) Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 MÉDIA Bloqueia : Escalabilidade horizontal e deploy flexível Estimativa Total : 180 horas Status : ⏳ Pendente Nota : Renumerada de Fase 19 para Fase 43 (Onda 9: Gamificação e Diferenciação). Fase 19 agora é Demandas e Ofertas. 🎯 Objetivo Criar arquitetura modular que permita duas versões da aplicação: Versão Monolito : Aplicação única, todos os módulos no mesmo processo (simples",
+      "url": "/wiki/docs/backlog-api/FASE43",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE44",
+      "title": "FASE44",
+      "content": "Fase 44: Integrações Externas Duração : 5 semanas (35 dias úteis) Prioridade : 🟡 ALTA (Transição e adoção) Depende de : Fase 6 (Pagamentos), Fase 12 (Termos), Fase 13 (Emails) Estimativa Total : 200 horas Status : ⏳ Pendente Nota : Renumerada de Fase 22 para Fase 44 (Onda 11: Extensões e Integrações) 🎯 Objetivo Implementar integrações com aplicativos externos que: Permite postagem cross-platform (Instagram, Facebook, WhatsApp) Conecta com WhatsApp para notificações e comunicação Integra Apple ",
+      "url": "/wiki/docs/backlog-api/FASE44",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/FASE48",
+      "title": "FASE48",
+      "content": "Fase 48: Banco de Sementes e Mudas Territorial Duração : 3 semanas (21 dias úteis) Prioridade : 🟢 MÉDIA (Soberania alimentar e economia circular) Depende de : TerritoryAsset (existe), Marketplace (existe), Fase 42 (Gamificação), WorkQueue (existe) Estimativa Total : 120 horas Status : ⏳ Pendente Nota : Renumerada de Fase 28 e Fase 29 para Fase 48, reposicionada para Onda 10 (Diferenciação Avançada). Referências atualizadas: Fase 17→42. 🎯 Objetivo Implementar sistema de banco de sementes e muda",
+      "url": "/wiki/docs/backlog-api/FASE48",
       "category": "Outros"
     },
     {
@@ -808,8 +976,15 @@
     {
       "id": "backlog-api/FASE9",
       "title": "FASE9",
-      "content": "Fase 9: Perfil de Usuário Completo Duração : 3 semanas (15 dias úteis) Prioridade : 🔴 CRÍTICA (Bloqueante para transição) Depende de : Fase 8 (Infraestrutura de Mídia) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Completar funcionalidades de perfil de usuário para permitir transição suave de outras plataformas, mantendo valores de soberania territorial e união comunitária . Funcionalidades : Avatar/Foto de perfil Bio/Descrição pessoal Visualizar perfil de outros usuários Estatís",
+      "content": "Fase 9: Perfil de Usuário Completo Duração : 3 semanas (21 dias úteis) Prioridade : 🔴 CRÍTICA (Bloqueante para transição) Depende de : Fase 8 (Infraestrutura de Mídia) Estimativa Total : 120 horas Status : ⏳ Pendente 🎯 Objetivo Completar funcionalidades de perfil de usuário para permitir transição suave de outras plataformas, mantendo valores de soberania territorial e união comunitária . Funcionalidades : Avatar/Foto de perfil Bio/Descrição pessoal Visualizar perfil de outros usuários Estatís",
       "url": "/wiki/docs/backlog-api/FASE9",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/GUIA_REORGANIZACAO_FASES",
+      "title": "GUIA REORGANIZACAO FASES",
+      "content": "Guia Rápido: Reorganizar ou Adicionar Fases Versão : 1.0 Objetivo : Guia passo-a-passo simples para reorganizar ou adicionar fases 🎯 Princípio Fundamental Regra de Ouro : Fase com número menor = implementada antes Exemplo : Fase 15 deve ser implementada antes de Fase 20. ➕ Como Adicionar uma Nova Fase Passo 1: Escolher o Número Identificar posição desejada : Depois de qual fase? (ex: depois da Fase 20) Antes de qual fase? (ex: antes da Fase 22) Verificar disponibilidade : Consultar MAPA_FASES.m",
+      "url": "/wiki/docs/backlog-api/GUIA_REORGANIZACAO_FASES",
       "category": "Outros"
     },
     {
@@ -817,6 +992,27 @@
       "title": "FASE10 ATUALIZACAO DEVPORTAL",
       "content": "Fase 10: Atualização do DevPortal e Documentação Data : 2025-01-17 Status : ✅ Documentação Atualizada 📋 Resumo A Fase 10 introduziu suporte a mídias em todos os tipos de conteúdo (Posts, Eventos, Marketplace, Chat). Este documento descreve as atualizações necessárias no DevPortal e na documentação do projeto. 🔄 OpenAPI/Swagger Geração Automática O arquivo openapi.json é gerado automaticamente quando a aplicação ASP.NET Core roda em modo de desenvolvimento. As mudanças nos contratos (DTOs) são ",
       "url": "/wiki/docs/backlog-api/implementacoes/FASE10_ATUALIZACAO_DEVPORTAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_AVALIACAO_COMPLETA",
+      "title": "FASE10 AVALIACAO COMPLETA",
+      "content": "Fase 10: Avaliação Completa de Implementação Data de Avaliação : 2025-01-20 Status : ✅ IMPLEMENTAÇÃO PRINCIPAL COMPLETA + ⚠️ PENDÊNCIAS MENORES 📊 Resumo Executivo A Fase 10 está ~85% completa . A implementação principal de mídias em conteúdo está 100% funcional , com testes de integração passando (40 testes), documentação técnica completa e configuração avançada por território implementada. Pendências menores incluem otimizações de performance e documentação BDD. ✅ Implementação Principal (100%",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_AVALIACAO_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_COMPLETA_RESUMO",
+      "title": "FASE10 COMPLETA RESUMO",
+      "content": "Fase 10: Resumo de Conclusão Data : 2025-01-20 Branch : feature/fase10-completa Status : ✅ ~95% COMPLETO - Pronto para Produção 📊 Resumo Executivo A Fase 10 foi completada com sucesso . Todas as funcionalidades principais, testes, otimizações e documentação estão implementados. A única pendência menor é BDD (Features Gherkin), que não é bloqueante. ✅ O Que Foi Implementado Nesta Branch 1. Testes de Performance ✅ Arquivo Criado : backend/Araponga.Tests/Performance/FeedWithMediaPerformanceTests.c",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_COMPLETA_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_CONCLUSAO",
+      "title": "FASE10 CONCLUSAO",
+      "content": "Fase 10: Conclusão Completa Data de Conclusão : 2025-01-20 Status : ✅ ~98% COMPLETO - Pronto para Produção 📊 Resumo Executivo A Fase 10 foi completada com sucesso . Todas as funcionalidades principais estão implementadas, testadas e otimizadas. A única pendência menor é a implementação de BDD (Features Gherkin), que pode ser feita em iterações futuras conforme o plano TDD/BDD. ✅ Implementações Completadas 1. Mídias em Posts ✅ ✅ Implementação completa ✅ Suporte a vídeos e áudios ✅ Validações de ",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_CONCLUSAO",
       "category": "Outros"
     },
     {
@@ -887,6 +1083,13 @@
       "title": "FASE10 VALIDACOES SEGURANCA",
       "content": "Fase 10: Validações de Segurança Avançadas Resumo Este documento descreve todas as validações de segurança implementadas para mídias em conteúdo na Fase 10. 1. Validações Implementadas 1.1 Validações de Propriedade ✅ Localização : PostCreationService , EventsService , StoreItemService , ChatService Validações : ✅ Usuário só pode usar mídias que ele mesmo fez upload ( UploadedByUserId == userId ) ✅ Mídias deletadas não podem ser usadas ( IsDeleted == false ) ✅ Validação ocorre antes de criar asso",
       "url": "/wiki/docs/backlog-api/implementacoes/FASE10_VALIDACOES_SEGURANCA",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE14_IMPLEMENTACAO_RESUMO",
+      "title": "FASE14 IMPLEMENTACAO RESUMO",
+      "content": "Fase 14: Governança Comunitária e Sistema de Votação - Resumo de Implementação Status : ✅ Implementado Data : 2025-01-23 Branch : feature/fase14-governanca-votacao 📋 Resumo Executivo Este documento resume as implementações realizadas na Fase 14: Governança Comunitária e Sistema de Votação — interesses do usuário, votações comunitárias, moderação dinâmica, feed filtrado por interesses, caracterização do território e histórico de participação no perfil. Itens pendentes (testes dedicados, performa",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE14_IMPLEMENTACAO_RESUMO",
       "category": "Outros"
     },
     {
@@ -988,6 +1191,13 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/MAPA_FASES",
+      "title": "MAPA FASES",
+      "content": "Mapa Completo das Fases - Araponga Data : 2026-01-25 Versão : 1.0 Status : ✅ Atualizado Objetivo : Mapa centralizado de todas as fases com guia simples para reorganização 🎯 Princípio Fundamental Regra de Ouro : Uma fase com número menor DEVE ser implementada antes de uma fase com número maior. Exceção : Fases 1-8 já implementadas (manter numeração original). 📊 Mapa Visual Completo das Fases ✅ Fases 1-8: Implementadas (Manter) Fase Título Status Arquivo 1 Segurança e Fundação Crítica ✅ Completo",
+      "url": "/wiki/docs/backlog-api/MAPA_FASES",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/NORMALIZACAO_COMPLETA",
       "title": "NORMALIZACAO COMPLETA",
       "content": "Normalização Completa da Estrutura Data : 2025-01-13 Status : ✅ NORMALIZAÇÃO COMPLETA ✅ Ações Realizadas 1. Estrutura de Pastas Criada ✅ backlog-api/implementacoes/ - Documentos de implementação ✅ backlog-api/arquivos-originais/ - Arquivos originais (referência) 2. Documentos Movidos Da Raiz docs/ para backlog-api/implementacoes/ ✅ FASE1_*.md (6 arquivos) ✅ FASE2_*.md (2 arquivos) ✅ FASE3_IMPLEMENTACAO_RESUMO.md ✅ FASE4_IMPLEMENTACAO_RESUMO.md ✅ FASE5_IMPLEMENTACAO_RESUMO.md ✅ TESTES_FASE7_RESUM",
@@ -1011,7 +1221,7 @@
     {
       "id": "backlog-api/README",
       "title": "README",
-      "content": "Backlog API - Estrutura Organizada Planejamento Estratégico de Desenvolvimento Data de Criação : 2025-01-13 Última Revisão : 2025-01-20 Objetivo : Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado Estimativa Total : 450 dias sequenciais / ~220 dias com paralelização (incluindo novas fases estratégicas) Status Atual : 9.3/10 (após implementação das fases 1-8, incluindo FASE8 com funcionalidades extras) ⭐ Estratégia de C",
+      "content": "Backlog API - Estrutura Organizada Planejamento Estratégico de Desenvolvimento Data de Criação : 2025-01-13 Última Revisão : 2026-01-25 Objetivo : Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado Estimativa Total : 495 dias sequenciais / ~241 dias com paralelização (incluindo novas fases estratégicas + Fase 30 Hospedagem) Status Atual : 9.3/10 (após implementação das fases 1-8, incluindo FASE8 com funcionalidades extr",
       "url": "/wiki/docs/backlog-api/README",
       "category": "Outros"
     },
@@ -1065,6 +1275,13 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/RESUMO_PRE_PR_FASE14_5",
+      "title": "RESUMO PRE PR FASE14 5",
+      "content": "Resumo Pré-PR: Fase 14.5 Data : 2025-01-23 Status : ✅ Pronto para PR ✅ O que foi feito nesta sessão 1. Verificação de Aderência (Fases 1-14) ✅ ✅ Análise completa do que está implementado vs. planejado ✅ Identificação de gaps e itens faltantes ✅ Criação de documentos de análise: ANALISE_ADERENCIA_FASES_1_14.md RESUMO_VERIFICACAO_ADERENCIA.md FASE14_5.md (atualizado) 2. Atualização FASE11.md (Alta Prioridade) ✅ ✅ Todas as tarefas marcadas como \"✅ Implementado\" ✅ Referências aos arquivos criados ad",
+      "url": "/wiki/docs/backlog-api/RESUMO_PRE_PR_FASE14_5",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/RESUMO_REALINHAMENTO",
       "title": "RESUMO REALINHAMENTO",
       "content": "Resumo Executivo: Realinhamento Estratégico das Fases 8-14 Data : 2025-01-13 Decisão : Reorganizar ordem das fases baseado em eficiência, urgência e necessidade 🎯 Decisão Estratégica Situação ✅ Fases 1-7 completas (base técnica sólida: 9.2/10) ⏳ Fases 8-14 pendentes (149 dias de trabalho) 🎯 Gap : Funcionalidades críticas para transição de usuários vêm depois de não-críticas Problema Identificado Ordem Original : Cripto (28 dias) - Valor baixo Arquitetura (35 dias) - Valor baixo Otimizações (21",
@@ -1079,6 +1296,13 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/RESUMO_VERIFICACAO_ADERENCIA",
+      "title": "RESUMO VERIFICACAO ADERENCIA",
+      "content": "Resumo: Verificação de Aderência Fases 1-14 Data : 2025-01-23 Objetivo : Verificar aderência entre plano de desenvolvimento e implementação real ✅ Resultado Geral Status : 🟢 Excelente — Maioria das funcionalidades das fases 1-14 estão implementadas Estatísticas ✅ Funcionalidades Implementadas : ~95% ⚠️ Itens Pendentes : Principalmente validação, testes e documentação 📝 Documentação Desatualizada : FASE11.md precisa ser atualizada 📋 Principais Descobertas ✅ O que está bem implementado Fase 9 (",
+      "url": "/wiki/docs/backlog-api/RESUMO_VERIFICACAO_ADERENCIA",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/REVISAO_COMPLETA_PRIORIDADES",
       "title": "REVISAO COMPLETA PRIORIDADES",
       "content": "Revisão Completa e Reformulação de Prioridades Data : 2025-01-13 Objetivo : Análise consciente e livre do backlog completo com reformulação de prioridades baseada em critérios elevados Status : 📋 Análise Completa - Proposta de Reformulação 🎯 Princípios de Avaliação Critérios Elevados Considerados Valor de Negócio Real Permite transição de usuários de outras plataformas? Reforça valores de soberania territorial? Gera receita ou reduz custos? Melhora experiência do usuário significativamente? De",
@@ -1088,7 +1312,7 @@
     {
       "id": "backlog-api/ROADMAP_VISUAL",
       "title": "ROADMAP VISUAL",
-      "content": "Roadmap Visual Estratégico Data : 2025-01-13 Versão : Estratégica Final 🎯 Visão Geral das 6 Ondas ┌─────────────────────────────────────────────────────────────────┐ │ ONDA 1: MVP ESSENCIAL (65d) │ │ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ │ │ │ Fase 8 │→ │ Fase 9 │ │ Fase 10 │→ │ Fase 11 │ │ │ │ Mídia │ │ Perfil │ │ Mídias │ │ Edição │ │ │ │ (15d) │ │ (15d) │ │ (20d) │ │ (15d) │ │ │ └──────────┘ └──────────┘ └──────────┘ └──────────┘ │ │ │ │ Resultado: MVP completo (90% transição d",
+      "content": "Roadmap Visual Estratégico Data : 2026-01-25 Versão : 3.2 - Numeração Coerente Atualizada Última Atualização : 2026-01-25 Nota : Numeração reorganizada para garantir que fases menores sejam implementadas antes de fases maiores. Referências : Mapa Completo das Fases | Guia de Reorganização 🎯 Visão Geral das Ondas Estratégicas ┌─────────────────────────────────────────────────────────────────┐ │ ONDA 1: MVP ESSENCIAL (61d) 🔴 CRÍTICO │ │ ┌──────────┐ ┌──────────┐ ┌──────────┐ │ │ │ Fase 9 │→ │ Fa",
       "url": "/wiki/docs/backlog-api/ROADMAP_VISUAL",
       "category": "Outros"
     },
@@ -1097,6 +1321,48 @@
       "title": "CARTILHA COMPLETA",
       "content": "📘 Cartilha Completa - Araponga Guia Detalhado para Todos os Papéis na Construção do Araponga Versão : 1.0 Data : 2025-01-20 📋 Índice Introdução Estrutura do Time Papéis e Responsabilidades Fluxos de Trabalho Ferramentas e Recursos Comunicação e Colaboração Discord - Organização do Time GitHub - Controle de Código Processo de Contribuição Valores na Prática Introdução Esta cartilha é um guia completo para todas as pessoas que querem contribuir com o Araponga, independente do papel ou nível de e",
       "url": "/wiki/docs/CARTILHA_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "CHANGELOG",
+      "title": "CHANGELOG",
+      "content": "Changelog - Araponga Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. O formato é baseado em Keep a Changelog , e este projeto adere ao Semantic Versioning . [Unreleased] Adicionado - Fase 14: Governança Comunitária e Sistema de Votação (2025-01-21) Funcionalidades ✅ Sistema de Interesses do Usuário Usuários podem definir interesses (tags/categorias) Máximo 10 interesses por usuário Interesses aparecem no perfil Endpoints: GET/POST/DELETE /api/v1/users/me/interests ✅ Si",
+      "url": "/wiki/docs/CHANGELOG",
+      "category": "Outros"
+    },
+    {
+      "id": "CI_CD_PIPELINE",
+      "title": "CI CD PIPELINE",
+      "content": "CI/CD Pipeline - Araponga Última Atualização : 2026-01-21 Versão : 1.0 📋 Visão Geral O pipeline CI/CD do Araponga está configurado no GitHub Actions e automatiza: Build e testes Análise de código e segurança Build de imagem Docker Deploy para staging/produção 🔄 Fluxo do Pipeline Push/PR → CI (Build + Testes + Security) → CD (Build Docker + Deploy) 📁 Estrutura de Workflows .github/workflows/ci.yml Trigger : Push para main ou Pull Request Jobs : build-test Setup .NET 8.0 Restore dependências Bu",
+      "url": "/wiki/docs/CI_CD_PIPELINE",
+      "category": "Outros"
+    },
+    {
+      "id": "COMMUNITY_MODERATION",
+      "title": "COMMUNITY MODERATION",
+      "content": "Moderação Comunitária Dinâmica Versão : 1.0 Data : 2025-01-21 Status : ✅ Implementado 📋 Visão Geral O Sistema de Moderação Comunitária Dinâmica permite que comunidades territoriais definam suas próprias regras de moderação através de votações ou diretamente por curadores. As regras são aplicadas automaticamente na criação de conteúdo. 🎯 Tipos de Regras 1. ContentType (Tipo de Conteúdo) Objetivo : Definir quais tipos de conteúdo são permitidos. Exemplo : { \"allowedTypes\": [\"General\", \"Event\", \"",
+      "url": "/wiki/docs/COMMUNITY_MODERATION",
+      "category": "Outros"
+    },
+    {
+      "id": "CONFIRMACAO_FASE_15",
+      "title": "CONFIRMACAO FASE 15",
+      "content": "Confirmação do Posicionamento da Fase 15 Data : 2026-01-25 Status : ✅ Confirmado Objetivo : Documentar o posicionamento correto da Fase 15 em todos os arquivos ✅ Posicionamento Confirmado Fase 15: Subscriptions &#x26; Recurring Payments Localização : Onda 2 - Governança e Sustentabilidade Sequência : Fase 13 → Fase 14 → Fase 15 → Fase 16 Prioridade : 🔴 P0 (Crítica) Duração : 45 dias Dependências : Fase 6 (Pagamentos), Fase 7 (Payout) 📋 Estrutura Correta Onda 2: Governança e Sustentabilidade (F",
+      "url": "/wiki/docs/CONFIRMACAO_FASE_15",
+      "category": "Outros"
+    },
+    {
+      "id": "CONNECTION_POOLING_METRICS",
+      "title": "CONNECTION POOLING METRICS",
+      "content": "Métricas de Connection Pooling - Araponga Última Atualização : 2025-01-23 Status : ✅ Configurado 📋 Resumo Este documento descreve a configuração de connection pooling e como monitorar métricas de conexões do PostgreSQL no Araponga. ⚙️ Configuração Atual Connection String A connection string está configurada em appsettings.json : { \"ConnectionStrings\": { \"Postgres\": \"Host=localhost;Port=5432;Database=araponga;Username=araponga;Password=araponga;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=",
+      "url": "/wiki/docs/CONNECTION_POOLING_METRICS",
+      "category": "Outros"
+    },
+    {
+      "id": "COVERAGE_STATUS_2026",
+      "title": "COVERAGE STATUS 2026",
+      "content": "📊 Status de Cobertura de Testes - 2026 Data : 2026-01-24 Status : ✅ Erros de Compilação Corrigidos (build bem-sucedido, testes executando) 🎯 Meta e Status Meta Objetivo : 90%+ de cobertura em todas as camadas Status Planejado : ✅ Testes criados (268 novos testes nas Phases 7-9) Status Validado : ✅ Build Bem-Sucedido (0 erros de compilação, testes executando) 📈 Cobertura Planejada (Após Correção de Erros) Por Camada Camada Cobertura Antes Cobertura Planejada Status Domain Layer ~85% ~90%+ ✅ Te",
+      "url": "/wiki/docs/COVERAGE_STATUS_2026",
       "category": "Outros"
     },
     {
@@ -1128,6 +1394,13 @@
       "category": "Outros"
     },
     {
+      "id": "DATABASE_INDEXES",
+      "title": "DATABASE INDEXES",
+      "content": "Índices de Banco de Dados - Araponga Última Atualização : 2025-01-23 Status : ✅ Implementado 📋 Resumo Este documento lista todos os índices de banco de dados criados no PostgreSQL para otimizar a performance das queries mais comuns do Araponga. 🔍 Índices por Tabela territories PK_territories (Primary Key em id ) - Índice primário IX_territories_status - Índice em status para filtrar territórios ativos IX_territories_created_at_utc - Índice em created_at_utc para ordenação temporal Justificativ",
+      "url": "/wiki/docs/DATABASE_INDEXES",
+      "category": "Outros"
+    },
+    {
       "id": "DEPLOYMENT_MULTI_INSTANCE",
       "title": "DEPLOYMENT MULTI INSTANCE",
       "content": "Deployment Multi-Instância e Load Balancer Este documento descreve como configurar e fazer deploy da aplicação Araponga em múltiplas instâncias com load balancer. 📋 Pré-requisitos API stateless (sem sessão no servidor) Cache distribuído (Redis) configurado Banco de dados com suporte a read replicas (opcional, mas recomendado) Load balancer (Nginx, AWS ALB, Azure Load Balancer, etc.) 🔧 Configuração 1. API Stateless A API Araponga é stateless por design: Autenticação via JWT (sem sessão no servi",
@@ -1153,6 +1426,13 @@
       "title": "DESIGN SYSTEM TOKENS",
       "content": "Design Tokens - Sistema Unificado Versão : 1.0 Data : 2025-01-20 Status : ✅ Implementado Localização : frontend/shared/styles/design-tokens.css 📋 Sumário Este documento descreve o sistema unificado de design tokens do Araponga. Os tokens são a fonte única de verdade para todos os valores de design (cores, tipografia, espaçamento, etc.) e são usados por Wiki e DevPortal para garantir consistência visual total. Objetivo: Garantir que Wiki e DevPortal compartilhem a mesma identidade visual, criand",
       "url": "/wiki/docs/DESIGN_SYSTEM_TOKENS",
+      "category": "Outros"
+    },
+    {
+      "id": "DEVELOPMENT",
+      "title": "DEVELOPMENT",
+      "content": "Desenvolvimento Guia para Desenvolvedores Configuração Inicial Clone o repositório Instale dependências: dotnet restore npm install Estrutura do Projeto backend/ ├── Araponga.Api/ # Controllers e endpoints ├── Araponga.Application/ # Application services ├── Araponga.Domain/ # Domain models ├── Araponga.Infrastructure/ # Database e externos └── Araponga.Tests/ # Testes frontend/ ├── wiki/ # Documentação interativa ├── devportal/ # Portal de desenvolvimento └── ... # Aplicação principal Build e T",
+      "url": "/wiki/docs/DEVELOPMENT",
       "category": "Outros"
     },
     {
@@ -1289,6 +1569,13 @@
       "category": "Outros"
     },
     {
+      "id": "DOCKER_DEV_ENVIRONMENT",
+      "title": "DOCKER DEV ENVIRONMENT",
+      "content": "Ambiente Docker de Desenvolvimento/Pré-Produção Este documento descreve como usar o ambiente Docker completo do Araponga para desenvolvimento e pré-produção. 📋 Visão Geral O ambiente Docker inclui: PostgreSQL 16 com PostGIS - Banco de dados principal com suporte geoespacial Redis 7 - Cache distribuído para melhor performance MinIO - Storage S3-compatible para desenvolvimento/pré-produção API Araponga - Aplicação .NET 8 com todas as dependências configuradas 🚀 Início Rápido 1. Pré-requisitos Do",
+      "url": "/wiki/docs/DOCKER_DEV_ENVIRONMENT",
+      "category": "Outros"
+    },
+    {
       "id": "ECOSSISTEMA_CONSOLIDACAO_CHECKLIST",
       "title": "ECOSSISTEMA CONSOLIDACAO CHECKLIST",
       "content": "✅ Checklist de Implementação - Estratégia de Consolidação Checklist Detalhado para Implementar a Estratégia de Consolidação do Ecossistema Versão : 1.0 Data : 2025-01-20 Baseado em : ECOSSISTEMA_CONSOLIDACAO_ESTRATEGIA.md 📊 Status Geral Última Atualização : 2025-01-20 Fase Atual 🔴 Fase 1: Fundação - Em progresso Progresso Geral ✅ Documentação criada ⏳ Infraestrutura em setup (Discord, GitHub) ⏳ Recursos visuais (planejado) 🔴 Fase 1: Fundação (0-1 mês) 1.1 Discord Configurado e Funcional Estru",
@@ -1300,6 +1587,251 @@
       "title": "ECOSSISTEMA CONSOLIDACAO ESTRATEGIA",
       "content": "🌱 Estratégia de Consolidação do Ecossistema de Desenvolvimento Territorial Plano de Fortalecimento da Comunidade e Preparação para Produção Versão : 1.0 Data : 2025-01-20 Contexto : Pré-produção - Site institucional e repositório ativos Objetivo : Construir comunidade forte e ecossistema de contribuição antes do lançamento da plataforma 📋 Resumo Executivo Este plano estabelece uma estratégia orgânica e consciente para consolidar o ecossistema de desenvolvimento territorial do Araponga, constru",
       "url": "/wiki/docs/ECOSSISTEMA_CONSOLIDACAO_ESTRATEGIA",
+      "category": "Outros"
+    },
+    {
+      "id": "EMAIL_SYSTEM",
+      "title": "EMAIL SYSTEM",
+      "content": "Sistema de Envio de Emails Fase : 13 Status : ✅ Implementado Data : 2025-01-22 🎯 Visão Geral Sistema completo de envio de emails para a plataforma Araponga, permitindo comunicação com usuários via email em situações específicas (boas-vindas, recuperação de senha, notificações importantes, alertas críticos). 📋 Arquitetura Camadas ┌─────────────────────────────────────┐ │ API Layer (Controllers) │ │ - AuthController (forgot-password) │ │ - UserPreferencesController │ └───────────────────────────",
+      "url": "/wiki/docs/EMAIL_SYSTEM",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_COMPILATION_FIXES",
+      "title": "ENTERPRISE COVERAGE COMPILATION FIXES",
+      "content": "🔧 Correções de Erros de Compilação - Enterprise Coverage Data : 2026-01-24 Status : ✅ COMPLETO - Todos os erros de compilação corrigidos 📊 Resumo Erros de Compilação : 52 → 0 ✅ Build Status : ✅ Bem-Sucedido (0 erros, 14 warnings) Testes Passando : 1470 de 1508 (97.5% de sucesso) Testes Edge Cases : 630 de 646 passando (97.5% de sucesso) ✅ Correções Realizadas 1. EmailServiceEdgeCasesTests.cs Problema : EmailConfiguration requer propriedade FromName Solução : Adicionado FromName = \"Test Sender\"",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_COMPILATION_FIXES",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_COMPLETE",
+      "title": "ENTERPRISE COVERAGE COMPLETE",
+      "content": "🎉 Enterprise-Level Test Coverage - Implementação Completa Status : ✅ TODAS AS FASES COMPLETAS Total de Testes Adicionados : 547 Taxa de Sucesso : 100% Testes Totais do Projeto : 1345+ Data de Conclusão : 2026-01-24 📊 Resumo Executivo Foi implementada com sucesso a cobertura de testes enterprise-level para o projeto Araponga, cobrindo todas as camadas da arquitetura (Domain, Application, Infrastructure, API) com testes robustos de edge cases. Objetivo Alcançado ✅ 435 testes de edge cases implem",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_COMPLETE",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_PHASE1",
+      "title": "ENTERPRISE COVERAGE PHASE1",
+      "content": "🚀 Enterprise-Level Test Coverage - Phase 1 Implementation Objetivo : Implementar testes de edge cases para o Domain Layer Status : ✅ Completo Tests Adicionados : 72 Taxa de Sucesso : 100% Testes Totais : 870 📊 Resultados Phase 1 Territory Entity Edge Cases (28 testes) Teste Cobertura TerritoryEdgeCasesTests 28 novos testes Caracteres especiais ✅ Unicode, emojis, múltiplas linguagens Limites de coordenadas ✅ Latitude (-90 a 90), Longitude (-180 a 180) Precisão de dados ✅ 8 casas decimais suport",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_PHASE1",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_PHASE2",
+      "title": "ENTERPRISE COVERAGE PHASE2",
+      "content": "🚀 Enterprise-Level Test Coverage - Phase 2 Implementation Objetivo : Implementar testes de edge cases para entidades de Governance/Voting Status : ✅ Completo Tests Adicionados : 85+ Taxa de Sucesso : 100% Testes Totais : 955 (antes: 870, adição: 85+) 📊 Resultados Phase 2 TerritoryModerationRule Entity Edge Cases (27 testes) Teste Cobertura TerritoryModerationRuleEdgeCasesTests 27 novos testes Validação de JSON ✅ Null, empty, invalid JSON Tipos de regra ✅ Todos os 5 RuleTypes (ContentType, Proh",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_PHASE2",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_PHASE3_4",
+      "title": "ENTERPRISE COVERAGE PHASE3 4",
+      "content": "🚀 Enterprise-Level Test Coverage - Phase 3 &#x26; 4 Implementation Objetivo Phase 3 : Implementar testes de edge cases para entidades de Marketplace Objetivo Phase 4 : Implementar testes de validação de Application Layer Services Status : ✅ Completo Tests Adicionados : 150+ Taxa de Sucesso : 100% Testes Totais : 1105+ (antes: 955, adição: 150+) 📊 Resultados Phase 3 (Marketplace Entities) Store Entity Edge Cases (25 testes) Teste Cobertura StoreEdgeCasesTests 25 novos testes Validação de entrad",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_PHASE3_4",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_PHASE5",
+      "title": "ENTERPRISE COVERAGE PHASE5",
+      "content": "🚀 Enterprise-Level Test Coverage - Phase 5 Implementation Objetivo : Implementar testes de edge cases para Infrastructure &#x26; API Layers Status : ✅ Completo Tests Adicionados : 128+ Taxa de Sucesso : 100% Testes Totais : 1233+ (antes: 1105, adição: 128+) 📊 Resultados Phase 5 Repository Edge Cases (57 testes) Teste Cobertura RepositoryEdgeCasesTests 57 novos testes UserRepository ✅ Empty Guid, non-existent ID, case-insensitive matching TerritoryRepository ✅ Empty Guid, search with null/empty",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_PHASE5",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_PHASE6",
+      "title": "ENTERPRISE COVERAGE PHASE6",
+      "content": "🚀 Enterprise-Level Test Coverage - Phase 6 Implementation Objetivo : Implementar testes de edge cases para Domain Layer - Entidades Restantes Status : ✅ Completo Tests Adicionados : 112 Taxa de Sucesso : 100% Testes Totais : 1345+ (antes: 1233, adição: 112) 📊 Resultados Phase 6 Domain Layer - Entidades Restantes (112 testes) Teste Cobertura MediaEdgeCasesTests 20 novos testes EventEdgeCasesTests 30 novos testes ChatEdgeCasesTests 30 novos testes AssetEdgeCasesTests 12 novos testes FinancialEdg",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_PHASE6",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_PHASES_7_8_9_COMPLETE",
+      "title": "ENTERPRISE COVERAGE PHASES 7 8 9 COMPLETE",
+      "content": "🎉 Enterprise-Level Test Coverage - Phases 7, 8 e 9 - COMPLETO Data de Conclusão : 2026-01-24 Status : ✅ TODAS AS PHASES COMPLETAS Testes Adicionados : 112 novos testes Taxa de Sucesso Esperada : 100% 📊 Resumo Executivo ✅ Phase 7: Application Layer - 100% Completo 66 testes totais (26 existentes + 40 novos) 7 serviços cobertos com edge cases completos Status : ✅ Completo ✅ Phase 8: Infrastructure Layer - 75% Completo 30 testes criados 3 de 4 componentes completos PostgresRepositoryIntegrationTe",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_COMPLETE",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS",
+      "title": "ENTERPRISE COVERAGE PHASES 7 8 9 STATUS",
+      "content": "🚀 Enterprise-Level Test Coverage - Phases 7, 8 e 9 - Status Última Atualização : 2026-01-25 Status Geral : ✅ Completo e Validado Progresso : Phases 7, 8 e 9 completas; Fase 4 Domain + Fase 2 lotes 1–8 + Fase 3 branches. Testes : ✅ 2021 passando, 20 skipped, 0 failed. Cobertura : Domain ~84–85%; Application ~70–72%. Como rodar coverage : localmente ./scripts/run-coverage.ps1 ; no CI ( .github/workflows/ci.yml ) os testes rodam com coverage, o resumo vai para o Job Summary e o relatório é enviado",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS",
+      "category": "Outros"
+    },
+    {
+      "id": "ENTERPRISE_COVERAGE_SERVICOS_MENORES",
+      "title": "ENTERPRISE COVERAGE SERVICOS MENORES",
+      "content": "🎯 Enterprise Coverage - Serviços Application Menores - Status Data : 2026-01-24 Status : ✅ Completo e Validado Testes Criados : 70 testes de edge cases Taxa de Sucesso : 100% (70/70 passando) 📊 Resumo Foram criados testes de edge cases para 6 serviços menores da camada Application que ainda não possuíam cobertura adequada de casos extremos. ✅ Serviços Cobertos Serviço Arquivo de Teste Testes Status SystemConfigCacheService SystemConfigCacheServiceEdgeCasesTests.cs 14 testes ✅ Completo EmailQue",
+      "url": "/wiki/docs/ENTERPRISE_COVERAGE_SERVICOS_MENORES",
+      "category": "Outros"
+    },
+    {
+      "id": "EXCEPTION_HANDLING_PATTERN",
+      "title": "EXCEPTION HANDLING PATTERN",
+      "content": "Padrão de Exception Handling - Araponga Última Atualização : 2025-01-23 Status : ✅ Padrão Definido 📋 Resumo Este documento descreve o padrão de tratamento de exceções usado no Araponga, garantindo consistência e melhor experiência para desenvolvedores e usuários. 🎯 Princípios Result Pattern : Services retornam Result&#x3C;T> em vez de lançar exceções para erros de negócio Exceções Apenas para Erros Técnicos : Exceções são lançadas apenas para erros inesperados (bugs, infraestrutura) Logging Es",
+      "url": "/wiki/docs/EXCEPTION_HANDLING_PATTERN",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE12_AVALIACAO_IMPLEMENTACAO",
+      "title": "FASE12 AVALIACAO IMPLEMENTACAO",
+      "content": "Avaliação da Implementação - Fase 12: Otimizações Finais e Conclusão Data da Avaliação : 2026-01-21 Avaliador : Equipe de Desenvolvimento Araponga Documento de Referência : FASE12_STATUS.md , FASE12.md 1. Visão Geral Métrica Valor Progresso estimado ~85% (190h de 224h planejadas) Componentes completos 8 de 10 planejados (2 parciais) Testes 716 passando, 2 pulados, 718 total (100% dos executáveis) Status 🟢 Quase Completo — objetivos principais atingidos A Fase 12 tinha como objetivo fechar lacun",
+      "url": "/wiki/docs/FASE12_AVALIACAO_IMPLEMENTACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE14_5_IMPLEMENTACAO_RESUMO",
+      "title": "FASE14 5 IMPLEMENTACAO RESUMO",
+      "content": "Fase 14.5: Resumo de Implementação Data : 2025-01-23 Status : ✅ Implementações Concluídas 📊 Resumo Executivo Todas as tarefas pendentes da Fase 14.5 foram implementadas ou documentadas: ✅ Fase 1 : Documentação completa (métricas, índices, exception handling, Result) ✅ Fase 11 : Full-text search implementado no marketplace ✅ Fase 14 : Planos de implementação documentados (tags explícitas, configuração de notificações) ✅ Implementações Realizadas 1. Fase 1: Segurança e Fundação Crítica 1.1 Connec",
+      "url": "/wiki/docs/FASE14_5_IMPLEMENTACAO_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE1_INFRASTRUCTURE_SHARED_COMPLETA",
+      "title": "FASE1 INFRASTRUCTURE SHARED COMPLETA",
+      "content": "Fase 1: Infrastructure.Shared - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Infrastructure.Shared ✅ Projeto Araponga.Infrastructure.Shared criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, Cache, Email, etc.) 2. SharedDbContext ✅ SharedDbContext criado com todas as configurações ✅ 14 entidades compartilhadas configuradas no OnModelCreating ✅ Implementa IUnitOfWork para transações Entidades no SharedDbContext : TerritoryRec",
+      "url": "/wiki/docs/FASE1_INFRASTRUCTURE_SHARED_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE2_FEED_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE2 FEED INFRASTRUCTURE COMPLETA",
+      "content": "Fase 2: Feed.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Feed.Infrastructure ✅ Projeto Araponga.Modules.Feed.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Feed.Infrastructure não referencia FeedModule (apenas Domain/Application) 2. FeedDbContext ✅ FeedDbContext criado com todas as configurações ✅ 6 entidades de Feed confi",
+      "url": "/wiki/docs/FASE2_FEED_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE3_MARKETPLACE_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE3 MARKETPLACE INFRASTRUCTURE COMPLETA",
+      "content": "Fase 3: Marketplace.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Marketplace.Infrastructure ✅ Projeto Araponga.Modules.Marketplace.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Marketplace.Infrastructure não referencia MarketplaceModule (apenas Domain/Application) 2. MarketplaceDbContext ✅ MarketplaceDbContext criado com t",
+      "url": "/wiki/docs/FASE3_MARKETPLACE_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_ADMIN_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 ADMIN INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4: Admin.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ COMPLETA 📋 Objetivo Criar infraestrutura independente para o módulo Admin, incluindo entidades de administração e sistema (WorkItem, DocumentEvidence). ✅ Resultado Projeto Criado ✅ Araponga.Modules.Admin.Infrastructure criado e funcional ✅ Build passando (apenas warnings de versão de pacote) DbContext ✅ AdminDbContext criado com 2 entidades: WorkItemRecord DocumentEvidenceRecord ✅ Implementa IUnitOfWork ✅ Configurações OnMod",
+      "url": "/wiki/docs/FASE4_ADMIN_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_ALERTS_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 ALERTS INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4 (Parte 7): Alerts.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Alerts.Infrastructure ✅ Projeto Araponga.Modules.Alerts.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Alerts.Infrastructure não referencia AlertsModule (apenas Domain/Application) 2. AlertsDbContext ✅ AlertsDbContext criado com todas as configurações ✅ 1",
+      "url": "/wiki/docs/FASE4_ALERTS_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_ASSETS_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 ASSETS INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4: Assets.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ COMPLETA 📋 Objetivo Criar infraestrutura independente para o módulo Assets, incluindo entidades de Assets (TerritoryAsset, AssetGeoAnchor, AssetValidation, PostAsset) e Media (MediaAsset, MediaAttachment). ✅ Resultado Projeto Criado ✅ Araponga.Modules.Assets.Infrastructure criado e funcional ✅ Build passando (apenas warnings de versão de pacote) DbContext ✅ AssetsDbContext criado com 6 entidades: TerritoryAssetRecord AssetG",
+      "url": "/wiki/docs/FASE4_ASSETS_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_CHAT_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 CHAT INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4 (Parte 3): Chat.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Chat.Infrastructure ✅ Projeto Araponga.Modules.Chat.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Chat.Infrastructure não referencia ChatModule (apenas Domain/Application) 2. ChatDbContext ✅ ChatDbContext criado com todas as configurações ✅ 4 entidades de ",
+      "url": "/wiki/docs/FASE4_CHAT_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_EVENTS_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 EVENTS INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4 (Parte 1): Events.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Events.Infrastructure ✅ Projeto Araponga.Modules.Events.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Events.Infrastructure não referencia EventsModule (apenas Domain/Application) 2. EventsDbContext ✅ EventsDbContext criado com todas as configurações ✅ 2",
+      "url": "/wiki/docs/FASE4_EVENTS_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_MAP_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 MAP INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4 (Parte 2): Map.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Map.Infrastructure ✅ Projeto Araponga.Modules.Map.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Map.Infrastructure não referencia MapModule (apenas Domain/Application) 2. MapDbContext ✅ MapDbContext criado com todas as configurações ✅ 2 entidades de Map con",
+      "url": "/wiki/docs/FASE4_MAP_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_MODERATION_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 MODERATION INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4 (Parte 5): Moderation.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Moderation.Infrastructure ✅ Projeto Araponga.Modules.Moderation.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Moderation.Infrastructure não referencia ModerationModule (apenas Domain/Application) 2. ModerationDbContext ✅ ModerationDbContext criado co",
+      "url": "/wiki/docs/FASE4_MODERATION_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_NOTIFICATIONS_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 NOTIFICATIONS INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4 (Parte 6): Notifications.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Notifications.Infrastructure ✅ Projeto Araponga.Modules.Notifications.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Notifications.Infrastructure não referencia NotificationsModule (apenas Domain/Application) 2. NotificationsDbContext ✅ Notificatio",
+      "url": "/wiki/docs/FASE4_NOTIFICATIONS_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE4_SUBSCRIPTIONS_INFRASTRUCTURE_COMPLETA",
+      "title": "FASE4 SUBSCRIPTIONS INFRASTRUCTURE COMPLETA",
+      "content": "Fase 4 (Parte 4): Subscriptions.Infrastructure - COMPLETA ✅ Data : 2026-01-27 Status : ✅ CONCLUÍDA ✅ O que foi implementado 1. Projeto Subscriptions.Infrastructure ✅ Projeto Araponga.Modules.Subscriptions.Infrastructure criado ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, referências aos projetos necessários) ✅ Sem dependência circular : Subscriptions.Infrastructure não referencia SubscriptionsModule (apenas Domain/Application) 2. SubscriptionsDbContext ✅ Subscriptio",
+      "url": "/wiki/docs/FASE4_SUBSCRIPTIONS_INFRASTRUCTURE_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE5_REFATORACAO_API_TESTES_PLANO",
+      "title": "FASE5 REFATORACAO API TESTES PLANO",
+      "content": "Fase 5: Refatoração API e Testes - Plano de Implementação Data : 2026-01-27 Status : 🚧 Em Planejamento 📋 Objetivo Atualizar a API e testes para usar a infraestrutura modular, removendo dependências do ArapongaDbContext monolítico e utilizando os múltiplos DbContext s modulares. 🎯 Tarefas Principais 1. Atualizar Program.cs Adicionar registro de módulos via ModuleRegistry Registrar SharedDbContext primeiro (infraestrutura compartilhada) Remover registro do ArapongaDbContext monolítico Atualizar",
+      "url": "/wiki/docs/FASE5_REFATORACAO_API_TESTES_PLANO",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE_TECNICA_MODULARIZACAO",
+      "title": "FASE TECNICA MODULARIZACAO",
+      "content": "Fase Técnica: Modularização da Aplicação Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA Tipo : Refatoração Arquitetural 🎯 Objetivo Implementar um sistema de módulos que permite habilitar/desabilitar funcionalidades da aplicação via configuração, preparando o código para futura migração para microserviços ou arquitetura modular. 📋 Resumo Executivo A modularização foi implementada com sucesso, permitindo: ✅ Configuração por Módulos : Habilitar/desabilitar módulos via appsettings.json ✅ Depen",
+      "url": "/wiki/docs/FASE_TECNICA_MODULARIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE_TECNICA_MODULARIZACAO_HEALTH_METRICS",
+      "title": "FASE TECNICA MODULARIZACAO HEALTH METRICS",
+      "content": "Health Checks e Métricas por Módulo Data de Implementação : 2026-01-26 Status : ✅ COMPLETO 🎯 Objetivo Implementar health checks e métricas específicas para o sistema de módulos, permitindo monitoramento e observabilidade do status dos módulos da aplicação. ✅ Implementações 1. Health Checks por Módulo 1.1 ModuleHealthCheck Arquivo : backend/Araponga.Api/HealthChecks/ModuleHealthCheck.cs Funcionalidades : Verifica se todos os módulos obrigatórios estão habilitados Retorna status Unhealthy se módu",
+      "url": "/wiki/docs/FASE_TECNICA_MODULARIZACAO_HEALTH_METRICS",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE_TECNICA_MODULARIZACAO_PROJETOS_SEPARADOS",
+      "title": "FASE TECNICA MODULARIZACAO PROJETOS SEPARADOS",
+      "content": "Separação de Módulos em Projetos Independentes Data de Implementação : 2026-01-26 Status : ✅ COMPLETO 🎯 Objetivo Separar cada módulo em um projeto independente para garantir desacoplamento real, facilitando manutenção, versionamento e futura migração para microserviços. ✅ Implementação 1. Estrutura de Projetos Criada 1.1 Projeto Base: Araponga.Modules.Core Localização : backend/Araponga.Modules.Core/ Conteúdo : IModule.cs - Interface base para módulos ModuleBase.cs - Classe base abstrata para m",
+      "url": "/wiki/docs/FASE_TECNICA_MODULARIZACAO_PROJETOS_SEPARADOS",
+      "category": "Outros"
+    },
+    {
+      "id": "FASE_TECNICA_MODULARIZACAO_RESUMO",
+      "title": "FASE TECNICA MODULARIZACAO RESUMO",
+      "content": "Resumo Executivo - Modularização da Aplicação Data de Conclusão : 2026-01-26 Status : ✅ COMPLETA E VALIDADA 🎯 Objetivo Alcançado Implementação bem-sucedida de um sistema de módulos que permite habilitar/desabilitar funcionalidades via configuração, preparando o código para futura migração para microserviços ou arquitetura modular. ✅ Entregas Completas 1. Sistema de Módulos ✅ 12 módulos implementados (Core, Feed, Marketplace, Subscriptions, Chat, Events, Map, Moderation, Notifications, Alerts, A",
+      "url": "/wiki/docs/FASE_TECNICA_MODULARIZACAO_RESUMO",
+      "category": "Outros"
+    },
+    {
+      "id": "FEED_TAGS_IMPLEMENTATION_PLAN",
+      "title": "FEED TAGS IMPLEMENTATION PLAN",
+      "content": "Plano de Implementação: Tags Explícitas em Posts Última Atualização : 2025-01-23 Status : 📋 Planejado (Opcional) 📋 Resumo Este documento descreve o plano para adicionar tags/categorias explícitas aos posts, permitindo filtragem mais precisa do feed por interesses. 🎯 Objetivo Permitir que posts tenham tags explícitas (ex: \"meio ambiente\", \"eventos\", \"saúde\") que podem ser usadas para filtrar o feed de forma mais precisa do que a busca por palavras-chave no título/conteúdo. 📐 Design Modelo de ",
+      "url": "/wiki/docs/FEED_TAGS_IMPLEMENTATION_PLAN",
+      "category": "Outros"
+    },
+    {
+      "id": "GOVERNANCE_SYSTEM",
+      "title": "GOVERNANCE SYSTEM",
+      "content": "Sistema de Governança Comunitária Versão : 1.0 Data : 2025-01-21 Status : ✅ Implementado 📋 Visão Geral O Sistema de Governança Comunitária permite que comunidades territoriais tomem decisões coletivas através de votações, definam regras de moderação dinâmicas e personalizem seus feeds através de interesses. Princípios Fundamentais Soberania Territorial : Cada território tem autonomia para definir suas próprias regras Transparência : Todas as votações e regras são públicas e auditáveis Participa",
+      "url": "/wiki/docs/GOVERNANCE_SYSTEM",
+      "category": "Outros"
+    },
+    {
+      "id": "GUIA_IMPLEMENTACAO_MODULARIZACAO",
+      "title": "GUIA IMPLEMENTACAO MODULARIZACAO",
+      "content": "Guia de Implementação: Modularização com Desacoplamento Real Data : 2026-01-27 Status : ✅ Fases 1, 2, 3 e 4 (Events, Map, Chat, Subscriptions, Moderation, Notifications, Alerts, Assets, Admin) Completas - FASE 4 COMPLETA ✅ 📋 Checklist de Implementação ✅ Fase 1: Infrastructure.Shared - COMPLETA ✅ Criar projeto Araponga.Infrastructure.Shared Adicionar ao solution Configurar dependências Criar estrutura de pastas Criar SharedDbContext base Copiar entidades compartilhadas para Postgres/Entities/ (1",
+      "url": "/wiki/docs/GUIA_IMPLEMENTACAO_MODULARIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "IMPLEMENTACAO_ARQUITETURA_MODULAR",
+      "title": "IMPLEMENTACAO ARQUITETURA MODULAR",
+      "content": "Implementação: Arquitetura Modular Escalável Versão : 1.0 Data : 2026-01-26 Status : 🚧 Em Implementação Tipo : Guia de Implementação 🎯 Estratégia de Implementação Abordagem Incremental Refatoração será feita incrementalmente para não quebrar funcionalidade existente: ✅ Fase 1 : Criar estrutura base (Domain.Core) ✅ Fase 2 : Refatorar módulo Feed (exemplo) ✅ Fase 3 : Refatorar módulo Marketplace ✅ Fase 4 : Aplicar aos demais módulos ✅ Fase 5 : Refatorar API 📋 Passo a Passo Passo 1: Criar Arapon",
+      "url": "/wiki/docs/IMPLEMENTACAO_ARQUITETURA_MODULAR",
       "category": "Outros"
     },
     {
@@ -1317,10 +1849,24 @@
       "category": "Outros"
     },
     {
+      "id": "IMPLEMENTACAO_MODULARIZACAO_EM_ANDAMENTO",
+      "title": "IMPLEMENTACAO MODULARIZACAO EM ANDAMENTO",
+      "content": "Implementação da Modularização - Em Andamento Data : 2026-01-27 Status : 🚧 Implementação Iniciada ✅ Progresso Fase 1: Infrastructure.Shared - EM ANDAMENTO ✅ Projeto Araponga.Infrastructure.Shared criado ✅ Projeto adicionado ao solution ✅ Dependências configuradas ⏳ Criar estrutura de pastas ⏳ Mover SharedDbContext (apenas Territory, User, Membership) ⏳ Mover repositórios compartilhados ⏳ Mover serviços cross-cutting 📋 Próximos Passos Imediatos 1. Criar Estrutura de Pastas Araponga.Infrastructu",
+      "url": "/wiki/docs/IMPLEMENTACAO_MODULARIZACAO_EM_ANDAMENTO",
+      "category": "Outros"
+    },
+    {
       "id": "IMPLEMENTACAO_REESTRUTURACAO_DEVPORTAL_PLANO",
       "title": "IMPLEMENTACAO REESTRUTURACAO DEVPORTAL PLANO",
       "content": "Plano de Implementação da Reestruturação do DevPortal Data : 2025-01-20 Status : Em Progresso Arquivo : frontend/devportal/index.html (~2795 linhas) 📋 Estratégia de Implementação Devido ao tamanho do arquivo (~2795 linhas), a reestruturação será feita em etapas incrementais : Etapa 1: Estrutura Base ✅ (Em Progresso) Adicionar Phase Tabs no início do &#x3C;main> Criar Phase Panels vazios para cada tab Validar CSS e JavaScript já existentes Etapa 2: Tab 1 - Começando (Pendente) Mover #quickstart ",
       "url": "/wiki/docs/IMPLEMENTACAO_REESTRUTURACAO_DEVPORTAL_PLANO",
+      "category": "Outros"
+    },
+    {
+      "id": "IMPLEMENTATION_SUMMARY",
+      "title": "IMPLEMENTATION SUMMARY",
+      "content": "📊 Resultado da Reorganização de Documentação ✅ PLANO IMPLEMENTADO COM SUCESSO 📂 Limpeza da Raiz - 43+ Arquivos Removidos Tipo Quantidade Removidos pr_body_*.txt 12 ✅ Deletados PR_*.md 23 ✅ Deletados pr_*_fix.txt 3 ✅ Deletados Documentação temporária 5 ✅ Deletados TOTAL 43+ ✅ LIMPO 📚 Novos Arquivos em /docs/ docs/ ├── 🆕 DEVELOPMENT.md # Guia para desenvolvedores ├── 🆕 SETUP.md # Instalação e configuração ├── 🆕 API.md # Documentação de API ├── 🆕 STRUCTURE.md # Estrutura da documentação └── ",
+      "url": "/wiki/docs/IMPLEMENTATION_SUMMARY",
       "category": "Outros"
     },
     {
@@ -1331,6 +1877,13 @@
       "category": "Outros"
     },
     {
+      "id": "INCIDENT_RESPONSE",
+      "title": "INCIDENT RESPONSE",
+      "content": "Plano de Resposta a Incidentes - Araponga Última Atualização : 2026-01-21 Versão : 1.0 📋 Índice Classificação de Incidentes Processo de Resposta Procedimentos por Tipo de Incidente Comunicação Pós-Incidente 1. Classificação de Incidentes Severidade P0 - Crítico Impacto : Sistema completamente indisponível Tempo de Resposta : Imediato (&#x3C; 15 minutos) Tempo de Resolução : &#x3C; 1 hora Exemplos : API completamente offline Banco de dados inacessível Perda de dados Severidade P1 - Alto Impacto ",
+      "url": "/wiki/docs/INCIDENT_RESPONSE",
+      "category": "Outros"
+    },
+    {
       "id": "INTEGRACAO_ONBOARDING_TECNICO_REESTRUTURACAO",
       "title": "INTEGRACAO ONBOARDING TECNICO REESTRUTURACAO",
       "content": "Integração de Onboarding Técnico na Reestruturação do DevPortal Data : 2025-01-20 Status : Concluído - Conteúdo criado e mapeado Próximo Passo : Implementação da estrutura de tabs/panels no HTML 📋 Sumário Executivo As seções de onboarding técnico (Analistas Funcionais e Desenvolvedores) foram criadas e integradas no DevPortal. O conteúdo está funcional e acessível, mapeado na estrutura de reestruturação proposta, e pronto para ser organizado em tabs/panels quando a estrutura de navegação progre",
@@ -1338,10 +1891,31 @@
       "category": "Outros"
     },
     {
+      "id": "LGPD_COMPLIANCE",
+      "title": "LGPD COMPLIANCE",
+      "content": "Conformidade LGPD - Araponga Última Atualização : 2026-01-20 Status : ✅ Implementado 📋 Resumo Este documento descreve as medidas implementadas no Araponga para garantir conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018) . ✅ Funcionalidades Implementadas 1. Exportação de Dados Pessoais Endpoint : GET /api/v1/users/me/export Descrição : Permite que o usuário exporte todos os seus dados pessoais em formato JSON. Dados Exportados : Perfil de usuário (nome, email, telefone",
+      "url": "/wiki/docs/LGPD_COMPLIANCE",
+      "category": "Outros"
+    },
+    {
       "id": "LICOES_APRENDIDAS",
       "title": "LICOES APRENDIDAS",
       "content": "Lições Aprendidas - Araponga Última Atualização : 2025-01-20 Total de Lições : 1 Status : Documento Vivo Este documento captura lições aprendidas de revisões técnicas, garantindo que conhecimento adquirido seja permanentemente incorporado às diretrizes do projeto. Processo : Ver docs/PROCESSO_AUTO_APRENDIZADO_REVISOES.md 📚 Lições por Categoria 🔴 Críticas LIC-001 - Cores Hardcoded Proibidas Data : 2025-01-20 Categoria : Crítico Revisão Origem : docs/REVISAO_ARTE_DESIGN_WIKI.md Contexto : Revisã",
       "url": "/wiki/docs/LICOES_APRENDIDAS",
+      "category": "Outros"
+    },
+    {
+      "id": "MAPEAMENTO_FASES_ATUALIZADO",
+      "title": "MAPEAMENTO FASES ATUALIZADO",
+      "content": "Mapeamento Atualizado de Fases - Numeração Coerente Data : 2026-01-25 Status : ✅ Atualizado Objetivo : Mapeamento completo de todas as fases com numeração coerente final 📊 Mapeamento Completo (Fase Antiga → Nova Fase) Fase Antiga Título Nova Fase Mudança Arquivo 1 Segurança e Fundação Crítica 1 ✅ Mantida FASE1.md 2 Qualidade de Código 2 ✅ Mantida FASE2.md 3 Performance e Escalabilidade 3 ✅ Mantida FASE3.md 4 Observabilidade 4 ✅ Mantida FASE4.md 5 Segurança Avançada 5 ✅ Mantida FASE5.md 6 Sistem",
+      "url": "/wiki/docs/MAPEAMENTO_FASES_ATUALIZADO",
+      "category": "Outros"
+    },
+    {
+      "id": "MAPEAMENTO_RENUMERACAO_FASES",
+      "title": "MAPEAMENTO RENUMERACAO FASES",
+      "content": "Mapeamento de Renumeração de Fases por Prioridade Data : 2026-01-25 Status : 📋 Mapeamento Completo Objetivo : Renumerar todas as fases em ordem sequencial de prioridade de implementação 📊 Ordem de Prioridade de Implementação Fases 1-8: ✅ Implementadas (Manter Numeração) Fase Título Status 1 Segurança e Fundação Crítica ✅ Completo 2 Qualidade de Código ✅ Completo 3 Performance e Escalabilidade ✅ Completo 4 Observabilidade ✅ Completo 5 Segurança Avançada ✅ Completo 6 Sistema de Pagamentos ✅ Comp",
+      "url": "/wiki/docs/MAPEAMENTO_RENUMERACAO_FASES",
       "category": "Outros"
     },
     {
@@ -1380,6 +1954,13 @@
       "category": "Outros"
     },
     {
+      "id": "NOTIFICATION_CONFIG_ADVANCED",
+      "title": "NOTIFICATION CONFIG ADVANCED",
+      "content": "Configuração Avançada de Notificações - Araponga Última Atualização : 2025-01-23 Status : 📋 Planejado (Opcional) 📋 Resumo Este documento descreve o plano para implementar configuração avançada de notificações por território e globalmente, permitindo controle granular sobre tipos, canais e templates de notificações. 🎯 Objetivo Permitir que administradores configurem: Quais tipos de notificações são enviados Quais canais são usados (in-app, email, push) Templates personalizados por território R",
+      "url": "/wiki/docs/NOTIFICATION_CONFIG_ADVANCED",
+      "category": "Outros"
+    },
+    {
       "id": "ONBOARDING_ANALISTAS_FUNCIONAIS",
       "title": "ONBOARDING ANALISTAS FUNCIONAIS",
       "content": "Analistas Funcionais Bem-vindo ao Araponga Você chegou aqui porque observa o território e entende que tecnologia pode servir às necessidades reais das comunidades. Este documento é para você que: Conhece seu território e identifica necessidades práticas Observa como pessoas se relacionam com o lugar onde vivem Quer propor melhorias baseadas em necessidades reais Entende processos e fluxos de organização comunitária Acredita que tecnologia deve servir ao território, não o contrário Não precisa se",
@@ -1408,6 +1989,69 @@
       "category": "Onboarding"
     },
     {
+      "id": "OPERATIONS_MANUAL",
+      "title": "OPERATIONS MANUAL",
+      "content": "Manual de Operação - Araponga Última Atualização : 2026-01-21 Versão : 1.0 📋 Índice Visão Geral Deploy Rollback Backup e Restore Monitoramento Escalabilidade Manutenção 1. Visão Geral Araponga é uma API ASP.NET Core 8.0 que utiliza: Banco de Dados : PostgreSQL Cache : Redis (opcional, fallback para IMemoryCache) Autenticação : JWT Observabilidade : OpenTelemetry, Prometheus, Serilog Containerização : Docker 2. Deploy 2.1 Pré-requisitos Docker e Docker Compose instalados Acesso ao repositório de",
+      "url": "/wiki/docs/OPERATIONS_MANUAL",
+      "category": "Outros"
+    },
+    {
+      "id": "ORDEM_FASES_POR_PRIORIDADE",
+      "title": "ORDEM FASES POR PRIORIDADE",
+      "content": "Ordem de Fases por Prioridade de Implementação Data : 2026-01-25 Status : ✅ Organizado Objetivo : Lista completa de fases em ordem sequencial de prioridade de implementação 📊 Fases em Ordem de Prioridade Fases 1-8: ✅ Implementadas # Título Status Prioridade 1 Segurança e Fundação Crítica ✅ - 2 Qualidade de Código ✅ - 3 Performance e Escalabilidade ✅ - 4 Observabilidade ✅ - 5 Segurança Avançada ✅ - 6 Sistema de Pagamentos ✅ - 7 Sistema de Payout ✅ - 8 Infraestrutura de Mídia ✅ - Fases 9-10, 13-1",
+      "url": "/wiki/docs/ORDEM_FASES_POR_PRIORIDADE",
+      "category": "Outros"
+    },
+    {
+      "id": "PERFORMANCE_TEST_RESULTS",
+      "title": "PERFORMANCE TEST RESULTS",
+      "content": "Resultados de Testes de Performance - Araponga Última Atualização : 2026-01-20 Status : ✅ Implementado 📋 Resumo Este documento descreve os testes de performance implementados, SLAs definidos e resultados esperados. ✅ Testes Implementados 1. Testes de Performance Básicos ( PerformanceTests.cs ) Testes de SLA para endpoints críticos: Endpoint SLA Status GET /api/v1/territories &#x3C; 500ms ✅ GET /api/v1/territories/paged &#x3C; 300ms ✅ GET /api/v1/feed &#x3C; 800ms ✅ GET /api/v1/feed/paged &#x3C;",
+      "url": "/wiki/docs/PERFORMANCE_TEST_RESULTS",
+      "category": "Outros"
+    },
+    {
+      "id": "PHASE1_SUMMARY",
+      "title": "PHASE1 SUMMARY",
+      "content": "🎯 IMPLEMENTAÇÃO ENTERPRISE-LEVEL COVERAGE - FASE 1 ✅ 🚀 Resumo Executivo Foi implementada com sucesso a Fase 1 do plano de cobertura de testes enterprise-level para o Araponga, focando no Domain Layer com testes de edge cases robustos. 📊 Números da Implementação Testes Adicionados Entidade Testes Status Territory 28 ✅ Passing User 18 ✅ Passing CommunityPost 26 ✅ Passing TOTAL 72 ✅ 100% Impacto na Cobertura Antes : ~40% Domain Layer Depois : ~65% Domain Layer Ganho : +25% de cobertura Testes to",
+      "url": "/wiki/docs/PHASE1_SUMMARY",
+      "category": "Outros"
+    },
+    {
+      "id": "PLANO_90_PORCENTO_COBERTURA",
+      "title": "PLANO 90 PORCENTO COBERTURA",
+      "content": "🎯 Plano para Atingir 90% de Cobertura em Todas as Camadas Última Atualização : 2026-01-25 Status Atual (medido após Fase 4 + Fase 2 lotes 1–8 + Fase 3 branches): Domain Layer: ~84–85% linhas, ~76% branches Application Layer: ~70–72% linhas, ~54% branches Suíte : 2021 passando, 20 skipped, 0 failed. Meta : 90%+ em todas as camadas Gap : Domain: ~5% linhas, ~14% branches Application: ~20% linhas, ~36% branches Estimativa : 360-500 testes adicionais (ver plano detalhado) Progresso 90% (2026-01-24)",
+      "url": "/wiki/docs/PLANO_90_PORCENTO_COBERTURA",
+      "category": "Outros"
+    },
+    {
+      "id": "PLANO_90_PORCENTO_COBERTURA_DETALHADO",
+      "title": "PLANO 90 PORCENTO COBERTURA DETALHADO",
+      "content": "🎯 Plano Detalhado para Atingir 90% de Cobertura Data : 2026-01-24 Status Atual : Domain Layer: 82.23% linhas, 74.39% branches (gap: ~8% linhas, ~16% branches) Application Layer: 66.37% linhas, 50.39% branches (gap: ~24% linhas, ~40% branches) Meta : 90%+ em ambas as camadas 📊 Análise de Gap Domain Layer (82.23% → 90%) Gap : ~8% linhas, ~16% branches Prioridade : 🟡 Média (já está próximo) O que falta: Cobertura de Branches (74.39% → 90%) Testar todos os caminhos condicionais Testar todos os ca",
+      "url": "/wiki/docs/PLANO_90_PORCENTO_COBERTURA_DETALHADO",
+      "category": "Outros"
+    },
+    {
+      "id": "PLANO_ACAO_10_10_RESULTADOS",
+      "title": "PLANO ACAO 10 10 RESULTADOS",
+      "content": "Plano de Ação 10/10 - Resultados Data de Conclusão : 2026-01-21 Status : 🟢 85% Completo — Objetivos principais atingidos 📊 Resumo Executivo O Plano de Ação 10/10 tinha como objetivo alcançar nota 10/10 em todas as categorias de avaliação. A Fase 12 foi responsável por fechar as lacunas finais. Resultado Final Categoria Nota Alcançada Status Funcionalidades 9.5/10 🟢 Excelente Testes 10/10 ✅ Perfeito Documentação 9/10 🟢 Excelente Operação 8.5/10 🟢 Muito Bom Performance 8/10 🟢 Muito Bom Média",
+      "url": "/wiki/docs/PLANO_ACAO_10_10_RESULTADOS",
+      "category": "Outros"
+    },
+    {
+      "id": "PLANO_MODULARIZACAO_DESACOPLAMENTO_REAL",
+      "title": "PLANO MODULARIZACAO DESACOPLAMENTO REAL",
+      "content": "Plano: Modularização com Desacoplamento Real Versão : 1.0 Data : 2026-01-27 Status : 🚧 Em Andamento Tipo : Documentação Técnica de Arquitetura 🎯 Objetivo Implementar modularização completa com desacoplamento real , onde cada módulo é totalmente independente, incluindo: ✅ Domain próprio ✅ Application própria ✅ Infrastructure própria (slice da infraestrutura) ← NOVO ✅ Interfaces públicas bem definidas ✅ Comunicação via contratos explícitos Princípio Fundamental : Cada módulo deve poder ser extra",
+      "url": "/wiki/docs/PLANO_MODULARIZACAO_DESACOPLAMENTO_REAL",
+      "category": "Outros"
+    },
+    {
+      "id": "PLANO_MODULARIZACAO_DESACOPLAMENTO_REAL_RESUMO",
+      "title": "PLANO MODULARIZACAO DESACOPLAMENTO REAL RESUMO",
+      "content": "Resumo: Plano de Modularização com Desacoplamento Real Versão : 1.0 Data : 2026-01-27 Status : 📋 Pronto para Implementação 🎯 Objetivo Principal Implementar desacoplamento real através do slice da infraestrutura , onde cada módulo tem sua própria camada de infraestrutura (repositórios, DbContext, migrações). 📊 O Problema Situação Atual : ❌ Araponga.Infrastructure é monolítico (todos os repositórios juntos) ❌ Um único DbContext para todos os módulos ❌ Migrações acopladas ❌ Impossível extrair mó",
+      "url": "/wiki/docs/PLANO_MODULARIZACAO_DESACOPLAMENTO_REAL_RESUMO",
+      "category": "Outros"
+    },
+    {
       "id": "PLANO_SISTEMATICO_REFORMULACAO_DESIGN",
       "title": "PLANO SISTEMATICO REFORMULACAO DESIGN",
       "content": "Plano Sistemático de Reformulação de Design - Araponga Versão : 2.0 Data : 2025-01-20 Status : 🚀 Em Execução Referência de Excelência : closer.earth, Material Design 3, Apple HIG, WCAG 2.1 📋 Sumário Executivo Este documento apresenta um plano sistemático e completo de reformulação do design system do Araponga, alinhado com diretrizes internacionais de design (Material Design 3, Apple HIG, WCAG 2.1) e profundamente enraizado nos valores fundamentais do projeto: território, autonomia, transparên",
@@ -1426,6 +2070,27 @@
       "title": "PROCESSO AUTO APRENDIZADO REVISOES",
       "content": "Processo de Auto-Aprendizado Após Revisões Versão : 1.0 Data : 2025-01-20 Status : Processo Estabelecido Aplicação : Todas as revisões de código, design, arquitetura e documentação 📋 Sumário Executivo Este documento define um processo sistemático de auto-aprendizado que captura, categoriza e integra lições aprendidas de revisões técnicas, garantindo que conhecimento adquirido seja permanentemente incorporado às diretrizes e práticas do projeto. Objetivo : Transformar revisões em melhorias contí",
       "url": "/wiki/docs/PROCESSO_AUTO_APRENDIZADO_REVISOES",
+      "category": "Outros"
+    },
+    {
+      "id": "PROGRESSO_IMPLEMENTACAO_MODULARIZACAO",
+      "title": "PROGRESSO IMPLEMENTACAO MODULARIZACAO",
+      "content": "Progresso da Implementação: Modularização com Desacoplamento Real Data : 2026-01-27 Status : 🚧 Fase 1 em Andamento ✅ Fase 1: Infrastructure.Shared - PROGRESSO Concluído ✅ Projeto criado : Araponga.Infrastructure.Shared ✅ Adicionado ao solution ✅ Dependências configuradas ✅ Estrutura de pastas criada ✅ SharedDbContext criado com todas as configurações do OnModelCreating ✅ 14 entidades compartilhadas copiadas : TerritoryRecord UserRecord UserPreferencesRecord UserDeviceRecord UserInterestRecord T",
+      "url": "/wiki/docs/PROGRESSO_IMPLEMENTACAO_MODULARIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "PROGRESSO_MODULARIZACAO_DESACOPLAMENTO",
+      "title": "PROGRESSO MODULARIZACAO DESACOPLAMENTO",
+      "content": "Progresso: Modularização com Desacoplamento Real Data : 2026-01-27 Status Geral : ✅ Fase 4 COMPLETA (3 de 6 fases completas + 9 módulos da Fase 4) ✅ Fases Completas ✅ Fase 1: Infrastructure.Shared - COMPLETA Objetivo : Criar infraestrutura compartilhada para entidades core e serviços cross-cutting. Resultado : ✅ Projeto Araponga.Infrastructure.Shared criado e funcional ✅ SharedDbContext com 14 entidades compartilhadas ✅ 10 repositórios compartilhados migrados ✅ 6 serviços cross-cutting + 3 FileS",
+      "url": "/wiki/docs/PROGRESSO_MODULARIZACAO_DESACOPLAMENTO",
+      "category": "Outros"
+    },
+    {
+      "id": "PROGRESSO_REFATORACAO_MODULAR",
+      "title": "PROGRESSO REFATORACAO MODULAR",
+      "content": "Progresso da Refatoração Arquitetural Modular Data : 2026-01-26 Status : 🚧 Em Andamento ✅ Fase 1: Domain.Core - CONCLUÍDA O que foi feito: ✅ Criado projeto Araponga.Domain.Core Estrutura de pastas criada Projeto adicionado ao solution ✅ Entidades compartilhadas movidas : Territories/Territory.cs → Araponga.Domain.Core.Territories Territories/TerritoryStatus.cs → Araponga.Domain.Core.Territories Users/User.cs → Araponga.Domain.Core.Users Users/UserIdentityVerificationStatus.cs → Araponga.Domain.",
+      "url": "/wiki/docs/PROGRESSO_REFATORACAO_MODULAR",
       "category": "Outros"
     },
     {
@@ -1618,6 +2283,13 @@
       "category": "Outros"
     },
     {
+      "id": "prs/PR_REPLANEJAMENTO_ROADMAP_FASES",
+      "title": "PR REPLANEJAMENTO ROADMAP FASES",
+      "content": "Pull Request: Replanejamento Completo do Roadmap e Fases Data : 2026-01-25 Tipo : 📋 Documentação / Planejamento Estratégico Status : ✅ Pronto para Review Impacto : Alto - Reorganização completa do roadmap estratégico 📋 Resumo Executivo Este PR consolida um replanejamento completo do roadmap estratégico do Araponga, incluindo: ✅ Reavaliação de Prioridades : Blockchain reposicionado de P0 para P1 (contexto brasileiro) ✅ Nova Funcionalidade : Sistema de Hospedagem Territorial (Fase 30) - já docum",
+      "url": "/wiki/docs/prs/PR_REPLANEJAMENTO_ROADMAP_FASES",
+      "category": "Outros"
+    },
+    {
       "id": "prs/PR_USER_PREFERENCES",
       "title": "PR USER PREFERENCES",
       "content": "PR: Preferências de Usuário e Privacidade Data : 2025-01-13 Status : ✅ Implementado e Testado Branch : feature/user-preferences 📋 Resumo Implementação completa da funcionalidade de preferências de privacidade e configurações do usuário, permitindo que usuários controlem: Visibilidade do perfil e informações de contato Preferências de notificações por tipo Atualização de informações do perfil 🎯 Funcionalidades Implementadas 1. Preferências de Privacidade Visibilidade do Perfil : Public, Residen",
@@ -1632,10 +2304,52 @@
       "category": "Outros"
     },
     {
+      "id": "PR_ENTERPRISE_COVERAGE_FINAL",
+      "title": "PR ENTERPRISE COVERAGE FINAL",
+      "content": "🚀 Pull Request: Enterprise Coverage - Fase Final 📊 Resumo Este PR consolida todas as melhorias de cobertura de testes implementadas, incluindo 70 novos testes de edge cases e correções de bugs identificados durante os testes. Branch : test/enterprise-coverage-phase2 Base : main Data : 2026-01-24 📈 Estatísticas Testes Total : 1578 testes Passando : 1556 (98.6%) Pulados : 20 Falhando : 2 (testes de performance - não críticos) Cobertura de Código Linhas : 45.72% Branches : 38.2% Métodos : 48.31%",
+      "url": "/wiki/docs/PR_ENTERPRISE_COVERAGE_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "PR_ENTERPRISE_COVERAGE_PHASES_1_5",
+      "title": "PR ENTERPRISE COVERAGE PHASES 1 5",
+      "content": "🚀 PR: Enterprise-Level Test Coverage - Phases 1-5 📋 Resumo Este PR implementa 435 testes de edge cases cobrindo todas as camadas da arquitetura (Domain, Application, Infrastructure, API), aumentando significativamente a cobertura de testes do projeto. Status : ✅ Pronto para Review Branch : test/enterprise-coverage-phase2 (consolidado com phases 3-5) Base : main ou branch principal 🎯 Objetivos Alcançados ✅ 435 testes de edge cases implementados e passando (100%) ✅ Zero regressions introduzidas",
+      "url": "/wiki/docs/PR_ENTERPRISE_COVERAGE_PHASES_1_5",
+      "category": "Outros"
+    },
+    {
+      "id": "PR_ENTERPRISE_COVERAGE_PHASES_7_8_9",
+      "title": "PR ENTERPRISE COVERAGE PHASES 7 8 9",
+      "content": "🚀 Enterprise-Level Test Coverage - Phases 7, 8 e 9 - PR Data : 2026-01-24 Branch : test/enterprise-coverage-phase2 Status : ✅ Pronto para Merge 🎯 Resumo Este PR implementa 268 testes de edge cases cobrindo as camadas Application, Infrastructure e API, aumentando a cobertura de testes e garantindo robustez em cenários extremos. 📊 Estatísticas ✅ 268 testes de edge cases implementados e passando (100%) ✅ 1488/1508 testes totais passando (98.7% de taxa de sucesso) ✅ Zero regressions introduzidas ",
+      "url": "/wiki/docs/PR_ENTERPRISE_COVERAGE_PHASES_7_8_9",
+      "category": "Outros"
+    },
+    {
+      "id": "PR_GUIDE_ENTERPRISE_COVERAGE",
+      "title": "PR GUIDE ENTERPRISE COVERAGE",
+      "content": "🚀 Guia Rápido: Criar PR Enterprise Coverage 📋 Checklist Pré-PR 1. Verificar Status # Verificar branch atual git branch --show-current # Deve estar em: test/enterprise-coverage-phase2 # Verificar status git status # Verificar testes dotnet test --verbosity quiet # Deve passar: Passed! - Failed: 0, Passed: 1233, Skipped: 3, Total: 1236 2. Preparar Commits (se necessário) # Adicionar todos os arquivos novos git add backend/Araponga.Tests/Domain/*EdgeCasesTests.cs git add backend/Araponga.Tests/Ap",
+      "url": "/wiki/docs/PR_GUIDE_ENTERPRISE_COVERAGE",
+      "category": "Outros"
+    },
+    {
+      "id": "PR_GUIDE_PHASES_7_8_9",
+      "title": "PR GUIDE PHASES 7 8 9",
+      "content": "🚀 Guia: Criar PR Enterprise Coverage Phases 7-9 📋 Checklist Pré-PR 1. Verificar Status # Verificar branch atual git branch --show-current # Deve estar em: test/enterprise-coverage-phase2 # Verificar status git status # Verificar testes dotnet test --verbosity quiet # Deve passar: Passed! - Failed: 0, Passed: 1488, Skipped: 20, Total: 1508 2. Push para Remote # Push branch git push origin test/enterprise-coverage-phase2 # Ou criar branch novo se necessário git checkout -b test/enterprise-covera",
+      "url": "/wiki/docs/PR_GUIDE_PHASES_7_8_9",
+      "category": "Outros"
+    },
+    {
       "id": "README",
       "title": "README",
       "content": "🐦 Araponga Araponga é uma plataforma digital comunitária orientada ao território. Um espaço onde tecnologia serve à vida local, à convivência e à autonomia das comunidades. Não é uma rede social genérica. É uma extensão digital do território vivo . 🌱 Propósito Vivemos um tempo em que plataformas digitais: capturam atenção, desorganizam comunidades, e desconectam pessoas do lugar onde vivem. O Araponga nasce como um contraponto consciente a esse modelo. Território como referência. Comunidade co",
       "url": "/wiki/docs/README",
+      "category": "Outros"
+    },
+    {
+      "id": "REAVALIACAO_BLOCKCHAIN_PRIORIDADE",
+      "title": "REAVALIACAO BLOCKCHAIN PRIORIDADE",
+      "content": "Reavaliação: Prioridade das Fases de Blockchain Data : 2026-01-25 Status : 📋 Reavaliação Completa Objetivo : Reavaliar priorização de fases de blockchain considerando contexto brasileiro e adoção real 🔍 Análise da Decisão Anterior Por que Blockchain foi Priorizado como P0? Justificativa Original (baseada em estratégia de convergência): 📊 Análise de Mercado : Comparação com Closer.earth e padrões de investimento 💰 Padrões de Investimento : Projetos que recebem milhões de euros têm Web3 nativo",
+      "url": "/wiki/docs/REAVALIACAO_BLOCKCHAIN_PRIORIDADE",
       "category": "Outros"
     },
     {
@@ -1730,6 +2444,90 @@
       "category": "Outros"
     },
     {
+      "id": "REFATORACAO_ARQUITETURA_MODULAR",
+      "title": "REFATORACAO ARQUITETURA MODULAR",
+      "content": "Refatoração: Arquitetura Modular Escalável Versão : 1.0 Data : 2026-01-26 Status : 📋 Plano de Refatoração Tipo : Documentação Técnica de Arquitetura 🎯 Objetivo Refatorar a arquitetura atual para permitir que cada módulo seja independente e escalável , seguindo princípios de Clean Architecture e preparando para possível migração futura para microserviços . 📊 Situação Atual vs. Desejada Situação Atual ❌ Araponga.Domain (Monolítico) ├── Feed/Post.cs ├── Marketplace/Store.cs ├── Territories/Terri",
+      "url": "/wiki/docs/REFATORACAO_ARQUITETURA_MODULAR",
+      "category": "Outros"
+    },
+    {
+      "id": "REORGANIZACAO_NUMERACAO_COERENTE",
+      "title": "REORGANIZACAO NUMERACAO COERENTE",
+      "content": "Reorganização de Numeração Coerente das Fases Data : 2026-01-25 Status : 🔄 Em Reorganização Objetivo : Garantir que fases com números menores sejam implementadas antes de fases com números maiores 🎯 Princípio Fundamental Regra : Uma fase com número menor DEVE ser implementada antes de uma fase com número maior. Exceção : Fases 1-8 já implementadas (manter numeração original). 📊 Ordem de Implementação Corrigida Fases 1-8: ✅ Implementadas (Manter) Fase Título Status 1 Segurança e Fundação Críti",
+      "url": "/wiki/docs/REORGANIZACAO_NUMERACAO_COERENTE",
+      "category": "Outros"
+    },
+    {
+      "id": "RESULT_PATTERN",
+      "title": "RESULT PATTERN",
+      "content": "Padrão Result - Araponga Última Atualização : 2025-01-23 Status : ✅ Padrão Definido e Implementado 📋 Resumo O Araponga usa o padrão Result&#x3C;T> para representar operações que podem falhar de forma esperada, evitando o uso excessivo de exceções para controle de fluxo. 🎯 Princípios Result para Erros de Negócio : Use Result&#x3C;T> quando uma falha é esperada e faz parte do fluxo normal Exceções para Erros Técnicos : Use exceções apenas para erros inesperados (bugs, infraestrutura) Mensagens C",
+      "url": "/wiki/docs/RESULT_PATTERN",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_EXECUTIVO_PHASES_1_5",
+      "title": "RESUMO EXECUTIVO PHASES 1 5",
+      "content": "📊 Resumo Executivo - Enterprise Coverage Phases 1-5 Data : 2026-01-24 Status : ✅ COMPLETO E PRONTO PARA PR 🎯 Resultados Alcançados Estatísticas Principais ✅ 435 testes de edge cases implementados ✅ 100% taxa de sucesso (1233/1233 testes passando) ✅ Zero regressions introduzidas ✅ Cobertura aumentada : ~60% → ~79% (+19 pontos percentuais) Cobertura por Camada Camada Antes Depois Ganho Domain Layer ~40% ~85% +45% Application Layer ~70% ~75% +5% Infrastructure Layer ~60% ~75% +15% API Layer ~70% ",
+      "url": "/wiki/docs/RESUMO_EXECUTIVO_PHASES_1_5",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_FASE1_COMPLETA",
+      "title": "RESUMO FASE1 COMPLETA",
+      "content": "Resumo: Fase 1 - Infrastructure.Shared COMPLETA ✅ Data : 2026-01-27 Status : ✅ FASE 1 COMPLETA (pronta para integração) 🎉 Conquistas ✅ Projeto Infrastructure.Shared Criado ✅ Projeto criado e adicionado ao solution ✅ Dependências configuradas ✅ Build passando (0 erros) ✅ SharedDbContext ✅ DbContext próprio com apenas entidades compartilhadas ✅ 14 entidades configuradas no OnModelCreating ✅ Implementa IUnitOfWork para transações ✅ Entidades Compartilhadas (14/14) TerritoryRecord UserRecord UserPr",
+      "url": "/wiki/docs/RESUMO_FASE1_COMPLETA",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_FASE_14_8",
+      "title": "RESUMO FASE 14 8",
+      "content": "Resumo: Fase 14.8 - Finalização Completa das Fases 1-15 Data : 2026-01-25 Status : ⏳ Pendente Objetivo : Resumo executivo da Fase 14.8 🎯 Objetivo da Fase 14.8 Implementar todos os itens que ficaram pendentes ou não plenamente cobertos nas fases 1 até 15, garantindo que todas as funcionalidades planejadas estejam completamente implementadas, testadas e validadas antes de prosseguir para fases futuras. 📊 Itens a Implementar 🔴 Crítico: Sistema de Políticas de Termos Por quê? : Requisito Legal (L",
+      "url": "/wiki/docs/RESUMO_FASE_14_8",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_GAP_90_PORCENTO",
+      "title": "RESUMO GAP 90 PORCENTO",
+      "content": "📊 Resumo: O que falta para 90% de Cobertura Data : 2026-01-25 Status Atual Medido (após Fase 4 + Fase 2 lotes 1–8 + Fase 3 branches): Domain Layer : ~84–85% linhas, ~76% branches Application Layer : ~70–72% linhas, ~54% branches Suíte : 2021 passando, 20 skipped, 0 failed. 🎯 Gap para 90% Domain Layer Gap Linhas : ~5% (~84–85% → 90%) Gap Branches : ~14% (~76% → 90%) Prioridade : 🟡 Média Testes Necessários : ~20-30 testes focados em branches (Fase 4 parcialmente feita) Application Layer Gap Lin",
+      "url": "/wiki/docs/RESUMO_GAP_90_PORCENTO",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_IMPLEMENTACAO_MODULARIZACAO",
+      "title": "RESUMO IMPLEMENTACAO MODULARIZACAO",
+      "content": "Resumo: Implementação da Modularização Data : 2026-01-27 Status : 🚧 Fase 1 Iniciada ✅ O que foi feito Fase 1: Infrastructure.Shared - INICIADA ✅ Projeto criado : Araponga.Infrastructure.Shared ✅ Adicionado ao solution ✅ Dependências configuradas (EF Core, PostgreSQL, etc.) ✅ Estrutura de pastas criada : Postgres/ Postgres/Entities/ Repositories/ Services/ ✅ SharedDbContext base criado (estrutura pronta, falta completar configurações) ⏳ O que falta fazer Fase 1: Infrastructure.Shared - PENDENTE ",
+      "url": "/wiki/docs/RESUMO_IMPLEMENTACAO_MODULARIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_ORGANIZACAO_FASES_PRIORIDADE",
+      "title": "RESUMO ORGANIZACAO FASES PRIORIDADE",
+      "content": "Resumo: Organização de Fases por Prioridade de Implementação Data : 2026-01-25 Status : ✅ Organizado Objetivo : Documentar a organização completa das fases em ordem sequencial de prioridade ✅ Organização Completa Fases 1-8: ✅ Implementadas (Manter) # Título Status 1-8 (Implementadas) ✅ Completo Fases 9-10, 13-15, 24-26: 🔴 P0 - Críticas (Primeira Prioridade) Foco : Valor imediato e funcionalidades essenciais (contexto brasileiro) # Título Duração Arquivo Original 9 Perfil de Usuário Completo 21 ",
+      "url": "/wiki/docs/RESUMO_ORGANIZACAO_FASES_PRIORIDADE",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_REAVALIACAO_BLOCKCHAIN",
+      "title": "RESUMO REAVALIACAO BLOCKCHAIN",
+      "content": "Resumo: Reavaliação de Prioridade Blockchain Data : 2026-01-25 Status : ✅ Reavaliado e Reposicionado Objetivo : Documentar a reavaliação e reposicionamento das fases de blockchain 🔍 Por que Blockchain foi Priorizado como P0 Originalmente? Justificativa Original A priorização original (P0) foi baseada em: 📊 Análise de Mercado : Comparação com Closer.earth e padrões de investimento internacional 💰 Padrões de Investimento : Projetos que recebem milhões de euros têm Web3 nativo 🎯 Convergência Es",
+      "url": "/wiki/docs/RESUMO_REAVALIACAO_BLOCKCHAIN",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_VALIDACAO_FASES",
+      "title": "RESUMO VALIDACAO FASES",
+      "content": "Resumo de Validação e Atualização de Fases Data : 2026-01-25 Status : 🔄 Em Progresso Objetivo : Validar e atualizar todos os arquivos FASE*.md com numeração coerente ✅ Arquivos Atualizados Fases Críticas Atualizadas FASE24.md → Fase 20 (Trocas Comunitárias) ✅ Título atualizado Referências: Fase 17 → Fase 42, Fase 20 → Fase 22 Subseções: 24.1-24.6 → 20.1-20.6 FASE23.md → Fase 17 (Compra Coletiva) ✅ Título atualizado Prioridade: P1 → P0 Referências: Fase 16 → Fase 21, Fase 20 → Fase 22, Fase 17 →",
+      "url": "/wiki/docs/RESUMO_VALIDACAO_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_VALIDACAO_FASES_1_14_5",
+      "title": "RESUMO VALIDACAO FASES 1 14 5",
+      "content": "Resumo Executivo: Validação de Implementação Fases 1-14.5 Data : 2026-01-25 Status : ✅ Validação Completa Objetivo : Resumo executivo da validação de implementação das fases 1-14.5 📊 Status Geral ✅ Boas Notícias A maioria das fases está implementada! A validação no código confirmou que: ✅ Fases 1-8 : Completas (100%) ✅ Fase 9 : Implementada (Avatar, Bio, Perfil Público, Estatísticas) ✅ Fase 10 : ~98% Completa ✅ Fase 11 : Implementada (Edição, Avaliações, Busca, Histórico) ✅ Fase 13 : Implementa",
+      "url": "/wiki/docs/RESUMO_VALIDACAO_FASES_1_14_5",
+      "category": "Outros"
+    },
+    {
       "id": "REVISAO_ARTE_DESIGN_WIKI",
       "title": "REVISAO ARTE DESIGN WIKI",
       "content": "Revisão de Arte e Design - Wiki Araponga Data : 2025-01-20 Versão : 1.0 Status : Análise Completa Base : DESIGN_SYSTEM_IDENTIDADE_VISUAL.md e CURSOR_DESIGN_RULES.md 📋 Resumo Executivo Esta revisão analisa a implementação atual da Wiki contra as diretrizes do Design System do Araponga, identificando conformidades e áreas que precisam de ajustes para garantir coerência visual e alinhamento com os princípios estabelecidos. Status Geral ✅ Conforme : Tipografia (Inter/JetBrains Mono), Estrutura Glas",
@@ -1786,10 +2584,52 @@
       "category": "Segurança"
     },
     {
+      "id": "SETUP",
+      "title": "SETUP",
+      "content": "Setup Pré-requisitos .NET 8.0 Node.js 18+ PostgreSQL 14+ Docker (opcional) Instalação Local Backend # Restaurar dependências .NET dotnet restore # Build dotnet build Araponga.sln # Aplicar migrações dotnet ef database update --project backend/Araponga.Infrastructure Frontend # Instalar dependências npm install # Desenvolvimento npm run dev # Build produção npm run build Wiki cd frontend/wiki npm install npm run dev # Acessa http://localhost:3000/wiki Variáveis de Ambiente Criar arquivo .env na r",
+      "url": "/wiki/docs/SETUP",
+      "category": "Outros"
+    },
+    {
       "id": "STATUS_FASES",
       "title": "STATUS FASES",
-      "content": "Status das Fases - Backlog API Última Atualização : 2025-01-20 Total de Fases : [Calcular dinamicamente com node scripts/get-phase-count.mjs ] Nota : O número total de fases é calculado automaticamente contando arquivos FASE*.md em docs/backlog-api/ . Ver docs/PROJECT_PHASES_CONFIG.md para mais informações. Fases Completas : 8 Fases em Andamento : 0 Fases Pendentes : [Calcular: Total - Completas - Em Andamento] 📊 Visão Geral Status Quantidade Percentual ✅ Completo 8 28% ⏳ Pendente 21 72% 🚧 Em ",
+      "content": "Status das Fases - Backlog API Última Atualização : 2026-01-20 Total de Fases : [Calcular dinamicamente com node scripts/get-phase-count.mjs ] Nota : O número total de fases é calculado automaticamente contando arquivos FASE*.md em docs/backlog-api/ . Ver docs/PROJECT_PHASES_CONFIG.md para mais informações. Fases Completas : 8 Fases em Andamento : 2 (Fase 12 - 85% completo, Fase 13 - MVP recuperacao) Fases Complementares : 2 (Fase 14.5, Fase 14.8) Fases Pendentes : [Calcular: Total - Completas -",
       "url": "/wiki/docs/STATUS_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "STATUS_REFATORACAO_MODULAR",
+      "title": "STATUS REFATORACAO MODULAR",
+      "content": "Status da Refatoração Arquitetural Modular Data : 2026-01-26 Status : 🚧 Em Andamento - Fase 1 Concluída, Fase 2 Iniciada ✅ Fase 1: Domain.Core - CONCLUÍDA O que foi feito: ✅ Projeto Araponga.Domain.Core criado Estrutura de pastas: Territories/ , Users/ , Membership/ Projeto adicionado ao Araponga.sln ✅ Entidades compartilhadas movidas : Territory , TerritoryStatus User , UserIdentityVerificationStatus TerritoryMembership , MembershipRole , ResidencyVerification , MembershipStatus ✅ Referências ",
+      "url": "/wiki/docs/STATUS_REFATORACAO_MODULAR",
+      "category": "Outros"
+    },
+    {
+      "id": "STATUS_TESTES_PRODUCAO",
+      "title": "STATUS TESTES PRODUCAO",
+      "content": "Status dos Testes - Pronto para Produção? 📊 Resumo Atual dos Testes Data : Verificar com dotnet test no backend/Araponga.Tests Resultados da Suite Completa ✅ Passed : 739 testes ❌ Failed : 1 teste ⏭️ Skipped : 2 testes 📦 Total : 742 testes Taxa de Sucesso 99.86% dos testes passando (739/741 executados) 0.14% de falhas (1 teste) ⚠️ Teste com Problema DevicesControllerTests.RegisterDevice_WhenValid_CreatesDevice Status : ❌ Falhando (mas com [SkippableFact] ) Problema : Problema conhecido de ambi",
+      "url": "/wiki/docs/STATUS_TESTES_PRODUCAO",
+      "category": "Outros"
+    },
+    {
+      "id": "STRUCTURE",
+      "title": "STRUCTURE",
+      "content": "Estrutura da Documentação Organização de Arquivos A documentação está centralizada em /docs/ com a seguinte estrutura: Raiz do Projeto / ├── README.md # Documentação principal ├── CONTRIBUTING.md # Guia de contribuição ├── CODE_OF_CONDUCT.md # Código de conduta ├── SECURITY.md # Política de segurança ├── LICENSE # Licença MIT └── LICENSE.pt-BR # Licença em português Documentação Centralizada /docs/ ├── README.md # Index da documentação ├── DEVELOPMENT.md # Guia para desenvolvedores ├── SETUP.md ",
+      "url": "/wiki/docs/STRUCTURE",
+      "category": "Outros"
+    },
+    {
+      "id": "TESTCONTAINERS_POSTGRES_IMPACTO",
+      "title": "TESTCONTAINERS POSTGRES IMPACTO",
+      "content": "Impacto de Usar Testcontainers + PostgreSQL nos Testes O que é Testcontainers? Testcontainers é uma biblioteca que sobe containers Docker reais durante a execução dos testes. Para .NET, o pacote Testcontainers.PostgreSql sobe um container PostgreSQL efêmero, aplica migrações, expõe a connection string e derruba o container ao fim dos testes. Objetivo : Testes de integração contra um banco idêntico ao de produção , em vez de InMemory ou SQLite. Situação Atual Infraestrutura de testes Componente S",
+      "url": "/wiki/docs/TESTCONTAINERS_POSTGRES_IMPACTO",
+      "category": "Outros"
+    },
+    {
+      "id": "TESTE_DEVICES_CONTROLLER_EXPLICACAO",
+      "title": "TESTE DEVICES CONTROLLER EXPLICACAO",
+      "content": "Explicação: Problema de Autenticação no Teste RegisterDevice_WhenValid_CreatesDevice 📋 O Que Foi Feito 1. Teste Original O teste RegisterDevice_WhenValid_CreatesDevice foi criado para validar que: Um usuário pode fazer login via social (Google) Após login, pode registrar um dispositivo (token push notification) O dispositivo é criado corretamente com os dados fornecidos 2. Implementação do Teste [SkippableFact] public async Task RegisterDevice_WhenValid_CreatesDevice() { // 1. Cria factory e cl",
+      "url": "/wiki/docs/TESTE_DEVICES_CONTROLLER_EXPLICACAO",
       "category": "Outros"
     },
     {
@@ -1800,10 +2640,31 @@
       "category": "Outros"
     },
     {
+      "id": "VALIDACAO_ATUALIZACAO_FASES",
+      "title": "VALIDACAO ATUALIZACAO FASES",
+      "content": "Validação e Atualização de Arquivos FASE*.md Data : 2026-01-25 Status : 🔄 Em Progresso Objetivo : Validar e atualizar todos os arquivos FASE*.md com numeração coerente 📋 Checklist de Atualização Arquivos Atualizados ✅ FASE24.md → Atualizado para Fase 20 (Trocas Comunitárias) Título atualizado Referências: Fase 17 → Fase 42, Fase 20 → Fase 22 Subseções: 24.1-24.6 → 20.1-20.6 FASE20.md → Atualizado para Fase 22 (Moeda Territorial) Título atualizado Referências: Fase 17 → Fase 42, Fase 18 → Fase ",
+      "url": "/wiki/docs/VALIDACAO_ATUALIZACAO_FASES",
+      "category": "Outros"
+    },
+    {
       "id": "VALIDACAO_DIAGRAMACAO_FINAL",
       "title": "VALIDACAO DIAGRAMACAO FINAL",
       "content": "Validação Final de Diagramação - Wiki e DevPortal Data : 2025-01-20 Versão : 1.0 Objetivo : Garantir coesão visual total entre Wiki e DevPortal, seguindo padrões de mercado de sobriedade e calma 🎯 OBJETIVO Validar e padronizar a diagramação das páginas Wiki e DevPortal para garantir: ✅ Coesão visual : Elementos e disposições visuais consistentes ✅ Altos padrões : Seguir tendências de mercado (sobriedade, calma, design limpo) ✅ Inovação : Design limpo e inovador mantendo funcionalidade 📊 ANÁLIS",
       "url": "/wiki/docs/VALIDACAO_DIAGRAMACAO_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "VALIDACAO_IMPLEMENTACAO_FASES_1_14_5",
+      "title": "VALIDACAO IMPLEMENTACAO FASES 1 14 5",
+      "content": "Validação de Implementação: Fases 1 a 14.5 Data : 2026-01-25 Status : 🔍 Em Análise Objetivo : Validar o que está realmente implementado nas fases 1-14.5 vs. o que deveria estar implementado 📊 Resumo Executivo Status Geral Fase Status Documentado Status Real Gaps Identificados 1-8 ✅ Completo ✅ Completo Nenhum 9 ⚠️ Parcial ✅ Implementado Validação de endpoints 10 ✅ ~98% ✅ ~98% Nenhum crítico 11 ⚠️ Parcial ✅ Implementado Validação de endpoints 12 ⏳ Pendente ⚠️ Parcial Sistema de Políticas de Term",
+      "url": "/wiki/docs/VALIDACAO_IMPLEMENTACAO_FASES_1_14_5",
+      "category": "Outros"
+    },
+    {
+      "id": "VALIDACAO_INCONSISTENCIAS_CORRIGIDAS",
+      "title": "VALIDACAO INCONSISTENCIAS CORRIGIDAS",
+      "content": "Validação e Correção de Inconsistências Data : 2026-01-25 Status : ✅ Corrigido Objetivo : Documentar todas as inconsistências encontradas e corrigidas ✅ Inconsistências Corrigidas 1. Fase 15 - Posicionamento Problema : Fase 15 aparecia como Subscriptions na Onda 2 E como Fase 31 na Onda 6/7. Correção : ✅ Fase 15 = Subscriptions (Onda 2: Governança e Sustentabilidade) ✅ Fase 31 = Avaliação Blockchain (Onda 7: Preparação Web3) ✅ Removida duplicação da Fase 31 como Subscriptions Arquivos Corrigidos",
+      "url": "/wiki/docs/VALIDACAO_INCONSISTENCIAS_CORRIGIDAS",
       "category": "Outros"
     },
     {
@@ -1825,6 +2686,13 @@
       "title": "VALIDACAO SEGURANCA PAYOUT FASE7",
       "content": "Validação de Segurança - Sistema de Payout e Gestão Financeira (Fase 7) Data : 2026-01-19 Fase : Fase 7 - Sistema de Payout e Gestão Financeira Status : ✅ VALIDAÇÃO COMPLETA 📋 Objetivo Validar a segurança de todas as implementações relacionadas ao sistema de payout e gestão financeira, garantindo que dados financeiros sejam protegidos e operações sensíveis sejam auditadas. 🔐 Checklist de Segurança 1. Autenticação e Autorização ✅ 1.1 Endpoints Protegidos ✅ ✅ GET /api/v1/territories/{territoryId",
       "url": "/wiki/docs/validation/VALIDACAO_SEGURANCA_PAYOUT_FASE7",
+      "category": "Outros"
+    },
+    {
+      "id": "VOTING_SYSTEM",
+      "title": "VOTING SYSTEM",
+      "content": "Sistema de Votação Comunitária Versão : 1.0 Data : 2025-01-21 Status : ✅ Implementado 📋 Visão Geral O Sistema de Votação permite que comunidades territoriais tomem decisões coletivas através de votações estruturadas. As votações podem ser de diferentes tipos, com diferentes níveis de visibilidade e permissões. 🎯 Tipos de Votação 1. ThemePrioritization (Priorização de Temas) Objetivo : Definir quais temas devem ter prioridade no feed do território. Quem pode criar : Residents Quem pode votar : ",
+      "url": "/wiki/docs/VOTING_SYSTEM",
       "category": "Outros"
     },
     {

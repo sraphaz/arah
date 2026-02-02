@@ -33,6 +33,18 @@ O Araponga utiliza uma **arquitetura modular** baseada em **Clean Architecture**
 - ✅ **Clean Architecture**: Camadas bem definidas (Domain, Application, Infrastructure, API)
 - ✅ **Extensibilidade**: Fácil adicionar novos módulos sem impactar existentes
 
+### Isolamento: infraestrutura independente (não microserviços)
+
+**Isolamento real** (deploy, rede, falhas independentes) só existe com **serviços separados** (microserviços). Para o tamanho e estágio do projeto, o Araponga **não** adota microserviços.
+
+O objetivo adotado é ter **infraestrutura independente por módulo**, isolando **pontos de manutenção e de falha** dentro do mesmo processo:
+
+- **Manutenção**: alterações em Feed (schema, repositório, bugs) ficam contidas no projeto `Araponga.Modules.Feed.Infrastructure`; o mesmo para Events, Map, Chat, Marketplace, etc. Menos risco de regressão em outros domínios e ownership claro por módulo.
+- **Falha**: um bug ou problema de persistência em um módulo fica limitado ao código e ao DbContext daquele módulo; o restante da aplicação continua referenciando apenas interfaces da Application.
+- **Evolução**: se no futuro um módulo precisar virar serviço separado, a fronteira já está desenhada (projeto de infra + contratos de aplicação).
+
+Ou seja: **uma infraestrutura modular**, não vários serviços, com isolamento de responsabilidade e de impacto por domínio.
+
 ---
 
 ## 🏗️ Princípios de Modularização

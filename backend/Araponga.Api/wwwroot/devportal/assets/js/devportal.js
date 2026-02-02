@@ -511,7 +511,7 @@
     var temp = document.createElement('div');
     temp.textContent = html; // Use textContent first to escape all HTML
     var escaped = temp.innerHTML;
-    
+
     // Only allow specific safe HTML tags if needed
     // For now, treat all HTML as plain text to prevent XSS
     // If HTML is truly needed, use a proper sanitization library like DOMPurify

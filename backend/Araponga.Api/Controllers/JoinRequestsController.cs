@@ -193,7 +193,7 @@ public sealed class JoinRequestsController : ControllerBase
 
         // Obter request para pegar territoryId
         var joinRequest = await _joinRequestService.GetByIdAsync(id, cancellationToken);
-        var isCurator = joinRequest != null 
+        var isCurator = joinRequest != null
             ? await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, joinRequest.TerritoryId, MembershipCapabilityType.Curator, cancellationToken)
             : false;
 
@@ -240,7 +240,7 @@ public sealed class JoinRequestsController : ControllerBase
 
         // Obter request para pegar territoryId
         var joinRequest = await _joinRequestService.GetByIdAsync(id, cancellationToken);
-        var isCurator = joinRequest != null 
+        var isCurator = joinRequest != null
             ? await _accessEvaluator.HasCapabilityAsync(userContext.User.Id, joinRequest.TerritoryId, MembershipCapabilityType.Curator, cancellationToken)
             : false;
 

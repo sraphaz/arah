@@ -131,17 +131,7 @@ async function getDocContent(filePath: string) {
     // que serão substituídos por componentes React no MermaidContent
     htmlContent = htmlContent.replace(
       /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/gi,
-      (match, code) => {
-        const encodedCode = encodeURIComponent(code.trim());
-        return `<div data-mermaid-code="${encodedCode}"></div>`;
-      }
-    );
-
-    // Processa blocos Mermaid: substitui <pre><code class="language-mermaid"> por placeholders
-    // que serão substituídos por componentes React no MermaidContent
-    htmlContent = htmlContent.replace(
-      /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/gi,
-      (match, code) => {
+      (_match, code) => {
         const encodedCode = encodeURIComponent(code.trim());
         return `<div data-mermaid-code="${encodedCode}"></div>`;
       }
@@ -288,10 +278,10 @@ export default async function DocPage({ params }: PageProps) {
                 <span>›</span>
                 <Link href="/docs" prefetch={false}>Documentação</Link>
                 {(slug[0]?.startsWith('ONBOARDING_') || slug.some(s => s?.startsWith('ONBOARDING_'))) && (
-                  <>
+                  <span className="inline-flex items-center gap-1">
                     <span>›</span>
                     <Link href="/docs" prefetch={false}>Onboarding</Link>
-                  </>
+                  </span>
                 )}
                 <span>›</span>
                 <span className="text-forest-900 font-medium">{doc?.title || yamlDoc?.title}</span>
@@ -325,12 +315,14 @@ export default async function DocPage({ params }: PageProps) {
           <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
             <Link
               href="/"
+              prefetch={false}
               className="btn-secondary text-center"
             >
               ← Voltar às Boas-Vindas
             </Link>
             <Link
               href="/docs"
+              prefetch={false}
               className="btn-secondary text-center"
             >
               Ver Todos os Docs →

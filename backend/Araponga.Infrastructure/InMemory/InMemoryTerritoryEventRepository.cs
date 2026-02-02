@@ -149,7 +149,7 @@ public sealed class InMemoryTerritoryEventRepository : ITerritoryEventRepository
             .Skip(skip)
             .Take(take)
             .ToList();
-        
+
         return Task.FromResult<IReadOnlyList<TerritoryEvent>>(results);
     }
 
@@ -190,7 +190,7 @@ public sealed class InMemoryTerritoryEventRepository : ITerritoryEventRepository
             .Skip(skip)
             .Take(take)
             .ToList();
-        
+
         return Task.FromResult<IReadOnlyList<TerritoryEvent>>(results);
     }
 

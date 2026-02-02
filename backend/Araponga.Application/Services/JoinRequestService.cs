@@ -97,7 +97,7 @@ public sealed class JoinRequestService
                 territoryId,
                 MembershipCapabilityType.Curator,
                 cancellationToken);
-            
+
             if (!isRecipientResident && !isRecipientCurator)
             {
                 return (false, "Recipient is not a confirmed resident or curator.", null);
@@ -274,7 +274,7 @@ public sealed class JoinRequestService
                 decidedAtUtc);
 
             await _membershipRepository.AddAsync(newMembership, cancellationToken);
-            
+
             // Criar MembershipSettings automaticamente (similar ao MembershipService.BecomeResidentAsync)
             var existingSettings = await _settingsRepository.GetByMembershipIdAsync(newMembership.Id, cancellationToken);
             if (existingSettings is null)

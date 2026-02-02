@@ -59,8 +59,8 @@ const isDangerousScheme = (href) => {
 };
 
 const internalLinks = links.filter(link => link.href.startsWith('#'));
-const externalLinks = links.filter(link => 
-  !link.href.startsWith('#') && 
+const externalLinks = links.filter(link =>
+  !link.href.startsWith('#') &&
   !isDangerousScheme(link.href)
 );
 

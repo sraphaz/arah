@@ -64,10 +64,10 @@ public sealed class AuthService
             {
                 var challengeId = Guid.NewGuid().ToString("N");
                 _twoFactorChallenges[challengeId] = (existing.Id, DateTime.UtcNow.Add(Constants.Auth.TwoFactorChallengeExpiration));
-                
+
                 // Limpar challenges expirados
                 CleanupExpiredChallenges();
-                
+
                 return Result<(User user, string token)>.Failure($"2FA_REQUIRED:{challengeId}");
             }
 
@@ -353,10 +353,10 @@ public sealed class AuthService
                 .Replace("+", "-")
                 .Replace("/", "_")
                 .Replace("=", "");
-            
+
             // Pegar os primeiros 12 caracteres (garantido ter pelo menos 12)
-            var code = base64.Length >= Constants.Auth.RecoveryCodeMinLength 
-                ? base64.Substring(0, Constants.Auth.RecoveryCodeMinLength) 
+            var code = base64.Length >= Constants.Auth.RecoveryCodeMinLength
+                ? base64.Substring(0, Constants.Auth.RecoveryCodeMinLength)
                 : base64;
             codes.Add(code);
         }

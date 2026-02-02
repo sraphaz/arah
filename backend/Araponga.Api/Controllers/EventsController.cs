@@ -475,7 +475,7 @@ public sealed class EventsController : ControllerBase
         }
 
         var result = await _eventsService.GetEventParticipantsAsync(eventId, parsedStatus, cancellationToken);
-        
+
         if (!result.IsSuccess)
         {
             if (result.Error?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true)

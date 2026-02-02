@@ -80,7 +80,7 @@ public sealed class MapService
         // Cache não é usado em métodos paginados pois a paginação no repositório é mais eficiente
         // Primeiro buscamos a página do repositório, depois aplicamos filtros
         var entitiesPaged = await _mapRepository.ListByTerritoryPagedAsync(territoryId, pagination.Skip, pagination.Take, cancellationToken);
-        
+
         var blockedUserIds = userId is null
             ? Array.Empty<Guid>()
             : _userBlockCache is not null
@@ -112,7 +112,7 @@ public sealed class MapService
         var allVisible = blockedUserIds.Count == 0
             ? allEntities
             : allEntities.Where(entity => !blockedUserIds.Contains(entity.CreatedByUserId)).ToList();
-        
+
         var allFiltered = userId is null
             ? allVisible.Where(entity => entity.Visibility == MapEntityVisibility.Public).ToList()
             : await _accessEvaluator.IsResidentAsync(userId.Value, territoryId, cancellationToken)

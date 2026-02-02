@@ -126,7 +126,7 @@ public sealed class InMemoryFeedRepository : IFeedRepository
     {
         const int maxInt32 = int.MaxValue;
         var result = new Dictionary<Guid, PostCounts>();
-        
+
         foreach (var postId in postIds)
         {
             var likeCountRaw = _dataStore.PostLikes.TryGetValue(postId, out var likes) ? likes.Count : 0;
@@ -135,7 +135,7 @@ public sealed class InMemoryFeedRepository : IFeedRepository
             var shareCount = shareCountRaw > maxInt32 ? maxInt32 : shareCountRaw;
             result[postId] = new PostCounts(likeCount, shareCount);
         }
-        
+
         return Task.FromResult<IReadOnlyDictionary<Guid, PostCounts>>(result);
     }
 

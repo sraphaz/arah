@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^15.5.10",
+    "next": "16.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -4,6 +4,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Assets;
 using Araponga.Domain.Work;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -15,8 +16,10 @@ public sealed class TerritoryAssetCurationQueueTests
     public async Task CreateAsync_CreatesSuggestedAsset_AndEnqueuesAssetCurationWorkItem()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<ITerritoryAssetRepository, InMemoryAssetRepository>();
         services.AddScoped<IAssetGeoAnchorRepository, InMemoryAssetGeoAnchorRepository>();
         services.AddScoped<IAssetValidationRepository, InMemoryAssetValidationRepository>();
@@ -30,8 +33,9 @@ public sealed class TerritoryAssetCurationQueueTests
         var svc = sp.GetRequiredService<TerritoryAssetService>();
         var workRepo = sp.GetRequiredService<IWorkItemRepository>();
 
-        var territoryId = dataStore.Territories[0].Id;
-        var userId = dataStore.Users[0].Id;
+        // Resident do seed está no território B (índice 1)
+        var territoryId = sharedStore.Territories[1].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var create = await svc.CreateAsync(
             territoryId,

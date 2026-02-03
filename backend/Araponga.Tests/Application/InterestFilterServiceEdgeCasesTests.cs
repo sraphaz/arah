@@ -2,6 +2,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -14,8 +15,8 @@ public sealed class InterestFilterServiceEdgeCasesTests
     [Fact]
     public async Task FilterFeedByInterestsAsync_WhenPostHasMatchingTags_IncludesPost()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemoryUserInterestRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserInterestRepository(sharedStore);
         var svc = new InterestFilterService(repo);
         var userId = Guid.NewGuid();
         var territoryId = Guid.NewGuid();
@@ -48,8 +49,8 @@ public sealed class InterestFilterServiceEdgeCasesTests
     [Fact]
     public async Task FilterFeedByInterestsAsync_WhenPostTagsNoOverlap_ExcludesIfNoTitleContentMatch()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemoryUserInterestRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserInterestRepository(sharedStore);
         var svc = new InterestFilterService(repo);
         var userId = Guid.NewGuid();
         var territoryId = Guid.NewGuid();

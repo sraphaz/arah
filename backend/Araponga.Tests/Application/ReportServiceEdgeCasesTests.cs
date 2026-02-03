@@ -2,6 +2,7 @@ using Araponga.Application.Events;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -15,9 +16,10 @@ public sealed class ReportServiceEdgeCasesTests
     public async Task ReportPostAsync_WhenReasonEmpty_ReturnsError()
     {
         var ds = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var reportRepo = new InMemoryReportRepository(ds);
         var feedRepo = new InMemoryFeedRepository(ds);
-        var userRepo = new InMemoryUserRepository(ds);
+        var userRepo = new InMemoryUserRepository(sharedStore);
         var sanctionRepo = new InMemorySanctionRepository(ds);
         var mediaRepo = new InMemoryMediaAttachmentRepository(ds);
         var audit = new InMemoryAuditLogger(ds);
@@ -47,9 +49,10 @@ public sealed class ReportServiceEdgeCasesTests
     public async Task ReportPostAsync_WhenPostNotFound_ReturnsError()
     {
         var ds = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var reportRepo = new InMemoryReportRepository(ds);
         var feedRepo = new InMemoryFeedRepository(ds);
-        var userRepo = new InMemoryUserRepository(ds);
+        var userRepo = new InMemoryUserRepository(sharedStore);
         var sanctionRepo = new InMemorySanctionRepository(ds);
         var mediaRepo = new InMemoryMediaAttachmentRepository(ds);
         var audit = new InMemoryAuditLogger(ds);

@@ -21,23 +21,23 @@ public class EventServiceEdgeCasesTests
     private static readonly Guid TestTerritoryId = Guid.NewGuid();
     private static readonly Guid TestUserId = Guid.NewGuid();
 
-    private static EventsService CreateService(InMemoryDataStore dataStore)
+    private static EventsService CreateService(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
         var eventRepository = new InMemoryTerritoryEventRepository(dataStore);
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,
             userRepository,
             featureFlags);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
         var accessEvaluator = new AccessEvaluator(
             membershipRepository,
             capabilityRepository,
@@ -71,7 +71,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithEmptyTerritoryId_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar usuário para passar validação de políticas
         var user = new User(
@@ -85,7 +86,7 @@ public class EventServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var result = await service.CreateEventAsync(
             Guid.Empty,
@@ -109,7 +110,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithEmptyUserId_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.CreateEventAsync(
             TestTerritoryId,
@@ -133,7 +135,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithNullTitle_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar usuário para passar validação de políticas
         var user = new User(
@@ -147,7 +150,7 @@ public class EventServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var result = await service.CreateEventAsync(
             TestTerritoryId,
@@ -171,7 +174,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithEmptyTitle_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar usuário para passar validação de políticas
         var user = new User(
@@ -185,7 +189,7 @@ public class EventServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var result = await service.CreateEventAsync(
             TestTerritoryId,
@@ -209,7 +213,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithInvalidLatitude_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar usuário para passar validação de políticas
         var user = new User(
@@ -223,7 +228,7 @@ public class EventServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var result = await service.CreateEventAsync(
             TestTerritoryId,
@@ -247,7 +252,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithInvalidLongitude_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar usuário para passar validação de políticas
         var user = new User(
@@ -261,7 +267,7 @@ public class EventServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var result = await service.CreateEventAsync(
             TestTerritoryId,
@@ -285,7 +291,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithEndsAtBeforeStartsAt_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar usuário para passar validação de políticas
         var user = new User(
@@ -299,7 +306,7 @@ public class EventServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var startsAt = TestDate.AddDays(2);
         var endsAt = TestDate.AddDays(1); // Antes de startsAt
@@ -326,7 +333,8 @@ public class EventServiceEdgeCasesTests
     public async Task CreateEventAsync_WithUnicodeInTitle_HandlesCorrectly()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar usuário para passar validação de políticas
         var user = new User(
@@ -340,7 +348,7 @@ public class EventServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         // Criar território e membership para passar validação de acesso
         var territory = new Territory(
@@ -398,7 +406,8 @@ public class EventServiceEdgeCasesTests
     public async Task UpdateEventAsync_WithNonExistentEvent_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.UpdateEventAsync(
             Guid.NewGuid(),
@@ -422,7 +431,8 @@ public class EventServiceEdgeCasesTests
     public async Task CancelEventAsync_WithNonExistentEvent_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.CancelEventAsync(
             Guid.NewGuid(),
@@ -437,7 +447,8 @@ public class EventServiceEdgeCasesTests
     public async Task SetParticipationAsync_WithNonExistentEvent_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.SetParticipationAsync(
             Guid.NewGuid(),
@@ -453,7 +464,8 @@ public class EventServiceEdgeCasesTests
     public async Task SetParticipationAsync_WithEmptyUserId_HandlesCorrectly()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar evento
         var eventId = Guid.NewGuid();
@@ -490,7 +502,8 @@ public class EventServiceEdgeCasesTests
     public async Task GetEventsNearbyAsync_WithInvalidCoordinates_ReturnsEmpty()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.GetEventsNearbyAsync(
             91.0, // Latitude inválida
@@ -508,7 +521,8 @@ public class EventServiceEdgeCasesTests
     public async Task GetEventParticipantsAsync_WithNonExistentEvent_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.GetEventParticipantsAsync(
             Guid.NewGuid(),

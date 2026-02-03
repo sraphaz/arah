@@ -77,9 +77,9 @@ public sealed class VotingPerformanceTests
 
     private static Task CreateMembershipAsync(ApiFactory factory, Guid userId, Guid territoryId, MembershipRole role = MembershipRole.Resident)
     {
-        var dataStore = factory.GetDataStore();
-        
-        var existing = dataStore.Memberships.FirstOrDefault(m => m.UserId == userId && m.TerritoryId == territoryId);
+        var sharedStore = factory.GetSharedStore();
+
+        var existing = sharedStore.Memberships.FirstOrDefault(m => m.UserId == userId && m.TerritoryId == territoryId);
         if (existing != null)
         {
             return Task.CompletedTask;
@@ -94,8 +94,8 @@ public sealed class VotingPerformanceTests
             DateTime.UtcNow,
             null,
             DateTime.UtcNow);
-        
-        dataStore.Memberships.Add(membership);
+
+        sharedStore.Memberships.Add(membership);
         return Task.CompletedTask;
     }
 
@@ -134,11 +134,11 @@ public sealed class VotingPerformanceTests
         Assert.NotNull(voting);
 
         // Abrir votação (se estiver em Draft)
-        var dataStore = factory.GetDataStore();
-        var domainVoting = dataStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
+        var sharedStore = factory.GetSharedStore();
+        var domainVoting = sharedStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
         if (domainVoting == null)
         {
-            Assert.Fail("Voting not found in data store");
+            Assert.Fail("Voting not found in shared store");
             return;
         }
         if (domainVoting.Status == VotingStatus.Draft)
@@ -294,11 +294,11 @@ public sealed class VotingPerformanceTests
         Assert.NotNull(voting);
 
         // Abrir votação (se estiver em Draft)
-        var dataStore = factory.GetDataStore();
-        var domainVoting = dataStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
+        var sharedStore = factory.GetSharedStore();
+        var domainVoting = sharedStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
         if (domainVoting == null)
         {
-            Assert.Fail("Voting not found in data store");
+            Assert.Fail("Voting not found in shared store");
             return;
         }
         if (domainVoting.Status == VotingStatus.Draft)

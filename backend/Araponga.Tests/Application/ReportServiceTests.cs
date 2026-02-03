@@ -8,6 +8,7 @@ using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -16,11 +17,11 @@ namespace Araponga.Tests.Application;
 
 public sealed class ReportServiceTests
 {
-    private static ReportService CreateService(InMemoryDataStore dataStore)
+    private static ReportService CreateService(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
         var reportRepository = new InMemoryReportRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
@@ -44,7 +45,8 @@ public sealed class ReportServiceTests
     public async Task ReportPostAsync_ReturnsError_WhenReasonIsEmpty()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var postId = TestIds.Post1;
 
@@ -64,7 +66,8 @@ public sealed class ReportServiceTests
     public async Task ReportPostAsync_ReturnsError_WhenPostNotFound()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var nonExistentPostId = Guid.NewGuid();
 
@@ -84,7 +87,8 @@ public sealed class ReportServiceTests
     public async Task ReportPostAsync_CreatesReport_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var postId = TestIds.Post1;
 
@@ -110,7 +114,8 @@ public sealed class ReportServiceTests
     public async Task ReportPostAsync_ReturnsNull_WhenDuplicateReport()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var postId = TestIds.Post1;
 
@@ -140,7 +145,8 @@ public sealed class ReportServiceTests
     public async Task ReportUserAsync_ReturnsError_WhenReasonIsEmpty()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var reportedUserId = TestIds.ResidentUser;
         var territoryId = TestIds.Territory1;
@@ -162,7 +168,8 @@ public sealed class ReportServiceTests
     public async Task ReportUserAsync_ReturnsError_WhenUserNotFound()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var nonExistentUserId = Guid.NewGuid();
         var territoryId = TestIds.Territory1;
@@ -184,7 +191,8 @@ public sealed class ReportServiceTests
     public async Task ReportUserAsync_ReturnsError_WhenTerritoryIdIsEmpty()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var reportedUserId = TestIds.ResidentUser;
 
@@ -205,7 +213,8 @@ public sealed class ReportServiceTests
     public async Task ReportUserAsync_CreatesReport_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var reporterId = TestIds.TestUserId1;
         var reportedUserId = TestIds.ResidentUser;
         var territoryId = TestIds.Territory1;
@@ -233,7 +242,8 @@ public sealed class ReportServiceTests
     public async Task ListPagedAsync_ReturnsPagedResults()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         // Verificar qual território o post pertence
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var post = await feedRepository.GetPostAsync(TestIds.Post1, CancellationToken.None);
@@ -267,9 +277,10 @@ public sealed class ReportServiceTests
     public async Task EvaluatePostThresholdAsync_HidesPost_WhenThresholdReached()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var reportRepository = new InMemoryReportRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var services = new ServiceCollection();

@@ -14,18 +14,18 @@ public sealed class VotingServiceTests
     public async Task CreateVotingAsync_WhenValid_ReturnsSuccess()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
         // Usar territoryB e residentUser do InMemoryDataStore
-        var territoryId = dataStore.Territories[1].Id; // territoryB
-        var userId = dataStore.Users[0].Id; // residentUser
+        var territoryId = sharedStore.Territories[1].Id; // territoryB
+        var userId = sharedStore.Users[0].Id; // residentUser
 
         // Criar membership explicitamente para garantir que existe
         var newMembership = new TerritoryMembership(
@@ -71,18 +71,18 @@ public sealed class VotingServiceTests
     public async Task VoteAsync_WhenValid_ReturnsSuccess()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
         // Usar territoryB e residentUser do InMemoryDataStore
-        var territoryId = dataStore.Territories[1].Id; // territoryB
-        var userId = dataStore.Users[0].Id; // residentUser
+        var territoryId = sharedStore.Territories[1].Id; // territoryB
+        var userId = sharedStore.Users[0].Id; // residentUser
 
         // Criar membership explicitamente para garantir que existe
         var newMembership = new TerritoryMembership(
@@ -141,17 +141,17 @@ public sealed class VotingServiceTests
     public async Task CloseVotingAsync_WhenCreator_ReturnsSuccess()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
-        var territoryId = dataStore.Territories[1].Id;
-        var userId = dataStore.Users[0].Id;
+        var territoryId = sharedStore.Territories[1].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -197,17 +197,17 @@ public sealed class VotingServiceTests
     public async Task GetResultsAsync_WhenVotingHasVotes_ReturnsResults()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
-        var territoryId = dataStore.Territories[1].Id;
-        var userId = dataStore.Users[0].Id;
+        var territoryId = sharedStore.Territories[1].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -259,17 +259,17 @@ public sealed class VotingServiceTests
     public async Task VoteAsync_WhenVotingClosed_ReturnsFailure()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
-        var territoryId = dataStore.Territories[1].Id;
-        var userId = dataStore.Users[0].Id;
+        var territoryId = sharedStore.Territories[1].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -314,17 +314,17 @@ public sealed class VotingServiceTests
     public async Task VoteAsync_WhenInvalidOption_ReturnsFailure()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
-        var territoryId = dataStore.Territories[1].Id;
-        var userId = dataStore.Users[0].Id;
+        var territoryId = sharedStore.Territories[1].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -368,17 +368,17 @@ public sealed class VotingServiceTests
     public async Task ListVotingsAsync_WhenTerritoryHasVotings_ReturnsList()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
-        var territoryId = dataStore.Territories[1].Id;
-        var userId = dataStore.Users[0].Id;
+        var territoryId = sharedStore.Territories[1].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -416,17 +416,17 @@ public sealed class VotingServiceTests
     public async Task GetVotingAsync_WhenExists_ReturnsVoting()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
-        var territoryId = dataStore.Territories[1].Id;
-        var userId = dataStore.Users[0].Id;
+        var territoryId = sharedStore.Territories[1].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -460,11 +460,11 @@ public sealed class VotingServiceTests
     public async Task GetVotingAsync_WhenNotExists_ReturnsFailure()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
@@ -477,13 +477,13 @@ public sealed class VotingServiceTests
         Assert.Contains("not found", result.Error ?? "", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static AccessEvaluator CreateAccessEvaluator(InMemoryDataStore dataStore)
+    private static AccessEvaluator CreateAccessEvaluator(InMemorySharedStore sharedStore)
     {
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepo = new InMemoryMembershipCapabilityRepository(dataStore);
-        var permissionRepo = new InMemorySystemPermissionRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var capabilityRepo = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var permissionRepo = new InMemorySystemPermissionRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var accessRules = new MembershipAccessRules(
             membershipRepo,

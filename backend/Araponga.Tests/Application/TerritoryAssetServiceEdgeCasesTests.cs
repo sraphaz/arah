@@ -5,6 +5,7 @@ using Araponga.Domain.Assets;
 using Araponga.Domain.Geo;
 using Araponga.Domain.Work;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Xunit;
 
@@ -27,7 +28,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -66,7 +68,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -105,7 +108,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -139,7 +143,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -173,7 +178,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -212,7 +218,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -252,7 +259,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -292,7 +300,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -325,7 +334,8 @@ public class TerritoryAssetServiceEdgeCasesTests
         var assetRepository = new InMemoryAssetRepository(dataStore);
         var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
         var validationRepository = new InMemoryAssetValidationRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();

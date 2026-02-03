@@ -12,8 +12,8 @@ public sealed class UserInterestServiceTests
     public async Task AddInterestAsync_WhenValid_ReturnsSuccess()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserInterestRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new UserInterestService(repository, unitOfWork);
         var userId = Guid.NewGuid();
@@ -31,8 +31,8 @@ public sealed class UserInterestServiceTests
     public async Task AddInterestAsync_WhenTagTooLong_ReturnsFailure()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserInterestRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new UserInterestService(repository, unitOfWork);
         var userId = Guid.NewGuid();
@@ -49,8 +49,8 @@ public sealed class UserInterestServiceTests
     public async Task AddInterestAsync_WhenMaxInterestsReached_ReturnsFailure()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserInterestRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new UserInterestService(repository, unitOfWork);
         var userId = Guid.NewGuid();
@@ -72,8 +72,8 @@ public sealed class UserInterestServiceTests
     public async Task RemoveInterestAsync_WhenExists_ReturnsSuccess()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserInterestRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new UserInterestService(repository, unitOfWork);
         var userId = Guid.NewGuid();
@@ -90,8 +90,8 @@ public sealed class UserInterestServiceTests
     public async Task ListInterestsAsync_WhenUserHasInterests_ReturnsList()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserInterestRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new UserInterestService(repository, unitOfWork);
         var userId = Guid.NewGuid();

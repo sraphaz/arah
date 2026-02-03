@@ -4,6 +4,7 @@ using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Interfaces.Users;
 using Araponga.Application.Services;
 using Araponga.Application.Events;
+using Araponga.Infrastructure;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.Email;
 using Araponga.Infrastructure.FileStorage;
@@ -12,6 +13,7 @@ using Araponga.Infrastructure.Media;
 using Araponga.Infrastructure.Outbox;
 using Araponga.Infrastructure.Postgres;
 using Araponga.Infrastructure.Security;
+using Araponga.Infrastructure.Shared.Postgres;
 using Araponga.Application;
 using Araponga.Infrastructure.Shared;
 using Araponga.Modules.Feed;
@@ -256,11 +258,22 @@ public static class ServiceCollectionExtensions
                     npgsqlOptions.CommandTimeout(30);
                 }));
 
-            // IUnitOfWork = ArapongaDbContext para que CommitAsync persista as alterações dos repositórios da Infrastructure principal (Territory, User, JoinRequest, etc.). Módulos usam seus próprios DbContexts.
-            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ArapongaDbContext>());
+            // Participantes do UoW composto: contexto principal e shared (módulos registram os deles no próprio Apply)
+            services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<ArapongaDbContext>()));
+            services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<SharedDbContext>()));
+
+            // IUnitOfWork = CompositeUnitOfWork: CommitAsync persiste todos os contextos (Araponga, Shared, Feed, Events, etc.). Transação explícita delega para ArapongaDbContext.
+            services.AddScoped<IUnitOfWork>(sp =>
+            {
+                var participants = sp.GetServices<IUnitOfWorkParticipant>().ToList();
+                var primary = sp.GetRequiredService<ArapongaDbContext>();
+                return new CompositeUnitOfWork(participants, primary);
+            });
         }
         else
         {
+            // Shared InMemory (core: Territory, User, Membership, JoinRequest, UserPreferences, etc.)
+            services.AddSharedInMemoryRepositories();
             services.AddSingleton<InMemoryDataStore>();
             services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
             services.AddInMemoryRepositories();
@@ -337,10 +350,9 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddPostgresRepositories(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<ITerritoryRepository, PostgresTerritoryRepository>();
-        services.AddScoped<IUserRepository, PostgresUserRepository>();
-        services.AddScoped<ITerritoryMembershipRepository, PostgresTerritoryMembershipRepository>();
-        services.AddScoped<ITerritoryJoinRequestRepository, PostgresTerritoryJoinRequestRepository>();
+        // Repositórios core (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
+        // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
+        // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedCrossCuttingServices (Shared)
         // IFeedRepository: registrado em Araponga.Modules.Feed.Infrastructure.FeedModule
         // Events: registrado em Araponga.Modules.Events.Infrastructure.EventsModule
         // Map: registrado em Araponga.Modules.Map.Infrastructure.MapModule
@@ -367,19 +379,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPlatformExpenseTransactionRepository, PostgresPlatformExpenseTransactionRepository>();
         services.AddScoped<IReconciliationRecordRepository, PostgresReconciliationRecordRepository>();
 
-        services.AddScoped<IUserPreferencesRepository, PostgresUserPreferencesRepository>();
-        services.AddScoped<IUserInterestRepository, PostgresUserInterestRepository>();
-        services.AddScoped<IVotingRepository, PostgresVotingRepository>();
-        services.AddScoped<IVoteRepository, PostgresVoteRepository>();
-        // ITerritoryModerationRuleRepository registrado em Araponga.Modules.Moderation.Infrastructure.ModerationModule
-        services.AddScoped<ITerritoryCharacterizationRepository, PostgresTerritoryCharacterizationRepository>();
-        // INotificationConfigRepository registrado em Araponga.Modules.Notifications.Infrastructure.NotificationsModule
-        services.AddScoped<IMembershipSettingsRepository, PostgresMembershipSettingsRepository>();
-        services.AddScoped<IMembershipCapabilityRepository, PostgresMembershipCapabilityRepository>();
-        services.AddScoped<ISystemPermissionRepository, PostgresSystemPermissionRepository>();
-        services.AddScoped<ISystemConfigRepository, PostgresSystemConfigRepository>();
-        // IWorkItemRepository, IDocumentEvidenceRepository registrados em Araponga.Modules.Moderation.Infrastructure.ModerationModule
-
         // Chat: registrado em Araponga.Modules.Chat.Infrastructure.ChatModule
 
         // Media
@@ -389,16 +388,7 @@ public static class ServiceCollectionExtensions
         // services.AddScoped<ITerritoryMediaConfigRepository, Araponga.Infrastructure.Postgres.PostgresTerritoryMediaConfigRepository>();
         // services.AddScoped<IUserMediaPreferencesRepository, Araponga.Infrastructure.Postgres.PostgresUserMediaPreferencesRepository>();
 
-        // Policies
-        services.AddScoped<ITermsOfServiceRepository, PostgresTermsOfServiceRepository>();
-        services.AddScoped<ITermsAcceptanceRepository, PostgresTermsAcceptanceRepository>();
-        services.AddScoped<IPrivacyPolicyRepository, PostgresPrivacyPolicyRepository>();
-        services.AddScoped<IPrivacyPolicyAcceptanceRepository, PostgresPrivacyPolicyAcceptanceRepository>();
-
         // Subscriptions: registrado em Araponga.Modules.Subscriptions.Infrastructure.SubscriptionsModule
-
-        // Push Notifications
-        services.AddScoped<IUserDeviceRepository, PostgresUserDeviceRepository>();
 
         // Push Notification Provider (opcional - configurar Firebase:ServerKey para habilitar)
         var firebaseServerKey = configuration["Firebase:ServerKey"];
@@ -424,10 +414,9 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
     {
-        services.AddSingleton<ITerritoryRepository, InMemoryTerritoryRepository>();
-        services.AddSingleton<IUserRepository, InMemoryUserRepository>();
-        services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
-        services.AddSingleton<ITerritoryJoinRequestRepository, InMemoryTerritoryJoinRequestRepository>();
+        // Core repos (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
+        // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
+        // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedInMemoryRepositories
         services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();
         services.AddSingleton<ITerritoryEventRepository, InMemoryTerritoryEventRepository>();
         services.AddSingleton<IEventParticipationRepository, InMemoryEventParticipationRepository>();
@@ -470,10 +459,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPlatformExpenseTransactionRepository, InMemoryPlatformExpenseTransactionRepository>();
         services.AddSingleton<IReconciliationRecordRepository, InMemoryReconciliationRecordRepository>();
 
-        services.AddSingleton<IUserPreferencesRepository, InMemoryUserPreferencesRepository>();
-        services.AddSingleton<IUserInterestRepository, InMemoryUserInterestRepository>();
-        services.AddSingleton<IVotingRepository, InMemoryVotingRepository>();
-
         // Subscriptions
         services.AddSingleton<ISubscriptionPlanRepository, InMemorySubscriptionPlanRepository>();
         services.AddSingleton<ISubscriptionRepository, InMemorySubscriptionRepository>();
@@ -481,14 +466,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICouponRepository, InMemoryCouponRepository>();
         services.AddSingleton<ISubscriptionCouponRepository, InMemorySubscriptionCouponRepository>();
         services.AddSingleton<ISubscriptionPlanHistoryRepository, InMemorySubscriptionPlanHistoryRepository>();
-        services.AddSingleton<IVoteRepository, InMemoryVoteRepository>();
         services.AddSingleton<ITerritoryModerationRuleRepository, InMemoryTerritoryModerationRuleRepository>();
-        services.AddSingleton<ITerritoryCharacterizationRepository, InMemoryTerritoryCharacterizationRepository>();
         services.AddSingleton<Araponga.Application.Interfaces.Notifications.INotificationConfigRepository, InMemoryNotificationConfigRepository>();
-        services.AddSingleton<IMembershipSettingsRepository, InMemoryMembershipSettingsRepository>();
-        services.AddSingleton<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
-        services.AddSingleton<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
-        services.AddSingleton<ISystemConfigRepository, InMemorySystemConfigRepository>();
         services.AddSingleton<IWorkItemRepository, InMemoryWorkItemRepository>();
         services.AddSingleton<IDocumentEvidenceRepository, InMemoryDocumentEvidenceRepository>();
 
@@ -504,15 +483,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITerritoryMediaConfigRepository, InMemoryTerritoryMediaConfigRepository>();
         services.AddSingleton<IUserMediaPreferencesRepository, InMemoryUserMediaPreferencesRepository>();
         services.AddSingleton<IMediaStorageConfigRepository, InMemoryMediaStorageConfigRepository>();
-
-        // Policies
-        services.AddSingleton<ITermsOfServiceRepository, InMemoryTermsOfServiceRepository>();
-        services.AddSingleton<ITermsAcceptanceRepository, InMemoryTermsAcceptanceRepository>();
-        services.AddSingleton<IPrivacyPolicyRepository, InMemoryPrivacyPolicyRepository>();
-        services.AddSingleton<IPrivacyPolicyAcceptanceRepository, InMemoryPrivacyPolicyAcceptanceRepository>();
-
-        // Push Notifications
-        services.AddSingleton<IUserDeviceRepository, InMemoryUserDeviceRepository>();
 
         return services;
     }

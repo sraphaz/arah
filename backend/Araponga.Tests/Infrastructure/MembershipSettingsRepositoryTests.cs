@@ -9,8 +9,8 @@ public sealed class MembershipSettingsRepositoryTests
     [Fact]
     public async Task MembershipSettingsRepository_AddAndGetByMembershipId()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryMembershipSettingsRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryMembershipSettingsRepository(sharedStore);
 
         // Usar um MembershipId diferente para evitar conflito com dados pré-populados
         var membershipId = Guid.NewGuid();
@@ -31,8 +31,8 @@ public sealed class MembershipSettingsRepositoryTests
     [Fact]
     public async Task MembershipSettingsRepository_Update_ModifiesExisting()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryMembershipSettingsRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryMembershipSettingsRepository(sharedStore);
 
         // Usar um MembershipId diferente para evitar conflito com dados pré-populados
         var membershipId = Guid.NewGuid();

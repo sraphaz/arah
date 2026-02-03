@@ -16,6 +16,7 @@ using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.Api;
 using Microsoft.Extensions.DependencyInjection;
 using Reqnroll;
@@ -119,15 +120,15 @@ public sealed class MediaSteps
                 _users[userName] = userIdGuid;
 
                 // Tornar usuário verificado (necessário para chat)
-                var dataStore = _factory.GetDataStore();
-                var user = dataStore.Users.FirstOrDefault(u => u.Id == userIdGuid);
+                var sharedStore = _factory.GetSharedStore();
+                var user = sharedStore.Users.FirstOrDefault(u => u.Id == userIdGuid);
                 if (user is not null)
                 {
                     user.UpdateIdentityVerification(Araponga.Domain.Users.UserIdentityVerificationStatus.Verified, DateTime.UtcNow);
                 }
 
-                // Criar/atualizar membership diretamente no InMemoryDataStore para garantir que seja residente
-                var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+                // Criar/atualizar membership diretamente no InMemorySharedStore para garantir que seja residente
+                var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
                 var existingMembership = await membershipRepository.GetByUserAndTerritoryAsync(
                     userIdGuid,
@@ -771,8 +772,8 @@ public sealed class MediaSteps
 
     private async Task EnsureMarketplaceOptInAsync()
     {
-        var dataStore = _factory.GetDataStore();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = _factory.GetSharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
         // Obter ID do usuário atual
         var meResponse = await _client!.GetAsync("api/v1/users/me/profile");
@@ -790,7 +791,7 @@ public sealed class MediaSteps
                 if (membership is not null)
                 {
                     // Buscar ou criar MembershipSettings e ativar marketplace opt-in
-                    var settings = dataStore.MembershipSettings.FirstOrDefault(s => s.MembershipId == membership.Id);
+                    var settings = sharedStore.MembershipSettings.FirstOrDefault(s => s.MembershipId == membership.Id);
                     if (settings is null)
                     {
                         var now = DateTime.UtcNow;
@@ -799,7 +800,7 @@ public sealed class MediaSteps
                             marketplaceOptIn: true,
                             now,
                             now);
-                        dataStore.MembershipSettings.Add(settings);
+                        sharedStore.MembershipSettings.Add(settings);
                     }
                     else if (!settings.MarketplaceOptIn)
                     {

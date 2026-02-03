@@ -5,6 +5,7 @@ using Araponga.Domain.Membership;
 using Araponga.Domain.Policies;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using System.Text.Json;
 using Xunit;
 
@@ -23,9 +24,9 @@ public sealed class PolicySecurityTests
     public async Task AcceptTermsAsync_UserCannotAcceptTermsForAnotherUser()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TermsAcceptanceService(acceptanceRepository, termsRepository, unitOfWork);
 
@@ -65,9 +66,9 @@ public sealed class PolicySecurityTests
     public async Task AcceptTermsAsync_CannotAcceptExpiredTerms()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TermsAcceptanceService(acceptanceRepository, termsRepository, unitOfWork);
 
@@ -97,9 +98,9 @@ public sealed class PolicySecurityTests
     public async Task RevokeAcceptanceAsync_UserCannotRevokeAnotherUserAcceptance()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TermsAcceptanceService(acceptanceRepository, termsRepository, unitOfWork);
 
@@ -134,9 +135,9 @@ public sealed class PolicySecurityTests
     public async Task GetAcceptanceHistoryAsync_UserCanOnlySeeOwnHistory()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TermsAcceptanceService(acceptanceRepository, termsRepository, unitOfWork);
 
@@ -174,9 +175,9 @@ public sealed class PolicySecurityTests
     public async Task AcceptTermsAsync_ValidatesTermsVersionMismatch()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TermsAcceptanceService(acceptanceRepository, termsRepository, unitOfWork);
 
@@ -240,12 +241,12 @@ public sealed class PolicySecurityTests
     public async Task PolicyRequirementService_OnlyReturnsActivePolicies()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var privacyRepository = new InMemoryPrivacyPolicyRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var privacyRepository = new InMemoryPrivacyPolicyRepository(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
 
         var termsService = new TermsOfServiceService(termsRepository);
         var privacyService = new PrivacyPolicyService(privacyRepository);
@@ -309,9 +310,9 @@ public sealed class PolicySecurityTests
     public async Task AcceptTermsAsync_ValidatesEffectiveDate()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TermsAcceptanceService(acceptanceRepository, termsRepository, unitOfWork);
 
@@ -341,9 +342,9 @@ public sealed class PolicySecurityTests
     public async Task AcceptTermsAsync_StoresIpAddressAndUserAgent()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var termsRepository = new InMemoryTermsOfServiceRepository(dataStore);
-        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepository = new InMemoryTermsOfServiceRepository(sharedStore);
+        var acceptanceRepository = new InMemoryTermsAcceptanceRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TermsAcceptanceService(acceptanceRepository, termsRepository, unitOfWork);
 

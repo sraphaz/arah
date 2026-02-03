@@ -4,6 +4,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -14,6 +15,7 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class UserProfileServiceEdgeCasesTests
 {
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryDataStore _dataStore;
     private readonly InMemoryUserRepository _userRepository;
     private readonly InMemoryUserInterestRepository _interestRepository;
@@ -24,11 +26,12 @@ public sealed class UserProfileServiceEdgeCasesTests
 
     public UserProfileServiceEdgeCasesTests()
     {
+        _sharedStore = new InMemorySharedStore();
         _dataStore = new InMemoryDataStore();
-        _userRepository = new InMemoryUserRepository(_dataStore);
-        _interestRepository = new InMemoryUserInterestRepository(_dataStore);
-        _preferencesRepository = new InMemoryUserPreferencesRepository(_dataStore);
-        _membershipRepository = new InMemoryTerritoryMembershipRepository(_dataStore);
+        _userRepository = new InMemoryUserRepository(_sharedStore);
+        _interestRepository = new InMemoryUserInterestRepository(_sharedStore);
+        _preferencesRepository = new InMemoryUserPreferencesRepository(_sharedStore);
+        _membershipRepository = new InMemoryTerritoryMembershipRepository(_sharedStore);
         _unitOfWork = new InMemoryUnitOfWork();
         _service = new UserProfileService(
             _userRepository,

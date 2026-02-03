@@ -6,6 +6,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -19,10 +20,11 @@ public sealed class NotificationFlowTests
     public async Task CreatePost_EnqueuesNotificationOutboxMessage()
     {
         var dataStore = new InMemoryDataStore();
-        var serviceProvider = BuildServiceProvider(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var serviceProvider = BuildServiceProvider(dataStore, sharedStore);
         var eventBus = new InMemoryEventBus(serviceProvider);
 
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, eventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, sharedStore, eventBus);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -49,7 +51,7 @@ public sealed class NotificationFlowTests
             new JsonSerializerOptions(JsonSerializerDefaults.Web));
         Assert.NotNull(payload);
         Assert.Equal("post.created", payload!.Kind);
-        Assert.Contains(dataStore.Users[0].Id, payload.Recipients);
+        Assert.Contains(sharedStore.Users[0].Id, payload.Recipients);
     }
 
     [Fact]
@@ -198,10 +200,11 @@ public sealed class NotificationFlowTests
         Assert.True(authorizedMark);
     }
 
-    private static ServiceProvider BuildServiceProvider(InMemoryDataStore dataStore)
+    private static ServiceProvider BuildServiceProvider(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
         var services = new ServiceCollection();
         services.AddSingleton(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddSingleton<IOutbox, InMemoryOutbox>();
         services.AddSingleton<IUserRepository, InMemoryUserRepository>();
         services.AddSingleton<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();

@@ -1,5 +1,6 @@
 using Araponga.Application;
 using Araponga.Application.Interfaces;
+using Araponga.Infrastructure.Shared;
 using Araponga.Modules.Feed.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,9 @@ public sealed class FeedModule : IModule
                     errorCodesToAdd: null);
                 npgsqlOptions.CommandTimeout(30);
             }));
+
+        // Participante do UoW composto para que CommitAsync persista alterações do Feed junto com os demais contextos
+        services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<FeedDbContext>()));
 
         // Registrar repositórios de Feed
         services.AddScoped<IFeedRepository, PostgresFeedRepository>();

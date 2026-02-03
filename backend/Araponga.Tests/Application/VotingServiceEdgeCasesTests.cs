@@ -3,6 +3,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Governance;
 using Araponga.Domain.Membership;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Xunit;
 
@@ -134,17 +135,17 @@ public sealed class VotingServiceEdgeCasesTests
 
     private static async Task<(VotingService Service, Guid TerritoryId, Guid UserId)> CreateServiceAndSetupAsync()
     {
-        var dataStore = new InMemoryDataStore();
-        var votingRepo = new InMemoryVotingRepository(dataStore);
-        var voteRepo = new InMemoryVoteRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var accessEvaluator = CreateAccessEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var votingRepo = new InMemoryVotingRepository(sharedStore);
+        var voteRepo = new InMemoryVoteRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var accessEvaluator = CreateAccessEvaluator(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new VotingService(
             votingRepo, voteRepo, membershipRepo, accessEvaluator, unitOfWork);
 
-        var territoryId = dataStore.Territories[1].Id;
-        var userId = dataStore.Users[0].Id;
+        var territoryId = sharedStore.Territories.Count > 1 ? sharedStore.Territories[1].Id : sharedStore.Territories[0].Id;
+        var userId = sharedStore.Users[0].Id;
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -161,13 +162,13 @@ public sealed class VotingServiceEdgeCasesTests
         return (service, territoryId, userId);
     }
 
-    private static AccessEvaluator CreateAccessEvaluator(InMemoryDataStore dataStore)
+    private static AccessEvaluator CreateAccessEvaluator(InMemorySharedStore sharedStore)
     {
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepo = new InMemoryMembershipCapabilityRepository(dataStore);
-        var permissionRepo = new InMemorySystemPermissionRepository(dataStore);
-        var settingsRepo = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepo = new InMemoryUserRepository(dataStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var capabilityRepo = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var permissionRepo = new InMemorySystemPermissionRepository(sharedStore);
+        var settingsRepo = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepo = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var accessRules = new MembershipAccessRules(
             membershipRepo,

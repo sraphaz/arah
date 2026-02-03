@@ -1,5 +1,6 @@
 using Araponga.Application;
 using Araponga.Application.Interfaces;
+using Araponga.Infrastructure.Shared;
 using Araponga.Modules.Assets.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,7 @@ public sealed class AssetsModule : IModule
                 npgsqlOptions.CommandTimeout(30);
             }));
 
+        services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<AssetsDbContext>()));
         services.AddScoped<ITerritoryAssetRepository, PostgresAssetRepository>();
         services.AddScoped<IAssetGeoAnchorRepository, PostgresAssetGeoAnchorRepository>();
         services.AddScoped<IAssetValidationRepository, PostgresAssetValidationRepository>();

@@ -4,6 +4,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Media;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application.Services;
@@ -13,7 +14,7 @@ namespace Araponga.Tests.Application.Services;
 /// </summary>
 public sealed class UserProfileServiceAvatarBioTests
 {
-    private readonly InMemoryDataStore _dataStore;
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryUserRepository _userRepository;
     private readonly InMemoryUserInterestRepository _interestRepository;
     private readonly InMemoryUnitOfWork _unitOfWork;
@@ -21,9 +22,9 @@ public sealed class UserProfileServiceAvatarBioTests
 
     public UserProfileServiceAvatarBioTests()
     {
-        _dataStore = new InMemoryDataStore();
-        _userRepository = new InMemoryUserRepository(_dataStore);
-        _interestRepository = new InMemoryUserInterestRepository(_dataStore);
+        _sharedStore = new InMemorySharedStore();
+        _userRepository = new InMemoryUserRepository(_sharedStore);
+        _interestRepository = new InMemoryUserInterestRepository(_sharedStore);
         _unitOfWork = new InMemoryUnitOfWork();
         _service = new UserProfileService(
             _userRepository,

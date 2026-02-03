@@ -2,6 +2,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Configuration;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
@@ -9,15 +10,15 @@ namespace Araponga.Tests.Application;
 
 public sealed class SystemConfigCacheServiceEdgeCasesTests
 {
-    private readonly InMemoryDataStore _dataStore;
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemorySystemConfigRepository _repository;
     private readonly IMemoryCache _cache;
     private readonly SystemConfigCacheService _service;
 
     public SystemConfigCacheServiceEdgeCasesTests()
     {
-        _dataStore = new InMemoryDataStore();
-        _repository = new InMemorySystemConfigRepository(_dataStore);
+        _sharedStore = new InMemorySharedStore();
+        _repository = new InMemorySystemConfigRepository(_sharedStore);
         _cache = new MemoryCache(new MemoryCacheOptions());
         _service = new SystemConfigCacheService(_repository, _cache);
     }

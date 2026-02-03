@@ -10,8 +10,8 @@ public sealed class UserRepositoryTests
     public async Task GetByEmailAsync_ReturnsUser_WhenEmailExists()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
         var user = new User(
             Guid.NewGuid(),
             "Test User",
@@ -38,8 +38,8 @@ public sealed class UserRepositoryTests
     public async Task GetByEmailAsync_ReturnsNull_WhenEmailDoesNotExist()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         // Act
         var result = await repository.GetByEmailAsync("nonexistent@example.com", CancellationToken.None);
@@ -52,8 +52,8 @@ public sealed class UserRepositoryTests
     public async Task GetByEmailAsync_IsCaseInsensitive()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
         var user = new User(
             Guid.NewGuid(),
             "Test User",
@@ -85,8 +85,8 @@ public sealed class UserRepositoryTests
     public async Task GetByEmailAsync_ReturnsNull_WhenEmailIsNullOrEmpty()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         // Act
         var result1 = await repository.GetByEmailAsync("", CancellationToken.None);

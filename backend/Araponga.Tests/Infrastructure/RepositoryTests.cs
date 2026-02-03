@@ -18,8 +18,8 @@ public sealed class RepositoryTests
     [Fact]
     public async Task TerritoryRepository_ListAndGetById()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var territories = await repository.ListAsync(CancellationToken.None);
         Assert.NotEmpty(territories);
@@ -32,8 +32,8 @@ public sealed class RepositoryTests
     [Fact]
     public async Task UserRepository_AddAndGetByAuthProvider()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var user = new User(
             Guid.NewGuid(),
@@ -59,8 +59,8 @@ public sealed class RepositoryTests
     [Fact]
     public async Task MembershipRepository_GetByUserAndTerritory()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
         var membership = await repository.GetByUserAndTerritoryAsync(UserId, TerritoryId, CancellationToken.None);
         Assert.NotNull(membership);
@@ -270,8 +270,8 @@ public sealed class RepositoryTests
     [Fact]
     public async Task TerritoryRepository_ListPagedAsync_ReturnsPagedResults()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var page1 = await repository.ListPagedAsync(0, 5, CancellationToken.None);
         Assert.True(page1.Count <= 5);

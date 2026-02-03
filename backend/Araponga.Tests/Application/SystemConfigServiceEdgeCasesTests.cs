@@ -2,6 +2,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Configuration;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -15,7 +16,8 @@ public sealed class SystemConfigServiceEdgeCasesTests
     public async Task GetByKeyAsync_WithEmptyKey_ReturnsNull()
     {
         var ds = new InMemoryDataStore();
-        var repo = new InMemorySystemConfigRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemorySystemConfigRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var audit = new InMemoryAuditLogger(ds);
         var svc = new SystemConfigService(repo, uow, audit, cacheService: null);
@@ -29,7 +31,8 @@ public sealed class SystemConfigServiceEdgeCasesTests
     public async Task UpsertAsync_WithEmptyKey_ReturnsFailure()
     {
         var ds = new InMemoryDataStore();
-        var repo = new InMemorySystemConfigRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemorySystemConfigRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var audit = new InMemoryAuditLogger(ds);
         var svc = new SystemConfigService(repo, uow, audit, cacheService: null);
@@ -51,7 +54,8 @@ public sealed class SystemConfigServiceEdgeCasesTests
     public async Task ListAsync_WithCategory_ReturnsFiltered()
     {
         var ds = new InMemoryDataStore();
-        var repo = new InMemorySystemConfigRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemorySystemConfigRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var audit = new InMemoryAuditLogger(ds);
         var svc = new SystemConfigService(repo, uow, audit, cacheService: null);
@@ -65,7 +69,8 @@ public sealed class SystemConfigServiceEdgeCasesTests
     public async Task ListAsync_WithNullCategory_ReturnsAll()
     {
         var ds = new InMemoryDataStore();
-        var repo = new InMemorySystemConfigRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemorySystemConfigRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var audit = new InMemoryAuditLogger(ds);
         var svc = new SystemConfigService(repo, uow, audit, cacheService: null);

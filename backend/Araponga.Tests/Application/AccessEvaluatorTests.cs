@@ -13,13 +13,13 @@ public sealed class AccessEvaluatorTests
     private static readonly Guid UserId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private static readonly Guid OtherUserId = Guid.Parse("99999999-9999-9999-9999-999999999999");
 
-    private static AccessEvaluator CreateEvaluator(InMemoryDataStore dataStore)
+    private static AccessEvaluator CreateEvaluator(InMemorySharedStore sharedStore)
     {
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var cache = CacheTestHelper.CreateDistributedCacheService();
 
@@ -40,10 +40,10 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasCapabilityAsync_ReturnsTrue_WhenCapabilityExists()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -77,10 +77,10 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasCapabilityAsync_ReturnsFalse_WhenCapabilityRevoked()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -115,8 +115,8 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasCapabilityAsync_ReturnsFalse_WhenNoMembership()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
 
         var hasCapability = await evaluator.HasCapabilityAsync(OtherUserId, TerritoryId, MembershipCapabilityType.Curator, CancellationToken.None);
         Assert.False(hasCapability);
@@ -125,9 +125,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasSystemPermissionAsync_ReturnsTrue_WhenPermissionActive()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
 
         var permission = new SystemPermission(
             Guid.NewGuid(),
@@ -147,9 +147,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasSystemPermissionAsync_ReturnsFalse_WhenPermissionRevoked()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
 
         var permission = new SystemPermission(
             Guid.NewGuid(),
@@ -169,8 +169,8 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasSystemPermissionAsync_ReturnsFalse_WhenNoPermission()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
 
         var hasPermission = await evaluator.HasSystemPermissionAsync(OtherUserId, SystemPermissionType.SystemAdmin, CancellationToken.None);
         Assert.False(hasPermission);
@@ -179,9 +179,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task IsResidentAsync_ReturnsTrue_ForVerifiedResident()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -204,9 +204,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task IsResidentAsync_ReturnsFalse_ForUnverifiedResident()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -229,9 +229,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task IsResidentAsync_ReturnsFalse_ForVisitor()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -254,9 +254,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task GetRoleAsync_ReturnsCorrectRole()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -279,8 +279,8 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task GetRoleAsync_ReturnsNull_WhenNoMembership()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
 
         var role = await evaluator.GetRoleAsync(OtherUserId, TerritoryId, CancellationToken.None);
         Assert.Null(role);
@@ -289,9 +289,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasCapabilityAsync_ReturnsTrue_WhenUserIsSystemAdmin()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -320,9 +320,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasCapabilityAsync_ReturnsTrue_WhenSystemAdmin_EvenWithoutMembership()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();
@@ -348,9 +348,9 @@ public sealed class AccessEvaluatorTests
     [Fact]
     public async Task HasCapabilityAsync_ReturnsFalse_WhenNotSystemAdminAndNoCapability()
     {
-        var dataStore = new InMemoryDataStore();
-        var evaluator = CreateEvaluator(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var evaluator = CreateEvaluator(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
 
         // Usar um UserId diferente para evitar conflito com dados pré-populados
         var testUserId = Guid.NewGuid();

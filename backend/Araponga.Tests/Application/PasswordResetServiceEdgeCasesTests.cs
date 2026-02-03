@@ -4,6 +4,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,7 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class PasswordResetServiceEdgeCasesTests
 {
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryDataStore _dataStore;
     private readonly InMemoryUserRepository _userRepository;
     private readonly Mock<ITokenService> _tokenServiceMock;
@@ -30,8 +32,9 @@ public sealed class PasswordResetServiceEdgeCasesTests
 
     public PasswordResetServiceEdgeCasesTests()
     {
+        _sharedStore = new InMemorySharedStore();
         _dataStore = new InMemoryDataStore();
-        _userRepository = new InMemoryUserRepository(_dataStore);
+        _userRepository = new InMemoryUserRepository(_sharedStore);
         _tokenServiceMock = new Mock<ITokenService>();
         _emailSenderMock = new Mock<IEmailSender>();
         _cache = new MemoryDistributedCache(Options.Create(new MemoryDistributedCacheOptions { }));

@@ -3,6 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Events;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 
 namespace Araponga.Tests.Application;
@@ -11,21 +12,22 @@ public static class FeedServiceTestHelper
 {
     public static FeedService CreateFeedService(
         InMemoryDataStore dataStore,
+        InMemorySharedStore sharedStore,
         IEventBus? eventBus = null)
     {
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,
             userRepository,
             featureFlags);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
         var accessEvaluator = new AccessEvaluator(
             membershipRepository,
             capabilityRepository,

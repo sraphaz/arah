@@ -115,31 +115,27 @@ public sealed class MediaInContentIntegrationTests
         // 5. Se factory foi fornecido e o usuário precisa criar stores/items, ativar marketplace opt-in
         if (factory is not null)
         {
-            var dataStore = factory.GetDataStore();
+            var sharedStore = factory.GetSharedStore();
 
-            // Buscar o membership do usuário atual
             var userContextResponse = await client.GetAsync($"api/v1/memberships/{territoryId}/me");
             if (userContextResponse.IsSuccessStatusCode)
             {
                 var membershipDetail = await userContextResponse.Content.ReadFromJsonAsync<MembershipDetailResponse>();
                 if (membershipDetail is not null)
                 {
-                    // Buscar ou criar MembershipSettings e ativar marketplace opt-in
-                    var settings = dataStore.MembershipSettings.FirstOrDefault(s => s.MembershipId == membershipDetail.Id);
+                    var settings = sharedStore.MembershipSettings.FirstOrDefault(s => s.MembershipId == membershipDetail.Id);
                     if (settings is null)
                     {
-                        // Criar novo settings com marketplace opt-in ativado
                         var now = DateTime.UtcNow;
                         settings = new MembershipSettings(
                             membershipDetail.Id,
                             marketplaceOptIn: true,
                             now,
                             now);
-                        dataStore.MembershipSettings.Add(settings);
+                        sharedStore.MembershipSettings.Add(settings);
                     }
                     else
                     {
-                        // Atualizar settings existente para ativar marketplace opt-in
                         settings.UpdateMarketplaceOptIn(true, DateTime.UtcNow);
                     }
                 }

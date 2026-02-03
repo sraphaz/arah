@@ -3,6 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Territories;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -13,15 +14,15 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class TerritoryCharacterizationServiceEdgeCasesTests
 {
-    private readonly InMemoryDataStore _dataStore;
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryTerritoryCharacterizationRepository _repository;
     private readonly InMemoryUnitOfWork _unitOfWork;
     private readonly TerritoryCharacterizationService _service;
 
     public TerritoryCharacterizationServiceEdgeCasesTests()
     {
-        _dataStore = new InMemoryDataStore();
-        _repository = new InMemoryTerritoryCharacterizationRepository(_dataStore);
+        _sharedStore = new InMemorySharedStore();
+        _repository = new InMemoryTerritoryCharacterizationRepository(_sharedStore);
         _unitOfWork = new InMemoryUnitOfWork();
         _service = new TerritoryCharacterizationService(_repository, _unitOfWork);
     }

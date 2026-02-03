@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Araponga.Api;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,7 @@ namespace Araponga.Tests.Api;
 public sealed class ApiFactory : WebApplicationFactory<Program>
 {
     private InMemoryDataStore? _dataStore;
+    private InMemorySharedStore? _sharedStore;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -74,12 +76,18 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
             }
 
+            // Substituir também o InMemorySharedStore para que testes e API usem a mesma instância
+            var sharedDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(InMemorySharedStore));
+            if (sharedDescriptor != null) services.Remove(sharedDescriptor);
+            _sharedStore = new InMemorySharedStore();
+            services.AddSingleton(_sharedStore);
+
             // Criar uma nova instância isolada para este teste
             _dataStore = new InMemoryDataStore();
             services.AddSingleton(_dataStore);
 
             // Os repositórios serão recriados automaticamente quando o container for construído,
-            // pois eles dependem do InMemoryDataStore que acabamos de substituir
+            // pois eles dependem do InMemoryDataStore/InMemorySharedStore que acabamos de substituir
         });
     }
 
@@ -96,12 +104,25 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         return _dataStore;
     }
 
+    /// <summary>
+    /// Obtém o InMemorySharedStore usado nesta instância do factory (Users, Memberships, etc.).
+    /// Use para setup de dados shared em testes BDD.
+    /// </summary>
+    public InMemorySharedStore GetSharedStore()
+    {
+        if (_sharedStore == null)
+        {
+            _sharedStore = Services.GetRequiredService<InMemorySharedStore>();
+        }
+        return _sharedStore;
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            // Limpar referência ao dataStore quando o factory for descartado
             _dataStore = null;
+            _sharedStore = null;
         }
         base.Dispose(disposing);
     }

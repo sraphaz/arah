@@ -2,8 +2,8 @@ using System.Net;
 using System.Net.Http.Json;
 using Araponga.Api;
 using Araponga.Api.Contracts.Auth;
+using Araponga.Application.Interfaces;
 using Araponga.Domain.Users;
-using Araponga.Infrastructure.InMemory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -17,8 +17,7 @@ public sealed class AuthControllerForgotPasswordTests
         // Arrange
         using var factory = new ApiFactory();
         using var client = factory.CreateClient();
-        var dataStore = factory.GetDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = factory.Services.GetRequiredService<IUserRepository>();
 
         // Criar usuário com email
         var user = new User(

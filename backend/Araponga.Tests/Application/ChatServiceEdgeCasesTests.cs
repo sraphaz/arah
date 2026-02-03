@@ -21,6 +21,7 @@ public class ChatServiceEdgeCasesTests
     private static readonly DateTime TestDate = DateTime.UtcNow;
     private static readonly Guid TestTerritoryId = Guid.NewGuid();
     private static readonly Guid TestUserId = Guid.NewGuid();
+    private static readonly InMemorySharedStore SharedStore = new();
 
     [Fact]
     public async Task CreateGroupAsync_WithEmptyName_ReturnsFailure()
@@ -30,7 +31,7 @@ public class ChatServiceEdgeCasesTests
         var participantRepository = new InMemoryChatConversationParticipantRepository(dataStore);
         var messageRepository = new InMemoryChatMessageRepository(dataStore);
         var statsRepository = new InMemoryChatConversationStatsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         
@@ -51,10 +52,10 @@ public class ChatServiceEdgeCasesTests
             featureFlagService,
             cache);
         
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(SharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(SharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,
@@ -98,7 +99,7 @@ public class ChatServiceEdgeCasesTests
         var participantRepository = new InMemoryChatConversationParticipantRepository(dataStore);
         var messageRepository = new InMemoryChatMessageRepository(dataStore);
         var statsRepository = new InMemoryChatConversationStatsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         
@@ -119,10 +120,10 @@ public class ChatServiceEdgeCasesTests
             featureFlagService,
             cache);
         
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(SharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(SharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,
@@ -166,7 +167,7 @@ public class ChatServiceEdgeCasesTests
         var participantRepository = new InMemoryChatConversationParticipantRepository(dataStore);
         var messageRepository = new InMemoryChatMessageRepository(dataStore);
         var statsRepository = new InMemoryChatConversationStatsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         
@@ -187,10 +188,10 @@ public class ChatServiceEdgeCasesTests
             featureFlagService,
             cache);
         
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(SharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(SharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,
@@ -235,7 +236,7 @@ public class ChatServiceEdgeCasesTests
         var participantRepository = new InMemoryChatConversationParticipantRepository(dataStore);
         var messageRepository = new InMemoryChatMessageRepository(dataStore);
         var statsRepository = new InMemoryChatConversationStatsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         
@@ -256,10 +257,10 @@ public class ChatServiceEdgeCasesTests
             featureFlagService,
             cache);
         
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(SharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(SharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,
@@ -306,7 +307,7 @@ public class ChatServiceEdgeCasesTests
         var participantRepository = new InMemoryChatConversationParticipantRepository(dataStore);
         var messageRepository = new InMemoryChatMessageRepository(dataStore);
         var statsRepository = new InMemoryChatConversationStatsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         
@@ -327,10 +328,10 @@ public class ChatServiceEdgeCasesTests
             featureFlagService,
             cache);
         
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(SharedStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(SharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,

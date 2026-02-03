@@ -1,9 +1,9 @@
 namespace Araponga.Application.Interfaces;
 
 /// <summary>
-/// Unidade de trabalho para persistência. Em Postgres a implementação registrada é ArapongaDbContext:
-/// CommitAsync persiste as alterações dos repositórios da Infrastructure principal (Territory, User, JoinRequest, etc.).
-/// Repositórios dos módulos (Feed, Events, Map, etc.) usam seus próprios DbContexts e não são cobertos por esta interface.
+/// Unidade de trabalho para persistência. Em Postgres a implementação é um UoW composto que agrega múltiplos contextos:
+/// CommitAsync persiste alterações em todos os participantes (ArapongaDbContext, SharedDbContext e DbContexts dos módulos Feed, Events, Map, etc.).
+/// Participantes são registrados como <see cref="IUnitOfWorkParticipant"/>; transação explícita (Begin/Rollback/HasActive) delega para o contexto principal.
 /// Ver docs/VALIDACAO_INFRAESTRUTURA_INTEGRIDADE.md §3.1.
 /// </summary>
 public interface IUnitOfWork

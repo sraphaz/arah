@@ -10,7 +10,7 @@
 | Build | OK (0 erros) |
 | Testes | 2171 passando, 0 falhando, 23 ignorados |
 | Rastreio de jornada | CorrelationId + traceId em uso |
-| UoW vs contextos | OK: IUnitOfWork = ArapongaDbContext (ver §3.1) |
+| UoW vs contextos | OK: IUnitOfWork = CompositeUnitOfWork com múltiplos contextos (ver §3.1) |
 | Clean Code / Clean Architecture | Ver [VALIDACAO_CLEAN_CODE_CLEAN_ARCHITECTURE.md](VALIDACAO_CLEAN_CODE_CLEAN_ARCHITECTURE.md) |
 
 ---
@@ -22,10 +22,10 @@ Existem **três camadas** de projetos de infraestrutura:
 | Camada | Projeto(s) | Conteúdo | Uso |
 |--------|------------|----------|-----|
 | **Principal** | `Araponga.Infrastructure` | ArapongaDbContext, **78 entidades** em Postgres/Entities, repositórios Postgres restantes (Territory, User, JoinRequest, PostGeoAnchor, PostAsset, Financial, Policies, Media, etc.), **todos** os repositórios InMemory, Migrations | Repositórios “shared” em modo Postgres; todos os repositórios em modo InMemory; migrations; ConnectionPoolMetricsService; HealthCheck; OutboxDispatcherWorker |
-| **Shared** | `Araponga.Infrastructure.Shared` | SharedDbContext, **29 entidades** em Postgres/Entities | SharedDbContext disponível para uso direto; IUnitOfWork é registrado na API como ArapongaDbContext |
+| **Shared** | `Araponga.Infrastructure.Shared` | SharedDbContext, **29 entidades** em Postgres/Entities | SharedDbContext disponível para uso direto; participante do UoW composto (IUnitOfWork = CompositeUnitOfWork) |
 | **Por módulo** | `Araponga.Modules.{Feed,Events,Map,Chat,Alerts,Assets,Marketplace,Moderation,Notifications,Subscriptions,Admin}.Infrastructure` | Cada um: DbContext próprio, entidades do domínio, repositórios Postgres do domínio | Cada módulo registra seu DbContext e seus repositórios; **nenhum** repositório Postgres duplicado na principal para domínios já migrados |
 
-Conclusão: há **muita** infraestrutura (principal + shared + 11 módulos), mas a **divisão de responsabilidade** está clara: módulos têm só seus domínios; principal tem o que ainda não foi modularizado + InMemory + migrations; shared expõe SharedDbContext; IUnitOfWork é registrado na API como ArapongaDbContext.
+Conclusão: há **muita** infraestrutura (principal + shared + 11 módulos), mas a **divisão de responsabilidade** está clara: módulos têm só seus domínios; principal tem o que ainda não foi modularizado + InMemory + migrations; shared expõe SharedDbContext; IUnitOfWork é um CompositeUnitOfWork que persiste todos os contextos.
 
 ---
 
@@ -61,11 +61,11 @@ Risco: alteração de schema (coluna, índice) exige cuidado: pode ser preciso a
 
 ### 3.1 Unit of Work vs contextos
 
-- Em Postgres, **IUnitOfWork** está registrado como **ArapongaDbContext** na API (após `AddDbContext<ArapongaDbContext>`).
-- Os repositórios registrados em `AddPostgresRepositories` usam **ArapongaDbContext** (Territory, User, JoinRequest, etc.).
-- **CommitAsync** persiste as alterações desse contexto; os repositórios da Infrastructure principal ficam cobertos pelo mesmo UoW.
-- Os módulos (Feed, Events, Map, etc.) usam seus próprios DbContexts; alterações feitas via repositórios de módulos **não** são commitadas por IUnitOfWork (cada módulo persiste seu próprio contexto).
-- **SharedDbContext** continua registrado para uso direto se necessário; não é mais usado como IUnitOfWork.
+- Em Postgres, **IUnitOfWork** está registrado como **CompositeUnitOfWork** na API: agrega múltiplos contextos via **IUnitOfWorkParticipant**.
+- Participantes: **ArapongaDbContext**, **SharedDbContext** e o DbContext de cada módulo (Feed, Events, Map, Chat, Subscriptions, Moderation, Notifications, Alerts, Assets). Cada um é registrado como `IUnitOfWorkParticipant` (adapter `DbContextUnitOfWorkParticipant` em Infrastructure.Shared).
+- **CommitAsync** chama SaveChangesAsync em todos os participantes na ordem de registro; assim, uma única chamada a `_unitOfWork.CommitAsync()` persiste alterações da Infrastructure principal, do Shared e dos módulos.
+- **BeginTransactionAsync**, **RollbackAsync** e **HasActiveTransactionAsync** delegam para **ArapongaDbContext** (transação explícita não abrange os outros contextos).
+- **SharedDbContext** continua registrado para uso direto; também é participante do UoW composto.
 
 
 ### 3.2 Dois DbContexts no mesmo banco
@@ -102,7 +102,7 @@ Risco: alteração de schema (coluna, índice) exige cuidado: pode ser preciso a
 | Repositórios Postgres duplicados | OK | Não há; cada interface tem uma implementação (módulo ou Infrastructure). |
 | Repositórios InMemory duplicados | OK | Todos em `Araponga.Infrastructure/InMemory`. |
 | Entidades (Record) duplicadas | Atenção | Mesma tabela mapeada em 2 (ou 3) lugares: Infrastructure/Entities, Shared/Entities e/ou módulos. |
-| IUnitOfWork vs repositórios | OK | IUnitOfWork = ArapongaDbContext; commit cobre repositórios da Infrastructure principal; módulos usam seus próprios contextos. |
+| IUnitOfWork vs repositórios | OK | IUnitOfWork = CompositeUnitOfWork; commit persiste ArapongaDbContext, SharedDbContext e DbContexts dos módulos numa única chamada. |
 | Infra “demais” (principal + shared + módulos) | Esperado | Principal: repositórios restantes + InMemory + migrations. Shared: SharedDbContext disponível; IUnitOfWork na API. Módulos: domínios já migrados. |
 | Integridade do projeto | OK | Build ok; sem repositórios duplicados; migrations únicas; risco principal é drift de entidades. |
 | Identificação de jornada | OK | CorrelationId + traceId permitem rastrear uma request entre módulos (logs e resposta de erro). |
@@ -112,8 +112,8 @@ Risco: alteração de schema (coluna, índice) exige cuidado: pode ser preciso a
 ## 5. Recomendações
 
 1. **Entidades duplicadas**: A longo prazo, escolher uma única “fonte de verdade” por tabela: ou manter apenas em módulos (e ArapongaDbContext deixar de ter DbSets para domínios migrados) ou manter apenas em Infrastructure/Entities para compatibilidade com migrations. Hoje não é bloqueante; ao alterar schema/entidade de uma tabela que existe em Infrastructure/Entities e no módulo, atualize os dois lados para evitar drift (ver §6).
-2. **IUnitOfWork**: **Aplicada.** Em Postgres, IUnitOfWork está registrado como ArapongaDbContext na API; CommitAsync cobre os repositórios da Infrastructure principal. SharedDbContext permanece disponível para uso direto. (Antes: Decidir se SharedDbContext deveria ser o contexto de UoW para toda a aplicação; se sim, os repositórios “shared” que hoje usam ArapongaDbContext precisariam migrar para SharedDbContext (e as entidades shared virariam fonte única em Infrastructure.Shared). — optou-se por registrar IUnitOfWork como ArapongaDbContext na API.)
-3. **Shared vs principal** (próximo passo): Avaliar se Infrastructure.Shared deve passar a ser o único lugar das entidades e do contexto “core” (Territory, User, Membership, etc.) e a Infrastructure principal ficar só com InMemory, Financial e o que ainda não for modularizado; isso reduz duplicação de entidades e deixa a fronteira mais clara.
+2. **IUnitOfWork**: **Aplicada.** Em Postgres, IUnitOfWork é um CompositeUnitOfWork que agrega ArapongaDbContext, SharedDbContext e os DbContexts dos módulos; CommitAsync persiste todos. SharedDbContext permanece disponível para uso direto. (Antes: Decidir se SharedDbContext deveria ser o contexto de UoW para toda a aplicação; se sim, os repositórios “shared” que hoje usam ArapongaDbContext precisariam migrar para SharedDbContext (e as entidades shared virariam fonte única em Infrastructure.Shared). — optou-se por registrar IUnitOfWork como ArapongaDbContext na API.)
+3. **Shared + InMemory** (próximo passo): Ver [MELHOR_OPCAO_MODULARIZACAO.md](MELHOR_OPCAO_MODULARIZACAO.md). Direção recomendada: Shared como fonte da verdade; InMemory com store shared + por módulo. Avaliar se Infrastructure.Shared deve passar a ser o único lugar das entidades e do contexto “core” (Territory, User, Membership, etc.) e a Infrastructure principal ficar só com InMemory, Financial e o que ainda não for modularizado; isso reduz duplicação de entidades e deixa a fronteira mais clara.
 
 ---
 

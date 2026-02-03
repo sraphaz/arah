@@ -5,6 +5,7 @@ using Araponga.Domain.Membership;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests;
 using Araponga.Tests.TestHelpers;
 using Microsoft.Extensions.Caching.Memory;
@@ -18,6 +19,7 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class ResidencyRequestServiceEdgeCasesTests
 {
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryDataStore _dataStore;
     private readonly JoinRequestService _joinRequestService;
     private readonly InMemoryTerritoryMembershipRepository _membershipRepository;
@@ -29,16 +31,17 @@ public sealed class ResidencyRequestServiceEdgeCasesTests
 
     public ResidencyRequestServiceEdgeCasesTests()
     {
+        _sharedStore = new InMemorySharedStore();
         _dataStore = new InMemoryDataStore();
-        _joinRequestRepository = new InMemoryTerritoryJoinRequestRepository(_dataStore);
-        _membershipRepository = new InMemoryTerritoryMembershipRepository(_dataStore);
-        var userRepository = new InMemoryUserRepository(_dataStore);
-        var membershipSettingsRepository = new InMemoryMembershipSettingsRepository(_dataStore);
+        _joinRequestRepository = new InMemoryTerritoryJoinRequestRepository(_sharedStore);
+        _membershipRepository = new InMemoryTerritoryMembershipRepository(_sharedStore);
+        var userRepository = new InMemoryUserRepository(_sharedStore);
+        var membershipSettingsRepository = new InMemoryMembershipSettingsRepository(_sharedStore);
         var featureFlagService = new InMemoryFeatureFlagService();
         var accessEvaluator = new AccessEvaluator(
             _membershipRepository,
-            new InMemoryMembershipCapabilityRepository(_dataStore),
-            new InMemorySystemPermissionRepository(_dataStore),
+            new InMemoryMembershipCapabilityRepository(_sharedStore),
+            new InMemorySystemPermissionRepository(_sharedStore),
             new MembershipAccessRules(
                 _membershipRepository,
                 membershipSettingsRepository,
@@ -53,8 +56,8 @@ public sealed class ResidencyRequestServiceEdgeCasesTests
             userRepository,
             accessEvaluator,
             unitOfWork);
-        _capabilityRepository = new InMemoryMembershipCapabilityRepository(_dataStore);
-        _systemPermissionRepository = new InMemorySystemPermissionRepository(_dataStore);
+        _capabilityRepository = new InMemoryMembershipCapabilityRepository(_sharedStore);
+        _systemPermissionRepository = new InMemorySystemPermissionRepository(_sharedStore);
         _cache = new MemoryCache(new MemoryCacheOptions());
         _service = new ResidencyRequestService(
             _joinRequestService,

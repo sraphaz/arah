@@ -13,10 +13,10 @@ public sealed class MembershipAccessRulesTests
     [Fact]
     public async Task CanCreateStoreAsync_RequiresResidentAndVerified()
     {
-        var dataStore = new InMemoryDataStore();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
@@ -53,10 +53,10 @@ public sealed class MembershipAccessRulesTests
     [Fact]
     public async Task CanCreateStoreAsync_Fails_ForVisitor()
     {
-        var dataStore = new InMemoryDataStore();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
@@ -78,10 +78,10 @@ public sealed class MembershipAccessRulesTests
     [Fact]
     public async Task CanCreateStoreAsync_Fails_ForUnverifiedResident()
     {
-        var dataStore = new InMemoryDataStore();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
@@ -103,10 +103,10 @@ public sealed class MembershipAccessRulesTests
     [Fact]
     public async Task CanCreateItemAsync_SameAsStoreRule()
     {
-        var dataStore = new InMemoryDataStore();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 
@@ -131,10 +131,10 @@ public sealed class MembershipAccessRulesTests
     [Fact]
     public async Task IsVerifiedResidentAsync_ChecksRoleAndVerification()
     {
-        var dataStore = new InMemoryDataStore();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var rules = new MembershipAccessRules(membershipRepository, settingsRepository, userRepository, featureFlags);
 

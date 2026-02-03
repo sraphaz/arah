@@ -53,16 +53,14 @@ public sealed class GovernanceIntegrationTests
 
     private static Task CreateMembershipAsync(ApiFactory factory, Guid userId, Guid territoryId, MembershipRole role = MembershipRole.Resident)
     {
-        var dataStore = factory.GetDataStore();
-        
-        // Verificar se já existe
-        var existing = dataStore.Memberships.FirstOrDefault(m => m.UserId == userId && m.TerritoryId == territoryId);
+        var sharedStore = factory.GetSharedStore();
+
+        var existing = sharedStore.Memberships.FirstOrDefault(m => m.UserId == userId && m.TerritoryId == territoryId);
         if (existing != null)
         {
             return Task.CompletedTask;
         }
 
-        // Criar membership com verificação para que HasAnyVerification() retorne true
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
             userId,
@@ -72,33 +70,30 @@ public sealed class GovernanceIntegrationTests
             DateTime.UtcNow,
             null,
             DateTime.UtcNow);
-        
-        dataStore.Memberships.Add(membership);
+
+        sharedStore.Memberships.Add(membership);
         return Task.CompletedTask;
     }
 
     private static Task CreateCuratorCapabilityAsync(ApiFactory factory, Guid userId, Guid territoryId)
     {
-        var dataStore = factory.GetDataStore();
-        
-        // Encontrar membership
-        var membership = dataStore.Memberships.FirstOrDefault(m => m.UserId == userId && m.TerritoryId == territoryId);
+        var sharedStore = factory.GetSharedStore();
+
+        var membership = sharedStore.Memberships.FirstOrDefault(m => m.UserId == userId && m.TerritoryId == territoryId);
         if (membership == null)
         {
             throw new InvalidOperationException("Membership must exist before creating capability");
         }
 
-        // Verificar se já existe capability
-        var existing = dataStore.MembershipCapabilities.FirstOrDefault(
-            c => c.MembershipId == membership.Id && 
-                 c.CapabilityType == MembershipCapabilityType.Curator && 
+        var existing = sharedStore.MembershipCapabilities.FirstOrDefault(
+            c => c.MembershipId == membership.Id &&
+                 c.CapabilityType == MembershipCapabilityType.Curator &&
                  c.IsActive());
         if (existing != null)
         {
             return Task.CompletedTask;
         }
 
-        // Criar capability de curador
         var capability = new MembershipCapability(
             Guid.NewGuid(),
             membership.Id,
@@ -107,8 +102,8 @@ public sealed class GovernanceIntegrationTests
             userId,
             membership.Id,
             "Test curator capability");
-        
-        dataStore.MembershipCapabilities.Add(capability);
+
+        sharedStore.MembershipCapabilities.Add(capability);
         return Task.CompletedTask;
     }
 
@@ -232,9 +227,9 @@ public sealed class GovernanceIntegrationTests
         var voting = await createResponse.Content.ReadFromJsonAsync<VotingResponse>();
         Assert.NotNull(voting);
 
-        // Abrir votação diretamente no dataStore (não há endpoint para isso)
-        var dataStore = factory.GetDataStore();
-        var domainVoting = dataStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
+        // Abrir votação diretamente no sharedStore (não há endpoint para isso)
+        var sharedStore = factory.GetSharedStore();
+        var domainVoting = sharedStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
         if (domainVoting != null)
         {
             domainVoting.Open();
@@ -458,8 +453,8 @@ public sealed class GovernanceIntegrationTests
         Assert.NotNull(voting);
 
         // Abrir votação
-        var dataStore = factory.GetDataStore();
-        var domainVoting = dataStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
+        var sharedStore = factory.GetSharedStore();
+        var domainVoting = sharedStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
         if (domainVoting != null)
         {
             domainVoting.Open();
@@ -513,8 +508,8 @@ public sealed class GovernanceIntegrationTests
         Assert.NotNull(voting);
 
         // Abrir votação
-        var dataStore = factory.GetDataStore();
-        var domainVoting = dataStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
+        var sharedStore = factory.GetSharedStore();
+        var domainVoting = sharedStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
         if (domainVoting != null)
         {
             domainVoting.Open();
@@ -625,8 +620,8 @@ public sealed class GovernanceIntegrationTests
         Assert.NotNull(voting);
 
         // Abrir votação
-        var dataStore = factory.GetDataStore();
-        var domainVoting = dataStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
+        var sharedStore = factory.GetSharedStore();
+        var domainVoting = sharedStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
         if (domainVoting != null)
         {
             domainVoting.Open();
@@ -725,8 +720,8 @@ public sealed class GovernanceIntegrationTests
         Assert.NotNull(voting);
 
         // Abrir votação para poder fechá-la (não há endpoint para isso)
-        var dataStore = factory.GetDataStore();
-        var domainVoting = dataStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
+        var sharedStore = factory.GetSharedStore();
+        var domainVoting = sharedStore.Votings.FirstOrDefault(v => v.Id == voting.Id);
         if (domainVoting != null)
         {
             domainVoting.Open();

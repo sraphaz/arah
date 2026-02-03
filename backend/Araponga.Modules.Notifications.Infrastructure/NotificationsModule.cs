@@ -1,6 +1,7 @@
 using Araponga.Application;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Interfaces.Notifications;
+using Araponga.Infrastructure.Shared;
 using Araponga.Modules.Notifications.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,7 @@ public sealed class NotificationsModule : IModule
                 npgsqlOptions.CommandTimeout(30);
             }));
 
+        services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<NotificationsDbContext>()));
         services.AddScoped<INotificationInboxRepository, PostgresNotificationInboxRepository>();
         services.AddScoped<INotificationConfigRepository, PostgresNotificationConfigRepository>();
     }

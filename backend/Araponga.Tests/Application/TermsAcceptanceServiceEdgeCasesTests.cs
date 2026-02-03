@@ -1,6 +1,7 @@
 using Araponga.Application.Services;
 using Araponga.Domain.Policies;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -13,9 +14,9 @@ public sealed class TermsAcceptanceServiceEdgeCasesTests
     [Fact]
     public async Task AcceptTermsAsync_WhenTermsNotFound_ReturnsFailure()
     {
-        var ds = new InMemoryDataStore();
-        var acceptanceRepo = new InMemoryTermsAcceptanceRepository(ds);
-        var termsRepo = new InMemoryTermsOfServiceRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var acceptanceRepo = new InMemoryTermsAcceptanceRepository(sharedStore);
+        var termsRepo = new InMemoryTermsOfServiceRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new TermsAcceptanceService(acceptanceRepo, termsRepo, uow);
         var userId = Guid.NewGuid();
@@ -29,8 +30,8 @@ public sealed class TermsAcceptanceServiceEdgeCasesTests
     [Fact]
     public async Task AcceptTermsAsync_WhenTermsExpired_ReturnsFailure()
     {
-        var ds = new InMemoryDataStore();
-        var termsRepo = new InMemoryTermsOfServiceRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepo = new InMemoryTermsOfServiceRepository(sharedStore);
         var termsId = Guid.NewGuid();
         var terms = new TermsOfService(
             termsId,
@@ -45,7 +46,7 @@ public sealed class TermsAcceptanceServiceEdgeCasesTests
             null,
             DateTime.UtcNow.AddDays(-30));
         await termsRepo.AddAsync(terms, CancellationToken.None);
-        var acceptanceRepo = new InMemoryTermsAcceptanceRepository(ds);
+        var acceptanceRepo = new InMemoryTermsAcceptanceRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new TermsAcceptanceService(acceptanceRepo, termsRepo, uow);
         var userId = Guid.NewGuid();
@@ -59,9 +60,9 @@ public sealed class TermsAcceptanceServiceEdgeCasesTests
     [Fact]
     public async Task GetAcceptanceHistoryAsync_WhenUserHasNone_ReturnsEmpty()
     {
-        var ds = new InMemoryDataStore();
-        var acceptanceRepo = new InMemoryTermsAcceptanceRepository(ds);
-        var termsRepo = new InMemoryTermsOfServiceRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var acceptanceRepo = new InMemoryTermsAcceptanceRepository(sharedStore);
+        var termsRepo = new InMemoryTermsOfServiceRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new TermsAcceptanceService(acceptanceRepo, termsRepo, uow);
         var userId = Guid.NewGuid();

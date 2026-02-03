@@ -1,6 +1,7 @@
 using Araponga.Application.Services;
 using Araponga.Domain.Membership;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -13,14 +14,14 @@ public sealed class PolicyRequirementServiceEdgeCasesTests
     [Fact]
     public async Task GetRequiredPoliciesForUserAsync_WhenUserHasNoMemberships_ReturnsEmpty()
     {
-        var ds = new InMemoryDataStore();
-        var termsRepo = new InMemoryTermsOfServiceRepository(ds);
-        var privacyRepo = new InMemoryPrivacyPolicyRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepo = new InMemoryTermsOfServiceRepository(sharedStore);
+        var privacyRepo = new InMemoryPrivacyPolicyRepository(sharedStore);
         var termsService = new TermsOfServiceService(termsRepo);
         var privacyService = new PrivacyPolicyService(privacyRepo);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(ds);
-        var capabilityRepo = new InMemoryMembershipCapabilityRepository(ds);
-        var permissionRepo = new InMemorySystemPermissionRepository(ds);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var capabilityRepo = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var permissionRepo = new InMemorySystemPermissionRepository(sharedStore);
         var svc = new PolicyRequirementService(
             termsService,
             privacyService,
@@ -41,14 +42,14 @@ public sealed class PolicyRequirementServiceEdgeCasesTests
     [Fact]
     public async Task GetRequiredPoliciesForRoleAsync_ReturnsResult()
     {
-        var ds = new InMemoryDataStore();
-        var termsRepo = new InMemoryTermsOfServiceRepository(ds);
-        var privacyRepo = new InMemoryPrivacyPolicyRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var termsRepo = new InMemoryTermsOfServiceRepository(sharedStore);
+        var privacyRepo = new InMemoryPrivacyPolicyRepository(sharedStore);
         var termsService = new TermsOfServiceService(termsRepo);
         var privacyService = new PrivacyPolicyService(privacyRepo);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(ds);
-        var capabilityRepo = new InMemoryMembershipCapabilityRepository(ds);
-        var permissionRepo = new InMemorySystemPermissionRepository(ds);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var capabilityRepo = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var permissionRepo = new InMemorySystemPermissionRepository(sharedStore);
         var svc = new PolicyRequirementService(
             termsService,
             privacyService,

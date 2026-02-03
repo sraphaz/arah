@@ -2,6 +2,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -12,8 +13,8 @@ public sealed class InterestFilterServiceTests
     public async Task FilterFeedByInterestsAsync_WhenUserHasInterests_ReturnsFilteredPosts()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var interestRepository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var interestRepository = new InMemoryUserInterestRepository(sharedStore);
         var service = new InterestFilterService(interestRepository);
 
         var userId = Guid.NewGuid();
@@ -84,8 +85,8 @@ public sealed class InterestFilterServiceTests
     public async Task FilterFeedByInterestsAsync_WhenUserHasNoInterests_ReturnsAllPosts()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var interestRepository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var interestRepository = new InMemoryUserInterestRepository(sharedStore);
         var service = new InterestFilterService(interestRepository);
 
         var userId = Guid.NewGuid();
@@ -130,8 +131,8 @@ public sealed class InterestFilterServiceTests
     public async Task FilterFeedByInterestsAsync_WhenEmptyPosts_ReturnsEmpty()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var interestRepository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var interestRepository = new InMemoryUserInterestRepository(sharedStore);
         var service = new InterestFilterService(interestRepository);
 
         var userId = Guid.NewGuid();
@@ -149,8 +150,8 @@ public sealed class InterestFilterServiceTests
     public async Task FilterFeedByInterestsAsync_WhenCaseInsensitive_MatchesCorrectly()
     {
         // Arrange
-        var dataStore = new InMemoryDataStore();
-        var interestRepository = new InMemoryUserInterestRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var interestRepository = new InMemoryUserInterestRepository(sharedStore);
         var service = new InterestFilterService(interestRepository);
 
         var userId = Guid.NewGuid();

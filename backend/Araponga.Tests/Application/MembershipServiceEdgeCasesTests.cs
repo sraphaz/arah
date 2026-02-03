@@ -3,6 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Membership;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -13,6 +14,7 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class MembershipServiceEdgeCasesTests
 {
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryDataStore _dataStore;
     private readonly InMemoryTerritoryMembershipRepository _membershipRepository;
     private readonly InMemoryMembershipSettingsRepository _settingsRepository;
@@ -23,10 +25,11 @@ public sealed class MembershipServiceEdgeCasesTests
 
     public MembershipServiceEdgeCasesTests()
     {
+        _sharedStore = new InMemorySharedStore();
         _dataStore = new InMemoryDataStore();
-        _membershipRepository = new InMemoryTerritoryMembershipRepository(_dataStore);
-        _settingsRepository = new InMemoryMembershipSettingsRepository(_dataStore);
-        _territoryRepository = new InMemoryTerritoryRepository(_dataStore);
+        _membershipRepository = new InMemoryTerritoryMembershipRepository(_sharedStore);
+        _settingsRepository = new InMemoryMembershipSettingsRepository(_sharedStore);
+        _territoryRepository = new InMemoryTerritoryRepository(_sharedStore);
         _auditLogger = new InMemoryAuditLogger(_dataStore);
         _unitOfWork = new InMemoryUnitOfWork();
         _service = new MembershipService(

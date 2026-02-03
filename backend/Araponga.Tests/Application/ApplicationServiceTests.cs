@@ -20,15 +20,16 @@ public sealed class ApplicationServiceTests
     private static readonly Guid ActiveTerritoryId = Guid.Parse("22222222-2222-2222-2222-222222222222");
     private static readonly Guid PilotTerritoryId = Guid.Parse("11111111-1111-1111-1111-111111111111");
     private static readonly IEventBus EventBus = new NoOpEventBus();
+    private static readonly InMemorySharedStore SharedStore = new();
 
     private static (MembershipAccessRules rules, AccessEvaluator evaluator) CreateAccessEvaluator(
-        InMemoryDataStore dataStore,
+        InMemorySharedStore sharedStore,
         ITerritoryMembershipRepository membershipRepository,
         IUserRepository userRepository,
         IDistributedCacheService? cache = null)
     {
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
 
         var rules = new MembershipAccessRules(
@@ -37,7 +38,7 @@ public sealed class ApplicationServiceTests
             userRepository,
             featureFlags);
 
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
         var cacheService = cache ?? CacheTestHelper.CreateDistributedCacheService();
         var evaluator = new AccessEvaluator(
             membershipRepository,
@@ -53,7 +54,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_ValidatesInputsAndFlags()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
 
         var invalid = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -130,7 +131,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_BlocksNonResidentCommentAndShare()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
         var feedRepository = new InMemoryFeedRepository(dataStore);
 
         var post = new CommunityPost(
@@ -171,9 +172,9 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryMapRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
         var relationRepository = new InMemoryMapEntityRelationRepository(dataStore);
@@ -215,17 +216,17 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var repository = new InMemoryMapRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var membershipAccessRules = new MembershipAccessRules(
             membershipRepository,
             settingsRepository,
             userRepository,
             featureFlags);
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(SharedStore);
         var accessEvaluator = new AccessEvaluator(
             membershipRepository,
             capabilityRepository,
@@ -336,7 +337,7 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var reportRepository = new InMemoryReportRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
@@ -373,7 +374,7 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var reportRepository = new InMemoryReportRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
@@ -405,7 +406,7 @@ public sealed class ApplicationServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new UserBlockService(blockRepository, userRepository, auditLogger, unitOfWork);
@@ -426,7 +427,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_FiltersBlockedAuthors()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
 
         var blockerId = dataStore.Users[1].Id;
         var blockedId = dataStore.Users[0].Id;
@@ -456,9 +457,9 @@ public sealed class ApplicationServiceTests
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -523,9 +524,9 @@ public sealed class ApplicationServiceTests
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -576,9 +577,9 @@ public sealed class ApplicationServiceTests
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -636,9 +637,9 @@ public sealed class ApplicationServiceTests
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -723,9 +724,9 @@ public sealed class ApplicationServiceTests
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -799,7 +800,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_AllowsPostsWithoutGeoAnchors()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -824,7 +825,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_PersistsGeoAnchorsFromMediaMetadata()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
 
         var created = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -855,7 +856,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_DeduplicatesAndLimitsGeoAnchors()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
 
         var anchors = new List<GeoAnchorInput>
         {
@@ -893,7 +894,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_FiltersByMapEntity()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
 
         var entityId = dataStore.MapEntities[0].Id;
         var feedRepository = new InMemoryFeedRepository(dataStore);
@@ -927,11 +928,11 @@ public sealed class ApplicationServiceTests
     public async Task MembershipService_AllowsDocumentVerification()
     {
         var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var territoryRepository = new InMemoryTerritoryRepository(dataStore);
+        var repository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var territoryRepository = new InMemoryTerritoryRepository(SharedStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
         var service = new MembershipService(repository, settingsRepository, territoryRepository, auditLogger, unitOfWork);
 
         var userId = Guid.NewGuid();
@@ -954,11 +955,11 @@ public sealed class ApplicationServiceTests
     public async Task MembershipService_AllowsVisitorUpgradeToResident()
     {
         var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var territoryRepository = new InMemoryTerritoryRepository(dataStore);
+        var repository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var territoryRepository = new InMemoryTerritoryRepository(SharedStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(SharedStore);
         var service = new MembershipService(repository, settingsRepository, territoryRepository, auditLogger, unitOfWork);
 
         var userId = Guid.NewGuid();
@@ -981,7 +982,7 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var reportRepository = new InMemoryReportRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var sanctionRepository = new InMemorySanctionRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
@@ -1036,9 +1037,9 @@ public sealed class ApplicationServiceTests
         var dataStore = new InMemoryDataStore();
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var featureFlags = new InMemoryFeatureFlagService();
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var blockRepository = new InMemoryUserBlockRepository(dataStore);
@@ -1065,7 +1066,7 @@ public sealed class ApplicationServiceTests
                 DateTime.UtcNow),
             CancellationToken.None);
 
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
 
         var result = await service.CreatePostAsync(
             ActiveTerritoryId,
@@ -1091,7 +1092,7 @@ public sealed class ApplicationServiceTests
     public async Task FeedService_ListForTerritoryPagedAsync_ReturnsPagedResults()
     {
         var dataStore = new InMemoryDataStore();
-        var service = FeedServiceTestHelper.CreateFeedService(dataStore, EventBus);
+        var service = FeedServiceTestHelper.CreateFeedService(dataStore, SharedStore, EventBus);
         var userId = dataStore.Users[0].Id;
 
         // Criar alguns posts
@@ -1149,7 +1150,7 @@ public sealed class ApplicationServiceTests
     public async Task TerritoryService_ListAvailablePagedAsync_ReturnsPagedResults()
     {
         var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var repository = new InMemoryTerritoryRepository(SharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var service = new TerritoryService(repository, unitOfWork);
 
@@ -1256,9 +1257,9 @@ public sealed class ApplicationServiceTests
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
@@ -1327,9 +1328,9 @@ public sealed class ApplicationServiceTests
         var participationRepository = new InMemoryEventParticipationRepository(dataStore);
         var feedRepository = new InMemoryFeedRepository(dataStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(dataStore, membershipRepository, userRepository, cache);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(SharedStore);
+        var userRepository = new InMemoryUserRepository(SharedStore);
+        var (membershipAccessRules, accessEvaluator) = CreateAccessEvaluator(SharedStore, membershipRepository, userRepository, cache);
         var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
         var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();

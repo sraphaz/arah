@@ -5,6 +5,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Membership;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -16,8 +17,10 @@ public sealed class MembershipCapabilityServiceTests
     public async Task GrantAsync_CreatesCapability_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
@@ -82,8 +85,10 @@ public sealed class MembershipCapabilityServiceTests
     public async Task GrantAsync_ReturnsFailure_WhenMembershipNotFound()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
@@ -110,8 +115,10 @@ public sealed class MembershipCapabilityServiceTests
     public async Task GrantAsync_ReturnsFailure_WhenCapabilityAlreadyExists()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
@@ -167,8 +174,10 @@ public sealed class MembershipCapabilityServiceTests
     public async Task RevokeAsync_RevokesCapability_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
@@ -232,8 +241,10 @@ public sealed class MembershipCapabilityServiceTests
     public async Task RevokeAsync_ReturnsFailure_WhenCapabilityNotFound()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
@@ -253,8 +264,10 @@ public sealed class MembershipCapabilityServiceTests
     public async Task RevokeAsync_ReturnsFailure_WhenCapabilityAlreadyRevoked()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();

@@ -1,6 +1,7 @@
 using Araponga.Application.Services;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -11,6 +12,7 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class UserBlockServiceEdgeCasesTests
 {
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryDataStore _dataStore;
     private readonly InMemoryUserBlockRepository _blockRepo;
     private readonly InMemoryUserRepository _userRepo;
@@ -20,9 +22,10 @@ public sealed class UserBlockServiceEdgeCasesTests
 
     public UserBlockServiceEdgeCasesTests()
     {
+        _sharedStore = new InMemorySharedStore();
         _dataStore = new InMemoryDataStore();
         _blockRepo = new InMemoryUserBlockRepository(_dataStore);
-        _userRepo = new InMemoryUserRepository(_dataStore);
+        _userRepo = new InMemoryUserRepository(_sharedStore);
         _auditLogger = new InMemoryAuditLogger(_dataStore);
         _unitOfWork = new InMemoryUnitOfWork();
         _service = new UserBlockService(

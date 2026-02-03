@@ -1,0 +1,32 @@
+using Araponga.Application;
+using Araponga.Application.Interfaces;
+using Araponga.Infrastructure.Shared;
+using Araponga.Modules.Events.Infrastructure.Postgres;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Araponga.Modules.Events;
+
+public sealed class EventsModule : IModule
+{
+    public void RegisterServices(IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("Postgres")
+            ?? throw new InvalidOperationException("Postgres connection string is required");
+
+        services.AddDbContext<EventsDbContext>(options =>
+            options.UseNpgsql(connectionString, npgsqlOptions =>
+            {
+                npgsqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 3,
+                    maxRetryDelay: TimeSpan.FromSeconds(5),
+                    errorCodesToAdd: null);
+                npgsqlOptions.CommandTimeout(30);
+            }));
+
+        services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<EventsDbContext>()));
+        services.AddScoped<ITerritoryEventRepository, PostgresTerritoryEventRepository>();
+        services.AddScoped<IEventParticipationRepository, PostgresEventParticipationRepository>();
+    }
+}

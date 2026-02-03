@@ -4,6 +4,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Territories;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -29,11 +30,11 @@ public sealed class MembershipServiceTests
     private const double FarLat = -23.4000;
     private const double FarLng = -44.9500;
 
-    private static MembershipService CreateService(InMemoryDataStore dataStore)
+    private static MembershipService CreateService(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
-        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var territoryRepository = new InMemoryTerritoryRepository(dataStore);
+        var repository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var territoryRepository = new InMemoryTerritoryRepository(sharedStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
         var unitOfWork = new InMemoryUnitOfWork();
         return new MembershipService(repository, settingsRepository, territoryRepository, auditLogger, unitOfWork);
@@ -43,7 +44,8 @@ public sealed class MembershipServiceTests
     public async Task EnterAsVisitorAsync_CreatesNewMembership()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var membership = await service.EnterAsVisitorAsync(UserId, TerritoryId1, CancellationToken.None);
 
@@ -58,7 +60,8 @@ public sealed class MembershipServiceTests
     public async Task EnterAsVisitorAsync_ReturnsExisting_IfAlreadyVisitor()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var first = await service.EnterAsVisitorAsync(UserId, TerritoryId1, CancellationToken.None);
         var second = await service.EnterAsVisitorAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -70,7 +73,8 @@ public sealed class MembershipServiceTests
     public async Task BecomeResidentAsync_Succeeds_WhenNoExistingResident()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.BecomeResidentAsync(UserId, TerritoryId1, CancellationToken.None);
 
@@ -89,7 +93,8 @@ public sealed class MembershipServiceTests
     public async Task BecomeResidentAsync_Fails_WhenHasResidentInAnotherTerritory()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar Resident no território 1
         var firstResult = await service.BecomeResidentAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -106,7 +111,8 @@ public sealed class MembershipServiceTests
     public async Task BecomeResidentAsync_SetsUnverified_WhenOtherResidentsExist()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar primeiro Resident (não auto-verificado)
         var firstUserId = Guid.NewGuid();
@@ -125,8 +131,9 @@ public sealed class MembershipServiceTests
     public async Task TransferResidencyAsync_DemotesCurrentResident()
     {
         var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar Resident no território 1
         var becomeResult = await service.BecomeResidentAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -152,7 +159,8 @@ public sealed class MembershipServiceTests
     public async Task TransferResidencyAsync_Fails_WhenNoCurrentResident()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.TransferResidencyAsync(UserId, TerritoryId2, CancellationToken.None);
 
@@ -164,8 +172,9 @@ public sealed class MembershipServiceTests
     public async Task VerifyResidencyByGeoAsync_UpdatesVerification()
     {
         var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar Resident
         var becomeResult = await service.BecomeResidentAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -192,7 +201,8 @@ public sealed class MembershipServiceTests
     public async Task VerifyResidencyByGeoAsync_Fails_WhenCoordinatesTooFar()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar Resident
         var becomeResult = await service.BecomeResidentAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -214,7 +224,8 @@ public sealed class MembershipServiceTests
     public async Task VerifyResidencyByGeoAsync_Fails_IfNotResident()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar apenas Visitor
         await service.EnterAsVisitorAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -236,8 +247,9 @@ public sealed class MembershipServiceTests
     public async Task VerifyResidencyByDocumentAsync_UpdatesVerification()
     {
         var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar Resident
         var becomeResult = await service.BecomeResidentAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -258,7 +270,8 @@ public sealed class MembershipServiceTests
     public async Task ListMyMembershipsAsync_ReturnsAllMemberships()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         // Criar múltiplos Visitors
         await service.EnterAsVisitorAsync(UserId, TerritoryId1, CancellationToken.None);
@@ -275,7 +288,8 @@ public sealed class MembershipServiceTests
     public async Task ListMyMembershipsAsync_IncludesMultipleVisitors()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var territory3 = Guid.NewGuid();
         await service.EnterAsVisitorAsync(UserId, TerritoryId1, CancellationToken.None);

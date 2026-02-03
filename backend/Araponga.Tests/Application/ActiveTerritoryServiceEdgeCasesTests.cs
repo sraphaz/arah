@@ -13,8 +13,9 @@ public sealed class ActiveTerritoryServiceEdgeCasesTests
     public async Task SetActiveAsync_WhenTerritoryNotFound_ReturnsFalse()
     {
         var ds = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var store = new InMemoryActiveTerritoryStore(ds);
-        var territoryRepo = new InMemoryTerritoryRepository(ds);
+        var territoryRepo = new InMemoryTerritoryRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new ActiveTerritoryService(store, territoryRepo, uow);
 
@@ -27,11 +28,12 @@ public sealed class ActiveTerritoryServiceEdgeCasesTests
     public async Task SetActiveAsync_WhenTerritoryExists_ReturnsTrue()
     {
         var ds = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var store = new InMemoryActiveTerritoryStore(ds);
-        var territoryRepo = new InMemoryTerritoryRepository(ds);
+        var territoryRepo = new InMemoryTerritoryRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new ActiveTerritoryService(store, territoryRepo, uow);
-        var territoryId = ds.Territories[0].Id;
+        var territoryId = sharedStore.Territories[0].Id;
 
         var ok = await svc.SetActiveAsync("session-1", territoryId, CancellationToken.None);
 
@@ -42,8 +44,9 @@ public sealed class ActiveTerritoryServiceEdgeCasesTests
     public async Task GetActiveAsync_WhenNotSet_ReturnsNull()
     {
         var ds = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var store = new InMemoryActiveTerritoryStore(ds);
-        var territoryRepo = new InMemoryTerritoryRepository(ds);
+        var territoryRepo = new InMemoryTerritoryRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new ActiveTerritoryService(store, territoryRepo, uow);
 
@@ -56,11 +59,12 @@ public sealed class ActiveTerritoryServiceEdgeCasesTests
     public async Task SetActiveAsync_ThenGetActiveAsync_ReturnsTerritoryId()
     {
         var ds = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var store = new InMemoryActiveTerritoryStore(ds);
-        var territoryRepo = new InMemoryTerritoryRepository(ds);
+        var territoryRepo = new InMemoryTerritoryRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new ActiveTerritoryService(store, territoryRepo, uow);
-        var territoryId = ds.Territories[0].Id;
+        var territoryId = sharedStore.Territories[0].Id;
 
         await svc.SetActiveAsync("s1", territoryId, CancellationToken.None);
         var active = await svc.GetActiveAsync("s1", CancellationToken.None);

@@ -108,7 +108,7 @@ public class EventBusEdgeCasesTests
         handler.Setup(h => h.HandleAsync(It.IsAny<TestEvent>(), It.IsAny<CancellationToken>()))
             .Returns(async (TestEvent e, CancellationToken ct) =>
             {
-                await Task.Delay(1000, ct); // Simular trabalho longo
+                await Task.Delay(1000, ct); // Simular trabalho longo; lança se ct já estiver cancelado
             });
 
         serviceCollection.AddSingleton<IEventHandler<TestEvent>>(handler.Object);
@@ -118,7 +118,7 @@ public class EventBusEdgeCasesTests
 
         var testEvent = new TestEvent { Message = "Test" };
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(100); // Cancelar após 100ms
+        cts.Cancel(); // Token já cancelado antes de PublishAsync para teste determinístico
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
         {

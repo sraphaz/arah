@@ -2,6 +2,7 @@ using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Map;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Xunit;
 
@@ -14,17 +15,17 @@ public sealed class MapServiceEdgeCasesTests
 {
     private static readonly Guid TerritoryB = Guid.Parse("22222222-2222-2222-2222-222222222222");
 
-    private static MapService CreateService(InMemoryDataStore ds)
+    private static MapService CreateService(InMemoryDataStore ds, InMemorySharedStore sharedStore)
     {
         var mapRepo = new InMemoryMapRepository(ds);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(ds);
-        var userRepo = new InMemoryUserRepository(ds);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepo = new InMemoryUserRepository(sharedStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var settingsRepo = new InMemoryMembershipSettingsRepository(ds);
-        var capabilityRepo = new InMemoryMembershipCapabilityRepository(ds);
+        var settingsRepo = new InMemoryMembershipSettingsRepository(sharedStore);
+        var capabilityRepo = new InMemoryMembershipCapabilityRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var accessRules = new MembershipAccessRules(membershipRepo, settingsRepo, userRepo, featureFlags);
-        var permissionRepo = new InMemorySystemPermissionRepository(ds);
+        var permissionRepo = new InMemorySystemPermissionRepository(sharedStore);
         var accessEvaluator = new AccessEvaluator(
             membershipRepo,
             capabilityRepo,
@@ -51,7 +52,8 @@ public sealed class MapServiceEdgeCasesTests
     public async Task ListEntitiesAsync_WhenUserIdNull_ReturnsOnlyPublic()
     {
         var ds = new InMemoryDataStore();
-        var svc = CreateService(ds);
+        var sharedStore = new InMemorySharedStore();
+        var svc = CreateService(ds, sharedStore);
 
         var list = await svc.ListEntitiesAsync(TerritoryB, null, CancellationToken.None);
 
@@ -63,7 +65,8 @@ public sealed class MapServiceEdgeCasesTests
     public async Task ListEntitiesPagedAsync_ReturnsPagedResult()
     {
         var ds = new InMemoryDataStore();
-        var svc = CreateService(ds);
+        var sharedStore = new InMemorySharedStore();
+        var svc = CreateService(ds, sharedStore);
         var paging = new PaginationParameters(1, 10);
 
         var result = await svc.ListEntitiesPagedAsync(TerritoryB, null, paging, CancellationToken.None);
@@ -79,7 +82,8 @@ public sealed class MapServiceEdgeCasesTests
     public async Task ListEntitiesAsync_WhenResident_ReturnsIncludingResidentsOnly()
     {
         var ds = new InMemoryDataStore();
-        var svc = CreateService(ds);
+        var sharedStore = new InMemorySharedStore();
+        var svc = CreateService(ds, sharedStore);
         var residentId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
 
         var list = await svc.ListEntitiesAsync(TerritoryB, residentId, CancellationToken.None);
@@ -94,15 +98,16 @@ public sealed class MapServiceEdgeCasesTests
     {
         var ds = new InMemoryDataStore();
         ds.MapEntities.Clear();
+        var sharedStore = new InMemorySharedStore();
         var mapRepo = new InMemoryMapRepository(ds);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(ds);
-        var userRepo = new InMemoryUserRepository(ds);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepo = new InMemoryUserRepository(sharedStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
-        var settingsRepo = new InMemoryMembershipSettingsRepository(ds);
-        var capabilityRepo = new InMemoryMembershipCapabilityRepository(ds);
+        var settingsRepo = new InMemoryMembershipSettingsRepository(sharedStore);
+        var capabilityRepo = new InMemoryMembershipCapabilityRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var accessRules = new MembershipAccessRules(membershipRepo, settingsRepo, userRepo, featureFlags);
-        var permissionRepo = new InMemorySystemPermissionRepository(ds);
+        var permissionRepo = new InMemorySystemPermissionRepository(sharedStore);
         var accessEvaluator = new AccessEvaluator(
             membershipRepo,
             capabilityRepo,

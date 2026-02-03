@@ -16,12 +16,12 @@ public sealed class UserPreferencesRecord
     public bool NotificationsMarketplaceEnabled { get; set; }
     public bool NotificationsModerationEnabled { get; set; }
     public bool NotificationsMembershipRequestsEnabled { get; set; }
-    
+
     // Email Preferences
     public bool EmailReceiveEmails { get; set; } = true;
     public int EmailFrequency { get; set; } = 0; // Immediate
     public int EmailTypes { get; set; } = 31; // All (bit flags)
-    
+
     public DateTime CreatedAtUtc { get; set; }
     public DateTime UpdatedAtUtc { get; set; }
 }

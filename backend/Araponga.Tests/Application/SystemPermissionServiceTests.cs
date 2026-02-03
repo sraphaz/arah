@@ -5,6 +5,7 @@ using Araponga.Application.Services;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -16,8 +17,10 @@ public sealed class SystemPermissionServiceTests
     public async Task GrantAsync_CreatesPermission_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
@@ -57,8 +60,10 @@ public sealed class SystemPermissionServiceTests
     public async Task GrantAsync_ReturnsFailure_WhenPermissionAlreadyExists()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
@@ -87,8 +92,10 @@ public sealed class SystemPermissionServiceTests
     public async Task RevokeAsync_RevokesPermission_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
@@ -133,8 +140,10 @@ public sealed class SystemPermissionServiceTests
     public async Task RevokeAsync_ReturnsFailure_WhenPermissionNotFound()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
@@ -153,8 +162,10 @@ public sealed class SystemPermissionServiceTests
     public async Task RevokeAsync_ReturnsFailure_WhenPermissionAlreadyRevoked()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<IEventBus, InMemoryEventBus>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();

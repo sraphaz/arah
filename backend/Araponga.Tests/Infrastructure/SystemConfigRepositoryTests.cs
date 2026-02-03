@@ -9,8 +9,8 @@ public sealed class SystemConfigRepositoryTests
     [Fact]
     public async Task SystemConfigRepository_UpsertAndGetByKey()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemorySystemConfigRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemorySystemConfigRepository(sharedStore);
 
         var actor = Guid.NewGuid();
         var cfg = new SystemConfig(
@@ -35,8 +35,8 @@ public sealed class SystemConfigRepositoryTests
     [Fact]
     public async Task SystemConfigRepository_List_ByCategory()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemorySystemConfigRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemorySystemConfigRepository(sharedStore);
         var actor = Guid.NewGuid();
 
         await repo.UpsertAsync(new SystemConfig(

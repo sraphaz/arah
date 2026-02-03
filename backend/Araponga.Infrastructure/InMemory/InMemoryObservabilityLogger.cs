@@ -20,7 +20,7 @@ public sealed class InMemoryObservabilityLogger : IObservabilityLogger
         // Sanitize user-controlled values to prevent log injection
         var sanitizedOperation = SanitizeForLogging(operation);
         var sanitizedReason = SanitizeForLogging(reason ?? "Unknown");
-        
+
         _logger.LogWarning(
             "Geolocation error in {Operation}. Reason: {Reason}. UserId: {UserId}, TerritoryId: {TerritoryId}",
             sanitizedOperation,
@@ -42,7 +42,7 @@ public sealed class InMemoryObservabilityLogger : IObservabilityLogger
         // Sanitize user-controlled values to prevent log injection
         var sanitizedOperation = SanitizeForLogging(operation);
         var sanitizedReason = SanitizeForLogging(reason);
-        
+
         _logger.LogError(
             "Moderation failure in {Operation}. Reason: {Reason}. TerritoryId: {TerritoryId}",
             sanitizedOperation,
@@ -55,7 +55,7 @@ public sealed class InMemoryObservabilityLogger : IObservabilityLogger
         // Sanitize user-controlled values to prevent log injection
         var sanitizedMethod = SanitizeForLogging(method);
         var sanitizedPath = SanitizeForLogging(path);
-        
+
         var level = statusCode >= 500 ? LogLevel.Error
             : statusCode >= 400 ? LogLevel.Warning
             : LogLevel.Information;

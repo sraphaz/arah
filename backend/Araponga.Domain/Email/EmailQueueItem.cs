@@ -72,7 +72,7 @@ public sealed class EmailQueueItem
         Attempts++;
         ErrorMessage = errorMessage;
         NextRetryAtUtc = nextRetryAt;
-        
+
         if (Attempts >= 4)
         {
             Status = EmailQueueStatus.Failed;

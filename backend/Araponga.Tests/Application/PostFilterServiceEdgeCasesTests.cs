@@ -2,6 +2,7 @@ using Araponga.Application.Common;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Xunit;
 
@@ -12,15 +13,15 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class PostFilterServiceEdgeCasesTests
 {
-    private static PostFilterService CreateService(InMemoryDataStore ds)
+    private static PostFilterService CreateService(InMemoryDataStore ds, InMemorySharedStore sharedStore)
     {
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(ds);
-        var settingsRepo = new InMemoryMembershipSettingsRepository(ds);
-        var userRepo = new InMemoryUserRepository(ds);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepo = new InMemoryMembershipSettingsRepository(sharedStore);
+        var userRepo = new InMemoryUserRepository(sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         var accessRules = new MembershipAccessRules(membershipRepo, settingsRepo, userRepo, featureFlags);
-        var capabilityRepo = new InMemoryMembershipCapabilityRepository(ds);
-        var permissionRepo = new InMemorySystemPermissionRepository(ds);
+        var capabilityRepo = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var permissionRepo = new InMemorySystemPermissionRepository(sharedStore);
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var accessEvaluator = new AccessEvaluator(
             membershipRepo,
@@ -37,7 +38,8 @@ public sealed class PostFilterServiceEdgeCasesTests
     public async Task FilterPostsAsync_WithEmptyPosts_ReturnsEmpty()
     {
         var ds = new InMemoryDataStore();
-        var svc = CreateService(ds);
+        var sharedStore = new InMemorySharedStore();
+        var svc = CreateService(ds, sharedStore);
         var territoryId = ds.Territories[0].Id;
 
         var result = await svc.FilterPostsAsync(
@@ -56,7 +58,8 @@ public sealed class PostFilterServiceEdgeCasesTests
     public async Task FilterPostsAsync_WithUserIdNull_ReturnsOnlyPublicPublished()
     {
         var ds = new InMemoryDataStore();
-        var svc = CreateService(ds);
+        var sharedStore = new InMemorySharedStore();
+        var svc = CreateService(ds, sharedStore);
         var territoryId = ds.Territories[0].Id;
         var authorId = Guid.NewGuid();
         var posts = new List<CommunityPost>
@@ -105,7 +108,8 @@ public sealed class PostFilterServiceEdgeCasesTests
     public async Task FilterAndPaginateAsync_WithEmptyPosts_ReturnsEmptyPaged()
     {
         var ds = new InMemoryDataStore();
-        var svc = CreateService(ds);
+        var sharedStore = new InMemorySharedStore();
+        var svc = CreateService(ds, sharedStore);
         var territoryId = ds.Territories[0].Id;
         var paging = new PaginationParameters(1, 10);
 
@@ -127,7 +131,8 @@ public sealed class PostFilterServiceEdgeCasesTests
     public async Task FilterPostsAsync_WithMapEntityIdFilter_ReturnsOnlyMatchingPosts()
     {
         var ds = new InMemoryDataStore();
-        var svc = CreateService(ds);
+        var sharedStore = new InMemorySharedStore();
+        var svc = CreateService(ds, sharedStore);
         var territoryId = ds.Territories[0].Id;
         var authorId = Guid.NewGuid();
         var mapEntityId = Guid.NewGuid();

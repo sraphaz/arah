@@ -1,0 +1,126 @@
+# Atualizações na Wiki e DevPortal: Ícones no Header, Toggle de Tema e Melhorias de UX
+
+## Resumo
+
+Este PR inclui melhorias na interface tanto da Wiki quanto do DevPortal:
+1. **Atualização dos links do header da Wiki para exibir apenas ícones** (similar ao DevPortal)
+2. **Remoção de referências visuais ao atalho Cmd/Ctrl+K na Wiki** (funcionalidade mantida)
+3. **Correção do toggle de tema no DevPortal** (lógica invertida e separador adicionado)
+
+## 🎯 Mudanças
+
+### 1. Ícones no Header da Wiki
+
+#### Antes
+- Links exibiam texto: "Todos os Docs", "DevPortal", "Site Institucional"
+- Layout com textos visíveis
+
+#### Depois
+- Links exibem apenas ícones SVG
+- Estilo consistente com o DevPortal
+- Hover com escala e cor de destaque
+- Mantém mesma ordem e alinhamento
+
+**Arquivos modificados:**
+- `frontend/wiki/components/layout/Header.tsx`
+- `frontend/wiki/app/globals.css`
+
+**Alterações:**
+- Substituição de textos por ícones SVG
+- Adição de estilos `.header-link-icon` similares ao DevPortal
+- Correção da URL do DevPortal para `https://devportal.araponga.app`
+- Adição de `target="_blank"` e `rel="noopener noreferrer"` para links externos
+- Desabilitação de prefetch nos Links para evitar erros 404 com duplicação do basePath
+
+### 2. Remoção de Referências Visuais ao Cmd/Ctrl+K na Wiki
+
+#### Antes
+- Atalho `Cmd/Ctrl+K` abria o diálogo de busca
+- Botão exibia visualmente "⌘K" indicando o atalho
+- Placeholder do input mencionava o atalho
+- aria-label do botão mencionava o atalho
+
+#### Depois
+- **Atalho `Cmd/Ctrl+K` continua funcionando** (funcionalidade mantida)
+- Removidas todas as referências visuais ao atalho
+- Botão não exibe mais "⌘K"
+- Placeholder não menciona mais o atalho
+- aria-label não menciona mais o atalho
+- Atalho `Escape` ainda fecha o diálogo quando aberto
+
+**Arquivos modificados:**
+- `frontend/wiki/components/search/SearchTrigger.tsx`
+- `frontend/wiki/components/search/SearchDialog.tsx`
+
+### 3. Correção do Toggle de Tema no DevPortal
+
+#### Antes
+- Toggle mostrava sol quando estava claro (indicando estado atual - ERRADO)
+- Toggle mostrava lua quando estava escuro (indicando estado atual - ERRADO)
+- Toggle estava posicionado antes dos links
+- Sem separador visual entre links e toggle
+
+#### Depois
+- **Toggle mostra lua quando está claro** (indica ação: clicar vai escurecer) ✅
+- **Toggle mostra sol quando está escuro** (indica ação: clicar vai clarear) ✅
+- Toggle movido para depois dos links (mais à direita)
+- Separador sutil adicionado entre links e toggle, similar à Wiki
+- aria-label e title atualizados dinamicamente para melhor acessibilidade
+
+**Arquivos modificados:**
+- `frontend/devportal/index.html`
+- `frontend/devportal/assets/css/devportal.css`
+- `frontend/devportal/assets/js/devportal.js`
+
+**Alterações:**
+- Inversão da lógica CSS dos ícones (sun/moon)
+- Reorganização do HTML para posicionar toggle após links
+- Adição de classe `.header-separator` com estilos para light/dark mode
+- Atualização do JavaScript para modificar aria-label e title dinamicamente
+
+## ✅ Benefícios
+
+### Ícones no Header da Wiki
+- ✅ Consistência visual entre Wiki e DevPortal
+- ✅ Interface mais limpa e moderna
+- ✅ Melhor uso do espaço no header
+- ✅ Links externos abrem em nova aba com segurança
+
+### Remoção de Referências ao Cmd/Ctrl+K
+- ✅ Simplifica interface (menos informações visuais)
+- ✅ Atalho continua funcionando para usuários que conhecem
+- ✅ Busca continua totalmente funcional via botão e atalho
+- ✅ Mantém navegação por teclado dentro do diálogo (↑↓, Enter, Esc)
+
+### Correção do Toggle no DevPortal
+- ✅ Lógica intuitiva: mostra ação, não estado atual
+- ✅ Consistência com a Wiki
+- ✅ Melhor organização visual com separador
+- ✅ Melhor acessibilidade com labels dinâmicos
+
+## 🧪 Testes
+
+### Wiki
+- [x] Botão de busca abre diálogo corretamente
+- [x] Atalho Escape fecha o diálogo
+- [x] Navegação por teclado funciona dentro do diálogo
+- [x] Cmd/Ctrl+K continua abrindo o diálogo (funcionalidade mantida)
+- [x] Ícones do header exibem corretamente
+- [x] Hover nos ícones funciona corretamente
+- [x] Links externos abrem em nova aba
+- [x] URL do DevPortal está correta
+- [x] Prefetch desabilitado evita erros 404 em `/wiki/wiki/index.txt?_rsc=...`
+
+### DevPortal
+- [x] Toggle mostra lua quando está em modo claro
+- [x] Toggle mostra sol quando está em modo escuro
+- [x] Toggle está posicionado após os links
+- [x] Separador visual aparece corretamente
+- [x] aria-label e title atualizam dinamicamente
+- [x] Transições suaves entre temas
+
+---
+
+**Tipo**: Style/Enhancement/Fix
+**Escopo**: Wiki + DevPortal
+**Impacto**: Baixo (melhorias visuais e de UX, funcionalidades mantidas)

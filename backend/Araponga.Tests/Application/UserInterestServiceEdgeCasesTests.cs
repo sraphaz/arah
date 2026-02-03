@@ -1,6 +1,7 @@
 using Araponga.Application.Services;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -13,8 +14,8 @@ public sealed class UserInterestServiceEdgeCasesTests
     [Fact]
     public async Task AddInterestAsync_WithEmptyTag_ReturnsFailure()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemoryUserInterestRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserInterestRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new UserInterestService(repo, uow);
         var userId = Guid.NewGuid();
@@ -28,8 +29,8 @@ public sealed class UserInterestServiceEdgeCasesTests
     [Fact]
     public async Task AddInterestAsync_WhenDuplicate_ReturnsFailure()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemoryUserInterestRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserInterestRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new UserInterestService(repo, uow);
         var userId = Guid.NewGuid();
@@ -44,8 +45,8 @@ public sealed class UserInterestServiceEdgeCasesTests
     [Fact]
     public async Task RemoveInterestAsync_WithEmptyTag_ReturnsFailure()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemoryUserInterestRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserInterestRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new UserInterestService(repo, uow);
         var userId = Guid.NewGuid();
@@ -59,8 +60,8 @@ public sealed class UserInterestServiceEdgeCasesTests
     [Fact]
     public async Task RemoveInterestAsync_WhenNotExists_ReturnsFailure()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemoryUserInterestRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserInterestRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new UserInterestService(repo, uow);
         var userId = Guid.NewGuid();
@@ -74,8 +75,8 @@ public sealed class UserInterestServiceEdgeCasesTests
     [Fact]
     public async Task ListInterestsAsync_WhenUserHasNone_ReturnsEmpty()
     {
-        var ds = new InMemoryDataStore();
-        var repo = new InMemoryUserInterestRepository(ds);
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserInterestRepository(sharedStore);
         var uow = new InMemoryUnitOfWork();
         var svc = new UserInterestService(repo, uow);
         var userId = Guid.NewGuid();

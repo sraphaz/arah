@@ -11,8 +11,8 @@ public sealed class MembershipCapabilityRepositoryTests
     [Fact]
     public async Task MembershipCapabilityRepository_AddAndGetById()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryMembershipCapabilityRepository(sharedStore);
 
         var capability = new MembershipCapability(
             Guid.NewGuid(),
@@ -34,8 +34,8 @@ public sealed class MembershipCapabilityRepositoryTests
     [Fact]
     public async Task MembershipCapabilityRepository_GetActiveByMembershipId()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryMembershipCapabilityRepository(sharedStore);
 
         var activeCapability = new MembershipCapability(
             Guid.NewGuid(),
@@ -68,8 +68,8 @@ public sealed class MembershipCapabilityRepositoryTests
     [Fact]
     public async Task MembershipCapabilityRepository_HasCapability_ReturnsTrue_WhenActive()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryMembershipCapabilityRepository(sharedStore);
 
         var capability = new MembershipCapability(
             Guid.NewGuid(),
@@ -89,8 +89,8 @@ public sealed class MembershipCapabilityRepositoryTests
     [Fact]
     public async Task MembershipCapabilityRepository_HasCapability_ReturnsFalse_WhenRevoked()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryMembershipCapabilityRepository(sharedStore);
 
         var capability = new MembershipCapability(
             Guid.NewGuid(),

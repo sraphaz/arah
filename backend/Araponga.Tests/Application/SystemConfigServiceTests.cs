@@ -2,6 +2,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Configuration;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -14,8 +15,10 @@ public sealed class SystemConfigServiceTests
     public async Task UpsertAsync_CreatesConfig_AndWritesAudit()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddMemoryCache();
         services.AddScoped<ISystemConfigRepository, InMemorySystemConfigRepository>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();
@@ -48,8 +51,10 @@ public sealed class SystemConfigServiceTests
     public async Task GetByKeyAsync_UsesCache_AndInvalidatesOnUpdate()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddMemoryCache();
         services.AddScoped<ISystemConfigRepository, InMemorySystemConfigRepository>();
         services.AddScoped<IAuditLogger, InMemoryAuditLogger>();

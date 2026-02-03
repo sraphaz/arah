@@ -16,8 +16,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task Setup2FAAsync_GeneratesSecretAndQR()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -55,8 +55,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task Setup2FAAsync_Fails_IfAlreadyEnabled()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -98,8 +98,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task Confirm2FAAsync_ValidatesCode()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -149,8 +149,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task Confirm2FAAsync_Fails_OnInvalidCode()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -187,8 +187,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task LoginSocialAsync_Returns2FARequired_WhenEnabled()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -240,8 +240,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task LoginSocialAsync_ReturnsJWT_When2FADisabled()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -271,8 +271,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task Verify2FAAsync_ReturnsJWT_OnValidCode()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -335,8 +335,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task Verify2FAAsync_Fails_OnInvalidCode()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",
@@ -393,8 +393,8 @@ public sealed class AuthService2FATests
     [Fact]
     public async Task Disable2FAAsync_ClearsSecrets()
     {
-        var dataStore = new InMemoryDataStore();
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var jwtOptions = Options.Create(new JwtOptions 
         { 
             Issuer = "Araponga",

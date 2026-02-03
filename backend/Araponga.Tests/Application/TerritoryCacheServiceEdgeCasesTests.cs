@@ -3,6 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Territories;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,7 +17,7 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class TerritoryCacheServiceEdgeCasesTests
 {
-    private readonly InMemoryDataStore _dataStore;
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryTerritoryRepository _territoryRepository;
     private readonly IDistributedCacheService _cache;
     private readonly Mock<ILogger<CacheMetricsService>> _loggerMock;
@@ -25,8 +26,8 @@ public sealed class TerritoryCacheServiceEdgeCasesTests
 
     public TerritoryCacheServiceEdgeCasesTests()
     {
-        _dataStore = new InMemoryDataStore();
-        _territoryRepository = new InMemoryTerritoryRepository(_dataStore);
+        _sharedStore = new InMemorySharedStore();
+        _territoryRepository = new InMemoryTerritoryRepository(_sharedStore);
         _cache = CacheTestHelper.CreateDistributedCacheService();
         _loggerMock = new Mock<ILogger<CacheMetricsService>>();
         _metrics = new CacheMetricsService(_loggerMock.Object);
@@ -40,7 +41,7 @@ public sealed class TerritoryCacheServiceEdgeCasesTests
     private async Task CleanupAsync()
     {
         // Clear all territories from data store
-        _dataStore.Territories.Clear();
+        _sharedStore.Territories.Clear();
 
         // Clear cache
         await _cache.RemoveAsync(Constants.CacheKeys.ActiveTerritories, CancellationToken.None);

@@ -2,6 +2,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -11,15 +12,15 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class UserPreferencesServiceEdgeCasesTests
 {
-    private readonly InMemoryDataStore _dataStore;
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryUserPreferencesRepository _repository;
     private readonly InMemoryUnitOfWork _unitOfWork;
     private readonly UserPreferencesService _service;
 
     public UserPreferencesServiceEdgeCasesTests()
     {
-        _dataStore = new InMemoryDataStore();
-        _repository = new InMemoryUserPreferencesRepository(_dataStore);
+        _sharedStore = new InMemorySharedStore();
+        _repository = new InMemoryUserPreferencesRepository(_sharedStore);
         _unitOfWork = new InMemoryUnitOfWork();
         _service = new UserPreferencesService(_repository, _unitOfWork);
     }

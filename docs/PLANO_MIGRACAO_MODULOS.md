@@ -110,7 +110,7 @@ A migração será feita **gradualmente**, módulo por módulo, seguindo o padr�
 
 #### 4. Connections Module (2 repositórios)
 **Complexidade**: Baixa  
-**Dependências**: Baixas (Users, Memberships para busca/sugestões; Notificações para eventos)
+**Dependências**: Baixas (Users, Memberships em Shared para busca/sugestões; Notificações para eventos)
 
 **Entidades a mover**:
 - `UserConnectionRecord`

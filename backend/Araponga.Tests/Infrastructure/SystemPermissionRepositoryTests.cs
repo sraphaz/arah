@@ -11,8 +11,8 @@ public sealed class SystemPermissionRepositoryTests
     [Fact]
     public async Task SystemPermissionRepository_AddAndGetById()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemorySystemPermissionRepository(sharedStore);
 
         var permission = new SystemPermission(
             Guid.NewGuid(),
@@ -34,8 +34,8 @@ public sealed class SystemPermissionRepositoryTests
     [Fact]
     public async Task SystemPermissionRepository_GetActiveByUserId()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemorySystemPermissionRepository(sharedStore);
 
         var activePermission = new SystemPermission(
             Guid.NewGuid(),
@@ -66,8 +66,8 @@ public sealed class SystemPermissionRepositoryTests
     [Fact]
     public async Task SystemPermissionRepository_HasPermission_ReturnsTrue_WhenActive()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemorySystemPermissionRepository(sharedStore);
 
         var permission = new SystemPermission(
             Guid.NewGuid(),
@@ -87,8 +87,8 @@ public sealed class SystemPermissionRepositoryTests
     [Fact]
     public async Task SystemPermissionRepository_HasPermission_ReturnsFalse_WhenRevoked()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemorySystemPermissionRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemorySystemPermissionRepository(sharedStore);
 
         var permission = new SystemPermission(
             Guid.NewGuid(),

@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -16,6 +16,28 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Shared", "backend\Araponga.Shared\Araponga.Shared.csproj", "{461CFFE6-62DA-4977-9C88-F1D79ABB728D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Tests", "backend\Araponga.Tests\Araponga.Tests.csproj", "{2A1A0D8E-6A8D-4F52-8B26-9AAB6E2E5E61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Subscriptions.Infrastructure", "backend\Araponga.Modules.Subscriptions.Infrastructure\Araponga.Modules.Subscriptions.Infrastructure.csproj", "{948941FA-C0EE-4D48-BC49-A1C8BB9A6077}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Moderation.Infrastructure", "backend\Araponga.Modules.Moderation.Infrastructure\Araponga.Modules.Moderation.Infrastructure.csproj", "{EC76B7E0-A34D-4FC8-A46B-DECF95073398}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Notifications.Infrastructure", "backend\Araponga.Modules.Notifications.Infrastructure\Araponga.Modules.Notifications.Infrastructure.csproj", "{F8470718-D7C9-424C-8B39-EA32EC448249}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Alerts.Infrastructure", "backend\Araponga.Modules.Alerts.Infrastructure\Araponga.Modules.Alerts.Infrastructure.csproj", "{06AA8D9E-F4E2-413F-BF21-B00027AE7C75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Assets.Infrastructure", "backend\Araponga.Modules.Assets.Infrastructure\Araponga.Modules.Assets.Infrastructure.csproj", "{141BCEB2-5C4A-412E-9FBC-4B93D0BB9699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Admin.Infrastructure", "backend\Araponga.Modules.Admin.Infrastructure\Araponga.Modules.Admin.Infrastructure.csproj", "{3B4EB21F-0D75-49DA-8535-9A857246EE59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Feed.Infrastructure", "backend\Araponga.Modules.Feed.Infrastructure\Araponga.Modules.Feed.Infrastructure.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Marketplace.Infrastructure", "backend\Araponga.Modules.Marketplace.Infrastructure\Araponga.Modules.Marketplace.Infrastructure.csproj", "{B2C3D4E5-F6A7-8901-BCDE-F23456789012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Events.Infrastructure", "backend\Araponga.Modules.Events.Infrastructure\Araponga.Modules.Events.Infrastructure.csproj", "{C3D4E5F6-A7B8-9012-CDEF-345678901234}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Map.Infrastructure", "backend\Araponga.Modules.Map.Infrastructure\Araponga.Modules.Map.Infrastructure.csproj", "{D4E5F6A7-B8C9-0123-DEF0-456789012345}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Araponga.Modules.Chat.Infrastructure", "backend\Araponga.Modules.Chat.Infrastructure\Araponga.Modules.Chat.Infrastructure.csproj", "{E5F6A7B8-C9D0-1234-EF01-567890123456}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +72,50 @@ Global
 		{2A1A0D8E-6A8D-4F52-8B26-9AAB6E2E5E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A1A0D8E-6A8D-4F52-8B26-9AAB6E2E5E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A1A0D8E-6A8D-4F52-8B26-9AAB6E2E5E61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948941FA-C0EE-4D48-BC49-A1C8BB9A6077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948941FA-C0EE-4D48-BC49-A1C8BB9A6077}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948941FA-C0EE-4D48-BC49-A1C8BB9A6077}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948941FA-C0EE-4D48-BC49-A1C8BB9A6077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC76B7E0-A34D-4FC8-A46B-DECF95073398}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC76B7E0-A34D-4FC8-A46B-DECF95073398}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC76B7E0-A34D-4FC8-A46B-DECF95073398}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC76B7E0-A34D-4FC8-A46B-DECF95073398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8470718-D7C9-424C-8B39-EA32EC448249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8470718-D7C9-424C-8B39-EA32EC448249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8470718-D7C9-424C-8B39-EA32EC448249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8470718-D7C9-424C-8B39-EA32EC448249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06AA8D9E-F4E2-413F-BF21-B00027AE7C75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06AA8D9E-F4E2-413F-BF21-B00027AE7C75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06AA8D9E-F4E2-413F-BF21-B00027AE7C75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06AA8D9E-F4E2-413F-BF21-B00027AE7C75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{141BCEB2-5C4A-412E-9FBC-4B93D0BB9699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141BCEB2-5C4A-412E-9FBC-4B93D0BB9699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141BCEB2-5C4A-412E-9FBC-4B93D0BB9699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141BCEB2-5C4A-412E-9FBC-4B93D0BB9699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B4EB21F-0D75-49DA-8535-9A857246EE59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B4EB21F-0D75-49DA-8535-9A857246EE59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B4EB21F-0D75-49DA-8535-9A857246EE59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B4EB21F-0D75-49DA-8535-9A857246EE59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F23456789012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F23456789012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F23456789012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F23456789012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-345678901234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-345678901234}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-345678901234}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-345678901234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E5F6A7-B8C9-0123-DEF0-456789012345}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E5F6A7-B8C9-0123-DEF0-456789012345}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E5F6A7-B8C9-0123-DEF0-456789012345}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E5F6A7-B8C9-0123-DEF0-456789012345}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5F6A7B8-C9D0-1234-EF01-567890123456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5F6A7B8-C9D0-1234-EF01-567890123456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5F6A7B8-C9D0-1234-EF01-567890123456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5F6A7B8-C9D0-1234-EF01-567890123456}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{08DA2003-1543-4F18-9A42-7D87BD6686E9} = {41B63377-3DEA-40A5-8273-847E18B68483}
@@ -58,5 +124,16 @@ Global
 		{CD1D0C7D-1BBC-4A50-94C7-D9BE3F4FDB7A} = {41B63377-3DEA-40A5-8273-847E18B68483}
 		{461CFFE6-62DA-4977-9C88-F1D79ABB728D} = {41B63377-3DEA-40A5-8273-847E18B68483}
 		{2A1A0D8E-6A8D-4F52-8B26-9AAB6E2E5E61} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{948941FA-C0EE-4D48-BC49-A1C8BB9A6077} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{EC76B7E0-A34D-4FC8-A46B-DECF95073398} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{F8470718-D7C9-424C-8B39-EA32EC448249} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{06AA8D9E-F4E2-413F-BF21-B00027AE7C75} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{141BCEB2-5C4A-412E-9FBC-4B93D0BB9699} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{3B4EB21F-0D75-49DA-8535-9A857246EE59} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{B2C3D4E5-F6A7-8901-BCDE-F23456789012} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{C3D4E5F6-A7B8-9012-CDEF-345678901234} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{D4E5F6A7-B8C9-0123-DEF0-456789012345} = {41B63377-3DEA-40A5-8273-847E18B68483}
+		{E5F6A7B8-C9D0-1234-EF01-567890123456} = {41B63377-3DEA-40A5-8273-847E18B68483}
 	EndGlobalSection
 EndGlobal

@@ -21,8 +21,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByIdAsync_WithEmptyGuid_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.GetByIdAsync(Guid.Empty, CancellationToken.None);
 
@@ -32,8 +32,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByIdAsync_WithNonExistentId_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.GetByIdAsync(Guid.NewGuid(), CancellationToken.None);
 
@@ -43,8 +43,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByAuthProviderAsync_WithNullProvider_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.GetByAuthProviderAsync(null!, "external-id", CancellationToken.None);
 
@@ -54,8 +54,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByAuthProviderAsync_WithNullExternalId_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.GetByAuthProviderAsync("google", null!, CancellationToken.None);
 
@@ -65,8 +65,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByAuthProviderAsync_WithCaseInsensitive_MatchesCorrectly()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var user = new User(
             Guid.NewGuid(),
@@ -95,8 +95,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_ListByIdsAsync_WithEmptyCollection_ReturnsEmpty()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.ListByIdsAsync(Array.Empty<Guid>(), CancellationToken.None);
 
@@ -106,8 +106,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_ListByIdsAsync_WithNonExistentIds_ReturnsEmpty()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.ListByIdsAsync(new[] { Guid.NewGuid(), Guid.NewGuid() }, CancellationToken.None);
 
@@ -117,8 +117,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByEmailAsync_WithNullEmail_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.GetByEmailAsync(null!, CancellationToken.None);
 
@@ -128,8 +128,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByEmailAsync_WithEmptyEmail_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var result = await repository.GetByEmailAsync("   ", CancellationToken.None);
 
@@ -139,8 +139,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_GetByEmailAsync_WithCaseInsensitive_MatchesCorrectly()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var user = new User(
             Guid.NewGuid(),
@@ -168,8 +168,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task UserRepository_UpdateAsync_WithNonExistentUser_AddsUser()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryUserRepository(sharedStore);
 
         var user = new User(
             Guid.NewGuid(),
@@ -194,8 +194,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_GetByIdAsync_WithEmptyGuid_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.GetByIdAsync(Guid.Empty, CancellationToken.None);
 
@@ -205,8 +205,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_GetByIdAsync_WithNonExistentId_ReturnsNull()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.GetByIdAsync(Guid.NewGuid(), CancellationToken.None);
 
@@ -216,8 +216,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_SearchAsync_WithNullQuery_ReturnsAll()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.SearchAsync(null, null, null, CancellationToken.None);
 
@@ -227,8 +227,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_SearchAsync_WithEmptyQuery_ReturnsAll()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.SearchAsync("   ", null, null, CancellationToken.None);
 
@@ -238,8 +238,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_SearchAsync_WithWhitespaceQuery_TrimsAndSearches()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         // Add a territory with known name
         var territory = new Territory(
@@ -264,8 +264,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_SearchAsync_WithCaseInsensitive_MatchesCorrectly()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var territory = new Territory(
             Guid.NewGuid(),
@@ -291,8 +291,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_NearbyAsync_WithZeroRadius_ReturnsEmpty()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.NearbyAsync(0, 0, 0, 10, CancellationToken.None);
 
@@ -302,8 +302,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_NearbyAsync_WithNegativeRadius_ReturnsEmpty()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.NearbyAsync(0, 0, -10, 10, CancellationToken.None);
 
@@ -313,8 +313,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_NearbyAsync_WithZeroLimit_ReturnsEmpty()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.NearbyAsync(0, 0, 100, 0, CancellationToken.None);
 
@@ -324,8 +324,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_ListPagedAsync_WithNegativeSkip_ReturnsFromStart()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.ListPagedAsync(-10, 10, CancellationToken.None);
 
@@ -335,8 +335,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_ListPagedAsync_WithZeroTake_ReturnsEmpty()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.ListPagedAsync(0, 0, CancellationToken.None);
 
@@ -346,8 +346,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_ListPagedAsync_WithLargeSkip_ReturnsEmpty()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var result = await repository.ListPagedAsync(1000000, 10, CancellationToken.None);
 
@@ -357,8 +357,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_CountAsync_ReturnsNonNegative()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var count = await repository.CountAsync(CancellationToken.None);
 
@@ -368,8 +368,8 @@ public class RepositoryEdgeCasesTests
     [Fact]
     public async Task TerritoryRepository_CountSearchAsync_WithNullQuery_ReturnsAllCount()
     {
-        var dataStore = new InMemoryDataStore();
-        var repository = new InMemoryTerritoryRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var repository = new InMemoryTerritoryRepository(sharedStore);
 
         var count = await repository.CountSearchAsync(null, null, null, CancellationToken.None);
 

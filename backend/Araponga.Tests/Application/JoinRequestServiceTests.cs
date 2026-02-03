@@ -14,9 +14,9 @@ namespace Araponga.Tests.Application;
 
 public sealed class JoinRequestServiceTests
 {
-    private static async Task EnsureTestUserExists(InMemoryDataStore dataStore, Guid userId, string displayName, string cpf)
+    private static async Task EnsureTestUserExists(InMemorySharedStore sharedStore, Guid userId, string displayName, string cpf)
     {
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var existing = await userRepository.GetByIdAsync(userId, CancellationToken.None);
         if (existing is null)
         {
@@ -25,17 +25,17 @@ public sealed class JoinRequestServiceTests
         }
     }
 
-    private static JoinRequestService CreateService(InMemoryDataStore dataStore)
+    private static JoinRequestService CreateService(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
-        var joinRequestRepository = new InMemoryTerritoryJoinRequestRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var membershipSettingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var joinRequestRepository = new InMemoryTerritoryJoinRequestRepository(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
+        var membershipSettingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
         var featureFlagService = new InMemoryFeatureFlagService();
         var accessEvaluator = new AccessEvaluator(
             membershipRepository,
-            new InMemoryMembershipCapabilityRepository(dataStore),
-            new InMemorySystemPermissionRepository(dataStore),
+            new InMemoryMembershipCapabilityRepository(sharedStore),
+            new InMemorySystemPermissionRepository(sharedStore),
             new MembershipAccessRules(
                 membershipRepository,
                 membershipSettingsRepository,
@@ -43,7 +43,7 @@ public sealed class JoinRequestServiceTests
                 featureFlagService),
             CacheTestHelper.CreateDistributedCacheService());
         var unitOfWork = new InMemoryUnitOfWork();
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
         return new JoinRequestService(
             joinRequestRepository,
             membershipRepository,
@@ -57,7 +57,8 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_ReturnsError_WhenNoRecipients()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory1;
 
@@ -77,7 +78,8 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_ReturnsError_WhenDuplicateRecipients()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory1;
         var recipientId = TestIds.ResidentUser;
@@ -98,7 +100,8 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_ReturnsError_WhenRequesterIsRecipient()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory1;
 
@@ -118,7 +121,8 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_ReturnsError_WhenRequesterIsAlreadyConfirmedResident()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.ResidentUser; // Já é resident confirmado
         var territoryId = TestIds.Territory2; // Territory2 tem membership pré-populado
         var recipientId = TestIds.CuratorUser;
@@ -139,7 +143,8 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_ReturnsError_WhenRecipientNotFound()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory1;
         var nonExistentRecipientId = Guid.NewGuid();
@@ -160,9 +165,10 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_ReturnsError_WhenRecipientIsNotResidentOrCurator()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId3, "Visitor", "999.999.999-99");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId3, "Visitor", "999.999.999-99");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident (para usar como recipient válido em outros testes)
         var visitorId = TestIds.TestUserId3; // Este não é resident nem curator
@@ -183,8 +189,9 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_ReturnsExisting_WhenPendingRequestExists()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;
@@ -216,8 +223,9 @@ public sealed class JoinRequestServiceTests
     public async Task CreateAsync_CreatesRequest_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;
@@ -242,7 +250,8 @@ public sealed class JoinRequestServiceTests
     public async Task ApproveAsync_ReturnsError_WhenRequestNotFound()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var nonExistentRequestId = Guid.NewGuid();
         var actorId = TestIds.ResidentUser; // Este usuário já existe no dataStore
 
@@ -262,9 +271,10 @@ public sealed class JoinRequestServiceTests
     public async Task ApproveAsync_ReturnsUnauthorized_WhenActorIsNotRecipientOrCurator()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId3, "Test User 3", "333.333.333-33");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId3, "Test User 3", "333.333.333-33");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;
@@ -296,8 +306,9 @@ public sealed class JoinRequestServiceTests
     public async Task ApproveAsync_ReturnsError_WhenRequestNotPending()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;
@@ -340,8 +351,9 @@ public sealed class JoinRequestServiceTests
     public async Task RejectAsync_RejectsRequest_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;
@@ -373,9 +385,10 @@ public sealed class JoinRequestServiceTests
     public async Task CancelAsync_ReturnsError_WhenRequesterIsNotOwner()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId3, "Test User 3", "333.333.333-33");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId3, "Test User 3", "333.333.333-33");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;
@@ -406,8 +419,9 @@ public sealed class JoinRequestServiceTests
     public async Task CancelAsync_CancelsRequest_WhenValid()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;
@@ -438,9 +452,10 @@ public sealed class JoinRequestServiceTests
     public async Task ListIncomingPagedAsync_ReturnsPagedResults()
     {
         var dataStore = new InMemoryDataStore();
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
-        await EnsureTestUserExists(dataStore, TestIds.TestUserId3, "Test User 3", "333.333.333-33");
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId1, "Test User 1", "111.111.111-11");
+        await EnsureTestUserExists(sharedStore, TestIds.TestUserId3, "Test User 3", "333.333.333-33");
+        var service = CreateService(dataStore, sharedStore);
         var requesterId = TestIds.TestUserId1;
         var territoryId = TestIds.Territory2; // Territory2 tem ResidentUser como resident
         var recipientId = TestIds.ResidentUser;

@@ -1,6 +1,7 @@
 using Araponga.Application.Services;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -14,7 +15,8 @@ public sealed class PushNotificationServiceEdgeCasesTests
     [Fact]
     public async Task GetDeviceAsync_WhenNotFound_ReturnsFailure()
     {
-        var repo = new InMemoryUserDeviceRepository();
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserDeviceRepository(sharedStore);
         var logger = NullLogger<PushNotificationService>.Instance;
         var svc = new PushNotificationService(repo, null, logger);
         var userId = Guid.NewGuid();
@@ -28,7 +30,8 @@ public sealed class PushNotificationServiceEdgeCasesTests
     [Fact]
     public async Task ListDevicesAsync_WhenUserHasNone_ReturnsEmptyList()
     {
-        var repo = new InMemoryUserDeviceRepository();
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserDeviceRepository(sharedStore);
         var logger = NullLogger<PushNotificationService>.Instance;
         var svc = new PushNotificationService(repo, null, logger);
         var userId = Guid.NewGuid();
@@ -43,7 +46,8 @@ public sealed class PushNotificationServiceEdgeCasesTests
     [Fact]
     public async Task UnregisterDeviceAsync_WhenNotFound_ReturnsFailure()
     {
-        var repo = new InMemoryUserDeviceRepository();
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserDeviceRepository(sharedStore);
         var logger = NullLogger<PushNotificationService>.Instance;
         var svc = new PushNotificationService(repo, null, logger);
         var userId = Guid.NewGuid();
@@ -57,7 +61,8 @@ public sealed class PushNotificationServiceEdgeCasesTests
     [Fact]
     public async Task SendToUserAsync_WhenNoProvider_ReturnsZeroSent()
     {
-        var repo = new InMemoryUserDeviceRepository();
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserDeviceRepository(sharedStore);
         var logger = NullLogger<PushNotificationService>.Instance;
         var svc = new PushNotificationService(repo, null, logger);
         var userId = Guid.NewGuid();
@@ -71,7 +76,8 @@ public sealed class PushNotificationServiceEdgeCasesTests
     [Fact]
     public async Task SendToUsersAsync_WhenNoProvider_ReturnsZeroSent()
     {
-        var repo = new InMemoryUserDeviceRepository();
+        var sharedStore = new InMemorySharedStore();
+        var repo = new InMemoryUserDeviceRepository(sharedStore);
         var logger = NullLogger<PushNotificationService>.Instance;
         var svc = new PushNotificationService(repo, null, logger);
 

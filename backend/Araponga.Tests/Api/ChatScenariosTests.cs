@@ -18,14 +18,14 @@ public sealed class ChatScenariosTests
     public async Task TerritoryChannels_CanListAndSendMessage()
     {
         using var factory = new ApiFactory();
-        var dataStore = factory.GetDataStore();
+        var sharedStore = factory.GetSharedStore();
         using var client = factory.CreateClient();
 
         var token = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         // Tornar usuário verificado (gate do chat)
-        var user = dataStore.Users.Single(u => u.Id == ResidentUserId);
+        var user = sharedStore.Users.Single(u => u.Id == ResidentUserId);
         user.UpdateIdentityVerification(UserIdentityVerificationStatus.Verified, DateTime.UtcNow);
 
         var channels = await client.GetFromJsonAsync<ListChannelsResponse>(
@@ -52,14 +52,14 @@ public sealed class ChatScenariosTests
     public async Task Groups_CanCreateApproveAndChat()
     {
         using var factory = new ApiFactory();
-        var dataStore = factory.GetDataStore();
+        var sharedStore = factory.GetSharedStore();
         using var client = factory.CreateClient();
 
         var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
 
         // Tornar usuário verificado para criar/enviar mensagem
-        var user = dataStore.Users.Single(u => u.Id == ResidentUserId);
+        var user = sharedStore.Users.Single(u => u.Id == ResidentUserId);
         user.UpdateIdentityVerification(UserIdentityVerificationStatus.Verified, DateTime.UtcNow);
 
         var createGroup = await client.PostAsJsonAsync(

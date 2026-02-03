@@ -3,6 +3,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Marketplace;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests;
 using Araponga.Tests.TestHelpers;
 using Xunit;
@@ -15,6 +16,7 @@ namespace Araponga.Tests.Application;
 /// </summary>
 public sealed class StoreServiceEdgeCasesTests
 {
+    private readonly InMemorySharedStore _sharedStore;
     private readonly InMemoryDataStore _dataStore;
     private readonly InMemoryStoreRepository _storeRepository;
     private readonly InMemoryUserRepository _userRepository;
@@ -28,13 +30,14 @@ public sealed class StoreServiceEdgeCasesTests
 
     public StoreServiceEdgeCasesTests()
     {
+        _sharedStore = new InMemorySharedStore();
         _dataStore = new InMemoryDataStore();
         _storeRepository = new InMemoryStoreRepository(_dataStore);
-        _userRepository = new InMemoryUserRepository(_dataStore);
-        _membershipRepository = new InMemoryTerritoryMembershipRepository(_dataStore);
-        _settingsRepository = new InMemoryMembershipSettingsRepository(_dataStore);
-        _systemPermissionRepository = new InMemorySystemPermissionRepository(_dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(_dataStore);
+        _userRepository = new InMemoryUserRepository(_sharedStore);
+        _membershipRepository = new InMemoryTerritoryMembershipRepository(_sharedStore);
+        _settingsRepository = new InMemoryMembershipSettingsRepository(_sharedStore);
+        _systemPermissionRepository = new InMemorySystemPermissionRepository(_sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(_sharedStore);
         var featureFlags = new InMemoryFeatureFlagService();
         _accessRules = new MembershipAccessRules(
             _membershipRepository,

@@ -56,6 +56,18 @@
   <ItemGroup>
     <ProjectReference Include="..\Araponga.Application\Araponga.Application.csproj" />
     <ProjectReference Include="..\Araponga.Infrastructure\Araponga.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Infrastructure.Shared\Araponga.Infrastructure.Shared.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Feed.Infrastructure\Araponga.Modules.Feed.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Marketplace.Infrastructure\Araponga.Modules.Marketplace.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Events.Infrastructure\Araponga.Modules.Events.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Map.Infrastructure\Araponga.Modules.Map.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Chat.Infrastructure\Araponga.Modules.Chat.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Subscriptions.Infrastructure\Araponga.Modules.Subscriptions.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Moderation.Infrastructure\Araponga.Modules.Moderation.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Notifications.Infrastructure\Araponga.Modules.Notifications.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Alerts.Infrastructure\Araponga.Modules.Alerts.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Assets.Infrastructure\Araponga.Modules.Assets.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Admin.Infrastructure\Araponga.Modules.Admin.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@ using Araponga.Application.Services.Connections;
 using Araponga.Domain.Connections;
 using Araponga.Domain.Moderation;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests;
 using Xunit;
 
@@ -10,13 +11,14 @@ namespace Araponga.Tests.Application;
 
 public sealed class ConnectionServiceTests
 {
-    private static ConnectionService CreateService(InMemoryDataStore dataStore)
+    /// <summary>Arquitetura modular: conexões no Infrastructure (dataStore); User/Membership no Shared (sharedStore).</summary>
+    private static ConnectionService CreateService(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
         var connectionRepo = new InMemoryUserConnectionRepository(dataStore);
         var privacyRepo = new InMemoryConnectionPrivacySettingsRepository(dataStore);
         var blockRepo = new InMemoryUserBlockRepository(dataStore);
-        var userRepo = new InMemoryUserRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepo = new InMemoryUserRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var eventBus = new NoOpEventBus();
         return new ConnectionService(connectionRepo, privacyRepo, blockRepo, userRepo, membershipRepo, unitOfWork, eventBus);
@@ -25,8 +27,9 @@ public sealed class ConnectionServiceTests
     [Fact]
     public async Task RequestConnectionAsync_SameUser_ReturnsFailure()
     {
-        var store = new InMemoryDataStore();
-        var service = CreateService(store);
+        var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var userId = TestIds.TestUserId1;
 
         var result = await service.RequestConnectionAsync(userId, userId, null, CancellationToken.None);
@@ -38,8 +41,9 @@ public sealed class ConnectionServiceTests
     [Fact]
     public async Task RequestConnectionAsync_WhenNoExistingConnection_CreatesPending()
     {
-        var store = new InMemoryDataStore();
-        var service = CreateService(store);
+        var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requester = TestIds.TestUserId1;
         var target = TestIds.ResidentUser;
 
@@ -57,8 +61,9 @@ public sealed class ConnectionServiceTests
     [Fact]
     public async Task RequestConnectionAsync_WhenAlreadyExists_ReturnsFailure()
     {
-        var store = new InMemoryDataStore();
-        var service = CreateService(store);
+        var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requester = TestIds.TestUserId1;
         var target = TestIds.ResidentUser;
         await service.RequestConnectionAsync(requester, target, null, CancellationToken.None);
@@ -72,8 +77,9 @@ public sealed class ConnectionServiceTests
     [Fact]
     public async Task AcceptConnectionAsync_WhenTargetUser_Accepts()
     {
-        var store = new InMemoryDataStore();
-        var service = CreateService(store);
+        var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requester = TestIds.TestUserId1;
         var target = TestIds.ResidentUser;
         var requestResult = await service.RequestConnectionAsync(requester, target, null, CancellationToken.None);
@@ -90,8 +96,9 @@ public sealed class ConnectionServiceTests
     [Fact]
     public async Task AcceptConnectionAsync_WhenNotTarget_ReturnsFailure()
     {
-        var store = new InMemoryDataStore();
-        var service = CreateService(store);
+        var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requester = TestIds.TestUserId1;
         var target = TestIds.ResidentUser;
         var requestResult = await service.RequestConnectionAsync(requester, target, null, CancellationToken.None);
@@ -106,8 +113,9 @@ public sealed class ConnectionServiceTests
     [Fact]
     public async Task RemoveConnectionAsync_WhenAccepted_Removes()
     {
-        var store = new InMemoryDataStore();
-        var service = CreateService(store);
+        var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
         var requester = TestIds.TestUserId1;
         var target = TestIds.ResidentUser;
         await service.RequestConnectionAsync(requester, target, null, CancellationToken.None);

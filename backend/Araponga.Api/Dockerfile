@@ -1,17 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+# Copiar solução e todo o backend para garantir que todos os projetos (incl. módulos) existam no restore
 COPY Araponga.sln ./
-COPY backend/Araponga.Api/Araponga.Api.csproj backend/Araponga.Api/
-COPY backend/Araponga.Application/Araponga.Application.csproj backend/Araponga.Application/
-COPY backend/Araponga.Domain/Araponga.Domain.csproj backend/Araponga.Domain/
-COPY backend/Araponga.Infrastructure/Araponga.Infrastructure.csproj backend/Araponga.Infrastructure/
-COPY backend/Araponga.Shared/Araponga.Shared.csproj backend/Araponga.Shared/
-COPY backend/Araponga.Tests/Araponga.Tests.csproj backend/Araponga.Tests/
+COPY backend/ backend/
 
 RUN dotnet restore Araponga.sln
 
-COPY . .
 WORKDIR /src/backend/Araponga.Api
 RUN dotnet publish -c Release -o /app/publish --no-restore
 

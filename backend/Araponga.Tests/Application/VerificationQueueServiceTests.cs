@@ -4,6 +4,7 @@ using Araponga.Domain.Evidence;
 using Araponga.Domain.Users;
 using Araponga.Domain.Work;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -15,8 +16,10 @@ public sealed class VerificationQueueServiceTests
     public async Task SubmitIdentityDocumentAsync_SetsUserPending_AndCreatesWorkItem()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IUserRepository, InMemoryUserRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IWorkItemRepository, InMemoryWorkItemRepository>();
@@ -29,7 +32,7 @@ public sealed class VerificationQueueServiceTests
         var svc = sp.GetRequiredService<VerificationQueueService>();
         var userRepo = sp.GetRequiredService<IUserRepository>();
 
-        var user = dataStore.Users[0];
+        var user = sharedStore.Users[0];
         Assert.Equal(UserIdentityVerificationStatus.Unverified, user.IdentityVerificationStatus);
 
         var evidenceId = Guid.NewGuid();
@@ -61,8 +64,10 @@ public sealed class VerificationQueueServiceTests
     public async Task DecideIdentityAsync_Approve_SetsUserVerified_AndCompletesWorkItem()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         services.AddSingleton(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IUserRepository, InMemoryUserRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IWorkItemRepository, InMemoryWorkItemRepository>();
@@ -76,7 +81,7 @@ public sealed class VerificationQueueServiceTests
         var userRepo = sp.GetRequiredService<IUserRepository>();
         var workRepo = sp.GetRequiredService<IWorkItemRepository>();
 
-        var user = dataStore.Users[0];
+        var user = sharedStore.Users[0];
 
         var evidenceId = Guid.NewGuid();
         dataStore.DocumentEvidences.Add(new DocumentEvidence(

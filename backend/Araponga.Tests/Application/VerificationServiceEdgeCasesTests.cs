@@ -6,6 +6,7 @@ using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Domain.Work;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Xunit;
 
 namespace Araponga.Tests.Application;
@@ -20,10 +21,10 @@ public class VerificationServiceEdgeCasesTests
     private static readonly Guid TestTerritoryId = Guid.NewGuid();
     private static readonly Guid TestUserId = Guid.NewGuid();
 
-    private static VerificationQueueService CreateService(InMemoryDataStore dataStore)
+    private static VerificationQueueService CreateService(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
         var workItemRepository = new InMemoryWorkItemRepository(dataStore);
         var documentEvidenceRepository = new InMemoryDocumentEvidenceRepository(dataStore);
         var auditLogger = new InMemoryAuditLogger(dataStore);
@@ -42,7 +43,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitIdentityDocumentAsync_WithEmptyEvidenceId_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var user = new User(
             TestUserId,
@@ -55,7 +57,7 @@ public class VerificationServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var result = await service.SubmitIdentityDocumentAsync(
             TestUserId,
@@ -70,7 +72,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitIdentityDocumentAsync_WithNonExistentUser_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var evidenceId = Guid.NewGuid();
         var evidence = new DocumentEvidence(
@@ -100,7 +103,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitIdentityDocumentAsync_WithNonExistentEvidence_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var user = new User(
             TestUserId,
@@ -113,7 +117,7 @@ public class VerificationServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var result = await service.SubmitIdentityDocumentAsync(
             TestUserId,
@@ -128,7 +132,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitIdentityDocumentAsync_WithInvalidEvidenceKind_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var user = new User(
             TestUserId,
@@ -141,7 +146,7 @@ public class VerificationServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var evidenceId = Guid.NewGuid();
         var territoryId = Guid.NewGuid();
@@ -174,7 +179,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitIdentityDocumentAsync_WithEvidenceFromDifferentUser_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var user = new User(
             TestUserId,
@@ -187,7 +193,7 @@ public class VerificationServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var otherUserId = Guid.NewGuid();
         var evidenceId = Guid.NewGuid();
@@ -218,7 +224,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitResidencyDocumentAsync_WithEmptyTerritoryId_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.SubmitResidencyDocumentAsync(
             TestUserId,
@@ -234,7 +241,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitResidencyDocumentAsync_WithEmptyEvidenceId_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.SubmitResidencyDocumentAsync(
             TestUserId,
@@ -250,7 +258,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitResidencyDocumentAsync_WithNonExistentMembership_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var evidenceId = Guid.NewGuid();
         var evidence = new DocumentEvidence(
@@ -281,7 +290,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task SubmitResidencyDocumentAsync_WithInvalidEvidenceKind_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var user = new User(
             TestUserId,
@@ -294,7 +304,7 @@ public class VerificationServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(user);
+        sharedStore.Users.Add(user);
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -305,7 +315,7 @@ public class VerificationServiceEdgeCasesTests
             null,
             null,
             TestDate);
-        dataStore.Memberships.Add(membership);
+        sharedStore.Memberships.Add(membership);
 
         var evidenceId = Guid.NewGuid();
         // Criar evidence com kind Identity ao invés de Residency
@@ -337,7 +347,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task DecideIdentityAsync_WithNonExistentWorkItem_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.DecideIdentityAsync(
             Guid.NewGuid(),
@@ -354,7 +365,8 @@ public class VerificationServiceEdgeCasesTests
     public async Task DecideResidencyAsync_WithNonExistentWorkItem_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.DecideResidencyAsync(
             Guid.NewGuid(),

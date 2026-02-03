@@ -22,15 +22,13 @@ const nextConfig = {
   // Base path para servir em /wiki dentro do devportal.araponga.app
   basePath: '/wiki',
   trailingSlash: true,
-  // Asset prefix também precisa do basePath
-  assetPrefix: '/wiki',
-  // Desabilita RSC (React Server Components) para evitar problemas com basePath
-  // e prefetch de arquivos .txt que não existem em modo estático
+  // NÃO usar assetPrefix junto com basePath em static export.
+  // Duplicar /wiki causa 404 em RSC payloads e quebra hidratação ("$Sreact.fragment").
+  // Bug conhecido: static export + basePath → cliente pede /wiki.txt em vez de /wiki/index.txt.
+  // Ver: https://github.com/vercel/next.js/issues/73427 (PR #73912).
   experimental: {
     optimizePackageImports: [],
   },
-  // Configuração para evitar problemas com RSC e basePath
-  // Em modo estático, RSC não funciona corretamente com basePath
   reactStrictMode: true,
 };
 

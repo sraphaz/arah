@@ -1,0 +1,84 @@
+# Atualizações na Wiki: Ícones no Header e Remoção de Referências Visuais ao Cmd/Ctrl+K
+
+## Resumo
+
+Este PR inclui duas melhorias na interface da Wiki:
+1. **Atualização dos links do header para exibir apenas ícones** (similar ao DevPortal)
+2. **Remoção de referências visuais ao atalho Cmd/Ctrl+K** (funcionalidade mantida)
+
+## 🎯 Mudanças
+
+### 1. Ícones no Header
+
+#### Antes
+- Links exibiam texto: "Todos os Docs", "DevPortal", "Site Institucional"
+- Layout com textos visíveis
+
+#### Depois
+- Links exibem apenas ícones SVG
+- Estilo consistente com o DevPortal
+- Hover com escala e cor de destaque
+- Mantém mesma ordem e alinhamento
+
+**Arquivos modificados:**
+- `frontend/wiki/components/layout/Header.tsx`
+- `frontend/wiki/app/globals.css`
+
+**Alterações:**
+- Substituição de textos por ícones SVG
+- Adição de estilos `.header-link-icon` similares ao DevPortal
+- Correção da URL do DevPortal para `https://devportal.araponga.app`
+- Adição de `target="_blank"` e `rel="noopener noreferrer"` para links externos
+- Desabilitação de prefetch nos Links para evitar erros 404 com duplicação do basePath
+
+### 2. Remoção de Referências Visuais ao Cmd/Ctrl+K
+
+#### Antes
+- Atalho `Cmd/Ctrl+K` abria o diálogo de busca
+- Botão exibia visualmente "⌘K" indicando o atalho
+- Placeholder do input mencionava o atalho
+- aria-label do botão mencionava o atalho
+
+#### Depois
+- **Atalho `Cmd/Ctrl+K` continua funcionando** (funcionalidade mantida)
+- Removidas todas as referências visuais ao atalho
+- Botão não exibe mais "⌘K"
+- Placeholder não menciona mais o atalho
+- aria-label não menciona mais o atalho
+- Atalho `Escape` ainda fecha o diálogo quando aberto
+
+**Arquivos modificados:**
+- `frontend/wiki/components/search/SearchTrigger.tsx`
+- `frontend/wiki/components/search/SearchDialog.tsx`
+
+## ✅ Benefícios
+
+### Ícones no Header
+- ✅ Consistência visual entre Wiki e DevPortal
+- ✅ Interface mais limpa e moderna
+- ✅ Melhor uso do espaço no header
+- ✅ Links externos abrem em nova aba com segurança
+
+### Remoção de Referências ao Cmd/Ctrl+K
+- ✅ Simplifica interface (menos informações visuais)
+- ✅ Atalho continua funcionando para usuários que conhecem
+- ✅ Busca continua totalmente funcional via botão e atalho
+- ✅ Mantém navegação por teclado dentro do diálogo (↑↓, Enter, Esc)
+
+## 🧪 Testes
+
+- [x] Botão de busca abre diálogo corretamente
+- [x] Atalho Escape fecha o diálogo
+- [x] Navegação por teclado funciona dentro do diálogo
+- [x] Cmd/Ctrl+K continua abrindo o diálogo (funcionalidade mantida)
+- [x] Ícones do header exibem corretamente
+- [x] Hover nos ícones funciona corretamente
+- [x] Links externos abrem em nova aba
+- [x] URL do DevPortal está correta
+- [x] Prefetch desabilitado evita erros 404 em `/wiki/wiki/index.txt?_rsc=...`
+
+---
+
+**Tipo**: Style/Enhancement
+**Escopo**: Wiki
+**Impacto**: Baixo (melhorias visuais e de UX, funcionalidades mantidas)

@@ -6,6 +6,7 @@ using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Xunit;
 
@@ -22,17 +23,17 @@ public class JoinRequestServiceEdgeCasesTests
     private static readonly Guid TestUserId = Guid.NewGuid();
     private static readonly Guid TestRecipientId = Guid.NewGuid();
 
-    private static JoinRequestService CreateService(InMemoryDataStore dataStore)
+    private static JoinRequestService CreateService(InMemoryDataStore dataStore, InMemorySharedStore sharedStore)
     {
-        var joinRequestRepository = new InMemoryTerritoryJoinRequestRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
-        var membershipSettingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var joinRequestRepository = new InMemoryTerritoryJoinRequestRepository(sharedStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
+        var membershipSettingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
         var featureFlagService = new InMemoryFeatureFlagService();
         var accessEvaluator = new AccessEvaluator(
             membershipRepository,
-            new InMemoryMembershipCapabilityRepository(dataStore),
-            new InMemorySystemPermissionRepository(dataStore),
+            new InMemoryMembershipCapabilityRepository(sharedStore),
+            new InMemorySystemPermissionRepository(sharedStore),
             new MembershipAccessRules(
                 membershipRepository,
                 membershipSettingsRepository,
@@ -40,7 +41,7 @@ public class JoinRequestServiceEdgeCasesTests
                 featureFlagService),
             CacheTestHelper.CreateDistributedCacheService());
         var unitOfWork = new InMemoryUnitOfWork();
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
         return new JoinRequestService(
             joinRequestRepository,
             membershipRepository,
@@ -54,7 +55,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task CreateAsync_WithEmptyTerritoryId_HandlesCorrectly()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var requester = new User(
             TestUserId,
@@ -67,7 +69,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(requester);
+        sharedStore.Users.Add(requester);
 
         var recipient = new User(
             TestRecipientId,
@@ -80,7 +82,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestRecipientId}",
             TestDate);
-        dataStore.Users.Add(recipient);
+        sharedStore.Users.Add(recipient);
 
         // Criar território e membership para recipient
         var territory = new Territory(
@@ -94,7 +96,7 @@ public class JoinRequestServiceEdgeCasesTests
             0.0,
             0.0,
             TestDate);
-        dataStore.Territories.Add(territory);
+        sharedStore.Territories.Add(territory);
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -105,7 +107,7 @@ public class JoinRequestServiceEdgeCasesTests
             null,
             null,
             TestDate);
-        dataStore.Memberships.Add(membership);
+        sharedStore.Memberships.Add(membership);
 
         var (created, error, request) = await service.CreateAsync(
             TestUserId,
@@ -123,7 +125,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task CreateAsync_WithNonExistentRecipient_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var requester = new User(
             TestUserId,
@@ -136,7 +139,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(requester);
+        sharedStore.Users.Add(requester);
 
         var territory = new Territory(
             TestTerritoryId,
@@ -149,7 +152,7 @@ public class JoinRequestServiceEdgeCasesTests
             0.0,
             0.0,
             TestDate);
-        dataStore.Territories.Add(territory);
+        sharedStore.Territories.Add(territory);
 
         var (created, error, request) = await service.CreateAsync(
             TestUserId,
@@ -166,7 +169,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task CreateAsync_WithRecipientNotResidentOrCurator_ReturnsFailure()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var requester = new User(
             TestUserId,
@@ -179,7 +183,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(requester);
+        sharedStore.Users.Add(requester);
 
         var recipient = new User(
             TestRecipientId,
@@ -192,7 +196,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestRecipientId}",
             TestDate);
-        dataStore.Users.Add(recipient);
+        sharedStore.Users.Add(recipient);
 
         var territory = new Territory(
             TestTerritoryId,
@@ -205,7 +209,7 @@ public class JoinRequestServiceEdgeCasesTests
             0.0,
             0.0,
             TestDate);
-        dataStore.Territories.Add(territory);
+        sharedStore.Territories.Add(territory);
 
         // Recipient não é resident nem curator
         var (created, error, request) = await service.CreateAsync(
@@ -223,7 +227,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task ApproveAsync_WithNonExistentRequest_ReturnsNotFound()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.ApproveAsync(
             Guid.NewGuid(),
@@ -240,7 +245,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task ApproveAsync_WithAlreadyApprovedRequest_HandlesCorrectly()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var requester = new User(
             TestUserId,
@@ -253,7 +259,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(requester);
+        sharedStore.Users.Add(requester);
 
         var recipient = new User(
             TestRecipientId,
@@ -266,7 +272,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestRecipientId}",
             TestDate);
-        dataStore.Users.Add(recipient);
+        sharedStore.Users.Add(recipient);
 
         var territory = new Territory(
             TestTerritoryId,
@@ -279,7 +285,7 @@ public class JoinRequestServiceEdgeCasesTests
             0.0,
             0.0,
             TestDate);
-        dataStore.Territories.Add(territory);
+        sharedStore.Territories.Add(territory);
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -290,7 +296,7 @@ public class JoinRequestServiceEdgeCasesTests
             null,
             null,
             TestDate);
-        dataStore.Memberships.Add(membership);
+        sharedStore.Memberships.Add(membership);
 
         // Criar request
         var requestId = Guid.NewGuid();
@@ -304,14 +310,14 @@ public class JoinRequestServiceEdgeCasesTests
             null, // expiresAtUtc
             TestDate, // decidedAtUtc
             TestRecipientId); // decidedByUserId
-        dataStore.TerritoryJoinRequests.Add(request);
+        sharedStore.TerritoryJoinRequests.Add(request);
 
         var recipientEntity = new TerritoryJoinRequestRecipient(
             requestId,
             TestRecipientId,
             TestDate,
             null);
-        dataStore.TerritoryJoinRequestRecipients.Add(recipientEntity);
+        sharedStore.TerritoryJoinRequestRecipients.Add(recipientEntity);
 
         var result = await service.ApproveAsync(
             requestId,
@@ -327,7 +333,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task RejectAsync_WithNonExistentRequest_ReturnsNotFound()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.RejectAsync(
             Guid.NewGuid(),
@@ -344,7 +351,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task RejectAsync_WithEmptyReason_HandlesCorrectly()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var requester = new User(
             TestUserId,
@@ -357,7 +365,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestUserId}",
             TestDate);
-        dataStore.Users.Add(requester);
+        sharedStore.Users.Add(requester);
 
         var recipient = new User(
             TestRecipientId,
@@ -370,7 +378,7 @@ public class JoinRequestServiceEdgeCasesTests
             "test",
             $"test-{TestRecipientId}",
             TestDate);
-        dataStore.Users.Add(recipient);
+        sharedStore.Users.Add(recipient);
 
         var territory = new Territory(
             TestTerritoryId,
@@ -383,7 +391,7 @@ public class JoinRequestServiceEdgeCasesTests
             0.0,
             0.0,
             TestDate);
-        dataStore.Territories.Add(territory);
+        sharedStore.Territories.Add(territory);
 
         var membership = new TerritoryMembership(
             Guid.NewGuid(),
@@ -394,7 +402,7 @@ public class JoinRequestServiceEdgeCasesTests
             null,
             null,
             TestDate);
-        dataStore.Memberships.Add(membership);
+        sharedStore.Memberships.Add(membership);
 
         // Criar request pendente
         var requestId = Guid.NewGuid();
@@ -408,14 +416,14 @@ public class JoinRequestServiceEdgeCasesTests
             null,
             null,
             null);
-        dataStore.TerritoryJoinRequests.Add(request);
+        sharedStore.TerritoryJoinRequests.Add(request);
 
         var recipientEntity = new TerritoryJoinRequestRecipient(
             requestId,
             TestRecipientId,
             TestDate,
             null);
-        dataStore.TerritoryJoinRequestRecipients.Add(recipientEntity);
+        sharedStore.TerritoryJoinRequestRecipients.Add(recipientEntity);
 
         var result = await service.RejectAsync(
             requestId,
@@ -431,7 +439,8 @@ public class JoinRequestServiceEdgeCasesTests
     public async Task ListIncomingAsync_WithNonExistentUser_ReturnsEmpty()
     {
         var dataStore = new InMemoryDataStore();
-        var service = CreateService(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var service = CreateService(dataStore, sharedStore);
 
         var result = await service.ListIncomingAsync(
             Guid.NewGuid(),

@@ -20,7 +20,7 @@ public static class PagedResponseHelper
         var items = pagedResult.Items.Select(mapper).ToList();
         var safeTotalCount = pagedResult.TotalCount > MaxInt32 ? MaxInt32 : pagedResult.TotalCount;
         var safeTotalPages = pagedResult.TotalPages > MaxInt32 ? MaxInt32 : pagedResult.TotalPages;
-        
+
         return new PagedResponse<TResponse>(
             items,
             pagedResult.PageNumber,

@@ -1,0 +1,152 @@
+<!-- Este arquivo contém todo o conteúdo do phase-panel fundamentos -->
+<!-- Será carregado quando acessar #/fundamentos sem sub-rota específica -->
+
+<section class="section" id="visao-geral">
+  <span class="eyebrow" data-i18n="overview.eyebrow">Visão geral</span>
+  <div>
+    <h2 data-i18n="overview.title">API orientada a território com governança comunitária transparente</h2>
+    <p data-i18n="overview.lead">
+      A API Araponga fornece uma base confiável para territórios, vínculos, feed, mapa, marketplace e eventos.
+      Regras explícitas de visibilidade, validação e moderação garantem que experiências locais sejam auditáveis e evoluam com segurança.
+      A arquitetura suporta decisões comunitárias, economia circular local e regeneração social territorial através de ferramentas técnicas que respeitam a soberania e pertencimento dos grupos locais.
+    </p>
+  </div>
+  <div class="grid-two">
+    <div class="card">
+      <h3>Território como base estrutural</h3>
+      <p>
+        Território é a unidade geográfica fundamental que separa "onde" de "quem" e "o quê".
+        Esta separação evita que conteúdo social distorça o mapa e mantém o contexto local como primeira classe.
+        A geografia como fundamento estrutural fortalece vínculos de pertencimento e permite que comunidades gerenciem seus próprios processos de organização e economia.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Governança em camadas transparentes</h3>
+      <p>
+        Vínculos (visitor/resident), validações comunitárias, moderação (reports/bloqueios) e notificações formam as camadas que definem visibilidade no feed e mapa.
+        Cada camada é configurável e auditável pela comunidade, garantindo transparência total e autonomia nas decisões que afetam o território.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="como-funciona">
+  <span class="eyebrow" data-i18n="how.eyebrow">Como o Araponga funciona</span>
+  <h2 data-i18n="how.title">Do visitante ao morador validado</h2>
+  <div class="grid-two">
+    <div class="card">
+      <h3>Visitante</h3>
+      <p>
+        Visitantes declaram vínculo com <code>role=Visitor</code>. Não existe "validação" para visitante:
+        é apenas um vínculo leve para acesso a conteúdo público e operações permitidas para não-moradores.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Pedido de moradia</h3>
+      <p>
+        Para virar morador, o visitante cria um pedido (JoinRequest) via
+        <code>POST /api/v1/memberships/{territoryId}/become-resident</code>.
+        Se ele conhecer alguém, pode enviar <code>recipientUserIds</code> e fazer um convite direcionado.
+        Sem destinatários, o pedido vai para a curadoria (Curator) e, se necessário, para SystemAdmin.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Aprovação comunitária</h3>
+      <p>
+        Destinatários (ou curadores) aprovam/rejeitam via
+        <code>POST /api/v1/join-requests/{id}/approve|reject</code>. Ao aprovar, o requester
+        torna-se <strong>RESIDENT</strong> (ainda <strong>NÃO verificado</strong>).
+        A verificação de residência acontece depois via
+        <code>POST /api/v1/memberships/{territoryId}/verify-residency/geo</code> ou
+        <code>/verify-residency/document</code>.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Bootstrap (primeiro morador)</h3>
+      <p>
+        Não existe "fundador" autoaprovado. Se o território ainda não tiver curadores/moradores verificados,
+        o pedido faz fallback para <strong>SystemAdmin</strong> (governança global) para destravar o bootstrap.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="territorios">
+  <span class="eyebrow" data-i18n="territories.eyebrow">Territórios</span>
+  <h2 data-i18n="territories.title">Unidade primária com vínculo estrutural</h2>
+  <div class="grid-two">
+    <div class="card">
+      <h3>Estado atual</h3>
+      <p>
+        Territórios continuam sendo a unidade primária de organização. Todo conteúdo e
+        governança são ancorados diretamente no território selecionado.
+      </p>
+    </div>
+    <div class="card">
+      <h3>ParentTerritoryId</h3>
+      <p>
+        O campo <code>ParentTerritoryId</code> existe apenas para modelar hierarquia estrutural
+        (ex.: bairro → município). Ele ainda não gera herança de permissões, feeds ou validações.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Roadmap (não implementado)</h3>
+      <p>
+        Herança de permissões, feeds agregados e regras automáticas por hierarquia permanecem
+        como roadmap e <strong>não</strong> fazem parte do backend atual.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="conceitos">
+  <span class="eyebrow" data-i18n="concepts.eyebrow">Conceitos de produto</span>
+  <h2 data-i18n="concepts.title">Semântica de negócio</h2>
+  <div class="grid-two">
+    <div class="card">
+      <h3>Territory-first</h3>
+      <p>
+        Território é uma célula geográfica neutra. Não carrega conteúdo social embutido; ele apenas
+        organiza contexto, priorização e governança.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Memberships</h3>
+      <p>
+        Vínculos entre usuário e território podem ser <strong>VISITOR</strong> ou <strong>RESIDENT</strong>.
+        O pedido de moradia (JoinRequest) tem status <strong>PENDING</strong>/<strong>APPROVED</strong>/<strong>REJECTED</strong>.
+        Já a verificação de residência do membership é feita por flags: <strong>NONE</strong>/<strong>GEOVERIFIED</strong>/<strong>DOCUMENTVERIFIED</strong>,
+        influenciando visibilidade e autorização.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Feature flags por território</h3>
+      <p>
+        Cada território pode habilitar flags como <strong>AlertPosts</strong>
+        em <code>/api/v1/territories/{territoryId}/features</code>. Elas controlam quais tipos de post são aceitos.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Curadoria/Validação</h3>
+      <p>
+        A aprovação de pedidos de moradia é feita por <strong>Curators</strong> e/ou por moradores já
+        verificados (geo/doc). Curadores também continuam responsáveis por validação de entidades do mapa
+        e alertas ambientais.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Moderação & segurança</h3>
+      <p>
+        Moderação é um conjunto de sinais (reports) + ações (bloqueios) para manter o território útil e
+        seguro. O objetivo aqui não é "censura automática", e sim <strong>reduzir abuso e ruído</strong>
+        com decisões auditáveis e fluxo claro de triagem por curadoria.
+      </p>
+      <ul>
+        <li><strong>Reportar post</strong>: <code>POST /api/v1/reports/posts/{postId}</code> com <code>reason</code> (obrigatório) e <code>details</code> (opcional).</li>
+        <li><strong>Reportar usuário</strong>: <code>POST /api/v1/reports/users/{userId}</code> (pode receber <code>territoryId</code>).</li>
+        <li><strong>Triagem</strong>: curadoria lista e filtra em <code>GET /api/v1/reports</code> (por território, status e tipo).</li>
+        <li><strong>Bloquear/desbloquear</strong>: corta visibilidade de conteúdo no feed e no mapa via <code>POST</code>/<code>DELETE /api/v1/blocks/users/{userId}</code>.</li>
+      </ul>
+    </div>
+  </div>
+</section>

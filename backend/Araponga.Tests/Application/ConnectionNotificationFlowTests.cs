@@ -4,8 +4,10 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Application.Services.Connections;
 using Araponga.Domain.Connections;
+using Araponga.Domain.Users;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -23,13 +25,14 @@ public sealed class ConnectionNotificationFlowTests
     public async Task RequestConnectionAsync_EnqueuesConnectionRequestNotification()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var serviceProvider = BuildServiceProvider(dataStore);
         var eventBus = new InMemoryEventBus(serviceProvider);
-        var connectionService = CreateConnectionService(dataStore, eventBus);
+        var connectionService = CreateConnectionService(dataStore, sharedStore, eventBus);
 
         var requesterId = TestIds.TestUserId1;
         var targetId = TestIds.TestUserId2FA;
-        EnsureUsersExist(dataStore, requesterId, targetId);
+        EnsureUsersExist(sharedStore, requesterId, targetId);
 
         var result = await connectionService.RequestConnectionAsync(
             requesterId,
@@ -59,13 +62,14 @@ public sealed class ConnectionNotificationFlowTests
     public async Task AcceptConnectionAsync_EnqueuesConnectionAcceptedNotification()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var serviceProvider = BuildServiceProvider(dataStore);
         var eventBus = new InMemoryEventBus(serviceProvider);
-        var connectionService = CreateConnectionService(dataStore, eventBus);
+        var connectionService = CreateConnectionService(dataStore, sharedStore, eventBus);
 
         var requesterId = TestIds.TestUserId1;
         var targetId = TestIds.TestUserId2FA;
-        EnsureUsersExist(dataStore, requesterId, targetId);
+        EnsureUsersExist(sharedStore, requesterId, targetId);
 
         var requestResult = await connectionService.RequestConnectionAsync(
             requesterId,
@@ -100,11 +104,12 @@ public sealed class ConnectionNotificationFlowTests
         Assert.True(payload.Data?.ContainsKey("acceptorUserId") == true);
     }
 
-    private static void EnsureUsersExist(InMemoryDataStore dataStore, Guid user1, Guid user2)
+    /// <summary>Garante usuários no Shared store (arquitetura modular: User em Shared).</summary>
+    private static void EnsureUsersExist(InMemorySharedStore sharedStore, Guid user1, Guid user2)
     {
-        if (dataStore.Users.All(u => u.Id != user1))
+        if (sharedStore.Users.All(u => u.Id != user1))
         {
-            dataStore.Users.Add(new Araponga.Domain.Users.User(
+            sharedStore.Users.Add(new User(
                 user1,
                 "User One",
                 "u1@test.com",
@@ -116,9 +121,9 @@ public sealed class ConnectionNotificationFlowTests
                 "ext-1",
                 DateTime.UtcNow));
         }
-        if (dataStore.Users.All(u => u.Id != user2))
+        if (sharedStore.Users.All(u => u.Id != user2))
         {
-            dataStore.Users.Add(new Araponga.Domain.Users.User(
+            sharedStore.Users.Add(new User(
                 user2,
                 "User Two",
                 "u2@test.com",
@@ -142,15 +147,17 @@ public sealed class ConnectionNotificationFlowTests
         return services.BuildServiceProvider();
     }
 
+    /// <summary>Arquitetura modular: conexões no dataStore; User/Membership no sharedStore (Shared).</summary>
     private static ConnectionService CreateConnectionService(
         InMemoryDataStore dataStore,
+        InMemorySharedStore sharedStore,
         InMemoryEventBus eventBus)
     {
         var connectionRepo = new InMemoryUserConnectionRepository(dataStore);
         var privacyRepo = new InMemoryConnectionPrivacySettingsRepository(dataStore);
         var blockRepo = new InMemoryUserBlockRepository(dataStore);
-        var userRepo = new InMemoryUserRepository(dataStore);
-        var membershipRepo = new InMemoryTerritoryMembershipRepository(dataStore);
+        var userRepo = new InMemoryUserRepository(sharedStore);
+        var membershipRepo = new InMemoryTerritoryMembershipRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         return new ConnectionService(
             connectionRepo,

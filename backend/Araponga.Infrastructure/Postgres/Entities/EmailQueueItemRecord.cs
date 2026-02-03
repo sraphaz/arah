@@ -43,6 +43,9 @@ public sealed class EmailQueueItemRecord
     [Column("attempts")]
     public int Attempts { get; set; } = 0;
 
+    [Column("retry_count")]
+    public int RetryCount { get; set; } = 0;
+
     [Column("status")]
     public int Status { get; set; } = 0; // Pending
 
@@ -51,6 +54,12 @@ public sealed class EmailQueueItemRecord
 
     [Column("processed_at_utc")]
     public DateTime? ProcessedAtUtc { get; set; }
+
+    [Column("sent_at_utc")]
+    public DateTime? SentAtUtc { get; set; }
+
+    [Column("failed_at_utc")]
+    public DateTime? FailedAtUtc { get; set; }
 
     [Column("error_message")]
     [MaxLength(2000)]

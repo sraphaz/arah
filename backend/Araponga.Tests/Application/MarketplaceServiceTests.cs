@@ -5,6 +5,7 @@ using Araponga.Domain.Marketplace;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Xunit;
 
@@ -17,15 +18,16 @@ public sealed class MarketplaceServiceTests
 
     private static async Task<(StoreService storeService, StoreItemService itemService)> CreateServicesAsync(
         InMemoryDataStore dataStore,
+        InMemorySharedStore sharedStore,
         Guid territoryId,
         CancellationToken cancellationToken)
     {
         var storeRepository = new InMemoryStoreRepository(dataStore);
         var itemRepository = new InMemoryStoreItemRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
 
@@ -40,7 +42,7 @@ public sealed class MarketplaceServiceTests
             userRepository,
             featureFlags);
 
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
         var accessEvaluator = new AccessEvaluator(
             membershipRepository,
             capabilityRepository,
@@ -79,15 +81,15 @@ public sealed class MarketplaceServiceTests
     }
 
     private static async Task<(MembershipAccessRules rules, AccessEvaluator evaluator, TerritoryFeatureFlagGuard featureGuard)> CreateAccessAsync(
-        InMemoryDataStore dataStore,
+        InMemorySharedStore sharedStore,
         ITerritoryMembershipRepository membershipRepository,
         IUserRepository userRepository,
         IDistributedCacheService cache,
         Guid territoryId,
         CancellationToken cancellationToken)
     {
-        var settingsRepository = new InMemoryMembershipSettingsRepository(dataStore);
-        var capabilityRepository = new InMemoryMembershipCapabilityRepository(dataStore);
+        var settingsRepository = new InMemoryMembershipSettingsRepository(sharedStore);
+        var capabilityRepository = new InMemoryMembershipCapabilityRepository(sharedStore);
 
         var featureFlags = new InMemoryFeatureFlagService();
         featureFlags.SetEnabledFlags(territoryId, new List<FeatureFlag> { FeatureFlag.MarketplaceEnabled });
@@ -100,7 +102,7 @@ public sealed class MarketplaceServiceTests
             userRepository,
             featureFlags);
 
-        var systemPermissionRepository = new InMemorySystemPermissionRepository(dataStore);
+        var systemPermissionRepository = new InMemorySystemPermissionRepository(sharedStore);
         var evaluator = new AccessEvaluator(
             membershipRepository,
             capabilityRepository,
@@ -127,7 +129,8 @@ public sealed class MarketplaceServiceTests
     public async Task ResidentCanCreateStoreAndListing()
     {
         var dataStore = new InMemoryDataStore();
-        var (storeService, itemService) = await CreateServicesAsync(dataStore, TerritoryId, CancellationToken.None);
+        var sharedStore = new InMemorySharedStore();
+        var (storeService, itemService) = await CreateServicesAsync(dataStore, sharedStore, TerritoryId, CancellationToken.None);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -173,6 +176,7 @@ public sealed class MarketplaceServiceTests
     public async Task VisitorCannotCreateStoreOrListing()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var visitor = new User(
             Guid.NewGuid(),
             "Visitante",
@@ -184,9 +188,9 @@ public sealed class MarketplaceServiceTests
             "google",
             "visitor-external",
             DateTime.UtcNow);
-        dataStore.Users.Add(visitor);
+        sharedStore.Users.Add(visitor);
 
-        var (storeService, itemService) = await CreateServicesAsync(dataStore, TerritoryId, CancellationToken.None);
+        var (storeService, itemService) = await CreateServicesAsync(dataStore, sharedStore, TerritoryId, CancellationToken.None);
 
         var storeResult = await storeService.UpsertMyStoreAsync(
             TerritoryId,
@@ -252,12 +256,13 @@ public sealed class MarketplaceServiceTests
         var checkoutRepository = new InMemoryCheckoutRepository(dataStore);
         var checkoutItemRepository = new InMemoryCheckoutItemRepository(dataStore);
         var feeRepository = new InMemoryPlatformFeeConfigRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
-            dataStore,
+            sharedStore,
             membershipRepository,
             userRepository,
             cache,
@@ -392,12 +397,13 @@ public sealed class MarketplaceServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var storeRepository = new InMemoryStoreRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, _) = await CreateAccessAsync(
-            dataStore,
+            sharedStore,
             membershipRepository,
             userRepository,
             cache,
@@ -454,12 +460,13 @@ public sealed class MarketplaceServiceTests
     {
         var dataStore = new InMemoryDataStore();
         var storeRepository = new InMemoryStoreRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, _) = await CreateAccessAsync(
-            dataStore,
+            sharedStore,
             membershipRepository,
             userRepository,
             cache,
@@ -477,12 +484,13 @@ public sealed class MarketplaceServiceTests
         var dataStore = new InMemoryDataStore();
         var storeRepository = new InMemoryStoreRepository(dataStore);
         var itemRepository = new InMemoryStoreItemRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
-            dataStore,
+            sharedStore,
             membershipRepository,
             userRepository,
             cache,
@@ -571,12 +579,13 @@ public sealed class MarketplaceServiceTests
         var dataStore = new InMemoryDataStore();
         var storeRepository = new InMemoryStoreRepository(dataStore);
         var itemRepository = new InMemoryStoreItemRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
-            dataStore,
+            sharedStore,
             membershipRepository,
             userRepository,
             cache,
@@ -690,12 +699,13 @@ public sealed class MarketplaceServiceTests
         var checkoutItemRepository = new InMemoryCheckoutItemRepository(dataStore);
         var inquiryRepository = new InMemoryInquiryRepository(dataStore);
         var feeRepository = new InMemoryPlatformFeeConfigRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
-            dataStore,
+            sharedStore,
             membershipRepository,
             userRepository,
             cache,
@@ -804,12 +814,13 @@ public sealed class MarketplaceServiceTests
         var inquiryRepository = new InMemoryInquiryRepository(dataStore);
         var itemRepository = new InMemoryStoreItemRepository(dataStore);
         var storeRepository = new InMemoryStoreRepository(dataStore);
-        var membershipRepository = new InMemoryTerritoryMembershipRepository(dataStore);
-        var userRepository = new InMemoryUserRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
         var unitOfWork = new InMemoryUnitOfWork();
         var cache = CacheTestHelper.CreateDistributedCacheService();
         var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
-            dataStore,
+            sharedStore,
             membershipRepository,
             userRepository,
             cache,

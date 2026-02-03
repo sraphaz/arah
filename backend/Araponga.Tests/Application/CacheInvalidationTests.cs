@@ -5,6 +5,7 @@ using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
 using Araponga.Infrastructure.Eventing;
 using Araponga.Infrastructure.InMemory;
+using Araponga.Infrastructure.Shared.InMemory;
 using Araponga.Tests.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -16,20 +17,22 @@ public sealed class CacheInvalidationTests
     [Fact]
     public async Task SystemPermissionRevokedEvent_InvalidatesCache()
     {
+        var sharedStore = new InMemorySharedStore();
         var dataStore = new InMemoryDataStore();
         var services = new ServiceCollection();
         var cacheService = CacheTestHelper.CreateDistributedCacheService();
         services.AddSingleton<IDistributedCacheService>(_ => cacheService);
-        services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
+        services.AddSingleton(dataStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<AccessEvaluator>(sp =>
         {
-            var ds = sp.GetRequiredService<InMemoryDataStore>();
-            var membershipRepository = new InMemoryTerritoryMembershipRepository(ds);
-            var settingsRepository = new InMemoryMembershipSettingsRepository(ds);
-            var userRepository = new InMemoryUserRepository(ds);
-            var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
-            var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
+            var shared = sp.GetRequiredService<InMemorySharedStore>();
+            var membershipRepository = new InMemoryTerritoryMembershipRepository(shared);
+            var settingsRepository = new InMemoryMembershipSettingsRepository(shared);
+            var userRepository = new InMemoryUserRepository(shared);
+            var capabilityRepository = new InMemoryMembershipCapabilityRepository(shared);
+            var systemPermissionRepository = new InMemorySystemPermissionRepository(shared);
             var featureFlags = new InMemoryFeatureFlagService();
             var cache = sp.GetRequiredService<IDistributedCacheService>();
 
@@ -100,20 +103,22 @@ public sealed class CacheInvalidationTests
     public async Task MembershipCapabilityRevokedEvent_InvalidatesCache()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         var cacheService = CacheTestHelper.CreateDistributedCacheService();
         services.AddSingleton<IDistributedCacheService>(_ => cacheService);
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<AccessEvaluator>(sp =>
         {
-            var ds = sp.GetRequiredService<InMemoryDataStore>();
-            var membershipRepository = new InMemoryTerritoryMembershipRepository(ds);
-            var settingsRepository = new InMemoryMembershipSettingsRepository(ds);
-            var userRepository = new InMemoryUserRepository(ds);
-            var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
-            var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
+            var shared = sp.GetRequiredService<InMemorySharedStore>();
+            var membershipRepository = new InMemoryTerritoryMembershipRepository(shared);
+            var settingsRepository = new InMemoryMembershipSettingsRepository(shared);
+            var userRepository = new InMemoryUserRepository(shared);
+            var capabilityRepository = new InMemoryMembershipCapabilityRepository(shared);
+            var systemPermissionRepository = new InMemorySystemPermissionRepository(shared);
             var featureFlags = new InMemoryFeatureFlagService();
             var cache = sp.GetRequiredService<IDistributedCacheService>();
 
@@ -204,20 +209,22 @@ public sealed class CacheInvalidationTests
     [Fact]
     public async Task SystemPermissionService_RevokeAsync_PublishesEvent()
     {
+        var sharedStore = new InMemorySharedStore();
         var dataStore = new InMemoryDataStore();
         var services = new ServiceCollection();
         var cacheService = CacheTestHelper.CreateDistributedCacheService();
         services.AddSingleton<IDistributedCacheService>(_ => cacheService);
-        services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
+        services.AddSingleton(dataStore);
         services.AddScoped<ISystemPermissionRepository, InMemorySystemPermissionRepository>();
         services.AddScoped<AccessEvaluator>(sp =>
         {
-            var ds = sp.GetRequiredService<InMemoryDataStore>();
-            var membershipRepository = new InMemoryTerritoryMembershipRepository(ds);
-            var settingsRepository = new InMemoryMembershipSettingsRepository(ds);
-            var userRepository = new InMemoryUserRepository(ds);
-            var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
-            var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
+            var shared = sp.GetRequiredService<InMemorySharedStore>();
+            var membershipRepository = new InMemoryTerritoryMembershipRepository(shared);
+            var settingsRepository = new InMemoryMembershipSettingsRepository(shared);
+            var userRepository = new InMemoryUserRepository(shared);
+            var capabilityRepository = new InMemoryMembershipCapabilityRepository(shared);
+            var systemPermissionRepository = new InMemorySystemPermissionRepository(shared);
             var featureFlags = new InMemoryFeatureFlagService();
             var cache = sp.GetRequiredService<IDistributedCacheService>();
 
@@ -285,20 +292,22 @@ public sealed class CacheInvalidationTests
     public async Task MembershipCapabilityService_RevokeAsync_PublishesEvent()
     {
         var dataStore = new InMemoryDataStore();
+        var sharedStore = new InMemorySharedStore();
         var services = new ServiceCollection();
         var cacheService = CacheTestHelper.CreateDistributedCacheService();
         services.AddSingleton<IDistributedCacheService>(_ => cacheService);
         services.AddSingleton<InMemoryDataStore>(dataStore);
+        services.AddSingleton(sharedStore);
         services.AddScoped<IMembershipCapabilityRepository, InMemoryMembershipCapabilityRepository>();
         services.AddScoped<ITerritoryMembershipRepository, InMemoryTerritoryMembershipRepository>();
         services.AddScoped<AccessEvaluator>(sp =>
         {
-            var ds = sp.GetRequiredService<InMemoryDataStore>();
-            var membershipRepository = new InMemoryTerritoryMembershipRepository(ds);
-            var settingsRepository = new InMemoryMembershipSettingsRepository(ds);
-            var userRepository = new InMemoryUserRepository(ds);
-            var capabilityRepository = new InMemoryMembershipCapabilityRepository(ds);
-            var systemPermissionRepository = new InMemorySystemPermissionRepository(ds);
+            var shared = sp.GetRequiredService<InMemorySharedStore>();
+            var membershipRepository = new InMemoryTerritoryMembershipRepository(shared);
+            var settingsRepository = new InMemoryMembershipSettingsRepository(shared);
+            var userRepository = new InMemoryUserRepository(shared);
+            var capabilityRepository = new InMemoryMembershipCapabilityRepository(shared);
+            var systemPermissionRepository = new InMemorySystemPermissionRepository(shared);
             var featureFlags = new InMemoryFeatureFlagService();
             var cache = sp.GetRequiredService<IDistributedCacheService>();
 

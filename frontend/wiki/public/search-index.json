@@ -589,6 +589,34 @@
       "category": "Outros"
     },
     {
+      "id": "AVALIACAO_COMPLETA_FINAL",
+      "title": "AVALIACAO COMPLETA FINAL",
+      "content": "Avaliação Completa Final - Implementação DevPortal 📊 Resumo Executivo Data : 20/01/2026 Branch : refactor/devportal-contextualizacao Status Final : ✅ IMPLEMENTAÇÃO COMPLETA E FUNCIONAL 🔍 Problemas Identificados e Corrigidos ❌ Problema 1: Router.js não estava sendo carregado Status : ✅ CORRIGIDO Evidência : Arquivo router.js existia mas não estava no HTML Router não inicializava Sistema antigo continuava ativo Correção : &#x3C;script src=\"./assets/js/devportal.js\">&#x3C;/script> &#x3C;script sr",
+      "url": "/wiki/docs/AVALIACAO_COMPLETA_FINAL",
+      "category": "Outros"
+    },
+    {
+      "id": "AVALIACAO_DESIGN_DEVPORTAL",
+      "title": "AVALIACAO DESIGN DEVPORTAL",
+      "content": "Avaliação Enterprise de Design - DevPortal Araponga Data : 2025-01-20 Escopo : Análise completa de design, UX e arquitetura de conteúdo Objetivo : Reduzir densidade textual, melhorar hierarquia visual e criar biblioteca técnica moderna 📊 Resumo Executivo O DevPortal atual apresenta excelente estrutura técnica , mas sofre de sobrecarga visual e textual que compromete a experiência do desenvolvedor. A análise identifica oportunidades claras de simplificação seguindo princípios enterprise de desig",
+      "url": "/wiki/docs/AVALIACAO_DESIGN_DEVPORTAL",
+      "category": "Outros"
+    },
+    {
+      "id": "AVALIACAO_FINAL_IMPLEMENTACAO",
+      "title": "AVALIACAO FINAL IMPLEMENTACAO",
+      "content": "Avaliação Final - Implementação de Contextualização DevPortal 🔍 Diagnóstico Completo Realizado Problemas Encontrados e Corrigidos ❌ Problema 1: Router.js não estava sendo carregado Causa : Script não incluído no HTML Impacto : Router não funcionava, sistema antigo continuava ativo Status : ✅ CORRIGIDO - Script adicionado após devportal.js ❌ Problema 2: Container #page-content não existia Causa : Router procurava elemento que não existia Impacto : Router falhava ao inicializar Status : ✅ CORRIGI",
+      "url": "/wiki/docs/AVALIACAO_FINAL_IMPLEMENTACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "AVALIACAO_IMPLEMENTACAO_CONTEXTUALIZACAO",
+      "title": "AVALIACAO IMPLEMENTACAO CONTEXTUALIZACAO",
+      "content": "Avaliação da Implementação de Contextualização - DevPortal 📊 Resumo Executivo Data : 20/01/2026 Branch : refactor/devportal-contextualizacao Status : ✅ Implementação Base Completa ✅ O Que Foi Implementado 1. Estrutura de Arquivos ✅ Criação de estrutura pages/ com subpastas para cada categoria: pages/comecando/ pages/fundamentos/ pages/funcionalidades/ pages/api-pratica/ pages/avancado/ 2. Páginas de Contextualização (Landing Pages) ✅ Todas as 5 categorias principais têm páginas index.html com: ",
+      "url": "/wiki/docs/AVALIACAO_IMPLEMENTACAO_CONTEXTUALIZACAO",
+      "category": "Outros"
+    },
+    {
       "id": "AVALIACAO_ORDEM_BACKLOG_HOSPEDAGEM",
       "title": "AVALIACAO ORDEM BACKLOG HOSPEDAGEM",
       "content": "Avaliação da Ordem do Backlog - Sistema de Hospedagem Data : 2026-01-25 Status : 📋 Análise e Recomendações Objetivo : Avaliar a ordem das funcionalidades do backlog e reposicionar se necessário, considerando a demanda pelo tipo de funcionalidade oferecida 📊 Análise da Ordem Atual Fase 30: Sistema de Hospedagem Territorial Posição Atual : Onda 4 (Economia Local), após Fase 23 (Compra Coletiva), antes de Fase 24 (Trocas Comunitárias) Ordem na Onda 4 (Atualizada) : Fase 23: Sistema de Compra Cole",
@@ -1156,10 +1184,24 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/GUIA_INTEGRACAO_TDD_BDD_FASES",
+      "title": "GUIA INTEGRACAO TDD BDD FASES",
+      "content": "Guia de Integração TDD/BDD nas Fases Versão : 1.1 Data : 2025-01-20 Status : 📋 Guia Atualizado 🎯 Objetivo Este guia garante que TODAS as fases futuras (10+) tenham integração homogênea e consistente de TDD (Test-Driven Development) e BDD (Behavior-Driven Development), seguindo o padrão estabelecido na Fase 0: Fundação TDD/BDD . Nota : A Fase 9 já passou, então o trabalho de TDD/BDD é distribuído a partir da Fase 10. 📋 Regras Obrigatórias 1. Seção TDD/BDD Obrigatória TODAS as fases futuras (10",
+      "url": "/wiki/docs/backlog-api/GUIA_INTEGRACAO_TDD_BDD_FASES",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/GUIA_REORGANIZACAO_FASES",
       "title": "GUIA REORGANIZACAO FASES",
       "content": "Guia Rápido: Reorganizar ou Adicionar Fases Versão : 1.0 Objetivo : Guia passo-a-passo simples para reorganizar ou adicionar fases 🎯 Princípio Fundamental Regra de Ouro : Fase com número menor = implementada antes Exemplo : Fase 15 deve ser implementada antes de Fase 20. ➕ Como Adicionar uma Nova Fase Passo 1: Escolher o Número Identificar posição desejada : Depois de qual fase? (ex: depois da Fase 20) Antes de qual fase? (ex: antes da Fase 22) Verificar disponibilidade : Consultar MAPA_FASES.m",
       "url": "/wiki/docs/backlog-api/GUIA_REORGANIZACAO_FASES",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/implementacoes/FASE10_9_VALIDACAO",
+      "title": "FASE10 9 VALIDACAO",
+      "content": "Fase 10.9: Validação de Implementação - Configuração Avançada de Limites de Mídia Data de Validação : 2025-01-20 Status : ✅ VALIDAÇÃO COMPLETA - IMPLEMENTAÇÃO APROVADA 📊 Resumo Executivo A Fase 10.9 foi 100% implementada e validada . Todos os componentes necessários para configuração avançada de limites de mídia por território estão funcionando corretamente, com validações, testes e documentação completos. ✅ Validação Detalhada 1. Modelo de Domínio ✅ Arquivo : backend/Araponga.Domain/Media/Terr",
+      "url": "/wiki/docs/backlog-api/implementacoes/FASE10_9_VALIDACAO",
       "category": "Outros"
     },
     {
@@ -1394,6 +1436,13 @@
       "category": "Outros"
     },
     {
+      "id": "backlog-api/PLANO_DISTRIBUICAO_TDD_BDD",
+      "title": "PLANO DISTRIBUICAO TDD BDD",
+      "content": "Plano de Distribuição TDD/BDD pelas Fases Versão : 1.0 Data : 2025-01-20 Status : 📋 Plano de Distribuição 🎯 Objetivo Distribuir o backlog de TDD/BDD de forma homogênea pelas fases seguintes (10+), garantindo que cada fase tenha uma carga equilibrada de trabalho de testes e documentação BDD. Contexto : A Fase 9 já passou, então o trabalho de TDD/BDD será distribuído a partir da Fase 10. 📊 Distribuição por Fases Estratégia de Distribuição Princípios : +15-20% de tempo por fase para TDD/BDD (dil",
+      "url": "/wiki/docs/backlog-api/PLANO_DISTRIBUICAO_TDD_BDD",
+      "category": "Outros"
+    },
+    {
       "id": "backlog-api/README",
       "title": "README",
       "content": "Backlog API - Estrutura Organizada Planejamento Estratégico de Desenvolvimento Data de Criação : 2025-01-13 Última Revisão : 2026-01-25 Objetivo : Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado Estimativa Total : 495 dias sequenciais / ~241 dias com paralelização (incluindo novas fases estratégicas + Fase 30 Hospedagem) Status Atual : 9.3/10 (após implementação das fases 1-8, incluindo FASE8 com funcionalidades extr",
@@ -1433,6 +1482,13 @@
       "title": "RESUMO FASES 25 28",
       "content": "Resumo Executivo: Fases 25-28 - Autonomia Digital e Economia Circular Data : 2025-01-17 Versão : 1.0 Status : 📋 Planejamento Completo 🎯 Visão Geral As Fases 25-28 expandem a plataforma Araponga para incluir: Fase 25 : Infraestrutura base para serviços digitais integrados Fase 26 : Chat com IA e consumo consciente Fase 27 : Negociação territorial e assinatura coletiva de serviços Fase 28 : Banco de sementes e mudas territorial Objetivo Estratégico : Promover autonomia digital e economia circula",
       "url": "/wiki/docs/backlog-api/RESUMO_FASES_25_28",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/RESUMO_INTEGRACAO_TDD_BDD",
+      "title": "RESUMO INTEGRACAO TDD BDD",
+      "content": "Resumo da Integração TDD/BDD nas Fases Data : 2025-01-20 Status : ✅ INTEGRAÇÃO INICIADA 📊 Resumo Executivo O backlog de TDD/BDD foi distribuído de forma homogênea pelas fases seguintes (10+), garantindo que cada fase tenha uma carga equilibrada de trabalho de testes e documentação BDD. Contexto : A Fase 9 já passou, então o trabalho de TDD/BDD é distribuído a partir da Fase 10. ✅ O Que Foi Feito 1. Documentos Criados ✅ PLANO_DISTRIBUICAO_TDD_BDD.md : Plano completo de distribuição de TDD/BDD pe",
+      "url": "/wiki/docs/backlog-api/RESUMO_INTEGRACAO_TDD_BDD",
       "category": "Outros"
     },
     {
@@ -1489,6 +1545,13 @@
       "title": "ROADMAP VISUAL",
       "content": "Roadmap Visual Estratégico Data : 2026-01-25 Versão : 3.2 - Numeração Coerente Atualizada Última Atualização : 2026-01-25 Nota : Numeração reorganizada para garantir que fases menores sejam implementadas antes de fases maiores. Referências : Mapa Completo das Fases | Guia de Reorganização 🎯 Visão Geral das Ondas Estratégicas ┌─────────────────────────────────────────────────────────────────┐ │ ONDA 1: MVP ESSENCIAL (61d) 🔴 CRÍTICO │ │ ┌──────────┐ ┌──────────┐ ┌──────────┐ │ │ │ Fase 9 │→ │ Fa",
       "url": "/wiki/docs/backlog-api/ROADMAP_VISUAL",
+      "category": "Outros"
+    },
+    {
+      "id": "backlog-api/TEMPLATE_TDD_BDD_FASES",
+      "title": "TEMPLATE TDD BDD FASES",
+      "content": "Template: Seção TDD/BDD para Fases Versão : 1.0 Data : 2025-01-20 Status : 📋 Template Obrigatório 📋 Uso Este template DEVE ser incluído em TODAS as fases do backlog, após a seção \"📋 Tarefas Detalhadas\" e antes de \"📊 Resumo da Fase\". Referência : Plano Completo TDD/BDD 🧪 Estratégia TDD/BDD Contexto Esta fase segue o padrão estabelecido na Fase 0: Fundação TDD/BDD , garantindo: ✅ TDD obrigatório : Testes escritos ANTES do código (Red-Green-Refactor) ✅ BDD para funcionalidades de negócio : Fea",
+      "url": "/wiki/docs/backlog-api/TEMPLATE_TDD_BDD_FASES",
       "category": "Outros"
     },
     {
@@ -1884,10 +1947,24 @@
       "category": "Outros"
     },
     {
+      "id": "ESTRUTURA_ARQUIVOS_DEVPORTAL",
+      "title": "ESTRUTURA ARQUIVOS DEVPORTAL",
+      "content": "Estrutura de Arquivos - DevPortal Refatorado 🎯 Objetivo Separar conteúdo em arquivos HTML individuais para melhor organização, manutenção e performance. 📁 Estrutura Proposta frontend/devportal/ ├── index.html # Shell principal (header, sidebar, footer) ├── pages/ # Páginas de conteúdo │ ├── home.html # Homepage │ ├── comecando/ │ │ ├── index.html # Overview do \"Começando\" │ │ ├── quickstart.html │ │ ├── auth.html │ │ └── territory-session.html │ ├── fundamentos/ │ │ ├── index.html # Overview d",
+      "url": "/wiki/docs/ESTRUTURA_ARQUIVOS_DEVPORTAL",
+      "category": "Outros"
+    },
+    {
       "id": "EXCEPTION_HANDLING_PATTERN",
       "title": "EXCEPTION HANDLING PATTERN",
       "content": "Padrão de Exception Handling - Araponga Última Atualização : 2025-01-23 Status : ✅ Padrão Definido 📋 Resumo Este documento descreve o padrão de tratamento de exceções usado no Araponga, garantindo consistência e melhor experiência para desenvolvedores e usuários. 🎯 Princípios Result Pattern : Services retornam Result&#x3C;T> em vez de lançar exceções para erros de negócio Exceções Apenas para Erros Técnicos : Exceções são lançadas apenas para erros inesperados (bugs, infraestrutura) Logging Es",
       "url": "/wiki/docs/EXCEPTION_HANDLING_PATTERN",
+      "category": "Outros"
+    },
+    {
+      "id": "EXEMPLO_CONTEXTUALIZACAO_MARKETPLACE",
+      "title": "EXEMPLO CONTEXTUALIZACAO MARKETPLACE",
+      "content": "Exemplo: Marketplace com Contextualização Adequada Este documento mostra como a página do Marketplace deve ser estruturada com contextualização adequada. ❌ ANTES: Estrutura Atual (Problema) &#x3C;!-- Começa abruptamente com endpoint --> &#x3C;section class=\"section\" id=\"marketplace\"> &#x3C;span class=\"eyebrow\">Marketplace&#x3C;/span> &#x3C;h2>Economia local territorial&#x3C;/h2> &#x3C;p class=\"lead\"> O marketplace permite criar lojas e publicar produtos/serviços (items), gerenciar carrinho de co",
+      "url": "/wiki/docs/EXEMPLO_CONTEXTUALIZACAO_MARKETPLACE",
       "category": "Outros"
     },
     {
@@ -2199,6 +2276,13 @@
       "category": "Outros"
     },
     {
+      "id": "MAPA_REPOSITORIOS_MODULOS",
+      "title": "MAPA REPOSITORIOS MODULOS",
+      "content": "Mapeamento de Repositórios para Módulos Data : 2026-01-28 Status : 📋 Em Progresso Tipo : Documentação Técnica - Migração 📋 Objetivo Este documento mapeia quais repositórios devem ser migrados de Araponga.Infrastructure.Postgres para os módulos correspondentes. 🗺️ Mapeamento Completo ✅ Feed Module (Já Migrado) ✅ IFeedRepository → PostgresFeedRepository (já em Araponga.Modules.Feed.Infrastructure ) ✅ Chat Module (Migrado) ✅ IChatConversationRepository → PostgresChatConversationRepository (em Ar",
+      "url": "/wiki/docs/MAPA_REPOSITORIOS_MODULOS",
+      "category": "Outros"
+    },
+    {
       "id": "MAPEAMENTO_FASES_ATUALIZADO",
       "title": "MAPEAMENTO FASES ATUALIZADO",
       "content": "Mapeamento Atualizado de Fases - Numeração Coerente Data : 2026-01-25 Status : ✅ Atualizado Objetivo : Mapeamento completo de todas as fases com numeração coerente final 📊 Mapeamento Completo (Fase Antiga → Nova Fase) Fase Antiga Título Nova Fase Mudança Arquivo 1 Segurança e Fundação Crítica 1 ✅ Mantida FASE1.md 2 Qualidade de Código 2 ✅ Mantida FASE2.md 3 Performance e Escalabilidade 3 ✅ Mantida FASE3.md 4 Observabilidade 4 ✅ Mantida FASE4.md 5 Segurança Avançada 5 ✅ Mantida FASE5.md 6 Sistem",
@@ -2318,6 +2402,13 @@
       "category": "Outros"
     },
     {
+      "id": "PAGINAS_CONTEXTUALIZACAO_PADRAO",
+      "title": "PAGINAS CONTEXTUALIZACAO PADRAO",
+      "content": "Padrão de Páginas de Contextualização - DevPortal 🎯 Objetivo Criar páginas de contextualização que introduzam cada temática antes de mergulhar nos detalhes técnicos. 📋 Estrutura Padrão Cada categoria/temática deve ter: Página de Contextualização ( index.html ) - Visão geral da temática Páginas Específicas ( [topico].html ) - Detalhes técnicos 🏗️ Template: Página de Contextualização Exemplo: pages/funcionalidades/index.html &#x3C;!-- 1. HERO - Apresentação da Temática --> &#x3C;section class=\"",
+      "url": "/wiki/docs/PAGINAS_CONTEXTUALIZACAO_PADRAO",
+      "category": "Outros"
+    },
+    {
       "id": "PERFORMANCE_TEST_RESULTS",
       "title": "PERFORMANCE TEST RESULTS",
       "content": "Resultados de Testes de Performance - Araponga Última Atualização : 2026-01-20 Status : ✅ Implementado 📋 Resumo Este documento descreve os testes de performance implementados, SLAs definidos e resultados esperados. ✅ Testes Implementados 1. Testes de Performance Básicos ( PerformanceTests.cs ) Testes de SLA para endpoints críticos: Endpoint SLA Status GET /api/v1/territories &#x3C; 500ms ✅ GET /api/v1/territories/paged &#x3C; 300ms ✅ GET /api/v1/feed &#x3C; 800ms ✅ GET /api/v1/feed/paged &#x3C;",
@@ -2353,6 +2444,13 @@
       "category": "Outros"
     },
     {
+      "id": "PLANO_ACAO_DEVPORTAL_EXEMPLOS",
+      "title": "PLANO ACAO DEVPORTAL EXEMPLOS",
+      "content": "Plano de Ação DevPortal - Exemplos Práticos de Refatoração Este documento complementa a avaliação principal com exemplos concretos de como aplicar as melhorias. Exemplo 1: Substituição de Emojis por Ícones SVG Antes &#x3C;div class=\"card\"> &#x3C;h3>🎯 O que é o Sistema de Payout?&#x3C;/h3> &#x3C;p>O sistema de payout territorial...&#x3C;/p> &#x3C;ul> &#x3C;li>✅ &#x3C;strong>Rastreabilidade completa&#x3C;/strong>&#x3C;/li> &#x3C;li>✅ &#x3C;strong>Retenção configurável&#x3C;/strong>&#x3C;/li> &#x3",
+      "url": "/wiki/docs/PLANO_ACAO_DEVPORTAL_EXEMPLOS",
+      "category": "Outros"
+    },
+    {
       "id": "PLANO_EXTRACAO_BFF_APLICACAO_EXTERNA",
       "title": "PLANO EXTRACAO BFF APLICACAO EXTERNA",
       "content": "Plano de Extração do BFF para Aplicação Externa com Autenticação Própria Data : 2026-01-28 Status : 📋 Plano Detalhado Objetivo : Extrair BFF de módulo interno para aplicação externa com autenticação própria e suporte a múltiplos apps consumidores (OAuth2 Client Credentials) 🎯 Objetivo Extrair o BFF (Backend for Frontend) de módulo interno para uma aplicação ASP.NET Core separada que: ✅ Tem autenticação própria (OAuth2 Client Credentials Flow) ✅ Registra múltiplos apps consumidores (BFF, Mobile",
@@ -2364,6 +2462,20 @@
       "title": "PLANO IMPLANTACAO FASES 13 15",
       "content": "Plano de Implantação - Fases 13 a 15 Data de Criação : 2026-01-25 Última Atualização : 2026-01-25 Objetivo : Plano detalhado de implementação das Fases 13, 14, 15 e 16 (Finalização) Duração Total Estimada : ~100 dias úteis (~5 meses) Status : 📋 Planejado 📊 Visão Geral Estado Atual do Projeto Componente Status Progresso Fases 1-8 ✅ Completo 100% Fases 9-12 ✅ Completo 100% (MVP Essencial) Fase 13 ⏳ Pendente 0% Fase 14 ✅ Implementado 100% Fase 15 ⏳ Pendente 0% Fase 16 ⏳ Pendente 0% Objetivo das F",
       "url": "/wiki/docs/PLANO_IMPLANTACAO_FASES_13_15",
+      "category": "Outros"
+    },
+    {
+      "id": "PLANO_MIGRACAO_MODULOS",
+      "title": "PLANO MIGRACAO MODULOS",
+      "content": "Plano de Migração de Repositórios para Módulos Data : 2026-01-28 Status : ✅ Concluído (registros dos módulos ativos; API usa apenas módulos) Tipo : Documentação Técnica - Migração 📋 Estratégia de Migração A migração será feita gradualmente , módulo por módulo, seguindo o padrão já estabelecido pelo FeedModule . Padrão a Seguir (Baseado em FeedModule) Criar estrutura de diretórios no módulo : Araponga.Modules.Xxx.Infrastructure/ ├── Postgres/ │ ├── Entities/ │ │ └── XxxRecord.cs (mover de Infras",
+      "url": "/wiki/docs/PLANO_MIGRACAO_MODULOS",
+      "category": "Outros"
+    },
+    {
+      "id": "PLANO_ORGANIZACAO_PASTAS_MODULOS",
+      "title": "PLANO ORGANIZACAO PASTAS MODULOS",
+      "content": "Plano: Organização em pastas por módulo (Application e API) Data : 2026-02-02 Objetivo : Fronteiras prontas para split — Application e API organizadas por domínio em pastas, sem alterar namespaces (apenas estrutura de pastas). 1. Escopo Application/Services : criar pastas por módulo e mover serviços (manter namespace Araponga.Application.Services ). Application/Interfaces : criar pastas por módulo e mover interfaces (manter namespace Araponga.Application.Interfaces ou subnamespaces existentes). ",
+      "url": "/wiki/docs/PLANO_ORGANIZACAO_PASTAS_MODULOS",
       "category": "Outros"
     },
     {
@@ -2801,6 +2913,27 @@
       "category": "Outros"
     },
     {
+      "id": "RESUMO_CONTINUACAO_MODULARIZACAO",
+      "title": "RESUMO CONTINUACAO MODULARIZACAO",
+      "content": "Resumo da Continuação da Modularização Data : 2026-01-28 Status : ✅ Documentação e Planejamento Concluídos Tipo : Documentação Técnica - Resumo 📋 O Que Foi Feito 1. Documentação Criada Foram criados 3 documentos para guiar a continuação da modularização: 📄 docs/MAPA_REPOSITORIOS_MODULOS.md Mapeamento completo de ~70 repositórios para seus módulos correspondentes Classificação por status: ✅ Já Migrado, 🔄 A Migrar, 📍 Permanecer, ⚠️ A Decidir Estatísticas : 1 migrado (~1%), ~40 a migrar (~60%),",
+      "url": "/wiki/docs/RESUMO_CONTINUACAO_MODULARIZACAO",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_CORRECOES_APLICADAS",
+      "title": "RESUMO CORRECOES APLICADAS",
+      "content": "Resumo das Correções Aplicadas - DevPortal Router 🔧 Problemas Encontrados e Corrigidos ❌ Problema 1: Router.js não estava sendo carregado Sintoma : Router não funcionava, sistema antigo continuava ativo Causa : &#x3C;script src=\"./assets/js/router.js\">&#x3C;/script> não estava no HTML Correção : ✅ Adicionado script após devportal.js Arquivo : frontend/devportal/index.html linha ~3707 ❌ Problema 2: Container #page-content não existia Sintoma : Router falhava ao inicializar com erro \"Container nã",
+      "url": "/wiki/docs/RESUMO_CORRECOES_APLICADAS",
+      "category": "Outros"
+    },
+    {
+      "id": "RESUMO_EXECUTIVO_DEVPORTAL",
+      "title": "RESUMO EXECUTIVO DEVPORTAL",
+      "content": "Resumo Executivo - Refatoração DevPortal 🎯 Objetivo Transformar o DevPortal em uma biblioteca técnica moderna, reduzindo densidade textual e melhorando experiência do desenvolvedor. 📊 Situação Atual Problemas Identificados Problema Impacto Prioridade Densidade textual excessiva Alta fadiga de leitura 🔴 Crítico 50+ emojis Poluição visual, não escala 🔴 Crítico 8+ tipos de containers Inconsistência, manutenção difícil 🔴 Crítico Phase-panels muito grandes Navegação interna confusa, falta sub-ro",
+      "url": "/wiki/docs/RESUMO_EXECUTIVO_DEVPORTAL",
+      "category": "Outros"
+    },
+    {
       "id": "RESUMO_EXECUTIVO_PHASES_1_5",
       "title": "RESUMO EXECUTIVO PHASES 1 5",
       "content": "📊 Resumo Executivo - Enterprise Coverage Phases 1-5 Data : 2026-01-24 Status : ✅ COMPLETO E PRONTO PARA PR 🎯 Resultados Alcançados Estatísticas Principais ✅ 435 testes de edge cases implementados ✅ 100% taxa de sucesso (1233/1233 testes passando) ✅ Zero regressions introduzidas ✅ Cobertura aumentada : ~60% → ~79% (+19 pontos percentuais) Cobertura por Camada Camada Antes Depois Ganho Domain Layer ~40% ~85% +45% Application Layer ~70% ~75% +5% Infrastructure Layer ~60% ~75% +15% API Layer ~70% ",
@@ -2927,6 +3060,13 @@
       "category": "Segurança"
     },
     {
+      "id": "SEPARACAO_ARQUIVOS_RACIONAL",
+      "title": "SEPARACAO ARQUIVOS RACIONAL",
+      "content": "Por Que Separar Conteúdo em Arquivos HTML? 🎯 Resposta Direta Sim, devemos separar! É a melhor prática para documentação técnica moderna. 📊 Comparação: Monolítico vs Separado Arquivo Único (Atual) index.html (3800 linhas) ├── Header, Sidebar, Footer ├── Phase-Panel: Começando (600 linhas) ├── Phase-Panel: Fundamentos (800 linhas) ├── Phase-Panel: Funcionalidades (1200 linhas) ├── Phase-Panel: API Prática (700 linhas) └── Phase-Panel: Avançado (500 linhas) Problemas : ❌ Difícil encontrar conteúd",
+      "url": "/wiki/docs/SEPARACAO_ARQUIVOS_RACIONAL",
+      "category": "Outros"
+    },
+    {
       "id": "SETUP",
       "title": "SETUP",
       "content": "Setup Pré-requisitos .NET 8.0 Node.js 18+ PostgreSQL 14+ Docker (opcional) Instalação Local Backend # Restaurar dependências .NET dotnet restore # Build dotnet build Araponga.sln # Aplicar migrações dotnet ef database update --project backend/Araponga.Infrastructure Frontend # Instalar dependências npm install # Desenvolvimento npm run dev # Build produção npm run build Wiki cd frontend/wiki npm install npm run dev # Acessa http://localhost:3000/wiki Variáveis de Ambiente Criar arquivo .env na r",
@@ -3011,6 +3151,13 @@
       "category": "Outros"
     },
     {
+      "id": "VALIDACAO_CLEAN_CODE_CLEAN_ARCHITECTURE",
+      "title": "VALIDACAO CLEAN CODE CLEAN ARCHITECTURE",
+      "content": "Validação: Clean Code e Clean Architecture Data : 2026-02-02 Objetivo : Validar a aplicação Araponga contra os princípios e padrões descritos em Clean Code (Robert C. Martin) e Clean Architecture (Uncle Bob). 1. Clean Architecture – Regra das Dependências 1.1 Direção das dependências A regra central: dependências apontam para dentro . O núcleo (Domain) não depende de nada externo; camadas externas dependem das internas. Camada Projeto(s) Depende de Avaliação Entidades (núcleo) Araponga.Domain Ne",
+      "url": "/wiki/docs/VALIDACAO_CLEAN_CODE_CLEAN_ARCHITECTURE",
+      "category": "Outros"
+    },
+    {
       "id": "VALIDACAO_COERENCIA_FASES_ROADMAP",
       "title": "VALIDACAO COERENCIA FASES ROADMAP",
       "content": "Validação de Coerência: FASE*.md vs. Roadmap Data : 2026-01-25 Status : 🔄 Em Validação Objetivo : Validar coerência entre documentos FASE*.md e roadmap estratégico 📋 Mapeamento Esperado (Roadmap → Arquivos) Onda 1: MVP Essencial Fase Título Arquivo Esperado Status 9 Perfil de Usuário FASE9.md ⏳ Validar 10 Mídias Avançadas FASE10.md ⏳ Validar 11 Edição e Gestão FASE11.md ⏳ Validar 12 Otimizações Finais FASE12.md ⏳ Validar Onda 2: Governança e Sustentabilidade Fase Título Arquivo Esperado Status",
@@ -3039,6 +3186,20 @@
       "category": "Outros"
     },
     {
+      "id": "VALIDACAO_INFRAESTRUTURA_INTEGRIDADE",
+      "title": "VALIDACAO INFRAESTRUTURA INTEGRIDADE",
+      "content": "Validação: Infraestrutura e Integridade do Projeto Data : 2026-02-02 Objetivo : Verificar código repetido pós-refatoração, situação atual da infra (Shared vs Infra principal vs por módulo) e integridade do projeto. Estado atual (checklist) Item Status Build OK (0 erros) Testes 2171 passando, 0 falhando, 23 ignorados Rastreio de jornada CorrelationId + traceId em uso UoW vs contextos OK: IUnitOfWork = ArapongaDbContext (ver §3.1) Clean Code / Clean Architecture Ver VALIDACAO_CLEAN_CODE_CLEAN_ARCH",
+      "url": "/wiki/docs/VALIDACAO_INFRAESTRUTURA_INTEGRIDADE",
+      "category": "Outros"
+    },
+    {
+      "id": "VALIDACAO_MODULARIZACAO",
+      "title": "VALIDACAO MODULARIZACAO",
+      "content": "Validação da Modularização - Araponga Data : 2026-01-28 Status : ✅ Concluída (estrutura base) Tipo : Documentação Técnica - Validação 📋 Resumo Executivo A modularização do backend do Araponga foi validada e recuperada . A estrutura de módulos está em uso, o build compila com sucesso e o trabalho pode ser retomado a partir do estado atual. ✅ O Que Foi Validado e Corrigido 1. Erros de Compilação Corrigidos Item Status Referência Microsoft.Extensions.Configuration.Abstractions no Araponga.Applicat",
+      "url": "/wiki/docs/VALIDACAO_MODULARIZACAO",
+      "category": "Outros"
+    },
+    {
       "id": "validation/README",
       "title": "README",
       "content": "Documentação de Validações Esta pasta contém documentação sobre validações realizadas no projeto. Estrutura VALIDACAO_SEGURANCA.md - Validação completa de segurança para as novas entidades (SystemPermission, MembershipCapability, MembershipSettings)",
@@ -3064,6 +3225,13 @@
       "title": "VOTING SYSTEM",
       "content": "Sistema de Votação Comunitária Versão : 1.0 Data : 2025-01-21 Status : ✅ Implementado 📋 Visão Geral O Sistema de Votação permite que comunidades territoriais tomem decisões coletivas através de votações estruturadas. As votações podem ser de diferentes tipos, com diferentes níveis de visibilidade e permissões. 🎯 Tipos de Votação 1. ThemePrioritization (Priorização de Temas) Objetivo : Definir quais temas devem ter prioridade no feed do território. Quem pode criar : Residents Quem pode votar : ",
       "url": "/wiki/docs/VOTING_SYSTEM",
+      "category": "Outros"
+    },
+    {
+      "id": "WCAG_CONTRASTE_VALIDACAO_COMPLETA",
+      "title": "WCAG CONTRASTE VALIDACAO COMPLETA",
+      "content": "Validação Completa de Contraste WCAG AA - Wiki e DevPortal Data : 2025-01-20 Status : ✅ COMPLETO Resultado : 14/14 testes passaram (100% conformidade WCAG AA) 📊 Resumo Executivo Validação completa de contraste WCAG AA realizada para ambos os portais (Wiki e DevPortal) em modo light e dark. Todos os elementos atendem aos requisitos mínimos de acessibilidade WCAG AA (4.5:1 para texto normal, 3:1 para texto grande) . ✅ Resultados da Validação DevPortal - 8/8 Testes Passaram ✅ Light Mode Texto prin",
+      "url": "/wiki/docs/WCAG_CONTRASTE_VALIDACAO_COMPLETA",
       "category": "Outros"
     },
     {

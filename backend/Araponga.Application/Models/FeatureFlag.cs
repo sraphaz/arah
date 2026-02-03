@@ -19,5 +19,9 @@ public enum FeatureFlag
     MediaVideosEnabled = 11,
     MediaAudioEnabled = 12,
     ChatMediaImagesEnabled = 13,
-    ChatMediaAudioEnabled = 14
+    ChatMediaAudioEnabled = 14,
+
+    // Connections / Círculo de Amigos (territory-scoped)
+    ConnectionsEnabled = 15,
+    ConnectionsFeedPrioritize = 16
 }

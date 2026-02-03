@@ -108,31 +108,51 @@ A migração será feita **gradualmente**, módulo por módulo, seguindo o padr�
 - `PostgresMapRepository`
 - `PostgresMapEntityRelationRepository`
 
+#### 4. Connections Module (2 repositórios)
+**Complexidade**: Baixa  
+**Dependências**: Baixas (Users, Memberships em Shared para busca/sugestões; Notificações para eventos)
+
+**Entidades a mover**:
+- `UserConnectionRecord`
+- `ConnectionPrivacySettingsRecord`
+
+**Repositórios a mover**:
+- `PostgresUserConnectionRepository`
+- `PostgresConnectionPrivacySettingsRepository`
+
+**Passos**:
+1. Criar `ConnectionsDbContext` (ou estender mapeamentos no DbContext principal, conforme estratégia adotada)
+2. Mover entidades para `Araponga.Modules.Connections.Infrastructure.Postgres.Entities`
+3. Mover repositórios para `Araponga.Modules.Connections.Infrastructure.Postgres`
+4. Atualizar repositórios para usar o DbContext do módulo
+5. Registrar repositórios no módulo; remover registros de `AddPostgresRepositories`
+6. Manter Domain/Application/API de Connections em projetos principais até eventual migração completa
+
 ### Fase 2: Módulos Médias (Média Prioridade)
 
-#### 4. Alerts Module (1 repositório)
+#### 5. Alerts Module (1 repositório)
 **Complexidade**: Baixa  
 **Dependências**: Baixas
 
-#### 5. Assets Module (3 repositórios)
+#### 6. Assets Module (3 repositórios)
 **Complexidade**: Média  
 **Dependências**: Médias
 
-#### 6. Notifications Module (2 repositórios)
+#### 7. Notifications Module (2 repositórios)
 **Complexidade**: Média  
 **Dependências**: Médias
 
 ### Fase 3: Módulos Complexos (Baixa Prioridade)
 
-#### 7. Subscriptions Module (6 repositórios)
+#### 8. Subscriptions Module (6 repositórios)
 **Complexidade**: Alta  
 **Dependências**: Altas (Financial, Payments)
 
-#### 8. Moderation Module (5 repositórios)
+#### 9. Moderation Module (5 repositórios)
 **Complexidade**: Alta  
 **Dependências**: Altas (WorkItems, Reports, etc.)
 
-#### 9. Marketplace Module (12+ repositórios)
+#### 10. Marketplace Module (12+ repositórios)
 **Complexidade**: Muito Alta  
 **Dependências**: Altas (Financial, Payments, etc.)
 

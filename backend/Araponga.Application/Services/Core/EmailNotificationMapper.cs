@@ -25,6 +25,8 @@ public sealed class EmailNotificationMapper
             "alert.created" => false, // Alertas normais apenas in-app
             "report.created" => false, // Apenas in-app
             "membership.request" => false, // Apenas in-app
+            "connection.request" => false, // Apenas in-app
+            "connection.accepted" => false, // Apenas in-app
             _ => false // Por padrão, não enviar email
         };
     }

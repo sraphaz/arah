@@ -308,7 +308,8 @@ public sealed class MapController : ControllerBase
                 userContext.User?.Id,
                 null,
                 null,
-                false,
+                filterByInterests: false,
+                prioritizeConnections: false,
                 cancellationToken);
 
             var postIds = posts.Select(post => post.Id).ToList();
@@ -480,6 +481,7 @@ public sealed class MapController : ControllerBase
                 null,
                 pagination,
                 filterByInterests: false,
+                prioritizeConnections: false,
                 cancellationToken);
 
             var postIds = postsPaged.Items.Select(post => post.Id).ToList();

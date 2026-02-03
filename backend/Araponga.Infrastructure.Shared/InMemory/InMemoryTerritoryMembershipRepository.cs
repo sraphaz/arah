@@ -24,6 +24,15 @@ public sealed class InMemoryTerritoryMembershipRepository : ITerritoryMembership
             .Where(m => m.TerritoryId == territoryId && m.Role == MembershipRole.Resident && m.ResidencyVerification != ResidencyVerification.None)
             .Select(m => m.UserId).Distinct().ToList());
 
+    public Task<IReadOnlyList<Guid>> ListUserIdsByTerritoryAsync(Guid territoryId, MembershipRole? role, CancellationToken cancellationToken)
+    {
+        var query = _store.Memberships.Where(m => m.TerritoryId == territoryId);
+        if (role.HasValue)
+            query = query.Where(m => m.Role == role.Value);
+        var userIds = query.Select(m => m.UserId).Distinct().ToList();
+        return Task.FromResult<IReadOnlyList<Guid>>(userIds);
+    }
+
     public Task AddAsync(TerritoryMembership membership, CancellationToken cancellationToken)
     {
         _store.Memberships.Add(membership);

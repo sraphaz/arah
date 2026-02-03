@@ -128,6 +128,19 @@ public sealed class PostgresTerritoryMembershipRepository : ITerritoryMembership
         return records.Select(record => record.ToDomain()).ToList();
     }
 
+    public async Task<IReadOnlyList<Guid>> ListUserIdsByTerritoryAsync(Guid territoryId, MembershipRole? role, CancellationToken cancellationToken)
+    {
+        var query = _dbContext.TerritoryMemberships
+            .AsNoTracking()
+            .Where(m => m.TerritoryId == territoryId);
+
+        if (role.HasValue)
+            query = query.Where(m => m.Role == role.Value);
+
+        var userIds = await query.Select(m => m.UserId).Distinct().ToListAsync(cancellationToken);
+        return userIds;
+    }
+
     public async Task UpdateResidencyVerificationAsync(Guid membershipId, ResidencyVerification verification, CancellationToken cancellationToken)
     {
         var membership = await _dbContext.TerritoryMemberships

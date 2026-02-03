@@ -15,6 +15,24 @@
 ---
 
 ## 🆕 Mudanças Recentes
+### Versão 3.6 (2026-02-02) - Conexões / Círculo de Amigos (Fase 49 - MVP) ✅
+
+**Status**: ✅ **MVP implementado**
+
+#### Conexões e Círculo de Amigos
+- **Feature flags por território**: `ConnectionsEnabled` (15) e `ConnectionsFeedPrioritize` (16)
+- **Domínio**: `UserConnection`, `ConnectionStatus`, `ConnectionPrivacySettings`, `ConnectionRequestPolicy`, `ConnectionVisibility`; repositórios `IUserConnectionRepository`, `IConnectionPrivacySettingsRepository`
+- **Infraestrutura**: `PostgresUserConnectionRepository`, `PostgresConnectionPrivacySettingsRepository`; tabelas `user_connections`, `connection_privacy_settings` (migration `AddConnectionsModule`)
+- **Application**: `ConnectionService` (solicitar, aceitar, rejeitar, remover, listar); `AcceptedConnectionsProvider` para integração com Feed
+- **Integração Feed**: parâmetro `prioritizeConnections` (default true) em `GET /api/v1/feed` e `GET /api/v1/feed/paged`; priorização por conexões aceitas quando a feature flag está ativa no território
+- **API**: `ConnectionsController` — `POST /api/v1/connections/request`, `POST /api/v1/connections/{id}/accept`, `POST /api/v1/connections/{id}/reject`, `DELETE /api/v1/connections/{id}`, `GET /api/v1/connections`, `GET /api/v1/connections/pending`, `GET /api/v1/connections/users/search`, `GET /api/v1/connections/suggestions`, `GET/PUT /api/v1/connections/privacy`
+- **Notificações**: eventos `ConnectionRequestedEvent` e `ConnectionAcceptedEvent`; handlers enfileiram `notification.dispatch` (kinds `connection.request` e `connection.accepted`) para caixa de entrada in-app do destinatário
+- **Testes de integração**: `ConnectionNotificationFlowTests` (fluxo request/accept → Outbox); `ConnectionsIntegrationTests` (API: request + accept e asserção das mensagens de notificação no Outbox)
+
+**Documentação**: Ver `docs/backlog-api/FASE49_CONEXOES_CIRCULO_AMIGOS.md` e `docs/funcional/23_CONEXOES_CIRCULO_AMIGOS.md`.
+
+---
+
 ### Versão 3.5 (2026-01-25) - Fase 13: Conector de Envio de Emails - COMPLETA ✅
 
 **Status**: ✅ **Fase 13 Finalizada (100%)**

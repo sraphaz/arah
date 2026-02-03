@@ -152,7 +152,9 @@ public sealed class NotificationConfigService
             ["alert.created"] = new NotificationTypeConfig("alert.created", true, new[] { "InApp", "Push", "Email" }),
             ["marketplace.inquiry"] = new NotificationTypeConfig("marketplace.inquiry", true, new[] { "InApp" }),
             ["report.created"] = new NotificationTypeConfig("report.created", true, new[] { "InApp" }),
-            ["membership.request"] = new NotificationTypeConfig("membership.request", true, new[] { "InApp", "Email" })
+            ["membership.request"] = new NotificationTypeConfig("membership.request", true, new[] { "InApp", "Email" }),
+            ["connection.request"] = new NotificationTypeConfig("connection.request", true, new[] { "InApp" }),
+            ["connection.accepted"] = new NotificationTypeConfig("connection.accepted", true, new[] { "InApp" })
         };
 
         return new NotificationConfig(

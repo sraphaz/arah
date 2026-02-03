@@ -258,6 +258,13 @@ backend/
 - **Elementos**: SystemConfig, SystemPermission, WorkQueue
 - **Feature Flags**: Nenhum específico (habilitado se módulo ativo)
 
+#### 16. Conexões (Círculo de Amigos)
+- **Responsabilidade**: Conexões entre usuários (círculo de amigos), priorização no feed e notificações de solicitação/aceitação
+- **Elementos**: UserConnection, ConnectionPrivacySettings, ConnectionStatus, ConnectionRequestPolicy, ConnectionVisibility
+- **Feature Flags**: 
+  - `ConnectionsEnabled` (15) — habilitar conexões no território
+  - `ConnectionsFeedPrioritize` (16) — priorizar posts de conexões no feed
+
 ---
 
 ## 🗺️ Organização por Domínios
@@ -290,6 +297,7 @@ Cada módulo representa um **domínio funcional** completo:
 | Subscriptions | Subscriptions | Opcional |
 | Governança | Governance | Opcional |
 | Admin | Admin | Opcional |
+| Conexões (Círculo de Amigos) | Connections | Opcional |
 
 ---
 
@@ -329,7 +337,10 @@ public enum FeatureFlag
     MediaVideosEnabled = 11,
     MediaAudioEnabled = 12,
     ChatMediaImagesEnabled = 13,
-    ChatMediaAudioEnabled = 14
+    ChatMediaAudioEnabled = 14,
+    // Conexões (Círculo de Amigos)
+    ConnectionsEnabled = 15,
+    ConnectionsFeedPrioritize = 16
 }
 ```
 
@@ -372,6 +383,7 @@ if (flag == FeatureFlag.ChatMediaEnabled &&
 | Notificações | Autenticação | Obrigatória |
 | Subscriptions | Autenticação, Territórios | Obrigatória |
 | Admin | Autenticação | Obrigatória |
+| Connections (Círculo de Amigos) | Autenticação, Memberships, Notificações | Obrigatória |
 
 ### Validação de Dependências
 

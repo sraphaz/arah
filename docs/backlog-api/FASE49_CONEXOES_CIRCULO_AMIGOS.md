@@ -1,8 +1,8 @@
 # FASE 49: Conexões e Círculo de Amigos
 
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Data**: 2026-01-28  
-**Status**: 📋 Planejamento  
+**Status**: 🚧 MVP implementado (2026-02-02) — solicitações, aceitar/rejeitar/remover, listagem, integração Feed, feature flag por território, busca, sugestões, privacidade. Notificações in-app para solicitação recebida e conexão aceita. Testes de integração: fluxo de notificação (Application) e API (ConnectionsController + Outbox).  
 **Prioridade**: Alta  
 **Duração Estimada**: 21 dias  
 **Dependências**: Fase 3 (Feed), Fase 11 (Notificações)
@@ -847,6 +847,15 @@ public class ConnectionCacheService
 ---
 
 ## 🚀 Próximos Passos (Futuro)
+
+### Modularização física (opcional)
+
+Quando a base de código adotar a migração por módulos físicos (projeto `Araponga.Modules.*.Infrastructure`), o módulo **Connections** pode ser migrado conforme `docs/PLANO_MIGRACAO_MODULOS.md`:
+
+- **Entidades a mover**: `UserConnectionRecord`, `ConnectionPrivacySettingsRecord`
+- **Repositórios a mover**: `PostgresUserConnectionRepository`, `PostgresConnectionPrivacySettingsRepository`
+- **Manter** em Application/Api: `ConnectionService`, `ConnectionPrivacyService`, `ConnectionsController`, eventos e handlers de notificação (até eventual migração de Application por módulo)
+- **Referência**: Ver também `docs/TECNICO_MODULARIZACAO.md` (módulo 16 — Conexões) e tabela de dependências (Connections → Auth, Memberships, Notifications)
 
 ### Fase 2: Melhorias
 

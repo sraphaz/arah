@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Connections;
 using Araponga.Domain.Feed;
 
 namespace Araponga.Application.Services;
@@ -14,19 +15,22 @@ public sealed class FeedService
     private readonly PostInteractionService _postInteractionService;
     private readonly PostFilterService _postFilterService;
     private readonly InterestFilterService? _interestFilterService;
+    private readonly IAcceptedConnectionsProvider? _acceptedConnectionsProvider;
 
     public FeedService(
         IFeedRepository feedRepository,
         PostCreationService postCreationService,
         PostInteractionService postInteractionService,
         PostFilterService postFilterService,
-        InterestFilterService? interestFilterService = null)
+        InterestFilterService? interestFilterService = null,
+        IAcceptedConnectionsProvider? acceptedConnectionsProvider = null)
     {
         _feedRepository = feedRepository;
         _postCreationService = postCreationService;
         _postInteractionService = postInteractionService;
         _postFilterService = postFilterService;
         _interestFilterService = interestFilterService;
+        _acceptedConnectionsProvider = acceptedConnectionsProvider;
     }
 
     public async Task<IReadOnlyList<CommunityPost>> ListForTerritoryAsync(
@@ -35,6 +39,7 @@ public sealed class FeedService
         Guid? mapEntityId,
         Guid? assetId,
         bool filterByInterests = false,
+        bool prioritizeConnections = false,
         CancellationToken cancellationToken = default)
     {
         var posts = await _feedRepository.ListByTerritoryAsync(territoryId, cancellationToken);
@@ -50,6 +55,11 @@ public sealed class FeedService
                 cancellationToken);
         }
 
+        if (prioritizeConnections && _acceptedConnectionsProvider is not null && userId.HasValue)
+        {
+            filtered = await PrioritizeByConnectionsAsync(filtered, userId.Value, cancellationToken);
+        }
+
         return filtered;
     }
 
@@ -60,6 +70,7 @@ public sealed class FeedService
         Guid? assetId,
         Common.PaginationParameters pagination,
         bool filterByInterests = false,
+        bool prioritizeConnections = false,
         CancellationToken cancellationToken = default)
     {
         var totalCount = await _feedRepository.CountByTerritoryAsync(territoryId, cancellationToken);
@@ -76,7 +87,28 @@ public sealed class FeedService
                 cancellationToken);
         }
 
+        if (prioritizeConnections && _acceptedConnectionsProvider is not null && userId.HasValue)
+        {
+            filtered = await PrioritizeByConnectionsAsync(filtered, userId.Value, cancellationToken);
+        }
+
         return new Common.PagedResult<CommunityPost>(filtered, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
+    private async Task<IReadOnlyList<CommunityPost>> PrioritizeByConnectionsAsync(
+        IReadOnlyList<CommunityPost> posts,
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        if (_acceptedConnectionsProvider is null) return posts;
+
+        var connectionIds = await _acceptedConnectionsProvider.GetAcceptedConnectionUserIdsAsync(userId, cancellationToken);
+        var connectionSet = connectionIds.ToHashSet();
+
+        var fromConnections = posts.Where(p => connectionSet.Contains(p.AuthorUserId)).OrderByDescending(p => p.CreatedAtUtc).ToList();
+        var fromOthers = posts.Where(p => !connectionSet.Contains(p.AuthorUserId)).OrderByDescending(p => p.CreatedAtUtc).ToList();
+
+        return fromConnections.Concat(fromOthers).ToList();
     }
 
     public Task<IReadOnlyList<CommunityPost>> ListForUserAsync(

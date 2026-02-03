@@ -11,6 +11,7 @@ using Araponga.Domain.Moderation;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Configuration;
 using Araponga.Domain.Chat;
+using Araponga.Domain.Connections;
 using Araponga.Domain.Evidence;
 using Araponga.Domain.Policies;
 using Araponga.Domain.Social.JoinRequests;
@@ -407,6 +408,8 @@ public sealed class InMemoryDataStore
     public List<Application.Models.AuditEntry> AuditEntries { get; } = new();
     public List<ModerationReport> ModerationReports { get; } = new();
     public List<UserBlock> UserBlocks { get; } = new();
+    public List<UserConnection> UserConnections { get; } = new();
+    public List<ConnectionPrivacySettings> ConnectionPrivacySettings { get; } = new();
     public List<Sanction> Sanctions { get; } = new();
     public List<OutboxMessage> OutboxMessages { get; } = new();
         public List<UserNotification> UserNotifications { get; } = new();

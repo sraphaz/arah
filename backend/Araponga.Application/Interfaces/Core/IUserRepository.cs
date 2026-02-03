@@ -52,4 +52,13 @@ public interface IUserRepository
     /// <param name="cancellationToken">Token de cancelamento.</param>
     /// <returns>Usuário encontrado ou null se não existir.</returns>
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Busca usuários por nome de exibição (contém, case-insensitive).
+    /// </summary>
+    /// <param name="query">Trecho do nome (opcional; se vazio, retorna até limit usuários).</param>
+    /// <param name="restrictToUserIds">Se não nulo, restringe a busca a estes IDs.</param>
+    /// <param name="limit">Máximo de resultados.</param>
+    /// <param name="cancellationToken">Token de cancelamento.</param>
+    Task<IReadOnlyList<User>> SearchByDisplayNameAsync(string? query, IReadOnlyCollection<Guid>? restrictToUserIds, int limit, CancellationToken cancellationToken);
 }

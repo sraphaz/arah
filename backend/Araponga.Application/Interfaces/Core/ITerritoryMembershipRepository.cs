@@ -36,6 +36,11 @@ public interface ITerritoryMembershipRepository
     /// Lista todos os Memberships do usuário.
     /// </summary>
     Task<IReadOnlyList<TerritoryMembership>> ListByUserAsync(Guid userId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Lista IDs de usuários que são membros do território, opcionalmente filtrados por papel.
+    /// </summary>
+    Task<IReadOnlyList<Guid>> ListUserIdsByTerritoryAsync(Guid territoryId, MembershipRole? role, CancellationToken cancellationToken);
     
     /// <summary>
     /// Atualiza o ResidencyVerification do membership.

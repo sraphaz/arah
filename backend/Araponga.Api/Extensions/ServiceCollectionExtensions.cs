@@ -1,7 +1,10 @@
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
+using Araponga.Application.Interfaces.Connections;
 using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Interfaces.Users;
+using Araponga.Application.Services.Connections;
+using Araponga.Domain.Connections;
 using Araponga.Application.Services;
 using Araponga.Application.Events;
 using Araponga.Infrastructure;
@@ -64,6 +67,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PostInteractionService>();
         services.AddScoped<PostFilterService>();
         services.AddScoped<FeedService>();
+
+        // Connections (Círculo de Amigos)
+        services.AddScoped<ConnectionService>();
+        services.AddScoped<ConnectionPrivacyService>();
 
         // Other services
         services.AddScoped<TerritoryService>();
@@ -189,6 +196,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventHandler<MembershipCapabilityRevokedEvent>, MembershipCapabilityRevokedCacheHandler>();
         services.AddScoped<IEventHandler<TermsOfServicePublishedEvent>, TermsOfServicePublishedNotificationHandler>();
         services.AddScoped<IEventHandler<PrivacyPolicyPublishedEvent>, PrivacyPolicyPublishedNotificationHandler>();
+        services.AddScoped<IEventHandler<ConnectionRequestedEvent>, ConnectionRequestedNotificationHandler>();
+        services.AddScoped<IEventHandler<ConnectionAcceptedEvent>, ConnectionAcceptedNotificationHandler>();
 
         return services;
     }
@@ -390,6 +399,11 @@ public static class ServiceCollectionExtensions
 
         // Subscriptions: registrado em Araponga.Modules.Subscriptions.Infrastructure.SubscriptionsModule
 
+        // Connections (Círculo de Amigos)
+        services.AddScoped<IUserConnectionRepository, PostgresUserConnectionRepository>();
+        services.AddScoped<IConnectionPrivacySettingsRepository, PostgresConnectionPrivacySettingsRepository>();
+        services.AddScoped<IAcceptedConnectionsProvider, AcceptedConnectionsProvider>();
+
         // Push Notification Provider (opcional - configurar Firebase:ServerKey para habilitar)
         var firebaseServerKey = configuration["Firebase:ServerKey"];
         if (!string.IsNullOrWhiteSpace(firebaseServerKey))
@@ -433,6 +447,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAuditLogger, InMemoryAuditLogger>();
         services.AddSingleton<IReportRepository, InMemoryReportRepository>();
         services.AddSingleton<IUserBlockRepository, InMemoryUserBlockRepository>();
+        services.AddSingleton<IUserConnectionRepository, InMemoryUserConnectionRepository>();
+        services.AddSingleton<IConnectionPrivacySettingsRepository, InMemoryConnectionPrivacySettingsRepository>();
+        services.AddSingleton<IAcceptedConnectionsProvider, AcceptedConnectionsProvider>();
         services.AddSingleton<ISanctionRepository, InMemorySanctionRepository>();
         services.AddSingleton<IOutbox, InMemoryOutbox>();
         services.AddSingleton<INotificationInboxRepository, InMemoryNotificationInboxRepository>();

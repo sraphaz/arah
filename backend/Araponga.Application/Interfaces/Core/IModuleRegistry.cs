@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Araponga.Application.Interfaces;
 
 /// <summary>
@@ -5,5 +8,5 @@ namespace Araponga.Application.Interfaces;
 /// </summary>
 public interface IModuleRegistry
 {
-    void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, Microsoft.Extensions.Configuration.IConfiguration configuration);
+    void Apply(IServiceCollection services, IConfiguration configuration);
 }

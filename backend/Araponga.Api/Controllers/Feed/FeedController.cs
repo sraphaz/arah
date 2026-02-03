@@ -5,6 +5,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Interfaces.Media;
+using Araponga.Application.Models;
 using Araponga.Application.Services;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Media;
@@ -26,6 +27,7 @@ public sealed class FeedController : ControllerBase
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ActiveTerritoryService _activeTerritoryService;
     private readonly AccessEvaluator _accessEvaluator;
+    private readonly TerritoryFeatureFlagGuard _featureGuard;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
     private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
 
@@ -37,6 +39,7 @@ public sealed class FeedController : ControllerBase
         CurrentUserAccessor currentUserAccessor,
         ActiveTerritoryService activeTerritoryService,
         AccessEvaluator accessEvaluator,
+        TerritoryFeatureFlagGuard featureGuard,
         IPostGeoAnchorRepository postGeoAnchorRepository,
         IMediaAttachmentRepository mediaAttachmentRepository)
     {
@@ -47,6 +50,7 @@ public sealed class FeedController : ControllerBase
         _currentUserAccessor = currentUserAccessor;
         _activeTerritoryService = activeTerritoryService;
         _accessEvaluator = accessEvaluator;
+        _featureGuard = featureGuard;
         _postGeoAnchorRepository = postGeoAnchorRepository;
         _mediaAttachmentRepository = mediaAttachmentRepository;
     }
@@ -56,6 +60,7 @@ public sealed class FeedController : ControllerBase
     /// </summary>
     /// <remarks>
     /// Visitantes veem somente posts públicos; moradores veem todo o conteúdo.
+    /// prioritizeConnections: quando o módulo de Conexões está ativo no território, prioriza posts de amigos (conexões aceitas).
     /// </remarks>
     [HttpGet]
     [EnableRateLimiting("feed")]
@@ -68,7 +73,8 @@ public sealed class FeedController : ControllerBase
         [FromQuery] Guid? mapEntityId,
         [FromQuery] Guid? assetId,
         CancellationToken cancellationToken,
-        [FromQuery] bool filterByInterests = false)
+        [FromQuery] bool filterByInterests = false,
+        [FromQuery] bool prioritizeConnections = true)
     {
         var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
         if (resolvedTerritoryId is null)
@@ -82,12 +88,17 @@ public sealed class FeedController : ControllerBase
             return Unauthorized();
         }
 
+        var effectivePrioritize = prioritizeConnections
+            && _featureGuard.IsEnabled(resolvedTerritoryId.Value, FeatureFlag.ConnectionsEnabled)
+            && _featureGuard.IsEnabled(resolvedTerritoryId.Value, FeatureFlag.ConnectionsFeedPrioritize);
+
         var posts = await _feedService.ListForTerritoryAsync(
             resolvedTerritoryId.Value,
             userContext.User?.Id,
             mapEntityId,
             assetId,
             filterByInterests,
+            effectivePrioritize,
             cancellationToken);
 
         var eventLookup = await LoadEventSummariesAsync(posts, cancellationToken);
@@ -138,6 +149,7 @@ public sealed class FeedController : ControllerBase
         [FromQuery] Guid? assetId,
         CancellationToken cancellationToken,
         [FromQuery] bool filterByInterests = false,
+        [FromQuery] bool prioritizeConnections = true,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 20)
     {
@@ -153,6 +165,10 @@ public sealed class FeedController : ControllerBase
             return Unauthorized();
         }
 
+        var effectivePrioritize = prioritizeConnections
+            && _featureGuard.IsEnabled(resolvedTerritoryId.Value, FeatureFlag.ConnectionsEnabled)
+            && _featureGuard.IsEnabled(resolvedTerritoryId.Value, FeatureFlag.ConnectionsFeedPrioritize);
+
         var pagination = new PaginationParameters(pageNumber, pageSize);
         var pagedResult = await _feedService.ListForTerritoryPagedAsync(
             resolvedTerritoryId.Value,
@@ -161,6 +177,7 @@ public sealed class FeedController : ControllerBase
             assetId,
             pagination,
             filterByInterests,
+            effectivePrioritize,
             cancellationToken);
 
         var eventLookup = await LoadEventSummariesAsync(pagedResult.Items, cancellationToken);

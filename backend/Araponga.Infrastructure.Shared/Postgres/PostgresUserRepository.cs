@@ -87,4 +87,21 @@ public sealed class PostgresUserRepository : IUserRepository
                 cancellationToken);
         return record?.ToDomain();
     }
+
+    public async Task<IReadOnlyList<User>> SearchByDisplayNameAsync(string? query, IReadOnlyCollection<Guid>? restrictToUserIds, int limit, CancellationToken cancellationToken)
+    {
+        var dbQuery = _dbContext.Users.AsNoTracking();
+
+        if (restrictToUserIds is { Count: > 0 })
+            dbQuery = dbQuery.Where(u => restrictToUserIds.Contains(u.Id));
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            var pattern = $"%{query.Trim()}%";
+            dbQuery = dbQuery.Where(u => EF.Functions.ILike(u.DisplayName, pattern));
+        }
+
+        var records = await dbQuery.OrderBy(u => u.DisplayName).Take(limit).ToListAsync(cancellationToken);
+        return records.Select(r => r.ToDomain()).ToList();
+    }
 }

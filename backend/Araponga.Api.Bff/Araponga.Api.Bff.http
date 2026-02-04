@@ -1,6 +1,77 @@
 @Araponga.Bff_HostAddress = http://localhost:5005
 
-GET {{Araponga.Bff_HostAddress}}/weatherforecast/
+### Lista todas as jornadas expostas pelo BFF
+GET {{Araponga.Bff_HostAddress}}/bff/journeys
 Accept: application/json
+
+### Onboarding: territórios sugeridos (GET cacheável)
+GET {{Araponga.Bff_HostAddress}}/api/v2/journeys/onboarding/suggested-territories?latitude=-23.5&longitude=-46.6&radiusKm=10
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Feed: feed do território (GET cacheável)
+GET {{Araponga.Bff_HostAddress}}/api/v2/journeys/feed/territory-feed?territoryId={{territoryId}}&pageNumber=1&pageSize=20
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Eventos: eventos do território (GET cacheável)
+GET {{Araponga.Bff_HostAddress}}/api/v2/journeys/events/territory-events?territoryId={{territoryId}}&pageNumber=1&pageSize=20
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Marketplace: busca (GET cacheável)
+GET {{Araponga.Bff_HostAddress}}/api/v2/journeys/marketplace/search?territoryId={{territoryId}}&pageNumber=1&pageSize=20
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### --- Onboarding: completar (POST) ---
+POST {{Araponga.Bff_HostAddress}}/api/v2/journeys/onboarding/complete
+Content-Type: application/json
+Authorization: Bearer {{token}}
+X-Session-Id: {{sessionId}}
+
+{"selectedTerritoryId": "{{territoryId}}"}
+
+### --- Feed: criar post (POST) ---
+POST {{Araponga.Bff_HostAddress}}/api/v2/journeys/feed/create-post?territoryId={{territoryId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"title": "Título", "content": "Conteúdo", "type": "POST", "visibility": "PUBLIC", "mediaIds": null}
+
+### --- Feed: interagir (POST) ---
+POST {{Araponga.Bff_HostAddress}}/api/v2/journeys/feed/interact
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"postId": "{{postId}}", "territoryId": "{{territoryId}}", "action": "LIKE", "commentContent": null}
+
+### --- Eventos: criar evento (POST) ---
+POST {{Araponga.Bff_HostAddress}}/api/v2/journeys/events/create-event
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"territoryId": "{{territoryId}}", "title": "Evento", "description": "Descrição", "startAt": "2025-03-01T19:00:00Z", "endAt": "2025-03-01T22:00:00Z"}
+
+### --- Eventos: participar (POST) ---
+POST {{Araponga.Bff_HostAddress}}/api/v2/journeys/events/participate
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"eventId": "{{eventId}}", "status": "GOING"}
+
+### --- Marketplace: adicionar ao carrinho (POST) ---
+POST {{Araponga.Bff_HostAddress}}/api/v2/journeys/marketplace/add-to-cart
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"territoryId": "{{territoryId}}", "itemId": "{{itemId}}", "quantity": 1, "notes": null}
+
+### --- Marketplace: checkout (POST) ---
+POST {{Araponga.Bff_HostAddress}}/api/v2/journeys/marketplace/checkout
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"territoryId": "{{territoryId}}", "message": null}
 
 ###

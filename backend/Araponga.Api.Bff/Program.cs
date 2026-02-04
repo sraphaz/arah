@@ -1,3 +1,4 @@
+using Araponga.Bff.Journeys;
 using Araponga.Bff.Middleware;
 using Araponga.Bff.Services;
 using Microsoft.OpenApi.Models;
@@ -39,4 +40,23 @@ app.UseHttpsRedirection();
 app.UseMiddleware<JourneyProxyMiddleware>();
 app.MapControllers();
 
+// Documentação de todas as jornadas expostas pelo BFF (proxy para a API)
+app.MapGet("/bff/journeys", () =>
+{
+    var journeys = BffJourneyRegistry.AllPathPrefixes.Select(prefix =>
+    {
+        var basePath = $"{BffJourneyRegistry.BasePath}{prefix}";
+        var endpoints = BffJourneyRegistry.AllEndpoints.TryGetValue(prefix, out var list)
+            ? list.Select(e => new { e.Path, e.Method, e.Description }).ToList<object>()
+            : new List<object>();
+        return new { journey = prefix, basePath, endpoints };
+    }).ToList();
+    return Results.Ok(new { journeys });
+})
+.WithTags("BFF")
+.WithName("GetBffJourneys");
+
 app.Run();
+
+/// <summary>Exposta para testes com WebApplicationFactory.</summary>
+public partial class Program;

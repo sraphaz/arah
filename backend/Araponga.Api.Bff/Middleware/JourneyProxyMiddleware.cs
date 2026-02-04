@@ -52,7 +52,7 @@ public sealed class JourneyProxyMiddleware
         }
 
         context.Request.EnableBuffering();
-        var response = await proxy.ForwardAsync(context.Request, pathAndQuery, context.RequestAborted).ConfigureAwait(false);
+        using var response = await proxy.ForwardAsync(context.Request, pathAndQuery, context.RequestAborted).ConfigureAwait(false);
 
         if (string.Equals(method, "GET", StringComparison.OrdinalIgnoreCase))
             context.Response.Headers["X-Bff-Cache"] = "MISS";

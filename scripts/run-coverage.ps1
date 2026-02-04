@@ -1,10 +1,10 @@
 #!/usr/bin/env pwsh
-# Run tests with code coverage (matches CI). Output: backend/Araponga.Tests/TestResults/<guid>/coverage.cobertura.xml
+# Run tests with code coverage (matches CI). Output: backend/Tests/Araponga.Tests/TestResults/<guid>/coverage.cobertura.xml
 
 $ErrorActionPreference = "Stop"
-$resultsDir = "backend/Araponga.Tests/TestResults"
+$resultsDir = "backend/Tests/Araponga.Tests/TestResults"
 
-dotnet test backend/Araponga.Tests/Araponga.Tests.csproj `
+dotnet test backend/Tests/Araponga.Tests/Araponga.Tests.csproj `
   --configuration Release `
   --verbosity minimal `
   --collect:"XPlat Code Coverage" `

@@ -1185,11 +1185,30 @@
       "araponga.application": {
         "type": "Project",
         "dependencies": {
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
+          "Araponga.Modules.Alerts": "[1.0.0, )",
+          "Araponga.Modules.Assets": "[1.0.0, )",
+          "Araponga.Modules.Chat": "[1.0.0, )",
+          "Araponga.Modules.Connections": "[1.0.0, )",
+          "Araponga.Modules.Events": "[1.0.0, )",
+          "Araponga.Modules.Feed": "[1.0.0, )",
+          "Araponga.Modules.Map": "[1.0.0, )",
+          "Araponga.Modules.Marketplace": "[1.0.0, )",
+          "Araponga.Modules.Moderation": "[1.0.0, )",
+          "Araponga.Modules.Notifications": "[1.0.0, )",
+          "Araponga.Modules.Subscriptions": "[1.0.0, )",
           "Araponga.Shared": "[1.0.0, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.11, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[8.0.0, )",
           "Otp.NET": "[1.3.0, )"
+        }
+      },
+      "araponga.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "[8.0.0, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.2, )"
         }
       },
       "araponga.domain": {
@@ -1201,6 +1220,12 @@
           "AWSSDK.S3": "[4.0.17.1, )",
           "Araponga.Application": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
+          "Araponga.Modules.Assets": "[1.0.0, )",
+          "Araponga.Modules.Connections": "[1.0.0, )",
+          "Araponga.Modules.Feed": "[1.0.0, )",
+          "Araponga.Modules.Map": "[1.0.0, )",
+          "Araponga.Modules.Marketplace": "[1.0.0, )",
+          "Araponga.Modules.Moderation": "[1.0.0, )",
           "Azure.Storage.Blobs": "[12.21.1, )",
           "MailKit": "[4.14.1, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
@@ -1217,7 +1242,9 @@
         "type": "Project",
         "dependencies": {
           "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
+          "Araponga.Modules.Moderation": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
@@ -1232,102 +1259,101 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.alerts.infrastructure": {
+      "araponga.modules.alerts": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.assets.infrastructure": {
+      "araponga.modules.assets": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.chat.infrastructure": {
+      "araponga.modules.chat": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.events.infrastructure": {
+      "araponga.modules.connections": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
-          "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.feed.infrastructure": {
+      "araponga.modules.events": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.map.infrastructure": {
+      "araponga.modules.feed": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
+          "Araponga.Modules.Map": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.marketplace.infrastructure": {
+      "araponga.modules.map": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.moderation.infrastructure": {
+      "araponga.modules.marketplace": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.notifications.infrastructure": {
+      "araponga.modules.moderation": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }
       },
-      "araponga.modules.subscriptions.infrastructure": {
+      "araponga.modules.notifications": {
         "type": "Project",
         "dependencies": {
-          "Araponga.Application": "[1.0.0, )",
+          "Araponga.Application.Abstractions": "[1.0.0, )",
           "Araponga.Domain": "[1.0.0, )",
-          "Araponga.Infrastructure.Shared": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+        }
+      },
+      "araponga.modules.subscriptions": {
+        "type": "Project",
+        "dependencies": {
+          "Araponga.Application.Abstractions": "[1.0.0, )",
+          "Araponga.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
         }

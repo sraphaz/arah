@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -8,6 +9,7 @@ namespace Araponga.Infrastructure.Security;
 
 public sealed class JwtTokenService : ITokenService
 {
+    private const int SystemTokenExpirationMinutes = 15;
     private readonly JwtOptions _options;
 
     public JwtTokenService(IOptions<JwtOptions> options)
@@ -38,6 +40,29 @@ public sealed class JwtTokenService : ITokenService
         var payloadSegment = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(payload));
         var signature = ComputeSignature($"{headerSegment}.{payloadSegment}");
 
+        return $"{headerSegment}.{payloadSegment}.{signature}";
+    }
+
+    public string IssueSystemToken(string clientId)
+    {
+        var now = DateTimeOffset.UtcNow;
+        var header = new Dictionary<string, object>
+        {
+            ["alg"] = "HS256",
+            ["typ"] = "JWT"
+        };
+        var payload = new Dictionary<string, object>
+        {
+            ["client_id"] = clientId,
+            ["iss"] = _options.Issuer,
+            ["aud"] = _options.Audience,
+            ["iat"] = now.ToUnixTimeSeconds(),
+            ["nbf"] = now.ToUnixTimeSeconds(),
+            ["exp"] = now.AddMinutes(SystemTokenExpirationMinutes).ToUnixTimeSeconds()
+        };
+        var headerSegment = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(header));
+        var payloadSegment = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(payload));
+        var signature = ComputeSignature($"{headerSegment}.{payloadSegment}");
         return $"{headerSegment}.{payloadSegment}.{signature}";
     }
 
@@ -89,6 +114,71 @@ public sealed class JwtTokenService : ITokenService
             }
 
             return Guid.TryParse(subject, out var userId) ? userId : null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public int GetAccessTokenExpirationMinutes() => _options.ExpirationMinutes;
+
+    public ClaimsPrincipal? GetPrincipal(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return null;
+        }
+
+        var parts = token.Split('.');
+        if (parts.Length != 3)
+        {
+            return null;
+        }
+
+        var data = $"{parts[0]}.{parts[1]}";
+        if (!TimingSafeEquals(ComputeSignature(data), parts[2]))
+        {
+            return null;
+        }
+
+        try
+        {
+            var payloadJson = Base64UrlDecode(parts[1]);
+            using var document = JsonDocument.Parse(payloadJson);
+            if (!TryGetString(document, "iss", out var issuer) || !TryGetString(document, "aud", out var audience))
+            {
+                return null;
+            }
+            if (!string.Equals(issuer, _options.Issuer, StringComparison.Ordinal) ||
+                !string.Equals(audience, _options.Audience, StringComparison.Ordinal))
+            {
+                return null;
+            }
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            if (TryGetLong(document, "nbf", out var notBefore) && now < notBefore)
+            {
+                return null;
+            }
+            if (TryGetLong(document, "exp", out var expiresAt) && now >= expiresAt)
+            {
+                return null;
+            }
+
+            if (TryGetString(document, "sub", out var subject) && Guid.TryParse(subject, out var userId))
+            {
+                var identity = new ClaimsIdentity("Bearer");
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId.ToString()));
+                identity.AddClaim(new Claim("sub", userId.ToString()));
+                return new ClaimsPrincipal(identity);
+            }
+            if (TryGetString(document, "client_id", out var clientId))
+            {
+                var identity = new ClaimsIdentity("Bearer");
+                identity.AddClaim(new Claim("client_id", clientId));
+                return new ClaimsPrincipal(identity);
+            }
+            return null;
         }
         catch (Exception)
         {

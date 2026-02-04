@@ -1,7 +1,8 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Application.Interfaces;
+using Araponga.Modules.Marketplace.Domain;
 using Araponga.Domain.Membership;
 
 namespace Araponga.Application.Services;

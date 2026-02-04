@@ -3,7 +3,7 @@ using Araponga.Api.Contracts.Marketplace;
 using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Domain;
 using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
 

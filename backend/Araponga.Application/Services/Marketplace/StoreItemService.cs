@@ -3,7 +3,8 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Services;
 using Araponga.Application.Services.Media;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Application.Interfaces;
+using Araponga.Modules.Marketplace.Domain;
 using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
 

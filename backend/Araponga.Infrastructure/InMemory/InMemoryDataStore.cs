@@ -1,25 +1,26 @@
+using System.Collections.Concurrent;
 using Araponga.Application.Models;
-using Araponga.Domain.Assets;
+using Araponga.Modules.Assets.Domain;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Financial;
 using Araponga.Domain.Health;
-using Araponga.Domain.Map;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Map.Domain;
+using Araponga.Modules.Marketplace.Domain;
 using Araponga.Domain.Media;
-using Araponga.Domain.Moderation;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Configuration;
 using Araponga.Domain.Chat;
 using Araponga.Domain.Connections;
-using Araponga.Domain.Evidence;
 using Araponga.Domain.Policies;
 using Araponga.Domain.Social.JoinRequests;
 using Araponga.Domain.Subscriptions;
 using Araponga.Domain.Territories;
 using Araponga.Domain.Users;
-using Araponga.Domain.Work;
 using Araponga.Domain.Email;
+using Araponga.Modules.Moderation.Domain.Evidence;
+using Araponga.Modules.Moderation.Domain.Moderation;
+using Araponga.Modules.Moderation.Domain.Work;
 
 namespace Araponga.Infrastructure.InMemory;
 
@@ -401,7 +402,7 @@ public sealed class InMemoryDataStore
     public List<PlatformExpenseTransaction> PlatformExpenseTransactions { get; } = new();
     public List<ReconciliationRecord> ReconciliationRecords { get; } = new();
 
-    public Dictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public ConcurrentDictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();
     public Dictionary<Guid, List<PostComment>> PostComments { get; } = new();
     public Dictionary<Guid, HashSet<Guid>> PostShares { get; } = new();

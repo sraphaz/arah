@@ -3,6 +3,10 @@ using Araponga.Api.Services.Journeys;
 using Araponga.Api.Services.Journeys.Backend;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Interfaces.Connections;
+using Araponga.Modules.Assets.Application.Interfaces;
+using Araponga.Modules.Map.Application.Interfaces;
+using Araponga.Modules.Marketplace.Application.Interfaces;
+using Araponga.Modules.Moderation.Application.Interfaces;
 using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Interfaces.Users;
 using Araponga.Application.Services.Connections;
@@ -32,6 +36,7 @@ using Araponga.Modules.Notifications;
 using Araponga.Modules.Alerts;
 using Araponga.Modules.Assets;
 using Araponga.Modules.Admin;
+using Araponga.Modules.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -236,7 +241,8 @@ public static class ServiceCollectionExtensions
                 new NotificationsModule(),
                 new AlertsModule(),
                 new AssetsModule(),
-                new AdminModule()
+                new AdminModule(),
+                new ConnectionsModule()
             };
 
             // Criar logger temporário para ModuleRegistry
@@ -282,12 +288,13 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<ArapongaDbContext>()));
             services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<SharedDbContext>()));
 
-            // IUnitOfWork = CompositeUnitOfWork: CommitAsync persiste todos os contextos (Araponga, Shared, Feed, Events, etc.). Transação explícita delega para ArapongaDbContext.
+            services.AddScoped<DbContextTransactionScopeAdapter>();
+            // IUnitOfWork = CompositeUnitOfWork: CommitAsync persiste todos os participantes; transação explícita delega ao adapter do contexto principal (ADR-017).
             services.AddScoped<IUnitOfWork>(sp =>
             {
                 var participants = sp.GetServices<IUnitOfWorkParticipant>().ToList();
-                var primary = sp.GetRequiredService<ArapongaDbContext>();
-                return new CompositeUnitOfWork(participants, primary);
+                var transactionScope = sp.GetRequiredService<DbContextTransactionScopeAdapter>();
+                return new CompositeUnitOfWork(participants, transactionScope);
             });
         }
         else
@@ -302,8 +309,21 @@ public static class ServiceCollectionExtensions
         // Email Configuration (aplicável a ambos InMemory e Postgres)
         services.Configure<EmailConfiguration>(configuration.GetSection("Email"));
 
+        // Push Notification Provider (aplicável a ambos InMemory e Postgres; Firebase:ServerKey para habilitar FCM, senão no-op)
+        var firebaseServerKey = configuration["Firebase:ServerKey"];
+        if (!string.IsNullOrWhiteSpace(firebaseServerKey))
+        {
+            services.AddScoped<IPushNotificationProvider, Araponga.Infrastructure.Notifications.FirebasePushNotificationProvider>();
+        }
+        else
+        {
+            services.AddScoped<IPushNotificationProvider, Araponga.Infrastructure.Notifications.NoOpPushNotificationProvider>();
+        }
+
         services.AddSingleton<Araponga.Application.Interfaces.IObservabilityLogger, InMemoryObservabilityLogger>();
         services.AddSingleton<ITokenService, JwtTokenService>();
+        services.Configure<Araponga.Infrastructure.InMemory.RefreshTokenOptions>(configuration.GetSection("RefreshToken"));
+        services.AddSingleton<Araponga.Application.Interfaces.IRefreshTokenStore, Araponga.Infrastructure.InMemory.InMemoryRefreshTokenStore>();
         services.AddSingleton<Araponga.Infrastructure.Security.ISecretsService, Araponga.Infrastructure.Security.EnvironmentSecretsService>();
 
         var storageProvider = configuration.GetValue<string>("Storage:Provider") ?? "Local";
@@ -373,12 +393,10 @@ public static class ServiceCollectionExtensions
         // Repositórios core (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
         // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
         // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedCrossCuttingServices (Shared)
-        // IFeedRepository: registrado em Araponga.Modules.Feed.Infrastructure.FeedModule
+        // IFeedRepository, IPostGeoAnchorRepository, IPostAssetRepository: registrados em Araponga.Modules.Feed.Infrastructure.FeedModule
         // Events: registrado em Araponga.Modules.Events.Infrastructure.EventsModule
         // Map: registrado em Araponga.Modules.Map.Infrastructure.MapModule
-        services.AddScoped<IPostGeoAnchorRepository, PostgresPostGeoAnchorRepository>();
         // Assets: registrado em Araponga.Modules.Assets.Infrastructure.AssetsModule
-        services.AddScoped<IPostAssetRepository, PostgresPostAssetRepository>();
         services.AddScoped<IActiveTerritoryStore, PostgresActiveTerritoryStore>();
         // Alerts: registrado em Araponga.Modules.Alerts.Infrastructure.AlertsModule
         services.AddScoped<IFeatureFlagService, PostgresFeatureFlagService>();
@@ -410,17 +428,8 @@ public static class ServiceCollectionExtensions
 
         // Subscriptions: registrado em Araponga.Modules.Subscriptions.Infrastructure.SubscriptionsModule
 
-        // Connections (Círculo de Amigos)
-        services.AddScoped<IUserConnectionRepository, PostgresUserConnectionRepository>();
-        services.AddScoped<IConnectionPrivacySettingsRepository, PostgresConnectionPrivacySettingsRepository>();
+        // Connections (Círculo de Amigos): repositórios registrados em Araponga.Modules.Connections.Infrastructure.ConnectionsModule
         services.AddScoped<IAcceptedConnectionsProvider, AcceptedConnectionsProvider>();
-
-        // Push Notification Provider (opcional - configurar Firebase:ServerKey para habilitar)
-        var firebaseServerKey = configuration["Firebase:ServerKey"];
-        if (!string.IsNullOrWhiteSpace(firebaseServerKey))
-        {
-            services.AddScoped<IPushNotificationProvider, Araponga.Infrastructure.Notifications.FirebasePushNotificationProvider>();
-        }
 
         // Email Queue
         var emailPersistenceProvider = configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";

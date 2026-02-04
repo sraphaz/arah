@@ -7,7 +7,7 @@ COPY backend/ backend/
 
 RUN dotnet restore Araponga.sln
 
-WORKDIR /src/backend/Araponga.Api
+WORKDIR /src/backend/Core/Araponga.Api
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

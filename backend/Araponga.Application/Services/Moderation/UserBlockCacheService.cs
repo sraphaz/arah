@@ -1,5 +1,6 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Modules.Moderation.Application.Interfaces;
 
 namespace Araponga.Application.Services;
 

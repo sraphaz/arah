@@ -2,7 +2,7 @@ using Araponga.Api.Contracts.Admin;
 using Araponga.Api.Security;
 using Araponga.Application.Services;
 using Araponga.Domain.Membership;
-using Araponga.Domain.Work;
+using Araponga.Modules.Moderation.Domain.Work;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;

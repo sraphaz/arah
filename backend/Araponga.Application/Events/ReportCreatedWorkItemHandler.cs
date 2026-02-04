@@ -1,7 +1,8 @@
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Membership;
-using Araponga.Domain.Work;
+using Araponga.Modules.Moderation.Application.Interfaces;
+using Araponga.Modules.Moderation.Domain.Work;
 
 namespace Araponga.Application.Events;
 

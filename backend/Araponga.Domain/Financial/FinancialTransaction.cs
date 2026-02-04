@@ -1,4 +1,3 @@
-using Araponga.Domain.Marketplace;
 using Araponga.Domain.Territories;
 
 namespace Araponga.Domain.Financial;
@@ -52,10 +51,9 @@ public sealed class FinancialTransaction
     public DateTime CreatedAtUtc { get; private set; }
     public DateTime UpdatedAtUtc { get; private set; }
     
-    // Navigation properties
+    // Navigation properties (RelatedCheckout lives in Marketplace module; use RelatedEntityId/RelatedEntityType for reference)
     public Territory Territory { get; private set; } = null!;
-    public Checkout? RelatedCheckout { get; private set; }
-    
+
     private FinancialTransaction() 
     {
         // Inicializar propriedades para EF Core

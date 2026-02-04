@@ -1,9 +1,0 @@
-using Araponga.Domain.Map;
-
-namespace Araponga.Application.Interfaces;
-
-public interface IMapEntityRelationRepository
-{
-    Task<bool> ExistsAsync(Guid userId, Guid entityId, CancellationToken cancellationToken);
-    Task AddAsync(MapEntityRelation relation, CancellationToken cancellationToken);
-}

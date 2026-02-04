@@ -271,13 +271,13 @@ public sealed class PostEditService
         return Result<CommunityPost>.Success(post);
     }
 
-    private static IReadOnlyCollection<Domain.Map.PostGeoAnchor> BuildPostAnchors(
+    private static IReadOnlyCollection<Araponga.Modules.Map.Domain.PostGeoAnchor> BuildPostAnchors(
         Guid postId,
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors)
     {
         if (geoAnchors is null || geoAnchors.Count == 0)
         {
-            return Array.Empty<Domain.Map.PostGeoAnchor>();
+            return Array.Empty<Araponga.Modules.Map.Domain.PostGeoAnchor>();
         }
 
         var now = DateTime.UtcNow;
@@ -290,7 +290,7 @@ public sealed class PostEditService
                 Longitude = Math.Round(anchor.Longitude, Constants.Posts.GeoAnchorPrecision, MidpointRounding.AwayFromZero),
                 Type = anchor.Type
             })
-            .Select(anchor => new Domain.Map.PostGeoAnchor(
+            .Select(anchor => new Araponga.Modules.Map.Domain.PostGeoAnchor(
                 Guid.NewGuid(),
                 postId,
                 anchor.Latitude,

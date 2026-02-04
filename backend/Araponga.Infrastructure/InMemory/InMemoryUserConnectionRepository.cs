@@ -1,3 +1,4 @@
+using Araponga.Application.Interfaces;
 using Araponga.Domain.Connections;
 
 namespace Araponga.Infrastructure.InMemory;

@@ -1,4 +1,4 @@
-using Araponga.Domain.Evidence;
+using Araponga.Modules.Moderation.Domain.Evidence;
 
 namespace Araponga.Application.Interfaces;
 

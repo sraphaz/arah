@@ -1,4 +1,4 @@
-using Araponga.Domain.Assets;
+using Araponga.Modules.Assets.Domain;
 
 namespace Araponga.Application.Models;
 

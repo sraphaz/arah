@@ -56,17 +56,17 @@
   <ItemGroup>
     <ProjectReference Include="..\Araponga.Application\Araponga.Application.csproj" />
     <ProjectReference Include="..\Araponga.Infrastructure\Araponga.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Feed\Araponga.Modules.Feed\Araponga.Modules.Feed.csproj" />
     <ProjectReference Include="..\Araponga.Infrastructure.Shared\Araponga.Infrastructure.Shared.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Feed.Infrastructure\Araponga.Modules.Feed.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Marketplace.Infrastructure\Araponga.Modules.Marketplace.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Events.Infrastructure\Araponga.Modules.Events.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Map.Infrastructure\Araponga.Modules.Map.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Chat.Infrastructure\Araponga.Modules.Chat.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Subscriptions.Infrastructure\Araponga.Modules.Subscriptions.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Moderation.Infrastructure\Araponga.Modules.Moderation.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Notifications.Infrastructure\Araponga.Modules.Notifications.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Alerts.Infrastructure\Araponga.Modules.Alerts.Infrastructure.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Assets.Infrastructure\Araponga.Modules.Assets.Infrastructure.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Events\Araponga.Modules.Events\Araponga.Modules.Events.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Map\Araponga.Modules.Map\Araponga.Modules.Map.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Chat\Araponga.Modules.Chat\Araponga.Modules.Chat.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Subscriptions\Araponga.Modules.Subscriptions\Araponga.Modules.Subscriptions.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Moderation\Araponga.Modules.Moderation\Araponga.Modules.Moderation.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Notifications\Araponga.Modules.Notifications\Araponga.Modules.Notifications.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Alerts\Araponga.Modules.Alerts\Araponga.Modules.Alerts.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Assets\Araponga.Modules.Assets\Araponga.Modules.Assets.csproj" />
     <ProjectReference Include="..\Araponga.Modules.Admin.Infrastructure\Araponga.Modules.Admin.Infrastructure.csproj" />
   </ItemGroup>
 
@@ -77,7 +77,7 @@
 
   <Target Name="SyncDocsForGitHubPages" AfterTargets="Build">
     <PropertyGroup>
-      <DocsOutputDir>$(MSBuildProjectDirectory)\..\..\docs</DocsOutputDir>
+      <DocsOutputDir>$(MSBuildProjectDirectory)\..\..\..\docs</DocsOutputDir>
     </PropertyGroup>
     <Message Text="Syncing GitHub Pages assets to $(DocsOutputDir)" Importance="high" />
     <Copy SourceFiles="@(DocsSyncFiles)" DestinationFolder="$(DocsOutputDir)" SkipUnchangedFiles="true" />

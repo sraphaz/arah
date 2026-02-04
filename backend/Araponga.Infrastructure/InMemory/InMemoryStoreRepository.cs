@@ -1,5 +1,6 @@
 using Araponga.Application.Interfaces;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Application.Interfaces;
+using Araponga.Modules.Marketplace.Domain;
 
 namespace Araponga.Infrastructure.InMemory;
 

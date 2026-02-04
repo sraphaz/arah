@@ -7,31 +7,25 @@ WORKDIR /src
 # 1) Copiar solution e csproj (para cache)
 COPY *.sln ./
 
-COPY backend/Araponga.Api/*.csproj backend/Araponga.Api/
-COPY backend/Araponga.Application/*.csproj backend/Araponga.Application/
-COPY backend/Araponga.Domain/*.csproj backend/Araponga.Domain/
-COPY backend/Araponga.Infrastructure/*.csproj backend/Araponga.Infrastructure/
-COPY backend/Araponga.Shared/*.csproj backend/Araponga.Shared/
+COPY backend/Core/Araponga.Api/*.csproj backend/Core/Araponga.Api/
+COPY backend/Core/Araponga.Application/*.csproj backend/Core/Araponga.Application/
+COPY backend/Core/Araponga.Domain/*.csproj backend/Core/Araponga.Domain/
+COPY backend/Core/Araponga.Infrastructure/*.csproj backend/Core/Araponga.Infrastructure/
+COPY backend/Core/Araponga.Infrastructure.Shared/*.csproj backend/Core/Araponga.Infrastructure.Shared/
+COPY backend/Core/Araponga.Shared/*.csproj backend/Core/Araponga.Shared/
+COPY backend/Modules/ backend/Modules/
 COPY backend/Araponga.Tests/*.csproj backend/Araponga.Tests/
 
-# 2) Copiar lock files (importante para CI)
-COPY backend/Araponga.Api/packages.lock.json backend/Araponga.Api/
-COPY backend/Araponga.Application/packages.lock.json backend/Araponga.Application/
-COPY backend/Araponga.Domain/packages.lock.json backend/Araponga.Domain/
-COPY backend/Araponga.Infrastructure/packages.lock.json backend/Araponga.Infrastructure/
-COPY backend/Araponga.Shared/packages.lock.json backend/Araponga.Shared/
-COPY backend/Araponga.Tests/packages.lock.json backend/Araponga.Tests/
+# 2) Restore
+WORKDIR /src/backend/Core/Araponga.Api
+RUN dotnet restore
 
-# 3) Restore (agora os pacotes realmente existem no container)
-WORKDIR /src/backend/Araponga.Api
-RUN dotnet restore --locked-mode
-
-# 4) Copiar o resto do código
+# 3) Copiar o resto do código
 WORKDIR /src
 COPY . .
 
-# 5) Publish sem restore (agora funciona)
-WORKDIR /src/backend/Araponga.Api
+# 4) Publish sem restore (agora funciona)
+WORKDIR /src/backend/Core/Araponga.Api
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 

@@ -1,10 +1,12 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
-using Araponga.Domain.Assets;
+using Araponga.Modules.Assets.Application.Interfaces;
+using Araponga.Modules.Assets.Domain;
 using Araponga.Domain.Geo;
 using Araponga.Domain.Membership;
-using Araponga.Domain.Work;
+using Araponga.Modules.Moderation.Application.Interfaces;
+using Araponga.Modules.Moderation.Domain.Work;
 
 namespace Araponga.Application.Services;
 

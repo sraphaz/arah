@@ -1,8 +1,9 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
-using Araponga.Domain.Feed;
 using Araponga.Domain.Events;
+using Araponga.Domain.Feed;
+using Araponga.Modules.Marketplace.Application.Interfaces;
 
 namespace Araponga.Application.Services;
 
@@ -104,7 +105,7 @@ public sealed class UserActivityService
         var checkouts = await _checkoutRepository.ListByUserAsync(userId, cancellationToken);
 
         var purchases = checkouts
-            .Where(c => c.Status == Domain.Marketplace.CheckoutStatus.Paid)
+            .Where(c => c.Status == Araponga.Modules.Marketplace.Domain.CheckoutStatus.Paid)
             .OrderByDescending(c => c.CreatedAtUtc)
             .Skip(pagination.Skip)
             .Take(pagination.Take)
@@ -118,7 +119,7 @@ public sealed class UserActivityService
             .ToList();
 
         const int maxInt32 = int.MaxValue;
-        var count = checkouts.Count(c => c.Status == Domain.Marketplace.CheckoutStatus.Paid);
+        var count = checkouts.Count(c => c.Status == Araponga.Modules.Marketplace.Domain.CheckoutStatus.Paid);
         var totalCount = count > maxInt32 ? maxInt32 : count;
 
         return new PagedResult<UserPurchaseActivity>(
@@ -153,7 +154,7 @@ public sealed class UserActivityService
         var allCheckouts = await _checkoutRepository.ListAllAsync(cancellationToken);
 
         var sales = allCheckouts
-            .Where(c => storeIds.Contains(c.StoreId) && c.Status == Domain.Marketplace.CheckoutStatus.Paid)
+            .Where(c => storeIds.Contains(c.StoreId) && c.Status == Araponga.Modules.Marketplace.Domain.CheckoutStatus.Paid)
             .OrderByDescending(c => c.CreatedAtUtc)
             .Skip(pagination.Skip)
             .Take(pagination.Take)
@@ -167,7 +168,7 @@ public sealed class UserActivityService
             .ToList();
 
         const int maxInt32 = int.MaxValue;
-        var count = allCheckouts.Count(c => storeIds.Contains(c.StoreId) && c.Status == Domain.Marketplace.CheckoutStatus.Paid);
+        var count = allCheckouts.Count(c => storeIds.Contains(c.StoreId) && c.Status == Araponga.Modules.Marketplace.Domain.CheckoutStatus.Paid);
         var totalCount = count > maxInt32 ? maxInt32 : count;
 
         return new PagedResult<UserSaleActivity>(

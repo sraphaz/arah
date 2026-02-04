@@ -1,3 +1,4 @@
+using Araponga.Api.Configuration;
 using Araponga.Api.Contracts.Auth;
 using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
@@ -7,6 +8,7 @@ using Araponga.Domain.Email;
 using Araponga.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Options;
 
 namespace Araponga.Api.Controllers;
 
@@ -18,16 +20,25 @@ public sealed class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
     private readonly ITokenService _tokenService;
+    private readonly IRefreshTokenStore _refreshTokenStore;
+    private readonly IUserRepository _userRepository;
     private readonly CurrentUserAccessor _currentUserAccessor;
+    private readonly ClientCredentialsOptions _clientCredentialsOptions;
 
     public AuthController(
         AuthService authService,
         ITokenService tokenService,
-        CurrentUserAccessor currentUserAccessor)
+        IRefreshTokenStore refreshTokenStore,
+        IUserRepository userRepository,
+        CurrentUserAccessor currentUserAccessor,
+        IOptions<ClientCredentialsOptions> clientCredentialsOptions)
     {
         _authService = authService;
         _tokenService = tokenService;
+        _refreshTokenStore = refreshTokenStore;
+        _userRepository = userRepository;
         _currentUserAccessor = currentUserAccessor;
+        _clientCredentialsOptions = clientCredentialsOptions.Value;
     }
 
     /// <summary>
@@ -84,10 +95,13 @@ public sealed class AuthController : ControllerBase
             return BadRequest(new { error = result.Error });
         }
 
-        var (user, token) = result.Value!;
+        var (user, accessToken, refreshToken) = result.Value!;
+        var expiresInSeconds = (int)TimeSpan.FromMinutes(_tokenService.GetAccessTokenExpirationMinutes()).TotalSeconds;
         var response = new SocialLoginResponse(
             new UserResponse(user.Id, user.DisplayName, user.Email),
-            token);
+            accessToken,
+            refreshToken,
+            expiresInSeconds);
 
         return Ok(response);
     }
@@ -181,24 +195,13 @@ public sealed class AuthController : ControllerBase
             return BadRequest(new { error = result.Error });
         }
 
-        var token = result.Value!;
-        var userId = _tokenService.ParseToken(token);
-        if (userId is null)
-        {
-            return BadRequest(new { error = "Invalid token." });
-        }
-
-        // Buscar user para response
-        var userRepository = HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-        var user = await userRepository.GetByIdAsync(userId.Value, cancellationToken);
-        if (user is null)
-        {
-            return BadRequest(new { error = "User not found." });
-        }
-
+        var (user, accessToken, refreshToken) = result.Value!;
+        var expiresInSeconds = (int)TimeSpan.FromMinutes(_tokenService.GetAccessTokenExpirationMinutes()).TotalSeconds;
         var response = new SocialLoginResponse(
             new UserResponse(user.Id, user.DisplayName, user.Email),
-            token);
+            accessToken,
+            refreshToken,
+            expiresInSeconds);
 
         return Ok(response);
     }
@@ -223,23 +226,13 @@ public sealed class AuthController : ControllerBase
             return BadRequest(new { error = result.Error });
         }
 
-        var token = result.Value!;
-        var userId = _tokenService.ParseToken(token);
-        if (userId is null)
-        {
-            return BadRequest(new { error = "Invalid token." });
-        }
-
-        var userRepository = HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-        var user = await userRepository.GetByIdAsync(userId.Value, cancellationToken);
-        if (user is null)
-        {
-            return BadRequest(new { error = "User not found." });
-        }
-
+        var (user, accessToken, refreshToken) = result.Value!;
+        var expiresInSeconds = (int)TimeSpan.FromMinutes(_tokenService.GetAccessTokenExpirationMinutes()).TotalSeconds;
         var response = new SocialLoginResponse(
             new UserResponse(user.Id, user.DisplayName, user.Email),
-            token);
+            accessToken,
+            refreshToken,
+            expiresInSeconds);
 
         return Ok(response);
     }
@@ -316,6 +309,85 @@ public sealed class AuthController : ControllerBase
         }, cancellationToken);
 
         return Task.FromResult<ActionResult>(Ok(new { message = "If the email exists, a password reset link has been sent." }));
+    }
+
+    /// <summary>
+    /// Emite token para workers/sistemas (client credentials). O BFF não usa; workers que precisam chamar a API usam client_id + client_secret configurados.
+    /// </summary>
+    [HttpPost("token")]
+    [EnableRateLimiting("auth")]
+    [ProducesResponseType(typeof(ClientCredentialsTokenResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public ActionResult<ClientCredentialsTokenResponse> ClientCredentialsToken(
+        [FromBody] ClientCredentialsTokenRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.GrantType) ||
+            !string.Equals(request.GrantType, "client_credentials", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest(new { error = "grant_type must be client_credentials." });
+        }
+        if (string.IsNullOrWhiteSpace(request.ClientId) || string.IsNullOrWhiteSpace(request.ClientSecret))
+        {
+            return BadRequest(new { error = "client_id and client_secret are required." });
+        }
+        if (string.IsNullOrWhiteSpace(_clientCredentialsOptions.ClientId) ||
+            string.IsNullOrWhiteSpace(_clientCredentialsOptions.ClientSecret))
+        {
+            return Unauthorized();
+        }
+        if (!string.Equals(request.ClientId, _clientCredentialsOptions.ClientId, StringComparison.Ordinal) ||
+            !string.Equals(request.ClientSecret, _clientCredentialsOptions.ClientSecret, StringComparison.Ordinal))
+        {
+            return Unauthorized();
+        }
+
+        var accessToken = _tokenService.IssueSystemToken(request.ClientId);
+        return Ok(new ClientCredentialsTokenResponse(accessToken, "Bearer", 15 * 60)); // 15 min
+    }
+
+    /// <summary>
+    /// Renova o access token usando o refresh token (padrão OAuth: expiração + rotação).
+    /// O BFF/frontend chama este endpoint quando o access token expira; o refresh token é consumido uma vez e novos tokens são retornados.
+    /// </summary>
+    [HttpPost("refresh")]
+    [EnableRateLimiting("auth")]
+    [ProducesResponseType(typeof(SocialLoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult<SocialLoginResponse>> Refresh(
+        [FromBody] RefreshTokenRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.RefreshToken))
+        {
+            return BadRequest(new { error = "RefreshToken is required." });
+        }
+
+        var userId = await _refreshTokenStore.ConsumeAsync(request.RefreshToken, cancellationToken);
+        if (userId is null)
+        {
+            return BadRequest(new { error = "Invalid or expired refresh token." });
+        }
+
+        var user = await _userRepository.GetByIdAsync(userId.Value, cancellationToken);
+        if (user is null)
+        {
+            return BadRequest(new { error = "User not found." });
+        }
+
+        var (newRefreshToken, _) = _refreshTokenStore.Issue(user.Id);
+        var accessToken = _tokenService.IssueToken(user.Id);
+        var expiresInSeconds = (int)TimeSpan.FromMinutes(_tokenService.GetAccessTokenExpirationMinutes()).TotalSeconds;
+
+        var response = new SocialLoginResponse(
+            new UserResponse(user.Id, user.DisplayName, user.Email),
+            accessToken,
+            newRefreshToken,
+            expiresInSeconds);
+
+        return Ok(response);
     }
 
     /// <summary>

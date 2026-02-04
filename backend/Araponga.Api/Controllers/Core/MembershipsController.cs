@@ -7,6 +7,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
+using Araponga.Modules.Moderation.Domain.Evidence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -318,7 +319,7 @@ public sealed class MembershipsController : ControllerBase
         var created = await _documentEvidenceService.CreateAsync(
             userContext.User.Id,
             territoryId,
-            Araponga.Domain.Evidence.DocumentEvidenceKind.Residency,
+            DocumentEvidenceKind.Residency,
             file.FileName,
             file.ContentType,
             stream,

@@ -4,7 +4,7 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 

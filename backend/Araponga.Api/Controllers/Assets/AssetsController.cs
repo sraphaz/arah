@@ -4,9 +4,9 @@ using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Models;
 using Araponga.Application.Services;
-using Araponga.Domain.Assets;
+using Araponga.Modules.Assets.Domain;
 using Araponga.Domain.Membership;
-using Araponga.Domain.Work;
+using Araponga.Modules.Moderation.Domain.Work;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 

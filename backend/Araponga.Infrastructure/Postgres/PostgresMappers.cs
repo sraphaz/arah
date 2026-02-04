@@ -1,12 +1,12 @@
-using Araponga.Domain.Assets;
+using Araponga.Modules.Assets.Domain;
+using Araponga.Modules.Map.Domain;
 using Araponga.Domain.Chat;
 using Araponga.Domain.Email;
 using Araponga.Domain.Events;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Financial;
 using Araponga.Domain.Health;
-using Araponga.Domain.Map;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Domain;
 using Araponga.Domain.Media;
 using Araponga.Domain.Membership;
 using Araponga.Domain.Policies;
@@ -481,7 +481,7 @@ public static class PostgresMappers
                 // Se falhar ao deserializar, tags permanece null
             }
         }
-        
+
         return new CommunityPost(
             record.Id,
             record.TerritoryId,
@@ -607,30 +607,6 @@ public static class PostgresMappers
             record.Status,
             record.Visibility,
             confirmationCount,
-            record.CreatedAtUtc);
-    }
-
-    public static PostGeoAnchorRecord ToRecord(this PostGeoAnchor anchor)
-    {
-        return new PostGeoAnchorRecord
-        {
-            Id = anchor.Id,
-            PostId = anchor.PostId,
-            Latitude = anchor.Latitude,
-            Longitude = anchor.Longitude,
-            Type = anchor.Type,
-            CreatedAtUtc = anchor.CreatedAtUtc
-        };
-    }
-
-    public static PostGeoAnchor ToDomain(this PostGeoAnchorRecord record)
-    {
-        return new PostGeoAnchor(
-            record.Id,
-            record.PostId,
-            record.Latitude,
-            record.Longitude,
-            record.Type,
             record.CreatedAtUtc);
     }
 
@@ -875,7 +851,7 @@ public static class PostgresMappers
             record.UpdatedByUserId);
     }
 
-    public static WorkItemRecord ToRecord(this Araponga.Domain.Work.WorkItem item)
+    public static WorkItemRecord ToRecord(this Araponga.Modules.Moderation.Domain.Work.WorkItem item)
     {
         return new WorkItemRecord
         {
@@ -897,9 +873,9 @@ public static class PostgresMappers
         };
     }
 
-    public static Araponga.Domain.Work.WorkItem ToDomain(this WorkItemRecord record)
+    public static Araponga.Modules.Moderation.Domain.Work.WorkItem ToDomain(this WorkItemRecord record)
     {
-        return new Araponga.Domain.Work.WorkItem(
+        return new Araponga.Modules.Moderation.Domain.Work.WorkItem(
             record.Id,
             record.Type,
             record.Status,
@@ -917,7 +893,7 @@ public static class PostgresMappers
             record.CompletionNotes);
     }
 
-    public static DocumentEvidenceRecord ToRecord(this Araponga.Domain.Evidence.DocumentEvidence evidence)
+    public static DocumentEvidenceRecord ToRecord(this Araponga.Modules.Moderation.Domain.Evidence.DocumentEvidence evidence)
     {
         return new DocumentEvidenceRecord
         {
@@ -935,9 +911,9 @@ public static class PostgresMappers
         };
     }
 
-    public static Araponga.Domain.Evidence.DocumentEvidence ToDomain(this DocumentEvidenceRecord record)
+    public static Araponga.Modules.Moderation.Domain.Evidence.DocumentEvidence ToDomain(this DocumentEvidenceRecord record)
     {
-        return new Araponga.Domain.Evidence.DocumentEvidence(
+        return new Araponga.Modules.Moderation.Domain.Evidence.DocumentEvidence(
             record.Id,
             record.UserId,
             record.TerritoryId,
@@ -2083,10 +2059,10 @@ public static class PostgresMappers
             record.ValidUntil,
             record.MaxUses,
             record.StripeCouponId);
-        
+
         // Restaurar estado do banco
         coupon.RestoreState(record.UsedCount, record.IsActive, record.CreatedAtUtc, record.UpdatedAtUtc);
-        
+
         return coupon;
     }
 

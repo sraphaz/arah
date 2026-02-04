@@ -1,7 +1,9 @@
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
+using Araponga.Modules.Moderation.Application.Interfaces;
 using Araponga.Domain.Geo;
-using Araponga.Domain.Map;
+using Araponga.Modules.Map.Application.Interfaces;
+using Araponga.Modules.Map.Domain;
 
 namespace Araponga.Application.Services;
 

@@ -2,6 +2,7 @@ using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Events;
 using Araponga.Domain.Territories;
+using Araponga.Modules.Marketplace.Application.Interfaces;
 
 namespace Araponga.Application.Services;
 
@@ -59,7 +60,7 @@ public sealed class AnalyticsService
 
         // Contar posts
         var posts = await _feedRepository.ListByTerritoryAsync(territoryId, cancellationToken);
-        var totalPosts = posts.Count(p => 
+        var totalPosts = posts.Count(p =>
             (fromUtc == null || p.CreatedAtUtc >= fromUtc.Value) &&
             (toUtc == null || p.CreatedAtUtc <= toUtc.Value));
 
@@ -75,7 +76,7 @@ public sealed class AnalyticsService
         // Nota: Em produção, precisaríamos de um método ListByTerritoryAsync no repositório
         var residentIds = await _membershipRepository.ListResidentUserIdsAsync(territoryId, cancellationToken);
         var totalMembers = residentIds.Count; // Aproximação - apenas residents verificados
-        
+
         // Membros novos nos últimos 30 dias (simplificado)
         var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
         var newMembers = 0; // TODO: Implementar quando tivermos método para listar todos os memberships por território
@@ -181,7 +182,7 @@ public sealed class AnalyticsService
     {
         // Nota: Implementação simplificada
         // Em produção, precisaríamos de repositórios específicos para stores e items
-        
+
         var sales = territoryId.HasValue
             ? await GetTerritorySalesAsync(territoryId.Value, fromUtc, toUtc, cancellationToken)
             : await GetAllSalesAsync(fromUtc, toUtc, cancellationToken);
@@ -203,7 +204,7 @@ public sealed class AnalyticsService
             var stores = await _storeRepository.ListByTerritoryAsync(territoryId.Value, cancellationToken);
             if (stores != null)
             {
-                totalStores = stores.Count(s => 
+                totalStores = stores.Count(s =>
                     (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
                     (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
             }
@@ -219,7 +220,7 @@ public sealed class AnalyticsService
                     var stores = await _storeRepository.ListByTerritoryAsync(territory.Id, cancellationToken);
                     if (stores != null)
                     {
-                        totalStores += stores.Count(s => 
+                        totalStores += stores.Count(s =>
                             (fromUtc == null || s.CreatedAtUtc >= fromUtc.Value) &&
                             (toUtc == null || s.CreatedAtUtc <= toUtc.Value));
                     }
@@ -242,7 +243,7 @@ public sealed class AnalyticsService
                 cancellationToken);
             if (items != null)
             {
-                totalItems = items.Count(i => 
+                totalItems = items.Count(i =>
                     (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
                     (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
             }
@@ -265,7 +266,7 @@ public sealed class AnalyticsService
                         cancellationToken);
                     if (items != null)
                     {
-                        totalItems += items.Count(i => 
+                        totalItems += items.Count(i =>
                             (fromUtc == null || i.CreatedAtUtc >= fromUtc.Value) &&
                             (toUtc == null || i.CreatedAtUtc <= toUtc.Value));
                     }
@@ -296,9 +297,9 @@ public sealed class AnalyticsService
     {
         // Usar SellerTransactionRepository para obter vendas do território
         var transactions = await _sellerTransactionRepository.GetByTerritoryIdAsync(territoryId, cancellationToken);
-        
+
         var sales = transactions
-            .Where(t => 
+            .Where(t =>
                 (fromUtc == null || t.CreatedAtUtc >= fromUtc.Value) &&
                 (toUtc == null || t.CreatedAtUtc <= toUtc.Value))
             .Select(t => new SaleInfo(
@@ -317,9 +318,9 @@ public sealed class AnalyticsService
     {
         // Usar SellerTransactionRepository para obter payouts do território
         var transactions = await _sellerTransactionRepository.GetByTerritoryIdAsync(territoryId, cancellationToken);
-        
+
         var payouts = transactions
-            .Where(t => 
+            .Where(t =>
                 t.PayoutId != null &&
                 (fromUtc == null || (t.PaidAtUtc.HasValue && t.PaidAtUtc.Value >= fromUtc.Value)) &&
                 (toUtc == null || (t.PaidAtUtc.HasValue && t.PaidAtUtc.Value <= toUtc.Value)))
@@ -338,10 +339,10 @@ public sealed class AnalyticsService
     {
         // Obter todos os checkouts e converter para vendas
         var allCheckouts = await _checkoutRepository.ListAllAsync(cancellationToken);
-        
+
         var sales = allCheckouts
-            .Where(c => 
-                c.Status == Domain.Marketplace.CheckoutStatus.Paid &&
+            .Where(c =>
+                c.Status == Araponga.Modules.Marketplace.Domain.CheckoutStatus.Paid &&
                 (fromUtc == null || c.CreatedAtUtc >= fromUtc.Value) &&
                 (toUtc == null || c.CreatedAtUtc <= toUtc.Value))
             .Select(c => new SaleInfo(
@@ -370,7 +371,7 @@ public sealed class AnalyticsService
         // Por enquanto, estimamos baseado em memberships únicos
         var territories = await _territoryRepository.ListAsync(cancellationToken);
         var uniqueUserIds = new HashSet<Guid>();
-        
+
         foreach (var territory in territories)
         {
             var residentIds = await _membershipRepository.ListResidentUserIdsAsync(territory.Id, cancellationToken);
@@ -379,7 +380,7 @@ public sealed class AnalyticsService
                 uniqueUserIds.Add(userId);
             }
         }
-        
+
         return uniqueUserIds.Count;
     }
 }

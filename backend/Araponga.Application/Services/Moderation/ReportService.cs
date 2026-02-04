@@ -4,7 +4,8 @@ using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Metrics;
 using Araponga.Application.Events;
 using Araponga.Domain.Media;
-using Araponga.Domain.Moderation;
+using Araponga.Modules.Moderation.Application.Interfaces;
+using Araponga.Modules.Moderation.Domain.Moderation;
 
 namespace Araponga.Application.Services;
 

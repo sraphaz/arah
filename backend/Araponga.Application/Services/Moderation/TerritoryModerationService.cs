@@ -2,7 +2,8 @@ using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Governance;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Domain;
+using Araponga.Modules.Moderation.Application.Interfaces;
 using System.Text.Json;
 
 namespace Araponga.Application.Services;

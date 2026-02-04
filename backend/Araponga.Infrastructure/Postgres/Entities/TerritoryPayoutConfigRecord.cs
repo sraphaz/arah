@@ -1,4 +1,4 @@
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Domain;
 
 namespace Araponga.Infrastructure.Postgres.Entities;
 

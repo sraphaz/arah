@@ -1,6 +1,6 @@
 using Araponga.Domain.Membership;
 using Araponga.Domain.Users;
-using Araponga.Domain.Work;
+using Araponga.Modules.Moderation.Domain.Work;
 
 namespace Araponga.Infrastructure.Postgres.Entities;
 

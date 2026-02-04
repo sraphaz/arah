@@ -14,6 +14,7 @@ public sealed class AuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
+    private readonly IRefreshTokenStore _refreshTokenStore;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IServiceProvider? _serviceProvider;
 
@@ -23,11 +24,13 @@ public sealed class AuthService
     public AuthService(
         IUserRepository userRepository,
         ITokenService tokenService,
+        IRefreshTokenStore refreshTokenStore,
         IUnitOfWork unitOfWork,
         IServiceProvider? serviceProvider = null)
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
+        _refreshTokenStore = refreshTokenStore;
         _unitOfWork = unitOfWork;
         _serviceProvider = serviceProvider;
     }
@@ -44,8 +47,8 @@ public sealed class AuthService
     /// <param name="phoneNumber">Número de telefone (opcional).</param>
     /// <param name="address">Endereço físico (opcional).</param>
     /// <param name="cancellationToken">Token de cancelamento.</param>
-    /// <returns>Resultado contendo o usuário e token JWT, ou erro se 2FA for necessário.</returns>
-    public async Task<Result<(User user, string token)>> LoginSocialAsync(
+    /// <returns>Resultado contendo o usuário, access token, refresh token; ou erro se 2FA for necessário.</returns>
+    public async Task<Result<(User user, string accessToken, string refreshToken)>> LoginSocialAsync(
         string authProvider,
         string externalId,
         string displayName,
@@ -68,10 +71,14 @@ public sealed class AuthService
                 // Limpar challenges expirados
                 CleanupExpiredChallenges();
 
-                return Result<(User user, string token)>.Failure($"2FA_REQUIRED:{challengeId}");
+                return Result<(User user, string accessToken, string refreshToken)>.Failure($"2FA_REQUIRED:{challengeId}");
             }
 
-            return Result<(User user, string token)>.Success((existing, _tokenService.IssueToken(existing.Id)));
+            var (issuedRefresh, _) = _refreshTokenStore.Issue(existing.Id);
+            return Result<(User user, string accessToken, string refreshToken)>.Success((
+                existing,
+                _tokenService.IssueToken(existing.Id),
+                issuedRefresh));
         }
 
         var user = new User(
@@ -88,6 +95,9 @@ public sealed class AuthService
 
         await _userRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        var (newUserRefresh, _) = _refreshTokenStore.Issue(user.Id);
+        var accessToken = _tokenService.IssueToken(user.Id);
 
         // Enfileirar email de boas-vindas (opcional - não bloqueia o login)
         _ = Task.Run(async () =>
@@ -129,7 +139,7 @@ public sealed class AuthService
             }
         }, cancellationToken);
 
-        return Result<(User user, string token)>.Success((user, _tokenService.IssueToken(user.Id)));
+        return Result<(User user, string accessToken, string refreshToken)>.Success((user, accessToken, newUserRefresh));
     }
 
     /// <summary>
@@ -205,9 +215,9 @@ public sealed class AuthService
     }
 
     /// <summary>
-    /// Verifica código 2FA e retorna JWT.
+    /// Verifica código 2FA e retorna usuário, access token e refresh token.
     /// </summary>
-    public async Task<Result<string>> Verify2FAAsync(
+    public async Task<Result<(User user, string accessToken, string refreshToken)>> Verify2FAAsync(
         string challengeId,
         string code,
         CancellationToken cancellationToken)
@@ -216,19 +226,19 @@ public sealed class AuthService
 
         if (!_twoFactorChallenges.TryGetValue(challengeId, out var challenge))
         {
-            return Result<string>.Failure("Invalid or expired challenge.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Invalid or expired challenge.");
         }
 
         if (DateTime.UtcNow > challenge.expiresAt)
         {
             _twoFactorChallenges.Remove(challengeId);
-            return Result<string>.Failure("Challenge expired.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Challenge expired.");
         }
 
         var user = await _userRepository.GetByIdAsync(challenge.userId, cancellationToken);
         if (user is null || !user.TwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
         {
-            return Result<string>.Failure("2FA not enabled for user.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("2FA not enabled for user.");
         }
 
         // Validar código TOTP
@@ -236,20 +246,23 @@ public sealed class AuthService
         var totp = new Totp(secretBytes);
         if (!totp.VerifyTotp(code, out _, new VerificationWindow(1, 1)))
         {
-            return Result<string>.Failure("Invalid TOTP code.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Invalid TOTP code.");
         }
 
         // Remover challenge usado
         _twoFactorChallenges.Remove(challengeId);
 
-        // Retornar JWT
-        return Result<string>.Success(_tokenService.IssueToken(user.Id));
+        var (issuedRefresh, _) = _refreshTokenStore.Issue(user.Id);
+        return Result<(User user, string accessToken, string refreshToken)>.Success((
+            user,
+            _tokenService.IssueToken(user.Id),
+            issuedRefresh));
     }
 
     /// <summary>
     /// Usa recovery code para autenticação.
     /// </summary>
-    public async Task<Result<string>> Recover2FAAsync(
+    public async Task<Result<(User user, string accessToken, string refreshToken)>> Recover2FAAsync(
         string challengeId,
         string recoveryCode,
         CancellationToken cancellationToken)
@@ -258,35 +271,36 @@ public sealed class AuthService
 
         if (!_twoFactorChallenges.TryGetValue(challengeId, out var challenge))
         {
-            return Result<string>.Failure("Invalid or expired challenge.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Invalid or expired challenge.");
         }
 
         if (DateTime.UtcNow > challenge.expiresAt)
         {
             _twoFactorChallenges.Remove(challengeId);
-            return Result<string>.Failure("Challenge expired.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Challenge expired.");
         }
 
         var user = await _userRepository.GetByIdAsync(challenge.userId, cancellationToken);
         if (user is null || !user.TwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorRecoveryCodesHash))
         {
-            return Result<string>.Failure("2FA not enabled for user.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("2FA not enabled for user.");
         }
 
         // Validar recovery code
         var recoveryCodeHash = HashRecoveryCode(recoveryCode);
         if (!VerifyRecoveryCode(recoveryCodeHash, user.TwoFactorRecoveryCodesHash))
         {
-            return Result<string>.Failure("Invalid recovery code.");
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Invalid recovery code.");
         }
 
         // Remover challenge usado
         _twoFactorChallenges.Remove(challengeId);
 
-        // TODO: Invalidar recovery code usado (requer armazenar códigos individuais hasheados)
-        // Por enquanto, apenas retornar JWT
-
-        return Result<string>.Success(_tokenService.IssueToken(user.Id));
+        var (issuedRefresh, _) = _refreshTokenStore.Issue(user.Id);
+        return Result<(User user, string accessToken, string refreshToken)>.Success((
+            user,
+            _tokenService.IssueToken(user.Id),
+            issuedRefresh));
     }
 
     /// <summary>

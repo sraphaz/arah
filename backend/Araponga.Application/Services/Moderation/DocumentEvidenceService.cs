@@ -2,7 +2,8 @@ using System.Security.Cryptography;
 using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
-using Araponga.Domain.Evidence;
+using Araponga.Modules.Moderation.Application.Interfaces;
+using Araponga.Modules.Moderation.Domain.Evidence;
 
 namespace Araponga.Application.Services;
 

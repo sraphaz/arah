@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Araponga.Application.Interfaces;
 using Araponga.Domain.Users;
+using Microsoft.AspNetCore.Http;
 
 namespace Araponga.Api.Security;
 
@@ -15,8 +17,26 @@ public sealed class CurrentUserAccessor
         _userRepository = userRepository;
     }
 
+    /// <summary>
+    /// Obtém o contexto do usuário atual. Preferência: HttpContext.User (definido pelo JwtAuthenticationHandler);
+    /// fallback: parse do Bearer token no request (ex.: testes ou contextos sem pipeline de auth).
+    /// </summary>
     public async Task<UserContext> GetAsync(HttpRequest request, CancellationToken cancellationToken)
     {
+        var httpContext = request.HttpContext;
+        if (httpContext.User?.Identity?.IsAuthenticated == true)
+        {
+            var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? httpContext.User.FindFirst("sub")?.Value;
+            if (Guid.TryParse(userIdClaim, out var userId))
+            {
+                var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+                return user is null
+                    ? new UserContext(null, TokenStatus.Invalid)
+                    : new UserContext(user, TokenStatus.Valid);
+            }
+        }
+
         if (!request.Headers.TryGetValue(ApiHeaders.Authorization, out var authorization) ||
             string.IsNullOrWhiteSpace(authorization))
         {
@@ -30,15 +50,15 @@ public sealed class CurrentUserAccessor
         }
 
         var token = authValue[BearerPrefix.Length..].Trim();
-        var userId = _tokenService.ParseToken(token);
-        if (userId is null)
+        var userIdFromToken = _tokenService.ParseToken(token);
+        if (userIdFromToken is null)
         {
             return new UserContext(null, TokenStatus.Invalid);
         }
 
-        var user = await _userRepository.GetByIdAsync(userId.Value, cancellationToken);
-        return user is null
+        var userFromRepo = await _userRepository.GetByIdAsync(userIdFromToken.Value, cancellationToken);
+        return userFromRepo is null
             ? new UserContext(null, TokenStatus.Invalid)
-            : new UserContext(user, TokenStatus.Valid);
+            : new UserContext(userFromRepo, TokenStatus.Valid);
     }
 }

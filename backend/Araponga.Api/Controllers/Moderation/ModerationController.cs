@@ -4,7 +4,7 @@ using Araponga.Api.Contracts.Moderation;
 using Araponga.Api.Security;
 using Araponga.Application.Common;
 using Araponga.Application.Services;
-using Araponga.Domain.Moderation;
+using Araponga.Modules.Moderation.Domain.Moderation;
 using Araponga.Domain.Membership;
 using Microsoft.AspNetCore.Mvc;
 

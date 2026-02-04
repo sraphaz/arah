@@ -1,4 +1,4 @@
-using Araponga.Domain.Moderation;
+using Araponga.Modules.Moderation.Domain.Moderation;
 
 namespace Araponga.Infrastructure.Postgres.Entities;
 

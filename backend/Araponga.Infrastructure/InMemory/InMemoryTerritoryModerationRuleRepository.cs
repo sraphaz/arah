@@ -1,5 +1,5 @@
-using Araponga.Application.Interfaces;
 using Araponga.Domain.Governance;
+using Araponga.Modules.Moderation.Application.Interfaces;
 
 namespace Araponga.Infrastructure.InMemory;
 

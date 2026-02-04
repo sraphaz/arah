@@ -4,8 +4,9 @@ using Araponga.Application.Interfaces.Media;
 using Araponga.Application.Models;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Media;
-using Araponga.Domain.Moderation;
-using Araponga.Domain.Work;
+using Araponga.Modules.Moderation.Application.Interfaces;
+using Araponga.Modules.Moderation.Domain.Moderation;
+using Araponga.Modules.Moderation.Domain.Work;
 
 namespace Araponga.Application.Services;
 
@@ -98,7 +99,7 @@ public sealed class ModerationCaseService
                 if (post is not null && post.TerritoryId == report.TerritoryId && post.Status != PostStatus.Hidden)
                 {
                     await _feedRepository.UpdateStatusAsync(post.Id, PostStatus.Hidden, cancellationToken);
-                    
+
                     // Deletar mídias associadas ao post quando ocultado
                     await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Post, post.Id, cancellationToken);
                 }

@@ -3,7 +3,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Araponga.Application.Interfaces;
-using Araponga.Domain.Evidence;
+using Araponga.Modules.Moderation.Domain.Evidence;
 
 namespace Araponga.Infrastructure.FileStorage;
 

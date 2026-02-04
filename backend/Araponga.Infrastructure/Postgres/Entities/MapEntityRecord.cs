@@ -1,4 +1,4 @@
-using Araponga.Domain.Map;
+using Araponga.Modules.Map.Domain;
 
 namespace Araponga.Infrastructure.Postgres.Entities;
 

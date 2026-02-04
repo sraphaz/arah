@@ -1,11 +1,10 @@
-using Araponga.Application.Interfaces;
 using Araponga.Infrastructure.Shared.Postgres.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Araponga.Infrastructure.Shared.Postgres;
 
-public sealed class SharedDbContext : DbContext, IUnitOfWork
+public sealed class SharedDbContext : DbContext
 {
     private IDbContextTransaction? _currentTransaction;
 

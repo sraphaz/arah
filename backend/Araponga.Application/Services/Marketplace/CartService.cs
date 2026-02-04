@@ -2,7 +2,8 @@ using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Models;
 using Araponga.Domain.Email;
-using Araponga.Domain.Marketplace;
+using Araponga.Modules.Marketplace.Application.Interfaces;
+using Araponga.Modules.Marketplace.Domain;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Araponga.Application.Services;

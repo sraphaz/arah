@@ -2,8 +2,9 @@ using Araponga.Api.Security;
 using Araponga.Application.Interfaces;
 using Araponga.Application.Services;
 using Araponga.Application.Models;
-using Araponga.Domain.Evidence;
 using Araponga.Domain.Membership;
+using Araponga.Modules.Moderation.Application.Interfaces;
+using Araponga.Modules.Moderation.Domain.Evidence;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;

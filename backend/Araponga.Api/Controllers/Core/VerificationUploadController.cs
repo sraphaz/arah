@@ -1,7 +1,7 @@
 using Araponga.Api.Security;
 using Araponga.Api.Contracts.Common;
 using Araponga.Application.Services;
-using Araponga.Domain.Evidence;
+using Araponga.Modules.Moderation.Domain.Evidence;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Araponga.Api.Controllers;

@@ -103,6 +103,7 @@ if (builder.Environment.IsProduction() && jwtSigningKey.Length < 32)
 var jwtSection = builder.Configuration.GetSection("Jwt");
 builder.Services.Configure<JwtOptions>(jwtSection);
 builder.Services.Configure<PresencePolicyOptions>(builder.Configuration.GetSection("PresencePolicy"));
+builder.Services.Configure<Araponga.Api.Configuration.ClientCredentialsOptions>(builder.Configuration.GetSection("ClientCredentials"));
 builder.Services.Configure<PasswordResetOptions>(builder.Configuration.GetSection("Auth:PasswordReset"));
 
 // CORS Configuration
@@ -337,6 +338,13 @@ builder.Services.AddAuthentication(options =>
 .AddScheme<AuthenticationSchemeOptions, JwtAuthenticationHandler>(
     "Bearer", _ => { });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("SystemAdmin", policy =>
+        policy.Requirements.Add(new Araponga.Api.Security.SystemAdminRequirement()));
+});
+builder.Services.AddScoped<Microsoft.AspNetCore.Authorization.IAuthorizationHandler, Araponga.Api.Security.SystemAdminAuthorizationHandler>();
+
 // Response Compression (gzip/brotli)
 builder.Services.AddResponseCompression(options =>
 {
@@ -527,6 +535,7 @@ app.UseExceptionHandler(errorApp =>
             ConflictException => StatusCodes.Status409Conflict,
             ArgumentException => StatusCodes.Status400BadRequest,
             InvalidOperationException => StatusCodes.Status409Conflict,
+            Araponga.Application.Exceptions.DomainException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
 

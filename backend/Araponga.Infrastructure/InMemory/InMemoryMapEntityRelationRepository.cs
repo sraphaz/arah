@@ -1,5 +1,5 @@
-using Araponga.Application.Interfaces;
-using Araponga.Domain.Map;
+using Araponga.Modules.Map.Application.Interfaces;
+using Araponga.Modules.Map.Domain;
 
 namespace Araponga.Infrastructure.InMemory;
 

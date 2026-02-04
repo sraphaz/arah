@@ -5,10 +5,13 @@ using Araponga.Application.Metrics;
 using Araponga.Application.Events;
 using Araponga.Application.Models;
 using Araponga.Application.Services.Media;
+using Araponga.Modules.Assets.Application.Interfaces;
+using Araponga.Modules.Map.Application.Interfaces;
 using Araponga.Domain.Feed;
 using Araponga.Domain.Geo;
 using Araponga.Domain.Media;
-using Araponga.Domain.Moderation;
+using Araponga.Modules.Moderation.Application.Interfaces;
+using Araponga.Modules.Moderation.Domain.Moderation;
 
 namespace Araponga.Application.Services;
 
@@ -332,13 +335,13 @@ public sealed class PostCreationService
         return Result<CommunityPost>.Success(post);
     }
 
-    private static IReadOnlyCollection<Domain.Map.PostGeoAnchor> BuildPostAnchors(
+    private static IReadOnlyCollection<Araponga.Modules.Map.Domain.PostGeoAnchor> BuildPostAnchors(
         Guid postId,
         IReadOnlyCollection<Models.GeoAnchorInput>? geoAnchors)
     {
         if (geoAnchors is null || geoAnchors.Count == 0)
         {
-            return Array.Empty<Domain.Map.PostGeoAnchor>();
+            return Array.Empty<Araponga.Modules.Map.Domain.PostGeoAnchor>();
         }
 
         var now = DateTime.UtcNow;
@@ -352,7 +355,7 @@ public sealed class PostCreationService
             })
             .Distinct()
             .Take(Constants.Posts.MaxAnchors)
-            .Select(anchor => new Domain.Map.PostGeoAnchor(
+            .Select(anchor => new Araponga.Modules.Map.Domain.PostGeoAnchor(
                 Guid.NewGuid(),
                 postId,
                 anchor.Latitude,

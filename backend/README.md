@@ -4,39 +4,59 @@ Estrutura do backend após modularização e organização de pastas.
 
 ## Estrutura de pastas
 
+Os projetos do núcleo e dos módulos ficam **na raiz de `backend/`** (sem pastas físicas `Core/` ou `Modules/`).
+
 ```
 backend/
-├── Core/                    # Núcleo compartilhado e orquestração
-│   ├── Araponga.Api/        # API HTTP principal
-│   ├── Araponga.Application/           # Serviços transversais, orquestração
-│   ├── Araponga.Application.Abstractions/  # IModule, IUnitOfWorkParticipant (evita ciclo)
-│   ├── Araponga.Domain/     # Domínio compartilhado (Users, Territories, etc.)
-│   ├── Araponga.Infrastructure/        # Infraestrutura core (Postgres, Redis, etc.)
-│   ├── Araponga.Infrastructure.Shared/ # DbContexts e repositórios compartilhados
-│   └── Araponga.Shared/     # Utilitários e tipos compartilhados
-├── Modules/                 # Módulos de negócio (um projeto por módulo)
-│   ├── Admin/
-│   ├── Alerts/
-│   ├── Assets/
-│   ├── Chat/
-│   ├── Connections/         # Domain + Application + Infrastructure (ConnectionsDbContext)
-│   ├── Events/
-│   ├── Feed/
-│   ├── Map/
-│   ├── Marketplace/
-│   ├── Moderation/
-│   ├── Notifications/
-│   └── Subscriptions/
-├── Tests/                   # Todos os projetos de teste
-│   ├── Araponga.Tests/              # Testes de integração e core
-│   ├── Araponga.Tests.Shared/       # Helpers compartilhados
+├── Araponga.Api/                    # API HTTP principal
+├── Araponga.Api.Bff/                # BFF (Backend for Frontend)
+├── Araponga.Application/            # Serviços transversais, orquestração
+├── Araponga.Application.Abstractions/  # IModule, IUnitOfWorkParticipant (evita ciclo)
+├── Araponga.Domain/                 # Domínio compartilhado (Users, Territories, etc.)
+├── Araponga.Infrastructure/         # Infraestrutura principal (Postgres, Redis, e-mail, etc.)
+├── Araponga.Infrastructure.Shared/  # Repositórios compartilhados (User, Territory, Membership, etc.)
+├── Araponga.Shared/                 # Projeto compartilhado (atualmente apenas referência)
+├── Araponga.Modules.Admin.Infrastructure/
+├── Araponga.Modules.Alerts/
+├── Araponga.Modules.Assets/
+├── Araponga.Modules.Chat/
+├── Araponga.Modules.Connections/
+├── Araponga.Modules.Events/
+├── Araponga.Modules.Feed/
+├── Araponga.Modules.Map/
+├── Araponga.Modules.Marketplace/
+├── Araponga.Modules.Moderation/
+├── Araponga.Modules.Notifications/
+├── Araponga.Modules.Subscriptions/
+├── Tests/                           # Todos os projetos de teste
+│   ├── Araponga.Tests/
+│   ├── Araponga.Tests.Shared/
 │   ├── Araponga.Tests.Modules.Connections/
 │   ├── Araponga.Tests.Modules.Map/
 │   ├── Araponga.Tests.Modules.Marketplace/
 │   ├── Araponga.Tests.Modules.Moderation/
-│   └── Araponga.Tests.Modules.Subscriptions/
-└── Araponga.Api.Bff/        # BFF (Backend for Frontend) na raiz do backend
+│   ├── Araponga.Tests.Modules.Subscriptions/
+│   ├── Araponga.Tests.ApiSupport/
+│   └── Araponga.Tests.Bff/
+└── docs/
+    └── BACKEND_LAYERS_AND_NAMING.md  # Detalhe do que cada projeto/pasta contém
 ```
+
+## Estrutura dos módulos
+
+Use **um único padrão** para todos os módulos: **estrutura flat** (como Connections e Feed).
+
+- **Padrão:** `Araponga.Modules.<Nome>/` contém o `.csproj` na raiz e as pastas `Domain/`, `Application/`, `Infrastructure/` diretamente (sem subpasta aninhada `Araponga.Modules.<Nome>/Araponga.Modules.<Nome>/`).
+- Ao criar um novo módulo, copie a estrutura de **Connections** ou **Feed** (raiz com .csproj + Domain/Application/Infrastructure).
+- Documentação detalhada: [BACKEND_LAYERS_AND_NAMING.md](docs/BACKEND_LAYERS_AND_NAMING.md) e [IMPROVEMENTS_AND_KNOWN_ISSUES.md](docs/IMPROVEMENTS_AND_KNOWN_ISSUES.md).
+
+## Onde colocar um novo repositório
+
+- **Entidade do núcleo (Araponga.Domain):** User, Territory, Membership, Policies, etc. → **Araponga.Infrastructure.Shared**.
+- **Entidade de módulo:** repositório no **próprio módulo** (pasta Infrastructure do módulo).
+- **Outro cross-cutting** (e-mail, cache, outbox, mídia): **Araponga.Infrastructure**.
+
+Detalhes: [BACKEND_LAYERS_AND_NAMING.md](docs/BACKEND_LAYERS_AND_NAMING.md) (seção “Regras de decisão”).
 
 ## Regras de dependência (evitar referências circulares)
 
@@ -69,5 +89,6 @@ dotnet test backend/Tests/Araponga.Tests.Modules.Map/Araponga.Tests.Modules.Map.
 
 ## Documentação
 
-- [Módulos](Modules/README.md) — estrutura por módulo e lista de módulos.
+- [Camadas e nomenclatura](docs/BACKEND_LAYERS_AND_NAMING.md) — o que está em Api, Application, Domain, Infrastructure, Infrastructure.Shared, Shared; significado de "Platform" e "Shared".
+- [Melhorias, erros conhecidos e problemas comuns](docs/IMPROVEMENTS_AND_KNOWN_ISSUES.md) — melhorias de estrutura e módulos, assimetrias conhecidas, problemas comuns de abordagens (modular monolith, shared kernel, etc.) e ações priorizadas.
 - [Decisões arquiteturais (ADRs)](../docs/10_ARCHITECTURE_DECISIONS.md) — ADR-012, ADR-014, ADR-015, ADR-016.

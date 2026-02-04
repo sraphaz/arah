@@ -10,17 +10,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Araponga.Domain\Araponga.Domain.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Feed\Araponga.Modules.Feed\Araponga.Modules.Feed.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Events\Araponga.Modules.Events\Araponga.Modules.Events.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Notifications\Araponga.Modules.Notifications\Araponga.Modules.Notifications.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Chat\Araponga.Modules.Chat\Araponga.Modules.Chat.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Alerts\Araponga.Modules.Alerts\Araponga.Modules.Alerts.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Feed\Araponga.Modules.Feed.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Events\Araponga.Modules.Events.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Notifications\Araponga.Modules.Notifications.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Chat\Araponga.Modules.Chat.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Alerts\Araponga.Modules.Alerts.csproj" />
     <ProjectReference Include="..\Araponga.Modules.Connections\Araponga.Modules.Connections.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Subscriptions\Araponga.Modules.Subscriptions\Araponga.Modules.Subscriptions.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Assets\Araponga.Modules.Assets\Araponga.Modules.Assets.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Map\Araponga.Modules.Map\Araponga.Modules.Map.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Moderation\Araponga.Modules.Moderation\Araponga.Modules.Moderation.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Subscriptions\Araponga.Modules.Subscriptions.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Assets\Araponga.Modules.Assets.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Map\Araponga.Modules.Map.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Moderation\Araponga.Modules.Moderation.csproj" />
     <ProjectReference Include="..\Araponga.Shared\Araponga.Shared.csproj" />
   </ItemGroup>
 

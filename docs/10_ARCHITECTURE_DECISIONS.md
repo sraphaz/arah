@@ -416,7 +416,7 @@ Sim, **um projeto por módulo faz sentido** e é uma opção válida:
 
 4. **Verificação**: Não há ciclo no grafo de referências entre projetos. Build e testes passam após a reorganização.
 
-**Referência**: [backend/README.md](../backend/README.md), [backend/Modules/README.md](../backend/Modules/README.md).
+**Referência**: [backend/README.md](../backend/README.md), [backend/docs/BACKEND_LAYERS_AND_NAMING.md](../backend/docs/BACKEND_LAYERS_AND_NAMING.md).
 
 ---
 
@@ -435,11 +435,11 @@ Sim, **um projeto por módulo faz sentido** e é uma opção válida:
 
 2. **Repositórios fora do módulo (Feed)**
    - **Problema**: `IPostGeoAnchorRepository` e `IPostAssetRepository` são do módulo Feed, mas as implementações Postgres estavam no Core.Infrastructure.
-   - **Resolução (aplicada)**: Implementações Postgres migradas para o módulo Feed (`PostgresPostGeoAnchorRepository`, `PostgresPostAssetRepository` em `Araponga.Modules.Feed.Infrastructure.Postgres`), usando `FeedDbContext`; registros em `FeedModule`. Implementações InMemory permanecem no Core (uso do `InMemoryDataStore` compartilhado em testes/dev). Entidades `PostGeoAnchorRecord`/`PostAssetRecord` e configuração em `ArapongaDbContext` mantidas para compatibilidade com histórico de migrations; em runtime com Postgres apenas `FeedDbContext` é usado por esses repositórios.
+   - **Resolução (aplicada)**: Implementações Postgres migradas para o módulo Feed (`PostgresPostGeoAnchorRepository`, `PostgresPostAssetRepository` em `Araponga.Modules.Feed.Infrastructure.Postgres`), usando `FeedDbContext`; registros em `FeedModule`. Implementações InMemory permanecem no Core (uso do `InMemoryDataStore` compartilhado em testes/dev). **Repositórios Feed usam apenas FeedDbContext** para PostGeoAnchor e PostAsset.
 
 3. **Duplicação de entidades em dois DbContexts**
-   - **Problema**: `PostGeoAnchorRecord` / `PostAssetRecord` e tabelas correspondentes existem em `ArapongaDbContext` e em `FeedDbContext` (duplicação de configuração).
-   - **Estado**: Mantida de forma intencional: `FeedDbContext` é o contexto de uso para os repositórios do Feed; `ArapongaDbContext` conserva a configuração para não alterar o histórico de migrations existentes. Opcionalmente, uma migração futura no Core poderia remover essas entidades do snapshot após garantir que nenhum código Core as utilize.
+   - **Problema**: `PostGeoAnchorRecord` / `PostAssetRecord` e tabelas correspondentes existiam em `ArapongaDbContext` e em `FeedDbContext` (duplicação de configuração).
+   - **Resolução (aplicada)**: Entidades **removidas do modelo** do `ArapongaDbContext` (DbSets e `OnModelCreating`). Apenas `FeedDbContext` configura e usa essas tabelas. Ao gerar a próxima migração do ArapongaDbContext, remover do `Up()` as chamadas `DropTable` para `post_geo_anchors` e `post_assets` para não apagar as tabelas.
 
 4. **Registro de serviços na API**
    - **Problema**: Alguns repositórios e provedores (ex.: `IAcceptedConnectionsProvider`) são registrados na API em `AddPostgresRepositories` ou em `AddApplicationServices`, enquanto a maioria dos repositórios de módulos é registrada via `IModule.RegisterServices`.
@@ -528,7 +528,7 @@ Sim, **um projeto por módulo faz sentido** e é uma opção válida:
 | Autenticação/Auth | Implementado  | JWT no pipeline; SystemAdmin policy; refresh tokens; client credentials (workers); respostas com Token + RefreshToken + ExpiresIn |
 | Webhooks          | OK            | Nenhuma |
 
-**Referência**: [backend/README.md](../backend/README.md), [Core/Araponga.Api/Program.cs](../backend/Core/Araponga.Api/Program.cs), [Core/Araponga.Api/Security/](../backend/Core/Araponga.Api/Security/).
+**Referência**: [backend/README.md](../backend/README.md), [backend/Araponga.Api/Program.cs](../backend/Araponga.Api/Program.cs), [backend/Araponga.Api/Security/](../backend/Araponga.Api/Security/).
 
 ---
 

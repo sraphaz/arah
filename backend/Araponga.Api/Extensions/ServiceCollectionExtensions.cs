@@ -51,7 +51,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        // Core services
+        // Platform services (cross-cutting)
         services.AddScoped<MembershipAccessRules>();
         // AccessEvaluator será registrado depois para permitir injeção dos serviços de políticas
         services.AddScoped<CurrentUserAccessor>();
@@ -448,7 +448,7 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
     {
-        // Core repos (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
+        // Shared/platform repos (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
         // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
         // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedInMemoryRepositories
         services.AddSingleton<IFeedRepository, InMemoryFeedRepository>();

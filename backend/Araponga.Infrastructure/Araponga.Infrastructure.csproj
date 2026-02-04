@@ -3,12 +3,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Araponga.Domain\Araponga.Domain.csproj" />
     <ProjectReference Include="..\Araponga.Application\Araponga.Application.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Feed\Araponga.Modules.Feed\Araponga.Modules.Feed.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Feed\Araponga.Modules.Feed.csproj" />
     <ProjectReference Include="..\Araponga.Modules.Connections\Araponga.Modules.Connections.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Assets\Araponga.Modules.Assets\Araponga.Modules.Assets.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Map\Araponga.Modules.Map\Araponga.Modules.Map.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Moderation\Araponga.Modules.Moderation\Araponga.Modules.Moderation.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Assets\Araponga.Modules.Assets.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Map\Araponga.Modules.Map.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Marketplace\Araponga.Modules.Marketplace.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Moderation\Araponga.Modules.Moderation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,7 +10,7 @@
     <ProjectReference Include="..\Araponga.Domain\Araponga.Domain.csproj" />
     <ProjectReference Include="..\Araponga.Application\Araponga.Application.csproj" />
     <ProjectReference Include="..\Araponga.Application.Abstractions\Araponga.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Araponga.Modules.Moderation\Araponga.Modules.Moderation\Araponga.Modules.Moderation.csproj" />
+    <ProjectReference Include="..\Araponga.Modules.Moderation\Araponga.Modules.Moderation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

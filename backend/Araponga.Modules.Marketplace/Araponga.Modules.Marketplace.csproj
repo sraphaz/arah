@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Araponga.Domain\Araponga.Domain.csproj" />
-    <ProjectReference Include="..\..\Araponga.Application.Abstractions\Araponga.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Araponga.Domain\Araponga.Domain.csproj" />
+    <ProjectReference Include="..\Araponga.Application.Abstractions\Araponga.Application.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

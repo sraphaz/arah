@@ -4,13 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Araponga.Modules.Feed</RootNamespace>
+    <RootNamespace>Araponga.Modules.Subscriptions</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Araponga.Domain\Araponga.Domain.csproj" />
-    <ProjectReference Include="..\..\Araponga.Application.Abstractions\Araponga.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Araponga.Modules.Map\Araponga.Modules.Map\Araponga.Modules.Map.csproj" />
+    <ProjectReference Include="..\Araponga.Domain\Araponga.Domain.csproj" />
+    <ProjectReference Include="..\Araponga.Application.Abstractions\Araponga.Application.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

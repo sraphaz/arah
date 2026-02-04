@@ -38,14 +38,12 @@ public sealed class ArapongaDbContext : DbContext
     public DbSet<EventParticipationRecord> EventParticipations => Set<EventParticipationRecord>();
     public DbSet<MapEntityRecord> MapEntities => Set<MapEntityRecord>();
     public DbSet<MapEntityRelationRecord> MapEntityRelations => Set<MapEntityRelationRecord>();
-    public DbSet<PostGeoAnchorRecord> PostGeoAnchors => Set<PostGeoAnchorRecord>();
     public DbSet<HealthAlertRecord> HealthAlerts => Set<HealthAlertRecord>();
     public DbSet<PostLikeRecord> PostLikes => Set<PostLikeRecord>();
     public DbSet<PostShareRecord> PostShares => Set<PostShareRecord>();
     public DbSet<TerritoryAssetRecord> TerritoryAssets => Set<TerritoryAssetRecord>();
     public DbSet<AssetGeoAnchorRecord> AssetGeoAnchors => Set<AssetGeoAnchorRecord>();
     public DbSet<AssetValidationRecord> AssetValidations => Set<AssetValidationRecord>();
-    public DbSet<PostAssetRecord> PostAssets => Set<PostAssetRecord>();
     public DbSet<ActiveTerritoryRecord> ActiveTerritories => Set<ActiveTerritoryRecord>();
     public DbSet<FeatureFlagRecord> FeatureFlags => Set<FeatureFlagRecord>();
     public DbSet<AuditEntryRecord> AuditEntries => Set<AuditEntryRecord>();
@@ -549,17 +547,6 @@ public sealed class ArapongaDbContext : DbContext
             entity.HasIndex(r => r.EntityId);
         });
 
-        modelBuilder.Entity<PostGeoAnchorRecord>(entity =>
-        {
-            entity.ToTable("post_geo_anchors");
-            entity.HasKey(a => a.Id);
-            entity.Property(a => a.Type).HasMaxLength(120).IsRequired();
-            entity.Property(a => a.Latitude).HasColumnType("double precision");
-            entity.Property(a => a.Longitude).HasColumnType("double precision");
-            entity.Property(a => a.CreatedAtUtc).HasColumnType("timestamp with time zone");
-            entity.HasIndex(a => a.PostId);
-        });
-
         modelBuilder.Entity<HealthAlertRecord>(entity =>
         {
             entity.ToTable("health_alerts");
@@ -605,13 +592,6 @@ public sealed class ArapongaDbContext : DbContext
             entity.HasKey(a => new { a.AssetId, a.UserId });
             entity.Property(a => a.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(a => a.UserId);
-        });
-
-        modelBuilder.Entity<PostAssetRecord>(entity =>
-        {
-            entity.ToTable("post_assets");
-            entity.HasKey(p => new { p.PostId, p.AssetId });
-            entity.HasIndex(p => p.AssetId);
         });
 
         modelBuilder.Entity<PostLikeRecord>(entity =>

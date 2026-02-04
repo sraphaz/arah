@@ -69,10 +69,16 @@ public sealed class AdminCouponsController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var created = result.Value!;
         return CreatedAtAction(
             nameof(Get),
-            new { id = result.Value!.Id },
-            ToResponse(result.Value));
+            new { id = created.Id },
+            ToResponse(created));
     }
 
     /// <summary>

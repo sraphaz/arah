@@ -69,11 +69,11 @@
       },
       "OpenTelemetry.Exporter.Console": {
         "type": "Direct",
-        "requested": "[1.9.0-beta.1, )",
-        "resolved": "1.9.0-rc.1",
-        "contentHash": "PI4IbbyCdPC5YqxeaXL+doQ3R8d/8Uu87HjzlFS/Sb6bMhq08KslOu/O8BJTCP2Xgzy2Wk4wGYz+YU9cUcBYpA==",
+        "requested": "[1.9.0, )",
+        "resolved": "1.9.0",
+        "contentHash": "TbScDLSc6kcji+/wZYIf8/HBV2SnttzN7PNxr3TYczlmGlU4K2ugujp6seSktEO4OaAvKRd7Y3CG3SKNj0C+1Q==",
         "dependencies": {
-          "OpenTelemetry": "1.9.0-rc.1"
+          "OpenTelemetry": "1.9.0"
         }
       },
       "OpenTelemetry.Exporter.Jaeger": {
@@ -88,14 +88,14 @@
       },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
         "type": "Direct",
-        "requested": "[1.9.0-beta.1, )",
-        "resolved": "1.9.0-rc.1",
-        "contentHash": "yTPCLoYzdSL9p83+KCwQlxkhQOmD/75DoyvNUK009OprmS0DSCoaSKx/tKpePAfXRPR0UJbNB7BNqPSJVYWEsA==",
+        "requested": "[1.9.0, )",
+        "resolved": "1.9.0",
+        "contentHash": "qzFOP3V2eYIVbug3U4BJzzidHe9JhAJ42WZ/H8pUp/45Ry3MQQg/+e/ZieClJcxKnpbkXi7dUq1rpvuNp+yBYA==",
         "dependencies": {
           "Google.Protobuf": "[3.22.5, 4.0.0)",
           "Grpc.Net.Client": "[2.52.0, 3.0.0)",
           "Microsoft.Extensions.Configuration.Binder": "8.0.1",
-          "OpenTelemetry": "1.9.0-rc.1"
+          "OpenTelemetry": "1.9.0"
         }
       },
       "OpenTelemetry.Exporter.Prometheus.AspNetCore": {
@@ -109,17 +109,17 @@
       },
       "OpenTelemetry.Extensions.Hosting": {
         "type": "Direct",
-        "requested": "[1.9.0-beta.1, )",
-        "resolved": "1.9.0-rc.1",
-        "contentHash": "+RIPGjz4dys9Ayc0516S5RFHjMl8ybnUDHuS7qVQfTorT9kmUamKHqqVO5+N7lSZ4UYdKAx3agLGMToG91eOiQ==",
+        "requested": "[1.9.0, )",
+        "resolved": "1.9.0",
+        "contentHash": "QBQPrKDVCXxTBE+r8tgjmFNKKHi4sKyczmip2XGUcjy8kk3quUNhttnjiMqC4sU50Hemmn4i5752Co26pnKe3A==",
         "dependencies": {
           "Microsoft.Extensions.Hosting.Abstractions": "8.0.0",
-          "OpenTelemetry": "1.9.0-rc.1"
+          "OpenTelemetry": "1.9.0"
         }
       },
       "OpenTelemetry.Instrumentation.AspNetCore": {
         "type": "Direct",
-        "requested": "[1.9.0-beta.1, )",
+        "requested": "[1.9.0, )",
         "resolved": "1.9.0",
         "contentHash": "x4HuWBw1rbWZUh5j8/GpXz3xa7JnrTuKne+ACmBqvcoO/rNGkG7HayRruwoQ7gf52xpMtRGr4gxlhLW8eU0EiQ==",
         "dependencies": {
@@ -138,7 +138,7 @@
       },
       "OpenTelemetry.Instrumentation.Http": {
         "type": "Direct",
-        "requested": "[1.9.0-beta.1, )",
+        "requested": "[1.9.0, )",
         "resolved": "1.9.0",
         "contentHash": "+ZXppf8Qxz3OdC803T8fB6i8iSscc8PsxMnM/JizSOYmkz+8vGiScEiaBBBFNZtMh2KpA0q+qxwnSwQUkbvzog==",
         "dependencies": {
@@ -1199,7 +1199,7 @@
           "Araponga.Modules.Notifications": "[1.0.0, )",
           "Araponga.Modules.Subscriptions": "[1.0.0, )",
           "Araponga.Shared": "[1.0.0, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.11, )",
+          "Microsoft.Extensions.Caching.Memory": "[9.0.0, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[8.0.0, )",
           "Otp.NET": "[1.3.0, )"
         }
@@ -1229,7 +1229,7 @@
           "Azure.Storage.Blobs": "[12.21.1, )",
           "MailKit": "[4.14.1, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.11, )",
+          "Microsoft.Extensions.Caching.Memory": "[9.0.0, )",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "[8.0.11, )",
           "Microsoft.Extensions.Hosting": "[8.0.0, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )",

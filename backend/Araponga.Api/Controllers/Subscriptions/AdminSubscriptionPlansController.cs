@@ -39,7 +39,7 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
         CancellationToken cancellationToken)
     {
         IReadOnlyList<SubscriptionPlan> plans;
-        
+
         if (territoryId.HasValue)
         {
             plans = await _adminService.GetPlansForTerritoryAsync(territoryId.Value, cancellationToken);
@@ -133,10 +133,16 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var created = result.Value!;
         return CreatedAtAction(
             nameof(Get),
-            new { id = result.Value!.Id },
-            ToResponse(result.Value));
+            new { id = created.Id },
+            ToResponse(created));
     }
 
     /// <summary>
@@ -174,10 +180,16 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var createdPlan = result.Value;
         return CreatedAtAction(
             nameof(Get),
-            new { id = result.Value!.Id },
-            ToResponse(result.Value));
+            new { id = createdPlan.Id },
+            ToResponse(createdPlan));
     }
 
     /// <summary>
@@ -211,7 +223,13 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     /// <summary>
@@ -242,7 +260,13 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     /// <summary>
@@ -268,7 +292,13 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     /// <summary>
@@ -299,7 +329,13 @@ public sealed class AdminSubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     /// <summary>

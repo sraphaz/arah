@@ -77,10 +77,16 @@ public sealed class SubscriptionsController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var created = result.Value!;
         return CreatedAtAction(
             nameof(Get),
-            new { id = result.Value!.Id },
-            await ToResponseAsync(result.Value, cancellationToken));
+            new { id = created.Id },
+            await ToResponseAsync(created, cancellationToken));
     }
 
     /// <summary>
@@ -148,7 +154,13 @@ public sealed class SubscriptionsController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(await ToResponseAsync(result.Value!, cancellationToken));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(await ToResponseAsync(updated, cancellationToken));
     }
 
     /// <summary>
@@ -228,7 +240,13 @@ public sealed class SubscriptionsController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(await ToResponseAsync(result.Value!, cancellationToken));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var reactivated = result.Value!;
+        return Ok(await ToResponseAsync(reactivated, cancellationToken));
     }
 
     private async Task<SubscriptionResponse> ToResponseAsync(Subscription subscription, CancellationToken cancellationToken)

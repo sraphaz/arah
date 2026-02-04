@@ -56,7 +56,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Basic dGVzdDp0ZXN0"); // Basic auth ao invés de Bearer
+        request.Headers["Authorization"] = "Basic dGVzdDp0ZXN0"; // Basic auth ao invés de Bearer
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -75,7 +75,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Bearer invalid-token");
+        request.Headers["Authorization"] = "Bearer invalid-token";
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -98,7 +98,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Bearer valid-token");
+        request.Headers["Authorization"] = "Bearer valid-token";
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -133,7 +133,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Bearer valid-token");
+        request.Headers["Authorization"] = "Bearer valid-token";
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -169,7 +169,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "bearer valid-token"); // lowercase
+        request.Headers["Authorization"] = "bearer valid-token"; // lowercase
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -204,7 +204,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Bearer   valid-token   "); // Com espaços extras
+        request.Headers["Authorization"] = "Bearer   valid-token   "; // Com espaços extras
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -224,7 +224,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Bearer expired-token");
+        request.Headers["Authorization"] = "Bearer expired-token";
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -243,7 +243,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Bearer not.a.valid.jwt.token");
+        request.Headers["Authorization"] = "Bearer not.a.valid.jwt.token";
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 
@@ -262,7 +262,7 @@ public class AuthEdgeCasesTests
 
         var httpContext = new DefaultHttpContext();
         var request = httpContext.Request;
-        request.Headers.Add("Authorization", "Bearer "); // Token vazio
+        request.Headers["Authorization"] = "Bearer "; // Token vazio
 
         var result = await accessor.GetAsync(request, CancellationToken.None);
 

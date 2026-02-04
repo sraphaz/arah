@@ -335,8 +335,9 @@ public sealed class AuthService2FATests
         var verifyResult = await service.Verify2FAAsync(challengeId, code, CancellationToken.None);
 
         Assert.True(verifyResult.IsSuccess);
-        Assert.NotNull(verifyResult.Value);
-        Assert.NotNull(verifyResult.Value!);
+        Assert.NotNull(verifyResult.Value.user);
+        Assert.NotNull(verifyResult.Value.accessToken);
+        Assert.NotNull(verifyResult.Value.refreshToken);
     }
 
     [Fact]

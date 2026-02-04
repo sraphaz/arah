@@ -97,7 +97,7 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
             userContext.User.Id,
             territoryId,
             cancellationToken);
-        
+
         if (membership == null || membership.Role != MembershipRole.Resident)
         {
             return Forbid("Only territory curators can create territory plans.");
@@ -121,10 +121,16 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var created = result.Value!;
         return CreatedAtAction(
             nameof(Get),
-            new { territoryId, id = result.Value!.Id },
-            ToResponse(result.Value));
+            new { territoryId, id = created.Id },
+            ToResponse(created));
     }
 
     /// <summary>
@@ -165,7 +171,7 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
                 userContext.User.Id,
                 territoryId,
                 cancellationToken);
-            
+
             if (membership == null || membership.Role != MembershipRole.Resident)
             {
                 return Forbid("Only territory curators can update territory plans.");
@@ -186,7 +192,13 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     /// <summary>
@@ -227,7 +239,7 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
                 userContext.User.Id,
                 territoryId,
                 cancellationToken);
-            
+
             if (membership == null || membership.Role != MembershipRole.Resident)
             {
                 return Forbid("Only territory curators can update territory plans.");
@@ -245,7 +257,13 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     /// <summary>
@@ -285,7 +303,7 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
                 userContext.User.Id,
                 territoryId,
                 cancellationToken);
-            
+
             if (membership == null || membership.Role != MembershipRole.Resident)
             {
                 return Forbid("Only territory curators can activate territory plans.");
@@ -299,7 +317,13 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     /// <summary>
@@ -340,7 +364,7 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
                 userContext.User.Id,
                 territoryId,
                 cancellationToken);
-            
+
             if (membership == null || membership.Role != MembershipRole.Resident)
             {
                 return Forbid("Only territory curators can deactivate territory plans.");
@@ -358,7 +382,13 @@ public sealed class TerritorySubscriptionPlansController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var updated = result.Value!;
+        return Ok(ToResponse(updated));
     }
 
     private static SubscriptionPlanResponse ToResponse(SubscriptionPlan plan)

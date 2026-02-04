@@ -48,7 +48,13 @@ public sealed class CouponsController : ControllerBase
             return BadRequest(new ErrorResponse { Message = result.Error ?? "Invalid coupon." });
         }
 
-        return Ok(ToResponse(result.Value!));
+        if (result.Value is null)
+        {
+            return BadRequest(new ErrorResponse { Message = "Unexpected null result." });
+        }
+
+        var coupon = result.Value!;
+        return Ok(ToResponse(coupon));
     }
 
     private static CouponResponse ToResponse(Coupon coupon)

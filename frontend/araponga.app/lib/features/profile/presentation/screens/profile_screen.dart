@@ -186,7 +186,6 @@ class ProfileScreen extends ConsumerWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

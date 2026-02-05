@@ -1,3 +1,4 @@
+import 'package:araponga_app/features/auth/data/repositories/auth_repository.dart';
 import 'package:araponga_app/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:araponga_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:araponga_app/l10n/app_localizations.dart';

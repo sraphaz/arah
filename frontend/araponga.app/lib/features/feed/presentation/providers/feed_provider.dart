@@ -26,7 +26,7 @@ class FeedState {
 
 /// Notifier do feed por território: carrega primeira página, loadMore e refresh.
 class FeedNotifier extends StateNotifier<FeedState> {
-  FeedNotifier(this._ref, this.territoryId) : super(FeedState.initial()) {
+  FeedNotifier(this._ref, this.territoryId) : super(FeedState.initial) {
     if (territoryId != null && territoryId!.isNotEmpty) {
       _loadPage(1, append: false);
     }

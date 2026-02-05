@@ -34,6 +34,7 @@ void main() {
           meProfileProvider.overrideWith((ref) async => profile),
         ],
         child: MaterialApp(
+          locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ProfileScreen(),

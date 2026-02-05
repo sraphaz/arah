@@ -20,6 +20,7 @@ void main() {
           authStateProvider.overrideWith(() => _FakeAuthStateNotifier()),
         ],
         child: MaterialApp(
+          locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const LoginScreen(bffBaseUrl: 'http://test'),

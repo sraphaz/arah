@@ -15,6 +15,7 @@ void main() {
           selectedTerritoryIdValueProvider.overrideWith((ref) => null),
         ],
         child: MaterialApp(
+          locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ExploreScreen(),

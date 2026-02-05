@@ -26,8 +26,10 @@ public sealed class FeedController : ControllerBase
     private readonly MediaService _mediaService;
     private readonly CurrentUserAccessor _currentUserAccessor;
     private readonly ActiveTerritoryService _activeTerritoryService;
+    private readonly TerritoryService _territoryService;
     private readonly AccessEvaluator _accessEvaluator;
     private readonly TerritoryFeatureFlagGuard _featureGuard;
+    private readonly IGeoConvergenceBypassService _geoBypass;
     private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
     private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
 
@@ -38,8 +40,10 @@ public sealed class FeedController : ControllerBase
         MediaService mediaService,
         CurrentUserAccessor currentUserAccessor,
         ActiveTerritoryService activeTerritoryService,
+        TerritoryService territoryService,
         AccessEvaluator accessEvaluator,
         TerritoryFeatureFlagGuard featureGuard,
+        IGeoConvergenceBypassService geoBypass,
         IPostGeoAnchorRepository postGeoAnchorRepository,
         IMediaAttachmentRepository mediaAttachmentRepository)
     {
@@ -49,8 +53,10 @@ public sealed class FeedController : ControllerBase
         _mediaService = mediaService;
         _currentUserAccessor = currentUserAccessor;
         _activeTerritoryService = activeTerritoryService;
+        _territoryService = territoryService;
         _accessEvaluator = accessEvaluator;
         _featureGuard = featureGuard;
+        _geoBypass = geoBypass;
         _postGeoAnchorRepository = postGeoAnchorRepository;
         _mediaAttachmentRepository = mediaAttachmentRepository;
     }
@@ -86,6 +92,29 @@ public sealed class FeedController : ControllerBase
         if (userContext.Status != TokenStatus.Valid)
         {
             return Unauthorized();
+        }
+
+        // Convergência geo/território: se o cliente enviar X-Geo-Latitude/X-Geo-Longitude, exige que a posição esteja no raio do território (salvo bypass por flag ou permissão).
+        if (GeoHeaderReader.TryGetCoordinates(Request.Headers, out var userLat, out var userLon))
+        {
+            var bypass = await _geoBypass.ShouldBypassGeoEnforcementAsync(resolvedTerritoryId.Value, userContext.User?.Id, cancellationToken);
+            if (!bypass)
+            {
+                var territory = await _territoryService.GetByIdAsync(resolvedTerritoryId.Value, cancellationToken);
+                if (territory is not null)
+                {
+                    var maxRadiusKm = territory.RadiusKm ?? Constants.Geo.VerificationRadiusKm;
+                    var distanceKm = GeographyHelper.DistanceKm(userLat, userLon, territory.Latitude, territory.Longitude);
+                    if (distanceKm > maxRadiusKm)
+                    {
+                        return StatusCode(StatusCodes.Status403Forbidden, new
+                        {
+                            error = "Geolocation does not converge with the observed territory.",
+                            detail = $"User position is {distanceKm:F1} km from territory center. Maximum allowed: {maxRadiusKm:F1} km.",
+                        });
+                    }
+                }
+            }
         }
 
         var effectivePrioritize = prioritizeConnections

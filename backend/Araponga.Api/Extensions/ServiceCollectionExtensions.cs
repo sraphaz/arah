@@ -67,6 +67,7 @@ public static class ServiceCollectionExtensions
 
         // Feature flags guards (territory-scoped)
         services.AddScoped<TerritoryFeatureFlagGuard>();
+        services.AddScoped<IGeoConvergenceBypassService, GeoConvergenceBypassService>();
 
         // Feed services (refactored)
         services.AddScoped<PostCreationService>();

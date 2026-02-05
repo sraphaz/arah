@@ -1,3 +1,4 @@
+# SDK 8.0.13: alinhado ao RuntimeFrameworkVersion e evita CVE-2024-43483 (hash flooding)
 FROM mcr.microsoft.com/dotnet/sdk:8.0.13 AS build
 WORKDIR /src
 
@@ -10,7 +11,7 @@ RUN dotnet restore Araponga.sln
 WORKDIR /src/backend/Araponga.Api
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
-# Runtime 8.0.10+ required for CVE-2024-43483 (hash flooding) fix
+# Runtime 8.0.13: contém fix CVE-2024-43483 (hash flooding)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.13
 WORKDIR /app
 COPY --from=build /app/publish .

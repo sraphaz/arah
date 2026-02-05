@@ -6,7 +6,6 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../data/repositories/auth_repository.dart';
 import '../providers/auth_state_provider.dart';
 
 /// Tela de login. API usa auth/social; em dev usamos provider "dev".

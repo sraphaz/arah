@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/bff_client.dart';
 import '../../../../core/providers/app_providers.dart';
+import '../../data/repositories/feed_repository.dart';
 
 /// Estado do feed com paginação: itens carregados, página atual, se há mais.
 class FeedState {
@@ -24,17 +25,17 @@ class FeedState {
 }
 
 /// Notifier do feed por território: carrega primeira página, loadMore e refresh.
-class FeedNotifier extends AutoDisposeFamilyStateNotifier<FeedState, String?> {
-  FeedNotifier(this.ref, this.territoryId) : super(FeedState.initial()) {
+class FeedNotifier extends StateNotifier<FeedState> {
+  FeedNotifier(this._ref, this.territoryId) : super(FeedState.initial()) {
     if (territoryId != null && territoryId!.isNotEmpty) {
       _loadPage(1, append: false);
     }
   }
 
-  final Ref ref;
+  final Ref _ref;
   final String? territoryId;
 
-  BffClient get _client => ref.read(bffClientProvider);
+  BffClient get _client => _ref.read(bffClientProvider);
 
   Future<void> _loadPage(int pageNumber, {required bool append}) async {
     final tid = territoryId ?? '';
@@ -59,7 +60,7 @@ class FeedNotifier extends AutoDisposeFamilyStateNotifier<FeedState, String?> {
         isLoading: false,
         error: null,
       );
-    } catch (e, st) {
+    } catch (e) {
       state = FeedState(
         items: state.items,
         page: state.page,

@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class _FakeAuthStateNotifierWithSession extends AuthStateNotifier {
-  _FakeAuthStateNotifierWithSession(super.ref);
+  _FakeAuthStateNotifierWithSession();
   @override
   Future<AuthSession?> build() async => AuthSession(
         accessToken: 'test-token',
@@ -30,7 +30,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          authStateProvider.overrideWith((ref) => _FakeAuthStateNotifierWithSession(ref)),
+          authStateProvider.overrideWith(() => _FakeAuthStateNotifierWithSession()),
           meProfileProvider.overrideWith((ref) async => profile),
         ],
         child: MaterialApp(

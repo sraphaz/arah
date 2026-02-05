@@ -7,7 +7,6 @@ import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
-import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/onboarding_models.dart';
 import '../providers/onboarding_providers.dart';

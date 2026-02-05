@@ -5,10 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
-import '../../../../core/widgets/profile_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/me_profile.dart';
-import '../../data/repositories/me_profile_repository.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
 import '../providers/me_profile_provider.dart';
 

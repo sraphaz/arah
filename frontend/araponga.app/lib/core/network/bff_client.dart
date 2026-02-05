@@ -19,8 +19,7 @@ class BffClient {
     this.latitude,
     this.longitude,
     this.onUnauthorized,
-  })  : _base = config.bffBaseUrl.replaceAll(RegExp(r'/$'), '') + '/api/v2/journeys',
-        _dio = _createDio(config.bffBaseUrl.replaceAll(RegExp(r'/$'), '') + '/api/v2/journeys', onUnauthorized);
+  }) : _dio = _createDio(config.bffBaseUrl.replaceAll(RegExp(r'/$'), '') + '/api/v2/journeys', onUnauthorized);
 
   final AppConfig config;
   final String? accessToken;
@@ -29,7 +28,6 @@ class BffClient {
   final double? longitude;
   final void Function()? onUnauthorized;
 
-  final String _base;
   final Dio _dio;
   static const _timeout = Duration(seconds: 30);
 
@@ -50,6 +48,12 @@ class BffClient {
           onUnauthorized?.call();
         }
         if (error.response?.statusCode == 429) {
+          const maxRetries = 2;
+          final retries = (error.requestOptions.extra['_429_retries'] as int?) ?? 0;
+          if (retries >= maxRetries) {
+            return handler.next(error);
+          }
+          error.requestOptions.extra['_429_retries'] = retries + 1;
           final retryAfter = error.response?.headers.value('Retry-After');
           final seconds = retryAfter != null ? int.tryParse(retryAfter) ?? 2 : 2;
           await Future<void>.delayed(Duration(seconds: seconds.clamp(1, 10)));

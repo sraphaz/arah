@@ -1,7 +1,7 @@
 # =========================
 # Build stage
 # =========================
-FROM mcr.microsoft.com/dotnet/sdk:8.0.13 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # 1) Copiar solution e csproj (para cache)
@@ -32,7 +32,7 @@ RUN dotnet publish -c Release -o /app/publish --no-restore
 # =========================
 # Runtime stage
 # =========================
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.13 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish ./
 

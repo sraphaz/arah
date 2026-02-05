@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../feed/presentation/screens/feed_screen.dart';
-import '../../feed/presentation/screens/create_post_screen.dart';
-import '../../profile/presentation/screens/profile_screen.dart';
-import '../../explore/presentation/screens/explore_screen.dart';
+import '../../../feed/presentation/screens/feed_screen.dart';
+import '../../../feed/presentation/screens/create_post_screen.dart';
+import '../../../profile/presentation/screens/profile_screen.dart';
+import '../../../explore/presentation/screens/explore_screen.dart';
 
 /// Shell principal com bottom navigation estilo Instagram: Home (feed), Explore, Publicar, Notifications (placeholder), Profile.
 class MainShellScreen extends ConsumerStatefulWidget {

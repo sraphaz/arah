@@ -1,5 +1,6 @@
 // Gerado manualmente. Execute `flutter gen-l10n` para regenerar a partir dos .arb.
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class AppLocalizations {
   AppLocalizations(this.locale);
@@ -10,7 +11,7 @@ class AppLocalizations {
 
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [
+  static List<LocalizationsDelegate<dynamic>> get localizationsDelegates => [
     delegate,
     ...GlobalMaterialLocalizations.delegates,
     GlobalWidgetsLocalizations.delegate,

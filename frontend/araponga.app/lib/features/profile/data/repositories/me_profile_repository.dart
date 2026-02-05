@@ -1,6 +1,5 @@
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
-import '../../../../core/providers/app_providers.dart';
 import '../models/me_profile.dart';
 
 /// Repositório do perfil do usuário logado (jornada me).

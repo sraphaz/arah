@@ -38,7 +38,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final territoryId = ref.read(selectedTerritoryIdValueProvider);
     if (territoryId == null || territoryId.isEmpty) {
-      _showError('Escolha um território antes de publicar.');
+      if (mounted) showErrorSnackBar(context, 'Escolha um território antes de publicar.');
       return;
     }
     setState(() => _submitting = true);

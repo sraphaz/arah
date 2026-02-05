@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class _FakeAuthStateNotifier extends AuthStateNotifier {
-  _FakeAuthStateNotifier(super.ref);
+  _FakeAuthStateNotifier();
   @override
   Future<AuthSession?> build() async => null;
 }
@@ -16,7 +16,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          authStateProvider.overrideWith((ref) => _FakeAuthStateNotifier(ref)),
+          authStateProvider.overrideWith(() => _FakeAuthStateNotifier()),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,

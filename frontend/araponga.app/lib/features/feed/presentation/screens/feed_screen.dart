@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
-import '../../../../core/providers/app_providers.dart';
+import '../../../../core/providers/territory_provider.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../territories/presentation/widgets/territory_selector.dart';
+import '../../../territories/presentation/widgets/territory_selector.dart';
 import '../providers/feed_provider.dart';
 
 /// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação e pull-to-refresh.
@@ -34,7 +34,7 @@ class FeedScreen extends ConsumerWidget {
                     ),
               ),
             ),
-            const Expanded(child: TerritorySelector()),
+            Expanded(child: TerritorySelector()),
           ],
         ),
       );

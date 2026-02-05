@@ -4,7 +4,7 @@ import '../../data/models/auth_models.dart';
 import '../../data/repositories/auth_repository.dart';
 
 /// Estado global de autenticação. Inicializa com restoreSession.
-final authStateProvider = AsyncNotifierProvider<AuthStateNotifier, AuthSession?>(AuthStateNotifier);
+final authStateProvider = AsyncNotifierProvider<AuthStateNotifier, AuthSession?>(AuthStateNotifier.new);
 
 class AuthStateNotifier extends AsyncNotifier<AuthSession?> {
   @override

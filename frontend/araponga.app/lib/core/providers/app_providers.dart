@@ -22,6 +22,3 @@ final bffClientProvider = Provider<BffClient>((ref) {
     },
   );
 });
-
-/// Território ativo (X-Session-Id). Persistir com SharedPreferences em produção.
-final selectedTerritoryIdProvider = StateProvider<String?>((ref) => null);

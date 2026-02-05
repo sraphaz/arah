@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -8,8 +9,8 @@ import '../../../../core/storage/secure_storage_service.dart';
 import '../models/auth_models.dart';
 
 /// Repositório de autenticação: login (social/dev), refresh, logout.
-/// API usa auth/social; para dev usamos provider "dev" com documento placeholder.
-/// Login Google: apenas Google Sign-In → BFF (sem Firebase).
+/// API usa auth/social; lookup por (authProvider, externalId). externalId = Firebase UID
+/// preserva contas existentes (evita duplicar ao trocar para Google account.id).
 class AuthRepository {
   AuthRepository({
     required this.config,
@@ -21,7 +22,7 @@ class AuthRepository {
 
   BffClient _client() => BffClient(config: config);
 
-  /// Login com Google: Google Sign-In → BFF auth/social (sem Firebase).
+  /// Login com Google: Google Sign-In → Firebase Auth → BFF auth/social (externalId = Firebase UID).
   Future<AuthSession?> loginWithGoogle() async {
     final googleSignIn = GoogleSignIn(
       scopes: ['email', 'profile'],
@@ -30,15 +31,21 @@ class AuthRepository {
     final account = await googleSignIn.signIn();
     if (account == null) return null;
 
-    final displayName = account.displayName ?? account.email;
-    final externalId = account.id;
-    if (externalId.isEmpty) throw ApiException('Google não retornou id do usuário');
+    final auth = await account.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: auth.accessToken,
+      idToken: auth.idToken,
+    );
+    final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    final firebaseUser = userCredential.user;
+    if (firebaseUser == null) throw ApiException('Firebase não retornou usuário');
 
+    final displayName = firebaseUser.displayName ?? firebaseUser.email ?? 'User';
     final body = <String, dynamic>{
       'authProvider': 'google',
-      'externalId': externalId,
+      'externalId': firebaseUser.uid,
       'displayName': displayName,
-      'email': account.email,
+      'email': firebaseUser.email,
       'foreignDocument': 'google',
     };
     final client = _client();
@@ -126,6 +133,7 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
     await secureStorage.clearAuth();
   }

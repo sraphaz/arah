@@ -1,4 +1,4 @@
-# SDK 8.0: use tag 8.0 para última patch (CVE-2024-43483 corrigido em 8.0.10+)
+# SDK .NET 8 (tag 8.0 = último patch disponível; evita "not found" em algumas arquiteturas)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
@@ -11,7 +11,7 @@ RUN dotnet restore Araponga.sln
 WORKDIR /src/backend/Araponga.Api
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
-# Runtime 8.0: última patch com fix CVE-2024-43483 (hash flooding)
+# Runtime .NET 8
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .

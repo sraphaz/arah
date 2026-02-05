@@ -14,3 +14,15 @@ final meProfileProvider = FutureProvider.autoDispose<MeProfile>((ref) async {
   final repo = ref.watch(meProfileRepositoryProvider);
   return repo.getProfile();
 });
+
+/// Interesses do usuário (GET me/interests).
+final meInterestsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
+  final repo = ref.watch(meProfileRepositoryProvider);
+  return repo.getInterests();
+});
+
+/// Preferências do usuário (GET me/preferences).
+final mePreferencesProvider = FutureProvider.autoDispose<UserPreferences>((ref) async {
+  final repo = ref.watch(meProfileRepositoryProvider);
+  return repo.getPreferences();
+});

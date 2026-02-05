@@ -296,16 +296,7 @@ if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnor
 // Infrastructure (repositories, unit of work, etc.) - must be called before adding database health check
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Configure connection pool metrics after infrastructure is registered
-if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
-{
-    builder.Services.AddSingleton<ConnectionPoolMetricsService>(sp =>
-    {
-        var dbContext = sp.GetRequiredService<ArapongaDbContext>();
-        var logger = sp.GetRequiredService<ILogger<ConnectionPoolMetricsService>>();
-        return new ConnectionPoolMetricsService(dbContext, logger);
-    });
-}
+// ConnectionPoolMetricsService é registrado em AddInfrastructure quando Postgres
 
 // Add database health check after infrastructure is registered
 if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
@@ -482,6 +473,38 @@ builder.Services.AddHsts(options =>
 });
 
 var app = builder.Build();
+
+// Aplicar migrações do Postgres quando Persistence:ApplyMigrations = true (ex.: Docker dev)
+var applyMigrations = builder.Configuration.GetValue<bool>("Persistence:ApplyMigrations");
+if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase) && applyMigrations)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    const int maxRetries = 10;
+    const int delaySeconds = 3;
+    for (int attempt = 1; attempt <= maxRetries; attempt++)
+    {
+        try
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var mainDb = scope.ServiceProvider.GetRequiredService<ArapongaDbContext>();
+                mainDb.Database.Migrate();
+            }
+            logger.LogInformation("ArapongaDbContext migrations applied successfully.");
+            break;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Attempt {Attempt}/{Max} failed to apply migrations (waiting {Delay}s before retry)", attempt, maxRetries, delaySeconds);
+            if (attempt == maxRetries)
+            {
+                logger.LogError(ex, "Failed to apply ArapongaDbContext migrations after {Max} attempts. Ensure Postgres is running and connection string is correct.", maxRetries);
+                throw;
+            }
+            Thread.Sleep(TimeSpan.FromSeconds(delaySeconds));
+        }
+    }
+}
 
 // Configure connection pool metrics if using Postgres
 if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))

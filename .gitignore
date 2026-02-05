@@ -26,6 +26,14 @@
 **/TestResults/
 **/coverage/
 
+# Logs
+logs/
+
+# Environment (secrets)
+.env
+.env.local
+.env.*.local
+
 # OS
 .DS_Store
 Thumbs.db

@@ -5,10 +5,13 @@ class AppConfig {
   const AppConfig({
     required this.bffBaseUrl,
     this.apiTimeoutSeconds = 30,
+    this.googleSignInClientId,
   });
 
   final String bffBaseUrl;
   final int apiTimeoutSeconds;
+  /// Client ID OAuth 2.0 para Google Sign-In (obrigatório em Web; Android/iOS usam GoogleService se null).
+  final String? googleSignInClientId;
 
   /// URL base das jornadas BFF: [bffBaseUrl]/api/v2/journeys
   String get bffJourneysBaseUrl =>
@@ -16,10 +19,16 @@ class AppConfig {
 }
 
 final appConfigProvider = Provider<AppConfig>((ref) {
-  // Em desenvolvimento use o IP/porta do BFF. Em produção, substituir por variável de ambiente.
   const baseUrl = String.fromEnvironment(
     'BFF_BASE_URL',
     defaultValue: 'http://localhost:5001',
   );
-  return AppConfig(bffBaseUrl: baseUrl);
+  const googleClientId = String.fromEnvironment(
+    'GOOGLE_SIGN_IN_CLIENT_ID',
+    defaultValue: '',
+  );
+  return AppConfig(
+    bffBaseUrl: baseUrl,
+    googleSignInClientId: googleClientId.isEmpty ? null : googleClientId,
+  );
 });

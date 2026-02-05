@@ -40,6 +40,7 @@ class FeedNotifier extends StateNotifier<FeedState> {
   Future<void> _loadPage(int pageNumber, {required bool append}) async {
     final tid = territoryId ?? '';
     if (tid.isEmpty) return;
+    final filterByInterests = _ref.read(filterFeedByInterestsProvider);
     state = FeedState(
       items: append ? state.items : [],
       page: state.page,
@@ -48,7 +49,8 @@ class FeedNotifier extends StateNotifier<FeedState> {
       error: null,
     );
     try {
-      final path = 'territory-feed?territoryId=$tid&pageNumber=$pageNumber&pageSize=${AppConstants.defaultPageSize}';
+      var path = 'territory-feed?territoryId=$tid&pageNumber=$pageNumber&pageSize=${AppConstants.defaultPageSize}';
+      if (filterByInterests) path += '&filterByInterests=true';
       final response = await _client.get('feed', path);
       final data = response.data as Map<String, dynamic>?;
       final list = data != null ? (data['items'] as List?) ?? [] : [];
@@ -83,6 +85,9 @@ class FeedNotifier extends StateNotifier<FeedState> {
     await _loadPage(state.page + 1, append: true);
   }
 }
+
+/// Ativar para filtrar o feed pelos interesses do usuário (me/interests).
+final filterFeedByInterestsProvider = StateProvider<bool>((ref) => false);
 
 final feedNotifierProvider =
     StateNotifierProvider.autoDispose.family<FeedNotifier, FeedState, String?>((ref, territoryId) {

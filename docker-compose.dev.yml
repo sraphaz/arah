@@ -1,5 +1,4 @@
-version: "3.9"
-
+# version está obsoleto no Docker Compose v2+ e foi removido
 services:
   # PostgreSQL com PostGIS para dados geográficos
   postgres:
@@ -77,11 +76,11 @@ services:
     networks:
       - araponga-network
 
-  # API Araponga
+  # API Araponga (usa Dockerfile do backend; context = raiz do repo)
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: backend/Araponga.Api/Dockerfile
     container_name: araponga-api
     depends_on:
       postgres:

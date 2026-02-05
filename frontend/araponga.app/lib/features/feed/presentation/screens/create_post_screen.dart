@@ -6,6 +6,7 @@ import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/feed_provider.dart';
 
 /// Tela "Publicar": título, conteúdo, tipo e visibilidade; POST feed/create-post.
@@ -119,70 +120,78 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 ),
               ),
             )
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(AppConstants.spacingMd),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextFormField(
-                      controller: _titleController,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.title,
-                        hintText: AppLocalizations.of(context)!.titleHint,
-                        border: const OutlineInputBorder(),
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const TerritoryIndicatorBar(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(AppConstants.spacingMd),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            controller: _titleController,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!.title,
+                              hintText: AppLocalizations.of(context)!.titleHint,
+                              border: const OutlineInputBorder(),
+                            ),
+                            maxLength: 200,
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) return AppLocalizations.of(context)!.informTitle;
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: AppConstants.spacingMd),
+                          TextFormField(
+                            controller: _contentController,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!.content,
+                              hintText: AppLocalizations.of(context)!.contentHint,
+                              border: const OutlineInputBorder(),
+                              alignLabelWithHint: true,
+                            ),
+                            maxLines: 5,
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) return AppLocalizations.of(context)!.informContent;
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: AppConstants.spacingLg),
+                          DropdownButtonFormField<String>(
+                            value: _type,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!.type,
+                              border: const OutlineInputBorder(),
+                            ),
+                            items: [
+                              DropdownMenuItem(value: 'General', child: Text(AppLocalizations.of(context)!.general)),
+                              DropdownMenuItem(value: 'Alert', child: Text(AppLocalizations.of(context)!.alert)),
+                            ],
+                            onChanged: (v) => setState(() => _type = v ?? 'General'),
+                          ),
+                          const SizedBox(height: AppConstants.spacingMd),
+                          DropdownButtonFormField<String>(
+                            value: _visibility,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!.visibility,
+                              border: const OutlineInputBorder(),
+                            ),
+                            items: [
+                              DropdownMenuItem(value: 'Public', child: Text(AppLocalizations.of(context)!.public)),
+                              DropdownMenuItem(value: 'ResidentsOnly', child: Text(AppLocalizations.of(context)!.residentsOnly)),
+                            ],
+                            onChanged: (v) => setState(() => _visibility = v ?? 'Public'),
+                          ),
+                        ],
                       ),
-                      maxLength: 200,
-                      validator: (v) {
-                        if (v == null || v.trim().isEmpty) return AppLocalizations.of(context)!.informTitle;
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: AppConstants.spacingMd),
-                    TextFormField(
-                      controller: _contentController,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.content,
-                        hintText: AppLocalizations.of(context)!.contentHint,
-                        border: const OutlineInputBorder(),
-                        alignLabelWithHint: true,
-                      ),
-                      maxLines: 5,
-                      validator: (v) {
-                        if (v == null || v.trim().isEmpty) return AppLocalizations.of(context)!.informContent;
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: AppConstants.spacingLg),
-                    DropdownButtonFormField<String>(
-                      value: _type,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.type,
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: [
-                        DropdownMenuItem(value: 'General', child: Text(AppLocalizations.of(context)!.general)),
-                        DropdownMenuItem(value: 'Alert', child: Text(AppLocalizations.of(context)!.alert)),
-                      ],
-                      onChanged: (v) => setState(() => _type = v ?? 'General'),
-                    ),
-                    const SizedBox(height: AppConstants.spacingMd),
-                    DropdownButtonFormField<String>(
-                      value: _visibility,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.visibility,
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: [
-                        DropdownMenuItem(value: 'Public', child: Text(AppLocalizations.of(context)!.public)),
-                        DropdownMenuItem(value: 'ResidentsOnly', child: Text(AppLocalizations.of(context)!.residentsOnly)),
-                      ],
-                      onChanged: (v) => setState(() => _visibility = v ?? 'Public'),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
     );
   }

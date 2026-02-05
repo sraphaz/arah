@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Araponga BFF - Status do serviço" />
+  <meta name="color-scheme" content="dark" />
+  <title>Araponga BFF - Running</title>
+  <style>
+    /* Design system Araponga – tema dark (conforto visual, identidade da plataforma) */
+    :root {
+      --bg: #0a0e12;
+      --bg-elevated: #0f1419;
+      --bg-card: #141a21;
+      --border: #25303a;
+      --text: #e8edf2;
+      --text-muted: #b8c5d2;
+      --text-subtle: #8a97a4;
+      --primary: #4dd4a8;
+      --primary-hover: #3bc495;
+      --link: #7dd3ff;
+      --link-hover: #9de3ff;
+      --success-bg: rgba(77, 212, 168, 0.15);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.6;
+    }
+    main {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: var(--text);
+    }
+    .service {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--success-bg);
+      color: var(--primary);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+    .status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    nav {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    a {
+      color: var(--link);
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+    a:hover { color: var(--link-hover); text-decoration: underline; }
+    .sep { color: var(--text-subtle); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Araponga BFF</h1>
+    <p class="service">Backend for Frontend - Jornadas (onboarding, feed, eventos)</p>
+    <p><span class="status">Running</span></p>
+    <nav>
+      <a href="/swagger">Swagger</a>
+      <span class="sep">·</span>
+      <a href="/bff/journeys">Journeys</a>
+    </nav>
+  </main>
+</body>
+</html>

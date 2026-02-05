@@ -6,6 +6,7 @@ import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../feed/presentation/screens/feed_screen.dart';
 import '../../../feed/presentation/screens/create_post_screen.dart';
+import '../../../notifications/presentation/screens/notifications_screen.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
 import '../../../explore/presentation/screens/explore_screen.dart';
 
@@ -32,7 +33,7 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
     const FeedScreen(),
     const ExploreScreen(),
     CreatePostScreen(onSuccess: () => setState(() => _currentIndex = 0)),
-    const _PlaceholderScreen(label: 'Notificações'),
+    const NotificationsScreen(),
     const ProfileScreen(),
   ];
 
@@ -71,36 +72,6 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
             icon: const Icon(Icons.person_outline),
             selectedIcon: const Icon(Icons.person),
             label: AppLocalizations.of(context)!.profile,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.construction, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(height: AppConstants.spacingMd),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: AppConstants.spacingSm),
-          Text(
-            AppLocalizations.of(context)!.comingSoon,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
           ),
         ],
       ),

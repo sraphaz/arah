@@ -19,7 +19,7 @@ class BffClient {
     this.latitude,
     this.longitude,
     this.onUnauthorized,
-  }) : _dio = _createDio(config.bffBaseUrl.replaceAll(RegExp(r'/$'), '') + '/api/v2/journeys', onUnauthorized);
+  }) : _dio = _createDio(config.bffBaseUrl.replaceAll(RegExp(r'/$'), '') + '/api/v2/journeys/', onUnauthorized);
 
   final AppConfig config;
   final String? accessToken;
@@ -141,6 +141,24 @@ class BffClient {
       final response = await _dio.put<dynamic>(
         path,
         data: body,
+        options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
+      );
+      return _fromResponse(response);
+    } on DioException catch (e) {
+      throw _toApiException(e);
+    }
+  }
+
+  /// DELETE jornada (ex: me/interests/{tag}).
+  Future<BffResponse> delete(
+    String journey,
+    String pathAndQuery, {
+    String? sessionIdOverride,
+  }) async {
+    final path = '$journey/$pathAndQuery';
+    try {
+      final response = await _dio.delete<dynamic>(
+        path,
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
       );
       return _fromResponse(response);

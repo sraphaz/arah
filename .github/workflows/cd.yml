@@ -47,7 +47,7 @@ jobs:
           channel: 'stable'
           cache: true
       - name: Ensure platforms
-        run: flutter create . --platforms=android,ios,web
+        run: flutter create . --project-name araponga_app --org com.araponga --platforms=android,ios,web
       - name: Install dependencies
         run: flutter pub get
       - name: Build APK
@@ -80,7 +80,7 @@ jobs:
           channel: 'stable'
           cache: true
       - name: Ensure platforms
-        run: flutter create . --platforms=android,ios,web
+        run: flutter create . --project-name araponga_app --org com.araponga --platforms=android,ios,web
       - name: Install dependencies
         run: flutter pub get
       - name: Build iOS (no codesign)

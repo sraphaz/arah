@@ -1,48 +1,110 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Araponga - Plataforma comunitária territory-first" />
-  <link rel="canonical" href="https://araponga.app/" />
+  <meta name="description" content="Araponga API - Status do serviço" />
+  <meta name="color-scheme" content="dark" />
   <link rel="icon" href="/araponga_icon.png" />
-  <title>Araponga</title>
+  <title>Araponga API - Running</title>
   <style>
-    body { font-family: "Inter", system-ui, sans-serif; background: #0b1114; color: #f4f6f7; margin: 0; }
-    .container { max-width: 720px; margin: 120px auto; padding: 0 24px; text-align: center; }
-    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    p { font-size: 1.125rem; line-height: 1.6; margin-bottom: 2rem; }
-    .links { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
-    .link-button { 
-      display: inline-block; 
-      padding: 0.75rem 1.5rem; 
-      background: #7cd1ff; 
-      color: #0b1114; 
-      text-decoration: none; 
-      border-radius: 0.5rem; 
+    /* Design system Araponga – tema dark (conforto visual, identidade da plataforma) */
+    :root {
+      --bg: #0a0e12;
+      --bg-elevated: #0f1419;
+      --bg-card: #141a21;
+      --border: #25303a;
+      --text: #e8edf2;
+      --text-muted: #b8c5d2;
+      --text-subtle: #8a97a4;
+      --primary: #4dd4a8;
+      --primary-hover: #3bc495;
+      --link: #7dd3ff;
+      --link-hover: #9de3ff;
+      --success-bg: rgba(77, 212, 168, 0.15);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.6;
+    }
+    main {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
       font-weight: 600;
-      transition: background 0.2s;
+      margin: 0 0 0.5rem 0;
+      color: var(--text);
     }
-    .link-button:hover { background: #5ab8e0; }
-    .link-button.secondary {
-      background: transparent;
-      color: #7cd1ff;
-      border: 2px solid #7cd1ff;
+    .service {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
     }
-    .link-button.secondary:hover {
-      background: #7cd1ff;
-      color: #0b1114;
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--success-bg);
+      color: var(--primary);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
     }
+    .status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    nav {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    a {
+      color: var(--link);
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+    a:hover { color: var(--link-hover); text-decoration: underline; }
+    .sep { color: var(--text-subtle); }
   </style>
 </head>
 <body>
-  <main class="container">
-    <h1>Araponga</h1>
-    <p>Plataforma comunitária territory-first para comunidades locais.</p>
-    <div class="links">
-      <a href="https://araponga.app" class="link-button">Visitar araponga.app</a>
-      <a href="/devportal/" class="link-button secondary">Developer Portal</a>
-    </div>
+  <main>
+    <h1>Araponga API</h1>
+    <p class="service">Backend da plataforma comunitária Araponga</p>
+    <p><span class="status">Running</span></p>
+    <nav>
+      <a href="/swagger">Swagger</a>
+      <span class="sep">·</span>
+      <a href="/health">Health</a>
+      <span class="sep">·</span>
+      <a href="/devportal/">Developer Portal</a>
+    </nav>
   </main>
 </body>
 </html>

@@ -16,6 +16,27 @@ builder.Services.AddHttpClient<IJourneyApiProxy, JourneyApiProxy>(client =>
         client.BaseAddress = new Uri(baseUrl);
 });
 
+// CORS: permite Flutter web (localhost com qualquer porta) e outros origins em dev
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.SetIsOriginAllowed(origin =>
+            {
+                if (string.IsNullOrEmpty(origin)) return false;
+                try
+                {
+                    var uri = new Uri(origin);
+                    return uri.Host == "localhost" || uri.Host == "127.0.0.1";
+                }
+                catch { return false; }
+            })
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -36,8 +57,18 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v2/swagger.json", "BFF Journeys v2");
 });
 
-app.UseHttpsRedirection();
+app.UseCors();
+
+// Em Development com só HTTP (localhost:5001) evita aviso "Failed to determine the https port"
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
+
 app.UseMiddleware<JourneyProxyMiddleware>();
+
+// Página inicial indicativa (padrão enterprise: serviço rodando) - wwwroot/index.html
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 
 // Documentação de todas as jornadas expostas pelo BFF (proxy para a API)

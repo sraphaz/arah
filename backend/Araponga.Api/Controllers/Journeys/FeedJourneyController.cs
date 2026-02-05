@@ -124,7 +124,8 @@ public sealed class FeedJourneyController : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
-        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        var user = userContext.User;
+        if (userContext.Status != TokenStatus.Valid || user is null)
         {
             return Unauthorized();
         }
@@ -137,7 +138,7 @@ public sealed class FeedJourneyController : ControllerBase
         // Convergência geo/território ao criar post (salvo bypass por flag ou permissão)
         if (GeoHeaderReader.TryGetCoordinates(Request.Headers, out var userLat, out var userLon))
         {
-            var bypass = await _geoBypass.ShouldBypassGeoEnforcementAsync(territoryId, userContext.User?.Id, cancellationToken);
+            var bypass = await _geoBypass.ShouldBypassGeoEnforcementAsync(territoryId, user.Id, cancellationToken);
             if (!bypass)
             {
                 var territory = await _territoryService.GetByIdAsync(territoryId, cancellationToken);
@@ -162,7 +163,7 @@ public sealed class FeedJourneyController : ControllerBase
         // MediaIds podem vir no body se o cliente fez upload prévio; senão envie null
         var response = await _feedJourneyService.CreatePostAsync(
             territoryId,
-            userContext.User.Id,
+            user.Id,
             request with { TerritoryId = territoryId },
             request.MediaIds,
             cancellationToken);

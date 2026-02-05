@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../core/config/app_config.dart';
 import '../../../../core/network/api_exception.dart';
@@ -18,6 +20,50 @@ class AuthRepository {
   final SecureStorageService secureStorage;
 
   BffClient _client() => BffClient(config: config);
+
+  /// Login com Google: Google Sign-In -> Firebase Auth -> BFF auth/social.
+  /// No Android usa google-services.json; exibe nome/email via sessão e me/profile.
+  Future<AuthSession?> loginWithGoogle() async {
+    final googleSignIn = GoogleSignIn(
+      scopes: ['email', 'profile'],
+      clientId: config.googleSignInClientId,
+    );
+    final account = await googleSignIn.signIn();
+    if (account == null) return null;
+
+    final auth = await account.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: auth.accessToken,
+      idToken: auth.idToken,
+    );
+    final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    final firebaseUser = userCredential.user;
+    if (firebaseUser == null) throw ApiException('Firebase não retornou usuário');
+
+    final displayName = firebaseUser.displayName ?? firebaseUser.email ?? 'User';
+    final body = <String, dynamic>{
+      'authProvider': 'google',
+      'externalId': firebaseUser.uid,
+      'displayName': displayName,
+      'email': firebaseUser.email,
+      'foreignDocument': 'google',
+    };
+    final client = _client();
+    final response = await client.post('auth', 'social', body: body);
+    final data = response.data as Map<String, dynamic>?;
+    if (data == null) throw ApiException('Resposta inválida');
+    final user = AuthUser.fromJson(data);
+    final token = data['token'] as String? ?? '';
+    final refreshToken = data['refreshToken'] as String? ?? '';
+    final expiresIn = data['expiresInSeconds'] as int? ?? 900;
+    if (token.isEmpty) throw ApiException('Token não retornado');
+    await secureStorage.writeAccessToken(token);
+    await secureStorage.writeRefreshToken(refreshToken);
+    await secureStorage.writeTokenExpiry(
+      DateTime.now().add(Duration(seconds: expiresIn)).toIso8601String(),
+    );
+    return AuthSession(user: user, accessToken: token);
+  }
 
   /// Login: BFF auth/social. Em produção usar provedor real (Google/Apple).
   /// Para desenvolvimento: AuthProvider=dev, ExternalId=email, ForeignDocument=dev.
@@ -87,6 +133,8 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
     await secureStorage.clearAuth();
   }
 }

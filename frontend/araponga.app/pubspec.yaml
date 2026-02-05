@@ -24,8 +24,16 @@ dependencies:
   cached_network_image: ^3.3.1
   # Geolocalização (convergência com território observado)
   geolocator: ^13.0.2
+  # Mapa (open source: OpenStreetMap; opcionalmente tiles Mapbox)
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
   # Utilitários
-  intl: ^0.19.0
+  intl: ^0.20.2
+  # Login social
+  google_sign_in: ^6.2.2
+  sign_in_button: ^4.0.1
+  firebase_core: ^3.8.0
+  firebase_auth: ^5.3.1
 
 dev_dependencies:
   flutter_test:

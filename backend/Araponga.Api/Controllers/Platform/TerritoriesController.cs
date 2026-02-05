@@ -144,7 +144,8 @@ public sealed class TerritoriesController : ControllerBase
             request.State,
             request.Latitude,
             request.Longitude,
-            cancellationToken);
+            cancellationToken,
+            request.RadiusKm);
 
         if (!result.Success || result.Territory is null)
         {

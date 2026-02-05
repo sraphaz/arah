@@ -44,6 +44,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Araponga.Api.Extensions;
 
@@ -222,8 +223,18 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var persistenceProvider = configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+        var isPostgres = string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase);
 
-        if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+        // Registrar repositórios de mídia logo no início quando Postgres (usados por TerritoryMediaConfigService e vários serviços).
+        // Assim garantimos registro antes de módulos/DbContext que possam falhar.
+        if (isPostgres)
+        {
+            services.AddScoped<ITerritoryMediaConfigRepository, PostgresTerritoryMediaConfigRepository>();
+            services.AddScoped<IUserMediaPreferencesRepository, PostgresUserMediaPreferencesRepository>();
+            services.AddScoped<IMediaStorageConfigRepository, PostgresMediaStorageConfigRepository>();
+        }
+
+        if (isPostgres)
         {
             // Registrar infraestrutura compartilhada primeiro (SharedDbContext e repositórios compartilhados)
             services.AddSharedInfrastructure(configuration);
@@ -258,13 +269,12 @@ public static class ServiceCollectionExtensions
             // e será migrada gradualmente para os módulos apropriados
             services.AddPostgresRepositories(configuration);
 
-            // Connection Pool Metrics Service (usando ArapongaDbContext temporariamente)
-            // TODO: Atualizar ConnectionPoolMetricsService para aceitar DbContext genérico
+            // Connection Pool Metrics Service (usa IServiceScopeFactory para resolver DbContext por chamada; evita Singleton+Scoped)
             services.AddSingleton<ConnectionPoolMetricsService>(sp =>
             {
-                var dbContext = sp.GetRequiredService<ArapongaDbContext>();
+                var scopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
                 var logger = sp.GetRequiredService<ILogger<ConnectionPoolMetricsService>>();
-                return new ConnectionPoolMetricsService(dbContext, logger);
+                return new ConnectionPoolMetricsService(scopeFactory, logger);
             });
 
             // Workers e serviços de background
@@ -305,6 +315,15 @@ public static class ServiceCollectionExtensions
             services.AddSingleton<InMemoryDataStore>();
             services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
             services.AddInMemoryRepositories();
+        }
+
+        // Fallback: garantir repositórios de mídia quando Postgres (evita falha de DI se o bloco inicial não tiver sido executado)
+        var persistenceAgain = configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+        if (string.Equals(persistenceAgain, "Postgres", StringComparison.OrdinalIgnoreCase))
+        {
+            services.TryAddScoped<ITerritoryMediaConfigRepository, PostgresTerritoryMediaConfigRepository>();
+            services.TryAddScoped<IUserMediaPreferencesRepository, PostgresUserMediaPreferencesRepository>();
+            services.TryAddScoped<IMediaStorageConfigRepository, PostgresMediaStorageConfigRepository>();
         }
 
         // Email Configuration (aplicável a ambos InMemory e Postgres)
@@ -391,6 +410,11 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddPostgresRepositories(this IServiceCollection services, IConfiguration configuration)
     {
+        // Media (necessário para TerritoryMediaConfigService -> EventJourneyService e outros)
+        services.AddScoped<ITerritoryMediaConfigRepository, PostgresTerritoryMediaConfigRepository>();
+        services.AddScoped<IUserMediaPreferencesRepository, PostgresUserMediaPreferencesRepository>();
+        services.AddScoped<IMediaStorageConfigRepository, PostgresMediaStorageConfigRepository>();
+
         // Repositórios core (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
         // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
         // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedCrossCuttingServices (Shared)
@@ -420,12 +444,9 @@ public static class ServiceCollectionExtensions
 
         // Chat: registrado em Araponga.Modules.Chat.Infrastructure.ChatModule
 
-        // Media
+        // Media (ITerritoryMediaConfigRepository e IUserMediaPreferencesRepository já registrados no início do método)
         services.AddScoped<IMediaAssetRepository, PostgresMediaAssetRepository>();
         services.AddScoped<IMediaAttachmentRepository, PostgresMediaAttachmentRepository>();
-        // TODO: Implementar PostgresTerritoryMediaConfigRepository e PostgresUserMediaPreferencesRepository
-        // services.AddScoped<ITerritoryMediaConfigRepository, Araponga.Infrastructure.Postgres.PostgresTerritoryMediaConfigRepository>();
-        // services.AddScoped<IUserMediaPreferencesRepository, Araponga.Infrastructure.Postgres.PostgresUserMediaPreferencesRepository>();
 
         // Subscriptions: registrado em Araponga.Modules.Subscriptions.Infrastructure.SubscriptionsModule
 
@@ -449,6 +470,10 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
     {
+        // Media (necessário para TerritoryMediaConfigService -> EventJourneyService e outros)
+        services.AddSingleton<ITerritoryMediaConfigRepository, InMemoryTerritoryMediaConfigRepository>();
+        services.AddSingleton<IUserMediaPreferencesRepository, InMemoryUserMediaPreferencesRepository>();
+
         // Shared/platform repos (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
         // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
         // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedInMemoryRepositories
@@ -515,11 +540,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IChatMessageRepository, InMemoryChatMessageRepository>();
         services.AddSingleton<IChatConversationStatsRepository, InMemoryChatConversationStatsRepository>();
 
-        // Media
+        // Media (ITerritoryMediaConfigRepository e IUserMediaPreferencesRepository já registrados no início do método)
         services.AddSingleton<IMediaAssetRepository, InMemoryMediaAssetRepository>();
         services.AddSingleton<IMediaAttachmentRepository, InMemoryMediaAttachmentRepository>();
-        services.AddSingleton<ITerritoryMediaConfigRepository, InMemoryTerritoryMediaConfigRepository>();
-        services.AddSingleton<IUserMediaPreferencesRepository, InMemoryUserMediaPreferencesRepository>();
         services.AddSingleton<IMediaStorageConfigRepository, InMemoryMediaStorageConfigRepository>();
 
         return services;

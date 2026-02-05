@@ -7,6 +7,8 @@ import 'core/providers/territory_provider.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/providers/auth_state_provider.dart';
 import 'features/home/presentation/screens/main_shell_screen.dart';
+import 'features/map/presentation/screens/map_screen.dart';
+import 'features/events/presentation/screens/events_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 /// Rotas com guard de auth e onboarding: sem token → /login; com token sem território → /onboarding; com território → /home.
@@ -58,6 +60,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/home',
         builder: (_, __) => const MainShellScreen(),
+      ),
+      GoRoute(
+        path: '/map',
+        builder: (_, state) {
+          final territoryId = state.uri.queryParameters['territoryId'];
+          return MapScreen(territoryId: territoryId);
+        },
+      ),
+      GoRoute(
+        path: '/events',
+        builder: (_, state) {
+          final territoryId = state.uri.queryParameters['territoryId'];
+          return EventsScreen(territoryId: territoryId);
+        },
       ),
     ],
   );

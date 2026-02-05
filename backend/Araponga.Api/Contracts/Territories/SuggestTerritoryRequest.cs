@@ -6,5 +6,6 @@ public sealed record SuggestTerritoryRequest(
     string City,
     string State,
     double Latitude,
-    double Longitude
+    double Longitude,
+    double? RadiusKm = null
 );

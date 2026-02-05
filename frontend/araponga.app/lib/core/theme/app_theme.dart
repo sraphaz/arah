@@ -44,7 +44,7 @@ class AppTheme {
         unselectedItemColor: colors.onSurfaceVariant,
         backgroundColor: colors.surface,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: colors.surfaceContainer,
         elevation: 0,
         shape: RoundedRectangleBorder(

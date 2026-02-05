@@ -27,7 +27,7 @@ Status atual (implementado) e como usar os artefatos.
 | **App iOS** | `flutter build ios --no-codesign`; zip de `Runner.app`; upload do artefato **araponga-app-ios**. |
 
 - **Disparo:** push em `main`, tags `v*.*.*` ou `workflow_dispatch`.
-- **Plataformas:** se o projeto ainda não tiver `android/` e `ios/`, o CD executa `flutter create . --platforms=android,ios,web` antes do build.
+- **Plataformas:** se o projeto ainda não tiver `android/` e `ios/`, o CD executa `flutter create . --project-name araponga_app --org com.araponga --platforms=android,ios,web` antes do build (o nome do pacote deve ser `araponga_app`, pois a pasta é `araponga.app`).
 
 ### Como baixar os artefatos
 

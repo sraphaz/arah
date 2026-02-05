@@ -9,7 +9,8 @@ import '../../../../core/storage/secure_storage_service.dart';
 import '../models/auth_models.dart';
 
 /// Repositório de autenticação: login (social/dev), refresh, logout.
-/// API usa auth/social; para dev usamos provider "dev" com documento placeholder.
+/// API usa auth/social; lookup por (authProvider, externalId). externalId = Firebase UID
+/// preserva contas existentes (evita duplicar ao trocar para Google account.id).
 class AuthRepository {
   AuthRepository({
     required this.config,
@@ -21,8 +22,7 @@ class AuthRepository {
 
   BffClient _client() => BffClient(config: config);
 
-  /// Login com Google: Google Sign-In -> Firebase Auth -> BFF auth/social.
-  /// No Android usa google-services.json; exibe nome/email via sessão e me/profile.
+  /// Login com Google: Google Sign-In → Firebase Auth → BFF auth/social (externalId = Firebase UID).
   Future<AuthSession?> loginWithGoogle() async {
     final googleSignIn = GoogleSignIn(
       scopes: ['email', 'profile'],

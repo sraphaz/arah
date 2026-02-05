@@ -29,7 +29,7 @@ dependencies:
   latlong2: ^0.9.1
   # Utilitários (faixa compatível com flutter_localizations em Flutter 3.x e 4.x)
   intl: ">=0.19.0 <0.21.0"
-  # Login social
+  # Login social: Google Sign-In → Firebase Auth (UID) → BFF (externalId = Firebase UID evita duplicar contas)
   google_sign_in: ^6.2.2
   sign_in_button: ^4.0.1
   firebase_core: ^3.8.0

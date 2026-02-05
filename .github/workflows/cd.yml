@@ -81,6 +81,12 @@ jobs:
           cache: true
       - name: Ensure platforms
         run: flutter create . --project-name araponga_app --org com.araponga --platforms=android,ios,web
+      - name: Set iOS min 13 for firebase_auth
+        run: |
+          if [ -f ios/Podfile ]; then
+            sed -i.bak "s/platform :ios, '[^']*'/platform :ios, '13.0'/" ios/Podfile
+            sed -i.bak "s/# platform :ios, '[^']*'/platform :ios, '13.0'/" ios/Podfile
+          fi
       - name: Install dependencies
         run: flutter pub get
       - name: Build iOS (no codesign)

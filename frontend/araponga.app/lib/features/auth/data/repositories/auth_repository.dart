@@ -30,9 +30,9 @@ class AuthRepository {
     final account = await googleSignIn.signIn();
     if (account == null) return null;
 
-    final displayName = account.displayName ?? account.email ?? 'User';
+    final displayName = account.displayName ?? account.email;
     final externalId = account.id;
-    if (externalId == null || externalId.isEmpty) throw ApiException('Google não retornou id do usuário');
+    if (externalId.isEmpty) throw ApiException('Google não retornou id do usuário');
 
     final body = <String, dynamic>{
       'authProvider': 'google',

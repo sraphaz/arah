@@ -40,6 +40,15 @@ O app consome o BFF em `/api/v2/journeys/*`.
 
 O projeto **Araponga.Api.Bff** (backend) precisa estar em execução.
 
+### Rodar app + BFF + API localmente (stack integrado)
+
+Para subir **API (Docker) + BFF (dotnet) + app** de uma vez e debugar integrado:
+
+1. Na **raiz do repositório**: `.\scripts\run-local-stack.ps1`
+2. Neste diretório: `.\scripts\run-app-local.ps1` (ou `.\scripts\run-app-local.ps1 -Android` para emulador)
+
+Detalhes: **[docs/RUN_LOCAL.md](docs/RUN_LOCAL.md)**.
+
 ## Estrutura do projeto
 
 ```

@@ -391,6 +391,11 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddPostgresRepositories(this IServiceCollection services, IConfiguration configuration)
     {
+        // Media (necessário para TerritoryMediaConfigService -> EventJourneyService e outros)
+        services.AddScoped<ITerritoryMediaConfigRepository, PostgresTerritoryMediaConfigRepository>();
+        services.AddScoped<IUserMediaPreferencesRepository, PostgresUserMediaPreferencesRepository>();
+        services.AddScoped<IMediaStorageConfigRepository, PostgresMediaStorageConfigRepository>();
+
         // Repositórios core (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
         // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
         // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedCrossCuttingServices (Shared)
@@ -420,12 +425,9 @@ public static class ServiceCollectionExtensions
 
         // Chat: registrado em Araponga.Modules.Chat.Infrastructure.ChatModule
 
-        // Media
+        // Media (ITerritoryMediaConfigRepository e IUserMediaPreferencesRepository já registrados no início do método)
         services.AddScoped<IMediaAssetRepository, PostgresMediaAssetRepository>();
         services.AddScoped<IMediaAttachmentRepository, PostgresMediaAttachmentRepository>();
-        // TODO: Implementar PostgresTerritoryMediaConfigRepository e PostgresUserMediaPreferencesRepository
-        // services.AddScoped<ITerritoryMediaConfigRepository, Araponga.Infrastructure.Postgres.PostgresTerritoryMediaConfigRepository>();
-        // services.AddScoped<IUserMediaPreferencesRepository, Araponga.Infrastructure.Postgres.PostgresUserMediaPreferencesRepository>();
 
         // Subscriptions: registrado em Araponga.Modules.Subscriptions.Infrastructure.SubscriptionsModule
 
@@ -449,6 +451,10 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
     {
+        // Media (necessário para TerritoryMediaConfigService -> EventJourneyService e outros)
+        services.AddSingleton<ITerritoryMediaConfigRepository, InMemoryTerritoryMediaConfigRepository>();
+        services.AddSingleton<IUserMediaPreferencesRepository, InMemoryUserMediaPreferencesRepository>();
+
         // Shared/platform repos (Territory, User, Membership, JoinRequest, UserPreferences, UserInterest, Voting, Vote,
         // TerritoryCharacterization, MembershipSettings, MembershipCapability, SystemPermission, SystemConfig,
         // TermsOfService, TermsAcceptance, PrivacyPolicy, PrivacyPolicyAcceptance, UserDevice): AddSharedInMemoryRepositories
@@ -515,11 +521,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IChatMessageRepository, InMemoryChatMessageRepository>();
         services.AddSingleton<IChatConversationStatsRepository, InMemoryChatConversationStatsRepository>();
 
-        // Media
+        // Media (ITerritoryMediaConfigRepository e IUserMediaPreferencesRepository já registrados no início do método)
         services.AddSingleton<IMediaAssetRepository, InMemoryMediaAssetRepository>();
         services.AddSingleton<IMediaAttachmentRepository, InMemoryMediaAttachmentRepository>();
-        services.AddSingleton<ITerritoryMediaConfigRepository, InMemoryTerritoryMediaConfigRepository>();
-        services.AddSingleton<IUserMediaPreferencesRepository, InMemoryUserMediaPreferencesRepository>();
         services.AddSingleton<IMediaStorageConfigRepository, InMemoryMediaStorageConfigRepository>();
 
         return services;

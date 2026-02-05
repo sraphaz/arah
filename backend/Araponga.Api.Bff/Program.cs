@@ -36,8 +36,16 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v2/swagger.json", "BFF Journeys v2");
 });
 
-app.UseHttpsRedirection();
+// Em Development com só HTTP (localhost:5001) evita aviso "Failed to determine the https port"
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
+
 app.UseMiddleware<JourneyProxyMiddleware>();
+
+// Página inicial indicativa (padrão enterprise: serviço rodando) - wwwroot/index.html
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 
 // Documentação de todas as jornadas expostas pelo BFF (proxy para a API)

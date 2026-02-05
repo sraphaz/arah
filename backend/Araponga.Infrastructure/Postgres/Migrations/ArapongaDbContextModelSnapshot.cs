@@ -919,6 +919,104 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.ToTable("media_attachments", (string)null);
                 });
 
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.TerritoryMediaConfigRecord", b =>
+                {
+                    b.Property<Guid>("TerritoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ChatJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("EventsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("MarketplaceJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("PostsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("TerritoryId");
+
+                    b.ToTable("territory_media_configs", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserMediaPreferencesRecord", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("AutoPlayAudio")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("AutoPlayVideos")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowAudio")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowImages")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowVideos")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("user_media_preferences", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.MediaStorageConfigRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SettingsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsActive");
+
+                    b.ToTable("media_storage_configs", (string)null);
+                });
+
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.MembershipCapabilityRecord", b =>
                 {
                     b.Property<Guid>("Id")

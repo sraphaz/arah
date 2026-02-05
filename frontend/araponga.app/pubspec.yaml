@@ -27,8 +27,8 @@ dependencies:
   # Mapa (open source: OpenStreetMap; opcionalmente tiles Mapbox)
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
-  # Utilitários
-  intl: ^0.20.2
+  # Utilitários (faixa compatível com flutter_localizations em Flutter 3.x e 4.x)
+  intl: ">=0.19.0 <0.21.0"
   # Login social
   google_sign_in: ^6.2.2
   sign_in_button: ^4.0.1

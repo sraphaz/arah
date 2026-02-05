@@ -77,6 +77,32 @@ class AppLocalizations {
       'errorLoad': 'Erro ao carregar.',
       'sessionExpired': 'Sessão expirada. Faça login novamente.',
       'enterToAccess': 'Entre na sua conta para acessar perfil, publicar e notificações.',
+      'map': 'Mapa',
+      'viewOnMap': 'Ver no mapa',
+      'mapEntity': 'Estabelecimento / ponto no mapa',
+      'mapPost': 'Post',
+      'mapEvent': 'Evento',
+      'mapAsset': 'Mídia / asset',
+      'mapAlert': 'Alerta',
+      'mapPin': 'Pin no mapa',
+      'noNotifications': 'Nenhuma notificação',
+      'events': 'Eventos',
+      'noEvents': 'Nenhum evento neste território',
+      'eventInterested': 'Tenho interesse',
+      'eventConfirm': 'Confirmar presença',
+      'eventConfirmed': 'Presença confirmada',
+      'myInterests': 'Meus interesses',
+      'myInterestsHint': 'Interesses ajudam a personalizar o feed.',
+      'interestTag': 'Interesse',
+      'interestAdded': 'Interesse adicionado',
+      'interestRemoved': 'Interesse removido',
+      'notificationPreferences': 'Preferências de notificação',
+      'notifPosts': 'Posts',
+      'notifComments': 'Comentários',
+      'notifEvents': 'Eventos',
+      'notifAlerts': 'Alertas',
+      'filterByInterests': 'Por interesses',
+      'inTerritory': 'Em',
     },
     'en': {
       'appTitle': 'Ará',
@@ -132,6 +158,32 @@ class AppLocalizations {
       'errorLoad': 'Error loading.',
       'sessionExpired': 'Session expired. Please log in again.',
       'enterToAccess': 'Sign in to access profile, post, and notifications.',
+      'map': 'Map',
+      'viewOnMap': 'View on map',
+      'mapEntity': 'Place / map point',
+      'mapPost': 'Post',
+      'mapEvent': 'Event',
+      'mapAsset': 'Media / asset',
+      'mapAlert': 'Alert',
+      'mapPin': 'Map pin',
+      'noNotifications': 'No notifications',
+      'events': 'Events',
+      'noEvents': 'No events in this territory',
+      'eventInterested': 'I\'m interested',
+      'eventConfirm': 'Confirm attendance',
+      'eventConfirmed': 'Attendance confirmed',
+      'myInterests': 'My interests',
+      'myInterestsHint': 'Interests help personalize your feed.',
+      'interestTag': 'Interest',
+      'interestAdded': 'Interest added',
+      'interestRemoved': 'Interest removed',
+      'notificationPreferences': 'Notification preferences',
+      'notifPosts': 'Posts',
+      'notifComments': 'Comments',
+      'notifEvents': 'Events',
+      'notifAlerts': 'Alerts',
+      'filterByInterests': 'By interests',
+      'inTerritory': 'In',
     },
   };
 
@@ -191,6 +243,32 @@ class AppLocalizations {
   String get errorLoad => _t('errorLoad');
   String get sessionExpired => _t('sessionExpired');
   String get enterToAccess => _t('enterToAccess');
+  String get map => _t('map');
+  String get viewOnMap => _t('viewOnMap');
+  String get mapEntity => _t('mapEntity');
+  String get mapPost => _t('mapPost');
+  String get mapEvent => _t('mapEvent');
+  String get mapAsset => _t('mapAsset');
+  String get mapAlert => _t('mapAlert');
+  String get mapPin => _t('mapPin');
+  String get noNotifications => _t('noNotifications');
+  String get events => _t('events');
+  String get noEvents => _t('noEvents');
+  String get eventInterested => _t('eventInterested');
+  String get eventConfirm => _t('eventConfirm');
+  String get eventConfirmed => _t('eventConfirmed');
+  String get myInterests => _t('myInterests');
+  String get myInterestsHint => _t('myInterestsHint');
+  String get interestTag => _t('interestTag');
+  String get interestAdded => _t('interestAdded');
+  String get interestRemoved => _t('interestRemoved');
+  String get notificationPreferences => _t('notificationPreferences');
+  String get notifPosts => _t('notifPosts');
+  String get notifComments => _t('notifComments');
+  String get notifEvents => _t('notifEvents');
+  String get notifAlerts => _t('notifAlerts');
+  String get filterByInterests => _t('filterByInterests');
+  String get inTerritory => _t('inTerritory');
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

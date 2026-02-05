@@ -22,7 +22,8 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          # Pin 8.0.12: CVE-2024-43483 (hash flooding); alinhado a Directory.Build.props e Dockerfiles
+          dotnet-version: '8.0.12'
           cache: true
           cache-dependency-path: |
             backend/**/packages.lock.json

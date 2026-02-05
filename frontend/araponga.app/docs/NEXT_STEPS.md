@@ -13,9 +13,12 @@ Alinhado à **proposta do projeto** (território-first, comunidade-first, interf
 | **Tema** | Material 3 light/dark, verde território; **AppConstants** no tema e telas | - |
 | **BFF** | BffClient GET/POST/**PUT**, token (Bearer), X-Session-Id, X-Geo-*; feed/territory-feed, me/profile | Tratamento 429; retry |
 | **Auth** | Login (auth/social dev), persistência token (secure_storage), refresh, logout; 401 → logout | - |
-| **Feed** | Lista via BFF; **paginação** (pageNumber); **pull-to-refresh**; **carregar mais**; território ativo (provider + persistido) | Skeleton loader; scroll infinito automático (opcional) |
-| **Perfil** | **GET me/profile** + loading/erro; **edição** (nome, bio) em bottom sheet; PUT display-name/bio; Sair → /login | me/preferences, me/interests |
-| **Explorar** | Lista BFF territories; **POST enter** ao selecionar; TerritorySelector | Mapa; eventos |
+| **Feed** | Lista via BFF; **paginação**; **pull-to-refresh**; **carregar mais**; **scroll infinito** (loadMore ao rolar); **filtro por interesses** (filterByInterests); território ativo | Skeleton loader (já usado no loading inicial) |
+| **Perfil** | **GET me/profile** + edição (nome, bio); **GET/PUT me/preferences** (notificações); **GET/POST/DELETE me/interests**; Sair → /login | - |
+| **Explorar** | Lista BFF territories; **POST enter** ao selecionar; TerritorySelector; **Mapa** (Ver no mapa); **Eventos** (lista) | - |
+| **Notificações** | **Lista** BFF notifications/paged; pull-to-refresh; **marcar como lida** ao toque | Push (registro token) |
+| **Eventos** | **Lista** BFF events/territory-events; tela /events; **Participar** (POST participate); link no Explorar | - |
+| **Mapa** | Tela /map com flutter_map, pins BFF map/pins, link no Explorar | - |
 
 ---
 

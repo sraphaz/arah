@@ -1,7 +1,6 @@
 <Project>
   <PropertyGroup>
-    <!-- Fix CVE-2024-43483: .NET components susceptible to hash flooding. Patched in 8.0.10+. -->
-    <!-- CVE-2024-43483 fix: 8.0.10+; 8.0.12 existe no NuGet/MCR -->
+    <!-- CVE-2024-43483: .NET hash flooding. Patched in 8.0.10+. Fix: usar 8.0.12 em todo o backend e nas imagens Docker (sdk/aspnet:8.0.12). -->
     <RuntimeFrameworkVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.12</RuntimeFrameworkVersion>
   </PropertyGroup>
 </Project>

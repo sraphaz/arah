@@ -1,40 +1,49 @@
 # Mapa e pins – App Ará
 
-Estado atual e recomendação de componente para visualização de pins e interação com o mapa.
+Implementação e opções de tiles (OpenStreetMap, Mapbox).
 
 ---
 
-## Estado atual
+## Implementado
 
-- **No app Flutter:** não há tela de mapa nem exibição de pins. A tela **Explorar** hoje mostra apenas a lista de territórios (lista, sem mapa).
-- **No backend:** a API está pronta: `GET /api/v1/map/pins`, `GET /api/v1/map/entities`, etc. (ver `docs/api/60_06_API_MAPA.md` e `docs/funcional/05_MAPA_TERRITORIAL.md`).
-- **BFF:** a jornada **map** pode expor esses endpoints; ao implementar o mapa no app, as chamadas devem passar pelo BFF.
-
----
-
-## Recomendação de componente
-
-Para **visualização de pins no mapa e interação** (zoom, arrastar, toque em pin, etc.), as opções mais adequadas em Flutter são:
-
-| Pacote | Prós | Contras |
-|--------|------|---------|
-| **google_maps_flutter** | Oficial Google, markers nativos, boa interação, documentação sólida | Requer API key e conta Google; uso sujeito a termos e custos em alto volume |
-| **flutter_map** | Open source, OpenStreetMap, várias fontes de tiles (Mapbox, etc.), suporte a offline, marcadores e camadas | Configuração de tiles e estilos; não é “Google Maps” |
-
-**Recomendação:**
-
-- **Se a marca e a base de mapas forem Google:** use **google_maps_flutter**. Markers com `Marker(position: LatLng(...))`, `onTap`, e `CameraPosition` cobrem bem pins e navegação.
-- **Se quiser evitar dependência da Google ou precisar de offline/múltiplas fontes:** use **flutter_map** (ex.: `flutter_map` + `latlong2`). Permite `MarkerLayer` com pins, gestos de mapa e troca de provedor de tiles.
-
-Ambos permitem boa **visualização dos pins e interação com o mapa** (arrastar, zoom, toque em pin). A escolha é principalmente por ecossistema (Google vs open source) e requisitos de licença/custo.
+- **App Flutter:** tela de mapa com **flutter_map** + **latlong2** (open source).
+  - **Rota:** `/map` (opcional `?territoryId=...`).
+  - **Explorar:** botão “Ver no mapa” na AppBar abre o mapa do território selecionado.
+  - **Pins:** carregados via BFF jornada **map** (`GET map/pins?territoryId=...`). Tipos: entity, post, event, asset, alert, media.
+  - **Tiles:** OpenStreetMap (padrão), com `userAgentPackageName` para conformidade com ToS.
+  - **Localização:** marcador “minha localização” quando disponível; botão na AppBar para centralizar na posição atual.
+- **Backend:** API `GET /api/v1/map/pins` (e entities) já existente.
+- **BFF:** jornada **map** expõe `api/v1/map`; app chama `client.get('map', 'pins?territoryId=...')`.
 
 ---
 
-## Próximos passos para implementar
+## Tiles: OpenStreetMap vs Mapbox
 
-1. Expor no BFF a jornada **map** (ex.: `GET map/pins?territoryId=...`) consumindo a API existente.
-2. No app: adicionar dependência **google_maps_flutter** ou **flutter_map** em `pubspec.yaml`.
-3. Criar feature **map** (tela + provider que chama o BFF), exibir mapa com `CameraPosition` centrada no território/usuário e desenhar pins a partir da resposta de pins/entities.
-4. Opcional: link Explorar ↔ Mapa (aba ou botão “Ver no mapa”) e deep link para abrir o mapa em um território.
+| Fonte | Uso no app | Observação |
+|--------|-------------|------------|
+| **OpenStreetMap** | Padrão (atual) | Sem API key; ToS exige User-Agent identificável (`userAgentPackageName`). |
+| **Mapbox** | Opcional | Melhor estilo e desempenho; requer token. Ver [Using Mapbox](https://docs.fleaflet.dev/v7/tile-servers/using-mapbox). |
 
-Referências no repositório: `docs/funcional/05_MAPA_TERRITORIAL.md`, `docs/api/60_06_API_MAPA.md`.
+Para usar **Mapbox** no lugar (ou em camada):
+
+1. Obter token em [Mapbox](https://www.mapbox.com/).
+2. Trocar/adicional `TileLayer` em `MapScreen` com `urlTemplate` Mapbox (ex.: `https://api.mapbox.com/styles/v1/mapbox/.../tiles/256/{z}/{x}/{y}@2x?access_token=YOUR_TOKEN`) e `tileSize: 512`, `zoomOffset: -1` se usar tiles 512px.
+3. Manter token em variável de ambiente / config (nunca commitar).
+
+---
+
+## Estrutura no app
+
+- `lib/features/map/`
+  - `data/models/map_pin.dart` – modelo do pin (pinType, lat, lng, title, ids).
+  - `data/repositories/map_repository.dart` – BFF GET map/pins.
+  - `presentation/providers/map_pins_provider.dart` – `FutureProvider.family` por território.
+  - `presentation/screens/map_screen.dart` – `FlutterMap`, `TileLayer`, `MarkerLayer`, bottom sheet no toque do pin.
+
+---
+
+## Android / plataforma
+
+- **Android:** o app precisa de permissão `INTERNET` para carregar tiles. Em projetos Flutter padrão isso já vem em `android/app/src/main/AndroidManifest.xml`. Se o mapa não carregar tiles, conferir o manifest.
+
+Referências: `docs/funcional/05_MAPA_TERRITORIAL.md`, `docs/api/60_06_API_MAPA.md`.

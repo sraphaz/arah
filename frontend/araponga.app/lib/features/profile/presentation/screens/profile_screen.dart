@@ -9,6 +9,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../../data/models/me_profile.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
 import '../providers/me_profile_provider.dart';
+import '../widgets/interests_sheet.dart';
+import '../widgets/preferences_sheet.dart';
 
 /// Perfil: dados do usuário via BFF me/profile; edição (nome, bio) em bottom sheet.
 class ProfileScreen extends ConsumerWidget {
@@ -61,7 +63,10 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.profile),
         actions: [
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => _showSettingsSheet(context),
+          ),
         ],
       ),
       body: profileAsync.when(
@@ -95,6 +100,54 @@ class ProfileScreen extends ConsumerWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showSettingsSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusLg)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.interests),
+              title: Text(AppLocalizations.of(ctx)!.myInterests),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                showModalBottomSheet<void>(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusLg)),
+                  ),
+                  builder: (_) => const InterestsSheet(),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.notifications_active_outlined),
+              title: Text(AppLocalizations.of(ctx)!.notificationPreferences),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                showModalBottomSheet<void>(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radiusLg)),
+                  ),
+                  builder: (_) => const PreferencesSheet(),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

@@ -149,6 +149,24 @@ class BffClient {
     }
   }
 
+  /// DELETE jornada (ex: me/interests/{tag}).
+  Future<BffResponse> delete(
+    String journey,
+    String pathAndQuery, {
+    String? sessionIdOverride,
+  }) async {
+    final path = '$journey/$pathAndQuery';
+    try {
+      final response = await _dio.delete<dynamic>(
+        path,
+        options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
+      );
+      return _fromResponse(response);
+    } on DioException catch (e) {
+      throw _toApiException(e);
+    }
+  }
+
   static BffResponse _fromResponse(Response<dynamic> response) {
     return BffResponse(
       statusCode: response.statusCode ?? 0,

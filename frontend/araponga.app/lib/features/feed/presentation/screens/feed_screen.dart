@@ -6,18 +6,34 @@ import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../../territories/presentation/widgets/territory_selector.dart';
 import '../providers/feed_provider.dart';
 
-/// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação e pull-to-refresh.
-class FeedScreen extends ConsumerWidget {
+/// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação, pull-to-refresh e scroll infinito.
+class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FeedScreen> createState() => _FeedScreenState();
+}
+
+class _FeedScreenState extends ConsumerState<FeedScreen> {
+  final ScrollController _scrollController = ScrollController();
+  static const double _loadMoreThreshold = 300;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final feedState = ref.watch(feedNotifierProvider(territoryId));
     final notifier = ref.read(feedNotifierProvider(territoryId).notifier);
+    final filterByInterests = ref.watch(filterFeedByInterestsProvider);
 
     if (territoryId == null || territoryId.isEmpty) {
       return Scaffold(
@@ -34,7 +50,7 @@ class FeedScreen extends ConsumerWidget {
                     ),
               ),
             ),
-            Expanded(child: TerritorySelector()),
+            const Expanded(child: TerritorySelector()),
           ],
         ),
       );
@@ -44,17 +60,37 @@ class FeedScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.home),
         actions: [
-          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}),
+          IconButton(
+            icon: Icon(
+              filterByInterests ? Icons.filter_list : Icons.filter_list_off,
+              color: filterByInterests ? Theme.of(context).colorScheme.primary : null,
+            ),
+            tooltip: AppLocalizations.of(context)!.filterByInterests,
+            onPressed: () {
+              ref.read(filterFeedByInterestsProvider.notifier).state = !filterByInterests;
+              ref.invalidate(feedNotifierProvider(territoryId));
+            },
+          ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => notifier.refresh(),
-        child: _FeedBody(
-          state: feedState,
-          onRetry: () => notifier.refresh(),
-          onLoadMore: () => notifier.loadMore(),
-        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const TerritoryIndicatorBar(),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => notifier.refresh(),
+              child: _FeedBody(
+                state: feedState,
+                onRetry: () => notifier.refresh(),
+                onLoadMore: () => notifier.loadMore(),
+                scrollController: _scrollController,
+                onScrollNearBottom: () => notifier.loadMore(),
+                loadMoreThreshold: _loadMoreThreshold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -65,11 +101,17 @@ class _FeedBody extends StatelessWidget {
     required this.state,
     required this.onRetry,
     required this.onLoadMore,
+    this.scrollController,
+    this.onScrollNearBottom,
+    this.loadMoreThreshold = 300,
   });
 
   final FeedState state;
   final VoidCallback onRetry;
   final VoidCallback onLoadMore;
+  final ScrollController? scrollController;
+  final VoidCallback? onScrollNearBottom;
+  final double loadMoreThreshold;
 
   @override
   Widget build(BuildContext context) {
@@ -88,17 +130,23 @@ class _FeedBody extends StatelessWidget {
       isLoadingMore: state.isLoading,
       onLoadMore: onLoadMore,
       onRetry: onRetry,
+      scrollController: scrollController,
+      onScrollNearBottom: onScrollNearBottom,
+      loadMoreThreshold: loadMoreThreshold,
     );
   }
 }
 
-class _FeedList extends StatelessWidget {
+class _FeedList extends StatefulWidget {
   const _FeedList({
     required this.items,
     required this.onRetry,
     this.hasMore = false,
     this.isLoadingMore = false,
     this.onLoadMore,
+    this.scrollController,
+    this.onScrollNearBottom,
+    this.loadMoreThreshold = 300,
   });
 
   final List<dynamic> items;
@@ -106,9 +154,53 @@ class _FeedList extends StatelessWidget {
   final bool hasMore;
   final bool isLoadingMore;
   final VoidCallback? onLoadMore;
+  final ScrollController? scrollController;
+  final VoidCallback? onScrollNearBottom;
+  final double loadMoreThreshold;
+
+  @override
+  State<_FeedList> createState() => _FeedListState();
+}
+
+class _FeedListState extends State<_FeedList> {
+  void _onScroll() {
+    final controller = widget.scrollController;
+    final onNearBottom = widget.onScrollNearBottom;
+    if (controller == null || onNearBottom == null || !controller.hasClients) return;
+    final pos = controller.position;
+    if (pos.pixels >= pos.maxScrollExtent - widget.loadMoreThreshold) {
+      onNearBottom();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.scrollController?.addListener(_onScroll);
+  }
+
+  @override
+  void didUpdateWidget(covariant _FeedList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.scrollController != widget.scrollController) {
+      oldWidget.scrollController?.removeListener(_onScroll);
+      widget.scrollController?.addListener(_onScroll);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController?.removeListener(_onScroll);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final items = widget.items;
+    final onRetry = widget.onRetry;
+    final hasMore = widget.hasMore;
+    final isLoadingMore = widget.isLoadingMore;
+    final onLoadMore = widget.onLoadMore;
     if (items.isEmpty) {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -144,6 +236,8 @@ class _FeedList extends StatelessWidget {
       );
     }
     return ListView.builder(
+      controller: widget.scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
       itemCount: items.length + (hasMore || isLoadingMore ? 1 : 0),
       itemBuilder: (context, index) {
         if (index >= items.length) {

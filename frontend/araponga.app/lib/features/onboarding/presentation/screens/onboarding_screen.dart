@@ -87,7 +87,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               ] else ...[
                 _SuggestedList(
-                  latitude: geo!.latitude,
+                  latitude: geo.latitude,
                   longitude: geo.longitude,
                   onSelect: _completeWith,
                   completing: _completing,

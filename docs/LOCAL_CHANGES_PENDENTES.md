@@ -15,7 +15,7 @@ Este arquivo lista o que estava aberto localmente e **não** foi incluído no ú
 | `backend/Araponga.Api.Bff/Araponga.Api.Bff.http` | Requisições HTTP |
 | `backend/Araponga.Api/Controllers/Feed/FeedController.cs` | Controller feed |
 | `backend/Araponga.Api/Controllers/Journeys/FeedJourneyController.cs` | Jornada feed |
-| `backend/Araponga.Api/Dockerfile` | Docker da API (já ajustado para 8.0.13 neste PR) |
+| `backend/Araponga.Api/Dockerfile` | Docker da API (usa SDK/Runtime 8.0; CVE em 8.0.12 via Directory.Build.props) |
 | `backend/Araponga.Api/Extensions/ServiceCollectionExtensions.cs` | DI |
 | `backend/Araponga.Application/Models/FeatureFlag.cs` | Feature flags |
 | `backend/Araponga.Application/Services/Platform/MembershipService.cs` | Membership |
@@ -24,7 +24,7 @@ Este arquivo lista o que estava aberto localmente e **não** foi incluído no ú
 | `backend/Araponga.Domain/Users/SystemPermissionType.cs` | Permissões |
 | `backend/Araponga.Infrastructure.Shared/Postgres/*` | Shared EF + mappers |
 | `backend/Araponga.Infrastructure/Postgres/*` | DbContext, migrations, mappers |
-| `backend/Directory.Build.props` | Versão .NET (já tem 8.0.13) |
+| `backend/Directory.Build.props` | Versão .NET (RuntimeFrameworkVersion 8.0.12) |
 | `backend/Tests/Araponga.Tests/GlobalUsings.cs` | Usings |
 | `backend/docs/IMPLEMENTATION_PLAN_NEXT_STEPS.md` | Plano |
 | `backend/scripts/validate-module-boundaries.ps1` | Script validação |

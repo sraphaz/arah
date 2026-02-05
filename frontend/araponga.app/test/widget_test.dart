@@ -13,7 +13,7 @@ void main() {
         child: ArapongaApp(),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }

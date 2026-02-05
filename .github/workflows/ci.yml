@@ -88,7 +88,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.x'
+          # 3.27+ para CardThemeData em ThemeData.cardTheme (Material theme normalization).
+          flutter-version: '3.27.x'
           channel: 'stable'
           cache: true
       - name: Install dependencies

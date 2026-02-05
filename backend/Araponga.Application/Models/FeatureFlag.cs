@@ -23,5 +23,11 @@ public enum FeatureFlag
 
     // Connections / Círculo de Amigos (territory-scoped)
     ConnectionsEnabled = 15,
-    ConnectionsFeedPrioritize = 16
+    ConnectionsFeedPrioritize = 16,
+
+    /// <summary>
+    /// Acesso remoto ao território: quando ativo, ignora a exigência de convergência geolocalização para ver/participar do território.
+    /// Configurável por território; por usuário usa SystemPermission RemoteAccessToTerritory (sys admin tem por padrão).
+    /// </summary>
+    RemoteAccessToTerritoryEnabled = 17
 }

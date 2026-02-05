@@ -34,7 +34,8 @@ public static class PostgresMappers
             State = territory.State,
             Latitude = territory.Latitude,
             Longitude = territory.Longitude,
-            CreatedAtUtc = territory.CreatedAtUtc
+            CreatedAtUtc = territory.CreatedAtUtc,
+            RadiusKm = territory.RadiusKm
         };
     }
 
@@ -50,7 +51,8 @@ public static class PostgresMappers
             record.State,
             record.Latitude,
             record.Longitude,
-            record.CreatedAtUtc);
+            record.CreatedAtUtc,
+            record.RadiusKm);
     }
 
     public static UserRecord ToRecord(this User user)

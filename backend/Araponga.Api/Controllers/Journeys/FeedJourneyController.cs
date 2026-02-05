@@ -2,6 +2,9 @@ using Araponga.Api;
 using Araponga.Api.Contracts.Journeys.Feed;
 using Araponga.Api.Security;
 using Araponga.Api.Services.Journeys;
+using Araponga.Application.Common;
+using Araponga.Application.Interfaces;
+using Araponga.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -18,13 +21,19 @@ public sealed class FeedJourneyController : ControllerBase
 {
     private readonly IFeedJourneyService _feedJourneyService;
     private readonly CurrentUserAccessor _currentUserAccessor;
+    private readonly TerritoryService _territoryService;
+    private readonly IGeoConvergenceBypassService _geoBypass;
 
     public FeedJourneyController(
         IFeedJourneyService feedJourneyService,
-        CurrentUserAccessor currentUserAccessor)
+        CurrentUserAccessor currentUserAccessor,
+        TerritoryService territoryService,
+        IGeoConvergenceBypassService geoBypass)
     {
         _feedJourneyService = feedJourneyService;
         _currentUserAccessor = currentUserAccessor;
+        _territoryService = territoryService;
+        _geoBypass = geoBypass;
     }
 
     /// <summary>
@@ -55,6 +64,31 @@ public sealed class FeedJourneyController : ControllerBase
             return BadRequest(new { error = "territoryId is required." });
         }
 
+        // Convergência geo/território: se o cliente enviar X-Geo-Latitude/X-Geo-Longitude, exige que a posição esteja no raio do território (salvo bypass por flag ou permissão).
+        if (GeoHeaderReader.TryGetCoordinates(Request.Headers, out var userLat, out var userLon))
+        {
+            var bypass = await _geoBypass.ShouldBypassGeoEnforcementAsync(territoryId, userContext.User?.Id, cancellationToken);
+            if (!bypass)
+            {
+                var territory = await _territoryService.GetByIdAsync(territoryId, cancellationToken);
+                if (territory is null)
+                {
+                    return NotFound(new { error = "Territory not found." });
+                }
+
+                var maxRadiusKm = territory.RadiusKm ?? Constants.Geo.VerificationRadiusKm;
+                var distanceKm = GeographyHelper.DistanceKm(userLat, userLon, territory.Latitude, territory.Longitude);
+                if (distanceKm > maxRadiusKm)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new
+                    {
+                        error = "Geolocation does not converge with the observed territory.",
+                        detail = $"User position is {distanceKm:F1} km from territory center. Maximum allowed: {maxRadiusKm:F1} km.",
+                    });
+                }
+            }
+        }
+
         pageSize = Math.Clamp(pageSize, 1, 100);
         var response = await _feedJourneyService.GetTerritoryFeedAsync(
             territoryId,
@@ -82,6 +116,7 @@ public sealed class FeedJourneyController : ControllerBase
     [ProducesResponseType(typeof(CreatePostJourneyResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     public async Task<ActionResult<CreatePostJourneyResponse>> CreatePost(
         [FromQuery] Guid territoryId,
@@ -97,6 +132,31 @@ public sealed class FeedJourneyController : ControllerBase
         if (territoryId == Guid.Empty)
         {
             return BadRequest(new { error = "territoryId is required." });
+        }
+
+        // Convergência geo/território ao criar post (salvo bypass por flag ou permissão)
+        if (GeoHeaderReader.TryGetCoordinates(Request.Headers, out var userLat, out var userLon))
+        {
+            var bypass = await _geoBypass.ShouldBypassGeoEnforcementAsync(territoryId, userContext.User?.Id, cancellationToken);
+            if (!bypass)
+            {
+                var territory = await _territoryService.GetByIdAsync(territoryId, cancellationToken);
+                if (territory is null)
+                {
+                    return NotFound(new { error = "Territory not found." });
+                }
+
+                var maxRadiusKm = territory.RadiusKm ?? Constants.Geo.VerificationRadiusKm;
+                var distanceKm = GeographyHelper.DistanceKm(userLat, userLon, territory.Latitude, territory.Longitude);
+                if (distanceKm > maxRadiusKm)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new
+                    {
+                        error = "Geolocation does not converge with the observed territory.",
+                        detail = $"User position is {distanceKm:F1} km from territory center. Maximum allowed: {maxRadiusKm:F1} km.",
+                    });
+                }
+            }
         }
 
         // MediaIds podem vir no body se o cliente fez upload prévio; senão envie null

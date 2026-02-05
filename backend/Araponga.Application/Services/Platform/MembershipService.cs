@@ -219,13 +219,13 @@ public sealed class MembershipService
 
         // Iniciar transação para garantir atomicidade
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
-        
+
         try
         {
             // Demover Resident atual para Visitor
             currentResident.UpdateRole(MembershipRole.Visitor);
             currentResident.UpdateResidencyVerification(ResidencyVerification.None);
-            
+
             await _membershipRepository.UpdateAsync(currentResident, cancellationToken);
 
             await _auditLogger.LogAsync(
@@ -297,12 +297,13 @@ public sealed class MembershipService
             return OperationResult.Failure("Territory not found.");
         }
 
-        // Validar que as coordenadas estão dentro do raio permitido do território
+        // Validar que as coordenadas estão dentro do raio do território (específico ou padrão)
+        var maxRadiusKm = territory.RadiusKm ?? Constants.Geo.VerificationRadiusKm;
         var distance = CalculateDistance(latitude, longitude, territory.Latitude, territory.Longitude);
-        if (distance > Constants.Geo.VerificationRadiusKm)
+        if (distance > maxRadiusKm)
         {
             return OperationResult.Failure(
-                $"Coordinates are too far from territory center. Distance: {distance:F2}km, Maximum allowed: {Constants.Geo.VerificationRadiusKm}km.");
+                $"Coordinates are too far from territory center. Distance: {distance:F2}km, Maximum allowed: {maxRadiusKm:F2}km.");
         }
 
         var membership = await _membershipRepository.GetByUserAndTerritoryAsync(

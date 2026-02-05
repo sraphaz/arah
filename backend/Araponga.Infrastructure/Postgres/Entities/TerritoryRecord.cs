@@ -14,4 +14,6 @@ public sealed class TerritoryRecord
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public DateTime CreatedAtUtc { get; set; }
+    /// <summary>Raio do território em km; null = usar padrão do sistema.</summary>
+    public double? RadiusKm { get; set; }
 }

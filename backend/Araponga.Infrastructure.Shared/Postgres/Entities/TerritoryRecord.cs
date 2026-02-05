@@ -14,4 +14,5 @@ public sealed class TerritoryRecord
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public DateTime CreatedAtUtc { get; set; }
+    public double? RadiusKm { get; set; }
 }

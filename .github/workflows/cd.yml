@@ -7,11 +7,12 @@ on:
     tags: ["v*.*.*"]
 
 permissions:
-  contents: read
+  contents: write   # necessário para criar GitHub Release ao publicar tag
   packages: write
 
 jobs:
-  build-and-push:
+  build-and-push-api:
+    name: API Docker
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,3 +31,90 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/araponga-api:latest
             ghcr.io/${{ github.repository }}/araponga-api:${{ github.sha }}
+
+  build-flutter-android:
+    name: App Android
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/araponga.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+      - name: Ensure platforms
+        run: flutter create . --platforms=android,ios,web
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build APK
+        run: flutter build apk --release
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: araponga-app-android-apk
+          path: frontend/araponga.app/build/app/outputs/flutter-apk/app-release.apk
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: araponga-app-android-aab
+          path: frontend/araponga.app/build/app/outputs/bundle/release/app-release.aab
+
+  build-flutter-ios:
+    name: App iOS
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: frontend/araponga.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+      - name: Ensure platforms
+        run: flutter create . --platforms=android,ios,web
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign
+      - name: Zip iOS build
+        run: |
+          cd build/ios/iphoneos
+          zip -r ../../ios-Runner.app.zip Runner.app
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: araponga-app-ios
+          path: frontend/araponga.app/build/ios/ios-Runner.app.zip
+
+  create-release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
+    needs: [build-flutter-android, build-flutter-ios]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            artifacts/araponga-app-android-apk/app-release.apk
+            artifacts/araponga-app-android-aab/app-release.aab
+            artifacts/araponga-app-ios/ios-Runner.app.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

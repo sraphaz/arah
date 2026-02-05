@@ -144,6 +144,7 @@ public sealed class SharedDbContext : DbContext
             entity.Property(t => t.Latitude).HasColumnType("double precision");
             entity.Property(t => t.Longitude).HasColumnType("double precision");
             entity.Property(t => t.CreatedAtUtc).HasColumnType("timestamp with time zone");
+            entity.Property(t => t.RadiusKm).HasColumnType("double precision");
             entity.HasIndex(t => t.Name);
             entity.HasIndex(t => t.City);
             entity.HasIndex(t => t.State);

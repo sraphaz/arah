@@ -22,7 +22,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
           cache: true
           cache-dependency-path: |
             backend/**/packages.lock.json
@@ -75,3 +75,32 @@ jobs:
         continue-on-error: true
         with:
           sarif_file: 'trivy-results.sarif'
+
+  flutter-app:
+    name: Flutter app
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/araponga.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+      - name: Test with coverage
+        run: flutter test --coverage
+      - name: Upload Flutter coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: success()
+        with:
+          files: frontend/araponga.app/coverage/lcov.info
+          fail_ci_if_error: false
+          flags: flutter
+          name: flutter-app-coverage

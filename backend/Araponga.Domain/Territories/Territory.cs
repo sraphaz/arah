@@ -16,7 +16,8 @@ public sealed class Territory
         string state,
         double latitude,
         double longitude,
-        DateTime createdAtUtc)
+        DateTime createdAtUtc,
+        double? radiusKm = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -33,6 +34,11 @@ public sealed class Territory
             throw new ArgumentException("State is required.", nameof(state));
         }
 
+        if (radiusKm.HasValue && radiusKm.Value <= 0)
+        {
+            throw new ArgumentException("RadiusKm must be positive when provided.", nameof(radiusKm));
+        }
+
         Id = id;
         ParentTerritoryId = parentTerritoryId;
         Name = name.Trim();
@@ -43,6 +49,7 @@ public sealed class Territory
         Latitude = latitude;
         Longitude = longitude;
         CreatedAtUtc = createdAtUtc;
+        RadiusKm = radiusKm;
     }
 
     public Guid Id { get; }
@@ -55,4 +62,9 @@ public sealed class Territory
     public double Latitude { get; }
     public double Longitude { get; }
     public DateTime CreatedAtUtc { get; }
+
+    /// <summary>
+    /// Raio do perímetro do território em km. Quando null, usa o valor padrão do sistema (ex.: 5 km) para convergência geo e verificação de residência.
+    /// </summary>
+    public double? RadiusKm { get; }
 }

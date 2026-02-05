@@ -51,7 +51,8 @@ public sealed class TerritoryService
         string state,
         double latitude,
         double longitude,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        double? radiusKm = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -68,6 +69,11 @@ public sealed class TerritoryService
             return new TerritoryCreationResult(false, "State is required.", null);
         }
 
+        if (radiusKm.HasValue && radiusKm.Value <= 0)
+        {
+            return new TerritoryCreationResult(false, "RadiusKm must be positive when provided.", null);
+        }
+
         var territory = new Territory(
             Guid.NewGuid(),
             null,
@@ -78,7 +84,8 @@ public sealed class TerritoryService
             state,
             latitude,
             longitude,
-            DateTime.UtcNow);
+            DateTime.UtcNow,
+            radiusKm);
 
         await _territoryRepository.AddAsync(territory, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);

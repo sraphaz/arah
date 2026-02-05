@@ -66,6 +66,22 @@ Cada fase: mapeamento no registry, TTL onde aplicável, testes, `.http`.
 
 ---
 
+## 2.7 Geolocalização e convergência com território
+
+- **Regra:** A geolocalização do usuário deve convergir com o território que ele está observando. A validação é feita no **backend**; o app (e qualquer cliente) deve enviar a posição para que a API possa aplicá-la.
+- **API:** Cabeçalhos `X-Geo-Latitude` e `X-Geo-Longitude` (definidos em `ApiHeaders`). Leitura via `GeoHeaderReader.TryGetCoordinates(Request.Headers, ...)`; coordenadas válidas validadas com `GeoCoordinate.IsValid`.
+- **BFF:** Repassa todos os headers da requisição (exceto `Host`) para a API; não precisa lógica específica de geo.
+- **Uso atual:** (1) Onboarding: `suggested-territories` usa query `latitude`, `longitude`, `radiusKm`. (2) Residência: POST `memberships/{territoryId}/verify-residency/geo` com body `{ latitude, longitude }` para provar presença no território.
+- **Raio por território:** Cada território pode ter um `RadiusKm` (nullable). Quando null, usa-se o padrão do sistema (`Constants.Geo.VerificationRadiusKm`, 5 km). Assim o perímetro varia por território (bairro 5 km, região 50 km, etc.).
+- **Uso atual:** Feed (v1 e jornada), create-post e verify-residency/geo usam `territory.RadiusKm ?? Constants.Geo.VerificationRadiusKm` para validar convergência.
+
+- **Acesso remoto ao território (bypass geo):** Feature flag por território e permissão por usuário permitem ignorar a exigência de convergência geolocalização.
+  - **Por território:** `FeatureFlag.RemoteAccessToTerritoryEnabled` — quando ativa no território, qualquer usuário pode acessar (feed, criar post) sem estar no perímetro.
+  - **Por usuário:** `SystemPermissionType.RemoteAccessToTerritory` — usuários com essa permissão podem acessar qualquer território sem geo. **Sys admin:** tem bypass por padrão (não precisa da permissão explícita).
+  - Serviço `IGeoConvergenceBypassService.ShouldBypassGeoEnforcementAsync(territoryId, userId)` centraliza a decisão; usado em FeedController e FeedJourneyController. Verify-residency/geo não usa bypass (continua exigindo presença no território).
+
+---
+
 ## 3. Desacoplamento e assimetrias (incremental)
 
 ### 3.1 Domain e Application

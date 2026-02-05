@@ -48,12 +48,14 @@ class BffClient {
           onUnauthorized?.call();
         }
         if (error.response?.statusCode == 429) {
+          // Bound retries to avoid endless loops when backend keeps returning 429.
           const maxRetries = 2;
-          final retries = (error.requestOptions.extra['_429_retries'] as int?) ?? 0;
+          const retryCountKey = '_429_retries';
+          final retries = (error.requestOptions.extra[retryCountKey] as int?) ?? 0;
           if (retries >= maxRetries) {
             return handler.next(error);
           }
-          error.requestOptions.extra['_429_retries'] = retries + 1;
+          error.requestOptions.extra[retryCountKey] = retries + 1;
           final retryAfter = error.response?.headers.value('Retry-After');
           final seconds = retryAfter != null ? int.tryParse(retryAfter) ?? 2 : 2;
           await Future<void>.delayed(Duration(seconds: seconds.clamp(1, 10)));

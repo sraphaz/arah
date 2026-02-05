@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Araponga.Infrastructure.Postgres.Migrations
 {
     [DbContext(typeof(ArapongaDbContext))]
-    [Migration("20260121214543_AddTermsAndPoliciesSystem")]
-    partial class AddTermsAndPoliciesSystem
+    [Migration("20260205204020_UnifiedInitialCreate")]
+    partial class UnifiedInitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -487,6 +487,9 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("TagsJson")
+                        .HasColumnType("jsonb");
+
                     b.Property<Guid>("TerritoryId")
                         .HasColumnType("uuid");
 
@@ -507,6 +510,11 @@ namespace Araponga.Infrastructure.Postgres.Migrations
 
                     b.HasIndex("MapEntityId");
 
+                    b.HasIndex("TagsJson")
+                        .HasFilter("\"TagsJson\" IS NOT NULL");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("TagsJson"), "gin");
+
                     b.HasIndex("TerritoryId");
 
                     b.HasIndex("ReferenceType", "ReferenceId");
@@ -516,6 +524,100 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.HasIndex("TerritoryId", "Status", "CreatedAtUtc");
 
                     b.ToTable("community_posts", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.ConnectionPrivacySettingsRecord", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("ShowConnectionsInProfile")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("WhoCanAddMe")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WhoCanSeeMyConnections")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("connection_privacy_settings", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.CouponRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<int>("DiscountType")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("DiscountValue")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("MaxUses")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("StripeCouponId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UsedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ValidFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ValidUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("StripeCouponId")
+                        .IsUnique()
+                        .HasFilter("\"StripeCouponId\" IS NOT NULL");
+
+                    b.ToTable("coupons", (string)null);
                 });
 
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.DocumentEvidenceRecord", b =>
@@ -568,6 +670,93 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.HasIndex("TerritoryId", "Kind");
 
                     b.ToTable("document_evidences", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.EmailQueueItemRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer")
+                        .HasColumnName("attempts");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("body");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("error_message");
+
+                    b.Property<DateTime?>("FailedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("failed_at_utc");
+
+                    b.Property<bool>("IsHtml")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_html");
+
+                    b.Property<DateTime?>("NextRetryAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("next_retry_at_utc");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer")
+                        .HasColumnName("priority");
+
+                    b.Property<DateTime?>("ProcessedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_at_utc");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("retry_count");
+
+                    b.Property<DateTime?>("ScheduledFor")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("scheduled_for");
+
+                    b.Property<DateTime?>("SentAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_at_utc");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("subject");
+
+                    b.Property<string>("TemplateDataJson")
+                        .HasColumnType("text")
+                        .HasColumnName("template_data_json");
+
+                    b.Property<string>("TemplateName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("template_name");
+
+                    b.Property<string>("To")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("to_address");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("email_queue_items");
                 });
 
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.EventParticipationRecord", b =>
@@ -922,6 +1111,45 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.ToTable("media_attachments", (string)null);
                 });
 
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.MediaStorageConfigRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SettingsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsActive");
+
+                    b.ToTable("media_storage_configs", (string)null);
+                });
+
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.MembershipCapabilityRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1028,6 +1256,49 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.HasIndex("TargetType", "TargetId", "CreatedAtUtc");
 
                     b.ToTable("moderation_reports", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.NotificationConfigRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AvailableChannelsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DefaultChannelsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NotificationTypesJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("TemplatesJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<Guid?>("TerritoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TerritoryId")
+                        .IsUnique()
+                        .HasFilter("\"TerritoryId\" IS NULL");
+
+                    b.ToTable("notification_configs", (string)null);
                 });
 
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.OutboxMessageRecord", b =>
@@ -1225,21 +1496,6 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.ToTable("platform_revenue_transactions", (string)null);
                 });
 
-            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.PostAssetRecord", b =>
-                {
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AssetId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("PostId", "AssetId");
-
-                    b.HasIndex("AssetId");
-
-                    b.ToTable("post_assets", (string)null);
-                });
-
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.PostCommentRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1265,36 +1521,6 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("post_comments", (string)null);
-                });
-
-            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.PostGeoAnchorRecord", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("post_geo_anchors", (string)null);
                 });
 
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.PostLikeRecord", b =>
@@ -1826,6 +2052,277 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.ToTable("store_rating_responses", (string)null);
                 });
 
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.SubscriptionCouponRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("AppliedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CouponId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SubscriptionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CouponId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.HasIndex("SubscriptionId", "CouponId")
+                        .IsUnique();
+
+                    b.ToTable("subscription_coupons", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.SubscriptionPaymentRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("FailureReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StripeInvoiceId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("SubscriptionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("StripeInvoiceId")
+                        .IsUnique()
+                        .HasFilter("\"StripeInvoiceId\" IS NOT NULL");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("subscription_payments", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.SubscriptionPlanHistoryRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ChangeReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("ChangeType")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ChangedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ChangedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NewStateJson")
+                        .HasColumnType("jsonb");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PreviousStateJson")
+                        .HasColumnType("jsonb");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangedByUserId");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("PlanId", "ChangedAtUtc");
+
+                    b.ToTable("subscription_plan_histories", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.SubscriptionPlanRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("BillingCycle")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CapabilitiesJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LimitsJson")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<decimal?>("PricePerCycle")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<int>("Scope")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StripePriceId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("StripeProductId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("TerritoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Tier")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TrialDays")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Scope");
+
+                    b.HasIndex("TerritoryId");
+
+                    b.HasIndex("Scope", "IsDefault");
+
+                    b.HasIndex("Scope", "TerritoryId");
+
+                    b.ToTable("subscription_plans", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.SubscriptionRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("CancelAtPeriodEnd")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("CanceledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CurrentPeriodEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CurrentPeriodStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("StripeSubscriptionId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("TerritoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("TrialEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("TrialStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("StripeSubscriptionId")
+                        .IsUnique()
+                        .HasFilter("\"StripeSubscriptionId\" IS NOT NULL");
+
+                    b.HasIndex("TerritoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "TerritoryId");
+
+                    b.ToTable("subscriptions", (string)null);
+                });
+
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.SystemConfigRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2069,6 +2566,27 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.ToTable("territory_assets", (string)null);
                 });
 
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.TerritoryCharacterizationRecord", b =>
+                {
+                    b.Property<Guid>("TerritoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("TagsJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("TerritoryId");
+
+                    b.HasIndex("TerritoryId")
+                        .IsUnique();
+
+                    b.ToTable("territory_characterizations", (string)null);
+                });
+
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.TerritoryEventRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2206,6 +2724,39 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.ToTable("territory_join_requests", (string)null);
                 });
 
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.TerritoryMediaConfigRecord", b =>
+                {
+                    b.Property<Guid>("TerritoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ChatJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("EventsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("MarketplaceJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("PostsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("TerritoryId");
+
+                    b.ToTable("territory_media_configs", (string)null);
+                });
+
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.TerritoryMembershipRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2251,6 +2802,45 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                         .IsUnique();
 
                     b.ToTable("territory_memberships", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.TerritoryModerationRuleRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CreatedByVotingId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("RuleJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RuleType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TerritoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByVotingId");
+
+                    b.HasIndex("TerritoryId");
+
+                    b.HasIndex("TerritoryId", "IsActive");
+
+                    b.ToTable("territory_moderation_rules", (string)null);
                 });
 
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.TerritoryPayoutConfigRecord", b =>
@@ -2334,6 +2924,9 @@ namespace Araponga.Infrastructure.Postgres.Migrations
 
                     b.Property<Guid?>("ParentTerritoryId")
                         .HasColumnType("uuid");
+
+                    b.Property<double?>("RadiusKm")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -2480,6 +3073,155 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.ToTable("user_blocks", (string)null);
                 });
 
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserConnectionRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("RemovedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("RequestedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("RequesterUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("RespondedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TargetUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TerritoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequesterUserId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("TargetUserId");
+
+                    b.HasIndex("RequesterUserId", "TargetUserId")
+                        .IsUnique();
+
+                    b.ToTable("user_connections", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserDeviceRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DeviceName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("DeviceToken")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastUsedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Platform")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("RegisteredAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceToken")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "IsActive");
+
+                    b.ToTable("user_devices", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserInterestRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InterestTag")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InterestTag");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "InterestTag")
+                        .IsUnique();
+
+                    b.ToTable("user_interests", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserMediaPreferencesRecord", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("AutoPlayAudio")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("AutoPlayVideos")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowAudio")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowImages")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowVideos")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("user_media_preferences", (string)null);
+                });
+
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserNotificationRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2538,6 +3280,15 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("EmailFrequency")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("EmailReceiveEmails")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("EmailTypes")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("NotificationsAlertsEnabled")
                         .HasColumnType("boolean");
 
@@ -2592,6 +3343,13 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
+
+                    b.Property<Guid?>("AvatarMediaAssetId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Cpf")
                         .HasColumnType("text");
@@ -2649,6 +3407,98 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                         .IsUnique();
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.VoteRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SelectedOption")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("VotingId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VotingId");
+
+                    b.HasIndex("VotingId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("votes", (string)null);
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.VotingRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime?>("EndsAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OptionsJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("StartsAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TerritoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Visibility")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("TerritoryId");
+
+                    b.HasIndex("TerritoryId", "Status");
+
+                    b.ToTable("votings", (string)null);
                 });
 
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.WorkItemRecord", b =>
@@ -2778,11 +3628,29 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserInterestRecord", b =>
+                {
+                    b.HasOne("Araponga.Infrastructure.Postgres.Entities.UserRecord", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.UserPreferencesRecord", b =>
                 {
                     b.HasOne("Araponga.Infrastructure.Postgres.Entities.UserRecord", null)
                         .WithOne()
                         .HasForeignKey("Araponga.Infrastructure.Postgres.Entities.UserPreferencesRecord", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Araponga.Infrastructure.Postgres.Entities.VoteRecord", b =>
+                {
+                    b.HasOne("Araponga.Infrastructure.Postgres.Entities.VotingRecord", null)
+                        .WithMany()
+                        .HasForeignKey("VotingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

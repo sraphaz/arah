@@ -44,6 +44,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Araponga.Api.Extensions;
 
@@ -222,8 +223,18 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var persistenceProvider = configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+        var isPostgres = string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase);
 
-        if (string.Equals(persistenceProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+        // Registrar repositórios de mídia logo no início quando Postgres (usados por TerritoryMediaConfigService e vários serviços).
+        // Assim garantimos registro antes de módulos/DbContext que possam falhar.
+        if (isPostgres)
+        {
+            services.AddScoped<ITerritoryMediaConfigRepository, PostgresTerritoryMediaConfigRepository>();
+            services.AddScoped<IUserMediaPreferencesRepository, PostgresUserMediaPreferencesRepository>();
+            services.AddScoped<IMediaStorageConfigRepository, PostgresMediaStorageConfigRepository>();
+        }
+
+        if (isPostgres)
         {
             // Registrar infraestrutura compartilhada primeiro (SharedDbContext e repositórios compartilhados)
             services.AddSharedInfrastructure(configuration);
@@ -258,13 +269,12 @@ public static class ServiceCollectionExtensions
             // e será migrada gradualmente para os módulos apropriados
             services.AddPostgresRepositories(configuration);
 
-            // Connection Pool Metrics Service (usando ArapongaDbContext temporariamente)
-            // TODO: Atualizar ConnectionPoolMetricsService para aceitar DbContext genérico
+            // Connection Pool Metrics Service (usa IServiceScopeFactory para resolver DbContext por chamada; evita Singleton+Scoped)
             services.AddSingleton<ConnectionPoolMetricsService>(sp =>
             {
-                var dbContext = sp.GetRequiredService<ArapongaDbContext>();
+                var scopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
                 var logger = sp.GetRequiredService<ILogger<ConnectionPoolMetricsService>>();
-                return new ConnectionPoolMetricsService(dbContext, logger);
+                return new ConnectionPoolMetricsService(scopeFactory, logger);
             });
 
             // Workers e serviços de background
@@ -305,6 +315,15 @@ public static class ServiceCollectionExtensions
             services.AddSingleton<InMemoryDataStore>();
             services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
             services.AddInMemoryRepositories();
+        }
+
+        // Fallback: garantir repositórios de mídia quando Postgres (evita falha de DI se o bloco inicial não tiver sido executado)
+        var persistenceAgain = configuration.GetValue<string>("Persistence:Provider") ?? "InMemory";
+        if (string.Equals(persistenceAgain, "Postgres", StringComparison.OrdinalIgnoreCase))
+        {
+            services.TryAddScoped<ITerritoryMediaConfigRepository, PostgresTerritoryMediaConfigRepository>();
+            services.TryAddScoped<IUserMediaPreferencesRepository, PostgresUserMediaPreferencesRepository>();
+            services.TryAddScoped<IMediaStorageConfigRepository, PostgresMediaStorageConfigRepository>();
         }
 
         // Email Configuration (aplicável a ambos InMemory e Postgres)

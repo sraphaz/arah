@@ -19,7 +19,7 @@ class BffClient {
     this.latitude,
     this.longitude,
     this.onUnauthorized,
-  }) : _dio = _createDio(config.bffBaseUrl.replaceAll(RegExp(r'/$'), '') + '/api/v2/journeys', onUnauthorized);
+  }) : _dio = _createDio(config.bffBaseUrl.replaceAll(RegExp(r'/$'), '') + '/api/v2/journeys/', onUnauthorized);
 
   final AppConfig config;
   final String? accessToken;

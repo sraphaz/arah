@@ -134,6 +134,7 @@ public static class BffJourneyRegistry
             },
             [Auth] = new List<JourneyEndpoint>
             {
+                new("social", "POST", "Login/cadastro social (Google, Apple, etc.). Body: authProvider, externalId, displayName, email, foreignDocument."),
                 new("login", "POST", "Login (email/senha ou provedor). Body: credenciais."),
                 new("refresh", "POST", "Refresh do token. Body: refreshToken."),
                 new("logout", "POST", "Logout. Requer Authorization."),

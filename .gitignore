@@ -26,6 +26,9 @@
 **/TestResults/
 **/coverage/
 
+# Logs
+logs/
+
 # Environment (secrets)
 .env
 .env.local

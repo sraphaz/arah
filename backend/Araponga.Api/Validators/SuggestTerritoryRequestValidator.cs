@@ -25,5 +25,9 @@ public sealed class SuggestTerritoryRequestValidator : AbstractValidator<Suggest
 
         RuleFor(x => x.Longitude)
             .Longitude();
+
+        RuleFor(x => x.RadiusKm)
+            .GreaterThan(0).When(x => x.RadiusKm.HasValue)
+            .WithMessage("RadiusKm deve ser positivo quando informado.");
     }
 }

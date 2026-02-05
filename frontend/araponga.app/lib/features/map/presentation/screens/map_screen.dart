@@ -113,7 +113,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
-                const AttributionLayer(),
+                SimpleAttributionWidget(
+                  source: Text('OpenStreetMap contributors'),
+                ),
               ],
             ),
     );

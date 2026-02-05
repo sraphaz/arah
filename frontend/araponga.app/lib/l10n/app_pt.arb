@@ -78,5 +78,10 @@
 "notifEvents": "Eventos",
 "notifAlerts": "Alertas",
 "filterByInterests": "Por interesses",
-  "inTerritory": "Em"
+  "inTerritory": "Em",
+  "loginWithGoogle": "Entrar com Google",
+  "noAccountYet": "Não tem conta?",
+  "createAccount": "Criar conta",
+  "loginOr": "ou",
+  "comingSoon": "Em breve"
 }

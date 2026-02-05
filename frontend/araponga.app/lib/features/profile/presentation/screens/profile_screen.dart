@@ -58,6 +58,7 @@ class ProfileScreen extends ConsumerWidget {
     }
 
     final profileAsync = ref.watch(meProfileProvider);
+    final authUser = session.user;
 
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +79,31 @@ class ProfileScreen extends ConsumerWidget {
             if (context.mounted) context.go('/login');
           },
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (authUser != null) ...[
+                Text(
+                  authUser.displayName,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                if (authUser.email != null && authUser.email!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppConstants.spacingSm),
+                    child: Text(
+                      authUser.email!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ),
+                const SizedBox(height: AppConstants.spacingLg),
+              ],
+              const CircularProgressIndicator(),
+            ],
+          ),
+        ),
         error: (err, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(AppConstants.spacingLg),

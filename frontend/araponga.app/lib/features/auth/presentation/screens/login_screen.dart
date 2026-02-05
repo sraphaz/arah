@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
@@ -80,6 +81,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                   ),
                   const SizedBox(height: AppConstants.spacingXl + AppConstants.spacingSm),
+                  Opacity(
+                    opacity: auth.isLoading ? 0.6 : 1,
+                    child: SignInButton(
+                      Buttons.google,
+                      text: AppLocalizations.of(context)!.loginWithGoogle,
+                      onPressed: auth.isLoading
+                          ? () {}
+                          : () async {
+                              await ref.read(authStateProvider.notifier).loginWithGoogle();
+                              if (!mounted) return;
+                              final authState = ref.read(authStateProvider);
+                              if (authState.hasError) {
+                                final msg = authState.error is ApiException
+                                    ? (authState.error! as ApiException).userMessage
+                                    : authState.error.toString();
+                                showErrorSnackBar(context, msg);
+                              } else if (authState.valueOrNull != null) {
+                                context.go('/home');
+                              }
+                            },
+                    ),
+                  ),
+                  const SizedBox(height: AppConstants.spacingLg),
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
+                        child: Text(
+                          AppLocalizations.of(context)!.loginOr,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: AppConstants.spacingLg),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -104,13 +144,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: AppConstants.spacingLg),
                   FilledButton(
                     onPressed: auth.isLoading ? null : _submit,
-                    child:                     auth.isLoading
+                    child: auth.isLoading
                         ? SizedBox(
                             height: AppConstants.loadingIndicatorSize,
                             width: AppConstants.loadingIndicatorSize,
                             child: const CircularProgressIndicator(strokeWidth: 2),
                           )
                         : Text(AppLocalizations.of(context)!.login),
+                  ),
+                  const SizedBox(height: AppConstants.spacingLg),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.noAccountYet,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _emailController.clear();
+                          _nameController.clear();
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        },
+                        child: Text(AppLocalizations.of(context)!.createAccount),
+                      ),
+                    ],
                   ),
                 ],
               ),

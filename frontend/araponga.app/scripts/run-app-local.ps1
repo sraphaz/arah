@@ -3,12 +3,13 @@
 # ============================================
 # Use depois de subir o stack com: ..\..\scripts\run-local-stack.ps1
 #
-# Este script roda o app Flutter com BFF_BASE_URL=http://localhost:5001
-# Para emulador Android use: BFF_BASE_URL=http://10.0.2.2:5001
+# Por padrão roda no Chrome (web). Sem dispositivo/emulador conectado, o app abre no navegador.
+# Para emulador Android: -Android (usa 10.0.2.2:5001) ou -Device android
 
 param(
     [string]$BffUrl = "http://localhost:5001",
-    [switch]$Android,  # Usa 10.0.2.2:5001 para emulador Android
+    [switch]$Android,   # Usa 10.0.2.2:5001 para emulador Android
+    [string]$Device,   # Dispositivo: chrome (padrão), edge, android, ios, etc. Use "flutter devices" para listar.
     [switch]$Help
 )
 
@@ -38,19 +39,25 @@ function Show-Help {
     Write-Host ""
     Write-Info "=== Ará - Rodar app contra BFF local ==="
     Write-Host ""
-    Write-Host "  flutter run --dart-define=BFF_BASE_URL=<url>"
+    Write-Host "  Por padrão roda no Chrome (web). Use -Device para outro alvo."
     Write-Host ""
     Write-Host "Uso:"
-    Write-Host "  .\scripts\run-app-local.ps1           BFF em localhost:5001 (padrão)"
-    Write-Host "  .\scripts\run-app-local.ps1 -Android BFF em 10.0.2.2:5001 (emulador Android)"
+    Write-Host "  .\scripts\run-app-local.ps1             BFF localhost:5001, app no Chrome"
+    Write-Host "  .\scripts\run-app-local.ps1 -Android     BFF 10.0.2.2:5001 (emulador Android)"
+    Write-Host "  .\scripts\run-app-local.ps1 -Device edge App no Edge (web)"
+    Write-Host "  .\scripts\run-app-local.ps1 -Device android  Emulador/device Android"
     Write-Host "  .\scripts\run-app-local.ps1 -BffUrl http://192.168.1.10:5001"
     Write-Host "  .\scripts\run-app-local.ps1 -Help"
+    Write-Host "  flutter devices   lista dispositivos disponíveis"
     Write-Host ""
 }
 
 if ($Help) { Show-Help; exit 0 }
 
 if ($Android) { $BffUrl = "http://10.0.2.2:5001" }
+
+# Dispositivo padrão: Chrome (web), para rodar sem phone/emulador
+if (-not $Device) { $Device = "chrome" }
 
 $flutterCmd = Get-FlutterPath
 if (-not $flutterCmd) {
@@ -61,17 +68,18 @@ if (-not $flutterCmd) {
     Write-Host "  2. Rode manualmente (em um terminal onde 'flutter' funciona):"
     Write-Host ""
     Write-Host "     cd $AppRoot" -ForegroundColor Gray
-    Write-Host "     flutter run --dart-define=BFF_BASE_URL=$BffUrl" -ForegroundColor Gray
+    Write-Host "     flutter run -d chrome --dart-define=BFF_BASE_URL=$BffUrl" -ForegroundColor Gray
     Write-Host ""
     Write-Host "  3. No Cursor/VS Code, use o terminal integrado onde o Flutter Extension pode ter configurado o PATH."
     exit 1
 }
 
 Write-Info "BFF_BASE_URL=$BffUrl"
+Write-Info "Dispositivo: $Device"
 Write-Info "Iniciando Flutter..."
 Push-Location $AppRoot | Out-Null
 try {
-    & $flutterCmd run --dart-define=BFF_BASE_URL=$BffUrl
+    & $flutterCmd run -d $Device --dart-define=BFF_BASE_URL=$BffUrl
 } finally {
     Pop-Location | Out-Null
 }

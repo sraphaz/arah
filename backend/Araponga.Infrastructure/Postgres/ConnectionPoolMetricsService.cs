@@ -1,22 +1,24 @@
 using Araponga.Application.Metrics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Araponga.Infrastructure.Postgres;
 
 /// <summary>
 /// Serviço para coletar métricas de connection pool em tempo real.
+/// Usa IServiceScopeFactory para resolver ArapongaDbContext por chamada (evita Singleton dependendo de Scoped).
 /// </summary>
 public sealed class ConnectionPoolMetricsService
 {
-    private readonly ArapongaDbContext _dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<ConnectionPoolMetricsService> _logger;
 
     public ConnectionPoolMetricsService(
-        ArapongaDbContext dbContext,
+        IServiceScopeFactory scopeFactory,
         ILogger<ConnectionPoolMetricsService> logger)
     {
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
         _logger = logger;
     }
 
@@ -27,7 +29,9 @@ public sealed class ConnectionPoolMetricsService
     {
         try
         {
-            var connection = _dbContext.Database.GetDbConnection();
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ArapongaDbContext>();
+            var connection = dbContext.Database.GetDbConnection();
             if (connection.State != System.Data.ConnectionState.Open)
             {
                 connection.Open();
@@ -58,7 +62,9 @@ public sealed class ConnectionPoolMetricsService
     {
         try
         {
-            var connection = _dbContext.Database.GetDbConnection();
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ArapongaDbContext>();
+            var connection = dbContext.Database.GetDbConnection();
             if (connection.State != System.Data.ConnectionState.Open)
             {
                 connection.Open();

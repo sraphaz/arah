@@ -52,7 +52,8 @@ public sealed class TerritoryService
         double latitude,
         double longitude,
         CancellationToken cancellationToken,
-        double? radiusKm = null)
+        double? radiusKm = null,
+        TerritoryStatus status = TerritoryStatus.Pending)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -79,7 +80,7 @@ public sealed class TerritoryService
             null,
             name,
             description,
-            TerritoryStatus.Pending,
+            status,
             city,
             state,
             latitude,

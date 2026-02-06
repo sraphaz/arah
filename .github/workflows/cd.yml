@@ -32,6 +32,27 @@ jobs:
             ghcr.io/${{ github.repository }}/araponga-api:latest
             ghcr.io/${{ github.repository }}/araponga-api:${{ github.sha }}
 
+  build-and-push-bff:
+    name: BFF Docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: backend/Araponga.Api.Bff/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/araponga-bff:latest
+            ghcr.io/${{ github.repository }}/araponga-bff:${{ github.sha }}
+
   build-flutter-android:
     name: App Android
     runs-on: ubuntu-latest
@@ -48,6 +69,14 @@ jobs:
           cache: true
       - name: Ensure platforms
         run: flutter create . --project-name araponga_app --org com.araponga --platforms=android,ios,web
+      - name: Set Android minSdk 23 for Firebase Auth
+        run: |
+          # firebase-auth 23.x exige minSdkVersion >= 23 (template Flutter usa 21)
+          for f in android/app/build.gradle android/app/build.gradle.kts; do
+            if [ -f "$f" ]; then
+              sed -i.bak -e 's/minSdkVersion 21/minSdkVersion 23/g' -e 's/minSdk 21/minSdk 23/g' -e 's/minSdk = 21/minSdk = 23/g' -e 's/flutter\.minSdkVersion/23/g' "$f"
+            fi
+          done
       - name: Install dependencies
         run: flutter pub get
       - name: Build APK
@@ -99,7 +128,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: araponga-app-ios
-          path: frontend/araponga.app/build/ios/ios-Runner.app.zip
+          path: frontend/araponga.app/build/ios-Runner.app.zip
 
   create-release:
     name: GitHub Release

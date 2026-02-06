@@ -140,7 +140,7 @@ buildscript {
 
 ### 4.2 android/app/build.gradle
 
-- **minSdkVersion:** pelo menos **21** (Firebase exige).
+- **minSdkVersion:** pelo menos **23** (firebase-auth 23.x exige; template Flutter costuma usar 21).
 
 Exemplo da parte relevante:
 
@@ -151,7 +151,7 @@ android {
 
     defaultConfig {
         applicationId "com.araponga"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -246,7 +246,7 @@ void main() async {
 - [ ] App Android registrado no Firebase com o mesmo pacote e mesmo SHA-1.
 - [ ] `google-services.json` em `android/app/google-services.json`.
 - [ ] Plugin `com.google.gms.google-services` no `build.gradle` (raiz e app).
-- [ ] `minSdkVersion 21` em `android/app/build.gradle`.
+- [ ] `minSdkVersion 23` em `android/app/build.gradle` (firebase-auth 23.x exige).
 - [ ] `Firebase.initializeApp()` no `main.dart`.
 - [ ] Login com Google + Firebase Auth + chamada ao BFF implementados no repositório de auth.
 - [ ] Nome/e-mail exibidos na tela de perfil (já coberto pelo fluxo BFF + `me/profile`).

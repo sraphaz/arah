@@ -40,6 +40,8 @@ jobs:
             --collect:"XPlat Code Coverage" \
             --results-directory:"${{ runner.temp }}/test-results" \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+      - name: Test BFF
+        run: dotnet test backend/Tests/Araponga.Tests.Bff/Araponga.Tests.Bff.csproj --no-build --configuration Release --verbosity normal
       - name: Coverage summary
         run: |
           F=$(find "${{ runner.temp }}/test-results" -name "coverage.cobertura.xml" 2>/dev/null | head -1)
@@ -69,6 +71,8 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
+          # Ignora artefatos de build .NET (deps.json em bin/obj); dependências são controladas por csproj/Directory.Build.props.
+          skip-dirs: '**/bin,**/obj'
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
         if: always()

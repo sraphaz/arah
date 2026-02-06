@@ -57,6 +57,7 @@ public sealed class JourneyApiProxy : IJourneyApiProxy
         // Corpo: buffer até 2MB; acima disso ou chunked (sem Content-Length) encaminha em stream para não regredir uploads.
         const int maxBufferedBodyBytes = 2 * 1024 * 1024;
         byte[]? bodyBytes = null;
+        var bodyStreamSet = false; // true quando já definimos StreamContent(request.Body) para chunked/large
         var contentLength = request.ContentLength;
         var methodHasBody = string.Equals(request.Method, "GET", StringComparison.OrdinalIgnoreCase) == false;
 
@@ -77,6 +78,7 @@ public sealed class JourneyApiProxy : IJourneyApiProxy
         else if (request.Body.CanRead && methodHasBody && (contentLength is null or 0 or > maxBufferedBodyBytes))
         {
             // Chunked ou corpo > 2MB: encaminhar stream (evita corpo vazio na API)
+            bodyStreamSet = true;
             if (request.Body.CanSeek)
                 request.Body.Position = 0;
             requestMessage.Content = new StreamContent(request.Body);
@@ -100,7 +102,9 @@ public sealed class JourneyApiProxy : IJourneyApiProxy
             requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
         }
 
-        if (bodyBytes is { Length: > 0 } && requestMessage.Content == null)
+        // Só não sobrescrever Content quando já definimos o stream do body (chunked/large). Caso contrário,
+        // mesmo que o loop de headers tenha feito Content = StreamContent(Stream.Null), usamos o body bufferizado.
+        if (bodyBytes is { Length: > 0 } && !bodyStreamSet)
         {
             requestMessage.Content = new ByteArrayContent(bodyBytes);
             if (request.ContentType is not null)

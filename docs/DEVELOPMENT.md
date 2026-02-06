@@ -2,6 +2,15 @@
 
 ## Guia para Desenvolvedores
 
+### Quick start (app + stack local)
+
+Para subir API, BFF, seeds e app Flutter em poucos passos:
+
+- **Stack**: na raiz do repositório, execute `.\scripts\run-local-stack.ps1` (PowerShell). O script sobe API (Docker), BFF e aplica os seeds Camburi e Boiçucanga. Use `-ResetDatabase` para recriar o banco.
+- **App**: em outro terminal, `cd frontend/araponga.app` e `flutter run`.
+
+Documentação completa (getting started, release estável, o que falta no app): **[STABLE_RELEASE_APP_ONBOARDING.md](./STABLE_RELEASE_APP_ONBOARDING.md)**.
+
 ### Configuração Inicial
 
 1. Clone o repositório

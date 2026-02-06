@@ -141,6 +141,8 @@ backend/
 - [Domain Routing](./13_DOMAIN_ROUTING.md)
 
 ### Desenvolvimento
+- [Release estável – App e Onboarding](./STABLE_RELEASE_APP_ONBOARDING.md) — Getting started, stack local, seeds, o que está no app e o que falta
+- [Guia de Desenvolvimento](./DEVELOPMENT.md)
 - [Plano de Implementação](./20_IMPLEMENTATION_PLAN.md)
 - [Revisão de Código](./21_CODE_REVIEW.md)
 - [Análise de Coesão e Testes](./22_COHESION_AND_TESTS.md)

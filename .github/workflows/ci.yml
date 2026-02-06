@@ -55,13 +55,20 @@ jobs:
             printf "| Lines | %.1f%% |\n" $(echo "$LR" | awk '{print $1*100}') >> $GITHUB_STEP_SUMMARY
             printf "| Branches | %.1f%% |\n" $(echo "$BR" | awk '{print $1*100}') >> $GITHUB_STEP_SUMMARY
           fi
+      - name: Find coverage file
+        id: coverage
+        run: |
+          F=$(find "${{ runner.temp }}/test-results" -name "coverage.cobertura.xml" 2>/dev/null | head -1)
+          echo "path=${F:-}" >> $GITHUB_OUTPUT
+      # Para branches protegidas/PRs o Codecov pode exigir token: adicione CODECOV_TOKEN em Settings > Secrets.
       - name: Upload Coverage Reports
         uses: codecov/codecov-action@v4
-        if: success()
+        if: success() && steps.coverage.outputs.path != ''
         with:
-          files: ${{ runner.temp }}/test-results/**/coverage.cobertura.xml
+          files: ${{ steps.coverage.outputs.path }}
           fail_ci_if_error: false
           flags: unittests
+          token: ${{ secrets.CODECOV_TOKEN }}
       - name: Security Scan (Trivy)
         uses: aquasecurity/trivy-action@master
         with:

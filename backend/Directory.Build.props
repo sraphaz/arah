@@ -3,4 +3,8 @@
     <!-- CVE-2024-43483: .NET hash flooding. Patched in 8.0.10+. Fix: usar 8.0.12 em todo o backend e nas imagens Docker (sdk/aspnet:8.0.12). -->
     <RuntimeFrameworkVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.12</RuntimeFrameworkVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- CVE-2024-43483: força 8.0.1 em todos os projetos (evita 8.0.0 transitivo; 8.0.1 compatível com DI 8.x). -->
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+  </ItemGroup>
 </Project>

@@ -52,10 +52,7 @@ public sealed class AdminSeedController : ControllerBase
 
     /// <summary>
     /// Cadastra o território Camburi (São Sebastião, SP) como território padrão, se ainda não existir.
-    /// Perímetro: centroide do polígono da região (-23.76281, -45.63691), raio 3,5 km cobrindo todos os vértices.
-    /// Vértices do polígono: (-23.77712,-45.66050), (-23.76220,-45.66387), (-23.74968,-45.66118),
-    /// (-23.73371,-45.62439), (-23.75068,-45.60883), (-23.76304,-45.60608), (-23.77456,-45.62988),
-    /// (-23.78168,-45.63744), (-23.78252,-45.65002).
+    /// Perímetro: polígono com os 9 vértices da região; centroide (-23.76281, -45.63691).
     /// </summary>
     [HttpPost("territories/camburi")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -66,12 +63,23 @@ public sealed class AdminSeedController : ControllerBase
         const string name = "Camburi";
         const string city = "São Sebastião";
         const string state = "SP";
-        // Centroide do polígono informado (média dos 9 vértices)
         const double latitude = -23.76281;
         const double longitude = -45.63691;
-        // Raio que cobre todos os vértices (~3,3 km máx.) + margem
         const double radiusKm = 3.5;
         const string description = "Praia e bairro de Camburi, São Sebastião, SP. Perímetro definido pelo polígono da região.";
+
+        var boundaryPolygon = new List<TerritoryBoundaryPoint>
+        {
+            new(-23.77712, -45.66050),
+            new(-23.76220, -45.66387),
+            new(-23.74968, -45.66118),
+            new(-23.73371, -45.62439),
+            new(-23.75068, -45.60883),
+            new(-23.76304, -45.60608),
+            new(-23.77456, -45.62988),
+            new(-23.78168, -45.63744),
+            new(-23.78252, -45.65002),
+        };
 
         try
         {
@@ -97,6 +105,7 @@ public sealed class AdminSeedController : ControllerBase
                 longitude,
                 cancellationToken,
                 radiusKm,
+                boundaryPolygon,
                 TerritoryStatus.Active);
 
             if (!result.Success || result.Territory is null)

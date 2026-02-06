@@ -71,6 +71,7 @@ public sealed class AccountDeletionService
             null, // IdentityVerifiedAtUtc removido
             null, // AvatarMediaAssetId removido
             null, // Bio removido
+            null, // PasswordHash removido
             user.CreatedAtUtc); // Manter data de criação para estatísticas
 
         await _userRepository.UpdateAsync(anonymizedUser, cancellationToken);

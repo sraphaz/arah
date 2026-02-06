@@ -137,6 +137,9 @@ public sealed class TerritoriesController : ControllerBase
         [FromBody] SuggestTerritoryRequest request,
         CancellationToken cancellationToken)
     {
+        var boundaryPolygon = request.BoundaryPolygon?.Count >= 3
+            ? request.BoundaryPolygon.Select(p => new TerritoryBoundaryPoint(p.Latitude, p.Longitude)).ToList()
+            : null;
         var result = await _territoryService.CreateAsync(
             request.Name,
             request.Description,
@@ -145,7 +148,8 @@ public sealed class TerritoriesController : ControllerBase
             request.Latitude,
             request.Longitude,
             cancellationToken,
-            request.RadiusKm);
+            request.RadiusKm,
+            boundaryPolygon);
 
         if (!result.Success || result.Territory is null)
         {
@@ -406,6 +410,8 @@ public sealed class TerritoriesController : ControllerBase
             territory.State,
             territory.Latitude,
             territory.Longitude,
+            territory.RadiusKm,
+            MapBoundaryPolygon(territory.BoundaryPolygon),
             territory.CreatedAtUtc,
             tags);
     }
@@ -421,8 +427,16 @@ public sealed class TerritoriesController : ControllerBase
             territory.State,
             territory.Latitude,
             territory.Longitude,
+            territory.RadiusKm,
+            MapBoundaryPolygon(territory.BoundaryPolygon),
             territory.CreatedAtUtc,
             tags);
+    }
+
+    private static IReadOnlyList<GeoPointDto>? MapBoundaryPolygon(IReadOnlyList<TerritoryBoundaryPoint>? polygon)
+    {
+        if (polygon is null || polygon.Count == 0) return null;
+        return polygon.Select(p => new GeoPointDto(p.Latitude, p.Longitude)).ToList();
     }
 
     private bool TryGetSessionId(out string sessionId)

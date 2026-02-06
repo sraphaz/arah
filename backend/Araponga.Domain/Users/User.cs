@@ -21,7 +21,7 @@ public sealed class User
         string authProvider,
         string externalId,
         DateTime createdAtUtc)
-        : this(id, displayName, email, cpf, foreignDocument, phoneNumber, address, authProvider, externalId, false, null, null, null, UserIdentityVerificationStatus.Unverified, null, null, null, createdAtUtc)
+        : this(id, displayName, email, cpf, foreignDocument, phoneNumber, address, authProvider, externalId, false, null, null, null, UserIdentityVerificationStatus.Unverified, null, null, null, null, createdAtUtc)
     {
     }
 
@@ -45,6 +45,7 @@ public sealed class User
     /// <param name="identityVerifiedAtUtc">Data/hora UTC em que a identidade foi verificada (opcional).</param>
     /// <param name="avatarMediaAssetId">ID do MediaAsset usado como avatar (opcional).</param>
     /// <param name="bio">Biografia/descrição pessoal do usuário (opcional, máx. 500 caracteres).</param>
+    /// <param name="passwordHash">Hash da senha (opcional; usado para login por e-mail/senha).</param>
     /// <param name="createdAtUtc">Data/hora UTC de criação do usuário.</param>
     public User(
         Guid id,
@@ -64,6 +65,7 @@ public sealed class User
         DateTime? identityVerifiedAtUtc,
         Guid? avatarMediaAssetId,
         string? bio,
+        string? passwordHash,
         DateTime createdAtUtc)
     {
         if (string.IsNullOrWhiteSpace(displayName))
@@ -114,6 +116,7 @@ public sealed class User
         IdentityVerifiedAtUtc = identityVerifiedAtUtc;
         AvatarMediaAssetId = avatarMediaAssetId;
         Bio = NormalizeBio(bio);
+        PasswordHash = passwordHash;
         CreatedAtUtc = createdAtUtc;
     }
 
@@ -204,6 +207,11 @@ public sealed class User
     /// Biografia/descrição pessoal do usuário (opcional, máx. 500 caracteres).
     /// </summary>
     public string? Bio { get; private set; }
+
+    /// <summary>
+    /// Hash da senha (opcional; presente para contas criadas com e-mail/senha).
+    /// </summary>
+    public string? PasswordHash { get; }
 
     /// <summary>
     /// Data/hora UTC de criação do usuário no sistema.

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -11,6 +11,7 @@ namespace Araponga.Infrastructure.Postgres.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS pgcrypto;");
             migrationBuilder.CreateTable(
                 name: "active_territories",
                 columns: table => new
@@ -1014,7 +1015,8 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     Latitude = table.Column<double>(type: "double precision", nullable: false),
                     Longitude = table.Column<double>(type: "double precision", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RadiusKm = table.Column<double>(type: "double precision", nullable: true)
+                    RadiusKm = table.Column<double>(type: "double precision", nullable: true),
+                    BoundaryPolygonJson = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1325,7 +1327,8 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                     IdentityVerifiedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     AvatarMediaAssetId = table.Column<Guid>(type: "uuid", nullable: true),
                     Bio = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2478,7 +2481,7 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                 table: "territory_memberships",
                 column: "UserId",
                 unique: true,
-                filter: "\"Role\" = 1");
+                filter: "\"Role\" = 2");
 
             migrationBuilder.CreateIndex(
                 name: "IX_territory_memberships_UserId_TerritoryId",
@@ -2684,11 +2687,17 @@ namespace Araponga.Infrastructure.Postgres.Migrations
                 name: "IX_work_items_Type",
                 table: "work_items",
                 column: "Type");
+
+            migrationBuilder.Sql("ALTER TABLE territory_memberships ALTER COLUMN \"RowVersion\" SET DEFAULT gen_random_bytes(8);");
+            migrationBuilder.Sql("ALTER TABLE community_posts ALTER COLUMN \"RowVersion\" SET DEFAULT gen_random_bytes(8);");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("ALTER TABLE territory_memberships ALTER COLUMN \"RowVersion\" DROP DEFAULT;");
+            migrationBuilder.Sql("ALTER TABLE community_posts ALTER COLUMN \"RowVersion\" DROP DEFAULT;");
+
             migrationBuilder.DropTable(
                 name: "active_territories");
 

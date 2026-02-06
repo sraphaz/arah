@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../config/app_config.dart';
 import 'api_exception.dart';
@@ -42,6 +43,17 @@ class BffClient {
         'Content-Type': 'application/json',
       },
     ));
+    if (kDebugMode) {
+      dio.interceptors.add(LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+        logPrint: (obj) => debugPrint(obj.toString()),
+      ));
+    }
     dio.interceptors.add(InterceptorsWrapper(
       onError: (error, handler) async {
         if (error.response?.statusCode == 401) {
@@ -104,8 +116,8 @@ class BffClient {
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
       );
       return _fromResponse(response);
-    } on DioException catch (e) {
-      throw _toApiException(e);
+    } on DioException catch (e, stackTrace) {
+      throw _toApiException(e, stackTrace);
     }
   }
 
@@ -124,8 +136,8 @@ class BffClient {
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
       );
       return _fromResponse(response);
-    } on DioException catch (e) {
-      throw _toApiException(e);
+    } on DioException catch (e, stackTrace) {
+      throw _toApiException(e, stackTrace);
     }
   }
 
@@ -144,8 +156,8 @@ class BffClient {
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
       );
       return _fromResponse(response);
-    } on DioException catch (e) {
-      throw _toApiException(e);
+    } on DioException catch (e, stackTrace) {
+      throw _toApiException(e, stackTrace);
     }
   }
 
@@ -162,8 +174,8 @@ class BffClient {
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
       );
       return _fromResponse(response);
-    } on DioException catch (e) {
-      throw _toApiException(e);
+    } on DioException catch (e, stackTrace) {
+      throw _toApiException(e, stackTrace);
     }
   }
 
@@ -174,24 +186,53 @@ class BffClient {
     );
   }
 
-  static ApiException _toApiException(DioException e) {
+  static ApiException _toApiException(DioException e, [StackTrace? stackTrace]) {
     final statusCode = e.response?.statusCode;
-    final body = e.response?.data is String
-        ? e.response!.data as String
-        : e.response?.data != null
-            ? jsonEncode(e.response!.data)
-            : null;
+    final rawData = e.response?.data;
+    String? body;
+    String? serverError;
+    if (rawData is String) {
+      body = rawData;
+      try {
+        final decoded = jsonDecode(rawData) as Map<String, dynamic>?;
+        serverError = decoded?['error'] as String?;
+      } catch (_) {}
+    } else if (rawData is Map<String, dynamic>) {
+      body = jsonEncode(rawData);
+      serverError = rawData['error'] as String?;
+    } else if (rawData != null) {
+      body = jsonEncode(rawData);
+    }
     final message = e.type == DioExceptionType.connectionTimeout ||
             e.type == DioExceptionType.receiveTimeout ||
             e.type == DioExceptionType.sendTimeout
         ? 'Timeout ao conectar'
         : (e.message ?? 'Erro de rede');
-    return ApiException(
+    final exception = ApiException(
       message,
       statusCode: statusCode,
       body: body != null && body.length > 500 ? null : body,
       originalError: e,
+      serverError: serverError,
     );
+    // Log em debug: detalhes para diagnóstico (tipo Dio, URL tentada, erro subjacente).
+    if (kDebugMode) {
+      final dioType = e.type.name;
+      final url = e.requestOptions.uri.toString();
+      final underlying = e.error?.toString() ?? '';
+      if (statusCode == null) {
+        debugPrint('[ApiException] type=$dioType url=$url message=$message');
+        if (underlying.isNotEmpty) debugPrint('[ApiException] error=$underlying');
+        debugPrint('[ApiException] (BFF inacessível? Backend rodando? CORS para web?)');
+      } else {
+        debugPrint(
+          '[ApiException] statusCode=$statusCode type=$dioType url=$url message=$message serverError=$serverError body=${exception.body ?? "(truncated or null)"}',
+        );
+        if (underlying.isNotEmpty) debugPrint('[ApiException] error=$underlying');
+        if (stackTrace != null) debugPrint('[ApiException] stackTrace:\n$stackTrace');
+      }
+    }
+    return exception;
   }
 }
 

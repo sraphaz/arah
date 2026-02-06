@@ -9,6 +9,8 @@ public sealed record TerritoryResponse(
     string State,
     double Latitude,
     double Longitude,
+    double? RadiusKm,
+    IReadOnlyList<GeoPointDto>? BoundaryPolygon,
     DateTime CreatedAtUtc,
     IReadOnlyList<string> Tags
 );

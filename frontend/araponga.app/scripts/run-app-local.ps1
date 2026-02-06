@@ -68,7 +68,7 @@ if (-not $flutterCmd) {
     Write-Host "  2. Rode manualmente (em um terminal onde 'flutter' funciona):"
     Write-Host ""
     Write-Host "     cd $AppRoot" -ForegroundColor Gray
-    Write-Host "     flutter run -d chrome --dart-define=BFF_BASE_URL=$BffUrl" -ForegroundColor Gray
+    Write-Host '     flutter run -d chrome --dart-define=BFF_BASE_URL=... --dart-define=flutter.flutter_map.unblockOSM="OpenStreetMap data is free for everyone to use."' -ForegroundColor Gray
     Write-Host ""
     Write-Host "  3. No Cursor/VS Code, use o terminal integrado onde o Flutter Extension pode ter configurado o PATH."
     exit 1
@@ -79,7 +79,8 @@ Write-Info "Dispositivo: $Device"
 Write-Info "Iniciando Flutter..."
 Push-Location $AppRoot | Out-Null
 try {
-    & $flutterCmd run -d $Device --dart-define=BFF_BASE_URL=$BffUrl
+    $osmDefine = '--dart-define=flutter.flutter_map.unblockOSM=OpenStreetMap data is free for everyone to use.'
+    & $flutterCmd run -d $Device --dart-define=BFF_BASE_URL=$BffUrl $osmDefine
 } finally {
     Pop-Location | Out-Null
 }

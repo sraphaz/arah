@@ -78,6 +78,7 @@ public sealed class AccountDeletionServiceTests
             DateTime.UtcNow,
             null,
             null,
+            null,
             DateTime.UtcNow);
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(userId, It.IsAny<CancellationToken>()))
@@ -136,6 +137,7 @@ public sealed class AccountDeletionServiceTests
             null,
             null,
             UserIdentityVerificationStatus.Unverified,
+            null,
             null,
             null,
             null,

@@ -31,12 +31,30 @@ public static class SharedMappers
             Latitude = territory.Latitude,
             Longitude = territory.Longitude,
             CreatedAtUtc = territory.CreatedAtUtc,
-            RadiusKm = territory.RadiusKm
+            RadiusKm = territory.RadiusKm,
+            BoundaryPolygonJson = territory.BoundaryPolygon is null or { Count: 0 }
+                ? null
+                : JsonSerializer.Serialize(territory.BoundaryPolygon),
         };
     }
 
     public static Territory ToDomain(this TerritoryRecord record)
     {
+        IReadOnlyList<TerritoryBoundaryPoint>? boundaryPolygon = null;
+        if (!string.IsNullOrWhiteSpace(record.BoundaryPolygonJson))
+        {
+            try
+            {
+                var list = JsonSerializer.Deserialize<List<TerritoryBoundaryPoint>>(record.BoundaryPolygonJson);
+                if (list is { Count: >= 3 })
+                    boundaryPolygon = list;
+            }
+            catch
+            {
+                // Ignore invalid JSON
+            }
+        }
+
         return new Territory(
             record.Id,
             record.ParentTerritoryId,
@@ -48,7 +66,8 @@ public static class SharedMappers
             record.Latitude,
             record.Longitude,
             record.CreatedAtUtc,
-            record.RadiusKm);
+            record.RadiusKm,
+            boundaryPolygon);
     }
 
     public static UserRecord ToRecord(this User user)
@@ -72,6 +91,7 @@ public static class SharedMappers
             IdentityVerifiedAtUtc = user.IdentityVerifiedAtUtc,
             AvatarMediaAssetId = user.AvatarMediaAssetId,
             Bio = user.Bio,
+            PasswordHash = user.PasswordHash,
             CreatedAtUtc = user.CreatedAtUtc
         };
     }
@@ -96,6 +116,7 @@ public static class SharedMappers
             record.IdentityVerifiedAtUtc,
             record.AvatarMediaAssetId,
             record.Bio,
+            record.PasswordHash,
             record.CreatedAtUtc);
     }
 
@@ -111,7 +132,8 @@ public static class SharedMappers
             LastGeoVerifiedAtUtc = membership.LastGeoVerifiedAtUtc,
             LastDocumentVerifiedAtUtc = membership.LastDocumentVerifiedAtUtc,
             CreatedAtUtc = membership.CreatedAtUtc,
-            RowVersion = Array.Empty<byte>()
+            // Garante valor não nulo no INSERT; coluna NOT NULL e IsRowVersion() pode fazer o EF omitir no insert.
+            RowVersion = new byte[8]
         };
     }
 

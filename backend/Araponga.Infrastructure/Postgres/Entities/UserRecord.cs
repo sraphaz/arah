@@ -27,6 +27,9 @@ public sealed class UserRecord
     // Profile fields
     public Guid? AvatarMediaAssetId { get; set; }
     public string? Bio { get; set; }
-    
+
+    /// <summary>Hash da senha (BCrypt); usado para login por e-mail/senha.</summary>
+    public string? PasswordHash { get; set; }
+
     public DateTime CreatedAtUtc { get; set; }
 }

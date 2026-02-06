@@ -514,6 +514,7 @@ public sealed class UserEdgeCasesTests
             null,
             null,
             null,
+            null,
             DateTime.UtcNow);
         
         // Act
@@ -631,6 +632,7 @@ public sealed class UserEdgeCasesTests
             null,
             avatarId,
             bio,
+            null,
             createdAt);
         
         // Assert

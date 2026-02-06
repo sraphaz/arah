@@ -17,7 +17,8 @@ public sealed class Territory
         double latitude,
         double longitude,
         DateTime createdAtUtc,
-        double? radiusKm = null)
+        double? radiusKm = null,
+        IReadOnlyList<TerritoryBoundaryPoint>? boundaryPolygon = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -39,6 +40,11 @@ public sealed class Territory
             throw new ArgumentException("RadiusKm must be positive when provided.", nameof(radiusKm));
         }
 
+        if (boundaryPolygon is { Count: < 3 })
+        {
+            throw new ArgumentException("Boundary polygon must have at least 3 points when provided.", nameof(boundaryPolygon));
+        }
+
         Id = id;
         ParentTerritoryId = parentTerritoryId;
         Name = name.Trim();
@@ -50,6 +56,7 @@ public sealed class Territory
         Longitude = longitude;
         CreatedAtUtc = createdAtUtc;
         RadiusKm = radiusKm;
+        BoundaryPolygon = boundaryPolygon;
     }
 
     public Guid Id { get; }
@@ -65,6 +72,14 @@ public sealed class Territory
 
     /// <summary>
     /// Raio do perímetro do território em km. Quando null, usa o valor padrão do sistema (ex.: 5 km) para convergência geo e verificação de residência.
+    /// Ignorado para desenho no mapa quando <see cref="BoundaryPolygon"/> estiver preenchido.
     /// </summary>
     public double? RadiusKm { get; }
+
+    /// <summary>
+    /// Polígono do perímetro do território (lista ordenada de pontos no mapa).
+    /// Quando preenchido, o perímetro é exibido como contorno no mapa; caso contrário usa-se centro (Latitude, Longitude) + RadiusKm.
+    /// Permite cadastro de território a partir do desenho no mapa no futuro.
+    /// </summary>
+    public IReadOnlyList<TerritoryBoundaryPoint>? BoundaryPolygon { get; }
 }

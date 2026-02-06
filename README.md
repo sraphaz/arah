@@ -131,6 +131,18 @@ backend/
 
 ---
 
+## Quick start (app + stack local)
+
+Para rodar **API, BFF, seeds e app Flutter** do zero:
+
+1. **Subir a stack**: `.\scripts\run-local-stack.ps1` (PowerShell na raiz do repositório).  
+   Use `-ResetDatabase` para recriar o banco e aplicar migrações.
+2. **Rodar o app**: em outro terminal, `cd frontend\araponga.app` e `flutter run`.
+
+Guia completo (pré-requisitos, fluxo de onboarding, o que está implementado e o que falta): **[Release estável – App e Onboarding](./docs/STABLE_RELEASE_APP_ONBOARDING.md)**.
+
+---
+
 ## Documentação
 
 **[Índice Completo da Documentação](./docs/00_INDEX.md)** — Navegação estruturada
@@ -153,6 +165,8 @@ backend/
 
 ### Desenvolvimento
 - [Guia de Desenvolvimento](./docs/DEVELOPMENT.md) — Setup local e padrões
+- [Release estável – App e Onboarding](./docs/STABLE_RELEASE_APP_ONBOARDING.md) — Getting started, o que está no app e o que falta
+- [Matriz API / BFF / App](./docs/FEATURE_MATRIX_API_BFF_APP.md) — Funcionalidades por camada, o que desenvolver no app/BFF/API
 - [Configuração e Setup](./docs/SETUP.md) — Instalar e rodar o projeto
 - [API Documentation](./docs/API.md) — Endpoints principais
 - [Plano de Implementação](./docs/20_IMPLEMENTATION_PLAN.md)

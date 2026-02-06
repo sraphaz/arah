@@ -30,6 +30,28 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
+        },
+        {
+            "name": "araponga (Flutter) - Chrome",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "cwd": "${workspaceFolder}/frontend/araponga.app",
+            "args": [
+                "-d", "chrome",
+                "--dart-define=BFF_BASE_URL=http://localhost:5001",
+                "--dart-define=flutter.flutter_map.unblockOSM=OpenStreetMap data is free for everyone to use."
+            ]
+        },
+        {
+            "name": "araponga (Flutter)",
+            "request": "launch",
+            "type": "dart",
+            "cwd": "${workspaceFolder}/frontend/araponga.app",
+            "args": [
+                "--dart-define=BFF_BASE_URL=http://localhost:5001",
+                "--dart-define=flutter.flutter_map.unblockOSM=OpenStreetMap data is free for everyone to use."
+            ]
         }
     ]
 }

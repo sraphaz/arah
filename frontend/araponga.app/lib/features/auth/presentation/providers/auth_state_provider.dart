@@ -12,10 +12,24 @@ class AuthStateNotifier extends AsyncNotifier<AuthSession?> {
     return ref.read(authRepositoryProvider).restoreSession();
   }
 
-  Future<void> login({required String email, String? displayName}) async {
+  /// Verifica se o e-mail existe na base (para decidir tela de senha ou criar conta).
+  Future<bool> checkEmailExists(String email) async {
+    return ref.read(authRepositoryProvider).checkEmailExists(email);
+  }
+
+  Future<void> login({required String email, required String password}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final session = await ref.read(authRepositoryProvider).login(email: email, displayName: displayName);
+      final session = await ref.read(authRepositoryProvider).login(email: email, password: password);
+      return session;
+    });
+  }
+
+  /// Criar conta: signup com email + displayName + senha (auth/signup; senha armazenada em hash).
+  Future<void> signUp({required String email, required String displayName, required String password}) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final session = await ref.read(authRepositoryProvider).signUp(email: email, displayName: displayName, password: password);
       return session;
     });
   }

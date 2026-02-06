@@ -9,10 +9,17 @@ O conteúdo do território **Camburi** (São Sebastião, SP) é populado por **i
 - **Membership** desse usuário no território (Resident).
 - **3 posts** no feed do território.
 - **2 eventos** no território.
+- **2 alertas de saúde** no território (base para testar a funcionalidade de alertas no front).
 
 ## Como executar
 
-### 1) Só SQL (recomendado)
+Para um **quick start** completo (API + BFF + seeds + app), veja [docs/STABLE_RELEASE_APP_ONBOARDING.md](../../docs/STABLE_RELEASE_APP_ONBOARDING.md#como-rodar-o-projeto-getting-started).
+
+### 0) Stack local (automático)
+
+Ao subir o stack com `.\scripts\run-local-stack.ps1` (Docker), o script **executa o seed automaticamente** no container Postgres usando `docker cp` + `psql -f` (UTF-8 preservado; não usa pipe do PowerShell). Não é necessário ter `psql` instalado no host.
+
+### 1) Só SQL (manual)
 
 Com **psql** e conexão ao Postgres (ex.: banco já criado pelo Docker):
 
@@ -44,8 +51,11 @@ Se preferir criar o território pela API administrativa:
 | Arquivo | Descrição |
 |--------|-----------|
 | `seed-camburi.sql` | Script SQL de ingestão (território opcional + usuário + membership + posts + eventos). |
+| `seed-boicucanga.sql` | Script SQL: território Boiçucanga (São Sebastião, SP), polígono 11 vértices + usuário seed, membership, 3 posts, 2 eventos, 2 alertas (base mínima para testar feed, eventos e alertas no front). |
 | `run-seed-camburi.ps1` | Script PowerShell que executa o SQL (usa `psql` e variáveis de ambiente ou padrões). |
 | `README.md` | Este arquivo. |
+
+O `run-local-stack.ps1` executa em sequência `seed-camburi.sql` e `seed-boicucanga.sql` para permitir testar a alternância entre territórios na tela de seleção.
 
 ## Variáveis de ambiente (opcional)
 

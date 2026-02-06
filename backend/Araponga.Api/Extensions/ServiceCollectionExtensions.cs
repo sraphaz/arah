@@ -504,7 +504,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IInquiryRepository, InMemoryInquiryRepository>();
         services.AddSingleton<IStoreRatingRepository, InMemoryStoreRatingRepository>();
         services.AddSingleton<IStoreItemRatingRepository, InMemoryStoreItemRatingRepository>();
-        services.AddSingleton<IStoreRatingResponseRepository, InMemoryStoreRatingResponseRepository>();
+        services.AddSingleton<Araponga.Modules.Marketplace.Application.Interfaces.IStoreRatingResponseRepository, InMemoryStoreRatingResponseRepository>();
         services.AddSingleton<ICartRepository, InMemoryCartRepository>();
         services.AddSingleton<ICartItemRepository, InMemoryCartItemRepository>();
         services.AddSingleton<ICheckoutRepository, InMemoryCheckoutRepository>();

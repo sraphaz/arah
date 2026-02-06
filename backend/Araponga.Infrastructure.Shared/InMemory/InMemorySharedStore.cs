@@ -72,6 +72,7 @@ public sealed class InMemorySharedStore
             null,
             null,
             null,
+            null,
             DateTime.UtcNow);
 
         var curatorUser = new User(
@@ -92,6 +93,7 @@ public sealed class InMemorySharedStore
             null,
             null,
             null,
+            null,
             DateTime.UtcNow);
 
         var adminUser = new User(
@@ -109,6 +111,7 @@ public sealed class InMemorySharedStore
             null,
             null,
             UserIdentityVerificationStatus.Unverified,
+            null,
             null,
             null,
             null,

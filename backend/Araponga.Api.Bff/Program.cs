@@ -14,9 +14,12 @@ builder.Services.AddHttpClient<IJourneyApiProxy, JourneyApiProxy>(client =>
     var baseUrl = builder.Configuration["Bff:ApiBaseUrl"]?.TrimEnd('/');
     if (!string.IsNullOrEmpty(baseUrl))
         client.BaseAddress = new Uri(baseUrl);
+}).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    AutomaticDecompression = System.Net.DecompressionMethods.All
 });
 
-// CORS: permite Flutter web (localhost com qualquer porta) e outros origins em dev
+// CORS: Flutter web em localhost (qualquer porta). Em Development, qualquer origin localhost/127.0.0.1.
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -27,13 +30,21 @@ builder.Services.AddCors(options =>
                 try
                 {
                     var uri = new Uri(origin);
-                    return uri.Host == "localhost" || uri.Host == "127.0.0.1";
+                    return uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase)
+                        || uri.Host == "127.0.0.1";
                 }
                 catch { return false; }
             })
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
+    });
+    // Development: AllowAnyOrigin (sem credentials) para garantir que Flutter web no Chrome não seja bloqueado
+    options.AddPolicy("Development", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
@@ -57,12 +68,18 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v2/swagger.json", "BFF Journeys v2");
 });
 
-app.UseCors();
+if (app.Environment.IsDevelopment())
+    app.UseCors("Development");
+else
+    app.UseCors();
 
 // Em Development com só HTTP (localhost:5001) evita aviso "Failed to determine the https port"
 if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 
+// Monitoramento integrado App → BFF → API: correlation ID e logging estruturado
+app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseMiddleware<BffRequestLoggingMiddleware>();
 app.UseMiddleware<JourneyProxyMiddleware>();
 
 // Página inicial indicativa (padrão enterprise: serviço rodando) - wwwroot/index.html

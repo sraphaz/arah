@@ -35,12 +35,30 @@ public static class PostgresMappers
             Latitude = territory.Latitude,
             Longitude = territory.Longitude,
             CreatedAtUtc = territory.CreatedAtUtc,
-            RadiusKm = territory.RadiusKm
+            RadiusKm = territory.RadiusKm,
+            BoundaryPolygonJson = territory.BoundaryPolygon is null or { Count: 0 }
+                ? null
+                : JsonSerializer.Serialize(territory.BoundaryPolygon),
         };
     }
 
     public static Territory ToDomain(this TerritoryRecord record)
     {
+        IReadOnlyList<TerritoryBoundaryPoint>? boundaryPolygon = null;
+        if (!string.IsNullOrWhiteSpace(record.BoundaryPolygonJson))
+        {
+            try
+            {
+                var list = JsonSerializer.Deserialize<List<TerritoryBoundaryPoint>>(record.BoundaryPolygonJson);
+                if (list is { Count: >= 3 })
+                    boundaryPolygon = list;
+            }
+            catch
+            {
+                // Ignore invalid JSON; treat as null polygon
+            }
+        }
+
         return new Territory(
             record.Id,
             record.ParentTerritoryId,
@@ -52,7 +70,8 @@ public static class PostgresMappers
             record.Latitude,
             record.Longitude,
             record.CreatedAtUtc,
-            record.RadiusKm);
+            record.RadiusKm,
+            boundaryPolygon);
     }
 
     public static UserRecord ToRecord(this User user)
@@ -76,6 +95,7 @@ public static class PostgresMappers
             IdentityVerifiedAtUtc = user.IdentityVerifiedAtUtc,
             AvatarMediaAssetId = user.AvatarMediaAssetId,
             Bio = user.Bio,
+            PasswordHash = user.PasswordHash,
             CreatedAtUtc = user.CreatedAtUtc
         };
     }
@@ -100,6 +120,7 @@ public static class PostgresMappers
             record.IdentityVerifiedAtUtc,
             record.AvatarMediaAssetId,
             record.Bio,
+            record.PasswordHash,
             record.CreatedAtUtc);
     }
 
@@ -114,7 +135,9 @@ public static class PostgresMappers
             ResidencyVerification = membership.ResidencyVerification,
             LastGeoVerifiedAtUtc = membership.LastGeoVerifiedAtUtc,
             LastDocumentVerifiedAtUtc = membership.LastDocumentVerifiedAtUtc,
-            CreatedAtUtc = membership.CreatedAtUtc
+            CreatedAtUtc = membership.CreatedAtUtc,
+            // Garante valor não nulo no INSERT; coluna NOT NULL e IsRowVersion() pode fazer o EF omitir no insert.
+            RowVersion = new byte[8]
         };
     }
 

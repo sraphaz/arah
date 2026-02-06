@@ -1,4 +1,3 @@
-using Araponga.Application.Interfaces;
 using Araponga.Modules.Marketplace.Application.Interfaces;
 using Araponga.Modules.Marketplace.Domain;
 

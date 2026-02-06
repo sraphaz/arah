@@ -90,6 +90,7 @@ public sealed class DataExportServiceTests
             null,
             null,
             null,
+            null,
             DateTime.UtcNow);
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(userId, It.IsAny<CancellationToken>()))
@@ -144,6 +145,7 @@ public sealed class DataExportServiceTests
             null,
             null,
             UserIdentityVerificationStatus.Unverified,
+            null,
             null,
             null,
             null,

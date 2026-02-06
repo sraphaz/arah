@@ -53,6 +53,7 @@ public sealed class TerritoryService
         double longitude,
         CancellationToken cancellationToken,
         double? radiusKm = null,
+        IReadOnlyList<TerritoryBoundaryPoint>? boundaryPolygon = null,
         TerritoryStatus status = TerritoryStatus.Pending)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -75,6 +76,11 @@ public sealed class TerritoryService
             return new TerritoryCreationResult(false, "RadiusKm must be positive when provided.", null);
         }
 
+        if (boundaryPolygon is { Count: < 3 })
+        {
+            return new TerritoryCreationResult(false, "Boundary polygon must have at least 3 points.", null);
+        }
+
         var territory = new Territory(
             Guid.NewGuid(),
             null,
@@ -86,7 +92,8 @@ public sealed class TerritoryService
             latitude,
             longitude,
             DateTime.UtcNow,
-            radiusKm);
+            radiusKm,
+            boundaryPolygon);
 
         await _territoryRepository.AddAsync(territory, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);

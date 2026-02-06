@@ -141,6 +141,7 @@ public sealed class UserAvatarBioTests
             null,
             mediaAssetId,
             bio,
+            null,
             DateTime.UtcNow);
 
         Assert.Equal(mediaAssetId, user.AvatarMediaAssetId);

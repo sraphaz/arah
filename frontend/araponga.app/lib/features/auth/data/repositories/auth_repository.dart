@@ -22,6 +22,15 @@ class AuthRepository {
 
   BffClient _client() => BffClient(config: config);
 
+  /// Verifica se o e-mail já está cadastrado (fluxo login vs criar conta).
+  Future<bool> checkEmailExists(String email) async {
+    final client = _client();
+    final response = await client.post('auth', 'check-email', body: {'email': email.trim()});
+    final data = response.data;
+    if (data is! Map<String, dynamic>) return false;
+    return data['exists'] == true;
+  }
+
   /// Login com Google: Google Sign-In → Firebase Auth → BFF auth/social (externalId = Firebase UID).
   Future<AuthSession?> loginWithGoogle() async {
     final googleSignIn = GoogleSignIn(
@@ -65,18 +74,34 @@ class AuthRepository {
     return AuthSession(user: user, accessToken: token);
   }
 
-  /// Login: BFF auth/social. Em produção usar provedor real (Google/Apple).
-  /// Para desenvolvimento: AuthProvider=dev, ExternalId=email, ForeignDocument=dev.
-  Future<AuthSession> login({required String email, String? displayName}) async {
+  /// Login com e-mail e senha: BFF auth/login. A senha é validada no backend (BCrypt).
+  Future<AuthSession> login({required String email, required String password}) async {
     final body = <String, dynamic>{
-      'authProvider': 'dev',
-      'externalId': email,
-      'displayName': displayName ?? email,
-      'foreignDocument': 'dev',
-      'email': email,
+      'email': email.trim(),
+      'password': password,
     };
     final client = _client();
-    final response = await client.post('auth', 'social', body: body);
+    final response = await client.post('auth', 'login', body: body);
+    return _parseAuthResponse(response);
+  }
+
+  /// Criar conta (signup): BFF auth/signup. Senha armazenada em hash no backend.
+  Future<AuthSession> signUp({
+    required String email,
+    required String displayName,
+    required String password,
+  }) async {
+    final body = <String, dynamic>{
+      'email': email.trim(),
+      'displayName': displayName.trim(),
+      'password': password,
+    };
+    final client = _client();
+    final response = await client.post('auth', 'signup', body: body);
+    return _parseAuthResponse(response);
+  }
+
+  Future<AuthSession> _parseAuthResponse(dynamic response) async {
     final data = response.data as Map<String, dynamic>?;
     if (data == null) throw ApiException('Resposta inválida');
     final user = AuthUser.fromJson(data);

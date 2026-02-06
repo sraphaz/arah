@@ -166,6 +166,7 @@ Guia completo (pré-requisitos, fluxo de onboarding, o que está implementado e 
 ### Desenvolvimento
 - [Guia de Desenvolvimento](./docs/DEVELOPMENT.md) — Setup local e padrões
 - [Release estável – App e Onboarding](./docs/STABLE_RELEASE_APP_ONBOARDING.md) — Getting started, o que está no app e o que falta
+- [Matriz API / BFF / App](./docs/FEATURE_MATRIX_API_BFF_APP.md) — Funcionalidades por camada, o que desenvolver no app/BFF/API
 - [Configuração e Setup](./docs/SETUP.md) — Instalar e rodar o projeto
 - [API Documentation](./docs/API.md) — Endpoints principais
 - [Plano de Implementação](./docs/20_IMPLEMENTATION_PLAN.md)

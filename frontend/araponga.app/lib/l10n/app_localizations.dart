@@ -224,6 +224,66 @@ abstract class AppLocalizations {
   /// **'Nenhum território encontrado nesta região. Tente aumentar o raio ou ative a localização.'**
   String get noTerritoryInRegion;
 
+  /// No description provided for @onboardingNearbyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximos a você'**
+  String get onboardingNearbyTitle;
+
+  /// No description provided for @onboardingAllTerritoriesTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os territórios'**
+  String get onboardingAllTerritoriesTitle;
+
+  /// No description provided for @onboardingOrChooseFromList.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ou escolha um território na lista abaixo'**
+  String get onboardingOrChooseFromList;
+
+  /// No description provided for @onboardingLocationEnabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Localização ativa'**
+  String get onboardingLocationEnabled;
+
+  /// No description provided for @onboardingLocationPrivacy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua localização é privada e não fica visível para outros usuários.'**
+  String get onboardingLocationPrivacy;
+
+  /// No description provided for @onboardingAllowLocationToCenter.
+  ///
+  /// In pt, this message translates to:
+  /// **'Permita a localização para centralizar o mapa e ver territórios próximos.'**
+  String get onboardingAllowLocationToCenter;
+
+  /// No description provided for @onboardingContinueWith.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continuar com {name}'**
+  String onboardingContinueWith(Object name);
+
+  /// No description provided for @onboardingVisitorOnContinue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.'**
+  String get onboardingVisitorOnContinue;
+
+  /// No description provided for @onboardingGettingLocation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Obtendo localização...'**
+  String get onboardingGettingLocation;
+
+  /// No description provided for @onboardingLoadingTerritories.
+  ///
+  /// In pt, this message translates to:
+  /// **'Carregando territórios...'**
+  String get onboardingLoadingTerritories;
+
   /// No description provided for @tryAgain.
   ///
   /// In pt, this message translates to:
@@ -595,6 +655,90 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'ou'**
   String get loginOr;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continuar'**
+  String get continueButton;
+
+  /// No description provided for @password.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha'**
+  String get password;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite sua senha'**
+  String get passwordHint;
+
+  /// No description provided for @enterPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite sua senha para entrar'**
+  String get enterPassword;
+
+  /// No description provided for @signUp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar conta'**
+  String get signUp;
+
+  /// No description provided for @signUpSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preencha os dados para criar sua conta'**
+  String get signUpSubtitle;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar senha'**
+  String get confirmPassword;
+
+  /// No description provided for @confirmPasswordHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Repita a senha'**
+  String get confirmPasswordHint;
+
+  /// No description provided for @displayName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get displayName;
+
+  /// No description provided for @displayNameHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como quer ser chamado'**
+  String get displayNameHint;
+
+  /// No description provided for @back.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar'**
+  String get back;
+
+  /// No description provided for @accountCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta criada. Bem-vindo!'**
+  String get accountCreated;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mín. 6 caracteres'**
+  String get passwordMinLength;
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'As senhas não coincidem'**
+  String get passwordsDontMatch;
 }
 
 class _AppLocalizationsDelegate

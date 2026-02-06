@@ -17,6 +17,11 @@ public sealed class OnboardingJourneyService : IOnboardingJourneyService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Conclui o onboarding: o usuário só se torna visitante do território neste momento.
+    /// Esta tela aparece apenas após login/cadastro quando ainda não há preferência de território salva;
+    /// se já houvesse território selecionado, o app iria direto para o feed sem pedir email, senha ou seleção.
+    /// </summary>
     public async Task<CompleteOnboardingResponse?> CompleteOnboardingAsync(
         Guid userId,
         string sessionId,
@@ -31,6 +36,7 @@ public sealed class OnboardingJourneyService : IOnboardingJourneyService
         if (!stored)
             return null;
 
+        // Único momento em que o usuário se torna visitante: ao concluir a seleção de território nesta tela.
         var membership = await _backend.EnterAsVisitorAsync(userId, selectedTerritoryId, cancellationToken);
         if (membership is null)
             return null;

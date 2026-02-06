@@ -106,7 +106,7 @@ class TerritorySelector extends ConsumerWidget {
             children: [
               Icon(Icons.wifi_off, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.error),
               const SizedBox(height: AppConstants.spacingMd),
-              Text(err.toString().replaceFirst('ApiException: ', ''), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
+              Text(err is ApiException ? (err as ApiException).userMessage : err.toString().replaceFirst('ApiException: ', ''), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),

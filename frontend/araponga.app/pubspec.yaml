@@ -25,7 +25,7 @@ dependencies:
   # Geolocalização (convergência com território observado)
   geolocator: ^13.0.2
   # Mapa (open source: OpenStreetMap; opcionalmente tiles Mapbox)
-  flutter_map: ^7.0.2
+  flutter_map: ^8.2.2
   latlong2: ^0.9.1
   # Utilitários (faixa compatível com flutter_localizations em Flutter 3.x e 4.x)
   intl: ">=0.19.0 <0.21.0"

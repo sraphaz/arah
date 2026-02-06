@@ -7,6 +7,8 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/geo/geo_location_provider.dart';
+import '../../../territories/data/repositories/territories_repository.dart';
+import '../../../territories/presentation/providers/territories_list_provider.dart';
 import '../providers/map_pins_provider.dart';
 import '../../data/models/map_pin.dart';
 
@@ -14,6 +16,8 @@ import '../../data/models/map_pin.dart';
 const LatLng _defaultCenter = LatLng(-14.2, -51.9);
 const double _defaultZoom = 4.0;
 const double _territoryZoom = 13.0;
+/// Cor do contorno do polígono e do pin do território (verde floresta).
+const _territoryBoundaryColorMap = Color(0xFF228B22);
 
 /// Tela de mapa com pins do território (entidades, posts, eventos, etc.).
 /// Usa flutter_map + OpenStreetMap; opcionalmente configurável para tiles Mapbox.
@@ -32,13 +36,16 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final territoryId = widget.territoryId ??
-        ref.watch(selectedTerritoryIdValueProvider);
+    // Sempre priorizar o território atualmente selecionado para que a alternância no Explorar
+    // reflita no mapa e apenas um contorno seja exibido por vez.
+    final territoryId = ref.watch(selectedTerritoryIdValueProvider) ?? widget.territoryId;
     final geo = ref.watch(geoLocationStateProvider);
     final pinsAsync = ref.watch(mapPinsProvider(territoryId));
+    final territoryDetailAsync = ref.watch(territoryDetailProvider(territoryId ?? ''));
 
     final hasTerritory = territoryId != null && territoryId.isNotEmpty;
-    final initialCenter = _initialCenter(geo, pinsAsync.valueOrNull);
+    final territoryDetail = territoryDetailAsync.valueOrNull;
+    final initialCenter = _initialCenter(geo, pinsAsync.valueOrNull, territoryDetail);
     final initialZoom = _initialZoom(geo, pinsAsync.valueOrNull);
 
     return Scaffold(
@@ -102,12 +109,24 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         height: 40,
                         child: Icon(
                           Icons.person_pin_circle,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Colors.orange,
                           size: 40,
                         ),
                       ),
                     ],
                   ),
+                territoryDetailAsync.when(
+                  data: (detail) {
+                    if (detail == null) return const SizedBox.shrink();
+                    // Key garante que apenas o contorno do território atual seja exibido ao alternar.
+                    return KeyedSubtree(
+                      key: ValueKey('boundary-$territoryId'),
+                      child: _buildTerritoryBoundaryLayer(context, detail),
+                    );
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, __) => const SizedBox.shrink(),
+                ),
                 pinsAsync.when(
                   data: (pins) => _buildPinsLayer(context, pins),
                   loading: () => const SizedBox.shrink(),
@@ -121,14 +140,47 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     );
   }
 
-  LatLng _initialCenter(GeoPosition? geo, List<MapPin>? pins) {
+  LatLng _initialCenter(GeoPosition? geo, List<MapPin>? pins, TerritoryDetail? territoryDetail) {
     if (geo != null) return LatLng(geo.latitude, geo.longitude);
     if (pins != null && pins.isNotEmpty) {
       final lat = pins.map((p) => p.latitude).reduce((a, b) => a + b) / pins.length;
       final lng = pins.map((p) => p.longitude).reduce((a, b) => a + b) / pins.length;
       return LatLng(lat, lng);
     }
+    if (territoryDetail != null) return LatLng(territoryDetail.latitude, territoryDetail.longitude);
     return _defaultCenter;
+  }
+
+  Widget _buildTerritoryBoundaryLayer(BuildContext context, TerritoryDetail detail) {
+    const color = _territoryBoundaryColorMap;
+    if (detail.boundaryPolygon != null && detail.boundaryPolygon!.length >= 3) {
+      final points = detail.boundaryPolygon!.map((p) => LatLng(p.lat, p.lng)).toList();
+      return PolygonLayer(
+        polygons: [
+          Polygon(
+            points: points,
+            color: color.withOpacity(0.2),
+            borderStrokeWidth: 2.5,
+            borderColor: color,
+          ),
+        ],
+      );
+    }
+    if (detail.radiusKm != null && detail.radiusKm! > 0) {
+      return CircleLayer(
+        circles: [
+          CircleMarker(
+            point: LatLng(detail.latitude, detail.longitude),
+            radius: detail.radiusKm! * 1000,
+            useRadiusInMeter: true,
+            color: color.withOpacity(0.2),
+            borderStrokeWidth: 2.5,
+            borderColor: color,
+          ),
+        ],
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   double _initialZoom(GeoPosition? geo, List<MapPin>? pins) {

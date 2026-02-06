@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
 import '../models/onboarding_models.dart';
@@ -18,11 +20,30 @@ class OnboardingRepository {
     final path = 'suggested-territories'
         '?latitude=$latitude&longitude=$longitude&radiusKm=$radiusKm';
     final response = await client.get('onboarding', path);
-    final data = response.data as Map<String, dynamic>?;
-    final list = data?['territories'] as List? ?? [];
-    return list
-        .map((e) => TerritorySuggestion.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final list = _extractTerritoriesList(response.data);
+    final result = <TerritorySuggestion>[];
+    for (final e in list) {
+      if (e is! Map<String, dynamic>) continue;
+      try {
+        result.add(TerritorySuggestion.fromJson(e));
+      } catch (_) {}
+    }
+    return result;
+  }
+
+  static List<dynamic> _extractTerritoriesList(dynamic data) {
+    if (data == null) return [];
+    Map<String, dynamic>? map;
+    if (data is Map<String, dynamic>) {
+      map = data;
+    } else if (data is String) {
+      try {
+        final decoded = jsonDecode(data);
+        if (decoded is Map<String, dynamic>) map = decoded;
+      } catch (_) {}
+    }
+    if (map == null) return [];
+    return map['territories'] as List? ?? map['Territories'] as List? ?? [];
   }
 
   /// POST onboarding/complete com body { selectedTerritoryId }.

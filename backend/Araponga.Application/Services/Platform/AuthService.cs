@@ -7,6 +7,7 @@ using Araponga.Domain.Email;
 using Araponga.Domain.Users;
 using Microsoft.Extensions.DependencyInjection;
 using OtpNet;
+using BCryptNet = BCrypt.Net;
 
 namespace Araponga.Application.Services;
 
@@ -140,6 +141,105 @@ public sealed class AuthService
         }, cancellationToken);
 
         return Result<(User user, string accessToken, string refreshToken)>.Success((user, accessToken, newUserRefresh));
+    }
+
+    /// <summary>
+    /// Cadastra usuário com e-mail e senha. Cria conta com authProvider=dev e armazena hash da senha.
+    /// </summary>
+    public async Task<Result<(User user, string accessToken, string refreshToken)>> SignUpWithPasswordAsync(
+        string email,
+        string displayName,
+        string password,
+        CancellationToken cancellationToken)
+    {
+        var normalizedEmail = email.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedEmail))
+        {
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Email is required.");
+        }
+        if (string.IsNullOrWhiteSpace(displayName?.Trim()))
+        {
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Display name is required.");
+        }
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
+        {
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Password must be at least 6 characters.");
+        }
+
+        var existing = await _userRepository.GetByEmailAsync(normalizedEmail, cancellationToken);
+        if (existing is not null)
+        {
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Email already registered.");
+        }
+
+        var passwordHash = BCryptNet.BCrypt.HashPassword(password, BCryptNet.BCrypt.GenerateSalt(12));
+        var user = new User(
+            Guid.NewGuid(),
+            displayName.Trim(),
+            normalizedEmail,
+            null,
+            "dev",
+            null,
+            null,
+            "dev",
+            normalizedEmail,
+            false,
+            null,
+            null,
+            null,
+            UserIdentityVerificationStatus.Unverified,
+            null,
+            null,
+            null,
+            passwordHash,
+            DateTime.UtcNow);
+
+        await _userRepository.AddAsync(user, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        var (refreshToken, _) = _refreshTokenStore.Issue(user.Id);
+        var accessToken = _tokenService.IssueToken(user.Id);
+        return Result<(User user, string accessToken, string refreshToken)>.Success((user, accessToken, refreshToken));
+    }
+
+    /// <summary>
+    /// Login com e-mail e senha. Verifica hash e emite tokens (ou retorna 2FA_REQUIRED se habilitado).
+    /// </summary>
+    public async Task<Result<(User user, string accessToken, string refreshToken)>> LoginWithPasswordAsync(
+        string email,
+        string password,
+        CancellationToken cancellationToken)
+    {
+        var normalizedEmail = email.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedEmail) || string.IsNullOrWhiteSpace(password))
+        {
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Invalid email or password.");
+        }
+
+        var user = await _userRepository.GetByEmailAsync(normalizedEmail, cancellationToken);
+        if (user is null || string.IsNullOrEmpty(user.PasswordHash))
+        {
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Invalid email or password.");
+        }
+
+        if (!BCryptNet.BCrypt.Verify(password, user.PasswordHash))
+        {
+            return Result<(User user, string accessToken, string refreshToken)>.Failure("Invalid email or password.");
+        }
+
+        if (user.TwoFactorEnabled)
+        {
+            var challengeId = Guid.NewGuid().ToString("N");
+            _twoFactorChallenges[challengeId] = (user.Id, DateTime.UtcNow.Add(Constants.Auth.TwoFactorChallengeExpiration));
+            CleanupExpiredChallenges();
+            return Result<(User user, string accessToken, string refreshToken)>.Failure($"2FA_REQUIRED:{challengeId}");
+        }
+
+        var (issuedRefresh, _) = _refreshTokenStore.Issue(user.Id);
+        return Result<(User user, string accessToken, string refreshToken)>.Success((
+            user,
+            _tokenService.IssueToken(user.Id),
+            issuedRefresh));
     }
 
     /// <summary>

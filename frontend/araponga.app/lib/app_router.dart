@@ -33,6 +33,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         return '/login';
       }
 
+      // Sem território salvo → onboarding (seleção). Com território → feed. O usuário só vira visitante ao concluir o onboarding.
       if (territoryLoading && location == '/') return null;
       if (hasTerritory) {
         if (location == '/') return '/home';

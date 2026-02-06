@@ -2,6 +2,7 @@ using Araponga.Application.Common;
 using Araponga.Application.Interfaces;
 using Araponga.Modules.Marketplace.Application.Interfaces;
 using Araponga.Modules.Marketplace.Domain;
+using IStoreRatingResponseRepository = Araponga.Modules.Marketplace.Application.Interfaces.IStoreRatingResponseRepository;
 
 namespace Araponga.Application.Services;
 

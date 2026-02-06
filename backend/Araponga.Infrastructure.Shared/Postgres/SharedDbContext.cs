@@ -145,6 +145,7 @@ public sealed class SharedDbContext : DbContext
             entity.Property(t => t.Longitude).HasColumnType("double precision");
             entity.Property(t => t.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(t => t.RadiusKm).HasColumnType("double precision");
+            entity.Property(t => t.BoundaryPolygonJson).HasColumnType("jsonb");
             entity.HasIndex(t => t.Name);
             entity.HasIndex(t => t.City);
             entity.HasIndex(t => t.State);
@@ -169,6 +170,7 @@ public sealed class SharedDbContext : DbContext
             entity.Property(u => u.IdentityVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(u => u.AvatarMediaAssetId);
             entity.Property(u => u.Bio).HasMaxLength(500);
+            entity.Property(u => u.PasswordHash).HasMaxLength(500);
             entity.Property(u => u.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => new { u.AuthProvider, u.ExternalId }).IsUnique();
@@ -308,12 +310,16 @@ public sealed class SharedDbContext : DbContext
             entity.Property(m => m.LastGeoVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(m => m.LastDocumentVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(m => m.CreatedAtUtc).HasColumnType("timestamp with time zone");
-            entity.Property(m => m.RowVersion).IsRowVersion();
+            // DEFAULT no banco (migração 20260207000000); EF não envia no INSERT para evitar NULL.
+            entity.Property(m => m.RowVersion)
+                .HasDefaultValueSql("gen_random_bytes(8)")
+                .ValueGeneratedOnAdd();
             entity.HasIndex(m => m.UserId);
             entity.HasIndex(m => m.TerritoryId);
             entity.HasIndex(m => new { m.UserId, m.TerritoryId }).IsUnique();
+            // Índice único parcial: 1 Resident por User (Role=2). Visitor (1) pode ter vários territórios.
             entity.HasIndex(m => m.UserId)
-                .HasFilter("\"Role\" = 1")
+                .HasFilter("\"Role\" = 2")
                 .IsUnique();
         });
     }

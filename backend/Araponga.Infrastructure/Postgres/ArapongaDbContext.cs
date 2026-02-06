@@ -181,6 +181,7 @@ public sealed class ArapongaDbContext : DbContext
             entity.Property(t => t.Longitude).HasColumnType("double precision");
             entity.Property(t => t.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(t => t.RadiusKm).HasColumnType("double precision");
+            entity.Property(t => t.BoundaryPolygonJson).HasColumnType("jsonb");
             entity.HasIndex(t => t.Name);
             entity.HasIndex(t => t.City);
             entity.HasIndex(t => t.State);
@@ -205,6 +206,7 @@ public sealed class ArapongaDbContext : DbContext
             // Profile fields
             entity.Property(u => u.AvatarMediaAssetId);
             entity.Property(u => u.Bio).HasMaxLength(500);
+            entity.Property(u => u.PasswordHash).HasMaxLength(500);
             entity.Property(u => u.CreatedAtUtc).HasColumnType("timestamp with time zone");
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => new { u.AuthProvider, u.ExternalId }).IsUnique();
@@ -323,13 +325,16 @@ public sealed class ArapongaDbContext : DbContext
             entity.Property(m => m.LastGeoVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(m => m.LastDocumentVerifiedAtUtc).HasColumnType("timestamp with time zone");
             entity.Property(m => m.CreatedAtUtc).HasColumnType("timestamp with time zone");
-            entity.Property(m => m.RowVersion).IsRowVersion();
+            // DEFAULT no banco (migração 20260207000000); EF não envia no INSERT para evitar NULL.
+            entity.Property(m => m.RowVersion)
+                .HasDefaultValueSql("gen_random_bytes(8)")
+                .ValueGeneratedOnAdd();
             entity.HasIndex(m => m.UserId);
             entity.HasIndex(m => m.TerritoryId);
             entity.HasIndex(m => new { m.UserId, m.TerritoryId }).IsUnique();
-            // Índice único parcial para garantir 1 Resident por User
+            // Índice único parcial: 1 Resident por User (Role=2). Visitor (1) pode ter vários territórios.
             entity.HasIndex(m => m.UserId)
-                .HasFilter("\"Role\" = 1") // MembershipRole.Resident = 1
+                .HasFilter("\"Role\" = 2") // MembershipRole.Resident = 2
                 .IsUnique();
         });
 
@@ -469,7 +474,9 @@ public sealed class ArapongaDbContext : DbContext
             entity.Property(p => p.ReferenceType).HasMaxLength(40);
             entity.Property(p => p.TagsJson).HasColumnType("jsonb"); // JSONB para busca eficiente
             entity.Property(p => p.CreatedAtUtc).HasColumnType("timestamp with time zone");
-            entity.Property(p => p.RowVersion).IsRowVersion();
+            entity.Property(p => p.RowVersion)
+                .HasDefaultValueSql("gen_random_bytes(8)")
+                .ValueGeneratedOnAdd();
             entity.HasIndex(p => p.TerritoryId);
             entity.HasIndex(p => new { p.TerritoryId, p.CreatedAtUtc });
             entity.HasIndex(p => new { p.TerritoryId, p.Status, p.CreatedAtUtc });

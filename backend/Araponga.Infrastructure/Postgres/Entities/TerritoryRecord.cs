@@ -16,4 +16,6 @@ public sealed class TerritoryRecord
     public DateTime CreatedAtUtc { get; set; }
     /// <summary>Raio do território em km; null = usar padrão do sistema.</summary>
     public double? RadiusKm { get; set; }
+    /// <summary>Polígono do perímetro (JSON array de { Latitude, Longitude }). Armazenado como jsonb no Postgres.</summary>
+    public string? BoundaryPolygonJson { get; set; }
 }

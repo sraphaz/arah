@@ -1,0 +1,13 @@
+{
+  "language": {
+    "feature": "pt-BR"
+  },
+  "bindingCulture": {
+    "name": "pt-BR"
+  },
+  "stepAssemblies": [
+    {
+      "assembly": "Araponga.Tests"
+    }
+  ]
+}

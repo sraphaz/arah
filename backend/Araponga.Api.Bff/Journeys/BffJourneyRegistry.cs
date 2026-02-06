@@ -134,6 +134,8 @@ public static class BffJourneyRegistry
             },
             [Auth] = new List<JourneyEndpoint>
             {
+                new("check-email", "POST", "Verifica se o e-mail já está cadastrado. Body: { \"email\": \"...\" }."),
+                new("signup", "POST", "Cadastro com e-mail e senha. Body: email, displayName, password."),
                 new("social", "POST", "Login/cadastro social (Google, Apple, etc.). Body: authProvider, externalId, displayName, email, foreignDocument."),
                 new("login", "POST", "Login (email/senha ou provedor). Body: credenciais."),
                 new("refresh", "POST", "Refresh do token. Body: refreshToken."),

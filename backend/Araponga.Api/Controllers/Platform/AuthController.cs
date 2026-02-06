@@ -107,6 +107,114 @@ public sealed class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// Verifica se um e-mail já está cadastrado. Usado no fluxo de login/criar conta (app).
+    /// </summary>
+    [HttpPost("check-email")]
+    [EnableRateLimiting("auth")]
+    [ProducesResponseType(typeof(CheckEmailResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult<CheckEmailResponse>> CheckEmail(
+        [FromBody] CheckEmailRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return BadRequest(new { error = "Email is required." });
+        }
+
+        var email = request.Email.Trim();
+        var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
+        return Ok(new CheckEmailResponse(Exists: user is not null));
+    }
+
+    /// <summary>
+    /// Cadastro com e-mail e senha. A senha é armazenada em hash (BCrypt).
+    /// </summary>
+    [HttpPost("signup")]
+    [EnableRateLimiting("auth")]
+    [ProducesResponseType(typeof(SocialLoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult<SocialLoginResponse>> SignUp(
+        [FromBody] SignUpRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return BadRequest(new { error = "Email is required." });
+        }
+        if (string.IsNullOrWhiteSpace(request.DisplayName))
+        {
+            return BadRequest(new { error = "Display name is required." });
+        }
+        if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 6)
+        {
+            return BadRequest(new { error = "Password must be at least 6 characters." });
+        }
+
+        var result = await _authService.SignUpWithPasswordAsync(
+            request.Email,
+            request.DisplayName,
+            request.Password,
+            cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(new { error = result.Error });
+        }
+
+        var (user, accessToken, refreshToken) = result.Value!;
+        var expiresInSeconds = (int)TimeSpan.FromMinutes(_tokenService.GetAccessTokenExpirationMinutes()).TotalSeconds;
+        return Ok(new SocialLoginResponse(
+            new UserResponse(user.Id, user.DisplayName, user.Email),
+            accessToken,
+            refreshToken,
+            expiresInSeconds));
+    }
+
+    /// <summary>
+    /// Login com e-mail e senha.
+    /// </summary>
+    [HttpPost("login")]
+    [EnableRateLimiting("auth")]
+    [ProducesResponseType(typeof(SocialLoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult<SocialLoginResponse>> Login(
+        [FromBody] LoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+        {
+            return BadRequest(new { error = "Email and password are required." });
+        }
+
+        var result = await _authService.LoginWithPasswordAsync(
+            request.Email,
+            request.Password,
+            cancellationToken);
+
+        if (result.IsFailure)
+        {
+            if (result.Error?.StartsWith("2FA_REQUIRED:") == true)
+            {
+                var challengeId = result.Error.Substring("2FA_REQUIRED:".Length);
+                return BadRequest(new { error = "2FA_REQUIRED", challengeId });
+            }
+            return BadRequest(new { error = result.Error });
+        }
+
+        var (user, accessToken, refreshToken) = result.Value!;
+        var expiresInSeconds = (int)TimeSpan.FromMinutes(_tokenService.GetAccessTokenExpirationMinutes()).TotalSeconds;
+        return Ok(new SocialLoginResponse(
+            new UserResponse(user.Id, user.DisplayName, user.Email),
+            accessToken,
+            refreshToken,
+            expiresInSeconds));
+    }
+
+    /// <summary>
     /// Inicia o setup de 2FA, gerando secret e QR code.
     /// </summary>
     [HttpPost("2fa/setup")]

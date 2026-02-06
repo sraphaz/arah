@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
+using Araponga.Api.Contracts.Common;
 using Araponga.Api.Swagger;
 using Microsoft.AspNetCore.Http;
 using Serilog;
@@ -451,11 +452,38 @@ builder.Services.AddSwaggerGen(c =>
         c.IncludeXmlComments(xmlPath);
     }
 
-    // Support multipart/form-data + IFormFile endpoints in Swagger
+    // Support multipart/form-data + IFormFile endpoints in Swagger (evita 500 ao gerar swagger.json)
     c.MapType<IFormFile>(() => new OpenApiSchema { Type = "string", Format = "binary" });
+    c.MapType<FileUploadRequest>(() => new OpenApiSchema
+    {
+        Type = "object",
+        Properties = new Dictionary<string, OpenApiSchema>
+        {
+            ["File"] = new OpenApiSchema { Type = "string", Format = "binary", Description = "Arquivo enviado" }
+        },
+        Required = new HashSet<string> { "File" }
+    });
     c.OperationFilter<FormFileOperationFilter>();
 
-    c.DocInclusionPredicate((_, __) => true);
+    // Incluir no doc v1 apenas rotas api/v1; no v2 apenas api/v2 (evita duplicatas e 500 na geração)
+    c.DocInclusionPredicate((docName, api) =>
+    {
+        var path = api.RelativePath ?? "";
+        return docName == "v1" ? path.StartsWith("api/v1/", StringComparison.OrdinalIgnoreCase)
+             : docName == "v2" ? path.StartsWith("api/v2/", StringComparison.OrdinalIgnoreCase)
+             : true;
+    });
+
+    // OperationIds únicos (path + method) para evitar conflito entre documentos
+    c.CustomOperationIds(api =>
+    {
+        var path = (api.RelativePath ?? "")
+            .Replace("/", "_", StringComparison.Ordinal)
+            .Replace("-", "_", StringComparison.Ordinal)
+            .Trim('_');
+        var method = api.HttpMethod ?? "Get";
+        return $"{path}_{method}";
+    });
 });
 
 // Configure HSTS (deve ser configurado antes de Build())
@@ -562,11 +590,18 @@ app.UseExceptionHandler(errorApp =>
             _ => StatusCodes.Status500InternalServerError
         };
 
+        var detail = "An unexpected error occurred.";
+        if (includeDetails && exception is not null)
+        {
+            detail = exception.Message;
+            if (exception.InnerException is not null)
+                detail += " | Inner: " + exception.InnerException.Message;
+        }
         var problem = new ProblemDetails
         {
             Title = "Unexpected error",
             Status = statusCode,
-            Detail = includeDetails ? (exception?.Message ?? "An unexpected error occurred.") : "An unexpected error occurred.",
+            Detail = detail,
             Instance = feature?.Path
         };
         problem.Extensions["traceId"] = context.TraceIdentifier;

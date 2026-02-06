@@ -13,7 +13,7 @@ O conteúdo do território **Camburi** (São Sebastião, SP) é populado por **i
 
 ## Como executar
 
-Para um **quick start** completo (API + BFF + seeds + app), veja [docs/STABLE_RELEASE_APP_ONBOARDING.md](../docs/STABLE_RELEASE_APP_ONBOARDING.md#como-rodar-o-projeto-getting-started).
+Para um **quick start** completo (API + BFF + seeds + app), veja [docs/STABLE_RELEASE_APP_ONBOARDING.md](../../docs/STABLE_RELEASE_APP_ONBOARDING.md#como-rodar-o-projeto-getting-started).
 
 ### 0) Stack local (automático)
 

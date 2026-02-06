@@ -17,8 +17,15 @@ class ArapongaApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.dark,
       routerConfig: router,
+      locale: const Locale('pt'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      localeResolutionCallback: (locale, supported) {
+        for (final l in supported) {
+          if (l.languageCode == locale?.languageCode) return l;
+        }
+        return const Locale('pt');
+      },
     );
   }
 }

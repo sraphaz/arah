@@ -181,6 +181,7 @@ public sealed class UserProfileService
             user.IdentityVerifiedAtUtc,
             user.AvatarMediaAssetId,
             user.Bio,
+            user.PasswordHash,
             user.CreatedAtUtc);
 
         await _userRepository.UpdateAsync(updatedUser, cancellationToken);
@@ -220,6 +221,7 @@ public sealed class UserProfileService
             user.IdentityVerifiedAtUtc,
             user.AvatarMediaAssetId,
             user.Bio,
+            user.PasswordHash,
             user.CreatedAtUtc);
 
         await _userRepository.UpdateAsync(updatedUser, cancellationToken);

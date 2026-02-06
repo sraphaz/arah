@@ -79,6 +79,13 @@
 - Sanções podem ter data de início e fim
 - Sanções ativas são verificadas automaticamente
 
+### Acesso ao território e localização
+
+**Política atual (acesso independente da localização)**:
+- **Conexão e visualização**: Visitantes e moradores podem **entrar e visualizar** um território mesmo estando fora do perímetro (não é mais exigido que a geolocalização esteja dentro do território).
+- **Status no perfil**: Haverá informação de status (ex.: "no território" / "fora do território") no perfil do usuário; regras por ação (quais exigem estar no território) serão definidas depois.
+- **Ações**: Por ora todas as operações (ler feed, criar post, etc.) permitem acesso de qualquer local; no futuro algumas ações poderão voltar a exigir presença no território.
+
 ---
 
 ## 📚 Documentação Relacionada

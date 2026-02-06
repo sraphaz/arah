@@ -29,25 +29,35 @@ class GeoLocationNotifier extends StateNotifier<GeoPosition?> {
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      // Pequena pausa após o usuário aceitar para o sistema registrar a permissão (evita falha na 1ª getCurrentPosition no Web).
+      if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+      }
     }
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       return;
     }
 
-    try {
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.medium,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );
-      state = GeoPosition(
-        latitude: position.latitude,
-        longitude: position.longitude,
-      );
-    } catch (_) {
-      // Manter estado anterior ou null; não bloquear o app
+    // Obter posição; em alguns contextos (ex.: Web) a primeira chamada após aceitar permissão pode falhar — tentar até 2x.
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          locationSettings: LocationSettings(
+            accuracy: LocationAccuracy.medium,
+            timeLimit: Duration(seconds: attempt == 0 ? 8 : 12),
+          ),
+        );
+        state = GeoPosition(
+          latitude: position.latitude,
+          longitude: position.longitude,
+        );
+        return;
+      } catch (_) {
+        if (attempt == 0) {
+          await Future<void>.delayed(const Duration(milliseconds: 400));
+        }
+      }
     }
   }
 

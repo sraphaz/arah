@@ -142,6 +142,7 @@ backend/
 
 ### Desenvolvimento
 - [Release estável – App e Onboarding](./STABLE_RELEASE_APP_ONBOARDING.md) — Getting started, stack local, seeds, o que está no app e o que falta
+- [Matriz API / BFF / App](./FEATURE_MATRIX_API_BFF_APP.md) — Funcionalidades por camada, o que desenvolver no app/BFF/API, documentos a revisar
 - [Guia de Desenvolvimento](./DEVELOPMENT.md)
 - [Plano de Implementação](./20_IMPLEMENTATION_PLAN.md)
 - [Revisão de Código](./21_CODE_REVIEW.md)
@@ -204,7 +205,7 @@ Documentação técnica das fases de implementação: Instalador, Modularizaçã
 - ✅ Testes automatizados
 - ✅ Chat territorial: canais (público/moradores) + grupos com aprovação por curadoria
 - ✅ CI configurado com builds reprodutíveis (`packages.lock.json`)
-- 🚧 Frontend e experiências móveis em planejamento
+- ✅ App Flutter em uso (versão estável: auth, onboarding, feed, mapa, eventos, perfil, notificações). Ver [Release estável](./STABLE_RELEASE_APP_ONBOARDING.md) e [Matriz API/BFF/App](./FEATURE_MATRIX_API_BFF_APP.md).
 
 O projeto está em **evolução ativa**, com foco em solidez antes de escala.
 

@@ -16,6 +16,7 @@
 #   .\scripts\run-local-stack.ps1 -Detached # BFF em background + abre navegador e app
 #   .\scripts\run-local-stack.ps1 -NoStartApp # Não abre navegador nem inicia o app (só sobe BFF)
 #   .\scripts\run-local-stack.ps1 -SkipDocker # Só BFF (API já em :8080)
+#   .\scripts\run-local-stack.ps1 -ResetDatabase # Recria o banco (apaga volume Postgres) e sobe tudo; aplica a migração única do zero
 #
 # Depois, em outro terminal:
 #   cd frontend\araponga.app
@@ -28,9 +29,10 @@
 # Após mudanças no backend: docker compose -f docker-compose.dev.yml build api
 
 param(
-    [switch]$Detached,    # Roda BFF em background (Start-Job)
-    [switch]$SkipDocker,   # Não sobe Docker; assume que API já está em localhost:8080
-    [switch]$NoStartApp,   # Não abre navegador nem inicia o app Flutter (só sobe BFF)
+    [switch]$Detached,       # Roda BFF em background (Start-Job)
+    [switch]$SkipDocker,     # Não sobe Docker; assume que API já está em localhost:8080
+    [switch]$NoStartApp,     # Não abre navegador nem inicia o app Flutter (só sobe BFF)
+    [switch]$ResetDatabase,  # Recria o banco do zero: para containers, remove volume Postgres e sobe de novo (aplica migração única)
     [switch]$Help
 )
 
@@ -55,22 +57,67 @@ function Test-PortInUse {
     }
 }
 
+# Encerra processos que estão escutando na porta indicada (para liberar e reiniciar o BFF).
+function Stop-ProcessOnPort {
+    param([int]$Port)
+    try {
+        $conns = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
+        if (-not $conns) { return }
+        $pids = @($conns | ForEach-Object { $_.OwningProcess } | Sort-Object -Unique)
+        foreach ($pid in $pids) {
+            $proc = Get-Process -Id $pid -ErrorAction SilentlyContinue
+            if ($proc) {
+                Write-Warn "Encerrando processo na porta $Port (PID $pid): $($proc.ProcessName)"
+                Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+                Start-Sleep -Seconds 1
+            }
+        }
+    } catch {
+        Write-Warn "Não foi possível encerrar processo na porta $Port : $_"
+    }
+}
+
 # Verifica se o daemon Docker está acessível (Docker Desktop rodando).
 function Test-DockerDaemon {
     $null = docker info 2>&1
     return ($LASTEXITCODE -eq 0)
 }
 
-# Abre a home da API, o BFF e opcionalmente inicia o app Flutter em nova janela.
+# Verifica se já existe aba/janela do Chrome com a URL (heurística por título contendo a porta).
+function Test-ChromeHasUrl {
+    param([string]$PortRef)   # ex: "8080" ou "5001"
+    try {
+        $chrome = Get-Process -Name chrome -ErrorAction SilentlyContinue
+        if (-not $chrome) { return $false }
+        $titles = ($chrome | Where-Object { $_.MainWindowTitle } | ForEach-Object { $_.MainWindowTitle }) -join " "
+        return ($titles -and $titles -match [regex]::Escape($PortRef))
+    } catch {
+        return $false
+    }
+}
+
+# Abre a home da API e o BFF no navegador só se ainda não existir aba com essa URL (evita abrir novas janelas).
 function Open-StackInBrowser {
     param([string]$RepoRoot, [switch]$StartApp)
     $apiUrl = "http://localhost:8080"
     $bffUrl = "http://localhost:5001"
     try {
-        Start-Process $apiUrl
-        Start-Sleep -Milliseconds 300
-        Start-Process $bffUrl
-        Write-Ok "Navegador: API (home) e BFF abertos."
+        $openApi = $false
+        $openBff = $false
+        if (-not (Test-ChromeHasUrl -PortRef "8080")) {
+            Start-Process $apiUrl
+            $openApi = $true
+            Start-Sleep -Milliseconds 300
+        }
+        if (-not (Test-ChromeHasUrl -PortRef "5001")) {
+            Start-Process $bffUrl
+            $openBff = $true
+        }
+        if ($openApi -or $openBff) {
+            Write-Ok "Navegador: $(if ($openApi) { 'API (home) ' })$(if ($openBff) { 'BFF ' })aberto(s)."
+        } else {
+            Write-Ok "Navegador: API e BFF já estavam abertos (nenhuma nova aba)."
+        }
     } catch {
         Write-Warn "Não foi possível abrir o navegador: $_"
     }
@@ -134,9 +181,10 @@ function Show-Help {
     Write-Host "Uso (na raiz do repo ou em scripts\):"
     Write-Host "  .\scripts\run-local-stack.ps1              Sobe API + BFF, abre API/BFF no navegador e inicia o app"
     Write-Host "  .\scripts\run-local-stack.ps1 -Detached     BFF em background + abre navegador e app"
-    Write-Host "  .\scripts\run-local-stack.ps1 -NoStartApp  Só sobe BFF (não abre navegador nem app)"
-    Write-Host "  .\scripts\run-local-stack.ps1 -SkipDocker  Só sobe BFF (API já em :8080)"
-    Write-Host "  .\scripts\run-local-stack.ps1 -Help        Esta ajuda"
+    Write-Host "  .\scripts\run-local-stack.ps1 -NoStartApp   Só sobe BFF (não abre navegador nem app)"
+    Write-Host "  .\scripts\run-local-stack.ps1 -SkipDocker   Só sobe BFF (API já em :8080)"
+    Write-Host "  .\scripts\run-local-stack.ps1 -ResetDatabase  Recria o banco do zero (apaga volume Postgres; aplica migração única)"
+    Write-Host "  .\scripts\run-local-stack.ps1 -Help         Esta ajuda"
     Write-Host ""
     Write-Host "Depois, em outro terminal, rode o app:"
     Write-Host "  cd frontend\araponga.app"
@@ -150,6 +198,7 @@ function Show-Help {
     Write-Host "Se a API ficar em Restarting: docker compose -f docker-compose.dev.yml logs api"
     Write-Host "Após mudanças no backend:     docker compose -f docker-compose.dev.yml build api"
     Write-Host "Seed manual (se falhar):       .\scripts\seed\run-seed-camburi.ps1"
+    Write-Host "Recriar banco (sem dados):     .\scripts\run-local-stack.ps1 -ResetDatabase"
     Write-Host ""
 }
 
@@ -186,6 +235,31 @@ try {
             exit 1
         }
         $env:COMPOSE_PROJECT_NAME = "araponga"
+
+        if ($ResetDatabase) {
+            Write-Warn "ResetDatabase: parando containers e removendo volume do Postgres (todos os dados do banco serão apagados)."
+            # down -v escreve "Container xxx Stopping" em stderr; evitar que PowerShell trate como erro (Erro inesperado).
+            $prevErrPref = $ErrorActionPreference
+            $ErrorActionPreference = "SilentlyContinue"
+            try {
+                & docker compose -f $ComposeFile down -v *>$null
+            } finally {
+                $ErrorActionPreference = $prevErrPref
+            }
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warn "docker compose down -v retornou $LASTEXITCODE (pode ser normal se não havia containers)."
+            }
+            Write-Info "Reconstruindo imagem da API para garantir migração única atual (ex.: coluna PasswordHash)."
+            & docker compose -f $ComposeFile build api
+            $buildExit = $LASTEXITCODE
+            if ($buildExit -ne 0) {
+                Write-Err "Falha ao construir a imagem da API (código $buildExit). Corrija e execute novamente."
+                exit 1
+            }
+            Write-Ok "Imagem da API construída. Subindo containers (banco novo; migração única será aplicada)..."
+        }
+
+        Write-Info "Subindo containers (postgres, redis, minio, api)..."
         & docker compose -f $ComposeFile up -d
         if ($LASTEXITCODE -ne 0) {
             $DockerOk = $false
@@ -212,29 +286,43 @@ try {
             Write-Ok "API respondendo em http://localhost:8080/health"
         }
 
-        # Seed Camburi: ingestão de dados (território + conteúdo) no Postgres do stack
-        $SeedScript = Join-Path $RepoRoot "scripts\seed\run-seed-camburi.ps1"
-        if (Test-Path -LiteralPath $SeedScript) {
-            try {
-                $envFile = Join-Path $RepoRoot ".env"
-                if (Test-Path -LiteralPath $envFile) {
-                    Get-Content $envFile -Encoding UTF8 | ForEach-Object {
-                        if ($_ -match '^\s*POSTGRES_(\w+)=(.*)$') {
-                            $key = "POSTGRES_$($matches[1])"
-                            $val = $matches[2].Trim().Trim('"').Trim("'")
-                            Set-Item -Path "env:$key" -Value $val -ErrorAction SilentlyContinue
+        # Seeds: Camburi + Boiçucanga (executa SQL dentro do container Postgres)
+        $envFile = Join-Path $RepoRoot ".env"
+        if (Test-Path -LiteralPath $envFile) {
+            Get-Content $envFile -Encoding UTF8 | ForEach-Object {
+                if ($_ -match '^\s*POSTGRES_(\w+)=(.*)$') {
+                    $key = "POSTGRES_$($matches[1])"
+                    $val = $matches[2].Trim().Trim('"').Trim("'")
+                    Set-Item -Path "env:$key" -Value $val -ErrorAction SilentlyContinue
+                }
+            }
+        }
+        $PgUser = if ($env:POSTGRES_USER) { $env:POSTGRES_USER } else { "araponga" }
+        $PgDb   = if ($env:POSTGRES_DB)   { $env:POSTGRES_DB }   else { "araponga" }
+        foreach ($seedName in @('camburi', 'boicucanga')) {
+            $SqlFile = Join-Path $RepoRoot "scripts\seed\seed-$seedName.sql"
+            if (Test-Path -LiteralPath $SqlFile) {
+                try {
+                    Write-Info "Executando seed $seedName no container Postgres (UTF-8)..."
+                    $SeedPathInContainer = "/tmp/seed-$seedName.sql"
+                    docker cp $SqlFile araponga-postgres:${SeedPathInContainer}
+                    if ($LASTEXITCODE -ne 0) {
+                        Write-Warn "Falha ao copiar seed $seedName para o container."
+                    } else {
+                        docker exec -e PGCLIENTENCODING=UTF8 araponga-postgres psql -U $PgUser -d $PgDb -f $SeedPathInContainer -v ON_ERROR_STOP=1
+                        $runExit = $LASTEXITCODE
+                        docker exec araponga-postgres rm -f $SeedPathInContainer 2>$null
+                        if ($runExit -eq 0) {
+                            Write-Ok "Seed $seedName aplicado."
+                        } else {
+                            Write-Warn "Seed $seedName falhou (código $runExit)."
                         }
                     }
+                } catch {
+                    Write-Warn "Seed $seedName não executado: $_"
                 }
-                Write-Info "Executando seed Camburi (ingestão de dados)..."
-                & $SeedScript
-                if ($LASTEXITCODE -eq 0) {
-                    Write-Ok "Seed Camburi aplicado."
-                } else {
-                    Write-Warn "Seed Camburi falhou ou psql não encontrado (opcional). Para rodar depois: .\scripts\seed\run-seed-camburi.ps1"
-                }
-            } catch {
-                Write-Warn "Seed Camburi não executado: $_. Para rodar depois: .\scripts\seed\run-seed-camburi.ps1"
+            } else {
+                Write-Warn "Arquivo de seed não encontrado: $SqlFile"
             }
         }
 
@@ -255,9 +343,14 @@ try {
     }
 
     if (Test-PortInUse -Port 5001) {
-        Write-Err "Porta 5001 já está em uso. Pare o BFF anterior (ou o processo que a usa) e execute o script novamente."
-        Write-Host "  Dica: se o BFF está em outro terminal, use só aquele. Para ver o que usa a porta: Get-NetTCPConnection -LocalPort 5001" -ForegroundColor DarkGray
-        exit 1
+        Write-Warn "Porta 5001 já está em uso. Encerrando o processo que a usa para reiniciar o BFF..."
+        Stop-ProcessOnPort -Port 5001
+        if (Test-PortInUse -Port 5001) {
+            Write-Err "Não foi possível liberar a porta 5001. Pare o processo manualmente e execute o script novamente."
+            Write-Host "  Para ver o que usa a porta: Get-NetTCPConnection -LocalPort 5001" -ForegroundColor DarkGray
+            exit 1
+        }
+        Write-Ok "Porta 5001 liberada. Iniciando BFF..."
     }
 
     if ($Detached) {

@@ -75,6 +75,42 @@ class AppLocalizationsEn extends AppLocalizations {
       'No territory found in this region. Try a larger radius or enable location.';
 
   @override
+  String get onboardingNearbyTitle => 'Near you';
+
+  @override
+  String get onboardingAllTerritoriesTitle => 'All territories';
+
+  @override
+  String get onboardingOrChooseFromList =>
+      'Or choose a territory from the list below';
+
+  @override
+  String get onboardingLocationEnabled => 'Location enabled';
+
+  @override
+  String get onboardingLocationPrivacy =>
+      'Your location is private and not visible to other users.';
+
+  @override
+  String get onboardingAllowLocationToCenter =>
+      'Allow location to center the map and see nearby territories.';
+
+  @override
+  String onboardingContinueWith(Object name) {
+    return 'Continue with $name';
+  }
+
+  @override
+  String get onboardingVisitorOnContinue =>
+      'When you continue, you will enter as a visitor in this territory and will be able to see the feed.';
+
+  @override
+  String get onboardingGettingLocation => 'Getting location...';
+
+  @override
+  String get onboardingLoadingTerritories => 'Loading territories...';
+
+  @override
   String get tryAgain => 'Try again';
 
   @override
@@ -261,4 +297,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginOr => 'or';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get passwordHint => 'Enter your password';
+
+  @override
+  String get enterPassword => 'Enter your password to sign in';
+
+  @override
+  String get signUp => 'Create account';
+
+  @override
+  String get signUpSubtitle => 'Fill in your details to create an account';
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get confirmPasswordHint => 'Repeat password';
+
+  @override
+  String get displayName => 'Name';
+
+  @override
+  String get displayNameHint => 'What should we call you';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get accountCreated => 'Account created. Welcome!';
+
+  @override
+  String get passwordMinLength => 'At least 6 characters';
+
+  @override
+  String get passwordsDontMatch => 'Passwords do not match';
 }

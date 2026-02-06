@@ -77,6 +77,42 @@ class AppLocalizationsPt extends AppLocalizations {
       'Nenhum território encontrado nesta região. Tente aumentar o raio ou ative a localização.';
 
   @override
+  String get onboardingNearbyTitle => 'Próximos a você';
+
+  @override
+  String get onboardingAllTerritoriesTitle => 'Todos os territórios';
+
+  @override
+  String get onboardingOrChooseFromList =>
+      'Ou escolha um território na lista abaixo';
+
+  @override
+  String get onboardingLocationEnabled => 'Localização ativa';
+
+  @override
+  String get onboardingLocationPrivacy =>
+      'Sua localização é privada e não fica visível para outros usuários.';
+
+  @override
+  String get onboardingAllowLocationToCenter =>
+      'Permita a localização para centralizar o mapa e ver territórios próximos.';
+
+  @override
+  String onboardingContinueWith(Object name) {
+    return 'Continuar com $name';
+  }
+
+  @override
+  String get onboardingVisitorOnContinue =>
+      'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.';
+
+  @override
+  String get onboardingGettingLocation => 'Obtendo localização...';
+
+  @override
+  String get onboardingLoadingTerritories => 'Carregando territórios...';
+
+  @override
   String get tryAgain => 'Tentar de novo';
 
   @override
@@ -263,4 +299,46 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get loginOr => 'ou';
+
+  @override
+  String get continueButton => 'Continuar';
+
+  @override
+  String get password => 'Senha';
+
+  @override
+  String get passwordHint => 'Digite sua senha';
+
+  @override
+  String get enterPassword => 'Digite sua senha para entrar';
+
+  @override
+  String get signUp => 'Criar conta';
+
+  @override
+  String get signUpSubtitle => 'Preencha os dados para criar sua conta';
+
+  @override
+  String get confirmPassword => 'Confirmar senha';
+
+  @override
+  String get confirmPasswordHint => 'Repita a senha';
+
+  @override
+  String get displayName => 'Nome';
+
+  @override
+  String get displayNameHint => 'Como quer ser chamado';
+
+  @override
+  String get back => 'Voltar';
+
+  @override
+  String get accountCreated => 'Conta criada. Bem-vindo!';
+
+  @override
+  String get passwordMinLength => 'Mín. 6 caracteres';
+
+  @override
+  String get passwordsDontMatch => 'As senhas não coincidem';
 }

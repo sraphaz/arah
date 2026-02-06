@@ -41,11 +41,26 @@ public sealed class FormFileOperationFilter : IOperationFilter
                 continue;
             }
 
-            var isFile = p.Type == typeof(IFormFile);
-            schema.Properties[p.Name] = isFile
-                ? new OpenApiSchema { Type = "string", Format = "binary" }
-                : context.SchemaGenerator.GenerateSchema(p.Type, context.SchemaRepository);
-
+            var type = p.Type;
+            var isFile = type == typeof(IFormFile) ||
+                (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && type.GetGenericArguments()[0] == typeof(IFormFile));
+            OpenApiSchema propSchema;
+            if (isFile)
+            {
+                propSchema = new OpenApiSchema { Type = "string", Format = "binary" };
+            }
+            else
+            {
+                try
+                {
+                    propSchema = context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository);
+                }
+                catch
+                {
+                    propSchema = new OpenApiSchema { Type = "string", Description = "Form parameter" };
+                }
+            }
+            schema.Properties[p.Name] = propSchema;
             if (p.IsRequired)
             {
                 schema.Required.Add(p.Name);

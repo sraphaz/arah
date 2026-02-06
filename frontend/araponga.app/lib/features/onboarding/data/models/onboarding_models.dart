@@ -17,14 +17,19 @@ class TerritorySuggestion {
   final double longitude;
 
   factory TerritorySuggestion.fromJson(Map<String, dynamic> json) {
-    final id = json['id'];
+    final id = json['id'] ?? json['Id'];
+    final name = json['name'] ?? json['Name'];
+    final description = json['description'] ?? json['Description'];
+    final distanceKm = json['distanceKm'] ?? json['DistanceKm'];
+    final lat = json['latitude'] ?? json['Latitude'];
+    final lng = json['longitude'] ?? json['Longitude'];
     return TerritorySuggestion(
       id: id == null ? '' : id.toString(),
-      name: json['name'] as String? ?? '',
-      description: json['description'] as String?,
-      distanceKm: (json['distanceKm'] as num?)?.toDouble() ?? 0,
-      latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
-      longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
+      name: name is String ? name : (name?.toString() ?? ''),
+      description: description is String ? description : (description?.toString()),
+      distanceKm: (distanceKm is num) ? distanceKm.toDouble() : 0,
+      latitude: (lat is num) ? lat.toDouble() : 0,
+      longitude: (lng is num) ? lng.toDouble() : 0,
     );
   }
 }

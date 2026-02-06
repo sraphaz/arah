@@ -12,7 +12,7 @@ $ScriptDir = $PSScriptRoot
 $RepoRoot = (Get-Item $ScriptDir).Parent.Parent.FullName
 $SqlFile = Join-Path $ScriptDir "seed-camburi.sql"
 
-$Host = if ($env:POSTGRES_HOST) { $env:POSTGRES_HOST } else { "localhost" }
+$PgHost = if ($env:POSTGRES_HOST) { $env:POSTGRES_HOST } else { "localhost" }
 $Port = if ($env:POSTGRES_PORT) { $env:POSTGRES_PORT } else { "5432" }
 $Db   = if ($env:POSTGRES_DB)   { $env:POSTGRES_DB }   else { "araponga" }
 $User = if ($env:POSTGRES_USER) { $env:POSTGRES_USER } else { "araponga" }
@@ -46,7 +46,7 @@ if (-not $psql) {
 
 $env:PGPASSWORD = $Pass
 try {
-    & $psql -h $Host -p $Port -U $User -d $Db -f $SqlFile
+    & $psql -h $PgHost -p $Port -U $User -d $Db -f $SqlFile
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }

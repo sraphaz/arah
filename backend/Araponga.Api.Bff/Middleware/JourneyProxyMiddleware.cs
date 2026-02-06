@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using Araponga.Bff.Services;
@@ -8,17 +9,20 @@ namespace Araponga.Bff.Middleware;
 /// <summary>
 /// Encaminha requisições /api/v2/journeys/* para a API principal.
 /// Aplica cache em respostas GET 2xx quando configurado.
+/// Registra em log exceções e respostas 5xx da API para diagnóstico.
 /// </summary>
 public sealed class JourneyProxyMiddleware
 {
     private const string JourneyPathPrefix = "/api/v2/journeys/";
     private readonly RequestDelegate _next;
     private readonly IOptions<BffOptions> _options;
+    private readonly ILogger<JourneyProxyMiddleware> _logger;
 
-    public JourneyProxyMiddleware(RequestDelegate next, IOptions<BffOptions> options)
+    public JourneyProxyMiddleware(RequestDelegate next, IOptions<BffOptions> options, ILogger<JourneyProxyMiddleware> logger)
     {
         _next = next;
         _options = options;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context, IJourneyApiProxy proxy, IJourneyResponseCache cache)
@@ -52,12 +56,87 @@ public sealed class JourneyProxyMiddleware
         }
 
         context.Request.EnableBuffering();
-        using var response = await proxy.ForwardAsync(context.Request, pathAndQuery, context.RequestAborted).ConfigureAwait(false);
+        var forwardUri = JourneyApiProxy.BuildForwardUri(_options.Value.ApiBaseUrl ?? "", pathAndQuery, context.Request.QueryString.ToString());
+        var correlationId = context.Items[CorrelationIdMiddleware.CorrelationIdItemKey]?.ToString() ?? "unknown";
+        var opts = _options.Value;
 
-        if (string.Equals(method, "GET", StringComparison.OrdinalIgnoreCase))
-            context.Response.Headers["X-Bff-Cache"] = "MISS";
+        if (opts.LogForwardToApi)
+        {
+            _logger.LogInformation(
+                "BFF Forward to API | Method={Method} Path={Path} Uri={Uri} CorrelationId={CorrelationId}",
+                method, pathAndQuery, forwardUri, correlationId);
+        }
 
-        if (cache.ShouldCache(method, pathAndQuery, (int)response.StatusCode) && response.Content is not null)
+        var stopwatch = Stopwatch.StartNew();
+        HttpResponseMessage response;
+        try
+        {
+            response = await proxy.ForwardAsync(context.Request, pathAndQuery, context.RequestAborted).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+            _logger.LogError(ex,
+                "BFF Proxy error | Method={Method} Path={Path} Uri={Uri} DurationMs={DurationMs} CorrelationId={CorrelationId} Message={Message}",
+                method, pathAndQuery, forwardUri, stopwatch.ElapsedMilliseconds, correlationId, ex.Message);
+            context.Response.StatusCode = 502;
+            var apiBase = _options.Value.ApiBaseUrl ?? "http://localhost:8080";
+            var isPrematureClose = ex.Message.Contains("prematurely", StringComparison.OrdinalIgnoreCase) ||
+                                  ex.Message.Contains("ResponseEnded", StringComparison.OrdinalIgnoreCase);
+            var hint = isPrematureClose
+                ? "A API fechou a conexão sem responder. Verifique se a API está rodando e os logs do container/processo (ex.: docker logs para araponga-api)."
+                : "Ensure the API is running (e.g. docker ps for araponga-api, or open " + apiBase + "/health).";
+            await context.Response.WriteAsJsonAsync(new
+            {
+                error = "BFF could not reach the API.",
+                detail = ex.Message,
+                apiBaseUrl = apiBase,
+                hint
+            }).ConfigureAwait(false);
+            return;
+        }
+
+        using (response)
+        {
+            stopwatch.Stop();
+            var statusCode = (int)response.StatusCode;
+            if (opts.LogForwardToApi)
+            {
+                _logger.LogInformation(
+                    "BFF Forward completed | Method={Method} Path={Path} ApiStatusCode={StatusCode} DurationMs={DurationMs} CorrelationId={CorrelationId}",
+                    method, pathAndQuery, statusCode, stopwatch.ElapsedMilliseconds, correlationId);
+            }
+
+            if (statusCode >= 400)
+            {
+                _logger.LogWarning(
+                    "API returned error | StatusCode={StatusCode} Method={Method} Path={Path} Uri={Uri} CorrelationId={CorrelationId}",
+                    statusCode, method, pathAndQuery, forwardUri, correlationId);
+            }
+
+            // Log response body for any 4xx/5xx so the console shows the real API error (e.g. error, detail) for diagnosis.
+            var bodyPreviewLength = opts.LogApiErrorBodyPreviewLength;
+            if (statusCode >= 400 && bodyPreviewLength > 0 && response.Content is not null)
+            {
+                var bodyPreview = "";
+                try
+                {
+                    var bytes = await response.Content.ReadAsByteArrayAsync(context.RequestAborted).ConfigureAwait(false);
+                    bodyPreview = Encoding.UTF8.GetString(bytes);
+                    if (bodyPreview.Length > bodyPreviewLength)
+                        bodyPreview = bodyPreview[..bodyPreviewLength] + "...";
+                    response.Content = new ByteArrayContent(bytes);
+                    _logger.LogWarning(
+                        "API error body | StatusCode={StatusCode} Path={Path} CorrelationId={CorrelationId} BodyPreview={BodyPreview}",
+                        statusCode, pathAndQuery, correlationId, bodyPreview);
+                }
+                catch { /* ignore */ }
+            }
+
+            if (string.Equals(method, "GET", StringComparison.OrdinalIgnoreCase))
+                context.Response.Headers["X-Bff-Cache"] = "MISS";
+
+            if (cache.ShouldCache(method, pathAndQuery, (int)response.StatusCode) && response.Content is not null)
         {
             var body = await response.Content.ReadAsByteArrayAsync(context.RequestAborted).ConfigureAwait(false);
             var headers = new Dictionary<string, string[]>();
@@ -96,6 +175,7 @@ public sealed class JourneyProxyMiddleware
             foreach (var header in response.Content.Headers)
                 context.Response.Headers[header.Key] = header.Value.ToArray();
             await response.Content.CopyToAsync(context.Response.Body, context.RequestAborted).ConfigureAwait(false);
+        }
         }
     }
 

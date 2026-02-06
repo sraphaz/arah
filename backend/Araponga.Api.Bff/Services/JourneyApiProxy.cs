@@ -54,9 +54,32 @@ public sealed class JourneyApiProxy : IJourneyApiProxy
         var uri = BuildForwardUri(baseUrl, pathAndQuery, request.QueryString.ToString());
         var requestMessage = new HttpRequestMessage(MapMethod(request.Method), uri);
 
+        // Ler corpo com buffer de tamanho fixo (Content-Length) para evitar exceção do FileBufferingReadStream
+        // ao usar CopyToAsync ("content would exceed Content-Length")
+        byte[]? bodyBytes = null;
+        var contentLength = request.ContentLength.GetValueOrDefault();
+        if (contentLength > 0 && contentLength <= 2 * 1024 * 1024 && request.Body.CanRead) // máx 2MB
+        {
+            if (request.Body.CanSeek)
+                request.Body.Position = 0;
+            var buf = new byte[contentLength];
+            var offset = 0;
+            while (offset < buf.Length)
+            {
+                var read = await request.Body.ReadAsync(buf.AsMemory(offset, buf.Length - offset), cancellationToken).ConfigureAwait(false);
+                if (read == 0) break;
+                offset += read;
+            }
+            bodyBytes = offset > 0 ? (offset == buf.Length ? buf : buf.AsSpan(0, offset).ToArray()) : null;
+        }
+
         foreach (var header in request.Headers)
         {
             if (header.Key.Equals("Host", StringComparison.OrdinalIgnoreCase))
+                continue;
+            // Não copiar Content-Length/Content-Type; serão definidos pelo ByteArrayContent/StreamContent
+            if (header.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase) ||
+                header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
                 continue;
             if (requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()))
                 continue;
@@ -64,11 +87,9 @@ public sealed class JourneyApiProxy : IJourneyApiProxy
             requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
         }
 
-        if (request.ContentLength.GetValueOrDefault() > 0 && request.Body.CanRead)
+        if (bodyBytes is { Length: > 0 })
         {
-            if (request.Body.CanSeek)
-                request.Body.Position = 0;
-            requestMessage.Content = new StreamContent(request.Body);
+            requestMessage.Content = new ByteArrayContent(bodyBytes);
             if (request.ContentType is not null)
                 requestMessage.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(request.ContentType);
         }
@@ -117,4 +138,20 @@ public sealed class BffOptions
 
     /// <summary>TTL por prefixo de path (ex: "feed" => 30, "onboarding" => 300). Sobrescreve CacheTtlSeconds.</summary>
     public Dictionary<string, int>? CacheTtlByPath { get; set; }
+
+    // Monitoramento / logging
+    /// <summary>Logar requisições recebidas no BFF (entrada).</summary>
+    public bool LogIncomingRequest { get; set; } = true;
+
+    /// <summary>Logar conclusão da requisição (status, duração, saída).</summary>
+    public bool LogOutgoingResponse { get; set; } = true;
+
+    /// <summary>Logar chamadas à API (forward URI, status, duração).</summary>
+    public bool LogForwardToApi { get; set; } = true;
+
+    /// <summary>Incluir preview do body em respostas 4xx/5xx da API (máx caracteres; 0 = desligado).</summary>
+    public int LogApiErrorBodyPreviewLength { get; set; } = 500;
+
+    /// <summary>Logar corpo da requisição recebida (máx caracteres; 0 = desligado). Habilitar em Development para diagnóstico.</summary>
+    public int LogRequestBodyMaxLength { get; set; } = 0;
 }

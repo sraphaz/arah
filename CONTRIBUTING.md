@@ -41,7 +41,7 @@ Se você não tem certeza de qual documento atualizar:
 ./scripts/run-all-tests.ps1
 ```
 
-Só prossiga com o commit se a suíte passar (Restore → Build → Arah.Tests → Arah.Tests.Bff).
+A suíte inclui: **backend** (.NET, ~2.400 testes), **wiki** (Jest), **devportal** (Jest) e **app** (Flutter). Requer .NET 8, Node/npm e Flutter no PATH. Só prossiga com o commit se todos passarem.
 
 ### Checklist Rápido
 

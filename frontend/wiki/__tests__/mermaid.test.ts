@@ -49,7 +49,7 @@ describe('Mermaid Support Tests', () => {
     // Verifica estrutura básica do flowchart
     expect(mermaidCode).toContain('flowchart');
     expect(mermaidCode).toContain('subgraph');
-    expect(mermaidCode).toContain('ARAPONGA PLATFORM');
+    expect(mermaidCode).toContain('Arah PLATFORM');
     
     // Verifica se tem definições de nós
     expect(mermaidCode).toMatch(/\["[^"]+"\]/); // Nós com labels

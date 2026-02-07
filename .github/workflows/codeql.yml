@@ -1,6 +1,6 @@
-# CodeQL: análise de segurança. Usa sempre o workspace do Actions ($GITHUB_WORKSPACE),
-# evitando caminhos antigos (ex.: .../araponga/araponga) que causam "Invalid working directory"
-# no pre-finalize do C# após renomear o repositório.
+# CodeQL: análise de segurança (JavaScript).
+# C# foi desativado: o pre-finalize do CodeQL C# exige o path antigo .../araponga/araponga
+# e não aceita symlink/workspace atual após o rebrand; sem solução estável no action.
 name: CodeQL
 
 on:
@@ -24,28 +24,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Workaround: o pre-finalize do CodeQL C# usa o path antigo .../araponga/araponga.
-      # Criar symlink para o workspace atual para o script encontrar o diretório.
-      - name: Fix CodeQL C# working directory (rebrand workaround)
-        run: |
-          mkdir -p /home/runner/work/araponga
-          ln -nsf "$GITHUB_WORKSPACE" /home/runner/work/araponga/araponga
-
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
-          languages: csharp
-
-      # Build entre init e analyze para o extrator C# processar o código.
-      - name: Build (CodeQL)
-        run: dotnet build Arah.sln --configuration Release /p:UseSharedCompilation=false
+          languages: javascript
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
-          category: "/language:csharp"
+          category: "/language:javascript"

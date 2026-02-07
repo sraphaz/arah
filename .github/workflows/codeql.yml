@@ -1,6 +1,6 @@
-# CodeQL: análise de segurança (JavaScript).
-# C# foi desativado: o pre-finalize do CodeQL C# exige o path antigo .../araponga/araponga
-# e não aceita symlink/workspace atual após o rebrand; sem solução estável no action.
+# CodeQL: análise de segurança (JavaScript + C#).
+# C#: o pre-finalize exige o path .../araponga/araponga; copiamos o repo para lá e
+# rodamos o build nesse path para o script encontrar um diretório real.
 name: CodeQL
 
 on:
@@ -24,12 +24,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # C#: path antigo exigido pelo pre-finalize; cópia real (não symlink) para o script validar.
+      - name: Prepare path for CodeQL C#
+        run: |
+          mkdir -p /home/runner/work/araponga
+          cp -a "$GITHUB_WORKSPACE"/. /home/runner/work/araponga/araponga/
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
-          languages: javascript
+          languages: javascript, csharp
+
+      # Build C# no path esperado pelo extrator/finalize.
+      - name: Build (CodeQL C#)
+        run: dotnet build Arah.sln --configuration Release /p:UseSharedCompilation=false
+        working-directory: /home/runner/work/araponga/araponga
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:javascript"

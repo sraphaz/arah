@@ -1,6 +1,7 @@
 # CodeQL: análise de segurança (JavaScript + C#).
-# C#: o pre-finalize exige o path .../araponga/araponga; copiamos o repo para lá e
-# rodamos o build nesse path para o script encontrar um diretório real.
+# O pre-finalize do CodeQL C# usa o path .../araponga/araponga mesmo após o repo ser
+# renomeado (cache ou bug do extrator). Workaround: copiar o repo para esse path e
+# rodar o build lá para o script encontrar um diretório válido.
 name: CodeQL
 
 on:
@@ -24,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # C#: path antigo exigido pelo pre-finalize; cópia real (não symlink) para o script validar.
+      # Workaround: extrator C# ainda exige .../araponga/araponga; cópia real para o path esperado.
       - name: Prepare path for CodeQL C#
         run: |
           mkdir -p /home/runner/work/araponga
@@ -40,7 +41,6 @@ jobs:
         with:
           languages: javascript, csharp
 
-      # Build C# no path esperado pelo extrator/finalize.
       - name: Build (CodeQL C#)
         run: dotnet build Arah.sln --configuration Release /p:UseSharedCompilation=false
         working-directory: /home/runner/work/araponga/araponga

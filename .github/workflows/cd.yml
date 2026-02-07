@@ -151,7 +151,9 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
+          pattern: arah-app-*
           path: artifacts
+          merge-multiple: false
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:

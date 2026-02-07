@@ -13,7 +13,7 @@ public sealed class ArahDbContextFactory : IDesignTimeDbContextFactory<ArahDbCon
     {
         var connectionString =
             Environment.GetEnvironmentVariable("Arah_POSTGRES_CONNECTION") ??
-            "Host=localhost;Database=Arah;Username=postgres;Password=postgres";
+            "Host=localhost;Database=arah;Username=postgres;Password=postgres";
 
         var optionsBuilder = new DbContextOptionsBuilder<ArahDbContext>();
         optionsBuilder.UseNpgsql(connectionString);

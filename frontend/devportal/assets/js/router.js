@@ -176,7 +176,7 @@
         .catch(function(error) {
           // Se falhar (CORS com file:// ou arquivo não existe), usa fallback inline
           console.log('Router: Fallback para conteúdo inline para rota', route);
-          return Promise.resolve(this._getInlineContent(mainRoute || route));
+          return Promise.resolve(this._getInlineContent(route));
         }.bind(this));
     },
 

@@ -162,7 +162,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                           ),
                           const SizedBox(height: AppConstants.spacingLg),
                           DropdownButtonFormField<String>(
-                            initialValue: _type,
+                            value: _type,
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(context)!.type,
                               border: const OutlineInputBorder(),
@@ -175,7 +175,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                           ),
                           const SizedBox(height: AppConstants.spacingMd),
                           DropdownButtonFormField<String>(
-                            initialValue: _visibility,
+                            value: _visibility,
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(context)!.visibility,
                               border: const OutlineInputBorder(),

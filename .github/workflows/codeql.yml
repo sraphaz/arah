@@ -24,11 +24,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: csharp
-          # C# usa modo "none" por padrão; não gravar caminho absoluto do workspace.
+
+      # Build entre init e analyze para o extrator C# processar o código.
+      - name: Build (CodeQL)
+        run: dotnet build Arah.sln --configuration Release /p:UseSharedCompilation=false
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

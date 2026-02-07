@@ -210,7 +210,7 @@ function fixSVGColors(svgContent) {
   font-weight: 400 !important;
 }
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: ${COLORS.messageLine} !important; }
 #mermaid-svg .messageLine1 { stroke: ${COLORS.messageLine} !important; }
 #mermaid-svg .actor-line { stroke: ${COLORS.actorLine} !important; }

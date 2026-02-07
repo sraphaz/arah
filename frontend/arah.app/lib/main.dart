@@ -35,7 +35,7 @@ Future<void> _runApp() async {
   }
   runApp(
     const ProviderScope(
-      child: ArapongaApp(),
+      child: ArahApp(),
     ),
   );
 }

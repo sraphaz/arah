@@ -1,5 +1,5 @@
 <svg id="mermaid-svg" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width: 2741.5px; background-color: #141a21;" viewBox="-50 -10 2741.5 1703" role="graphics-document document" aria-roledescription="sequence" xmlns:xlink="http://www.w3.org/1999/xlink"><style xmlns="http://www.w3.org/1999/xhtml">@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css");
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -20,7 +20,7 @@
 }
 
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -41,7 +41,7 @@
 }
 
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -62,7 +62,7 @@
 }
 
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -83,7 +83,7 @@
 }
 
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -104,7 +104,7 @@
 }
 
 
-/* Tipografia padronizada Araponga */
+/* Tipografia padronizada Arah */
 #mermaid-svg text.actor, #mermaid-svg .actor-box { 
   font-size: 15px !important; 
   font-weight: 500 !important;
@@ -118,7 +118,7 @@
   font-weight: 400 !important;
 }
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -139,7 +139,7 @@
 }
 
 
-/* Tipografia padronizada Araponga */
+/* Tipografia padronizada Arah */
 #mermaid-svg text.actor, #mermaid-svg .actor-box { 
   font-size: 15px !important; 
   font-weight: 500 !important;
@@ -153,7 +153,7 @@
   font-weight: 400 !important;
 }
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -174,7 +174,7 @@
 }
 
 
-/* Tipografia padronizada Araponga */
+/* Tipografia padronizada Arah */
 #mermaid-svg text.actor, #mermaid-svg .actor-box { 
   font-size: 15px !important; 
   font-weight: 500 !important;
@@ -188,7 +188,7 @@
   font-weight: 400 !important;
 }
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }
@@ -209,7 +209,7 @@
 }
 
 
-/* Tipografia padronizada Araponga */
+/* Tipografia padronizada Arah */
 #mermaid-svg text.actor, #mermaid-svg .actor-box { 
   font-size: 15px !important; 
   font-weight: 500 !important;
@@ -223,7 +223,7 @@
   font-weight: 400 !important;
 }
 
-/* Cores customizadas Araponga */
+/* Cores customizadas Arah */
 #mermaid-svg .messageLine0 { stroke: #7dd3ff !important; }
 #mermaid-svg .messageLine1 { stroke: #7dd3ff !important; }
 #mermaid-svg .actor-line { stroke: #7dd3ff !important; }

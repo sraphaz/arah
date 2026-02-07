@@ -88,7 +88,7 @@ body {
   position: relative;
 }
 
-/* Marca d'água sutil do Araponga - replicada ao longo da página */
+/* Marca d'água sutil do Arah - replicada ao longo da página */
 body::before {
   content: '';
   position: fixed;

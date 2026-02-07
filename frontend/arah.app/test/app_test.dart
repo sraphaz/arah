@@ -8,7 +8,7 @@ void main() {
   testWidgets('App builds without crashing', (WidgetTester tester) async {
     await tester.pumpWidget(
       const ProviderScope(
-        child: ArapongaApp(),
+        child: ArahApp(),
       ),
     );
     await tester.pump();

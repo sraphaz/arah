@@ -1,19 +1,8 @@
-# Rebrand Araponga → Arah – pendências manuais
+# Rebrand Araponga → Arah – concluído
 
-O rebrand foi aplicado na branch `chore/rebrand-araponga-to-arah`. A solução é `Arah.sln`, os projetos são `Arah.*`, imagens Docker `arah-api`/`arah-bff`, app Flutter `arah_app`, etc.
+O rebrand foi aplicado. A solução é `Arah.sln`, os projetos são `Arah.*`, pastas `Arah.Api.Bff`, app Flutter `ArahApp` em `frontend/arah.app`, devportal e conteúdo estático com marca "Arah API".
 
-**Referências de caminho e texto já foram atualizadas** (Arah.sln, workflows, scripts, launch.json, Dockerfile, devportal, README, etc.) para `frontend/arah.app` e `backend/Arah.Api.Bff`.
-
-## 1. Renomear as pastas (último passo manual)
-
-No Windows, feche a IDE/processos que usem essas pastas e, na raiz do repo, execute:
-
-```powershell
-git mv frontend/araponga.app frontend/arah.app
-git mv backend/Araponga.Api.Bff backend/Arah.Api.Bff
-```
-
-Se der *Permission denied*, feche o Cursor/VS Code, qualquer terminal com `cd` nessas pastas, e tente de novo em um PowerShell novo.
+**Exceção:** o **CNAME** (domínio do GitHub Pages / devportal) não foi alterado; manter conforme configurado no repositório e nos workflows.
 
 ## Banco de dados
 

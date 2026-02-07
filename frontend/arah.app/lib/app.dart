@@ -4,8 +4,8 @@ import 'app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 
-class ArapongaApp extends ConsumerWidget {
-  const ArapongaApp({super.key});
+class ArahApp extends ConsumerWidget {
+  const ArahApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

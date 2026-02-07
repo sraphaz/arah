@@ -200,7 +200,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     const ProviderScope(
-      child: ArapongaApp(),
+      child: ArahApp(),
     ),
   );
 }

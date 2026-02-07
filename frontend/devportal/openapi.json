@@ -1,10 +1,10 @@
-﻿{
+{
   "openapi": "3.0.1",
   "info": {
-    "title": "Araponga API",
-    "description": "Araponga é uma plataforma comunitária orientada a território. Esta API expõe recursos de território, feed comunitário, entidades do mapa e saúde do território. O objetivo do MVP é viabilizar cadastro, visualização e curadoria comunitária com segurança e governança mínima.",
+    "title": "Arah API",
+    "description": "Arah é uma plataforma comunitária orientada a território. Esta API expõe recursos de território, feed comunitário, entidades do mapa e saúde do território. O objetivo do MVP é viabilizar cadastro, visualização e curadoria comunitária com segurança e governança mínima.",
     "contact": {
-      "name": "Araponga (maintainers)"
+      "name": "Arah (maintainers)"
     },
     "license": {
       "name": "MIT"

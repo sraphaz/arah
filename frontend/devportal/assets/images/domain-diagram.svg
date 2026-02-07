@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" role="img" aria-labelledby="title desc">
-  <title id="title">Diagrama de relacionamento do domínio Araponga</title>
+  <title id="title">Diagrama de relacionamento do domínio Arah</title>
   <desc id="desc">Usuários conectam-se a territórios por memberships, que controlam feed, mapa e moderação.</desc>
   <style>
     .box { fill: #ffffff; stroke: #1f2b32; stroke-width: 2; rx: 16; }

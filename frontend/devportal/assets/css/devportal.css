@@ -201,7 +201,7 @@ body {
   background-color: var(--bg);
 }
 
-/* Marca d'água sutil do Araponga - Sincronizado com Wiki (usa icon.png) */
+/* Marca d'água sutil do Arah - Sincronizado com Wiki (usa icon.png) */
 body::before {
   content: '';
   position: fixed;

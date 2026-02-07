@@ -31,14 +31,14 @@ Esta é uma regra **NÃO NEGOCIÁVEL**. Documentação desatualizada é consider
 **Arquivos a Atualizar:**
 - ✅ `docs/60_API_LÓGICA_NEGÓCIO.md` - Seção correspondente
 - ✅ `frontend/devportal/index.html` - Se mudar DevPortal
-- ✅ `docs/40_CHANGELOG.md` - Se mudança significativa
+- ✅ `docs/CHANGELOG.md` - Se mudança significativa
 
 **Exemplo:**
 ```markdown
 Se você adicionar `POST /api/v1/feed/posts/{id}/reactions`:
 1. Atualizar docs/60_API_LÓGICA_NEGÓCIO.md → Seção "Feed Comunitário"
 2. Adicionar exemplo em docs/60_API_LÓGICA_NEGÓCIO.md
-3. Atualizar docs/40_CHANGELOG.md com nova funcionalidade
+3. Atualizar docs/CHANGELOG.md com nova funcionalidade
 ```
 
 ### Mudanças em Services/Application
@@ -68,7 +68,7 @@ Se você adicionar `POST /api/v1/feed/posts/{id}/reactions`:
 - ✅ `docs/backlog-api/FASE*.md` - Marcar como completo
 - ✅ `docs/backlog-api/README.md` - Atualizar status
 - ✅ `docs/backlog-api/implementacoes/FASE*_IMPLEMENTACAO_RESUMO.md` - Criar resumo
-- ✅ `docs/40_CHANGELOG.md` - Adicionar entrada da fase
+- ✅ `docs/CHANGELOG.md` - Adicionar entrada da fase
 - ✅ `docs/STATUS_FASES.md` - Se existir, atualizar status
 - ✅ `docs/02_ROADMAP.md` - Se mudar roadmap
 
@@ -77,7 +77,7 @@ Se você adicionar `POST /api/v1/feed/posts/{id}/reactions`:
 **Arquivos a Atualizar:**
 - ✅ `docs/SECURITY_CONFIGURATION.md`
 - ✅ `docs/SECURITY_AUDIT.md`
-- ✅ `docs/40_CHANGELOG.md`
+- ✅ `docs/CHANGELOG.md`
 
 ### Mudanças em Configuração
 
@@ -113,7 +113,7 @@ Antes de criar qualquer PR, você DEVE verificar:
 ## Documentação Atualizada
 
 - ✅ `docs/60_API_LÓGICA_NEGÓCIO.md` - [O que foi atualizado]
-- ✅ `docs/40_CHANGELOG.md` - [O que foi atualizado]
+- ✅ `docs/CHANGELOG.md` - [O que foi atualizado]
 - ✅ [outros arquivos] - [O que foi atualizado]
 
 ## Testes
@@ -188,7 +188,7 @@ grep -r "feed\|Feed" docs/ --include="*.md"
 
 ### Documentação
 - ✅ Atualizado `docs/60_API_LÓGICA_NEGÓCIO.md`
-- ✅ Atualizado `docs/40_CHANGELOG.md`
+- ✅ Atualizado `docs/CHANGELOG.md`
 ```
 
 ---
@@ -237,7 +237,7 @@ Documentos sincronizados:
 - `docs/12_DOMAIN_MODEL.md` - Modelo de domínio
 - `docs/10_ARCHITECTURE_DECISIONS.md` - Decisões arquiteturais
 - `docs/22_COHESION_AND_TESTS.md` - Status de implementação
-- `docs/40_CHANGELOG.md` - Histórico de mudanças
+- `docs/CHANGELOG.md` - Histórico de mudanças
 - `docs/backlog-api/README.md` - Backlog completo (número de fases calculado dinamicamente - ver `PROJECT_PHASES_CONFIG.md`)
 
 ### Estrutura de Documentação

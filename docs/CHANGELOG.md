@@ -9,6 +9,9 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+- Reorganização federal da documentação (estrutura por domínios, unificação de duplicados, archive de PRs).
+- Changelog unificado (conteúdo de 40_CHANGELOG incorporado).
+
 ### Alterado - Fase 12 Encerrada (2026-01-25)
 
 - ✅ **Fase 12 declarada 100% encerrada.** Todas as funcionalidades críticas entregues; melhorias contínuas (cobertura >90%, P95 &lt; 200ms) fora do escopo de fechamento.

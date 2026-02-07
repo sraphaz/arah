@@ -4,6 +4,8 @@
 
 Este documento organiza toda a documentação do projeto Arah de forma estruturada e fácil de navegar.
 
+**Reorganização federal:** Foi criada uma estrutura por domínios (produto, arquitetura, API, BFF, app Flutter, operações, governança, backlog, wiki, técnico) e arquivados PRs/temporários. Ver **[Plano de Reorganização Federal](./PLANO_REORGANIZACAO_FEDERAL.md)** para a estrutura completa e pastas `01-produto/` … `11-tecnico-especial/`, `archive/`.
+
 ## Estrutura da Documentação
 
 ### Visão e Produto
@@ -84,7 +86,7 @@ Documentos sobre segurança, configuração e implementação de medidas de segu
 ### Histórico e Mudanças
 Documentos sobre histórico e mudanças do projeto.
 
-- **[Changelog](./40_CHANGELOG.md)** - Histórico de mudanças e versões
+- **[Changelog](./CHANGELOG.md)** - Histórico de mudanças e versões (documento unificado)
 - **[Onboarding Público](./ONBOARDING_PUBLICO.md)** 🌟 - Página pública de entrada para conhecer o projeto e escolher seu caminho
 - **[Cartilha Completa](./CARTILHA_COMPLETA.md)** 📘 - Guia detalhado para todos os papéis no projeto
 - **[Onboarding para Desenvolvedores](./ONBOARDING_DEVELOPERS.md)** 🌱 - Guia completo para novos desenvolvedores usando Cursor
@@ -233,8 +235,8 @@ Documentos adicionais são organizados em pastas:
 | `MODERATION_REPORTS.md` | `30_MODERATION.md` |
 | `ADMIN_OBSERVABILITY.md` | `31_ADMIN_OBSERVABILITY.md` |
 | `TRACEABILITY.md` | `32_TRACEABILITY.md` |
-| `CHANGELOG.md` | `40_CHANGELOG.md` |
-| `CONTRIBUTING.md` | `41_CONTRIBUTING.md` |
+| `CHANGELOG.md` | Documento unificado (40_CHANGELOG arquivado em `archive/substituidos/`) |
+| `CONTRIBUTING.md` | Raiz + `41_CONTRIBUTING.md` (redireciona para raiz) |
 
 ## Mudanças Recentes no Projeto
 

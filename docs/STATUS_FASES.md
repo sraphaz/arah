@@ -217,7 +217,7 @@
 
 - **[Backlog API Completo](./backlog-api/README.md)** - Detalhes completos de todas as 29 fases
 - **[Roadmap](./02_ROADMAP.md)** - Planejamento de funcionalidades
-- **[Changelog](./40_CHANGELOG.md)** - Histórico de mudanças
+- **[Changelog](./CHANGELOG.md)** - Histórico de mudanças
 
 ---
 

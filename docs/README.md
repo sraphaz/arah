@@ -164,7 +164,7 @@ Documentação técnica das fases de implementação: Instalador, Modularizaçã
 - [Rastreabilidade](./32_TRACEABILITY.md)
 
 ### Histórico
-- [Changelog](./40_CHANGELOG.md)
+- [Changelog](./CHANGELOG.md)
 - [Contribuindo](./41_CONTRIBUTING.md)
 
 - **Membership**  

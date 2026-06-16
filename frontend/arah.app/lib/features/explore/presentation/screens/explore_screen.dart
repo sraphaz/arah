@@ -32,6 +32,11 @@ class ExploreScreen extends ConsumerWidget {
               tooltip: AppLocalizations.of(context)!.viewOnMap,
               onPressed: () => context.push('/map?territoryId=$territoryId'),
             ),
+            IconButton(
+              icon: const Icon(Icons.warning_amber_outlined),
+              tooltip: 'Alertas',
+              onPressed: () => context.push('/alerts'),
+            ),
           ],
         ],
       ),

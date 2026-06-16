@@ -35,4 +35,10 @@ public interface IFeedJourneyService
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default);
+
+    Task<bool> DeletePostAsync(
+        Guid territoryId,
+        Guid postId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
 }

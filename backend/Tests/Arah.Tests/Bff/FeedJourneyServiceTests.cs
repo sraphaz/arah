@@ -190,6 +190,33 @@ public sealed class FeedJourneyServiceTests
         Assert.Single(result.Items);
         Assert.Equal("Olá", result.Items[0].Content);
         Assert.Equal("Autor", result.Items[0].Author.DisplayName);
+    }
+
+    [Fact]
+    public async Task DeletePostAsync_ReturnsTrue_WhenBackendDeletes()
+    {
+        var backend = new Mock<IFeedJourneyBackend>();
+        backend.Setup(x => x.DeletePostAsync(TerritoryId, PostId, UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var service = CreateService(backend);
+        var deleted = await service.DeletePostAsync(TerritoryId, PostId, UserId);
+
+        Assert.True(deleted);
+    }
+
+    [Fact]
+    public async Task DeletePostAsync_ReturnsFalse_WhenBackendFails()
+    {
+        var backend = new Mock<IFeedJourneyBackend>();
+        backend.Setup(x => x.DeletePostAsync(TerritoryId, PostId, UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var service = CreateService(backend);
+        var deleted = await service.DeletePostAsync(TerritoryId, PostId, UserId);
+
+        Assert.False(deleted);
+    }
 
     [Fact]
     public async Task InteractAsync_Comment_ReturnsNull_WhenCommentContentEmpty()

@@ -69,7 +69,8 @@ public sealed class FeedJourneyService : IFeedJourneyService
             var mediaDtos = mediaList.Select(url => new TerritoryFeedMediaDto(url, "IMAGE", null)).ToList();
             var postDto = MapToPostDto(post);
             var countsDto = new TerritoryFeedCountsDto(postCounts.LikeCount, postCounts.ShareCount, postCounts.CommentCount);
-            var metadata = new ItemMetadataDto(false, false, true, true);
+            var isAuthor = userId.HasValue && post.AuthorUserId == userId.Value;
+            var metadata = new ItemMetadataDto(isAuthor, isAuthor, true, true);
             items.Add(new TerritoryFeedItemJourneyDto(
                 postDto,
                 countsDto,
@@ -218,6 +219,15 @@ public sealed class FeedJourneyService : IFeedJourneyService
             paged.HasNextPage);
 
         return new PostCommentsJourneyResponse(items, paginationDto);
+    }
+
+    public async Task<bool> DeletePostAsync(
+        Guid territoryId,
+        Guid postId,
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _backend.DeletePostAsync(territoryId, postId, userId, cancellationToken);
     }
 
     private static TerritoryFeedPostDto MapToPostDto(BackendFeedPost post)

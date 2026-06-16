@@ -40,28 +40,28 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 | **Auth** (check-email, signup, login, social, refresh, logout) | ✅ | ✅ | ✅ | App: check-email, signup, login, Google social, refresh. |
 | **Onboarding** (suggested-territories, complete) | ✅ | ✅ | ✅ | App: lista sugeridos, completa com território selecionado. |
 | **Territories** (listar, paged, detalhe, enter) | ✅ | ✅ | ✅ | App: paged (explorar), get by id (mapa), enter (trocar território). |
-| **Feed** (territory-feed, create-post, interact, post-comments) | ✅ | ✅ | 🚧 | App: feed paginado, interact e **thread de comentários** (bottom sheet). Backend: contadores reais + GET `post-comments`. |
+| **Feed** (territory-feed, create-post, interact, post-comments, delete-post) | ✅ | ✅ | ✅ | App: feed paginado, like/comment/share, thread de comentários, upload de mídia, excluir próprio post, filtros por tipo/interesses. |
 | **Events** (territory-events, participate) | ✅ | ✅ | ✅ | App: lista eventos, participar (interesse/confirmado). |
 | **Map** (pins, entities) | ✅ | ✅ | ✅ | App: GET map/pins para exibir pins no mapa. |
 | **Me** (profile, preferences, interests, devices) | ✅ | ✅ | 🚧 | App: profile (GET/PUT displayName, bio), interests (GET/POST/DELETE), preferences (GET/PUT notificações). Devices e outros sub-recursos de me não usados. |
 | **Notifications** (listar paginado, marcar lida) | ✅ | ✅ | ✅ | App: notifications/paged, notifications/{id}/read. |
 | **Membership** (me, become-resident, verify-residency) | ✅ | ✅ | ❌ | App não chama; onboarding usa journey onboarding/complete que associa território à sessão. |
-| **Connections** (listar, pending, request, accept, reject, privacy) | ✅ | ✅ | ❌ | Círculo de amigos: API e BFF prontos; app ainda não tem tela. |
+| **Connections** (listar, pending, request, accept, reject, privacy) | ✅ | ✅ | ✅ | App: tela Conexões com listagem, pendentes, busca/sugestões, enviar/aceitar/rejeitar/remover. |
 | **Assets** (listar, upload, curate) | ✅ | ✅ | ❌ | App não usa upload/lista de assets. |
-| **Media** (upload, info, download) | ✅ | ✅ | ❌ | App não usa; posts sem mídia no app ainda. |
+| **Media** (upload, info, download) | ✅ | ✅ | ✅ | App: upload via `media/upload` ao publicar post; exibição de imagens no feed. |
 | **Marketplace** (search, add-to-cart, checkout) | ✅ | ✅ | ❌ | Jornada v2; app não tem marketplace. |
 | **Marketplace V1** (cart, stores, items) | ✅ | ✅ | ❌ | Carrinho, lojas, itens; app não usa. |
 | **Subscription plans / Subscriptions** | ✅ | ✅ | ❌ | App não exibe planos nem assinaturas. |
 | **Moderation** (work-items, cases, evidences) | ✅ | ✅ | ❌ | App não tem área de moderação. |
 | **Chat** (conversations, messages, participants) | ✅ | ✅ | ❌ | App não tem chat. |
-| **Alerts** (listar, criar) | ✅ | ✅ | ❌ | App não lista nem cria alertas. |
+| **Alerts** (listar, criar) | ✅ | ✅ | 🚧 | App: lista alertas do território (GET). Criação ainda não no app. |
 | **Admin** (seed, cache-metrics, configs) | ✅ | ✅ | ❌ | Uso administrativo; não no app usuário. |
 
 Resumo rápido:
 
-- **Totalmente alinhados (API + BFF + App em uso)**: Auth, Onboarding, Territories, Events, Map, Notifications.
-- **Parcialmente no app**: Feed (falta interact), Me (falta devices e outros sub-recursos se necessário).
-- **Só API + BFF**: Membership, Connections, Assets, Media, Marketplace, Subscriptions, Moderation, Chat, Alerts, Admin.
+- **Totalmente alinhados (API + BFF + App em uso)**: Auth, Onboarding, Territories, Events, Map, Notifications, Feed (interact/comentários/mídia/excluir), Connections, Media.
+- **Parcialmente no app**: Me (falta devices), Alerts (só listagem).
+- **Só API + BFF**: Membership, Assets, Marketplace, Subscriptions, Moderation, Chat, Admin.
 
 ---
 
@@ -74,14 +74,14 @@ Prioridade sugerida para **alinhar** e depois **evoluir**.
 | Prioridade | Funcionalidade | O que fazer |
 |------------|----------------|-------------|
 | Alta | **Feed – comentários** | ✅ Backend + BFF + app (listagem paginada). Próximo: respostas aninhadas e moderação inline. |
-| Alta | **Mídia nos posts** | Upload de mídia (BFF media ou assets), associar a create-post; exibir imagens nos posts. |
-| Alta | **Excluir próprio post** | Endpoint na API/BFF se ainda não existir; botão “Excluir” no app para posts do usuário. |
-| Média | **Conexões (círculo de amigos)** | Telas: listar conexões, pendentes, enviar/aceitar/rejeitar; usar BFF connections/*. |
-| Média | **Filtros do feed** | Filtro por tipo/tag no app; BFF já suporta filterByInterests e parâmetros no territory-feed. |
+| Alta | **Mídia nos posts** | ✅ Upload via BFF `media/upload` + exibição no feed. Próximo: múltiplas imagens e tratamento offline. |
+| Alta | **Excluir próprio post** | ✅ BFF `delete-post` + menu no app para autor. |
+| Média | **Conexões (círculo de amigos)** | ✅ Tela com listagem, pendentes, busca/sugestões e solicitar/aceitar/rejeitar. |
+| Média | **Filtros do feed** | ✅ Filtro por tipo (chips) + filterByInterests no BFF. |
 | Média | **Preferências no perfil** | Já existe me/preferences no app (notificações); expandir para interesses visíveis e “tipo de post preferido” se a API suportar. |
 | Média | **Tipo de post ao publicar** | UI para escolher tipo (geral, alerta, evento) ao criar post; create-post já aceita tipo. |
 | Baixa | **Membership** | Tela “Sou morador” / become-resident onde fizer sentido no fluxo. |
-| Baixa | **Alertas** | Listar e exibir alertas do território (BFF alerts). |
+| Baixa | **Alertas** | 🚧 Listagem no app (BFF alerts). Próximo: criar alerta no app. |
 | Futuro | **Marketplace** | Lojas, listagens, carrinho, checkout no app (jornadas marketplace e marketplace-v1). |
 | Futuro | **Chat** | Conversas e mensagens (BFF chat). |
 
@@ -92,7 +92,7 @@ Prioridade sugerida para **alinhar** e depois **evoluir**.
 
 ### Na API
 
-- **Feed**: Endpoint para **excluir post** (do próprio usuário) se ainda não existir; manter feed/interact (like, comment, share) estável.
+- **Feed**: Endpoint **delete-post** exposto no BFF v2; manter feed/interact (like, comment, share) estável.
 - **Mídia/Assets**: Manter upload e associação a posts; documentar contrato para o app.
 - Novas fases do backlog: implementar na API primeiro, depois BFF, depois app (conforme estratégia acima).
 

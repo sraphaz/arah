@@ -9,6 +9,8 @@ import 'features/auth/presentation/providers/auth_state_provider.dart';
 import 'features/home/presentation/screens/main_shell_screen.dart';
 import 'features/map/presentation/screens/map_screen.dart';
 import 'features/events/presentation/screens/events_screen.dart';
+import 'features/connections/presentation/screens/connections_screen.dart';
+import 'features/alerts/presentation/screens/alerts_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 /// Rotas com guard de auth e onboarding: sem token → /login; com token sem território → /onboarding; com território → /home.
@@ -75,6 +77,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           final territoryId = state.uri.queryParameters['territoryId'];
           return EventsScreen(territoryId: territoryId);
         },
+      ),
+      GoRoute(
+        path: '/connections',
+        builder: (_, __) => const ConnectionsScreen(),
+      ),
+      GoRoute(
+        path: '/alerts',
+        builder: (_, __) => const AlertsScreen(),
       ),
     ],
   );

@@ -5,6 +5,7 @@ import '../../../../core/network/bff_client.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../data/repositories/feed_repository.dart';
 import '../../domain/feed_interaction.dart';
+import '../../../media/data/repositories/media_repository.dart';
 
 /// Estado do feed com paginação: itens carregados, página atual, se há mais.
 class FeedState {
@@ -123,10 +124,40 @@ class FeedNotifier extends StateNotifier<FeedState> {
       error: null,
     );
   }
+
+  /// Remove um post do feed localmente após DELETE bem-sucedido.
+  Future<void> deletePost(String postId) async {
+    final tid = territoryId ?? '';
+    if (tid.isEmpty) return;
+
+    final repository = _ref.read(feedRepositoryProvider);
+    await repository.deletePost(postId: postId, territoryId: tid);
+
+    final updatedItems = state.items.where((rawItem) {
+      final item = rawItem as Map<String, dynamic>;
+      final post = item['post'] as Map<String, dynamic>?;
+      return post?['id']?.toString() != postId;
+    }).toList();
+
+    state = FeedState(
+      items: updatedItems,
+      page: state.page,
+      hasMore: state.hasMore,
+      isLoading: false,
+      error: null,
+    );
+  }
 }
 
 /// Ativar para filtrar o feed pelos interesses do usuário (me/interests).
 final filterFeedByInterestsProvider = StateProvider<bool>((ref) => false);
+
+/// Filtro opcional por tipo de post (General, Alert, etc.). Null = todos.
+final filterFeedTypeProvider = StateProvider<String?>((ref) => null);
+
+final mediaRepositoryProvider = Provider<MediaRepository>((ref) {
+  return MediaRepository(client: ref.watch(bffClientProvider));
+});
 
 final feedNotifierProvider =
     StateNotifierProvider.autoDispose.family<FeedNotifier, FeedState, String?>((ref, territoryId) {

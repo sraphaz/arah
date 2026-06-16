@@ -141,6 +141,14 @@ class ProfileScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              leading: const Icon(Icons.people_outline),
+              title: const Text('Conexões'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/connections');
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.interests),
               title: Text(AppLocalizations.of(ctx)!.myInterests),
               onTap: () {

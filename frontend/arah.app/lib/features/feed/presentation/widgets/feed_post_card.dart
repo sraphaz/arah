@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/config/constants.dart';
@@ -28,6 +29,7 @@ class FeedPostCard extends StatelessWidget {
     this.shareCount = 0,
     this.isLiked = false,
     this.isShared = false,
+    this.mediaUrls = const [],
     this.onMorePressed,
     this.onLikePressed,
     this.onCommentPressed,
@@ -43,6 +45,7 @@ class FeedPostCard extends StatelessWidget {
   final int shareCount;
   final bool isLiked;
   final bool isShared;
+  final List<String> mediaUrls;
   final VoidCallback? onMorePressed;
   final VoidCallback? onLikePressed;
   final VoidCallback? onCommentPressed;
@@ -163,6 +166,28 @@ class FeedPostCard extends StatelessWidget {
                         style: theme.textTheme.bodyMedium,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    if (mediaUrls.isNotEmpty) ...[
+                      const SizedBox(height: AppConstants.spacingSm),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                        child: CachedNetworkImage(
+                          imageUrl: mediaUrls.first,
+                          height: 180,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Container(
+                            height: 180,
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          ),
+                          errorWidget: (_, __, ___) => Container(
+                            height: 120,
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            child: const Center(child: Icon(Icons.broken_image_outlined)),
+                          ),
+                        ),
                       ),
                     ],
                     const SizedBox(height: AppConstants.spacingSm),

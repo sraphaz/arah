@@ -261,4 +261,43 @@ public sealed class FeedJourneyController : ControllerBase
 
         return Ok(response);
     }
+
+    /// <summary>
+    /// Exclui um post do autor autenticado.
+    /// </summary>
+    [HttpDelete("delete-post")]
+    [EnableRateLimiting("write")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeletePost(
+        [FromQuery] Guid territoryId,
+        [FromQuery] Guid postId,
+        CancellationToken cancellationToken = default)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        if (territoryId == Guid.Empty || postId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId and postId are required." });
+        }
+
+        var deleted = await _feedJourneyService.DeletePostAsync(
+            territoryId,
+            postId,
+            userContext.User.Id,
+            cancellationToken);
+
+        if (!deleted)
+        {
+            return NotFound(new { error = "Post not found or you cannot delete it." });
+        }
+
+        return NoContent();
+    }
 }

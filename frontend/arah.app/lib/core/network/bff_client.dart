@@ -108,11 +108,13 @@ class BffClient {
     String journey,
     String pathAndQuery, {
     String? sessionIdOverride,
+    Map<String, dynamic>? queryParameters,
   }) async {
     final path = '$journey/$pathAndQuery';
     try {
       final response = await _dio.get<dynamic>(
         path,
+        queryParameters: queryParameters,
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
       );
       return _fromResponse(response);
@@ -172,6 +174,28 @@ class BffClient {
       final response = await _dio.delete<dynamic>(
         path,
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
+      );
+      return _fromResponse(response);
+    } on DioException catch (e, stackTrace) {
+      throw _toApiException(e, stackTrace);
+    }
+  }
+
+  /// POST multipart (ex: media/upload).
+  Future<BffResponse> postMultipart(
+    String journey,
+    String pathAndQuery, {
+    required FormData formData,
+    String? sessionIdOverride,
+  }) async {
+    final path = '$journey/$pathAndQuery';
+    final headers = _headersFor(sessionIdOverride: sessionIdOverride);
+    headers.remove('Content-Type');
+    try {
+      final response = await _dio.post<dynamic>(
+        path,
+        data: formData,
+        options: Options(headers: headers),
       );
       return _fromResponse(response);
     } on DioException catch (e, stackTrace) {

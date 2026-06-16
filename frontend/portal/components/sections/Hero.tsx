@@ -11,7 +11,7 @@ export default function Hero() {
           <div className="grid gap-12 md:grid-cols-[1.05fr_0.95fr] md:items-center">
             <div className="max-w-2xl space-y-6">
               <h1 className="text-5xl font-bold tracking-tight text-forest-950 md:text-6xl lg:text-7xl">
-                ARAPONGA
+                ARAH
               </h1>
               <p className="text-xl leading-relaxed text-forest-800 md:text-2xl">
                 <strong className="font-semibold text-forest-900">Território-Primeiro &amp; Comunidade-Primeiro</strong>

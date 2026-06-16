@@ -4,6 +4,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/bff_client.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../data/repositories/feed_repository.dart';
+import '../../domain/feed_interaction.dart';
 
 /// Estado do feed com paginação: itens carregados, página atual, se há mais.
 class FeedState {
@@ -83,6 +84,44 @@ class FeedNotifier extends StateNotifier<FeedState> {
   Future<void> loadMore() async {
     if (state.isLoading || !state.hasMore) return;
     await _loadPage(state.page + 1, append: true);
+  }
+
+  /// Interage com um post (like, comment, share) e atualiza o item localmente.
+  Future<void> interact({
+    required String postId,
+    required FeedInteractionAction action,
+    String? commentContent,
+  }) async {
+    final tid = territoryId ?? '';
+    if (tid.isEmpty) return;
+
+    final repository = _ref.read(feedRepositoryProvider);
+    final result = await repository.interactPost(
+      postId: postId,
+      territoryId: tid,
+      action: action,
+      commentContent: commentContent,
+    );
+
+    final updatedItems = state.items.map((rawItem) {
+      final item = rawItem as Map<String, dynamic>;
+      final post = item['post'] as Map<String, dynamic>?;
+      if (post?['id']?.toString() != postId) return item;
+
+      return {
+        ...item,
+        'counts': result['counts'] ?? item['counts'],
+        'userInteractions': result['userInteractions'] ?? item['userInteractions'],
+      };
+    }).toList();
+
+    state = FeedState(
+      items: updatedItems,
+      page: state.page,
+      hasMore: state.hasMore,
+      isLoading: false,
+      error: null,
+    );
   }
 }
 

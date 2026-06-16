@@ -23,6 +23,11 @@ class FeedPostCard extends StatelessWidget {
     this.content,
     this.authorInitial,
     this.type = FeedPostType.general,
+    this.likeCount = 0,
+    this.commentCount = 0,
+    this.shareCount = 0,
+    this.isLiked = false,
+    this.isShared = false,
     this.onMorePressed,
     this.onLikePressed,
     this.onCommentPressed,
@@ -33,6 +38,11 @@ class FeedPostCard extends StatelessWidget {
   final String? content;
   final String? authorInitial;
   final FeedPostType type;
+  final int likeCount;
+  final int commentCount;
+  final int shareCount;
+  final bool isLiked;
+  final bool isShared;
   final VoidCallback? onMorePressed;
   final VoidCallback? onLikePressed;
   final VoidCallback? onCommentPressed;
@@ -158,29 +168,22 @@ class FeedPostCard extends StatelessWidget {
                     const SizedBox(height: AppConstants.spacingSm),
                     Row(
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.favorite_border),
+                        _InteractionButton(
+                          icon: isLiked ? Icons.favorite : Icons.favorite_border,
+                          count: likeCount,
+                          color: isLiked ? theme.colorScheme.primary : null,
                           onPressed: onLikePressed,
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size(36, 36),
-                            padding: EdgeInsets.zero,
-                          ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.chat_bubble_outline),
+                        _InteractionButton(
+                          icon: Icons.chat_bubble_outline,
+                          count: commentCount,
                           onPressed: onCommentPressed,
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size(36, 36),
-                            padding: EdgeInsets.zero,
-                          ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.send_outlined),
+                        _InteractionButton(
+                          icon: isShared ? Icons.send : Icons.send_outlined,
+                          count: shareCount,
+                          color: isShared ? theme.colorScheme.primary : null,
                           onPressed: onSharePressed,
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size(36, 36),
-                            padding: EdgeInsets.zero,
-                          ),
                         ),
                       ],
                     ),
@@ -188,6 +191,47 @@ class FeedPostCard extends StatelessWidget {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InteractionButton extends StatelessWidget {
+  const _InteractionButton({
+    required this.icon,
+    required this.count,
+    this.color,
+    this.onPressed,
+  });
+
+  final IconData icon;
+  final int count;
+  final Color? color;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingXs),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 20, color: color),
+            if (count > 0) ...[
+              const SizedBox(width: 4),
+              Text(
+                count.toString(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: color ?? theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ],
         ),
       ),

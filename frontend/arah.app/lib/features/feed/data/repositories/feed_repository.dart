@@ -1,14 +1,14 @@
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
+import '../../domain/feed_interaction.dart';
 
-/// Repositório da jornada de feed (territory-feed, create-post).
+/// Repositório da jornada de feed (territory-feed, create-post, interact).
 class FeedRepository {
   FeedRepository({required this.client});
 
   final BffClient client;
 
   /// POST feed/create-post?territoryId=... com body título, conteúdo, tipo, visibilidade.
-  /// [type] ex: "General", "Alert". [visibility] ex: "Public", "ResidentsOnly".
   Future<Map<String, dynamic>> createPost({
     required String territoryId,
     required String title,
@@ -34,6 +34,37 @@ class FeedRepository {
     };
 
     final response = await client.post('feed', path, body: body);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(
+        'HTTP ${response.statusCode}',
+        statusCode: response.statusCode,
+        body: response.data?.toString(),
+      );
+    }
+    final data = response.data as Map<String, dynamic>?;
+    if (data == null) throw ApiException('Resposta inválida');
+    return data;
+  }
+
+  /// POST feed/interact — like, comment ou share.
+  Future<Map<String, dynamic>> interactPost({
+    required String postId,
+    required String territoryId,
+    required FeedInteractionAction action,
+    String? commentContent,
+  }) async {
+    if (postId.isEmpty) throw ArgumentError('postId is required');
+    if (territoryId.isEmpty) throw ArgumentError('territoryId is required');
+
+    final body = <String, dynamic>{
+      'postId': postId,
+      'territoryId': territoryId,
+      'action': action.apiValue,
+      if (commentContent != null && commentContent.trim().isNotEmpty)
+        'commentContent': commentContent.trim(),
+    };
+
+    final response = await client.post('feed', 'interact', body: body);
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiException(
         'HTTP ${response.statusCode}',

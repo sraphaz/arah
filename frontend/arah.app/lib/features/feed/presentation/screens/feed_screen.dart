@@ -8,7 +8,9 @@ import '../../../../core/providers/territory_provider.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../../territories/presentation/widgets/territory_selector.dart';
+import '../../domain/feed_interaction.dart';
 import '../providers/feed_provider.dart';
+import '../widgets/feed_post_card.dart';
 
 /// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação, pull-to-refresh e scroll infinito.
 class FeedScreen extends ConsumerStatefulWidget {
@@ -82,6 +84,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               onRefresh: () => notifier.refresh(),
               child: _FeedBody(
                 state: feedState,
+                territoryId: territoryId,
                 onRetry: () => notifier.refresh(),
                 onLoadMore: () => notifier.loadMore(),
                 scrollController: _scrollController,
@@ -99,6 +102,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 class _FeedBody extends StatelessWidget {
   const _FeedBody({
     required this.state,
+    required this.territoryId,
     required this.onRetry,
     required this.onLoadMore,
     this.scrollController,
@@ -107,6 +111,7 @@ class _FeedBody extends StatelessWidget {
   });
 
   final FeedState state;
+  final String territoryId;
   final VoidCallback onRetry;
   final VoidCallback onLoadMore;
   final ScrollController? scrollController;
@@ -126,6 +131,7 @@ class _FeedBody extends StatelessWidget {
     }
     return _FeedList(
       items: state.items,
+      territoryId: territoryId,
       hasMore: state.hasMore,
       isLoadingMore: state.isLoading,
       onLoadMore: onLoadMore,
@@ -137,9 +143,10 @@ class _FeedBody extends StatelessWidget {
   }
 }
 
-class _FeedList extends StatefulWidget {
+class _FeedList extends ConsumerStatefulWidget {
   const _FeedList({
     required this.items,
+    required this.territoryId,
     required this.onRetry,
     this.hasMore = false,
     this.isLoadingMore = false,
@@ -150,6 +157,7 @@ class _FeedList extends StatefulWidget {
   });
 
   final List<dynamic> items;
+  final String territoryId;
   final VoidCallback onRetry;
   final bool hasMore;
   final bool isLoadingMore;
@@ -159,10 +167,10 @@ class _FeedList extends StatefulWidget {
   final double loadMoreThreshold;
 
   @override
-  State<_FeedList> createState() => _FeedListState();
+  ConsumerState<_FeedList> createState() => _FeedListState();
 }
 
-class _FeedListState extends State<_FeedList> {
+class _FeedListState extends ConsumerState<_FeedList> {
   void _onScroll() {
     final controller = widget.scrollController;
     final onNearBottom = widget.onScrollNearBottom;
@@ -192,6 +200,34 @@ class _FeedListState extends State<_FeedList> {
   void dispose() {
     widget.scrollController?.removeListener(_onScroll);
     super.dispose();
+  }
+
+  Future<void> _submitComment(String postId) async {
+    final controller = TextEditingController();
+    final content = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Comentar'),
+        content: TextField(
+          controller: controller,
+          maxLines: 3,
+          decoration: const InputDecoration(hintText: 'Escreva seu comentário'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+            child: const Text('Enviar'),
+          ),
+        ],
+      ),
+    );
+    if (content == null || content.isEmpty) return;
+    await ref.read(feedNotifierProvider(widget.territoryId).notifier).interact(
+          postId: postId,
+          action: FeedInteractionAction.comment,
+          commentContent: content,
+        );
   }
 
   @override
@@ -258,10 +294,18 @@ class _FeedListState extends State<_FeedList> {
         }
         final item = items[index] as Map<String, dynamic>?;
         final post = item?['post'] as Map<String, dynamic>?;
+        final postId = post?['id']?.toString() ?? '';
         final title = post?['title']?.toString() ?? 'Post';
         final content = post?['content']?.toString() ?? '';
+        final postType = post?['type']?.toString();
+        final counts = FeedPostCounts.fromJson(item?['counts'] as Map<String, dynamic>?);
+        final interactions = FeedUserInteractions.fromJson(
+          item?['userInteractions'] as Map<String, dynamic>?,
+        );
+        final notifier = ref.read(feedNotifierProvider(widget.territoryId).notifier);
+
         return TweenAnimationBuilder<double>(
-          key: ValueKey(post?['id'] ?? index),
+          key: ValueKey(postId.isNotEmpty ? postId : index),
           tween: Tween(begin: 0, end: 1),
           duration: const Duration(milliseconds: AppConstants.animationNormal),
           curve: Curves.easeOut,
@@ -272,52 +316,22 @@ class _FeedListState extends State<_FeedList> {
               child: child,
             ),
           ),
-          child: Card(
-            margin: const EdgeInsets.symmetric(
-              horizontal: AppConstants.spacingMd,
-              vertical: AppConstants.spacingSm + 2,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.spacingMd),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                      child: Text(
-                        (title.isNotEmpty ? title[0] : '?').toUpperCase(),
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
-                      ),
-                    ),
-                    const SizedBox(width: AppConstants.radiusMd),
-                    Expanded(
-                      child: Text(title, style: Theme.of(context).textTheme.titleSmall),
-                    ),
-                    IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
-                  ],
-                ),
-                if (content.isNotEmpty) ...[
-                  const SizedBox(height: AppConstants.spacingMd - 4),
-                  Text(
-                    content,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                const SizedBox(height: AppConstants.spacingMd - 4),
-                Row(
-                  children: [
-                    IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
-                    IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}),
-                    IconButton(icon: const Icon(Icons.send_outlined), onPressed: () {}),
-                  ],
-                ),
-              ],
-              ),
-            ),
+          child: FeedPostCard(
+            title: title,
+            content: content,
+            type: FeedPostCard.typeFromString(postType),
+            likeCount: counts.likes,
+            commentCount: counts.comments,
+            shareCount: counts.shares,
+            isLiked: interactions.liked,
+            isShared: interactions.shared,
+            onLikePressed: postId.isEmpty
+                ? null
+                : () => notifier.interact(postId: postId, action: FeedInteractionAction.like),
+            onCommentPressed: postId.isEmpty ? null : () => _submitComment(postId),
+            onSharePressed: postId.isEmpty
+                ? null
+                : () => notifier.interact(postId: postId, action: FeedInteractionAction.share),
           ),
         );
       },

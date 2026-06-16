@@ -40,7 +40,7 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 | **Auth** (check-email, signup, login, social, refresh, logout) | ✅ | ✅ | ✅ | App: check-email, signup, login, Google social, refresh. |
 | **Onboarding** (suggested-territories, complete) | ✅ | ✅ | ✅ | App: lista sugeridos, completa com território selecionado. |
 | **Territories** (listar, paged, detalhe, enter) | ✅ | ✅ | ✅ | App: paged (explorar), get by id (mapa), enter (trocar território). |
-| **Feed** (territory-feed, create-post, interact) | ✅ | ✅ | 🚧 | App: feed paginado + create-post. **Falta**: interact (like, comentar, compartilhar). |
+| **Feed** (territory-feed, create-post, interact) | ✅ | ✅ | 🚧 | App: feed paginado + create-post + **interact** (like, comentar, compartilhar) com contadores locais. **Falta**: listagem de comentários inline. |
 | **Events** (territory-events, participate) | ✅ | ✅ | ✅ | App: lista eventos, participar (interesse/confirmado). |
 | **Map** (pins, entities) | ✅ | ✅ | ✅ | App: GET map/pins para exibir pins no mapa. |
 | **Me** (profile, preferences, interests, devices) | ✅ | ✅ | 🚧 | App: profile (GET/PUT displayName, bio), interests (GET/POST/DELETE), preferences (GET/PUT notificações). Devices e outros sub-recursos de me não usados. |
@@ -73,7 +73,7 @@ Prioridade sugerida para **alinhar** e depois **evoluir**.
 
 | Prioridade | Funcionalidade | O que fazer |
 |------------|----------------|-------------|
-| Alta | **Feed – interações** | Usar BFF `feed/interact` (like, comentar, compartilhar); exibir contadores e comentários no feed. |
+| Alta | **Feed – interações** | ✅ Implementado no app (`feed/interact` + contadores). Próximo: exibir thread de comentários no feed. |
 | Alta | **Mídia nos posts** | Upload de mídia (BFF media ou assets), associar a create-post; exibir imagens nos posts. |
 | Alta | **Excluir próprio post** | Endpoint na API/BFF se ainda não existir; botão “Excluir” no app para posts do usuário. |
 | Média | **Conexões (círculo de amigos)** | Telas: listar conexões, pendentes, enviar/aceitar/rejeitar; usar BFF connections/*. |

@@ -4,6 +4,7 @@ import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../data/models/asset_item.dart';
+import '../../data/models/asset_validation_result.dart';
 import '../../data/repositories/assets_repository.dart';
 
 class AssetsState {
@@ -50,6 +51,38 @@ class AssetsNotifier extends StateNotifier<AssetsState> {
       longitude: geo.longitude,
     );
     await refresh();
+  }
+
+  Future<AssetValidationResult> validateAsset(String assetId) async {
+    final territoryId = _requireTerritoryId();
+    final result = await _repo.validateAsset(territoryId: territoryId, assetId: assetId);
+    await refresh();
+    return result;
+  }
+
+  Future<void> archiveAsset(String assetId, {String? reason}) async {
+    final territoryId = _requireTerritoryId();
+    await _repo.archiveAsset(territoryId: territoryId, assetId: assetId, reason: reason);
+    await refresh();
+  }
+
+  Future<void> curateAsset(String assetId, {required String outcome, String? notes}) async {
+    final territoryId = _requireTerritoryId();
+    await _repo.curateAsset(
+      territoryId: territoryId,
+      assetId: assetId,
+      outcome: outcome,
+      notes: notes,
+    );
+    await refresh();
+  }
+
+  String _requireTerritoryId() {
+    final territoryId = _ref.read(selectedTerritoryIdValueProvider);
+    if (territoryId == null || territoryId.isEmpty) {
+      throw StateError('Território não selecionado');
+    }
+    return territoryId;
   }
 }
 

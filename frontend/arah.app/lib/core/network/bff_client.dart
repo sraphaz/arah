@@ -103,6 +103,29 @@ class BffClient {
     return map;
   }
 
+  /// GET binário (ex: moderation/evidences/{id}/download).
+  Future<List<int>> getBytes(
+    String journey,
+    String pathAndQuery, {
+    String? sessionIdOverride,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    final path = '$journey/$pathAndQuery';
+    try {
+      final response = await _dio.get<List<int>>(
+        path,
+        queryParameters: queryParameters,
+        options: Options(
+          headers: _headersFor(sessionIdOverride: sessionIdOverride),
+          responseType: ResponseType.bytes,
+        ),
+      );
+      return response.data ?? const [];
+    } on DioException catch (e, stackTrace) {
+      throw _toApiException(e, stackTrace);
+    }
+  }
+
   /// GET jornada (ex: feed/territory-feed, me/profile).
   Future<BffResponse> get(
     String journey,

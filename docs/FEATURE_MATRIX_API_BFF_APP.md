@@ -48,12 +48,12 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 | **Notifications** (listar paginado, marcar lida) | ✅ | ✅ | ✅ | App: notifications/paged, notifications/{id}/read. |
 | **Membership** (me, become-resident, verify-residency) | ✅ | ✅ | ✅ | App: tela Membership com status, solicitar residência e verificação geo. |
 | **Connections** (listar, pending, request, accept, reject, privacy) | ✅ | ✅ | ✅ | App: Conexões com busca, sugestões, solicitar/aceitar/rejeitar. |
-| **Assets** (listar, upload, curate) | ✅ | ✅ | 🚧 | App: listagem e criação JSON com geo. Curadoria/arquivar ainda não no app. |
+| **Assets** (listar, upload, curate) | ✅ | ✅ | ✅ | App: listagem, criação, validar, arquivar e curar (aprovar/rejeitar). |
 | **Media** (upload, info, download) | ✅ | ✅ | ✅ | App: upload ao publicar post; exibição no feed. |
 | **Marketplace** (search, add-to-cart, checkout) | ✅ | ✅ | ✅ | App: busca, adicionar ao carrinho, checkout (v2 + cart v1). |
 | **Marketplace V1** (cart, stores, items) | ✅ | ✅ | 🚧 | App usa cart v1; lojas/itens avançados ainda não. |
 | **Subscription plans / Subscriptions** | ✅ | ✅ | ✅ | App: lista planos e minha assinatura (leitura). |
-| **Moderation** (work-items, cases, evidences) | ✅ | ✅ | 🚧 | App: listagem de work-items. Casos/evidências ainda não. |
+| **Moderation** (work-items, cases, evidences) | ✅ | ✅ | ✅ | App: fila, casos (decidir), evidências (download + decidir residência). |
 | **Chat** (conversations, messages, participants) | ✅ | ✅ | ✅ | App: canais do território, mensagens e envio. |
 | **Alerts** (listar, criar) | ✅ | ✅ | ✅ | App: listagem e criação de alertas. |
 | **Admin** (seed, cache-metrics, configs) | ✅ | ✅ | ➖ | Uso administrativo; não no app usuário. |
@@ -74,8 +74,6 @@ Prioridade sugerida para **evoluir** após alinhamento base.
 
 | Prioridade | Funcionalidade | O que fazer |
 |------------|----------------|-------------|
-| Média | **Assets – curadoria** | Arquivar/validar assets (BFF assets/{id}/archive, validate). |
-| Média | **Moderation – casos** | Telas de casos e evidências para curadores. |
 | Média | **Marketplace V1 – lojas** | Gerenciar loja própria (`stores/me`, criar loja). |
 | Baixa | **Chat – grupos** | Criar grupos (`territories/{id}/chat/groups` POST). |
 | Baixa | **Subscriptions – assinar** | Fluxo de contratação/cancelamento no app. |

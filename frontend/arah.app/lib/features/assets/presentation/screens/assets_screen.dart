@@ -6,6 +6,7 @@ import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
+import '../../data/models/asset_item.dart';
 import '../providers/assets_provider.dart';
 
 class AssetsScreen extends ConsumerWidget {
@@ -125,10 +126,62 @@ class AssetsScreen extends ConsumerWidget {
         return Card(
           child: ListTile(
             title: Text(asset.name),
-            subtitle: Text('${asset.type} · ${asset.status}'),
+            subtitle: Text(
+              '${asset.type} · ${asset.status}'
+              '${asset.validationsCount > 0 ? ' · ${asset.validationsCount} validações (${asset.validationPct.toStringAsFixed(0)}%)' : ''}',
+            ),
+            trailing: PopupMenuButton<String>(
+              onSelected: (value) => _onAssetAction(context, ref, asset, value),
+              itemBuilder: (context) => [
+                if (asset.canValidate)
+                  const PopupMenuItem(value: 'validate', child: Text('Validar')),
+                if (asset.canArchive)
+                  const PopupMenuItem(value: 'archive', child: Text('Arquivar')),
+                if (asset.canCurate) ...[
+                  const PopupMenuItem(value: 'approve', child: Text('Aprovar (curador)')),
+                  const PopupMenuItem(value: 'reject', child: Text('Rejeitar (curador)')),
+                ],
+              ],
+            ),
           ),
         );
       },
     );
+  }
+
+  Future<void> _onAssetAction(
+    BuildContext context,
+    WidgetRef ref,
+    AssetItem asset,
+    String action,
+  ) async {
+    final notifier = ref.read(assetsProvider.notifier);
+    try {
+      if (action == 'validate') {
+        final result = await notifier.validateAsset(asset.id);
+        if (context.mounted) {
+          showSuccessSnackBar(
+            context,
+            'Validação registrada (${result.validationPct.toStringAsFixed(0)}% da comunidade).',
+          );
+        }
+      } else if (action == 'archive') {
+        await notifier.archiveAsset(asset.id);
+        if (context.mounted) showSuccessSnackBar(context, 'Asset arquivado.');
+      } else if (action == 'approve') {
+        await notifier.curateAsset(asset.id, outcome: 'APPROVED');
+        if (context.mounted) showSuccessSnackBar(context, 'Asset aprovado.');
+      } else if (action == 'reject') {
+        await notifier.curateAsset(asset.id, outcome: 'REJECTED');
+        if (context.mounted) showSuccessSnackBar(context, 'Asset rejeitado.');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showErrorSnackBar(
+          context,
+          e is ApiException ? e.userMessage : 'Não foi possível concluir a ação.',
+        );
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
-using Arah.Api.Bff.Contracts.Journeys.Common;
+using Arah.Bff.Contracts.Journeys.Common;
 
-namespace Arah.Api.Bff.Contracts.Journeys.Feed;
+namespace Arah.Bff.Contracts.Journeys.Feed;
 
 public sealed record PostCommentsJourneyResponse(
     IReadOnlyList<PostCommentItemDto> Items,

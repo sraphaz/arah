@@ -190,6 +190,7 @@ public sealed class FeedJourneyServiceTests
         Assert.Single(result.Items);
         Assert.Equal("Olá", result.Items[0].Content);
         Assert.Equal("Autor", result.Items[0].Author.DisplayName);
+    }
 
     [Fact]
     public async Task InteractAsync_Comment_ReturnsNull_WhenCommentContentEmpty()

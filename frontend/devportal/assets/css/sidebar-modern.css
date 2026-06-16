@@ -21,9 +21,9 @@
 
 /* Contorno mais visível no dark mode - Estilos de produção */
 :root.dark .sidebar-container {
-  border-right-color: rgba(100, 150, 180, 0.12);
-  box-shadow: 1px 0 6px rgba(100, 150, 180, 0.06);
-  background: rgba(10, 14, 18, 0.85);
+  border-right-color: var(--border-sidebar-dark);
+  box-shadow: 1px 0 6px var(--shadow-sidebar-dark);
+  background: var(--sidebar-surface);
 }
 
 /* Scrollbar suave e discreta para sidebar */

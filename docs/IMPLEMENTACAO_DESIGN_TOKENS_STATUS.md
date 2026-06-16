@@ -51,26 +51,24 @@
 - ⚠️ **Tailwind @apply**: Alguns `@apply transition-all duration-300` permanecem (compatível com tokens)
 
 ### DevPortal
-- ⏳ **Pendente**: Aplicar tokens de transição e remover cores hardcoded
+- ✅ **Tokens de transição padronizados** (fast 150ms, base 200ms, slow 300ms, smooth 400ms)
+- ✅ **TODAS** transições hardcoded substituídas por tokens (`mobile-menu.css` + `devportal.css`)
+- ✅ **Import de `design-tokens.css`** adicionado em `devportal.css`
+- ✅ **Tokens semânticos de interação** (`--accent-bg-hover`, `--surface-overlay`, etc.)
+- ✅ **Cores hardcoded semânticas removidas** de regras de componente
+- ✅ **Estados focus-visible e disabled** em botões e menu mobile
 
 ---
 
-## 📋 Próximos Passos (Para Completar Fase 3)
+## 📋 Próximos Passos (Fase 4)
 
-### 1. DevPortal - Refinamento (Prioridade Alta)
-- [ ] Adicionar tokens de transição (`--transition-fast`, `--transition-base`, etc.)
-- [ ] Substituir transições hardcoded (`0.2s`, `0.3s`, etc.) por tokens
-- [ ] Remover cores hardcoded restantes (se houver)
+### 1. Wiki - Import de tokens compartilhados (Prioridade Média)
+- [ ] Importar `frontend/shared/styles/design-tokens.css` em `globals.css`
+- [ ] Remover duplicação de tokens entre Wiki e arquivo compartilhado
 
-### 2. Estados de Componentes (Prioridade Média)
-- [ ] Focus states: Adicionar `:focus-visible` com indicadores claros
-- [ ] Disabled states: Adicionar `:disabled` com opacidade reduzida
-- [ ] Active states: Garantir feedback visual claro
-
-### 3. Validação WCAG AA (Prioridade Alta)
-- [ ] Verificar contraste 4.5:1 para texto normal
-- [ ] Verificar contraste 3:1 para texto grande (18px+)
-- [ ] Verificar estados de foco claramente visíveis
+### 2. Validação WCAG AA contínua (Prioridade Alta)
+- [ ] Verificar contraste em novos componentes
+- [ ] Testar em diferentes dispositivos e navegadores
 
 ---
 
@@ -81,18 +79,19 @@
 - [x] Paleta revisada e alinhada com valores
 - [x] Migração inicial de cores
 
-### Fase 2 (Aplicação): ✅ ~80% Completo
+### Fase 2 (Aplicação): ✅ ~100% Completo
 - [x] Cores migradas para tokens (Wiki e DevPortal)
 - [x] Tipografia aplicada sistematicamente (Wiki e DevPortal)
 - [x] Espaçamento aplicado sistematicamente (Wiki e DevPortal)
 - [x] Hierarquia tipográfica aplicada (H1-H6)
 
-### Fase 3 (Refinamento): ⏳ ~30% Completo
+### Fase 3 (Refinamento): ✅ ~95% Completo
 - [x] Transições padronizadas (Wiki)
-- [x] Cores hardcoded removidas (Wiki - parcial)
-- [ ] Transições padronizadas (DevPortal)
-- [ ] Estados de componentes (focus, disabled)
-- [ ] Validação WCAG AA
+- [x] Transições padronizadas (DevPortal + mobile-menu)
+- [x] Cores hardcoded removidas de componentes (DevPortal)
+- [x] Estados de componentes (focus, disabled)
+- [x] Import de design-tokens.css no DevPortal
+- [ ] Import de design-tokens.css na Wiki
 
 ---
 
@@ -109,19 +108,19 @@ Alguns componentes usam `@apply transition-all duration-300` do Tailwind, que é
 A maioria das cores hardcoded são:
 - **rgba() em shadows**: Apropriado (usar opacidade dinâmica)
 - **rgba() em gradients**: Apropriado (efeitos visuais complexos)
-- **rgba() em glass morphism**: Apropriado (efeitos de blur)
+- **rgba() em definições de tokens**: Apropriado (fonte única de verdade)
 
-**Regra:** Cores hardcoded são aceitáveis quando são parte de efeitos visuais complexos (shadows, gradients, glass effects). O importante é que cores **semânticas** (accent, link, text) usem tokens.
+**Regra:** Cores hardcoded são aceitáveis quando são parte de efeitos visuais complexos (shadows, gradients, glass effects) ou definições de tokens em `:root`. O importante é que cores **semânticas** (accent, link, text) em regras de componente usem tokens.
 
 ---
 
 ## 🔄 Próxima Ação Recomendada
 
 **Ação Imediata:**
-1. Aplicar tokens de transição no DevPortal
-2. Adicionar estados focus e disabled nos componentes principais
-3. Validar contraste WCAG AA em textos críticos
+1. Importar `design-tokens.css` na Wiki (`globals.css`)
+2. Validar contraste WCAG AA em textos críticos
+3. Testar DevPortal em mobile (menu + transições)
 
 ---
 
-**Última Atualização**: 2025-01-20
+**Última Atualização**: 2026-06-16

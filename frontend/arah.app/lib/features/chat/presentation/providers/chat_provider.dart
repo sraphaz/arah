@@ -5,12 +5,25 @@ import '../../../../core/providers/territory_provider.dart';
 import '../../data/models/chat_models.dart';
 import '../../data/repositories/chat_repository.dart';
 
+enum ChatListTab { channels, groups }
+
 class ChatListState {
-  const ChatListState({this.channels = const [], this.isLoading = false, this.error});
+  const ChatListState({
+    this.channels = const [],
+    this.groups = const [],
+    this.isLoading = false,
+    this.error,
+    this.tab = ChatListTab.channels,
+  });
 
   final List<ChatConversationSummary> channels;
+  final List<ChatConversationSummary> groups;
   final bool isLoading;
   final Object? error;
+  final ChatListTab tab;
+
+  List<ChatConversationSummary> get activeItems =>
+      tab == ChatListTab.channels ? channels : groups;
 }
 
 class ChatListNotifier extends StateNotifier<ChatListState> {
@@ -22,19 +35,48 @@ class ChatListNotifier extends StateNotifier<ChatListState> {
 
   ChatRepository get _repo => ChatRepository(client: _ref.read(bffClientProvider));
 
+  void setTab(ChatListTab tab) {
+    state = ChatListState(
+      channels: state.channels,
+      groups: state.groups,
+      tab: tab,
+    );
+    refresh();
+  }
+
   Future<void> refresh() async {
     final territoryId = _ref.read(selectedTerritoryIdValueProvider);
     if (territoryId == null || territoryId.isEmpty) {
       state = const ChatListState();
       return;
     }
-    state = ChatListState(channels: state.channels, isLoading: true);
+    state = ChatListState(
+      channels: state.channels,
+      groups: state.groups,
+      isLoading: true,
+      tab: state.tab,
+    );
     try {
-      final channels = await _repo.listChannels(territoryId);
-      state = ChatListState(channels: channels);
+      if (state.tab == ChatListTab.channels) {
+        final channels = await _repo.listChannels(territoryId);
+        state = ChatListState(channels: channels, groups: state.groups, tab: state.tab);
+      } else {
+        final groups = await _repo.listGroups(territoryId);
+        state = ChatListState(channels: state.channels, groups: groups, tab: state.tab);
+      }
     } catch (e) {
-      state = ChatListState(error: e);
+      state = ChatListState(error: e, tab: state.tab);
     }
+  }
+
+  Future<ChatConversationSummary> createGroup(String name) async {
+    final territoryId = _ref.read(selectedTerritoryIdValueProvider);
+    if (territoryId == null || territoryId.isEmpty) {
+      throw StateError('Território não selecionado');
+    }
+    final group = await _repo.createGroup(territoryId: territoryId, name: name);
+    await refresh();
+    return group;
   }
 }
 

@@ -5,14 +5,87 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/chat_provider.dart';
 
-class ChatListScreen extends ConsumerWidget {
+class ChatListScreen extends ConsumerStatefulWidget {
   const ChatListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChatListScreen> createState() => _ChatListScreenState();
+}
+
+class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    if (_tabController.indexIsChanging) return;
+    final tab = _tabController.index == 0 ? ChatListTab.channels : ChatListTab.groups;
+    ref.read(chatListProvider.notifier).setTab(tab);
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_onTabChanged);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _showCreateGroupDialog() async {
+    final nameController = TextEditingController();
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Novo grupo'),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(
+            labelText: 'Nome do grupo',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          FilledButton(
+            onPressed: () async {
+              final name = nameController.text.trim();
+              if (name.isEmpty) return;
+              try {
+                final group = await ref.read(chatListProvider.notifier).createGroup(name);
+                if (ctx.mounted) {
+                  Navigator.pop(ctx);
+                  showSuccessSnackBar(context, 'Grupo criado.');
+                  if (mounted) {
+                    context.push('/chat/${group.id}?title=${Uri.encodeComponent(group.name)}');
+                  }
+                }
+              } catch (e) {
+                if (ctx.mounted) {
+                  showErrorSnackBar(
+                    ctx,
+                    e is ApiException ? e.userMessage : 'Erro ao criar grupo.',
+                  );
+                }
+              }
+            },
+            child: const Text('Criar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(chatListProvider);
     final notifier = ref.read(chatListProvider.notifier);
@@ -25,7 +98,22 @@ class ChatListScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Chat')),
+      appBar: AppBar(
+        title: const Text('Chat'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Canais'),
+            Tab(text: 'Grupos'),
+          ],
+        ),
+      ),
+      floatingActionButton: _tabController.index == 1
+          ? FloatingActionButton(
+              onPressed: _showCreateGroupDialog,
+              child: const Icon(Icons.group_add_outlined),
+            )
+          : null,
       body: Column(
         children: [
           const TerritoryIndicatorBar(),
@@ -41,13 +129,13 @@ class ChatListScreen extends ConsumerWidget {
   }
 
   Widget _buildBody(BuildContext context, ChatListState state) {
-    if (state.isLoading && state.channels.isEmpty) {
+    if (state.isLoading && state.activeItems.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
       );
     }
-    if (state.error != null && state.channels.isEmpty) {
+    if (state.error != null && state.activeItems.isEmpty) {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
@@ -56,29 +144,42 @@ class ChatListScreen extends ConsumerWidget {
             child: Text(
               state.error is ApiException
                   ? (state.error as ApiException).userMessage
-                  : 'Erro ao carregar canais.',
+                  : 'Erro ao carregar conversas.',
               textAlign: TextAlign.center,
             ),
           ),
         ],
       );
     }
-    if (state.channels.isEmpty) {
+    if (state.activeItems.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: Text('Nenhum canal disponível.')))],
+        children: [
+          SizedBox(
+            height: 200,
+            child: Center(
+              child: Text(
+                state.tab == ChatListTab.channels
+                    ? 'Nenhum canal disponível.'
+                    : 'Nenhum grupo ainda. Toque + para criar.',
+              ),
+            ),
+          ),
+        ],
       );
     }
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: state.channels.length,
+      itemCount: state.activeItems.length,
       itemBuilder: (context, index) {
-        final channel = state.channels[index];
+        final conversation = state.activeItems[index];
         return ListTile(
-          leading: const Icon(Icons.chat_bubble_outline),
-          title: Text(channel.name),
-          subtitle: Text('${channel.kind} · ${channel.status}'),
-          onTap: () => context.push('/chat/${channel.id}?title=${Uri.encodeComponent(channel.name)}'),
+          leading: Icon(
+            state.tab == ChatListTab.channels ? Icons.chat_bubble_outline : Icons.group_outlined,
+          ),
+          title: Text(conversation.name),
+          subtitle: Text('${conversation.kind} · ${conversation.status}'),
+          onTap: () => context.push('/chat/${conversation.id}?title=${Uri.encodeComponent(conversation.name)}'),
         );
       },
     );

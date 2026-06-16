@@ -1,3 +1,5 @@
+@import "../../shared/styles/design-tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,54 +19,19 @@
     --watermark-right: -180px;
     --body-watermark-opacity: 0.025;
     --body-watermark-size: 720px;
-    /* Transition Tokens - Padronizado com DevPortal */
-    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-quick: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     --spacing-section: 120px;
     --spacing-card: 80px;
     --gradient-overlay: linear-gradient(180deg, rgba(241, 248, 244, 0.6) 0%, rgba(241, 248, 244, 0.2) 100%);
 
-    /* Design System - Typography Scale (Harmonic Scale 1.125) */
-    --font-size-xs: 0.75rem;      /* 12px */
-    --font-size-sm: 0.875rem;     /* 14px */
-    --font-size-base: 1rem;       /* 16px */
-    --font-size-lg: 1.125rem;     /* 18px */
-    --font-size-xl: 1.25rem;      /* 20px */
-    --font-size-2xl: 1.5rem;      /* 24px */
-    --font-size-3xl: 1.875rem;    /* 30px */
-    --font-size-4xl: 2.25rem;     /* 36px */
-    --font-size-5xl: 3rem;        /* 48px */
-    --font-size-6xl: 3.75rem;     /* 60px */
-    --font-size-7xl: 4.5rem;      /* 72px */
-
-    /* Line Heights - Optimized for reading */
-    --line-height-tight: 1.25;
-    --line-height-snug: 1.375;
-    --line-height-normal: 1.5;
-    --line-height-relaxed: 1.75;
-    --line-height-loose: 2;
-
-    /* Letter Spacing */
-    --letter-spacing-tighter: -0.05em;
-    --letter-spacing-tight: -0.025em;
-    --letter-spacing-normal: 0;
-    --letter-spacing-wide: 0.025em;
-    --letter-spacing-wider: 0.05em;
-
-    /* Spacing System (Base 8px) - Padronizado com DevPortal */
-    --spacing-xxs: 0.25rem;  /* 4px */
-    --spacing-xs: 0.5rem;    /* 8px */
-    --spacing-sm: 0.75rem;   /* 12px */
-    --spacing-md: 1rem;      /* 16px */
-    --spacing-lg: 1.5rem;    /* 24px */
-    --spacing-xl: 2rem;      /* 32px */
-    --spacing-2xl: 3rem;     /* 48px */
-    --spacing-3xl: 4rem;     /* 64px */
-
-    /* Aliases para compatibilidade (equivalente a --space-* do DevPortal) */
+    /* Spacing aliases - convenção Wiki (--spacing-* mapeia para tokens base) */
+    --spacing-xxs: var(--space-1);
+    --spacing-xs: var(--space-2);
+    --spacing-sm: var(--space-3);
+    --spacing-md: var(--space-4);
+    --spacing-lg: var(--space-6);
+    --spacing-xl: var(--space-8);
+    --spacing-2xl: var(--space-12);
+    --spacing-3xl: var(--space-16);
     --space-xs: var(--spacing-xxs);
     --space-sm: var(--spacing-xs);
     --space-md: var(--spacing-md);
@@ -77,7 +44,7 @@
     --content-width-narrow: 65ch;
     --content-width-default: 75ch;
     --content-width-wide: 90ch;
-    --content-max: 1200px; /* Padronizado com DevPortal */
+    --content-max: 1200px;
 
     /* Breakpoints Padronizados - Unificado Wiki + DevPortal */
     --breakpoint-mobile: 640px;
@@ -85,29 +52,28 @@
     --breakpoint-desktop: 1024px;
     --breakpoint-wide: 1280px;
     --breakpoint-ultrawide: 1536px;
+    --sidebar-width-mobile: 280px;
 
-    /* Sidebar Width - Padronizado */
-    --sidebar-width: 256px; /* lg:w-64 = 16rem = 256px */
-    --sidebar-width-mobile: 280px; /* Mobile sidebar width */
+    /* Semantic aliases - referenciam tokens compartilhados */
+    --accent: var(--color-primary-400);
+    --accent-hover: var(--color-primary-500);
+    --accent-strong: var(--color-primary-500);
+    --link: var(--color-secondary-300);
+    --link-hover: var(--color-secondary-400);
+    --bg-dark: var(--color-dark-950);
+    --border-dark: var(--color-dark-800);
 
-    /* Sistema de Elevação Unificado (Material Design) - Wiki + DevPortal */
-    --elevation-0: none;
-    --elevation-1: 0 1px 2px rgba(23, 53, 37, 0.05);
-    --elevation-2: 0 2px 8px rgba(23, 53, 37, 0.08);
-    --elevation-3: 0 4px 16px rgba(23, 53, 37, 0.12);
-    --elevation-4: 0 8px 32px rgba(23, 53, 37, 0.16);
-
-    /* Design System - Cores de Acento e Links (usando tokens unificados) */
-    --accent: var(--color-primary-400);           /* #4dd4a8 */
-    --accent-hover: var(--color-primary-500);     /* #3bc495 */
-    --accent-strong: var(--color-primary-500);    /* #3bc495 */
-    --accent-subtle: rgba(77, 212, 168, 0.15);
-    --link: var(--color-secondary-300);           /* #7dd3ff */
-    --link-hover: var(--color-secondary-400);     /* #9de3ff */
-
-    /* Dark mode colors */
-    --bg-dark: var(--color-dark-950);             /* #0a0e12 */
-    --border-dark: var(--color-dark-800);         /* #1e2830 */
+    /* Syntax highlighting - YAML code blocks */
+    --syntax-base: #e0e0e0;
+    --syntax-keyword: #82aaff;
+    --syntax-string: #c3e88d;
+    --syntax-number: #f78c6c;
+    --syntax-comment: #546e7a;
+    --syntax-literal: #ff5370;
+    --shimmer-highlight: rgba(255, 255, 255, 0.1);
+    --app-banner-title-light: linear-gradient(135deg, rgb(20, 40, 30) 0%, rgb(30, 60, 45) 50%, rgb(40, 80, 60) 100%);
+    --app-banner-title-dark: linear-gradient(135deg, rgb(240, 255, 250) 0%, rgb(200, 250, 230) 50%, rgb(180, 240, 220) 100%);
+    --app-banner-phone-glow: radial-gradient(circle at 50% 0%, rgba(77, 212, 168, 0.02) 50%, transparent 100%);
   }
 
   /* Dark mode - identidade visual do devportal */
@@ -119,16 +85,6 @@
     --watermark-opacity: 0.015;
     --body-watermark-opacity: 0.01;
     --gradient-overlay: linear-gradient(180deg, rgba(10, 14, 18, 0.8) 0%, rgba(10, 14, 18, 0.4) 100%);
-
-    /* Sistema de Elevação Unificado - Dark Mode */
-    --elevation-0: none;
-    --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.15);
-    --elevation-2: 0 2px 8px rgba(0, 0, 0, 0.25);
-    --elevation-3: 0 4px 16px rgba(0, 0, 0, 0.35);
-    --elevation-4: 0 8px 32px rgba(0, 0, 0, 0.45);
-
-    /* Cores de acento e links em dark mode (usam mesmas variáveis) */
-    /* --accent e --link já definidas no :root, funcionam em ambos os modos */
   }
 
   * {
@@ -157,7 +113,7 @@
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
     font-variant-ligatures: common-ligatures;
     font-kerning: normal;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color var(--transition-slow), color var(--transition-slow);
     line-height: var(--line-height-relaxed);
     font-size: var(--font-size-lg);
     /* Ajuste fino para sobriedade */
@@ -166,9 +122,7 @@
 
   /* Dark mode body background */
   :root.dark body {
-    background-image:
-      radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
+    background-image: var(--bg-gradient-accent);
     background-color: var(--bg-dark);
   }
 
@@ -191,7 +145,7 @@
     z-index: 0;
     mix-blend-mode: soft-light;
     filter: grayscale(100%) brightness(1.3) contrast(0.9);
-    transition: opacity 2s ease-in-out;
+    transition: opacity var(--duration-watermark) ease-in-out;
   }
 
   body > * {
@@ -213,7 +167,7 @@
     @apply bg-forest-300 dark:bg-forest-800 rounded-full;
     border: 2px solid transparent;
     background-clip: padding-box;
-    transition: background-color 0.2s ease;
+    transition: background-color var(--transition-base);
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -300,7 +254,7 @@
     z-index: 0;
     filter: grayscale(100%) brightness(1.15) contrast(0.85);
     mix-blend-mode: soft-light;
-    transition: opacity 1s ease-in-out;
+    transition: opacity var(--duration-watermark) ease-in-out;
   }
 
   .glass-card:hover::after {
@@ -360,14 +314,14 @@
     width: 32px;
     height: 32px;
     border-radius: 6px;
-    color: rgb(107 114 128);
+    color: var(--color-neutral-500);
     transition: all var(--transition-base);
     text-decoration: none;
     opacity: 0.85;
   }
 
   .dark .header-link-icon {
-    color: rgb(156 163 175);
+    color: var(--color-neutral-400);
   }
 
   .header-link-icon:hover {
@@ -491,7 +445,7 @@
     @apply bg-white dark:bg-forest-900;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+    transition: width var(--duration-ripple), height var(--duration-ripple);
     opacity: 0.2;
   }
 
@@ -506,7 +460,7 @@
     @apply hover:bg-forest-200 dark:hover:bg-forest-800 hover:shadow-lg;
     @apply active:scale-[0.98];
     @apply transition-all duration-300 ease-out;
-    border: 1.5px solid rgba(198, 227, 210, 0.6);
+    border: 1.5px solid var(--glass-border);
   }
 
   /* Markdown content - Enterprise typography system - Layout limpo */
@@ -651,7 +605,7 @@
     top: 0;
     font-size: 1.1em;
     line-height: var(--line-height-relaxed);
-    transition: transform 0.2s ease;
+    transition: transform var(--transition-base);
   }
 
   .markdown-content ul > li:hover::before {
@@ -726,33 +680,33 @@
 
   /* YAML syntax highlighting - básico mas funcional */
   .markdown-content pre code.language-yaml {
-    color: #e0e0e0;
+    color: var(--syntax-base);
   }
 
   .markdown-content pre code.language-yaml .hljs-keyword,
   .markdown-content pre code.language-yaml .hljs-attr {
-    color: #82aaff;
+    color: var(--syntax-keyword);
   }
 
   .markdown-content pre code.language-yaml .hljs-string {
-    color: #c3e88d;
+    color: var(--syntax-string);
   }
 
   .markdown-content pre code.language-yaml .hljs-number {
-    color: #f78c6c;
+    color: var(--syntax-number);
   }
 
   .markdown-content pre code.language-yaml .hljs-comment {
-    color: #546e7a;
+    color: var(--syntax-comment);
     font-style: italic;
   }
 
   .markdown-content pre code.language-yaml .hljs-literal {
-    color: #ff5370;
+    color: var(--syntax-literal);
   }
 
   .dark .markdown-content pre code.language-yaml {
-    color: #e0e0e0;
+    color: var(--syntax-base);
   }
 
   /* Blockquotes - Enterprise design (Market standards) */
@@ -813,7 +767,7 @@
 
   .markdown-content tr:hover {
     @apply bg-forest-50 dark:bg-forest-900/50;
-    transition: background-color 0.2s ease;
+    transition: background-color var(--transition-base);
   }
 
   /* Horizontal rules - Modern separators (Market standards) */
@@ -1023,7 +977,7 @@
     background: linear-gradient(
       to right,
       transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
+      var(--shimmer-highlight) 50%,
       transparent 100%
     );
     background-size: 1000px 100%;
@@ -1062,7 +1016,7 @@
   /* Interactive list items */
   .markdown-content li {
     position: relative;
-    transition: all 0.3s ease;
+    transition: all var(--transition-slow);
   }
 
   .markdown-content li:hover {
@@ -1133,7 +1087,7 @@
   }
 
   .tooltip-content {
-    animation: tooltipFadeIn 0.2s ease-out;
+    animation: tooltipFadeIn var(--duration-base) ease-out;
   }
 
   @keyframes tooltipFadeIn {
@@ -1396,7 +1350,7 @@
   height: 60%;
   @apply bg-forest-600 dark:bg-dark-accent;
   border-radius: 0 2px 2px 0;
-  animation: slideInLeft 0.3s ease-out;
+  animation: slideInLeft var(--duration-slow) ease-out;
 }
 
 /* Heading links - Adicionar ícone de link em headings com ID */
@@ -1543,9 +1497,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image:
-    radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
+  background-image: var(--bg-gradient-accent);
   pointer-events: none;
   z-index: 0;
 }
@@ -1562,7 +1514,7 @@
   @apply inline-flex items-center space-x-2 px-4 py-2 rounded-full;
   /* Usa var(--accent) com opacity */
   background-color: var(--accent-subtle);
-  border: 1px solid rgba(77, 212, 168, 0.3);
+  border: 1px solid var(--accent-subtle);
   color: var(--accent);
   @apply font-semibold text-sm;
   @apply animate-pulse-slow;
@@ -1581,20 +1533,14 @@
   @apply text-4xl md:text-5xl lg:text-6xl font-bold;
   @apply text-forest-900 dark:text-forest-50;
   @apply leading-tight tracking-tight;
-  background: linear-gradient(135deg,
-    rgb(20, 40, 30) 0%,
-    rgb(30, 60, 45) 50%,
-    rgb(40, 80, 60) 100%);
+  background: var(--app-banner-title-light);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 :root.dark .app-banner-title {
-  background: linear-gradient(135deg,
-    rgb(240, 255, 250) 0%,
-    rgb(200, 250, 230) 50%,
-    rgb(180, 240, 220) 100%);
+  background: var(--app-banner-title-dark);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1636,12 +1582,12 @@
   @apply active:scale-100;
   /* Gradient usando variáveis CSS com fallback */
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
-  box-shadow: 0 10px 25px rgba(77, 212, 168, 0.3);
+  box-shadow: var(--elevation-3), var(--shadow-glow);
 }
 
 .app-banner-button-primary:hover {
   background: linear-gradient(135deg, var(--accent-hover) 0%, rgba(110, 246, 202, 1) 100%);
-  box-shadow: var(--elevation-4), 0 0 32px rgba(77, 212, 168, 0.3);
+  box-shadow: var(--elevation-4), var(--shadow-glow);
 }
 
 .app-banner-button-secondary {
@@ -1683,12 +1629,7 @@
 
 .app-banner-overlay {
   @apply absolute inset-0 pointer-events-none;
-  background: linear-gradient(
-    135deg,
-    transparent 0%,
-    rgba(77, 212, 168, 0.02) 50%,
-    transparent 100%
-  );
+  background: var(--app-banner-phone-glow);
   @apply opacity-0 transition-opacity duration-500;
 }
 

@@ -85,13 +85,19 @@
 - [x] Espaçamento aplicado sistematicamente (Wiki e DevPortal)
 - [x] Hierarquia tipográfica aplicada (H1-H6)
 
-### Fase 3 (Refinamento): ✅ ~95% Completo
+### Fase 3 (Refinamento): ✅ 100% Completo
 - [x] Transições padronizadas (Wiki)
 - [x] Transições padronizadas (DevPortal + mobile-menu)
 - [x] Cores hardcoded removidas de componentes (DevPortal)
 - [x] Estados de componentes (focus, disabled)
 - [x] Import de design-tokens.css no DevPortal
-- [ ] Import de design-tokens.css na Wiki
+- [x] Import de design-tokens.css na Wiki
+
+### Fase 4 (Unificação): ✅ ~80% Completo
+- [x] Tokens semânticos de interação centralizados em `design-tokens.css`
+- [x] Duplicações removidas de `devportal.css` e `globals.css`
+- [x] Script de validação cobre Wiki + DevPortal
+- [ ] Extrair tokens de glass/watermark para camada compartilhada (opcional)
 
 ---
 
@@ -117,9 +123,9 @@ A maioria das cores hardcoded são:
 ## 🔄 Próxima Ação Recomendada
 
 **Ação Imediata:**
-1. Importar `design-tokens.css` na Wiki (`globals.css`)
-2. Validar contraste WCAG AA em textos críticos
-3. Testar DevPortal em mobile (menu + transições)
+1. Validar contraste WCAG AA em textos críticos
+2. Testar Wiki e DevPortal em mobile
+3. (Opcional) Extrair tokens glass/watermark para `design-tokens.css`
 
 ---
 

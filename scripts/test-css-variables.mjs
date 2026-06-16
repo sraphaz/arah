@@ -15,6 +15,7 @@ const cssFiles = [
   'frontend/devportal/assets/css/sidebar-modern.css',
   'frontend/devportal/assets/css/content-typography.css',
   'frontend/devportal/assets/css/mobile-menu.css',
+  'frontend/wiki/app/globals.css',
 ];
 
 const hardcodedPatterns = [

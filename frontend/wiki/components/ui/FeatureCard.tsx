@@ -10,17 +10,17 @@ interface FeatureCardProps {
 }
 
 export function FeatureCard({ icon, title, description, color = "forest", href }: FeatureCardProps) {
-  // Harmonizado com a paleta do Dev Portal Araponga - sem bordas excessivas
+  // Harmonizado com tokens Arah (accent / link)
   const colorClasses = {
     forest: "bg-forest-50/50 dark:bg-forest-900/30 hover:bg-forest-100/70 dark:hover:bg-forest-900/50",
-    accent: "bg-[#4dd4a8]/5 dark:bg-[#4dd4a8]/10 hover:bg-[#4dd4a8]/10 dark:hover:bg-[#4dd4a8]/15",
-    link: "bg-[#7dd3ff]/5 dark:bg-[#7dd3ff]/10 hover:bg-[#7dd3ff]/10 dark:hover:bg-[#7dd3ff]/15",
+    accent: "bg-accent/5 dark:bg-dark-accent/10 hover:bg-accent/10 dark:hover:bg-dark-accent/15",
+    link: "bg-link/5 dark:bg-dark-link/10 hover:bg-link/10 dark:hover:bg-dark-link/15",
   };
 
   const iconColorClasses = {
     forest: "text-forest-600 dark:text-forest-400",
-    accent: "text-[#4dd4a8] dark:text-[#5ee5b9]",
-    link: "text-[#7dd3ff] dark:text-[#9de3ff]",
+    accent: "text-accent dark:text-dark-accent-hover",
+    link: "text-link dark:text-dark-link-hover",
   };
 
   const cardContent = (

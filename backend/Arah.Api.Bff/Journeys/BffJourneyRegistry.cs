@@ -118,7 +118,9 @@ public static class BffJourneyRegistry
             {
                 new("territory-feed", "GET", "Feed do território (posts, contadores). Query: territoryId, pageNumber, pageSize, filterByInterests, mapEntityId, assetId."),
                 new("create-post", "POST", "Cria um post no território. Query: territoryId. Body: título, conteúdo, tipo, visibilidade, mediaIds."),
-                new("interact", "POST", "Interage com um post (like, comment, share). Body: postId, territoryId, action, commentContent (opcional).")
+                new("interact", "POST", "Interage com um post (like, comment, share). Body: postId, territoryId, action, commentContent (opcional)."),
+                new("post-comments", "GET", "Lista comentários de um post. Query: territoryId, postId, pageNumber, pageSize."),
+                new("delete-post", "DELETE", "Exclui post do autor. Query: territoryId, postId.")
             },
             [Events] = new List<JourneyEndpoint>
             {
@@ -173,7 +175,9 @@ public static class BffJourneyRegistry
                 new("paged", "GET", "Lista territórios (paginado). Query: pageNumber, pageSize."),
                 new("{id}", "GET", "Detalhe do território por Id."),
                 new("{id}/features", "GET", "Features do território."),
-                new("{id}/enter", "POST", "Entra no território como visitante.")
+                new("{id}/enter", "POST", "Entra no território como visitante."),
+                new("{id}/chat/channels", "GET", "Canais de chat do território."),
+                new("{id}/chat/groups", "GET", "Grupos de chat do território.")
             },
             [Membership] = new List<JourneyEndpoint>
             {

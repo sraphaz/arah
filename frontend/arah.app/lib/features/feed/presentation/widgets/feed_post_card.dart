@@ -60,7 +60,6 @@ class FeedPostCard extends StatelessWidget {
       case FeedPostType.tip:
         return AppDesignTokens.feedTypeTip;
       case FeedPostType.general:
-      default:
         return AppDesignTokens.feedTypeGeneral;
     }
   }
@@ -74,7 +73,6 @@ class FeedPostCard extends StatelessWidget {
       case FeedPostType.tip:
         return Icons.lightbulb_outline_rounded;
       case FeedPostType.general:
-      default:
         return Icons.article_outlined;
     }
   }

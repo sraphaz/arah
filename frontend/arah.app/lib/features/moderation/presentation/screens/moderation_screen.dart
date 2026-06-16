@@ -43,7 +43,7 @@ class ModerationScreen extends ConsumerWidget {
 
   Widget _buildBody(BuildContext context, ModerationState state, DateFormat dateFormat) {
     if (state.isLoading && state.items.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
       );
@@ -65,7 +65,7 @@ class ModerationScreen extends ConsumerWidget {
       );
     }
     if (state.items.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: Text('Nenhum work item pendente.')))],
       );

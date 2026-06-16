@@ -42,7 +42,7 @@ class ChatListScreen extends ConsumerWidget {
 
   Widget _buildBody(BuildContext context, ChatListState state) {
     if (state.isLoading && state.channels.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
       );
@@ -64,7 +64,7 @@ class ChatListScreen extends ConsumerWidget {
       );
     }
     if (state.channels.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: Text('Nenhum canal disponível.')))],
       );

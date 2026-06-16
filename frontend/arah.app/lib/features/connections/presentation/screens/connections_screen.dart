@@ -59,7 +59,7 @@ class ConnectionsScreen extends ConsumerWidget {
 
   Widget _buildBody(BuildContext context, ConnectionsState state, ConnectionsNotifier notifier) {
     if (state.isLoading && state.accepted.isEmpty && state.pending.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 240, child: Center(child: CircularProgressIndicator()))],
       );

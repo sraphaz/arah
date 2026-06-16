@@ -89,7 +89,7 @@ class AssetsScreen extends ConsumerWidget {
 
   Widget _buildBody(BuildContext context, AssetsState state) {
     if (state.isLoading && state.items.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
       );
@@ -111,7 +111,7 @@ class AssetsScreen extends ConsumerWidget {
       );
     }
     if (state.items.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: Text('Nenhum asset cadastrado.')))],
       );

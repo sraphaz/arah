@@ -104,7 +104,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
 
   Widget _buildBody(BuildContext context, AlertsState state, AlertsNotifier notifier) {
     if (state.isLoading && state.items.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 240, child: Center(child: CircularProgressIndicator()))],
       );

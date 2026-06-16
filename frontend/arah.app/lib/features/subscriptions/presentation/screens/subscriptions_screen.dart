@@ -24,7 +24,7 @@ class SubscriptionsScreen extends ConsumerWidget {
 
   Widget _buildBody(BuildContext context, SubscriptionsState state) {
     if (state.isLoading && state.plans.isEmpty) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
       );

@@ -49,7 +49,7 @@ class MembershipScreen extends ConsumerWidget {
     MembershipNotifier notifier,
   ) {
     if (state.isLoading && state.membership == null && state.error == null) {
-      return const ListView(
+      return ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
       );

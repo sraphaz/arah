@@ -218,4 +218,47 @@ public sealed class FeedJourneyController : ControllerBase
 
         return Ok(response);
     }
+
+    /// <summary>
+    /// Lista comentários de um post do território (paginado, mais recentes primeiro).
+    /// </summary>
+    [HttpGet("post-comments")]
+    [EnableRateLimiting("feed")]
+    [ProducesResponseType(typeof(PostCommentsJourneyResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PostCommentsJourneyResponse>> GetPostComments(
+        [FromQuery] Guid territoryId,
+        [FromQuery] Guid postId,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        if (territoryId == Guid.Empty || postId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId and postId are required." });
+        }
+
+        pageSize = Math.Clamp(pageSize, 1, 100);
+        var response = await _feedJourneyService.GetPostCommentsAsync(
+            territoryId,
+            postId,
+            pageNumber,
+            pageSize,
+            cancellationToken);
+
+        if (response is null)
+        {
+            return NotFound(new { error = "Post not found in territory." });
+        }
+
+        return Ok(response);
+    }
 }

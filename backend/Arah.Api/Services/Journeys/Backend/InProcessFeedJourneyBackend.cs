@@ -62,7 +62,40 @@ public sealed class InProcessFeedJourneyBackend : IFeedJourneyBackend
         CancellationToken cancellationToken = default)
     {
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
-        return counts.ToDictionary(kv => kv.Key, kv => new BackendPostCounts(kv.Value.LikeCount, kv.Value.ShareCount));
+        return counts.ToDictionary(kv => kv.Key, kv => new BackendPostCounts(kv.Value.LikeCount, kv.Value.ShareCount, kv.Value.CommentCount));
+    }
+
+    public async Task<BackendPagedResult<BackendPostComment>> ListCommentsPagedAsync(
+        Guid territoryId,
+        Guid postId,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var paged = await _feedService.ListCommentsForPostPagedAsync(
+            territoryId,
+            postId,
+            pagination,
+            cancellationToken);
+
+        var items = paged.Items
+            .Select(comment => new BackendPostComment(
+                comment.Id,
+                comment.PostId,
+                comment.UserId,
+                comment.Content,
+                comment.CreatedAtUtc))
+            .ToList();
+
+        return new BackendPagedResult<BackendPostComment>(
+            items,
+            paged.PageNumber,
+            paged.PageSize,
+            paged.TotalCount,
+            paged.TotalPages,
+            paged.HasPreviousPage,
+            paged.HasNextPage);
     }
 
     public async Task<IReadOnlyDictionary<Guid, BackendEventSummary>> GetEventSummariesByIdsAsync(

@@ -1,6 +1,7 @@
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
 import '../../domain/feed_interaction.dart';
+import '../../domain/feed_comment.dart';
 
 /// Repositório da jornada de feed (territory-feed, create-post, interact).
 class FeedRepository {
@@ -75,5 +76,28 @@ class FeedRepository {
     final data = response.data as Map<String, dynamic>?;
     if (data == null) throw ApiException('Resposta inválida');
     return data;
+  }
+
+  /// GET feed/post-comments — lista comentários paginados de um post.
+  Future<FeedCommentsPage> getPostComments({
+    required String postId,
+    required String territoryId,
+    int pageNumber = 1,
+    int pageSize = 20,
+  }) async {
+    if (postId.isEmpty) throw ArgumentError('postId is required');
+    if (territoryId.isEmpty) throw ArgumentError('territoryId is required');
+
+    final path =
+        'post-comments?postId=$postId&territoryId=$territoryId&pageNumber=$pageNumber&pageSize=$pageSize';
+    final response = await client.get('feed', path);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(
+        'HTTP ${response.statusCode}',
+        statusCode: response.statusCode,
+        body: response.data?.toString(),
+      );
+    }
+    return FeedCommentsPage.fromJson(response.data as Map<String, dynamic>?);
   }
 }

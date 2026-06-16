@@ -11,6 +11,7 @@ import '../../../territories/presentation/widgets/territory_selector.dart';
 import '../../domain/feed_interaction.dart';
 import '../providers/feed_provider.dart';
 import '../widgets/feed_post_card.dart';
+import '../widgets/feed_comments_sheet.dart';
 
 /// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação, pull-to-refresh e scroll infinito.
 class FeedScreen extends ConsumerStatefulWidget {
@@ -202,32 +203,13 @@ class _FeedListState extends ConsumerState<_FeedList> {
     super.dispose();
   }
 
-  Future<void> _submitComment(String postId) async {
-    final controller = TextEditingController();
-    final content = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Comentar'),
-        content: TextField(
-          controller: controller,
-          maxLines: 3,
-          decoration: const InputDecoration(hintText: 'Escreva seu comentário'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-            child: const Text('Enviar'),
-          ),
-        ],
-      ),
+  Future<void> _openComments(String postId, String title) async {
+    await FeedCommentsSheet.show(
+      context,
+      postId: postId,
+      territoryId: widget.territoryId,
+      postTitle: title,
     );
-    if (content == null || content.isEmpty) return;
-    await ref.read(feedNotifierProvider(widget.territoryId).notifier).interact(
-          postId: postId,
-          action: FeedInteractionAction.comment,
-          commentContent: content,
-        );
   }
 
   @override
@@ -328,7 +310,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
             onLikePressed: postId.isEmpty
                 ? null
                 : () => notifier.interact(postId: postId, action: FeedInteractionAction.like),
-            onCommentPressed: postId.isEmpty ? null : () => _submitComment(postId),
+            onCommentPressed: postId.isEmpty ? null : () => _openComments(postId, title),
             onSharePressed: postId.isEmpty
                 ? null
                 : () => notifier.interact(postId: postId, action: FeedInteractionAction.share),

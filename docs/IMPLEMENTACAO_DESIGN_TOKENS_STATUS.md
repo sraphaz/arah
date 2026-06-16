@@ -93,10 +93,12 @@
 - [x] Import de design-tokens.css no DevPortal
 - [x] Import de design-tokens.css na Wiki
 
-### Fase 4 (Unificação): ✅ ~80% Completo
+### Fase 4 (Unificação): ✅ ~90% Completo
 - [x] Tokens semânticos de interação centralizados em `design-tokens.css`
 - [x] Duplicações removidas de `devportal.css` e `globals.css`
 - [x] Script de validação cobre Wiki + DevPortal
+- [x] Componentes Wiki (InfoBox, FeatureCard, Tabs, etc.) migrados de hex hardcoded para classes `accent`/`link`/`dark-accent`
+- [x] Portal institucional importa tokens compartilhados
 - [ ] Extrair tokens de glass/watermark para camada compartilhada (opcional)
 
 ---

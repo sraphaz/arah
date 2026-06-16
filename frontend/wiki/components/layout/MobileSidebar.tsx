@@ -86,8 +86,8 @@ export function MobileSidebar() {
         onClick={() => setIsOpen(!isOpen)}
         className={`fixed top-24 right-4 z-50 p-3 rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300 lg:hidden ${
           isOpen
-            ? "bg-forest-600 dark:bg-[#4dd4a8]"
-            : "bg-forest-600/90 dark:bg-[#4dd4a8]/90 hover:bg-forest-600 dark:hover:bg-[#4dd4a8]"
+            ? "bg-forest-600 dark:bg-dark-accent"
+            : "bg-forest-600/90 dark:bg-dark-accent/90 hover:bg-forest-600 dark:hover:bg-dark-accent"
         }`}
         aria-label={isOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
         aria-expanded={isOpen}

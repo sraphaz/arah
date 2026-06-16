@@ -1,8 +1,8 @@
 /**
- * Design Tokens - Araponga
+ * Design Tokens - Arah
  *
  * Sistema unificado de design tokens baseado em:
- * - Valores da Araponga (território, transparência, sobriedade)
+ * - Valores da Arah (território, transparência, sobriedade)
  * - Material Design 3
  * - Apple Human Interface Guidelines
  * - WCAG 2.1 (Acessibilidade)
@@ -13,7 +13,7 @@
 
 :root {
   /* ============================================
-     COLOR SYSTEM - Paleta Baseada em Valores da Araponga
+     COLOR SYSTEM - Paleta Baseada em Valores da Arah
      ============================================ */
 
   /* Primary - Verde (Natureza, Território, Crescimento) */

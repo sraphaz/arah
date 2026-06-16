@@ -68,7 +68,7 @@ public sealed class FeedJourneyService : IFeedJourneyService
             var authorDto = author is null ? null : new TerritoryFeedAuthorDto(author.Id, author.DisplayName, author.AvatarUrl);
             var mediaDtos = mediaList.Select(url => new TerritoryFeedMediaDto(url, "IMAGE", null)).ToList();
             var postDto = MapToPostDto(post);
-            var countsDto = new TerritoryFeedCountsDto(postCounts.LikeCount, postCounts.ShareCount, 0);
+            var countsDto = new TerritoryFeedCountsDto(postCounts.LikeCount, postCounts.ShareCount, postCounts.CommentCount);
             var metadata = new ItemMetadataDto(false, false, true, true);
             items.Add(new TerritoryFeedItemJourneyDto(
                 postDto,
@@ -164,13 +164,60 @@ public sealed class FeedJourneyService : IFeedJourneyService
         var counts = await _backend.GetCountsByPostIdsAsync(new[] { post.Id }, cancellationToken);
         var postCounts = counts.GetValueOrDefault(post.Id, new BackendPostCounts(0, 0));
         var postDto = MapToPostDto(post);
-        var countsDto = new TerritoryFeedCountsDto(postCounts.LikeCount, postCounts.ShareCount, 0);
+        var countsDto = new TerritoryFeedCountsDto(postCounts.LikeCount, postCounts.ShareCount, postCounts.CommentCount);
         var userInteractions = new UserInteractionsDto(
             request.Action.Equals("LIKE", StringComparison.OrdinalIgnoreCase),
             request.Action.Equals("SHARE", StringComparison.OrdinalIgnoreCase),
             request.Action.Equals("COMMENT", StringComparison.OrdinalIgnoreCase));
 
         return new PostInteractionResponse(postDto, countsDto, userInteractions);
+    }
+
+    public async Task<PostCommentsJourneyResponse?> GetPostCommentsAsync(
+        Guid territoryId,
+        Guid postId,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var post = await _backend.GetPostAsync(postId, cancellationToken);
+        if (post is null || post.TerritoryId != territoryId)
+        {
+            return null;
+        }
+
+        var paged = await _backend.ListCommentsPagedAsync(
+            territoryId,
+            postId,
+            pageNumber,
+            pageSize,
+            cancellationToken);
+
+        var userIds = paged.Items.Select(comment => comment.UserId).Distinct().ToList();
+        var users = await _backend.GetUsersByIdsAsync(userIds, cancellationToken);
+        var userMap = users.ToDictionary(user => user.Id, user => user);
+
+        var items = paged.Items.Select(comment =>
+        {
+            userMap.TryGetValue(comment.UserId, out var author);
+            var authorDto = author is null
+                ? new PostCommentAuthorDto(comment.UserId, "Usuário", null)
+                : new PostCommentAuthorDto(author.Id, author.DisplayName, author.AvatarUrl);
+            return new PostCommentItemDto(comment.Id, comment.Content, comment.CreatedAtUtc, authorDto);
+        }).ToList();
+
+        const int maxInt32 = int.MaxValue;
+        var totalCount = paged.TotalCount > maxInt32 ? maxInt32 : paged.TotalCount;
+        var totalPages = paged.TotalPages > maxInt32 ? maxInt32 : paged.TotalPages;
+        var paginationDto = new JourneyPaginationDto(
+            paged.PageNumber,
+            paged.PageSize,
+            totalCount,
+            totalPages,
+            paged.HasPreviousPage,
+            paged.HasNextPage);
+
+        return new PostCommentsJourneyResponse(items, paginationDto);
     }
 
     private static TerritoryFeedPostDto MapToPostDto(BackendFeedPost post)

@@ -177,7 +177,8 @@ public static class BffJourneyRegistry
                 new("{id}/features", "GET", "Features do território."),
                 new("{id}/enter", "POST", "Entra no território como visitante."),
                 new("{id}/chat/channels", "GET", "Canais de chat do território."),
-                new("{id}/chat/groups", "GET", "Grupos de chat do território.")
+                new("{id}/chat/groups", "GET", "Grupos de chat do território."),
+                new("{id}/chat/groups", "POST", "Cria grupo de chat. Body: name.")
             },
             [Membership] = new List<JourneyEndpoint>
             {
@@ -359,6 +360,8 @@ public static class BffJourneyRegistry
                 new("me", "GET", "Minha assinatura."),
                 new("me/capabilities", "GET", "Capacidades."),
                 new("me/limits", "GET", "Limites."),
+                new("", "POST", "Cria assinatura paga. Body: planId, territoryId, couponCode."),
+                new("{id}/cancel", "POST", "Cancela assinatura. Body: cancelAtPeriodEnd."),
                 new("{id}", "GET", "Detalhe da assinatura.")
             },
             [Notifications] = new List<JourneyEndpoint>

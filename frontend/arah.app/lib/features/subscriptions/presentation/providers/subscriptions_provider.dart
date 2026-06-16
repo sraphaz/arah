@@ -35,12 +35,28 @@ class SubscriptionsNotifier extends StateNotifier<SubscriptionsState> {
       final plans = await _repo.listPlans(territoryId: territoryId);
       MySubscription? mine;
       try {
-        mine = await _repo.getMySubscription();
+        mine = await _repo.getMySubscription(territoryId: territoryId);
       } catch (_) {}
       state = SubscriptionsState(plans: plans, mySubscription: mine);
     } catch (e) {
       state = SubscriptionsState(error: e);
     }
+  }
+
+  Future<void> subscribeToPlan(String planId) async {
+    final territoryId = _ref.read(selectedTerritoryIdValueProvider);
+    await _repo.subscribe(planId: planId, territoryId: territoryId);
+    await refresh();
+  }
+
+  Future<void> cancelMySubscription({bool cancelAtPeriodEnd = true}) async {
+    final subscriptionId = state.mySubscription?.id;
+    if (subscriptionId == null || subscriptionId.isEmpty) return;
+    await _repo.cancelSubscription(
+      subscriptionId: subscriptionId,
+      cancelAtPeriodEnd: cancelAtPeriodEnd,
+    );
+    await refresh();
   }
 }
 

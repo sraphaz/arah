@@ -30,4 +30,25 @@ class AlertsRepository {
         .map(AlertItem.fromJson)
         .toList();
   }
+
+  Future<AlertItem> createAlert({
+    required String territoryId,
+    required String title,
+    required String description,
+  }) async {
+    final response = await _client.post(
+      'alerts',
+      '',
+      queryParameters: {'territoryId': territoryId},
+      body: {'title': title, 'description': description},
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(
+        'HTTP ${response.statusCode}',
+        statusCode: response.statusCode,
+        body: response.data?.toString(),
+      );
+    }
+    return AlertItem.fromJson(response.data as Map<String, dynamic>);
+  }
 }

@@ -5,15 +5,21 @@ import 'package:intl/intl.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/alerts_provider.dart';
 
 /// Alertas de saúde/comunidade do território (requer morador ou curador na API).
-class AlertsScreen extends ConsumerWidget {
+class AlertsScreen extends ConsumerStatefulWidget {
   const AlertsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AlertsScreen> createState() => _AlertsScreenState();
+}
+
+class _AlertsScreenState extends ConsumerState<AlertsScreen> {
+  @override
+  Widget build(BuildContext context) {
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(alertsProvider);
     final notifier = ref.read(alertsProvider.notifier);
@@ -27,6 +33,10 @@ class AlertsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Alertas')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showCreateDialog(context),
+        child: const Icon(Icons.add),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -36,6 +46,56 @@ class AlertsScreen extends ConsumerWidget {
               onRefresh: () => notifier.refresh(),
               child: _buildBody(context, state, notifier),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showCreateDialog(BuildContext context) async {
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Reportar alerta'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Título'),
+            ),
+            TextField(
+              controller: descController,
+              decoration: const InputDecoration(labelText: 'Descrição'),
+              maxLines: 3,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          FilledButton(
+            onPressed: () async {
+              try {
+                await ref.read(alertsProvider.notifier).createAlert(
+                      title: titleController.text.trim(),
+                      description: descController.text.trim(),
+                    );
+                if (ctx.mounted) {
+                  Navigator.pop(ctx);
+                  showSuccessSnackBar(ctx, 'Alerta criado.');
+                }
+              } catch (e) {
+                if (ctx.mounted) {
+                  showErrorSnackBar(
+                    ctx,
+                    e is ApiException ? e.userMessage : 'Erro ao criar alerta.',
+                  );
+                }
+              }
+            },
+            child: const Text('Enviar'),
           ),
         ],
       ),

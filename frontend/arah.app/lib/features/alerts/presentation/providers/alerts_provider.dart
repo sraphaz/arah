@@ -41,6 +41,17 @@ class AlertsNotifier extends StateNotifier<AlertsState> {
       state = AlertsState(error: e);
     }
   }
+
+  Future<void> createAlert({required String title, required String description}) async {
+    final territoryId = _ref.read(selectedTerritoryIdValueProvider);
+    if (territoryId == null || territoryId.isEmpty) return;
+    await _repository.createAlert(
+      territoryId: territoryId,
+      title: title,
+      description: description,
+    );
+    await refresh();
+  }
 }
 
 final alertsProvider = StateNotifierProvider.autoDispose<AlertsNotifier, AlertsState>((ref) {

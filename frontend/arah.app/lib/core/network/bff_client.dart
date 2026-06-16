@@ -129,12 +129,14 @@ class BffClient {
     String pathAndQuery, {
     Map<String, dynamic>? body,
     String? sessionIdOverride,
+    Map<String, dynamic>? queryParameters,
   }) async {
     final path = '$journey/$pathAndQuery';
     try {
       final response = await _dio.post<dynamic>(
         path,
         data: body,
+        queryParameters: queryParameters,
         options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
       );
       return _fromResponse(response);

@@ -175,7 +175,9 @@ public static class BffJourneyRegistry
                 new("paged", "GET", "Lista territórios (paginado). Query: pageNumber, pageSize."),
                 new("{id}", "GET", "Detalhe do território por Id."),
                 new("{id}/features", "GET", "Features do território."),
-                new("{id}/enter", "POST", "Entra no território como visitante.")
+                new("{id}/enter", "POST", "Entra no território como visitante."),
+                new("{id}/chat/channels", "GET", "Canais de chat do território."),
+                new("{id}/chat/groups", "GET", "Grupos de chat do território.")
             },
             [Membership] = new List<JourneyEndpoint>
             {

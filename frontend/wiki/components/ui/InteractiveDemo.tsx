@@ -22,7 +22,7 @@ export function InteractiveDemo({ title, description, children, defaultOpen = fa
           </div>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="px-4 py-2 text-sm font-medium rounded-lg bg-forest-600 dark:bg-[#4dd4a8] text-white dark:text-forest-950 hover:bg-forest-700 dark:hover:bg-[#5ee5b9] transition-colors duration-200 flex-shrink-0"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-forest-600 dark:bg-dark-accent text-white dark:text-forest-950 hover:bg-forest-700 dark:hover:bg-dark-accent-hover transition-colors duration-200 flex-shrink-0"
           >
             {isOpen ? "Ocultar" : "Explorar"}
           </button>

@@ -1,5 +1,6 @@
 using Arah.Application.Common;
 using Arah.Application.Interfaces;
+using Arah.Application.Interfaces.Media;
 using Arah.Application.Models;
 using Arah.Application.Services;
 using Arah.Domain.Feed;
@@ -14,19 +15,25 @@ public sealed class InProcessFeedJourneyBackend : IFeedJourneyBackend
     private readonly MediaService _mediaService;
     private readonly IUserRepository _userRepository;
     private readonly TerritoryFeatureFlagGuard _featureGuard;
+    private readonly IMediaAttachmentRepository _mediaAttachmentRepository;
+    private readonly IPostGeoAnchorRepository _postGeoAnchorRepository;
 
     public InProcessFeedJourneyBackend(
         FeedService feedService,
         EventsService eventsService,
         MediaService mediaService,
         IUserRepository userRepository,
-        TerritoryFeatureFlagGuard featureGuard)
+        TerritoryFeatureFlagGuard featureGuard,
+        IMediaAttachmentRepository mediaAttachmentRepository,
+        IPostGeoAnchorRepository postGeoAnchorRepository)
     {
         _feedService = feedService;
         _eventsService = eventsService;
         _mediaService = mediaService;
         _userRepository = userRepository;
         _featureGuard = featureGuard;
+        _mediaAttachmentRepository = mediaAttachmentRepository;
+        _postGeoAnchorRepository = postGeoAnchorRepository;
     }
 
     public Task<bool> IsConnectionsPrioritizeEnabledAsync(Guid territoryId, CancellationToken cancellationToken = default)
@@ -62,7 +69,40 @@ public sealed class InProcessFeedJourneyBackend : IFeedJourneyBackend
         CancellationToken cancellationToken = default)
     {
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
-        return counts.ToDictionary(kv => kv.Key, kv => new BackendPostCounts(kv.Value.LikeCount, kv.Value.ShareCount));
+        return counts.ToDictionary(kv => kv.Key, kv => new BackendPostCounts(kv.Value.LikeCount, kv.Value.ShareCount, kv.Value.CommentCount));
+    }
+
+    public async Task<BackendPagedResult<BackendPostComment>> ListCommentsPagedAsync(
+        Guid territoryId,
+        Guid postId,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var pagination = new PaginationParameters(pageNumber, pageSize);
+        var paged = await _feedService.ListCommentsForPostPagedAsync(
+            territoryId,
+            postId,
+            pagination,
+            cancellationToken);
+
+        var items = paged.Items
+            .Select(comment => new BackendPostComment(
+                comment.Id,
+                comment.PostId,
+                comment.UserId,
+                comment.Content,
+                comment.CreatedAtUtc))
+            .ToList();
+
+        return new BackendPagedResult<BackendPostComment>(
+            items,
+            paged.PageNumber,
+            paged.PageSize,
+            paged.TotalCount,
+            paged.TotalPages,
+            paged.HasPreviousPage,
+            paged.HasNextPage);
     }
 
     public async Task<IReadOnlyDictionary<Guid, BackendEventSummary>> GetEventSummariesByIdsAsync(
@@ -141,6 +181,24 @@ public sealed class InProcessFeedJourneyBackend : IFeedJourneyBackend
     {
         var post = await _feedService.GetPostAsync(postId, cancellationToken);
         return post is null ? null : ToBackendPost(post);
+    }
+
+    public async Task<bool> DeletePostAsync(
+        Guid territoryId,
+        Guid postId,
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var post = await _feedService.GetPostAsync(postId, cancellationToken);
+        if (post is null || post.TerritoryId != territoryId || post.AuthorUserId != userId)
+        {
+            return false;
+        }
+
+        await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Post, postId, cancellationToken);
+        await _postGeoAnchorRepository.DeleteByPostIdAsync(postId, cancellationToken);
+        await _feedService.DeletePostAsync(postId, cancellationToken);
+        return true;
     }
 
     public static BackendFeedPost ToBackendPost(CommunityPost p)

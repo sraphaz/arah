@@ -108,5 +108,90 @@
   "back": "Voltar",
   "accountCreated": "Conta criada. Bem-vindo!",
   "passwordMinLength": "Mín. 6 caracteres",
-  "passwordsDontMatch": "As senhas não coincidem"
+  "passwordsDontMatch": "As senhas não coincidem",
+  "chooseTerritoryFirst": "Escolha um território primeiro.",
+  "cancel": "Cancelar",
+  "create": "Criar",
+  "send": "Enviar",
+  "delete": "Excluir",
+  "deletePost": "Excluir post",
+  "deletePostConfirm": "Esta ação não pode ser desfeita.",
+  "marketplace": "Marketplace",
+  "chat": "Chat",
+  "alertsTitle": "Alertas",
+  "moderation": "Moderação",
+  "assetsTitle": "Assets",
+  "membership": "Membership",
+  "subscriptions": "Assinaturas",
+  "connections": "Conexões",
+  "add": "Adicionar",
+  "newGroup": "Novo grupo",
+  "newAsset": "Novo asset",
+  "assetName": "Nome",
+  "assetType": "Tipo",
+  "validate": "Validar",
+  "archive": "Arquivar",
+  "approveCurator": "Aprovar (curador)",
+  "rejectCurator": "Rejeitar (curador)",
+  "noAssetsRegistered": "Nenhum asset cadastrado.",
+  "noItemsFound": "Nenhum item encontrado.",
+  "noQueueItems": "Nenhum item nesta fila.",
+  "noAlertsActive": "Nenhum alerta ativo",
+  "reportAlert": "Reportar alerta",
+  "chooseTerritoryForAlerts": "Escolha um território para ver alertas.",
+  "pending": "Pendentes",
+  "connect": "Conectar",
+  "searchPeople": "Buscar pessoas",
+  "statusLabel": "Status: {status}",
+  "@statusLabel": {
+    "placeholders": {
+      "status": {"type": "String"}
+    }
+  },
+  "checkoutWithCount": "Checkout ({count})",
+  "@checkoutWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "myStore": "Minha loja",
+  "itemsTab": "Itens",
+  "availablePlans": "Planos disponíveis",
+  "mySubscription": "Minha assinatura",
+  "subscribe": "Assinar",
+  "cancelSubscription": "Cancelar",
+  "yourRole": "Seu papel",
+  "verificationLabel": "Verificação: {value}",
+  "@verificationLabel": {
+    "placeholders": {
+      "value": {"type": "String"}
+    }
+  },
+  "requestResidency": "Solicitar residência",
+  "verifyByLocation": "Verificar por localização",
+  "channelsTab": "Canais",
+  "groupsTab": "Grupos",
+  "groupName": "Nome do grupo",
+  "openStreetMapAttribution": "OpenStreetMap contributors",
+  "priceLabel": "{currency} {amount}",
+  "@priceLabel": {
+    "placeholders": {
+      "currency": {"type": "String"},
+      "amount": {"type": "String"}
+    }
+  },
+  "storeAndPrice": "{store} · {price}",
+  "@storeAndPrice": {
+    "placeholders": {
+      "store": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+  "conversationMeta": "{kind} · {status}",
+  "@conversationMeta": {
+    "placeholders": {
+      "kind": {"type": "String"},
+      "status": {"type": "String"}
+    }
+  }
 }

@@ -108,5 +108,90 @@
   "back": "Back",
   "accountCreated": "Account created. Welcome!",
   "passwordMinLength": "At least 6 characters",
-  "passwordsDontMatch": "Passwords do not match"
+  "passwordsDontMatch": "Passwords do not match",
+  "chooseTerritoryFirst": "Choose a territory first.",
+  "cancel": "Cancel",
+  "create": "Create",
+  "send": "Send",
+  "delete": "Delete",
+  "deletePost": "Delete post",
+  "deletePostConfirm": "This action cannot be undone.",
+  "marketplace": "Marketplace",
+  "chat": "Chat",
+  "alertsTitle": "Alerts",
+  "moderation": "Moderation",
+  "assetsTitle": "Assets",
+  "membership": "Membership",
+  "subscriptions": "Subscriptions",
+  "connections": "Connections",
+  "add": "Add",
+  "newGroup": "New group",
+  "newAsset": "New asset",
+  "assetName": "Name",
+  "assetType": "Type",
+  "validate": "Validate",
+  "archive": "Archive",
+  "approveCurator": "Approve (curator)",
+  "rejectCurator": "Reject (curator)",
+  "noAssetsRegistered": "No assets registered.",
+  "noItemsFound": "No items found.",
+  "noQueueItems": "No items in this queue.",
+  "noAlertsActive": "No active alerts",
+  "reportAlert": "Report alert",
+  "chooseTerritoryForAlerts": "Choose a territory to see alerts.",
+  "pending": "Pending",
+  "connect": "Connect",
+  "searchPeople": "Search people",
+  "statusLabel": "Status: {status}",
+  "@statusLabel": {
+    "placeholders": {
+      "status": {"type": "String"}
+    }
+  },
+  "checkoutWithCount": "Checkout ({count})",
+  "@checkoutWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "myStore": "My store",
+  "itemsTab": "Items",
+  "availablePlans": "Available plans",
+  "mySubscription": "My subscription",
+  "subscribe": "Subscribe",
+  "cancelSubscription": "Cancel",
+  "yourRole": "Your role",
+  "verificationLabel": "Verification: {value}",
+  "@verificationLabel": {
+    "placeholders": {
+      "value": {"type": "String"}
+    }
+  },
+  "requestResidency": "Request residency",
+  "verifyByLocation": "Verify by location",
+  "channelsTab": "Channels",
+  "groupsTab": "Groups",
+  "groupName": "Group name",
+  "openStreetMapAttribution": "OpenStreetMap contributors",
+  "priceLabel": "{currency} {amount}",
+  "@priceLabel": {
+    "placeholders": {
+      "currency": {"type": "String"},
+      "amount": {"type": "String"}
+    }
+  },
+  "storeAndPrice": "{store} · {price}",
+  "@storeAndPrice": {
+    "placeholders": {
+      "store": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+  "conversationMeta": "{kind} · {status}",
+  "@conversationMeta": {
+    "placeholders": {
+      "kind": {"type": "String"},
+      "status": {"type": "String"}
+    }
+  }
 }

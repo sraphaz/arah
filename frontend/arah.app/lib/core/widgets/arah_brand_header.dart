@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../config/brand_config.dart';
 import '../config/constants.dart';
 import '../theme/app_design_tokens.dart';
 
-/// Cabeçalho de marca com presença visual alinhada ao portal/wiki.
+/// Cabeçalho de marca com logo e wordmark alinhados ao portal/wiki.
 class ArahBrandHeader extends StatelessWidget {
   const ArahBrandHeader({
     super.key,
@@ -16,6 +17,12 @@ class ArahBrandHeader extends StatelessWidget {
   final String? subtitle;
   final ArahBrandHeaderSize size;
   final bool center;
+
+  double get _logoSize => switch (size) {
+        ArahBrandHeaderSize.large => 48,
+        ArahBrandHeaderSize.medium => 40,
+        _ => 32,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -44,18 +51,13 @@ class ArahBrandHeader extends StatelessWidget {
           mainAxisSize: center ? MainAxisSize.min : MainAxisSize.max,
           mainAxisAlignment: center ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
-            Container(
-              width: size == ArahBrandHeaderSize.large ? 48 : 40,
-              height: size == ArahBrandHeaderSize.large ? 48 : 40,
-              decoration: BoxDecoration(
-                color: colors.accentSubtle,
-                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                border: Border.all(color: colors.accentBorder),
-              ),
-              child: Icon(
-                Icons.terrain_outlined,
-                color: colors.primary,
-                size: size == ArahBrandHeaderSize.large ? 28 : 22,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+              child: SvgPicture.asset(
+                'assets/images/arah-icon.svg',
+                width: _logoSize,
+                height: _logoSize,
+                semanticsLabel: BrandConfig.name,
               ),
             ),
             const SizedBox(width: AppConstants.spacingSm + 4),

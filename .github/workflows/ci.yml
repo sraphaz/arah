@@ -70,9 +70,10 @@ jobs:
           flags: unittests
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Security Scan (Trivy)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.36.0
         with:
-          version: 'v0.69.0'
+          # v0.69.0 teve assets removidos no GitHub; usar versão com release disponível.
+          version: 'v0.69.2'
           scan-type: 'fs'
           scan-ref: '.'
           format: 'sarif'
@@ -82,7 +83,7 @@ jobs:
           skip-dirs: '**/bin,**/obj'
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: hashFiles('trivy-results.sarif') != ''
         continue-on-error: true
         with:
           sarif_file: 'trivy-results.sarif'

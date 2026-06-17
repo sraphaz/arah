@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
@@ -27,6 +30,8 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   String _type = 'General';
   String _visibility = 'Public';
   bool _submitting = false;
+  String? _selectedImagePath;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void dispose() {
@@ -45,18 +50,29 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     setState(() => _submitting = true);
     try {
       final repo = ref.read(feedRepositoryProvider);
+      List<String>? mediaIds;
+      if (_selectedImagePath != null) {
+        final mediaRepo = ref.read(mediaRepositoryProvider);
+        final mediaId = await mediaRepo.uploadImage(
+          filePath: _selectedImagePath!,
+          fileName: 'post-image.jpg',
+        );
+        mediaIds = [mediaId];
+      }
       await repo.createPost(
         territoryId: territoryId,
         title: _titleController.text,
         content: _contentController.text,
         type: _type,
         visibility: _visibility,
+        mediaIds: mediaIds,
       );
       ref.invalidate(feedNotifierProvider(territoryId));
       if (!mounted) return;
       _titleController.clear();
       _contentController.clear();
-      showSuccessSnackBar(context, 'Post criado com sucesso.');
+      setState(() => _selectedImagePath = null);
+      showSuccessSnackBar(context, AppLocalizations.of(context)!.postCreated);
       widget.onSuccess?.call();
     } on ApiException catch (e) {
       if (mounted) showErrorSnackBar(context, e.userMessage);
@@ -186,6 +202,24 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                             ],
                             onChanged: (v) => setState(() => _visibility = v ?? 'Public'),
                           ),
+                          const SizedBox(height: AppConstants.spacingLg),
+                          OutlinedButton.icon(
+                            onPressed: _submitting ? null : _pickImage,
+                            icon: const Icon(Icons.image_outlined),
+                            label: Text(_selectedImagePath == null ? 'Adicionar imagem' : 'Trocar imagem'),
+                          ),
+                          if (_selectedImagePath != null) ...[
+                            const SizedBox(height: AppConstants.spacingSm),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                              child: Image.file(
+                                File(_selectedImagePath!),
+                                height: 160,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -194,5 +228,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               ],
             ),
     );
+  }
+
+  Future<void> _pickImage() async {
+    final picked = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    if (picked == null) return;
+    setState(() => _selectedImagePath = picked.path);
   }
 }

@@ -27,7 +27,7 @@ export default function Future() {
               </p>
               <div className="rounded-2xl border border-forest-200/60 bg-forest-50/50 p-6">
                 <p className="font-semibold text-forest-900">
-                  O Araponga não é apenas uma ferramenta.
+                  O Arah não é apenas uma ferramenta.
                 </p>
                 <p className="mt-2">
                   É parte de um movimento maior em direção à <strong className="font-semibold text-forest-900">autonomia comunitária</strong>,{" "}

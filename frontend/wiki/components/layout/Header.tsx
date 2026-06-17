@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { SearchTrigger } from "../search/SearchTrigger";
+import { brand } from "../../../shared/config/brand";
 
 export function Header() {
   return (
@@ -12,7 +13,7 @@ export function Header() {
             <div className="relative w-14 h-14 md:w-16 md:h-16 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <Image
                 src="/wiki/icon.png"
-                alt="Araponga Logo"
+                alt={`${brand.name} Logo`}
                 width={64}
                 height={64}
                 className="object-contain dark:brightness-110 dark:contrast-105"
@@ -23,9 +24,9 @@ export function Header() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-forest-900 dark:text-forest-50 group-hover:text-forest-700 dark:group-hover:text-forest-200 transition-colors leading-tight">
-                Wiki Araponga
+                {brand.wikiTitle}
               </h1>
-              <p className="text-xs text-forest-500 dark:text-forest-400 font-medium tracking-wide">Documentação Completa</p>
+              <p className="text-xs text-forest-500 dark:text-forest-400 font-medium tracking-wide">{brand.tagline}</p>
             </div>
           </Link>
           <nav className="flex items-center space-x-2 lg:space-x-3">
@@ -44,7 +45,7 @@ export function Header() {
                 </svg>
               </Link>
               <a
-                href="https://devportal.araponga.app"
+                href={brand.urls.devportal}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="header-link-icon"
@@ -56,7 +57,7 @@ export function Header() {
                 </svg>
               </a>
               <a
-                href="https://araponga.app"
+                href={brand.urls.site}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="header-link-icon"

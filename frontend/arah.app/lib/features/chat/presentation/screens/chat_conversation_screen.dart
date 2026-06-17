@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../providers/chat_provider.dart';
 
 class ChatConversationScreen extends ConsumerStatefulWidget {
@@ -50,7 +51,7 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
     final state = ref.watch(chatConversationProvider(widget.conversationId));
     final timeFormat = DateFormat('HH:mm');
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(title: Text(widget.title ?? 'Conversa')),
       body: Column(
         children: [

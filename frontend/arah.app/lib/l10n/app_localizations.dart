@@ -745,6 +745,318 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'As senhas não coincidem'**
   String get passwordsDontMatch;
+
+  /// No description provided for @chooseTerritoryFirst.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha um território primeiro.'**
+  String get chooseTerritoryFirst;
+
+  /// No description provided for @cancel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar'**
+  String get cancel;
+
+  /// No description provided for @create.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar'**
+  String get create;
+
+  /// No description provided for @send.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar'**
+  String get send;
+
+  /// No description provided for @delete.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir'**
+  String get delete;
+
+  /// No description provided for @deletePost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir post'**
+  String get deletePost;
+
+  /// No description provided for @deletePostConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta ação não pode ser desfeita.'**
+  String get deletePostConfirm;
+
+  /// No description provided for @marketplace.
+  ///
+  /// In pt, this message translates to:
+  /// **'Marketplace'**
+  String get marketplace;
+
+  /// No description provided for @chat.
+  ///
+  /// In pt, this message translates to:
+  /// **'Chat'**
+  String get chat;
+
+  /// No description provided for @alertsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alertas'**
+  String get alertsTitle;
+
+  /// No description provided for @moderation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Moderação'**
+  String get moderation;
+
+  /// No description provided for @assetsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assets'**
+  String get assetsTitle;
+
+  /// No description provided for @membership.
+  ///
+  /// In pt, this message translates to:
+  /// **'Membership'**
+  String get membership;
+
+  /// No description provided for @subscriptions.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinaturas'**
+  String get subscriptions;
+
+  /// No description provided for @connections.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conexões'**
+  String get connections;
+
+  /// No description provided for @add.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar'**
+  String get add;
+
+  /// No description provided for @newGroup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo grupo'**
+  String get newGroup;
+
+  /// No description provided for @newAsset.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo asset'**
+  String get newAsset;
+
+  /// No description provided for @assetName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get assetName;
+
+  /// No description provided for @assetType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo'**
+  String get assetType;
+
+  /// No description provided for @validate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Validar'**
+  String get validate;
+
+  /// No description provided for @archive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivar'**
+  String get archive;
+
+  /// No description provided for @approveCurator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aprovar (curador)'**
+  String get approveCurator;
+
+  /// No description provided for @rejectCurator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitar (curador)'**
+  String get rejectCurator;
+
+  /// No description provided for @noAssetsRegistered.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum asset cadastrado.'**
+  String get noAssetsRegistered;
+
+  /// No description provided for @noItemsFound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum item encontrado.'**
+  String get noItemsFound;
+
+  /// No description provided for @noQueueItems.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum item nesta fila.'**
+  String get noQueueItems;
+
+  /// No description provided for @noAlertsActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum alerta ativo'**
+  String get noAlertsActive;
+
+  /// No description provided for @reportAlert.
+  ///
+  /// In pt, this message translates to:
+  /// **'Reportar alerta'**
+  String get reportAlert;
+
+  /// No description provided for @chooseTerritoryForAlerts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha um território para ver alertas.'**
+  String get chooseTerritoryForAlerts;
+
+  /// No description provided for @pending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendentes'**
+  String get pending;
+
+  /// No description provided for @connect.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conectar'**
+  String get connect;
+
+  /// No description provided for @searchPeople.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar pessoas'**
+  String get searchPeople;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Status: {status}'**
+  String statusLabel(String status);
+
+  /// No description provided for @checkoutWithCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Checkout ({count})'**
+  String checkoutWithCount(int count);
+
+  /// No description provided for @myStore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Minha loja'**
+  String get myStore;
+
+  /// No description provided for @itemsTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Itens'**
+  String get itemsTab;
+
+  /// No description provided for @availablePlans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Planos disponíveis'**
+  String get availablePlans;
+
+  /// No description provided for @mySubscription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Minha assinatura'**
+  String get mySubscription;
+
+  /// No description provided for @subscribe.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinar'**
+  String get subscribe;
+
+  /// No description provided for @cancelSubscription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar'**
+  String get cancelSubscription;
+
+  /// No description provided for @yourRole.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu papel'**
+  String get yourRole;
+
+  /// No description provided for @verificationLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verificação: {value}'**
+  String verificationLabel(String value);
+
+  /// No description provided for @requestResidency.
+  ///
+  /// In pt, this message translates to:
+  /// **'Solicitar residência'**
+  String get requestResidency;
+
+  /// No description provided for @verifyByLocation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verificar por localização'**
+  String get verifyByLocation;
+
+  /// No description provided for @channelsTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Canais'**
+  String get channelsTab;
+
+  /// No description provided for @groupsTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Grupos'**
+  String get groupsTab;
+
+  /// No description provided for @groupName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do grupo'**
+  String get groupName;
+
+  /// No description provided for @openStreetMapAttribution.
+  ///
+  /// In pt, this message translates to:
+  /// **'OpenStreetMap contributors'**
+  String get openStreetMapAttribution;
+
+  /// No description provided for @priceLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'{currency} {amount}'**
+  String priceLabel(String currency, String amount);
+
+  /// No description provided for @storeAndPrice.
+  ///
+  /// In pt, this message translates to:
+  /// **'{store} · {price}'**
+  String storeAndPrice(String store, String price);
+
+  /// No description provided for @conversationMeta.
+  ///
+  /// In pt, this message translates to:
+  /// **'{kind} · {status}'**
+  String conversationMeta(String kind, String status);
 }
 
 class _AppLocalizationsDelegate

@@ -126,7 +126,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       });
     }
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -378,7 +378,7 @@ class _OnboardingMap extends ConsumerWidget {
           children: [
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.araponga.app',
+              userAgentPackageName: AppConstants.mapUserAgentPackage,
             ),
             // Contorno do território mais próximo (polígono ou círculo)
             detailAsync.when(

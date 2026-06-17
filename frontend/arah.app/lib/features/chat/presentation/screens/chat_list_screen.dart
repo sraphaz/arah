@@ -6,6 +6,8 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/chat_provider.dart';
 
@@ -41,11 +43,12 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
   }
 
   Future<void> _showCreateGroupDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController();
     await showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Novo grupo'),
+        title: Text(l10n.newGroup),
         content: TextField(
           controller: nameController,
           decoration: const InputDecoration(
@@ -54,7 +57,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
           FilledButton(
             onPressed: () async {
               final name = nameController.text.trim();
@@ -77,7 +80,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
                 }
               }
             },
-            child: const Text('Criar'),
+            child: Text(l10n.create),
           ),
         ],
       ),
@@ -86,20 +89,21 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(chatListProvider);
     final notifier = ref.read(chatListProvider.notifier);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Chat')),
-        body: const Center(child: Text('Escolha um território primeiro.')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.chat)),
+        body: Center(child: Text(l10n.chooseTerritoryFirst)),
       );
     }
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Text(l10n.chat),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

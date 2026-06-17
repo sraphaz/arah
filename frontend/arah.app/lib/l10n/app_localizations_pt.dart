@@ -344,4 +344,173 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get passwordsDontMatch => 'As senhas não coincidem';
+
+  @override
+  String get chooseTerritoryFirst => 'Escolha um território primeiro.';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get create => 'Criar';
+
+  @override
+  String get send => 'Enviar';
+
+  @override
+  String get delete => 'Excluir';
+
+  @override
+  String get deletePost => 'Excluir post';
+
+  @override
+  String get deletePostConfirm => 'Esta ação não pode ser desfeita.';
+
+  @override
+  String get marketplace => 'Marketplace';
+
+  @override
+  String get chat => 'Chat';
+
+  @override
+  String get alertsTitle => 'Alertas';
+
+  @override
+  String get moderation => 'Moderação';
+
+  @override
+  String get assetsTitle => 'Assets';
+
+  @override
+  String get membership => 'Membership';
+
+  @override
+  String get subscriptions => 'Assinaturas';
+
+  @override
+  String get connections => 'Conexões';
+
+  @override
+  String get add => 'Adicionar';
+
+  @override
+  String get newGroup => 'Novo grupo';
+
+  @override
+  String get newAsset => 'Novo asset';
+
+  @override
+  String get assetName => 'Nome';
+
+  @override
+  String get assetType => 'Tipo';
+
+  @override
+  String get validate => 'Validar';
+
+  @override
+  String get archive => 'Arquivar';
+
+  @override
+  String get approveCurator => 'Aprovar (curador)';
+
+  @override
+  String get rejectCurator => 'Rejeitar (curador)';
+
+  @override
+  String get noAssetsRegistered => 'Nenhum asset cadastrado.';
+
+  @override
+  String get noItemsFound => 'Nenhum item encontrado.';
+
+  @override
+  String get noQueueItems => 'Nenhum item nesta fila.';
+
+  @override
+  String get noAlertsActive => 'Nenhum alerta ativo';
+
+  @override
+  String get reportAlert => 'Reportar alerta';
+
+  @override
+  String get chooseTerritoryForAlerts =>
+      'Escolha um território para ver alertas.';
+
+  @override
+  String get pending => 'Pendentes';
+
+  @override
+  String get connect => 'Conectar';
+
+  @override
+  String get searchPeople => 'Buscar pessoas';
+
+  @override
+  String statusLabel(String status) {
+    return 'Status: $status';
+  }
+
+  @override
+  String checkoutWithCount(int count) {
+    return 'Checkout ($count)';
+  }
+
+  @override
+  String get myStore => 'Minha loja';
+
+  @override
+  String get itemsTab => 'Itens';
+
+  @override
+  String get availablePlans => 'Planos disponíveis';
+
+  @override
+  String get mySubscription => 'Minha assinatura';
+
+  @override
+  String get subscribe => 'Assinar';
+
+  @override
+  String get cancelSubscription => 'Cancelar';
+
+  @override
+  String get yourRole => 'Seu papel';
+
+  @override
+  String verificationLabel(String value) {
+    return 'Verificação: $value';
+  }
+
+  @override
+  String get requestResidency => 'Solicitar residência';
+
+  @override
+  String get verifyByLocation => 'Verificar por localização';
+
+  @override
+  String get channelsTab => 'Canais';
+
+  @override
+  String get groupsTab => 'Grupos';
+
+  @override
+  String get groupName => 'Nome do grupo';
+
+  @override
+  String get openStreetMapAttribution => 'OpenStreetMap contributors';
+
+  @override
+  String priceLabel(String currency, String amount) {
+    return '$currency $amount';
+  }
+
+  @override
+  String storeAndPrice(String store, String price) {
+    return '$store · $price';
+  }
+
+  @override
+  String conversationMeta(String kind, String status) {
+    return '$kind · $status';
+  }
 }

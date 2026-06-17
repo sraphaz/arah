@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/connection_item.dart';
 import '../../data/models/connection_user.dart';
 import '../providers/connections_provider.dart';
@@ -14,15 +16,16 @@ class ConnectionsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(connectionsProvider);
     final notifier = ref.read(connectionsProvider.notifier);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Conexões')),
+    return ArahScaffold(
+      appBar: AppBar(title: Text(l10n.connections)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openSearchSheet(context, ref),
         icon: const Icon(Icons.person_add_outlined),
-        label: const Text('Adicionar'),
+        label: Text(l10n.add),
       ),
       body: RefreshIndicator(
         onRefresh: () => notifier.refresh(),
@@ -58,6 +61,7 @@ class ConnectionsScreen extends ConsumerWidget {
   }
 
   Widget _buildBody(BuildContext context, ConnectionsState state, ConnectionsNotifier notifier) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.accepted.isEmpty && state.pending.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -78,7 +82,7 @@ class ConnectionsScreen extends ConsumerWidget {
               children: [
                 Text(message, textAlign: TextAlign.center),
                 const SizedBox(height: AppConstants.spacingMd),
-                FilledButton.tonal(onPressed: () => notifier.refresh(), child: const Text('Tentar novamente')),
+                FilledButton.tonal(onPressed: () => notifier.refresh(), child: Text(l10n.tryAgain)),
               ],
             ),
           ),
@@ -96,12 +100,12 @@ class ConnectionsScreen extends ConsumerWidget {
       ),
       children: [
         if (state.pending.isNotEmpty) ...[
-          Text('Pendentes', style: Theme.of(context).textTheme.titleMedium),
+          Text(l10n.pending, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppConstants.spacingSm),
           ...state.pending.map((item) => _ConnectionTile(item: item, notifier: notifier, isPending: true)),
           const SizedBox(height: AppConstants.spacingLg),
         ],
-        Text('Conexões', style: Theme.of(context).textTheme.titleMedium),
+        Text(l10n.connections, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: AppConstants.spacingSm),
         if (state.accepted.isEmpty)
           Padding(
@@ -192,6 +196,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.85,
@@ -202,7 +207,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Buscar pessoas', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.searchPeople, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: AppConstants.spacingMd),
             TextField(
               controller: _queryController,
@@ -255,7 +260,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
                           title: Text(user.displayName),
                           trailing: FilledButton.tonal(
                             onPressed: () => widget.onRequest(user.id),
-                            child: const Text('Conectar'),
+                            child: Text(l10n.connect),
                           ),
                         );
                       },
@@ -281,12 +286,13 @@ class _ConnectionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
       child: ListTile(
         leading: CircleAvatar(child: Text(item.isIncoming ? '←' : '→')),
         title: Text(isPending ? 'Solicitação ${item.isIncoming ? 'recebida' : 'enviada'}' : 'Conexão ativa'),
-        subtitle: Text('Status: ${item.status}'),
+        subtitle: Text(l10n.statusLabel(item.status)),
         trailing: isPending && item.isIncoming
             ? Row(
                 mainAxisSize: MainAxisSize.min,

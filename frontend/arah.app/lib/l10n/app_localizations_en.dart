@@ -342,4 +342,172 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordsDontMatch => 'Passwords do not match';
+
+  @override
+  String get chooseTerritoryFirst => 'Choose a territory first.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get deletePost => 'Delete post';
+
+  @override
+  String get deletePostConfirm => 'This action cannot be undone.';
+
+  @override
+  String get marketplace => 'Marketplace';
+
+  @override
+  String get chat => 'Chat';
+
+  @override
+  String get alertsTitle => 'Alerts';
+
+  @override
+  String get moderation => 'Moderation';
+
+  @override
+  String get assetsTitle => 'Assets';
+
+  @override
+  String get membership => 'Membership';
+
+  @override
+  String get subscriptions => 'Subscriptions';
+
+  @override
+  String get connections => 'Connections';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get newGroup => 'New group';
+
+  @override
+  String get newAsset => 'New asset';
+
+  @override
+  String get assetName => 'Name';
+
+  @override
+  String get assetType => 'Type';
+
+  @override
+  String get validate => 'Validate';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get approveCurator => 'Approve (curator)';
+
+  @override
+  String get rejectCurator => 'Reject (curator)';
+
+  @override
+  String get noAssetsRegistered => 'No assets registered.';
+
+  @override
+  String get noItemsFound => 'No items found.';
+
+  @override
+  String get noQueueItems => 'No items in this queue.';
+
+  @override
+  String get noAlertsActive => 'No active alerts';
+
+  @override
+  String get reportAlert => 'Report alert';
+
+  @override
+  String get chooseTerritoryForAlerts => 'Choose a territory to see alerts.';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get connect => 'Connect';
+
+  @override
+  String get searchPeople => 'Search people';
+
+  @override
+  String statusLabel(String status) {
+    return 'Status: $status';
+  }
+
+  @override
+  String checkoutWithCount(int count) {
+    return 'Checkout ($count)';
+  }
+
+  @override
+  String get myStore => 'My store';
+
+  @override
+  String get itemsTab => 'Items';
+
+  @override
+  String get availablePlans => 'Available plans';
+
+  @override
+  String get mySubscription => 'My subscription';
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get cancelSubscription => 'Cancel';
+
+  @override
+  String get yourRole => 'Your role';
+
+  @override
+  String verificationLabel(String value) {
+    return 'Verification: $value';
+  }
+
+  @override
+  String get requestResidency => 'Request residency';
+
+  @override
+  String get verifyByLocation => 'Verify by location';
+
+  @override
+  String get channelsTab => 'Channels';
+
+  @override
+  String get groupsTab => 'Groups';
+
+  @override
+  String get groupName => 'Group name';
+
+  @override
+  String get openStreetMapAttribution => 'OpenStreetMap contributors';
+
+  @override
+  String priceLabel(String currency, String amount) {
+    return '$currency $amount';
+  }
+
+  @override
+  String storeAndPrice(String store, String price) {
+    return '$store · $price';
+  }
+
+  @override
+  String conversationMeta(String kind, String status) {
+    return '$kind · $status';
+  }
 }

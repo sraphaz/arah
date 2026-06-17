@@ -5,6 +5,8 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/marketplace_provider.dart';
 
@@ -44,20 +46,21 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(marketplaceProvider);
     final notifier = ref.read(marketplaceProvider.notifier);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Marketplace')),
-        body: const Center(child: Text('Escolha um território primeiro.')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.marketplace)),
+        body: Center(child: Text(l10n.chooseTerritoryFirst)),
       );
     }
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: const Text('Marketplace'),
+        title: Text(l10n.marketplace),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -82,7 +85,7 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen>
                 }
               },
               icon: const Icon(Icons.shopping_cart_checkout),
-              label: Text('Checkout (${_cartItemCount(state.cart)})'),
+              label: Text(l10n.checkoutWithCount(_cartItemCount(state.cart))),
             ),
         ],
       ),
@@ -145,6 +148,7 @@ class _SearchTab extends StatelessWidget {
   }
 
   Widget _buildList(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -158,7 +162,7 @@ class _SearchTab extends StatelessWidget {
       );
     }
     if (state.items.isEmpty) {
-      return const Center(child: Text('Nenhum item encontrado.'));
+      return Center(child: Text(l10n.noItemsFound));
     }
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
@@ -234,6 +238,7 @@ class _MyStoreTabState extends State<_MyStoreTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (widget.state.isStoreLoading && widget.state.myStore == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -246,7 +251,7 @@ class _MyStoreTabState extends State<_MyStoreTab> {
             child: ListTile(
               leading: const Icon(Icons.storefront_outlined),
               title: Text(widget.state.myStore!.displayName),
-              subtitle: Text('Status: ${widget.state.myStore!.status}'),
+              subtitle: Text(l10n.statusLabel(widget.state.myStore!.status)),
             ),
           ),
         const SizedBox(height: AppConstants.spacingMd),

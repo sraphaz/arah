@@ -5,6 +5,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../../territories/presentation/widgets/territory_selector.dart';
@@ -33,6 +34,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final feedState = ref.watch(feedNotifierProvider(territoryId));
     final notifier = ref.read(feedNotifierProvider(territoryId).notifier);
@@ -40,8 +42,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final filterType = ref.watch(filterFeedTypeProvider);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Início')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.home)),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -60,16 +62,16 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       );
     }
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.home),
+        title: Text(l10n.home),
         actions: [
           IconButton(
             icon: Icon(
               filterByInterests ? Icons.filter_list : Icons.filter_list_off,
               color: filterByInterests ? Theme.of(context).colorScheme.primary : null,
             ),
-            tooltip: AppLocalizations.of(context)!.filterByInterests,
+            tooltip: l10n.filterByInterests,
             onPressed: () {
               ref.read(filterFeedByInterestsProvider.notifier).state = !filterByInterests;
               ref.invalidate(feedNotifierProvider(territoryId));
@@ -226,14 +228,15 @@ class _FeedListState extends ConsumerState<_FeedList> {
   }
 
   Future<void> _confirmDelete(String postId) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Excluir post'),
-        content: const Text('Esta ação não pode ser desfeita.'),
+        title: Text(l10n.deletePost),
+        content: Text(l10n.deletePostConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Excluir')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.delete)),
         ],
       ),
     );
@@ -242,6 +245,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
   }
 
   void _showPostMenu({required String postId, required bool canDelete}) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
@@ -251,7 +255,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
             if (canDelete)
               ListTile(
                 leading: Icon(Icons.delete_outline, color: Theme.of(ctx).colorScheme.error),
-                title: const Text('Excluir post'),
+                title: Text(l10n.deletePost),
                 onTap: () {
                   Navigator.pop(ctx);
                   _confirmDelete(postId);

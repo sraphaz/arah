@@ -6,6 +6,8 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../data/models/work_item.dart';
 import '../providers/moderation_provider.dart';
@@ -42,21 +44,22 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(moderationProvider);
     final notifier = ref.read(moderationProvider.notifier);
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Moderação')),
-        body: const Center(child: Text('Escolha um território primeiro.')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.moderation)),
+        body: Center(child: Text(l10n.chooseTerritoryFirst)),
       );
     }
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: const Text('Moderação'),
+        title: Text(l10n.moderation),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -86,6 +89,7 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     DateFormat dateFormat,
     ModerationNotifier notifier,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -111,7 +115,7 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     if (state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: Text('Nenhum item nesta fila.')))],
+        children: [SizedBox(height: 200, child: Center(child: Text(l10n.noQueueItems)))],
       );
     }
     return ListView.builder(

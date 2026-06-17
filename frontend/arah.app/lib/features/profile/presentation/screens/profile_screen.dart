@@ -20,12 +20,13 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authStateProvider);
     final session = auth.valueOrNull;
 
     if (session == null) {
       return ArahScaffold(
-        appBar: AppBar(title: Text(AppLocalizations.of(context)!.profile)),
+        appBar: AppBar(title: Text(l10n.profile)),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(AppConstants.spacingLg),
@@ -33,13 +34,13 @@ class ProfileScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ArahBrandHeader(
-                  subtitle: 'Entre na sua conta para acessar perfil, publicar e notificações.',
+                  subtitle: l10n.enterToAccess,
                   size: ArahBrandHeaderSize.medium,
                 ),
                 const SizedBox(height: AppConstants.spacingLg),
                 FilledButton(
                   onPressed: () => context.push('/login'),
-                  child: Text(AppLocalizations.of(context)!.login),
+                  child: Text(l10n.login),
                 ),
               ],
             ),
@@ -51,9 +52,9 @@ class ProfileScreen extends ConsumerWidget {
     final profileAsync = ref.watch(meProfileProvider);
     final authUser = session.user;
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.profile),
+        title: Text(l10n.profile),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -104,14 +105,14 @@ class ProfileScreen extends ConsumerWidget {
                 Icon(Icons.error_outline, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: AppConstants.spacingMd),
                 Text(
-                  err is ApiException ? err.userMessage : AppLocalizations.of(context)!.errorLoad,
+                  err is ApiException ? err.userMessage : l10n.errorLoad,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 FilledButton.tonal(
                   onPressed: () => ref.invalidate(meProfileProvider),
-                  child: Text(AppLocalizations.of(context)!.tryAgain),
+                  child: Text(l10n.tryAgain),
                 ),
               ],
             ),
@@ -122,6 +123,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   void _showSettingsSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -133,7 +135,7 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.people_outline),
-              title: const Text('Conexões'),
+              title: Text(l10n.connections),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/connections');
@@ -141,7 +143,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.home_work_outlined),
-              title: const Text('Membership'),
+              title: Text(l10n.membership),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/membership');
@@ -149,7 +151,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.storefront_outlined),
-              title: const Text('Marketplace'),
+              title: Text(l10n.marketplace),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/marketplace');
@@ -157,7 +159,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.chat_outlined),
-              title: const Text('Chat'),
+              title: Text(l10n.chat),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/chat');
@@ -165,7 +167,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.warning_amber_outlined),
-              title: const Text('Alertas'),
+              title: Text(l10n.alertsTitle),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/alerts');
@@ -173,7 +175,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.gavel_outlined),
-              title: const Text('Moderação'),
+              title: Text(l10n.moderation),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/moderation');
@@ -181,7 +183,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.inventory_2_outlined),
-              title: const Text('Assets'),
+              title: Text(l10n.assetsTitle),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/assets');
@@ -189,7 +191,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.card_membership_outlined),
-              title: const Text('Assinaturas'),
+              title: Text(l10n.subscriptions),
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/subscriptions');

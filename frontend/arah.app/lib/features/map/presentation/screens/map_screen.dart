@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/theme/app_design_tokens.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/geo/geo_location_provider.dart';
 import '../../../territories/data/repositories/territories_repository.dart';
@@ -35,6 +36,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Sempre priorizar o território atualmente selecionado para que a alternância no Explorar
     // reflita no mapa e apenas um contorno seja exibido por vez.
     final territoryId = ref.watch(selectedTerritoryIdValueProvider) ?? widget.territoryId;
@@ -47,9 +49,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final initialCenter = _initialCenter(geo, pinsAsync.valueOrNull, territoryDetail);
     final initialZoom = _initialZoom(geo, pinsAsync.valueOrNull);
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.map),
+        title: Text(l10n.map),
         actions: [
           if (geo != null)
             IconButton(
@@ -77,7 +79,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ),
                     const SizedBox(height: AppConstants.spacingMd),
                     Text(
-                      AppLocalizations.of(context)!.chooseTerritory,
+                      l10n.chooseTerritory,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
@@ -97,7 +99,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.araponga.app',
+                  userAgentPackageName: AppConstants.mapUserAgentPackage,
                 ),
                 if (geo != null)
                   MarkerLayer(
@@ -131,8 +133,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
-                const SimpleAttributionWidget(
-                  source: Text('OpenStreetMap contributors'),
+                SimpleAttributionWidget(
+                  source: Text(l10n.openStreetMapAttribution),
                 ),
               ],
             ),

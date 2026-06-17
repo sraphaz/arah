@@ -8,6 +8,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/feed_provider.dart';
@@ -88,7 +89,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final hasTerritory = territoryId != null && territoryId.isNotEmpty;
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.createPost),
         actions: [

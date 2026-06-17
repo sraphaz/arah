@@ -6,6 +6,8 @@ import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/membership_provider.dart';
 
@@ -14,19 +16,20 @@ class MembershipScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(membershipProvider);
     final notifier = ref.read(membershipProvider.notifier);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Membership')),
-        body: const Center(child: Text('Escolha um território primeiro.')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.membership)),
+        body: Center(child: Text(l10n.chooseTerritoryFirst)),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Membership')),
+    return ArahScaffold(
+      appBar: AppBar(title: Text(l10n.membership)),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -48,6 +51,7 @@ class MembershipScreen extends ConsumerWidget {
     MembershipState state,
     MembershipNotifier notifier,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.membership == null && state.error == null) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -68,7 +72,7 @@ class MembershipScreen extends ConsumerWidget {
               children: [
                 Text(msg, textAlign: TextAlign.center),
                 const SizedBox(height: AppConstants.spacingMd),
-                FilledButton.tonal(onPressed: () => notifier.refresh(), child: const Text('Tentar novamente')),
+                FilledButton.tonal(onPressed: () => notifier.refresh(), child: Text(l10n.tryAgain)),
               ],
             ),
           ),
@@ -90,12 +94,12 @@ class MembershipScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Seu papel', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.yourRole, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: AppConstants.spacingSm),
                 Text(role, style: Theme.of(context).textTheme.headlineSmall),
                 if (membership?.residencyVerification != null) ...[
                   const SizedBox(height: AppConstants.spacingSm),
-                  Text('Verificação: ${membership!.residencyVerification}'),
+                  Text(l10n.verificationLabel(membership!.residencyVerification!)),
                 ],
               ],
             ),
@@ -118,7 +122,7 @@ class MembershipScreen extends ConsumerWidget {
               }
             },
             icon: const Icon(Icons.home_work_outlined),
-            label: const Text('Solicitar residência'),
+            label: Text(l10n.requestResidency),
           ),
           const SizedBox(height: AppConstants.spacingMd),
           OutlinedButton.icon(
@@ -141,7 +145,7 @@ class MembershipScreen extends ConsumerWidget {
               }
             },
             icon: const Icon(Icons.location_on_outlined),
-            label: const Text('Verificar por localização'),
+            label: Text(l10n.verifyByLocation),
           ),
         ] else
           Text(

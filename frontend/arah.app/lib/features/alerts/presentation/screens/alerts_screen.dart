@@ -6,6 +6,8 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/alerts_provider.dart';
 
@@ -20,19 +22,20 @@ class AlertsScreen extends ConsumerStatefulWidget {
 class _AlertsScreenState extends ConsumerState<AlertsScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(alertsProvider);
     final notifier = ref.read(alertsProvider.notifier);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Alertas')),
-        body: const Center(child: Text('Escolha um território para ver alertas.')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.alertsTitle)),
+        body: Center(child: Text(l10n.chooseTerritoryForAlerts)),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Alertas')),
+    return ArahScaffold(
+      appBar: AppBar(title: Text(l10n.alertsTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateDialog(context),
         child: const Icon(Icons.add),
@@ -53,12 +56,13 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
   }
 
   Future<void> _showCreateDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final titleController = TextEditingController();
     final descController = TextEditingController();
     await showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Reportar alerta'),
+        title: Text(l10n.reportAlert),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -74,7 +78,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
           FilledButton(
             onPressed: () async {
               try {
@@ -95,7 +99,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                 }
               }
             },
-            child: const Text('Enviar'),
+            child: Text(l10n.send),
           ),
         ],
       ),
@@ -103,6 +107,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
   }
 
   Widget _buildBody(BuildContext context, AlertsState state, AlertsNotifier notifier) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -133,7 +138,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                       ),
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
-                FilledButton.tonal(onPressed: () => notifier.refresh(), child: const Text('Tentar novamente')),
+                FilledButton.tonal(onPressed: () => notifier.refresh(), child: Text(l10n.tryAgain)),
               ],
             ),
           ),
@@ -157,7 +162,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                     color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
                   ),
                   const SizedBox(height: AppConstants.spacingMd),
-                  Text('Nenhum alerta ativo', style: Theme.of(context).textTheme.titleMedium),
+                  Text(l10n.noAlertsActive, style: Theme.of(context).textTheme.titleMedium),
                 ],
               ),
             ),

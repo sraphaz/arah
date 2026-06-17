@@ -61,7 +61,7 @@ export default function Roadmap() {
                 Roadmap: evolução em três fases
               </h2>
               <p className="text-base leading-relaxed text-forest-800 md:text-lg">
-                O Araponga evolui de forma incremental, priorizando solidez antes de escala.
+                O Arah evolui de forma incremental, priorizando solidez antes de escala.
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-3">

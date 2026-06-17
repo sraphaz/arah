@@ -7,21 +7,21 @@ interface InfoBoxProps {
 }
 
 export function InfoBox({ type = "info", title, children }: InfoBoxProps) {
-  // Harmonizado com paleta Araponga (Dev Portal)
+  // Harmonizado com paleta Arah (tokens dark-accent / dark-link)
   const config = {
     info: {
       icon: "ℹ️",
-      bg: "bg-[#7dd3ff]/10 dark:bg-[#7dd3ff]/15",
-      border: "border-[#7dd3ff]/50 dark:border-[#7dd3ff]/60",
-      text: "text-forest-900 dark:text-[#e8edf2]",
-      titleColor: "text-forest-800 dark:text-[#7dd3ff]",
+      bg: "bg-link/10 dark:bg-dark-link/15",
+      border: "border-link/50 dark:border-dark-link/60",
+      text: "text-forest-900 dark:text-dark-text",
+      titleColor: "text-forest-800 dark:text-dark-link",
     },
     success: {
       icon: "✅",
-      bg: "bg-[#4dd4a8]/10 dark:bg-[#4dd4a8]/15",
-      border: "border-[#4dd4a8]/50 dark:border-[#4dd4a8]/60",
-      text: "text-forest-900 dark:text-[#e8edf2]",
-      titleColor: "text-forest-800 dark:text-[#4dd4a8]",
+      bg: "bg-accent/10 dark:bg-dark-accent/15",
+      border: "border-accent/50 dark:border-dark-accent/60",
+      text: "text-forest-900 dark:text-dark-text",
+      titleColor: "text-forest-800 dark:text-dark-accent",
     },
     warning: {
       icon: "⚠️",

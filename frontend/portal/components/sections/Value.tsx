@@ -36,7 +36,7 @@ export default function Value() {
                 Valor gerado para comunidades e parceiros
               </h2>
               <p className="text-base leading-relaxed text-forest-800 md:text-lg">
-                O Araponga gera valor real para comunidades locais através de funcionalidades
+                O Arah gera valor real para comunidades locais através de funcionalidades
                 pensadas para fortalecer laços territoriais e organizações comunitárias.
               </p>
             </div>

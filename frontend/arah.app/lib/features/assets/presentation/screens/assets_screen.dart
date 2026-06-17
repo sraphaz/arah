@@ -37,7 +37,7 @@ class AssetsScreen extends ConsumerWidget {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () => notifier.refresh(),
-              child: _buildBody(context, state),
+              child: _buildBody(context, ref, state),
             ),
           ),
         ],
@@ -88,7 +88,7 @@ class AssetsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, AssetsState state) {
+  Widget _buildBody(BuildContext context, WidgetRef ref, AssetsState state) {
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),

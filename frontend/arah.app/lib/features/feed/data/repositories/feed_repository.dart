@@ -1,14 +1,15 @@
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
+import '../../domain/feed_interaction.dart';
+import '../../domain/feed_comment.dart';
 
-/// Repositório da jornada de feed (territory-feed, create-post).
+/// Repositório da jornada de feed (territory-feed, create-post, interact).
 class FeedRepository {
   FeedRepository({required this.client});
 
   final BffClient client;
 
   /// POST feed/create-post?territoryId=... com body título, conteúdo, tipo, visibilidade.
-  /// [type] ex: "General", "Alert". [visibility] ex: "Public", "ResidentsOnly".
   Future<Map<String, dynamic>> createPost({
     required String territoryId,
     required String title,
@@ -16,6 +17,7 @@ class FeedRepository {
     String type = 'General',
     String visibility = 'Public',
     List<String>? tags,
+    List<String>? mediaIds,
   }) async {
     if (territoryId.isEmpty) throw ArgumentError('territoryId is required');
     if (title.trim().isEmpty) throw ArgumentError('title is required');
@@ -30,7 +32,7 @@ class FeedRepository {
       'territoryId': territoryId,
       'tags': tags,
       'mapEntityId': null,
-      'mediaIds': null,
+      'mediaIds': mediaIds,
     };
 
     final response = await client.post('feed', path, body: body);
@@ -44,5 +46,78 @@ class FeedRepository {
     final data = response.data as Map<String, dynamic>?;
     if (data == null) throw ApiException('Resposta inválida');
     return data;
+  }
+
+  /// POST feed/interact — like, comment ou share.
+  Future<Map<String, dynamic>> interactPost({
+    required String postId,
+    required String territoryId,
+    required FeedInteractionAction action,
+    String? commentContent,
+  }) async {
+    if (postId.isEmpty) throw ArgumentError('postId is required');
+    if (territoryId.isEmpty) throw ArgumentError('territoryId is required');
+
+    final body = <String, dynamic>{
+      'postId': postId,
+      'territoryId': territoryId,
+      'action': action.apiValue,
+      if (commentContent != null && commentContent.trim().isNotEmpty)
+        'commentContent': commentContent.trim(),
+    };
+
+    final response = await client.post('feed', 'interact', body: body);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(
+        'HTTP ${response.statusCode}',
+        statusCode: response.statusCode,
+        body: response.data?.toString(),
+      );
+    }
+    final data = response.data as Map<String, dynamic>?;
+    if (data == null) throw ApiException('Resposta inválida');
+    return data;
+  }
+
+  /// GET feed/post-comments — lista comentários paginados de um post.
+  Future<FeedCommentsPage> getPostComments({
+    required String postId,
+    required String territoryId,
+    int pageNumber = 1,
+    int pageSize = 20,
+  }) async {
+    if (postId.isEmpty) throw ArgumentError('postId is required');
+    if (territoryId.isEmpty) throw ArgumentError('territoryId is required');
+
+    final path =
+        'post-comments?postId=$postId&territoryId=$territoryId&pageNumber=$pageNumber&pageSize=$pageSize';
+    final response = await client.get('feed', path);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(
+        'HTTP ${response.statusCode}',
+        statusCode: response.statusCode,
+        body: response.data?.toString(),
+      );
+    }
+    return FeedCommentsPage.fromJson(response.data as Map<String, dynamic>?);
+  }
+
+  /// DELETE feed/delete-post — exclui post do autor autenticado.
+  Future<void> deletePost({
+    required String postId,
+    required String territoryId,
+  }) async {
+    if (postId.isEmpty) throw ArgumentError('postId is required');
+    if (territoryId.isEmpty) throw ArgumentError('territoryId is required');
+
+    final path = 'delete-post?postId=$postId&territoryId=$territoryId';
+    final response = await client.delete('feed', path);
+    if (response.statusCode != 204 && (response.statusCode < 200 || response.statusCode >= 300)) {
+      throw ApiException(
+        'HTTP ${response.statusCode}',
+        statusCode: response.statusCode,
+        body: response.data?.toString(),
+      );
+    }
   }
 }

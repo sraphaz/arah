@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { SocialIcon } from "../ui/SocialIcon";
+import { brand } from "../../../shared/config/brand";
 
 export function Footer() {
   return (
@@ -7,19 +8,19 @@ export function Footer() {
       <div className="container-max py-16">
         <div className="text-center space-y-6">
           <p className="text-forest-800 dark:text-forest-200 text-lg md:text-xl font-medium leading-relaxed max-w-3xl mx-auto">
-            Wiki Araponga — Documentação completa da plataforma digital comunitária
+            {brand.wikiTitle} — Documentação completa da plataforma digital comunitária
             orientada ao território
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
             <a
-              href="https://araponga.app"
+              href={brand.urls.site}
               target="_blank"
               rel="noopener noreferrer"
               className="footer-link flex items-center gap-2 transition-transform hover:scale-105"
             >
               <Image
                 src="/wiki/icon.png"
-                alt="Araponga"
+                alt={brand.name}
                 width={20}
                 height={20}
                 className="opacity-90 hover:opacity-100 transition-opacity"
@@ -28,7 +29,7 @@ export function Footer() {
             </a>
             <span className="text-forest-400 dark:text-forest-600">•</span>
             <a
-              href="https://github.com/sraphaz/araponga"
+              href={brand.urls.github}
               target="_blank"
               rel="noopener noreferrer"
               className="footer-link flex items-center gap-2 transition-transform hover:scale-105"
@@ -38,7 +39,7 @@ export function Footer() {
             </a>
             <span className="text-forest-400 dark:text-forest-600">•</span>
             <a
-              href="https://discord.gg/auwqN8Yjgw"
+              href={brand.urls.discord}
               target="_blank"
               rel="noopener noreferrer"
               className="footer-link flex items-center gap-2 transition-transform hover:scale-105"

@@ -67,7 +67,7 @@
 
   <Target Name="SyncDocsForGitHubPages" AfterTargets="Build">
     <PropertyGroup>
-      <DocsOutputDir>$(MSBuildProjectDirectory)\..\..\..\docs</DocsOutputDir>
+      <DocsOutputDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../../docs'))</DocsOutputDir>
     </PropertyGroup>
     <Message Text="Syncing GitHub Pages assets to $(DocsOutputDir)" Importance="high" />
     <Copy SourceFiles="@(DocsSyncFiles)" DestinationFolder="$(DocsOutputDir)" SkipUnchangedFiles="true" />

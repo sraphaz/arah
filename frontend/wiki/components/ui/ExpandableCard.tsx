@@ -15,14 +15,14 @@ export function ExpandableCard({ title, summary, children, icon, color = "forest
 
   const colorClasses = {
     forest: "border-forest-300 dark:border-forest-700 bg-forest-50 dark:bg-forest-900/50",
-    accent: "border-[#4dd4a8]/30 dark:border-[#4dd4a8]/50 bg-[#4dd4a8]/5 dark:bg-[#4dd4a8]/10",
-    link: "border-[#7dd3ff]/30 dark:border-[#7dd3ff]/50 bg-[#7dd3ff]/5 dark:bg-[#7dd3ff]/10",
+    accent: "border-accent/30 dark:border-dark-accent/50 bg-accent/5 dark:bg-dark-accent/10",
+    link: "border-link/30 dark:border-dark-link/50 bg-link/5 dark:bg-dark-link/10",
   };
 
   const iconColorClasses = {
     forest: "text-forest-600 dark:text-forest-400",
-    accent: "text-[#4dd4a8] dark:text-[#5ee5b9]",
-    link: "text-[#7dd3ff] dark:text-[#9de3ff]",
+    accent: "text-accent dark:text-dark-accent-hover",
+    link: "text-link dark:text-dark-link-hover",
   };
 
   return (

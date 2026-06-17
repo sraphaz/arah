@@ -1,8 +1,8 @@
 /**
- * Design Tokens - Araponga
+ * Design Tokens - Arah
  *
  * Sistema unificado de design tokens baseado em:
- * - Valores da Araponga (território, transparência, sobriedade)
+ * - Valores da Arah (território, transparência, sobriedade)
  * - Material Design 3
  * - Apple Human Interface Guidelines
  * - WCAG 2.1 (Acessibilidade)
@@ -13,7 +13,7 @@
 
 :root {
   /* ============================================
-     COLOR SYSTEM - Paleta Baseada em Valores da Araponga
+     COLOR SYSTEM - Paleta Baseada em Valores da Arah
      ============================================ */
 
   /* Primary - Verde (Natureza, Território, Crescimento) */
@@ -159,7 +159,68 @@
   --transition-base:   200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow:   300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-quick:  250ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-default: all var(--transition-base);
+  --duration-slow: 300ms;
+  --duration-base: 200ms;
+  --duration-watermark: 2s;
+  --duration-ripple: 0.6s;
+
+  /* ============================================
+     SEMANTIC INTERACTION TOKENS - Wiki + DevPortal
+     ============================================ */
+
+  --accent-subtle: rgba(77, 212, 168, 0.15);
+  --accent-bg-hover: rgba(77, 212, 168, 0.1);
+  --accent-bg-active: rgba(77, 212, 168, 0.15);
+  --accent-bg-muted: rgba(77, 212, 168, 0.08);
+  --accent-bg-strong: rgba(77, 212, 168, 0.2);
+  --accent-border-soft: rgba(77, 212, 168, 0.25);
+  --accent-border-medium: rgba(77, 212, 168, 0.4);
+  --accent-border-strong: rgba(77, 212, 168, 0.6);
+  --accent-text-soft: rgba(77, 212, 168, 0.8);
+  --surface-elevated: rgba(20, 26, 33, 0.8);
+  --surface-elevated-strong: rgba(20, 26, 33, 0.95);
+  --surface-muted: rgba(20, 26, 33, 0.6);
+  --surface-overlay: rgba(10, 14, 18, 0.65);
+  --surface-overlay-strong: rgba(10, 14, 18, 0.85);
+  --sidebar-surface: rgba(10, 14, 18, 0.85);
+  --text-on-accent: #0a0e12;
+  --scrollbar-thumb: rgba(198, 227, 210, 0.3);
+  --scrollbar-thumb-hover: rgba(198, 227, 210, 0.5);
+  --scrollbar-thumb-dark: rgba(100, 150, 180, 0.3);
+  --scrollbar-thumb-dark-hover: rgba(100, 150, 180, 0.5);
+  --border-sidebar-subtle: rgba(77, 212, 168, 0.08);
+  --shadow-sidebar-subtle: rgba(77, 212, 168, 0.04);
+  --border-sidebar-dark: rgba(100, 150, 180, 0.12);
+  --shadow-sidebar-dark: rgba(100, 150, 180, 0.06);
+  --overlay-scrim: rgba(0, 0, 0, 0.5);
+  --overlay-shadow: rgba(0, 0, 0, 0.2);
+  --ripple-bg: rgba(255, 255, 255, 0.2);
+  --info-bg-subtle: rgba(125, 211, 255, 0.2);
+  --warning-bg-subtle: rgba(245, 200, 66, 0.12);
+  --warning-border-subtle: rgba(245, 200, 66, 0.3);
+  --warning-text-soft: #f5d98c;
+  --error-bg-subtle: rgba(242, 109, 109, 0.2);
+  --link-underline-subtle: rgba(125, 211, 255, 0.3);
+  --tag-bg-light: rgba(198, 227, 210, 0.4);
+  --tag-bg-dark: rgba(37, 48, 58, 0.6);
+  --border-divider-light: rgba(198, 227, 210, 0.1);
+  --border-divider-dark: rgba(100, 150, 180, 0.1);
+  --border-divider-light-strong: rgba(198, 227, 210, 0.2);
+  --border-divider-dark-strong: rgba(100, 150, 180, 0.2);
+  --border-divider-light-medium: rgba(198, 227, 210, 0.3);
+  --border-divider-dark-medium: rgba(100, 150, 180, 0.5);
+  --bg-gradient-accent: radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
+
+  /* Elevation - Material Design (Wiki + DevPortal) */
+  --elevation-0: none;
+  --elevation-1: 0 1px 2px rgba(23, 53, 37, 0.05);
+  --elevation-2: 0 2px 8px rgba(23, 53, 37, 0.08);
+  --elevation-3: 0 4px 16px rgba(23, 53, 37, 0.12);
+  --elevation-4: 0 8px 32px rgba(23, 53, 37, 0.16);
+  --shadow-glow: 0 0 24px rgba(77, 212, 168, 0.15);
 
   /* ============================================
      GRID SYSTEM
@@ -199,4 +260,10 @@
   --shadow-dark-sm:   0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
   --shadow-dark-md:   0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
   --shadow-dark-lg:   0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.6);
+
+  /* Elevation - Dark Mode */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --elevation-2: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --elevation-3: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --elevation-4: 0 8px 32px rgba(0, 0, 0, 0.45);
 }

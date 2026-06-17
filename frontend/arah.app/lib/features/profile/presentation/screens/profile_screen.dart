@@ -141,6 +141,70 @@ class ProfileScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              leading: const Icon(Icons.people_outline),
+              title: const Text('Conexões'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/connections');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.home_work_outlined),
+              title: const Text('Membership'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/membership');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.storefront_outlined),
+              title: const Text('Marketplace'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/marketplace');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.chat_outlined),
+              title: const Text('Chat'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/chat');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.warning_amber_outlined),
+              title: const Text('Alertas'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/alerts');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.gavel_outlined),
+              title: const Text('Moderação'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/moderation');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.inventory_2_outlined),
+              title: const Text('Assets'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/assets');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.card_membership_outlined),
+              title: const Text('Assinaturas'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/subscriptions');
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.interests),
               title: Text(AppLocalizations.of(ctx)!.myInterests),
               onTap: () {

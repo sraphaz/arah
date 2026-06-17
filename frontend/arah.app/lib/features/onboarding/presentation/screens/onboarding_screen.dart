@@ -8,7 +8,9 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
 import '../../../territories/data/repositories/territories_repository.dart';
@@ -157,9 +159,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           children: [
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.location_on,
-                                  color: Colors.orange,
+                                  color: context.appColors.locationPin,
                                   size: AppConstants.iconSizeLg,
                                 ),
                                 const SizedBox(width: AppConstants.spacingSm),
@@ -339,9 +341,6 @@ class _ContinueButton extends StatelessWidget {
   }
 }
 
-/// Cor do contorno do polígono e do pin do território (verde floresta).
-const _territoryBoundaryColor = Color(0xFF228B22);
-
 /// Mapa compacto: sempre visível; contorno do território selecionado (ou mais próximo).
 class _OnboardingMap extends ConsumerWidget {
   const _OnboardingMap({
@@ -394,9 +393,9 @@ class _OnboardingMap extends ConsumerWidget {
                     point: LatLng(centerLat, centerLng),
                     width: 40,
                     height: 40,
-                    child: const Icon(
+                    child: Icon(
                       Icons.person_pin_circle,
-                      color: Colors.orange,
+                      color: context.appColors.locationPin,
                       size: 40,
                     ),
                   ),
@@ -413,7 +412,7 @@ class _OnboardingMap extends ConsumerWidget {
                           height: 32,
                           child: Icon(
                             Icons.place,
-                            color: _territoryBoundaryColor,
+                            color: context.appColors.territoryBoundary,
                             size: 32,
                           ),
                         );
@@ -429,7 +428,7 @@ class _OnboardingMap extends ConsumerWidget {
   }
 
   Widget _boundaryLayer(BuildContext context, TerritoryDetail detail) {
-    const color = _territoryBoundaryColor;
+    final color = context.appColors.territoryBoundary;
     if (detail.boundaryPolygon != null && detail.boundaryPolygon!.length >= 3) {
       final points = detail.boundaryPolygon!.map((p) => LatLng(p.lat, p.lng)).toList();
       return PolygonLayer(

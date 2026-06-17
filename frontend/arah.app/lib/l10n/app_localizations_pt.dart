@@ -9,7 +9,10 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get appTitle => 'Ará';
+  String get appTitle => 'Arah';
+
+  @override
+  String get brandTagline => 'Território primeiro. Comunidade primeiro.';
 
   @override
   String get login => 'Entrar';

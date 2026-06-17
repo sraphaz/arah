@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/geo/geo_location_provider.dart';
 import '../../../territories/data/repositories/territories_repository.dart';
@@ -16,8 +17,6 @@ import '../../data/models/map_pin.dart';
 const LatLng _defaultCenter = LatLng(-14.2, -51.9);
 const double _defaultZoom = 4.0;
 const double _territoryZoom = 13.0;
-/// Cor do contorno do polígono e do pin do território (verde floresta).
-const _territoryBoundaryColorMap = Color(0xFF228B22);
 
 /// Tela de mapa com pins do território (entidades, posts, eventos, etc.).
 /// Usa flutter_map + OpenStreetMap; opcionalmente configurável para tiles Mapbox.
@@ -107,9 +106,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         point: LatLng(geo.latitude, geo.longitude),
                         width: 40,
                         height: 40,
-                        child: const Icon(
+                        child: Icon(
                           Icons.person_pin_circle,
-                          color: Colors.orange,
+                          color: context.appColors.locationPin,
                           size: 40,
                         ),
                       ),
@@ -152,7 +151,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   Widget _buildTerritoryBoundaryLayer(BuildContext context, TerritoryDetail detail) {
-    const color = _territoryBoundaryColorMap;
+    final color = context.appColors.territoryBoundary;
     if (detail.boundaryPolygon != null && detail.boundaryPolygon!.length >= 3) {
       final points = detail.boundaryPolygon!.map((p) => LatLng(p.lat, p.lng)).toList();
       return PolygonLayer(

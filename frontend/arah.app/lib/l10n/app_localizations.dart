@@ -101,8 +101,14 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In pt, this message translates to:
-  /// **'Ará'**
+  /// **'Arah'**
   String get appTitle;
+
+  /// No description provided for @brandTagline.
+  ///
+  /// In pt, this message translates to:
+  /// **'Território primeiro. Comunidade primeiro.'**
+  String get brandTagline;
 
   /// No description provided for @login.
   ///

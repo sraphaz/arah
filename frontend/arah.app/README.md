@@ -1,6 +1,6 @@
-# Ará (App Flutter)
+# Arah (App Flutter)
 
-App mobile **território-first** e **comunidade-first**. Nome: **Ará**. Interface clean, fundo escuro padrão. Conecta ao **BFF** do repositório.
+App mobile **território-first** e **comunidade-first**. Marca: **Arah**. Interface alinhada ao design system (fundo escuro, tipografia Inter, tokens compartilhados). Conecta ao **BFF** do repositório.
 
 **Fluxo:** Login → Onboarding (escolha de território) ou Home → Feed / Explorar / Publicar / Perfil.
 

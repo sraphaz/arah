@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_brand_header.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_state_provider.dart';
 
@@ -131,7 +133,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final auth = ref.watch(authStateProvider);
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
+    return ArahScaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -151,27 +153,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         label: Text(l10n.back),
                       ),
                     ),
-                  Text(
-                    l10n.appTitle,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: AppConstants.spacingSm),
-                  Text(
-                    _step == LoginStep.email
+                  ArahBrandHeader(
+                    subtitle: _step == LoginStep.email
                         ? l10n.loginSubtitle
                         : _step == LoginStep.password
                             ? l10n.enterPassword
                             : l10n.signUpSubtitle,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
                   ),
-                  const SizedBox(height: AppConstants.spacingXl + AppConstants.spacingSm),
+                  const SizedBox(height: AppConstants.spacing2xl),
                   if (_step == LoginStep.email) ..._buildEmailStep(l10n),
                   if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
                   if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),

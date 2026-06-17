@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_brand_header.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/me_profile.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
@@ -22,7 +24,7 @@ class ProfileScreen extends ConsumerWidget {
     final session = auth.valueOrNull;
 
     if (session == null) {
-      return Scaffold(
+      return ArahScaffold(
         appBar: AppBar(title: Text(AppLocalizations.of(context)!.profile)),
         body: Center(
           child: Padding(
@@ -30,20 +32,9 @@ class ProfileScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Ará',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: AppConstants.spacingMd),
-                Text(
-                  'Entre na sua conta para acessar perfil, publicar e notificações.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                ArahBrandHeader(
+                  subtitle: 'Entre na sua conta para acessar perfil, publicar e notificações.',
+                  size: ArahBrandHeaderSize.medium,
                 ),
                 const SizedBox(height: AppConstants.spacingLg),
                 FilledButton(

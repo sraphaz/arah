@@ -74,7 +74,7 @@
 }
 
 /* Ícone genérico ↗ apenas para links sem ícone específico */
-.sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-araponga)::after {
+.sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-arah)::after {
   content: '↗';
   position: absolute;
   right: 0.75rem;
@@ -86,7 +86,7 @@
   font-weight: 600;
 }
 
-.sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-araponga):hover::after {
+.sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-arah):hover::after {
   opacity: 0.7;
   transform: translateY(-50%) translate(1px, -1px);
 }
@@ -97,10 +97,10 @@
   opacity: 1;
 }
 
-:root.dark .sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-araponga)::after {
+:root.dark .sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-arah)::after {
   opacity: 0.3;
 }
 
-:root.dark .sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-araponga):hover::after {
+:root.dark .sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-arah):hover::after {
   opacity: 0.6;
 }

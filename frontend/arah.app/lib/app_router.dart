@@ -9,6 +9,15 @@ import 'features/auth/presentation/providers/auth_state_provider.dart';
 import 'features/home/presentation/screens/main_shell_screen.dart';
 import 'features/map/presentation/screens/map_screen.dart';
 import 'features/events/presentation/screens/events_screen.dart';
+import 'features/connections/presentation/screens/connections_screen.dart';
+import 'features/alerts/presentation/screens/alerts_screen.dart';
+import 'features/membership/presentation/screens/membership_screen.dart';
+import 'features/marketplace/presentation/screens/marketplace_screen.dart';
+import 'features/chat/presentation/screens/chat_list_screen.dart';
+import 'features/chat/presentation/screens/chat_conversation_screen.dart';
+import 'features/moderation/presentation/screens/moderation_screen.dart';
+import 'features/assets/presentation/screens/assets_screen.dart';
+import 'features/subscriptions/presentation/screens/subscriptions_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 /// Rotas com guard de auth e onboarding: sem token → /login; com token sem território → /onboarding; com território → /home.
@@ -75,6 +84,46 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           final territoryId = state.uri.queryParameters['territoryId'];
           return EventsScreen(territoryId: territoryId);
         },
+      ),
+      GoRoute(
+        path: '/connections',
+        builder: (_, __) => const ConnectionsScreen(),
+      ),
+      GoRoute(
+        path: '/alerts',
+        builder: (_, __) => const AlertsScreen(),
+      ),
+      GoRoute(
+        path: '/membership',
+        builder: (_, __) => const MembershipScreen(),
+      ),
+      GoRoute(
+        path: '/marketplace',
+        builder: (_, __) => const MarketplaceScreen(),
+      ),
+      GoRoute(
+        path: '/chat',
+        builder: (_, __) => const ChatListScreen(),
+      ),
+      GoRoute(
+        path: '/chat/:conversationId',
+        builder: (_, state) {
+          final id = state.pathParameters['conversationId'] ?? '';
+          final title = state.uri.queryParameters['title'];
+          return ChatConversationScreen(conversationId: id, title: title);
+        },
+      ),
+      GoRoute(
+        path: '/moderation',
+        builder: (_, __) => const ModerationScreen(),
+      ),
+      GoRoute(
+        path: '/assets',
+        builder: (_, __) => const AssetsScreen(),
+      ),
+      GoRoute(
+        path: '/subscriptions',
+        builder: (_, __) => const SubscriptionsScreen(),
       ),
     ],
   );

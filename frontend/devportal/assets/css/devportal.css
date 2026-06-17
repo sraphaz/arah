@@ -1,3 +1,5 @@
+@import url("../../../shared/styles/design-tokens.css");
+
 :root {
   color-scheme: light dark;
 
@@ -14,12 +16,6 @@
   --watermark-right: -180px;
   --body-watermark-opacity: 0.025;
   --body-watermark-size: 720px;
-  /* Transition Tokens - Sincronizado com Wiki */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-quick: 250ms cubic-bezier(0.16, 1, 0.3, 1); /* Alias para compatibilidade */
   --gradient-overlay: linear-gradient(180deg, rgba(241, 248, 244, 0.6) 0%, rgba(241, 248, 244, 0.2) 100%);
 
   /* Paleta de cores - Light mode (Wiki sync) */
@@ -34,11 +30,22 @@
   --text-muted: #3d5a4f; /* forest-600 */
   --text-subtle: #6b8a7d; /* forest-500 */
 
-  /* Cores usando tokens unificados (referência para futura migração completa) */
-  --accent: var(--color-primary-400, #4dd4a8);           /* Verde primário */
-  --accent-hover: var(--color-primary-500, #3bc495);     /* Verde hover */
-  --accent-strong: var(--color-primary-500, #3bc495);    /* Verde strong */
-  --accent-subtle: rgba(77, 212, 168, 0.15);
+  /* Cores usando tokens unificados */
+  --accent: var(--color-primary-400, #4dd4a8);
+  --accent-hover: var(--color-primary-500, #3bc495);
+  --accent-strong: var(--color-primary-500, #3bc495);
+  --header-gradient-light: linear-gradient(
+    180deg,
+    rgba(241, 248, 244, 0.95) 0%,
+    rgba(241, 248, 244, 0.8) 50%,
+    rgba(241, 248, 244, 0.95) 100%
+  );
+  --header-gradient-dark: linear-gradient(
+    180deg,
+    rgba(10, 14, 18, 0.95) 0%,
+    rgba(10, 14, 18, 0.8) 50%,
+    rgba(10, 14, 18, 0.95) 100%
+  );
 
   /* Dark mode: Links mantêm cores claras com contraste adequado */
   --link: var(--color-secondary-300, #7dd3ff);           /* Azul secundário - contraste OK em dark */
@@ -51,20 +58,12 @@
   --code-bg: #0a0e12;
   --code-border: #1a2129;
 
-  /* Sistema de Elevação Unificado (Material Design) - Wiki + DevPortal */
-  --elevation-0: none;
-  --elevation-1: 0 1px 2px rgba(23, 53, 37, 0.05);
-  --elevation-2: 0 2px 8px rgba(23, 53, 37, 0.08);
-  --elevation-3: 0 4px 16px rgba(23, 53, 37, 0.12);
-  --elevation-4: 0 8px 32px rgba(23, 53, 37, 0.16);
-
   /* Escala de shadows (compatibilidade - usar --elevation-* quando possível) */
   --shadow-xs: var(--elevation-1);
   --shadow-sm: var(--elevation-2);
   --shadow-md: var(--elevation-3);
   --shadow-lg: var(--elevation-4);
   --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5); /* Para casos especiais */
-  --shadow-glow: 0 0 24px rgba(77, 212, 168, 0.15); /* Efeito especial */
 
   /* Sistema de espaçamento consistente (Base 8px) - Sincronizado com Wiki */
   --space-xs: 0.25rem;   /* 4px */
@@ -84,32 +83,6 @@
   --spacing-xl: var(--space-xl);
   --spacing-2xl: var(--space-2xl);
   --spacing-3xl: var(--space-3xl);
-
-  /* Typography Scale (Harmonic Scale 1.125) - Sincronizado com Wiki */
-  --font-size-xs: 0.75rem;      /* 12px */
-  --font-size-sm: 0.875rem;     /* 14px */
-  --font-size-base: 1rem;       /* 16px */
-  --font-size-lg: 1.125rem;     /* 18px */
-  --font-size-xl: 1.25rem;      /* 20px */
-  --font-size-2xl: 1.5rem;      /* 24px */
-  --font-size-3xl: 1.875rem;    /* 30px */
-  --font-size-4xl: 2.25rem;     /* 36px */
-  --font-size-5xl: 3rem;        /* 48px */
-  --font-size-6xl: 3.75rem;     /* 60px */
-  --font-size-7xl: 4.5rem;      /* 72px */
-
-  /* Line Heights - Otimizados para leitura - Sincronizado com Wiki */
-  --line-height-tight: 1.25;
-  --line-height-snug: 1.375;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  --line-height-loose: 2;
-
-  /* Letter Spacing - Sincronizado com Wiki */
-  --letter-spacing-tighter: -0.05em;
-  --letter-spacing-tight: -0.025em;
-  --letter-spacing-normal: 0;
-  --letter-spacing-wide: 0.025em;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -185,15 +158,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color var(--transition-slow), color var(--transition-slow);
 }
 
 /* Dark mode body background - Sincronizado com Wiki */
 :root.dark body {
   /* Dark mode: remove bukeh, usa apenas gradients */
-  background-image:
-    radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
+  background-image: var(--bg-gradient-accent);
   background-repeat: no-repeat;
   background-size: auto;
   background-position: center;
@@ -221,7 +192,7 @@ body::before {
   z-index: 0;
   mix-blend-mode: soft-light;
   filter: grayscale(100%) brightness(1.3) contrast(0.9);
-  transition: opacity 2s ease-in-out;
+  transition: opacity var(--duration-watermark) ease-in-out;
 }
 
 /* Garantir que conteúdo fique acima da marca d'água */
@@ -283,7 +254,7 @@ input:focus-visible {
   padding: 0.75rem 1.25rem;
   display: inline-block;
   background: var(--accent);
-  color: #0a0e12;
+  color: var(--text-on-accent);
   border-radius: var(--radius-sm);
   font-weight: 600;
   z-index: 9999;
@@ -310,24 +281,14 @@ input:focus-visible {
   right: 0;
   bottom: 0;
   /* Light mode: overlay claro (forest-50) */
-  background: linear-gradient(
-    180deg,
-    rgba(241, 248, 244, 0.95) 0%,
-    rgba(241, 248, 244, 0.8) 50%,
-    rgba(241, 248, 244, 0.95) 100%
-  );
+  background: var(--header-gradient-light);
   pointer-events: none;
-  transition: background 0.3s ease;
+  transition: background var(--transition-slow);
 }
 
 :root.dark .header::before {
   /* Dark mode: overlay escuro */
-  background: linear-gradient(
-    180deg,
-    rgba(10, 14, 18, 0.95) 0%,
-    rgba(10, 14, 18, 0.8) 50%,
-    rgba(10, 14, 18, 0.95) 100%
-  );
+  background: var(--header-gradient-dark);
 }
 
 .container {
@@ -340,7 +301,7 @@ input:focus-visible {
 
 .return-banner {
   background: var(--accent-subtle);
-  border: 1px solid rgba(77, 212, 168, 0.25);
+  border: 1px solid var(--accent-border-soft);
   color: var(--text);
   padding: 0.875rem 1.25rem;
   border-radius: var(--radius);
@@ -355,7 +316,7 @@ input:focus-visible {
 }
 
 .return-banner:hover {
-  border-color: rgba(77, 212, 168, 0.4);
+  border-color: var(--accent-border-medium);
   box-shadow: var(--shadow-glow);
 }
 
@@ -391,9 +352,9 @@ input:focus-visible {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: rgba(77, 212, 168, 0.1);
-  border: 1px solid rgba(77, 212, 168, 0.2);
-  color: rgba(77, 212, 168, 0.8);
+  background: var(--accent-bg-hover);
+  border: 1px solid var(--accent-bg-strong);
+  color: var(--accent-text-soft);
   transition: var(--transition-slow); /* 300ms - usa token */
   cursor: pointer;
   display: flex;
@@ -404,21 +365,21 @@ input:focus-visible {
 }
 
 :root.dark .theme-toggle {
-  background: rgba(20, 26, 33, 0.8);
-  border-color: rgba(37, 48, 58, 0.6);
-  color: #e8edf2;
+  background: var(--surface-elevated);
+  border-color: var(--glass-border);
+  color: var(--text);
 }
 
 .theme-toggle:hover {
-  background: rgba(77, 212, 168, 0.2);
-  border-color: rgba(77, 212, 168, 0.4);
+  background: var(--accent-bg-strong);
+  border-color: var(--accent-border-medium);
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(77, 212, 168, 0.2);
+  box-shadow: var(--elevation-2);
 }
 
 :root.dark .theme-toggle:hover {
-  background: rgba(20, 26, 33, 0.95);
-  border-color: rgba(77, 212, 168, 0.3);
+  background: var(--surface-elevated-strong);
+  border-color: var(--accent-subtle);
 }
 
 .theme-icon {
@@ -464,7 +425,7 @@ input:focus-visible {
 }
 
 .lang-select:hover {
-  border-color: rgba(77, 212, 168, 0.6);
+  border-color: var(--accent-border-strong);
 }
 
 .hero-tag {
@@ -500,7 +461,7 @@ input:focus-visible {
 
 .button {
   background: var(--accent);
-  color: var(--bg); /* #0a0e12 - usa token para melhor manutenção */
+  color: var(--text-on-accent);
   padding: 0.875rem 1.75rem;
   border-radius: var(--radius-full);
   border: none;
@@ -551,9 +512,9 @@ input:focus-visible {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--ripple-bg);
   transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  transition: width var(--duration-ripple), height var(--duration-ripple);
 }
 
 .button:active::after {
@@ -723,19 +684,19 @@ main {
   overflow-y: auto;
   overflow-x: hidden;
   /* Contorno suave respeitando identidade visual */
-  border-right: 1px solid rgba(77, 212, 168, 0.08); /* Verde-água muito sutil */
-  box-shadow: 1px 0 4px rgba(77, 212, 168, 0.04); /* Sombra muito suave */
+  border-right: 1px solid var(--border-sidebar-subtle); /* Verde-água muito sutil */
+  box-shadow: 1px 0 4px var(--shadow-sidebar-subtle); /* Sombra muito suave */
   border-radius: 0;
   scrollbar-width: thin;
-  scrollbar-color: rgba(198, 227, 210, 0.3) transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
   z-index: 100;
   transition: all var(--transition-base);
 }
 
 :root.dark .sidebar-container {
-  border-right-color: rgba(100, 150, 180, 0.12); /* Azul-céu muito sutil no dark */
-  box-shadow: 1px 0 6px rgba(100, 150, 180, 0.06); /* Sombra muito suave */
-  background: rgba(10, 14, 18, 0.85);
+  border-right-color: var(--border-sidebar-dark); /* Azul-céu muito sutil no dark */
+  box-shadow: 1px 0 6px var(--shadow-sidebar-dark); /* Sombra muito suave */
+  background: var(--sidebar-surface);
 }
 
 /* Scrollbar suave para sidebar */
@@ -748,21 +709,21 @@ main {
 }
 
 .sidebar-container::-webkit-scrollbar-thumb {
-  background: rgba(198, 227, 210, 0.3);
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
   transition: background var(--transition-base);
 }
 
 .sidebar-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(198, 227, 210, 0.5);
+  background: var(--scrollbar-thumb-hover);
 }
 
 :root.dark .sidebar-container::-webkit-scrollbar-thumb {
-  background: rgba(100, 150, 180, 0.3);
+  background: var(--scrollbar-thumb-dark);
 }
 
 :root.dark .sidebar-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 150, 180, 0.5);
+  background: var(--scrollbar-thumb-dark-hover);
 }
 
 /* Botão de Menu Mobile */
@@ -808,7 +769,7 @@ main {
     background: var(--bg-elevated);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 0 16px var(--overlay-shadow);
     overflow-y: auto;
     padding: 1rem 0.75rem;
     padding-top: 4rem; /* Espaço para o botão de fechar */
@@ -827,7 +788,7 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--overlay-scrim);
     z-index: 999;
     backdrop-filter: blur(2px);
   }
@@ -880,16 +841,16 @@ main {
 }
 
 .sidebar-section-toggle:hover {
-  background: rgba(77, 212, 168, 0.1);
+  background: var(--accent-bg-hover);
   color: var(--accent);
 }
 
 :root.dark .sidebar-section-toggle {
-  color: #e8edf2;
+  color: var(--text);
 }
 
 :root.dark .sidebar-section-toggle:hover {
-  background: rgba(20, 26, 33, 0.8);
+  background: var(--surface-elevated);
 }
 
 .sidebar-section-title {
@@ -901,7 +862,7 @@ main {
   width: 16px;
   height: 16px;
   color: var(--text-muted);
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-slow);
   flex-shrink: 0;
 }
 
@@ -933,30 +894,30 @@ main {
 }
 
 :root.dark .sidebar-link {
-  color: #b8c5d2;
+  color: var(--text-muted);
 }
 
 .sidebar-link:hover {
-  background: rgba(77, 212, 168, 0.1);
+  background: var(--accent-bg-hover);
   color: var(--accent);
   border-left-color: var(--accent);
   transform: translateX(4px);
 }
 
 :root.dark .sidebar-link:hover {
-  background: rgba(20, 26, 33, 0.6);
+  background: var(--surface-muted);
 }
 
 .sidebar-link-active {
-  background: rgba(77, 212, 168, 0.15);
+  background: var(--accent-bg-active);
   color: var(--accent);
   font-weight: 500;
   border-left-color: var(--accent);
 }
 
 :root.dark .sidebar-link-active {
-  background: rgba(20, 26, 33, 0.8);
-  color: #e8edf2;
+  background: var(--surface-elevated);
+  color: var(--text);
 }
 
 .sidebar-link-title {
@@ -990,18 +951,18 @@ main {
 }
 
 :root.dark .sidebar-submenu-toggle {
-  color: #b8c5d2;
+  color: var(--text-muted);
 }
 
 .sidebar-submenu-toggle:hover {
-  background: rgba(77, 212, 168, 0.1);
+  background: var(--accent-bg-hover);
   color: var(--accent);
   border-left-color: var(--accent);
   transform: translateX(4px);
 }
 
 :root.dark .sidebar-submenu-toggle:hover {
-  background: rgba(20, 26, 33, 0.6);
+  background: var(--surface-muted);
 }
 
 .sidebar-submenu-toggle .sidebar-chevron {
@@ -1038,11 +999,11 @@ main {
 }
 
 :root.dark .sidebar-submenu-item .sidebar-link {
-  color: #9aabb8;
+  color: var(--text-subtle);
 }
 
 .sidebar-submenu-item .sidebar-link:hover {
-  background: rgba(77, 212, 168, 0.08);
+  background: var(--accent-bg-muted);
   transform: translateX(2px);
 }
 
@@ -1633,7 +1594,7 @@ main {
   padding: clamp(1rem, 2vw, 1.5rem);
   overflow-x: auto;
   border: 1px solid var(--code-border);
-  color: #d4e4f0;
+  color: var(--text-muted);
   font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono", ui-monospace, monospace;
   font-size: var(--font-size-sm); /* 14px - usa token da Wiki */
   line-height: var(--line-height-relaxed); /* 1.75 - usa token da Wiki */
@@ -1671,15 +1632,15 @@ main {
   font-weight: 600;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(10, 14, 18, 0.65);
+  background: var(--surface-overlay);
   color: var(--text);
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: background var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
 }
 
 .copy-button:hover {
-  background: rgba(10, 14, 18, 0.85);
-  border-color: rgba(77, 212, 168, 0.6);
+  background: var(--sidebar-surface);
+  border-color: var(--accent-border-strong);
   transform: translateY(-1px);
 }
 
@@ -1750,7 +1711,7 @@ pre code {
   margin: 2rem 0;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  background: #ffffff;
+  background: var(--bg-elevated);
   padding: 1.5rem;
   overflow-x: auto;
 }
@@ -1762,7 +1723,7 @@ pre code {
 
 .diagram figcaption {
   margin-top: 1rem;
-  color: #24333b;
+  color: var(--text);
   font-size: 0.9375rem;
   text-align: center;
 }
@@ -1800,9 +1761,9 @@ pre code {
 
 /* Notice */
 .notice {
-  background: rgba(245, 200, 66, 0.12);
-  border: 1px solid rgba(245, 200, 66, 0.3);
-  color: #f5d98c;
+  background: var(--warning-bg-subtle);
+  border: 1px solid var(--warning-border-subtle);
+  color: var(--warning-text-soft);
   padding: 1rem 1.25rem;
   border-radius: var(--radius);
   margin: 1.5rem 0;
@@ -1898,22 +1859,22 @@ pre code {
 }
 
 .method.post {
-  background: rgba(125, 211, 255, 0.2);
+  background: var(--info-bg-subtle);
   color: var(--link);
 }
 
 .method.put {
-  background: rgba(245, 200, 66, 0.2);
+  background: var(--warning-bg-subtle);
   color: var(--warning);
 }
 
 .method.patch {
-  background: rgba(242, 109, 109, 0.2);
+  background: var(--error-bg-subtle);
   color: var(--danger);
 }
 
 .method.delete {
-  background: rgba(242, 109, 109, 0.2);
+  background: var(--error-bg-subtle);
   color: var(--danger);
 }
 
@@ -1959,7 +1920,7 @@ pre code {
 .footer a {
   color: var(--text);
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: color var(--transition-base);
 }
 
 .footer a:hover {
@@ -2159,7 +2120,7 @@ pre code {
   height: clamp(40px, 5vw, 56px);
   opacity: 0.7;
   filter: brightness(1.1);
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-slow);
 }
 
 .footer-brand:hover .footer-icon {
@@ -2190,14 +2151,14 @@ pre code {
 .header-separator {
   width: 1px;
   height: 24px;
-  background: rgba(198, 227, 210, 0.4);
+  background: var(--tag-bg-light);
   flex-shrink: 0;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
 
 :root.dark .header-separator {
-  background: rgba(37, 48, 58, 0.6);
+  background: var(--tag-bg-dark);
 }
 
 .header-link-icon {
@@ -2320,9 +2281,9 @@ pre code {
 .footer-links a {
   color: var(--link);
   text-decoration: underline;
-  text-decoration-color: rgba(125, 211, 255, 0.3);
+  text-decoration-color: var(--link-underline-subtle);
   text-underline-offset: 0.2em;
-  transition: text-decoration-color 0.2s ease;
+  transition: text-decoration-color var(--transition-base);
 }
 
 .footer-links a:hover {
@@ -2438,7 +2399,7 @@ pre code {
   border-radius: var(--radius);
   background: var(--bg-card);
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--transition-slow);
 }
 
 .sequence-diagram-toggle:hover {
@@ -2476,7 +2437,7 @@ pre code {
   content: '▼';
   font-size: 0.75rem;
   color: var(--accent);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--transition-slow);
   margin-left: auto;
   padding-left: 1rem;
 }
@@ -2494,7 +2455,7 @@ pre code {
   font-weight: 600;
   font-size: 0.9375rem;
   color: var(--text);
-  transition: color 0.2s ease;
+  transition: color var(--transition-base);
 }
 
 .sequence-diagram-summary:hover span {
@@ -2506,7 +2467,7 @@ pre code {
   background: var(--bg);
   border-top: 1px solid var(--border);
   overflow-x: auto;
-  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideDown var(--duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
@@ -2716,7 +2677,7 @@ pre code {
   z-index: 9999;
   padding: 2rem;
   overflow: auto;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn var(--duration-slow) ease;
 }
 
 .diagram-modal.active {
@@ -3057,7 +3018,7 @@ main > .section:not(.phase-panel):not(.phase-panels) {
   z-index: 1000;
   overflow-y: auto;
   scrollbar-width: thin;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2);
+  box-shadow: -4px 0 24px var(--overlay-shadow);
 }
 
 .side-panel.open {
@@ -3110,7 +3071,7 @@ main > .section:not(.phase-panel):not(.phase-panels) {
 .panel-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-scrim);
   z-index: 999;
   opacity: 0;
   pointer-events: none;
@@ -3169,12 +3130,12 @@ main > .section:not(.phase-panel):not(.phase-panels) {
   -webkit-backdrop-filter: blur(12px);
   width: 100%;
   max-width: 280px;
-  border-bottom: 1px solid rgba(198, 227, 210, 0.1);
+  border-bottom: 1px solid var(--border-divider-light);
   transition: all var(--transition-base);
 }
 
 :root.dark .sidebar-brand-fixed {
-  border-bottom-color: rgba(100, 150, 180, 0.1);
+  border-bottom-color: var(--border-divider-dark);
 }
 
 /* Responsivo: Esconde logo fixo em telas pequenas */
@@ -3208,11 +3169,11 @@ main > .section:not(.phase-panel):not(.phase-panels) {
 .sidebar-brand {
   padding: 1rem 0.75rem 0.75rem;
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(198, 227, 210, 0.2);
+  border-bottom: 1px solid var(--border-divider-light-strong);
 }
 
 :root.dark .sidebar-brand {
-  border-bottom-color: rgba(100, 150, 180, 0.2);
+  border-bottom-color: var(--border-divider-dark-strong);
 }
 
 .sidebar-brand-link {
@@ -3273,11 +3234,11 @@ main > .section:not(.phase-panel):not(.phase-panels) {
 .sidebar-quick-links {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(198, 227, 210, 0.2);
+  border-top: 1px solid var(--border-divider-light-strong);
 }
 
 :root.dark .sidebar-quick-links {
-  border-top-color: rgba(100, 150, 180, 0.2);
+  border-top-color: var(--border-divider-dark-strong);
 }
 
 .quick-links-container {
@@ -3399,7 +3360,7 @@ main > .section:not(.phase-panel):not(.phase-panels) {
   max-height: calc(100vh - clamp(3.5rem, 8vw, 5rem) - 2rem);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(198, 227, 210, 0.3) transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 .toc-container::-webkit-scrollbar {
@@ -3408,12 +3369,12 @@ main > .section:not(.phase-panel):not(.phase-panels) {
 }
 
 .toc-container::-webkit-scrollbar-thumb {
-  background-color: rgba(198, 227, 210, 0.3);
+  background-color: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 
 .toc-container::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(198, 227, 210, 0.5);
+  background-color: var(--scrollbar-thumb-hover);
 }
 
 .toc-header {
@@ -3473,13 +3434,13 @@ main > .section:not(.phase-panel):not(.phase-panels) {
   top: 0;
   bottom: 0;
   width: 1px;
-  background: rgba(198, 227, 210, 0.3);
+  background: var(--scrollbar-thumb);
   opacity: 1;
 }
 
 :root.dark .toc-item-level-3:not(.toc-group-start)::before,
 :root.dark .toc-item-level-4:not(.toc-group-start)::before {
-  background: rgba(100, 150, 180, 0.5);
+  background: var(--scrollbar-thumb-dark-hover);
 }
 
 .toc-item-level-3:not(.toc-group-start),
@@ -3491,11 +3452,11 @@ main > .section:not(.phase-panel):not(.phase-panels) {
 .toc-item-level-2:not(:first-child) {
   margin-top: 0.75rem;
   padding-top: 0.5rem;
-  border-top: 1px solid rgba(198, 227, 210, 0.3);
+  border-top: 1px solid var(--border-divider-light-medium);
 }
 
 :root.dark .toc-item-level-2:not(:first-child) {
-  border-top-color: rgba(100, 150, 180, 0.5);
+  border-top-color: var(--border-divider-dark-medium);
 }
 
 .toc-link {
@@ -3520,7 +3481,7 @@ main > .section:not(.phase-panel):not(.phase-panels) {
 }
 
 .toc-item-active .toc-link {
-  background: rgba(77, 212, 168, 0.15);
+  background: var(--accent-bg-active);
   color: var(--accent);
   font-weight: 600;
   transform: translateX(2px);

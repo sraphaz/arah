@@ -9,7 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Identidade visual Araponga - Paleta Forest
+        accent: {
+          DEFAULT: "#4dd4a8",
+          hover: "#5ee5b9",
+        },
+        link: {
+          DEFAULT: "#7dd3ff",
+          hover: "#9de3ff",
+        },
+        // Identidade visual Arah - Paleta Forest
         forest: {
           50: "#F1F8F4",
           100: "#E2F1E8",

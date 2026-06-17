@@ -1,6 +1,7 @@
 import GlassCard from "@/components/ui/GlassCard";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import Section from "@/components/ui/Section";
+import { brand } from "../../../shared/config/brand";
 
 export default function Join() {
   return (
@@ -13,7 +14,7 @@ export default function Join() {
                 Faça parte dessa transformação
               </h2>
               <p className="text-base leading-relaxed text-forest-800 md:text-lg">
-                O Araponga é um projeto aberto à colaboração. Sua participação fortalece comunidades
+                O Arah é um projeto aberto à colaboração. Sua participação fortalece comunidades
                 locais e promove autonomia territorial.
               </p>
             </div>
@@ -37,7 +38,7 @@ export default function Join() {
                     Teste na prática
                   </h3>
                   <p className="text-sm leading-relaxed">
-                    Teste a plataforma em sua comunidade. Veja como o Araponga pode fortalecer
+                    Teste a plataforma em sua comunidade. Veja como o Arah pode fortalecer
                     organizações locais.
                   </p>
                 </div>
@@ -55,10 +56,21 @@ export default function Join() {
                 </div>
               </RevealOnScroll>
             </div>
-            <div className="rounded-2xl border border-forest-200/60 bg-forest-50/50 p-6 text-center">
+            <div className="rounded-2xl border border-forest-200/60 bg-forest-50/50 p-6 text-center space-y-4">
               <p className="text-lg font-semibold text-forest-900 leading-relaxed">
                 Território primeiro. Comunidade primeiro. Vida primeiro.
               </p>
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
+                <a href={brand.urls.wiki} target="_blank" rel="noopener noreferrer" className="text-forest-700 hover:text-forest-950">
+                  Wiki
+                </a>
+                <a href={brand.urls.devportal} target="_blank" rel="noopener noreferrer" className="text-forest-700 hover:text-forest-950">
+                  DevPortal
+                </a>
+                <a href={brand.urls.github} target="_blank" rel="noopener noreferrer" className="text-forest-700 hover:text-forest-950">
+                  GitHub
+                </a>
+              </div>
             </div>
           </div>
         </GlassCard>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { brand } from "../../../shared/config/brand";
 
 export function AppBanner() {
   return (
@@ -37,7 +37,7 @@ export function AppBanner() {
 
               <div className="app-banner-cta">
                 <a
-                  href="https://araponga.app"
+                  href={brand.urls.site}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="app-banner-button-primary"
@@ -58,7 +58,7 @@ export function AppBanner() {
                   </svg>
                 </a>
                 <a
-                  href="https://discord.gg/auwqN8Yjgw"
+                  href={brand.urls.discord}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="app-banner-button-secondary"
@@ -73,7 +73,7 @@ export function AppBanner() {
               <div className="app-banner-image-wrapper">
                 <Image
                   src="/wiki/app_banner.png"
-                  alt="Araponga App - Plataforma Digital Comunitária"
+                  alt={`${brand.name} App - Plataforma Digital Comunitária`}
                   width={800}
                   height={600}
                   className="app-banner-image"

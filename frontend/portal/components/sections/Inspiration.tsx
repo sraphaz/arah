@@ -13,14 +13,14 @@ export default function Inspiration() {
                 O Pássaro que nos inspira
               </h2>
               <p className="text-base leading-relaxed text-forest-800 md:text-lg">
-                O nome Araponga carrega significado profundo sobre comunicação, território e
+                O nome Arah evoca significado profundo sobre comunicação, território e
                 presença.
               </p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 md:items-center">
               <div className="space-y-4 text-base leading-relaxed text-forest-800">
                 <p>
-                  O <strong className="font-semibold text-forest-900">Araponga</strong>, também conhecido como{" "}
+                  O <strong className="font-semibold text-forest-900">Araponga</strong> (uirapuru), também conhecido como{" "}
                   <strong className="font-semibold text-forest-900">"pássaro-ferreiro"</strong>, é famoso por
                   seu canto metálico e ressonante nas florestas brasileiras.
                 </p>
@@ -29,7 +29,7 @@ export default function Inspiration() {
                   comunicando-se de forma clara e autêntica em seu território.
                 </p>
                 <p>
-                  A escolha do Araponga reflete nosso compromisso com a <strong className="font-semibold text-forest-900">autenticidade e a comunicação
+                  A escolha do Arah reflete nosso compromisso com a <strong className="font-semibold text-forest-900">autenticidade e a comunicação
                   clara</strong>.
                 </p>
                 <p>

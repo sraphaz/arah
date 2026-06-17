@@ -315,6 +315,8 @@ public static class ServiceCollectionExtensions
             services.AddSingleton<InMemoryDataStore>();
             services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
             services.AddInMemoryRepositories();
+            services.AddSingleton<IEmailQueueRepository>(sp =>
+                new InMemoryEmailQueueRepository(sp.GetRequiredService<InMemoryDataStore>()));
         }
 
         // Fallback: garantir repositórios de mídia quando Postgres (evita falha de DI se o bloco inicial não tiver sido executado)

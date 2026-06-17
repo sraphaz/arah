@@ -64,4 +64,17 @@ public interface IFeedJourneyBackend
         CancellationToken cancellationToken = default);
 
     Task<BackendFeedPost?> GetPostAsync(Guid postId, CancellationToken cancellationToken = default);
+
+    Task<BackendPagedResult<BackendPostComment>> ListCommentsPagedAsync(
+        Guid territoryId,
+        Guid postId,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> DeletePostAsync(
+        Guid territoryId,
+        Guid postId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
 }

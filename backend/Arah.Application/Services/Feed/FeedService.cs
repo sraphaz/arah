@@ -195,6 +195,28 @@ public sealed class FeedService
         return _feedRepository.GetCountsByPostIdsAsync(postIds, cancellationToken);
     }
 
+    public async Task<Common.PagedResult<PostComment>> ListCommentsForPostPagedAsync(
+        Guid territoryId,
+        Guid postId,
+        Common.PaginationParameters pagination,
+        CancellationToken cancellationToken)
+    {
+        var post = await _feedRepository.GetPostAsync(postId, cancellationToken);
+        if (post is null || post.TerritoryId != territoryId)
+        {
+            return new Common.PagedResult<PostComment>(Array.Empty<PostComment>(), pagination.PageNumber, pagination.PageSize, 0);
+        }
+
+        var totalCount = await _feedRepository.CountCommentsByPostIdAsync(postId, cancellationToken);
+        var comments = await _feedRepository.ListCommentsByPostIdPagedAsync(
+            postId,
+            pagination.Skip,
+            pagination.Take,
+            cancellationToken);
+
+        return new Common.PagedResult<PostComment>(comments, pagination.PageNumber, pagination.PageSize, totalCount);
+    }
+
     public Task<CommunityPost?> GetPostAsync(Guid postId, CancellationToken cancellationToken)
     {
         return _feedRepository.GetPostAsync(postId, cancellationToken);

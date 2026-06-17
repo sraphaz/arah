@@ -267,15 +267,15 @@
   color: var(--color-sky-blue-strong);
 }
 
-.sidebar-link-icon-araponga .sidebar-link-icon {
+.sidebar-link-icon-arah .sidebar-link-icon {
   color: var(--color-moss-green);
 }
 
-.sidebar-link-icon-araponga:hover .sidebar-link-icon {
+.sidebar-link-icon-arah:hover .sidebar-link-icon {
   color: var(--color-water-green-strong);
 }
 
 /* Remover ícone genérico ↗ - manter apenas ícones específicos */
-.sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-araponga)::after {
+.sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-arah)::after {
   display: none;
 }

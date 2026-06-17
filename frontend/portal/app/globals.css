@@ -1,3 +1,5 @@
+@import "../../shared/styles/design-tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,9 +7,9 @@
 :root {
   color-scheme: light;
   --glass-bg: rgba(255, 255, 255, 0.88);
-  --glass-border: rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 20px 50px rgba(20, 40, 28, 0.15);
-  --glass-hover-shadow: 0 24px 60px rgba(20, 40, 28, 0.2);
+  --glass-border: rgba(198, 227, 210, 0.4);
+  --glass-shadow: var(--elevation-3);
+  --glass-hover-shadow: var(--elevation-4);
   --glass-radius: 32px;
   --glass-blur: 16px;
   --watermark-opacity: 0.04;
@@ -19,7 +21,6 @@
   --reveal-translate: 20px;
   --reveal-duration: 800ms;
   --reveal-easing: cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
@@ -175,7 +176,7 @@ html {
 
 /* Better focus states */
 *:focus-visible {
-  outline: 2px solid var(--forest-500);
+  outline: 3px solid var(--color-primary-400);
   outline-offset: 2px;
   border-radius: 4px;
 }

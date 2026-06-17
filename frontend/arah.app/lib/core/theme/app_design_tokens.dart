@@ -9,25 +9,29 @@ class AppDesignTokens {
   AppDesignTokens._();
 
   // ---------------------------------------------------------------------------
-  // Paleta – tema escuro (padrão)
+  // Paleta Arah – alinhada a frontend/shared/styles/design-tokens.css
   // ---------------------------------------------------------------------------
-  static const Color primaryDark = Color(0xFF81C784);
-  static const Color surfaceDark = Color(0xFF121212);
-  static const Color surfaceVariantDark = Color(0xFF1E1E1E);
-  static const Color onSurfaceDark = Color(0xFFE8E8E8);
-  static const Color onSurfaceVariantDark = Color(0xFFB0B0B0);
-  static const Color outlineDark = Color(0xFF404040);
+  static const Color primaryDark = Color(0xFF4DD4A8);
+  static const Color linkDark = Color(0xFF7DD3FF);
+  static const Color surfaceDark = Color(0xFF0F172A);
+  static const Color surfaceVariantDark = Color(0xFF1E293B);
+  static const Color onSurfaceDark = Color(0xFFF1F5F9);
+  static const Color onSurfaceVariantDark = Color(0xFF94A3B8);
+  static const Color outlineDark = Color(0xFF334155);
 
-  // ---------------------------------------------------------------------------
-  // Paleta – tema claro
-  // ---------------------------------------------------------------------------
-  static const Color primaryLight = Color(0xFF1B5E20);
+  static const Color primaryLight = Color(0xFF3BC495);
   static const Color surfaceLight = Color(0xFFFAFAFA);
   static const Color onSurfaceLight = Color(0xFF1C1C1C);
 
-  // ---------------------------------------------------------------------------
-  // Tipografia (tamanhos base para TextTheme; Material 3 já define scale)
-  // ---------------------------------------------------------------------------
+  // Feed – cores semânticas por tipo de post
+  static const Color feedTypeAlert = Color(0xFFF5C842);
+  static const Color feedTypeEvent = Color(0xFF7DD3FF);
+  static const Color feedTypeTip = Color(0xFF4DD4A8);
+  static const Color feedTypeGeneral = Color(0xFF9CA3AF);
+
+  static const double feedCardTypeBorderWidth = 4;
+  static const EdgeInsets cardPadding = EdgeInsets.all(16);
+  static const double fontSizeBodySmall = 12;
   static const double fontSizeSnackBar = 15;
 
   // ---------------------------------------------------------------------------

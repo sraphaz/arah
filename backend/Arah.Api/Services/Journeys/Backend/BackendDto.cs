@@ -29,7 +29,14 @@ public sealed record BackendFeedPost(
     DateTime CreatedAtUtc,
     IReadOnlyList<string>? Tags);
 
-public sealed record BackendPostCounts(int LikeCount, int ShareCount);
+public sealed record BackendPostCounts(int LikeCount, int ShareCount, int CommentCount = 0);
+
+public sealed record BackendPostComment(
+    Guid Id,
+    Guid PostId,
+    Guid UserId,
+    string Content,
+    DateTime CreatedAtUtc);
 
 public sealed record BackendEventSummary(
     Guid EventId,

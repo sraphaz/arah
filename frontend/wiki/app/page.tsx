@@ -14,6 +14,7 @@ import { ContentSectionsProgressive } from "./docs/[slug]/content-sections-progr
 import { TableOfContents } from "../components/layout/TableOfContents";
 import { JourneyCard } from "../components/ui/JourneyCard";
 import { getAllJourneys } from "../lib/journeys";
+import { brand } from "../../shared/config/brand";
 
 // Helper function para extrair texto de HTML de forma segura
 function getTextContent(html: string): string {
@@ -174,10 +175,10 @@ export default async function HomePage() {
         <div className="glass-card animation-fade-in">
           <div className="glass-card__content markdown-content">
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-forest-900 dark:text-forest-50 mb-6 leading-tight tracking-tight">
-              Boas-Vindas ao Araponga
+              Boas-Vindas ao {brand.name}
             </h1>
             <p className="text-lg text-forest-700 dark:text-forest-300 mb-8">
-              Bem-vindo à documentação completa do Araponga.
+              Bem-vindo à documentação completa do {brand.name}.
             </p>
             <div className="mt-8">
               <Link href="/docs" prefetch={false} className="btn-primary">
@@ -247,7 +248,7 @@ export default async function HomePage() {
               <FeatureCard
                 icon="👨‍💻"
                 title="Desenvolvedores"
-                description="Comece a desenvolver com o Araponga"
+                description={`Comece a desenvolver com o ${brand.name}`}
                 color="forest"
                 href="/docs/ONBOARDING_DEVELOPERS"
               />

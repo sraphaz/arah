@@ -28,4 +28,17 @@ public interface IFeedJourneyService
         PostInteractionRequest request,
         string? commentContent,
         CancellationToken cancellationToken = default);
+
+    Task<PostCommentsJourneyResponse?> GetPostCommentsAsync(
+        Guid territoryId,
+        Guid postId,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> DeletePostAsync(
+        Guid territoryId,
+        Guid postId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
 }

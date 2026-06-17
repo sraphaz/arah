@@ -44,9 +44,21 @@ public interface IFeedRepository
     Task AddShareAsync(Guid postId, Guid userId, CancellationToken cancellationToken);
     Task<int> GetLikeCountAsync(Guid postId, CancellationToken cancellationToken);
     Task<int> GetShareCountAsync(Guid postId, CancellationToken cancellationToken);
+    Task<int> GetCommentCountAsync(Guid postId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets like and share counts for multiple posts in a single batch operation.
+    /// Lists comments for a post ordered by most recent first.
+    /// </summary>
+    Task<IReadOnlyList<PostComment>> ListCommentsByPostIdPagedAsync(
+        Guid postId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken);
+
+    Task<int> CountCommentsByPostIdAsync(Guid postId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets like, share and comment counts for multiple posts in a single batch operation.
     /// </summary>
     Task<IReadOnlyDictionary<Guid, PostCounts>> GetCountsByPostIdsAsync(
         IReadOnlyCollection<Guid> postIds,

@@ -48,37 +48,33 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 | **Notifications** (listar paginado, marcar lida) | ✅ | ✅ | ✅ | App: notifications/paged, notifications/{id}/read. |
 | **Membership** (me, become-resident, verify-residency) | ✅ | ✅ | ✅ | App: tela Membership com status, solicitar residência e verificação geo. |
 | **Connections** (listar, pending, request, accept, reject, privacy) | ✅ | ✅ | ✅ | App: Conexões com busca, sugestões, solicitar/aceitar/rejeitar. |
-| **Assets** (listar, upload, curate) | ✅ | ✅ | 🚧 | App: listagem e criação JSON com geo. Curadoria/arquivar ainda não no app. |
+| **Assets** (listar, upload, curate) | ✅ | ✅ | ✅ | App: listagem, criação, validar, arquivar e curar (aprovar/rejeitar). |
 | **Media** (upload, info, download) | ✅ | ✅ | ✅ | App: upload ao publicar post; exibição no feed. |
 | **Marketplace** (search, add-to-cart, checkout) | ✅ | ✅ | ✅ | App: busca, adicionar ao carrinho, checkout (v2 + cart v1). |
-| **Marketplace V1** (cart, stores, items) | ✅ | ✅ | 🚧 | App usa cart v1; lojas/itens avançados ainda não. |
-| **Subscription plans / Subscriptions** | ✅ | ✅ | ✅ | App: lista planos e minha assinatura (leitura). |
-| **Moderation** (work-items, cases, evidences) | ✅ | ✅ | 🚧 | App: listagem de work-items. Casos/evidências ainda não. |
-| **Chat** (conversations, messages, participants) | ✅ | ✅ | ✅ | App: canais do território, mensagens e envio. |
+| **Marketplace V1** (cart, stores, items) | ✅ | ✅ | ✅ | App: cart v1, busca/checkout v2 e gestão de loja própria (`stores/me`, criar/atualizar). |
+| **Subscription plans / Subscriptions** | ✅ | ✅ | ✅ | App: planos, minha assinatura, assinar e cancelar. |
+| **Moderation** (work-items, cases, evidences) | ✅ | ✅ | ✅ | App: fila, casos (decidir), evidências (download + decidir residência). |
+| **Chat** (conversations, messages, participants) | ✅ | ✅ | ✅ | App: canais, grupos (criar), mensagens e envio. |
 | **Alerts** (listar, criar) | ✅ | ✅ | ✅ | App: listagem e criação de alertas. |
 | **Admin** (seed, cache-metrics, configs) | ✅ | ✅ | ➖ | Uso administrativo; não no app usuário. |
 
 Resumo rápido:
 
-- **Totalmente alinhados (API + BFF + App em uso)**: Auth, Onboarding, Territories, Feed, Events, Map, Me, Notifications, Membership, Connections, Media, Marketplace (fluxo básico), Chat, Alerts, Subscriptions (leitura).
-- **Parcialmente no app**: Assets (sem curadoria), Marketplace V1 (sem lojas), Moderation (só work-items).
+- **Totalmente alinhados (API + BFF + App em uso)**: todas as jornadas do app usuário, exceto Admin (➖).
+- **Parcialmente no app**: nenhuma pendência crítica na matriz base.
 - **Fora do app usuário**: Admin.
 
 ---
 
 ## O que desenvolver a seguir
 
-Prioridade sugerida para **evoluir** após alinhamento base.
+Prioridade sugerida para **evoluir** com novas fases do backlog (API → BFF → App).
 
 ### No App (Flutter)
 
 | Prioridade | Funcionalidade | O que fazer |
 |------------|----------------|-------------|
-| Média | **Assets – curadoria** | Arquivar/validar assets (BFF assets/{id}/archive, validate). |
-| Média | **Moderation – casos** | Telas de casos e evidências para curadores. |
-| Média | **Marketplace V1 – lojas** | Gerenciar loja própria (`stores/me`, criar loja). |
-| Baixa | **Chat – grupos** | Criar grupos (`territories/{id}/chat/groups` POST). |
-| Baixa | **Subscriptions – assinar** | Fluxo de contratação/cancelamento no app. |
+| — | _Alinhamento base concluído_ | Próximas entregas seguem fases do backlog em `docs/backlog-api/`. |
 
 ### No BFF
 

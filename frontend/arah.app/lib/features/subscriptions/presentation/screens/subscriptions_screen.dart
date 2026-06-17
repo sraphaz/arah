@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../providers/subscriptions_provider.dart';
 
 class SubscriptionsScreen extends ConsumerWidget {
@@ -17,12 +18,16 @@ class SubscriptionsScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Assinaturas')),
       body: RefreshIndicator(
         onRefresh: () => notifier.refresh(),
-        child: _buildBody(context, state),
+        child: _buildBody(context, state, notifier),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, SubscriptionsState state) {
+  Widget _buildBody(
+    BuildContext context,
+    SubscriptionsState state,
+    SubscriptionsNotifier notifier,
+  ) {
     if (state.isLoading && state.plans.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -46,6 +51,10 @@ class SubscriptionsScreen extends ConsumerWidget {
       );
     }
 
+    final hasPaidSubscription = state.mySubscription != null &&
+        state.mySubscription!.status.toUpperCase() != 'FREE' &&
+        state.mySubscription!.status.toUpperCase() != 'CANCELED';
+
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(AppConstants.spacingMd),
@@ -56,6 +65,26 @@ class SubscriptionsScreen extends ConsumerWidget {
               leading: const Icon(Icons.verified_outlined),
               title: const Text('Minha assinatura'),
               subtitle: Text('Status: ${state.mySubscription!.status}'),
+              trailing: hasPaidSubscription
+                  ? TextButton(
+                      onPressed: () async {
+                        try {
+                          await notifier.cancelMySubscription();
+                          if (context.mounted) {
+                            showSuccessSnackBar(context, 'Assinatura cancelada.');
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            showErrorSnackBar(
+                              context,
+                              e is ApiException ? e.userMessage : 'Erro ao cancelar.',
+                            );
+                          }
+                        }
+                      },
+                      child: const Text('Cancelar'),
+                    )
+                  : null,
             ),
           ),
           const SizedBox(height: AppConstants.spacingMd),
@@ -69,6 +98,22 @@ class SubscriptionsScreen extends ConsumerWidget {
               title: Text(plan.name),
               subtitle: Text('${plan.description}\n${plan.currency} ${plan.priceAmount.toStringAsFixed(2)}'),
               isThreeLine: true,
+              trailing: FilledButton(
+                onPressed: () async {
+                  try {
+                    await notifier.subscribeToPlan(plan.id);
+                    if (context.mounted) showSuccessSnackBar(context, 'Assinatura ativada.');
+                  } catch (e) {
+                    if (context.mounted) {
+                      showErrorSnackBar(
+                        context,
+                        e is ApiException ? e.userMessage : 'Erro ao assinar.',
+                      );
+                    }
+                  }
+                },
+                child: const Text('Assinar'),
+              ),
             ),
           ),
         ),

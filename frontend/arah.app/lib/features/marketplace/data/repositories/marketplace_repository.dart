@@ -1,6 +1,7 @@
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
 import '../models/marketplace_item.dart';
+import '../models/store_item.dart';
 
 class MarketplaceRepository {
   MarketplaceRepository({required BffClient client}) : _client = client;
@@ -69,5 +70,39 @@ class MarketplaceRepository {
       throw ApiException('HTTP ${response.statusCode}', statusCode: response.statusCode);
     }
     return response.data as Map<String, dynamic>? ?? {};
+  }
+
+  Future<MyStore?> getMyStore(String territoryId) async {
+    final response = await _client.get(
+      'marketplace-v1',
+      'stores/me',
+      queryParameters: {'territoryId': territoryId},
+    );
+    if (response.statusCode == 404) return null;
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('HTTP ${response.statusCode}', statusCode: response.statusCode);
+    }
+    return MyStore.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<MyStore> upsertMyStore({
+    required String territoryId,
+    required String displayName,
+    String? description,
+  }) async {
+    final response = await _client.post(
+      'marketplace-v1',
+      'stores',
+      body: {
+        'territoryId': territoryId,
+        'displayName': displayName,
+        'description': description,
+        'contactVisibility': 'PUBLIC',
+      },
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('HTTP ${response.statusCode}', statusCode: response.statusCode);
+    }
+    return MyStore.fromJson(response.data as Map<String, dynamic>);
   }
 }

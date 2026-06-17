@@ -5,14 +5,43 @@ import 'package:intl/intl.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
+import '../../data/models/work_item.dart';
 import '../providers/moderation_provider.dart';
 
-class ModerationScreen extends ConsumerWidget {
+class ModerationScreen extends ConsumerStatefulWidget {
   const ModerationScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ModerationScreen> createState() => _ModerationScreenState();
+}
+
+class _ModerationScreenState extends ConsumerState<ModerationScreen> with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    if (_tabController.indexIsChanging) return;
+    final tab = ModerationTab.values[_tabController.index];
+    ref.read(moderationProvider.notifier).setTab(tab);
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_onTabChanged);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(moderationProvider);
     final notifier = ref.read(moderationProvider.notifier);
@@ -26,14 +55,24 @@ class ModerationScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Moderação')),
+      appBar: AppBar(
+        title: const Text('Moderação'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Fila'),
+            Tab(text: 'Casos'),
+            Tab(text: 'Evidências'),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           const TerritoryIndicatorBar(),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () => notifier.refresh(),
-              child: _buildBody(context, state, dateFormat),
+              child: _buildBody(context, state, dateFormat, notifier),
             ),
           ),
         ],
@@ -41,7 +80,12 @@ class ModerationScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, ModerationState state, DateFormat dateFormat) {
+  Widget _buildBody(
+    BuildContext context,
+    ModerationState state,
+    DateFormat dateFormat,
+    ModerationNotifier notifier,
+  ) {
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -67,7 +111,7 @@ class ModerationScreen extends ConsumerWidget {
     if (state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: Text('Nenhum work item pendente.')))],
+        children: [SizedBox(height: 200, child: Center(child: Text('Nenhum item nesta fila.')))],
       );
     }
     return ListView.builder(
@@ -79,10 +123,96 @@ class ModerationScreen extends ConsumerWidget {
         return Card(
           child: ListTile(
             title: Text(item.type),
-            subtitle: Text('${item.status} · ${item.subjectType} · ${dateFormat.format(item.createdAtUtc.toLocal())}'),
+            subtitle: Text(
+              '${item.status} · ${item.subjectType}'
+              '${item.evidenceId != null ? ' · evidência' : ''}'
+              ' · ${dateFormat.format(item.createdAtUtc.toLocal())}',
+            ),
+            trailing: _buildActions(context, notifier, item),
           ),
         );
       },
     );
+  }
+
+  Widget? _buildActions(BuildContext context, ModerationNotifier notifier, WorkItem item) {
+    if (!item.isPending) return null;
+    if (item.isResidencyVerification && item.evidenceId != null) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: 'Baixar evidência',
+            icon: const Icon(Icons.download_outlined),
+            onPressed: () => _downloadEvidence(context, notifier, item),
+          ),
+          IconButton(
+            tooltip: 'Aprovar',
+            icon: const Icon(Icons.check_circle_outline),
+            onPressed: () => _decide(context, notifier, item, 'APPROVED'),
+          ),
+          IconButton(
+            tooltip: 'Rejeitar',
+            icon: const Icon(Icons.cancel_outlined),
+            onPressed: () => _decide(context, notifier, item, 'REJECTED'),
+          ),
+        ],
+      );
+    }
+    if (item.isModerationCase || item.isResidencyVerification) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: 'Aprovar',
+            icon: const Icon(Icons.check_circle_outline),
+            onPressed: () => _decide(context, notifier, item, 'APPROVED'),
+          ),
+          IconButton(
+            tooltip: 'Rejeitar',
+            icon: const Icon(Icons.cancel_outlined),
+            onPressed: () => _decide(context, notifier, item, 'REJECTED'),
+          ),
+        ],
+      );
+    }
+    return null;
+  }
+
+  Future<void> _decide(
+    BuildContext context,
+    ModerationNotifier notifier,
+    WorkItem item,
+    String outcome,
+  ) async {
+    try {
+      await notifier.decideItem(item, outcome);
+      if (context.mounted) showSuccessSnackBar(context, 'Decisão registrada.');
+    } catch (e) {
+      if (context.mounted) {
+        showErrorSnackBar(
+          context,
+          e is ApiException ? e.userMessage : 'Erro ao decidir item.',
+        );
+      }
+    }
+  }
+
+  Future<void> _downloadEvidence(
+    BuildContext context,
+    ModerationNotifier notifier,
+    WorkItem item,
+  ) async {
+    try {
+      final size = await notifier.downloadEvidence(item);
+      if (context.mounted) showSuccessSnackBar(context, 'Evidência baixada ($size bytes).');
+    } catch (e) {
+      if (context.mounted) {
+        showErrorSnackBar(
+          context,
+          e is ApiException ? e.userMessage : 'Erro ao baixar evidência.',
+        );
+      }
+    }
   }
 }

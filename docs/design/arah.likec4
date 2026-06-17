@@ -1,0 +1,276 @@
+// Ará — Arquitetura real: contexto → containers → camadas e módulos
+// Playground: https://playground.likec4.dev/w/tutorial/index/
+// Formas e ícones diferenciam: site (browser), app (mobile), serviço (API), banco (cylinder), storage (bucket), fila (queue).
+// Relações tipadas: uses, calls (HTTP), proxies, persists, publishes (async).
+
+specification {
+  element actor {
+    notation 'Person, user or admin'
+    style { shape person }
+  }
+  element softwareSystem
+  element webApp {
+    notation 'Web application (browser)'
+    style { shape browser }
+  }
+  element mobileApp {
+    notation 'Mobile application'
+    style { shape mobile }
+  }
+  element apiService {
+    notation 'API / Backend service'
+    style { shape rectangle }
+  }
+  element database {
+    notation 'Database (relational, e.g. PostgreSQL)'
+    style { shape cylinder }
+  }
+  element objectStorage {
+    notation 'Object / file storage (e.g. S3)'
+    style { shape bucket }
+  }
+  element messageQueue {
+    notation 'Event bus / message queue'
+    style { shape queue }
+  }
+  element container
+  element component
+  relationship uses { notation 'User uses system' }
+  relationship calls {
+    notation 'Sync HTTP/RPC call'
+    style { line solid }
+  }
+  relationship proxies {
+    notation 'BFF proxies request to API'
+    style { line solid; head diamond }
+  }
+  relationship persists {
+    notation 'Writes / persists data'
+    style { line solid; head crow }
+  }
+  relationship publishes {
+    notation 'Publishes event (async)'
+    style { line dotted; head open }
+  }
+  relationship auth {
+    notation 'Authentication (OIDC, etc.)'
+    style { line dashed }
+  }
+}
+
+model {
+  user = actor 'Usuário' 'Morador ou Visitante.'
+  moderator = actor 'Curador/Moderador' 'Morador verificado com permissões ampliadas.'
+  sysadmin = actor 'System Admin' 'Admin global.'
+
+  arah = softwareSystem 'Ará' 'Plataforma comunitária territorial.' {
+    // ========== CONTAINERS (formas distintas: browser, mobile, rectangle, cylinder, bucket, queue) ==========
+    web = webApp 'Web App' 'Cliente web (futuro).' 'Next.js/React'
+
+    mobile = mobileApp 'App Mobile' 'Cliente Flutter: feed, mapa, eventos, onboarding, perfil.' 'Flutter/Dart' {
+      // ---- Camadas do App ----
+      core = component 'Core' 'Config, BffClient, providers, storage, theme, widgets.' {
+        config = component 'AppConfig'
+        network = component 'BffClient' 'HTTP para BFF (Dio, token, geo headers).'
+        providers = component 'Providers' 'TerritoryProvider, AppProviders.'
+        storage = component 'Storage' 'SecureStorage, TerritoryPreferences.'
+        theme = component 'Theme' 'AppTheme, DesignTokens.'
+        widgets = component 'Widgets' 'Shimmer, Snackbar, skeletons.'
+      }
+      features = component 'Features' 'Funcionalidades por feature (data + presentation).' {
+        auth = component 'Auth' 'Login, auth_repository, login_screen.'
+        feed = component 'Feed' 'feed_repository, feed_provider, feed_screen, create_post, feed_post_card.'
+        events = component 'Events' 'events_repository, territory_events_provider, events_screen.'
+        explore = component 'Explore' 'explore_screen, territórios.'
+        map = component 'Map' 'map_repository, map_pins_provider, map_screen.'
+        notifications = component 'Notifications' 'notifications_repository, notifications_screen.'
+        onboarding = component 'Onboarding' 'onboarding_repository, onboarding_screen, suggested-territories.'
+        profile = component 'Profile' 'me_profile_repository, profile_screen, interests, preferences.'
+        territories = component 'Territories' 'territories_repository, territory_indicator_bar, selector.'
+        home = component 'Home' 'main_shell_screen, navegação.'
+      }
+      core.network -> core.config
+      features.feed -> core.network
+      features.events -> core.network
+      features.onboarding -> core.network
+      features.profile -> core.network
+      features.territories -> core.network
+      features.map -> core.network
+      features.notifications -> core.network
+      features.auth -> core.network
+      features.feed -> core.providers
+      features.home -> core.theme
+    }
+
+    bff = apiService 'BFF API' 'Backend-for-Frontend. Jornadas REST, proxy para API.' '.NET 8' {
+      // ---- Camadas do BFF ----
+      middleware = component 'Middleware' 'JourneyProxyMiddleware (intercepta /api/v2/journeys/*), CorrelationId, Logging.'
+      journeys = component 'Journey Registry' 'BffJourneyRegistry: mapeamento jornada → path API (feed, onboarding, events, marketplace, auth, me, territories, map, ...).'
+      services = component 'Services' 'JourneyApiProxy (HTTP para API), JourneyResponseCache (TTL por path).'
+      contracts = component 'Contracts' 'DTOs das jornadas: Feed (CreatePost, TerritoryFeed), Events, Onboarding (SuggestedTerritories, Complete), Marketplace.'
+      middleware -> journeys 'consulta rota'
+      middleware -> services 'proxy ou cache'
+      services -> journeys 'path da API'
+    }
+
+    api = apiService 'Arah API' 'API principal. Composição: Host (Controllers) + Application (módulos) + Domain + Infrastructure.' '.NET 8' {
+      // ---- Camada de entrada (Host) ----
+      host = component 'API Host' 'Controllers, Middleware, Security, Validators, HealthChecks.' {
+        controllersPlatform = component 'Controllers Platform' 'Auth, Territories, Memberships, Verification, JoinRequests, Features, Admin, Terms, Privacy, Analytics, Devices, Votings, DataExport.'
+        controllersFeed = component 'Controllers Feed' 'FeedController, FeedJourneyController.'
+        controllersMap = component 'Controllers Map' 'MapController.'
+        controllersEvents = component 'Controllers Events' 'EventsController, EventsJourneyController.'
+        controllersChat = component 'Controllers Chat' 'ChatController, TerritoryChatController.'
+        controllersMarketplace = component 'Controllers Marketplace' 'Stores, Items, Cart, Inquiries, MarketplaceSearch, PlatformFees, Rating, SellerBalance, TerritoryPayoutConfig.'
+        controllersModeration = component 'Controllers Moderation' 'ModerationController, TerritoryWorkItems, TerritoryModerationCases, TerritoryEvidences, AdminWorkItems, AdminEvidences.'
+        controllersSubscriptions = component 'Controllers Subscriptions' 'SubscriptionPlans, Subscriptions, Coupons, MercadoPago/Stripe webhooks, Analytics, Capabilities.'
+        controllersUsers = component 'Controllers Users' 'UserProfile, UserPreferences, UserInterests, UserActivity, UserPublicProfile.'
+        controllersJourneys = component 'Controllers Journeys' 'OnboardingJourneyController, FeedJourneyController, EventsJourneyController, MarketplaceJourneyController.'
+        controllersAlerts = component 'Controllers Alerts' 'AlertsController.'
+        controllersAssets = component 'Controllers Assets' 'AssetsController.'
+        controllersMedia = component 'Controllers Media' 'MediaController, MediaConfig, UserMediaPreferences.'
+        controllersNotifications = component 'Controllers Notifications' 'NotificationsController, NotificationConfig.'
+        security = component 'Security' 'JWT, current user, auth handlers.'
+        middleware = component 'Middleware' 'CorrelationId, logging, headers.'
+      }
+
+      // ---- Camada Application (módulos) ----
+      application = component 'Application' 'Casos de uso, orquestração.' {
+        modulePlatform = component 'Module Platform' 'AuthService, TerritoryService, MembershipService, FeatureFlagService, AccessEvaluator, JoinRequestService, VerificationQueue, SystemConfig, WorkQueue, Audit, Terms/Privacy.'
+        moduleFeed = component 'Module Feed' 'FeedService, PostCreationService, PostFilterService, PostInteractionService, PostEditService.'
+        moduleMap = component 'Module Map' 'MapService, MapEntityCacheService.'
+        moduleEvents = component 'Module Events' 'EventsService, EventCacheService.'
+        moduleChat = component 'Module Chat' 'ChatService.'
+        moduleMarketplace = component 'Module Marketplace' 'StoreService, StoreItemService, CartService, InquiryService, MarketplaceSearchService, PlatformFeeService, RatingService, SellerPayoutService, TerritoryPayoutConfigService.'
+        moduleModeration = component 'Module Moderation' 'WorkQueueService, VerificationQueueService, ReportService, ModerationCaseService, DocumentEvidenceService, UserBlockService, TerritoryModerationService.'
+        moduleSubscriptions = component 'Module Subscriptions' 'SubscriptionService, SubscriptionPlanAdmin, CouponService, Renewal, Trial, MercadoPago/Stripe webhooks, Analytics.'
+        moduleUsers = component 'Module Users' 'UserProfileService, UserPreferencesService, UserInterestService, UserActivityService.'
+        moduleAlerts = component 'Module Alerts' 'HealthService, AlertCacheService.'
+        moduleAssets = component 'Module Assets' 'TerritoryAssetService.'
+        moduleMedia = component 'Module Media' 'MediaService, MediaStorageConfig, TerritoryMediaConfig.'
+        moduleNotifications = component 'Module Notifications' 'NotificationConfigService, PushNotificationService.'
+        moduleConnections = component 'Module Connections' 'ConnectionService, ConnectionPrivacyService, AcceptedConnectionsProvider.'
+      }
+
+      domain = component 'Domain' 'Arah.Domain: User, Territory, Membership, Governance, Policies, JoinRequests, Financial, Geo, Media, SystemConfig (núcleo compartilhado).'
+      infrastructure = component 'Infrastructure' 'Arah.Infrastructure + Infrastructure.Shared: Postgres (ArapongaDbContext, módulos), InMemory, Cache, Eventing/Outbox, FileStorage, Email, Payments, Security (JWT), Background workers.'
+
+      // Host → Application (por módulo)
+      host.controllersPlatform -> application.modulePlatform
+      host.controllersFeed -> application.moduleFeed
+      host.controllersMap -> application.moduleMap
+      host.controllersEvents -> application.moduleEvents
+      host.controllersChat -> application.moduleChat
+      host.controllersMarketplace -> application.moduleMarketplace
+      host.controllersModeration -> application.moduleModeration
+      host.controllersSubscriptions -> application.moduleSubscriptions
+      host.controllersUsers -> application.moduleUsers
+      host.controllersJourneys -> application.moduleFeed
+      host.controllersJourneys -> application.moduleEvents
+      host.controllersAlerts -> application.moduleAlerts
+      host.controllersAssets -> application.moduleAssets
+      host.controllersMedia -> application.moduleMedia
+      host.controllersNotifications -> application.moduleNotifications
+      host.security -> application.modulePlatform
+      // Application → Domain e Infrastructure
+      application.modulePlatform -> domain
+      application.moduleFeed -> domain
+      application.moduleMap -> domain
+      application.moduleEvents -> domain
+      application.moduleChat -> domain
+      application.moduleMarketplace -> domain
+      application.moduleModeration -> domain
+      application.moduleSubscriptions -> domain
+      application.moduleUsers -> domain
+      application.moduleAlerts -> domain
+      application.moduleAssets -> domain
+      application.moduleMedia -> domain
+      application.moduleNotifications -> domain
+      application.moduleConnections -> domain
+      application.modulePlatform -> infrastructure
+      application.moduleFeed -> infrastructure
+      application.moduleMap -> infrastructure
+      application.moduleEvents -> infrastructure
+      application.moduleChat -> infrastructure
+      application.moduleMarketplace -> infrastructure
+      application.moduleModeration -> infrastructure
+      application.moduleSubscriptions -> infrastructure
+      application.moduleUsers -> infrastructure
+    }
+
+    db = database 'Banco de Dados' 'PostgreSQL + PostGIS.' 'PostgreSQL'
+    storage = objectStorage 'Object Storage' 'Arquivos, evidências.' 'S3 compatível'
+    queue = messageQueue 'Event Bus' 'Eventos de domínio.' 'RabbitMQ/Kafka'
+  }
+
+  identity = softwareSystem 'Provedores de Identidade' 'OIDC (Google, Apple, Microsoft)'
+  payments = softwareSystem 'Meios de Pagamento' 'Mercado Pago / PayPal'
+  notificationsExt = softwareSystem 'Notificações Push' 'FCM/APNs'
+  mapsExt = softwareSystem 'Mapas e Geocoding' 'Tiles, geocode'
+
+  // ========== CONTEXTO (relações tipadas: uses, calls, proxies, persists, publishes, auth) ==========
+  user -[uses]-> arah.mobile 'Usa'
+  user -[uses]-> arah.web 'Usa'
+  moderator -[uses]-> arah.web 'Modera'
+  sysadmin -[uses]-> arah.web 'Administra'
+  arah.api -[auth]-> identity 'OIDC'
+  arah.api -[calls]-> payments 'Pagamentos'
+  arah.api -[calls]-> notificationsExt 'Push'
+  arah.api -[calls]-> mapsExt 'Mapas'
+
+  // ========== CONTAINERS ==========
+  arah.mobile -[calls]-> arah.bff 'HTTPS/JSON'
+  arah.web -[calls]-> arah.bff 'HTTPS/JSON'
+  arah.bff -[proxies]-> arah.api 'Jornadas'
+  arah.api -[persists]-> arah.db 'SQL'
+  arah.api -[persists]-> arah.storage 'Upload/Download'
+  arah.api -[publishes]-> arah.queue 'Eventos'
+}
+
+views {
+  view index {
+    title 'Ará — Contexto (Nível 1)'
+    include user
+    include moderator
+    include sysadmin
+    include arah
+    include identity
+    include payments
+    include notificationsExt
+    include mapsExt
+  }
+
+  view containers {
+    title 'Ará — Containers (Nível 2)'
+    include arah.*
+    include identity
+    include payments
+    include notificationsExt
+    include mapsExt
+  }
+
+  view of arah.mobile {
+    title 'App Mobile — Camadas (Core + Features)'
+    include *
+  }
+
+  view of arah.bff {
+    title 'BFF — Camadas (Middleware, Registry, Services, Contracts)'
+    include *
+  }
+
+  view of arah.api {
+    title 'Arah API — Composição (Host + Application módulos + Domain + Infrastructure)'
+    include *
+  }
+
+  view of arah.api.host {
+    title 'API Host — Controllers por área'
+    include *
+  }
+
+  view of arah.api.application {
+    title 'Application — Módulos'
+    include *
+  }
+}

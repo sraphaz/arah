@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { brand } from "../../../shared/config/brand";
 
 export function ApiDomainDiagram() {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -12,7 +13,7 @@ export function ApiDomainDiagram() {
         <div className="glass-card__content">
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-forest-900 dark:text-forest-50 mb-4">
-              Visão Geral do Sistema Araponga
+              Visão Geral do Sistema {brand.name}
             </h2>
             <p className="text-lg text-forest-700 dark:text-forest-300 max-w-2xl mx-auto">
               Diagrama isométrico mostrando como os diferentes módulos se conectam ao território como referência central
@@ -34,7 +35,7 @@ export function ApiDomainDiagram() {
           >
             <Image
               src="/wiki/araponga-api-domain-diagram.png"
-              alt="Diagrama isométrico do Domínio API Araponga - mostrando TERRITÓRIO no centro com conexões para FEED, MAP, HEALTH, FEATURES, MEMBERSHIP & GOVERNANCE, e AUTENTICAÇÃO"
+              alt={`Diagrama isométrico do Domínio API ${brand.name} - mostrando TERRITÓRIO no centro com conexões para FEED, MAP, HEALTH, FEATURES, MEMBERSHIP & GOVERNANCE, e AUTENTICAÇÃO`}
               width={1200}
               height={800}
               className="w-full h-auto object-contain transition-transform duration-300 hover:scale-[1.02]"
@@ -53,7 +54,7 @@ export function ApiDomainDiagram() {
               style={{ display: 'none' }}
             >
               <p className="text-forest-600 dark:text-forest-400 mb-4">
-                Diagrama do Domínio API Araponga
+                Diagrama do Domínio API {brand.name}
               </p>
               <p className="text-sm text-forest-500 dark:text-forest-500">
                 A imagem será carregada quando disponível em <code>/public/araponga-api-domain-diagram.png</code>
@@ -97,7 +98,7 @@ export function ApiDomainDiagram() {
           <div className="relative z-10 max-w-full max-h-full" onClick={(e) => e.stopPropagation()}>
             <Image
               src="/wiki/araponga-api-domain-diagram.png"
-              alt="Diagrama isométrico do Domínio API Araponga - versão ampliada"
+              alt={`Diagrama isométrico do Domínio API ${brand.name} - versão ampliada`}
               width={2400}
               height={1600}
               className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl"

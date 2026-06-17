@@ -13,7 +13,7 @@ export default function Visibility() {
                 Regras de visibilidade: por que isso importa
               </h2>
               <p className="text-base leading-relaxed text-forest-800 md:text-lg">
-                O sistema de visibilidade do Araponga garante que comunidades tenham controle sobre
+                O sistema de visibilidade do Arah garante que comunidades tenham controle sobre
                 suas informações, promovendo segurança e confiança.
               </p>
             </div>

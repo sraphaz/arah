@@ -14,7 +14,7 @@ export default function Technology() {
                 Arquitetura técnica: domínio primeiro, evolução incremental
               </h3>
               <p>
-                O Araponga é construído com <strong className="font-semibold">.NET 8</strong> e segue princípios de{" "}
+                O Arah é construído com <strong className="font-semibold">.NET 8</strong> e segue princípios de{" "}
                 <strong className="font-semibold">Domain-Driven Design (DDD)</strong> e <strong className="font-semibold">Clean Architecture</strong>.
                 <br />
                 A arquitetura prioriza domínios de negócio bem definidos e evolução incremental,

@@ -53,7 +53,7 @@ export default function Proposal() {
             </div>
             <div className="space-y-4 text-base leading-relaxed text-forest-800">
               <p>
-                O Araponga é uma plataforma de <strong>código aberto</strong> projetada para
+                O Arah é uma plataforma de <strong>código aberto</strong> projetada para
                 fortalecer a organização comunitária a partir do território.
                 <br />
                 Ela combina feed social, mapeamento colaborativo e regras de participação definidas

@@ -7,6 +7,7 @@ import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
 import { MobileSidebar } from "../components/layout/MobileSidebar";
 import { Footer } from "../components/layout/Footer";
+import { brand } from "../../shared/config/brand";
 
 // Inter - Fonte moderna e sóbria para corpo de texto
 // Usada por Vercel, Stripe, Linear - transmite profissionalismo e modernidade
@@ -28,19 +29,17 @@ const jetbrainsMono = JetBrains_Mono({
   preload: true,
 });
 
-const siteUrl = "https://devportal.araponga.app/wiki";
+const siteUrl = brand.urls.wiki;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Wiki Araponga — Documentação Completa",
-  description:
-    "Documentação completa do Araponga: visão do produto, arquitetura, desenvolvimento, onboarding e mais.",
+  title: `${brand.wikiTitle} — ${brand.tagline}`,
+  description: brand.description,
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Wiki Araponga — Documentação Completa",
-    description:
-      "Documentação completa do Araponga: visão do produto, arquitetura, desenvolvimento, onboarding e mais.",
+    title: `${brand.wikiTitle} — ${brand.tagline}`,
+    description: brand.description,
   },
   icons: {
     icon: "/wiki/favicon.png",

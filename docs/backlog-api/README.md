@@ -6,7 +6,7 @@
 **Objetivo**: Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado  
 **Estimativa Total**: 495 dias sequenciais / ~241 dias com paralelização (incluindo novas fases estratégicas + Fase 30 Hospedagem)  
 **Status Atual**: 9.3/10 (após implementação das fases 1-8, incluindo FASE8 com funcionalidades extras)  
-**Total de Fases Documentadas**: 48 fases (1-8 completas + 9-48 planejadas, incluindo fases complementares)
+**Total de Fases Documentadas**: 50 fases (1-8 completas + 9-51 planejadas, incluindo fases complementares)
 
 **Nota**: O roadmap estratégico menciona fases 31-44 conceituais (Proof of Sweat, Subscriptions, Web3, DAO, etc.), mas sem documentos detalhados. A Fase 30 (Hospedagem) é a primeira fase nova com documento completo.  
 **⭐ Estratégia de Convergência**: Ver [Estratégia de Convergência de Mercado](../39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) | [Mapa de Funcionalidades](../38_MAPA_FUNCIONALIDADES_MERCADO.md)
@@ -438,6 +438,8 @@ backlog-api/
 |------|---------|------------|--------|
 | **Fase 42: Learning Hub** | 60 dias | 🟢 P2 | ⏳ Novo |
 | **Fase 43: Rental System** | 45 dias | 🟢 P2 | ⏳ Novo |
+| **[Fase 50](./FASE50.md): Busca de Babás** | 28 dias | 🟡 P1 | ⏳ Novo | Busca e contratação de babás no território, integrado com Marketplace, Chat e Pagamentos |
+| **[Fase 51](./FASE51.md): Espaços e Prestadores de Wellness** | 35 dias | 🟡 P1 | ⏳ Novo | Espaços de bem-estar com agendas compartilhadas, prestadores que reservam horários, integração com Map Entities |
 
 **Referência**: [Estratégia de Convergência - Fase 5](../39_ESTRATEGIA_CONVERGENCIA_MERCADO.md#fase-5-diferenciação-mês-12-18)
 
@@ -476,9 +478,9 @@ O backlog foi expandido com novas fases estratégicas identificadas através de 
 | **Onda 2** | 17-18 | 63d | 35d (paralelo) | 🟡 P1 | 8% |
 | **Onda 3** | 23-24 | 49d | 28d (paralelo) | 🟡 P1 | 5% |
 | **Onda 4** | 12, 15 | 56d | 28d (paralelo) | 🟡 P1 | 3% |
-| **Onda 0.8** | 26, 41-43 | 230d | 120d (paralelo) | 🟢 P2 | 3% |
+| **Onda 0.8** | 26, 41-43, 50-51 | 293d | 160d (paralelo) | 🟢 P2 | 3% |
 | **Onda 5** | 16, 19, 21-22, 25, 27-29 | 231d | 120d (paralelo) | 🟢 P2 | 1% |
-| **Total** | **43 fases** | **~1133d** | **~672d (aprox. 14 meses)** | | **100%** |
+| **Total** | **45 fases** | **~1196d** | **~735d (aprox. 15 meses)** | | **100%** |
 
 ### Marcos Críticos
 

@@ -70,7 +70,7 @@ jobs:
           flags: unittests
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Security Scan (Trivy)
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           # v0.69.0 teve assets removidos no GitHub; usar versão com release disponível.
           version: 'v0.69.2'

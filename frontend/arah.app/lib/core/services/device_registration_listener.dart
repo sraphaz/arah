@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/presentation/providers/auth_state_provider.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
-import '../network/bff_client.dart';
 import '../providers/app_providers.dart';
 
 /// Registra dispositivo no BFF (`me/devices`) quando o usuário está autenticado.

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/notification_item.dart';
 import '../providers/notifications_provider.dart';
@@ -17,7 +18,7 @@ class NotificationsScreen extends ConsumerWidget {
     final state = ref.watch(notificationsProvider);
     final notifier = ref.read(notificationsProvider.notifier);
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.notifications),
       ),

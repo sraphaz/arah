@@ -5,6 +5,8 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../data/models/asset_item.dart';
 import '../providers/assets_provider.dart';
@@ -14,19 +16,20 @@ class AssetsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(assetsProvider);
     final notifier = ref.read(assetsProvider.notifier);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Assets')),
-        body: const Center(child: Text('Escolha um território primeiro.')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.assetsTitle)),
+        body: Center(child: Text(l10n.chooseTerritoryFirst)),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Assets')),
+    return ArahScaffold(
+      appBar: AppBar(title: Text(l10n.assetsTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateDialog(context, ref),
         child: const Icon(Icons.add),
@@ -46,21 +49,22 @@ class AssetsScreen extends ConsumerWidget {
   }
 
   Future<void> _showCreateDialog(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController();
     final typeController = TextEditingController(text: 'Infrastructure');
     await showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Novo asset'),
+        title: Text(l10n.newAsset),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Nome')),
-            TextField(controller: typeController, decoration: const InputDecoration(labelText: 'Tipo')),
+            TextField(controller: nameController, decoration: InputDecoration(labelText: l10n.assetName)),
+            TextField(controller: typeController, decoration: InputDecoration(labelText: l10n.assetType)),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
           FilledButton(
             onPressed: () async {
               try {
@@ -70,18 +74,18 @@ class AssetsScreen extends ConsumerWidget {
                     );
                 if (ctx.mounted) {
                   Navigator.pop(ctx);
-                  showSuccessSnackBar(ctx, 'Asset criado.');
+                  showSuccessSnackBar(ctx, l10n.assetCreated);
                 }
               } catch (e) {
                 if (ctx.mounted) {
                   showErrorSnackBar(
                     ctx,
-                    e is ApiException ? e.userMessage : 'Erro ao criar asset.',
+                    e is ApiException ? e.userMessage : l10n.errorCreateAsset,
                   );
                 }
               }
             },
-            child: const Text('Criar'),
+            child: Text(l10n.create),
           ),
         ],
       ),
@@ -89,6 +93,7 @@ class AssetsScreen extends ConsumerWidget {
   }
 
   Widget _buildBody(BuildContext context, WidgetRef ref, AssetsState state) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -104,7 +109,7 @@ class AssetsScreen extends ConsumerWidget {
             child: Text(
               state.error is ApiException
                   ? (state.error as ApiException).userMessage
-                  : 'Erro ao carregar assets.',
+                  : l10n.errorLoadAssets,
               textAlign: TextAlign.center,
             ),
           ),
@@ -114,7 +119,7 @@ class AssetsScreen extends ConsumerWidget {
     if (state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: Text('Nenhum asset cadastrado.')))],
+        children: [SizedBox(height: 200, child: Center(child: Text(l10n.noAssetsRegistered)))],
       );
     }
     return ListView.builder(
@@ -128,18 +133,18 @@ class AssetsScreen extends ConsumerWidget {
             title: Text(asset.name),
             subtitle: Text(
               '${asset.type} · ${asset.status}'
-              '${asset.validationsCount > 0 ? ' · ${asset.validationsCount} validações (${asset.validationPct.toStringAsFixed(0)}%)' : ''}',
+              '${asset.validationsCount > 0 ? ' · ${l10n.assetValidationsMeta(asset.validationsCount, asset.validationPct.toStringAsFixed(0))}' : ''}',
             ),
             trailing: PopupMenuButton<String>(
               onSelected: (value) => _onAssetAction(context, ref, asset, value),
               itemBuilder: (context) => [
                 if (asset.canValidate)
-                  const PopupMenuItem(value: 'validate', child: Text('Validar')),
+                  PopupMenuItem(value: 'validate', child: Text(l10n.validate)),
                 if (asset.canArchive)
-                  const PopupMenuItem(value: 'archive', child: Text('Arquivar')),
+                  PopupMenuItem(value: 'archive', child: Text(l10n.archive)),
                 if (asset.canCurate) ...[
-                  const PopupMenuItem(value: 'approve', child: Text('Aprovar (curador)')),
-                  const PopupMenuItem(value: 'reject', child: Text('Rejeitar (curador)')),
+                  PopupMenuItem(value: 'approve', child: Text(l10n.approveCurator)),
+                  PopupMenuItem(value: 'reject', child: Text(l10n.rejectCurator)),
                 ],
               ],
             ),
@@ -155,6 +160,7 @@ class AssetsScreen extends ConsumerWidget {
     AssetItem asset,
     String action,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final notifier = ref.read(assetsProvider.notifier);
     try {
       if (action == 'validate') {
@@ -162,24 +168,24 @@ class AssetsScreen extends ConsumerWidget {
         if (context.mounted) {
           showSuccessSnackBar(
             context,
-            'Validação registrada (${result.validationPct.toStringAsFixed(0)}% da comunidade).',
+            l10n.validationRegistered(result.validationPct.toStringAsFixed(0)),
           );
         }
       } else if (action == 'archive') {
         await notifier.archiveAsset(asset.id);
-        if (context.mounted) showSuccessSnackBar(context, 'Asset arquivado.');
+        if (context.mounted) showSuccessSnackBar(context, l10n.assetArchived);
       } else if (action == 'approve') {
         await notifier.curateAsset(asset.id, outcome: 'APPROVED');
-        if (context.mounted) showSuccessSnackBar(context, 'Asset aprovado.');
+        if (context.mounted) showSuccessSnackBar(context, l10n.assetApproved);
       } else if (action == 'reject') {
         await notifier.curateAsset(asset.id, outcome: 'REJECTED');
-        if (context.mounted) showSuccessSnackBar(context, 'Asset rejeitado.');
+        if (context.mounted) showSuccessSnackBar(context, l10n.assetRejected);
       }
     } catch (e) {
       if (context.mounted) {
         showErrorSnackBar(
           context,
-          e is ApiException ? e.userMessage : 'Não foi possível concluir a ação.',
+          e is ApiException ? e.userMessage : l10n.errorCompleteAction,
         );
       }
     }

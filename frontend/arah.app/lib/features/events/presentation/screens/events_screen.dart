@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../data/models/event_item.dart';
@@ -25,7 +26,7 @@ class EventsScreen extends ConsumerWidget {
 
     final hasTerritory = effectiveTerritoryId != null && effectiveTerritoryId.isNotEmpty;
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.events),
       ),

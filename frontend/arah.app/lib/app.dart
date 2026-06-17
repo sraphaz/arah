@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app_router.dart';
 import 'core/services/device_registration_listener.dart';
+import 'core/config/brand_config.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 
@@ -13,7 +14,7 @@ class ArahApp extends ConsumerWidget {
     final router = ref.watch(goRouterProvider);
     return DeviceRegistrationListener(
       child: MaterialApp.router(
-        title: 'Ará',
+        title: BrandConfig.name,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,

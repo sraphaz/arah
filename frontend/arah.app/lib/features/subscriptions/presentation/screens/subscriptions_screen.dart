@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/subscriptions_provider.dart';
 
 class SubscriptionsScreen extends ConsumerWidget {
@@ -11,11 +13,12 @@ class SubscriptionsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(subscriptionsProvider);
     final notifier = ref.read(subscriptionsProvider.notifier);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Assinaturas')),
+    return ArahScaffold(
+      appBar: AppBar(title: Text(l10n.subscriptions)),
       body: RefreshIndicator(
         onRefresh: () => notifier.refresh(),
         child: _buildBody(context, state, notifier),
@@ -28,6 +31,7 @@ class SubscriptionsScreen extends ConsumerWidget {
     SubscriptionsState state,
     SubscriptionsNotifier notifier,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.plans.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -43,7 +47,7 @@ class SubscriptionsScreen extends ConsumerWidget {
             child: Text(
               state.error is ApiException
                   ? (state.error as ApiException).userMessage
-                  : 'Erro ao carregar planos.',
+                  : l10n.errorLoadPlans,
               textAlign: TextAlign.center,
             ),
           ),
@@ -63,33 +67,33 @@ class SubscriptionsScreen extends ConsumerWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.verified_outlined),
-              title: const Text('Minha assinatura'),
-              subtitle: Text('Status: ${state.mySubscription!.status}'),
+              title: Text(l10n.mySubscription),
+              subtitle: Text(l10n.statusLabel(state.mySubscription!.status)),
               trailing: hasPaidSubscription
                   ? TextButton(
                       onPressed: () async {
                         try {
                           await notifier.cancelMySubscription();
                           if (context.mounted) {
-                            showSuccessSnackBar(context, 'Assinatura cancelada.');
+                            showSuccessSnackBar(context, l10n.subscriptionCancelled);
                           }
                         } catch (e) {
                           if (context.mounted) {
                             showErrorSnackBar(
                               context,
-                              e is ApiException ? e.userMessage : 'Erro ao cancelar.',
+                              e is ApiException ? e.userMessage : l10n.errorCancelSubscription,
                             );
                           }
                         }
                       },
-                      child: const Text('Cancelar'),
+                      child: Text(l10n.cancelSubscription),
                     )
                   : null,
             ),
           ),
           const SizedBox(height: AppConstants.spacingMd),
         ],
-        Text('Planos disponíveis', style: Theme.of(context).textTheme.titleMedium),
+        Text(l10n.availablePlans, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: AppConstants.spacingSm),
         ...state.plans.map(
           (plan) => Card(
@@ -102,17 +106,17 @@ class SubscriptionsScreen extends ConsumerWidget {
                 onPressed: () async {
                   try {
                     await notifier.subscribeToPlan(plan.id);
-                    if (context.mounted) showSuccessSnackBar(context, 'Assinatura ativada.');
+                    if (context.mounted) showSuccessSnackBar(context, l10n.subscriptionActivated);
                   } catch (e) {
                     if (context.mounted) {
                       showErrorSnackBar(
                         context,
-                        e is ApiException ? e.userMessage : 'Erro ao assinar.',
+                        e is ApiException ? e.userMessage : l10n.errorSubscribe,
                       );
                     }
                   }
                 },
-                child: const Text('Assinar'),
+                child: Text(l10n.subscribe),
               ),
             ),
           ),

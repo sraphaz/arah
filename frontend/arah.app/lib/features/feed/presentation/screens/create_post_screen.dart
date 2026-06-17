@@ -8,6 +8,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/feed_provider.dart';
@@ -44,7 +45,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final territoryId = ref.read(selectedTerritoryIdValueProvider);
     if (territoryId == null || territoryId.isEmpty) {
-      if (mounted) showErrorSnackBar(context, 'Escolha um território antes de publicar.');
+      if (mounted) showErrorSnackBar(context, AppLocalizations.of(context)!.chooseTerritoryBeforePost);
       return;
     }
     setState(() => _submitting = true);
@@ -88,7 +89,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final hasTerritory = territoryId != null && territoryId.isNotEmpty;
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.createPost),
         actions: [
@@ -206,7 +207,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                           OutlinedButton.icon(
                             onPressed: _submitting ? null : _pickImage,
                             icon: const Icon(Icons.image_outlined),
-                            label: Text(_selectedImagePath == null ? 'Adicionar imagem' : 'Trocar imagem'),
+                            label: Text(_selectedImagePath == null
+                                ? AppLocalizations.of(context)!.addImage
+                                : AppLocalizations.of(context)!.changeImage),
                           ),
                           if (_selectedImagePath != null) ...[
                             const SizedBox(height: AppConstants.spacingSm),

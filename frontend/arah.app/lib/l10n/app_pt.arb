@@ -1,6 +1,7 @@
 {
   "@@locale": "pt",
-  "appTitle": "Ará",
+  "appTitle": "Arah",
+  "brandTagline": "Território primeiro. Comunidade primeiro.",
   "login": "Entrar",
   "loginSubtitle": "Entre na sua conta",
   "email": "E-mail",
@@ -107,5 +108,189 @@
   "back": "Voltar",
   "accountCreated": "Conta criada. Bem-vindo!",
   "passwordMinLength": "Mín. 6 caracteres",
-  "passwordsDontMatch": "As senhas não coincidem"
+  "passwordsDontMatch": "As senhas não coincidem",
+  "chooseTerritoryFirst": "Escolha um território primeiro.",
+  "cancel": "Cancelar",
+  "create": "Criar",
+  "send": "Enviar",
+  "delete": "Excluir",
+  "deletePost": "Excluir post",
+  "deletePostConfirm": "Esta ação não pode ser desfeita.",
+  "marketplace": "Marketplace",
+  "chat": "Chat",
+  "alertsTitle": "Alertas",
+  "moderation": "Moderação",
+  "assetsTitle": "Assets",
+  "membership": "Membership",
+  "subscriptions": "Assinaturas",
+  "connections": "Conexões",
+  "add": "Adicionar",
+  "newGroup": "Novo grupo",
+  "newAsset": "Novo asset",
+  "assetName": "Nome",
+  "assetType": "Tipo",
+  "validate": "Validar",
+  "archive": "Arquivar",
+  "approveCurator": "Aprovar (curador)",
+  "rejectCurator": "Rejeitar (curador)",
+  "noAssetsRegistered": "Nenhum asset cadastrado.",
+  "noItemsFound": "Nenhum item encontrado.",
+  "noQueueItems": "Nenhum item nesta fila.",
+  "noAlertsActive": "Nenhum alerta ativo",
+  "reportAlert": "Reportar alerta",
+  "chooseTerritoryForAlerts": "Escolha um território para ver alertas.",
+  "pending": "Pendentes",
+  "connect": "Conectar",
+  "searchPeople": "Buscar pessoas",
+  "statusLabel": "Status: {status}",
+  "@statusLabel": {
+    "placeholders": {
+      "status": {"type": "String"}
+    }
+  },
+  "checkoutWithCount": "Checkout ({count})",
+  "@checkoutWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "myStore": "Minha loja",
+  "itemsTab": "Itens",
+  "availablePlans": "Planos disponíveis",
+  "mySubscription": "Minha assinatura",
+  "subscribe": "Assinar",
+  "cancelSubscription": "Cancelar",
+  "yourRole": "Seu papel",
+  "verificationLabel": "Verificação: {value}",
+  "@verificationLabel": {
+    "placeholders": {
+      "value": {"type": "String"}
+    }
+  },
+  "requestResidency": "Solicitar residência",
+  "verifyByLocation": "Verificar por localização",
+  "channelsTab": "Canais",
+  "groupsTab": "Grupos",
+  "groupName": "Nome do grupo",
+  "openStreetMapAttribution": "OpenStreetMap contributors",
+  "priceLabel": "{currency} {amount}",
+  "@priceLabel": {
+    "placeholders": {
+      "currency": {"type": "String"},
+      "amount": {"type": "String"}
+    }
+  },
+  "storeAndPrice": "{store} · {price}",
+  "@storeAndPrice": {
+    "placeholders": {
+      "store": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+  "conversationMeta": "{kind} · {status}",
+  "@conversationMeta": {
+    "placeholders": {
+      "kind": {"type": "String"},
+      "status": {"type": "String"}
+    }
+  },
+  "noCommentsYet": "Nenhum comentário ainda.",
+  "commentHint": "Escreva um comentário",
+  "errorLoadComments": "Não foi possível carregar comentários.",
+  "errorComment": "Erro ao comentar.",
+  "groupCreated": "Grupo criado.",
+  "errorCreateGroup": "Erro ao criar grupo.",
+  "errorLoadConversations": "Erro ao carregar conversas.",
+  "noChannelsAvailable": "Nenhum canal disponível.",
+  "noGroupsYet": "Nenhum grupo ainda. Toque + para criar.",
+  "conversation": "Conversa",
+  "messageHint": "Mensagem",
+  "errorSendMessage": "Erro ao enviar mensagem.",
+  "searchTab": "Buscar",
+  "searchItemsHint": "Buscar itens",
+  "orderSent": "Pedido enviado.",
+  "errorCheckout": "Erro no checkout.",
+  "errorSearchItems": "Erro ao buscar itens.",
+  "addedToCart": "Adicionado ao carrinho.",
+  "errorAddToCart": "Erro ao adicionar.",
+  "createMyStore": "Criar minha loja",
+  "updateStore": "Atualizar loja",
+  "storeNameLabel": "Nome da loja",
+  "descriptionLabel": "Descrição",
+  "informStoreName": "Informe o nome da loja.",
+  "storeCreated": "Loja criada.",
+  "storeUpdated": "Loja atualizada.",
+  "errorSaveStore": "Erro ao salvar loja.",
+  "createStore": "Criar loja",
+  "saveChanges": "Salvar alterações",
+  "requestSent": "Solicitação enviada.",
+  "errorSendRequest": "Erro ao enviar solicitação.",
+  "errorLoadConnections": "Não foi possível carregar conexões.",
+  "noConnectionsYet": "Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.",
+  "errorLoadSuggestions": "Erro ao carregar sugestões.",
+  "errorSearch": "Erro na busca.",
+  "searchMinCharsHint": "Digite ao menos 2 caracteres ou veja sugestões acima.",
+  "connectionRequestIncoming": "Solicitação recebida",
+  "connectionRequestOutgoing": "Solicitação enviada",
+  "activeConnection": "Conexão ativa",
+  "errorAccept": "Erro ao aceitar.",
+  "errorReject": "Erro ao rejeitar.",
+  "errorRemove": "Erro ao remover.",
+  "assetCreated": "Asset criado.",
+  "errorCreateAsset": "Erro ao criar asset.",
+  "errorLoadAssets": "Erro ao carregar assets.",
+  "validationRegistered": "Validação registrada ({percent}% da comunidade).",
+  "@validationRegistered": {
+    "placeholders": {
+      "percent": {"type": "String"}
+    }
+  },
+  "assetArchived": "Asset arquivado.",
+  "assetApproved": "Asset aprovado.",
+  "assetRejected": "Asset rejeitado.",
+  "errorCompleteAction": "Não foi possível concluir a ação.",
+  "assetValidationsMeta": "{count} validações ({percent}%)",
+  "@assetValidationsMeta": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "percent": {"type": "String"}
+    }
+  },
+  "alertCreated": "Alerta criado.",
+  "errorCreateAlert": "Erro ao criar alerta.",
+  "errorLoadAlerts": "Não foi possível carregar alertas.",
+  "alertsRequireResidency": "Alertas do território exigem residência ou curadoria.",
+  "filterAll": "Todos",
+  "postDefaultTitle": "Post",
+  "chooseTerritoryBeforePost": "Escolha um território antes de publicar.",
+  "addImage": "Adicionar imagem",
+  "changeImage": "Trocar imagem",
+  "moderationQueueTab": "Fila",
+  "moderationCasesTab": "Casos",
+  "moderationEvidencesTab": "Evidências",
+  "noPermissionOrError": "Sem permissão ou erro ao carregar.",
+  "downloadEvidenceTooltip": "Baixar evidência",
+  "approveTooltip": "Aprovar",
+  "rejectTooltip": "Rejeitar",
+  "decisionRegistered": "Decisão registrada.",
+  "errorDecideItem": "Erro ao decidir item.",
+  "evidenceDownloaded": "Evidência baixada ({size} bytes).",
+  "@evidenceDownloaded": {
+    "placeholders": {
+      "size": {"type": "int"}
+    }
+  },
+  "errorDownloadEvidence": "Erro ao baixar evidência.",
+  "errorLoadMembership": "Erro ao carregar membership.",
+  "enableLocationFirst": "Ative a localização primeiro.",
+  "residencyVerifiedByGeo": "Residência verificada por geo.",
+  "errorResidencyVerification": "Erro na verificação.",
+  "alreadyResident": "Você já é morador neste território.",
+  "errorLoadPlans": "Erro ao carregar planos.",
+  "subscriptionCancelled": "Assinatura cancelada.",
+  "errorCancelSubscription": "Erro ao cancelar.",
+  "subscriptionActivated": "Assinatura ativada.",
+  "errorSubscribe": "Erro ao assinar.",
+  "errorRequestResidency": "Erro ao solicitar residência.",
+  "moderationEvidenceSuffix": "evidência"
 }

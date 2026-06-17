@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/chat_provider.dart';
 
 class ChatConversationScreen extends ConsumerStatefulWidget {
@@ -35,9 +37,10 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
       _controller.clear();
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         showErrorSnackBar(
           context,
-          e is ApiException ? e.userMessage : 'Erro ao enviar mensagem.',
+          e is ApiException ? e.userMessage : l10n.errorSendMessage,
         );
       }
     } finally {
@@ -47,11 +50,12 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(chatConversationProvider(widget.conversationId));
     final timeFormat = DateFormat('HH:mm');
 
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title ?? 'Conversa')),
+    return ArahScaffold(
+      appBar: AppBar(title: Text(widget.title ?? l10n.conversation)),
       body: Column(
         children: [
           Expanded(
@@ -94,8 +98,8 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      decoration: const InputDecoration(
-                        hintText: 'Mensagem',
+                      decoration: InputDecoration(
+                        hintText: l10n.messageHint,
                         border: OutlineInputBorder(),
                       ),
                       onSubmitted: (_) => _send(),

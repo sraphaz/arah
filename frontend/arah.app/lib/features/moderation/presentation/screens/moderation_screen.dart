@@ -6,6 +6,8 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../data/models/work_item.dart';
 import '../providers/moderation_provider.dart';
@@ -42,27 +44,28 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final state = ref.watch(moderationProvider);
     final notifier = ref.read(moderationProvider.notifier);
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Moderação')),
-        body: const Center(child: Text('Escolha um território primeiro.')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.moderation)),
+        body: Center(child: Text(l10n.chooseTerritoryFirst)),
       );
     }
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: const Text('Moderação'),
+        title: Text(l10n.moderation),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Fila'),
-            Tab(text: 'Casos'),
-            Tab(text: 'Evidências'),
+          tabs: [
+            Tab(text: l10n.moderationQueueTab),
+            Tab(text: l10n.moderationCasesTab),
+            Tab(text: l10n.moderationEvidencesTab),
           ],
         ),
       ),
@@ -86,6 +89,7 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     DateFormat dateFormat,
     ModerationNotifier notifier,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -101,7 +105,7 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
             child: Text(
               state.error is ApiException
                   ? (state.error as ApiException).userMessage
-                  : 'Sem permissão ou erro ao carregar.',
+                  : l10n.noPermissionOrError,
               textAlign: TextAlign.center,
             ),
           ),
@@ -111,7 +115,7 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     if (state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: Text('Nenhum item nesta fila.')))],
+        children: [SizedBox(height: 200, child: Center(child: Text(l10n.noQueueItems)))],
       );
     }
     return ListView.builder(
@@ -125,7 +129,7 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
             title: Text(item.type),
             subtitle: Text(
               '${item.status} · ${item.subjectType}'
-              '${item.evidenceId != null ? ' · evidência' : ''}'
+              '${item.evidenceId != null ? ' · ${l10n.moderationEvidenceSuffix}' : ''}'
               ' · ${dateFormat.format(item.createdAtUtc.toLocal())}',
             ),
             trailing: _buildActions(context, notifier, item),
@@ -136,23 +140,24 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
   }
 
   Widget? _buildActions(BuildContext context, ModerationNotifier notifier, WorkItem item) {
+    final l10n = AppLocalizations.of(context)!;
     if (!item.isPending) return null;
     if (item.isResidencyVerification && item.evidenceId != null) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            tooltip: 'Baixar evidência',
+            tooltip: l10n.downloadEvidenceTooltip,
             icon: const Icon(Icons.download_outlined),
             onPressed: () => _downloadEvidence(context, notifier, item),
           ),
           IconButton(
-            tooltip: 'Aprovar',
+            tooltip: l10n.approveTooltip,
             icon: const Icon(Icons.check_circle_outline),
             onPressed: () => _decide(context, notifier, item, 'APPROVED'),
           ),
           IconButton(
-            tooltip: 'Rejeitar',
+            tooltip: l10n.rejectTooltip,
             icon: const Icon(Icons.cancel_outlined),
             onPressed: () => _decide(context, notifier, item, 'REJECTED'),
           ),
@@ -164,12 +169,12 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            tooltip: 'Aprovar',
+            tooltip: l10n.approveTooltip,
             icon: const Icon(Icons.check_circle_outline),
             onPressed: () => _decide(context, notifier, item, 'APPROVED'),
           ),
           IconButton(
-            tooltip: 'Rejeitar',
+            tooltip: l10n.rejectTooltip,
             icon: const Icon(Icons.cancel_outlined),
             onPressed: () => _decide(context, notifier, item, 'REJECTED'),
           ),
@@ -185,14 +190,15 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     WorkItem item,
     String outcome,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await notifier.decideItem(item, outcome);
-      if (context.mounted) showSuccessSnackBar(context, 'Decisão registrada.');
+      if (context.mounted) showSuccessSnackBar(context, l10n.decisionRegistered);
     } catch (e) {
       if (context.mounted) {
         showErrorSnackBar(
           context,
-          e is ApiException ? e.userMessage : 'Erro ao decidir item.',
+          e is ApiException ? e.userMessage : l10n.errorDecideItem,
         );
       }
     }
@@ -203,14 +209,15 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     ModerationNotifier notifier,
     WorkItem item,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final size = await notifier.downloadEvidence(item);
-      if (context.mounted) showSuccessSnackBar(context, 'Evidência baixada ($size bytes).');
+      if (context.mounted) showSuccessSnackBar(context, l10n.evidenceDownloaded(size));
     } catch (e) {
       if (context.mounted) {
         showErrorSnackBar(
           context,
-          e is ApiException ? e.userMessage : 'Erro ao baixar evidência.',
+          e is ApiException ? e.userMessage : l10n.errorDownloadEvidence,
         );
       }
     }

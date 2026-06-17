@@ -127,7 +127,7 @@ class FeedPostCard extends StatelessWidget {
                             (authorInitial ?? (title.isNotEmpty ? title[0] : '?')).toUpperCase(),
                             style: TextStyle(
                               color: theme.colorScheme.onPrimaryContainer,
-                              fontSize: AppDesignTokens.fontSizeBodySmall,
+                              fontSize: AppDesignTokens.fontSizeXs,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

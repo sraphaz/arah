@@ -1,3 +1,4 @@
+import 'package:arah_app/core/theme/app_theme.dart';
 import 'package:arah_app/core/config/app_config.dart';
 import 'package:arah_app/core/storage/secure_storage_service.dart';
 import 'package:arah_app/features/auth/data/repositories/auth_repository.dart';
@@ -54,6 +55,7 @@ void main() {
           authStateProvider.overrideWith(() => _FakeAuthStateNotifier()),
         ],
         child: MaterialApp(
+          theme: AppTheme.dark,
           locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -63,7 +65,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Ará'), findsOneWidget);
+    expect(find.text('Arah'), findsOneWidget);
     expect(find.text('Continuar'), findsOneWidget);
     expect(find.byType(TextFormField), findsWidgets);
   });
@@ -80,6 +82,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(fakeRepo),
         ],
         child: MaterialApp(
+          theme: AppTheme.dark,
           locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

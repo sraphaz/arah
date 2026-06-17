@@ -37,7 +37,7 @@ function Get-FlutterPath {
 
 function Show-Help {
     Write-Host ""
-    Write-Info "=== Ará - Rodar app contra BFF local ==="
+    Write-Info "=== Arah - Rodar app contra BFF local ==="
     Write-Host ""
     Write-Host "  Por padrão roda no Chrome (web). Use -Device para outro alvo."
     Write-Host ""

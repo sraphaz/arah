@@ -1,4 +1,4 @@
-# Arquitetura – Ará App (Flutter)
+# Arquitetura – Arah App (Flutter)
 
 Visão da arquitetura do app: rede, estado, rotas e internacionalização.
 

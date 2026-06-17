@@ -5,6 +5,8 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/geo/geo_location_provider.dart';
 import '../../../territories/data/repositories/territories_repository.dart';
@@ -16,8 +18,6 @@ import '../../data/models/map_pin.dart';
 const LatLng _defaultCenter = LatLng(-14.2, -51.9);
 const double _defaultZoom = 4.0;
 const double _territoryZoom = 13.0;
-/// Cor do contorno do polígono e do pin do território (verde floresta).
-const _territoryBoundaryColorMap = Color(0xFF228B22);
 
 /// Tela de mapa com pins do território (entidades, posts, eventos, etc.).
 /// Usa flutter_map + OpenStreetMap; opcionalmente configurável para tiles Mapbox.
@@ -36,6 +36,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Sempre priorizar o território atualmente selecionado para que a alternância no Explorar
     // reflita no mapa e apenas um contorno seja exibido por vez.
     final territoryId = ref.watch(selectedTerritoryIdValueProvider) ?? widget.territoryId;
@@ -48,9 +49,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final initialCenter = _initialCenter(geo, pinsAsync.valueOrNull, territoryDetail);
     final initialZoom = _initialZoom(geo, pinsAsync.valueOrNull);
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.map),
+        title: Text(l10n.map),
         actions: [
           if (geo != null)
             IconButton(
@@ -78,7 +79,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ),
                     const SizedBox(height: AppConstants.spacingMd),
                     Text(
-                      AppLocalizations.of(context)!.chooseTerritory,
+                      l10n.chooseTerritory,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
@@ -98,7 +99,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.araponga.app',
+                  userAgentPackageName: AppConstants.mapUserAgentPackage,
                 ),
                 if (geo != null)
                   MarkerLayer(
@@ -107,9 +108,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         point: LatLng(geo.latitude, geo.longitude),
                         width: 40,
                         height: 40,
-                        child: const Icon(
+                        child: Icon(
                           Icons.person_pin_circle,
-                          color: Colors.orange,
+                          color: context.appColors.locationPin,
                           size: 40,
                         ),
                       ),
@@ -132,8 +133,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
-                const SimpleAttributionWidget(
-                  source: Text('OpenStreetMap contributors'),
+                SimpleAttributionWidget(
+                  source: Text(l10n.openStreetMapAttribution),
                 ),
               ],
             ),
@@ -152,7 +153,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   Widget _buildTerritoryBoundaryLayer(BuildContext context, TerritoryDetail detail) {
-    const color = _territoryBoundaryColorMap;
+    final color = context.appColors.territoryBoundary;
     if (detail.boundaryPolygon != null && detail.boundaryPolygon!.length >= 3) {
       final points = detail.boundaryPolygon!.map((p) => LatLng(p.lat, p.lng)).toList();
       return PolygonLayer(

@@ -7,6 +7,7 @@ class AppConstants {
   static const double spacingMd = 16.0;
   static const double spacingLg = 24.0;
   static const double spacingXl = 32.0;
+  static const double spacing2xl = 48.0;
   static const double radiusSm = 8.0;
   static const double radiusMd = 12.0;
   static const double radiusLg = 16.0;
@@ -29,8 +30,11 @@ class AppConstants {
   static const double minTouchTargetSize = 44.0;
   static const int defaultPageSize = 20;
   static const int maxPageSize = 50;
-  static const String keyAccessToken = 'araponga_access_token';
-  static const String keyRefreshToken = 'araponga_refresh_token';
-  static const String keyTokenExpiry = 'araponga_token_expiry';
-  static const String keySelectedTerritoryId = 'araponga_selected_territory_id';
+  static const String keyAccessToken = 'arah_access_token';
+  static const String keyRefreshToken = 'arah_refresh_token';
+  static const String keyTokenExpiry = 'arah_token_expiry';
+  static const String keySelectedTerritoryId = 'arah_selected_territory_id';
+
+  /// Pacote para user-agent de mapas (OpenStreetMap).
+  static const String mapUserAgentPackage = 'com.arah.app';
 }

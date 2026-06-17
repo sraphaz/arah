@@ -5,6 +5,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../../territories/presentation/widgets/territory_selector.dart';
@@ -33,6 +34,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final feedState = ref.watch(feedNotifierProvider(territoryId));
     final notifier = ref.read(feedNotifierProvider(territoryId).notifier);
@@ -40,15 +42,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final filterType = ref.watch(filterFeedTypeProvider);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Início')),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.home)),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
               padding: const EdgeInsets.all(AppConstants.spacingMd),
               child: Text(
-                'Escolha um território para ver o feed da região',
+                l10n.chooseTerritory,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -60,16 +62,16 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       );
     }
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.home),
+        title: Text(l10n.home),
         actions: [
           IconButton(
             icon: Icon(
               filterByInterests ? Icons.filter_list : Icons.filter_list_off,
               color: filterByInterests ? Theme.of(context).colorScheme.primary : null,
             ),
-            tooltip: AppLocalizations.of(context)!.filterByInterests,
+            tooltip: l10n.filterByInterests,
             onPressed: () {
               ref.read(filterFeedByInterestsProvider.notifier).state = !filterByInterests;
               ref.invalidate(feedNotifierProvider(territoryId));
@@ -226,14 +228,15 @@ class _FeedListState extends ConsumerState<_FeedList> {
   }
 
   Future<void> _confirmDelete(String postId) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Excluir post'),
-        content: const Text('Esta ação não pode ser desfeita.'),
+        title: Text(l10n.deletePost),
+        content: Text(l10n.deletePostConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Excluir')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.delete)),
         ],
       ),
     );
@@ -242,6 +245,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
   }
 
   void _showPostMenu({required String postId, required bool canDelete}) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
@@ -251,7 +255,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
             if (canDelete)
               ListTile(
                 leading: Icon(Icons.delete_outline, color: Theme.of(ctx).colorScheme.error),
-                title: const Text('Excluir post'),
+                title: Text(l10n.deletePost),
                 onTap: () {
                   Navigator.pop(ctx);
                   _confirmDelete(postId);
@@ -297,6 +301,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
     final isLoadingMore = widget.isLoadingMore;
     final onLoadMore = widget.onLoadMore;
     if (items.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
@@ -313,12 +318,12 @@ class _FeedListState extends ConsumerState<_FeedList> {
                   ),
                   const SizedBox(height: AppConstants.spacingMd),
                   Text(
-                    'Nenhum post nesta região',
+                    l10n.noPostsHere,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: AppConstants.spacingSm),
                   Text(
-                    'Seja o primeiro a publicar aqui.',
+                    l10n.beFirstToPost,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -355,7 +360,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
         final item = items[index] as Map<String, dynamic>?;
         final post = item?['post'] as Map<String, dynamic>?;
         final postId = post?['id']?.toString() ?? '';
-        final title = post?['title']?.toString() ?? 'Post';
+        final title = post?['title']?.toString() ?? AppLocalizations.of(context)!.postDefaultTitle;
         final content = post?['content']?.toString() ?? '';
         final postType = post?['type']?.toString();
         final counts = FeedPostCounts.fromJson(item?['counts'] as Map<String, dynamic>?);
@@ -412,14 +417,16 @@ class _FeedTypeFilterBar extends StatelessWidget {
   final String? selectedType;
   final ValueChanged<String?> onTypeSelected;
 
-  static const _options = <String?, String>{
-    null: 'Todos',
-    'general': 'Geral',
-    'alert': 'Alerta',
+  static Map<String?, String> _options(AppLocalizations l10n) => {
+    null: l10n.filterAll,
+    'general': l10n.general,
+    'alert': l10n.alert,
   };
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final options = _options(l10n);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(
@@ -427,7 +434,7 @@ class _FeedTypeFilterBar extends StatelessWidget {
         vertical: AppConstants.spacingSm,
       ),
       child: Row(
-        children: _options.entries.map((entry) {
+        children: options.entries.map((entry) {
           final selected = selectedType?.toLowerCase() == entry.key?.toLowerCase() ||
               (selectedType == null && entry.key == null);
           return Padding(

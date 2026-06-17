@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/feed_comment.dart';
 import '../../domain/feed_interaction.dart';
 import '../providers/feed_provider.dart';
@@ -99,7 +100,7 @@ class _FeedCommentsSheetState extends ConsumerState<FeedCommentsSheet> {
       if (!mounted) return;
       setState(() {
         _isLoading = false;
-        _error = e is ApiException ? e.userMessage : 'Não foi possível carregar comentários.';
+        _error = e is ApiException ? e.userMessage : AppLocalizations.of(context)!.errorLoadComments;
       });
     }
   }
@@ -120,7 +121,7 @@ class _FeedCommentsSheetState extends ConsumerState<FeedCommentsSheet> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e is ApiException ? e.userMessage : 'Erro ao comentar.')),
+        SnackBar(content: Text(e is ApiException ? e.userMessage : AppLocalizations.of(context)!.errorComment)),
       );
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -130,6 +131,7 @@ class _FeedCommentsSheetState extends ConsumerState<FeedCommentsSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.75,
@@ -161,7 +163,7 @@ class _FeedCommentsSheetState extends ConsumerState<FeedCommentsSheet> {
                       : _comments.isEmpty
                           ? Center(
                               child: Text(
-                                'Nenhum comentário ainda.',
+                                l10n.noCommentsYet,
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
@@ -175,7 +177,7 @@ class _FeedCommentsSheetState extends ConsumerState<FeedCommentsSheet> {
                                 if (index >= _comments.length) {
                                   return TextButton(
                                     onPressed: () => _loadComments(reset: false),
-                                    child: const Text('Carregar mais'),
+                                    child: Text(l10n.loadMore),
                                   );
                                 }
                                 final comment = _comments[index];
@@ -193,8 +195,8 @@ class _FeedCommentsSheetState extends ConsumerState<FeedCommentsSheet> {
                       controller: _controller,
                       minLines: 1,
                       maxLines: 3,
-                      decoration: const InputDecoration(
-                        hintText: 'Escreva um comentário',
+                      decoration: InputDecoration(
+                        hintText: l10n.commentHint,
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
@@ -270,6 +272,7 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.spacingLg),
@@ -278,7 +281,7 @@ class _ErrorState extends StatelessWidget {
           children: [
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: AppConstants.spacingMd),
-            FilledButton.tonal(onPressed: onRetry, child: const Text('Tentar novamente')),
+            FilledButton.tonal(onPressed: onRetry, child: Text(l10n.tryAgain)),
           ],
         ),
       ),

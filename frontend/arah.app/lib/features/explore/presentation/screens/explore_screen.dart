@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../../territories/presentation/widgets/territory_selector.dart';
@@ -14,37 +15,38 @@ class ExploreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final territoryId = ref.watch(selectedTerritoryIdValueProvider);
     final hasTerritory = territoryId != null && territoryId.isNotEmpty;
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.explore),
+        title: Text(l10n.explore),
         actions: [
           if (hasTerritory) ...[
             IconButton(
               icon: const Icon(Icons.event_outlined),
-              tooltip: AppLocalizations.of(context)!.events,
+              tooltip: l10n.events,
               onPressed: () => context.push('/events?territoryId=$territoryId'),
             ),
             IconButton(
               icon: const Icon(Icons.map_outlined),
-              tooltip: AppLocalizations.of(context)!.viewOnMap,
+              tooltip: l10n.viewOnMap,
               onPressed: () => context.push('/map?territoryId=$territoryId'),
             ),
             IconButton(
               icon: const Icon(Icons.warning_amber_outlined),
-              tooltip: 'Alertas',
+              tooltip: l10n.alertsTitle,
               onPressed: () => context.push('/alerts'),
             ),
             IconButton(
               icon: const Icon(Icons.storefront_outlined),
-              tooltip: 'Marketplace',
+              tooltip: l10n.marketplace,
               onPressed: () => context.push('/marketplace'),
             ),
             IconButton(
               icon: const Icon(Icons.chat_outlined),
-              tooltip: 'Chat',
+              tooltip: l10n.chat,
               onPressed: () => context.push('/chat'),
             ),
           ],
@@ -62,7 +64,7 @@ class ExploreScreen extends ConsumerWidget {
               AppConstants.spacingSm,
             ),
             child: Text(
-              AppLocalizations.of(context)!.territories,
+              l10n.territories,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -71,7 +73,7 @@ class ExploreScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
             child: Text(
-              AppLocalizations.of(context)!.territoriesSubtitle,
+              l10n.territoriesSubtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),

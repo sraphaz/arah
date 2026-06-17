@@ -1,3 +1,4 @@
+import 'package:arah_app/core/theme/app_theme.dart';
 import 'package:arah_app/features/auth/data/models/auth_models.dart';
 import 'package:arah_app/features/auth/data/repositories/auth_repository.dart';
 import 'package:arah_app/features/auth/presentation/providers/auth_state_provider.dart';
@@ -34,6 +35,7 @@ void main() {
           meProfileProvider.overrideWith((ref) async => profile),
         ],
         child: MaterialApp(
+          theme: AppTheme.dark,
           locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

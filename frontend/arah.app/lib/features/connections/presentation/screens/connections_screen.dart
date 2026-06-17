@@ -35,6 +35,7 @@ class ConnectionsScreen extends ConsumerWidget {
   }
 
   Future<void> _openSearchSheet(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -44,14 +45,14 @@ class ConnectionsScreen extends ConsumerWidget {
           try {
             await ref.read(connectionsProvider.notifier).sendRequest(userId);
             if (ctx.mounted) {
-              showSuccessSnackBar(ctx, 'Solicitação enviada.');
+              showSuccessSnackBar(ctx, l10n.requestSent);
               Navigator.pop(ctx);
             }
           } catch (e) {
             if (ctx.mounted) {
               showErrorSnackBar(
                 ctx,
-                e is ApiException ? e.userMessage : 'Erro ao enviar solicitação.',
+                e is ApiException ? e.userMessage : l10n.errorSendRequest,
               );
             }
           }
@@ -72,7 +73,7 @@ class ConnectionsScreen extends ConsumerWidget {
     if (state.error != null && state.accepted.isEmpty && state.pending.isEmpty) {
       final message = state.error is ApiException
           ? (state.error as ApiException).userMessage
-          : 'Não foi possível carregar conexões.';
+          : l10n.errorLoadConnections;
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
@@ -111,7 +112,7 @@ class ConnectionsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingLg),
             child: Text(
-              'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.',
+              l10n.noConnectionsYet,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -152,6 +153,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
   }
 
   Future<void> _loadSuggestions() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _loading = true;
       _error = null;
@@ -162,7 +164,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = e is ApiException ? e.userMessage : 'Erro ao carregar sugestões.';
+          _error = e is ApiException ? e.userMessage : l10n.errorLoadSuggestions;
         });
       }
     } finally {
@@ -171,6 +173,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
   }
 
   Future<void> _search(String query) async {
+    final l10n = AppLocalizations.of(context)!;
     if (query.trim().length < 2) {
       await _loadSuggestions();
       return;
@@ -185,7 +188,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = e is ApiException ? e.userMessage : 'Erro na busca.';
+          _error = e is ApiException ? e.userMessage : l10n.errorSearch;
           _results = const [];
         });
       }
@@ -212,7 +215,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
             TextField(
               controller: _queryController,
               decoration: InputDecoration(
-                hintText: 'Nome de exibição',
+                hintText: l10n.displayNameHint,
                 prefixIcon: const Icon(Icons.search),
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
@@ -239,7 +242,7 @@ class _ConnectionSearchSheetState extends ConsumerState<_ConnectionSearchSheet> 
               child: _results.isEmpty && !_loading
                   ? Center(
                       child: Text(
-                        'Digite ao menos 2 caracteres ou veja sugestões acima.',
+                        l10n.searchMinCharsHint,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -291,7 +294,11 @@ class _ConnectionTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
       child: ListTile(
         leading: CircleAvatar(child: Text(item.isIncoming ? '←' : '→')),
-        title: Text(isPending ? 'Solicitação ${item.isIncoming ? 'recebida' : 'enviada'}' : 'Conexão ativa'),
+        title: Text(
+          isPending
+              ? (item.isIncoming ? l10n.connectionRequestIncoming : l10n.connectionRequestOutgoing)
+              : l10n.activeConnection,
+        ),
         subtitle: Text(l10n.statusLabel(item.status)),
         trailing: isPending && item.isIncoming
             ? Row(
@@ -306,7 +313,7 @@ class _ConnectionTile extends StatelessWidget {
                         if (context.mounted) {
                           showErrorSnackBar(
                             context,
-                            e is ApiException ? e.userMessage : 'Erro ao aceitar.',
+                            e is ApiException ? e.userMessage : l10n.errorAccept,
                           );
                         }
                       }
@@ -321,7 +328,7 @@ class _ConnectionTile extends StatelessWidget {
                         if (context.mounted) {
                           showErrorSnackBar(
                             context,
-                            e is ApiException ? e.userMessage : 'Erro ao rejeitar.',
+                            e is ApiException ? e.userMessage : l10n.errorReject,
                           );
                         }
                       }
@@ -339,7 +346,7 @@ class _ConnectionTile extends StatelessWidget {
                         if (context.mounted) {
                           showErrorSnackBar(
                             context,
-                            e is ApiException ? e.userMessage : 'Erro ao remover.',
+                            e is ApiException ? e.userMessage : l10n.errorRemove,
                           );
                         }
                       }

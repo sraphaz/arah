@@ -74,13 +74,13 @@ class AssetsScreen extends ConsumerWidget {
                     );
                 if (ctx.mounted) {
                   Navigator.pop(ctx);
-                  showSuccessSnackBar(ctx, 'Asset criado.');
+                  showSuccessSnackBar(ctx, l10n.assetCreated);
                 }
               } catch (e) {
                 if (ctx.mounted) {
                   showErrorSnackBar(
                     ctx,
-                    e is ApiException ? e.userMessage : 'Erro ao criar asset.',
+                    e is ApiException ? e.userMessage : l10n.errorCreateAsset,
                   );
                 }
               }
@@ -109,7 +109,7 @@ class AssetsScreen extends ConsumerWidget {
             child: Text(
               state.error is ApiException
                   ? (state.error as ApiException).userMessage
-                  : 'Erro ao carregar assets.',
+                  : l10n.errorLoadAssets,
               textAlign: TextAlign.center,
             ),
           ),
@@ -133,7 +133,7 @@ class AssetsScreen extends ConsumerWidget {
             title: Text(asset.name),
             subtitle: Text(
               '${asset.type} · ${asset.status}'
-              '${asset.validationsCount > 0 ? ' · ${asset.validationsCount} validações (${asset.validationPct.toStringAsFixed(0)}%)' : ''}',
+              '${asset.validationsCount > 0 ? ' · ${l10n.assetValidationsMeta(asset.validationsCount, asset.validationPct.toStringAsFixed(0))}' : ''}',
             ),
             trailing: PopupMenuButton<String>(
               onSelected: (value) => _onAssetAction(context, ref, asset, value),
@@ -160,6 +160,7 @@ class AssetsScreen extends ConsumerWidget {
     AssetItem asset,
     String action,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final notifier = ref.read(assetsProvider.notifier);
     try {
       if (action == 'validate') {
@@ -167,24 +168,24 @@ class AssetsScreen extends ConsumerWidget {
         if (context.mounted) {
           showSuccessSnackBar(
             context,
-            'Validação registrada (${result.validationPct.toStringAsFixed(0)}% da comunidade).',
+            l10n.validationRegistered(result.validationPct.toStringAsFixed(0)),
           );
         }
       } else if (action == 'archive') {
         await notifier.archiveAsset(asset.id);
-        if (context.mounted) showSuccessSnackBar(context, 'Asset arquivado.');
+        if (context.mounted) showSuccessSnackBar(context, l10n.assetArchived);
       } else if (action == 'approve') {
         await notifier.curateAsset(asset.id, outcome: 'APPROVED');
-        if (context.mounted) showSuccessSnackBar(context, 'Asset aprovado.');
+        if (context.mounted) showSuccessSnackBar(context, l10n.assetApproved);
       } else if (action == 'reject') {
         await notifier.curateAsset(asset.id, outcome: 'REJECTED');
-        if (context.mounted) showSuccessSnackBar(context, 'Asset rejeitado.');
+        if (context.mounted) showSuccessSnackBar(context, l10n.assetRejected);
       }
     } catch (e) {
       if (context.mounted) {
         showErrorSnackBar(
           context,
-          e is ApiException ? e.userMessage : 'Não foi possível concluir a ação.',
+          e is ApiException ? e.userMessage : l10n.errorCompleteAction,
         );
       }
     }

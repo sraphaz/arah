@@ -47,7 +47,7 @@ class SubscriptionsScreen extends ConsumerWidget {
             child: Text(
               state.error is ApiException
                   ? (state.error as ApiException).userMessage
-                  : 'Erro ao carregar planos.',
+                  : l10n.errorLoadPlans,
               textAlign: TextAlign.center,
             ),
           ),
@@ -75,13 +75,13 @@ class SubscriptionsScreen extends ConsumerWidget {
                         try {
                           await notifier.cancelMySubscription();
                           if (context.mounted) {
-                            showSuccessSnackBar(context, 'Assinatura cancelada.');
+                            showSuccessSnackBar(context, l10n.subscriptionCancelled);
                           }
                         } catch (e) {
                           if (context.mounted) {
                             showErrorSnackBar(
                               context,
-                              e is ApiException ? e.userMessage : 'Erro ao cancelar.',
+                              e is ApiException ? e.userMessage : l10n.errorCancelSubscription,
                             );
                           }
                         }
@@ -106,12 +106,12 @@ class SubscriptionsScreen extends ConsumerWidget {
                 onPressed: () async {
                   try {
                     await notifier.subscribeToPlan(plan.id);
-                    if (context.mounted) showSuccessSnackBar(context, 'Assinatura ativada.');
+                    if (context.mounted) showSuccessSnackBar(context, l10n.subscriptionActivated);
                   } catch (e) {
                     if (context.mounted) {
                       showErrorSnackBar(
                         context,
-                        e is ApiException ? e.userMessage : 'Erro ao assinar.',
+                        e is ApiException ? e.userMessage : l10n.errorSubscribe,
                       );
                     }
                   }

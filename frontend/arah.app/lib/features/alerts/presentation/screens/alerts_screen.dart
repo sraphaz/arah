@@ -68,11 +68,11 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           children: [
             TextField(
               controller: titleController,
-              decoration: const InputDecoration(labelText: 'Título'),
+              decoration: InputDecoration(labelText: l10n.title),
             ),
             TextField(
               controller: descController,
-              decoration: const InputDecoration(labelText: 'Descrição'),
+              decoration: InputDecoration(labelText: l10n.descriptionLabel),
               maxLines: 3,
             ),
           ],
@@ -88,13 +88,13 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                     );
                 if (ctx.mounted) {
                   Navigator.pop(ctx);
-                  showSuccessSnackBar(ctx, 'Alerta criado.');
+                  showSuccessSnackBar(ctx, l10n.alertCreated);
                 }
               } catch (e) {
                 if (ctx.mounted) {
                   showErrorSnackBar(
                     ctx,
-                    e is ApiException ? e.userMessage : 'Erro ao criar alerta.',
+                    e is ApiException ? e.userMessage : l10n.errorCreateAlert,
                   );
                 }
               }
@@ -118,7 +118,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     if (state.error != null && state.items.isEmpty) {
       final message = state.error is ApiException
           ? (state.error as ApiException).userMessage
-          : 'Não foi possível carregar alertas.';
+          : l10n.errorLoadAlerts;
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
@@ -131,7 +131,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                 Text(message, textAlign: TextAlign.center),
                 const SizedBox(height: AppConstants.spacingSm),
                 Text(
-                  'Alertas do território exigem residência ou curadoria.',
+                  l10n.alertsRequireResidency,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,

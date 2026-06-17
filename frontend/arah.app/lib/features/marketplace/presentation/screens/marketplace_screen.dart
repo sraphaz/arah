@@ -63,9 +63,9 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen>
         title: Text(l10n.marketplace),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Buscar'),
-            Tab(text: 'Minha loja'),
+          tabs: [
+            Tab(text: l10n.searchTab),
+            Tab(text: l10n.myStore),
           ],
         ),
         actions: [
@@ -74,12 +74,12 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen>
               onPressed: () async {
                 try {
                   await notifier.checkout(message: 'Checkout via app');
-                  if (mounted) showSuccessSnackBar(context, 'Pedido enviado.');
+                  if (mounted) showSuccessSnackBar(context, l10n.orderSent);
                 } catch (e) {
                   if (mounted) {
                     showErrorSnackBar(
                       context,
-                      e is ApiException ? e.userMessage : 'Erro no checkout.',
+                      e is ApiException ? e.userMessage : l10n.errorCheckout,
                     );
                   }
                 }
@@ -124,6 +124,7 @@ class _SearchTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Padding(
@@ -131,7 +132,7 @@ class _SearchTab extends StatelessWidget {
           child: TextField(
             controller: queryController,
             decoration: InputDecoration(
-              hintText: 'Buscar itens',
+              hintText: l10n.searchItemsHint,
               prefixIcon: const Icon(Icons.search),
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
@@ -157,7 +158,7 @@ class _SearchTab extends StatelessWidget {
         child: Text(
           state.error is ApiException
               ? (state.error as ApiException).userMessage
-              : 'Erro ao buscar itens.',
+              : l10n.errorSearchItems,
         ),
       );
     }
@@ -173,18 +174,21 @@ class _SearchTab extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
           child: ListTile(
             title: Text(item.title),
-            subtitle: Text('${item.storeName} · ${item.currency} ${item.priceAmount.toStringAsFixed(2)}'),
+            subtitle: Text(l10n.storeAndPrice(
+              item.storeName,
+              l10n.priceLabel(item.currency, item.priceAmount.toStringAsFixed(2)),
+            )),
             trailing: IconButton(
               icon: const Icon(Icons.add_shopping_cart_outlined),
               onPressed: () async {
                 try {
                   await notifier.addToCart(item.id);
-                  if (context.mounted) showSuccessSnackBar(context, 'Adicionado ao carrinho.');
+                  if (context.mounted) showSuccessSnackBar(context, l10n.addedToCart);
                 } catch (e) {
                   if (context.mounted) {
                     showErrorSnackBar(
                       context,
-                      e is ApiException ? e.userMessage : 'Erro ao adicionar.',
+                      e is ApiException ? e.userMessage : l10n.errorAddToCart,
                     );
                   }
                 }
@@ -256,23 +260,23 @@ class _MyStoreTabState extends State<_MyStoreTab> {
           ),
         const SizedBox(height: AppConstants.spacingMd),
         Text(
-          widget.state.myStore == null ? 'Criar minha loja' : 'Atualizar loja',
+          widget.state.myStore == null ? l10n.createMyStore : l10n.updateStore,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: AppConstants.spacingSm),
         TextField(
           controller: _nameController,
-          decoration: const InputDecoration(
-            labelText: 'Nome da loja',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: l10n.storeNameLabel,
+            border: const OutlineInputBorder(),
           ),
         ),
         const SizedBox(height: AppConstants.spacingSm),
         TextField(
           controller: _descriptionController,
-          decoration: const InputDecoration(
-            labelText: 'Descrição',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: l10n.descriptionLabel,
+            border: const OutlineInputBorder(),
           ),
           maxLines: 3,
         ),
@@ -281,7 +285,7 @@ class _MyStoreTabState extends State<_MyStoreTab> {
           onPressed: () async {
             final name = _nameController.text.trim();
             if (name.isEmpty) {
-              showErrorSnackBar(context, 'Informe o nome da loja.');
+              showErrorSnackBar(context, l10n.informStoreName);
               return;
             }
             try {
@@ -294,19 +298,19 @@ class _MyStoreTabState extends State<_MyStoreTab> {
               if (context.mounted) {
                 showSuccessSnackBar(
                   context,
-                  widget.state.myStore == null ? 'Loja criada.' : 'Loja atualizada.',
+                  widget.state.myStore == null ? l10n.storeCreated : l10n.storeUpdated,
                 );
               }
             } catch (e) {
               if (context.mounted) {
                 showErrorSnackBar(
                   context,
-                  e is ApiException ? e.userMessage : 'Erro ao salvar loja.',
+                  e is ApiException ? e.userMessage : l10n.errorSaveStore,
                 );
               }
             }
           },
-          child: Text(widget.state.myStore == null ? 'Criar loja' : 'Salvar alterações'),
+          child: Text(widget.state.myStore == null ? l10n.createStore : l10n.saveChanges),
         ),
       ],
     );

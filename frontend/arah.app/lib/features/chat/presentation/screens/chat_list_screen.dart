@@ -51,8 +51,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
         title: Text(l10n.newGroup),
         content: TextField(
           controller: nameController,
-          decoration: const InputDecoration(
-            labelText: 'Nome do grupo',
+          decoration: InputDecoration(
+            labelText: l10n.groupName,
             border: OutlineInputBorder(),
           ),
         ),
@@ -66,7 +66,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
                 final group = await ref.read(chatListProvider.notifier).createGroup(name);
                 if (ctx.mounted) {
                   Navigator.pop(ctx);
-                  showSuccessSnackBar(context, 'Grupo criado.');
+                  showSuccessSnackBar(context, l10n.groupCreated);
                   if (mounted) {
                     context.push('/chat/${group.id}?title=${Uri.encodeComponent(group.name)}');
                   }
@@ -75,7 +75,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
                 if (ctx.mounted) {
                   showErrorSnackBar(
                     ctx,
-                    e is ApiException ? e.userMessage : 'Erro ao criar grupo.',
+                    e is ApiException ? e.userMessage : l10n.errorCreateGroup,
                   );
                 }
               }
@@ -106,9 +106,9 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
         title: Text(l10n.chat),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Canais'),
-            Tab(text: 'Grupos'),
+          tabs: [
+            Tab(text: l10n.channelsTab),
+            Tab(text: l10n.groupsTab),
           ],
         ),
       ),
@@ -133,6 +133,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
   }
 
   Widget _buildBody(BuildContext context, ChatListState state) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.activeItems.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -148,7 +149,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
             child: Text(
               state.error is ApiException
                   ? (state.error as ApiException).userMessage
-                  : 'Erro ao carregar conversas.',
+                  : l10n.errorLoadConversations,
               textAlign: TextAlign.center,
             ),
           ),
@@ -164,8 +165,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
             child: Center(
               child: Text(
                 state.tab == ChatListTab.channels
-                    ? 'Nenhum canal disponível.'
-                    : 'Nenhum grupo ainda. Toque + para criar.',
+                    ? l10n.noChannelsAvailable
+                    : l10n.noGroupsYet,
               ),
             ),
           ),
@@ -182,7 +183,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> with SingleTick
             state.tab == ChatListTab.channels ? Icons.chat_bubble_outline : Icons.group_outlined,
           ),
           title: Text(conversation.name),
-          subtitle: Text('${conversation.kind} · ${conversation.status}'),
+          subtitle: Text(l10n.conversationMeta(conversation.kind, conversation.status)),
           onTap: () => context.push('/chat/${conversation.id}?title=${Uri.encodeComponent(conversation.name)}'),
         );
       },

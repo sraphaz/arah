@@ -50,7 +50,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             Padding(
               padding: const EdgeInsets.all(AppConstants.spacingMd),
               child: Text(
-                'Escolha um território para ver o feed da região',
+                l10n.chooseTerritory,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -301,6 +301,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
     final isLoadingMore = widget.isLoadingMore;
     final onLoadMore = widget.onLoadMore;
     if (items.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
@@ -317,12 +318,12 @@ class _FeedListState extends ConsumerState<_FeedList> {
                   ),
                   const SizedBox(height: AppConstants.spacingMd),
                   Text(
-                    'Nenhum post nesta região',
+                    l10n.noPostsHere,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: AppConstants.spacingSm),
                   Text(
-                    'Seja o primeiro a publicar aqui.',
+                    l10n.beFirstToPost,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -359,7 +360,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
         final item = items[index] as Map<String, dynamic>?;
         final post = item?['post'] as Map<String, dynamic>?;
         final postId = post?['id']?.toString() ?? '';
-        final title = post?['title']?.toString() ?? 'Post';
+        final title = post?['title']?.toString() ?? AppLocalizations.of(context)!.postDefaultTitle;
         final content = post?['content']?.toString() ?? '';
         final postType = post?['type']?.toString();
         final counts = FeedPostCounts.fromJson(item?['counts'] as Map<String, dynamic>?);
@@ -416,14 +417,16 @@ class _FeedTypeFilterBar extends StatelessWidget {
   final String? selectedType;
   final ValueChanged<String?> onTypeSelected;
 
-  static const _options = <String?, String>{
-    null: 'Todos',
-    'general': 'Geral',
-    'alert': 'Alerta',
+  static Map<String?, String> _options(AppLocalizations l10n) => {
+    null: l10n.filterAll,
+    'general': l10n.general,
+    'alert': l10n.alert,
   };
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final options = _options(l10n);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(
@@ -431,7 +434,7 @@ class _FeedTypeFilterBar extends StatelessWidget {
         vertical: AppConstants.spacingSm,
       ),
       child: Row(
-        children: _options.entries.map((entry) {
+        children: options.entries.map((entry) {
           final selected = selectedType?.toLowerCase() == entry.key?.toLowerCase() ||
               (selectedType == null && entry.key == null);
           return Padding(

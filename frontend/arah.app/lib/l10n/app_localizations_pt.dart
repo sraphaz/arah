@@ -513,4 +513,263 @@ class AppLocalizationsPt extends AppLocalizations {
   String conversationMeta(String kind, String status) {
     return '$kind · $status';
   }
+
+  @override
+  String get noCommentsYet => 'Nenhum comentário ainda.';
+
+  @override
+  String get commentHint => 'Escreva um comentário';
+
+  @override
+  String get errorLoadComments => 'Não foi possível carregar comentários.';
+
+  @override
+  String get errorComment => 'Erro ao comentar.';
+
+  @override
+  String get groupCreated => 'Grupo criado.';
+
+  @override
+  String get errorCreateGroup => 'Erro ao criar grupo.';
+
+  @override
+  String get errorLoadConversations => 'Erro ao carregar conversas.';
+
+  @override
+  String get noChannelsAvailable => 'Nenhum canal disponível.';
+
+  @override
+  String get noGroupsYet => 'Nenhum grupo ainda. Toque + para criar.';
+
+  @override
+  String get conversation => 'Conversa';
+
+  @override
+  String get messageHint => 'Mensagem';
+
+  @override
+  String get errorSendMessage => 'Erro ao enviar mensagem.';
+
+  @override
+  String get searchTab => 'Buscar';
+
+  @override
+  String get searchItemsHint => 'Buscar itens';
+
+  @override
+  String get orderSent => 'Pedido enviado.';
+
+  @override
+  String get errorCheckout => 'Erro no checkout.';
+
+  @override
+  String get errorSearchItems => 'Erro ao buscar itens.';
+
+  @override
+  String get addedToCart => 'Adicionado ao carrinho.';
+
+  @override
+  String get errorAddToCart => 'Erro ao adicionar.';
+
+  @override
+  String get createMyStore => 'Criar minha loja';
+
+  @override
+  String get updateStore => 'Atualizar loja';
+
+  @override
+  String get storeNameLabel => 'Nome da loja';
+
+  @override
+  String get descriptionLabel => 'Descrição';
+
+  @override
+  String get informStoreName => 'Informe o nome da loja.';
+
+  @override
+  String get storeCreated => 'Loja criada.';
+
+  @override
+  String get storeUpdated => 'Loja atualizada.';
+
+  @override
+  String get errorSaveStore => 'Erro ao salvar loja.';
+
+  @override
+  String get createStore => 'Criar loja';
+
+  @override
+  String get saveChanges => 'Salvar alterações';
+
+  @override
+  String get requestSent => 'Solicitação enviada.';
+
+  @override
+  String get errorSendRequest => 'Erro ao enviar solicitação.';
+
+  @override
+  String get errorLoadConnections => 'Não foi possível carregar conexões.';
+
+  @override
+  String get noConnectionsYet =>
+      'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.';
+
+  @override
+  String get errorLoadSuggestions => 'Erro ao carregar sugestões.';
+
+  @override
+  String get errorSearch => 'Erro na busca.';
+
+  @override
+  String get searchMinCharsHint =>
+      'Digite ao menos 2 caracteres ou veja sugestões acima.';
+
+  @override
+  String get connectionRequestIncoming => 'Solicitação recebida';
+
+  @override
+  String get connectionRequestOutgoing => 'Solicitação enviada';
+
+  @override
+  String get activeConnection => 'Conexão ativa';
+
+  @override
+  String get errorAccept => 'Erro ao aceitar.';
+
+  @override
+  String get errorReject => 'Erro ao rejeitar.';
+
+  @override
+  String get errorRemove => 'Erro ao remover.';
+
+  @override
+  String get assetCreated => 'Asset criado.';
+
+  @override
+  String get errorCreateAsset => 'Erro ao criar asset.';
+
+  @override
+  String get errorLoadAssets => 'Erro ao carregar assets.';
+
+  @override
+  String validationRegistered(String percent) {
+    return 'Validação registrada ($percent% da comunidade).';
+  }
+
+  @override
+  String get assetArchived => 'Asset arquivado.';
+
+  @override
+  String get assetApproved => 'Asset aprovado.';
+
+  @override
+  String get assetRejected => 'Asset rejeitado.';
+
+  @override
+  String get errorCompleteAction => 'Não foi possível concluir a ação.';
+
+  @override
+  String assetValidationsMeta(int count, String percent) {
+    return '$count validações ($percent%)';
+  }
+
+  @override
+  String get alertCreated => 'Alerta criado.';
+
+  @override
+  String get errorCreateAlert => 'Erro ao criar alerta.';
+
+  @override
+  String get errorLoadAlerts => 'Não foi possível carregar alertas.';
+
+  @override
+  String get alertsRequireResidency =>
+      'Alertas do território exigem residência ou curadoria.';
+
+  @override
+  String get filterAll => 'Todos';
+
+  @override
+  String get postDefaultTitle => 'Post';
+
+  @override
+  String get chooseTerritoryBeforePost =>
+      'Escolha um território antes de publicar.';
+
+  @override
+  String get addImage => 'Adicionar imagem';
+
+  @override
+  String get changeImage => 'Trocar imagem';
+
+  @override
+  String get moderationQueueTab => 'Fila';
+
+  @override
+  String get moderationCasesTab => 'Casos';
+
+  @override
+  String get moderationEvidencesTab => 'Evidências';
+
+  @override
+  String get noPermissionOrError => 'Sem permissão ou erro ao carregar.';
+
+  @override
+  String get downloadEvidenceTooltip => 'Baixar evidência';
+
+  @override
+  String get approveTooltip => 'Aprovar';
+
+  @override
+  String get rejectTooltip => 'Rejeitar';
+
+  @override
+  String get decisionRegistered => 'Decisão registrada.';
+
+  @override
+  String get errorDecideItem => 'Erro ao decidir item.';
+
+  @override
+  String evidenceDownloaded(int size) {
+    return 'Evidência baixada ($size bytes).';
+  }
+
+  @override
+  String get errorDownloadEvidence => 'Erro ao baixar evidência.';
+
+  @override
+  String get errorLoadMembership => 'Erro ao carregar membership.';
+
+  @override
+  String get enableLocationFirst => 'Ative a localização primeiro.';
+
+  @override
+  String get residencyVerifiedByGeo => 'Residência verificada por geo.';
+
+  @override
+  String get errorResidencyVerification => 'Erro na verificação.';
+
+  @override
+  String get alreadyResident => 'Você já é morador neste território.';
+
+  @override
+  String get errorLoadPlans => 'Erro ao carregar planos.';
+
+  @override
+  String get subscriptionCancelled => 'Assinatura cancelada.';
+
+  @override
+  String get errorCancelSubscription => 'Erro ao cancelar.';
+
+  @override
+  String get subscriptionActivated => 'Assinatura ativada.';
+
+  @override
+  String get errorSubscribe => 'Erro ao assinar.';
+
+  @override
+  String get errorRequestResidency => 'Erro ao solicitar residência.';
+
+  @override
+  String get moderationEvidenceSuffix => 'evidência';
 }

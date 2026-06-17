@@ -1,4 +1,4 @@
-# Mapa e pins – App Ará
+# Mapa e pins – App Arah
 
 Implementação e opções de tiles (OpenStreetMap, Mapbox).
 

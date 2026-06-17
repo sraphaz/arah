@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'core/config/app_config.dart';
 import 'core/providers/territory_provider.dart';
+import 'core/widgets/arah_scaffold.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/providers/auth_state_provider.dart';
 import 'features/home/presentation/screens/main_shell_screen.dart';
@@ -134,7 +135,7 @@ class _SplashOrRedirect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return const ArahScaffold(
       body: Center(child: CircularProgressIndicator()),
     );
   }

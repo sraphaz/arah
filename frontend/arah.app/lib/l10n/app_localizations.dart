@@ -1057,6 +1057,504 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'{kind} · {status}'**
   String conversationMeta(String kind, String status);
+
+  /// No description provided for @noCommentsYet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum comentário ainda.'**
+  String get noCommentsYet;
+
+  /// No description provided for @commentHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escreva um comentário'**
+  String get commentHint;
+
+  /// No description provided for @errorLoadComments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar comentários.'**
+  String get errorLoadComments;
+
+  /// No description provided for @errorComment.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao comentar.'**
+  String get errorComment;
+
+  /// No description provided for @groupCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Grupo criado.'**
+  String get groupCreated;
+
+  /// No description provided for @errorCreateGroup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao criar grupo.'**
+  String get errorCreateGroup;
+
+  /// No description provided for @errorLoadConversations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar conversas.'**
+  String get errorLoadConversations;
+
+  /// No description provided for @noChannelsAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum canal disponível.'**
+  String get noChannelsAvailable;
+
+  /// No description provided for @noGroupsYet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum grupo ainda. Toque + para criar.'**
+  String get noGroupsYet;
+
+  /// No description provided for @conversation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conversa'**
+  String get conversation;
+
+  /// No description provided for @messageHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mensagem'**
+  String get messageHint;
+
+  /// No description provided for @errorSendMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao enviar mensagem.'**
+  String get errorSendMessage;
+
+  /// No description provided for @searchTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar'**
+  String get searchTab;
+
+  /// No description provided for @searchItemsHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar itens'**
+  String get searchItemsHint;
+
+  /// No description provided for @orderSent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pedido enviado.'**
+  String get orderSent;
+
+  /// No description provided for @errorCheckout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro no checkout.'**
+  String get errorCheckout;
+
+  /// No description provided for @errorSearchItems.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao buscar itens.'**
+  String get errorSearchItems;
+
+  /// No description provided for @addedToCart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionado ao carrinho.'**
+  String get addedToCart;
+
+  /// No description provided for @errorAddToCart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao adicionar.'**
+  String get errorAddToCart;
+
+  /// No description provided for @createMyStore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar minha loja'**
+  String get createMyStore;
+
+  /// No description provided for @updateStore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atualizar loja'**
+  String get updateStore;
+
+  /// No description provided for @storeNameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da loja'**
+  String get storeNameLabel;
+
+  /// No description provided for @descriptionLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição'**
+  String get descriptionLabel;
+
+  /// No description provided for @informStoreName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe o nome da loja.'**
+  String get informStoreName;
+
+  /// No description provided for @storeCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Loja criada.'**
+  String get storeCreated;
+
+  /// No description provided for @storeUpdated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Loja atualizada.'**
+  String get storeUpdated;
+
+  /// No description provided for @errorSaveStore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao salvar loja.'**
+  String get errorSaveStore;
+
+  /// No description provided for @createStore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar loja'**
+  String get createStore;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar alterações'**
+  String get saveChanges;
+
+  /// No description provided for @requestSent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Solicitação enviada.'**
+  String get requestSent;
+
+  /// No description provided for @errorSendRequest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao enviar solicitação.'**
+  String get errorSendRequest;
+
+  /// No description provided for @errorLoadConnections.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar conexões.'**
+  String get errorLoadConnections;
+
+  /// No description provided for @noConnectionsYet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.'**
+  String get noConnectionsYet;
+
+  /// No description provided for @errorLoadSuggestions.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar sugestões.'**
+  String get errorLoadSuggestions;
+
+  /// No description provided for @errorSearch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro na busca.'**
+  String get errorSearch;
+
+  /// No description provided for @searchMinCharsHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite ao menos 2 caracteres ou veja sugestões acima.'**
+  String get searchMinCharsHint;
+
+  /// No description provided for @connectionRequestIncoming.
+  ///
+  /// In pt, this message translates to:
+  /// **'Solicitação recebida'**
+  String get connectionRequestIncoming;
+
+  /// No description provided for @connectionRequestOutgoing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Solicitação enviada'**
+  String get connectionRequestOutgoing;
+
+  /// No description provided for @activeConnection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conexão ativa'**
+  String get activeConnection;
+
+  /// No description provided for @errorAccept.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao aceitar.'**
+  String get errorAccept;
+
+  /// No description provided for @errorReject.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao rejeitar.'**
+  String get errorReject;
+
+  /// No description provided for @errorRemove.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao remover.'**
+  String get errorRemove;
+
+  /// No description provided for @assetCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Asset criado.'**
+  String get assetCreated;
+
+  /// No description provided for @errorCreateAsset.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao criar asset.'**
+  String get errorCreateAsset;
+
+  /// No description provided for @errorLoadAssets.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar assets.'**
+  String get errorLoadAssets;
+
+  /// No description provided for @validationRegistered.
+  ///
+  /// In pt, this message translates to:
+  /// **'Validação registrada ({percent}% da comunidade).'**
+  String validationRegistered(String percent);
+
+  /// No description provided for @assetArchived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Asset arquivado.'**
+  String get assetArchived;
+
+  /// No description provided for @assetApproved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Asset aprovado.'**
+  String get assetApproved;
+
+  /// No description provided for @assetRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Asset rejeitado.'**
+  String get assetRejected;
+
+  /// No description provided for @errorCompleteAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível concluir a ação.'**
+  String get errorCompleteAction;
+
+  /// No description provided for @assetValidationsMeta.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} validações ({percent}%)'**
+  String assetValidationsMeta(int count, String percent);
+
+  /// No description provided for @alertCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alerta criado.'**
+  String get alertCreated;
+
+  /// No description provided for @errorCreateAlert.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao criar alerta.'**
+  String get errorCreateAlert;
+
+  /// No description provided for @errorLoadAlerts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar alertas.'**
+  String get errorLoadAlerts;
+
+  /// No description provided for @alertsRequireResidency.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alertas do território exigem residência ou curadoria.'**
+  String get alertsRequireResidency;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos'**
+  String get filterAll;
+
+  /// No description provided for @postDefaultTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Post'**
+  String get postDefaultTitle;
+
+  /// No description provided for @chooseTerritoryBeforePost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha um território antes de publicar.'**
+  String get chooseTerritoryBeforePost;
+
+  /// No description provided for @addImage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar imagem'**
+  String get addImage;
+
+  /// No description provided for @changeImage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Trocar imagem'**
+  String get changeImage;
+
+  /// No description provided for @moderationQueueTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fila'**
+  String get moderationQueueTab;
+
+  /// No description provided for @moderationCasesTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Casos'**
+  String get moderationCasesTab;
+
+  /// No description provided for @moderationEvidencesTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Evidências'**
+  String get moderationEvidencesTab;
+
+  /// No description provided for @noPermissionOrError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem permissão ou erro ao carregar.'**
+  String get noPermissionOrError;
+
+  /// No description provided for @downloadEvidenceTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Baixar evidência'**
+  String get downloadEvidenceTooltip;
+
+  /// No description provided for @approveTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aprovar'**
+  String get approveTooltip;
+
+  /// No description provided for @rejectTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitar'**
+  String get rejectTooltip;
+
+  /// No description provided for @decisionRegistered.
+  ///
+  /// In pt, this message translates to:
+  /// **'Decisão registrada.'**
+  String get decisionRegistered;
+
+  /// No description provided for @errorDecideItem.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao decidir item.'**
+  String get errorDecideItem;
+
+  /// No description provided for @evidenceDownloaded.
+  ///
+  /// In pt, this message translates to:
+  /// **'Evidência baixada ({size} bytes).'**
+  String evidenceDownloaded(int size);
+
+  /// No description provided for @errorDownloadEvidence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao baixar evidência.'**
+  String get errorDownloadEvidence;
+
+  /// No description provided for @errorLoadMembership.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar membership.'**
+  String get errorLoadMembership;
+
+  /// No description provided for @enableLocationFirst.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ative a localização primeiro.'**
+  String get enableLocationFirst;
+
+  /// No description provided for @residencyVerifiedByGeo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Residência verificada por geo.'**
+  String get residencyVerifiedByGeo;
+
+  /// No description provided for @errorResidencyVerification.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro na verificação.'**
+  String get errorResidencyVerification;
+
+  /// No description provided for @alreadyResident.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você já é morador neste território.'**
+  String get alreadyResident;
+
+  /// No description provided for @errorLoadPlans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar planos.'**
+  String get errorLoadPlans;
+
+  /// No description provided for @subscriptionCancelled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinatura cancelada.'**
+  String get subscriptionCancelled;
+
+  /// No description provided for @errorCancelSubscription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao cancelar.'**
+  String get errorCancelSubscription;
+
+  /// No description provided for @subscriptionActivated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinatura ativada.'**
+  String get subscriptionActivated;
+
+  /// No description provided for @errorSubscribe.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao assinar.'**
+  String get errorSubscribe;
+
+  /// No description provided for @errorRequestResidency.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao solicitar residência.'**
+  String get errorRequestResidency;
+
+  /// No description provided for @moderationEvidenceSuffix.
+  ///
+  /// In pt, this message translates to:
+  /// **'evidência'**
+  String get moderationEvidenceSuffix;
 }
 
 class _AppLocalizationsDelegate

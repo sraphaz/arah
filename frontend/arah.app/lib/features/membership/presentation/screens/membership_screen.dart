@@ -62,7 +62,7 @@ class MembershipScreen extends ConsumerWidget {
     if (state.error != null && state.membership == null) {
       final msg = state.error is ApiException
           ? (state.error as ApiException).userMessage
-          : 'Erro ao carregar membership.';
+          : l10n.errorLoadMembership;
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
@@ -111,12 +111,12 @@ class MembershipScreen extends ConsumerWidget {
             onPressed: () async {
               try {
                 await notifier.becomeResident(message: 'Solicitação via app');
-                if (context.mounted) showSuccessSnackBar(context, 'Solicitação enviada.');
+                if (context.mounted) showSuccessSnackBar(context, l10n.requestSent);
               } catch (e) {
                 if (context.mounted) {
                   showErrorSnackBar(
                     context,
-                    e is ApiException ? e.userMessage : 'Erro ao solicitar residência.',
+                    e is ApiException ? e.userMessage : l10n.errorRequestResidency,
                   );
                 }
               }
@@ -129,17 +129,17 @@ class MembershipScreen extends ConsumerWidget {
             onPressed: () async {
               final geo = ref.read(geoLocationStateProvider);
               if (geo == null) {
-                if (context.mounted) showErrorSnackBar(context, 'Ative a localização primeiro.');
+                if (context.mounted) showErrorSnackBar(context, l10n.enableLocationFirst);
                 return;
               }
               try {
                 await notifier.verifyByGeo(geo.latitude, geo.longitude);
-                if (context.mounted) showSuccessSnackBar(context, 'Residência verificada por geo.');
+                if (context.mounted) showSuccessSnackBar(context, l10n.residencyVerifiedByGeo);
               } catch (e) {
                 if (context.mounted) {
                   showErrorSnackBar(
                     context,
-                    e is ApiException ? e.userMessage : 'Erro na verificação.',
+                    e is ApiException ? e.userMessage : l10n.errorResidencyVerification,
                   );
                 }
               }
@@ -149,7 +149,7 @@ class MembershipScreen extends ConsumerWidget {
           ),
         ] else
           Text(
-            'Você já é morador neste território.',
+            l10n.alreadyResident,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                 ),

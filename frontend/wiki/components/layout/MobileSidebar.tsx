@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { brand } from "../../../shared/config/brand";
 
 interface MobileSidebarSection {
   title: string;
@@ -85,8 +86,8 @@ export function MobileSidebar() {
         onClick={() => setIsOpen(!isOpen)}
         className={`fixed top-24 right-4 z-50 p-3 rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300 lg:hidden ${
           isOpen
-            ? "bg-forest-600 dark:bg-[#4dd4a8]"
-            : "bg-forest-600/90 dark:bg-[#4dd4a8]/90 hover:bg-forest-600 dark:hover:bg-[#4dd4a8]"
+            ? "bg-forest-600 dark:bg-dark-accent"
+            : "bg-forest-600/90 dark:bg-dark-accent/90 hover:bg-forest-600 dark:hover:bg-dark-accent"
         }`}
         aria-label={isOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
         aria-expanded={isOpen}
@@ -153,15 +154,16 @@ export function MobileSidebar() {
               Todos os Docs
             </Link>
             <a
-              href="/"
+              href={brand.urls.devportal}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}
               className="px-3 py-2 rounded-lg text-sm text-forest-700 dark:text-forest-300 hover:bg-forest-100/80 dark:hover:bg-forest-900/60 transition-colors"
-              title="DevPortal - Referência de API"
             >
               DevPortal
             </a>
             <a
-              href="https://araponga.app"
+              href={brand.urls.site}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}

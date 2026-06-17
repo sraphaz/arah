@@ -16,7 +16,7 @@ export default function Architecture() {
             </div>
             <div className="space-y-4 text-base leading-relaxed text-forest-800 md:text-lg">
               <p>
-                O Araponga organiza-se em domínios funcionais que trabalham de forma integrada.
+                O Arah organiza-se em domínios funcionais que trabalham de forma integrada.
                 <br />
                 Cada domínio possui responsabilidades claras e se relaciona com os demais para
                 garantir uma experiência completa orientada ao território.

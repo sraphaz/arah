@@ -63,7 +63,7 @@ export function TabsTrigger({ value, children, icon }: TabsTriggerProps) {
         {children}
       </span>
       {isActive && (
-        <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-forest-600 dark:bg-[#4dd4a8] rounded-t-full" />
+        <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-forest-600 dark:bg-dark-accent rounded-t-full" />
       )}
     </button>
   );

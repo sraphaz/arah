@@ -3,6 +3,8 @@
  * Define caminhos recomendados por perfil de usuário
  */
 
+import { brand } from "../../shared/config/brand";
+
 export interface JourneyStep {
   doc: string;
   label: string;
@@ -18,7 +20,7 @@ export interface Journey {
 export const journeys: Record<string, Journey> = {
   developer: {
     title: 'Desenvolvedor',
-    description: 'Caminho recomendado para desenvolvedores que querem integrar ou contribuir com o Araponga',
+    description: `Caminho recomendado para desenvolvedores que querem integrar ou contribuir com o ${brand.name}`,
     steps: [
       {
         doc: 'ONBOARDING_DEVELOPERS',

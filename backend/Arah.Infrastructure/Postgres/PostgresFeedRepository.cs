@@ -124,6 +124,37 @@ public sealed class PostgresFeedRepository : IFeedRepository
         return count > maxInt32 ? maxInt32 : (int)count;
     }
 
+    public async Task<int> GetCommentCountAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        const int maxInt32 = int.MaxValue;
+        var count = await _dbContext.PostComments
+            .AsNoTracking()
+            .CountAsync(comment => comment.PostId == postId, cancellationToken);
+        return count > maxInt32 ? maxInt32 : (int)count;
+    }
+
+    public async Task<IReadOnlyList<PostComment>> ListCommentsByPostIdPagedAsync(
+        Guid postId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.PostComments
+            .AsNoTracking()
+            .Where(comment => comment.PostId == postId)
+            .OrderByDescending(comment => comment.CreatedAtUtc)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+
+        return records.Select(record => record.ToDomain()).ToList();
+    }
+
+    public Task<int> CountCommentsByPostIdAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        return GetCommentCountAsync(postId, cancellationToken);
+    }
+
     public async Task<IReadOnlyDictionary<Guid, PostCounts>> GetCountsByPostIdsAsync(
         IReadOnlyCollection<Guid> postIds,
         CancellationToken cancellationToken)
@@ -149,15 +180,23 @@ public sealed class PostgresFeedRepository : IFeedRepository
             .Select(g => new { PostId = g.Key, Count = (long)g.Count() })
             .ToDictionaryAsync(x => x.PostId, x => x.Count > maxInt32 ? maxInt32 : (int)x.Count, cancellationToken);
 
+        var commentCounts = await _dbContext.PostComments
+            .AsNoTracking()
+            .Where(comment => postIds.Contains(comment.PostId))
+            .GroupBy(comment => comment.PostId)
+            .Select(g => new { PostId = g.Key, Count = (long)g.Count() })
+            .ToDictionaryAsync(x => x.PostId, x => x.Count > maxInt32 ? maxInt32 : (int)x.Count, cancellationToken);
+
         var result = new Dictionary<Guid, PostCounts>();
         foreach (var postId in postIds)
         {
             likeCounts.TryGetValue(postId, out var likeCount);
             shareCounts.TryGetValue(postId, out var shareCount);
-            // Garantir que os valores não excedam int.MaxValue
+            commentCounts.TryGetValue(postId, out var commentCount);
             var safeLikeCount = likeCount > maxInt32 ? maxInt32 : likeCount;
             var safeShareCount = shareCount > maxInt32 ? maxInt32 : shareCount;
-            result[postId] = new PostCounts(safeLikeCount, safeShareCount);
+            var safeCommentCount = commentCount > maxInt32 ? maxInt32 : commentCount;
+            result[postId] = new PostCounts(safeLikeCount, safeShareCount, safeCommentCount);
         }
 
         return result;

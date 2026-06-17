@@ -52,7 +52,7 @@ export default function Improvements() {
                 Melhorias Técnicas Implementadas
               </h2>
               <p className="text-base leading-relaxed text-forest-800 md:text-lg">
-                O Araponga evolui continuamente com melhorias de qualidade, performance e observabilidade.
+                O Arah evolui continuamente com melhorias de qualidade, performance e observabilidade.
                 Estas são as principais implementações técnicas concluídas:
               </p>
             </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { SocialIcon } from "../ui/SocialIcon";
+import { brand } from "../../../shared/config/brand";
 
 interface QuickLink {
   label: string;
@@ -15,28 +16,28 @@ interface QuickLink {
 const quickLinks: QuickLink[] = [
   {
     label: "Discord",
-    href: "https://discord.gg/auwqN8Yjgw",
+    href: brand.urls.discord,
     socialPlatform: "discord",
     external: true,
     description: "Conecte-se com o time",
   },
   {
     label: "GitHub",
-    href: "https://github.com/sraphaz/araponga",
+    href: brand.urls.github,
     socialPlatform: "github",
     external: true,
     description: "Repositório do projeto",
   },
   {
     label: "Site Institucional",
-    href: "https://araponga.app",
+    href: brand.urls.site,
     icon: "🌐",
     external: true,
     description: "Visite o site oficial",
   },
   {
     label: "Dev Portal",
-    href: "https://devportal.araponga.app",
+    href: brand.urls.devportal,
     external: true,
     description: "Documentação técnica da API",
   },

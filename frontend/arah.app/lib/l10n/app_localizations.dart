@@ -1555,6 +1555,36 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'evidência'**
   String get moderationEvidenceSuffix;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modo escuro'**
+  String get darkMode;
+
+  /// No description provided for @useSystemTheme.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar tema do sistema'**
+  String get useSystemTheme;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver detalhes'**
+  String get viewDetails;
+
+  /// No description provided for @createFirstPost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar primeiro post'**
+  String get createFirstPost;
+
+  /// No description provided for @appearance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aparência'**
+  String get appearance;
 }
 
 class _AppLocalizationsDelegate

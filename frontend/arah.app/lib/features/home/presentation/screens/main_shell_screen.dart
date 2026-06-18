@@ -30,7 +30,7 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
   }
 
   List<Widget> _buildScreens() => [
-    const FeedScreen(),
+    FeedScreen(onGoToCreatePost: () => setState(() => _currentIndex = 2)),
     const ExploreScreen(),
     CreatePostScreen(onSuccess: () => setState(() => _currentIndex = 0)),
     const NotificationsScreen(),

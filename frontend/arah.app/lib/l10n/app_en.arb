@@ -292,5 +292,10 @@
   "subscriptionActivated": "Subscription activated.",
   "errorSubscribe": "Error subscribing.",
   "errorRequestResidency": "Error requesting residency.",
-  "moderationEvidenceSuffix": "evidence"
+  "moderationEvidenceSuffix": "evidence",
+  "darkMode": "Dark mode",
+  "useSystemTheme": "Use system theme",
+  "viewDetails": "View details",
+  "createFirstPost": "Create first post",
+  "appearance": "Appearance"
 }

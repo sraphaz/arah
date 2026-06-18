@@ -214,6 +214,19 @@
   --bg-gradient-accent: radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
 
+  /* ============================================
+     GLASS MORPHISM & WATERMARK - Ecossistema Arah
+     ============================================ */
+
+  --glass-bg: rgba(20, 26, 33, 0.98);
+  --glass-border: rgba(37, 48, 58, 0.6);
+  --glass-blur: 24px;
+  --glass-radius: 24px;
+  --watermark-opacity: 0.015;
+  --watermark-size: 560px;
+  --body-watermark-opacity: 0.01;
+  --body-watermark-size: 720px;
+
   /* Elevation - Material Design (Wiki + DevPortal) */
   --elevation-0: none;
   --elevation-1: 0 1px 2px rgba(23, 53, 37, 0.05);

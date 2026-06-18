@@ -772,4 +772,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get moderationEvidenceSuffix => 'evidência';
+
+  @override
+  String get darkMode => 'Modo escuro';
+
+  @override
+  String get useSystemTheme => 'Usar tema do sistema';
+
+  @override
+  String get viewDetails => 'Ver detalhes';
+
+  @override
+  String get createFirstPost => 'Criar primeiro post';
+
+  @override
+  String get appearance => 'Aparência';
 }

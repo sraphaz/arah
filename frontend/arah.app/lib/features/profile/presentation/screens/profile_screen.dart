@@ -11,6 +11,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../data/models/me_profile.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
 import '../providers/me_profile_provider.dart';
+import '../../../../core/widgets/profile_skeleton.dart';
 import '../widgets/interests_sheet.dart';
 import '../widgets/preferences_sheet.dart';
 
@@ -92,7 +93,7 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 const SizedBox(height: AppConstants.spacingLg),
               ],
-              const CircularProgressIndicator(),
+              const ProfileSkeleton(),
             ],
           ),
         ),

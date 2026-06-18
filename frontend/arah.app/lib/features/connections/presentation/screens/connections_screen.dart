@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_list_skeleton.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/connection_item.dart';
@@ -66,7 +67,7 @@ class ConnectionsScreen extends ConsumerWidget {
     if (state.isLoading && state.accepted.isEmpty && state.pending.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 240, child: Center(child: CircularProgressIndicator()))],
+        children: const [ArahListSkeleton()],
       );
     }
 

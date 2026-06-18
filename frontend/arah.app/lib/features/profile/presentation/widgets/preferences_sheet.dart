@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/constants.dart';
+import '../../../../core/providers/theme_mode_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_loading_indicator.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/repositories/me_profile_repository.dart';
 import '../providers/me_profile_provider.dart';
@@ -22,6 +24,8 @@ class _PreferencesSheetState extends ConsumerState<PreferencesSheet> {
   @override
   Widget build(BuildContext context) {
     final prefsAsync = ref.watch(mePreferencesProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -47,10 +51,31 @@ class _PreferencesSheetState extends ConsumerState<PreferencesSheet> {
               ),
             ),
             Text(
-              AppLocalizations.of(context)!.notificationPreferences,
+              l10n.notificationPreferences,
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: AppConstants.spacingLg),
+            const SizedBox(height: AppConstants.spacingMd),
+            Text(l10n.appearance, style: Theme.of(context).textTheme.titleMedium),
+            _SwitchRow(
+              title: l10n.darkMode,
+              value: themeMode == ThemeMode.dark,
+              onChanged: (enabled) {
+                ref.read(themeModeProvider.notifier).setThemeMode(
+                      enabled ? ThemeMode.dark : ThemeMode.light,
+                    );
+              },
+            ),
+            _SwitchRow(
+              title: l10n.useSystemTheme,
+              value: themeMode == ThemeMode.system,
+              onChanged: (enabled) {
+                ref.read(themeModeProvider.notifier).setThemeMode(
+                      enabled ? ThemeMode.system : ThemeMode.dark,
+                    );
+              },
+            ),
+            const Divider(height: AppConstants.spacing2xl),
+            const SizedBox(height: AppConstants.spacingMd),
             prefsAsync.when(
               data: (preferences) {
                 _prefs ??= preferences.notifications;
@@ -123,7 +148,7 @@ class _PreferencesSheetState extends ConsumerState<PreferencesSheet> {
                   ],
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: ArahLoadingIndicator()),
               error: (e, _) => Text(
                 AppLocalizations.of(context)!.errorLoad,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

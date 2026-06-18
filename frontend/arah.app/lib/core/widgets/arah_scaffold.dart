@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_design_tokens.dart';
+import 'arah_watermark.dart';
 
 /// Scaffold com fundo em gradiente sutil do design system.
 class ArahScaffold extends StatelessWidget {
@@ -11,6 +12,7 @@ class ArahScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.extendBody = false,
+    this.showWatermark = true,
   });
 
   final Widget body;
@@ -18,6 +20,7 @@ class ArahScaffold extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final bool extendBody;
+  final bool showWatermark;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +35,18 @@ class ArahScaffold extends StatelessWidget {
           stops: const [0.0, 0.45, 0.75, 1.0],
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBody: extendBody,
-        appBar: appBar,
-        body: body,
-        bottomNavigationBar: bottomNavigationBar,
-        floatingActionButton: floatingActionButton,
+      child: Stack(
+        children: [
+          if (showWatermark) const ArahWatermark(),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            extendBody: extendBody,
+            appBar: appBar,
+            body: body,
+            bottomNavigationBar: bottomNavigationBar,
+            floatingActionButton: floatingActionButton,
+          ),
+        ],
       ),
     );
   }

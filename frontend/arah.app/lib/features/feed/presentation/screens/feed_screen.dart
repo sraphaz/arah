@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/widgets/arah_empty_state.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
@@ -16,7 +17,10 @@ import '../widgets/feed_comments_sheet.dart';
 
 /// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação, pull-to-refresh e scroll infinito.
 class FeedScreen extends ConsumerStatefulWidget {
-  const FeedScreen({super.key});
+  const FeedScreen({super.key, this.onGoToCreatePost});
+
+  /// Navega para a aba Publicar (shell principal).
+  final VoidCallback? onGoToCreatePost;
 
   @override
   ConsumerState<FeedScreen> createState() => _FeedScreenState();
@@ -98,6 +102,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 filterType: filterType,
                 onRetry: () => notifier.refresh(),
                 onLoadMore: () => notifier.loadMore(),
+                onGoToCreatePost: widget.onGoToCreatePost,
                 scrollController: _scrollController,
                 onScrollNearBottom: () => notifier.loadMore(),
                 loadMoreThreshold: _loadMoreThreshold,
@@ -120,6 +125,7 @@ class _FeedBody extends StatelessWidget {
     this.scrollController,
     this.onScrollNearBottom,
     this.loadMoreThreshold = 300,
+    this.onGoToCreatePost,
   });
 
   final FeedState state;
@@ -130,6 +136,7 @@ class _FeedBody extends StatelessWidget {
   final ScrollController? scrollController;
   final VoidCallback? onScrollNearBottom;
   final double loadMoreThreshold;
+  final VoidCallback? onGoToCreatePost;
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +160,7 @@ class _FeedBody extends StatelessWidget {
       scrollController: scrollController,
       onScrollNearBottom: onScrollNearBottom,
       loadMoreThreshold: loadMoreThreshold,
+      onGoToCreatePost: onGoToCreatePost,
     );
   }
 }
@@ -169,6 +177,7 @@ class _FeedList extends ConsumerStatefulWidget {
     this.scrollController,
     this.onScrollNearBottom,
     this.loadMoreThreshold = 300,
+    this.onGoToCreatePost,
   });
 
   final List<dynamic> items;
@@ -181,6 +190,7 @@ class _FeedList extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
   final VoidCallback? onScrollNearBottom;
   final double loadMoreThreshold;
+  final VoidCallback? onGoToCreatePost;
 
   @override
   ConsumerState<_FeedList> createState() => _FeedListState();
@@ -307,29 +317,12 @@ class _FeedListState extends ConsumerState<_FeedList> {
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.article_outlined,
-                    size: AppConstants.avatarSizeLg,
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-                  ),
-                  const SizedBox(height: AppConstants.spacingMd),
-                  Text(
-                    l10n.noPostsHere,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: AppConstants.spacingSm),
-                  Text(
-                    l10n.beFirstToPost,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                  ),
-                ],
-              ),
+            child: ArahEmptyState(
+              icon: Icons.article_outlined,
+              title: l10n.noPostsHere,
+              description: l10n.beFirstToPost,
+              actionLabel: widget.onGoToCreatePost != null ? l10n.createFirstPost : null,
+              onAction: widget.onGoToCreatePost,
             ),
           ),
         ],

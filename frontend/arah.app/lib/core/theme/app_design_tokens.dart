@@ -21,16 +21,35 @@ class AppDesignTokens {
   static const Color onSurfaceMuted = Color(0xFFB8C5D2);
   static const Color onSurfaceSubtle = Color(0xFF8A97A4);
   static const Color outline = Color(0xFF25303A);
-  static const Color outlineSubtle = Color(0x1A6496B4); // rgba(100,150,180,0.1)
+  static const Color outlineSubtle = Color(0x1A6496B4);
 
   static const Color error = Color(0xFFF26D6D);
   static const Color warning = Color(0xFFF5C842);
+  static const Color success = Color(0xFF4DD4A8);
+  static const Color info = Color(0xFF7DD3FF);
+  static const Color earth = Color(0xFF8B7355);
   static const Color textOnAccent = Color(0xFF0A0E12);
 
-  static const Color accentSubtle = Color(0x264DD4A8); // rgba(77,212,168,0.15)
-  static const Color accentBorderSoft = Color(0x404DD4A8); // rgba(77,212,168,0.25)
-  static const Color territoryBoundary = Color(0xFF16A34A); // primary-700
+  static const Color accentSubtle = Color(0x264DD4A8);
+  static const Color accentBorderSoft = Color(0x404DD4A8);
+  static const Color territoryBoundary = Color(0xFF16A34A);
   static const Color locationPin = Color(0xFFF5C842);
+
+  // Glass morphism (espelho de globals.css)
+  static const Color glassBackgroundDark = Color(0xFA141A21);
+  static const Color glassBorderDark = Color(0x9930393A);
+  static const Color glassBackgroundLight = Color(0xFAFFFFFF);
+  static const Color glassBorderLight = Color(0x66C6E3D2);
+  static const double glassBlur = 24;
+  static const double glassRadius = 24;
+
+  // Watermark
+  static const double watermarkOpacityDark = 0.015;
+  static const double watermarkOpacityLight = 0.035;
+  static const double bodyWatermarkOpacityDark = 0.01;
+  static const double bodyWatermarkOpacityLight = 0.025;
+  static const double bodyWatermarkSize = 720;
+  static const double cardWatermarkSize = 560;
 
   // Light mode
   static const Color primaryLight = Color(0xFF3BC495);
@@ -76,6 +95,64 @@ class AppDesignTokens {
     Color(0x087DD3FF),
     Color(0x000A0E12),
   ];
+
+  /// Cor semântica para pins no mapa por tipo.
+  static Color pinColorForType(String type) {
+    switch (type.toLowerCase()) {
+      case 'alert':
+        return warning;
+      case 'event':
+        return link;
+      case 'post':
+        return primary;
+      case 'asset':
+      case 'media':
+        return earth;
+      case 'entity':
+        return territoryBoundary;
+      default:
+        return primary;
+    }
+  }
+
+  /// Elevação Material (espelho de --elevation-*).
+  static List<BoxShadow> elevation(int level, {bool isDark = true}) {
+    final opacity = isDark ? 0.25 : 0.08;
+    switch (level) {
+      case 1:
+        return [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: opacity * 0.6),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ];
+      case 2:
+        return [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: opacity),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ];
+      case 3:
+        return [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: opacity * 1.4),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ];
+      default:
+        return [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: opacity * 1.8),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ];
+    }
+  }
 }
 
 /// Extensão do tema para cores semânticas do Arah.
@@ -92,8 +169,15 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.outline,
     required this.outlineSubtle,
     required this.error,
+    required this.success,
+    required this.info,
+    required this.earth,
     required this.accentSubtle,
     required this.accentBorder,
+    required this.glassBackground,
+    required this.glassBorder,
+    required this.watermarkOpacity,
+    required this.bodyWatermarkOpacity,
     required this.territoryBoundary,
     required this.locationPin,
   });
@@ -109,8 +193,15 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color outline;
   final Color outlineSubtle;
   final Color error;
+  final Color success;
+  final Color info;
+  final Color earth;
   final Color accentSubtle;
   final Color accentBorder;
+  final Color glassBackground;
+  final Color glassBorder;
+  final double watermarkOpacity;
+  final double bodyWatermarkOpacity;
   final Color territoryBoundary;
   final Color locationPin;
 
@@ -127,8 +218,15 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? outline,
     Color? outlineSubtle,
     Color? error,
+    Color? success,
+    Color? info,
+    Color? earth,
     Color? accentSubtle,
     Color? accentBorder,
+    Color? glassBackground,
+    Color? glassBorder,
+    double? watermarkOpacity,
+    double? bodyWatermarkOpacity,
     Color? territoryBoundary,
     Color? locationPin,
   }) {
@@ -144,8 +242,15 @@ class AppColors extends ThemeExtension<AppColors> {
       outline: outline ?? this.outline,
       outlineSubtle: outlineSubtle ?? this.outlineSubtle,
       error: error ?? this.error,
+      success: success ?? this.success,
+      info: info ?? this.info,
+      earth: earth ?? this.earth,
       accentSubtle: accentSubtle ?? this.accentSubtle,
       accentBorder: accentBorder ?? this.accentBorder,
+      glassBackground: glassBackground ?? this.glassBackground,
+      glassBorder: glassBorder ?? this.glassBorder,
+      watermarkOpacity: watermarkOpacity ?? this.watermarkOpacity,
+      bodyWatermarkOpacity: bodyWatermarkOpacity ?? this.bodyWatermarkOpacity,
       territoryBoundary: territoryBoundary ?? this.territoryBoundary,
       locationPin: locationPin ?? this.locationPin,
     );
@@ -166,8 +271,16 @@ class AppColors extends ThemeExtension<AppColors> {
       outline: Color.lerp(outline, other.outline, t)!,
       outlineSubtle: Color.lerp(outlineSubtle, other.outlineSubtle, t)!,
       error: Color.lerp(error, other.error, t)!,
+      success: Color.lerp(success, other.success, t)!,
+      info: Color.lerp(info, other.info, t)!,
+      earth: Color.lerp(earth, other.earth, t)!,
       accentSubtle: Color.lerp(accentSubtle, other.accentSubtle, t)!,
       accentBorder: Color.lerp(accentBorder, other.accentBorder, t)!,
+      glassBackground: Color.lerp(glassBackground, other.glassBackground, t)!,
+      glassBorder: Color.lerp(glassBorder, other.glassBorder, t)!,
+      watermarkOpacity: watermarkOpacity + (other.watermarkOpacity - watermarkOpacity) * t,
+      bodyWatermarkOpacity:
+          bodyWatermarkOpacity + (other.bodyWatermarkOpacity - bodyWatermarkOpacity) * t,
       territoryBoundary: Color.lerp(territoryBoundary, other.territoryBoundary, t)!,
       locationPin: Color.lerp(locationPin, other.locationPin, t)!,
     );
@@ -185,8 +298,15 @@ class AppColors extends ThemeExtension<AppColors> {
     outline: AppDesignTokens.outline,
     outlineSubtle: AppDesignTokens.outlineSubtle,
     error: AppDesignTokens.error,
+    success: AppDesignTokens.success,
+    info: AppDesignTokens.info,
+    earth: AppDesignTokens.earth,
     accentSubtle: AppDesignTokens.accentSubtle,
     accentBorder: AppDesignTokens.accentBorderSoft,
+    glassBackground: AppDesignTokens.glassBackgroundDark,
+    glassBorder: AppDesignTokens.glassBorderDark,
+    watermarkOpacity: AppDesignTokens.watermarkOpacityDark,
+    bodyWatermarkOpacity: AppDesignTokens.bodyWatermarkOpacityDark,
     territoryBoundary: AppDesignTokens.territoryBoundary,
     locationPin: AppDesignTokens.locationPin,
   );
@@ -203,8 +323,15 @@ class AppColors extends ThemeExtension<AppColors> {
     outline: AppDesignTokens.outlineLight,
     outlineSubtle: Color(0x1A000000),
     error: AppDesignTokens.error,
+    success: AppDesignTokens.success,
+    info: AppDesignTokens.info,
+    earth: AppDesignTokens.earth,
     accentSubtle: Color(0x1A3BC495),
     accentBorder: Color(0x333BC495),
+    glassBackground: AppDesignTokens.glassBackgroundLight,
+    glassBorder: AppDesignTokens.glassBorderLight,
+    watermarkOpacity: AppDesignTokens.watermarkOpacityLight,
+    bodyWatermarkOpacity: AppDesignTokens.bodyWatermarkOpacityLight,
     territoryBoundary: AppDesignTokens.territoryBoundary,
     locationPin: AppDesignTokens.locationPin,
   );

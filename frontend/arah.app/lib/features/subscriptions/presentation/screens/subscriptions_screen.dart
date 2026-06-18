@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_list_skeleton.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/subscriptions_provider.dart';
@@ -35,7 +36,7 @@ class SubscriptionsScreen extends ConsumerWidget {
     if (state.isLoading && state.plans.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
+        children: const [ArahListSkeleton()],
       );
     }
     if (state.error != null && state.plans.isEmpty) {

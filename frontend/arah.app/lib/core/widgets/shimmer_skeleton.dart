@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../config/constants.dart';
+import 'arah_card.dart';
 
 /// Placeholder cinza com animação de pulsação (skeleton loading).
 class ShimmerBox extends StatefulWidget {
@@ -73,76 +74,73 @@ class FeedCardSkeleton extends StatelessWidget {
         horizontal: AppConstants.spacingMd,
         vertical: AppConstants.spacingSm + 2,
       ),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.spacingMd),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const ShimmerBox(
-                    width: 40,
-                    height: 40,
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
+      child: ArahCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const ShimmerBox(
+                  width: 40,
+                  height: 40,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                const SizedBox(width: AppConstants.spacingMd),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShimmerBox(
+                        width: double.infinity,
+                        height: 16,
+                        borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+                      ),
+                      const SizedBox(height: AppConstants.spacingXs + 2),
+                      ShimmerBox(
+                        width: 120,
+                        height: 12,
+                        borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: AppConstants.spacingMd),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ShimmerBox(
-                          width: double.infinity,
-                          height: 16,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        const SizedBox(height: 6),
-                        ShimmerBox(
-                          width: 120,
-                          height: 12,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppConstants.spacingMd),
-              ShimmerBox(
-                width: double.infinity,
-                height: 14,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              const SizedBox(height: 6),
-              ShimmerBox(
-                width: double.infinity,
-                height: 14,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              const SizedBox(height: 6),
-              ShimmerBox(
-                width: 200,
-                height: 14,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              const SizedBox(height: AppConstants.spacingMd),
-              Row(
-                children: [
-                  ShimmerBox(
-                    width: 80,
-                    height: 36,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  const SizedBox(width: AppConstants.spacingSm),
-                  ShimmerBox(
-                    width: 80,
-                    height: 36,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppConstants.spacingMd),
+            ShimmerBox(
+              width: double.infinity,
+              height: 14,
+              borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+            ),
+            const SizedBox(height: AppConstants.spacingXs + 2),
+            ShimmerBox(
+              width: double.infinity,
+              height: 14,
+              borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+            ),
+            const SizedBox(height: AppConstants.spacingXs + 2),
+            ShimmerBox(
+              width: 200,
+              height: 14,
+              borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+            ),
+            const SizedBox(height: AppConstants.spacingMd),
+            Row(
+              children: [
+                ShimmerBox(
+                  width: 80,
+                  height: 36,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+                ),
+                const SizedBox(width: AppConstants.spacingSm),
+                ShimmerBox(
+                  width: 80,
+                  height: 36,
+                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

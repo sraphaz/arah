@@ -8,9 +8,18 @@ class AppConstants {
   static const double spacingLg = 24.0;
   static const double spacingXl = 32.0;
   static const double spacing2xl = 48.0;
+  static const double spacing3xl = 64.0;
+
+  /// Escala alinhada a design-tokens.css (--radius-*).
+  static const double radiusXs = 4.0;
   static const double radiusSm = 8.0;
   static const double radiusMd = 12.0;
   static const double radiusLg = 16.0;
+  static const double radiusXl = 24.0;
+  static const double radius2xl = 32.0;
+
+  static const double breakpointTablet = 768.0;
+  static const double breakpointDesktop = 1024.0;
 
   /// Tamanhos de ícone (empty states, botões, listas).
   static const double iconSizeSm = 14.0;
@@ -27,6 +36,11 @@ class AppConstants {
 
   static const int animationFast = 150;
   static const int animationNormal = 250;
+  static const int animationSlow = 300;
+  static const int animationSmooth = 400;
+  static const int animationWatermark = 2000;
+
+  static const String keyThemeMode = 'arah_theme_mode';
   static const double minTouchTargetSize = 44.0;
   static const int defaultPageSize = 20;
   static const int maxPageSize = 50;

@@ -6,6 +6,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_list_skeleton.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
@@ -111,7 +112,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 240, child: Center(child: CircularProgressIndicator()))],
+        children: const [ArahListSkeleton()],
       );
     }
 

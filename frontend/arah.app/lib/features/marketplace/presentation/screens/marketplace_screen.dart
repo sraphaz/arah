@@ -5,6 +5,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_loading_indicator.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
@@ -151,7 +152,7 @@ class _SearchTab extends StatelessWidget {
   Widget _buildList(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: ArahLoadingIndicator());
     }
     if (state.error != null && state.items.isEmpty) {
       return Center(
@@ -244,7 +245,7 @@ class _MyStoreTabState extends State<_MyStoreTab> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     if (widget.state.isStoreLoading && widget.state.myStore == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: ArahLoadingIndicator());
     }
 
     return ListView(

@@ -6,6 +6,8 @@ import 'package:latlong2/latlong.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/theme/app_design_tokens.dart';
+import '../../../../core/widgets/arah_glass_card.dart';
+import '../../../../core/widgets/arah_button.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/geo/geo_location_provider.dart';
@@ -201,17 +203,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             onTap: () => _onPinTap(context, pin),
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: AppDesignTokens.pinColorForType(pin.pinType).withValues(alpha: 0.25),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: AppDesignTokens.pinColorForType(pin.pinType),
                   width: 2,
                 ),
               ),
               child: Icon(
                 _iconForPinType(pin.pinType),
                 size: 20,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                color: AppDesignTokens.pinColorForType(pin.pinType),
               ),
             ),
           ),
@@ -240,26 +242,36 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   void _onPinTap(BuildContext context, MapPin pin) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
+      showDragHandle: true,
       builder: (ctx) => Padding(
         padding: const EdgeInsets.all(AppConstants.spacingMd),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              pin.title.isNotEmpty ? pin.title : 'Pin',
-              style: Theme.of(ctx).textTheme.titleMedium,
-            ),
-            const SizedBox(height: AppConstants.spacingSm),
-            Text(
-              _subtitleForPinType(ctx, pin),
-              style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(ctx).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-          ],
+        child: ArahGlassCard(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                pin.title.isNotEmpty ? pin.title : l10n.mapPin,
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
+              const SizedBox(height: AppConstants.spacingSm),
+              Text(
+                _subtitleForPinType(ctx, pin),
+                style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+              const SizedBox(height: AppConstants.spacingLg),
+              ArahButton(
+                label: l10n.viewDetails,
+                onPressed: () => Navigator.pop(ctx),
+                expand: true,
+              ),
+            ],
+          ),
         ),
       ),
     );

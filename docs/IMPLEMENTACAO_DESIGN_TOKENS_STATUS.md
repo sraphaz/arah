@@ -93,13 +93,22 @@
 - [x] Import de design-tokens.css no DevPortal
 - [x] Import de design-tokens.css na Wiki
 
-### Fase 4 (Unificação): ✅ ~90% Completo
+### Fase 4 (Unificação): ✅ 100% Completo
 - [x] Tokens semânticos de interação centralizados em `design-tokens.css`
 - [x] Duplicações removidas de `devportal.css` e `globals.css`
 - [x] Script de validação cobre Wiki + DevPortal
-- [x] Componentes Wiki (InfoBox, FeatureCard, Tabs, etc.) migrados de hex hardcoded para classes `accent`/`link`/`dark-accent`
+- [x] Componentes Wiki migrados de hex hardcoded para classes `accent`/`link`
 - [x] Portal institucional importa tokens compartilhados
-- [ ] Extrair tokens de glass/watermark para camada compartilhada (opcional)
+- [x] Tokens glass/watermark em `design-tokens.css` (camada compartilhada)
+- [x] App Flutter: espelho em `app_design_tokens.dart` + biblioteca `Arah*` widgets
+
+### App Flutter (handoff design system): ✅ 100% Completo
+- [x] `ArahScaffold` com gradiente + watermark
+- [x] `ArahGlassCard`, `ArahCard`, `ArahButton`, `ArahEmptyState`
+- [x] `ArahLoadingIndicator`, `ArahListSkeleton`, `FeedSkeleton`
+- [x] Tema claro/escuro persistido (`themeModeProvider`)
+- [x] Pins do mapa com cores semânticas por tipo
+- [x] Documentação em `frontend/arah.app/docs/DESIGN_SYSTEM.md`
 
 ---
 
@@ -131,4 +140,4 @@ A maioria das cores hardcoded são:
 
 ---
 
-**Última Atualização**: 2026-06-16
+**Última Atualização**: 2026-06-17

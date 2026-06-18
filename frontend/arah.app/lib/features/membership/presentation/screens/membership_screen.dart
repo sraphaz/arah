@@ -6,6 +6,7 @@ import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_list_skeleton.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
@@ -55,7 +56,7 @@ class MembershipScreen extends ConsumerWidget {
     if (state.isLoading && state.membership == null && state.error == null) {
       return ListView(
         physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))],
+        children: const [ArahListSkeleton()],
       );
     }
 

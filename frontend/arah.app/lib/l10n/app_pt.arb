@@ -292,5 +292,10 @@
   "subscriptionActivated": "Assinatura ativada.",
   "errorSubscribe": "Erro ao assinar.",
   "errorRequestResidency": "Erro ao solicitar residência.",
-  "moderationEvidenceSuffix": "evidência"
+  "moderationEvidenceSuffix": "evidência",
+  "darkMode": "Modo escuro",
+  "useSystemTheme": "Usar tema do sistema",
+  "viewDetails": "Ver detalhes",
+  "createFirstPost": "Criar primeiro post",
+  "appearance": "Aparência"
 }

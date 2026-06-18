@@ -196,12 +196,68 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           borderSide: BorderSide(color: colors.primary, width: 1.5),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+          borderSide: BorderSide(color: colors.error),
+        ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppConstants.spacingMd,
           vertical: AppConstants.spacingSm + 4,
         ),
         labelStyle: textTheme.bodyMedium,
         hintStyle: textTheme.bodyMedium?.copyWith(color: colors.onSurfaceSubtle),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(88, AppConstants.minTouchTargetSize),
+          foregroundColor: colors.primary,
+          side: BorderSide(color: colors.accentBorder),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDesignTokens.radiusButton),
+          ),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: colors.surfaceContainer,
+        selectedColor: colors.primary,
+        disabledColor: colors.surfaceContainer.withValues(alpha: 0.5),
+        labelStyle: textTheme.labelLarge!,
+        secondaryLabelStyle: textTheme.labelLarge!.copyWith(color: AppDesignTokens.textOnAccent),
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingSm),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+          side: BorderSide(color: colors.outlineSubtle),
+        ),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: colors.primary,
+        foregroundColor: AppDesignTokens.textOnAccent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        ),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: colors.primary,
+        linearTrackColor: colors.outlineSubtle,
+        circularTrackColor: colors.outlineSubtle,
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: colors.glassBackground,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDesignTokens.glassRadius),
+          side: BorderSide(color: colors.glassBorder),
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colors.glassBackground,
+        surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDesignTokens.glassRadius),
+          ),
+        ),
       ),
     );
   }

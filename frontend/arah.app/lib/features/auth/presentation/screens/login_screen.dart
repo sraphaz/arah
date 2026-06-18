@@ -6,7 +6,9 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_brand_header.dart';
+import '../../../../core/widgets/arah_glass_card.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../core/widgets/arah_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_state_provider.dart';
 
@@ -161,9 +163,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             : l10n.signUpSubtitle,
                   ),
                   const SizedBox(height: AppConstants.spacing2xl),
-                  if (_step == LoginStep.email) ..._buildEmailStep(l10n),
-                  if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
-                  if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),
+                  ArahGlassCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (_step == LoginStep.email) ..._buildEmailStep(l10n),
+                        if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
+                        if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -190,15 +199,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         validator: (v) => (v == null || v.isEmpty) ? l10n.informEmail : null,
       ),
       const SizedBox(height: AppConstants.spacingLg),
-      FilledButton(
+      ArahButton(
+        label: l10n.continueButton,
         onPressed: _checkEmailLoading ? null : _submitEmail,
-        child: _checkEmailLoading
-            ? const SizedBox(
-                height: AppConstants.loadingIndicatorSize,
-                width: AppConstants.loadingIndicatorSize,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : Text(l10n.continueButton),
+        loading: _checkEmailLoading,
+        expand: true,
       ),
     ];
   }

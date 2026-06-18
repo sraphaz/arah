@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../config/constants.dart';
 import '../theme/app_design_tokens.dart';
 import '../theme/arah_motion.dart';
 

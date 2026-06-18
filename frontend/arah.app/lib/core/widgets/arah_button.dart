@@ -7,7 +7,7 @@ import '../theme/arah_motion.dart';
 enum ArahButtonVariant { primary, secondary, text }
 
 /// Botão do design system com touch target mínimo e estados de loading.
-class ArahButton extends StatefulWidget {
+class ArahButton extends StatelessWidget {
   const ArahButton({
     super.key,
     required this.label,
@@ -26,72 +26,60 @@ class ArahButton extends StatefulWidget {
   final bool expand;
 
   @override
-  State<ArahButton> createState() => _ArahButtonState();
-}
-
-class _ArahButtonState extends State<ArahButton> {
-  bool _pressed = false;
-
-  @override
   Widget build(BuildContext context) {
-    final enabled = widget.onPressed != null && !widget.loading;
-    final scale = _pressed && enabled ? 0.96 : 1.0;
+    final enabled = onPressed != null && !loading;
 
     Widget button;
-    switch (widget.variant) {
+    switch (variant) {
       case ArahButtonVariant.primary:
         button = FilledButton(
-          onPressed: enabled ? _handlePress : null,
+          onPressed: enabled ? () => _handlePress() : null,
           child: _buildChild(context),
         );
       case ArahButtonVariant.secondary:
         button = OutlinedButton(
-          onPressed: enabled ? _handlePress : null,
+          onPressed: enabled ? () => _handlePress() : null,
           child: _buildChild(context),
         );
       case ArahButtonVariant.text:
         button = TextButton(
-          onPressed: enabled ? _handlePress : null,
+          onPressed: enabled ? () => _handlePress() : null,
           child: _buildChild(context),
         );
     }
 
-    return AnimatedScale(
-      scale: scale,
-      duration: ArahMotion.fast,
-      child: widget.expand
-          ? SizedBox(width: double.infinity, child: button)
-          : button,
-    );
+    return expand
+        ? SizedBox(width: double.infinity, child: button)
+        : button;
   }
 
   void _handlePress() {
     ArahMotion.lightTap();
-    widget.onPressed?.call();
+    onPressed?.call();
   }
 
   Widget _buildChild(BuildContext context) {
-    if (widget.loading) {
+    if (loading) {
       return SizedBox(
         width: AppConstants.loadingIndicatorSize,
         height: AppConstants.loadingIndicatorSize,
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          color: widget.variant == ArahButtonVariant.primary
+          color: variant == ArahButtonVariant.primary
               ? Theme.of(context).colorScheme.onPrimary
               : context.appColors.primary,
         ),
       );
     }
 
-    if (widget.icon == null) return Text(widget.label);
+    if (icon == null) return Text(label);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(widget.icon, size: AppConstants.iconSizeSm + 4),
+        Icon(icon, size: AppConstants.iconSizeSm + 4),
         const SizedBox(width: AppConstants.spacingSm),
-        Text(widget.label),
+        Text(label),
       ],
     );
   }

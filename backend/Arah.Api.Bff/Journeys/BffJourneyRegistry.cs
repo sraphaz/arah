@@ -60,6 +60,9 @@ public static class BffJourneyRegistry
     /// <summary>Jornada de moderação (work-items, cases, evidências por território).</summary>
     public const string Moderation = "moderation";
 
+    /// <summary>Jornada de governança (votações do território: listar, criar, votar, fechar, resultados).</summary>
+    public const string Governance = "governance";
+
     /// <summary>Jornada de chat (conversas, mensagens, participantes).</summary>
     public const string Chat = "chat";
 
@@ -90,6 +93,7 @@ public static class BffJourneyRegistry
             [Notifications] = "api/v1/notifications",
             [MarketplaceV1] = "api/v1",
             [Moderation] = "api/v1/territories",
+            [Governance] = "api/v1/territories",
             [Chat] = "api/v1/chat",
             [Alerts] = "api/v1/alerts",
             [Admin] = "api/v1/admin"
@@ -258,6 +262,15 @@ public static class BffJourneyRegistry
                 new("{territoryId}/moderation/cases", "GET", "Casos de moderação do território."),
                 new("{territoryId}/evidences", "GET", "Evidências do território.")
             },
+            [Governance] = new List<JourneyEndpoint>
+            {
+                new("{territoryId}/votings", "GET", "Lista votações do território. Query: status (Open, Closed, Cancelled)."),
+                new("{territoryId}/votings", "POST", "Cria votação no território. Body: type, title, description, options, visibility, startsAtUtc, endsAtUtc."),
+                new("{territoryId}/votings/{votingId}", "GET", "Detalhe de uma votação."),
+                new("{territoryId}/votings/{votingId}/vote", "POST", "Registra um voto. Body: selectedOption."),
+                new("{territoryId}/votings/{votingId}/close", "POST", "Fecha a votação (criador ou curador)."),
+                new("{territoryId}/votings/{votingId}/results", "GET", "Resultados da votação (contagem por opção).")
+            },
             [Chat] = new List<JourneyEndpoint>
             {
                 new("conversations/{conversationId}", "GET", "Detalhe da conversa."),
@@ -384,6 +397,12 @@ public static class BffJourneyRegistry
                 new("{territoryId}/moderation/cases", "GET", "Casos de moderação."),
                 new("{territoryId}/evidences", "GET", "Evidências.")
             },
+            [Governance] = new List<JourneyEndpoint>
+            {
+                new("{territoryId}/votings", "GET", "Votações do território."),
+                new("{territoryId}/votings/{votingId}", "GET", "Detalhe da votação."),
+                new("{territoryId}/votings/{votingId}/results", "GET", "Resultados da votação.")
+            },
             [Chat] = new List<JourneyEndpoint>
             {
                 new("conversations/{conversationId}", "GET", "Conversa."),
@@ -422,6 +441,7 @@ public static class BffJourneyRegistry
         Notifications,
         MarketplaceV1,
         Moderation,
+        Governance,
         Chat,
         Alerts,
         Admin

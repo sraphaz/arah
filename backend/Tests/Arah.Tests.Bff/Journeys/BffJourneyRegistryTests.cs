@@ -63,6 +63,7 @@ public sealed class BffJourneyRegistryTests
     [InlineData("notifications", "api/v1/notifications")]
     [InlineData("marketplace-v1", "api/v1")]
     [InlineData("moderation", "api/v1/territories")]
+    [InlineData("governance", "api/v1/territories")]
     [InlineData("chat", "api/v1/chat")]
     [InlineData("alerts", "api/v1/alerts")]
     [InlineData("admin", "api/v1/admin")]
@@ -234,5 +235,29 @@ public sealed class BffJourneyRegistryTests
     {
         var list = BffJourneyRegistry.CacheableGetEndpoints[BffJourneyRegistry.MarketplaceV1];
         Assert.Contains(list, e => e.Path == "cart");
+    }
+
+    [Fact]
+    public void AllEndpoints_Governance_ContainsVotingsLifecycle()
+    {
+        var list = BffJourneyRegistry.AllEndpoints[BffJourneyRegistry.Governance];
+        var paths = list.Select(e => e.Path).ToHashSet();
+        Assert.Contains("{territoryId}/votings", paths);
+        Assert.Contains("{territoryId}/votings/{votingId}", paths);
+        Assert.Contains("{territoryId}/votings/{votingId}/vote", paths);
+        Assert.Contains("{territoryId}/votings/{votingId}/close", paths);
+        Assert.Contains("{territoryId}/votings/{votingId}/results", paths);
+        Assert.Contains(list, e => e.Method == "GET");
+        Assert.Contains(list, e => e.Method == "POST");
+    }
+
+    [Fact]
+    public void CacheableGetEndpoints_Governance_HasVotingsReads()
+    {
+        var list = BffJourneyRegistry.CacheableGetEndpoints[BffJourneyRegistry.Governance];
+        var paths = list.Select(e => e.Path).ToHashSet();
+        Assert.Contains("{territoryId}/votings", paths);
+        Assert.Contains("{territoryId}/votings/{votingId}/results", paths);
+        Assert.All(list, e => Assert.Equal("GET", e.Method));
     }
 }

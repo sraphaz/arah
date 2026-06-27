@@ -18,7 +18,7 @@ import 'app_localizations_pt.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'l10n/app_localizations.dart';
+/// import 'gen_l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -62,8 +62,7 @@ import 'app_localizations_pt.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,8 +82,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -1585,10 +1582,255 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Aparência'**
   String get appearance;
+
+  /// No description provided for @governance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Governança'**
+  String get governance;
+
+  /// No description provided for @governanceSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Decisões coletivas do território.'**
+  String get governanceSubtitle;
+
+  /// No description provided for @chooseTerritoryForGovernance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha um território para ver as votações.'**
+  String get chooseTerritoryForGovernance;
+
+  /// No description provided for @noVotings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma votação no momento.'**
+  String get noVotings;
+
+  /// No description provided for @errorLoadVotings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar votações.'**
+  String get errorLoadVotings;
+
+  /// No description provided for @createVoting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova votação'**
+  String get createVoting;
+
+  /// No description provided for @filterAllVotings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todas'**
+  String get filterAllVotings;
+
+  /// No description provided for @filterOpenVotings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abertas'**
+  String get filterOpenVotings;
+
+  /// No description provided for @filterClosedVotings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechadas'**
+  String get filterClosedVotings;
+
+  /// No description provided for @voteAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Votar'**
+  String get voteAction;
+
+  /// No description provided for @voteRegistered.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voto registrado.'**
+  String get voteRegistered;
+
+  /// No description provided for @errorVote.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao registrar voto.'**
+  String get errorVote;
+
+  /// No description provided for @alreadyVoted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você já votou.'**
+  String get alreadyVoted;
+
+  /// No description provided for @viewResults.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver resultados'**
+  String get viewResults;
+
+  /// No description provided for @closeVoting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar votação'**
+  String get closeVoting;
+
+  /// No description provided for @votingClosedMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Votação fechada.'**
+  String get votingClosedMsg;
+
+  /// No description provided for @errorCloseVoting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao fechar votação.'**
+  String get errorCloseVoting;
+
+  /// No description provided for @votingCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Votação criada.'**
+  String get votingCreated;
+
+  /// No description provided for @errorCreateVoting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao criar votação.'**
+  String get errorCreateVoting;
+
+  /// No description provided for @votingTitleLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Título da votação'**
+  String get votingTitleLabel;
+
+  /// No description provided for @votingDescriptionLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição'**
+  String get votingDescriptionLabel;
+
+  /// No description provided for @votingTypeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo'**
+  String get votingTypeLabel;
+
+  /// No description provided for @votingVisibilityLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quem pode votar'**
+  String get votingVisibilityLabel;
+
+  /// No description provided for @votingOptionsLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opções'**
+  String get votingOptionsLabel;
+
+  /// No description provided for @optionLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opção'**
+  String get optionLabel;
+
+  /// No description provided for @addOption.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar opção'**
+  String get addOption;
+
+  /// No description provided for @removeOption.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover opção'**
+  String get removeOption;
+
+  /// No description provided for @votingNeedsTwoOptions.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe pelo menos 2 opções.'**
+  String get votingNeedsTwoOptions;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In pt, this message translates to:
+  /// **'Campo obrigatório.'**
+  String get requiredField;
+
+  /// No description provided for @totalVotesLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} votos'**
+  String totalVotesLabel(int count);
+
+  /// No description provided for @statusOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aberta'**
+  String get statusOpen;
+
+  /// No description provided for @statusClosed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechada'**
+  String get statusClosed;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelada'**
+  String get statusCancelled;
+
+  /// No description provided for @votingTypeThemePrioritization.
+  ///
+  /// In pt, this message translates to:
+  /// **'Priorização de temas'**
+  String get votingTypeThemePrioritization;
+
+  /// No description provided for @votingTypeModerationRule.
+  ///
+  /// In pt, this message translates to:
+  /// **'Regra de moderação'**
+  String get votingTypeModerationRule;
+
+  /// No description provided for @votingTypeFeatureFlag.
+  ///
+  /// In pt, this message translates to:
+  /// **'Funcionalidade'**
+  String get votingTypeFeatureFlag;
+
+  /// No description provided for @votingTypeTerritoryCharacterization.
+  ///
+  /// In pt, this message translates to:
+  /// **'Caracterização do território'**
+  String get votingTypeTerritoryCharacterization;
+
+  /// No description provided for @votingTypeCommunityPolicy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Política comunitária'**
+  String get votingTypeCommunityPolicy;
+
+  /// No description provided for @votingVisibilityAllMembers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os membros'**
+  String get votingVisibilityAllMembers;
+
+  /// No description provided for @votingVisibilityResidentsOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apenas moradores'**
+  String get votingVisibilityResidentsOnly;
+
+  /// No description provided for @votingVisibilityCuratorsOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apenas curadores'**
+  String get votingVisibilityCuratorsOnly;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1597,25 +1839,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'pt':
-      return AppLocalizationsPt();
+    case 'en': return AppLocalizationsEn();
+    case 'pt': return AppLocalizationsPt();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

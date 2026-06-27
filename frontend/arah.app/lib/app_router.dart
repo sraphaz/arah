@@ -18,6 +18,7 @@ import 'features/marketplace/presentation/screens/marketplace_screen.dart';
 import 'features/chat/presentation/screens/chat_list_screen.dart';
 import 'features/chat/presentation/screens/chat_conversation_screen.dart';
 import 'features/moderation/presentation/screens/moderation_screen.dart';
+import 'features/governance/presentation/screens/governance_screen.dart';
 import 'features/assets/presentation/screens/assets_screen.dart';
 import 'features/subscriptions/presentation/screens/subscriptions_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -118,6 +119,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/moderation',
         builder: (_, __) => const ModerationScreen(),
+      ),
+      GoRoute(
+        path: '/governance',
+        builder: (_, state) {
+          final territoryId = state.uri.queryParameters['territoryId'];
+          return GovernanceScreen(territoryId: territoryId);
+        },
       ),
       GoRoute(
         path: '/assets',

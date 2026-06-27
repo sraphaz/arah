@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -48,15 +46,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profile => 'Perfil';
 
   @override
-  String get chooseTerritory =>
-      'Escolha um território para ver o feed da região';
+  String get chooseTerritory => 'Escolha um território para ver o feed da região';
 
   @override
   String get territories => 'Territórios';
 
   @override
-  String get territoriesSubtitle =>
-      'Toque em um território para ver o feed da região ou trocar de região.';
+  String get territoriesSubtitle => 'Toque em um território para ver o feed da região ou trocar de região.';
 
   @override
   String get noTerritoryAvailable => 'Nenhum território disponível';
@@ -65,19 +61,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingTitle => 'Escolha seu território';
 
   @override
-  String get onboardingDescription =>
-      'Para ver o feed e participar da comunidade, escolha um território próximo a você.';
+  String get onboardingDescription => 'Para ver o feed e participar da comunidade, escolha um território próximo a você.';
 
   @override
   String get useMyLocation => 'Usar minha localização';
 
   @override
-  String get enableLocationHint =>
-      'Ative a localização para ver territórios próximos.';
+  String get enableLocationHint => 'Ative a localização para ver territórios próximos.';
 
   @override
-  String get noTerritoryInRegion =>
-      'Nenhum território encontrado nesta região. Tente aumentar o raio ou ative a localização.';
+  String get noTerritoryInRegion => 'Nenhum território encontrado nesta região. Tente aumentar o raio ou ative a localização.';
 
   @override
   String get onboardingNearbyTitle => 'Próximos a você';
@@ -86,19 +79,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingAllTerritoriesTitle => 'Todos os territórios';
 
   @override
-  String get onboardingOrChooseFromList =>
-      'Ou escolha um território na lista abaixo';
+  String get onboardingOrChooseFromList => 'Ou escolha um território na lista abaixo';
 
   @override
   String get onboardingLocationEnabled => 'Localização ativa';
 
   @override
-  String get onboardingLocationPrivacy =>
-      'Sua localização é privada e não fica visível para outros usuários.';
+  String get onboardingLocationPrivacy => 'Sua localização é privada e não fica visível para outros usuários.';
 
   @override
-  String get onboardingAllowLocationToCenter =>
-      'Permita a localização para centralizar o mapa e ver territórios próximos.';
+  String get onboardingAllowLocationToCenter => 'Permita a localização para centralizar o mapa e ver territórios próximos.';
 
   @override
   String onboardingContinueWith(Object name) {
@@ -106,8 +96,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get onboardingVisitorOnContinue =>
-      'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.';
+  String get onboardingVisitorOnContinue => 'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.';
 
   @override
   String get onboardingGettingLocation => 'Obtendo localização...';
@@ -197,8 +186,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noTerritorySelected => 'Nenhum território selecionado';
 
   @override
-  String get chooseTerritoryInExplore =>
-      'Toque em Explorar, escolha um território e volte aqui para publicar.';
+  String get chooseTerritoryInExplore => 'Toque em Explorar, escolha um território e volte aqui para publicar.';
 
   @override
   String get comingSoon => 'Em breve';
@@ -210,8 +198,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sessionExpired => 'Sessão expirada. Faça login novamente.';
 
   @override
-  String get enterToAccess =>
-      'Entre na sua conta para acessar perfil, publicar e notificações.';
+  String get enterToAccess => 'Entre na sua conta para acessar perfil, publicar e notificações.';
 
   @override
   String get map => 'Mapa';
@@ -433,8 +420,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get reportAlert => 'Reportar alerta';
 
   @override
-  String get chooseTerritoryForAlerts =>
-      'Escolha um território para ver alertas.';
+  String get chooseTerritoryForAlerts => 'Escolha um território para ver alertas.';
 
   @override
   String get pending => 'Pendentes';
@@ -611,8 +597,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorLoadConnections => 'Não foi possível carregar conexões.';
 
   @override
-  String get noConnectionsYet =>
-      'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.';
+  String get noConnectionsYet => 'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.';
 
   @override
   String get errorLoadSuggestions => 'Erro ao carregar sugestões.';
@@ -621,8 +606,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorSearch => 'Erro na busca.';
 
   @override
-  String get searchMinCharsHint =>
-      'Digite ao menos 2 caracteres ou veja sugestões acima.';
+  String get searchMinCharsHint => 'Digite ao menos 2 caracteres ou veja sugestões acima.';
 
   @override
   String get connectionRequestIncoming => 'Solicitação recebida';
@@ -683,8 +667,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorLoadAlerts => 'Não foi possível carregar alertas.';
 
   @override
-  String get alertsRequireResidency =>
-      'Alertas do território exigem residência ou curadoria.';
+  String get alertsRequireResidency => 'Alertas do território exigem residência ou curadoria.';
 
   @override
   String get filterAll => 'Todos';
@@ -693,8 +676,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get postDefaultTitle => 'Post';
 
   @override
-  String get chooseTerritoryBeforePost =>
-      'Escolha um território antes de publicar.';
+  String get chooseTerritoryBeforePost => 'Escolha um território antes de publicar.';
 
   @override
   String get addImage => 'Adicionar imagem';
@@ -787,4 +769,129 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get appearance => 'Aparência';
+
+  @override
+  String get governance => 'Governança';
+
+  @override
+  String get governanceSubtitle => 'Decisões coletivas do território.';
+
+  @override
+  String get chooseTerritoryForGovernance => 'Escolha um território para ver as votações.';
+
+  @override
+  String get noVotings => 'Nenhuma votação no momento.';
+
+  @override
+  String get errorLoadVotings => 'Erro ao carregar votações.';
+
+  @override
+  String get createVoting => 'Nova votação';
+
+  @override
+  String get filterAllVotings => 'Todas';
+
+  @override
+  String get filterOpenVotings => 'Abertas';
+
+  @override
+  String get filterClosedVotings => 'Fechadas';
+
+  @override
+  String get voteAction => 'Votar';
+
+  @override
+  String get voteRegistered => 'Voto registrado.';
+
+  @override
+  String get errorVote => 'Erro ao registrar voto.';
+
+  @override
+  String get alreadyVoted => 'Você já votou.';
+
+  @override
+  String get viewResults => 'Ver resultados';
+
+  @override
+  String get closeVoting => 'Fechar votação';
+
+  @override
+  String get votingClosedMsg => 'Votação fechada.';
+
+  @override
+  String get errorCloseVoting => 'Erro ao fechar votação.';
+
+  @override
+  String get votingCreated => 'Votação criada.';
+
+  @override
+  String get errorCreateVoting => 'Erro ao criar votação.';
+
+  @override
+  String get votingTitleLabel => 'Título da votação';
+
+  @override
+  String get votingDescriptionLabel => 'Descrição';
+
+  @override
+  String get votingTypeLabel => 'Tipo';
+
+  @override
+  String get votingVisibilityLabel => 'Quem pode votar';
+
+  @override
+  String get votingOptionsLabel => 'Opções';
+
+  @override
+  String get optionLabel => 'Opção';
+
+  @override
+  String get addOption => 'Adicionar opção';
+
+  @override
+  String get removeOption => 'Remover opção';
+
+  @override
+  String get votingNeedsTwoOptions => 'Informe pelo menos 2 opções.';
+
+  @override
+  String get requiredField => 'Campo obrigatório.';
+
+  @override
+  String totalVotesLabel(int count) {
+    return '$count votos';
+  }
+
+  @override
+  String get statusOpen => 'Aberta';
+
+  @override
+  String get statusClosed => 'Fechada';
+
+  @override
+  String get statusCancelled => 'Cancelada';
+
+  @override
+  String get votingTypeThemePrioritization => 'Priorização de temas';
+
+  @override
+  String get votingTypeModerationRule => 'Regra de moderação';
+
+  @override
+  String get votingTypeFeatureFlag => 'Funcionalidade';
+
+  @override
+  String get votingTypeTerritoryCharacterization => 'Caracterização do território';
+
+  @override
+  String get votingTypeCommunityPolicy => 'Política comunitária';
+
+  @override
+  String get votingVisibilityAllMembers => 'Todos os membros';
+
+  @override
+  String get votingVisibilityResidentsOnly => 'Apenas moradores';
+
+  @override
+  String get votingVisibilityCuratorsOnly => 'Apenas curadores';
 }

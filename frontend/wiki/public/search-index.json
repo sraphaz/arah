@@ -78,6 +78,14 @@
       "category": "Arquitetura"
     },
     {
+      "id": "14_C4_ARCHITECTURE",
+      "title": "Arquitetura C4",
+      "content": "Arquitetura C4 da Plataforma Arah Este documento descreve a arquitetura da plataforma Arah usando o modelo C4 (Contexto → Containers → Componentes), além do mapa de domínios, da topologia de implantação e dos diagramas de sequência das funcionalidades implementadas e previstas. 📐 Documento interativo completo : a versão navegável (com todos os diagramas de sequência, zoom e legendas) é publicada no site técnico (DevPortal) em /architecture/ (ex.: https://devportal.arah.app/architecture/ ). Quan",
+      "url": "/wiki/docs/14_C4_ARCHITECTURE",
+      "category": "Outros",
+      "description": "Modelo C4 da plataforma Arah — Contexto, Containers, Componentes, mapa de domínios e implantação."
+    },
+    {
       "id": "20_IMPLEMENTATION_PLAN",
       "title": "IMPLEMENTATION PLAN",
       "content": "Plano de Implementação (Prioridades e Dependências) Versão : 2.0 Data : 2025-01-20 Última Atualização : 2025-01-20 Status : MVP Completo + Fases 1-8 Implementadas ✅ Este documento organiza épicos → features → user stories em ordem de prioridade com dependências explícitas para orientar a sequência de entrega. Nota : Para o backlog completo de fases futuras (9-29), ver Backlog API . Legenda P0 : crítico para o MVP. P1 : importante para estabilidade do MVP. Depende de : requisitos técnicos/funcion",

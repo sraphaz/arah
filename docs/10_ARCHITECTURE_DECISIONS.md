@@ -619,4 +619,4 @@ Sim, **um projeto por módulo faz sentido** e é uma opção válida:
 
 - [Product Vision](./01_PRODUCT_VISION.md)
 - [User Stories](./04_USER_STORIES.md)
-- [Architecture C4](./design/Archtecture/C4_Components.md)
+- [Arquitetura C4](./14_C4_ARCHITECTURE.md)

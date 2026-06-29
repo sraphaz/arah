@@ -15,6 +15,7 @@ const docStructure = {
     { name: "Glossário", path: "05_GLOSSARY.md" },
   ],
   "Arquitetura e Design": [
+    { name: "Arquitetura C4", path: "14_C4_ARCHITECTURE.md" },
     { name: "Decisões Arquiteturais", path: "10_ARCHITECTURE_DECISIONS.md" },
     { name: "Arquitetura de Services", path: "11_ARCHITECTURE_SERVICES.md" },
     { name: "Modelo de Domínio", path: "12_DOMAIN_MODEL.md" },

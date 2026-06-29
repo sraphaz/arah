@@ -343,5 +343,16 @@
   "votingTypeCommunityPolicy": "Política comunitária",
   "votingVisibilityAllMembers": "Todos os membros",
   "votingVisibilityResidentsOnly": "Apenas moradores",
-  "votingVisibilityCuratorsOnly": "Apenas curadores"
+  "votingVisibilityCuratorsOnly": "Apenas curadores",
+  "createEvent": "Novo evento",
+  "eventTitleLabel": "Título do evento",
+  "eventDescriptionLabel": "Descrição",
+  "eventStartLabel": "Início",
+  "eventEndLabel": "Término (opcional)",
+  "eventLocationLabel": "Local (opcional)",
+  "selectDateTime": "Selecionar data e hora",
+  "eventCreated": "Evento criado.",
+  "errorCreateEvent": "Erro ao criar evento.",
+  "eventStartRequired": "Defina a data e hora de início.",
+  "eventEndBeforeStart": "O término deve ser após o início."
 }

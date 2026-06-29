@@ -343,5 +343,16 @@
   "votingTypeCommunityPolicy": "Community policy",
   "votingVisibilityAllMembers": "All members",
   "votingVisibilityResidentsOnly": "Residents only",
-  "votingVisibilityCuratorsOnly": "Curators only"
+  "votingVisibilityCuratorsOnly": "Curators only",
+  "createEvent": "New event",
+  "eventTitleLabel": "Event title",
+  "eventDescriptionLabel": "Description",
+  "eventStartLabel": "Start",
+  "eventEndLabel": "End (optional)",
+  "eventLocationLabel": "Location (optional)",
+  "selectDateTime": "Select date and time",
+  "eventCreated": "Event created.",
+  "errorCreateEvent": "Error creating event.",
+  "eventStartRequired": "Set the start date and time.",
+  "eventEndBeforeStart": "End must be after start."
 }

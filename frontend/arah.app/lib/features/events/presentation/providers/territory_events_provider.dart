@@ -85,6 +85,30 @@ class TerritoryEventsNotifier extends StateNotifier<TerritoryEventsState> {
     await loadPage(state.page + 1, append: true);
   }
 
+  /// Cria um evento no território ativo e recarrega a lista.
+  Future<EventItem> createEvent({
+    required String title,
+    String? description,
+    required DateTime startsAtUtc,
+    DateTime? endsAtUtc,
+    String? locationLabel,
+  }) async {
+    final tid = territoryId ?? '';
+    if (tid.isEmpty) {
+      throw StateError('Território ativo não definido.');
+    }
+    final created = await _repo.createEvent(
+      territoryId: tid,
+      title: title,
+      description: description,
+      startsAtUtc: startsAtUtc,
+      endsAtUtc: endsAtUtc,
+      locationLabel: locationLabel,
+    );
+    await loadPage(1, append: false);
+    return created;
+  }
+
   /// Marca participação (INTERESTED ou CONFIRMED) e atualiza o item na lista.
   Future<void> participate(EventItem item, String status) async {
     if (territoryId == null || territoryId!.isEmpty) return;

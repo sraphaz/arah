@@ -894,4 +894,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get votingVisibilityCuratorsOnly => 'Curators only';
+
+  @override
+  String get createEvent => 'New event';
+
+  @override
+  String get eventTitleLabel => 'Event title';
+
+  @override
+  String get eventDescriptionLabel => 'Description';
+
+  @override
+  String get eventStartLabel => 'Start';
+
+  @override
+  String get eventEndLabel => 'End (optional)';
+
+  @override
+  String get eventLocationLabel => 'Location (optional)';
+
+  @override
+  String get selectDateTime => 'Select date and time';
+
+  @override
+  String get eventCreated => 'Event created.';
+
+  @override
+  String get errorCreateEvent => 'Error creating event.';
+
+  @override
+  String get eventStartRequired => 'Set the start date and time.';
+
+  @override
+  String get eventEndBeforeStart => 'End must be after start.';
 }

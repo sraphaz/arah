@@ -1828,6 +1828,72 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Apenas curadores'**
   String get votingVisibilityCuratorsOnly;
+
+  /// No description provided for @createEvent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo evento'**
+  String get createEvent;
+
+  /// No description provided for @eventTitleLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Título do evento'**
+  String get eventTitleLabel;
+
+  /// No description provided for @eventDescriptionLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição'**
+  String get eventDescriptionLabel;
+
+  /// No description provided for @eventStartLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Início'**
+  String get eventStartLabel;
+
+  /// No description provided for @eventEndLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Término (opcional)'**
+  String get eventEndLabel;
+
+  /// No description provided for @eventLocationLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Local (opcional)'**
+  String get eventLocationLabel;
+
+  /// No description provided for @selectDateTime.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecionar data e hora'**
+  String get selectDateTime;
+
+  /// No description provided for @eventCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Evento criado.'**
+  String get eventCreated;
+
+  /// No description provided for @errorCreateEvent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao criar evento.'**
+  String get errorCreateEvent;
+
+  /// No description provided for @eventStartRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Defina a data e hora de início.'**
+  String get eventStartRequired;
+
+  /// No description provided for @eventEndBeforeStart.
+  ///
+  /// In pt, this message translates to:
+  /// **'O término deve ser após o início.'**
+  String get eventEndBeforeStart;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

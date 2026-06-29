@@ -46,6 +46,7 @@ const sidebarSections: SidebarSection[] = [
   {
     title: "Arquitetura",
     items: [
+      { title: "Arquitetura C4", href: "/docs/14_C4_ARCHITECTURE", description: "Modelo C4: contexto, containers e componentes" },
       { title: "Decisões Arquiteturais", href: "/docs/10_ARCHITECTURE_DECISIONS", description: "ADRs e decisões técnicas" },
       { title: "Modelo de Domínio", href: "/docs/12_DOMAIN_MODEL", description: "Entidades e relações" },
       { title: "Serviços", href: "/docs/11_ARCHITECTURE_SERVICES", description: "Serviços da aplicação" },

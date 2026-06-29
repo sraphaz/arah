@@ -49,6 +49,11 @@ class ExploreScreen extends ConsumerWidget {
               tooltip: l10n.chat,
               onPressed: () => context.push('/chat'),
             ),
+            IconButton(
+              icon: const Icon(Icons.how_to_vote_outlined),
+              tooltip: l10n.governance,
+              onPressed: () => context.push('/governance?territoryId=$territoryId'),
+            ),
           ],
         ],
       ),

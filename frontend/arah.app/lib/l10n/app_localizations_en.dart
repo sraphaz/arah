@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -54,8 +52,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get territories => 'Territories';
 
   @override
-  String get territoriesSubtitle =>
-      'Tap a territory to see its feed or switch region.';
+  String get territoriesSubtitle => 'Tap a territory to see its feed or switch region.';
 
   @override
   String get noTerritoryAvailable => 'No territory available';
@@ -64,8 +61,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle => 'Choose your territory';
 
   @override
-  String get onboardingDescription =>
-      'To see the feed and join the community, choose a territory near you.';
+  String get onboardingDescription => 'To see the feed and join the community, choose a territory near you.';
 
   @override
   String get useMyLocation => 'Use my location';
@@ -74,8 +70,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enableLocationHint => 'Enable location to see nearby territories.';
 
   @override
-  String get noTerritoryInRegion =>
-      'No territory found in this region. Try a larger radius or enable location.';
+  String get noTerritoryInRegion => 'No territory found in this region. Try a larger radius or enable location.';
 
   @override
   String get onboardingNearbyTitle => 'Near you';
@@ -84,19 +79,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingAllTerritoriesTitle => 'All territories';
 
   @override
-  String get onboardingOrChooseFromList =>
-      'Or choose a territory from the list below';
+  String get onboardingOrChooseFromList => 'Or choose a territory from the list below';
 
   @override
   String get onboardingLocationEnabled => 'Location enabled';
 
   @override
-  String get onboardingLocationPrivacy =>
-      'Your location is private and not visible to other users.';
+  String get onboardingLocationPrivacy => 'Your location is private and not visible to other users.';
 
   @override
-  String get onboardingAllowLocationToCenter =>
-      'Allow location to center the map and see nearby territories.';
+  String get onboardingAllowLocationToCenter => 'Allow location to center the map and see nearby territories.';
 
   @override
   String onboardingContinueWith(Object name) {
@@ -104,8 +96,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get onboardingVisitorOnContinue =>
-      'When you continue, you will enter as a visitor in this territory and will be able to see the feed.';
+  String get onboardingVisitorOnContinue => 'When you continue, you will enter as a visitor in this territory and will be able to see the feed.';
 
   @override
   String get onboardingGettingLocation => 'Getting location...';
@@ -195,8 +186,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noTerritorySelected => 'No territory selected';
 
   @override
-  String get chooseTerritoryInExplore =>
-      'Tap Explore, choose a territory, and come back here to post.';
+  String get chooseTerritoryInExplore => 'Tap Explore, choose a territory, and come back here to post.';
 
   @override
   String get comingSoon => 'Coming soon';
@@ -208,8 +198,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sessionExpired => 'Session expired. Please log in again.';
 
   @override
-  String get enterToAccess =>
-      'Sign in to access profile, post, and notifications.';
+  String get enterToAccess => 'Sign in to access profile, post, and notifications.';
 
   @override
   String get map => 'Map';
@@ -617,8 +606,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorSearch => 'Search error.';
 
   @override
-  String get searchMinCharsHint =>
-      'Type at least 2 characters or see suggestions above.';
+  String get searchMinCharsHint => 'Type at least 2 characters or see suggestions above.';
 
   @override
   String get connectionRequestIncoming => 'Incoming request';
@@ -679,8 +667,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorLoadAlerts => 'Could not load alerts.';
 
   @override
-  String get alertsRequireResidency =>
-      'Territory alerts require residency or curator role.';
+  String get alertsRequireResidency => 'Territory alerts require residency or curator role.';
 
   @override
   String get filterAll => 'All';
@@ -782,4 +769,129 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appearance => 'Appearance';
+
+  @override
+  String get governance => 'Governance';
+
+  @override
+  String get governanceSubtitle => 'Collective decisions of the territory.';
+
+  @override
+  String get chooseTerritoryForGovernance => 'Choose a territory to see the votings.';
+
+  @override
+  String get noVotings => 'No votings right now.';
+
+  @override
+  String get errorLoadVotings => 'Error loading votings.';
+
+  @override
+  String get createVoting => 'New voting';
+
+  @override
+  String get filterAllVotings => 'All';
+
+  @override
+  String get filterOpenVotings => 'Open';
+
+  @override
+  String get filterClosedVotings => 'Closed';
+
+  @override
+  String get voteAction => 'Vote';
+
+  @override
+  String get voteRegistered => 'Vote recorded.';
+
+  @override
+  String get errorVote => 'Error recording vote.';
+
+  @override
+  String get alreadyVoted => 'You already voted.';
+
+  @override
+  String get viewResults => 'View results';
+
+  @override
+  String get closeVoting => 'Close voting';
+
+  @override
+  String get votingClosedMsg => 'Voting closed.';
+
+  @override
+  String get errorCloseVoting => 'Error closing voting.';
+
+  @override
+  String get votingCreated => 'Voting created.';
+
+  @override
+  String get errorCreateVoting => 'Error creating voting.';
+
+  @override
+  String get votingTitleLabel => 'Voting title';
+
+  @override
+  String get votingDescriptionLabel => 'Description';
+
+  @override
+  String get votingTypeLabel => 'Type';
+
+  @override
+  String get votingVisibilityLabel => 'Who can vote';
+
+  @override
+  String get votingOptionsLabel => 'Options';
+
+  @override
+  String get optionLabel => 'Option';
+
+  @override
+  String get addOption => 'Add option';
+
+  @override
+  String get removeOption => 'Remove option';
+
+  @override
+  String get votingNeedsTwoOptions => 'Provide at least 2 options.';
+
+  @override
+  String get requiredField => 'Required field.';
+
+  @override
+  String totalVotesLabel(int count) {
+    return '$count votes';
+  }
+
+  @override
+  String get statusOpen => 'Open';
+
+  @override
+  String get statusClosed => 'Closed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get votingTypeThemePrioritization => 'Theme prioritization';
+
+  @override
+  String get votingTypeModerationRule => 'Moderation rule';
+
+  @override
+  String get votingTypeFeatureFlag => 'Feature flag';
+
+  @override
+  String get votingTypeTerritoryCharacterization => 'Territory characterization';
+
+  @override
+  String get votingTypeCommunityPolicy => 'Community policy';
+
+  @override
+  String get votingVisibilityAllMembers => 'All members';
+
+  @override
+  String get votingVisibilityResidentsOnly => 'Residents only';
+
+  @override
+  String get votingVisibilityCuratorsOnly => 'Curators only';
 }

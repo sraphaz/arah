@@ -361,5 +361,6 @@
   "clear": "Limpar",
   "onboardingSearchTitle": "Buscar território",
   "postDetailTitle": "Publicação",
-  "feedTypeTip": "Dica"
+  "feedTypeTip": "Dica",
+  "postNotFound": "Publicação não encontrada."
 }

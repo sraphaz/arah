@@ -23,6 +23,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - ✅ **Busca de territórios**: campo de busca no seletor (Explorar e folha "Meu território") usando a jornada `territories/search` — encontrar território por nome/cidade sem depender de geolocalização.
 - ✅ **Busca de território no onboarding**: novo usuário pode buscar, selecionar e concluir o onboarding sem conceder localização (antes a conclusão dependia de geolocalização).
 - ✅ **Detalhe de post**: tocar num card do feed abre a tela "Publicação" com conteúdo completo, todas as mídias, autor/data, contadores e ações (curtir/comentar/compartilhar/excluir).
+- ✅ **GET de post único** (`feed/post-detail`): novo endpoint na API + jornada BFF que retorna um post no formato de item do feed; o deep-link de pin `post` no mapa agora abre o detalhe direto (rota `/post`), com modo *fetch* na tela quando o post não está no feed carregado.
 - ✅ Documentação sincronizada: `README.md`, `docs/STABLE_RELEASE_APP_ONBOARDING.md`, `docs/FEATURE_MATRIX_API_BFF_APP.md`.
 
 ### Alterado - Fase 12 Encerrada (2026-01-25)

@@ -28,7 +28,18 @@ void main() {
       expect(mapPinDeepLink(_pin('alert')), '/alerts');
     });
 
-    test('post pin links to /home (feed)', () {
+    test('post pin with postId links to /post detail', () {
+      final pin = MapPin(
+        pinType: 'post',
+        latitude: -23.35,
+        longitude: -44.89,
+        title: 'Post',
+        postId: 'pid1',
+      );
+      expect(mapPinDeepLink(pin, territoryId: 't1'), '/post?territoryId=t1&postId=pid1');
+    });
+
+    test('post pin without postId falls back to /home (feed)', () {
       expect(mapPinDeepLink(_pin('post')), '/home');
     });
 

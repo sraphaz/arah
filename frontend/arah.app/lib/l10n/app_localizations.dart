@@ -1936,6 +1936,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Dica'**
   String get feedTypeTip;
+
+  /// No description provided for @postNotFound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicação não encontrada.'**
+  String get postNotFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

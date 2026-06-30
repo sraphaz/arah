@@ -62,22 +62,13 @@ public sealed class FeedJourneyService : IFeedJourneyService
         var items = new List<TerritoryFeedItemJourneyDto>();
         foreach (var post in posts)
         {
-            var postCounts = counts.GetValueOrDefault(post.Id, new BackendPostCounts(0, 0));
-            var mediaList = mediaByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
             userMap.TryGetValue(post.AuthorUserId, out var author);
-            var authorDto = author is null ? null : new TerritoryFeedAuthorDto(author.Id, author.DisplayName, author.AvatarUrl);
-            var mediaDtos = mediaList.Select(url => new TerritoryFeedMediaDto(url, "IMAGE", null)).ToList();
-            var postDto = MapToPostDto(post);
-            var countsDto = new TerritoryFeedCountsDto(postCounts.LikeCount, postCounts.ShareCount, postCounts.CommentCount);
-            var isAuthor = userId.HasValue && post.AuthorUserId == userId.Value;
-            var metadata = new ItemMetadataDto(isAuthor, isAuthor, true, true);
-            items.Add(new TerritoryFeedItemJourneyDto(
-                postDto,
-                countsDto,
-                mediaDtos,
-                authorDto,
-                new UserInteractionsDto(false, false, false),
-                metadata));
+            items.Add(BuildItem(
+                post,
+                counts.GetValueOrDefault(post.Id, new BackendPostCounts(0, 0)),
+                mediaByPost.GetValueOrDefault(post.Id, Array.Empty<string>()),
+                author,
+                userId));
         }
 
         const int maxInt32 = int.MaxValue;
@@ -228,6 +219,54 @@ public sealed class FeedJourneyService : IFeedJourneyService
         CancellationToken cancellationToken = default)
     {
         return await _backend.DeletePostAsync(territoryId, postId, userId, cancellationToken);
+    }
+
+    public async Task<TerritoryFeedItemJourneyDto?> GetPostDetailAsync(
+        Guid territoryId,
+        Guid? userId,
+        Guid postId,
+        CancellationToken cancellationToken = default)
+    {
+        var post = await _backend.GetPostAsync(postId, cancellationToken);
+        if (post is null || post.TerritoryId != territoryId)
+        {
+            return null;
+        }
+
+        var counts = await _backend.GetCountsByPostIdsAsync(new[] { post.Id }, cancellationToken);
+        var media = await _backend.GetMediaUrlsByPostIdsAsync(new[] { post.Id }, cancellationToken);
+        var users = await _backend.GetUsersByIdsAsync(new[] { post.AuthorUserId }, cancellationToken);
+        var author = users.FirstOrDefault(u => u.Id == post.AuthorUserId);
+
+        return BuildItem(
+            post,
+            counts.GetValueOrDefault(post.Id, new BackendPostCounts(0, 0)),
+            media.GetValueOrDefault(post.Id, Array.Empty<string>()),
+            author,
+            userId);
+    }
+
+    /// <summary>Monta um item de feed (post + contadores + mídia + autor + metadados) — reutilizado pelo feed e pelo detalhe.</summary>
+    private static TerritoryFeedItemJourneyDto BuildItem(
+        BackendFeedPost post,
+        BackendPostCounts postCounts,
+        IReadOnlyList<string> mediaUrls,
+        BackendUserInfo? author,
+        Guid? userId)
+    {
+        var authorDto = author is null ? null : new TerritoryFeedAuthorDto(author.Id, author.DisplayName, author.AvatarUrl);
+        var mediaDtos = mediaUrls.Select(url => new TerritoryFeedMediaDto(url, "IMAGE", null)).ToList();
+        var postDto = MapToPostDto(post);
+        var countsDto = new TerritoryFeedCountsDto(postCounts.LikeCount, postCounts.ShareCount, postCounts.CommentCount);
+        var isAuthor = userId.HasValue && post.AuthorUserId == userId.Value;
+        var metadata = new ItemMetadataDto(isAuthor, isAuthor, true, true);
+        return new TerritoryFeedItemJourneyDto(
+            postDto,
+            countsDto,
+            mediaDtos,
+            authorDto,
+            new UserInteractionsDto(false, false, false),
+            metadata);
     }
 
     private static TerritoryFeedPostDto MapToPostDto(BackendFeedPost post)

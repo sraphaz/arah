@@ -13,190 +13,107 @@ import '../providers/feed_provider.dart';
 import '../widgets/feed_post_card.dart';
 import '../widgets/feed_comments_sheet.dart';
 
-/// Detalhe de um post do feed: conteúdo completo, todas as mídias, autor, contadores e ações.
-/// Lê o item "vivo" do estado do feed por id, para refletir like/comentar/compartilhar/excluir.
-class PostDetailScreen extends ConsumerWidget {
+/// Busca o detalhe de um post quando ele não está no estado do feed (ex.: deep-link de pin do mapa).
+final postDetailFetchProvider = FutureProvider.autoDispose
+    .family<Map<String, dynamic>?, ({String territoryId, String postId})>((ref, key) async {
+  final repo = ref.watch(feedRepositoryProvider);
+  return repo.getPost(postId: key.postId, territoryId: key.territoryId);
+});
+
+/// Detalhe de um post: conteúdo completo, mídias, autor, contadores e ações.
+/// Se o post estiver no feed carregado, usa o item "vivo" (interações via feed); caso
+/// contrário (ex.: deep-link), busca por id e exibe em modo leitura + comentários.
+class PostDetailScreen extends ConsumerStatefulWidget {
   const PostDetailScreen({super.key, required this.territoryId, required this.postId});
 
   final String territoryId;
   final String postId;
 
-  Map<String, dynamic>? _findItem(FeedState state) {
+  @override
+  ConsumerState<PostDetailScreen> createState() => _PostDetailScreenState();
+}
+
+class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
+  bool _wasInFeed = false;
+
+  Map<String, dynamic>? _findInFeed() {
+    final state = ref.watch(feedNotifierProvider(widget.territoryId));
     for (final raw in state.items) {
       if (raw is! Map<String, dynamic>) continue;
       final post = raw['post'] as Map<String, dynamic>?;
-      if (post?['id']?.toString() == postId) return raw;
+      if (post?['id']?.toString() == widget.postId) return raw;
     }
     return null;
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final state = ref.watch(feedNotifierProvider(territoryId));
-    final notifier = ref.read(feedNotifierProvider(territoryId).notifier);
-    final item = _findItem(state);
+    final feedItem = _findInFeed();
 
-    if (item == null) {
-      // Post removido (ex.: após exclusão) ou ausente do estado: volta para o feed.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted && Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-        }
-      });
+    if (feedItem != null) {
+      _wasInFeed = true;
+      final notifier = ref.read(feedNotifierProvider(widget.territoryId).notifier);
+      final canDelete = (feedItem['metadata'] as Map<String, dynamic>?)?['canDelete'] == true;
       return ArahScaffold(
-        appBar: AppBar(title: Text(l10n.postDetailTitle)),
-        body: const SizedBox.shrink(),
+        appBar: AppBar(
+          title: Text(l10n.postDetailTitle),
+          actions: [
+            if (canDelete)
+              IconButton(
+                icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+                tooltip: l10n.deletePost,
+                onPressed: () => _confirmDelete(notifier),
+              ),
+          ],
+        ),
+        body: _PostBody(
+          item: feedItem,
+          territoryId: widget.territoryId,
+          onLike: () => notifier.interact(postId: widget.postId, action: FeedInteractionAction.like),
+          onShare: () => notifier.interact(postId: widget.postId, action: FeedInteractionAction.share),
+        ),
       );
     }
 
-    final post = item['post'] as Map<String, dynamic>? ?? const {};
-    final author = item['author'] as Map<String, dynamic>?;
-    final counts = FeedPostCounts.fromJson(item['counts'] as Map<String, dynamic>?);
-    final interactions = FeedUserInteractions.fromJson(item['userInteractions'] as Map<String, dynamic>?);
-    final metadata = item['metadata'] as Map<String, dynamic>?;
-    final canDelete = metadata?['canDelete'] == true;
+    // Estava no feed e sumiu (ex.: excluído) → fecha.
+    if (_wasInFeed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && Navigator.of(context).canPop()) Navigator.of(context).pop();
+      });
+      return ArahScaffold(appBar: AppBar(title: Text(l10n.postDetailTitle)), body: const SizedBox.shrink());
+    }
 
-    final title = post['title']?.toString() ?? l10n.postDefaultTitle;
-    final content = post['content']?.toString() ?? '';
-    final type = FeedPostCard.typeFromString(post['type']?.toString());
-    final authorName = author?['displayName']?.toString();
-    final createdAt = DateTime.tryParse(post['createdAtUtc']?.toString() ?? '');
-    final mediaUrls = _mediaUrls(item);
-    final theme = Theme.of(context);
-
+    // Não está no feed (deep-link): busca por id e exibe em leitura.
+    final fetchAsync = ref.watch(
+      postDetailFetchProvider((territoryId: widget.territoryId, postId: widget.postId)),
+    );
     return ArahScaffold(
-      appBar: AppBar(
-        title: Text(l10n.postDetailTitle),
-        actions: [
-          if (canDelete)
-            IconButton(
-              icon: Icon(Icons.delete_outline, color: theme.colorScheme.error),
-              tooltip: l10n.deletePost,
-              onPressed: () => _confirmDelete(context, ref, notifier),
-            ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(AppConstants.spacingMd),
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.spacingMd),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: AppConstants.avatarSizeSm / 2,
-                backgroundColor: theme.colorScheme.primaryContainer,
-                child: Text(
-                  ((authorName?.isNotEmpty == true ? authorName! : title)[0]).toUpperCase(),
-                  style: TextStyle(
-                    color: theme.colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w600,
-                  ),
+      appBar: AppBar(title: Text(l10n.postDetailTitle)),
+      body: fetchAsync.when(
+        data: (item) => item == null
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppConstants.spacingLg),
+                  child: Text(l10n.postNotFound, textAlign: TextAlign.center),
                 ),
-              ),
-              const SizedBox(width: AppConstants.spacingSm),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (authorName != null && authorName.isNotEmpty)
-                      Text(authorName, style: theme.textTheme.titleSmall),
-                    if (createdAt != null)
-                      Text(
-                        DateFormat('dd/MM/yyyy HH:mm').format(createdAt.toLocal()),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              _TypeChip(type: type),
-            ],
-          ),
-          const SizedBox(height: AppConstants.spacingMd),
-          Text(title, style: theme.textTheme.titleLarge),
-          if (content.isNotEmpty) ...[
-            const SizedBox(height: AppConstants.spacingSm),
-            SelectableText(content, style: theme.textTheme.bodyLarge),
-          ],
-          ...mediaUrls.map(
-            (url) => Padding(
-              padding: const EdgeInsets.only(top: AppConstants.spacingMd),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                child: CachedNetworkImage(
-                  imageUrl: url,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(
-                    height: 180,
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                  ),
-                  errorWidget: (_, __, ___) => Container(
-                    height: 120,
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    child: const Center(child: Icon(Icons.broken_image_outlined)),
-                  ),
-                ),
-              ),
+              )
+            : _PostBody(item: item, territoryId: widget.territoryId),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.spacingLg),
+            child: Text(
+              err is ApiException ? err.userMessage : l10n.errorLoad,
+              textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: AppConstants.spacingMd),
-          const Divider(),
-          Row(
-            children: [
-              _Action(
-                icon: interactions.liked ? Icons.favorite : Icons.favorite_border,
-                label: counts.likes.toString(),
-                color: interactions.liked ? theme.colorScheme.primary : null,
-                onPressed: () => notifier.interact(postId: postId, action: FeedInteractionAction.like),
-              ),
-              _Action(
-                icon: Icons.chat_bubble_outline,
-                label: counts.comments.toString(),
-                onPressed: () => FeedCommentsSheet.show(
-                  context,
-                  postId: postId,
-                  territoryId: territoryId,
-                  postTitle: title,
-                ),
-              ),
-              _Action(
-                icon: interactions.shared ? Icons.send : Icons.send_outlined,
-                label: counts.shares.toString(),
-                color: interactions.shared ? theme.colorScheme.primary : null,
-                onPressed: () => notifier.interact(postId: postId, action: FeedInteractionAction.share),
-              ),
-            ],
-          ),
-                ],
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  List<String> _mediaUrls(Map<String, dynamic> item) {
-    final media = item['media'] as List?;
-    if (media == null) return const [];
-    return media
-        .whereType<Map<String, dynamic>>()
-        .map((e) => e['url']?.toString())
-        .whereType<String>()
-        .where((url) => url.isNotEmpty)
-        .toList();
-  }
-
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, FeedNotifier notifier) async {
+  Future<void> _confirmDelete(FeedNotifier notifier) async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
@@ -211,13 +128,165 @@ class PostDetailScreen extends ConsumerWidget {
     );
     if (confirmed != true) return;
     try {
-      await notifier.deletePost(postId);
+      await notifier.deletePost(widget.postId);
       // O build reage à remoção do item no estado e fecha a tela.
     } catch (e) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorSnackBar(context, e is ApiException ? e.userMessage : l10n.errorLoad);
       }
     }
+  }
+}
+
+/// Corpo do detalhe do post (Card para bom contraste). Usado nos modos feed e leitura.
+class _PostBody extends StatelessWidget {
+  const _PostBody({
+    required this.item,
+    required this.territoryId,
+    this.onLike,
+    this.onShare,
+  });
+
+  final Map<String, dynamic> item;
+  final String territoryId;
+  final VoidCallback? onLike;
+  final VoidCallback? onShare;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final post = item['post'] as Map<String, dynamic>? ?? const {};
+    final author = item['author'] as Map<String, dynamic>?;
+    final counts = FeedPostCounts.fromJson(item['counts'] as Map<String, dynamic>?);
+    final interactions = FeedUserInteractions.fromJson(item['userInteractions'] as Map<String, dynamic>?);
+
+    final title = post['title']?.toString() ?? l10n.postDefaultTitle;
+    final content = post['content']?.toString() ?? '';
+    final type = FeedPostCard.typeFromString(post['type']?.toString());
+    final authorName = author?['displayName']?.toString();
+    final createdAt = DateTime.tryParse(post['createdAtUtc']?.toString() ?? '');
+    final mediaUrls = _mediaUrls(item);
+    final postId = post['id']?.toString() ?? '';
+
+    return ListView(
+      padding: const EdgeInsets.all(AppConstants.spacingMd),
+      children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.spacingMd),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: AppConstants.avatarSizeSm / 2,
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                      child: Text(
+                        ((authorName?.isNotEmpty == true ? authorName! : title)[0]).toUpperCase(),
+                        style: TextStyle(
+                          color: theme.colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppConstants.spacingSm),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (authorName != null && authorName.isNotEmpty)
+                            Text(authorName, style: theme.textTheme.titleSmall),
+                          if (createdAt != null)
+                            Text(
+                              DateFormat('dd/MM/yyyy HH:mm').format(createdAt.toLocal()),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    _TypeChip(type: type),
+                  ],
+                ),
+                const SizedBox(height: AppConstants.spacingMd),
+                Text(title, style: theme.textTheme.titleLarge),
+                if (content.isNotEmpty) ...[
+                  const SizedBox(height: AppConstants.spacingSm),
+                  SelectableText(content, style: theme.textTheme.bodyLarge),
+                ],
+                ...mediaUrls.map(
+                  (url) => Padding(
+                    padding: const EdgeInsets.only(top: AppConstants.spacingMd),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        placeholder: (_, __) => Container(
+                          height: 180,
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                        ),
+                        errorWidget: (_, __, ___) => Container(
+                          height: 120,
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          child: const Center(child: Icon(Icons.broken_image_outlined)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppConstants.spacingMd),
+                const Divider(),
+                Row(
+                  children: [
+                    _Action(
+                      icon: interactions.liked ? Icons.favorite : Icons.favorite_border,
+                      label: counts.likes.toString(),
+                      color: interactions.liked ? theme.colorScheme.primary : null,
+                      onPressed: onLike,
+                    ),
+                    _Action(
+                      icon: Icons.chat_bubble_outline,
+                      label: counts.comments.toString(),
+                      onPressed: postId.isEmpty
+                          ? null
+                          : () => FeedCommentsSheet.show(
+                                context,
+                                postId: postId,
+                                territoryId: territoryId,
+                                postTitle: title,
+                              ),
+                    ),
+                    _Action(
+                      icon: interactions.shared ? Icons.send : Icons.send_outlined,
+                      label: counts.shares.toString(),
+                      color: interactions.shared ? theme.colorScheme.primary : null,
+                      onPressed: onShare,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<String> _mediaUrls(Map<String, dynamic> item) {
+    final media = item['media'] as List?;
+    if (media == null) return const [];
+    return media
+        .whereType<Map<String, dynamic>>()
+        .map((e) => e['url']?.toString())
+        .whereType<String>()
+        .where((url) => url.isNotEmpty)
+        .toList();
   }
 }
 

@@ -263,6 +263,45 @@ public sealed class FeedJourneyController : ControllerBase
     }
 
     /// <summary>
+    /// Detalhe de um único post (mesmo formato de item do feed). Usado por deep-links (ex.: pin de post no mapa).
+    /// </summary>
+    [HttpGet("post-detail")]
+    [EnableRateLimiting("feed")]
+    [ProducesResponseType(typeof(TerritoryFeedItemJourneyDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<TerritoryFeedItemJourneyDto>> GetPostDetail(
+        [FromQuery] Guid territoryId,
+        [FromQuery] Guid postId,
+        CancellationToken cancellationToken = default)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        if (territoryId == Guid.Empty || postId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId and postId are required." });
+        }
+
+        var item = await _feedJourneyService.GetPostDetailAsync(
+            territoryId,
+            userContext.User?.Id,
+            postId,
+            cancellationToken);
+
+        if (item is null)
+        {
+            return NotFound(new { error = "Post not found in territory." });
+        }
+
+        return Ok(item);
+    }
+
+    /// <summary>
     /// Exclui um post do autor autenticado.
     /// </summary>
     [HttpDelete("delete-post")]

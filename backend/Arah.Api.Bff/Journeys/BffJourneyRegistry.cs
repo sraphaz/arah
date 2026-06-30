@@ -124,6 +124,7 @@ public static class BffJourneyRegistry
                 new("create-post", "POST", "Cria um post no território. Query: territoryId. Body: título, conteúdo, tipo, visibilidade, mediaIds."),
                 new("interact", "POST", "Interage com um post (like, comment, share). Body: postId, territoryId, action, commentContent (opcional)."),
                 new("post-comments", "GET", "Lista comentários de um post. Query: territoryId, postId, pageNumber, pageSize."),
+                new("post-detail", "GET", "Detalhe de um único post (mesmo formato de item do feed). Query: territoryId, postId."),
                 new("delete-post", "DELETE", "Exclui post do autor. Query: territoryId, postId.")
             },
             [Events] = new List<JourneyEndpoint>

@@ -361,5 +361,6 @@
   "clear": "Clear",
   "onboardingSearchTitle": "Search territory",
   "postDetailTitle": "Post",
-  "feedTypeTip": "Tip"
+  "feedTypeTip": "Tip",
+  "postNotFound": "Post not found."
 }

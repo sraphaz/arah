@@ -12,6 +12,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Reorganização federal da documentação (estrutura por domínios, unificação de duplicados, archive de PRs).
 - Changelog unificado (conteúdo de 40_CHANGELOG incorporado).
 
+### Adicionado - App (Flutter): entregas recentes (2026-06)
+
+- ✅ **Documentação de Arquitetura C4** publicada no DevPortal (`/architecture/`) e referenciada no Wiki (`docs/14_C4_ARCHITECTURE.md`).
+- ✅ **Governança/Votações no app**: nova jornada `governance` no BFF (proxy para `api/v1/territories/{id}/votings`) e tela de votações (listar com filtro de status, votar inline, ver resultados, criar votação).
+- ✅ **Criação de eventos no app**: formulário com início/término (date/time pickers) e local, via jornada `events/create-event`.
+- ✅ **Deep-links no mapa**: toque no pin abre detalhes e navega para evento/asset/alerta/feed (tratamento de toque no nível do mapa).
+- ✅ **Login com Google na UI**: botão "Entrar com Google" no fluxo de login (requer `GOOGLE_SIGN_IN_CLIENT_ID` + config Firebase para E2E).
+- ✅ Documentação sincronizada: `README.md`, `docs/STABLE_RELEASE_APP_ONBOARDING.md`, `docs/FEATURE_MATRIX_API_BFF_APP.md`.
+
 ### Alterado - Fase 12 Encerrada (2026-01-25)
 
 - ✅ **Fase 12 declarada 100% encerrada.** Todas as funcionalidades críticas entregues; melhorias contínuas (cobertura >90%, P95 &lt; 200ms) fora do escopo de fechamento.

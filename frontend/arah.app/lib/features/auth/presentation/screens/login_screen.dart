@@ -112,6 +112,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _loginWithGoogle() async {
+    await ref.read(authStateProvider.notifier).loginWithGoogle();
+    if (!mounted) return;
+    final auth = ref.read(authStateProvider);
+    if (auth.hasError) {
+      final msg = auth.error is ApiException
+          ? (auth.error! as ApiException).userMessage
+          : auth.error.toString();
+      showErrorSnackBar(context, msg);
+    } else if (auth.valueOrNull?.accessToken.isNotEmpty ?? false) {
+      context.go('/onboarding');
+    }
+    // valueOrNull == null → usuário cancelou o seletor do Google: nenhuma ação.
+  }
+
   Future<void> _submitSignUp() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final displayName = _displayNameController.text.trim();
@@ -167,7 +182,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        if (_step == LoginStep.email) ..._buildEmailStep(l10n),
+                        if (_step == LoginStep.email) ..._buildEmailStep(l10n, auth.isLoading),
                         if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
                         if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),
                       ],
@@ -182,7 +197,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  List<Widget> _buildEmailStep(AppLocalizations l10n) {
+  List<Widget> _buildEmailStep(AppLocalizations l10n, bool authLoading) {
+    final busy = _checkEmailLoading || authLoading;
     return [
       TextFormField(
         controller: _emailController,
@@ -204,6 +220,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         onPressed: _checkEmailLoading ? null : _submitEmail,
         loading: _checkEmailLoading,
         expand: true,
+      ),
+      const SizedBox(height: AppConstants.spacingMd),
+      Row(
+        children: [
+          const Expanded(child: Divider()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingSm),
+            child: Text(
+              l10n.loginOr,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ),
+          const Expanded(child: Divider()),
+        ],
+      ),
+      const SizedBox(height: AppConstants.spacingMd),
+      OutlinedButton.icon(
+        onPressed: busy ? null : _loginWithGoogle,
+        icon: const Icon(Icons.g_mobiledata, size: 28),
+        label: Text(l10n.loginWithGoogle),
       ),
     ];
   }

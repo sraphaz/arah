@@ -42,8 +42,8 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 | **Onboarding** (suggested-territories, complete) | ✅ | ✅ | ✅ | App: lista sugeridos, completa com território selecionado. |
 | **Territories** (listar, paged, detalhe, enter, chat/channels) | ✅ | ✅ | ✅ | App: paged (explorar), get by id (mapa), enter, canais de chat. |
 | **Feed** (territory-feed, create-post, interact, post-comments, delete-post) | ✅ | ✅ | ✅ | App: feed paginado, like/comment/share, thread, mídia, excluir, filtros. |
-| **Events** (territory-events, participate) | ✅ | ✅ | ✅ | App: lista eventos, participar (interesse/confirmado). |
-| **Map** (pins, entities) | ✅ | ✅ | ✅ | App: GET map/pins para exibir pins no mapa. |
+| **Events** (territory-events, create-event, participate) | ✅ | ✅ | ✅ | App: lista eventos, **criar evento** (título, descrição, início/término, local), participar (interesse/confirmado). |
+| **Map** (pins, entities) | ✅ | ✅ | ✅ | App: GET map/pins para exibir pins no mapa; **toque no pin abre detalhes (deep-link)** para eventos/assets/alertas/feed. |
 | **Me** (profile, preferences, interests, devices) | ✅ | ✅ | ✅ | App: profile, interests, preferences, registro automático de device. |
 | **Notifications** (listar paginado, marcar lida) | ✅ | ✅ | ✅ | App: notifications/paged, notifications/{id}/read. |
 | **Membership** (me, become-resident, verify-residency) | ✅ | ✅ | ✅ | App: tela Membership com status, solicitar residência e verificação geo. |
@@ -54,6 +54,7 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 | **Marketplace V1** (cart, stores, items) | ✅ | ✅ | ✅ | App: cart v1, busca/checkout v2 e gestão de loja própria (`stores/me`, criar/atualizar). |
 | **Subscription plans / Subscriptions** | ✅ | ✅ | ✅ | App: planos, minha assinatura, assinar e cancelar. |
 | **Moderation** (work-items, cases, evidences) | ✅ | ✅ | ✅ | App: fila, casos (decidir), evidências (download + decidir residência). |
+| **Governance** (votings: listar, criar, votar, fechar, resultados) | ✅ | ✅ | ✅ | App: tela Governança (jornada `governance`) — lista votações com filtro de status, votar inline, ver resultados e criar votação. |
 | **Chat** (conversations, messages, participants) | ✅ | ✅ | ✅ | App: canais, grupos (criar), mensagens e envio. |
 | **Alerts** (listar, criar) | ✅ | ✅ | ✅ | App: listagem e criação de alertas. |
 | **Admin** (seed, cache-metrics, configs) | ✅ | ✅ | ➖ | Uso administrativo; não no app usuário. |
@@ -89,7 +90,7 @@ Prioridade sugerida para **evoluir** com novas fases do backlog (API → BFF →
 
 ## Documentos a revisar (app já existe)
 
-> **App Flutter**: Existe uma versão estável do app (auth, onboarding, feed, mapa, eventos, perfil, notificações, publicar, marketplace, chat, membership, alertas). Ver [Release estável – App e Onboarding](./STABLE_RELEASE_APP_ONBOARDING.md) e esta matriz.
+> **App Flutter**: Existe uma versão estável do app (auth + **login com Google na UI**, onboarding, feed, mapa com **deep-links nos pins**, eventos com **criação**, **governança/votações**, perfil, notificações, publicar, marketplace, chat, membership, alertas). Ver [Release estável – App e Onboarding](./STABLE_RELEASE_APP_ONBOARDING.md) e esta matriz.
 
 ---
 

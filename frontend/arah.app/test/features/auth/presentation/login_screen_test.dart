@@ -70,6 +70,28 @@ void main() {
     expect(find.byType(TextFormField), findsWidgets);
   });
 
+  testWidgets('LoginScreen shows "Entrar com Google" on email step', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(() => _FakeAuthStateNotifier()),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.dark,
+          locale: const Locale('pt'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LoginScreen(bffBaseUrl: 'http://test'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Entrar com Google'), findsOneWidget);
+    // O botão fica na etapa de e-mail, ao lado do fluxo e-mail-first ("ou").
+    expect(find.text('ou'), findsOneWidget);
+  });
+
   testWidgets('LoginScreen shows signup form when email does not exist', (WidgetTester tester) async {
     final fakeRepo = FakeAuthRepository(
       config: const AppConfig(bffBaseUrl: 'http://test'),

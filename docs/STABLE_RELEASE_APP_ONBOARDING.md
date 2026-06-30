@@ -18,7 +18,7 @@ Este documento descreve a **versão estável** atual do app (Flutter), do fluxo 
 
 ### App (Flutter – `frontend/Arah.app`)
 
-- **Autenticação**: login com e-mail (check-email → senha ou criar conta), signup com nome e senha.
+- **Autenticação**: login com e-mail (check-email → senha ou criar conta), signup com nome e senha; **login com Google na UI** (botão "Entrar com Google" no fluxo de login — requer `GOOGLE_SIGN_IN_CLIENT_ID` e config Firebase para funcionar end-to-end).
 - **Onboarding**: tela de seleção de território após login/cadastro quando não há território salvo.
   - Lista “Próximos a você” (sugeridos por lat/lng).
   - Seleção na lista **só altera o mapa e o destaque**; o botão **Continuar** é o único que conclui o onboarding e leva ao feed.
@@ -27,7 +27,9 @@ Este documento descreve a **versão estável** atual do app (Flutter), do fluxo 
 - **Feed**: listagem do feed do território selecionado, com paginação e pull-to-refresh.
 - **Explorar**: troca de território (lista paginada); ao “entrar” em outro território, o feed e o mapa refletem o escolhido.
 - **Mapa**: pins do território, contorno (polígono/círculo) em verde floresta, marcador do usuário.
-- **Eventos**: lista de eventos do território, interesse e confirmação de presença.
+- **Eventos**: lista de eventos do território, **criação de evento** (título, descrição, início/término com seletores de data/hora, local), interesse e confirmação de presença.
+- **Governança**: tela de votações do território (jornada `governance`) — lista com filtro de status (Todas/Abertas/Fechadas), votar inline, ver resultados (barras) e criar votação (tipo, visibilidade, opções).
+- **Mapa (deep-links)**: tocar num pin abre uma folha com "Ver detalhes" que navega para o conteúdo correspondente (evento → Eventos, asset → Assets, alerta → Alertas, post → feed).
 - **Perfil**: exibição e edição de nome e bio; preferências de notificação (estrutura).
 - **Publicar**: criação de post (título, conteúdo, tipo, visibilidade) no território ativo.
 
@@ -123,15 +125,15 @@ Evolução planejada, em ordem de prioridade sugerida:
 
 | Área | O que falta |
 |------|-------------|
-| **Mídia / imagens** | Fotos e mídia nos posts (upload, exibição). |
-| **Interações no feed** | Curtir (like), comentar, compartilhar. |
-| **Gestão de posts** | Excluir o próprio post. |
-| **Filtros** | Opções para filtrar o feed (por tipo, tags, etc.) e preferência de o que filtrar. |
-| **Preferências no perfil** | Definir interesses/preferências do usuário para uso em filtros e sugestões. |
-| **Tipo de post** | Escolher tipo ao publicar (ex.: geral, alerta, evento) de forma explícita na UI. |
-| **Marketplace** | Lojas, listagens, carrinho, checkout no app. |
+| **Login Google (config)** | UI já existe; falta provisionar `GOOGLE_SIGN_IN_CLIENT_ID` (OAuth Web) e config Firebase para o fluxo funcionar end-to-end. |
+| **Push / FCM** | Recepção de notificações push e deep-link a partir da notificação (hoje só o registro de device token). |
+| **Mapa → post detalhe** | Deep-link de pin do tipo `post` hoje leva ao feed; falta tela de detalhe de post dedicada. |
+| **Perfil** | Upload de avatar; ligar o histórico de governança (`me/profile/governance`) na UI. |
+| **Marketplace (aprofundamento)** | Tela de carrinho dedicada, gestão de itens do vendedor e fluxo de pagamento (avaliar frente aos valores do produto). |
 
-O backend já cobre parte dessas capacidades (feed, eventos, perfil, notificações); o app será evoluído aos poucos para expor essas funcionalidades.
+> **Entregue recentemente no app**: login com Google na UI, criação de eventos, governança/votações (listar, votar, resultados, criar) e deep-links nos pins do mapa. Feed já cobre mídia, curtir/comentar/compartilhar, exclusão e filtros.
+
+O backend cobre amplamente essas capacidades; o app é evoluído de forma incremental (API → BFF → App) para expô-las.
 
 ---
 

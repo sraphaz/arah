@@ -930,4 +930,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get close => 'Fechar';
+
+  @override
+  String get searchTerritoriesHint => 'Buscar território por nome ou cidade';
+
+  @override
+  String get noSearchResults => 'Nenhum território encontrado para a busca.';
+
+  @override
+  String get clear => 'Limpar';
 }

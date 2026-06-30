@@ -40,7 +40,7 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 |--------------------------|-----|-----|-----|-------------|
 | **Auth** (check-email, signup, login, social, refresh, logout) | ✅ | ✅ | ✅ | App: check-email, signup, login, Google social, refresh. |
 | **Onboarding** (suggested-territories, complete) | ✅ | ✅ | ✅ | App: lista sugeridos, completa com território selecionado. |
-| **Territories** (listar, paged, detalhe, enter, chat/channels) | ✅ | ✅ | ✅ | App: paged (explorar), get by id (mapa), enter, canais de chat. |
+| **Territories** (listar, paged, **search**, detalhe, enter, chat/channels) | ✅ | ✅ | ✅ | App: paged (explorar), **busca por nome/cidade** (`territories/search`), get by id (mapa), enter, canais de chat. |
 | **Feed** (territory-feed, create-post, interact, post-comments, delete-post) | ✅ | ✅ | ✅ | App: feed paginado, like/comment/share, thread, mídia, excluir, filtros. |
 | **Events** (territory-events, create-event, participate) | ✅ | ✅ | ✅ | App: lista eventos, **criar evento** (título, descrição, início/término, local), participar (interesse/confirmado). |
 | **Map** (pins, entities) | ✅ | ✅ | ✅ | App: GET map/pins para exibir pins no mapa; **toque no pin abre detalhes (deep-link)** para eventos/assets/alertas/feed. |

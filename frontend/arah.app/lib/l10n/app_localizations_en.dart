@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -52,7 +54,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get territories => 'Territories';
 
   @override
-  String get territoriesSubtitle => 'Tap a territory to see its feed or switch region.';
+  String get territoriesSubtitle =>
+      'Tap a territory to see its feed or switch region.';
 
   @override
   String get noTerritoryAvailable => 'No territory available';
@@ -61,7 +64,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle => 'Choose your territory';
 
   @override
-  String get onboardingDescription => 'To see the feed and join the community, choose a territory near you.';
+  String get onboardingDescription =>
+      'To see the feed and join the community, choose a territory near you.';
 
   @override
   String get useMyLocation => 'Use my location';
@@ -70,7 +74,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enableLocationHint => 'Enable location to see nearby territories.';
 
   @override
-  String get noTerritoryInRegion => 'No territory found in this region. Try a larger radius or enable location.';
+  String get noTerritoryInRegion => 'No territory registered near you yet.';
+
+  @override
+  String get registerMunicipalityTitle => 'Register your municipality';
+
+  @override
+  String get registerMunicipalityDescription =>
+      'We use the official IBGE boundary to create your city territory so you can enter as a visitor.';
+
+  @override
+  String registerMunicipalityButton(String city) {
+    return 'Register $city';
+  }
+
+  @override
+  String get registerMunicipalityButtonGeneric => 'Register my municipality';
+
+  @override
+  String get registerMunicipalityLoading => 'Fetching official boundary...';
+
+  @override
+  String registerMunicipalitySuccess(String city) {
+    return 'Territory $city is ready to select.';
+  }
+
+  @override
+  String get registerMunicipalityFailed =>
+      'Could not fetch IBGE boundary. Adjust the pin and draw your cell.';
+
+  @override
+  String get proposeTerritoryButton => 'Draw my cell';
+
+  @override
+  String get proposeTerritoryTitle => 'Propose territory';
+
+  @override
+  String get proposeTerritoryDescription =>
+      'Adjust the pin on the map, confirm city and state, and draw the boundary. A curator will validate before activation; you get provisional visitor access.';
+
+  @override
+  String get proposeTerritoryTapPin =>
+      'Tap the map to adjust the territory center.';
+
+  @override
+  String get proposeTerritoryTapPolygon =>
+      'Tap the map to add polygon vertices (minimum 3).';
+
+  @override
+  String get proposeTerritoryCity => 'City';
+
+  @override
+  String get proposeTerritoryState => 'State';
+
+  @override
+  String get proposeTerritoryNameOptional => 'Cell name (optional)';
+
+  @override
+  String get proposeTerritoryPolygonMode => 'Draw polygon';
+
+  @override
+  String get proposeTerritoryPolygonModeHint =>
+      'Off: uses a circle with adjustable radius.';
+
+  @override
+  String proposeTerritoryRadiusLabel(String km) {
+    return 'Radius: $km km';
+  }
+
+  @override
+  String get proposeTerritoryClearPolygon => 'Clear polygon';
+
+  @override
+  String get proposeTerritorySubmit => 'Submit proposal';
+
+  @override
+  String get proposeTerritorySubmitting => 'Submitting proposal...';
+
+  @override
+  String proposeTerritorySuccess(String name) {
+    return 'Proposal submitted: $name. Provisional access until validation.';
+  }
+
+  @override
+  String get proposeTerritoryCityStateRequired =>
+      'Enter city and state (2 letters).';
+
+  @override
+  String get proposeTerritoryPolygonMinPoints =>
+      'The polygon needs at least 3 points.';
+
+  @override
+  String get territoryPendingBadge => 'Awaiting curator';
+
+  @override
+  String get onboardingPendingTerritoryHint =>
+      'This territory is under validation. You can enter provisionally as a visitor.';
 
   @override
   String get onboardingNearbyTitle => 'Near you';
@@ -79,16 +178,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingAllTerritoriesTitle => 'All territories';
 
   @override
-  String get onboardingOrChooseFromList => 'Or choose a territory from the list below';
+  String get onboardingOrChooseFromList =>
+      'Or choose a territory from the list below';
 
   @override
   String get onboardingLocationEnabled => 'Location enabled';
 
   @override
-  String get onboardingLocationPrivacy => 'Your location is private and not visible to other users.';
+  String get onboardingLocationPrivacy =>
+      'Your location is private and not visible to other users.';
 
   @override
-  String get onboardingAllowLocationToCenter => 'Allow location to center the map and see nearby territories.';
+  String get onboardingAllowLocationToCenter =>
+      'Allow location to center the map and see nearby territories.';
 
   @override
   String onboardingContinueWith(Object name) {
@@ -96,7 +198,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get onboardingVisitorOnContinue => 'When you continue, you will enter as a visitor in this territory and will be able to see the feed.';
+  String get onboardingVisitorOnContinue =>
+      'When you continue, you will enter as a visitor in this territory and will be able to see the feed.';
 
   @override
   String get onboardingGettingLocation => 'Getting location...';
@@ -186,7 +289,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noTerritorySelected => 'No territory selected';
 
   @override
-  String get chooseTerritoryInExplore => 'Tap Explore, choose a territory, and come back here to post.';
+  String get chooseTerritoryInExplore =>
+      'Tap Explore, choose a territory, and come back here to post.';
 
   @override
   String get comingSoon => 'Coming soon';
@@ -198,7 +302,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sessionExpired => 'Session expired. Please log in again.';
 
   @override
-  String get enterToAccess => 'Sign in to access profile, post, and notifications.';
+  String get enterToAccess =>
+      'Sign in to access profile, post, and notifications.';
 
   @override
   String get map => 'Map';
@@ -606,7 +711,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorSearch => 'Search error.';
 
   @override
-  String get searchMinCharsHint => 'Type at least 2 characters or see suggestions above.';
+  String get searchMinCharsHint =>
+      'Type at least 2 characters or see suggestions above.';
 
   @override
   String get connectionRequestIncoming => 'Incoming request';
@@ -667,7 +773,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorLoadAlerts => 'Could not load alerts.';
 
   @override
-  String get alertsRequireResidency => 'Territory alerts require residency or curator role.';
+  String get alertsRequireResidency =>
+      'Territory alerts require residency or curator role.';
 
   @override
   String get filterAll => 'All';
@@ -777,7 +884,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get governanceSubtitle => 'Collective decisions of the territory.';
 
   @override
-  String get chooseTerritoryForGovernance => 'Choose a territory to see the votings.';
+  String get chooseTerritoryForGovernance =>
+      'Choose a territory to see the votings.';
 
   @override
   String get noVotings => 'No votings right now.';
@@ -881,7 +989,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get votingTypeFeatureFlag => 'Feature flag';
 
   @override
-  String get votingTypeTerritoryCharacterization => 'Territory characterization';
+  String get votingTypeTerritoryCharacterization =>
+      'Territory characterization';
 
   @override
   String get votingTypeCommunityPolicy => 'Community policy';

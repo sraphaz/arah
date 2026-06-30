@@ -30,7 +30,7 @@ Este documento descreve a **versão estável** atual do app (Flutter), do fluxo 
 - **Eventos**: lista de eventos do território, **criação de evento** (título, descrição, início/término com seletores de data/hora, local), interesse e confirmação de presença.
 - **Governança**: tela de votações do território (jornada `governance`) — lista com filtro de status (Todas/Abertas/Fechadas), votar inline, ver resultados (barras) e criar votação (tipo, visibilidade, opções).
 - **Mapa (deep-links)**: tocar num pin abre uma folha com "Ver detalhes" que navega para o conteúdo correspondente (evento → Eventos, asset → Assets, alerta → Alertas, post → feed).
-- **Perfil**: exibição e edição de nome e bio; preferências de notificação (estrutura).
+- **Perfil**: exibição e edição de nome e bio; preferências de notificação (estrutura). Ações "Meu território" (seletor de território), "Notificações" (aba) e atalho "Governança" no menu de configurações.
 - **Publicar**: criação de post (título, conteúdo, tipo, visibilidade) no território ativo.
 
 ### Backend (API + BFF)

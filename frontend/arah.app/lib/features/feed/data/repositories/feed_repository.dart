@@ -102,6 +102,27 @@ class FeedRepository {
     return FeedCommentsPage.fromJson(response.data as Map<String, dynamic>?);
   }
 
+  /// GET feed/post-detail — detalhe de um único post (mesmo formato de item do feed).
+  /// Usado por deep-links (ex.: pin de post no mapa). Retorna null se não encontrado.
+  Future<Map<String, dynamic>?> getPost({
+    required String postId,
+    required String territoryId,
+  }) async {
+    if (postId.isEmpty || territoryId.isEmpty) return null;
+    final path = 'post-detail?postId=$postId&territoryId=$territoryId';
+    final response = await client.get('feed', path);
+    if (response.statusCode == 404) return null;
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(
+        'HTTP ${response.statusCode}',
+        statusCode: response.statusCode,
+        body: response.data?.toString(),
+      );
+    }
+    final data = response.data;
+    return data is Map<String, dynamic> ? data : null;
+  }
+
   /// DELETE feed/delete-post — exclui post do autor autenticado.
   Future<void> deletePost({
     required String postId,

@@ -128,11 +128,10 @@ Evolução planejada, em ordem de prioridade sugerida:
 |------|-------------|
 | **Login Google (config)** | UI já existe; falta provisionar `GOOGLE_SIGN_IN_CLIENT_ID` (OAuth Web) e config Firebase para o fluxo funcionar end-to-end. |
 | **Push / FCM** | Recepção de notificações push e deep-link a partir da notificação (hoje só o registro de device token). |
-| **Mapa → post detalhe** | A tela de detalhe de post já existe (acessível pelo feed). Para o deep-link de pin `post` abrir o detalhe direto, falta um endpoint GET de post único na API/BFF. |
 | **Perfil** | Upload de avatar; ligar o histórico de governança (`me/profile/governance`) na UI. |
 | **Marketplace (aprofundamento)** | Tela de carrinho dedicada, gestão de itens do vendedor e fluxo de pagamento (avaliar frente aos valores do produto). |
 
-> **Entregue recentemente no app**: login com Google na UI, criação de eventos, governança/votações (listar, votar, resultados, criar), deep-links nos pins do mapa, ações do Perfil (território/notificações/governança) e **busca de territórios** (no seletor e no onboarding — conclui sem geolocalização). Feed já cobre mídia, curtir/comentar/compartilhar, exclusão e filtros.
+> **Entregue recentemente no app**: login com Google na UI, criação de eventos, governança/votações (listar, votar, resultados, criar), deep-links nos pins do mapa, ações do Perfil (território/notificações/governança), **busca de territórios** (no seletor e no onboarding — conclui sem geolocalização) e **detalhe de post** (toque no card ou deep-link `/post`). Feed já cobre mídia, curtir/comentar/compartilhar, exclusão e filtros.
 
 O backend cobre amplamente essas capacidades; o app é evoluído de forma incremental (API → BFF → App) para expô-las.
 

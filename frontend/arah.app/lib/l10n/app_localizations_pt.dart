@@ -948,4 +948,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get feedTypeTip => 'Dica';
+
+  @override
+  String get postNotFound => 'Publicação não encontrada.';
 }

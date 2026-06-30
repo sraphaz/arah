@@ -930,4 +930,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get close => 'Close';
+
+  @override
+  String get searchTerritoriesHint => 'Search territory by name or city';
+
+  @override
+  String get noSearchResults => 'No territory found for the search.';
+
+  @override
+  String get clear => 'Clear';
 }

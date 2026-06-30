@@ -355,5 +355,8 @@
   "errorCreateEvent": "Erro ao criar evento.",
   "eventStartRequired": "Defina a data e hora de início.",
   "eventEndBeforeStart": "O término deve ser após o início.",
-  "close": "Fechar"
+  "close": "Fechar",
+  "searchTerritoriesHint": "Buscar território por nome ou cidade",
+  "noSearchResults": "Nenhum território encontrado para a busca.",
+  "clear": "Limpar"
 }

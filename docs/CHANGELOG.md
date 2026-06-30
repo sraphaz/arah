@@ -20,6 +20,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - ✅ **Deep-links no mapa**: toque no pin abre detalhes e navega para evento/asset/alerta/feed (tratamento de toque no nível do mapa).
 - ✅ **Login com Google na UI**: botão "Entrar com Google" no fluxo de login (requer `GOOGLE_SIGN_IN_CLIENT_ID` + config Firebase para E2E).
 - ✅ **Perfil — ações funcionais**: "Meu território" abre o seletor de território, "Notificações" leva à aba de notificações, e atalho "Governança" no menu de configurações (antes eram no-op).
+- ✅ **Busca de territórios**: campo de busca no seletor (Explorar e folha "Meu território") usando a jornada `territories/search` — encontrar território por nome/cidade sem depender de geolocalização.
 - ✅ Documentação sincronizada: `README.md`, `docs/STABLE_RELEASE_APP_ONBOARDING.md`, `docs/FEATURE_MATRIX_API_BFF_APP.md`.
 
 ### Alterado - Fase 12 Encerrada (2026-01-25)

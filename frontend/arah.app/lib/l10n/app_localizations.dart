@@ -1900,6 +1900,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Fechar'**
   String get close;
+
+  /// No description provided for @searchTerritoriesHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar território por nome ou cidade'**
+  String get searchTerritoriesHint;
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum território encontrado para a busca.'**
+  String get noSearchResults;
+
+  /// No description provided for @clear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar'**
+  String get clear;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

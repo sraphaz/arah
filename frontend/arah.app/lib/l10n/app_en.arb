@@ -355,5 +355,8 @@
   "errorCreateEvent": "Error creating event.",
   "eventStartRequired": "Set the start date and time.",
   "eventEndBeforeStart": "End must be after start.",
-  "close": "Close"
+  "close": "Close",
+  "searchTerritoriesHint": "Search territory by name or city",
+  "noSearchResults": "No territory found for the search.",
+  "clear": "Clear"
 }

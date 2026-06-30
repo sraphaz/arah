@@ -25,7 +25,7 @@ Este documento descreve a **versão estável** atual do app (Flutter), do fluxo 
   - Contorno do território e pin no mapa em **verde floresta**.
   - Botão **Voltar** (logout e retorno à tela de login/cadastro).
 - **Feed**: listagem do feed do território selecionado, com paginação e pull-to-refresh.
-- **Explorar**: troca de território (lista paginada); ao “entrar” em outro território, o feed e o mapa refletem o escolhido.
+- **Explorar**: troca de território (lista paginada) com **busca por nome/cidade** (jornada `territories/search`); ao “entrar” em outro território, o feed e o mapa refletem o escolhido.
 - **Mapa**: pins do território, contorno (polígono/círculo) em verde floresta, marcador do usuário.
 - **Eventos**: lista de eventos do território, **criação de evento** (título, descrição, início/término com seletores de data/hora, local), interesse e confirmação de presença.
 - **Governança**: tela de votações do território (jornada `governance`) — lista com filtro de status (Todas/Abertas/Fechadas), votar inline, ver resultados (barras) e criar votação (tipo, visibilidade, opções).

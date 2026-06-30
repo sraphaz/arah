@@ -41,4 +41,11 @@ public interface IFeedJourneyService
         Guid postId,
         Guid userId,
         CancellationToken cancellationToken = default);
+
+    /// <summary>Detalhe de um único post no formato de item do feed (post, contadores, mídia, autor). Null se não existir no território.</summary>
+    Task<TerritoryFeedItemJourneyDto?> GetPostDetailAsync(
+        Guid territoryId,
+        Guid? userId,
+        Guid postId,
+        CancellationToken cancellationToken = default);
 }

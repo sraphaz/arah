@@ -266,4 +266,57 @@ public sealed class FeedJourneyServiceTests
 
         Assert.Null(result);
     }
+
+    [Fact]
+    public async Task GetPostDetailAsync_ReturnsItem_WhenBackendReturnsData()
+    {
+        var backend = new Mock<IFeedJourneyBackend>();
+        backend.Setup(x => x.GetPostAsync(PostId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new BackendFeedPost(PostId, TerritoryId, UserId, "Título", "Conteúdo", "POST", "PUBLIC", "PUBLISHED",
+                null, null, null, DateTime.UtcNow, null));
+        backend.Setup(x => x.GetCountsByPostIdsAsync(It.IsAny<IReadOnlyCollection<Guid>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<Guid, BackendPostCounts> { { PostId, new BackendPostCounts(3, 1, 2) } });
+        backend.Setup(x => x.GetMediaUrlsByPostIdsAsync(It.IsAny<IReadOnlyCollection<Guid>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<Guid, IReadOnlyList<string>> { { PostId, new List<string> { "http://m/1.jpg" } } });
+        backend.Setup(x => x.GetUsersByIdsAsync(It.IsAny<IReadOnlyCollection<Guid>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<BackendUserInfo> { new(UserId, "Autora", null) });
+
+        var service = CreateService(backend);
+        var item = await service.GetPostDetailAsync(TerritoryId, UserId, PostId);
+
+        Assert.NotNull(item);
+        Assert.Equal(PostId, item!.Post.Id);
+        Assert.Equal("Título", item.Post.Title);
+        Assert.Equal("Autora", item.Author?.DisplayName);
+        Assert.Single(item.Media);
+        // Autor logado é o dono do post → pode editar/excluir.
+        Assert.True(item.Metadata.CanDelete);
+    }
+
+    [Fact]
+    public async Task GetPostDetailAsync_ReturnsNull_WhenPostNotInTerritory()
+    {
+        var otherTerritory = Guid.Parse("99999999-9999-9999-9999-999999999999");
+        var backend = new Mock<IFeedJourneyBackend>();
+        backend.Setup(x => x.GetPostAsync(PostId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new BackendFeedPost(PostId, otherTerritory, UserId, "T", "C", "POST", "PUBLIC", "PUBLISHED",
+                null, null, null, DateTime.UtcNow, null));
+
+        var service = CreateService(backend);
+        var item = await service.GetPostDetailAsync(TerritoryId, UserId, PostId);
+
+        Assert.Null(item);
+    }
+
+    [Fact]
+    public async Task GetPostDetailAsync_ReturnsNull_WhenPostNotFound()
+    {
+        var backend = new Mock<IFeedJourneyBackend>();
+        backend.Setup(x => x.GetPostAsync(PostId, It.IsAny<CancellationToken>())).ReturnsAsync((BackendFeedPost?)null);
+
+        var service = CreateService(backend);
+        var item = await service.GetPostDetailAsync(TerritoryId, UserId, PostId);
+
+        Assert.Null(item);
+    }
 }

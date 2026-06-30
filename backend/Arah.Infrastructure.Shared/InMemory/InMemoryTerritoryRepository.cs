@@ -99,4 +99,26 @@ public sealed class InMemoryTerritoryRepository : ITerritoryRepository
         var c = territories.Count();
         return Task.FromResult(c > max ? max : c);
     }
+
+    public Task UpdateStatusAsync(Guid territoryId, TerritoryStatus status, CancellationToken cancellationToken)
+    {
+        var index = _store.Territories.FindIndex(t => t.Id == territoryId);
+        if (index < 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        var current = _store.Territories[index];
+        _store.Territories[index] = current.WithStatus(status);
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<Territory>> ListByStatusAsync(TerritoryStatus status, CancellationToken cancellationToken)
+    {
+        var list = _store.Territories
+            .Where(t => t.Status == status)
+            .OrderBy(t => t.CreatedAtUtc)
+            .ToList();
+        return Task.FromResult<IReadOnlyList<Territory>>(list);
+    }
 }

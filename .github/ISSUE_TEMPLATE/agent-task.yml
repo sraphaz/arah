@@ -1,0 +1,60 @@
+name: Agent Task
+description: Intenção estruturada para orquestração de agentes
+title: "[Agent] "
+labels: ["agent-task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use este template para tarefas operadas por agentes. O humano define a **intenção**; o agente propõe PR.
+        Ver [AGENTS.md](../AGENTS.md) e labels `area/*`.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      description: Roteamento do Orquestrador
+      options:
+        - area/backend
+        - area/flutter
+        - area/web
+        - area/docs
+        - area/ops
+        - area/security
+        - area/planning
+    validations:
+      required: true
+  - type: textarea
+    id: intent
+    attributes:
+      label: Intenção (o quê e por quê)
+      description: Uma ou duas frases claras — não prescreva implementação salvo constraint
+      placeholder: "Implementar endpoint de quote com taxa e split visível no checkout..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite
+      description: Lista verificável
+      placeholder: |
+        - [ ] Morador vê split antes do PIX
+        - [ ] Testes passam
+        - [ ] sync-docs aplicado
+    validations:
+      required: true
+  - type: input
+    id: phase_ref
+    attributes:
+      label: Referência de fase/backlog (opcional)
+      placeholder: "FASE55, REALINHAMENTO_SUSTENTACAO, etc."
+  - type: checkboxes
+    id: guardrails
+    attributes:
+      label: Guardrails confirmados
+      options:
+        - label: Sem merge automático — humano aprova
+          required: true
+        - label: Escopo limitado à área selecionada
+          required: true
+        - label: CI verde antes de review
+          required: true

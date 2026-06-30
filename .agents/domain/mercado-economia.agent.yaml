@@ -1,0 +1,13 @@
+id: mercado-economia
+name: Domain — Mercado & Economia Local
+description: Consultivo para items, marketplace territorial e economia circular.
+consult_only: true
+scope:
+  paths:
+    - docs/**/mercado*
+    - docs/**/marketplace*
+references:
+  - docs/backlog-api/FASE17.md
+  - docs/05_GLOSSARY.md
+skills:
+  - code-review

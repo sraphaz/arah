@@ -1,0 +1,11 @@
+id: sync-docs
+description: Atualiza documentação obrigatória no mesmo PR que código.
+checklist:
+  - docs/CHANGELOG.md se mudança significativa
+  - docs/STATUS_FASES.md se mudou fase
+  - docs/backlog-api/FASE*.md se completou item de fase
+  - docs/backlog-api/README.md se mudou status de onda
+  - README.md se mudou funcionalidade principal
+  - docs/60_API_LÓGICA_NEGÓCIO.md ou subdocs se mudou API/contrato
+mapping: docs/CURSOR_DOCUMENTATION_RULES.md
+on_missing: fail_pr_check

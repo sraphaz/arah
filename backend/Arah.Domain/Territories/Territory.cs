@@ -82,4 +82,19 @@ public sealed class Territory
     /// Permite cadastro de território a partir do desenho no mapa no futuro.
     /// </summary>
     public IReadOnlyList<TerritoryBoundaryPoint>? BoundaryPolygon { get; }
+
+    public Territory WithStatus(TerritoryStatus status) =>
+        new(
+            Id,
+            ParentTerritoryId,
+            Name,
+            Description,
+            status,
+            City,
+            State,
+            Latitude,
+            Longitude,
+            CreatedAtUtc,
+            RadiusKm,
+            BoundaryPolygon);
 }

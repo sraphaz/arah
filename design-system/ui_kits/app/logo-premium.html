@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arah — Identidade da marca</title>
+<style>
+  @font-face { font-family:"Sora"; src:url("../fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; }
+  @font-face { font-family:"Geist"; src:url("../fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; }
+  *{box-sizing:border-box;margin:0;}
+  body{background:#08100B;color:#F2F4EE;font-family:"Geist",sans-serif;padding:48px 40px 72px;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(120% 70% at 50% -10%, #16271D 0%, #08100B 60%);}
+  .eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#A6D6B9;}
+  h1{font-family:"Sora";font-weight:700;font-size:34px;letter-spacing:-1px;margin:10px 0 0;}
+  .sub{color:#A6AC9E;font-size:14.5px;margin-top:10px;max-width:60ch;line-height:1.6;}
+  .row{display:flex;flex-wrap:wrap;gap:22px;margin-top:34px;}
+  .panel{background:linear-gradient(165deg,#16201A,#0E1712);border:1px solid rgba(255,255,255,0.08);border-radius:26px;padding:30px;
+    box-shadow:0 1px 0 rgba(255,255,255,0.05) inset, 0 22px 50px rgba(0,0,0,0.5);}
+  .label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6B7164;margin-bottom:18px;}
+  /* hero app icon */
+  .hero{display:flex;align-items:center;gap:36px;flex-wrap:wrap;}
+  .appicon{width:148px;height:148px;border-radius:36px;position:relative;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(160deg,#1C3326 0%,#0C1810 100%);
+    border:1px solid rgba(255,255,255,0.10);
+    box-shadow:0 2px 1px rgba(255,255,255,0.10) inset, 0 -10px 30px rgba(0,0,0,0.4) inset, 0 30px 60px rgba(0,0,0,0.55);overflow:hidden;}
+  .appicon::before{content:"";position:absolute;inset:0;border-radius:36px;background:radial-gradient(80% 55% at 50% 0%, rgba(166,214,185,0.22), transparent 70%);}
+  .lockup{display:flex;align-items:center;gap:16px;}
+  .word{font-family:"Sora";font-weight:700;font-size:54px;letter-spacing:-2px;line-height:0.9;}
+  .tagline{font-size:12px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:#A6D6B9;margin-top:8px;}
+  /* finishes */
+  .finishes{display:flex;gap:18px;flex-wrap:wrap;}
+  .chip{width:104px;height:104px;border-radius:24px;display:flex;align-items:center;justify-content:center;position:relative;}
+  .chip.dark{background:#0E1712;border:1px solid rgba(255,255,255,0.08);}
+  .chip.light{background:#F2F8F4;border:1px solid rgba(0,0,0,0.06);}
+  .chip.seal{background:linear-gradient(160deg,#1C3326,#0C1810);border:1px solid rgba(255,255,255,0.10);border-radius:50%;}
+  .cap{font-size:11.5px;color:#A6AC9E;margin-top:10px;text-align:center;}
+  .col{display:flex;flex-direction:column;align-items:center;}
+  /* scale */
+  .scale{display:flex;align-items:flex-end;gap:20px;}
+  .seal-emblem{width:128px;height:128px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;
+    background:linear-gradient(160deg,#1C3326,#0C1810);border:1px solid rgba(255,255,255,0.10);
+    box-shadow:0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 50px rgba(0,0,0,0.5);}
+  .seal-emblem::after{content:"";position:absolute;inset:9px;border-radius:50%;border:1px solid rgba(166,214,185,0.22);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px;}
+  @media(max-width:780px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="24" fill="#12231A"/><g transform="translate(26,26) scale(1.0)"><path d="M11.5 40.5 C6.5 26 16 11.5 40.5 7.5 C33 23 26 35.5 11.5 40.5 Z" fill="#56A877"/><path d="M14.5 37.8 C12.4 27 19 16.3 35.4 11.2 C29.6 23 22.6 32.6 14.5 37.8 Z" fill="#A6D6B9"/></g></svg></template>
+
+<div class="eyebrow">Identidade da marca</div>
+<h1>Arah — Folha-Asa</h1>
+<p class="sub">Uma marca premium e minimalista: a folha-asa do araponga, com volume, gradiente de copa e acabamento de emblema. Folha e asa ao mesmo tempo — território vivo em voo.</p>
+
+<div class="row">
+  <div class="panel" style="flex:1;min-width:340px;">
+    <div class="label">Aplicação principal · app icon + assinatura</div>
+    <div class="hero">
+      <div class="appicon" id="appicon"></div>
+      <div>
+        <div class="lockup"><span id="lockmark"></span><span class="word">Arah</span></div>
+        <div class="tagline">Território vivo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <div class="label">Acabamentos</div>
+    <div class="finishes">
+      <div class="col"><div class="chip seal" id="f-seal"></div><div class="cap">Emblema</div></div>
+      <div class="col"><div class="chip dark" id="f-dark"></div><div class="cap">Gradiente · escuro</div></div>
+      <div class="col"><div class="chip light" id="f-light"></div><div class="cap">Gradiente · claro</div></div>
+      <div class="col"><div class="chip dark" id="f-white"></div><div class="cap">Mono branco</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="label">Selo institucional</div>
+    <div style="display:flex;align-items:center;gap:26px;">
+      <div class="seal-emblem" id="seal"></div>
+      <div>
+        <div style="font-family:'Sora';font-weight:600;font-size:18px;">Marca-selo</div>
+        <div style="color:#A6AC9E;font-size:13px;margin-top:5px;max-width:24ch;line-height:1.5;">Para usos cerimoniais — capa de documentos, splash, carimbo do território.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:22px;">
+  <div class="label">Escala &amp; legibilidade — de 96px ao favicon</div>
+  <div class="scale" id="scale"></div>
+</div>
+
+<script>
+function mark(size, tone, gid){
+  tone = tone || 'canopy';
+  var flat = tone==='ink' ? '#0E1F12' : tone==='white' ? '#F2F4EE' : null;
+  var deep = flat || '#56A877';
+  var body = flat || ('url(#'+gid+')');
+  var barb = tone==='ink' ? '#A6D6B9' : tone==='white' ? '#1A2D20' : '#0E2117';
+  var defs = flat ? '' : '<defs><linearGradient id="'+gid+'" x1="0.1" y1="0.05" x2="0.85" y2="0.95"><stop offset="0" stop-color="#D2EFDD"/><stop offset="0.5" stop-color="#93D2A8"/><stop offset="1" stop-color="#56A877"/></linearGradient></defs>';
+  var sheen = flat ? '' : '<path d="M35.4 11.2 C24.5 14.5 17.8 21.5 14.9 30.5" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.7"/>';
+  var bopac = flat ? 0.45 : 0.9, gopac = flat ? 0.5 : 0.42;
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 48 48" fill="none" style="display:block">'+defs+
+    '<path d="M11.5 40.5 C6.5 26 16 11.5 40.5 7.5 C33 23 26 35.5 11.5 40.5 Z" fill="'+deep+'" opacity="'+bopac+'"/>'+
+    '<path d="M14.5 37.8 C12.4 27 19 16.3 35.4 11.2 C29.6 23 22.6 32.6 14.5 37.8 Z" fill="'+body+'"/>'+sheen+
+    '<g stroke="'+barb+'" stroke-width="1.5" stroke-linecap="round" opacity="'+gopac+'" fill="none">'+
+    '<path d="M15.4 36.6 L33.2 13.4"/><path d="M19.4 31.4 L27.6 28.6"/><path d="M22.4 26.6 L30.4 23.8"/><path d="M25.4 21.6 L32.4 18.8"/></g></svg>';
+}
+var n=0; function uid(){return 'g'+(++n);}
+document.getElementById('appicon').innerHTML = mark(86,'canopy',uid());
+document.getElementById('lockmark').innerHTML = mark(46,'canopy',uid());
+document.getElementById('seal').innerHTML = mark(70,'canopy',uid());
+document.getElementById('f-seal').innerHTML = mark(58,'canopy',uid());
+document.getElementById('f-dark').innerHTML = mark(58,'canopy',uid());
+document.getElementById('f-light').innerHTML = mark(58,'canopy',uid());
+document.getElementById('f-white').innerHTML = mark(58,'white',uid());
+document.getElementById('scale').innerHTML = [96,64,44,28,18].map(function(s){
+  return '<div class="col"><div>'+mark(s,'canopy',uid())+'</div><div class="cap">'+s+'px</div></div>';
+}).join('');
+</script>
+</body>
+</html>

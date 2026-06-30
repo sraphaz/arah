@@ -74,7 +74,102 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noTerritoryInRegion =>
-      'Nenhum território encontrado nesta região. Tente aumentar o raio ou ative a localização.';
+      'Nenhum território cadastrado perto de você ainda.';
+
+  @override
+  String get registerMunicipalityTitle => 'Cadastrar seu município';
+
+  @override
+  String get registerMunicipalityDescription =>
+      'Usamos o contorno oficial do IBGE para criar o território da sua cidade e você poder entrar como visitante.';
+
+  @override
+  String registerMunicipalityButton(String city) {
+    return 'Cadastrar $city';
+  }
+
+  @override
+  String get registerMunicipalityButtonGeneric => 'Cadastrar meu município';
+
+  @override
+  String get registerMunicipalityLoading => 'Buscando contorno oficial...';
+
+  @override
+  String registerMunicipalitySuccess(String city) {
+    return 'Território $city pronto para seleção.';
+  }
+
+  @override
+  String get registerMunicipalityFailed =>
+      'Não foi possível obter o contorno IBGE. Ajuste o pin e desenhe sua célula.';
+
+  @override
+  String get proposeTerritoryButton => 'Desenhar minha célula';
+
+  @override
+  String get proposeTerritoryTitle => 'Propor território';
+
+  @override
+  String get proposeTerritoryDescription =>
+      'Ajuste o pin no mapa, confirme cidade e UF e desenhe o perímetro. Um curador validará antes da ativação; você terá acesso provisório como visitante.';
+
+  @override
+  String get proposeTerritoryTapPin =>
+      'Toque no mapa para ajustar o centro do território.';
+
+  @override
+  String get proposeTerritoryTapPolygon =>
+      'Toque no mapa para adicionar vértices do polígono (mínimo 3).';
+
+  @override
+  String get proposeTerritoryCity => 'Cidade';
+
+  @override
+  String get proposeTerritoryState => 'UF';
+
+  @override
+  String get proposeTerritoryNameOptional => 'Nome da célula (opcional)';
+
+  @override
+  String get proposeTerritoryPolygonMode => 'Desenhar polígono';
+
+  @override
+  String get proposeTerritoryPolygonModeHint =>
+      'Desligado: usa círculo com raio ajustável.';
+
+  @override
+  String proposeTerritoryRadiusLabel(String km) {
+    return 'Raio: $km km';
+  }
+
+  @override
+  String get proposeTerritoryClearPolygon => 'Limpar polígono';
+
+  @override
+  String get proposeTerritorySubmit => 'Enviar proposta';
+
+  @override
+  String get proposeTerritorySubmitting => 'Enviando proposta...';
+
+  @override
+  String proposeTerritorySuccess(String name) {
+    return 'Proposta enviada: $name. Acesso provisório até validação.';
+  }
+
+  @override
+  String get proposeTerritoryCityStateRequired =>
+      'Informe cidade e UF (2 letras).';
+
+  @override
+  String get proposeTerritoryPolygonMinPoints =>
+      'O polígono precisa de pelo menos 3 pontos.';
+
+  @override
+  String get territoryPendingBadge => 'Aguardando curador';
+
+  @override
+  String get onboardingPendingTerritoryHint =>
+      'Este território está em validação. Você pode entrar provisoriamente como visitante.';
 
   @override
   String get onboardingNearbyTitle => 'Próximos a você';

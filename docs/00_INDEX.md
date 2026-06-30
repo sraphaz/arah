@@ -20,6 +20,9 @@ Documentos sobre a visão do produto, roadmap e funcionalidades.
 ### Arquitetura e Design
 Documentos técnicos sobre arquitetura, decisões e design.
 
+- **[Operação por agentes](./ops/AGENT_OPERATION.md)** ⭐ — Repo operável por agentes (AGENTS.md, manifests, skills)
+- **[Handoff — Arquitetura C4 e Sustentação](./handoff/README.md)** ⭐ — Documentação interativa C4, monetização, operação multi-instância, cockpit
+- **[Realinhamento Sustentação Operacional](./backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** ⭐ — Prioridades de backlog pós-C4 (Fases 52–61)
 - **[Decisões Arquiteturais (ADRs)](./10_ARCHITECTURE_DECISIONS.md)** - Decisões arquiteturais importantes (ADR-001 a ADR-009)
 - **[Arquitetura de Services](./11_ARCHITECTURE_SERVICES.md)** - Documentação dos services da camada de aplicação
 - **[Modelo de Domínio (MER)](./12_DOMAIN_MODEL.md)** - Modelo de entidades e relacionamentos

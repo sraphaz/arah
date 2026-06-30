@@ -1,5 +1,8 @@
 using Arah.Api.Contracts.Journeys.Onboarding;
 using Arah.Api.Services.Journeys.Backend;
+using Arah.Application.Interfaces.Geo;
+using Arah.Application.Services;
+using Arah.Domain.Territories;
 using Microsoft.Extensions.Logging;
 
 namespace Arah.Api.Services.Journeys;
@@ -7,13 +10,19 @@ namespace Arah.Api.Services.Journeys;
 public sealed class OnboardingJourneyService : IOnboardingJourneyService
 {
     private readonly IOnboardingJourneyBackend _backend;
+    private readonly IMunicipalityTerritoryProvisioningService _municipalityProvisioning;
+    private readonly ITerritoryProposalService _territoryProposal;
     private readonly ILogger<OnboardingJourneyService> _logger;
 
     public OnboardingJourneyService(
         IOnboardingJourneyBackend backend,
+        IMunicipalityTerritoryProvisioningService municipalityProvisioning,
+        ITerritoryProposalService territoryProposal,
         ILogger<OnboardingJourneyService> logger)
     {
         _backend = backend;
+        _municipalityProvisioning = municipalityProvisioning;
+        _territoryProposal = territoryProposal;
         _logger = logger;
     }
 
@@ -78,7 +87,7 @@ public sealed class OnboardingJourneyService : IOnboardingJourneyService
 
         var initialFeed = new TerritoryFeedInitialDto(items, paginationDto);
         var userSummary = new UserSummary(userId, displayName, email, membership.Role);
-        var territorySummary = new TerritorySummary(territory.Id, territory.Name, territory.Description, true);
+        var territorySummary = new TerritorySummary(territory.Id, territory.Name, territory.Description, territory.Active);
         var suggestedActions = new List<SuggestedAction>
         {
             new("REQUEST_RESIDENCY", "Solicitar Residência", "Torne-se morador para acessar conteúdo exclusivo", "HIGH"),
@@ -102,6 +111,82 @@ public sealed class OnboardingJourneyService : IOnboardingJourneyService
             list.Add(new TerritorySuggestionDto(t.Id, t.Name, t.Description, Math.Round(distanceKm, 2), t.Latitude, t.Longitude));
         }
         return new SuggestedTerritoriesResponse(list);
+    }
+
+    public async Task<SuggestMunicipalityResponse?> SuggestMunicipalityAsync(
+        double latitude,
+        double longitude,
+        string? city,
+        string? state,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _municipalityProvisioning.SuggestOrCreateAsync(
+            latitude,
+            longitude,
+            city,
+            state,
+            cancellationToken);
+
+        if (result is null)
+        {
+            return null;
+        }
+
+        return new SuggestMunicipalityResponse(
+            result.TerritoryId,
+            result.Name,
+            result.City,
+            result.StateCode,
+            result.Description,
+            result.DistanceKm,
+            result.Latitude,
+            result.Longitude,
+            result.IbgeCode,
+            result.Created);
+    }
+
+    public async Task<ProposeTerritoryResponse?> ProposeTerritoryAsync(
+        Guid proposerUserId,
+        ProposeTerritoryRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        IReadOnlyList<TerritoryBoundaryPoint>? polygon = null;
+        if (request.BoundaryPolygon is { Count: >= 3 })
+        {
+            polygon = request.BoundaryPolygon
+                .Select(p => new TerritoryBoundaryPoint(p.Latitude, p.Longitude))
+                .ToList();
+        }
+
+        var result = await _territoryProposal.ProposeAsync(
+            proposerUserId,
+            request.Name ?? string.Empty,
+            request.City,
+            request.State,
+            request.Latitude,
+            request.Longitude,
+            request.RadiusKm,
+            polygon,
+            request.ParentTerritoryId,
+            cancellationToken);
+
+        if (result is null)
+        {
+            return null;
+        }
+
+        return new ProposeTerritoryResponse(
+            result.TerritoryId,
+            result.Name,
+            result.City,
+            result.StateCode,
+            result.Description,
+            result.DistanceKm,
+            result.Latitude,
+            result.Longitude,
+            result.Status.ToString(),
+            result.IsPending,
+            result.Created);
     }
 
     private static double HaversineKm(double lat1, double lon1, double lat2, double lon2)

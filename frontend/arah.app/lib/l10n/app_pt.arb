@@ -20,7 +20,53 @@
   "onboardingDescription": "Para ver o feed e participar da comunidade, escolha um território próximo a você.",
   "useMyLocation": "Usar minha localização",
   "enableLocationHint": "Ative a localização para ver territórios próximos.",
-  "noTerritoryInRegion": "Nenhum território encontrado nesta região. Tente aumentar o raio ou ative a localização.",
+  "noTerritoryInRegion": "Nenhum território cadastrado perto de você ainda.",
+  "registerMunicipalityTitle": "Cadastrar seu município",
+  "registerMunicipalityDescription": "Usamos o contorno oficial do IBGE para criar o território da sua cidade e você poder entrar como visitante.",
+  "registerMunicipalityButton": "Cadastrar {city}",
+  "@registerMunicipalityButton": {
+    "placeholders": {
+      "city": { "type": "String" }
+    }
+  },
+  "registerMunicipalityButtonGeneric": "Cadastrar meu município",
+  "registerMunicipalityLoading": "Buscando contorno oficial...",
+  "registerMunicipalitySuccess": "Território {city} pronto para seleção.",
+  "@registerMunicipalitySuccess": {
+    "placeholders": {
+      "city": { "type": "String" }
+    }
+  },
+  "registerMunicipalityFailed": "Não foi possível obter o contorno IBGE. Ajuste o pin e desenhe sua célula.",
+  "proposeTerritoryButton": "Desenhar minha célula",
+  "proposeTerritoryTitle": "Propor território",
+  "proposeTerritoryDescription": "Ajuste o pin no mapa, confirme cidade e UF e desenhe o perímetro. Um curador validará antes da ativação; você terá acesso provisório como visitante.",
+  "proposeTerritoryTapPin": "Toque no mapa para ajustar o centro do território.",
+  "proposeTerritoryTapPolygon": "Toque no mapa para adicionar vértices do polígono (mínimo 3).",
+  "proposeTerritoryCity": "Cidade",
+  "proposeTerritoryState": "UF",
+  "proposeTerritoryNameOptional": "Nome da célula (opcional)",
+  "proposeTerritoryPolygonMode": "Desenhar polígono",
+  "proposeTerritoryPolygonModeHint": "Desligado: usa círculo com raio ajustável.",
+  "proposeTerritoryRadiusLabel": "Raio: {km} km",
+  "@proposeTerritoryRadiusLabel": {
+    "placeholders": {
+      "km": { "type": "String" }
+    }
+  },
+  "proposeTerritoryClearPolygon": "Limpar polígono",
+  "proposeTerritorySubmit": "Enviar proposta",
+  "proposeTerritorySubmitting": "Enviando proposta...",
+  "proposeTerritorySuccess": "Proposta enviada: {name}. Acesso provisório até validação.",
+  "@proposeTerritorySuccess": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "proposeTerritoryCityStateRequired": "Informe cidade e UF (2 letras).",
+  "proposeTerritoryPolygonMinPoints": "O polígono precisa de pelo menos 3 pontos.",
+  "territoryPendingBadge": "Aguardando curador",
+  "onboardingPendingTerritoryHint": "Este território está em validação. Você pode entrar provisoriamente como visitante.",
   "onboardingNearbyTitle": "Próximos a você",
   "onboardingAllTerritoriesTitle": "Todos os territórios",
   "onboardingOrChooseFromList": "Ou escolha um território na lista abaixo",

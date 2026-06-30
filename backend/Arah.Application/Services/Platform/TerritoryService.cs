@@ -54,7 +54,8 @@ public sealed class TerritoryService
         CancellationToken cancellationToken,
         double? radiusKm = null,
         IReadOnlyList<TerritoryBoundaryPoint>? boundaryPolygon = null,
-        TerritoryStatus status = TerritoryStatus.Pending)
+        TerritoryStatus status = TerritoryStatus.Pending,
+        Guid? parentTerritoryId = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -83,7 +84,7 @@ public sealed class TerritoryService
 
         var territory = new Territory(
             Guid.NewGuid(),
-            null,
+            parentTerritoryId,
             name,
             description,
             status,
@@ -182,5 +183,33 @@ public sealed class TerritoryService
     {
         var territories = await task;
         return territories.Where(t => t.Status == TerritoryStatus.Active).ToList();
+    }
+
+    public Task<IReadOnlyList<Territory>> ListPendingAsync(CancellationToken cancellationToken)
+    {
+        return _territoryRepository.ListByStatusAsync(TerritoryStatus.Pending, cancellationToken);
+    }
+
+    public async Task<bool> UpdateStatusAsync(
+        Guid territoryId,
+        TerritoryStatus status,
+        CancellationToken cancellationToken)
+    {
+        var territory = await _territoryRepository.GetByIdAsync(territoryId, cancellationToken);
+        if (territory is null)
+        {
+            return false;
+        }
+
+        await _territoryRepository.UpdateStatusAsync(territoryId, status, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+        InvalidateCaches(territoryId);
+        return true;
+    }
+
+    public void InvalidateCaches(Guid territoryId)
+    {
+        _cacheService?.InvalidateActiveTerritories();
+        _cacheInvalidation?.InvalidateTerritoryCache(territoryId);
     }
 }

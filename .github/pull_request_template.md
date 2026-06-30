@@ -1,3 +1,10 @@
+## 🤖 Checklist de agente (se PR operado por agente)
+
+- [ ] Corpo do PR segue [.agents/templates/pr-body.md](.agents/templates/pr-body.md)
+- [ ] Agente e skills listados
+- [ ] Escopo respeita manifest em `.agents/`
+- [ ] `scripts/agents/validate-manifests.ps1` passou (se alterou `.agents/` ou `.skills/`)
+
 ## 📋 Descrição
 
 [Descreva as mudanças realizadas]

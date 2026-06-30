@@ -1,0 +1,6 @@
+id: nextjs
+name: Next.js / Web
+mode: consult
+focus: wiki (base /wiki, porta 3001), portal, devportal; type-check e jest.
+references:
+  - frontend/devportal/README_TESTES.md

@@ -1,7 +1,8 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-01-26  
+**Última Atualização**: 2026-06-30  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
+**Prioridade atual**: 🔴 **Sustentação Operacional (Fases 52–61)** — ver [Realinhamento](./backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)  
 **Total de Fases**: [Calcular dinamicamente com `node scripts/get-phase-count.mjs`]  
 **Nota**: O número total de fases é calculado automaticamente contando arquivos `FASE*.md` em `docs/backlog-api/`. Ver `docs/PROJECT_PHASES_CONFIG.md` para mais informações.  
 **Fases Completas**: 16 (Fases 1-12, 13, 14, 15, 16)  
@@ -24,6 +25,23 @@
 ## ✅ Fases Completas (1-16)
 
 ## ⏳ Fases Pendentes
+
+### 🔴 Sustentação Operacional (52–61) — PRIORIDADE ATUAL
+
+| Fase | Nome | Prioridade | Onda | Status | Documentação |
+|------|------|------------|------|--------|--------------|
+| 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | ⏳ Pendente | [FASE52.md](./backlog-api/FASE52.md) |
+| 53 | Arah Core | 🔴 P0 | S0 | ⏳ Pendente | [FASE53.md](./backlog-api/FASE53.md) |
+| 54 | IaC e 1ª Instância | 🔴 P0 | S0 | ⏳ Pendente | [FASE54.md](./backlog-api/FASE54.md) |
+| 55 | Monetização Open-Core | 🔴 P0 | S1 | ⏳ Pendente | [FASE55.md](./backlog-api/FASE55.md) |
+| 56 | Transparência e Taxas | 🔴 P0 | S2 | ⏳ Pendente | [FASE56.md](./backlog-api/FASE56.md) |
+| 57 | Cockpit Implementador | 🔴 P0 | S1–S2 | ⏳ Pendente | [FASE57.md](./backlog-api/FASE57.md) |
+| 58 | Operação Multi-Instância | 🟡 P1 | S1–S2 | ⏳ Pendente | [FASE58.md](./backlog-api/FASE58.md) |
+| 59 | Federação | 🟡 P2→P1 | S3 | ⏳ Pendente | [FASE59.md](./backlog-api/FASE59.md) |
+| 60 | App Implementador | 🟡 P1 | S3 | ⏳ Pendente | [FASE60.md](./backlog-api/FASE60.md) |
+| 61 | Capital Territorial | 🟢 P2 | S3–S4 | ⏳ Pendente | [FASE61.md](./backlog-api/FASE61.md) |
+
+**Handoff**: [docs/handoff/](./handoff/README.md)
 
 | Fase | Nome | Prioridade | Status | Documentação |
 |------|------|------------|--------|--------------|

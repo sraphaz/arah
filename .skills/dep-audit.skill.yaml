@@ -1,0 +1,9 @@
+id: dep-audit
+description: Varre dependências, secrets vazados e CVEs conhecidos.
+run:
+  - dotnet list package --vulnerable --include-transitive
+  - rg -i "(api[_-]?key|password|secret|token)\s*=\s*['\"][^'\"]+" --glob '!**/packages.lock.json'
+references:
+  - SECURITY.md
+  - docs/SECURITY_AUDIT.md
+on_critical: block_merge_recommendation

@@ -1,0 +1,10 @@
+id: gen-l10n
+description: Gera localizações Flutter e copia para lib/l10n.
+run:
+  working_directory: frontend/arah.app
+  commands:
+    - flutter gen-l10n
+    - Copy-Item .dart_tool/flutter_gen/gen_l10n/* lib/l10n/ -Force
+verify:
+  - lib/l10n/app_localizations.dart exists
+  - flutter analyze passes

@@ -31,7 +31,7 @@ public sealed class InProcessOnboardingJourneyBackend : IOnboardingJourneyBacken
     public async Task<BackendTerritoryInfo?> GetTerritoryByIdAsync(Guid territoryId, CancellationToken cancellationToken = default)
     {
         var t = await _territoryService.GetByIdAsync(territoryId, cancellationToken);
-        return t is null ? null : new BackendTerritoryInfo(t.Id, t.Name, t.Description);
+        return t is null ? null : new BackendTerritoryInfo(t.Id, t.Name, t.Description, t.Status == TerritoryStatus.Active);
     }
 
     public Task<bool> SetActiveTerritoryAsync(string sessionId, Guid territoryId, CancellationToken cancellationToken = default)

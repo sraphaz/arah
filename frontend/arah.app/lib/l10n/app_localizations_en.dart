@@ -71,8 +71,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enableLocationHint => 'Enable location to see nearby territories.';
 
   @override
-  String get noTerritoryInRegion =>
-      'No territory found in this region. Try a larger radius or enable location.';
+  String get noTerritoryInRegion => 'No territory registered near you yet.';
+
+  @override
+  String get registerMunicipalityTitle => 'Register your municipality';
+
+  @override
+  String get registerMunicipalityDescription =>
+      'We use the official IBGE boundary to create your city territory so you can enter as a visitor.';
+
+  @override
+  String registerMunicipalityButton(String city) {
+    return 'Register $city';
+  }
+
+  @override
+  String get registerMunicipalityButtonGeneric => 'Register my municipality';
+
+  @override
+  String get registerMunicipalityLoading => 'Fetching official boundary...';
+
+  @override
+  String registerMunicipalitySuccess(String city) {
+    return 'Territory $city is ready to select.';
+  }
+
+  @override
+  String get registerMunicipalityFailed =>
+      'Could not fetch IBGE boundary. Adjust the pin and draw your cell.';
+
+  @override
+  String get proposeTerritoryButton => 'Draw my cell';
+
+  @override
+  String get proposeTerritoryTitle => 'Propose territory';
+
+  @override
+  String get proposeTerritoryDescription =>
+      'Adjust the pin on the map, confirm city and state, and draw the boundary. A curator will validate before activation; you get provisional visitor access.';
+
+  @override
+  String get proposeTerritoryTapPin =>
+      'Tap the map to adjust the territory center.';
+
+  @override
+  String get proposeTerritoryTapPolygon =>
+      'Tap the map to add polygon vertices (minimum 3).';
+
+  @override
+  String get proposeTerritoryCity => 'City';
+
+  @override
+  String get proposeTerritoryState => 'State';
+
+  @override
+  String get proposeTerritoryNameOptional => 'Cell name (optional)';
+
+  @override
+  String get proposeTerritoryPolygonMode => 'Draw polygon';
+
+  @override
+  String get proposeTerritoryPolygonModeHint =>
+      'Off: uses a circle with adjustable radius.';
+
+  @override
+  String proposeTerritoryRadiusLabel(String km) {
+    return 'Radius: $km km';
+  }
+
+  @override
+  String get proposeTerritoryClearPolygon => 'Clear polygon';
+
+  @override
+  String get proposeTerritorySubmit => 'Submit proposal';
+
+  @override
+  String get proposeTerritorySubmitting => 'Submitting proposal...';
+
+  @override
+  String proposeTerritorySuccess(String name) {
+    return 'Proposal submitted: $name. Provisional access until validation.';
+  }
+
+  @override
+  String get proposeTerritoryCityStateRequired =>
+      'Enter city and state (2 letters).';
+
+  @override
+  String get proposeTerritoryPolygonMinPoints =>
+      'The polygon needs at least 3 points.';
+
+  @override
+  String get territoryPendingBadge => 'Awaiting curator';
+
+  @override
+  String get onboardingPendingTerritoryHint =>
+      'This territory is under validation. You can enter provisionally as a visitor.';
 
   @override
   String get onboardingNearbyTitle => 'Near you';

@@ -1,0 +1,26 @@
+id: web
+name: Web Agent
+description: Wiki, portal institucional e devportal (Next.js).
+triggers:
+  - issue:label=area/web
+  - orchestrator:delegate
+scope:
+  paths:
+    - frontend/wiki/**
+    - frontend/portal/**
+    - frontend/devportal/**
+  commands:
+    - npm test
+    - npm run type-check
+skills:
+  - run-tests
+  - sync-docs
+  - open-pr
+  - code-review
+consult:
+  specialists:
+    - nextjs
+guardrails:
+  no_merge: true
+  require_ci: true
+  max_diff_files: 30

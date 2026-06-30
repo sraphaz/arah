@@ -221,8 +221,164 @@ abstract class AppLocalizations {
   /// No description provided for @noTerritoryInRegion.
   ///
   /// In pt, this message translates to:
-  /// **'Nenhum território encontrado nesta região. Tente aumentar o raio ou ative a localização.'**
+  /// **'Nenhum território cadastrado perto de você ainda.'**
   String get noTerritoryInRegion;
+
+  /// No description provided for @registerMunicipalityTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastrar seu município'**
+  String get registerMunicipalityTitle;
+
+  /// No description provided for @registerMunicipalityDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usamos o contorno oficial do IBGE para criar o território da sua cidade e você poder entrar como visitante.'**
+  String get registerMunicipalityDescription;
+
+  /// No description provided for @registerMunicipalityButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastrar {city}'**
+  String registerMunicipalityButton(String city);
+
+  /// No description provided for @registerMunicipalityButtonGeneric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastrar meu município'**
+  String get registerMunicipalityButtonGeneric;
+
+  /// No description provided for @registerMunicipalityLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscando contorno oficial...'**
+  String get registerMunicipalityLoading;
+
+  /// No description provided for @registerMunicipalitySuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Território {city} pronto para seleção.'**
+  String registerMunicipalitySuccess(String city);
+
+  /// No description provided for @registerMunicipalityFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível obter o contorno IBGE. Ajuste o pin e desenhe sua célula.'**
+  String get registerMunicipalityFailed;
+
+  /// No description provided for @proposeTerritoryButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desenhar minha célula'**
+  String get proposeTerritoryButton;
+
+  /// No description provided for @proposeTerritoryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Propor território'**
+  String get proposeTerritoryTitle;
+
+  /// No description provided for @proposeTerritoryDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ajuste o pin no mapa, confirme cidade e UF e desenhe o perímetro. Um curador validará antes da ativação; você terá acesso provisório como visitante.'**
+  String get proposeTerritoryDescription;
+
+  /// No description provided for @proposeTerritoryTapPin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque no mapa para ajustar o centro do território.'**
+  String get proposeTerritoryTapPin;
+
+  /// No description provided for @proposeTerritoryTapPolygon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque no mapa para adicionar vértices do polígono (mínimo 3).'**
+  String get proposeTerritoryTapPolygon;
+
+  /// No description provided for @proposeTerritoryCity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cidade'**
+  String get proposeTerritoryCity;
+
+  /// No description provided for @proposeTerritoryState.
+  ///
+  /// In pt, this message translates to:
+  /// **'UF'**
+  String get proposeTerritoryState;
+
+  /// No description provided for @proposeTerritoryNameOptional.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da célula (opcional)'**
+  String get proposeTerritoryNameOptional;
+
+  /// No description provided for @proposeTerritoryPolygonMode.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desenhar polígono'**
+  String get proposeTerritoryPolygonMode;
+
+  /// No description provided for @proposeTerritoryPolygonModeHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desligado: usa círculo com raio ajustável.'**
+  String get proposeTerritoryPolygonModeHint;
+
+  /// No description provided for @proposeTerritoryRadiusLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Raio: {km} km'**
+  String proposeTerritoryRadiusLabel(String km);
+
+  /// No description provided for @proposeTerritoryClearPolygon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar polígono'**
+  String get proposeTerritoryClearPolygon;
+
+  /// No description provided for @proposeTerritorySubmit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar proposta'**
+  String get proposeTerritorySubmit;
+
+  /// No description provided for @proposeTerritorySubmitting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviando proposta...'**
+  String get proposeTerritorySubmitting;
+
+  /// No description provided for @proposeTerritorySuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Proposta enviada: {name}. Acesso provisório até validação.'**
+  String proposeTerritorySuccess(String name);
+
+  /// No description provided for @proposeTerritoryCityStateRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe cidade e UF (2 letras).'**
+  String get proposeTerritoryCityStateRequired;
+
+  /// No description provided for @proposeTerritoryPolygonMinPoints.
+  ///
+  /// In pt, this message translates to:
+  /// **'O polígono precisa de pelo menos 3 pontos.'**
+  String get proposeTerritoryPolygonMinPoints;
+
+  /// No description provided for @territoryPendingBadge.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aguardando curador'**
+  String get territoryPendingBadge;
+
+  /// No description provided for @onboardingPendingTerritoryHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este território está em validação. Você pode entrar provisoriamente como visitante.'**
+  String get onboardingPendingTerritoryHint;
 
   /// No description provided for @onboardingNearbyTitle.
   ///

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!-- @dsCard group="UI Kit — App" name="Arah App UI Kit" subtitle="Interactive premium mobile app — full flow" viewport="390x844" -->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arah — App (UI Kit)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+<style>
+  @font-face {
+    font-family: "Geist";
+    src: url("../../fonts/Geist-VariableFont_wght.ttf") format("truetype");
+    font-weight: 100 900; font-display: swap;
+  }
+  @font-face {
+    font-family: "Sora";
+    src: url("../../fonts/Sora-VariableFont_wght.ttf") format("truetype");
+    font-weight: 100 800; font-display: swap;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: #0a0b09;
+    background-image: radial-gradient(120% 80% at 50% -10%, #16201a 0%, #0a0b09 60%);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 28px; font-family: "Geist", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  .msr {
+    font-family: "Material Symbols Rounded";
+    font-weight: normal; font-style: normal;
+    -webkit-font-feature-settings: "liga"; font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+  /* hide scrollbars in app */
+  .appscroll::-webkit-scrollbar, .noscroll::-webkit-scrollbar { display: none; }
+  .appscroll, .noscroll { scrollbar-width: none; -ms-overflow-style: none; }
+  .noscroll { overflow-x: auto; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes sheetUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  /* Smooth, harmonic screen transition: darken-out then fade-and-rise in */
+  @keyframes screenIn {
+    0%   { opacity: 0; transform: translateY(10px) scale(0.992); filter: brightness(0.5); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: brightness(1); }
+  }
+  .screen-fade { animation: screenIn 0.42s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
+  @media (prefers-reduced-motion: reduce) { .screen-fade { animation: none; } }
+  button { font-family: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#0E0F0D"/>
+    <text x="50" y="60" font-size="40" text-anchor="middle" fill="#81C784" font-family="sans-serif" font-weight="700">A</text>
+  </svg>
+</template>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="persist.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="chrome.jsx"></script>
+<script type="text/babel" src="screens1.jsx"></script>
+<script type="text/babel" src="screens2.jsx"></script>
+<script type="text/babel" src="screens3.jsx"></script>
+<script type="text/babel" src="screens4.jsx"></script>
+<script type="text/babel" src="screens5.jsx"></script>
+<script type="text/babel" src="screens6.jsx"></script>
+<script type="text/babel" src="screens7.jsx"></script>
+<script type="text/babel" src="screens8.jsx"></script>
+<script type="text/babel" src="screens9.jsx"></script>
+<script type="text/babel" src="screens10.jsx"></script>
+<script type="text/babel" src="screens11.jsx"></script>
+<script type="text/babel" src="screens12.jsx"></script>
+<script type="text/babel" src="screens13.jsx"></script>
+<script type="text/babel" src="screens14.jsx"></script>
+<script type="text/babel" src="screens15.jsx"></script>
+<script type="text/babel" src="screens16.jsx"></script>
+<script type="text/babel" src="screens17.jsx"></script>
+<script type="text/babel" src="screens18.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

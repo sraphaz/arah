@@ -3,6 +3,7 @@ using Arah.Api.Services.Journeys;
 using Arah.Api.Services.Journeys.Backend;
 using Arah.Application.Interfaces;
 using Arah.Application.Interfaces.Connections;
+using Arah.Application.Interfaces.Geo;
 using Arah.Modules.Assets.Application.Interfaces;
 using Arah.Modules.Map.Application.Interfaces;
 using Arah.Modules.Marketplace.Application.Interfaces;
@@ -21,6 +22,7 @@ using Arah.Infrastructure.InMemory;
 using Arah.Infrastructure.Media;
 using Arah.Infrastructure.Outbox;
 using Arah.Infrastructure.Postgres;
+using Arah.Infrastructure.Geo;
 using Arah.Infrastructure.Security;
 using Arah.Infrastructure.Shared.Postgres;
 using Arah.Application;
@@ -83,6 +85,8 @@ public static class ServiceCollectionExtensions
 
         // Other services
         services.AddScoped<TerritoryService>();
+        services.AddScoped<IMunicipalityTerritoryProvisioningService, MunicipalityTerritoryProvisioningService>();
+        services.AddScoped<ITerritoryProposalService, TerritoryProposalService>();
         services.AddScoped<AuthService>();
         services.AddScoped<PasswordResetService>();
         services.AddScoped<MembershipService>();
@@ -341,6 +345,7 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddSingleton<Arah.Application.Interfaces.IObservabilityLogger, InMemoryObservabilityLogger>();
+        services.AddGeoIntegrationServices();
         services.AddSingleton<ITokenService, JwtTokenService>();
         services.Configure<Arah.Infrastructure.InMemory.RefreshTokenOptions>(configuration.GetSection("RefreshToken"));
         services.AddSingleton<Arah.Application.Interfaces.IRefreshTokenStore, Arah.Infrastructure.InMemory.InMemoryRefreshTokenStore>();

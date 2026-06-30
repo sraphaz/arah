@@ -216,4 +216,26 @@ public sealed class PostgresTerritoryRepository : ITerritoryRepository
         var count = await territories.CountAsync(cancellationToken);
         return count > maxInt32 ? maxInt32 : (int)count;
     }
+
+    public async Task UpdateStatusAsync(Guid territoryId, TerritoryStatus status, CancellationToken cancellationToken)
+    {
+        var record = await _dbContext.Territories
+            .FirstOrDefaultAsync(t => t.Id == territoryId, cancellationToken);
+        if (record is null)
+        {
+            return;
+        }
+
+        record.Status = status;
+    }
+
+    public async Task<IReadOnlyList<Territory>> ListByStatusAsync(TerritoryStatus status, CancellationToken cancellationToken)
+    {
+        var records = await _dbContext.Territories
+            .AsNoTracking()
+            .Where(t => t.Status == status)
+            .OrderBy(t => t.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+        return records.Select(record => record.ToDomain()).ToList();
+    }
 }

@@ -112,6 +112,8 @@ public static class BffJourneyRegistry
             [Onboarding] = new List<JourneyEndpoint>
             {
                 new("suggested-territories", "GET", "Territórios sugeridos por localização (latitude, longitude, radiusKm)."),
+                new("suggest-municipality", "POST", "Cadastra ou reutiliza território municipal (contorno IBGE) a partir da localização."),
+                new("propose-territory", "POST", "Propõe território desenhado manualmente (status Pending até curador)."),
                 new("complete", "POST", "Completa o onboarding: seleciona território e retorna contexto inicial. Requer X-Session-Id.")
             },
             [Feed] = new List<JourneyEndpoint>
@@ -275,7 +277,9 @@ public static class BffJourneyRegistry
                 new("system-configs", "GET", "Configurações de sistema."),
                 new("cache-metrics", "GET", "Métricas de cache."),
                 new("work-items", "GET", "Work items globais (admin)."),
-                new("verifications", "GET", "Verificações pendentes (admin).")
+                new("verifications", "GET", "Verificações pendentes (admin)."),
+                new("territories/pending", "GET", "Territórios aguardando validação (Pending)."),
+                new("territories/{territoryId}/review", "POST", "Aprova ou rejeita proposta de território.")
             }
         };
 

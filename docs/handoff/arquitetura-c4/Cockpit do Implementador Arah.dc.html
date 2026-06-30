@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+body { margin:0; background:#0B0C0A; color:#F2F4EE; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:rgba(166,214,185,0.3); }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.navitem { display:flex; align-items:center; gap:12px; padding:10px 13px; border-radius:11px; cursor:pointer; color:#A6AC9E; font-size:14px; font-weight:500; transition:background .15s,color .15s; border:1px solid transparent; }
+.navitem:hover { background:rgba(255,255,255,0.04); color:#F2F4EE; }
+.navitem.on { background:rgba(166,214,185,0.12); color:#F2F4EE; border-color:rgba(166,214,185,0.18); }
+.navitem.on .msr { color:#A6D6B9; font-variation-settings:'FILL' 1,'wght' 500; }
+.rowh:hover { background:rgba(255,255,255,0.03); }
+</style>
+</helmet>
+
+<div style="display:grid; grid-template-columns:248px 1fr; min-height:100vh; max-width:1480px; margin:0 auto;">
+
+  <!-- SIDEBAR -->
+  <aside style="border-right:1px solid rgba(255,255,255,0.08); padding:22px 16px; display:flex; flex-direction:column; position:sticky; top:0; height:100vh;">
+    <div style="display:flex; align-items:center; gap:9px; padding:0 8px 4px;">
+      <img src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:26px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:17px; color:#F2F4EE;">Arah</b>
+      <span style="font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#6B7164; border-left:1px solid rgba(255,255,255,0.14); padding-left:9px; font-weight:600;">Cockpit</span>
+    </div>
+    <div style="font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#6B7164; font-weight:600; padding:24px 10px 8px;">Gestão</div>
+    <nav style="display:flex; flex-direction:column; gap:3px;">
+      <sc-for list="{{ navMain }}" as="n" hint-placeholder-count="6">
+        <div class="navitem {{ n.cls }}" onClick="{{ n.go }}"><span class="msr" style="font-size:21px;">{{ n.icon }}</span>{{ n.label }}<sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto; font-size:11px; font-weight:700; color:#0E1F12; background:#A6D6B9; padding:1px 8px; border-radius:999px;">{{ n.badge }}</span></sc-if></div>
+      </sc-for>
+    </nav>
+    <div style="font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#6B7164; font-weight:600; padding:24px 10px 8px;">Crescer</div>
+    <nav style="display:flex; flex-direction:column; gap:3px;">
+      <sc-for list="{{ navGrow }}" as="n" hint-placeholder-count="3">
+        <div class="navitem {{ n.cls }}" onClick="{{ n.go }}"><span class="msr" style="font-size:21px;">{{ n.icon }}</span>{{ n.label }}</div>
+      </sc-for>
+    </nav>
+    <div style="margin-top:auto; display:flex; align-items:center; gap:11px; padding:12px 10px; border-top:1px solid rgba(255,255,255,0.08);">
+      <div style="width:36px; height:36px; border-radius:999px; background:linear-gradient(150deg,#93D29C,#6FB98C); display:flex; align-items:center; justify-content:center; font-family:'Sora'; font-weight:700; color:#0E1F12; font-size:14px;">MR</div>
+      <div style="min-width:0;"><div style="font-size:13px; font-weight:600; color:#F2F4EE; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Marina Ribeiro</div><div style="font-size:11px; color:#6B7164;">Implementadora · sênior</div></div>
+      <span class="msr" style="font-size:18px; color:#6B7164; margin-left:auto;">unfold_more</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div style="min-width:0; display:flex; flex-direction:column;">
+    <!-- TOPBAR -->
+    <header style="display:flex; align-items:center; gap:16px; padding:16px clamp(20px,3vw,38px); border-bottom:1px solid rgba(255,255,255,0.08); position:sticky; top:0; background:rgba(11,12,10,0.85); backdrop-filter:blur(14px); z-index:10;">
+      <div style="display:flex; align-items:center; gap:9px; background:#191B17; border:1px solid rgba(255,255,255,0.10); border-radius:11px; padding:9px 14px; cursor:pointer;">
+        <span class="msr" style="font-size:19px; color:#A6D6B9;">hub</span>
+        <span style="font-size:14px; font-weight:600;">Toda a rede</span>
+        <span style="font-size:12px; color:#6B7164;">· 3 territórios</span>
+        <span class="msr" style="font-size:18px; color:#6B7164;">expand_more</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:9px; background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:11px; padding:9px 14px; flex:1; max-width:340px; color:#6B7164;">
+        <span class="msr" style="font-size:19px;">search</span><span style="font-size:13.5px;">Buscar comércio, território, repasse…</span>
+      </div>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:10px;">
+        <div style="width:42px; height:42px; border-radius:11px; background:#191B17; border:1px solid rgba(255,255,255,0.10); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer;"><span class="msr" style="font-size:21px; color:#A6AC9E;">notifications</span><span style="position:absolute; top:9px; right:10px; width:7px; height:7px; border-radius:999px; background:#E8A06A;"></span></div>
+        <div style="display:inline-flex; align-items:center; gap:8px; background:#A6D6B9; color:#0E1F12; font-weight:600; font-size:13.5px; padding:11px 17px; border-radius:11px; cursor:pointer; box-shadow:0 8px 22px rgba(129,199,132,0.22);"><span class="msr" style="font-size:19px;">add_business</span>Onboard comércio</div>
+      </div>
+    </header>
+
+    <main style="padding:clamp(22px,3vw,38px); flex:1;">
+
+      <!-- ============ VISÃO GERAL ============ -->
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:26px;">
+          <div>
+            <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Bom te ver, Marina.</h1>
+            <p style="font-size:14.5px; color:#A6AC9E; margin:0;">Aqui está como a sua rede de territórios está indo em junho.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <div style="font-size:13px; color:#A6AC9E; background:#191B17; border:1px solid rgba(255,255,255,0.10); border-radius:10px; padding:9px 14px;">Junho 2026 ▾</div>
+            <div style="font-size:13px; color:#A6AC9E; background:#191B17; border:1px solid rgba(255,255,255,0.10); border-radius:10px; padding:9px 12px; display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:18px;">download</span>Exportar</div>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin-bottom:18px;">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <div style="background:linear-gradient(160deg,#1C201A,#161814); border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:20px 22px;">
+              <div style="display:flex; align-items:center; gap:9px; margin-bottom:16px;"><span class="msr" style="font-size:20px; color:{{ k.color }};">{{ k.icon }}</span><span style="font-size:13px; color:#A6AC9E;">{{ k.label }}</span></div>
+              <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.85rem; letter-spacing:-0.02em; line-height:1;">{{ k.value }}</div>
+              <div style="display:flex; align-items:center; gap:5px; margin-top:11px; font-size:12.5px; color:{{ k.trendColor }};"><span class="msr" style="font-size:16px;">{{ k.trendIcon }}</span>{{ k.trend }}<span style="color:#6B7164;"> vs. maio</span></div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:14px; margin-bottom:18px;">
+          <!-- revenue chart -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+              <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Receita da rede</h3>
+              <div style="display:flex; gap:14px; font-size:11.5px; color:#A6AC9E;"><span><span style="color:#A6D6B9;">■</span> Assinaturas</span><span><span style="color:#86AEEA;">■</span> Taxa</span><span><span style="color:#E8A06A;">■</span> Serviços</span></div>
+            </div>
+            <div style="font-family:'Sora'; font-weight:700; font-size:1.5rem; margin:0 0 22px;">R$ 41,2k<span style="font-size:13px; color:#6B7164; font-weight:500;"> este mês</span></div>
+            <div style="display:flex; align-items:flex-end; gap:clamp(10px,2vw,26px); height:170px; padding-top:10px;">
+              <sc-for list="{{ chart }}" as="c" hint-placeholder-count="6">
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:9px; height:100%; justify-content:flex-end;">
+                  <div style="width:100%; max-width:38px; display:flex; flex-direction:column; border-radius:7px 7px 0 0; overflow:hidden;">
+                    <div style="height:{{ c.serv }}px; background:#E8A06A;"></div>
+                    <div style="height:{{ c.fee }}px; background:#86AEEA;"></div>
+                    <div style="height:{{ c.sub }}px; background:#A6D6B9;"></div>
+                  </div>
+                  <span style="font-size:11px; color:#6B7164;">{{ c.month }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- next payout -->
+          <div style="background:linear-gradient(160deg,#16271B,#11190F); border:1px solid rgba(166,214,185,0.2); border-radius:18px; padding:24px 26px; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:18px;"><span class="msr" style="font-size:20px; color:#A6D6B9;">payments</span><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Próximo repasse</h3></div>
+            <div style="font-family:'Sora'; font-weight:700; font-size:2.3rem; letter-spacing:-0.02em; line-height:1; color:#A6D6B9;">R$ 18,7k</div>
+            <div style="font-size:13px; color:#A6AC9E; margin-top:9px;">Liquidação em <b style="color:#F2F4EE;">01/jul</b> via PIX · referente a junho</div>
+            <div style="margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.10); display:flex; flex-direction:column; gap:11px;">
+              <sc-for list="{{ payoutBreak }}" as="p" hint-placeholder-count="3">
+                <div style="display:flex; align-items:center; justify-content:space-between; font-size:13px;"><span style="color:#A6AC9E;">{{ p.label }}</span><span style="font-weight:600;">{{ p.value }}</span></div>
+              </sc-for>
+            </div>
+            <div style="margin-top:auto; padding-top:18px; font-size:12.5px; color:#6B7164; display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:16px; color:#A6D6B9;">verified</span>Conferível no painel de transparência</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <!-- territories mini -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Seus territórios</h3><span onClick="{{ goTerr }}" style="font-size:12.5px; color:#A6D6B9; cursor:pointer;">Ver todos</span></div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <sc-for list="{{ territories }}" as="t" hint-placeholder-count="3">
+                <div class="rowh" style="display:flex; align-items:center; gap:13px; padding:11px 10px; border-radius:11px;">
+                  <div style="width:38px; height:38px; border-radius:11px; background:#20231E; display:flex; align-items:center; justify-content:center;"><span class="msr" style="font-size:20px; color:#A6D6B9;">forest</span></div>
+                  <div style="min-width:0; flex:1;"><div style="font-size:14px; font-weight:600;">{{ t.name }}</div><div style="font-size:12px; color:#6B7164;">{{ t.meta }}</div></div>
+                  <div style="text-align:right;"><div style="font-size:14px; font-weight:600; font-family:'Sora';">{{ t.revenue }}</div><div style="font-size:11.5px; color:{{ t.statusColor }};">{{ t.status }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <!-- activity -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 16px;">Atividade recente</h3>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <sc-for list="{{ activity }}" as="a" hint-placeholder-count="4">
+                <div style="display:flex; gap:13px; padding:10px 0; align-items:flex-start;">
+                  <div style="width:32px; height:32px; border-radius:9px; background:{{ a.tint }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:18px; color:{{ a.color }};">{{ a.icon }}</span></div>
+                  <div style="min-width:0; flex:1;"><div style="font-size:13.5px; line-height:1.4;">{{ a.text }}</div><div style="font-size:11.5px; color:#6B7164; margin-top:2px;">{{ a.time }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ TERRITÓRIOS ============ -->
+      <sc-if value="{{ isTerritorios }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
+          <div>
+            <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Territórios</h1>
+            <p style="font-size:14.5px; color:#A6AC9E; margin:0;">As vilas e regiões sob sua coordenação.</p>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:#A6D6B9; color:#0E1F12; font-weight:600; font-size:13.5px; padding:11px 17px; border-radius:11px; cursor:pointer;"><span class="msr" style="font-size:19px;">add_location_alt</span>Abrir novo território</div>
+        </div>
+        <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; overflow:hidden;">
+          <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr 0.9fr 40px; gap:14px; padding:14px 22px; border-bottom:1px solid rgba(255,255,255,0.08); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#6B7164; font-weight:600;">
+            <span>Território</span><span>Comércios</span><span>Volume / mês</span><span>Seu repasse</span><span>Status</span><span></span>
+          </div>
+          <sc-for list="{{ terrRows }}" as="t" hint-placeholder-count="3">
+            <div class="rowh" style="display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr 0.9fr 40px; gap:14px; padding:16px 22px; border-bottom:1px solid rgba(255,255,255,0.05); align-items:center; cursor:pointer;">
+              <div style="display:flex; align-items:center; gap:13px; min-width:0;"><div style="width:40px; height:40px; border-radius:11px; background:#20231E; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:21px; color:#A6D6B9;">forest</span></div><div style="min-width:0;"><div style="font-size:14.5px; font-weight:600;">{{ t.name }}</div><div style="font-size:12px; color:#6B7164;">{{ t.residents }} moradores</div></div></div>
+              <div><div style="font-size:14px; font-weight:600;">{{ t.merchants }}</div><div style="font-size:11.5px; color:#6B7164;">{{ t.subs }} assinantes</div></div>
+              <div style="font-size:14px; font-weight:600; font-family:'Sora';">{{ t.gmv }}</div>
+              <div style="font-size:14px; font-weight:600; font-family:'Sora'; color:#A6D6B9;">{{ t.payout }}</div>
+              <div><span style="font-size:12px; font-weight:600; color:{{ t.statusColor }}; background:{{ t.statusBg }}; padding:4px 11px; border-radius:999px;">{{ t.status }}</span></div>
+              <span class="msr" style="font-size:20px; color:#6B7164;">chevron_right</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:16px;">
+          <sc-for list="{{ terrAggregate }}" as="a" hint-placeholder-count="3">
+            <div style="flex:1; min-width:170px; background:#191B17; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px 20px;"><div style="font-size:12.5px; color:#A6AC9E; margin-bottom:9px;">{{ a.label }}</div><div style="font-family:'Sora'; font-weight:700; font-size:1.5rem;">{{ a.value }}</div></div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ RECEITA & REPASSES ============ -->
+      <sc-if value="{{ isReceita }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="margin-bottom:24px;">
+          <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Receita &amp; repasses</h1>
+          <p style="font-size:14.5px; color:#A6AC9E; margin:0;">De onde vem a sua renda e como ela é liquidada — tudo conferível.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+          <!-- receita por camada -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 18px;">Receita por camada · junho</h3>
+            <sc-for list="{{ layerRows }}" as="l" hint-placeholder-count="5">
+              <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;"><span style="color:#CFE3D6;">{{ l.name }}</span><span style="font-weight:600;">{{ l.value }}</span></div>
+                <div style="height:8px; background:rgba(255,255,255,0.06); border-radius:999px; overflow:hidden;"><div style="height:100%; width:{{ l.pct }}; background:{{ l.color }}; border-radius:999px;"></div></div>
+              </div>
+            </sc-for>
+          </div>
+          <!-- split aplicado -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 6px;">Como o split te paga</h3>
+            <p style="font-size:12.5px; color:#6B7164; margin:0 0 20px;">Sobre a receita gerada na sua rede em junho.</p>
+            <div style="display:flex; height:46px; border-radius:12px; overflow:hidden; margin-bottom:20px;">
+              <div style="width:45%; background:#A6D6B9;"></div><div style="width:22%; background:#6FC5D6;"></div><div style="width:33%; background:#9FB0A2;"></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <sc-for list="{{ splitRows }}" as="s" hint-placeholder-count="3">
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:11px; height:11px; border-radius:3px; background:{{ s.color }};"></span><span style="font-size:13.5px;">{{ s.name }}</span><span style="margin-left:auto; font-family:'Sora'; font-weight:700;">{{ s.value }}</span><span style="font-size:12px; color:#6B7164; width:42px; text-align:right;">{{ s.pct }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <!-- payout history -->
+        <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; overflow:hidden;">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.08);"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Histórico de repasses</h3><span style="font-size:12.5px; color:#A6D6B9; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><span class="msr" style="font-size:17px;">receipt_long</span>Exportar extrato</span></div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 0.9fr; gap:14px; padding:13px 24px; border-bottom:1px solid rgba(255,255,255,0.08); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#6B7164; font-weight:600;">
+            <span>Período</span><span>Receita rede</span><span>Seu repasse</span><span>Liquidação</span><span>Status</span>
+          </div>
+          <sc-for list="{{ payoutHistory }}" as="p" hint-placeholder-count="4">
+            <div class="rowh" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 0.9fr; gap:14px; padding:15px 24px; border-bottom:1px solid rgba(255,255,255,0.05); align-items:center; font-size:13.5px;">
+              <span style="font-weight:600;">{{ p.period }}</span><span style="color:#CFE3D6;">{{ p.gross }}</span><span style="font-family:'Sora'; font-weight:600; color:#A6D6B9;">{{ p.net }}</span><span style="color:#A6AC9E;">{{ p.date }}</span>
+              <span><span style="font-size:12px; font-weight:600; color:{{ p.statusColor }}; background:{{ p.statusBg }}; padding:4px 11px; border-radius:999px;">{{ p.status }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ OPERAÇÕES & INFRA ============ -->
+      <sc-if value="{{ isOps }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
+          <div>
+            <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Operações &amp; infraestrutura</h1>
+            <p style="font-size:14.5px; color:#A6AC9E; margin:0;">As aplicações que mantêm os seus territórios no ar — e como elas conversam com o Arah Core.</p>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#A6D6B9; background:rgba(166,214,185,0.12); border:1px solid rgba(166,214,185,0.22); padding:9px 15px; border-radius:999px;"><span style="width:8px; height:8px; border-radius:999px; background:#A6D6B9;"></span>Tudo operacional · uptime 99,97% (30d)</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:14px; margin-bottom:18px;">
+          <!-- services health -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 18px;">Saúde dos serviços</h3>
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+                <div class="rowh" style="display:flex; align-items:center; gap:13px; padding:11px 10px; border-radius:11px;">
+                  <div style="width:36px; height:36px; border-radius:10px; background:#20231E; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:19px; color:#A6AC9E;">{{ s.icon }}</span></div>
+                  <div style="min-width:0; flex:1;"><div style="font-size:14px; font-weight:600;">{{ s.name }}</div><div style="font-size:11.5px; color:#6B7164;">{{ s.meta }}</div></div>
+                  <span style="font-size:12px; color:#6B7164;">{{ s.latency }}</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:{{ s.sc }};"><span style="width:7px; height:7px; border-radius:999px; background:{{ s.sc }};"></span>{{ s.status }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <!-- core / federation -->
+          <div style="background:linear-gradient(160deg,#11201A,#0E1712); border:1px solid rgba(134,174,234,0.18); border-radius:18px; padding:24px 26px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:6px;"><span class="msr" style="font-size:20px; color:#86AEEA;">cloud_sync</span><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Conexão com o Arah Core</h3></div>
+            <p style="font-size:12.5px; color:#6B7164; margin:0 0 18px;">Federação: identidade, diretório, versões e ledger.</p>
+            <div style="display:flex; flex-direction:column; gap:11px;">
+              <sc-for list="{{ coreLinks }}" as="c" hint-placeholder-count="6">
+                <div style="display:flex; align-items:center; gap:11px;">
+                  <span class="msr" style="font-size:18px; color:{{ c.iconColor }};">{{ c.icon }}</span>
+                  <span style="font-size:13px; color:#CFE3D6;">{{ c.label }}</span>
+                  <span style="margin-left:auto; font-size:12.5px; font-weight:600; color:{{ c.vColor }};">{{ c.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+          <!-- instances -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Instâncias</h3><span style="font-size:11.5px; color:#6B7164;">multi-instância · por região</span></div>
+            <div style="display:flex; flex-direction:column; gap:11px;">
+              <sc-for list="{{ instances }}" as="i" hint-placeholder-count="2">
+                <div style="border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px 17px;">
+                  <div style="display:flex; align-items:center; gap:11px; margin-bottom:8px;">
+                    <span class="msr" style="font-size:21px; color:#A6D6B9;">{{ i.icon }}</span>
+                    <b style="font-family:'Sora'; font-size:14.5px;">{{ i.name }}</b>
+                    <span style="margin-left:auto; font-size:11px; font-weight:600; color:{{ i.modeColor }}; background:{{ i.modeBg }}; padding:3px 10px; border-radius:999px;">{{ i.mode }}</span>
+                  </div>
+                  <div style="font-size:12.5px; color:#A6AC9E; line-height:1.6;">Serve: <span style="color:#CFE3D6;">{{ i.serves }}</span><br/>{{ i.region }}</div>
+                  <div style="margin-top:9px; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:{{ i.statusColor }};"><span style="width:7px; height:7px; border-radius:999px; background:{{ i.statusColor }};"></span>{{ i.status }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <!-- deploys -->
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Implantações &amp; versão</h3><span style="font-size:12px; font-weight:600; color:#E8A06A; background:rgba(232,160,106,0.12); padding:4px 11px; border-radius:999px;">1 atualização</span></div>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <sc-for list="{{ deploys }}" as="d" hint-placeholder-count="3">
+                <div style="display:flex; gap:13px; padding:11px 0; align-items:flex-start;">
+                  <span class="msr" style="font-size:18px; color:{{ d.dotColor }}; margin-top:1px;">{{ d.dot }}</span>
+                  <div style="min-width:0; flex:1;"><div style="font-size:13.5px;"><b style="font-family:'Sora';">{{ d.version }}</b> <span style="color:#6B7164;">· {{ d.label }}</span></div><div style="font-size:12px; color:#6B7164; margin-top:2px;">{{ d.note }}</div></div>
+                  <span style="font-size:12px; color:{{ d.whenColor }}; font-weight:{{ d.whenWeight }};">{{ d.when }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:9px;">
+              <div style="flex:1; text-align:center; background:#A6D6B9; color:#0E1F12; font-weight:600; font-size:13px; padding:11px; border-radius:11px; cursor:pointer;">Aplicar v2.4.2</div>
+              <div style="text-align:center; background:#191B17; border:1px solid rgba(255,255,255,0.10); color:#A6AC9E; font-size:13px; padding:11px 15px; border-radius:11px; cursor:pointer;">Notas</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- incidents -->
+        <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 26px;">
+          <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 14px;">Eventos &amp; incidentes (30 dias)</h3>
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <sc-for list="{{ incidents }}" as="i" hint-placeholder-count="3">
+              <div style="display:flex; gap:13px; padding:11px 0; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="width:32px; height:32px; border-radius:9px; background:rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:18px; color:{{ i.color }};">{{ i.icon }}</span></div>
+                <span style="font-size:13.5px; flex:1;">{{ i.text }}</span>
+                <span style="font-size:12px; color:#6B7164;">{{ i.when }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ONBOARDING ============ -->
+      <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
+          <div><h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Onboarding</h1><p style="font-size:14.5px; color:#A6AC9E; margin:0;">Traga os comércios da vila para dentro do território.</p></div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:#A6D6B9; color:#0E1F12; font-weight:600; font-size:13.5px; padding:11px 17px; border-radius:11px; cursor:pointer;"><span class="msr" style="font-size:19px;">add_business</span>Convidar comércio</div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;">
+          <sc-for list="{{ onbFunnel }}" as="f" hint-placeholder-count="4">
+            <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px 20px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;"><span style="width:9px; height:9px; border-radius:999px; background:{{ f.color }};"></span><span style="font-size:12.5px; color:#A6AC9E;">{{ f.stage }}</span></div>
+              <div style="font-family:'Sora'; font-weight:700; font-size:1.7rem;">{{ f.count }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:grid; grid-template-columns:1.6fr 1fr; gap:14px;">
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; overflow:hidden;">
+            <div style="padding:18px 22px; border-bottom:1px solid rgba(255,255,255,0.08);"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Fila de ativação</h3></div>
+            <sc-for list="{{ onbQueue }}" as="q" hint-placeholder-count="4">
+              <div class="rowh" style="display:flex; align-items:center; gap:13px; padding:14px 22px; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="width:38px; height:38px; border-radius:10px; background:#20231E; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:20px; color:#A6AC9E;">storefront</span></div>
+                <div style="min-width:0; flex:1;"><div style="font-size:14px; font-weight:600;">{{ q.name }}</div><div style="font-size:12px; color:#6B7164;">{{ q.terr }} · {{ q.owner }}</div></div>
+                <span style="font-size:11.5px; font-weight:600; color:{{ q.stepColor }}; background:{{ q.stepBg }}; padding:4px 11px; border-radius:999px;">{{ q.step }}</span>
+                <span style="font-size:12.5px; color:#A6D6B9; cursor:pointer; font-weight:500;">{{ q.action }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 4px;">Passos da ativação</h3>
+            <p style="font-size:12px; color:#6B7164; margin:0 0 18px;">Mercearia do Zé · Camburi</p>
+            <div style="display:flex; flex-direction:column; gap:13px;">
+              <sc-for list="{{ onbChecklist }}" as="c" hint-placeholder-count="5">
+                <div style="display:flex; align-items:center; gap:11px;"><span class="msr" style="font-size:20px; color:{{ c.cColor }};">{{ c.cIcon }}</span><span style="font-size:13.5px; color:{{ c.tColor }};">{{ c.label }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ FORMAÇÃO ============ -->
+      <sc-if value="{{ isFormacao }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="margin-bottom:24px;"><h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Formação Arah</h1><p style="font-size:14.5px; color:#A6AC9E; margin:0;">Sua trilha e a de quem você forma.</p></div>
+        <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:14px; margin-bottom:18px;">
+          <div style="background:linear-gradient(160deg,#16271B,#11190F); border:1px solid rgba(166,214,185,0.2); border-radius:18px; padding:26px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:18px;"><span class="msr" style="font-size:22px; color:#A6D6B9;">workspace_premium</span><span style="font-size:13px; color:#A6AC9E;">Seu selo</span></div>
+            <div style="font-family:'Sora'; font-weight:700; font-size:1.4rem; line-height:1.15; margin-bottom:18px;">{{ formProgress.selo }}</div>
+            <div style="height:10px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; margin-bottom:9px;"><div style="height:100%; width:{{ formProgress.pct }}; background:#A6D6B9; border-radius:999px;"></div></div>
+            <div style="font-size:13px; color:#A6AC9E;">{{ formProgress.pct }} · {{ formProgress.done }}</div>
+          </div>
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 14px;">Módulos</h3>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <sc-for list="{{ formModules }}" as="m" hint-placeholder-count="5">
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <span class="msr" style="font-size:20px; color:{{ m.color }};">{{ m.icon }}</span>
+                  <span style="font-size:13.5px; flex:1;">{{ m.name }}</span>
+                  <span style="font-size:12px; color:{{ m.color }}; font-weight:500;">{{ m.status }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Você está formando</h3><span style="font-size:12.5px; color:#A6D6B9; cursor:pointer;">Convidar candidato</span></div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <sc-for list="{{ formMentees }}" as="m" hint-placeholder-count="2">
+              <div style="flex:1; min-width:200px; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px 18px;">
+                <div style="display:flex; align-items:center; gap:11px; margin-bottom:12px;"><div style="width:34px; height:34px; border-radius:999px; background:#20231E; display:flex; align-items:center; justify-content:center;"><span class="msr" style="font-size:18px; color:#A6D6B9;">person</span></div><div><div style="font-size:13.5px; font-weight:600;">{{ m.name }}</div><div style="font-size:11.5px; color:#6B7164;">{{ m.terr }}</div></div><span style="margin-left:auto; font-family:'Sora'; font-weight:700; font-size:0.95rem; color:#A6D6B9;">{{ m.pct }}</span></div>
+                <div style="height:6px; background:rgba(255,255,255,0.07); border-radius:999px; overflow:hidden;"><div style="height:100%; width:{{ m.pct }}; background:#A6D6B9; border-radius:999px;"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ PATROCÍNIOS ============ -->
+      <sc-if value="{{ isPatrocinios }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
+          <div><h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Patrocínios &amp; doações</h1><p style="font-size:14.5px; color:#A6AC9E; margin:0;">Quem banca recursos do território — com reconhecimento transparente.</p></div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:#A6D6B9; color:#0E1F12; font-weight:600; font-size:13.5px; padding:11px 17px; border-radius:11px; cursor:pointer;"><span class="msr" style="font-size:19px;">add</span>Novo patrocínio</div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px;">
+          <sc-for list="{{ patKpis }}" as="k" hint-placeholder-count="3">
+            <div style="background:linear-gradient(160deg,#1C201A,#161814); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px 20px;">
+              <div style="display:flex; align-items:center; gap:9px; margin-bottom:13px;"><span class="msr" style="font-size:19px; color:#A6D6B9;">{{ k.icon }}</span><span style="font-size:12.5px; color:#A6AC9E;">{{ k.label }}</span></div>
+              <div style="font-family:'Sora'; font-weight:700; font-size:1.6rem;">{{ k.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; overflow:hidden;">
+          <div style="display:grid; grid-template-columns:1.6fr 0.9fr 1fr 1fr 0.8fr; gap:14px; padding:14px 22px; border-bottom:1px solid rgba(255,255,255,0.08); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#6B7164; font-weight:600;"><span>Patrocinador</span><span>Tipo</span><span>Valor</span><span>Vigência</span><span>Status</span></div>
+          <sc-for list="{{ patList }}" as="p" hint-placeholder-count="4">
+            <div class="rowh" style="display:grid; grid-template-columns:1.6fr 0.9fr 1fr 1fr 0.8fr; gap:14px; padding:15px 22px; border-bottom:1px solid rgba(255,255,255,0.05); align-items:center; font-size:13.5px;">
+              <div><div style="font-weight:600;">{{ p.name }}</div><div style="font-size:11.5px; color:#6B7164;">{{ p.terr }}</div></div>
+              <span style="color:#A6AC9E;">{{ p.type }}</span>
+              <span style="font-family:'Sora'; font-weight:600;">{{ p.value }}</span>
+              <span style="font-size:12.5px; color:#A6AC9E;">{{ p.until }}</span>
+              <span><span style="font-size:12px; font-weight:600; color:{{ p.statusColor }}; background:{{ p.statusBg }}; padding:4px 11px; border-radius:999px;">{{ p.status }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CONFIGURAÇÕES ============ -->
+      <sc-if value="{{ isConfig }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="margin-bottom:24px;"><h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Configurações</h1><p style="font-size:14.5px; color:#A6AC9E; margin:0;">Conta, hospedagem, repasse e integrações.</p></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 16px;">Modo de hospedagem</h3>
+            <div style="display:flex; flex-direction:column; gap:11px;">
+              <sc-for list="{{ cfgHosting }}" as="h" hint-placeholder-count="2">
+                <div style="display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.08); border-radius:13px; padding:14px 16px;">
+                  <span class="msr" style="font-size:20px; color:#A6D6B9;">dns</span>
+                  <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">{{ h.name }}</div><div style="font-size:11.5px; color:#6B7164;">{{ h.detail }}</div></div>
+                  <span style="font-size:11.5px; font-weight:600; color:{{ h.modeColor }};">{{ h.mode }}</span>
+                  <span class="msr" style="font-size:18px; color:#6B7164;">chevron_right</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 16px;">Integrações &amp; repasse</h3>
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <sc-for list="{{ cfgIntegrations }}" as="i" hint-placeholder-count="3">
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <span class="msr" style="font-size:19px; color:#A6AC9E;">{{ i.icon }}</span>
+                  <span style="font-size:13.5px; flex:1;">{{ i.name }}</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#A6D6B9; font-weight:500;"><span style="width:7px; height:7px; border-radius:999px; background:#A6D6B9;"></span>{{ i.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:22px 24px;">
+          <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 14px;">Notificações</h3>
+          <div style="display:flex; flex-direction:column; gap:3px;">
+            <sc-for list="{{ cfgNotifs }}" as="n" hint-placeholder-count="4">
+              <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <span style="font-size:13.5px; flex:1;">{{ n.label }}</span>
+                <span style="width:42px; height:24px; border-radius:999px; background:{{ n.trackBg }}; position:relative; display:inline-block;"><span style="position:absolute; top:3px; {{ n.knobSide }}:3px; width:18px; height:18px; border-radius:999px; background:{{ n.knobColor }};"></span></span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ COMÉRCIOS ============ -->
+      <sc-if value="{{ isComercios }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
+          <div><h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Comércios</h1><p style="font-size:14.5px; color:#A6AC9E; margin:0;">Quem vende na sua rede — plano, volume e cobrança.</p></div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:#A6D6B9; color:#0E1F12; font-weight:600; font-size:13.5px; padding:11px 17px; border-radius:11px; cursor:pointer;"><span class="msr" style="font-size:19px;">add_business</span>Novo comércio</div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px;">
+          <sc-for list="{{ comKpis }}" as="k" hint-placeholder-count="3">
+            <div style="background:linear-gradient(160deg,#1C201A,#161814); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px 20px;">
+              <div style="display:flex; align-items:center; gap:9px; margin-bottom:13px;"><span class="msr" style="font-size:19px; color:#A6D6B9;">{{ k.icon }}</span><span style="font-size:12.5px; color:#A6AC9E;">{{ k.label }}</span></div>
+              <div style="font-family:'Sora'; font-weight:700; font-size:1.6rem;">{{ k.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; overflow:hidden;">
+          <div style="display:grid; grid-template-columns:1.6fr 1fr 0.8fr 1fr 1fr; gap:14px; padding:14px 22px; border-bottom:1px solid rgba(255,255,255,0.08); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#6B7164; font-weight:600;"><span>Comércio</span><span>Território</span><span>Plano</span><span>Volume / mês</span><span>Cobrança</span></div>
+          <sc-for list="{{ comList }}" as="c" hint-placeholder-count="5">
+            <div class="rowh" style="display:grid; grid-template-columns:1.6fr 1fr 0.8fr 1fr 1fr; gap:14px; padding:14px 22px; border-bottom:1px solid rgba(255,255,255,0.05); align-items:center; font-size:13.5px;">
+              <div style="display:flex; align-items:center; gap:11px;"><div style="width:34px; height:34px; border-radius:9px; background:#20231E; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:18px; color:#A6AC9E;">storefront</span></div><span style="font-weight:600;">{{ c.name }}</span></div>
+              <span style="color:#A6AC9E;">{{ c.terr }}</span>
+              <span><span style="font-size:11.5px; font-weight:600; color:{{ c.planColor }}; background:{{ c.planBg }}; padding:3px 10px; border-radius:999px;">{{ c.plan }}</span></span>
+              <span style="font-family:'Sora'; font-weight:600;">{{ c.gmv }}</span>
+              <span style="display:inline-flex; align-items:center; gap:6px; color:{{ c.bColor }}; font-size:12.5px; font-weight:500;"><span style="width:7px; height:7px; border-radius:999px; background:{{ c.bColor }};"></span>{{ c.billing }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ TRANSPARÊNCIA ============ -->
+      <sc-if value="{{ isTransparencia }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:22px;">
+          <div><h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2.1rem); letter-spacing:-0.02em; margin:0 0 6px;">Transparência</h1><p style="font-size:14.5px; color:#A6AC9E; margin:0;">A mesma visão que a comunidade vê — do seu lado da mesa.</p></div>
+          <div style="display:inline-flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600; color:#A6D6B9; background:rgba(166,214,185,0.12); border:1px solid rgba(166,214,185,0.22); padding:9px 14px; border-radius:999px;"><span class="msr" style="font-size:17px;">public</span>Painel público · somente leitura</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">
+          <sc-for list="{{ transTerr }}" as="t" hint-placeholder-count="3">
+            <div style="display:flex; align-items:center; gap:10px; background:{{ t.tbg }}; border:1px solid {{ t.tbd }}; border-radius:12px; padding:11px 16px;">
+              <span class="msr" style="font-size:18px; color:{{ t.tfg }};">forest</span>
+              <div><div style="font-size:13.5px; font-weight:600; color:{{ t.tfg }};">{{ t.name }}</div><div style="font-size:11px; color:#6B7164;">{{ t.revenue }} · repasse {{ t.share }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:14px;">
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Camburi · junho</h3><span style="font-size:11px; color:#A6D6B9; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px;height:6px;border-radius:999px;background:#A6D6B9;"></span>ao vivo</span></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <sc-for list="{{ transStats }}" as="s" hint-placeholder-count="4">
+                <div style="background:#191B17; border:1px solid rgba(255,255,255,0.07); border-radius:13px; padding:15px 16px;"><div style="font-size:0.74rem; color:#A6AC9E; margin-bottom:7px;">{{ s.label }}</div><div style="font-family:'Sora'; font-weight:700; font-size:1.25rem;">{{ s.value }}</div></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#141612; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:24px 26px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;"><h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:0;">Para onde foi</h3><span style="font-size:12px; color:#A6D6B9; cursor:pointer; display:inline-flex; align-items:center; gap:5px;"><span class="msr" style="font-size:16px;">download</span>Exportar</span></div>
+            <sc-for list="{{ transFlow }}" as="f" hint-placeholder-count="3">
+              <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;"><span style="color:#CFE3D6;">{{ f.name }}</span><span style="font-weight:600;">{{ f.amount }}</span></div>
+                <div style="height:8px; background:rgba(255,255,255,0.06); border-radius:999px; overflow:hidden;"><div style="height:100%; width:{{ f.pct }}; background:{{ f.color }}; border-radius:999px;"></div></div>
+              </div>
+            </sc-for>
+            <div style="display:flex; align-items:center; gap:8px; font-size:0.78rem; color:#A6AC9E; background:#191B17; border-radius:11px; padding:11px 13px; margin-top:6px;"><span class="msr" style="font-size:16px; color:#A6D6B9;">how_to_vote</span>Taxas votadas pelo conselho · regra v12</div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ PLACEHOLDER (views ainda não detalhadas) ============ -->
+      <sc-if value="{{ isPlaceholder }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; min-height:60vh; padding:40px;">
+        <div style="width:74px; height:74px; border-radius:20px; background:linear-gradient(160deg,#1C201A,#161814); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; margin-bottom:22px;"><span class="msr" style="font-size:38px; color:#A6D6B9;">{{ phIcon }}</span></div>
+        <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.7rem; letter-spacing:-0.02em; margin:0 0 10px;">{{ phTitle }}</h1>
+        <p style="font-size:14.5px; color:#A6AC9E; max-width:46ch; line-height:1.6; margin:0 0 8px;">{{ phNote }}</p>
+        <p style="font-size:13px; color:#6B7164; margin:0 0 24px;">Tela em detalhamento neste protótipo do cockpit.</p>
+        <div onClick="{{ goOverview }}" style="display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:#0E1F12; background:#A6D6B9; padding:11px 20px; border-radius:11px; cursor:pointer;"><span class="msr" style="font-size:18px;">arrow_back</span>Voltar à visão geral</div>
+      </div>
+      </sc-if>
+
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1380,&quot;height&quot;:920}}">
+class Component extends DCLogic {
+  state = { view: 'overview' };
+  setView(v) { this.setState({ view: v }); }
+  renderVals() {
+    const v = this.state.view;
+    const go = (target) => () => this.setView(target);
+    const mk = (id, icon, label, badge) => ({ icon, label, badge: badge || false, cls: v === id ? 'on' : '', go: go(id) });
+    return {
+      isOverview: v === 'overview',
+      isTerritorios: v === 'territorios',
+      isReceita: v === 'receita',
+      isOps: v === 'operacoes',
+      isOnboarding: v === 'onboarding',
+      isFormacao: v === 'formacao',
+      isPatrocinios: v === 'patrocinios',
+      isConfig: v === 'config',
+      isComercios: v === 'comercios',
+      isTransparencia: v === 'transparencia',
+      isPlaceholder: ['overview','territorios','receita','operacoes','onboarding','formacao','patrocinios','config','comercios','transparencia'].indexOf(v) === -1,
+      phTitle: ({ comercios:'Comércios', transparencia:'Transparência', onboarding:'Onboarding', formacao:'Formação Arah', patrocinios:'Patrocínios', config:'Configurações' })[v] || 'Seção',
+      phIcon: ({ comercios:'storefront', transparencia:'monitoring', onboarding:'group_add', formacao:'school', patrocinios:'volunteer_activism', config:'settings' })[v] || 'dashboard',
+      phNote: ({
+        comercios:'Lista de comércios por território, plano ativo, consumo e cobrança.',
+        transparencia:'A mesma visão pública do território, do lado do implementador.',
+        onboarding:'Convites, ativação de planos e acompanhamento da adoção.',
+        formacao:'Trilha de capacitação, certificações e materiais.',
+        patrocinios:'Captação e gestão de patrocínios e doações do território.',
+        config:'Conta, modos de hospedagem, integrações e preferências.'
+      })[v] || 'Detalhamento desta seção.',
+      goOverview: () => this.setView('overview'),
+      services: [
+        { name: 'API .NET', icon: 'api', status: 'operacional', sc: '#A6D6B9', meta: '99,98% · v2.4.1', latency: '42ms' },
+        { name: 'Banco PostgreSQL', icon: 'database', status: 'operacional', sc: '#A6D6B9', meta: '99,99% · réplica ativa', latency: '6ms' },
+        { name: 'Mídia / Storage', icon: 'image', status: 'operacional', sc: '#A6D6B9', meta: 'URLs assinadas · CDN', latency: '—' },
+        { name: 'Realtime', icon: 'bolt', status: 'operacional', sc: '#A6D6B9', meta: 'WebSocket · feed ao vivo', latency: '18ms' },
+        { name: 'Workers & jobs', icon: 'manufacturing', status: 'operacional', sc: '#A6D6B9', meta: 'fila: 3 · payouts', latency: '—' },
+        { name: 'PIX / PSP', icon: 'credit_card', status: 'conectado', sc: '#86AEEA', meta: 'idempotência ativa', latency: '210ms' },
+      ],
+      coreLinks: [
+        { label: 'Registro da instância', value: 'ativo', icon: 'verified', iconColor: '#A6D6B9', vColor: '#A6D6B9' },
+        { label: 'Identidade federada', value: 'sincronizada · há 2 min', icon: 'fingerprint', iconColor: '#A6D6B9', vColor: '#A6AC9E' },
+        { label: 'Diretório de territórios', value: 'publicado · 3 territórios', icon: 'travel_explore', iconColor: '#A6D6B9', vColor: '#A6AC9E' },
+        { label: 'Regras de split', value: 'v12 vigente', icon: 'pie_chart', iconColor: '#A6D6B9', vColor: '#A6AC9E' },
+        { label: 'Ledger → Core', value: 'consolidado', icon: 'sync', iconColor: '#A6D6B9', vColor: '#A6AC9E' },
+        { label: 'Atualização', value: '1 disponível (v2.4.2)', icon: 'system_update', iconColor: '#E8A06A', vColor: '#E8A06A' },
+      ],
+      instances: [
+        { name: 'Instância Litoral Norte', mode: 'Gerenciada', modeColor: '#A6D6B9', modeBg: 'rgba(166,214,185,0.12)', serves: 'Camburi · Boiçucanga', region: 'nuvem · São Paulo', status: 'operacional', statusColor: '#A6D6B9', icon: 'cloud_done' },
+        { name: 'Instância Maresias', mode: 'Soberana', modeColor: '#86AEEA', modeBg: 'rgba(134,174,234,0.12)', serves: 'Maresias', region: 'self-hosted · servidor do coletivo', status: 'backup pendente', statusColor: '#E8A06A', icon: 'dns' },
+      ],
+      deploys: [
+        { version: 'v2.4.1', label: 'em produção', when: 'há 6 dias', note: 'Carteira Aratá + split de pagamentos', dot: 'check_circle', dotColor: '#A6D6B9', whenColor: '#6B7164', whenWeight: '500' },
+        { version: 'v2.4.2', label: 'disponível', when: 'aplicar', note: 'Correções de segurança + governança de taxas', dot: 'system_update', dotColor: '#E8A06A', whenColor: '#E8A06A', whenWeight: '600' },
+        { version: 'v2.4.0', label: 'anterior', when: 'há 21 dias', note: 'Painel de transparência público', dot: 'history', dotColor: '#6B7164', whenColor: '#6B7164', whenWeight: '500' },
+      ],
+      comKpis: [
+        { label: 'Comércios ativos', value: '287', icon: 'storefront' },
+        { label: 'Assinantes (Loja+Pro)', value: '173', icon: 'card_membership' },
+        { label: 'MRR de assinaturas', value: 'R$ 9,8k', icon: 'autorenew' },
+      ],
+      comList: [
+        { name: 'Padaria da Vila', terr: 'Camburi', plan: 'Pro', planColor: '#A6D6B9', planBg: 'rgba(166,214,185,0.12)', gmv: 'R$ 12,4k', billing: 'em dia', bColor: '#A6D6B9' },
+        { name: 'Peixaria Tonho', terr: 'Boiçucanga', plan: 'Loja', planColor: '#86AEEA', planBg: 'rgba(134,174,234,0.12)', gmv: 'R$ 8,1k', billing: 'em dia', bColor: '#A6D6B9' },
+        { name: 'Pousada Maré', terr: 'Maresias', plan: 'Pro', planColor: '#A6D6B9', planBg: 'rgba(166,214,185,0.12)', gmv: 'R$ 19,7k', billing: 'em dia', bColor: '#A6D6B9' },
+        { name: 'Mercearia do Zé', terr: 'Camburi', plan: 'Loja', planColor: '#86AEEA', planBg: 'rgba(134,174,234,0.12)', gmv: 'R$ 5,2k', billing: 'PIX pendente', bColor: '#E8A06A' },
+        { name: 'Ateliê Caiçara', terr: 'Camburi', plan: 'Loja', planColor: '#86AEEA', planBg: 'rgba(134,174,234,0.12)', gmv: 'R$ 2,9k', billing: 'em dia', bColor: '#A6D6B9' },
+      ],
+      transTerr: [
+        { name: 'Camburi', revenue: 'R$ 18,4k', share: 'R$ 8,9k', on: true },
+        { name: 'Boiçucanga', revenue: 'R$ 14,1k', share: 'R$ 6,3k', on: false },
+        { name: 'Maresias', revenue: 'R$ 8,7k', share: 'R$ 3,5k', on: false },
+      ].map(t => ({ ...t, tbg: t.on ? 'rgba(166,214,185,0.10)' : '#141612', tbd: t.on ? 'rgba(166,214,185,0.28)' : 'rgba(255,255,255,0.08)', tfg: t.on ? '#A6D6B9' : '#F2F4EE' })),
+      transFlow: [
+        { name: 'Você (implementador)', amount: 'R$ 8,9k', pct: '48%', color: '#A6D6B9' },
+        { name: 'Fundo do território', amount: 'R$ 4,1k', pct: '22%', color: '#6FC5D6' },
+        { name: 'Plataforma (núcleo aberto)', amount: 'R$ 5,4k', pct: '30%', color: '#9FB0A2' },
+      ],
+      transStats: [
+        { label: 'Receita do mês', value: 'R$ 18,4k' },
+        { label: 'Comércios ativos', value: '142' },
+        { label: 'Volume transacionado', value: 'R$ 286k' },
+        { label: 'Regra de split', value: 'v12 · vigente' },
+      ],
+      onbFunnel: [
+        { stage: 'Convidado', count: '8', color: '#6B7164' },
+        { stage: 'Cadastro', count: '5', color: '#86AEEA' },
+        { stage: 'Plano ativado', count: '3', color: '#E8A06A' },
+        { stage: 'Ativo (30d)', count: '18', color: '#A6D6B9' },
+      ],
+      onbQueue: [
+        { name: 'Mercearia do Zé', terr: 'Camburi', owner: 'José Andrade', step: 'Cadastro', stepColor: '#86AEEA', stepBg: 'rgba(134,174,234,0.12)', action: 'Lembrar' },
+        { name: 'Pousada Maré', terr: 'Maresias', owner: 'Lúcia Mendes', step: 'Convidado', stepColor: '#A6AC9E', stepBg: 'rgba(255,255,255,0.06)', action: 'Reenviar' },
+        { name: 'Peixaria Tonho', terr: 'Boiçucanga', owner: 'Antônio Silva', step: 'Plano ativado', stepColor: '#E8A06A', stepBg: 'rgba(232,160,106,0.12)', action: 'Acompanhar' },
+        { name: 'Ateliê Caiçara', terr: 'Camburi', owner: 'Rita Souza', step: 'Cadastro', stepColor: '#86AEEA', stepBg: 'rgba(134,174,234,0.12)', action: 'Lembrar' },
+      ],
+      onbChecklist: [
+        { label: 'Convite enviado', done: true },
+        { label: 'Cadastro do comércio', done: true },
+        { label: 'Escolha do plano', done: false },
+        { label: 'Pagamento PIX', done: false },
+        { label: 'Loja publicada no território', done: false },
+      ].map(c => ({ label: c.label, cIcon: c.done ? 'check_circle' : 'radio_button_unchecked', cColor: c.done ? '#A6D6B9' : '#6B7164', tColor: c.done ? '#F2F4EE' : '#A6AC9E' })),
+      formProgress: { selo: 'Implementadora sênior', pct: '80%', done: '8 de 10 módulos' },
+      formModules: [
+        { name: 'Fundamentos território-primeiro', status: 'concluído', icon: 'check_circle', color: '#A6D6B9' },
+        { name: 'Vendas de proximidade', status: 'concluído', icon: 'check_circle', color: '#A6D6B9' },
+        { name: 'Governança & transparência', status: 'concluído', icon: 'check_circle', color: '#A6D6B9' },
+        { name: 'Monetização & split justo', status: 'em curso', icon: 'play_circle', color: '#E8A06A' },
+        { name: 'Operação, instâncias & federação', status: 'bloqueado', icon: 'lock', color: '#6B7164' },
+      ],
+      formMentees: [
+        { name: 'Carlos Nunes', terr: 'Maresias', pct: '45%' },
+        { name: 'Dona Inês', terr: 'Boiçucanga', pct: '20%' },
+      ],
+      patKpis: [
+        { label: 'Captação do mês', value: 'R$ 2,3k', icon: 'volunteer_activism' },
+        { label: 'Patrocinadores ativos', value: '6', icon: 'handshake' },
+        { label: 'Doações (mês)', value: 'R$ 480', icon: 'favorite' },
+      ],
+      patList: [
+        { name: 'Cooperativa Caiçara', terr: 'Camburi', type: 'Patrocínio', value: 'R$ 600/mês', until: 'até 12/2026', status: 'ativo', statusColor: '#A6D6B9', statusBg: 'rgba(166,214,185,0.12)' },
+        { name: 'Prefeitura · Sec. Turismo', terr: 'Boiçucanga', type: 'Patrocínio', value: 'R$ 800/mês', until: 'até 09/2026', status: 'ativo', statusColor: '#A6D6B9', statusBg: 'rgba(166,214,185,0.12)' },
+        { name: 'Padaria da Vila', terr: 'Camburi', type: 'Doação', value: 'R$ 50/mês', until: 'recorrente', status: 'ativo', statusColor: '#A6D6B9', statusBg: 'rgba(166,214,185,0.12)' },
+        { name: 'Surf Shop Norte', terr: 'Maresias', type: 'Patrocínio', value: 'R$ 300/mês', until: 'aguardando aceite', status: 'pendente', statusColor: '#E8A06A', statusBg: 'rgba(232,160,106,0.12)' },
+      ],
+      cfgHosting: [
+        { name: 'Instância Litoral Norte', mode: 'Gerenciada', modeColor: '#A6D6B9', detail: 'Camburi · Boiçucanga' },
+        { name: 'Instância Maresias', mode: 'Soberana', modeColor: '#86AEEA', detail: 'self-hosted' },
+      ],
+      cfgIntegrations: [
+        { name: 'Gateway PIX / PSP', value: 'conectado', icon: 'credit_card', ok: true },
+        { name: 'Arah Core (federação)', value: 'sincronizado', icon: 'hub', ok: true },
+        { name: 'Repasse — chave PIX', value: 'marina@arah.eco', icon: 'key', ok: true },
+      ],
+      cfgNotifs: [
+        { label: 'Repasses e liquidações', on: true },
+        { label: 'Onboarding de comércios', on: true },
+        { label: 'Incidentes de infraestrutura', on: true },
+        { label: 'Propostas de governança', on: false },
+      ].map(n => ({ label: n.label, trackBg: n.on ? '#A6D6B9' : 'rgba(255,255,255,0.12)', knobSide: n.on ? 'right' : 'left', knobColor: n.on ? '#0E1F12' : '#A6AC9E' })),
+      incidents: [
+        { text: 'Reinício automático do worker de mídia — auto-resolvido', when: '14/jun · 03:12', icon: 'restart_alt', color: '#A6D6B9' },
+        { text: 'Janela de manutenção do Arah Core (sem indisponibilidade)', when: '12/jun · 02:00', icon: 'build', color: '#86AEEA' },
+        { text: 'Backup da instância soberana de Maresias atrasado — ação necessária', when: 'agora', icon: 'warning', color: '#E8A06A' },
+      ],
+      goTerr: go('territorios'),
+      navMain: [
+        mk('overview', 'dashboard', 'Visão geral'),
+        mk('territorios', 'forest', 'Territórios'),
+        mk('comercios', 'storefront', 'Comércios'),
+        mk('receita', 'account_balance_wallet', 'Receita & repasses'),
+        mk('transparencia', 'monitoring', 'Transparência'),
+        mk('operacoes', 'dns', 'Operações & infra'),
+        mk('onboarding', 'group_add', 'Onboarding', '3'),
+      ],
+      navGrow: [
+        mk('formacao', 'school', 'Formação Arah'),
+        mk('patrocinios', 'volunteer_activism', 'Patrocínios'),
+        mk('config', 'settings', 'Configurações'),
+      ],
+      kpis: [
+        { icon: 'payments', color: '#A6D6B9', label: 'Receita da rede', value: 'R$ 41,2k', trend: '+12,4%', trendColor: '#A6D6B9', trendIcon: 'trending_up' },
+        { icon: 'savings', color: '#A6D6B9', label: 'Seu repasse', value: 'R$ 18,7k', trend: '+9,8%', trendColor: '#A6D6B9', trendIcon: 'trending_up' },
+        { icon: 'storefront', color: '#86AEEA', label: 'Comércios ativos', value: '287', trend: '+18', trendColor: '#A6D6B9', trendIcon: 'trending_up' },
+        { icon: 'forest', color: '#6FC5D6', label: 'Territórios', value: '3', trend: '+1', trendColor: '#A6D6B9', trendIcon: 'trending_up' },
+      ],
+      chart: [
+        { month: 'jan', sub: 22, fee: 30, serv: 8 },
+        { month: 'fev', sub: 26, fee: 38, serv: 9 },
+        { month: 'mar', sub: 30, fee: 46, serv: 11 },
+        { month: 'abr', sub: 33, fee: 52, serv: 12 },
+        { month: 'mai', sub: 38, fee: 60, serv: 13 },
+        { month: 'jun', sub: 44, fee: 70, serv: 15 },
+      ],
+      payoutBreak: [
+        { label: 'Assinaturas (50%)', value: 'R$ 6,2k' },
+        { label: 'Taxa transacional (45%)', value: 'R$ 9,1k' },
+        { label: 'Serviços & suporte', value: 'R$ 3,4k' },
+      ],
+      territories: [
+        { name: 'Camburi', meta: '2.040 moradores · 142 comércios', revenue: 'R$ 18,4k', status: 'saudável', statusColor: '#A6D6B9' },
+        { name: 'Boiçucanga', meta: '1.380 moradores · 96 comércios', revenue: 'R$ 14,1k', status: 'crescendo', statusColor: '#86AEEA' },
+        { name: 'Maresias (novo)', meta: '720 moradores · 49 comércios', revenue: 'R$ 8,7k', status: 'em ativação', statusColor: '#E8A06A' },
+      ],
+      terrRows: [
+        { name: 'Camburi', residents: '2.040', merchants: '142', subs: '88', gmv: 'R$ 286k', payout: 'R$ 8,9k', status: 'saudável', statusColor: '#A6D6B9', statusBg: 'rgba(166,214,185,0.12)' },
+        { name: 'Boiçucanga', residents: '1.380', merchants: '96', subs: '61', gmv: 'R$ 198k', payout: 'R$ 6,3k', status: 'crescendo', statusColor: '#86AEEA', statusBg: 'rgba(134,174,234,0.12)' },
+        { name: 'Maresias', residents: '720', merchants: '49', subs: '24', gmv: 'R$ 96k', payout: 'R$ 3,5k', status: 'em ativação', statusColor: '#E8A06A', statusBg: 'rgba(232,160,106,0.12)' },
+      ],
+      terrAggregate: [
+        { label: 'Moradores na rede', value: '4.140' },
+        { label: 'Comércios ativos', value: '287' },
+        { label: 'Volume / mês', value: 'R$ 580k' },
+      ],
+      layerRows: [
+        { name: 'Assinaturas comerciais', value: 'R$ 12,4k', pct: '30%', color: '#A6D6B9' },
+        { name: 'Taxa transacional', value: 'R$ 20,2k', pct: '49%', color: '#86AEEA' },
+        { name: 'Serviços & suporte', value: 'R$ 5,1k', pct: '12%', color: '#E8A06A' },
+        { name: 'Patrocínios', value: 'R$ 2,3k', pct: '6%', color: '#6FC5D6' },
+        { name: 'Consumo (IA/mídia)', value: 'R$ 1,2k', pct: '3%', color: '#9FB0A2' },
+      ],
+      splitRows: [
+        { name: 'Você (implementador)', value: 'R$ 18,7k', pct: '45%', color: '#A6D6B9' },
+        { name: 'Fundo dos territórios', value: 'R$ 9,1k', pct: '22%', color: '#6FC5D6' },
+        { name: 'Plataforma', value: 'R$ 13,4k', pct: '33%', color: '#9FB0A2' },
+      ],
+      payoutHistory: [
+        { period: 'Junho 2026', gross: 'R$ 41,2k', net: 'R$ 18,7k', date: '01/jul (previsto)', status: 'agendado', statusColor: '#E8A06A', statusBg: 'rgba(232,160,106,0.12)' },
+        { period: 'Maio 2026', gross: 'R$ 37,5k', net: 'R$ 17,0k', date: '01/jun', status: 'liquidado', statusColor: '#A6D6B9', statusBg: 'rgba(166,214,185,0.12)' },
+        { period: 'Abril 2026', gross: 'R$ 33,9k', net: 'R$ 15,4k', date: '01/mai', status: 'liquidado', statusColor: '#A6D6B9', statusBg: 'rgba(166,214,185,0.12)' },
+        { period: 'Março 2026', gross: 'R$ 29,7k', net: 'R$ 13,5k', date: '01/abr', status: 'liquidado', statusColor: '#A6D6B9', statusBg: 'rgba(166,214,185,0.12)' },
+      ],
+      activity: [
+        { icon: 'add_business', color: '#A6D6B9', tint: 'rgba(166,214,185,0.12)', text: 'Padaria da Vila ativou o plano Pro em Camburi', time: 'há 2 horas' },
+        { icon: 'payments', color: '#86AEEA', tint: 'rgba(134,174,234,0.12)', text: 'Repasse de maio liquidado — R$ 17,0k via PIX', time: 'há 1 dia' },
+        { icon: 'how_to_vote', color: '#E8A06A', tint: 'rgba(232,160,106,0.12)', text: 'Proposta de taxa aprovada pelo conselho de Boiçucanga', time: 'há 2 dias' },
+        { icon: 'group_add', color: '#A6D6B9', tint: 'rgba(166,214,185,0.12)', text: '3 comércios aguardando onboarding em Maresias', time: 'há 3 dias' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

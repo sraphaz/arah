@@ -9,6 +9,26 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Operação por agentes (2026-06-30)
+
+- `AGENTS.md`, `.agents/`, `.skills/`, `CODEOWNERS`, templates e scripts em `scripts/agents/`
+- [docs/ops/AGENT_OPERATION.md](./ops/AGENT_OPERATION.md), [docs/_meta/DOC_TAXONOMY.md](./_meta/DOC_TAXONOMY.md)
+- Workflow `.github/workflows/agents-validate.yml`
+- Handoff HTML: [Operacao por Agentes](./handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
+
+### Adicionado — Sustentação Operacional C4 (2026-06-30)
+
+- Pacote **Arquitetura C4 Arah** em `docs/handoff/arquitetura-c4/` (7 documentos HTML interativos)
+- [Realinhamento Sustentação Operacional](./backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)
+- Fases **52–61**: CI/CD, Core, IaC, monetização open-core, transparência, cockpit, operação, federação, capital
+- Onda **S (Sustentação)** no roadmap — precede economia local (F17–19) até go-live piloto
+
+### Alterado — Prioridades (2026-06-30)
+
+- FASE15 reposicionada como base para billing comercial (FASE55)
+- Economia local (F17–19) rebaixada de P0 para P1 até território-piloto no ar
+- Roadmap v3.2 e backlog README atualizados
+
 - Reorganização federal da documentação (estrutura por domínios, unificação de duplicados, archive de PRs).
 - Changelog unificado (conteúdo de 40_CHANGELOG incorporado).
 

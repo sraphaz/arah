@@ -96,4 +96,4 @@ export async function getTotalPhases(): Promise<number> {
 
 ---
 
-**Última Verificação Manual**: 2025-01-20 (29 fases)
+**Última Verificação Manual**: 2026-06-30 (61 fases: 1–51 comunitárias + 52–61 sustentação)

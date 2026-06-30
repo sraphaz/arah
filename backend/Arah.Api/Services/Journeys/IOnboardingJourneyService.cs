@@ -15,4 +15,16 @@ public interface IOnboardingJourneyService
         double longitude,
         double radiusKm,
         CancellationToken cancellationToken = default);
+
+    Task<SuggestMunicipalityResponse?> SuggestMunicipalityAsync(
+        double latitude,
+        double longitude,
+        string? city,
+        string? state,
+        CancellationToken cancellationToken = default);
+
+    Task<ProposeTerritoryResponse?> ProposeTerritoryAsync(
+        Guid proposerUserId,
+        ProposeTerritoryRequest request,
+        CancellationToken cancellationToken = default);
 }

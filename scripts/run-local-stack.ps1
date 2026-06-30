@@ -299,7 +299,7 @@ try {
         }
         $PgUser = if ($env:POSTGRES_USER) { $env:POSTGRES_USER } else { "arah" }
         $PgDb   = if ($env:POSTGRES_DB)   { $env:POSTGRES_DB }   else { "arah" }
-        foreach ($seedName in @('camburi', 'boicucanga')) {
+        foreach ($seedName in @('camburi', 'boicucanga', 'sao-paulo-centro')) {
             $SqlFile = Join-Path $RepoRoot "scripts\seed\seed-$seedName.sql"
             if (Test-Path -LiteralPath $SqlFile) {
                 try {

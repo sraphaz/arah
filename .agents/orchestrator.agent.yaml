@@ -1,0 +1,24 @@
+id: orchestrator
+name: Orquestrador
+description: Roteia intenções para agentes especializados; não altera código de produto.
+triggers:
+  - issue:labeled
+  - pull_request:opened
+  - manual
+scope:
+  paths: []
+  may_code: false
+skills:
+  - backlog-to-issue
+  - open-pr
+routing:
+  area/backend: backend
+  area/flutter: flutter
+  area/web: web
+  area/docs: docs-steward
+  area/ops: release
+  area/security: security
+  area/planning: planner
+guardrails:
+  no_merge: true
+  require_ci: true

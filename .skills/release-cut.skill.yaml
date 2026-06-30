@@ -1,0 +1,8 @@
+id: release-cut
+description: Versão semântica, changelog, tag e notas de release.
+steps:
+  - Atualizar docs/CHANGELOG.md [Unreleased]
+  - Criar tag vX.Y.Z
+  - gh release create com notas
+guardrails:
+  human_approval_required: true

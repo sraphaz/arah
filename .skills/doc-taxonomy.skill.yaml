@@ -1,0 +1,10 @@
+id: doc-taxonomy
+description: Organiza docs na taxonomia semântica e regenera índice.
+references:
+  - docs/_meta/DOC_TAXONOMY.md
+run:
+  - scripts/agents/generate-docs-index.ps1
+rules:
+  - kebab-case semantic names
+  - front_matter required for source_of_truth docs
+  - legacy numeric prefixes go to docs/_archive/

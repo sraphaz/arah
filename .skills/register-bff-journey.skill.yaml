@@ -1,0 +1,9 @@
+id: register-bff-journey
+description: Registra nova jornada no BffJourneyRegistry.
+steps:
+  - Adicionar constante de journey id em BffJourneyRegistry
+  - Registrar paths e cache policy
+  - Atualizar testes em backend/Tests/Arah.Tests/Bff/
+  - Documentar em docs/BFF_CONTRACT_SUMMARY.md se endpoint público
+files:
+  - backend/Arah.Api.Bff/Journeys/BffJourneyRegistry.cs

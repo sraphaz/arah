@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#16271D; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.tl { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.tl:hover { color:#377B57; border-left-color:#9FCEB4; }
+.mono { font-family:ui-monospace,"SF Mono",Menlo,monospace; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } .main { padding:0 !important; } section { break-inside:avoid; } }
+</style>
+</helmet>
+
+<div class="shell" style="display:grid; grid-template-columns:262px 1fr; max-width:1300px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:28px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:18px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:22px; padding-left:2px;">Operação por agentes</span>
+    <a class="tl" href="#g1">G1 · Diagnóstico do repo</a>
+    <a class="tl" href="#g2">G2 · Visão &amp; princípios</a>
+    <a class="tl" href="#g3">G3 · Catálogo de agentes</a>
+    <a class="tl" href="#g4">G4 · Skills componíveis</a>
+    <a class="tl" href="#g5">G5 · Como opera</a>
+    <a class="tl" href="#g6">G6 · Guardrails &amp; governança</a>
+    <a class="tl" href="#g7">G7 · Base open-source</a>
+    <a class="tl" href="#g8">G8 · Reorganizar os docs</a>
+    <a class="tl" href="#g9">G9 · Manifests (exemplos)</a>
+    <a class="tl" href="#g10">G10 · Adoção &amp; métricas</a>
+    <a class="tl" href="#g11">G11 · Domínio &amp; especialistas</a>
+    <div style="margin-top:22px; padding-top:18px; border-top:1px solid rgba(23,53,37,0.12);">
+      <a class="tl" href="Plano Operacional e Pipelines - Arah.dc.html">↗ Plano operacional &amp; pipelines</a>
+      <a class="tl" href="Backlog Atualizado - Arah.dc.html">↗ Backlog atualizado</a>
+    </div>
+  </nav>
+
+  <main class="main" style="padding:54px clamp(24px,5vw,76px); max-width:920px; min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:38px; margin-bottom:46px;">
+      <div style="font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:14px;">Proposta · engenharia operada por agentes</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.04; margin:0 0 18px; color:#0E2117;">Um repositório que se <span style="color:#377B57;">opera por agentes</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:64ch; margin:0;">De mexer item a item para <b>orquestrar uma equipe de agentes</b> sob comando humano. Uma proposta para tornar o repo <span class="mono">sraphaz/arah</span> — e toda a evolução do produto — operável por agentes: mais organização para os docs inflados, e outro patamar de produtividade.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:26px;">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:16px 20px; min-width:130px;"><div style="font-family:'Sora'; font-weight:700; font-size:1.7rem; color:{{ s.color }}; letter-spacing:-0.02em;">{{ s.value }}</div><div style="font-size:12.5px; color:#5A6B5C; margin-top:6px; line-height:1.4;">{{ s.label }}</div></div>
+        </sc-for>
+      </div>
+    </header>
+
+    <!-- G1 -->
+    <section id="g1" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G1</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Diagnóstico do repositório</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Lido direto do <span class="mono">sraphaz/arah</span>. A base é boa — o gargalo é coordenação manual e documentação espalhada.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;"><span class="msr" style="font-size:20px; color:#377B57;">inventory_2</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">O que o repo já é</b></div>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ repoIs }}" as="r" hint-placeholder-count="5"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.92rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#377B57; flex-shrink:0;">check</span><span>{{ r }}</span></div></sc-for>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;"><span class="msr" style="font-size:20px; color:#A8632F;">priority_high</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">A dor</b></div>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ painPoints }}" as="p" hint-placeholder-count="5"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.92rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#A8632F; flex-shrink:0;">close</span><span>{{ p }}</span></div></sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#FBF0E6; border:1px solid rgba(168,99,47,0.2); border-radius:14px; padding:16px 18px;">
+        <span class="msr" style="font-size:20px; color:#A8632F; flex-shrink:0;">description</span>
+        <div style="font-size:0.92rem; line-height:1.55; color:#7A4A22;">O próprio <span class="mono">AGENTS.md</span> já manda "manter docs em sincronia em todo PR" e tratar <b>documentação desatualizada como bug</b> — mas com <b>505 arquivos</b> em <span class="mono">docs/</span> e numeração colidindo (30_, 31_, 32_, 38_, 42_ repetidos), isso é insustentável no braço. É trabalho de agente.</div>
+      </div>
+    </section>
+
+    <!-- G2 -->
+    <section id="g2" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G2</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Visão &amp; princípios</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Você descreve a <b>intenção</b> (uma feature, um épico, uma correção); uma equipe de agentes a transforma em PRs prontos para revisão. Humano comanda e aprova; agente executa e documenta.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <sc-for list="{{ principles }}" as="p" hint-placeholder-count="6">
+          <div style="display:flex; gap:16px; align-items:flex-start; background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:18px 22px;">
+            <span class="msr" style="font-size:22px; color:#377B57; flex-shrink:0;">{{ p.icon }}</span>
+            <div><b style="font-family:'Sora'; font-size:1.04rem; color:#0E2117; display:block; margin-bottom:4px;">{{ p.title }}</b><span style="font-size:0.94rem; color:#46584A; line-height:1.6;">{{ p.body }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <!-- G3 -->
+    <section id="g3" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G3</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Catálogo de agentes</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Nove agentes especializados, cada um com gatilho, escopo (o que pode tocar) e entregável. Pequenos e focados — compõem-se via o Orquestrador.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <sc-for list="{{ agents }}" as="a" hint-placeholder-count="9">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+              <div style="width:42px; height:42px; border-radius:12px; background:{{ a.tint }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:23px; color:{{ a.color }};">{{ a.icon }}</span></div>
+              <div><b style="font-family:'Sora'; font-size:1.08rem; color:#0E2117;">{{ a.name }}</b><div style="font-size:0.84rem; color:#74806E;">{{ a.area }}</div></div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+              <div style="background:#F7FAF8; border:1px solid rgba(23,53,37,0.07); border-radius:11px; padding:11px 13px;"><div style="font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#9FB0A2; font-weight:600; margin-bottom:5px;">Gatilho</div><div style="font-size:0.85rem; color:#3A4A3E; line-height:1.4;">{{ a.trigger }}</div></div>
+              <div style="background:#F7FAF8; border:1px solid rgba(23,53,37,0.07); border-radius:11px; padding:11px 13px;"><div style="font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#9FB0A2; font-weight:600; margin-bottom:5px;">Escopo</div><div style="font-size:0.85rem; color:#3A4A3E; line-height:1.4;">{{ a.scope }}</div></div>
+              <div style="background:#F7FAF8; border:1px solid rgba(23,53,37,0.07); border-radius:11px; padding:11px 13px;"><div style="font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#9FB0A2; font-weight:600; margin-bottom:5px;">Entrega</div><div style="font-size:0.85rem; color:#3A4A3E; line-height:1.4;">{{ a.output }}</div></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- G4 -->
+    <section id="g4" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G4</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Skills componíveis</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Capacidades reutilizáveis (ferramenta + procedimento + guardrail) que os agentes combinam. Cada skill encapsula um comando real do repo, não prosa.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:1fr 1.7fr 0.9fr; gap:14px; padding:13px 20px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; font-weight:600;"><span>Skill</span><span>O que faz</span><span>Usada por</span></div>
+        <sc-for list="{{ skills }}" as="s" hint-placeholder-count="11">
+          <div style="display:grid; grid-template-columns:1fr 1.7fr 0.9fr; gap:14px; padding:13px 20px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center;">
+            <code class="mono" style="font-size:0.83rem; font-weight:600; color:#2B6246;">{{ s.name }}</code>
+            <span style="font-size:0.88rem; color:#46584A; line-height:1.45;">{{ s.what }}</span>
+            <span style="font-size:0.82rem; color:#74806E;">{{ s.by }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- G5 -->
+    <section id="g5" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G5</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Como opera</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Do gatilho ao merge, sobre a infraestrutura que o repo já tem (GitHub, Actions, Cursor). O humano entra em dois pontos: definir a intenção e aprovar o merge.</p>
+      <div style="background:linear-gradient(175deg,#F4F9F4,#FBFCF9); border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:24px 22px; margin-bottom:18px;">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+          <sc-for list="{{ flow }}" as="f" hint-placeholder-count="7">
+            <span style="display:inline-flex; align-items:center; gap:7px; font-size:0.84rem; color:{{ f.fg }}; background:{{ f.bg }}; border:1px solid {{ f.bd }}; padding:8px 13px; border-radius:10px;"><span class="msr" style="font-size:16px;">{{ f.icon }}</span>{{ f.label }}</span>
+            <span class="msr" style="font-size:16px; color:#9FCEB4;">arrow_forward</span>
+          </sc-for>
+        </div>
+      </div>
+      <p style="font-size:0.95rem; line-height:1.65; color:#46584A; margin:0 0 18px; max-width:72ch;">As peças que tornam isso real já existem no repo — só precisam ganhar a camada de agentes:</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;">
+        <sc-for list="{{ plumbing }}" as="p" hint-placeholder-count="5">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:13px; padding:16px 18px;">
+            <code class="mono" style="font-size:0.84rem; font-weight:600; color:#2B6246;">{{ p.file }}</code>
+            <p style="font-size:0.86rem; color:#46584A; line-height:1.5; margin:7px 0 0;">{{ p.role }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- G6 -->
+    <section id="g6" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G6</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Guardrails &amp; governança</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Autonomia com freios. Um agente nunca decide sozinho o que vai para produção — propõe, e o gate humano fecha.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px;">
+        <sc-for list="{{ guardrails }}" as="g" hint-placeholder-count="6">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;"><span class="msr" style="font-size:19px; color:#377B57;">{{ g.icon }}</span><b style="font-family:'Sora'; font-size:0.98rem; color:#0E2117;">{{ g.title }}</b></div>
+            <p style="font-size:0.89rem; color:#46584A; line-height:1.55; margin:0;">{{ g.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- G7 -->
+    <section id="g7" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G7</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Base open-source</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Não reinventar: aproveitar o ecossistema OSS de agentes — <b>adotar</b>, <b>adaptar</b> ou <b>inspirar</b>. Coerente com o open-core e com a soberania da Arah (modelos open-weight self-hostáveis = soberania de IA).</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden; margin-bottom:18px;">
+        <div style="display:grid; grid-template-columns:1fr 1.5fr 0.8fr; gap:14px; padding:13px 20px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; font-weight:600;"><span>Projeto OSS</span><span>Para quê na Arah</span><span>Como usar</span></div>
+        <sc-for list="{{ oss }}" as="o" hint-placeholder-count="9">
+          <div style="display:grid; grid-template-columns:1fr 1.5fr 0.8fr; gap:14px; padding:12px 20px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center;">
+            <code class="mono" style="font-size:0.83rem; font-weight:600; color:#2B6246;">{{ o.name }}</code>
+            <span style="font-size:0.87rem; color:#46584A; line-height:1.45;">{{ o.use }}</span>
+            <span><span style="font-size:11px; font-weight:600; color:{{ o.mColor }}; background:{{ o.mBg }}; padding:4px 10px; border-radius:999px;">{{ o.mode }}</span></span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#0E2117; border-radius:16px; padding:22px 24px; color:#CFE3D6;">
+        <div style="display:flex; align-items:center; gap:9px; margin-bottom:12px;"><span class="msr" style="font-size:20px; color:#A6D6B9;">vpn_lock</span><b style="font-family:'Sora'; font-size:1.02rem; color:#F2F4EE;">Modelos open-weight, self-hostáveis</b></div>
+        <p style="font-size:0.92rem; line-height:1.6; margin:0 0 14px; color:#CFE3D6;">Para código: <b style="color:#F2F4EE;">Qwen2.5-Coder</b>, <b style="color:#F2F4EE;">DeepSeek-Coder</b>, <b style="color:#F2F4EE;">Codestral</b>, <b style="color:#F2F4EE;">Llama 3.x</b>, <b style="color:#F2F4EE;">StarCoder2</b> — servidos por <span class="mono" style="background:rgba(255,255,255,0.08); padding:1px 6px; border-radius:5px;">Ollama</span> ou <span class="mono" style="background:rgba(255,255,255,0.08); padding:1px 6px; border-radius:5px;">vLLM</span>. Isso permite rodar agentes <b style="color:#F2F4EE;">sem que o código/dados do território saiam da infra</b> — o mesmo princípio da instância soberana, agora para a IA.</p>
+        <p style="font-size:0.82rem; color:#9FBBA6; margin:0;">Estratégia híbrida: modelo de fronteira (gerenciado) para tarefas difíceis; open-weight local para o volume e para territórios soberanos.</p>
+      </div>
+    </section>
+
+    <!-- G8 -->
+    <section id="g8" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G8</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Reorganizar os docs</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Sair de <b>505 arquivos numerados em conflito</b> para uma taxonomia semântica com fonte única de verdade — mantida pelo <b>Docs Steward</b>.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+        <div style="background:#fff; border:1px solid rgba(168,99,47,0.18); border-radius:14px; padding:20px 22px;">
+          <div style="font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#A8632F; font-weight:600; margin-bottom:12px;">Antes</div>
+          <div class="mono" style="font-size:0.8rem; color:#7A4A22; line-height:1.9;">docs/00_INDEX.md<br/>docs/24_FLUTTER_FRONTEND_PLAN.md<br/>docs/30_MODERATION.md<br/>docs/30_FLUTTER_TESTING…md<br/>docs/38_…  docs/42_… <span style="color:#A8632F;">(×505)</span></div>
+        </div>
+        <div style="background:#fff; border:1px solid rgba(55,123,87,0.18); border-radius:14px; padding:20px 22px;">
+          <div style="font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#377B57; font-weight:600; margin-bottom:12px;">Depois</div>
+          <div class="mono" style="font-size:0.8rem; color:#2B6246; line-height:1.9;">docs/product/ · architecture/<br/>docs/backend/ · frontend/{flutter,web}/<br/>docs/ops/ · governance/<br/>docs/decisions/ (ADRs)<br/>docs/_archive/ · INDEX.md (gerado)</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <sc-for list="{{ docRules }}" as="d" hint-placeholder-count="4"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.92rem; color:#3A4A3E; line-height:1.55;"><span class="msr" style="font-size:17px; color:#377B57; flex-shrink:0;">check</span><span>{{ d }}</span></div></sc-for>
+      </div>
+    </section>
+
+    <!-- G9 -->
+    <section id="g9" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G9</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Manifests (exemplos)</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Arquivos prontos para versionar no repo — definem agentes, skills, gatilhos e donos. É o esqueleto do handoff.</p>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <sc-for list="{{ manifests }}" as="m" hint-placeholder-count="5">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+            <div style="display:flex; align-items:center; gap:8px; padding:11px 16px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.08);"><span class="msr" style="font-size:17px; color:#377B57;">{{ m.icon }}</span><code class="mono" style="font-size:0.82rem; font-weight:600; color:#0E2117;">{{ m.file }}</code></div>
+            <pre class="mono" style="margin:0; padding:16px 18px; background:#0E2117; color:#CFE3D6; font-size:0.78rem; line-height:1.65; overflow-x:auto; white-space:pre;">{{ m.code }}</pre>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- G10 -->
+    <section id="g10" style="margin-bottom:30px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G10</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Adoção, métricas &amp; handoff</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Adoção gradual — a autonomia cresce com a confiança. Abaixo, as fases, as métricas e a <b>sequência de PRs</b> para o time landar a infraestrutura de agentes.</p>
+
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px;">
+        <sc-for list="{{ phases }}" as="p" hint-placeholder-count="3">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-top:4px solid {{ p.color }}; border-radius:14px; padding:18px 20px;">
+            <b style="font-family:'Sora'; font-size:1rem; color:#0E2117; display:block; margin-bottom:6px;">{{ p.name }}</b>
+            <p style="font-size:0.87rem; color:#46584A; line-height:1.5; margin:0;">{{ p.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;">
+        <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="4"><span style="font-size:0.84rem; color:#2B4A38; background:#F1F8F4; border:1px solid rgba(55,123,87,0.14); padding:6px 12px; border-radius:999px;"><span class="msr" style="font-size:15px; color:#377B57; vertical-align:-2px;">trending_up</span> {{ m }}</span></sc-for>
+      </div>
+
+      <div style="font-family:'Sora'; font-weight:700; font-size:1.15rem; color:#0E2117; margin-bottom:16px;">Handoff — sequência de PRs</div>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <sc-for list="{{ prs }}" as="p" hint-placeholder-count="7">
+          <div style="display:flex; gap:16px; padding-bottom:16px;">
+            <div style="display:flex; flex-direction:column; align-items:center;"><span style="width:48px; height:30px; border-radius:8px; background:#E2F1E8; color:#2B6246; font-family:ui-monospace,monospace; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ p.tag }}</span><span style="width:2px; flex:1; background:rgba(23,53,37,0.10); margin-top:4px;"></span></div>
+            <div style="padding-top:3px;"><b style="font-family:'Sora'; font-size:1rem; color:#0E2117;">{{ p.title }}</b><p style="font-size:0.91rem; color:#46584A; line-height:1.55; margin:4px 0 0;">{{ p.body }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); border-radius:14px; padding:16px 18px; margin-top:14px;">
+        <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">rocket_launch</span>
+        <div style="font-size:0.93rem; line-height:1.55; color:#2B6246;"><b>Depois disso, a implementação das novas funcionalidades</b> (monetização, cockpit, federação — ver Backlog atualizado) já roda <b>operada por agentes</b>: cada épico vira issues, PRs e docs com o humano só no comando e na aprovação.</div>
+      </div>
+    </section>
+
+    <!-- G11 -->
+    <section id="g11" style="margin-bottom:30px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">G11</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Agentes de domínio &amp; especialistas</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Os 9 agentes de fluxo (G3) <b>entregam</b>. Estas duas camadas garantem <b>profundidade</b>: agentes de domínio enriquecem e validam a regra de negócio; especialistas de ferramenta dão a consultoria técnica. São <b>consultados</b> pelo Orquestrador/QA e pelos agentes de código — não abrem PR sozinhos.</p>
+
+      <div style="display:flex; align-items:center; gap:9px; margin:0 0 14px;"><span class="msr" style="font-size:20px; color:#377B57;">workspaces</span><b style="font-family:'Sora'; font-size:1.1rem; color:#0E2117;">Agentes de domínio — enriquecer &amp; validar</b></div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:30px;">
+        <sc-for list="{{ domainAgents }}" as="d" hint-placeholder-count="7">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:16px 20px; display:grid; grid-template-columns:0.85fr 1.1fr 1.1fr; gap:14px; align-items:center;">
+            <div style="display:flex; align-items:center; gap:10px;"><span class="msr" style="font-size:20px; color:#377B57;">{{ d.icon }}</span><b style="font-family:'Sora'; font-size:0.98rem; color:#0E2117;">{{ d.name }}</b></div>
+            <div><div style="font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#9FB0A2; font-weight:600; margin-bottom:3px;">Enriquece</div><div style="font-size:0.86rem; color:#46584A; line-height:1.45;">{{ d.enrich }}</div></div>
+            <div><div style="font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#9FB0A2; font-weight:600; margin-bottom:3px;">Valida</div><div style="font-size:0.86rem; color:#46584A; line-height:1.45;">{{ d.validate }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:9px; margin:0 0 14px;"><span class="msr" style="font-size:20px; color:#2A6FDB;">handyman</span><b style="font-family:'Sora'; font-size:1.1rem; color:#0E2117;">Especialistas de ferramenta — consultoria técnica</b></div>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:0.9fr 1.8fr; gap:14px; padding:12px 20px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; font-weight:600;"><span>Especialista</span><span>Foco (do stack real do repo)</span></div>
+        <sc-for list="{{ toolSpecialists }}" as="t" hint-placeholder-count="8">
+          <div style="display:grid; grid-template-columns:0.9fr 1.8fr; gap:14px; padding:11px 20px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center;">
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:0.9rem; font-weight:600; color:#16271D;"><span class="msr" style="font-size:18px; color:#2A6FDB;">{{ t.icon }}</span>{{ t.name }}</span>
+            <span style="font-size:0.86rem; color:#46584A; line-height:1.45;">{{ t.focus }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); border-radius:14px; padding:16px 18px; margin-top:18px;">
+        <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">lightbulb</span>
+        <div style="font-size:0.93rem; line-height:1.55; color:#2B6246;">Na prática: o QA agent aciona o <b>agente de domínio</b> para um <b>gate de regra de negócio</b> no PR; o agente de código aciona o <b>especialista</b> quando o problema é técnico-profundo. Ambos viram <span class="mono">skills</span> consultivas e front-matter de validação — sem inflar o número de agentes que abrem PR.</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      stats: [
+        { value: '505', label: 'arquivos .md em docs/ hoje', color: '#A8632F' },
+        { value: '3', label: 'camadas: fluxo · domínio · ferramenta', color: '#377B57' },
+        { value: '11', label: 'skills componíveis', color: '#377B57' },
+        { value: 'humano', label: 'sempre no merge', color: '#2A6FDB' },
+      ],
+      repoIs: [
+        "Monorepo: backend .NET 8 (Arah.Api + Arah.Api.Bff), app Flutter, 3 web Next (wiki/portal/devportal).",
+        "Já tem AGENTS.md, .cursorrules (58 KB) e CI em .github/workflows.",
+        "CONTRIBUTING, SECURITY, CODE_OF_CONDUCT e licença dupla (pt-BR).",
+        "Cursor Cloud com toolchains pré-instaladas (VM snapshot).",
+        "docs/ rica: visão, roadmap, backlog, ADRs, planos Flutter, jornadas.",
+      ],
+      painPoints: [
+        "docs/ com 505 arquivos e numeração em conflito — difícil achar a fonte de verdade.",
+        "Doc-sync manual em todo PR (tratado como bug) — custoso e fácil de esquecer.",
+        "Trabalho item a item: humano roteia, implementa e documenta cada coisa.",
+        "Regras críticas (BFF journey registry, gen-l10n, JWT) escondidas em prosa.",
+        "Conhecimento espalhado entre .cursorrules, AGENTS.md e dezenas de mds.",
+      ],
+      domainAgents: [
+        { icon:'forest', name:'Território & Membership', enrich:'Sugere regras território-primeiro e casos de papel (visitante/morador/curador).', validate:'Escopo por territoryId e visibilidade imposta no servidor.' },
+        { icon:'eco', name:'Feed & Conteúdo', enrich:'Tipos de post, visibilidade, moderação e antiabuso.', validate:'Regras de visibilidade public/residents e fila de moderação.' },
+        { icon:'storefront', name:'Mercado & Economia', enrich:'Fluxos de loja, compra coletiva, hospedagem, trocas e entregas.', validate:'Estados de pedido, idempotência e regras de comércio local.' },
+        { icon:'paid', name:'Monetização & Split', enrich:'Camadas de receita, planos e ganchos de cobrança.', validate:'Taxa, split por regra vigente e payouts (Adendo A6).' },
+        { icon:'how_to_vote', name:'Governança & Transparência', enrich:'Propostas, quórum e prestação de contas.', validate:'Taxas votadas pelo conselho e painel público correto.' },
+        { icon:'account_balance_wallet', name:'Carteira Aratá', enrich:'Modelo de ledger, conciliação e estornos.', validate:'Idempotência, conformidade financeira e auditoria do saldo.' },
+        { icon:'map', name:'Mapa & Lugares', enrich:'Entidades, pins e curadoria geográfica.', validate:'Pins confirmados pela curadoria e fronteira do território.' },
+      ],
+      toolSpecialists: [
+        { icon:'api', name:'.NET / EF Core', focus:'Arah.Api, módulos DDD, persistência (InMemory/Postgres), JWT signing key.' },
+        { icon:'alt_route', name:'BFF', focus:'BffJourneyRegistry (constante, paths, cache), rotas /bff/journeys e /api/v2.' },
+        { icon:'smartphone', name:'Flutter / Dart', focus:'arah.app, flutter_map 8.x (onTap), gen-l10n + cópia para lib/l10n.' },
+        { icon:'language', name:'Next.js / Web', focus:'wiki (base /wiki, porta 3001), portal, devportal; type-check e jest (next lint quebrado).' },
+        { icon:'settings_suggest', name:'IaC / Terraform·Helm', focus:'Provisionar instâncias, ambientes e gates (Plano Operacional).' },
+        { icon:'database', name:'PostgreSQL / dados', focus:'Migrações, índices, réplica e seeds canônicos de território.' },
+        { icon:'play_circle', name:'GitHub Actions / CI', focus:'ci.yml, workflows dos agentes, secrets via OIDC.' },
+        { icon:'monitoring', name:'Observabilidade & LGPD', focus:'Prometheus/Grafana/Sentry, /health, privacidade e dados sensíveis.' },
+      ],
+      manifests: [
+        { icon:'smart_toy', file:'.agents/backend.agent.yaml', code:"id: backend\ndescription: Implementa features na API .NET e no BFF\ntriggers: [ issue:label=area/backend, orchestrator ]\nscope:\n  paths: [ backend/Arah.Api/**, backend/Arah.Api.Bff/** ]\n  commands: [ dotnet build, dotnet test ]\nskills: [ run-tests, register-bff-journey, sync-docs, open-pr ]\nmodel:\n  primary: frontier\n  fallback: qwen2.5-coder@ollama   # soberano\nguardrails: { no_merge: true, require_ci: true, max_diff_files: 40 }" },
+        { icon:'bolt', file:'.skills/run-tests.skill.yaml', code:"id: run-tests\ndescription: Roda a suite de testes da area alterada\ninputs: { area: enum[backend, bff, flutter, web] }\nrun:\n  backend: dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj\n  flutter: flutter test\n  web: npm test\nsuccess: exit_code == 0\non_fail: comment_pr + return_to_agent" },
+        { icon:'play_circle', file:'.github/workflows/agents.yml', code:"name: agents\non:\n  issues: { types: [labeled] }\n  pull_request: { types: [opened, synchronize] }\njobs:\n  orchestrate:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: arah-agents orchestrate --event \"$GITHUB_EVENT_NAME\"\n        env: { LLM_KEY: ${{ secrets.LLM_KEY }} }" },
+        { icon:'description', file:'docs/**/*.md (front-matter)', code:"---\ntitle: Carteira Arata & Split\nowner: backend\nstatus: active\nupdated: 2026-06-30\nsource_of_truth: true\n---" },
+        { icon:'shield_person', file:'CODEOWNERS', code:"backend/             @arah/backend-agent @arah/maintainers\nfrontend/arah.app/   @arah/flutter-agent\nfrontend/wiki/       @arah/web-agent\ndocs/                @arah/docs-steward" },
+      ],
+      phases: [
+        { name:'1 · Assistido', color:'#86AEEA', body:'Agente sugere; humano edita e commita. Confiança e calibração das skills.' },
+        { name:'2 · Copiloto', color:'#E8A06A', body:'Agente abre PRs completos; humano revisa e dá merge. CI + QA agent ativos.' },
+        { name:'3 · Autônomo c/ gate', color:'#377B57', body:'Agente roda o fluxo fim-a-fim; humano só aprova o merge. Escopos ampliados por confiança.' },
+      ],
+      metrics: [
+        'Lead time issue → PR', '% de PRs abertos por agente', 'Doc-freshness (0 docs órfãos)', 'Cobertura de testes', 'Retrabalho pós-review',
+      ],
+      prs: [
+        { tag:'PR 1', title:'Esqueleto de agentes & skills', body:'.agents/, .skills/, manifests base, CODEOWNERS e issue/PR templates.' },
+        { tag:'PR 2', title:'Orquestrador & gatilhos', body:'.github/workflows/agents.yml + CLI arah-agents (roteamento por label/área).' },
+        { tag:'PR 3', title:'Docs Steward & taxonomia', body:'Migra docs/ para a estrutura semântica, gera INDEX, move legado p/ _archive.' },
+        { tag:'PR 4', title:'Skills núcleo', body:'run-tests, open-pr e sync-docs — as mais usadas, com guardrails.' },
+        { tag:'PR 5', title:'Agentes de código', body:'Backend, Flutter e Web com escopo + register-bff-journey e gen-l10n.' },
+        { tag:'PR 6', title:'QA, Security & Release', body:'Review checklist, dep-audit, release-cut e os gates de merge.' },
+        { tag:'PR 7', title:'Piloto assistido', body:'Rodar um épico real (ex.: billing) ponta a ponta e medir as métricas.' },
+      ],
+      oss: [
+        { name:'Aider', use:'Pair-programmer git-aware: edita, roda testes e commita. Núcleo dos agentes de código.', mode:'adotar', mColor:'#377B57', mBg:'#EAF5EE' },
+        { name:'SWE-agent', use:'Loop issue → patch → PR (referência SWE-bench). Modelo do Backend Agent.', mode:'inspirar', mColor:'#A8632F', mBg:'#FBF0E6' },
+        { name:'OpenHands', use:'Agente dev autônomo end-to-end. Referência de loop e sandbox.', mode:'inspirar', mColor:'#A8632F', mBg:'#FBF0E6' },
+        { name:'CrewAI', use:'Orquestração multi-agente por papéis — encaixa no Orquestrador + "crew".', mode:'adotar', mColor:'#377B57', mBg:'#EAF5EE' },
+        { name:'LangGraph', use:'Grafos de estado para fluxos com gate humano e retomada.', mode:'adaptar', mColor:'#2A6FDB', mBg:'#EAF0FB' },
+        { name:'Semantic Kernel', use:'Orquestração nativa em .NET — combina com o backend .NET 8.', mode:'adotar', mColor:'#377B57', mBg:'#EAF5EE' },
+        { name:'MCP', use:'Padrão aberto para expor repo, skills e ferramentas como contexto/tools.', mode:'adotar', mColor:'#377B57', mBg:'#EAF5EE' },
+        { name:'Continue.dev', use:'Agente OSS no IDE para os desenvolvedores humanos.', mode:'adotar', mColor:'#377B57', mBg:'#EAF5EE' },
+        { name:'Probot / Actions', use:'Bots e automação no GitHub — gatilhos e checks dos agentes.', mode:'adotar', mColor:'#377B57', mBg:'#EAF5EE' },
+      ],
+      docRules: [
+        "Uma fonte de verdade por tema; o resto vira link ou vai para _archive/.",
+        "Front-matter obrigatório: title, owner, status, updated, source-of-truth.",
+        "Nomes em kebab-case semântico — sem prefixos numéricos que colidem.",
+        "INDEX.md e mapa de cobertura gerados automaticamente pelo Docs Steward.",
+      ],
+      flow: [
+        { icon:'flag', label:'Intenção (humano)', fg:'#214D37', bg:'#E2F1E8', bd:'rgba(55,123,87,0.2)' },
+        { icon:'hub', label:'Orquestrador', fg:'#2B6246', bg:'#F1F8F4', bd:'rgba(55,123,87,0.15)' },
+        { icon:'smart_toy', label:'Agente + skills', fg:'#2B6246', bg:'#F1F8F4', bd:'rgba(55,123,87,0.15)' },
+        { icon:'merge', label:'Abre PR', fg:'#2B6246', bg:'#F1F8F4', bd:'rgba(55,123,87,0.15)' },
+        { icon:'verified', label:'CI + QA agent', fg:'#2B6246', bg:'#F1F8F4', bd:'rgba(55,123,87,0.15)' },
+        { icon:'how_to_reg', label:'Aprovação (humano)', fg:'#A8632F', bg:'#FBF0E6', bd:'rgba(168,99,47,0.2)' },
+        { icon:'rocket_launch', label:'Merge → pipeline', fg:'#214D37', bg:'#E2F1E8', bd:'rgba(55,123,87,0.2)' },
+      ],
+      plumbing: [
+        { file:'AGENTS.md', role:'Vira o manual dos agentes: gotchas viram skills versionadas, não prosa.' },
+        { file:'.cursorrules', role:'Regras de execução do Cursor; fonte das políticas que os agentes herdam.' },
+        { file:'.github/workflows', role:'CI + workflows que disparam e validam os agentes (eventos, schedule).' },
+        { file:'CODEOWNERS', role:'Mapeia áreas → agente/dono; o Orquestrador roteia por aqui.' },
+        { file:'issue/PR templates', role:'Estrutura a intenção de entrada e a prestação de contas do agente.' },
+      ],
+      guardrails: [
+        { icon:'how_to_reg', title:'Gate humano no merge', body:'Agentes propõem PRs; merge para main/produção exige aprovação humana. Sem exceção em produção.' },
+        { icon:'lock', title:'Permissões mínimas', body:'Cada agente recebe escopo de paths, comandos e ambientes. Segredos via OIDC/Secrets, nunca no prompt.' },
+        { icon:'fact_check', title:'CI como porteiro', body:'Nada avança sem build verde, testes e checks do QA agent. Falhou, o PR volta ao agente.' },
+        { icon:'history', title:'Auditoria por PR', body:'Cada agente registra plano, ações e justificativa no PR — trilha completa e reversível.' },
+        { icon:'savings', title:'Orçamento & limites', body:'Tetos de tokens/tempo por tarefa; tarefas grandes são fatiadas pelo Orquestrador.' },
+        { icon:'undo', title:'Reversível por padrão', body:'Tudo é PR atômico com rollback trivial; mudanças de risco exigem feature flag.' },
+      ],
+      agents: [
+        { name: 'Orquestrador', area: 'Coordenação', icon: 'hub', color: '#214D37', tint: '#E2F1E8', trigger: 'Issue/PR aberto · label', scope: 'Roteia, não coda', output: 'Plano + atribui agentes' },
+        { name: 'Planner (Backlog Steward)', area: 'Produto', icon: 'checklist', color: '#377B57', tint: '#E2F1E8', trigger: 'Descoberta · agenda', scope: 'docs/03_BACKLOG · STATUS_FASES', output: 'Issues & épicos priorizados' },
+        { name: 'Docs Steward', area: 'Documentação', icon: 'description', color: '#377B57', tint: '#E2F1E8', trigger: 'Merge · agenda', scope: 'docs/ · README · CHANGELOG', output: 'Doc-sync, taxonomia, índice' },
+        { name: 'Backend Agent', area: '.NET API + BFF', icon: 'api', color: '#2B6246', tint: '#E2F1E8', trigger: 'Issue de API/BFF', scope: 'backend/Arah.Api(.Bff)', output: 'PR + testes + BFF journey' },
+        { name: 'Flutter Agent', area: 'App mobile', icon: 'smartphone', color: '#2A6FDB', tint: '#E5EEFB', trigger: 'Issue de app', scope: 'frontend/arah.app', output: 'PR + analyze + gen-l10n' },
+        { name: 'Web Agent', area: 'Wiki · Portal · Devportal', icon: 'language', color: '#2A6FDB', tint: '#E5EEFB', trigger: 'Issue web', scope: 'frontend/{wiki,portal,devportal}', output: 'PR + type-check + jest' },
+        { name: 'Review / QA Agent', area: 'Qualidade', icon: 'rule', color: '#A8632F', tint: '#F8EFD7', trigger: 'PR aberto', scope: 'Todos os PRs', output: 'Checklist, coesão, testes' },
+        { name: 'Release / DevOps Agent', area: 'Entrega', icon: 'rocket_launch', color: '#A8632F', tint: '#F8EFD7', trigger: 'Merge na main · tag', scope: '.github · infra · versões', output: 'Changelog, build, deploy' },
+        { name: 'Security / Compliance Agent', area: 'Segurança & LGPD', icon: 'security', color: '#5A4FB5', tint: '#ECE9FA', trigger: 'PR · agenda', scope: 'deps · secrets · SECURITY.md', output: 'Scan, alertas, conformidade' },
+      ],
+      skills: [
+        { name: 'run-tests', what: 'Roda a suíte certa por área: dotnet test, flutter test, jest.', by: 'Backend, Flutter, Web, QA' },
+        { name: 'open-pr', what: 'Cria branch e PR com descrição estruturada e checklist.', by: 'Todos' },
+        { name: 'sync-docs', what: 'Atualiza README, CHANGELOG, FEATURE_MATRIX e STATUS_FASES no mesmo PR.', by: 'Docs, Backend, Flutter' },
+        { name: 'backlog-to-issue', what: 'Converte item do backlog/descoberta em issue ou épico com critérios de aceite.', by: 'Planner' },
+        { name: 'register-bff-journey', what: 'Adiciona journey ao BffJourneyRegistry (constante, paths, cache).', by: 'Backend' },
+        { name: 'gen-l10n', what: 'flutter gen-l10n e copia os arquivos gerados para lib/l10n.', by: 'Flutter' },
+        { name: 'code-review', what: 'Aplica o checklist de 21_CODE_REVIEW e 22_COHESION ao diff.', by: 'QA' },
+        { name: 'release-cut', what: 'Versão semântica, changelog, tag e notas de release.', by: 'Release' },
+        { name: 'dep-audit', what: 'Varre dependências, segredos vazados e CVEs.', by: 'Security' },
+        { name: 'doc-taxonomy', what: 'Renomeia/organiza .md na taxonomia e regenera o índice.', by: 'Docs' },
+        { name: 'iac-plan', what: 'terraform plan / valida Helm (dry-run) ligado ao Plano Operacional.', by: 'Release / DevOps' },
+      ],
+      principles: [
+        { icon: 'flag', title: 'Humano comanda, agente executa', body: 'O humano define intenção e aprova; agentes propõem mudanças — nunca decidem sozinhos o que vai para produção.' },
+        { icon: 'merge', title: 'Tudo via Pull Request', body: 'Toda ação de agente vira um PR rastreável, com CI verde e revisão antes do merge. Nada de commit direto na main.' },
+        { icon: 'visibility', title: 'Transparência & auditoria', body: 'Cada agente registra no PR o que fez e por quê — coerente com o valor de transparência da própria plataforma.' },
+        { icon: 'shield', title: 'Guardrails por escopo', body: 'Cada agente só pode mexer na sua área (paths, comandos, ambientes). Permissões mínimas, segredos fora do alcance.' },
+        { icon: 'description', title: 'Doc como código', body: 'Documentação vive junto do código, com dono e validade; o agente de docs a mantém — fim do doc-sync manual.' },
+        { icon: 'forest', title: 'Território-primeiro, também no código', body: 'A mesma ética do produto: clareza, autonomia local e o mínimo de acoplamento — agentes pequenos e especializados.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

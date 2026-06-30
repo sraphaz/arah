@@ -46,3 +46,19 @@ startup update script refreshes dependencies. Standard build/test/run commands l
 ### Flutter app — `frontend/arah.app`
 - `flutter pub get`, then `flutter analyze --no-fatal-infos` (CI tolerates info-level lints) and
   `flutter test`. It talks only to the **BFF**, not the API directly (`--dart-define=BFF_BASE_URL=...`).
+- l10n: arb files in `lib/l10n/app_pt.arb` (template) + `app_en.arb`. `flutter gen-l10n` writes to the
+  synthetic package (`.dart_tool/flutter_gen/gen_l10n/`), but the app imports the **committed**
+  `lib/l10n/app_localizations*.dart`. After editing arb files, run `flutter gen-l10n` then copy the 3
+  generated files from `.dart_tool/flutter_gen/gen_l10n/` over `lib/l10n/`.
+- `flutter_map` 8.x markers: a `GestureDetector` inside a `Marker` child does **not** fire reliably on
+  web. Handle taps via `MapOptions.onTap` + nearest-pin matching (see `map_screen.dart`).
+- New app journeys must be registered in the BFF `BffJourneyRegistry` (constant + `JourneyToApiPathBase`
+  + `AllEndpoints` + `CacheableGetEndpoints` + `AllPathPrefixes`), or BFF tests/`/bff/journeys` break.
+
+### Keep docs in sync with every delivery (important)
+When shipping a feature (app/BFF/API), update the relevant docs **in the same PR**:
+- `README.md` (phase/status + "App (Flutter) — Entregas Recentes"), `docs/CHANGELOG.md`,
+  `docs/STABLE_RELEASE_APP_ONBOARDING.md` (app implemented + próximos passos),
+  `docs/FEATURE_MATRIX_API_BFF_APP.md` (API/BFF/App columns), and the phase docs under
+  `docs/backlog-api/` + `docs/STATUS_FASES.md` when a backlog phase status changes.
+Treat "documentação desatualizada" as a bug (see `.cursorrules`).

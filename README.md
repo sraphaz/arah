@@ -334,6 +334,19 @@ O Arah está em **desenvolvimento ativo** com **16 fases completas** (Fases 1-16
 
 ---
 
+### 📱 App (Flutter) — Entregas Recentes
+
+O app consome o backend via **BFF** (jornadas `/api/v2/journeys/*`). Entregas recentes que expõem capacidades já existentes no backend:
+
+- ✅ **Login com Google na UI** — botão "Entrar com Google" no fluxo de login (requer `GOOGLE_SIGN_IN_CLIENT_ID` + config Firebase para E2E).
+- ✅ **Criação de eventos** — formulário com data/hora e local (jornada `events/create-event`).
+- ✅ **Governança/Votações** — listar, votar, ver resultados e criar votações (jornada `governance`, expõe a Fase 14).
+- ✅ **Deep-links no mapa** — tocar num pin abre detalhes e navega para evento/asset/alerta/feed.
+
+Detalhes e o que falta no app: [Release estável – App e Onboarding](./docs/STABLE_RELEASE_APP_ONBOARDING.md) · [Matriz API/BFF/App](./docs/FEATURE_MATRIX_API_BFF_APP.md).
+
+---
+
 ### 🔒 Segurança e Confiabilidade (Cross-Phase)
 
 - ✅ JWT com secret de 32+ caracteres via variáveis de ambiente
@@ -471,9 +484,9 @@ Ver documentação completa: [`docs/ENTERPRISE_COVERAGE_PHASES_7_8_9_STATUS.md`]
 1. **Fase 17**: Compra Coletiva (P0 Crítico) - Organização de compras coletivas, agrupamento de pedidos
 2. **Fase 18**: Hospedagem Territorial (P0 Crítico) - Sistema de hospedagem, agenda, aprovação
 3. **Fase 19**: Demandas e Ofertas (P0 Crítico) - Moradores cadastram demandas, outros fazem ofertas
-4. **Frontend**: Começar desenvolvimento da interface (Vue/React)
+4. **App (Flutter)**: provisionar config do Google Sign-In (OAuth/Firebase); push/FCM; tela de detalhe de post; upload de avatar
 5. **Testes**: Validar cobertura de 90%+ (2171+ testes passando)
-6. **Documentação**: Manter wiki sincronizado com código
+6. **Documentação**: Manter wiki, README e docs de fases sincronizados com cada entrega (app/BFF/API)
 7. **Admin Dashboard**: Ferramentas de observabilidade para moderadores
 8. **Escalabilidade**: Preparar para múltiplos territórios/usuários em produção
 

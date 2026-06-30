@@ -927,4 +927,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventEndBeforeStart => 'End must be after start.';
+
+  @override
+  String get close => 'Close';
 }

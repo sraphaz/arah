@@ -354,5 +354,6 @@
   "eventCreated": "Event created.",
   "errorCreateEvent": "Error creating event.",
   "eventStartRequired": "Set the start date and time.",
-  "eventEndBeforeStart": "End must be after start."
+  "eventEndBeforeStart": "End must be after start.",
+  "close": "Close"
 }

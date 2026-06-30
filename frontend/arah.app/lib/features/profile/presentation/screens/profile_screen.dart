@@ -4,12 +4,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/providers/main_shell_tab_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_brand_header.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/me_profile.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
+import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/me_profile_provider.dart';
 import '../../../../core/widgets/profile_skeleton.dart';
 import '../widgets/interests_sheet.dart';
@@ -67,6 +69,9 @@ class ProfileScreen extends ConsumerWidget {
         data: (profile) => _ProfileBody(
           profile: profile,
           onEditTap: () => _showEditProfileSheet(context, ref, profile),
+          onMyTerritory: () => TerritoryIndicatorBar.showTerritorySelectorSheet(context),
+          onNotifications: () =>
+              ref.read(mainShellTabProvider.notifier).state = 3,
           onLogout: () async {
             await ref.read(authStateProvider.notifier).logout();
             if (context.mounted) context.go('/login');
@@ -172,6 +177,14 @@ class ProfileScreen extends ConsumerWidget {
               onTap: () {
                 Navigator.of(ctx).pop();
                 context.push('/alerts');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.how_to_vote_outlined),
+              title: Text(l10n.governance),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/governance');
               },
             ),
             ListTile(
@@ -330,11 +343,15 @@ class _ProfileBody extends StatelessWidget {
   const _ProfileBody({
     required this.profile,
     required this.onEditTap,
+    required this.onMyTerritory,
+    required this.onNotifications,
     required this.onLogout,
   });
 
   final MeProfile profile;
   final VoidCallback onEditTap;
+  final VoidCallback onMyTerritory;
+  final VoidCallback onNotifications;
   final VoidCallback onLogout;
 
   @override
@@ -399,12 +416,14 @@ class _ProfileBody extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.terrain_outlined),
             title: Text(l10n.myTerritory),
-            onTap: () {},
+            trailing: const Icon(Icons.chevron_right),
+            onTap: onMyTerritory,
           ),
           ListTile(
             leading: const Icon(Icons.notifications_outlined),
             title: Text(l10n.notifications),
-            onTap: () {},
+            trailing: const Icon(Icons.chevron_right),
+            onTap: onNotifications,
           ),
           const Divider(),
           ListTile(

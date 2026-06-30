@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/config/constants.dart';
@@ -23,20 +24,35 @@ class FeedPostCard extends StatelessWidget {
     this.content,
     this.authorInitial,
     this.type = FeedPostType.general,
+    this.likeCount = 0,
+    this.commentCount = 0,
+    this.shareCount = 0,
+    this.isLiked = false,
+    this.isShared = false,
+    this.mediaUrls = const [],
     this.onMorePressed,
     this.onLikePressed,
     this.onCommentPressed,
     this.onSharePressed,
+    this.onTap,
   });
 
   final String title;
   final String? content;
   final String? authorInitial;
   final FeedPostType type;
+  final int likeCount;
+  final int commentCount;
+  final int shareCount;
+  final bool isLiked;
+  final bool isShared;
+  final List<String> mediaUrls;
   final VoidCallback? onMorePressed;
   final VoidCallback? onLikePressed;
   final VoidCallback? onCommentPressed;
   final VoidCallback? onSharePressed;
+  /// Toque no corpo do card (abre o detalhe do post). Botões de interação têm precedência.
+  final VoidCallback? onTap;
 
   static Color _colorForType(FeedPostType t) {
     switch (t) {
@@ -47,7 +63,6 @@ class FeedPostCard extends StatelessWidget {
       case FeedPostType.tip:
         return AppDesignTokens.feedTypeTip;
       case FeedPostType.general:
-      default:
         return AppDesignTokens.feedTypeGeneral;
     }
   }
@@ -61,7 +76,6 @@ class FeedPostCard extends StatelessWidget {
       case FeedPostType.tip:
         return Icons.lightbulb_outline_rounded;
       case FeedPostType.general:
-      default:
         return Icons.article_outlined;
     }
   }
@@ -102,7 +116,9 @@ class FeedPostCard extends StatelessWidget {
               color: typeColor,
             ),
             Expanded(
-              child: Padding(
+              child: InkWell(
+                onTap: onTap,
+                child: Padding(
                 padding: AppDesignTokens.cardPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +132,7 @@ class FeedPostCard extends StatelessWidget {
                             (authorInitial ?? (title.isNotEmpty ? title[0] : '?')).toUpperCase(),
                             style: TextStyle(
                               color: theme.colorScheme.onPrimaryContainer,
-                              fontSize: AppDesignTokens.fontSizeBodySmall,
+                              fontSize: AppDesignTokens.fontSizeXs,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -155,39 +171,96 @@ class FeedPostCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
+                    if (mediaUrls.isNotEmpty) ...[
+                      const SizedBox(height: AppConstants.spacingSm),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                        child: CachedNetworkImage(
+                          imageUrl: mediaUrls.first,
+                          height: 180,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Container(
+                            height: 180,
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          ),
+                          errorWidget: (_, __, ___) => Container(
+                            height: 120,
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            child: const Center(child: Icon(Icons.broken_image_outlined)),
+                          ),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: AppConstants.spacingSm),
                     Row(
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.favorite_border),
+                        _InteractionButton(
+                          icon: isLiked ? Icons.favorite : Icons.favorite_border,
+                          count: likeCount,
+                          color: isLiked ? theme.colorScheme.primary : null,
                           onPressed: onLikePressed,
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size(36, 36),
-                            padding: EdgeInsets.zero,
-                          ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.chat_bubble_outline),
+                        _InteractionButton(
+                          icon: Icons.chat_bubble_outline,
+                          count: commentCount,
                           onPressed: onCommentPressed,
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size(36, 36),
-                            padding: EdgeInsets.zero,
-                          ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.send_outlined),
+                        _InteractionButton(
+                          icon: isShared ? Icons.send : Icons.send_outlined,
+                          count: shareCount,
+                          color: isShared ? theme.colorScheme.primary : null,
                           onPressed: onSharePressed,
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size(36, 36),
-                            padding: EdgeInsets.zero,
-                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
+                ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InteractionButton extends StatelessWidget {
+  const _InteractionButton({
+    required this.icon,
+    required this.count,
+    this.color,
+    this.onPressed,
+  });
+
+  final IconData icon;
+  final int count;
+  final Color? color;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingXs),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 20, color: color),
+            if (count > 0) ...[
+              const SizedBox(width: 4),
+              Text(
+                count.toString(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: color ?? theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ],
         ),
       ),

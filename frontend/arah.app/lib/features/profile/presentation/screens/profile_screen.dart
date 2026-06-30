@@ -4,11 +4,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/providers/main_shell_tab_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_brand_header.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/me_profile.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
+import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../providers/me_profile_provider.dart';
+import '../../../../core/widgets/profile_skeleton.dart';
 import '../widgets/interests_sheet.dart';
 import '../widgets/preferences_sheet.dart';
 
@@ -18,37 +23,27 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authStateProvider);
     final session = auth.valueOrNull;
 
     if (session == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text(AppLocalizations.of(context)!.profile)),
+      return ArahScaffold(
+        appBar: AppBar(title: Text(l10n.profile)),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(AppConstants.spacingLg),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Ará',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: AppConstants.spacingMd),
-                Text(
-                  'Entre na sua conta para acessar perfil, publicar e notificações.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                ArahBrandHeader(
+                  subtitle: l10n.enterToAccess,
+                  size: ArahBrandHeaderSize.medium,
                 ),
                 const SizedBox(height: AppConstants.spacingLg),
                 FilledButton(
                   onPressed: () => context.push('/login'),
-                  child: Text(AppLocalizations.of(context)!.login),
+                  child: Text(l10n.login),
                 ),
               ],
             ),
@@ -60,9 +55,9 @@ class ProfileScreen extends ConsumerWidget {
     final profileAsync = ref.watch(meProfileProvider);
     final authUser = session.user;
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.profile),
+        title: Text(l10n.profile),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -74,6 +69,9 @@ class ProfileScreen extends ConsumerWidget {
         data: (profile) => _ProfileBody(
           profile: profile,
           onEditTap: () => _showEditProfileSheet(context, ref, profile),
+          onMyTerritory: () => TerritoryIndicatorBar.showTerritorySelectorSheet(context),
+          onNotifications: () =>
+              ref.read(mainShellTabProvider.notifier).state = 3,
           onLogout: () async {
             await ref.read(authStateProvider.notifier).logout();
             if (context.mounted) context.go('/login');
@@ -100,7 +98,7 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 const SizedBox(height: AppConstants.spacingLg),
               ],
-              const CircularProgressIndicator(),
+              const ProfileSkeleton(),
             ],
           ),
         ),
@@ -113,14 +111,14 @@ class ProfileScreen extends ConsumerWidget {
                 Icon(Icons.error_outline, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: AppConstants.spacingMd),
                 Text(
-                  err is ApiException ? err.userMessage : AppLocalizations.of(context)!.errorLoad,
+                  err is ApiException ? err.userMessage : l10n.errorLoad,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: AppConstants.spacingMd),
                 FilledButton.tonal(
                   onPressed: () => ref.invalidate(meProfileProvider),
-                  child: Text(AppLocalizations.of(context)!.tryAgain),
+                  child: Text(l10n.tryAgain),
                 ),
               ],
             ),
@@ -131,6 +129,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   void _showSettingsSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -140,6 +139,78 @@ class ProfileScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            ListTile(
+              leading: const Icon(Icons.people_outline),
+              title: Text(l10n.connections),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/connections');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.home_work_outlined),
+              title: Text(l10n.membership),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/membership');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.storefront_outlined),
+              title: Text(l10n.marketplace),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/marketplace');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.chat_outlined),
+              title: Text(l10n.chat),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/chat');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.warning_amber_outlined),
+              title: Text(l10n.alertsTitle),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/alerts');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.how_to_vote_outlined),
+              title: Text(l10n.governance),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/governance');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.gavel_outlined),
+              title: Text(l10n.moderation),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/moderation');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.inventory_2_outlined),
+              title: Text(l10n.assetsTitle),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/assets');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.card_membership_outlined),
+              title: Text(l10n.subscriptions),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                context.push('/subscriptions');
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.interests),
               title: Text(AppLocalizations.of(ctx)!.myInterests),
@@ -272,11 +343,15 @@ class _ProfileBody extends StatelessWidget {
   const _ProfileBody({
     required this.profile,
     required this.onEditTap,
+    required this.onMyTerritory,
+    required this.onNotifications,
     required this.onLogout,
   });
 
   final MeProfile profile;
   final VoidCallback onEditTap;
+  final VoidCallback onMyTerritory;
+  final VoidCallback onNotifications;
   final VoidCallback onLogout;
 
   @override
@@ -341,12 +416,14 @@ class _ProfileBody extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.terrain_outlined),
             title: Text(l10n.myTerritory),
-            onTap: () {},
+            trailing: const Icon(Icons.chevron_right),
+            onTap: onMyTerritory,
           ),
           ListTile(
             leading: const Icon(Icons.notifications_outlined),
             title: Text(l10n.notifications),
-            onTap: () {},
+            trailing: const Icon(Icons.chevron_right),
+            onTap: onNotifications,
           ),
           const Divider(),
           ListTile(

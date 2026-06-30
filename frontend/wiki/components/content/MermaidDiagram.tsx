@@ -117,7 +117,7 @@ export function MermaidDiagram({ code, id }: MermaidDiagramProps) {
               `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
             );
           }}
-          className="absolute top-2 right-2 bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded-lg px-3 py-2 text-sm font-semibold shadow-lg transition-all opacity-0 group-hover:opacity-100 z-10 flex items-center gap-2"
+          className="absolute top-2 right-2 bg-dark-accent hover:bg-dark-accent-hover text-forest-950 rounded-lg px-3 py-2 text-sm font-semibold shadow-lg transition-all opacity-0 group-hover:opacity-100 z-10 flex items-center gap-2"
           aria-label="Abrir em tela cheia em nova janela"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

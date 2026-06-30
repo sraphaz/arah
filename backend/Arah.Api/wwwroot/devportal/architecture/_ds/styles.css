@@ -1,0 +1,10 @@
+/* ============================================================================
+   ARAH DESIGN SYSTEM — root stylesheet
+   Single entry point for consumers: import this and you get all tokens,
+   @font-face declarations, and the semantic type defaults.
+   ----------------------------------------------------------------------------
+   The site (site/site.css) and wiki (wiki/wiki.css) are self-contained page
+   stylesheets that restate the tokens they need locally; this file is the
+   canonical token + foundation source.
+   ============================================================================ */
+@import "colors_and_type.css";

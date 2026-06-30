@@ -70,7 +70,7 @@ public sealed class OnboardingJourneyService : IOnboardingJourneyService
                 post.Tags?.Count > 0 ? post.Tags : null,
                 postCounts.LikeCount,
                 postCounts.ShareCount,
-                0,
+                postCounts.CommentCount,
                 null));
         }
 

@@ -5,10 +5,12 @@ import 'package:intl/intl.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../data/models/event_item.dart';
 import '../providers/territory_events_provider.dart';
+import 'create_event_screen.dart';
 
 /// Lista de eventos do território (BFF events/territory-events). Pull-to-refresh e carregar mais.
 class EventsScreen extends ConsumerWidget {
@@ -25,10 +27,17 @@ class EventsScreen extends ConsumerWidget {
 
     final hasTerritory = effectiveTerritoryId != null && effectiveTerritoryId.isNotEmpty;
 
-    return Scaffold(
+    return ArahScaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.events),
       ),
+      floatingActionButton: hasTerritory
+          ? FloatingActionButton.extended(
+              onPressed: () => _openCreate(context, effectiveTerritoryId),
+              icon: const Icon(Icons.add),
+              label: Text(AppLocalizations.of(context)!.createEvent),
+            )
+          : null,
       body: !hasTerritory
           ? Center(
               child: Padding(
@@ -56,6 +65,17 @@ class EventsScreen extends ConsumerWidget {
               child: _buildBody(context, state, notifier),
             ),
     );
+  }
+
+  Future<void> _openCreate(BuildContext context, String territoryId) async {
+    final created = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => CreateEventScreen(territoryId: territoryId),
+      ),
+    );
+    if (created == true && context.mounted) {
+      showSuccessSnackBar(context, AppLocalizations.of(context)!.eventCreated);
+    }
   }
 
   Widget _buildBody(

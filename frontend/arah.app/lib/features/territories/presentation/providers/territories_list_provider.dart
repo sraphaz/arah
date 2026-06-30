@@ -56,6 +56,24 @@ final territoriesListProvider = FutureProvider.autoDispose<List<TerritoryItem>>(
   return list;
 });
 
+/// Busca territórios por texto (nome/cidade/estado) via jornada `territories/search`.
+/// Retorna lista vazia para query em branco.
+final territoriesSearchProvider =
+    FutureProvider.autoDispose.family<List<TerritoryItem>, String>((ref, query) async {
+  final q = query.trim();
+  if (q.isEmpty) return [];
+  final client = ref.watch(bffClientProvider);
+  final path = 'search?q=${Uri.encodeQueryComponent(q)}';
+  final response = await client.get('territories', path);
+  final rawItems = _extractItemsFromResponse(response.data);
+  final list = <TerritoryItem>[];
+  for (final e in rawItems) {
+    if (e is! Map<String, dynamic>) continue;
+    list.add(TerritoryItem.fromJson(e));
+  }
+  return list;
+});
+
 /// Item de território para listagem (onboarding, seletor).
 /// Espera da API: id (Guid string), name, description (opcional); aceita camelCase ou PascalCase.
 class TerritoryItem {

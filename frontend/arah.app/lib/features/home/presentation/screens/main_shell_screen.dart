@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/geo/geo_location_provider.dart';
+import '../../../../core/providers/main_shell_tab_provider.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../feed/presentation/screens/feed_screen.dart';
 import '../../../feed/presentation/screens/create_post_screen.dart';
@@ -18,7 +20,8 @@ class MainShellScreen extends ConsumerStatefulWidget {
 }
 
 class _MainShellScreenState extends ConsumerState<MainShellScreen> {
-  int _currentIndex = 0;
+  void _setTab(int index) =>
+      ref.read(mainShellTabProvider.notifier).state = index;
 
   @override
   void initState() {
@@ -29,23 +32,25 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
   }
 
   List<Widget> _buildScreens() => [
-    const FeedScreen(),
+    FeedScreen(onGoToCreatePost: () => _setTab(2)),
     const ExploreScreen(),
-    CreatePostScreen(onSuccess: () => setState(() => _currentIndex = 0)),
+    CreatePostScreen(onSuccess: () => _setTab(0)),
     const NotificationsScreen(),
     const ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final currentIndex = ref.watch(mainShellTabProvider);
+    return ArahScaffold(
+      extendBody: true,
       body: IndexedStack(
-        index: _currentIndex,
+        index: currentIndex,
         children: _buildScreens(),
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        selectedIndex: currentIndex,
+        onDestinationSelected: _setTab,
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.home_outlined),

@@ -15,7 +15,7 @@ export default function Support() {
                   Apoie o desenvolvimento
                 </h2>
                 <p className="text-base leading-relaxed text-forest-800 md:text-lg">
-                  O Araponga é um projeto de código aberto e conta com o apoio da comunidade para
+                  O Arah é um projeto de código aberto e conta com o apoio da comunidade para
                   continuar crescendo e fortalecendo comunidades locais.
                 </p>
               </div>

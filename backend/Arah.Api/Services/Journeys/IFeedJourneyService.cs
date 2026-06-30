@@ -28,4 +28,24 @@ public interface IFeedJourneyService
         PostInteractionRequest request,
         string? commentContent,
         CancellationToken cancellationToken = default);
+
+    Task<PostCommentsJourneyResponse?> GetPostCommentsAsync(
+        Guid territoryId,
+        Guid postId,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> DeletePostAsync(
+        Guid territoryId,
+        Guid postId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>Detalhe de um único post no formato de item do feed (post, contadores, mídia, autor). Null se não existir no território.</summary>
+    Task<TerritoryFeedItemJourneyDto?> GetPostDetailAsync(
+        Guid territoryId,
+        Guid? userId,
+        Guid postId,
+        CancellationToken cancellationToken = default);
 }

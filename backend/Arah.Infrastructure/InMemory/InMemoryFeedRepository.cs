@@ -120,6 +120,38 @@ public sealed class InMemoryFeedRepository : IFeedRepository
         return Task.FromResult(count > maxInt32 ? maxInt32 : count);
     }
 
+    public Task<int> GetCommentCountAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        const int maxInt32 = int.MaxValue;
+        var count = _dataStore.PostComments.TryGetValue(postId, out var comments) ? comments.Count : 0;
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
+    }
+
+    public Task<IReadOnlyList<PostComment>> ListCommentsByPostIdPagedAsync(
+        Guid postId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken)
+    {
+        if (!_dataStore.PostComments.TryGetValue(postId, out var comments))
+        {
+            return Task.FromResult<IReadOnlyList<PostComment>>(Array.Empty<PostComment>());
+        }
+
+        var page = comments
+            .OrderByDescending(comment => comment.CreatedAtUtc)
+            .Skip(skip)
+            .Take(take)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<PostComment>>(page);
+    }
+
+    public Task<int> CountCommentsByPostIdAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        return GetCommentCountAsync(postId, cancellationToken);
+    }
+
     public Task<IReadOnlyDictionary<Guid, PostCounts>> GetCountsByPostIdsAsync(
         IReadOnlyCollection<Guid> postIds,
         CancellationToken cancellationToken)
@@ -131,9 +163,11 @@ public sealed class InMemoryFeedRepository : IFeedRepository
         {
             var likeCountRaw = _dataStore.PostLikes.TryGetValue(postId, out var likes) ? likes.Count : 0;
             var shareCountRaw = _dataStore.PostShares.TryGetValue(postId, out var shares) ? shares.Count : 0;
+            var commentCountRaw = _dataStore.PostComments.TryGetValue(postId, out var comments) ? comments.Count : 0;
             var likeCount = likeCountRaw > maxInt32 ? maxInt32 : likeCountRaw;
             var shareCount = shareCountRaw > maxInt32 ? maxInt32 : shareCountRaw;
-            result[postId] = new PostCounts(likeCount, shareCount);
+            var commentCount = commentCountRaw > maxInt32 ? maxInt32 : commentCountRaw;
+            result[postId] = new PostCounts(likeCount, shareCount, commentCount);
         }
 
         return Task.FromResult<IReadOnlyDictionary<Guid, PostCounts>>(result);

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,16 +11,88 @@ import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/territories_list_provider.dart';
 
-class TerritorySelector extends ConsumerWidget {
+class TerritorySelector extends ConsumerStatefulWidget {
   const TerritorySelector({super.key, this.onSelected, this.subtitle = 'Toque para ver o feed da região'});
   final VoidCallback? onSelected;
   final String subtitle;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(territoriesListProvider);
+  ConsumerState<TerritorySelector> createState() => _TerritorySelectorState();
+}
+
+class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
+  final _searchController = TextEditingController();
+  Timer? _debounce;
+  String _query = '';
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      if (mounted) setState(() => _query = value.trim());
+    });
+  }
+
+  void _clearSearch() {
+    _debounce?.cancel();
+    _searchController.clear();
+    setState(() => _query = '');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isSearching = _query.isNotEmpty;
+    final async = isSearching
+        ? ref.watch(territoriesSearchProvider(_query))
+        : ref.watch(territoriesListProvider);
     final selectedId = ref.watch(selectedTerritoryIdValueProvider);
 
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppConstants.spacingMd,
+            AppConstants.spacingSm,
+            AppConstants.spacingMd,
+            0,
+          ),
+          child: TextField(
+            controller: _searchController,
+            onChanged: _onSearchChanged,
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              hintText: l10n.searchTerritoriesHint,
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: isSearching
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      tooltip: l10n.clear,
+                      onPressed: _clearSearch,
+                    )
+                  : null,
+              border: const OutlineInputBorder(),
+              isDense: true,
+            ),
+          ),
+        ),
+        Expanded(child: _buildList(context, async, selectedId, isSearching)),
+      ],
+    );
+  }
+
+  Widget _buildList(
+    BuildContext context,
+    AsyncValue<List<TerritoryItem>> async,
+    String? selectedId,
+    bool isSearching,
+  ) {
     return async.when(
       data: (list) {
         if (list.isEmpty) {
@@ -28,9 +102,9 @@ class TerritorySelector extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.terrain_outlined, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  Icon(isSearching ? Icons.search_off : Icons.terrain_outlined, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   const SizedBox(height: AppConstants.spacingMd),
-                  Text(AppLocalizations.of(context)!.noTerritoryAvailable, style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+                  Text(isSearching ? AppLocalizations.of(context)!.noSearchResults : AppLocalizations.of(context)!.noTerritoryAvailable, style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
                 ],
               ),
             ),
@@ -56,7 +130,7 @@ class TerritorySelector extends ConsumerWidget {
                   try {
                     await ref.read(territoriesRepositoryProvider).enterTerritory(t.id);
                     await ref.read(selectedTerritoryIdProvider.notifier).setTerritoryId(t.id);
-                    if (context.mounted) onSelected?.call();
+                    if (context.mounted) widget.onSelected?.call();
                   } catch (e) {
                     if (!context.mounted) return;
                     final msg = e is ApiException ? e.userMessage : 'Não foi possível entrar no território.';

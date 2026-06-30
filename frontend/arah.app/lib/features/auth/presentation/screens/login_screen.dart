@@ -5,6 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_brand_header.dart';
+import '../../../../core/widgets/arah_glass_card.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
+import '../../../../core/widgets/arah_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_state_provider.dart';
 
@@ -108,6 +112,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _loginWithGoogle() async {
+    await ref.read(authStateProvider.notifier).loginWithGoogle();
+    if (!mounted) return;
+    final auth = ref.read(authStateProvider);
+    if (auth.hasError) {
+      final msg = auth.error is ApiException
+          ? (auth.error! as ApiException).userMessage
+          : auth.error.toString();
+      showErrorSnackBar(context, msg);
+    } else if (auth.valueOrNull?.accessToken.isNotEmpty ?? false) {
+      context.go('/onboarding');
+    }
+    // valueOrNull == null → usuário cancelou o seletor do Google: nenhuma ação.
+  }
+
   Future<void> _submitSignUp() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final displayName = _displayNameController.text.trim();
@@ -131,7 +150,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final auth = ref.watch(authStateProvider);
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
+    return ArahScaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -151,30 +170,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         label: Text(l10n.back),
                       ),
                     ),
-                  Text(
-                    l10n.appTitle,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: AppConstants.spacingSm),
-                  Text(
-                    _step == LoginStep.email
+                  ArahBrandHeader(
+                    subtitle: _step == LoginStep.email
                         ? l10n.loginSubtitle
                         : _step == LoginStep.password
                             ? l10n.enterPassword
                             : l10n.signUpSubtitle,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
                   ),
-                  const SizedBox(height: AppConstants.spacingXl + AppConstants.spacingSm),
-                  if (_step == LoginStep.email) ..._buildEmailStep(l10n),
-                  if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
-                  if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),
+                  const SizedBox(height: AppConstants.spacing2xl),
+                  ArahGlassCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (_step == LoginStep.email) ..._buildEmailStep(l10n, auth.isLoading),
+                        if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
+                        if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -184,7 +197,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  List<Widget> _buildEmailStep(AppLocalizations l10n) {
+  List<Widget> _buildEmailStep(AppLocalizations l10n, bool authLoading) {
+    final busy = _checkEmailLoading || authLoading;
     return [
       TextFormField(
         controller: _emailController,
@@ -201,15 +215,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         validator: (v) => (v == null || v.isEmpty) ? l10n.informEmail : null,
       ),
       const SizedBox(height: AppConstants.spacingLg),
-      FilledButton(
+      ArahButton(
+        label: l10n.continueButton,
         onPressed: _checkEmailLoading ? null : _submitEmail,
-        child: _checkEmailLoading
-            ? const SizedBox(
-                height: AppConstants.loadingIndicatorSize,
-                width: AppConstants.loadingIndicatorSize,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : Text(l10n.continueButton),
+        loading: _checkEmailLoading,
+        expand: true,
+      ),
+      const SizedBox(height: AppConstants.spacingMd),
+      Row(
+        children: [
+          const Expanded(child: Divider()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingSm),
+            child: Text(
+              l10n.loginOr,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ),
+          const Expanded(child: Divider()),
+        ],
+      ),
+      const SizedBox(height: AppConstants.spacingMd),
+      OutlinedButton.icon(
+        onPressed: busy ? null : _loginWithGoogle,
+        icon: const Icon(Icons.g_mobiledata, size: 28),
+        label: Text(l10n.loginWithGoogle),
       ),
     ];
   }

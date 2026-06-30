@@ -1,6 +1,6 @@
 # Sistema de design – manutenção fácil
 
-O visual do app é controlado por **dois arquivos** e pelo **tema**. Alterar um deles atualiza o app inteiro.
+O visual do app é controlado por **tokens**, **componentes reutilizáveis** e pelo **tema**. Alterar um deles atualiza o app inteiro.
 
 ---
 
@@ -8,49 +8,65 @@ O visual do app é controlado por **dois arquivos** e pelo **tema**. Alterar um 
 
 | O que alterar | Arquivo | O que fazer |
 |---------------|---------|-------------|
-| **Cores** (primária, superfícies, texto) | `lib/core/theme/app_design_tokens.dart` | Editar `AppDesignTokens`: `primaryDark`, `surfaceDark`, `surfaceVariantDark`, etc. Para tema claro: `primaryLight`, `surfaceLight`, `onSurfaceLight`. |
-| **Radius** (cards, snackbars, botões) | `lib/core/config/constants.dart` | Editar `AppConstants`: `radiusSm`, `radiusMd`, `radiusLg`. O tema usa em cards e snackbars. |
-| **Espaçamento** (padding, margens) | `lib/core/config/constants.dart` | Editar `AppConstants`: `spacingXs` até `spacingXl`. Usar nas telas: `EdgeInsets.all(AppConstants.spacingMd)`. |
-| **Tamanho mínimo de toque** | `lib/core/config/constants.dart` | `minTouchTargetSize` (44). Usado no tema em IconButton e FilledButton. |
-| **Duração de animações** | `lib/core/config/constants.dart` | `animationFast`, `animationNormal`. Usar em animações: `Duration(milliseconds: AppConstants.animationNormal)`. |
-| **Componentes do Material** (AppBar, Card, SnackBar, Input) | `lib/core/theme/app_theme.dart` | Ajustar `AppBarTheme`, `cardTheme`, `snackBarTheme`, `inputDecorationTheme`, etc. Cores vêm de `AppDesignTokens` / `AppColors`. |
+| **Cores** (primária, superfícies, glass, watermark) | `lib/core/theme/app_design_tokens.dart` | Editar `AppDesignTokens` e `AppColors` (dark/light). Espelho de `frontend/shared/styles/design-tokens.css`. |
+| **Radius** (cards, snackbars, botões) | `lib/core/config/constants.dart` | `radiusXs` … `radius2xl` (escala 4–32px). |
+| **Espaçamento** (padding, margens) | `lib/core/config/constants.dart` | `spacingXs` … `spacing3xl`. |
+| **Tamanho mínimo de toque** | `lib/core/config/constants.dart` | `minTouchTargetSize` (44). |
+| **Duração de animações** | `lib/core/config/constants.dart` | `animationFast`, `animationNormal`, `animationSlow`, `animationSmooth`. |
+| **Componentes Material** (AppBar, Card, SnackBar, Chip) | `lib/core/theme/app_theme.dart` | Temas derivados de `AppDesignTokens` / `AppColors`. |
+| **Componentes Arah** (botão, card, glass, empty) | `lib/core/widgets/arah_*.dart` | Biblioteca de handoff do design system. |
+
+---
+
+## Componentes do handoff
+
+| Componente | Uso |
+|------------|-----|
+| `ArahScaffold` | Fundo com gradiente + watermark opcional |
+| `ArahGlassCard` | Painéis com blur (login, bottom sheets) |
+| `ArahCard` | Cards com elevação e padding padrão |
+| `ArahButton` | primary / secondary / text + loading |
+| `ArahEmptyState` | Estados vazios com CTA |
+| `ArahLoadingIndicator` | Spinner com cor primária |
+| `ArahListSkeleton` / `FeedSkeleton` | Loading de listas |
+| `ArahBrandHeader` | Logo + wordmark Arah |
+| `ArahWatermark` | Marca d'água do logo |
 
 ---
 
 ## Fluxo de cores
 
-1. **`app_design_tokens.dart`** define as cores brutas (ex.: `primaryDark = Color(0xFF81C784)`).
-2. **`AppColors`** (ThemeExtension) agrupa cores por tema (dark/light) e é injetado no `ThemeData`.
-3. **`AppTheme`** monta o `ColorScheme` e os componentes usando `AppDesignTokens` e `AppColors`.
-4. Nas telas: usar `Theme.of(context).colorScheme.primary` ou `context.appColors.primary` (evitar `Color(0xFF...)`).
-
-Assim, para mudar a cor primária do app: altere **só** `primaryDark` e `primaryLight` em `app_design_tokens.dart`.
+1. **`frontend/shared/styles/design-tokens.css`** — fonte canônica web.
+2. **`app_design_tokens.dart`** — espelho Dart para o app Flutter.
+3. **`AppColors`** (ThemeExtension) — agrupa cores por tema.
+4. **`AppTheme`** — monta `ThemeData` e componentes.
+5. Nas telas: `Theme.of(context).colorScheme` ou `context.appColors`.
 
 ---
 
 ## Uso nas telas
 
 ```dart
-// Cores (preferir tema)
-Theme.of(context).colorScheme.primary
-Theme.of(context).colorScheme.onSurfaceVariant
-context.appColors.primary   // extensão opcional
+// Cores
+context.appColors.primary
+context.appColors.glassBackground
 
-// Espaçamento e radius (sempre tokens)
+// Componentes
+ArahButton(label: l10n.save, onPressed: _save, expand: true)
+ArahEmptyState(icon: Icons.inbox, title: l10n.noItemsFound)
+
+// Layout
 padding: EdgeInsets.all(AppConstants.spacingMd)
 borderRadius: BorderRadius.circular(AppConstants.radiusMd)
-
-// Tipografia (preferir textTheme)
-Theme.of(context).textTheme.titleMedium
-Theme.of(context).textTheme.bodyLarge
 ```
 
 ---
 
-## Novas cores ou tokens
+## Tema claro/escuro
 
-- **Nova cor semântica:** adicione em `AppDesignTokens` e em `AppColors` (dark/light); use no tema ou em `context.appColors.novaCor`.
-- **Novo espaçamento/radius:** adicione em `AppConstants` e use nas telas; se for usado no tema (ex.: novo componente), use em `app_theme.dart`.
+- Preferência persistida em `themeModeProvider` (`SharedPreferences`).
+- Toggle em **Perfil → Preferências → Aparência**.
+- Padrão: **dark** (identidade Arah).
 
 ---
 
@@ -58,8 +74,9 @@ Theme.of(context).textTheme.bodyLarge
 
 | Arquivo | Responsabilidade |
 |---------|------------------|
-| `lib/core/theme/app_design_tokens.dart` | Paleta (cores), radius de componentes, insets de snackbar, fontSize de snackbar. |
-| `lib/core/config/constants.dart` | Espaçamento, radius genérico, animação, touch target, keys de storage, pageSize. |
-| `lib/core/theme/app_theme.dart` | Montagem do ThemeData (ColorScheme, AppBarTheme, cardTheme, etc.) a partir dos tokens. |
+| `lib/core/theme/app_design_tokens.dart` | Paleta, glass, watermark, elevação, pins |
+| `lib/core/config/constants.dart` | Espaçamento, radius, animação, storage keys |
+| `lib/core/theme/app_theme.dart` | ThemeData Material 3 |
+| `lib/core/widgets/arah_*.dart` | Componentes visuais reutilizáveis |
 
-Mantendo cores em `app_design_tokens.dart`, layout em `constants.dart` e tema em `app_theme.dart`, a manutenção do design fica centralizada e previsível.
+Mantendo tokens centralizados e telas usando `Arah*`, o handoff do design system permanece completo e previsível.

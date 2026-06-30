@@ -1,3 +1,4 @@
+import 'package:arah_app/core/theme/app_theme.dart';
 import 'package:arah_app/core/config/app_config.dart';
 import 'package:arah_app/core/storage/secure_storage_service.dart';
 import 'package:arah_app/features/auth/data/repositories/auth_repository.dart';
@@ -54,6 +55,7 @@ void main() {
           authStateProvider.overrideWith(() => _FakeAuthStateNotifier()),
         ],
         child: MaterialApp(
+          theme: AppTheme.dark,
           locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -63,9 +65,31 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Ará'), findsOneWidget);
+    expect(find.text('Arah'), findsOneWidget);
     expect(find.text('Continuar'), findsOneWidget);
     expect(find.byType(TextFormField), findsWidgets);
+  });
+
+  testWidgets('LoginScreen shows "Entrar com Google" on email step', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(() => _FakeAuthStateNotifier()),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.dark,
+          locale: const Locale('pt'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LoginScreen(bffBaseUrl: 'http://test'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Entrar com Google'), findsOneWidget);
+    // O botão fica na etapa de e-mail, ao lado do fluxo e-mail-first ("ou").
+    expect(find.text('ou'), findsOneWidget);
   });
 
   testWidgets('LoginScreen shows signup form when email does not exist', (WidgetTester tester) async {
@@ -80,6 +104,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(fakeRepo),
         ],
         child: MaterialApp(
+          theme: AppTheme.dark,
           locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

@@ -72,7 +72,7 @@ public sealed class InProcessOnboardingJourneyBackend : IOnboardingJourneyBacken
         CancellationToken cancellationToken = default)
     {
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
-        return counts.ToDictionary(kv => kv.Key, kv => new BackendPostCounts(kv.Value.LikeCount, kv.Value.ShareCount));
+        return counts.ToDictionary(kv => kv.Key, kv => new BackendPostCounts(kv.Value.LikeCount, kv.Value.ShareCount, kv.Value.CommentCount));
     }
 
     public async Task<IReadOnlyList<BackendTerritorySuggestion>> GetTerritoriesNearbyAsync(

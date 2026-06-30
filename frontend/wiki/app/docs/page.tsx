@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { readdir } from "fs/promises";
 import { join } from "path";
+import { brand } from "../../../shared/config/brand";
 // Header, Sidebar e Footer agora estão no layout.tsx raiz
 import { CategoryCard } from "../../components/ui/CategoryCard";
 
@@ -14,6 +15,7 @@ const docStructure = {
     { name: "Glossário", path: "05_GLOSSARY.md" },
   ],
   "Arquitetura e Design": [
+    { name: "Arquitetura C4", path: "14_C4_ARCHITECTURE.md" },
     { name: "Decisões Arquiteturais", path: "10_ARCHITECTURE_DECISIONS.md" },
     { name: "Arquitetura de Services", path: "11_ARCHITECTURE_SERVICES.md" },
     { name: "Modelo de Domínio", path: "12_DOMAIN_MODEL.md" },
@@ -46,7 +48,7 @@ const docStructure = {
   ],
   "Documentação Funcional": [
     { name: "Índice da Documentação Funcional", path: "funcional/README.md" },
-    { name: "Plataforma Araponga", path: "funcional/00_PLATAFORMA_ARAPONGA.md" },
+    { name: `Plataforma ${brand.name}`, path: "funcional/00_PLATAFORMA_ARAPONGA.md" },
     { name: "Autenticação e Identidade", path: "funcional/01_AUTENTICACAO_IDENTIDADE.md" },
     { name: "Territórios e Memberships", path: "funcional/02_TERRITORIOS_MEMBERSHIPS.md" },
     { name: "Feed Comunitário", path: "funcional/03_FEED_COMUNITARIO.md" },
@@ -112,7 +114,7 @@ export default async function DocsPage() {
             Documentação
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-forest-600 dark:text-forest-400 max-w-3xl leading-relaxed">
-            Documentação técnica, arquitetural e funcional da plataforma Araponga, organizada por categoria.
+            Documentação técnica, arquitetural e funcional da plataforma {brand.name}, organizada por categoria.
           </p>
         </div>
 

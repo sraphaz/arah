@@ -1,4 +1,5 @@
 import '../../../../core/config/constants.dart';
+import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
 import '../models/event_item.dart';
 
@@ -49,6 +50,39 @@ class EventsRepository {
       'participate',
       body: {'eventId': eventId, 'status': status},
     );
+  }
+
+  /// POST events/create-event — cria um evento no território ativo.
+  /// Datas em UTC (ISO 8601). Retorna o evento criado.
+  Future<EventItem> createEvent({
+    required String territoryId,
+    required String title,
+    String? description,
+    required DateTime startsAtUtc,
+    DateTime? endsAtUtc,
+    double? latitude,
+    double? longitude,
+    String? locationLabel,
+  }) async {
+    final response = await _client.post(
+      'events',
+      'create-event',
+      body: {
+        'territoryId': territoryId,
+        'title': title,
+        if (description != null && description.isNotEmpty) 'description': description,
+        'startsAtUtc': startsAtUtc.toUtc().toIso8601String(),
+        if (endsAtUtc != null) 'endsAtUtc': endsAtUtc.toUtc().toIso8601String(),
+        if (latitude != null) 'latitude': latitude,
+        if (longitude != null) 'longitude': longitude,
+        if (locationLabel != null && locationLabel.isNotEmpty) 'locationLabel': locationLabel,
+      },
+    );
+    final data = response.data;
+    if (data is Map<String, dynamic>) {
+      return EventItem.fromJson(data);
+    }
+    throw ApiException('Resposta inválida ao criar evento.', statusCode: response.statusCode);
   }
 }
 

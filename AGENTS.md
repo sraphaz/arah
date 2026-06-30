@@ -1,10 +1,10 @@
 # AGENTS.md — Manual de operação por agentes
 
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Data**: 2026-06-30  
 **Repo**: `sraphaz/arah`
 
-Este arquivo é a **fonte de verdade** para agentes (Cursor, CI, futuro `arah-agents`). Regras longas permanecem em `.cursorrules`; **procedimentos executáveis** vivem em `.skills/`.
+Este arquivo é a **fonte de verdade** para agentes (Cursor, CI, `arah-agents`). Regras longas permanecem em `.cursorrules`; **procedimentos executáveis** vivem em `.skills/`.
 
 **Handoff interativo**: [docs/handoff/Operacao por Agentes - Arah.dc.html](docs/handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
 
@@ -64,72 +64,53 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + QA → 
 
 ---
 
-## Gotchas do repo (obrigatório)
-
-### Backend / BFF
-
-- Nova jornada BFF: atualizar `BffJourneyRegistry` (constante, paths, cache) — skill `register-bff-journey`.
-- Clean Architecture: Domain não depende de Infrastructure.
-- Testes: `dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj`.
-
-### Flutter
-
-- Após editar `.arb`: `flutter gen-l10n` e copiar gerados para `lib/l10n/` — skill `gen-l10n`.
-- `flutter_map` 8.x: usar `onTap` (não API antiga).
-- Nomenclatura: **territory**, **items** (nunca place/listings).
-
-### Web (Next.js)
-
-- Wiki: base `/wiki`, porta dev 3001.
-- Preferir `npm test` / type-check; `next lint` pode estar quebrado.
-
-### Documentação
-
-- Nada na raiz exceto arquivos permitidos (ver `.cursorrules`).
-- Backlog: `docs/backlog-api/FASE*.md`.
-- Taxonomia alvo: [docs/_meta/DOC_TAXONOMY.md](docs/_meta/DOC_TAXONOMY.md).
-
-### Guardrails
-
-- **Nunca** merge automático em `main`/prod.
-- **Nunca** commitar secrets, `.env`, credenciais.
-- PR atômico; preferir &lt; 40 arquivos por PR de agente.
-- CI verde obrigatório antes de pedir review.
-
----
-
-## Rotear uma tarefa (humano)
-
-1. Abra issue com template **Agent Task** (`.github/ISSUE_TEMPLATE/agent-task.yml`).
-2. Labels: `area/backend` | `area/flutter` | `area/web` | `area/docs` | `area/ops`.
-3. Workflow [`.github/workflows/agents.yml`](.github/workflows/agents.yml) comenta o roteamento na issue/PR.
-4. Agente aplica skills → abre PR → QA agent + CI → humano aprova merge.
-
-### CLI `arah-agents`
+## CLI `arah-agents`
 
 ```powershell
 ./scripts/agents/arah-agents.ps1 orchestrate -Labels area/backend
-./scripts/agents/arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs,frontend/arah.app/lib/main.dart
+./scripts/agents/arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
 ./scripts/agents/arah-agents.ps1 validate
-./scripts/agents/arah-agents.ps1 ensure-labels   # gera comandos gh label create
+./scripts/agents/arah-agents.ps1 gates
+./scripts/agents/arah-agents.ps1 ensure-labels
 ```
 
-Atalho legado: `scripts/agents/orchestrate.ps1 -Labels area/backend`
+Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml)
 
 ---
 
-## Adoção (fases)
+## Cursor Cloud — instruções específicas
 
-| Fase | Modo |
-|------|------|
-| 1 Assistido | Agente sugere; humano edita e commita |
-| 2 Copiloto | Agente abre PR; humano revisa (**atual**) |
-| 3 Autônomo c/ gate | Agente end-to-end; humano só merge |
+Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Flutter (`frontend/arah.app`).
+
+### Backend
+- Use **`Arah.sln`**, não `Araponga.sln`. Namespaces `Arah.*`.
+- JWT obrigatório: `JWT__SIGNINGKEY=...` (ex.: `dev-only-change-me` em dev).
+- Default InMemory — Postgres opcional via `Persistence__Provider=Postgres`.
+- API: `dotnet run --project backend/Arah.Api` → `:5178`. BFF: `backend/Arah.Api.Bff` → `:5005`, `Bff__ApiBaseUrl=http://localhost:5178`.
+- Testes: `dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj`.
+
+### Web
+- `next lint` quebrado no wiki/portal — use `npm test` e `type-check`.
+- Wiki: porta **3001**, base **`/wiki`**.
+
+### Flutter
+- BFF only: `--dart-define=BFF_BASE_URL=...`
+- l10n: `flutter gen-l10n` + copiar para `lib/l10n/` (skill `gen-l10n`).
+- `flutter_map` 8.x: taps via `MapOptions.onTap`.
+- Jornadas BFF: `BffJourneyRegistry` (skill `register-bff-journey`).
+
+### Documentação (obrigatório em todo PR)
+- `docs/CHANGELOG.md`, `docs/STATUS_FASES.md`, fases em `docs/backlog-api/` quando aplicável.
+- Ver [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md) e [.cursorrules](.cursorrules).
+
+### Guardrails
+- **Nunca** merge automático em `main`/prod.
+- **Nunca** secrets no diff.
+- CI verde antes de review.
 
 ---
 
 ## Referências
 
-- [.cursorrules](.cursorrules) — políticas herdadas
-- [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md) — operação detalhada
-- [REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](docs/backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md) — épicos pós-infra agentes
+- [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md)
+- [REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](docs/backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)

@@ -32,6 +32,7 @@ Legenda:
 - **✅** Implementado e em uso (ou exposto de forma estável).
 - **🚧** Parcialmente implementado / só leitura ou só uma parte dos endpoints.
 - **❌** Não implementado ou não usado no app.
+- **➖** Uso administrativo; fora do escopo do app usuário.
 
 O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a API (v1 ou v2/journeys). A coluna BFF indica se a jornada está **registrada e roteada** no BFF; a coluna **App** indica se o app Flutter **chama** essa jornada.
 
@@ -39,88 +40,64 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 |--------------------------|-----|-----|-----|-------------|
 | **Auth** (check-email, signup, login, social, refresh, logout) | ✅ | ✅ | ✅ | App: check-email, signup, login, Google social, refresh. |
 | **Onboarding** (suggested-territories, complete) | ✅ | ✅ | ✅ | App: lista sugeridos, completa com território selecionado. |
-| **Territories** (listar, paged, detalhe, enter) | ✅ | ✅ | ✅ | App: paged (explorar), get by id (mapa), enter (trocar território). |
-| **Feed** (territory-feed, create-post, interact) | ✅ | ✅ | 🚧 | App: feed paginado + create-post. **Falta**: interact (like, comentar, compartilhar). |
-| **Events** (territory-events, participate) | ✅ | ✅ | ✅ | App: lista eventos, participar (interesse/confirmado). |
-| **Map** (pins, entities) | ✅ | ✅ | ✅ | App: GET map/pins para exibir pins no mapa. |
-| **Me** (profile, preferences, interests, devices) | ✅ | ✅ | 🚧 | App: profile (GET/PUT displayName, bio), interests (GET/POST/DELETE), preferences (GET/PUT notificações). Devices e outros sub-recursos de me não usados. |
+| **Territories** (listar, paged, **search**, detalhe, enter, chat/channels) | ✅ | ✅ | ✅ | App: paged (explorar), **busca por nome/cidade** (`territories/search`), get by id (mapa), enter, canais de chat. |
+| **Feed** (territory-feed, create-post, interact, post-comments, **post-detail**, delete-post) | ✅ | ✅ | ✅ | App: feed paginado, like/comment/share, thread, mídia, excluir, filtros, **detalhe de post** (toque no card ou deep-link `/post` via `feed/post-detail`); pin `post` no mapa abre o detalhe. |
+| **Events** (territory-events, create-event, participate) | ✅ | ✅ | ✅ | App: lista eventos, **criar evento** (título, descrição, início/término, local), participar (interesse/confirmado). |
+| **Map** (pins, entities) | ✅ | ✅ | ✅ | App: GET map/pins para exibir pins no mapa; **toque no pin abre detalhes (deep-link)** para eventos/assets/alertas/feed. |
+| **Me** (profile, preferences, interests, devices) | ✅ | ✅ | ✅ | App: profile, interests, preferences, registro automático de device. |
 | **Notifications** (listar paginado, marcar lida) | ✅ | ✅ | ✅ | App: notifications/paged, notifications/{id}/read. |
-| **Membership** (me, become-resident, verify-residency) | ✅ | ✅ | ❌ | App não chama; onboarding usa journey onboarding/complete que associa território à sessão. |
-| **Connections** (listar, pending, request, accept, reject, privacy) | ✅ | ✅ | ❌ | Círculo de amigos: API e BFF prontos; app ainda não tem tela. |
-| **Assets** (listar, upload, curate) | ✅ | ✅ | ❌ | App não usa upload/lista de assets. |
-| **Media** (upload, info, download) | ✅ | ✅ | ❌ | App não usa; posts sem mídia no app ainda. |
-| **Marketplace** (search, add-to-cart, checkout) | ✅ | ✅ | ❌ | Jornada v2; app não tem marketplace. |
-| **Marketplace V1** (cart, stores, items) | ✅ | ✅ | ❌ | Carrinho, lojas, itens; app não usa. |
-| **Subscription plans / Subscriptions** | ✅ | ✅ | ❌ | App não exibe planos nem assinaturas. |
-| **Moderation** (work-items, cases, evidences) | ✅ | ✅ | ❌ | App não tem área de moderação. |
-| **Chat** (conversations, messages, participants) | ✅ | ✅ | ❌ | App não tem chat. |
-| **Alerts** (listar, criar) | ✅ | ✅ | ❌ | App não lista nem cria alertas. |
-| **Admin** (seed, cache-metrics, configs) | ✅ | ✅ | ❌ | Uso administrativo; não no app usuário. |
+| **Membership** (me, become-resident, verify-residency) | ✅ | ✅ | ✅ | App: tela Membership com status, solicitar residência e verificação geo. |
+| **Connections** (listar, pending, request, accept, reject, privacy) | ✅ | ✅ | ✅ | App: Conexões com busca, sugestões, solicitar/aceitar/rejeitar. |
+| **Assets** (listar, upload, curate) | ✅ | ✅ | ✅ | App: listagem, criação, validar, arquivar e curar (aprovar/rejeitar). |
+| **Media** (upload, info, download) | ✅ | ✅ | ✅ | App: upload ao publicar post; exibição no feed. |
+| **Marketplace** (search, add-to-cart, checkout) | ✅ | ✅ | ✅ | App: busca, adicionar ao carrinho, checkout (v2 + cart v1). |
+| **Marketplace V1** (cart, stores, items) | ✅ | ✅ | ✅ | App: cart v1, busca/checkout v2 e gestão de loja própria (`stores/me`, criar/atualizar). |
+| **Subscription plans / Subscriptions** | ✅ | ✅ | ✅ | App: planos, minha assinatura, assinar e cancelar. |
+| **Moderation** (work-items, cases, evidences) | ✅ | ✅ | ✅ | App: fila, casos (decidir), evidências (download + decidir residência). |
+| **Governance** (votings: listar, criar, votar, fechar, resultados) | ✅ | ✅ | ✅ | App: tela Governança (jornada `governance`) — lista votações com filtro de status, votar inline, ver resultados e criar votação. |
+| **Chat** (conversations, messages, participants) | ✅ | ✅ | ✅ | App: canais, grupos (criar), mensagens e envio. |
+| **Alerts** (listar, criar) | ✅ | ✅ | ✅ | App: listagem e criação de alertas. |
+| **Admin** (seed, cache-metrics, configs) | ✅ | ✅ | ➖ | Uso administrativo; não no app usuário. |
 
 Resumo rápido:
 
-- **Totalmente alinhados (API + BFF + App em uso)**: Auth, Onboarding, Territories, Events, Map, Notifications.
-- **Parcialmente no app**: Feed (falta interact), Me (falta devices e outros sub-recursos se necessário).
-- **Só API + BFF**: Membership, Connections, Assets, Media, Marketplace, Subscriptions, Moderation, Chat, Alerts, Admin.
+- **Totalmente alinhados (API + BFF + App em uso)**: todas as jornadas do app usuário, exceto Admin (➖).
+- **Parcialmente no app**: nenhuma pendência crítica na matriz base.
+- **Fora do app usuário**: Admin.
 
 ---
 
 ## O que desenvolver a seguir
 
-Prioridade sugerida para **alinhar** e depois **evoluir**.
+Prioridade sugerida para **evoluir** com novas fases do backlog (API → BFF → App).
 
 ### No App (Flutter)
 
 | Prioridade | Funcionalidade | O que fazer |
 |------------|----------------|-------------|
-| Alta | **Feed – interações** | Usar BFF `feed/interact` (like, comentar, compartilhar); exibir contadores e comentários no feed. |
-| Alta | **Mídia nos posts** | Upload de mídia (BFF media ou assets), associar a create-post; exibir imagens nos posts. |
-| Alta | **Excluir próprio post** | Endpoint na API/BFF se ainda não existir; botão “Excluir” no app para posts do usuário. |
-| Média | **Conexões (círculo de amigos)** | Telas: listar conexões, pendentes, enviar/aceitar/rejeitar; usar BFF connections/*. |
-| Média | **Filtros do feed** | Filtro por tipo/tag no app; BFF já suporta filterByInterests e parâmetros no territory-feed. |
-| Média | **Preferências no perfil** | Já existe me/preferences no app (notificações); expandir para interesses visíveis e “tipo de post preferido” se a API suportar. |
-| Média | **Tipo de post ao publicar** | UI para escolher tipo (geral, alerta, evento) ao criar post; create-post já aceita tipo. |
-| Baixa | **Membership** | Tela “Sou morador” / become-resident onde fizer sentido no fluxo. |
-| Baixa | **Alertas** | Listar e exibir alertas do território (BFF alerts). |
-| Futuro | **Marketplace** | Lojas, listagens, carrinho, checkout no app (jornadas marketplace e marketplace-v1). |
-| Futuro | **Chat** | Conversas e mensagens (BFF chat). |
+| — | _Alinhamento base concluído_ | Próximas entregas seguem fases do backlog em `docs/backlog-api/`. |
 
 ### No BFF
 
-- Garantir que **todos** os endpoints usados pelo app existam e estejam mapeados no `BffJourneyRegistry` (já está coberto para as jornadas acima).
-- Se a API tiver novos endpoints (ex.: delete post, feed/interact com mais opções), expor na mesma jornada no BFF.
+- Endpoints de chat por território (`territories/{id}/chat/channels|groups`) registrados no BFF.
+- Manter registry sincronizado com novos endpoints da API.
 
 ### Na API
 
-- **Feed**: Endpoint para **excluir post** (do próprio usuário) se ainda não existir; manter feed/interact (like, comment, share) estável.
-- **Mídia/Assets**: Manter upload e associação a posts; documentar contrato para o app.
-- Novas fases do backlog: implementar na API primeiro, depois BFF, depois app (conforme estratégia acima).
+- Novas fases do backlog: implementar na API primeiro, depois BFF, depois app.
 
 ---
 
 ## Documentos a revisar (app já existe)
 
-Vários documentos ainda descrevem o frontend como “em planejamento” ou “não existe”. Agora **já existe uma versão do app Flutter** (auth, onboarding, feed, mapa, eventos, perfil, notificações, publicar). Recomenda-se revisar os seguintes arquivos para refletir que o app está em uso e em evolução:
-
-| Documento | O que ajustar |
-|-----------|----------------|
-| **docs/README.md** | Linha ~207: “Frontend e experiências móveis em planejamento” → indicar que o app Flutter existe (versão estável) e apontar para [STABLE_RELEASE_APP_ONBOARDING.md](./STABLE_RELEASE_APP_ONBOARDING.md) e esta matriz. |
-| **docs/24_FLUTTER_FRONTEND_PLAN.md** | Status “Planejamento”: atualizar para “Em implementação / Parcialmente implementado” e referenciar esta matriz e o doc de release estável; manter o plano como guia do que falta. |
-| **docs/35_PRIORIZACAO_ESTRATEGICA_API_FRONTEND.md** | Trechos que indicam “não há frontend” ou “Fase 2 bloqueadores frontend”: atualizar para refletir que o app existe e que a prioridade é alinhar API/BFF/App e depois evoluir. |
-| **docs/33_FLUTTER_REVIEW_AND_GAPS.md** | Incluir que o app está em uso e que gaps (ex.: segurança frontend, biometric) são melhorias sobre uma base já existente. |
-| **README.md (raiz)** | Seção “Estado do Projeto” / “Funcionalidades”: mencionar explicitamente o app Flutter e link para [STABLE_RELEASE_APP_ONBOARDING.md](./STABLE_RELEASE_APP_ONBOARDING.md) e [FEATURE_MATRIX_API_BFF_APP.md](./FEATURE_MATRIX_API_BFF_APP.md). |
-| **docs/backlog-api/** (fases que citam “app Flutter” ou “mobile”) | Onde disser “implementar no app Flutter” sem contexto: indicar que o app já existe e que a fase é para **estender** o app (ex.: FASE29, FASE30). |
-
-Sugestão de frase padrão para colocar nesses documentos:
-
-> **App Flutter**: Existe uma versão estável do app (auth, onboarding, feed, mapa, eventos, perfil, notificações, publicar). Ver [Release estável – App e Onboarding](./STABLE_RELEASE_APP_ONBOARDING.md) e [Matriz API/BFF/App](./FEATURE_MATRIX_API_BFF_APP.md).
+> **App Flutter**: Existe uma versão estável do app (auth + **login com Google na UI**, onboarding, feed, mapa com **deep-links nos pins**, eventos com **criação**, **governança/votações**, perfil, notificações, publicar, marketplace, chat, membership, alertas). Ver [Release estável – App e Onboarding](./STABLE_RELEASE_APP_ONBOARDING.md) e esta matriz.
 
 ---
 
 ## Referências
 
 - **Registro de jornadas BFF**: `backend/Arah.Api.Bff/Journeys/BffJourneyRegistry.cs`
-- **App – repositórios que chamam o BFF**: `frontend/Arah.app/lib/features/*/data/repositories/*.dart` e `feed/presentation/providers/feed_provider.dart`
+- **App – repositórios que chamam o BFF**: `frontend/arah.app/lib/features/*/data/repositories/*.dart`
 - **Release estável e getting started**: [STABLE_RELEASE_APP_ONBOARDING.md](./STABLE_RELEASE_APP_ONBOARDING.md)
 - **Planejamento do frontend Flutter**: [24_FLUTTER_FRONTEND_PLAN.md](./24_FLUTTER_FRONTEND_PLAN.md)
 - **Backlog e fases**: [docs/backlog-api/](./backlog-api/)

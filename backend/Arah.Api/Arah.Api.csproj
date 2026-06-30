@@ -35,7 +35,7 @@
       <NoWarn>NU1601;NU1603</NoWarn>
     </PackageReference>
     <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
     <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.6.0-rc.1">
       <NoWarn>NU1601;NU1603</NoWarn>
     </PackageReference>
@@ -67,7 +67,7 @@
 
   <Target Name="SyncDocsForGitHubPages" AfterTargets="Build">
     <PropertyGroup>
-      <DocsOutputDir>$(MSBuildProjectDirectory)\..\..\..\docs</DocsOutputDir>
+      <DocsOutputDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../../docs'))</DocsOutputDir>
     </PropertyGroup>
     <Message Text="Syncing GitHub Pages assets to $(DocsOutputDir)" Importance="high" />
     <Copy SourceFiles="@(DocsSyncFiles)" DestinationFolder="$(DocsOutputDir)" SkipUnchangedFiles="true" />

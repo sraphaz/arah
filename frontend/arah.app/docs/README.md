@@ -1,4 +1,4 @@
-# Documentação do app Ará
+# Documentação do app Arah
 
 Documentação interna do app Flutter (frontend/Arah.app).
 

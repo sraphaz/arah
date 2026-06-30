@@ -218,4 +218,125 @@ public sealed class FeedJourneyController : ControllerBase
 
         return Ok(response);
     }
+
+    /// <summary>
+    /// Lista comentários de um post do território (paginado, mais recentes primeiro).
+    /// </summary>
+    [HttpGet("post-comments")]
+    [EnableRateLimiting("feed")]
+    [ProducesResponseType(typeof(PostCommentsJourneyResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PostCommentsJourneyResponse>> GetPostComments(
+        [FromQuery] Guid territoryId,
+        [FromQuery] Guid postId,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        if (territoryId == Guid.Empty || postId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId and postId are required." });
+        }
+
+        pageSize = Math.Clamp(pageSize, 1, 100);
+        var response = await _feedJourneyService.GetPostCommentsAsync(
+            territoryId,
+            postId,
+            pageNumber,
+            pageSize,
+            cancellationToken);
+
+        if (response is null)
+        {
+            return NotFound(new { error = "Post not found in territory." });
+        }
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Detalhe de um único post (mesmo formato de item do feed). Usado por deep-links (ex.: pin de post no mapa).
+    /// </summary>
+    [HttpGet("post-detail")]
+    [EnableRateLimiting("feed")]
+    [ProducesResponseType(typeof(TerritoryFeedItemJourneyDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<TerritoryFeedItemJourneyDto>> GetPostDetail(
+        [FromQuery] Guid territoryId,
+        [FromQuery] Guid postId,
+        CancellationToken cancellationToken = default)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid)
+        {
+            return Unauthorized();
+        }
+
+        if (territoryId == Guid.Empty || postId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId and postId are required." });
+        }
+
+        var item = await _feedJourneyService.GetPostDetailAsync(
+            territoryId,
+            userContext.User?.Id,
+            postId,
+            cancellationToken);
+
+        if (item is null)
+        {
+            return NotFound(new { error = "Post not found in territory." });
+        }
+
+        return Ok(item);
+    }
+
+    /// <summary>
+    /// Exclui um post do autor autenticado.
+    /// </summary>
+    [HttpDelete("delete-post")]
+    [EnableRateLimiting("write")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeletePost(
+        [FromQuery] Guid territoryId,
+        [FromQuery] Guid postId,
+        CancellationToken cancellationToken = default)
+    {
+        var userContext = await _currentUserAccessor.GetAsync(Request, cancellationToken);
+        if (userContext.Status != TokenStatus.Valid || userContext.User is null)
+        {
+            return Unauthorized();
+        }
+
+        if (territoryId == Guid.Empty || postId == Guid.Empty)
+        {
+            return BadRequest(new { error = "territoryId and postId are required." });
+        }
+
+        var deleted = await _feedJourneyService.DeletePostAsync(
+            territoryId,
+            postId,
+            userContext.User.Id,
+            cancellationToken);
+
+        if (!deleted)
+        {
+            return NotFound(new { error = "Post not found or you cannot delete it." });
+        }
+
+        return NoContent();
+    }
 }

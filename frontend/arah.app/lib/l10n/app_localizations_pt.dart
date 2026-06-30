@@ -939,4 +939,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get clear => 'Limpar';
+
+  @override
+  String get onboardingSearchTitle => 'Buscar território';
 }

@@ -21,6 +21,7 @@ Este documento descreve a **versão estável** atual do app (Flutter), do fluxo 
 - **Autenticação**: login com e-mail (check-email → senha ou criar conta), signup com nome e senha; **login com Google na UI** (botão "Entrar com Google" no fluxo de login — requer `GOOGLE_SIGN_IN_CLIENT_ID` e config Firebase para funcionar end-to-end).
 - **Onboarding**: tela de seleção de território após login/cadastro quando não há território salvo.
   - Lista “Próximos a você” (sugeridos por lat/lng).
+  - **Busca de território por nome/cidade** (jornada `territories/search`): permite encontrar e selecionar um território e concluir o onboarding **sem depender de geolocalização**.
   - Seleção na lista **só altera o mapa e o destaque**; o botão **Continuar** é o único que conclui o onboarding e leva ao feed.
   - Contorno do território e pin no mapa em **verde floresta**.
   - Botão **Voltar** (logout e retorno à tela de login/cadastro).
@@ -131,7 +132,7 @@ Evolução planejada, em ordem de prioridade sugerida:
 | **Perfil** | Upload de avatar; ligar o histórico de governança (`me/profile/governance`) na UI. |
 | **Marketplace (aprofundamento)** | Tela de carrinho dedicada, gestão de itens do vendedor e fluxo de pagamento (avaliar frente aos valores do produto). |
 
-> **Entregue recentemente no app**: login com Google na UI, criação de eventos, governança/votações (listar, votar, resultados, criar) e deep-links nos pins do mapa. Feed já cobre mídia, curtir/comentar/compartilhar, exclusão e filtros.
+> **Entregue recentemente no app**: login com Google na UI, criação de eventos, governança/votações (listar, votar, resultados, criar), deep-links nos pins do mapa, ações do Perfil (território/notificações/governança) e **busca de territórios** (no seletor e no onboarding — conclui sem geolocalização). Feed já cobre mídia, curtir/comentar/compartilhar, exclusão e filtros.
 
 O backend cobre amplamente essas capacidades; o app é evoluído de forma incremental (API → BFF → App) para expô-las.
 

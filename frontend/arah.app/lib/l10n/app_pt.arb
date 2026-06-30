@@ -358,5 +358,6 @@
   "close": "Fechar",
   "searchTerritoriesHint": "Buscar território por nome ou cidade",
   "noSearchResults": "Nenhum território encontrado para a busca.",
-  "clear": "Limpar"
+  "clear": "Limpar",
+  "onboardingSearchTitle": "Buscar território"
 }

@@ -25,7 +25,7 @@ Este documento descreve a **versão estável** atual do app (Flutter), do fluxo 
   - Seleção na lista **só altera o mapa e o destaque**; o botão **Continuar** é o único que conclui o onboarding e leva ao feed.
   - Contorno do território e pin no mapa em **verde floresta**.
   - Botão **Voltar** (logout e retorno à tela de login/cadastro).
-- **Feed**: listagem do feed do território selecionado, com paginação e pull-to-refresh.
+- **Feed**: listagem do feed do território selecionado, com paginação e pull-to-refresh. Toque num post abre a **tela de detalhe** (conteúdo completo, mídias, autor, contadores e ações).
 - **Explorar**: troca de território (lista paginada) com **busca por nome/cidade** (jornada `territories/search`); ao “entrar” em outro território, o feed e o mapa refletem o escolhido.
 - **Mapa**: pins do território, contorno (polígono/círculo) em verde floresta, marcador do usuário.
 - **Eventos**: lista de eventos do território, **criação de evento** (título, descrição, início/término com seletores de data/hora, local), interesse e confirmação de presença.
@@ -128,7 +128,7 @@ Evolução planejada, em ordem de prioridade sugerida:
 |------|-------------|
 | **Login Google (config)** | UI já existe; falta provisionar `GOOGLE_SIGN_IN_CLIENT_ID` (OAuth Web) e config Firebase para o fluxo funcionar end-to-end. |
 | **Push / FCM** | Recepção de notificações push e deep-link a partir da notificação (hoje só o registro de device token). |
-| **Mapa → post detalhe** | Deep-link de pin do tipo `post` hoje leva ao feed; falta tela de detalhe de post dedicada. |
+| **Mapa → post detalhe** | A tela de detalhe de post já existe (acessível pelo feed). Para o deep-link de pin `post` abrir o detalhe direto, falta um endpoint GET de post único na API/BFF. |
 | **Perfil** | Upload de avatar; ligar o histórico de governança (`me/profile/governance`) na UI. |
 | **Marketplace (aprofundamento)** | Tela de carrinho dedicada, gestão de itens do vendedor e fluxo de pagamento (avaliar frente aos valores do produto). |
 

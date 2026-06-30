@@ -942,4 +942,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingSearchTitle => 'Search territory';
+
+  @override
+  String get postDetailTitle => 'Post';
+
+  @override
+  String get feedTypeTip => 'Tip';
 }

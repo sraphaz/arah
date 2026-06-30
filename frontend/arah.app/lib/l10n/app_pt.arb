@@ -359,5 +359,7 @@
   "searchTerritoriesHint": "Buscar território por nome ou cidade",
   "noSearchResults": "Nenhum território encontrado para a busca.",
   "clear": "Limpar",
-  "onboardingSearchTitle": "Buscar território"
+  "onboardingSearchTitle": "Buscar território",
+  "postDetailTitle": "Publicação",
+  "feedTypeTip": "Dica"
 }

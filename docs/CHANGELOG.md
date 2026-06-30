@@ -22,6 +22,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - ✅ **Perfil — ações funcionais**: "Meu território" abre o seletor de território, "Notificações" leva à aba de notificações, e atalho "Governança" no menu de configurações (antes eram no-op).
 - ✅ **Busca de territórios**: campo de busca no seletor (Explorar e folha "Meu território") usando a jornada `territories/search` — encontrar território por nome/cidade sem depender de geolocalização.
 - ✅ **Busca de território no onboarding**: novo usuário pode buscar, selecionar e concluir o onboarding sem conceder localização (antes a conclusão dependia de geolocalização).
+- ✅ **Detalhe de post**: tocar num card do feed abre a tela "Publicação" com conteúdo completo, todas as mídias, autor/data, contadores e ações (curtir/comentar/compartilhar/excluir).
 - ✅ Documentação sincronizada: `README.md`, `docs/STABLE_RELEASE_APP_ONBOARDING.md`, `docs/FEATURE_MATRIX_API_BFF_APP.md`.
 
 ### Alterado - Fase 12 Encerrada (2026-01-25)

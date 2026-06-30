@@ -1,9 +1,13 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../core/config/constants.dart';
+import '../../../../core/providers/main_shell_tab_provider.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/arah_glass_card.dart';
@@ -15,6 +19,7 @@ import '../../../territories/data/repositories/territories_repository.dart';
 import '../../../territories/presentation/providers/territories_list_provider.dart';
 import '../providers/map_pins_provider.dart';
 import '../../data/models/map_pin.dart';
+import 'map_deep_link.dart';
 
 /// Centro padrão do mapa (Brasil) quando não há geo nem pins.
 const LatLng _defaultCenter = LatLng(-14.2, -51.9);
@@ -97,6 +102,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 interactionOptions: const InteractionOptions(
                   flags: InteractiveFlag.all,
                 ),
+                onTap: (_, point) => _handleMapTap(
+                  context,
+                  point,
+                  pinsAsync.valueOrNull,
+                  territoryId,
+                ),
               ),
               children: [
                 TileLayer(
@@ -131,7 +142,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   error: (_, __) => const SizedBox.shrink(),
                 ),
                 pinsAsync.when(
-                  data: (pins) => _buildPinsLayer(context, pins),
+                  data: (pins) => _buildPinsLayer(context, pins, territoryId),
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
@@ -192,29 +203,28 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return _defaultZoom;
   }
 
-  Widget _buildPinsLayer(BuildContext context, List<MapPin> pins) {
+  Widget _buildPinsLayer(BuildContext context, List<MapPin> pins, String? territoryId) {
     return MarkerLayer(
       markers: pins.map((pin) {
         return Marker(
           point: LatLng(pin.latitude, pin.longitude),
-          width: 36,
-          height: 36,
-          child: GestureDetector(
-            onTap: () => _onPinTap(context, pin),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppDesignTokens.pinColorForType(pin.pinType).withValues(alpha: 0.25),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppDesignTokens.pinColorForType(pin.pinType),
-                  width: 2,
-                ),
-              ),
-              child: Icon(
-                _iconForPinType(pin.pinType),
-                size: 20,
+          width: AppConstants.minTouchTargetSize,
+          height: AppConstants.minTouchTargetSize,
+          // O toque é tratado no nível do mapa (MapOptions.onTap) por ser mais
+          // confiável na web do que GestureDetector dentro do marcador.
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppDesignTokens.pinColorForType(pin.pinType).withValues(alpha: 0.25),
+              shape: BoxShape.circle,
+              border: Border.all(
                 color: AppDesignTokens.pinColorForType(pin.pinType),
+                width: 2,
               ),
+            ),
+            child: Icon(
+              _iconForPinType(pin.pinType),
+              size: 20,
+              color: AppDesignTokens.pinColorForType(pin.pinType),
             ),
           ),
         );
@@ -241,8 +251,44 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
   }
 
-  void _onPinTap(BuildContext context, MapPin pin) {
+  /// Distância máxima (px) entre o toque e o pin para considerar um acerto.
+  /// Generosa o suficiente para toques de dedo próximos ao marcador.
+  static const double _pinTapTolerancePx = 48;
+
+  /// Trata o toque no mapa: localiza o pin mais próximo (em pixels) do ponto
+  /// tocado e, se dentro da tolerância, abre a folha de detalhes.
+  void _handleMapTap(
+    BuildContext context,
+    LatLng tapPoint,
+    List<MapPin>? pins,
+    String? territoryId,
+  ) {
+    if (pins == null || pins.isEmpty) return;
+    final camera = _mapController.camera;
+    final tapPx = camera.latLngToScreenOffset(tapPoint);
+
+    MapPin? nearest;
+    double nearestDistance = double.infinity;
+    for (final pin in pins) {
+      final pinPx = camera.latLngToScreenOffset(LatLng(pin.latitude, pin.longitude));
+      final dx = pinPx.dx - tapPx.dx;
+      final dy = pinPx.dy - tapPx.dy;
+      final distance = math.sqrt(dx * dx + dy * dy);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearest = pin;
+      }
+    }
+
+    if (nearest != null && nearestDistance <= _pinTapTolerancePx) {
+      _onPinTap(context, nearest, territoryId);
+    }
+  }
+
+  void _onPinTap(BuildContext context, MapPin pin, String? territoryId) {
     final l10n = AppLocalizations.of(context)!;
+    final target = mapPinDeepLink(pin, territoryId: territoryId);
+    final hasTarget = target != null;
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -266,8 +312,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               ),
               const SizedBox(height: AppConstants.spacingLg),
               ArahButton(
-                label: l10n.viewDetails,
-                onPressed: () => Navigator.pop(ctx),
+                label: hasTarget ? l10n.viewDetails : l10n.close,
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  if (target != null) {
+                    _navigateToPinTarget(context, target);
+                  }
+                },
                 expand: true,
               ),
             ],
@@ -275,6 +326,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ),
       ),
     );
+  }
+
+  /// Navega para a rota de detalhe correspondente ao pin (deep-link).
+  void _navigateToPinTarget(BuildContext context, String route) {
+    if (route == '/home') {
+      // Não há rota de detalhe de post; seleciona a aba do feed e volta ao shell.
+      ref.read(mainShellTabProvider.notifier).state = 0;
+      context.go('/home');
+    } else {
+      context.push(route);
+    }
   }
 
   String _subtitleForPinType(BuildContext context, MapPin pin) {

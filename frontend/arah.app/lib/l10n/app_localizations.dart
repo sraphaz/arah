@@ -1894,6 +1894,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'O término deve ser após o início.'**
   String get eventEndBeforeStart;
+
+  /// No description provided for @close.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

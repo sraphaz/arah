@@ -10,7 +10,23 @@ function CreatePostScreen({ territory, onPublish }) {
 
   const pickPhoto = (e) => {
     const f = e.target.files?.[0];
-    if (f) setPhoto(URL.createObjectURL(f));
+    if (!f) return;
+
+    const allowedImageTypes = new Set([
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'image/bmp',
+      'image/svg+xml',
+    ]);
+
+    if (!allowedImageTypes.has(f.type)) {
+      setPhoto(null);
+      return;
+    }
+
+    setPhoto(URL.createObjectURL(f));
   };
 
   return (

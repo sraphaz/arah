@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -9,7 +7,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Ará';
+  String get appTitle => 'Arah';
+
+  @override
+  String get brandTagline => 'Territory first. Community first.';
 
   @override
   String get login => 'Log in';
@@ -51,8 +52,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get territories => 'Territories';
 
   @override
-  String get territoriesSubtitle =>
-      'Tap a territory to see its feed or switch region.';
+  String get territoriesSubtitle => 'Tap a territory to see its feed or switch region.';
 
   @override
   String get noTerritoryAvailable => 'No territory available';
@@ -61,8 +61,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle => 'Choose your territory';
 
   @override
-  String get onboardingDescription =>
-      'To see the feed and join the community, choose a territory near you.';
+  String get onboardingDescription => 'To see the feed and join the community, choose a territory near you.';
 
   @override
   String get useMyLocation => 'Use my location';
@@ -71,102 +70,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enableLocationHint => 'Enable location to see nearby territories.';
 
   @override
-  String get noTerritoryInRegion => 'No territory registered near you yet.';
-
-  @override
-  String get registerMunicipalityTitle => 'Register your municipality';
-
-  @override
-  String get registerMunicipalityDescription =>
-      'We use the official IBGE boundary to create your city territory so you can enter as a visitor.';
-
-  @override
-  String registerMunicipalityButton(String city) {
-    return 'Register $city';
-  }
-
-  @override
-  String get registerMunicipalityButtonGeneric => 'Register my municipality';
-
-  @override
-  String get registerMunicipalityLoading => 'Fetching official boundary...';
-
-  @override
-  String registerMunicipalitySuccess(String city) {
-    return 'Territory $city is ready to select.';
-  }
-
-  @override
-  String get registerMunicipalityFailed =>
-      'Could not fetch IBGE boundary. Adjust the pin and draw your cell.';
-
-  @override
-  String get proposeTerritoryButton => 'Draw my cell';
-
-  @override
-  String get proposeTerritoryTitle => 'Propose territory';
-
-  @override
-  String get proposeTerritoryDescription =>
-      'Adjust the pin on the map, confirm city and state, and draw the boundary. A curator will validate before activation; you get provisional visitor access.';
-
-  @override
-  String get proposeTerritoryTapPin =>
-      'Tap the map to adjust the territory center.';
-
-  @override
-  String get proposeTerritoryTapPolygon =>
-      'Tap the map to add polygon vertices (minimum 3).';
-
-  @override
-  String get proposeTerritoryCity => 'City';
-
-  @override
-  String get proposeTerritoryState => 'State';
-
-  @override
-  String get proposeTerritoryNameOptional => 'Cell name (optional)';
-
-  @override
-  String get proposeTerritoryPolygonMode => 'Draw polygon';
-
-  @override
-  String get proposeTerritoryPolygonModeHint =>
-      'Off: uses a circle with adjustable radius.';
-
-  @override
-  String proposeTerritoryRadiusLabel(String km) {
-    return 'Radius: $km km';
-  }
-
-  @override
-  String get proposeTerritoryClearPolygon => 'Clear polygon';
-
-  @override
-  String get proposeTerritorySubmit => 'Submit proposal';
-
-  @override
-  String get proposeTerritorySubmitting => 'Submitting proposal...';
-
-  @override
-  String proposeTerritorySuccess(String name) {
-    return 'Proposal submitted: $name. Provisional access until validation.';
-  }
-
-  @override
-  String get proposeTerritoryCityStateRequired =>
-      'Enter city and state (2 letters).';
-
-  @override
-  String get proposeTerritoryPolygonMinPoints =>
-      'The polygon needs at least 3 points.';
-
-  @override
-  String get territoryPendingBadge => 'Awaiting curator';
-
-  @override
-  String get onboardingPendingTerritoryHint =>
-      'This territory is under validation. You can enter provisionally as a visitor.';
+  String get noTerritoryInRegion => 'No territory found in this region. Try a larger radius or enable location.';
 
   @override
   String get onboardingNearbyTitle => 'Near you';
@@ -175,19 +79,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingAllTerritoriesTitle => 'All territories';
 
   @override
-  String get onboardingOrChooseFromList =>
-      'Or choose a territory from the list below';
+  String get onboardingOrChooseFromList => 'Or choose a territory from the list below';
 
   @override
   String get onboardingLocationEnabled => 'Location enabled';
 
   @override
-  String get onboardingLocationPrivacy =>
-      'Your location is private and not visible to other users.';
+  String get onboardingLocationPrivacy => 'Your location is private and not visible to other users.';
 
   @override
-  String get onboardingAllowLocationToCenter =>
-      'Allow location to center the map and see nearby territories.';
+  String get onboardingAllowLocationToCenter => 'Allow location to center the map and see nearby territories.';
 
   @override
   String onboardingContinueWith(Object name) {
@@ -195,8 +96,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get onboardingVisitorOnContinue =>
-      'When you continue, you will enter as a visitor in this territory and will be able to see the feed.';
+  String get onboardingVisitorOnContinue => 'When you continue, you will enter as a visitor in this territory and will be able to see the feed.';
 
   @override
   String get onboardingGettingLocation => 'Getting location...';
@@ -286,8 +186,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noTerritorySelected => 'No territory selected';
 
   @override
-  String get chooseTerritoryInExplore =>
-      'Tap Explore, choose a territory, and come back here to post.';
+  String get chooseTerritoryInExplore => 'Tap Explore, choose a territory, and come back here to post.';
 
   @override
   String get comingSoon => 'Coming soon';
@@ -299,8 +198,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sessionExpired => 'Session expired. Please log in again.';
 
   @override
-  String get enterToAccess =>
-      'Sign in to access profile, post, and notifications.';
+  String get enterToAccess => 'Sign in to access profile, post, and notifications.';
 
   @override
   String get map => 'Map';
@@ -433,4 +331,624 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordsDontMatch => 'Passwords do not match';
+
+  @override
+  String get chooseTerritoryFirst => 'Choose a territory first.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get deletePost => 'Delete post';
+
+  @override
+  String get deletePostConfirm => 'This action cannot be undone.';
+
+  @override
+  String get marketplace => 'Marketplace';
+
+  @override
+  String get chat => 'Chat';
+
+  @override
+  String get alertsTitle => 'Alerts';
+
+  @override
+  String get moderation => 'Moderation';
+
+  @override
+  String get assetsTitle => 'Assets';
+
+  @override
+  String get membership => 'Membership';
+
+  @override
+  String get subscriptions => 'Subscriptions';
+
+  @override
+  String get connections => 'Connections';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get newGroup => 'New group';
+
+  @override
+  String get newAsset => 'New asset';
+
+  @override
+  String get assetName => 'Name';
+
+  @override
+  String get assetType => 'Type';
+
+  @override
+  String get validate => 'Validate';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get approveCurator => 'Approve (curator)';
+
+  @override
+  String get rejectCurator => 'Reject (curator)';
+
+  @override
+  String get noAssetsRegistered => 'No assets registered.';
+
+  @override
+  String get noItemsFound => 'No items found.';
+
+  @override
+  String get noQueueItems => 'No items in this queue.';
+
+  @override
+  String get noAlertsActive => 'No active alerts';
+
+  @override
+  String get reportAlert => 'Report alert';
+
+  @override
+  String get chooseTerritoryForAlerts => 'Choose a territory to see alerts.';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get connect => 'Connect';
+
+  @override
+  String get searchPeople => 'Search people';
+
+  @override
+  String statusLabel(String status) {
+    return 'Status: $status';
+  }
+
+  @override
+  String checkoutWithCount(int count) {
+    return 'Checkout ($count)';
+  }
+
+  @override
+  String get myStore => 'My store';
+
+  @override
+  String get itemsTab => 'Items';
+
+  @override
+  String get availablePlans => 'Available plans';
+
+  @override
+  String get mySubscription => 'My subscription';
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get cancelSubscription => 'Cancel';
+
+  @override
+  String get yourRole => 'Your role';
+
+  @override
+  String verificationLabel(String value) {
+    return 'Verification: $value';
+  }
+
+  @override
+  String get requestResidency => 'Request residency';
+
+  @override
+  String get verifyByLocation => 'Verify by location';
+
+  @override
+  String get channelsTab => 'Channels';
+
+  @override
+  String get groupsTab => 'Groups';
+
+  @override
+  String get groupName => 'Group name';
+
+  @override
+  String get openStreetMapAttribution => 'OpenStreetMap contributors';
+
+  @override
+  String priceLabel(String currency, String amount) {
+    return '$currency $amount';
+  }
+
+  @override
+  String storeAndPrice(String store, String price) {
+    return '$store · $price';
+  }
+
+  @override
+  String conversationMeta(String kind, String status) {
+    return '$kind · $status';
+  }
+
+  @override
+  String get noCommentsYet => 'No comments yet.';
+
+  @override
+  String get commentHint => 'Write a comment';
+
+  @override
+  String get errorLoadComments => 'Could not load comments.';
+
+  @override
+  String get errorComment => 'Error posting comment.';
+
+  @override
+  String get groupCreated => 'Group created.';
+
+  @override
+  String get errorCreateGroup => 'Error creating group.';
+
+  @override
+  String get errorLoadConversations => 'Error loading conversations.';
+
+  @override
+  String get noChannelsAvailable => 'No channels available.';
+
+  @override
+  String get noGroupsYet => 'No groups yet. Tap + to create one.';
+
+  @override
+  String get conversation => 'Conversation';
+
+  @override
+  String get messageHint => 'Message';
+
+  @override
+  String get errorSendMessage => 'Error sending message.';
+
+  @override
+  String get searchTab => 'Search';
+
+  @override
+  String get searchItemsHint => 'Search items';
+
+  @override
+  String get orderSent => 'Order sent.';
+
+  @override
+  String get errorCheckout => 'Checkout error.';
+
+  @override
+  String get errorSearchItems => 'Error searching items.';
+
+  @override
+  String get addedToCart => 'Added to cart.';
+
+  @override
+  String get errorAddToCart => 'Error adding to cart.';
+
+  @override
+  String get createMyStore => 'Create my store';
+
+  @override
+  String get updateStore => 'Update store';
+
+  @override
+  String get storeNameLabel => 'Store name';
+
+  @override
+  String get descriptionLabel => 'Description';
+
+  @override
+  String get informStoreName => 'Enter the store name.';
+
+  @override
+  String get storeCreated => 'Store created.';
+
+  @override
+  String get storeUpdated => 'Store updated.';
+
+  @override
+  String get errorSaveStore => 'Error saving store.';
+
+  @override
+  String get createStore => 'Create store';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get requestSent => 'Request sent.';
+
+  @override
+  String get errorSendRequest => 'Error sending request.';
+
+  @override
+  String get errorLoadConnections => 'Could not load connections.';
+
+  @override
+  String get noConnectionsYet => 'No connections yet. Tap Add to find people.';
+
+  @override
+  String get errorLoadSuggestions => 'Error loading suggestions.';
+
+  @override
+  String get errorSearch => 'Search error.';
+
+  @override
+  String get searchMinCharsHint => 'Type at least 2 characters or see suggestions above.';
+
+  @override
+  String get connectionRequestIncoming => 'Incoming request';
+
+  @override
+  String get connectionRequestOutgoing => 'Outgoing request';
+
+  @override
+  String get activeConnection => 'Active connection';
+
+  @override
+  String get errorAccept => 'Error accepting.';
+
+  @override
+  String get errorReject => 'Error rejecting.';
+
+  @override
+  String get errorRemove => 'Error removing.';
+
+  @override
+  String get assetCreated => 'Asset created.';
+
+  @override
+  String get errorCreateAsset => 'Error creating asset.';
+
+  @override
+  String get errorLoadAssets => 'Error loading assets.';
+
+  @override
+  String validationRegistered(String percent) {
+    return 'Validation recorded ($percent% of community).';
+  }
+
+  @override
+  String get assetArchived => 'Asset archived.';
+
+  @override
+  String get assetApproved => 'Asset approved.';
+
+  @override
+  String get assetRejected => 'Asset rejected.';
+
+  @override
+  String get errorCompleteAction => 'Could not complete the action.';
+
+  @override
+  String assetValidationsMeta(int count, String percent) {
+    return '$count validations ($percent%)';
+  }
+
+  @override
+  String get alertCreated => 'Alert created.';
+
+  @override
+  String get errorCreateAlert => 'Error creating alert.';
+
+  @override
+  String get errorLoadAlerts => 'Could not load alerts.';
+
+  @override
+  String get alertsRequireResidency => 'Territory alerts require residency or curator role.';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get postDefaultTitle => 'Post';
+
+  @override
+  String get chooseTerritoryBeforePost => 'Choose a territory before posting.';
+
+  @override
+  String get addImage => 'Add image';
+
+  @override
+  String get changeImage => 'Change image';
+
+  @override
+  String get moderationQueueTab => 'Queue';
+
+  @override
+  String get moderationCasesTab => 'Cases';
+
+  @override
+  String get moderationEvidencesTab => 'Evidence';
+
+  @override
+  String get noPermissionOrError => 'No permission or error loading.';
+
+  @override
+  String get downloadEvidenceTooltip => 'Download evidence';
+
+  @override
+  String get approveTooltip => 'Approve';
+
+  @override
+  String get rejectTooltip => 'Reject';
+
+  @override
+  String get decisionRegistered => 'Decision recorded.';
+
+  @override
+  String get errorDecideItem => 'Error deciding item.';
+
+  @override
+  String evidenceDownloaded(int size) {
+    return 'Evidence downloaded ($size bytes).';
+  }
+
+  @override
+  String get errorDownloadEvidence => 'Error downloading evidence.';
+
+  @override
+  String get errorLoadMembership => 'Error loading membership.';
+
+  @override
+  String get enableLocationFirst => 'Enable location first.';
+
+  @override
+  String get residencyVerifiedByGeo => 'Residency verified by location.';
+
+  @override
+  String get errorResidencyVerification => 'Verification error.';
+
+  @override
+  String get alreadyResident => 'You are already a resident in this territory.';
+
+  @override
+  String get errorLoadPlans => 'Error loading plans.';
+
+  @override
+  String get subscriptionCancelled => 'Subscription cancelled.';
+
+  @override
+  String get errorCancelSubscription => 'Error cancelling.';
+
+  @override
+  String get subscriptionActivated => 'Subscription activated.';
+
+  @override
+  String get errorSubscribe => 'Error subscribing.';
+
+  @override
+  String get errorRequestResidency => 'Error requesting residency.';
+
+  @override
+  String get moderationEvidenceSuffix => 'evidence';
+
+  @override
+  String get darkMode => 'Dark mode';
+
+  @override
+  String get useSystemTheme => 'Use system theme';
+
+  @override
+  String get viewDetails => 'View details';
+
+  @override
+  String get createFirstPost => 'Create first post';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get governance => 'Governance';
+
+  @override
+  String get governanceSubtitle => 'Collective decisions of the territory.';
+
+  @override
+  String get chooseTerritoryForGovernance => 'Choose a territory to see the votings.';
+
+  @override
+  String get noVotings => 'No votings right now.';
+
+  @override
+  String get errorLoadVotings => 'Error loading votings.';
+
+  @override
+  String get createVoting => 'New voting';
+
+  @override
+  String get filterAllVotings => 'All';
+
+  @override
+  String get filterOpenVotings => 'Open';
+
+  @override
+  String get filterClosedVotings => 'Closed';
+
+  @override
+  String get voteAction => 'Vote';
+
+  @override
+  String get voteRegistered => 'Vote recorded.';
+
+  @override
+  String get errorVote => 'Error recording vote.';
+
+  @override
+  String get alreadyVoted => 'You already voted.';
+
+  @override
+  String get viewResults => 'View results';
+
+  @override
+  String get closeVoting => 'Close voting';
+
+  @override
+  String get votingClosedMsg => 'Voting closed.';
+
+  @override
+  String get errorCloseVoting => 'Error closing voting.';
+
+  @override
+  String get votingCreated => 'Voting created.';
+
+  @override
+  String get errorCreateVoting => 'Error creating voting.';
+
+  @override
+  String get votingTitleLabel => 'Voting title';
+
+  @override
+  String get votingDescriptionLabel => 'Description';
+
+  @override
+  String get votingTypeLabel => 'Type';
+
+  @override
+  String get votingVisibilityLabel => 'Who can vote';
+
+  @override
+  String get votingOptionsLabel => 'Options';
+
+  @override
+  String get optionLabel => 'Option';
+
+  @override
+  String get addOption => 'Add option';
+
+  @override
+  String get removeOption => 'Remove option';
+
+  @override
+  String get votingNeedsTwoOptions => 'Provide at least 2 options.';
+
+  @override
+  String get requiredField => 'Required field.';
+
+  @override
+  String totalVotesLabel(int count) {
+    return '$count votes';
+  }
+
+  @override
+  String get statusOpen => 'Open';
+
+  @override
+  String get statusClosed => 'Closed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get votingTypeThemePrioritization => 'Theme prioritization';
+
+  @override
+  String get votingTypeModerationRule => 'Moderation rule';
+
+  @override
+  String get votingTypeFeatureFlag => 'Feature flag';
+
+  @override
+  String get votingTypeTerritoryCharacterization => 'Territory characterization';
+
+  @override
+  String get votingTypeCommunityPolicy => 'Community policy';
+
+  @override
+  String get votingVisibilityAllMembers => 'All members';
+
+  @override
+  String get votingVisibilityResidentsOnly => 'Residents only';
+
+  @override
+  String get votingVisibilityCuratorsOnly => 'Curators only';
+
+  @override
+  String get createEvent => 'New event';
+
+  @override
+  String get eventTitleLabel => 'Event title';
+
+  @override
+  String get eventDescriptionLabel => 'Description';
+
+  @override
+  String get eventStartLabel => 'Start';
+
+  @override
+  String get eventEndLabel => 'End (optional)';
+
+  @override
+  String get eventLocationLabel => 'Location (optional)';
+
+  @override
+  String get selectDateTime => 'Select date and time';
+
+  @override
+  String get eventCreated => 'Event created.';
+
+  @override
+  String get errorCreateEvent => 'Error creating event.';
+
+  @override
+  String get eventStartRequired => 'Set the start date and time.';
+
+  @override
+  String get eventEndBeforeStart => 'End must be after start.';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get searchTerritoriesHint => 'Search territory by name or city';
+
+  @override
+  String get noSearchResults => 'No territory found for the search.';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get onboardingSearchTitle => 'Search territory';
+
+  @override
+  String get postDetailTitle => 'Post';
+
+  @override
+  String get feedTypeTip => 'Tip';
+
+  @override
+  String get postNotFound => 'Post not found.';
 }

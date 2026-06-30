@@ -1,0 +1,7 @@
+id: flutter
+name: Flutter / Dart
+mode: consult
+focus: arah.app, flutter_map 8.x (onTap), gen-l10n + lib/l10n.
+references:
+  - docs/24_FLUTTER_FRONTEND_PLAN.md
+  - frontend/arah.app/l10n.yaml

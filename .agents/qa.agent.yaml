@@ -1,0 +1,26 @@
+id: qa
+name: Review / QA Agent
+description: Checklist de qualidade, coesão e testes em todo PR.
+triggers:
+  - pull_request:opened
+  - pull_request:synchronize
+scope:
+  paths:
+    - "**"
+  may_code: false
+skills:
+  - code-review
+  - run-tests
+consult:
+  domain:
+    - territorio-membership
+    - monetizacao-split
+    - governanca-transparencia
+  specialists:
+    - dotnet
+    - flutter
+    - nextjs
+guardrails:
+  no_merge: true
+  require_ci: true
+  comment_only: true

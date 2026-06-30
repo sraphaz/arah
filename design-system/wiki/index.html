@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arah — Wiki &amp; Documentação</title>
+<meta name="description" content="Documentação viva do Arah: visão, modelo território-primeiro, papéis, domínios, funcionalidades, arquitetura e roadmap. Transparência total." />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="wiki.css" />
+</head>
+<body>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#0E2117"/>
+    <text x="50" y="62" font-size="40" text-anchor="middle" fill="#A6D6B9" font-family="sans-serif" font-weight="700">A</text>
+  </svg>
+</template>
+
+<div class="scrim" id="scrim"></div>
+<div class="layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="side" id="side">
+    <div class="side-head">
+      <a class="brand" href="#visao-geral"><img src="../assets/arah-logo.png" alt="Arah" /><b>Arah</b><span class="doc-tag">Wiki</span></a>
+      <div class="search"><span class="msr">search</span><input id="search" type="text" placeholder="Buscar na documentação…" /></div>
+    </div>
+    <nav class="nav">
+      <div class="grp">Começar</div>
+      <a data-doc="visao-geral" href="#visao-geral"><span class="msr">explore</span>Visão geral</a>
+      <a data-doc="manifesto" href="#manifesto"><span class="msr">favorite</span>Manifesto &amp; princípios</a>
+      <a data-doc="modelo" href="#modelo"><span class="msr">hub</span>Modelo território-primeiro</a>
+      <a data-doc="glossario" href="#glossario"><span class="msr">menu_book</span>Glossário</a>
+
+      <div class="grp">Modelo &amp; domínio</div>
+      <a data-doc="papeis" href="#papeis"><span class="msr">groups</span>Papéis &amp; permissões</a>
+      <a data-doc="dominio" href="#dominio"><span class="msr">schema</span>Modelo de domínio</a>
+
+      <div class="grp">Funcionalidades</div>
+      <a data-doc="feed-mapa" href="#feed-mapa"><span class="msr">eco</span>Feed &amp; mapa</a>
+      <a data-doc="mercado" href="#mercado"><span class="msr">storefront</span>Mercado &amp; economia</a>
+      <a data-doc="governanca" href="#governanca"><span class="msr">how_to_vote</span>Governança &amp; curadoria</a>
+      <a data-doc="comunicacao" href="#comunicacao"><span class="msr">forum</span>Comunicação</a>
+
+      <div class="grp">Construção</div>
+      <a data-doc="arquitetura" href="#arquitetura"><span class="msr">architecture</span>Arquitetura</a>
+      <a data-doc="roadmap" href="#roadmap"><span class="msr">timeline</span>Roadmap</a>
+      <a data-doc="contribuir" href="#contribuir"><span class="msr">volunteer_activism</span>Contribuir</a>
+    </nav>
+  </aside>
+
+  <!-- ===== CONTENT ===== -->
+  <main class="content">
+    <div class="topbar">
+      <button class="burger" id="burger" aria-label="Abrir menu"><span class="msr">menu</span></button>
+      <a class="brand" href="#visao-geral"><img src="../assets/arah-logo.png" alt="Arah" /><b>Arah</b></a>
+    </div>
+    <div class="doc-wrap">
+
+      <!-- ===================== VISÃO GERAL ===================== -->
+      <article class="doc" id="doc-visao-geral">
+        <div class="eyebrow">Documentação viva</div>
+        <h1>Bem-vindo à Wiki do Arah</h1>
+        <p class="sub">Arah é uma plataforma digital comunitária <strong>orientada ao território</strong> — uma extensão digital do território vivo, feita para a relevância local, o cuidado coletivo e a autonomia das comunidades.</p>
+        <div class="meta"><span><b>Projeto</b> aberto e em evolução</span><span><b>Idioma</b> pt-BR</span><span><b>Licença</b> orientada à comunidade</span></div>
+
+        <p>Esta wiki é o reflexo público e transparente da documentação do projeto. Aqui você encontra <strong>o que</strong> o Arah é, <strong>por que</strong> existe, <strong>como</strong> se organiza e <strong>para onde</strong> caminha. Tudo construído à vista de todos.</p>
+
+        <div class="callout quote"><span class="msr fill">format_quote</span><div>Território como referência. Comunidade como prioridade. Tecnologia como ferramenta — não como fim.</div></div>
+
+        <h2>Por onde começar</h2>
+        <div class="cards">
+          <a class="card" href="#manifesto"><div class="ci"><span class="msr fill">favorite</span></div><h3>Manifesto</h3><p>O contraponto consciente às plataformas que capturam atenção.</p></a>
+          <a class="card" href="#modelo"><div class="ci"><span class="msr fill">hub</span></div><h3>Modelo território-primeiro</h3><p>As três decisões que tornam o Arah claro e justo.</p></a>
+          <a class="card" href="#papeis"><div class="ci"><span class="msr fill">groups</span></div><h3>Papéis &amp; permissões</h3><p>Visitante, morador, curador — e o que cada um pode.</p></a>
+          <a class="card" href="#roadmap"><div class="ci"><span class="msr fill">timeline</span></div><h3>Roadmap</h3><p>48 fases em 10 ondas, da fundação à soberania digital.</p></a>
+        </div>
+
+        <h2>O que existe hoje</h2>
+        <p>O backend implementa a fundação completa (fases 1–16): território e vínculos, feed e mapa georreferenciado, eventos, marketplace, governança e votação, chat, pagamentos e assinaturas. O cliente mobile e os serviços de economia local seguem em construção, em ondas.</p>
+        <table>
+          <thead><tr><th>Camada</th><th>Situação</th></tr></thead>
+          <tbody>
+            <tr><td><b>Backend</b> (.NET, DDD)</td><td>Fundação entregue · ~150 endpoints · 2.194 testes</td></tr>
+            <tr><td><b>App mobile</b> (Flutter)</td><td>Em construção — ver protótipo de alta fidelidade</td></tr>
+            <tr><td><b>Economia local</b></td><td>Em evolução (fases 17–25)</td></tr>
+            <tr><td><b>Soberania digital</b></td><td>Visão (fases 26–48)</td></tr>
+          </tbody>
+        </table>
+
+        <div class="pager"><span></span><a class="next" href="#manifesto"><span class="lbl">Próximo</span><b>Manifesto &amp; princípios →</b></a></div>
+      </article>
+
+      <!-- ===================== MANIFESTO ===================== -->
+      <article class="doc" id="doc-manifesto">
+        <div class="eyebrow">Começar</div>
+        <h1>Manifesto &amp; princípios</h1>
+        <p class="sub">Plataformas digitais capturam atenção, desorganizam comunidades e desconectam pessoas do lugar onde vivem. O Arah existe para o oposto.</p>
+
+        <h2>O contraponto consciente</h2>
+        <p>A tecnologia dominante otimiza para escala global e engajamento infinito. No caminho, perde exatamente o que importa para quem vive em um lugar: o entorno imediato, as relações de confiança, a cultura e as regras próprias de cada território.</p>
+        <p>O Arah recusa esse modelo. Não há feed infinito algorítmico, métricas de vaidade nem extração de dados. A tecnologia desaparece para que o território apareça.</p>
+
+        <h2>Princípios fundamentais</h2>
+        <ol>
+          <li><strong>Território como referência.</strong> O território é geográfico e neutro — existe antes do app e continua existindo sem usuários. Organiza contexto e governança; não é um filtro.</li>
+          <li><strong>Comunidade como prioridade.</strong> A vida social acontece em camadas (moradores, visitantes, confiança) que referenciam o território, sem hierarquia imposta.</li>
+          <li><strong>Tecnologia como ferramenta.</strong> Infraestrutura digital comunitária para a autonomia local e a continuidade da vida no lugar — não vigilância, não captura.</li>
+          <li><strong>Transparência radical.</strong> Código aberto, documentação pública, decisões auditáveis. Construído à vista de todos.</li>
+          <li><strong>Economia que fica no lugar.</strong> Mercado, serviços e trocas mantêm renda e relações dentro da comunidade.</li>
+        </ol>
+
+        <div class="callout"><span class="msr fill">spa</span><div>Calma, não captura. O movimento do app é curto e suave; entradas com fade, sem bounce, sem loops decorativos. A experiência respeita a atenção de quem usa.</div></div>
+
+        <h2>O futuro que buscamos</h2>
+        <p>Um futuro <strong>ancestral, local e descentralizado</strong>: comunidades com soberania sobre suas ferramentas digitais, sua economia e sua governança. O Arah não quer crescer rápido — quer criar raízes profundas.</p>
+
+        <div class="pager"><a href="#visao-geral"><span class="lbl">Anterior</span><b>← Visão geral</b></a><a class="next" href="#modelo"><span class="lbl">Próximo</span><b>Modelo território-primeiro →</b></a></div>
+      </article>
+
+      <!-- ===================== MODELO ===================== -->
+      <article class="doc" id="doc-modelo">
+        <div class="eyebrow">Começar</div>
+        <h1>Modelo território-primeiro</h1>
+        <p class="sub">Três decisões de modelagem tornam o Arah mais claro, mais justo e mais adaptável ao tempo.</p>
+
+        <h2>1 · O território é geográfico e neutro</h2>
+        <p>Um <strong>território</strong> é apenas um lugar real: nome, localização e fronteira. Não carrega lógica social, não é dono de conteúdo, não impõe hierarquia. É a unidade central do sistema — e a âncora de toda a experiência.</p>
+        <div class="callout quote"><span class="msr fill">format_quote</span><div>O território existe antes do app — e continua existindo mesmo sem usuários.</div></div>
+
+        <h2>2 · A vida social acontece em camadas</h2>
+        <p>Sobre o território neutro, camadas sociais se acumulam sem o redefinir:</p>
+        <ul>
+          <li><strong>Vínculos</strong> (memberships) — a relação pessoa ↔ território, como visitante ou morador.</li>
+          <li><strong>Visibilidade</strong> — conteúdo público ou restrito a moradores.</li>
+          <li><strong>Capacidades</strong> — poderes operacionais (curadoria, moderação) concedidos por território.</li>
+          <li><strong>Confiança</strong> — círculos pessoais (pós-MVP), nunca hierarquia.</li>
+        </ul>
+
+        <h2>3 · Presença valida o vínculo</h2>
+        <p>No MVP, a associação a um território <strong>não ocorre remotamente</strong>. A geolocalização do usuário (com consentimento explícito e privado) valida a proximidade física. Estar presente é o primeiro passo para pertencer.</p>
+        <div class="callout warn"><span class="msr fill">privacy_tip</span><div>A localização é <strong>privada</strong> e não fica visível para outros usuários. Consentimento é explícito e revogável — privacidade e transparência são fundamentos, não opções.</div></div>
+
+        <h2>Tudo é escopado ao território</h2>
+        <p>Feed, mapa, eventos, mercado, governança e conteúdo são sempre filtrados pelo território ativo. Trocar de território troca todo o contexto. Nada é global por padrão — o local vem primeiro.</p>
+
+        <div class="pager"><a href="#manifesto"><span class="lbl">Anterior</span><b>← Manifesto</b></a><a class="next" href="#glossario"><span class="lbl">Próximo</span><b>Glossário →</b></a></div>
+      </article>
+
+      <!-- ===================== GLOSSÁRIO ===================== -->
+      <article class="doc" id="doc-glossario">
+        <div class="eyebrow">Começar</div>
+        <h1>Glossário</h1>
+        <p class="sub">A terminologia do Arah é intencional. Os termos refletem os princípios: território como referência, transparência e respeito à inteligência comunitária.</p>
+
+        <h2>Território &amp; geografia</h2>
+        <dl class="terms">
+          <div class="term"><dt>Território <span class="en">Territory</span></dt><dd>Unidade central do sistema; lugar físico real e neutro com fronteiras definidas. Existe antes do app e organiza contexto e governança — não é um filtro.</dd></div>
+          <div class="term"><dt>GeoAnchor <span class="en">PostGeoAnchor</span></dt><dd>Ponto georreferenciado (lat/lng) que ancora conteúdo ao território, permitindo visualização espacial no mapa.</dd></div>
+          <div class="term"><dt>Presença no território</dt><dd>Requisito de vínculo no MVP: a associação não ocorre remotamente. A geolocalização valida a proximidade física.</dd></div>
+        </dl>
+
+        <h2>Vínculos &amp; papéis</h2>
+        <dl class="terms">
+          <div class="term"><dt>Visitante <span class="en">Visitor</span></dt><dd>Usuário presente no território, com vínculo básico. Acesso a conteúdo e canais públicos.</dd></div>
+          <div class="term"><dt>Morador <span class="en">Resident</span></dt><dd>Vínculo aprovado com acesso a conteúdo restrito. Requer verificação de residência (geográfica e/ou documental).</dd></div>
+          <div class="term"><dt>Vínculo <span class="en">Membership</span></dt><dd>Relação User ↔ Territory. Representa presença e participação, não hierarquia. Tem papel (Visitor/Resident) e status (Pending, Active, Suspended, Revoked).</dd></div>
+          <div class="term"><dt>Curador <span class="en">Curator</span></dt><dd>Capacidade territorial para curadoria e validação (ex.: residência, entidades do mapa). Valoriza a inteligência comunitária.</dd></div>
+          <div class="term"><dt>Moderador <span class="en">Moderator</span></dt><dd>Capacidade territorial para decisões de moderação (reports, sanções). Respeita a autonomia do território.</dd></div>
+        </dl>
+
+        <h2>Conteúdo &amp; mercado</h2>
+        <dl class="terms">
+          <div class="term"><dt>Post</dt><dd>Publicação no território, com visibilidade pública ou restrita. Suporta 0..N GeoAnchors.</dd></div>
+          <div class="term"><dt>Feed</dt><dd>Linha do tempo de posts (pessoal ou do território), integrada ao mapa via GeoAnchors.</dd></div>
+          <div class="term"><dt>Item <span class="en">StoreItem</span></dt><dd>Produto ou serviço do marketplace. Sempre "item" — nunca "listing".</dd></div>
+          <div class="term"><dt>Entidade do mapa <span class="en">MapEntity</span></dt><dd>Recurso georreferenciado do território (lugar, trilha, nascente, mirante) com categoria, status e visibilidade.</dd></div>
+        </dl>
+
+        <div class="callout"><span class="msr fill">translate</span><div><strong>Terminologia evitada:</strong> "place/location" → use <strong>Território</strong>; "listings" → use <strong>itens</strong>; "user/member" genérico → prefira <strong>Visitante/Morador</strong> conforme o contexto.</div></div>
+
+        <div class="pager"><a href="#modelo"><span class="lbl">Anterior</span><b>← Modelo</b></a><a class="next" href="#papeis"><span class="lbl">Próximo</span><b>Papéis &amp; permissões →</b></a></div>
+      </article>
+
+      <!-- ===================== PAPÉIS ===================== -->
+      <article class="doc" id="doc-papeis">
+        <div class="eyebrow">Modelo &amp; domínio</div>
+        <h1>Papéis &amp; permissões</h1>
+        <p class="sub">A interface e o acesso se adaptam ao papel do usuário <strong>em cada território</strong>. Um usuário pode ser morador de um e visitante de outro.</p>
+
+        <h2>Papéis de vínculo</h2>
+        <table>
+          <thead><tr><th>Capacidade</th><th>Visitante</th><th>Morador</th><th>Curador</th></tr></thead>
+          <tbody>
+            <tr><td>Ver feed público &amp; mapa</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Ver conteúdo "só moradores"</td><td>—</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Publicar &amp; comentar</td><td>público</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Participar de eventos</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Votar em eleições</td><td>—</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Vender / abrir loja</td><td>—</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Curadoria &amp; moderação</td><td>—</td><td>—</td><td>✓</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Capacidades operacionais</h2>
+        <p>Além do papel, um vínculo pode acumular <strong>capacidades</strong> (<code>MembershipCapability</code>) — poderes operacionais empilháveis, concedidos com auditoria e válidos apenas no território:</p>
+        <ul>
+          <li><strong>Curator</strong> — curadoria e validação (residência, entidades).</li>
+          <li><strong>Moderator</strong> — decisões de moderação (reports, sanções).</li>
+          <li><strong>EventOrganizer</strong> — organização de eventos.</li>
+        </ul>
+
+        <h2>Verificação</h2>
+        <p>A <strong>identidade</strong> é global e pertence ao usuário (<code>UserIdentityVerificationStatus</code>: Unverified → Pending → Verified). A <strong>residência</strong> é por vínculo (<code>ResidencyVerification</code>: None, GeoVerified, DocumentVerified — acumuláveis). Regra: no máximo 1 residência (Resident) por usuário em todo o sistema.</p>
+
+        <div class="callout"><span class="msr fill">lock</span><div>Quando uma ação exige papel superior, a UI mostra um <strong>convite</strong> ("Confirme residência para votar") em vez de esconder o recurso — transparência sobre o que o território oferece.</div></div>
+
+        <div class="pager"><a href="#glossario"><span class="lbl">Anterior</span><b>← Glossário</b></a><a class="next" href="#dominio"><span class="lbl">Próximo</span><b>Modelo de domínio →</b></a></div>
+      </article>
+
+      <!-- ===================== DOMÍNIO ===================== -->
+      <article class="doc" id="doc-dominio">
+        <div class="eyebrow">Modelo &amp; domínio</div>
+        <h1>Modelo de domínio</h1>
+        <p class="sub">O modelo é <strong>user-centric</strong>: a pessoa é uma identidade global; o vínculo com cada território é uma camada separada.</p>
+
+        <h2>Entidades principais</h2>
+        <table>
+          <thead><tr><th>Grupo</th><th>Entidades</th></tr></thead>
+          <tbody>
+            <tr><td><b>Identidade</b></td><td>User, SystemPermission, UserPreferences</td></tr>
+            <tr><td><b>Território</b></td><td>Territory, TerritoryMembership, MembershipSettings, MembershipCapability, FeatureFlag</td></tr>
+            <tr><td><b>Conteúdo</b></td><td>Post, PostGeoAnchor, MapEntity, MapEntityRelation, Media</td></tr>
+            <tr><td><b>Chat</b></td><td>ChatConversation, ConversationParticipant, ChatMessage, ChatConversationStats</td></tr>
+            <tr><td><b>Moderação</b></td><td>Report, Sanction, WorkItem (Work Queue)</td></tr>
+            <tr><td><b>Marketplace</b></td><td>Store, StoreItem, ItemInquiry, Cart, Checkout</td></tr>
+            <tr><td><b>Admin &amp; mídia</b></td><td>SystemConfig, DocumentEvidence, OutboxMessage, UserNotification</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Princípios do modelo</h2>
+        <ul>
+          <li><strong>User-centric</strong> — a verificação de identidade pertence ao usuário, não ao vínculo.</li>
+          <li><strong>Membership como vínculo</strong> — apenas a relação User ↔ Territory (papel + verificação + status), sem hierarquia social.</li>
+          <li><strong>Settings como escolhas</strong> — opt-ins do membro (ex.: <code>MarketplaceOptIn</code>) vivem em MembershipSettings.</li>
+          <li><strong>Capacidades como poderes</strong> — empilháveis, auditáveis, restritas ao território.</li>
+          <li><strong>Marketplace como regra composta</strong> — depende de feature flag do território + opt-in + papel morador + residência verificada + identidade verificada.</li>
+        </ul>
+
+        <div class="callout"><span class="msr fill">verified_user</span><div>Toda decisão sensível (verificação, curadoria, moderação) passa por uma <strong>Work Queue</strong> genérica com status e <em>outcome</em> auditável — transparência em processos.</div></div>
+
+        <div class="pager"><a href="#papeis"><span class="lbl">Anterior</span><b>← Papéis</b></a><a class="next" href="#feed-mapa"><span class="lbl">Próximo</span><b>Feed &amp; mapa →</b></a></div>
+      </article>
+
+      <!-- ===================== FEED & MAPA ===================== -->
+      <article class="doc" id="doc-feed-mapa">
+        <div class="eyebrow">Funcionalidades</div>
+        <h1>Feed &amp; mapa</h1>
+        <p class="sub">O conteúdo do território vive em duas vistas integradas: a linha do tempo e o mapa — unidas pelo georreferenciamento.</p>
+
+        <h2>Feed territorial</h2>
+        <p>Uma linha do tempo de posts escopada ao território e ao papel de quem vê. Sem algoritmo de manipulação: ordenação temporal, filtros simples (Tudo, Avisos, Vizinhança).</p>
+        <ul>
+          <li><strong>Tipos:</strong> geral e alerta (avisos urgentes do território).</li>
+          <li><strong>Visibilidade:</strong> público ou só moradores.</li>
+          <li><strong>Mídia:</strong> fotos ancoradas ao território (múltiplas mídias — pós-MVP).</li>
+          <li><strong>Interações:</strong> curtir, comentar, salvar, compartilhar, reportar.</li>
+        </ul>
+
+        <h2>Mapa vivo</h2>
+        <p>Visualização espacial do território com tiles reais (OpenStreetMap), contorno do território e <strong>entidades georreferenciadas</strong>: lugares, comércios, trilhas, cachoeiras, nascentes, mirantes e alertas. Cada entidade tem categoria, status e curadoria comunitária.</p>
+
+        <h2>Sincronia feed ↔ mapa</h2>
+        <p>Posts com <code>GeoAnchor</code> aparecem como pins no mapa; a navegação entre a timeline e o pin correspondente é sincronizada (pós-MVP), dando contexto espacial ao que acontece na vila.</p>
+
+        <div class="callout"><span class="msr fill">water_drop</span><div>O mapa também sustenta a <strong>saúde do território</strong>: indicadores vivos como água potável, árvores nativas, nascentes e santuários, mantidos pela comunidade.</div></div>
+
+        <div class="pager"><a href="#dominio"><span class="lbl">Anterior</span><b>← Modelo de domínio</b></a><a class="next" href="#mercado"><span class="lbl">Próximo</span><b>Mercado &amp; economia →</b></a></div>
+      </article>
+
+      <!-- ===================== MERCADO ===================== -->
+      <article class="doc" id="doc-mercado">
+        <div class="eyebrow">Funcionalidades</div>
+        <h1>Mercado &amp; economia local</h1>
+        <p class="sub">Economia que fica no lugar: renda e relações que circulam dentro do território.</p>
+
+        <h2>Marketplace</h2>
+        <p>Moradores abrem <strong>lojas</strong> e oferecem <strong>itens</strong> (produtos e serviços). Compradores montam carrinho e finalizam com pagamento — sem taxa entre moradores. O marketplace é uma <em>regra composta</em>: depende de feature flag do território, opt-in, papel morador, residência verificada e identidade verificada.</p>
+        <table>
+          <thead><tr><th>Conceito</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><b>Store</b></td><td>Espaço comercial no território, gerido por um owner.</td></tr>
+            <tr><td><b>StoreItem</b></td><td>Produto ou serviço (type, title, pricingType, status).</td></tr>
+            <tr><td><b>Cart / Checkout</b></td><td>Seleção e finalização de compra, com pagamento e repasse.</td></tr>
+            <tr><td><b>ItemInquiry</b></td><td>Mensagem de interesse pré-compra, respeitando a governança.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Economia local (em evolução)</h2>
+        <p>Sobre o marketplace, uma camada de economia comunitária — pré-visualizada no app, planejada no roadmap:</p>
+        <div class="cards">
+          <div class="card"><div class="ci"><span class="msr fill">groups_2</span></div><h3>Compra coletiva</h3><p>Unir pedidos para baixar preço. <span class="pill p-soon">F17</span></p></div>
+          <div class="card"><div class="ci"><span class="msr fill">cottage</span></div><h3>Hospedagem</h3><p>Estadias no território. <span class="pill p-soon">F18</span></p></div>
+          <div class="card"><div class="ci"><span class="msr fill">swap_horiz</span></div><h3>Demandas &amp; trocas</h3><p>Quem precisa, quem oferece; escambo. <span class="pill p-soon">F19–20</span></p></div>
+          <div class="card"><div class="ci"><span class="msr fill">account_balance_wallet</span></div><h3>Moeda territorial</h3><p>Créditos que circulam na vila. <span class="pill p-soon">F22</span></p></div>
+        </div>
+
+        <div class="pager"><a href="#feed-mapa"><span class="lbl">Anterior</span><b>← Feed &amp; mapa</b></a><a class="next" href="#governanca"><span class="lbl">Próximo</span><b>Governança &amp; curadoria →</b></a></div>
+      </article>
+
+      <!-- ===================== GOVERNANÇA ===================== -->
+      <article class="doc" id="doc-governanca">
+        <div class="eyebrow">Funcionalidades</div>
+        <h1>Governança &amp; curadoria</h1>
+        <p class="sub">Decisões coletivas e cuidado comunitário, com autonomia territorial e processos transparentes.</p>
+
+        <h2>Votação &amp; eleições</h2>
+        <p>O território elege representantes do conselho e decide consultas por votação. Só moradores votam; resultados são públicos. A governança é da comunidade — o app só dá a ferramenta.</p>
+
+        <h2>Curadoria comunitária</h2>
+        <p>A inteligência local valida o território. <strong>Curadores</strong> aprovam entidades do mapa, confirmam residências e cuidam da qualidade do conteúdo. Toda decisão passa pela <strong>Work Queue</strong> com <em>outcome</em> auditável.</p>
+
+        <h2>Moderação &amp; sanções</h2>
+        <ul>
+          <li><strong>Report</strong> — denúncia de post ou usuário com motivo e rastreabilidade.</li>
+          <li><strong>Moderador</strong> — decide casos, respeitando a autonomia do território.</li>
+          <li><strong>Sanction</strong> — ação disciplinar territorial ou global, temporária ou permanente, sempre justificada.</li>
+        </ul>
+
+        <div class="callout"><span class="msr fill">shield_person</span><div>Curadoria e moderação são <strong>capacidades</strong> concedidas com auditoria, válidas apenas no território. Admins globais existem para decisões de sistema, sem substituir a autonomia local.</div></div>
+
+        <div class="pager"><a href="#mercado"><span class="lbl">Anterior</span><b>← Mercado</b></a><a class="next" href="#comunicacao"><span class="lbl">Próximo</span><b>Comunicação →</b></a></div>
+      </article>
+
+      <!-- ===================== COMUNICAÇÃO ===================== -->
+      <article class="doc" id="doc-comunicacao">
+        <div class="eyebrow">Funcionalidades</div>
+        <h1>Comunicação</h1>
+        <p class="sub">Conversas com governança territorial e regras explícitas de acesso.</p>
+
+        <h2>Canais do território</h2>
+        <p>Conversas "implícitas" derivadas do território: um <strong>canal público</strong> (visitantes e moradores) e um <strong>canal de moradores</strong>. O acesso vem do <code>territoryId</code> + papel + regras de verificação — não há convite manual.</p>
+
+        <h2>Grupos &amp; mensagens diretas</h2>
+        <ul>
+          <li><strong>Grupo</strong> — conversa privada (invite-only) dentro de um território, criada por morador verificado, com aprovação por curadoria.</li>
+          <li><strong>DM</strong> — conversa direta entre usuários, respeitando preferências e bloqueios; habilitável por feature flag do território.</li>
+        </ul>
+
+        <div class="callout"><span class="msr fill">speed</span><div>Para performance, cada conversa mantém um <code>ConversationStats</code> (última mensagem, preview, contagem) — evita agregações caras na inbox.</div></div>
+
+        <div class="pager"><a href="#governanca"><span class="lbl">Anterior</span><b>← Governança</b></a><a class="next" href="#arquitetura"><span class="lbl">Próximo</span><b>Arquitetura →</b></a></div>
+      </article>
+
+      <!-- ===================== ARQUITETURA ===================== -->
+      <article class="doc" id="doc-arquitetura">
+        <div class="eyebrow">Construção</div>
+        <h1>Arquitetura</h1>
+        <p class="sub">Backend em .NET com Domain-Driven Design e Clean Architecture. Domínio primeiro, evolução incremental, API-first.</p>
+
+        <h2>Princípios técnicos</h2>
+        <ul>
+          <li><strong>Domain-Driven Design</strong> — o modelo de domínio (território, vínculos, capacidades) é o coração; o código reflete a linguagem do produto.</li>
+          <li><strong>Clean Architecture</strong> — camadas isoladas (domínio, aplicação, infraestrutura, API), dependências apontando para dentro.</li>
+          <li><strong>API-first</strong> — contrato documentado (Swagger) antes da UI; o cliente consome endpoints estáveis.</li>
+          <li><strong>Evolução em ondas</strong> — entregas incrementais e validadas, fase a fase.</li>
+        </ul>
+
+        <h2>Números do projeto</h2>
+        <table>
+          <thead><tr><th>Indicador</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Fases entregues</td><td><b>16 de 48</b></td></tr>
+            <tr><td>Endpoints documentados</td><td><b>~150</b> (Swagger)</td></tr>
+            <tr><td>Testes automatizados</td><td><b>2.194</b> (100% de sucesso)</td></tr>
+            <tr><td>Linhas de código</td><td><b>~40k</b></td></tr>
+            <tr><td>Licença</td><td>Aberta, orientada à comunidade</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Padrões de confiabilidade</h2>
+        <ul>
+          <li><strong>Outbox</strong> para notificações confiáveis (eventos → inbox).</li>
+          <li><strong>Work Queue</strong> genérica para revisão humana auditável.</li>
+          <li><strong>Storage por proxy</strong> (S3/MinIO) com autorização e auditoria — sem URLs públicas.</li>
+          <li><strong>SystemConfig</strong> calibrável e auditável para parametrizar o sistema.</li>
+        </ul>
+
+        <div class="callout"><span class="msr fill">terminal</span><div>Quem quer contribuir com código começa pelo <strong>Developer Portal</strong> (setup, padrões, guias) e pelo repositório no GitHub. Veja <a href="#contribuir">Contribuir</a>.</div></div>
+
+        <div class="pager"><a href="#comunicacao"><span class="lbl">Anterior</span><b>← Comunicação</b></a><a class="next" href="#roadmap"><span class="lbl">Próximo</span><b>Roadmap →</b></a></div>
+      </article>
+
+      <!-- ===================== ROADMAP ===================== -->
+      <article class="doc" id="doc-roadmap">
+        <div class="eyebrow">Construção</div>
+        <h1>Roadmap</h1>
+        <p class="sub">48 fases organizadas em 10 ondas. O Arah não quer crescer rápido — quer criar raízes profundas.</p>
+
+        <div class="wave done">
+          <div class="wh"><span class="wn">Entregue · Fases 1–16</span></div>
+          <h3>Fundação sólida</h3>
+          <p>Território, vínculos e feed · mapa, eventos e alertas · pagamentos, payout e mídia · governança, votação e chat · assinaturas recorrentes.</p>
+        </div>
+        <div class="wave now">
+          <div class="wh"><span class="wn">Em andamento · Fases 17–25</span></div>
+          <h3>Economia local</h3>
+          <p>Compra coletiva e demandas/ofertas · hospedagem e entregas territoriais · trocas comunitárias e moeda territorial · saúde do território e dashboards.</p>
+        </div>
+        <div class="wave next">
+          <div class="wh"><span class="wn">Visão · Fases 26–48</span></div>
+          <h3>Soberania digital</h3>
+          <p>Hub de serviços digitais e IA · preparação Web3 e DAO · governança tokenizada · aprendizado e banco de sementes.</p>
+        </div>
+
+        <div class="callout quote"><span class="msr fill">format_quote</span><div>O futuro é ancestral, local, descentralizado e inevitável.</div></div>
+
+        <div class="pager"><a href="#arquitetura"><span class="lbl">Anterior</span><b>← Arquitetura</b></a><a class="next" href="#contribuir"><span class="lbl">Próximo</span><b>Contribuir →</b></a></div>
+      </article>
+
+      <!-- ===================== CONTRIBUIR ===================== -->
+      <article class="doc" id="doc-contribuir">
+        <div class="eyebrow">Construção</div>
+        <h1>Contribuir</h1>
+        <p class="sub">Tecnologia consciente precisa de mãos conscientes. O Arah é aberto à colaboração de quem se interessa por território, cultura, soberania e software consciente.</p>
+
+        <h2>Para comunidades</h2>
+        <p>Sua comunidade, associação ou coletivo pode iniciar uma implementação do Arah no próprio território. O caminho começa com uma conversa sobre o lugar — quem são, o que sonham organizar, o que já existe.</p>
+        <div class="cards">
+          <a class="card" href="https://github.com/sraphaz/arah" target="_blank" rel="noopener"><div class="ci"><span class="msr fill">code</span></div><h3>Repositório</h3><p>Código, issues e contribuições no GitHub.</p></a>
+          <a class="card" href="https://devportal.araponga.app/" target="_blank" rel="noopener"><div class="ci"><span class="msr fill">terminal</span></div><h3>Developer Portal</h3><p>Setup, padrões e guias técnicos.</p></a>
+        </div>
+
+        <h2>Como ajudar</h2>
+        <ul>
+          <li><strong>Código &amp; testes</strong> — backend (.NET) e cliente (Flutter), seguindo DDD e os padrões do projeto.</li>
+          <li><strong>Documentação</strong> — esta wiki e os docs do repositório são vivos e públicos.</li>
+          <li><strong>Design</strong> — usar o design system do Arah (tokens, tipografia, iconografia) para manter coerência.</li>
+          <li><strong>Ideias &amp; feedback</strong> — território, cultura e governança são tão importantes quanto o código.</li>
+        </ul>
+
+        <div class="callout"><span class="msr fill">eco</span><div>Mantenha-se fiel ao que existe: copie o design, não reinvente. Quando um padrão não está no sistema, prefira omitir ou deixar explícito o que falta.</div></div>
+
+        <p style="font-family:var(--display);font-weight:600;color:var(--primary);margin-top:30px;">Território primeiro. Comunidade primeiro. Vida primeiro. 🌿</p>
+
+        <div class="pager"><a href="#roadmap"><span class="lbl">Anterior</span><b>← Roadmap</b></a><a class="next" href="#visao-geral"><span class="lbl">Voltar ao</span><b>Início →</b></a></div>
+      </article>
+
+    </div>
+  </main>
+</div>
+
+<script src="wiki.js"></script>
+</body>
+</html>

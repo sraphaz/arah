@@ -1,0 +1,8 @@
+id: territorio-membership
+name: Território & Membership
+mode: consult
+enrich: Sugere regras território-primeiro e casos de papel (visitante/morador/curador).
+validate: Escopo por territoryId e visibilidade imposta no servidor.
+references:
+  - docs/05_GLOSSARY.md
+  - docs/12_DOMAIN_MODEL.md

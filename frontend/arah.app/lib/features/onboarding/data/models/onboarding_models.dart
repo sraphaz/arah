@@ -7,6 +7,7 @@ class TerritorySuggestion {
     required this.distanceKm,
     required this.latitude,
     required this.longitude,
+    this.isPending = false,
   });
 
   final String id;
@@ -15,6 +16,7 @@ class TerritorySuggestion {
   final double distanceKm;
   final double latitude;
   final double longitude;
+  final bool isPending;
 
   factory TerritorySuggestion.fromJson(Map<String, dynamic> json) {
     final id = json['id'] ?? json['Id'];
@@ -30,7 +32,14 @@ class TerritorySuggestion {
       distanceKm: (distanceKm is num) ? distanceKm.toDouble() : 0,
       latitude: (lat is num) ? lat.toDouble() : 0,
       longitude: (lng is num) ? lng.toDouble() : 0,
+      isPending: _readBool(json['isPending'] ?? json['IsPending']),
     );
+  }
+
+  static bool _readBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is String) return value.toLowerCase() == 'true';
+    return false;
   }
 }
 

@@ -1,0 +1,9 @@
+id: iac-plan
+description: Valida IaC (terraform plan / helm template dry-run) quando existir.
+run:
+  - echo "IaC not yet in repo — see docs/backlog-api/FASE54.md"
+future:
+  - terraform plan
+  - helm template --dry-run
+references:
+  - docs/handoff/arquitetura-c4/Plano Operacional e Pipelines - Arah.dc.html

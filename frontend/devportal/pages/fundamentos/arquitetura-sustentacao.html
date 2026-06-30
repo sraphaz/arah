@@ -1,0 +1,91 @@
+<!-- HERO -->
+<section class="page-hero">
+  <div class="hero-content">
+    <span class="eyebrow">Fundamentos · Operação</span>
+    <h1>Arquitetura C4 e Sustentação Operacional</h1>
+    <p class="hero-lead">
+      Documentação de handoff sobre o que sustenta a plataforma em produção: modelo C4, monetização open-core,
+      multi-instância, federação e cockpit do implementador.
+    </p>
+  </div>
+</section>
+
+<section class="section section-overview">
+  <h2>Prioridade atual do backlog</h2>
+  <p class="lead-text">
+    Após o MVP comunitário (fases 1–16), a <strong>Onda S — Sustentação Operacional</strong> (fases 52–61)
+    precede a escala de economia local até o go-live do território-piloto. A plataforma ainda não roda em produção —
+    CI/CD, Arah Core, IaC e billing comercial são os próximos bloqueadores.
+  </p>
+
+  <div class="content-grid">
+    <div class="content-card">
+      <div class="card-header">
+        <h3>Onda S0 — Fundação técnica</h3>
+      </div>
+      <p>Fases 52–54: pipelines CI/CD, Arah Core mínimo, Terraform/Helm e 1ª instância gerenciada.</p>
+    </div>
+    <div class="content-card">
+      <div class="card-header">
+        <h3>Onda S1 — Fundação de receita</h3>
+      </div>
+      <p>Fases 55, 57: billing comercial, Carteira Aratá com split, payouts, cockpit núcleo.</p>
+    </div>
+    <div class="content-card">
+      <div class="card-header">
+        <h3>Ondas S2–S4</h3>
+      </div>
+      <p>Transparência pública, governança de taxas, federação opt-in, capital territorial.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-navigation">
+  <h2>Documentação interativa (handoff)</h2>
+  <p class="lead-text">
+    Pacote HTML completo no repositório — abra localmente para diagramas C4, sequências e especificações de operação.
+  </p>
+
+  <div class="content-grid">
+    <div class="content-card">
+      <h3>Como abrir localmente</h3>
+      <pre><code>cd docs/handoff/arquitetura-c4
+python -m http.server 8080
+# http://localhost:8080/Arquitetura%20C4%20Arah.dc.html</code></pre>
+    </div>
+    <div class="content-card">
+      <h3>Documentos incluídos</h3>
+      <ul>
+        <li>Arquitetura C4 (contexto, containers, componentes, sequências)</li>
+        <li>Plano operacional e pipelines CI/CD</li>
+        <li>Operação, instâncias e federação</li>
+        <li>Adendo de monetização (split, transparência)</li>
+        <li>Cockpit e programa de implementadores</li>
+        <li>Backlog atualizado (impacto nas prioridades)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section-next-steps">
+  <h2>Referências no repositório</h2>
+  <div class="content-grid">
+    <div class="content-card">
+      <h3>Markdown</h3>
+      <ul>
+        <li><code>docs/handoff/README.md</code> — índice do handoff</li>
+        <li><code>docs/backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md</code> — prioridades consolidadas</li>
+        <li><code>docs/backlog-api/FASE52.md</code> … <code>FASE61.md</code> — fases de implementação</li>
+      </ul>
+    </div>
+    <div class="content-card">
+      <h3>Princípios</h3>
+      <ul>
+        <li>Morador nunca paga pelo app comunitário</li>
+        <li>Núcleo aberto — receita por operação, não paywall</li>
+        <li>Território como fronteira de dados; federação opt-in</li>
+        <li>Taxa e split transparentes antes e depois do pagamento</li>
+      </ul>
+    </div>
+  </div>
+</section>

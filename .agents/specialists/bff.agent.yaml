@@ -1,0 +1,7 @@
+id: bff
+name: BFF
+mode: consult
+focus: BffJourneyRegistry (constante, paths, cache), rotas /bff/journeys e /api/v2.
+references:
+  - backend/Arah.Api.Bff/Journeys/BffJourneyRegistry.cs
+  - docs/BFF_CONTRACT_SUMMARY.md

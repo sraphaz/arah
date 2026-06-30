@@ -1,0 +1,13 @@
+id: open-pr
+description: Cria branch e PR com descrição estruturada e checklist de agente.
+inputs:
+  title: string
+  body: string
+  labels: array
+steps:
+  - git checkout -b "agent/{id}-{slug}"
+  - git push -u origin HEAD
+  - gh pr create --title "{title}" --body-file .agents/templates/pr-body.md
+guardrails:
+  - never_push_main
+  - require_issue_link

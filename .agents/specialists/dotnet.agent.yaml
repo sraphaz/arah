@@ -1,0 +1,7 @@
+id: dotnet
+name: .NET / EF Core
+mode: consult
+focus: Arah.Api, módulos DDD, persistência InMemory/Postgres, JWT signing key.
+references:
+  - docs/11_ARCHITECTURE_SERVICES.md
+  - backend/Arah.Api/Program.cs

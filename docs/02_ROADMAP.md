@@ -1,10 +1,10 @@
 # Roadmap Estratégico - Arah
 ## Planejamento de Desenvolvimento e Evolução da Plataforma
 
-**Versão**: 3.1  
+**Versão**: 3.2  
 **Data**: 2025-01-20  
-**Última Atualização**: 2026-01-25  
-**Status**: ✅ MVP Essencial Completo (Fases 1-12) | 📊 Estratégia de Convergência em Andamento
+**Última Atualização**: 2026-06-30  
+**Status**: ✅ MVP + Fases 1-16 Completas | 🔴 **Prioridade: Sustentação Operacional (F52–61)**
 
 ---
 
@@ -82,41 +82,56 @@ O roadmap estratégico foi reorganizado com base em análise comparativa de merc
 
 ---
 
-### Onda 2: Governança e Sustentabilidade (Mês 0-6) 🔴 CRÍTICO
+### 🔴 Onda S: Sustentação Operacional (Semanas 1–24+) — PRIORIDADE ATUAL ⭐ NOVO
 
-**Objetivo**: Implementar base de governança participativa e sustentabilidade financeira.
+**Objetivo**: Sair do código para produção — CI/CD, Core, 1ª instância, monetização, cockpit e go-live piloto.
 
-| Fase | Título | Prioridade | Duração | Status |
-|------|--------|------------|---------|--------|
-| **Fase 13** | Conector de Envio de Emails | 🔴 P0 | 14 dias | ⏳ Planejado |
-| **Fase 14** | Governança Comunitária e Votação | 🔴 P0 | 21 dias | ⏳ Planejado |
-| **Fase 15** | Subscriptions & Recurring Payments | 🔴 P0 | 45 dias | ⏳ Novo |
-| **Fase 16** | Finalização Completa das Fases 1-15 | 🔴 P0 | 20 dias | ⏳ Novo ⭐ NOVA (renumerada de 14.8) |
+**Origem**: [Arquitetura C4](./handoff/README.md) · [Realinhamento](./backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)
 
-**Resultado Esperado**: Governança participativa funcional, aumento de engajamento sem complexidade de blockchain. Base completa das fases 1-15 finalizada.
+| Sub-onda | Fases | Foco | Janela |
+|----------|-------|------|--------|
+| **S0 — Fundação técnica** | 52–54 | CI/CD, Arah Core, IaC, 1ª instância | semanas 1–8 |
+| **S1 — Fundação de receita** | 55, 57 (MVP), 58 | Billing, split, payouts, cockpit núcleo | meses 2–4 |
+| **S2 — Transparência** | 56, 57 (completo), 58 | Painel público, taxas, deploy/rollback | meses 3–6 |
+| **S3 — Rede** | 59–61 | Federação, app implementador, patrocínios | meses 6–12 |
+| **S4 — Capital** | 61 | Fundo territorial, escala regional | 12m+ |
 
-**Referência**: [Estratégia de Convergência - Fase 1](./39_ESTRATEGIA_CONVERGENCIA_MERCADO.md#fase-1-fundação-de-governança-mês-0-3) | [Fase 14.8](./backlog-api/FASE14_8.md)
+**Marco**: Território-piloto (ex.: Camburi) no ar, comércios assinando, taxa/split visível, repasse liquidado.
+
+**Bloqueador identificado**: a plataforma ainda **não roda em produção** — Onda S precede escala de funcionalidades comunitárias.
 
 ---
 
+### ✅ Onda 2: Governança e Sustentabilidade (Fases 13-16) — COMPLETA
 
----
-
-### Onda 3: Economia Local (Mês 6-9) 🔴 CRÍTICO
-
-**Objetivo**: Implementar funcionalidades de economia local que geram valor imediato.
+**Objetivo**: Base de governança participativa e sustentabilidade financeira (base comunitária).
 
 | Fase | Título | Prioridade | Duração | Status |
 |------|--------|------------|---------|--------|
-| **Fase 17** | Sistema de Compra Coletiva | 🔴 P0 | 28 dias | ⏳ Planejado ⬆️ **P1→P0** |
-| **Fase 18** | Sistema de Hospedagem Territorial | 🔴 P0 | 56 dias | ⏳ Novo ⬆️ **P1→P0** |
-| **Fase 19** | Sistema de Demandas e Ofertas | 🔴 P0 | 21 dias | ⏳ Novo ⬆️ **P1→P0** ⭐ NOVA |
+| **Fase 13** | Conector de Envio de Emails | 🔴 P0 | 14 dias | ✅ Completo |
+| **Fase 14** | Governança Comunitária e Votação | 🔴 P0 | 21 dias | ✅ Completo |
+| **Fase 15** | Subscriptions & Recurring Payments | 🔴 P0 | 45 dias | ✅ Completo · [↗ F55 billing comercial](./backlog-api/FASE55.md) |
+| **Fase 16** | Finalização Completa das Fases 1-15 | 🔴 P0 | 20 dias | ✅ Completo |
+
+**Resultado**: ✅ Governança e base de assinaturas implementadas. **Próximo**: monetização open-core (F55) e operação (F52–61).
+
+---
+
+### Onda 3: Economia Local (Após go-live piloto) 🟡 ALTA
+
+**Objetivo**: Funcionalidades de economia local — **após** Onda S1 (território faturando).
+
+| Fase | Título | Prioridade | Duração | Status |
+|------|--------|------------|---------|--------|
+| **Fase 17** | Sistema de Compra Coletiva | 🟡 P1 | 28 dias | ⏳ Planejado ⬇️ **P0→P1** |
+| **Fase 18** | Sistema de Hospedagem Territorial | 🟡 P1 | 56 dias | ⏳ Planejado ⬇️ **P0→P1** |
+| **Fase 19** | Sistema de Demandas e Ofertas | 🟡 P1 | 21 dias | ⏳ Planejado ⬇️ **P0→P1** |
 
 **Resultado Esperado**: Economia local funcional com compras coletivas, hospedagem e demandas/ofertas, gerando valor imediato com pagamentos convencionais.
 
-**Justificativa**: Considerando contexto brasileiro, economia local gera valor imediato sem necessidade de blockchain. Usuários podem usar serviços agora com PIX, cartão, etc.
+**Justificativa**: Economia local permanece valiosa, mas **depende de plataforma em produção e billing** (Onda S). Prioridade rebaixada até go-live piloto.
 
-**Referência**: [Reavaliação Blockchain Prioridade](./REAVALIACAO_BLOCKCHAIN_PRIORIDADE.md)
+**Referência**: [Realinhamento Sustentação](./backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)
 
 ---
 

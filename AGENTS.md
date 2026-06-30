@@ -1,64 +1,116 @@
-# AGENTS.md
+# AGENTS.md — Manual de operação por agentes
 
-## Cursor Cloud specific instructions
+**Versão**: 1.1  
+**Data**: 2026-06-30  
+**Repo**: `sraphaz/arah`
 
-This monorepo has four products: a .NET 8 backend API + BFF (`backend/`), three web apps
-(`frontend/wiki`, `frontend/portal`, `frontend/devportal`), and a Flutter app (`frontend/arah.app`).
-The VM snapshot already has the toolchains installed (.NET 8 SDK at `/usr/local/dotnet`,
-Flutter 3.27.4 + Dart at `/usr/local/flutter`, both symlinked into `/usr/local/bin`), and the
-startup update script refreshes dependencies. Standard build/test/run commands live in
-`.github/workflows/ci.yml`, `docs/SETUP.md`, `docs/DEVELOPMENT.md`, and the per-app
-`package.json`/`pubspec.yaml`. Notes below are the non-obvious gotchas.
+Este arquivo é a **fonte de verdade** para agentes (Cursor, CI, `arah-agents`). Regras longas permanecem em `.cursorrules`; **procedimentos executáveis** vivem em `.skills/`.
 
-### Backend (.NET 8) — `backend/`, solution `Arah.sln`
-- Use **`Arah.sln`**, not the legacy `Araponga.sln`. All code/namespaces are `Arah.*` even though
-  prose docs still say "Araponga".
-- The API **requires** a JWT signing key to boot, even in Development. Without it `Program.cs`
-  throws `JWT SigningKey must be configured...`. Set env `JWT__SIGNINGKEY=...` before running
-  (any value works in Development/Testing; the literal `dev-only-change-me` is tolerated outside
-  Production with a warning).
-- The API defaults to the **InMemory** persistence provider (`appsettings.json` →
-  `Persistence:Provider`), so it runs with **no Postgres/Redis/MinIO** for local dev and seeds
-  canonical territories on boot. Redis and MinIO are optional (the app falls back to in-memory cache
-  and local-disk media). For realistic persistence set `Persistence__Provider=Postgres` +
-  `ConnectionStrings__Postgres=...` (see `docker-compose.yml`).
-- Run the API: `dotnet run --project backend/Arah.Api` → `http://localhost:5178` (Swagger `/swagger`,
-  health `/health`). `/health` reporting `Degraded` in dev is expected (storage health check with the
-  Local media provider).
-- Run the BFF (needed by the Flutter app): `dotnet run --project backend/Arah.Api.Bff` →
-  `http://localhost:5005`. Point it at the API with `Bff__ApiBaseUrl=http://localhost:5178`. The BFF
-  has no `/health` route; its proxied routes live under `/bff/journeys` and `/api/v2/journeys/*`.
-- Tests: `dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj` and
-  `dotnet test backend/Tests/Arah.Tests.Bff/Arah.Tests.Bff.csproj`. A couple of tests under
-  `Arah.Tests/Performance` assert latency SLAs (e.g. `< 700ms`) and can flake on a slow/loaded VM —
-  those failures are timing-related, not code regressions.
+**Handoff interativo**: [docs/handoff/Operacao por Agentes - Arah.dc.html](docs/handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
 
-### Web frontends — `frontend/{wiki,portal,devportal}` (npm)
-- `npm run lint` is **broken** in `wiki` and `portal`: they call `next lint`, which Next.js 16
-  removed, so `next` treats `lint` as a directory and errors. Use `npm run type-check` and
-  `npm test` (jest) instead for those apps.
-- `wiki`: `npm run dev` serves on port **3001** under the **`/wiki`** base path
-  (`http://localhost:3001/wiki`); `/` returns 404. Checks: `npm run type-check`, `npm test`.
-- `portal`: `npm run dev` serves on port **3000** at `/`.
-- `devportal`: static HTML; no dev server. Validate with `npm test` (jest). It is also served by the
-  API at `/devportal`.
+---
 
-### Flutter app — `frontend/arah.app`
-- `flutter pub get`, then `flutter analyze --no-fatal-infos` (CI tolerates info-level lints) and
-  `flutter test`. It talks only to the **BFF**, not the API directly (`--dart-define=BFF_BASE_URL=...`).
-- l10n: arb files in `lib/l10n/app_pt.arb` (template) + `app_en.arb`. `flutter gen-l10n` writes to the
-  synthetic package (`.dart_tool/flutter_gen/gen_l10n/`), but the app imports the **committed**
-  `lib/l10n/app_localizations*.dart`. After editing arb files, run `flutter gen-l10n` then copy the 3
-  generated files from `.dart_tool/flutter_gen/gen_l10n/` over `lib/l10n/`.
-- `flutter_map` 8.x markers: a `GestureDetector` inside a `Marker` child does **not** fire reliably on
-  web. Handle taps via `MapOptions.onTap` + nearest-pin matching (see `map_screen.dart`).
-- New app journeys must be registered in the BFF `BffJourneyRegistry` (constant + `JourneyToApiPathBase`
-  + `AllEndpoints` + `CacheableGetEndpoints` + `AllPathPrefixes`), or BFF tests/`/bff/journeys` break.
+## Princípios
 
-### Keep docs in sync with every delivery (important)
-When shipping a feature (app/BFF/API), update the relevant docs **in the same PR**:
-- `README.md` (phase/status + "App (Flutter) — Entregas Recentes"), `docs/CHANGELOG.md`,
-  `docs/STABLE_RELEASE_APP_ONBOARDING.md` (app implemented + próximos passos),
-  `docs/FEATURE_MATRIX_API_BFF_APP.md` (API/BFF/App columns), and the phase docs under
-  `docs/backlog-api/` + `docs/STATUS_FASES.md` when a backlog phase status changes.
-Treat "documentação desatualizada" as a bug (see `.cursorrules`).
+1. **Humano comanda, agente executa** — intenção e merge são humanos; agentes propõem PRs.
+2. **Tudo via Pull Request** — sem commit direto em `main`.
+3. **Escopo mínimo** — cada agente só toca paths permitidos (ver `.agents/*.agent.yaml`).
+4. **Doc como código** — `sync-docs` no mesmo PR que código; doc desatualizada = bug.
+5. **Território-primeiro** — mesma ética do produto: agentes pequenos, desacoplados.
+
+---
+
+## Fluxo
+
+```
+Intenção (humano) → Orquestrador → Agente + skills → PR → CI + QA → Aprovação (humano) → Merge
+```
+
+---
+
+## Catálogo de agentes (fluxo)
+
+| ID | Agente | Gatilho | Escopo | Manifest |
+|----|--------|---------|--------|----------|
+| `orchestrator` | Orquestrador | issue/PR + label | Roteia, não coda | [.agents/orchestrator.agent.yaml](.agents/orchestrator.agent.yaml) |
+| `planner` | Planner / Backlog Steward | descoberta, agenda | backlog, STATUS_FASES | [.agents/planner.agent.yaml](.agents/planner.agent.yaml) |
+| `docs-steward` | Docs Steward | merge, agenda | `docs/`, README, CHANGELOG | [.agents/docs-steward.agent.yaml](.agents/docs-steward.agent.yaml) |
+| `backend` | Backend Agent | `area/backend` | `backend/Arah.Api*`, tests | [.agents/backend.agent.yaml](.agents/backend.agent.yaml) |
+| `flutter` | Flutter Agent | `area/flutter` | `frontend/arah.app/` | [.agents/flutter.agent.yaml](.agents/flutter.agent.yaml) |
+| `web` | Web Agent | `area/web` | wiki, portal, devportal | [.agents/web.agent.yaml](.agents/web.agent.yaml) |
+| `qa` | Review / QA Agent | PR aberto | todos os PRs | [.agents/qa.agent.yaml](.agents/qa.agent.yaml) |
+| `release` | Release / DevOps | merge main, tag | `.github/`, infra | [.agents/release.agent.yaml](.agents/release.agent.yaml) |
+| `security` | Security / Compliance | PR, agenda | deps, secrets, SECURITY | [.agents/security.agent.yaml](.agents/security.agent.yaml) |
+
+**Consultivos** (não abrem PR sozinhos): `.agents/domain/`, `.agents/specialists/`
+
+---
+
+## Skills componíveis
+
+| Skill | Uso |
+|-------|-----|
+| [run-tests](.skills/run-tests.skill.yaml) | `dotnet test` / `flutter test` / `npm test` por área |
+| [open-pr](.skills/open-pr.skill.yaml) | Branch + PR estruturado |
+| [sync-docs](.skills/sync-docs.skill.yaml) | README, CHANGELOG, STATUS_FASES, FASE* |
+| [register-bff-journey](.skills/register-bff-journey.skill.yaml) | BffJourneyRegistry |
+| [gen-l10n](.skills/gen-l10n.skill.yaml) | flutter gen-l10n + cópia para lib/l10n |
+| [code-review](.skills/code-review.skill.yaml) | Checklist 21_CODE_REVIEW / 22_COHESION |
+| [backlog-to-issue](.skills/backlog-to-issue.skill.yaml) | Item backlog → issue com AC |
+| [release-cut](.skills/release-cut.skill.yaml) | Versão, tag, notas |
+| [dep-audit](.skills/dep-audit.skill.yaml) | CVEs, secrets |
+| [doc-taxonomy](.skills/doc-taxonomy.skill.yaml) | Taxonomia docs + índice |
+| [iac-plan](.skills/iac-plan.skill.yaml) | terraform/helm dry-run |
+
+---
+
+## CLI `arah-agents`
+
+```powershell
+./scripts/agents/arah-agents.ps1 orchestrate -Labels area/backend
+./scripts/agents/arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
+./scripts/agents/arah-agents.ps1 validate
+./scripts/agents/arah-agents.ps1 gates
+./scripts/agents/arah-agents.ps1 ensure-labels
+```
+
+Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml)
+
+---
+
+## Cursor Cloud — instruções específicas
+
+Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Flutter (`frontend/arah.app`).
+
+### Backend
+- Use **`Arah.sln`**, não `Araponga.sln`. Namespaces `Arah.*`.
+- JWT obrigatório: `JWT__SIGNINGKEY=...` (ex.: `dev-only-change-me` em dev).
+- Default InMemory — Postgres opcional via `Persistence__Provider=Postgres`.
+- API: `dotnet run --project backend/Arah.Api` → `:5178`. BFF: `backend/Arah.Api.Bff` → `:5005`, `Bff__ApiBaseUrl=http://localhost:5178`.
+- Testes: `dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj`.
+
+### Web
+- `next lint` quebrado no wiki/portal — use `npm test` e `type-check`.
+- Wiki: porta **3001**, base **`/wiki`**.
+
+### Flutter
+- BFF only: `--dart-define=BFF_BASE_URL=...`
+- l10n: `flutter gen-l10n` + copiar para `lib/l10n/` (skill `gen-l10n`).
+- `flutter_map` 8.x: taps via `MapOptions.onTap`.
+- Jornadas BFF: `BffJourneyRegistry` (skill `register-bff-journey`).
+
+### Documentação (obrigatório em todo PR)
+- `docs/CHANGELOG.md`, `docs/STATUS_FASES.md`, fases em `docs/backlog-api/` quando aplicável.
+- Ver [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md) e [.cursorrules](.cursorrules).
+
+### Guardrails
+- **Nunca** merge automático em `main`/prod.
+- **Nunca** secrets no diff.
+- CI verde antes de review.
+
+---
+
+## Referências
+
+- [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md)
+- [REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](docs/backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)

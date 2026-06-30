@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arah — Especificação de Handoff (Frontend)</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+:root{
+  --paper:#FBFCF9; --paper2:#F2F7F1; --ink:#16271D; --ink2:#0E2117; --muted:#4C5B50; --subtle:#74806E;
+  --primary:#377B57; --primary2:#214D37; --canopy:#4F956F; --amber:#A8632F; --blue:#2A6FDB;
+  --line:rgba(23,53,37,0.12); --line2:rgba(23,53,37,0.20);
+  --green-bg:#EAF5EE; --amber-bg:#FBF0E6; --blue-bg:#EAF0FB; --code-bg:#0E2117;
+  --display:"Sora",system-ui,sans-serif; --sans:"Geist",system-ui,sans-serif; --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --maxw:880px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.62;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.msr{font-family:"Material Symbols Rounded";font-variation-settings:'FILL' 1,'wght' 500;line-height:1;vertical-align:middle;font-size:1.1em;}
+h1,h2,h3,h4{font-family:var(--display);color:var(--ink2);letter-spacing:-0.02em;line-height:1.12;}
+h2{font-size:1.85rem;margin:0 0 6px;}
+h3{font-size:1.28rem;margin:34px 0 10px;}
+h4{font-size:1.02rem;margin:22px 0 6px;}
+p{margin:0 0 14px;text-wrap:pretty;}
+a{color:var(--primary);text-decoration:none;}
+ul,ol{margin:0 0 14px;padding-left:22px;}
+li{margin-bottom:6px;}
+code{font-family:var(--mono);font-size:0.86em;background:var(--paper2);border:1px solid var(--line);padding:1px 6px;border-radius:6px;color:var(--primary2);}
+
+/* layout */
+.shell{display:grid;grid-template-columns:248px 1fr;max-width:1240px;margin:0 auto;}
+.toc{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:34px 22px;border-right:1px solid var(--line);}
+.toc .brand{display:flex;align-items:center;gap:9px;margin-bottom:6px;}
+.toc .brand img{height:30px;}
+.toc .brand b{font-family:var(--display);font-weight:700;font-size:19px;color:var(--ink2);}
+.toc .tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--subtle);margin-bottom:24px;display:block;}
+.toc a{display:block;font-size:13.5px;color:var(--muted);padding:5px 0;border-left:2px solid transparent;padding-left:12px;margin-left:-2px;transition:color .15s,border-color .15s;}
+.toc a:hover{color:var(--primary);}
+.toc a.sub{font-size:12.5px;color:var(--subtle);padding-left:24px;}
+.toc .grp{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--subtle);margin:18px 0 6px;padding-left:12px;}
+.main{padding:56px clamp(24px,5vw,72px);max-width:calc(var(--maxw) + 144px);}
+section{padding:30px 0;border-bottom:1px solid var(--line);scroll-margin-top:24px;}
+section:last-child{border-bottom:none;}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:10px;}
+.lead{font-size:1.12rem;line-height:1.6;color:var(--muted);max-width:62ch;}
+
+/* cover */
+.cover{border-bottom:1px solid var(--line);padding:20px 0 44px;}
+.cover h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,5vw,3.4rem);letter-spacing:-0.035em;line-height:1.04;margin:0 0 16px;color:var(--ink2);}
+.cover h1 em{font-style:normal;color:var(--primary);}
+.cover .meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:26px;font-size:13px;color:var(--subtle);}
+.cover .meta b{color:var(--ink);font-weight:600;}
+
+/* callouts */
+.note{display:flex;gap:12px;padding:15px 18px;border-radius:14px;background:var(--paper2);border:1px solid var(--line);margin:18px 0;font-size:14px;}
+.note .msr{color:var(--primary);font-size:20px;flex-shrink:0;margin-top:1px;}
+.note.warn{background:var(--amber-bg);border-color:rgba(168,99,47,0.2);}
+.note.warn .msr{color:var(--amber);}
+.note.gap{background:var(--blue-bg);border-color:rgba(42,111,219,0.18);}
+.note.gap .msr{color:var(--blue);}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;}
+th{text-align:left;font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--subtle);padding:9px 12px;border-bottom:2px solid var(--line2);}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--muted);}
+td b,td strong{color:var(--ink);font-weight:600;}
+tr:hover td{background:rgba(55,123,87,0.03);}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap;}
+.p-live{background:var(--green-bg);color:var(--primary);}
+.p-soon{background:var(--amber-bg);color:var(--amber);}
+.p-gap{background:var(--blue-bg);color:var(--blue);}
+
+/* journey steps */
+.journey{border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:14px 0;background:#fff;}
+.journey .jh{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.journey .jh .ji{width:38px;height:38px;border-radius:11px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;}
+.journey .jh b{font-family:var(--display);font-weight:600;font-size:1.05rem;color:var(--ink2);}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;}
+.steps li{counter-increment:s;position:relative;padding:0 0 16px 38px;}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:25px;height:25px;border-radius:50%;background:var(--primary);color:#fff;font-family:var(--display);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.steps li:not(:last-child)::after{content:"";position:absolute;left:12px;top:27px;bottom:2px;width:1.5px;background:var(--line2);}
+.steps li b{color:var(--ink);font-weight:600;}
+.steps li .endpoint{font-family:var(--mono);font-size:12px;color:var(--amber);}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.kard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff;}
+.kard h4{margin:0 0 6px;}
+.kard p{font-size:13.5px;color:var(--muted);margin:0;}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0;font-size:13px;}
+.legend span{display:inline-flex;align-items:center;gap:6px;color:var(--muted);}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr;}
+  .toc{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);}
+  .grid2{grid-template-columns:1fr;}
+}
+@media print{
+  .toc{display:none;}
+  .shell{grid-template-columns:1fr;}
+  .main{max-width:100%;padding:0;}
+  section{break-inside:avoid;border-bottom:none;padding:14px 0;}
+  .journey,.kard,table{break-inside:avoid;}
+  body{font-size:11pt;}
+  a{color:var(--ink);}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- ===== TOC ===== -->
+  <nav class="toc">
+    <div class="brand"><img src="../assets/arah-logo.png" alt="Arah" /><b>Arah</b></div>
+    <span class="tag">Handoff · Frontend</span>
+    <a href="#visao">1 · Visão &amp; princípios</a>
+    <a href="#papeis">2 · Papéis &amp; permissões</a>
+    <a href="#navegacao">3 · Arquitetura de navegação</a>
+    <a href="#telas">4 · Catálogo de telas</a>
+    <div class="grp">5 · Jornadas</div>
+    <a href="#j-onboarding" class="sub">Entrada &amp; onboarding</a>
+    <a href="#j-residencia" class="sub">Confirmar residência</a>
+    <a href="#j-feed" class="sub">Feed, post &amp; comentários</a>
+    <a href="#j-evento" class="sub">Eventos</a>
+    <a href="#j-mercado" class="sub">Mercado &amp; checkout</a>
+    <a href="#j-loja" class="sub">Minha loja</a>
+    <a href="#j-coletiva" class="sub">Compra coletiva</a>
+    <a href="#j-hospedagem" class="sub">Hospedagem</a>
+    <a href="#j-servicos" class="sub">Babás &amp; bem-estar</a>
+    <a href="#j-economia" class="sub">Demandas, trocas, entregas</a>
+    <a href="#j-carteira" class="sub">Carteira territorial</a>
+    <a href="#j-governanca" class="sub">Governança &amp; votação</a>
+    <a href="#j-curadoria" class="sub">Curadoria (curador)</a>
+    <a href="#telas-extra" class="sub">Aprendizado, sementes, IA</a>
+    <a href="#estados">6 · Estados de UI</a>
+    <a href="#cache">7 · Cache &amp; offline</a>
+    <a href="#gaps">8 · Gaps backend-first</a>
+    <a href="#design">9 · Design system</a>
+    <a href="#a11y">10 · Acessibilidade &amp; i18n</a>
+    <a href="#aceite">11 · Definição de pronto</a>
+    <div class="grp">Apêndice técnico</div>
+    <a href="#dominio">12 · Modelo de domínio</a>
+    <a href="#api">13 · Integração &amp; API</a>
+    <a href="#arquitetura">14 · Arquitetura cliente</a>
+    <a href="#notif">15 · Notificações &amp; deep links</a>
+    <a href="#seguranca">16 · Segurança &amp; privacidade</a>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+    <header class="cover">
+      <div class="eyebrow">Especificação de produto · Frontend</div>
+      <h1>Arah — handoff de <em>desenvolvimento</em></h1>
+      <p class="lead">Especificação completa das jornadas, telas, estados e lacunas do app mobile território-primeiro. Escrita para a equipe de frontend a partir do backlog, do roadmap e do protótipo navegável de alta fidelidade.</p>
+      <div class="meta">
+        <span><b>Versão</b> 1.0</span>
+        <span><b>Base</b> repositório sraphaz/arah</span>
+        <span><b>Protótipo</b> ui_kits/app/index.html</span>
+        <span><b>Escopo</b> App mobile (Flutter / Material 3)</span>
+        <span><b>Idioma</b> pt-BR (en como secundário)</span>
+      </div>
+      <div class="note"><span class="msr">info</span><div>Este documento descreve a <b>camada de experiência</b>: o que o usuário vê e faz. O backend já implementa boa parte dos domínios (MVP, fases 1–16); o frontend é o que ainda precisa ser construído com profundidade. Telas marcadas <span class="pill p-gap">gap</span> nunca foram desenvolvidas no cliente.</div></div>
+    </header>
+
+    <section id="visao">
+      <div class="eyebrow">01</div>
+      <h2>Visão &amp; princípios</h2>
+      <p>Arah é uma plataforma digital comunitária <b>orientada ao território</b>. Toda a experiência é filtrada pelo território ativo do usuário; nada é global por padrão. O app é a extensão digital do território vivo.</p>
+      <div class="grid2">
+        <div class="kard"><h4>Território-primeiro</h4><p>O território é a referência de tudo. Trocar de território troca feed, mapa, mercado, eventos, governança — todo o conteúdo é escopado.</p></div>
+        <div class="kard"><h4>Comunidade-primeiro</h4><p>Papéis explícitos (morador, visitante, curador) regem visibilidade e participação. Confiança é local, entre vizinhos.</p></div>
+        <div class="kard"><h4>Calma, não captura</h4><p>Sem feed infinito algorítmico, sem métricas de vaidade. Movimento curto e suave; o app desaparece, o território aparece.</p></div>
+        <div class="kard"><h4>Economia que fica no lugar</h4><p>Mercado, serviços e moeda territorial mantêm renda e relações dentro da comunidade.</p></div>
+      </div>
+      <p style="margin-top:18px;"><b>Princípio de implementação:</b> o território é geográfico e neutro (nome, localização, fronteira); a vida social acontece em <i>camadas</i> que referenciam o território, não o definem. O cliente nunca deve assumir vínculo social no modelo de território.</p>
+    </section>
+
+    <section id="papeis">
+      <div class="eyebrow">02</div>
+      <h2>Papéis &amp; permissões</h2>
+      <p>A interface se adapta ao papel do usuário no território ativo. O papel é por território (um usuário pode ser morador de um e visitante de outro). O protótipo expõe um seletor "Ver como" no Perfil para demonstrar as três jornadas.</p>
+      <table>
+        <thead><tr><th>Capacidade</th><th>Visitante</th><th>Morador</th><th>Curador</th></tr></thead>
+        <tbody>
+          <tr><td>Ver feed público &amp; mapa</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Ver conteúdo "só moradores"</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Publicar post / comentar</td><td>✓ público</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Participar de eventos</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Votar em eleições</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Vender / abrir loja</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Fila de curadoria &amp; moderação</td><td>—</td><td>—</td><td>✓</td></tr>
+          <tr><td>Abrir eleições / gerir território</td><td>—</td><td>—</td><td>✓</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><span class="msr">lock</span><div>Quando uma ação exige papel superior, a UI mostra o estado <b>bloqueado com convite</b> (ex.: banner "Confirme residência para votar") em vez de esconder o recurso — transparência sobre o que o território oferece.</div></div>
+    </section>
+
+    <section id="navegacao">
+      <div class="eyebrow">03</div>
+      <h2>Arquitetura de navegação</h2>
+      <p>O app tem três níveis de navegação:</p>
+      <ul>
+        <li><b>Stages</b> — Login → Onboarding → MainShell (fluxo de entrada, sem nav).</li>
+        <li><b>Tabs (MainShell)</b> — bottom-nav de 5 abas: <b>Feed · Explorar · Publicar · Serviços · Perfil</b>. A ação central (Publicar) é elevada.</li>
+        <li><b>Overlays empilhados</b> — telas push/pop com header de voltar (mapa, detalhe de post, mensagens, ferramentas do território, telas de serviço).</li>
+        <li><b>Jornadas</b> — fluxos modais full-screen de múltiplos passos (progresso + revisão + sucesso), abertos por qualquer CTA.</li>
+      </ul>
+      <h4>Topo (território-primeiro)</h4>
+      <p>A barra superior sempre mostra o <b>território ativo</b> (toque abre o seletor de território) + atalhos de <b>Mensagens</b> e <b>Notificações</b> (com badge de não-lidos). É o âncora constante da experiência.</p>
+      <h4>Regras de navegação</h4>
+      <ul>
+        <li>Trocar de aba limpa a pilha de overlays.</li>
+        <li>Trocar de território recarrega todo o conteúdo escopado e leva ao Feed.</li>
+        <li>Jornadas são modais: <code>back</code> volta um passo; <code>close</code> aborta a jornada inteira.</li>
+        <li>As ferramentas do território vivem em <b>Explorar</b> (são do lugar); itens do usuário vivem no <b>Perfil</b>.</li>
+      </ul>
+    </section>
+
+    <section id="telas">
+      <div class="eyebrow">04</div>
+      <h2>Catálogo de telas</h2>
+      <p>Todas as telas do app, com origem e situação. <span class="legend" style="display:inline-flex;"><span><span class="pill p-live">implementada</span> backend pronto, frontend a construir</span> <span><span class="pill p-soon">backlog</span> roadmap, visão de produto</span></span></p>
+      <table>
+        <thead><tr><th>Tela</th><th>Função</th><th>Situação · fase</th></tr></thead>
+        <tbody>
+          <tr><td><b>Login</b></td><td>Auth e-mail + social (Google)</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Onboarding</b></td><td>Localização → territórios próximos → entrar como visitante</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Feed</b></td><td>Timeline territorial, filtros, post (geral/alerta, público/moradores), curtir</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Detalhe do post</b></td><td>Conteúdo + comentários + composer</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Publicar</b></td><td>Título, conteúdo, mídia, tipo, visibilidade</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Explorar</b></td><td>Ferramentas do território + trocar de território</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Mapa</b></td><td>Tiles OSM, geolocalização, entidades (lugares, trilhas, nascentes, mirantes, alertas), detalhe do pin</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Eventos</b></td><td>Lista, participar / cancelar presença</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Mensagens</b></td><td>Lista de conversas + thread</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Notificações</b></td><td>Inbox, marcar lida, deep-link por tipo</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Perfil</b></td><td>Identidade, papel, stats, ferramentas do usuário, interesses</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Configurações</b></td><td>Conta, preferências, privacidade</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Mercado</b></td><td>Lojas, itens, carrinho, checkout</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Minha loja</b></td><td>Abrir loja, produtos, configuração de pagamento (PIX)</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Eleições &amp; votação</b></td><td>Candidatos, voto, resultados</td><td><span class="pill p-live">impl. · F14</span></td></tr>
+          <tr><td><b>Gestão / curadoria</b></td><td>Fila de moderação, aprovar entidades, confirmar residências</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Serviços (hub)</b></td><td>Diretório de todas as funcionalidades por categoria</td><td><span class="pill p-live">impl.</span></td></tr>
+          <tr><td><b>Compra coletiva</b></td><td>Tiers de preço, progresso, participar</td><td><span class="pill p-soon">F17</span></td></tr>
+          <tr><td><b>Hospedagem</b></td><td>Anúncios, reserva</td><td><span class="pill p-soon">F18</span></td></tr>
+          <tr><td><b>Demandas &amp; ofertas</b></td><td>Publicar / responder</td><td><span class="pill p-soon">F19</span></td></tr>
+          <tr><td><b>Trocas comunitárias</b></td><td>Escambo / doação</td><td><span class="pill p-soon">F20</span></td></tr>
+          <tr><td><b>Entregas</b></td><td>Solicitar / acompanhar</td><td><span class="pill p-soon">F21</span></td></tr>
+          <tr><td><b>Carteira (Aratá)</b></td><td>Saldo, enviar, receber, extrato</td><td><span class="pill p-soon">F22</span></td></tr>
+          <tr><td><b>Babás</b></td><td>Lista verificada, contratar</td><td><span class="pill p-soon">E10</span></td></tr>
+          <tr><td><b>Bem-estar</b></td><td>Espaços + profissionais, agenda</td><td><span class="pill p-soon">E10</span></td></tr>
+          <tr><td><b>Aluguéis</b></td><td>Equipamentos, alugar</td><td><span class="pill p-soon">F46</span></td></tr>
+          <tr><td><b>Hub digital</b></td><td>Serviços digitais locais</td><td><span class="pill p-soon">F26</span></td></tr>
+          <tr><td><b>Assinaturas</b></td><td>Planos de apoio recorrente</td><td><span class="pill p-soon">F15</span></td></tr>
+          <tr><td><b>Saúde do território</b></td><td>Indicadores vivos</td><td><span class="pill p-soon">F24</span></td></tr>
+          <tr><td><b>Painel de métricas</b></td><td>Pulso da comunidade</td><td><span class="pill p-soon">F25</span></td></tr>
+          <tr><td><b>Banco de sementes</b></td><td>Doar / trocar mudas</td><td><span class="pill p-soon">F48</span></td></tr>
+          <tr><td><b>Aprendizado</b></td><td>Oficinas e saberes locais</td><td><span class="pill p-soon">F45</span></td></tr>
+          <tr><td><b>Assistente IA</b></td><td>Chat de apoio ao território</td><td><span class="pill p-soon">F27</span></td></tr>
+          <tr><td><b>Conquistas</b></td><td>Gamificação harmoniosa</td><td><span class="pill p-soon">F42</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="jornadas-intro">
+      <div class="eyebrow">05</div>
+      <h2>Jornadas</h2>
+      <p>As jornadas principais descritas passo-a-passo, na ordem em que o usuário as encontra. Cada passo lista a <b>ação do usuário</b>, o <b>estado da UI</b> e a <span class="endpoint">chamada de API</span> esperada (nomes ilustrativos; alinhar com o Swagger do backend).</p>
+      <div class="legend">
+        <span><span class="msr" style="color:var(--primary)">touch_app</span> ação do usuário</span>
+        <span><span class="endpoint">POST /endpoint</span> integração</span>
+        <span><span class="pill p-gap">gap</span> profundidade nunca feita no cliente</span>
+      </div>
+
+      <div class="journey" id="j-onboarding">
+        <div class="jh"><span class="ji msr">login</span><b>Entrada &amp; onboarding</b></div>
+        <ol class="steps">
+          <li><b>Login</b> — e-mail/senha ou Google. <span class="endpoint">POST /auth/login</span> → JWT + refresh token.</li>
+          <li><b>Permissão de localização</b> — consentimento explícito explicando o porquê. Sem permissão, fluxo manual de busca.</li>
+          <li><b>Territórios próximos</b> — lista por raio/distância. <span class="endpoint">GET /territories/nearby?lat&amp;lng&amp;radiusKm</span></li>
+          <li><b>Entrar como visitante</b> — seleciona território, cria vínculo <code>visitor</code>. <span class="endpoint">POST /territories/{id}/enter</span></li>
+          <li><b>MainShell</b> — abre no Feed do território com banner de visitante.</li>
+        </ol>
+      </div>
+
+      <div class="journey" id="j-residencia">
+        <div class="jh"><span class="ji msr">how_to_reg</span><b>Confirmar residência (visitante → morador)</b></div>
+        <ol class="steps">
+          <li><b>Gatilho</b> — banner no Feed ou Perfil → abre jornada.</li>
+          <li><b>Presença no território</b> — heurística por GPS + tempo mínimo no local (privada). <span class="endpoint">POST /memberships/{id}/presence</span></li>
+          <li><b>Comprovante</b> — upload de documento (conta, contrato, declaração da associação).</li>
+          <li><b>Revisar &amp; enviar</b> — status vira <code>pending</code>. <span class="endpoint">POST /memberships/{id}/request-resident</span></li>
+          <li><b>Sucesso</b> — "solicitação enviada"; aguarda análise da curadoria. Notificação ao aprovar.</li>
+        </ol>
+        <div class="note gap"><span class="msr">construction</span><div><b>Gap:</b> upload de comprovante, verificação de identidade e o estado <code>pending</code> visível no perfil nunca foram construídos no cliente.</div></div>
+      </div>
+
+      <div class="journey" id="j-feed">
+        <div class="jh"><span class="ji msr">eco</span><b>Feed, publicação &amp; comentários</b></div>
+        <ol class="steps">
+          <li><b>Ler o feed</b> — posts georreferenciados do território, com filtros (Tudo / Avisos / Vizinhança). <span class="endpoint">GET /territories/{id}/feed?cursor</span> (paginação).</li>
+          <li><b>Abrir post</b> — detalhe + comentários. <span class="endpoint">GET /posts/{id}</span> · <span class="endpoint">GET /posts/{id}/comments</span></li>
+          <li><b>Curtir / comentar</b> — interações otimistas. <span class="endpoint">POST /posts/{id}/like</span> · <span class="endpoint">POST /posts/{id}/comments</span></li>
+          <li><b>Publicar</b> — título, conteúdo, <b>mídia (foto)</b>, tipo (geral/alerta), visibilidade (público/moradores). GeoAnchors derivados da mídia. <span class="endpoint">POST /posts</span></li>
+          <li><b>Reportar / bloquear</b> — menu do post com motivo. <span class="endpoint">POST /reports</span></li>
+        </ol>
+        <div class="note gap"><span class="msr">construction</span><div><b>Gaps:</b> múltiplas mídias por post, sincronia timeline↔pin no mapa, e o menu de reportar/bloquear não existem no cliente.</div></div>
+      </div>
+
+      <div class="journey" id="j-evento">
+        <div class="jh"><span class="ji msr">event</span><b>Eventos</b></div>
+        <ol class="steps">
+          <li><b>Ver eventos</b> do território (lista + no mapa). <span class="endpoint">GET /territories/{id}/events</span></li>
+          <li><b>Participar / cancelar</b> — alterna Interested/Confirmed. <span class="endpoint">POST /events/{id}/participation</span></li>
+          <li><b>Criar evento</b> — data/hora + local obrigatório; registra papel do criador. <span class="endpoint">POST /events</span></li>
+        </ol>
+        <div class="note gap"><span class="msr">construction</span><div><b>Gap:</b> criação de evento pelo usuário (formulário com local obrigatório) ainda não existe no cliente.</div></div>
+      </div>
+
+      <div class="journey" id="j-mercado">
+        <div class="jh"><span class="ji msr">storefront</span><b>Mercado &amp; checkout</b></div>
+        <ol class="steps">
+          <li><b>Explorar itens</b> do território. <span class="endpoint">GET /territories/{id}/stores</span> · <span class="endpoint">GET /items</span></li>
+          <li><b>Sacola</b> — quantidade do item. <span class="endpoint">POST /cart/items</span></li>
+          <li><b>Entrega</b> — retirar no local ou entrega local (+frete).</li>
+          <li><b>Pagamento PIX</b> — QR + copia-e-cola; sem taxa entre moradores. <span class="endpoint">POST /checkout</span> · <span class="endpoint">POST /payments/pix</span></li>
+          <li><b>Confirmação</b> — pedido criado, vendedor notificado. <span class="endpoint">GET /orders/{id}</span></li>
+        </ol>
+      </div>
+
+      <div class="journey" id="j-loja">
+        <div class="jh"><span class="ji msr">add_business</span><b>Minha loja (vendedor)</b></div>
+        <ol class="steps">
+          <li><b>Abrir loja</b> — onboarding do vendedor (morador). <span class="endpoint">POST /stores</span></li>
+          <li><b>Configurar pagamento</b> — chave PIX, formas, taxa, conta de repasse. <span class="endpoint">PUT /stores/{id}/payment</span></li>
+          <li><b>Gerir produtos</b> — adicionar, ativar/desativar. <span class="endpoint">POST /items</span> · <span class="endpoint">PATCH /items/{id}</span></li>
+          <li><b>Acompanhar vendas</b> — dashboard (vendas no mês, pedidos), payout. <span class="endpoint">GET /stores/{id}/sales</span></li>
+        </ol>
+        <div class="note gap"><span class="msr">construction</span><div><b>Gap:</b> dashboard de vendas, gestão de pedidos do vendedor e a tela de payout/repasse não foram construídos no cliente.</div></div>
+      </div>
+
+      <div class="journey" id="j-coletiva">
+        <div class="jh"><span class="ji msr">groups_2</span><b>Compra coletiva</b> <span class="pill p-soon" style="margin-left:6px;">F17</span></div>
+        <ol class="steps">
+          <li><b>Ver campanha</b> — meta, progresso (X/Y famílias), tiers de preço por adesão.</li>
+          <li><b>Entrar na compra</b> — adesão atualiza o tier ativo. <span class="endpoint">POST /group-buys/{id}/join</span></li>
+          <li><b>Acompanhar</b> — notificações ao bater meta / fechar prazo.</li>
+        </ol>
+      </div>
+
+      <div class="journey" id="j-hospedagem">
+        <div class="jh"><span class="ji msr">cottage</span><b>Hospedagem</b> <span class="pill p-soon" style="margin-left:6px;">F18</span></div>
+        <ol class="steps">
+          <li><b>Buscar estadia</b> — anúncios do território (casa, quarto, camping).</li>
+          <li><b>Datas &amp; noites</b> — seleção de período.</li>
+          <li><b>Hóspedes</b> — respeitando capacidade.</li>
+          <li><b>Revisar &amp; pagar PIX</b> — total calculado. <span class="endpoint">POST /bookings</span></li>
+          <li><b>Confirmação</b> — anfitrião notificado, combina recepção pelo chat.</li>
+        </ol>
+      </div>
+
+      <div class="journey" id="j-servicos">
+        <div class="jh"><span class="ji msr">concierge</span><b>Babás &amp; bem-estar</b> <span class="pill p-soon" style="margin-left:6px;">E10</span></div>
+        <h4 style="margin:0 0 6px;">Contratar babá</h4>
+        <ol class="steps">
+          <li><b>Buscar babás</b> — filtros (disponibilidade, experiência, distância, avaliação, preço); só verificadas.</li>
+          <li><b>Dia &amp; horário</b> → <b>detalhes</b> (duração, nº/idade das crianças, observações).</li>
+          <li><b>Revisar</b> — estimativa; pagamento liberado só após o serviço. <span class="endpoint">POST /service-requests</span></li>
+          <li><b>Solicitação enviada</b> — babá aceita/recusa/contrapropõe; chat para combinar.</li>
+        </ol>
+        <h4>Agendar bem-estar</h4>
+        <ol class="steps">
+          <li><b>Escolher serviço</b> (espaço ou profissional) + horário na agenda compartilhada.</li>
+          <li><b>Confirmar</b> — reserva o slot. <span class="endpoint">POST /bookings/wellness</span></li>
+        </ol>
+      </div>
+
+      <div class="journey" id="j-economia">
+        <div class="jh"><span class="ji msr">swap_horiz</span><b>Demandas, trocas &amp; entregas</b></div>
+        <h4 style="margin:0 0 6px;">Demanda / oferta <span class="pill p-soon">F19</span></h4>
+        <ol class="steps">
+          <li><b>Publicar</b> — tipo (demanda/oferta), título, categoria, descrição. <span class="endpoint">POST /demands</span></li>
+          <li><b>Responder</b> — abre chat com o autor.</li>
+        </ol>
+        <h4>Troca <span class="pill p-soon">F20</span></h4>
+        <ol class="steps">
+          <li><b>Propor</b> — o que ofereço / o que quero em troca. <span class="endpoint">POST /trades</span></li>
+        </ol>
+        <h4>Entrega <span class="pill p-soon">F21</span></h4>
+        <ol class="steps">
+          <li><b>Solicitar</b> — item, retirada, destino; frete local. <span class="endpoint">POST /deliveries</span></li>
+          <li><b>Acompanhar</b> — status + posição do entregador (morador) no mapa.</li>
+        </ol>
+      </div>
+
+      <div class="journey" id="j-carteira">
+        <div class="jh"><span class="ji msr">account_balance_wallet</span><b>Carteira territorial (Aratá)</b> <span class="pill p-soon" style="margin-left:6px;">F22</span></div>
+        <ol class="steps">
+          <li><b>Ver saldo</b> + extrato (créditos por participação, compras, recebimentos).</li>
+          <li><b>Enviar</b> — valor → destinatário (morador) → confirmar. <span class="endpoint">POST /wallet/transfer</span></li>
+          <li><b>Receber / adicionar</b> — QR de recebimento; conversão BRL↔Aratá.</li>
+        </ol>
+        <div class="note warn"><span class="msr">priority_high</span><div><b>Decisão pendente:</b> moeda territorial vem depois de um ecossistema robusto de serviços (PIX/cartão primeiro). Tratar como visão; não bloquear MVP.</div></div>
+      </div>
+
+      <div class="journey" id="j-governanca">
+        <div class="jh"><span class="ji msr">how_to_vote</span><b>Governança &amp; votação</b> <span class="pill p-live" style="margin-left:6px;">F14</span></div>
+        <ol class="steps">
+          <li><b>Ver eleições</b> — abertas e encerradas, com prazo e total de votos. <span class="endpoint">GET /territories/{id}/elections</span></li>
+          <li><b>Votar</b> — seleciona candidato (só moradores), confirma. <span class="endpoint">POST /elections/{id}/vote</span></li>
+          <li><b>Resultados</b> — barras de percentual; vencedor destacado ao encerrar.</li>
+        </ol>
+      </div>
+
+      <div class="journey" id="j-curadoria">
+        <div class="jh"><span class="ji msr">shield_person</span><b>Curadoria &amp; gestão (curador)</b></div>
+        <ol class="steps">
+          <li><b>Fila de curadoria</b> — entidades sugeridas, posts sinalizados, residências a confirmar. <span class="endpoint">GET /territories/{id}/moderation-queue</span></li>
+          <li><b>Aprovar / recusar</b> — gera registro de auditoria (autor, data, justificativa). <span class="endpoint">POST /moderation/{id}/decision</span></li>
+          <li><b>Abrir eleição</b> — conselho, representantes, consultas. <span class="endpoint">POST /elections</span></li>
+          <li><b>Sanções</b> — territorial ou global. <span class="endpoint">POST /sanctions</span></li>
+        </ol>
+        <div class="note gap"><span class="msr">construction</span><div><b>Gap:</b> toda a área de curadoria/gestão (fila, decisões, auditoria, sanções, abrir eleição) existe no backend mas nunca teve cliente.</div></div>
+      </div>
+
+      <div class="journey" id="telas-extra">
+        <div class="jh"><span class="ji msr">eco</span><b>Vida no território</b></div>
+        <h4 style="margin:0 0 6px;">Assinaturas <span class="pill p-soon">F15</span></h4>
+        <ol class="steps"><li>Escolher plano → pagar PIX recorrente → ativo. <span class="endpoint">POST /subscriptions</span></li></ol>
+        <h4>Aprendizado <span class="pill p-soon">F45</span></h4>
+        <ol class="steps"><li>Ver oficina (saberes locais) → matricular. <span class="endpoint">POST /courses/{id}/enroll</span></li></ol>
+        <h4>Banco de sementes <span class="pill p-soon">F48</span></h4>
+        <ol class="steps"><li>Doar espécie / solicitar muda. <span class="endpoint">POST /seeds</span></li></ol>
+        <h4>Hub digital <span class="pill p-soon">F26</span> · Aluguéis <span class="pill p-soon">F46</span></h4>
+        <ol class="steps"><li>Contratar serviço digital / alugar equipamento → proposta ou PIX. <span class="endpoint">POST /digital-requests</span> · <span class="endpoint">POST /rentals</span></li></ol>
+        <h4>Assistente IA <span class="pill p-soon">F27</span></h4>
+        <ol class="steps"><li>Perguntar sobre o território; respostas conectadas aos dados locais. <span class="endpoint">POST /ai/chat</span></li></ol>
+      </div>
+    </section>
+
+    <section id="estados">
+      <div class="eyebrow">06</div>
+      <h2>Estados de UI</h2>
+      <p>Toda lista/tela que depende de rede deve tratar os quatro estados. O protótipo mostra apenas o estado "pronto"; estes precisam ser construídos.</p>
+      <table>
+        <thead><tr><th>Estado</th><th>Tratamento</th></tr></thead>
+        <tbody>
+          <tr><td><b>Carregando</b></td><td>Skeletons com a forma do conteúdo (cards de feed, linhas de lista). Nunca spinner sozinho em tela cheia. Manter chrome (topbar/nav).</td></tr>
+          <tr><td><b>Vazio</b></td><td>Mensagem calorosa + ação. Ex.: feed vazio → "Nenhum post nesta região · <i>Seja o primeiro a publicar aqui.</i>" com CTA Publicar.</td></tr>
+          <tr><td><b>Erro</b></td><td>"Erro ao carregar." + botão "Tentar de novo". Preservar conteúdo já carregado; erro não destrói a tela.</td></tr>
+          <tr><td><b>Sem permissão / papel</b></td><td>Banner-convite (ex.: "Confirme residência para ver isto") em vez de tela bloqueada.</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><span class="msr">bolt</span><div><b>Interações otimistas:</b> curtir, confirmar presença, marcar notificação e participar de compra coletiva atualizam a UI imediatamente e revertem em caso de falha, com toast discreto.</div></div>
+    </section>
+
+    <section id="cache">
+      <div class="eyebrow">07</div>
+      <h2>Cache &amp; offline</h2>
+      <p>O território é um lugar físico — conectividade é intermitente. A camada de dados precisa ser pensada para offline-first, algo que nunca foi tratado (projeto começou pelo backend).</p>
+      <ul>
+        <li><b>Cache do território ativo</b> — feed, mapa (tiles + entidades), eventos e perfil persistidos localmente; abrir o app mostra o último estado conhecido <i>na hora</i>, revalidando em segundo plano (stale-while-revalidate).</li>
+        <li><b>Fila de ações offline</b> — publicar, comentar, curtir e confirmar presença enfileiram quando offline e sincronizam ao voltar a conexão; UI mostra "enviando…".</li>
+        <li><b>Mídia</b> — upload resiliente com retry e progresso; imagens com cache em disco e placeholders por blurhash.</li>
+        <li><b>Tiles do mapa</b> — cache local da região do território; degradar com elegância sem rede.</li>
+        <li><b>Indicador global de offline</b> — faixa discreta no topo quando sem conexão.</li>
+      </ul>
+      <div class="note gap"><span class="msr">construction</span><div><b>Gap estrutural:</b> não há estratégia de cache, persistência local nem fila offline no cliente. É a maior lacuna de profundidade e deve ser decidida cedo (ex.: repositório com fonte local + remota, store reativo).</div></div>
+    </section>
+
+    <section id="gaps">
+      <div class="eyebrow">08</div>
+      <h2>Gaps backend-first</h2>
+      <p>O projeto nasceu pelo backend; o frontend tem profundidade pendente. Lacunas priorizadas para o time:</p>
+      <table>
+        <thead><tr><th>Lacuna</th><th>Impacto</th><th>Prioridade</th></tr></thead>
+        <tbody>
+          <tr><td><b>Cache / offline / fila de sync</b></td><td>Confiabilidade em campo, percepção de velocidade</td><td><span class="pill p-soon">Alta</span></td></tr>
+          <tr><td><b>Estados loading/empty/error</b> em todas as telas</td><td>Robustez e acabamento</td><td><span class="pill p-soon">Alta</span></td></tr>
+          <tr><td><b>Verificação de residência</b> (upload, identidade, pending)</td><td>Bloqueia o ciclo visitante→morador</td><td><span class="pill p-soon">Alta</span></td></tr>
+          <tr><td><b>Curadoria / moderação / sanções</b> no cliente</td><td>Governança do território</td><td><span class="pill p-soon">Alta</span></td></tr>
+          <tr><td><b>Criar evento</b> &amp; <b>múltiplas mídias</b> no post</td><td>Funcionalidade core de conteúdo</td><td><span class="pill p-soon">Média</span></td></tr>
+          <tr><td><b>Sincronia timeline ↔ pin</b> no mapa</td><td>Experiência feed+mapa integrada</td><td><span class="pill p-soon">Média</span></td></tr>
+          <tr><td><b>Dashboard do vendedor</b> &amp; payout</td><td>Economia local</td><td><span class="pill p-soon">Média</span></td></tr>
+          <tr><td><b>Reportar / bloquear</b> a partir do conteúdo</td><td>Segurança comunitária</td><td><span class="pill p-soon">Média</span></td></tr>
+          <tr><td><b>Push notifications</b> reais (além do inbox)</td><td>Retenção e avisos urgentes</td><td><span class="pill p-soon">Média</span></td></tr>
+          <tr><td><b>Observabilidade no cliente</b> (logs, métricas, crash)</td><td>Qualidade e diagnóstico</td><td><span class="pill p-soon">Baixa</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="design">
+      <div class="eyebrow">09</div>
+      <h2>Design system</h2>
+      <p>Os fundamentos visuais completos estão em <code>colors_and_type.css</code> (raiz do design system) e nos cards do Design System. Resumo para implementação:</p>
+      <div class="grid2">
+        <div class="kard"><h4>Cor</h4><p>Escala floresta; app é <b>escuro por padrão</b> (superfície <code>#0E0F0D</code>, card <code>#16181500</code>→<code>#191B17</code> com degradê de profundidade). Acento copa <code>#81C784</code>/<code>#9FCEB4</code>. Semânticos: alerta <code>#E8A06A</code>, evento <code>#86AEEA</code>, água <code>#6FC5D6</code>.</p></div>
+        <div class="kard"><h4>Tipografia</h4><p><b>Sora</b> (display, 600–700) para títulos/números; <b>Geist</b> (400–600) para corpo/UI. Tracking negativo nos títulos.</p></div>
+        <div class="kard"><h4>Forma</h4><p>Raios 12–20px (cards), pills 999px. Hairlines brancas a 7–12% de opacidade. Sombra discreta no escuro; profundidade vem de superfície + borda.</p></div>
+        <div class="kard"><h4>Movimento</h4><p>150/250ms, easing <code>cubic-bezier(.16,1,.3,1)</code>. Transição de tela: escurecer→surgir. Press: <code>scale(.975)</code>. Sem bounce, sem loops decorativos. Respeitar <code>prefers-reduced-motion</code>.</p></div>
+      </div>
+      <p style="margin-top:16px;"><b>Iconografia:</b> Material Symbols (Rounded), eixo <code>FILL</code> 0 (inativo) / 1 (ativo). Tamanhos 18/20/24px. Nunca emoji como ícone de sistema.</p>
+      <p><b>Componentes reutilizáveis</b> (no UI kit): <code>Btn</code>, <code>Chip</code>, <code>Card</code>, <code>Avatar</code> (com selo de morador), <code>RoleBadge</code>, <code>TopBar</code>, <code>BottomNav</code>, <code>SegTab</code>, framework de jornada (<code>JourneyShell</code>, <code>SuccessView</code>, <code>Counter</code>, <code>PillSelect</code>, <code>ReviewRow</code>, <code>PixPay</code>). Hit-target mínimo 44px.</p>
+    </section>
+
+    <section id="a11y">
+      <div class="eyebrow">10</div>
+      <h2>Acessibilidade &amp; i18n</h2>
+      <ul>
+        <li><b>Idioma</b> — pt-BR padrão, en secundário. Todas as strings externalizadas (ARB). Datas/moeda localizadas.</li>
+        <li><b>Contraste</b> — texto sobre superfícies escuras ≥ 4.5:1; revisar tons <code>fg2/fg3</code> em textos pequenos.</li>
+        <li><b>Toque</b> — alvos ≥ 44px; espaçamento generoso na bottom-nav.</li>
+        <li><b>Leitor de tela</b> — rótulos semânticos em ícones-ação, papéis e badges; ordem de foco lógica nas jornadas.</li>
+        <li><b>Movimento reduzido</b> — desativar transições de tela e animações quando solicitado pelo sistema.</li>
+        <li><b>Tom de voz</b> — "você" + "nós/nosso", sentence case, verbos no infinitivo nos botões, vocabulário do território (vila, mutirão, conselho, morador/visitante).</li>
+      </ul>
+    </section>
+
+    <section id="aceite">
+      <div class="eyebrow">11</div>
+      <h2>Definição de pronto</h2>
+      <p>Uma tela/jornada está pronta quando:</p>
+      <ul>
+        <li>Cobre os quatro estados de UI (loading/empty/error/permissão) e funciona offline conforme a estratégia de cache.</li>
+        <li>Respeita o papel do usuário no território (visibilidade e ações corretas).</li>
+        <li>Integra os endpoints reais com tratamento de erro e interações otimistas onde aplicável.</li>
+        <li>Segue tokens, tipografia, iconografia e movimento do design system.</li>
+        <li>Passa em acessibilidade (contraste, toque, leitor de tela, movimento reduzido) e i18n (strings externalizadas).</li>
+        <li>Tem testes de widget/fluxo cobrindo o caminho feliz e os principais erros.</li>
+      </ul>
+      <div class="note"><span class="msr">menu_book</span><div>Referências vivas: protótipo navegável em <code>ui_kits/app/index.html</code> · tokens em <code>colors_and_type.css</code> · backlog e roadmap em <code>docs/02_ROADMAP.md</code>, <code>docs/03_BACKLOG.md</code> · documentação pública na wiki do projeto.</div></div>
+      <p style="margin-top:22px;font-family:var(--display);font-weight:600;color:var(--primary);">Território primeiro. Comunidade primeiro. Vida primeiro. 🌿</p>
+    </section>
+
+    <section id="dominio">
+      <div class="eyebrow">12 · Apêndice técnico</div>
+      <h2>Modelo de domínio</h2>
+      <p>Entidades centrais e campos-chave que o cliente consome. Nomes ilustrativos — alinhar com os contratos reais do backend (.NET / DDD). Todo recurso de conteúdo é <b>escopado a um território</b>.</p>
+      <table>
+        <thead><tr><th>Entidade</th><th>Campos-chave</th><th>Relações</th></tr></thead>
+        <tbody>
+          <tr><td><b>Territory</b></td><td><code>id, name, slug, center{lat,lng}, boundary(polygon|circle), region, memberCount, featureFlags[]</code></td><td>1—N Membership, Post, Event, MapEntity, Store, Election</td></tr>
+          <tr><td><b>User</b></td><td><code>id, name, handle, avatar, bio, interests[], createdAt</code></td><td>N—N Territory via Membership</td></tr>
+          <tr><td><b>Membership</b></td><td><code>userId, territoryId, role(visitor|resident|curator), status(active|pending), since</code></td><td>liga User↔Territory; rege permissões</td></tr>
+          <tr><td><b>Post</b></td><td><code>id, territoryId, authorId, type(general|alert), visibility(public|residents), title, body, media[], geoAnchors[], likeCount, commentCount, pinned, createdAt</code></td><td>N Comments; opcional N MapEntity (pins)</td></tr>
+          <tr><td><b>Comment</b></td><td><code>id, postId, authorId, body, createdAt</code></td><td>pertence a Post</td></tr>
+          <tr><td><b>MapEntity</b></td><td><code>id, territoryId, kind(place|trail|waterfall|spring|viewpoint|alert|media), coords, label, sub, confirmed, curatedBy</code></td><td>aparece no Mapa; passa por curadoria</td></tr>
+          <tr><td><b>Event</b></td><td><code>id, territoryId, title, startsAt, place{label,coords}, tag, goingCount, myParticipation(none|interested|confirmed)</code></td><td>local obrigatório</td></tr>
+          <tr><td><b>Store / Item</b></td><td><code>Store: id, territoryId, ownerId, name, payment{pixKey,methods[],fee,payout}</code> · <code>Item: id, storeId, title, price, category, active, media</code></td><td>Store 1—N Item; Order referencia Items</td></tr>
+          <tr><td><b>Order</b></td><td><code>id, buyerId, items[], fulfillment(pickup|delivery), total, status(pending|paid|fulfilled|cancelled), paymentId</code></td><td>gera Payment; notifica vendedor</td></tr>
+          <tr><td><b>Election / Vote</b></td><td><code>Election: id, territoryId, type, title, status(open|closed), endsAt, candidates[], voterCount</code> · <code>Vote: electionId, candidateId</code> (eleitor anônimo)</td><td>voto secreto; 1 por morador</td></tr>
+          <tr><td><b>Wallet / Transaction</b></td><td><code>Wallet: userId, territoryId, balance, currency(Aratá)</code> · <code>Tx: id, type(credit|debit), amount, label, counterparty, createdAt</code></td><td>moeda territorial (visão)</td></tr>
+          <tr><td><b>Notification</b></td><td><code>id, userId, kind, link, read, createdAt</code></td><td>deep-link para recurso</td></tr>
+          <tr><td><b>Membership-gated</b></td><td>GroupBuy, Booking, ServiceRequest, Demand, Trade, Delivery, Seed, Course, Subscription, Sanction, Report</td><td>todos referenciam territoryId + actor</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><span class="msr">schema</span><div>O cliente nunca infere papel/visibilidade a partir de dados locais: <code>visibility=residents</code> e ações por papel são <b>impostas pelo servidor</b>. O app só reflete o que a API autoriza.</div></div>
+    </section>
+
+    <section id="api">
+      <div class="eyebrow">13 · Apêndice técnico</div>
+      <h2>Integração &amp; API</h2>
+      <h4>Autenticação</h4>
+      <ul>
+        <li><b>JWT</b> de acesso (curto) + <b>refresh token</b> (seguro). Header <code>Authorization: Bearer &lt;access&gt;</code>.</li>
+        <li>Em <code>401</code>, tentar refresh transparente uma vez; falhando, deslogar e limpar dados sensíveis.</li>
+        <li>Tokens em <i>secure storage</i> (Keychain/Keystore), nunca em storage comum.</li>
+      </ul>
+      <h4>Escopo territorial</h4>
+      <ul>
+        <li>Recursos de conteúdo aceitam <code>territoryId</code> (path ou header <code>X-Territory-Id</code>); o servidor valida a membership antes de responder.</li>
+        <li>Trocar de território troca o escopo de todas as queries e invalida caches escopados.</li>
+      </ul>
+      <h4>Paginação, erros &amp; idempotência</h4>
+      <ul>
+        <li><b>Paginação por cursor</b>: <code>?cursor&amp;limit</code> → <code>{ data[], nextCursor }</code>. Feed e listas longas usam scroll infinito com cursor.</li>
+        <li><b>Envelope de erro</b> padronizado: <code>{ error:{ code, message, details? } }</code>. Mapear <code>code</code> → mensagem pt-BR amigável; nunca exibir stack/raw.</li>
+        <li><b>Idempotência</b> em pagamentos e ações financeiras: header <code>Idempotency-Key</code> (UUID por tentativa) para evitar cobrança/ação duplicada em retry.</li>
+        <li><b>Versionamento</b>: prefixo <code>/v1</code>; <b>feature flags</b> por território controlam quais módulos aparecem (o hub de Serviços lê isso).</li>
+      </ul>
+      <h4>Tempo real &amp; mídia</h4>
+      <ul>
+        <li><b>Realtime</b> (chat, notificações, novos posts/alertas): WebSocket ou SSE com reconexão; <i>fallback</i> para polling. Mensagens otimistas com reconciliação por id do servidor.</li>
+        <li><b>Upload de mídia</b>: solicitar <i>presigned URL</i> → <code>PUT</code> direto ao storage → confirmar referência no recurso. Suporta retry/resume; gerar <i>blurhash</i> para placeholder.</li>
+      </ul>
+    </section>
+
+    <section id="arquitetura">
+      <div class="eyebrow">14 · Apêndice técnico</div>
+      <h2>Arquitetura cliente recomendada</h2>
+      <p>O app é <b>Flutter + Material 3</b> com Riverpod (já presentes no repositório). Recomendação de camadas para sustentar a profundidade que falta (offline, estados, papéis):</p>
+      <div class="grid2">
+        <div class="kard"><h4>Presentation</h4><p>Widgets puros + telas. Sem lógica de rede. Consomem controllers e refletem os 4 estados de UI.</p></div>
+        <div class="kard"><h4>Application</h4><p>Controllers/Notifiers (Riverpod) — orquestram casos de uso, estado de tela e ações otimistas.</p></div>
+        <div class="kard"><h4>Domain</h4><p>Entidades + casos de uso independentes de framework (regras de papel, visibilidade, validação).</p></div>
+        <div class="kard"><h4>Data</h4><p>Repositórios com <b>fonte remota</b> (API) e <b>local</b> (cache) — política <i>stale-while-revalidate</i> + outbox offline.</p></div>
+      </div>
+      <h4>Decisões técnicas sugeridas</h4>
+      <ul>
+        <li><b>Estado:</b> Riverpod (providers + AsyncNotifier) — alinhado ao que já existe.</li>
+        <li><b>Persistência local:</b> Drift ou Isar para cache estruturado do território (feed, eventos, entidades, perfil) + fila de ações offline.</li>
+        <li><b>Rede:</b> dio com interceptors (auth/refresh, retry com backoff, logging, idempotency-key).</li>
+        <li><b>Navegação:</b> go_router com rotas tipadas e deep links; pilha de overlays e jornadas modais como rotas.</li>
+        <li><b>Mapas:</b> flutter_map (OSM) — já usado; cache de tiles da região do território.</li>
+        <li><b>Imagens:</b> cached_network_image + blurhash; upload resiliente.</li>
+        <li><b>Testes:</b> widget tests por jornada (caminho feliz + erros), golden tests dos componentes do design system.</li>
+      </ul>
+      <div class="note gap"><span class="msr">construction</span><div><b>Gap estrutural:</b> a camada de dados offline-first (repositório local+remoto, outbox, revalidação) é a maior peça ausente e deve ser definida antes de escalar as telas.</div></div>
+    </section>
+
+    <section id="notif">
+      <div class="eyebrow">15 · Apêndice técnico</div>
+      <h2>Notificações &amp; deep links</h2>
+      <p>O inbox in-app existe; <b>push real</b> e deep-linking consistente são gaps. Cada notificação carrega um <code>link</code> que resolve para uma rota.</p>
+      <table>
+        <thead><tr><th>Tipo</th><th>Gatilho</th><th>Deep link → rota</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill p-soon">alert</span></td><td>Alerta publicado no território</td><td><code>post:{id}</code> → detalhe do post</td></tr>
+          <tr><td><span class="pill p-live">event</span></td><td>Lembrete / mudança de evento</td><td><code>events</code> ou <code>event:{id}</code></td></tr>
+          <tr><td><span class="pill p-live">map</span></td><td>Entidade confirmada pela curadoria</td><td><code>map:{entityId}</code> → mapa focado no pin</td></tr>
+          <tr><td><span class="pill p-live">connection</span></td><td>Novo morador / vínculo</td><td><code>profile</code> ou perfil do usuário</td></tr>
+          <tr><td><span class="pill p-live">post</span></td><td>Comentário/curtida no seu post</td><td><code>post:{id}</code></td></tr>
+          <tr><td><span class="pill p-soon">order</span></td><td>Pedido pago / pronto / a caminho</td><td><code>order:{id}</code> → acompanhamento</td></tr>
+          <tr><td><span class="pill p-soon">election</span></td><td>Eleição aberta / encerrada</td><td><code>election:{id}</code></td></tr>
+          <tr><td><span class="pill p-soon">moderation</span></td><td>Item na fila / decisão (curador)</td><td><code>manage</code> → fila de curadoria</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>Esquema de URI:</b> <code>arah://territory/{tid}/post/{id}</code> etc. — abre direto na tela, restaurando o território correto.</li>
+        <li><b>Agrupamento</b> por território e por tipo; respeitar preferências de notificação (Posts / Eventos / Alertas).</li>
+        <li><b>Push</b> via FCM/APNs (gap): registrar token por dispositivo; alertas urgentes do território têm prioridade alta.</li>
+      </ul>
+    </section>
+
+    <section id="seguranca">
+      <div class="eyebrow">16 · Apêndice técnico</div>
+      <h2>Segurança &amp; privacidade</h2>
+      <ul>
+        <li><b>Localização privada (LGPD):</b> usada só para presença/sugestão de território; <b>nunca</b> exposta a outros usuários. Consentimento explícito com finalidade clara; permitir uso manual sem GPS.</li>
+        <li><b>Minimização de dados:</b> coletar o mínimo. Comprovante de residência é dado sensível — trânsito/repouso criptografados, acesso restrito à curadoria, retenção limitada e descarte após verificação.</li>
+        <li><b>Visibilidade imposta no servidor:</b> conteúdo "só moradores" e ações por papel validados no backend; o cliente não confia em flag local.</li>
+        <li><b>Pagamentos:</b> não armazenar dados de cartão no cliente (PCI). PIX e cobranças via PSP/backend; <code>Idempotency-Key</code> em toda operação financeira.</li>
+        <li><b>Moderação &amp; segurança comunitária:</b> reportar/bloquear a partir do conteúdo; sanções territoriais vs globais; toda decisão de curadoria gera registro de auditoria (autor, data, justificativa).</li>
+        <li><b>Sessão:</b> tokens em secure storage; logout limpa cache sensível e fila offline com dados pessoais.</li>
+        <li><b>Transparência:</b> projeto é código aberto — preferir mensagens claras sobre o que é coletado e por quê; sem dark patterns.</li>
+      </ul>
+      <div class="note"><span class="msr">shield</span><div>Princípio: o território confia em quem está nele. A tecnologia protege essa confiança — privacidade por padrão, decisões auditáveis, dados que ficam no lugar.</div></div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 using Arah.Api.Contracts.Journeys.Onboarding;
 using Arah.Api.Services.Journeys;
 using Arah.Api.Services.Journeys.Backend;
+using Arah.Application.Interfaces.Geo;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -13,11 +14,16 @@ public sealed class OnboardingJourneyServiceTests
     private static readonly Guid TerritoryId = Guid.Parse("22222222-2222-2222-2222-222222222222");
     private const string SessionId = "session-1";
 
-    private static OnboardingJourneyService CreateService(Mock<IOnboardingJourneyBackend>? backendMock = null)
+    private static OnboardingJourneyService CreateService(
+        Mock<IOnboardingJourneyBackend>? backendMock = null,
+        Mock<IMunicipalityTerritoryProvisioningService>? provisioningMock = null,
+        Mock<ITerritoryProposalService>? proposalMock = null)
     {
         var mock = backendMock ?? new Mock<IOnboardingJourneyBackend>();
+        var provisioning = provisioningMock ?? new Mock<IMunicipalityTerritoryProvisioningService>();
+        var proposal = proposalMock ?? new Mock<ITerritoryProposalService>();
         var logger = new Mock<ILogger<OnboardingJourneyService>>();
-        return new OnboardingJourneyService(mock.Object, logger.Object);
+        return new OnboardingJourneyService(mock.Object, provisioning.Object, proposal.Object, logger.Object);
     }
 
     [Fact]
@@ -38,7 +44,7 @@ public sealed class OnboardingJourneyServiceTests
     {
         var backend = new Mock<IOnboardingJourneyBackend>();
         backend.Setup(x => x.GetTerritoryByIdAsync(TerritoryId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "T", "D"));
+            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "T", "D", true));
         backend.Setup(x => x.SetActiveTerritoryAsync(SessionId, TerritoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
         var service = CreateService(backend);
@@ -53,7 +59,7 @@ public sealed class OnboardingJourneyServiceTests
     {
         var backend = new Mock<IOnboardingJourneyBackend>();
         backend.Setup(x => x.GetTerritoryByIdAsync(TerritoryId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "T", "D"));
+            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "T", "D", true));
         backend.Setup(x => x.SetActiveTerritoryAsync(SessionId, TerritoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
         backend.Setup(x => x.EnterAsVisitorAsync(UserId, TerritoryId, It.IsAny<CancellationToken>()))
@@ -70,7 +76,7 @@ public sealed class OnboardingJourneyServiceTests
     {
         var backend = new Mock<IOnboardingJourneyBackend>();
         backend.Setup(x => x.GetTerritoryByIdAsync(TerritoryId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "Territory", "Desc"));
+            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "Territory", "Desc", true));
         backend.Setup(x => x.SetActiveTerritoryAsync(SessionId, TerritoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
         backend.Setup(x => x.EnterAsVisitorAsync(UserId, TerritoryId, It.IsAny<CancellationToken>()))
@@ -99,7 +105,7 @@ public sealed class OnboardingJourneyServiceTests
     {
         var backend = new Mock<IOnboardingJourneyBackend>();
         backend.Setup(x => x.GetTerritoryByIdAsync(TerritoryId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "T", null));
+            .ReturnsAsync(new BackendTerritoryInfo(TerritoryId, "T", null, false));
         backend.Setup(x => x.SetActiveTerritoryAsync(SessionId, TerritoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
         backend.Setup(x => x.EnterAsVisitorAsync(UserId, TerritoryId, It.IsAny<CancellationToken>()))

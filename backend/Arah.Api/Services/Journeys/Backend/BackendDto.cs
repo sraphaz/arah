@@ -57,7 +57,7 @@ public sealed record BackendUserInfo(Guid Id, string DisplayName, string? Avatar
 
 public sealed record BackendCreatePostResult(bool Success, BackendFeedPost? Post, string? Error);
 
-public sealed record BackendTerritoryInfo(Guid Id, string Name, string? Description);
+public sealed record BackendTerritoryInfo(Guid Id, string Name, string? Description, bool Active);
 
 public sealed record BackendMembershipInfo(string Role);
 

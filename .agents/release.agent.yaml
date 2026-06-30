@@ -1,0 +1,25 @@
+id: release
+name: Release / DevOps Agent
+description: CI/CD, versões, changelog de release, IaC (quando existir).
+triggers:
+  - push:branch=main
+  - issue:label=area/ops
+  - workflow_dispatch
+scope:
+  paths:
+    - .github/**
+    - scripts/**
+    - docker-compose.yml
+    - Dockerfile
+    - global.json
+  commands:
+    - dotnet build
+skills:
+  - release-cut
+  - iac-plan
+  - run-tests
+  - open-pr
+guardrails:
+  no_merge: true
+  require_ci: true
+  production_gate: human

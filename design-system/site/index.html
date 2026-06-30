@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Brand" name="Arah Site" subtitle="Site institucional do movimento Arah — território-primeiro" viewport="1280x1200" -->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arah — Tecnologia a serviço do território</title>
+<meta name="description" content="Arah é uma plataforma digital comunitária orientada ao território. Soberania digital, território-primeiro, comunidade-primeiro. Código aberto, em evolução, aberto a comunidades." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="site.css" />
+</head>
+<body>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#0E2117"/>
+    <text x="50" y="62" font-size="42" text-anchor="middle" fill="#A6D6B9" font-family="sans-serif" font-weight="700">A</text>
+  </svg>
+</template>
+
+<!-- ============ NAV ============ -->
+<nav class="nav on-hero" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top">
+      <img src="../assets/arah-logo.png" alt="Arah" />
+      <b>Arah</b>
+    </a>
+    <div class="nav-links">
+      <a href="#movimento">Movimento</a>
+      <a href="#modelo">Modelo</a>
+      <a href="#app">O app</a>
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#codigo">Código aberto</a>
+      <a href="#comunidades">Comunidades</a>
+    </div>
+    <a class="btn btn-primary nav-cta" href="#comunidades">Levar ao meu território</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-bg">
+    <img src="../assets/cover-rainforest.png" alt="Floresta brasileira" />
+  </div>
+  <div class="hero-in">
+    <div class="eyebrow on-dark reveal">Movimento de soberania digital</div>
+    <h1 class="reveal d1">Tecnologia a serviço do <em>território</em>, não da escala.</h1>
+    <p class="lead reveal d2">Arah é uma plataforma digital comunitária orientada ao território. Uma extensão digital do território vivo — feita para a relevância local, o cuidado coletivo e a autonomia das comunidades.</p>
+    <div class="hero-cta reveal d3">
+      <a class="btn btn-primary" href="#comunidades">Levar ao meu território <span class="msr">arrow_forward</span></a>
+      <a class="btn btn-ghost on-dark" href="#movimento">Conhecer o movimento</a>
+    </div>
+    <div class="hero-meta reveal d3">
+      <div class="m"><b>16</b><span>de 48 fases entregues</span></div>
+      <div class="m"><b>150+</b><span>endpoints de API</span></div>
+      <div class="m"><b>2.194</b><span>testes automatizados</span></div>
+      <div class="m"><b>100%</b><span>código aberto</span></div>
+    </div>
+  </div>
+  <a class="hero-scroll" href="#movimento"><span>Role</span><span class="msr">expand_more</span></a>
+</header>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto" id="movimento">
+  <div class="wrap">
+    <p class="eyebrow on-dark reveal" style="margin-bottom:28px;">O contraponto consciente</p>
+    <p class="big reveal d1">Plataformas digitais capturam atenção, desorganizam comunidades e desconectam pessoas do lugar onde vivem. <em>O Arah existe para o oposto.</em></p>
+    <p class="sig reveal d2">Território como referência. Comunidade como prioridade. Tecnologia como ferramenta — não como fim.</p>
+  </div>
+</section>
+
+<!-- ============ O PROBLEMA ============ -->
+<section class="sec" id="problema">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">O problema</div>
+      <h2>O ruído da escala global apaga o contexto local.</h2>
+      <p class="lead">Ferramentas generalistas priorizam alcance planetário — e, no caminho, perdem exatamente o que importa para quem vive em um lugar.</p>
+    </div>
+    <div class="grid g-3" style="margin-top:54px;">
+      <div class="card hover reveal">
+        <div class="kic"><span class="msr">blur_on</span></div>
+        <h3>Relevância diluída</h3>
+        <p>O que acontece na sua rua some no infinito do feed global. O entorno imediato fica invisível.</p>
+      </div>
+      <div class="card hover reveal d1">
+        <div class="kic"><span class="msr">travel_explore</span></div>
+        <h3>Sem contexto territorial</h3>
+        <p>Regras, cultura e dinâmicas de confiança de cada território não são reconhecidas por plataformas únicas para todos.</p>
+      </div>
+      <div class="card hover reveal d2">
+        <div class="kic"><span class="msr">lock</span></div>
+        <h3>Dependência centralizada</h3>
+        <p>Comunidades ficam reféns de algoritmos opacos e políticas que não atendem às necessidades do lugar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ O MODELO / PRINCÍPIOS ============ -->
+<section class="sec dark" id="modelo">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <div class="eyebrow on-dark reveal">O modelo</div>
+        <h2 class="reveal d1" style="font-size:clamp(2rem,3.8vw,3.1rem); margin-top:16px;">Território-primeiro,<br/>comunidade-primeiro.</h2>
+        <p class="lead reveal d2" style="margin-top:20px;">Três decisões fundamentais que tornam o Arah mais claro, mais justo e mais adaptável ao tempo — sem algoritmos de manipulação, feed infinito ou extração de dados.</p>
+        <div class="hero-cta reveal d2" style="margin-top:30px;">
+          <a class="btn btn-ghost on-dark" href="#app">Ver o app <span class="msr">arrow_forward</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="principle reveal" style="border-top:none;">
+          <div class="num">01</div>
+          <div>
+            <h3>O território é geográfico e neutro</h3>
+            <p>Um território é apenas um lugar real: nome, localização, fronteira. Não carrega lógica social.</p>
+            <p class="quote">"O território existe antes do app — e continua existindo mesmo sem usuários."</p>
+          </div>
+        </div>
+        <div class="principle reveal d1">
+          <div class="num">02</div>
+          <div>
+            <h3>A vida social acontece em camadas</h3>
+            <p>Moradores, visitantes, visibilidade e convivência são camadas que referenciam o território — não o definem.</p>
+          </div>
+        </div>
+        <div class="principle reveal d2">
+          <div class="num">03</div>
+          <div>
+            <h3>Tecnologia a serviço do território</h3>
+            <p>Não é vigilância, nem engajamento infinito. É infraestrutura digital comunitária para a autonomia local e a continuidade da vida no lugar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP SHOWCASE ============ -->
+<section class="sec dark" id="app" style="background:linear-gradient(180deg,#0B140E,#0E2117);">
+  <div class="wrap">
+    <div class="app-stage">
+      <div>
+        <div class="eyebrow on-dark reveal">Um app funcionando, em evolução aberta</div>
+        <h2 class="reveal d1" style="font-size:clamp(2rem,3.8vw,3rem); margin-top:16px;">O território no seu bolso.</h2>
+        <p class="lead reveal d2" style="margin-top:18px;">Feed da sua vila, mapa vivo, eventos, mercado local e governança comunitária — tudo filtrado pelo território, com respeito entre moradores e visitantes. Experimente ao lado: é o app real, interativo.</p>
+        <div style="margin-top:30px;">
+          <div class="app-feat reveal d2"><span class="msr fill">eco</span><div><h4>Feed territorial</h4><p>O que importa na sua região, sem ruído global.</p></div></div>
+          <div class="app-feat reveal d2"><span class="msr fill">map</span><div><h4>Mapa vivo</h4><p>Lugares, trilhas, nascentes, mirantes e alertas do território.</p></div></div>
+          <div class="app-feat reveal d3"><span class="msr fill">how_to_vote</span><div><h4>Governança comunitária</h4><p>Votação, curadoria e papéis de morador, visitante e curador.</p></div></div>
+        </div>
+        <div class="hero-cta reveal d3" style="margin-top:28px;">
+          <a class="btn btn-primary" href="#comunidades" style="background:var(--canopy-solid); color:#0C1B10;">Quero no meu território</a>
+        </div>
+      </div>
+      <div class="phone-embed reveal d1">
+        <iframe src="../ui_kits/app/index.html" title="App Arah" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FUNCIONALIDADES ============ -->
+<section class="sec" id="funcionalidades" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="eyebrow">Funcionalidades</div>
+      <h2>Um sistema completo, orientado ao território.</h2>
+      <p class="lead">Domínios que trabalham integrados para uma experiência local de ponta a ponta. Muito já está implementado; outras camadas chegam na evolução aberta do projeto.</p>
+    </div>
+    <div class="grid g-3" style="margin-top:56px;">
+      <div class="card hover reveal"><div class="kic"><span class="msr fill">eco</span></div><h3>Feed territorial</h3><p>Publicações, avisos e eventos em timeline filtrada pelo território e pelo papel de quem vê.</p><div style="margin-top:14px;"><span class="pill pill-live"><span class="msr" style="font-size:14px;">check</span>Disponível</span></div></div>
+      <div class="card hover reveal d1"><div class="kic"><span class="msr fill">map</span></div><h3>Mapa + entidades</h3><p>Estabelecimentos, espaços públicos, naturais e órgãos — explorados geograficamente no território.</p><div style="margin-top:14px;"><span class="pill pill-live"><span class="msr" style="font-size:14px;">check</span>Disponível</span></div></div>
+      <div class="card hover reveal d2"><div class="kic"><span class="msr fill">groups</span></div><h3>Moradores &amp; visitantes</h3><p>Papéis e permissões explícitas. Cada território controla quem vê e participa do quê.</p><div style="margin-top:14px;"><span class="pill pill-live"><span class="msr" style="font-size:14px;">check</span>Disponível</span></div></div>
+      <div class="card hover reveal"><div class="kic"><span class="msr fill">storefront</span></div><h3>Marketplace territorial</h3><p>Lojas, anúncios, carrinho e checkout para trocas locais — com pagamentos e repasse a vendedores.</p><div style="margin-top:14px;"><span class="pill pill-live"><span class="msr" style="font-size:14px;">check</span>Disponível</span></div></div>
+      <div class="card hover reveal d1"><div class="kic"><span class="msr fill">how_to_vote</span></div><h3>Governança &amp; votação</h3><p>Votação territorial, moderação comunitária, curadoria e feature flags por território.</p><div style="margin-top:14px;"><span class="pill pill-live"><span class="msr" style="font-size:14px;">check</span>Disponível</span></div></div>
+      <div class="card hover reveal d2"><div class="kic"><span class="msr fill">forum</span></div><h3>Chat territorial</h3><p>Canais e grupos com governança, mídias e mensagens entre quem é do território.</p><div style="margin-top:14px;"><span class="pill pill-live"><span class="msr" style="font-size:14px;">check</span>Disponível</span></div></div>
+      <div class="card hover reveal"><div class="kic"><span class="msr fill">warning</span></div><h3>Alertas comunitários</h3><p>Avisos de saúde pública e comunicação emergencial direcionados ao território.</p><div style="margin-top:14px;"><span class="pill pill-live"><span class="msr" style="font-size:14px;">check</span>Disponível</span></div></div>
+      <div class="card hover reveal d1"><div class="kic"><span class="msr fill">groups_2</span></div><h3>Compra coletiva</h3><p>Agrupar pedidos e iniciativas para fortalecer a economia local do território.</p><div style="margin-top:14px;"><span class="pill pill-soon"><span class="msr" style="font-size:14px;">schedule</span>Em evolução</span></div></div>
+      <div class="card hover reveal d2"><div class="kic"><span class="msr fill">water_drop</span></div><h3>Saúde do território</h3><p>Indicadores vivos — água, nativas, nascentes, mirantes — mantidos pela comunidade.</p><div style="margin-top:14px;"><span class="pill pill-soon"><span class="msr" style="font-size:14px;">schedule</span>Em evolução</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="sec" id="como">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Como funciona</div>
+      <h2>Um fluxo que respeita as regras de cada território.</h2>
+    </div>
+    <div class="steps" style="margin-top:54px;">
+      <div class="step reveal"><div class="n">01 — ENTRAR</div><h3>Identidade</h3><p>Login e autenticação. Identidade verificada, sem vínculo inicial com nenhum território.</p></div>
+      <div class="step reveal d1"><div class="n">02 — ESCOLHER</div><h3>Território</h3><p>Selecione o território de interesse. Cada um tem regras próprias de participação e visibilidade.</p></div>
+      <div class="step reveal d2"><div class="n">03 — PAPEL</div><h3>Visitante ou morador</h3><p>Visitante vê o conteúdo público; morador acessa o restrito. A residência se solicita conforme regras locais.</p></div>
+      <div class="step reveal d3"><div class="n">04 — VIVER</div><h3>Feed e mapa</h3><p>O conteúdo aparece na timeline e no mapa, sempre respeitando o seu papel no território.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRANSPARÊNCIA / CÓDIGO ABERTO ============ -->
+<section class="sec dark" id="codigo">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow on-dark">Código aberto &amp; transparência</div>
+      <h2>Construído à vista de todos.</h2>
+      <p class="lead">Backend em .NET com Domain-Driven Design e Clean Architecture. Domínio primeiro, evolução incremental, API-first. Toda a documentação é pública.</p>
+    </div>
+    <div class="metrics reveal d1" style="margin-top:56px;">
+      <div class="metric"><b>16/48</b><span>fases entregues e validadas</span></div>
+      <div class="metric"><b>150+</b><span>endpoints documentados (Swagger)</span></div>
+      <div class="metric"><b>2.194</b><span>testes (100% de sucesso)</span></div>
+      <div class="metric"><b>~40k</b><span>linhas de código</span></div>
+    </div>
+    <div class="grid g-3 reveal d2" style="margin-top:46px;">
+      <a class="card hover" href="https://github.com/sraphaz/arah" target="_blank" rel="noopener"><div class="kic"><span class="msr fill">code</span></div><h3>Repositório</h3><p>Explore o código, a arquitetura e contribua no GitHub.</p></a>
+      <a class="card hover" href="https://devportal.araponga.app/wiki/" target="_blank" rel="noopener"><div class="kic"><span class="msr fill">menu_book</span></div><h3>Wiki &amp; documentação</h3><p>Visão de produto, domínios, ADRs e roadmap — transparência total.</p></a>
+      <a class="card hover" href="https://devportal.araponga.app/" target="_blank" rel="noopener"><div class="kic"><span class="msr fill">terminal</span></div><h3>Developer Portal</h3><p>Para quem quer ser contribuidor: setup, padrões e guias técnicos.</p></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section class="sec" id="roadmap" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Evolução em ondas</div>
+      <h2>O Arah não quer crescer rápido. Quer criar raízes profundas.</h2>
+      <p class="lead">Um roadmap disciplinado de 48 fases. Fundação e governança já entregues; a economia local e a soberania digital vêm a seguir.</p>
+    </div>
+    <div class="phases" style="margin-top:54px;">
+      <div class="phase done reveal">
+        <span class="tag">Entregue · Fases 1–16</span>
+        <h3>Fundação sólida</h3>
+        <ul>
+          <li><span class="msr">check_circle</span> Território, vínculos e feed</li>
+          <li><span class="msr">check_circle</span> Mapa, eventos e alertas</li>
+          <li><span class="msr">check_circle</span> Pagamentos, payout e mídia</li>
+          <li><span class="msr">check_circle</span> Governança, votação e chat</li>
+          <li><span class="msr">check_circle</span> Assinaturas recorrentes</li>
+        </ul>
+      </div>
+      <div class="phase now reveal d1">
+        <span class="tag">Em andamento · Fases 17–25</span>
+        <h3>Economia local</h3>
+        <ul>
+          <li><span class="msr">bolt</span> Compra coletiva e demandas/ofertas</li>
+          <li><span class="msr">bolt</span> Hospedagem e entregas territoriais</li>
+          <li><span class="msr">bolt</span> Trocas comunitárias e moeda territorial</li>
+          <li><span class="msr">bolt</span> Saúde territorial e dashboards</li>
+        </ul>
+      </div>
+      <div class="phase next reveal d2">
+        <span class="tag">Visão · Fases 26–48</span>
+        <h3>Soberania digital</h3>
+        <ul>
+          <li><span class="msr">arrow_circle_right</span> Hub de serviços digitais e IA</li>
+          <li><span class="msr">arrow_circle_right</span> Preparação Web3 e DAO</li>
+          <li><span class="msr">arrow_circle_right</span> Governança tokenizada</li>
+          <li><span class="msr">arrow_circle_right</span> Aprendizado e banco de sementes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAMADO ÀS COMUNIDADES ============ -->
+<section class="sec" id="comunidades">
+  <div class="wrap">
+    <div class="callout reveal">
+      <div class="callout-bg"><img src="../assets/texture-bukeh.jpg" alt="" /></div>
+      <div class="callout-in">
+        <div class="eyebrow on-dark">Para comunidades</div>
+        <h2 style="margin-top:16px;">Leve o Arah ao seu território.</h2>
+        <p class="lead">Sua comunidade, associação ou coletivo pode iniciar uma implementação do Arah no próprio território. Conte pra gente sobre o lugar e começamos juntos.</p>
+        <form class="form" onsubmit="return arahSubmit(event)">
+          <div class="field"><label>Seu nome</label><input name="nome" placeholder="Como te chamamos?" required /></div>
+          <div class="field"><label>E-mail ou WhatsApp</label><input name="contato" placeholder="Para retornarmos o contato" required /></div>
+          <div class="field full"><label>Território / comunidade</label><input name="territorio" placeholder="Nome do lugar, cidade, estado" required /></div>
+          <div class="field full"><label>Conte sobre o território</label><textarea name="msg" rows="3" placeholder="Quem são, o que sonham organizar, o que já existe…"></textarea></div>
+          <div class="full"><button class="btn btn-primary" type="submit">Iniciar implementação <span class="msr">arrow_forward</span></button></div>
+        </form>
+        <p class="form-note" id="formNote">Território primeiro. Comunidade primeiro. Vida primeiro.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTRIBUIDORES ============ -->
+<section class="sec" style="padding-top:0;">
+  <div class="wrap">
+    <div class="band">
+      <div class="reveal">
+        <div class="eyebrow">Para quem constrói</div>
+        <h2 style="font-size:clamp(1.8rem,3vw,2.5rem); margin-top:14px;">Tecnologia consciente precisa de mãos conscientes.</h2>
+        <p class="lead" style="margin-top:16px;">O Arah é aberto à colaboração de quem se interessa por território, cultura, soberania e arquitetura de software consciente. Código, testes, documentação, ideias ou feedback — tudo soma.</p>
+      </div>
+      <div class="reveal d1">
+        <div class="linkrow" style="flex-direction:column;">
+          <a class="linkcard" href="https://github.com/sraphaz/arah" target="_blank" rel="noopener"><span class="msr">code</span><div><b>GitHub</b><span>Código, issues e contribuições</span></div></a>
+          <a class="linkcard" href="https://devportal.araponga.app/" target="_blank" rel="noopener"><span class="msr">terminal</span><div><b>Developer Portal</b><span>Setup, padrões e guias</span></div></a>
+          <a class="linkcard" href="https://devportal.araponga.app/wiki/" target="_blank" rel="noopener"><span class="msr">menu_book</span><div><b>Wiki</b><span>Documentação viva do projeto</span></div></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="closing">
+  <div class="wrap">
+    <img class="logo reveal" src="../assets/arah-logo.png" alt="Arah" />
+    <h2 class="reveal d1">O futuro é ancestral, local, descentralizado e <em>inevitável</em>.</h2>
+    <p class="tri reveal d2">Território primeiro. Comunidade primeiro. Vida primeiro.</p>
+    <p class="note reveal d2">Se você chegou até aqui e sentiu que isso faz sentido, você já faz parte da conversa.</p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-in">
+      <div>
+        <a class="brand" href="#top" style="margin-bottom:14px;"><img src="../assets/arah-logo.png" alt="Arah" style="height:30px;" /><b>Arah</b></a>
+        <p style="max-width:34ch; color:rgba(255,255,255,0.6);">Plataforma digital comunitária orientada ao território. Uma extensão digital do território vivo.</p>
+      </div>
+      <div>
+        <h5>Projeto</h5>
+        <a href="#movimento">Movimento</a>
+        <a href="#modelo">Modelo</a>
+        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+      <div>
+        <h5>Código</h5>
+        <a href="https://github.com/sraphaz/arah" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://devportal.araponga.app/" target="_blank" rel="noopener">Developer Portal</a>
+        <a href="https://devportal.araponga.app/wiki/" target="_blank" rel="noopener">Wiki</a>
+      </div>
+      <div>
+        <h5>Comunidade</h5>
+        <a href="#comunidades">Levar ao meu território</a>
+        <a href="#comunidades">Contribuir</a>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© 2026 Arah · Licença aberta orientada à comunidade e ao território.</span>
+      <span class="song">Arah canta para avisar, proteger e comunicar.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

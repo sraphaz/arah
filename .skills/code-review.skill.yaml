@@ -1,0 +1,13 @@
+id: code-review
+description: Aplica checklist de revisão ao diff do PR.
+references:
+  - docs/21_CODE_REVIEW.md
+  - docs/22_COHESION_AND_TESTS.md
+checks:
+  - clean_architecture_dependency_rule
+  - territory_nomenclature
+  - tests_for_behavior_change
+  - no_secrets_in_diff
+  - mobile_first_if_ui
+  - no_hardcoded_colors
+output: markdown_comment_on_pr

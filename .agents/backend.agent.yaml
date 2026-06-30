@@ -1,0 +1,40 @@
+id: backend
+name: Backend Agent
+description: Implementa features na API .NET e no BFF.
+triggers:
+  - issue:label=area/backend
+  - orchestrator:delegate
+scope:
+  paths:
+    - backend/Arah.Api/**
+    - backend/Arah.Api.Bff/**
+    - backend/Arah.Application/**
+    - backend/Arah.Domain/**
+    - backend/Arah.Infrastructure/**
+    - backend/Arah.Infrastructure.Shared/**
+    - backend/Tests/**
+  commands:
+    - dotnet build
+    - dotnet test
+skills:
+  - run-tests
+  - register-bff-journey
+  - sync-docs
+  - open-pr
+  - code-review
+consult:
+  domain:
+    - monetizacao-split
+    - territorio-membership
+    - mercado-economia
+  specialists:
+    - dotnet
+    - bff
+    - postgresql
+model:
+  primary: frontier
+  fallback: open-weight-local
+guardrails:
+  no_merge: true
+  require_ci: true
+  max_diff_files: 40

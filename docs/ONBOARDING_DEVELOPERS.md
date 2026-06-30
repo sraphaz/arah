@@ -90,7 +90,7 @@ O Arah **não é**:
 - Criar novas funcionalidades mantendo a consistência
 - Aprender enquanto constrói
 
-> **Dica**: O Cursor **lê automaticamente** o arquivo `.cursorrules` na raiz do projeto, que contém todas as regras e padrões. Ele vai te guiar!
+> **Agentes**: Leia [AGENTS.md](../AGENTS.md) — repo operável por agentes (manifests em `.agents/`, skills em `.skills/`).
 
 ---
 

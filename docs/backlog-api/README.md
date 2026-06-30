@@ -2,11 +2,12 @@
 ## Planejamento Estratégico de Desenvolvimento
 
 **Data de Criação**: 2025-01-13  
-**Última Revisão**: 2026-01-25  
+**Última Revisão**: 2026-06-30  
 **Objetivo**: Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado  
-**Estimativa Total**: 495 dias sequenciais / ~241 dias com paralelização (incluindo novas fases estratégicas + Fase 30 Hospedagem)  
-**Status Atual**: 9.3/10 (após implementação das fases 1-8, incluindo FASE8 com funcionalidades extras)  
-**Total de Fases Documentadas**: 50 fases (1-8 completas + 9-51 planejadas, incluindo fases complementares)
+**Estimativa Total**: ~535 dias sequenciais / ~260 dias com paralelização (incl. camada sustentação F52–61)  
+**Status Atual**: 9.3/10 (após implementação das fases 1-16)  
+**Total de Fases Documentadas**: 61 fases (1-16 completas + 17-51 comunitárias + **52-61 sustentação operacional**)  
+**⭐ Realinhamento 2026-06**: [Sustentação Operacional](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md) · [Handoff C4](../handoff/README.md)
 
 **Nota**: O roadmap estratégico menciona fases 31-44 conceituais (Proof of Sweat, Subscriptions, Web3, DAO, etc.), mas sem documentos detalhados. A Fase 30 (Hospedagem) é a primeira fase nova com documento completo.  
 **⭐ Estratégia de Convergência**: Ver [Estratégia de Convergência de Mercado](../39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) | [Mapa de Funcionalidades](../38_MAPA_FUNCIONALIDADES_MERCADO.md)
@@ -52,6 +53,7 @@ backlog-api/
 - **[README.md](./README.md)** - Este arquivo (índice principal)
 - **[ESTRUTURA_DOCUMENTOS.md](./ESTRUTURA_DOCUMENTOS.md)** - Estrutura de organização
 - **[INDICE_DOCUMENTOS.md](./INDICE_DOCUMENTOS.md)** - Índice completo de documentos
+- **[REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** ⭐ **NOVO** — Camada de sustentação (C4, monetização, operação multi-instância)
 - **[RESUMO_EXECUTIVO_ESTRATEGICO.md](./RESUMO_EXECUTIVO_ESTRATEGICO.md)** ⭐ - Resumo executivo para apresentação externa
 - **[ROADMAP_VISUAL.md](./ROADMAP_VISUAL.md)** - Roadmap visual estratégico
 - **[MAPA_CORRELACAO_FUNCIONALIDADES.md](./MAPA_CORRELACAO_FUNCIONALIDADES.md)** - Mapa de correlação com plataformas
@@ -251,15 +253,41 @@ backlog-api/
 
 ---
 
+### 🔴 Onda S: Sustentação Operacional (Fases 52-61) — P0 CRÍTICO ⭐ NOVO
+
+**Objetivo**: Colocar a plataforma no ar, faturar e operar múltiplos territórios — pré-requisito para go-live piloto.
+
+**Referência**: [Realinhamento Sustentação](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md) · [Handoff C4](../handoff/README.md)
+
+| Fase | Título | Duração | Prioridade | Onda | Status |
+|------|--------|---------|------------|------|--------|
+| **[52](./FASE52.md)** | Fundação Técnica e CI/CD | 28d | 🔴 P0 | S0 | ⏳ Pendente |
+| **[53](./FASE53.md)** | Arah Core (registro, identidade, releases) | 35d | 🔴 P0 | S0 | ⏳ Pendente |
+| **[54](./FASE54.md)** | IaC e 1ª Instância Gerenciada | 28d | 🔴 P0 | S0 | ⏳ Pendente |
+| **[55](./FASE55.md)** | Monetização Open-Core (billing, split, payouts) | 45d | 🔴 P0 | S1 | ⏳ Pendente |
+| **[56](./FASE56.md)** | Transparência e Governança de Taxas | 21d | 🔴 P0 | S2 | ⏳ Pendente |
+| **[57](./FASE57.md)** | Cockpit do Implementador (Web) | 35d | 🔴 P0 | S1–S2 | ⏳ Pendente |
+| **[58](./FASE58.md)** | Operação Multi-Instância (deploy, health) | 28d | 🟡 P1 | S1–S2 | ⏳ Pendente |
+| **[59](./FASE59.md)** | Federação entre Instâncias | 35d | 🟡 P2→P1 | S3 | ⏳ Pendente |
+| **[60](./FASE60.md)** | App — Papel do Implementador | 14d | 🟡 P1 | S3 | ⏳ Pendente |
+| **[61](./FASE61.md)** | Capital Territorial e Patrocínios | 21d | 🟢 P2 | S3–S4 | ⏳ Pendente |
+
+**Total**: 290 dias | **Resultado**: Território-piloto no ar, faturando, com transparência e base multi-instância
+
+**Nota**: Ondas S0–S1 têm **prioridade sobre** economia local (F17–19) até go-live piloto.
+
+---
+
 ## 📊 Resumo Executivo de Todas as Fases
 
 ### Estatísticas Gerais
 
 | Categoria | Quantidade | Total de Dias |
 |-----------|------------|---------------|
-| **Fases Completas** | 12 | 216 dias |
-| **Fases Pendentes** | 36 | ~1,111 dias |
-| **Total de Fases** | 48 | ~1,327 dias |
+| **Fases Completas** | 16 | ~332 dias |
+| **Fases Pendentes (comunitárias)** | 35 | ~900 dias |
+| **Fases Sustentação (52-61)** | 10 | 290 dias |
+| **Total de Fases** | 61 | ~1,522 dias |
 
 ### Distribuição por Prioridade
 
@@ -276,8 +304,9 @@ backlog-api/
 |------|-------|---------|------------|--------|
 | **Fundação** | 1-8 | 127d | ✅ Completo | ✅ 100% |
 | **Onda 1: MVP** | 9-12 | 89d | ✅ Completo | ✅ 100% (Fase 12 encerrada) |
-| **Onda 2: Governança** | 13-16 | 100d | 🔴 P0 | ⏳ 0% |
-| **Onda 3: Economia Local** | 17-19 | 105d | 🔴 P0 | ⏳ 0% |
+| **Onda S: Sustentação** | 52-61 | 290d | 🔴 P0 | ⏳ 0% |
+| **Onda 2: Governança** | 13-16 | 100d | ✅ Completo | ✅ 100% |
+| **Onda 3: Economia Local** | 17-19 | 105d | 🟡 P1 | ⏳ 0% |
 | **Onda 4: Economia Completa** | 20-22 | 84d | 🟡 P1 | ⏳ 0% |
 | **Onda 5: Conformidade** | 23-25 | 77d | 🟡 P1 | ⏳ 0% |
 | **Onda 6: Autonomia Digital** | 26-30 | 77d | 🟡 P1 | ⏳ 0% |

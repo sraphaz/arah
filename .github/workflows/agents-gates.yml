@@ -1,0 +1,120 @@
+name: Agents Gates
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**'
+  workflow_dispatch:
+    inputs:
+      gate:
+        description: 'Gate to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - qa
+          - security
+          - release
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: read
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Collect changed files
+        id: files
+        run: |
+          files=$(git diff --name-only "${{ github.event.pull_request.base.sha }}...HEAD" | tr '\n' ',' | sed 's/,$//')
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+
+      - name: Run agent gates
+        id: gates
+        shell: pwsh
+        continue-on-error: true
+        env:
+          GATE: ${{ github.event_name == 'workflow_dispatch' && inputs.gate || 'all' }}
+          PR_FILES: ${{ steps.files.outputs.files }}
+        run: |
+          $changed = @()
+          if ($env:PR_FILES) {
+            $changed = $env:PR_FILES -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          }
+          dotnet restore Arah.sln
+          & ./scripts/agents/run-gates.ps1 -Gate $env:GATE -ChangedFiles $changed
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - name: Post QA checklist
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('.agents/templates/qa-checklist.md', 'utf8');
+            const marker = '<!-- arah-qa-gate -->';
+            const status = '${{ steps.gates.outcome }}' === 'success' ? '✅ Gates automáticos passaram' : '⚠️ Revise falhas nos logs de `Agents Gates`';
+            const full = `${body}\n\n**Status gates:** ${status}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: full
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: full
+              });
+            }
+
+      - name: Post Security report
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('.agents/templates/security-report.md', 'utf8');
+            const marker = '<!-- arah-security-gate -->';
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body
+              });
+            }
+
+      - name: Fail if gates failed
+        if: steps.gates.outcome == 'failure'
+        run: exit 1

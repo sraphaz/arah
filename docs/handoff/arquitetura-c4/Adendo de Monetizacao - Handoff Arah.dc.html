@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#16271D; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.tl { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.tl:hover { color:#377B57; border-left-color:#9FCEB4; }
+.tl.sub { font-size:12.5px; color:#74806E; padding-left:24px; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } .main { padding:0 !important; } section { break-inside:avoid; } }
+</style>
+</helmet>
+
+<div class="shell" style="display:grid; grid-template-columns:262px 1fr; max-width:1300px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:28px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:18px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:22px; padding-left:2px;">Adendo · Monetização</span>
+    <a class="tl" href="#a01">A1 · Sobre este adendo</a>
+    <a class="tl" href="#a02">A2 · Princípios de monetização</a>
+    <a class="tl" href="#a03">A3 · Domínios &amp; modelo de dados</a>
+    <a class="tl" href="#a04">A4 · Endpoints</a>
+    <a class="tl" href="#a05">A5 · Telas novas &amp; alteradas</a>
+    <a class="tl" href="#a06">A6 · Lógica de billing &amp; split</a>
+    <a class="tl" href="#a07">A7 · Estados &amp; casos de borda</a>
+    <a class="tl" href="#a08">A8 · Governança de taxas</a>
+    <a class="tl" href="#a09">A9 · Camada de capital</a>
+    <a class="tl" href="#a10">A10 · Backlog priorizado</a>
+    <a class="tl" href="#a11">A11 · Definição de pronto</a>
+    <a class="tl" href="#a12">A12 · Jornada &amp; Cockpit do implementador</a>
+    <div style="margin-top:22px; padding-top:18px; border-top:1px solid rgba(23,53,37,0.12);">
+      <a class="tl" href="Cockpit do Implementador Arah.dc.html">↗ Cockpit do implementador</a>
+      <a class="tl" href="Anexo Handoff - Operacao Instancias e Federacao.dc.html">↗ Anexo: operação &amp; federação</a>
+      <a class="tl" href="Backlog Atualizado - Arah.dc.html">↗ Backlog atualizado</a>
+      <a class="tl" href="Programa de Implementadores Arah.dc.html">↗ Site de implementadores</a>
+      <a class="tl" href="Arquitetura C4 Arah.dc.html">↗ Arquitetura C4</a>
+    </div>
+  </nav>
+
+  <main class="main" style="padding:54px clamp(24px,5vw,76px); max-width:920px; min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:38px; margin-bottom:46px;">
+      <div style="font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:14px;">Adendo de especificação · Frontend &amp; backend</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.04; margin:0 0 18px; color:#0E2117;">Adendo de <span style="color:#377B57;">monetização</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:62ch; margin:0;">Estende a <b>Especificação Arah — Handoff de Desenvolvimento (v1.0)</b> com a camada de receita: billing comercial, carteira Aratá com split, transparência, governança de taxas e camada de capital. Tudo fiel ao território-primeiro e ao código aberto.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:26px; font-size:13px; color:#74806E;">
+        <span><b style="color:#46584A;">Versão</b> A.1</span>
+        <span><b style="color:#46584A;">Base</b> Especificação Arah v1.0</span>
+        <span><b style="color:#46584A;">Escopo</b> Monetização open-core</span>
+        <span><b style="color:#46584A;">Idioma</b> pt-BR</span>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); border-radius:14px; padding:16px 18px; margin-top:24px;">
+        <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">info</span>
+        <div style="font-size:0.92rem; line-height:1.55; color:#2B6246;">Valores, preços e percentuais são <b>exemplos ilustrativos</b> para dimensionar contratos e telas — os definitivos vêm da governança de cada território. As seções referenciam a spec-mãe por nome (ex.: <i>4 · Catálogo de telas</i>, <i>5 · Mercado &amp; checkout</i>, <i>12 · Modelo de domínio</i>, <i>13 · Integração &amp; API</i>).</div>
+      </div>
+    </header>
+
+    <!-- A1 -->
+    <section id="a01" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A1</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Sobre este adendo</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 16px; max-width:70ch;">A spec-mãe descreve a <b>camada de experiência</b> território-primeiro. Este adendo acrescenta a <b>camada econômica</b> que a torna sustentável e geradora de renda para implementadores — sem fechar o código nem cobrar do morador. Ele <b>não substitui</b> nenhuma seção: estende as jornadas <i>Mercado &amp; checkout</i>, <i>Minha loja</i>, <i>Carteira territorial</i> e <i>Governança &amp; votação</i>, e adiciona domínios, endpoints e telas.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:22px;">
+        <sc-for list="{{ relates }}" as="r" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:18px 19px;">
+            <div style="font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#9FB0A2; font-weight:600; margin-bottom:7px;">{{ r.spec }}</div>
+            <div style="font-size:0.92rem; color:#3A4A3E; line-height:1.5;">{{ r.ext }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A2 -->
+    <section id="a02" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A2</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Princípios de monetização</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Toda decisão de produto sobre receita passa por estes quatro filtros. Em conflito, vence o de cima.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <sc-for list="{{ principles }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex; gap:16px; align-items:flex-start; background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:20px 22px;">
+            <span style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.1rem; color:#377B57; width:30px; flex-shrink:0;">{{ p.n }}</span>
+            <div><b style="font-family:'Sora',sans-serif; font-size:1.06rem; color:#0E2117; display:block; margin-bottom:5px;">{{ p.title }}</b><span style="font-size:0.95rem; color:#46584A; line-height:1.6;">{{ p.body }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A3 -->
+    <section id="a03" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A3</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Domínios &amp; modelo de dados</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Novas entidades, todas escopadas por <code style="font:0.9em ui-monospace,monospace; background:#EAF5EE; color:#214D37; padding:2px 6px; border-radius:6px;">territoryId</code> (estende <i>12 · Modelo de domínio</i>). Campos-chave abaixo.</p>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <sc-for list="{{ domains }}" as="d" hint-placeholder-count="6">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <span class="msr" style="font-size:20px; color:#377B57;">{{ d.icon }}</span>
+              <code style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.02rem; color:#0E2117;">{{ d.name }}</code>
+              <span style="margin-left:auto; font-size:11px; color:#74806E; background:#F2F7F1; padding:3px 9px; border-radius:6px;">{{ d.tag }}</span>
+            </div>
+            <p style="font-size:0.93rem; color:#46584A; line-height:1.55; margin:0 0 12px;">{{ d.body }}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:7px;">
+              <sc-for list="{{ d.fields }}" as="f" hint-placeholder-count="4">
+                <code style="font:0.78rem ui-monospace,monospace; background:#F4F8F4; color:#2B6246; border:1px solid rgba(23,53,37,0.08); padding:3px 8px; border-radius:6px;">{{ f }}</code>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <!-- A4 -->
+    <section id="a04" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A4</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Endpoints novos &amp; alterados</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Estende <i>13 · Integração &amp; API</i>. Todos exigem <code style="font:0.9em ui-monospace,monospace; background:#EAF5EE; color:#214D37; padding:2px 6px; border-radius:6px;">territoryId</code> no escopo do token. Repasses e splits são server-side e imutáveis no cliente.</p>
+      <div style="display:flex; flex-direction:column; gap:26px;">
+        <sc-for list="{{ apiGroups }}" as="g" hint-placeholder-count="4">
+          <div>
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:11px;"><span class="msr" style="font-size:19px; color:#377B57;">{{ g.icon }}</span><b style="font-family:'Sora',sans-serif; font-size:1.05rem; color:#0E2117;">{{ g.area }}</b></div>
+            <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+              <sc-for list="{{ g.routes }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex; align-items:center; gap:14px; padding:13px 16px; border-bottom:1px solid rgba(23,53,37,0.07); background:#fff;">
+                  <span style="font-family:ui-monospace,monospace; font-size:11px; font-weight:700; color:{{ r.color }}; background:{{ r.bg }}; padding:4px 8px; border-radius:6px; min-width:54px; text-align:center;">{{ r.method }}</span>
+                  <code style="font-family:ui-monospace,monospace; font-size:0.86rem; color:#214D37; flex-shrink:0;">{{ r.path }}</code>
+                  <span style="margin-left:auto; font-size:0.86rem; color:#5A6B5C; text-align:right;">{{ r.desc }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A5 -->
+    <section id="a05" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A5</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Telas novas &amp; alteradas</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Entradas para o <i>4 · Catálogo de telas</i>. Mockups de referência no <a href="Programa de Implementadores Arah.dc.html#produto" style="color:#377B57; font-weight:600;">site de implementadores → Ajustes de produto</a>.</p>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <sc-for list="{{ screens }}" as="s" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:11px; margin-bottom:9px; flex-wrap:wrap;">
+              <span class="msr" style="font-size:20px; color:#377B57;">{{ s.icon }}</span>
+              <b style="font-family:'Sora',sans-serif; font-size:1.06rem; color:#0E2117;">{{ s.name }}</b>
+              <span style="font-size:11px; font-weight:600; color:{{ s.tagColor }}; background:{{ s.tagBg }}; padding:3px 9px; border-radius:6px;">{{ s.tag }}</span>
+              <span style="margin-left:auto; font-size:11px; color:#74806E;">{{ s.role }}</span>
+            </div>
+            <p style="font-size:0.93rem; color:#46584A; line-height:1.55; margin:0 0 12px;">{{ s.body }}</p>
+            <div style="font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#9FB0A2; font-weight:600; margin-bottom:7px;">Estados</div>
+            <div style="display:flex; flex-wrap:wrap; gap:7px;">
+              <sc-for list="{{ s.states }}" as="st" hint-placeholder-count="3">
+                <span style="font-size:0.8rem; color:#3A4A3E; background:#F2F7F1; border:1px solid rgba(23,53,37,0.08); padding:4px 10px; border-radius:999px;">{{ st }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A6 -->
+    <section id="a06" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A6</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Lógica de billing &amp; split</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Ordem de cálculo no servidor. O cliente apenas <b>exibe</b> o resultado; nunca calcula nem aplica taxa.</p>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:28px;">
+        <sc-for list="{{ billingRules }}" as="b" hint-placeholder-count="5">
+          <div style="display:flex; gap:14px; align-items:flex-start; padding:15px 18px; background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:12px;">
+            <span style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.95rem; color:#fff; background:#377B57; width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ b.n }}</span>
+            <span style="font-size:0.95rem; color:#3A4A3E; line-height:1.55;">{{ b.text }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#0E2117; border-radius:16px; padding:24px 26px; color:#CFE3D6;">
+        <div style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#A6D6B9; font-weight:600; margin-bottom:14px;">Exemplo trabalhado · venda de R$ 60,00</div>
+        <div style="font-family:ui-monospace,monospace; font-size:0.86rem; line-height:1.9;">
+          <div>grossAmount = <span style="color:#F2F4EE;">R$ 60,00</span></div>
+          <div>feeRate (mercado) = <span style="color:#F2F4EE;">2,9%</span> &nbsp;→&nbsp; feeAmount = <span style="color:#A6D6B9;">R$ 1,74</span></div>
+          <div>vendedor recebe = <span style="color:#F2F4EE;">R$ 58,26</span></div>
+          <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.12);">split do fee (R$ 1,74):</div>
+          <div>· implementador 45% = <span style="color:#A6D6B9;">R$ 0,78</span></div>
+          <div>· fundo do território 25% = <span style="color:#6FC5D6;">R$ 0,44</span></div>
+          <div>· plataforma 30% = <span style="color:#9FB0A2;">R$ 0,52</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- A7 -->
+    <section id="a07" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A7</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Estados &amp; casos de borda</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Específicos da monetização (complementa <i>6 · Estados de UI</i>).</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px;">
+        <sc-for list="{{ edgeCases }}" as="e" hint-placeholder-count="6">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;"><span class="msr" style="font-size:18px; color:#A8632F;">{{ e.icon }}</span><b style="font-family:'Sora',sans-serif; font-size:0.98rem; color:#0E2117;">{{ e.title }}</b></div>
+            <p style="font-size:0.9rem; color:#46584A; line-height:1.55; margin:0;">{{ e.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A8 -->
+    <section id="a08" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A8</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Governança de taxas</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Nenhuma taxa ou split muda sem o conselho de moradores. Fluxo (estende <i>5 · Governança &amp; votação</i>):</p>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <sc-for list="{{ govFlow }}" as="g" hint-placeholder-count="4">
+          <div style="display:flex; gap:16px; padding-bottom:20px;">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <span style="width:34px; height:34px; border-radius:10px; background:#EAF5EE; color:#377B57; font-family:'Sora',sans-serif; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ g.n }}</span>
+              <span style="width:2px; flex:1; background:rgba(23,53,37,0.10); margin-top:4px;"></span>
+            </div>
+            <div style="padding-top:4px;"><b style="font-family:'Sora',sans-serif; font-size:1.04rem; color:#0E2117; display:block; margin-bottom:5px;">{{ g.title }}</b><span style="font-size:0.94rem; color:#46584A; line-height:1.6;">{{ g.body }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A9 -->
+    <section id="a09" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A9</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Camada de capital</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Opcional por território. Acelera a operação local com prestação de contas pelo mesmo painel de transparência.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <sc-for list="{{ capital }}" as="c" hint-placeholder-count="2">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:24px 24px;">
+            <div style="width:46px; height:46px; border-radius:13px; background:#EAF5EE; display:flex; align-items:center; justify-content:center; margin-bottom:16px;"><span class="msr" style="font-size:25px; color:#377B57;">{{ c.icon }}</span></div>
+            <h3 style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.15rem; color:#0E2117; margin:0 0 9px;">{{ c.title }}</h3>
+            <p style="font-size:0.93rem; color:#46584A; line-height:1.6; margin:0 0 14px;">{{ c.body }}</p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <sc-for list="{{ c.points }}" as="pt" hint-placeholder-count="3">
+                <div style="display:flex; gap:8px; align-items:flex-start; font-size:0.88rem; color:#3A4A3E; line-height:1.45;"><span class="msr" style="font-size:17px; color:#377B57; flex-shrink:0;">check</span><span>{{ pt }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A10 -->
+    <section id="a10" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A10</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Backlog priorizado</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Ordem de construção. <b>P0</b> destrava a primeira receita; <b>P1</b> amplia camadas; <b>P2</b> escala a operação.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+        <sc-for list="{{ backlog }}" as="b" hint-placeholder-count="8">
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 18px; border-bottom:1px solid rgba(23,53,37,0.07); background:#fff;">
+            <span style="font-size:11px; font-weight:700; letter-spacing:.04em; color:{{ b.pColor }}; background:{{ b.pBg }}; padding:4px 9px; border-radius:7px; min-width:34px; text-align:center;">{{ b.priority }}</span>
+            <b style="font-family:'Sora',sans-serif; font-size:0.98rem; color:#0E2117;">{{ b.title }}</b>
+            <span style="margin-left:auto; font-size:0.84rem; color:#74806E; white-space:nowrap;">{{ b.enables }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A11 -->
+    <section id="a11" style="margin-bottom:30px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A11</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Definição de pronto</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">A camada de monetização só é considerada pronta quando:</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <sc-for list="{{ dod }}" as="d" hint-placeholder-count="6">
+          <div style="display:flex; gap:12px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.16); border-radius:12px; padding:14px 17px;">
+            <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">check_circle</span>
+            <span style="font-size:0.95rem; color:#2B6246; line-height:1.55;">{{ d }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- A12 -->
+    <section id="a12" style="margin-bottom:30px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">A12</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Jornada &amp; Cockpit do implementador</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">O implementador é um <b>papel</b> dentro da plataforma (estende <i>2 · Papéis &amp; permissões</i>), com um <b>cockpit</b> próprio — painel web de gestão das suas implementações. Referência visual: <a href="Cockpit do Implementador Arah.dc.html" style="color:#377B57; font-weight:600;">Cockpit do implementador</a>.</p>
+
+      <h3 style="font-family:'Sora'; font-weight:600; font-size:1.05rem; color:#0E2117; margin:0 0 12px;">Ciclo de vida</h3>
+      <div style="display:flex; flex-direction:column; gap:0; margin-bottom:30px;">
+        <sc-for list="{{ implJourney }}" as="j" hint-placeholder-count="5">
+          <div style="display:flex; gap:16px; padding-bottom:18px;">
+            <div style="display:flex; flex-direction:column; align-items:center;"><span style="width:32px; height:32px; border-radius:9px; background:#EAF5EE; color:#377B57; font-family:'Sora'; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ j.n }}</span><span style="width:2px; flex:1; background:rgba(23,53,37,0.10); margin-top:4px;"></span></div>
+            <div style="padding-top:3px;"><b style="font-family:'Sora'; font-size:1rem; color:#0E2117; display:block; margin-bottom:4px;">{{ j.title }}</b><span style="font-size:0.93rem; color:#46584A; line-height:1.55;">{{ j.body }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+
+      <h3 style="font-family:'Sora'; font-weight:600; font-size:1.05rem; color:#0E2117; margin:0 0 12px;">Telas do cockpit (web)</h3>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-bottom:30px;">
+        <sc-for list="{{ cockpitScreens }}" as="s" hint-placeholder-count="6">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:16px 18px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:7px;"><span class="msr" style="font-size:19px; color:#377B57;">{{ s.icon }}</span><b style="font-family:'Sora'; font-size:0.98rem; color:#0E2117;">{{ s.name }}</b></div>
+            <p style="font-size:0.88rem; color:#46584A; line-height:1.5; margin:0;">{{ s.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+
+      <h3 style="font-family:'Sora'; font-weight:600; font-size:1.05rem; color:#0E2117; margin:0 0 12px;">Endpoints do cockpit</h3>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden; margin-bottom:26px;">
+        <sc-for list="{{ implRoutes }}" as="r" hint-placeholder-count="4">
+          <div style="display:flex; align-items:center; gap:14px; padding:13px 16px; border-bottom:1px solid rgba(23,53,37,0.07); background:#fff;">
+            <span style="font-family:ui-monospace,monospace; font-size:11px; font-weight:700; color:{{ r.color }}; background:{{ r.bg }}; padding:4px 8px; border-radius:6px; min-width:54px; text-align:center;">{{ r.method }}</span>
+            <code style="font-family:ui-monospace,monospace; font-size:0.86rem; color:#214D37;">{{ r.path }}</code>
+            <span style="margin-left:auto; font-size:0.86rem; color:#5A6B5C; text-align:right;">{{ r.desc }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.16); border-radius:12px; padding:15px 17px;">
+        <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">lightbulb</span>
+        <span style="font-size:0.94rem; color:#2B6246; line-height:1.55;">O cockpit é <b>web/desktop</b> (gestão densa), mas o implementador também tem uma visão leve no app (aba extra quando o papel é implementador): repasse do mês, alertas de onboarding e atalho ao painel de transparência. Coordenadores regionais alternam entre territórios pelo seletor "Toda a rede".</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      implJourney: [
+        { n: "1", title: "Candidatura & verificação", body: "Morador com raiz no território se candidata; curadoria/plataforma valida vínculo e ativa o papel de implementador." },
+        { n: "2", title: "Formação Arah", body: "Trilha curta (produto, vendas de proximidade, governança, painel de transparência) com selo ao concluir." },
+        { n: "3", title: "Ativação do território", body: "Configura a área, abre o feed e faz o onboarding dos primeiros comércios pelo cockpit." },
+        { n: "4", title: "Operação & gestão", body: "Acompanha receita, comissões e repasses; presta contas; renova assinaturas e resolve suporte." },
+        { n: "5", title: "Expansão", body: "Vira sênior/coordenador: abre territórios vizinhos, recebe override e acessa a camada de capital." },
+      ],
+      cockpitScreens: [
+        { icon: "dashboard", name: "Visão geral", body: "KPIs da rede, gráfico de receita, próximo repasse, territórios e atividade recente." },
+        { icon: "forest", name: "Territórios", body: "Lista de territórios com moradores, comércios, volume, repasse e status; abrir novo território." },
+        { icon: "storefront", name: "Comércios", body: "Assinantes por território, plano ativo, consumo e estado de cobrança." },
+        { icon: "account_balance_wallet", name: "Receita & repasses", body: "Receita por camada, split aplicado e histórico de payouts exportável." },
+        { icon: "monitoring", name: "Transparência", body: "Mesma visão pública do território, do lado do implementador (read-only)." },
+        { icon: "group_add", name: "Onboarding", body: "Convites, ativação de planos e acompanhamento da adoção dos comércios." },
+      ],
+      implRoutes: [
+        { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/implementers/me/overview", desc: "KPIs e resumo da rede" },
+        { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/implementers/me/territories", desc: "Territórios coordenados + métricas" },
+        { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/implementers/me/merchants/invite", desc: "Convidar / onboard de comércio" },
+        { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/implementers/me/payouts", desc: "Histórico e próximo repasse" },
+        { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/implementers/me/revenue?period", desc: "Receita por camada e split" },
+      ],
+      relates: [
+        { spec: "5 · Mercado & checkout", ext: "Acrescenta cálculo e exibição de taxa, split e repasse no fluxo de pagamento." },
+        { spec: "4 · Catálogo de telas", ext: "Inclui Ativar loja, Pagamento transparente, Painel de transparência e Console do implementador." },
+        { spec: "11 · Carteira territorial", ext: "Carteira Aratá ganha ledger de taxas, payouts automáticos e histórico auditável." },
+        { spec: "12 · Governança & votação", ext: "Novo objeto de proposta para alterar taxas e splits do território." },
+      ],
+      edgeCases: [
+        { icon: "wifi_off", title: "Offline no checkout", body: "A cotação fica em cache curto; sem rede, o pagamento é bloqueado com mensagem clara — nunca cobra sem confirmar split no servidor." },
+        { icon: "error", title: "PIX falha ou expira", body: "Assinatura/transação fica pendente, sem habilitar a loja nem creditar split; retry idempotente pela mesma referência." },
+        { icon: "schedule", title: "Taxa muda durante o mês", body: "A FeeSplitRule vigente no momento da transação é a aplicada; o painel mostra a regra usada por período." },
+        { icon: "currency_exchange", title: "Estorno / cancelamento", body: "Reverte fee e splits proporcionalmente; ajusta payouts futuros, com lançamento de estorno visível no ledger." },
+        { icon: "block", title: "Comércio sem plano vende", body: "Bloqueado: vender exige assinatura ativa. Morador segue podendo doar/trocar conforme regras do território." },
+        { icon: "visibility_off", title: "Patrocinador sem consentimento", body: "Sem displayConsent, o patrocínio existe no ledger mas não aparece publicamente — transparência ≠ exposição forçada." },
+      ],
+      govFlow: [
+        { n: "1", title: "Proposta", body: "Curador ou conselho cria fee-proposal com nova taxa/split e justificativa. O sistema mostra a prévia de impacto sobre transações recentes." },
+        { n: "2", title: "Votação", body: "Moradores habilitados votam dentro do prazo. Quórum e regra de aprovação seguem a configuração de governança do território." },
+        { n: "3", title: "Vigência futura", body: "Se aprovada, gera FeeSplitRule com effectiveFrom — nunca retroage. A regra anterior fica arquivada e auditável." },
+        { n: "4", title: "Transparência", body: "A mudança aparece no painel público com data, autor e resultado da votação. Qualquer um pode auditar o histórico." },
+      ],
+      capital: [
+        { icon: "diversity_3", title: "Investimento-anjo", body: "Cheque direto na operação local do implementador para acelerar implantação e formação.", points: ["Contrato simples de revenue-share", "Retorno atrelado à receita do território", "Prestação de contas no painel público"] },
+        { icon: "savings", title: "Fundo territorial", body: "Veículo comunitário que financia infraestrutura, bolsas de curadoria e novos territórios.", points: ["Cotas ou revenue-share da rede", "Parte do split alimenta o fundo", "Decisões de uso pela governança"] },
+      ],
+      backlog: [
+        { priority: "P0", pColor: "#A8632F", pBg: "#FBF0E6", title: "Planos & billing comercial", enables: "Camada 1" },
+        { priority: "P0", pColor: "#A8632F", pBg: "#FBF0E6", title: "Carteira Aratá & split de pagamentos", enables: "Camada 2" },
+        { priority: "P0", pColor: "#A8632F", pBg: "#FBF0E6", title: "Painel de transparência do território", enables: "Transparência" },
+        { priority: "P1", pColor: "#2A6FDB", pBg: "#EAF0FB", title: "Medição de consumo (IA/mídia/notif.)", enables: "Camada 1" },
+        { priority: "P1", pColor: "#2A6FDB", pBg: "#EAF0FB", title: "Governança de taxas (proposta/votação)", enables: "Governança" },
+        { priority: "P1", pColor: "#2A6FDB", pBg: "#EAF0FB", title: "Patrocínio & doação", enables: "Camada 4" },
+        { priority: "P2", pColor: "#74806E", pBg: "#F2F7F1", title: "Console do implementador", enables: "Operação" },
+        { priority: "P2", pColor: "#74806E", pBg: "#F2F7F1", title: "Camada de capital (fundo territorial)", enables: "Camada 3" },
+      ],
+      dod: [
+        "Morador usa o app por completo sem nenhuma cobrança ou bloqueio.",
+        "Toda taxa é exibida antes do pagamento e no comprovante, com split visível.",
+        "Painel de transparência mostra receita e repasses em tempo real, exportável.",
+        "Splits e payouts são server-side, idempotentes e auditáveis no ledger.",
+        "Alterações de taxa exigem proposta + votação e nunca retroagem.",
+        "Núcleo permanece em licença aberta — nenhuma função essencial atrás de paywall.",
+      ],
+      apiGroups: [
+        { icon: "subscriptions", area: "Planos & assinaturas", routes: [
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/territories/{id}/plans", desc: "Planos comerciais do território" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/merchants/{id}/subscription", desc: "Assinar / trocar de plano" },
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/merchants/{id}/consumption", desc: "Uso medido & cota restante" },
+        ] },
+        { icon: "account_balance_wallet", area: "Carteira Aratá & transações", routes: [
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/wallets/{id}", desc: "Saldo e dados de payout" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/transactions/{id}/quote", desc: "Cotação com taxa & split (pré-pagamento)" },
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/transactions/{id}/receipt", desc: "Comprovante transparente com split" },
+        ] },
+        { icon: "payments", area: "Repasses & transparência", routes: [
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/territories/{id}/revenue", desc: "Painel público: receita, repasses, volume" },
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/implementers/{id}/payouts", desc: "Histórico de repasses do implementador" },
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/territories/{id}/revenue/export", desc: "Exportar relatório (conselho)" },
+        ] },
+        { icon: "how_to_vote", area: "Governança, patrocínio & fundo", routes: [
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/territories/{id}/fee-proposals", desc: "Propor nova taxa / split" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/sponsorships", desc: "Criar patrocínio / doação" },
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/territories/{id}/fund", desc: "Saldo e contas do fundo territorial" },
+        ] },
+      ],
+      screens: [
+        { icon: "storefront", name: "Ativar loja", tag: "novo", tagColor: "#A8632F", tagBg: "#FBF0E6", role: "morador → comerciante", body: "Seleção de plano comercial e ativação via PIX. Mostra recursos liberados e nota de consumo medido. Habilita as telas de Minha loja (spec §5).", states: ["Sem plano", "Plano selecionado", "Pagamento pendente", "Ativo", "Falha PIX"] },
+        { icon: "receipt_long", name: "Pagamento transparente", tag: "altera", tagColor: "#2A6FDB", tagBg: "#EAF0FB", role: "comprador", body: "Estende o checkout: exibe valor ao vendedor, taxa Arah e o split (implementador / território / plataforma) antes e depois de pagar.", states: ["Cotação", "Processando", "Confirmado", "Comprovante", "Estornado"] },
+        { icon: "monitoring", name: "Painel de transparência", tag: "novo", tagColor: "#A8632F", tagBg: "#FBF0E6", role: "qualquer morador", body: "Receita do território em tempo real: totais, repasses por destinatário, comércios ativos e volume. Exportável para o conselho.", states: ["Carregando", "Com dados", "Mês sem receita", "Exportar"] },
+        { icon: "dashboard_customize", name: "Console do implementador", tag: "novo", tagColor: "#A8632F", tagBg: "#FBF0E6", role: "implementador / curador", body: "Onboarding de comércios, acompanhamento de comissões e payouts, relatórios e ferramentas de suporte de proximidade.", states: ["Vazio", "Com comércios", "Payout do mês", "Convite enviado"] },
+        { icon: "volunteer_activism", name: "Patrocínio & doação", tag: "novo", tagColor: "#A8632F", tagBg: "#FBF0E6", role: "patrocinador / morador", body: "Doação à plataforma ou patrocínio de território, com consentimento de exibição e período de vigência.", states: ["Escolher escopo", "Valor", "Recorrência", "Confirmado"] },
+        { icon: "how_to_vote", name: "Proposta de taxa", tag: "altera", tagColor: "#2A6FDB", tagBg: "#EAF0FB", role: "curador / conselho", body: "Estende Governança: propor e votar alteração de taxa ou split, com prévia do impacto e vigência futura.", states: ["Rascunho", "Em votação", "Aprovada", "Rejeitada", "Vigente"] },
+      ],
+      billingRules: [
+        { n: "1", text: "Toda transação chama /quote antes do pagamento — taxa e split vêm prontos do servidor e são mostrados ao usuário." },
+        { n: "2", text: "feeAmount = grossAmount × feeRate vigente para o revenueType, arredondado a centavo (banker's rounding)." },
+        { n: "3", text: "O vendedor recebe grossAmount − feeAmount; o feeAmount é dividido pela FeeSplitRule vigente." },
+        { n: "4", text: "Splits creditam carteiras (implementador, fundo, plataforma); Payout consolida e liquida por período." },
+        { n: "5", text: "Custos de gateway/PIX são repassados ao custo, fora do split, e exibidos como linha separada." },
+        { n: "6", text: "Toda alteração de taxa/split exige FeeSplitRule nova com effectiveFrom — nunca edita regra vigente (auditoria)." },
+      ],
+      principles: [
+        { n: "1", title: "Morador nunca paga", body: "Acesso ao território, feed, mapa e participação são gratuitos e permanentes. Cobrança só incide sobre atividade comercial (vender, transacionar) e serviços opcionais." },
+        { n: "2", title: "Núcleo aberto", body: "App, API e modelo permanecem em licença aberta. A receita vem de operação, hospedagem gerenciada, habilitação comercial e capital — nunca de fechar funcionalidade essencial." },
+        { n: "3", title: "Transparência por padrão", body: "Toda taxa é exibida no ato, todo split é público e o painel de receita do território é acessível a qualquer morador, em tempo real." },
+        { n: "4", title: "Split justo, território primeiro", body: "A divisão prioriza implementador local e fundo do território; a plataforma fica com o mínimo. Mudanças passam pela governança." },
+      ],
+      domains: [
+        { icon: "subscriptions", name: "CommercialPlan", tag: "novo", body: "Planos que habilitam funcionalidades comerciais (Loja, Pro). Define preço, recursos liberados e limites de consumo incluso.", fields: ["id", "territoryId", "name", "priceMonthly", "features[]", "consumptionQuota"] },
+        { icon: "card_membership", name: "Subscription", tag: "novo", body: "Assinatura ativa de um comércio a um plano. Liga ao billing recorrente e ao status de habilitação.", fields: ["id", "merchantId", "planId", "status", "renewsAt", "implementerId"] },
+        { icon: "account_balance_wallet", name: "Wallet (Aratá)", tag: "estende", body: "Carteira territorial com saldo, identidade do titular (comércio, implementador, fundo) e vínculo de payout.", fields: ["id", "ownerType", "ownerId", "territoryId", "balance", "payoutMethod"] },
+        { icon: "sync_alt", name: "Transaction", tag: "estende", body: "Movimento financeiro no app (venda, troca, aluguel, entrega). Carrega valor bruto, taxa e referência ao split aplicado.", fields: ["id", "type", "grossAmount", "feeAmount", "feeRateId", "splitId", "status"] },
+        { icon: "pie_chart", name: "FeeSplitRule", tag: "novo", body: "Regra versionada de divisão por tipo de receita. Percentuais por destinatário; vigência controlada pela governança.", fields: ["id", "territoryId", "revenueType", "shares{impl,fund,platform}", "effectiveFrom", "proposalId"] },
+        { icon: "payments", name: "Payout", tag: "novo", body: "Repasse liquidado a um destinatário (implementador, fundo, plataforma) a partir de transações e assinaturas.", fields: ["id", "walletId", "amount", "period", "sourceRefs[]", "status"] },
+        { icon: "volunteer_activism", name: "Sponsorship", tag: "novo", body: "Patrocínio de território ou doação à plataforma, com reconhecimento transparente e período de vigência.", fields: ["id", "sponsorId", "scope", "amount", "recurring", "displayConsent"] },
+        { icon: "savings", name: "TerritoryFund", tag: "novo", body: "Fundo de investimento territorial: aportes, cotas/revenue-share e prestação de contas aos investidores-anjo.", fields: ["id", "territoryId", "balance", "contributors[]", "model", "ledgerRef"] },
+        { icon: "speed", name: "ConsumptionMeter", tag: "novo", body: "Medição de uso cobrável (IA, mídia, notificações) por comércio, com cota incluída e excedente pré-pago.", fields: ["id", "subscriptionId", "metric", "usage", "quota", "overageRate"] },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

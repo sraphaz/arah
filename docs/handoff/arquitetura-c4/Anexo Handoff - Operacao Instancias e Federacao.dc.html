@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#16271D; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.tl { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.tl:hover { color:#377B57; border-left-color:#9FCEB4; }
+.tl.sub { font-size:12.5px; color:#74806E; padding-left:24px; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } .main { padding:0 !important; } section { break-inside:avoid; } }
+</style>
+</helmet>
+
+<div class="shell" style="display:grid; grid-template-columns:262px 1fr; max-width:1300px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:28px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:18px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:22px; padding-left:2px;">Anexo · Operação &amp; Federação</span>
+    <a class="tl" href="#o1">O1 · Modelo de instâncias</a>
+    <a class="tl" href="#o2">O2 · Topologia &amp; comunicação</a>
+    <a class="tl" href="#o3">O3 · Ciclo de vida do software</a>
+    <a class="tl" href="#o4">O4 · Federação</a>
+    <a class="tl" href="#o5">O5 · Responsabilidades</a>
+    <a class="tl" href="#o6">O6 · Modelo de dados</a>
+    <a class="tl" href="#o7">O7 · Endpoints (control plane)</a>
+    <a class="tl" href="#o8">O8 · Estados &amp; casos de borda</a>
+    <a class="tl" href="#o9">O9 · SLA &amp; observabilidade</a>
+    <a class="tl" href="#o10">O10 · Definição de pronto</a>
+    <div style="margin-top:22px; padding-top:18px; border-top:1px solid rgba(23,53,37,0.12);">
+      <a class="tl" href="Adendo de Monetizacao - Handoff Arah.dc.html">↗ Adendo de monetização</a>
+      <a class="tl" href="Cockpit do Implementador Arah.dc.html">↗ Cockpit do implementador</a>
+      <a class="tl" href="Backlog Atualizado - Arah.dc.html">↗ Backlog atualizado</a>
+      <a class="tl" href="Plano Operacional e Pipelines - Arah.dc.html">↗ Plano operacional &amp; pipelines</a>
+      <a class="tl" href="Arquitetura C4 Arah.dc.html">↗ Arquitetura C4</a>
+    </div>
+  </nav>
+
+  <main class="main" style="padding:54px clamp(24px,5vw,76px); max-width:920px; min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:38px; margin-bottom:46px;">
+      <div style="font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:14px;">Anexo de handoff · Backend &amp; infraestrutura</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.04; margin:0 0 18px; color:#0E2117;">Operação, instâncias <span style="color:#377B57;">&amp; federação</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:64ch; margin:0;">Como o software do Arah <b>sobe, fica disponível e se comunica</b> num modelo multi-instância: cada implementação serve um ou mais territórios e conversa com o <b>Arah Core</b> para federar com as demais. Estende a Especificação Arah (v1.0) e o Adendo de Monetização (A.1).</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:26px; font-size:13px; color:#74806E;">
+        <span><b style="color:#46584A;">Versão</b> 1.0</span>
+        <span><b style="color:#46584A;">Escopo</b> Control plane, deploy, federação</span>
+        <span><b style="color:#46584A;">Públicos</b> Backend · DevOps/SRE · Plataforma</span>
+        <span><b style="color:#46584A;">Idioma</b> pt-BR</span>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); border-radius:14px; padding:16px 18px; margin-top:24px;">
+        <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">lan</span>
+        <div style="font-size:0.92rem; line-height:1.55; color:#2B6246;">Princípio condutor: <b>o território é a fronteira de dados</b>. A federação é <b>opt-in</b> e escopada; o Core coordena identidade, descoberta, versões e o ledger — mas nunca é dono dos dados do território.</div>
+      </div>
+    </header>
+
+    <!-- O1 -->
+    <section id="o1" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O1</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Modelo de instâncias</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Duas peças. O <b>Core</b> é único e compartilhado; as <b>instâncias</b> são muitas e independentes. Uma instância serve de 1 a N territórios e existe em dois modos de hospedagem.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:24px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;"><span class="msr" style="font-size:22px; color:#377B57;">hub</span><b style="font-family:'Sora'; font-size:1.1rem; color:#0E2117;">Arah Core</b></div>
+          <p style="font-size:0.93rem; color:#46584A; line-height:1.6; margin:0 0 12px;">Hub aberto, operado pela plataforma/comunidade global. Não guarda o conteúdo do território — coordena.</p>
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <sc-for list="{{ coreRoles }}" as="r" hint-placeholder-count="5"><div style="display:flex; gap:8px; align-items:flex-start; font-size:0.88rem; color:#3A4A3E; line-height:1.45;"><span class="msr" style="font-size:16px; color:#377B57; flex-shrink:0;">check</span><span>{{ r }}</span></div></sc-for>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:24px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;"><span class="msr" style="font-size:22px; color:#377B57;">dns</span><b style="font-family:'Sora'; font-size:1.1rem; color:#0E2117;">Instância territorial</b></div>
+          <p style="font-size:0.93rem; color:#46584A; line-height:1.6; margin:0 0 12px;">Stack completo que serve o(s) território(s). Dona dos dados; conecta-se ao Core.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <sc-for list="{{ stackParts }}" as="s" hint-placeholder-count="6"><code style="font:0.78rem ui-monospace,monospace; background:#F4F8F4; color:#2B6246; border:1px solid rgba(23,53,37,0.08); padding:3px 8px; border-radius:6px;">{{ s }}</code></sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <sc-for list="{{ modes }}" as="m" hint-placeholder-count="2">
+          <div style="background:{{ m.bg }}; border:1px solid {{ m.border }}; border-radius:16px; padding:22px 24px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;"><span class="msr" style="font-size:20px; color:{{ m.accent }};">{{ m.icon }}</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">{{ m.title }}</b></div>
+            <p style="font-size:0.92rem; color:#46584A; line-height:1.6; margin:0;">{{ m.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- O2 -->
+    <section id="o2" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O2</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Topologia &amp; comunicação</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Dois planos: o <b>control plane</b> (instância ↔ Core) e o <b>data plane federado</b> (instância ↔ instância, via descoberta no Core). Tudo sobre TLS, com chaves por instância e eventos assinados.</p>
+      <!-- topology diagram -->
+      <div style="background:linear-gradient(175deg,#F4F9F4,#FBFCF9); border:1px solid rgba(23,53,37,0.12); border-radius:18px; padding:28px 24px; margin-bottom:22px;">
+        <div style="display:flex; justify-content:center; margin-bottom:16px;">
+          <div style="background:#214D37; color:#fff; border-radius:13px; padding:14px 22px; text-align:center; box-shadow:0 8px 22px rgba(20,40,28,0.18);"><div style="display:flex; align-items:center; gap:8px; justify-content:center;"><span class="msr" style="font-size:20px;">hub</span><b style="font-family:'Sora'; font-size:15px;">Arah Core</b></div><div style="font-size:11px; opacity:.8; margin-top:3px;">identidade · diretório · releases · ledger</div></div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:40px; margin-bottom:8px;"><span class="msr" style="font-size:22px; color:#9FCEB4;">swap_vert</span><span class="msr" style="font-size:22px; color:#9FCEB4;">swap_vert</span><span class="msr" style="font-size:22px; color:#9FCEB4;">swap_vert</span></div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px;">
+          <sc-for list="{{ topoInstances }}" as="i" hint-placeholder-count="3">
+            <div style="background:#fff; border:1.5px solid #4F956F; border-radius:13px; padding:14px 16px;"><div style="display:flex; align-items:center; gap:7px; margin-bottom:5px;"><span class="msr" style="font-size:18px; color:#377B57;">dns</span><b style="font-family:'Sora'; font-size:13px; color:#0E2117;">{{ i.name }}</b></div><div style="font-size:11px; color:#74806E; line-height:1.4;">{{ i.meta }}</div></div>
+          </sc-for>
+        </div>
+        <div style="text-align:center; font-size:11.5px; color:#74806E; display:flex; align-items:center; justify-content:center; gap:7px;"><span class="msr" style="font-size:16px; color:#2A6FDB;">sync_alt</span> federação instância↔instância: eventos assinados, descoberta via Core</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <b style="font-family:'Sora'; font-size:1.02rem; color:#0E2117; display:block; margin-bottom:12px;">Control plane · instância ↔ Core</b>
+          <div style="display:flex; flex-direction:column; gap:8px;"><sc-for list="{{ controlPlane }}" as="c" hint-placeholder-count="4"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.9rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#377B57; flex-shrink:0;">{{ c.icon }}</span><span>{{ c.text }}</span></div></sc-for></div>
+        </div>
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <b style="font-family:'Sora'; font-size:1.02rem; color:#0E2117; display:block; margin-bottom:12px;">Data plane · instância ↔ instância</b>
+          <div style="display:flex; flex-direction:column; gap:8px;"><sc-for list="{{ dataPlane }}" as="c" hint-placeholder-count="4"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.9rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#2A6FDB; flex-shrink:0;">{{ c.icon }}</span><span>{{ c.text }}</span></div></sc-for></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- O3 -->
+    <section id="o3" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O3</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Ciclo de vida do software</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Como uma implementação sobe, publica o território, se mantém no ar e atualiza.</p>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <sc-for list="{{ lifecycle }}" as="l" hint-placeholder-count="5">
+          <div style="display:flex; gap:16px; padding-bottom:18px;">
+            <div style="display:flex; flex-direction:column; align-items:center;"><span style="width:34px; height:34px; border-radius:10px; background:#EAF5EE; color:#377B57; font-family:'Sora'; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ l.n }}</span><span style="width:2px; flex:1; background:rgba(23,53,37,0.10); margin-top:4px;"></span></div>
+            <div style="padding-top:4px;"><b style="font-family:'Sora'; font-size:1.04rem; color:#0E2117; display:block; margin-bottom:5px;">{{ l.title }}</b><span style="font-size:0.94rem; color:#46584A; line-height:1.6;">{{ l.body }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <!-- O4 -->
+    <section id="o4" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O4</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Federação</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">O que uma instância troca com as outras — sempre via descoberta no Core, com eventos assinados e <b>opt-in por território</b>.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-bottom:20px;">
+        <sc-for list="{{ federation }}" as="f" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:9px;"><span class="msr" style="font-size:20px; color:#2A6FDB;">{{ f.icon }}</span><b style="font-family:'Sora'; font-size:1rem; color:#0E2117;">{{ f.title }}</b></div>
+            <p style="font-size:0.9rem; color:#46584A; line-height:1.55; margin:0;">{{ f.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF0FB; border:1px solid rgba(42,111,219,0.18); border-radius:12px; padding:15px 17px;">
+        <span class="msr" style="font-size:20px; color:#2A6FDB; flex-shrink:0;">shield_lock</span>
+        <span style="font-size:0.94rem; color:#2B4670; line-height:1.55;">Federar é uma escolha do território (governança). Dados pessoais não cruzam fronteira sem consentimento; o Core resolve identidade por <code style="font:0.85em ui-monospace,monospace; background:#fff; padding:1px 5px; border-radius:5px;">globalUserId</code> mas o conteúdo permanece na instância de origem.</span>
+      </div>
+    </section>
+
+    <!-- O5 -->
+    <section id="o5" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O5</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Responsabilidades do implementador</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Quem faz o quê, por modo de hospedagem. O negócio é sempre do implementador; a infra muda conforme managed ou soberana.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:12px; padding:13px 20px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; font-weight:600;">
+          <span>Responsabilidade</span><span>Gerenciada</span><span>Soberana</span>
+        </div>
+        <sc-for list="{{ respMatrix }}" as="r" hint-placeholder-count="8">
+          <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:12px; padding:13px 20px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center; font-size:0.92rem;">
+            <span style="color:#16271D; font-weight:500;">{{ r.task }}</span>
+            <span style="color:{{ r.mColor }}; font-weight:600;">{{ r.managed }}</span>
+            <span style="color:{{ r.sColor }}; font-weight:600;">{{ r.sovereign }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:0.85rem; color:#74806E; margin:12px 0 0;">Plataforma = time central do Arah · Implementador = operador local · Comunidade = conselho/curadoria do território.</p>
+    </section>
+
+    <!-- O6 -->
+    <section id="o6" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O6</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Modelo de dados</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Entidades do control plane (vivem no Core e/ou na instância). Estende <i>12 · Modelo de domínio</i> e o A3 do adendo.</p>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <sc-for list="{{ entities }}" as="e" hint-placeholder-count="7">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <span class="msr" style="font-size:20px; color:#377B57;">{{ e.icon }}</span>
+              <code style="font-family:'Sora'; font-weight:700; font-size:1.02rem; color:#0E2117;">{{ e.name }}</code>
+              <span style="margin-left:auto; font-size:11px; color:#74806E; background:#F2F7F1; padding:3px 9px; border-radius:6px;">{{ e.scope }}</span>
+            </div>
+            <p style="font-size:0.92rem; color:#46584A; line-height:1.55; margin:0 0 12px;">{{ e.body }}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:7px;">
+              <sc-for list="{{ e.fields }}" as="f" hint-placeholder-count="4"><code style="font:0.78rem ui-monospace,monospace; background:#F4F8F4; color:#2B6246; border:1px solid rgba(23,53,37,0.08); padding:3px 8px; border-radius:6px;">{{ f }}</code></sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- O7 -->
+    <section id="o7" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O7</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Endpoints (control plane)</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">APIs do Core e da instância. Autenticação por token de instância (mTLS); o cockpit consome via <code style="font:0.9em ui-monospace,monospace; background:#EAF5EE; color:#214D37; padding:2px 6px; border-radius:6px;">/implementers/me/*</code> (ver adendo).</p>
+      <div style="display:flex; flex-direction:column; gap:26px;">
+        <sc-for list="{{ apiGroups }}" as="g" hint-placeholder-count="4">
+          <div>
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:11px;"><span class="msr" style="font-size:19px; color:#377B57;">{{ g.icon }}</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">{{ g.area }}</b></div>
+            <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+              <sc-for list="{{ g.routes }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex; align-items:center; gap:14px; padding:13px 16px; border-bottom:1px solid rgba(23,53,37,0.07); background:#fff;">
+                  <span style="font-family:ui-monospace,monospace; font-size:11px; font-weight:700; color:{{ r.color }}; background:{{ r.bg }}; padding:4px 8px; border-radius:6px; min-width:54px; text-align:center;">{{ r.method }}</span>
+                  <code style="font-family:ui-monospace,monospace; font-size:0.84rem; color:#214D37;">{{ r.path }}</code>
+                  <span style="margin-left:auto; font-size:0.84rem; color:#5A6B5C; text-align:right;">{{ r.desc }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- O8 -->
+    <section id="o8" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O8</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Estados &amp; casos de borda</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">O território nunca deve ficar fora do ar por causa do Core. Resiliência primeiro.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px;">
+        <sc-for list="{{ edge }}" as="e" hint-placeholder-count="5">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;"><span class="msr" style="font-size:18px; color:#A8632F;">{{ e.icon }}</span><b style="font-family:'Sora'; font-size:0.98rem; color:#0E2117;">{{ e.title }}</b></div>
+            <p style="font-size:0.9rem; color:#46584A; line-height:1.55; margin:0;">{{ e.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- O9 -->
+    <section id="o9" style="margin-bottom:54px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O9</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">SLA &amp; observabilidade</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:18px;">
+        <sc-for list="{{ slaMetrics }}" as="s" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:20px;"><div style="font-family:'Sora'; font-weight:700; font-size:1.6rem; color:#377B57; letter-spacing:-0.02em;">{{ s.value }}</div><div style="font-size:0.85rem; color:#5A6B5C; margin-top:8px; line-height:1.4;">{{ s.label }}</div></div>
+        </sc-for>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <sc-for list="{{ obsTags }}" as="t" hint-placeholder-count="5"><span style="font-size:0.86rem; color:#2B6246; background:#EAF5EE; border:1px solid rgba(55,123,87,0.16); padding:6px 13px; border-radius:999px;">{{ t }}</span></sc-for>
+      </div>
+    </section>
+
+    <!-- O10 -->
+    <section id="o10" style="margin-bottom:30px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">O10</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Definição de pronto</h2>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <sc-for list="{{ dod }}" as="d" hint-placeholder-count="6">
+          <div style="display:flex; gap:12px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.16); border-radius:12px; padding:14px 17px;">
+            <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">check_circle</span>
+            <span style="font-size:0.95rem; color:#2B6246; line-height:1.55;">{{ d }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      federation: [
+        { icon: "fingerprint", title: "Identidade federada", body: "Um morador tem um globalUserId no Core e pode entrar em vários territórios sem recriar conta; cada instância mantém seu perfil local." },
+        { icon: "travel_explore", title: "Diretório de territórios", body: "Instâncias publicam seus territórios no Core; o app descobre territórios próximos mesmo que vivam em instâncias diferentes." },
+        { icon: "forum", title: "Mensagens cross-território", body: "Conversas entre moradores de territórios distintos roteadas por eventos federados assinados, com entrega via realtime de cada instância." },
+        { icon: "storefront", title: "Marketplace inter-territorial", body: "Opt-in: um território pode expor parte do mercado a territórios vizinhos (ex.: feira regional), preservando taxa e split de origem." },
+      ],
+      respMatrix: [
+        { task: "Hospedagem & uptime", managed: "Plataforma", mColor: "#377B57", sovereign: "Implementador", sColor: "#2A6FDB" },
+        { task: "Backups & recuperação", managed: "Plataforma", mColor: "#377B57", sovereign: "Implementador", sColor: "#2A6FDB" },
+        { task: "Atualizações & migrações", managed: "Plataforma (auto)", mColor: "#377B57", sovereign: "Implementador (assistido)", sColor: "#2A6FDB" },
+        { task: "Segurança & patches", managed: "Plataforma", mColor: "#377B57", sovereign: "Implementador", sColor: "#2A6FDB" },
+        { task: "Conformidade / LGPD", managed: "Compartilhada", mColor: "#A8632F", sovereign: "Implementador", sColor: "#2A6FDB" },
+        { task: "Onboarding & suporte ao comércio", managed: "Implementador", mColor: "#2A6FDB", sovereign: "Implementador", sColor: "#2A6FDB" },
+        { task: "Governança & transparência", managed: "Comunidade", mColor: "#A8632F", sovereign: "Comunidade", sColor: "#A8632F" },
+        { task: "Moderação & curadoria", managed: "Comunidade", mColor: "#A8632F", sovereign: "Comunidade", sColor: "#A8632F" },
+        { task: "Dados do território", managed: "Território", mColor: "#377B57", sovereign: "Território", sColor: "#377B57" },
+      ],
+      entities: [
+        { icon: "dns", name: "Instance", scope: "Core + instância", body: "Uma implementação registrada. Modo, endpoint, chave pública, versão e territórios servidos.", fields: ["id", "mode", "baseUrl", "publicKey", "version", "territoryIds[]", "status"] },
+        { icon: "inventory_2", name: "Release", scope: "Core", body: "Versão publicada do software, com canal e notas; instâncias consultam para atualizar.", fields: ["id", "version", "channel", "schemaVersion", "notes", "publishedAt"] },
+        { icon: "rocket_launch", name: "Deployment", scope: "instância", body: "Aplicação de um Release numa instância, com resultado de migração e rollback.", fields: ["id", "instanceId", "releaseId", "status", "migratedAt", "rolledBack"] },
+        { icon: "sync_alt", name: "FederationLink", scope: "Core", body: "Vínculo opt-in entre instâncias/territórios e o escopo do que é compartilhado.", fields: ["id", "fromTerritoryId", "toTerritoryId", "scopes[]", "status"] },
+        { icon: "favorite", name: "HealthCheck", scope: "Core + instância", body: "Heartbeat e métricas reportadas: serviços, latência, uptime, fila de jobs.", fields: ["id", "instanceId", "services{}", "uptime", "reportedAt"] },
+        { icon: "backup", name: "BackupSnapshot", scope: "instância", body: "Snapshot do banco/mídia, com verificação de integridade e retenção.", fields: ["id", "instanceId", "takenAt", "verified", "sizeBytes", "retentionDays"] },
+        { icon: "warning", name: "IncidentEvent", scope: "Core + instância", body: "Evento de saúde/operacional (auto-heal, manutenção, falha) exibido no cockpit.", fields: ["id", "instanceId", "severity", "type", "message", "resolvedAt"] },
+      ],
+      apiGroups: [
+        { icon: "add_to_queue", area: "Provisionamento & registro", routes: [
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/core/instances", desc: "Provisionar nova instância (modo)" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/core/instances/{id}/register", desc: "Registrar & trocar chaves" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/core/directory/territories", desc: "Publicar território no diretório" },
+        ] },
+        { icon: "favorite", area: "Saúde & telemetria", routes: [
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/instances/{id}/health", desc: "Status dos serviços & uptime" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/core/instances/{id}/heartbeat", desc: "Reportar métricas ao Core" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/instances/{id}/backups", desc: "Disparar/registrar backup" },
+        ] },
+        { icon: "system_update", area: "Releases & deploy", routes: [
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/core/releases?channel=stable", desc: "Releases disponíveis" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/instances/{id}/deploy", desc: "Aplicar release (migração + rollback)" },
+        ] },
+        { icon: "sync_alt", area: "Federação", routes: [
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/federation/links", desc: "Estabelecer vínculo (opt-in)" },
+          { method: "GET", color: "#2B6246", bg: "#EAF5EE", path: "/federation/identity/{globalUserId}", desc: "Resolver identidade federada" },
+          { method: "POST", color: "#2A6FDB", bg: "#EAF0FB", path: "/federation/events", desc: "Receber evento federado assinado" },
+        ] },
+      ],
+      edge: [
+        { icon: "cloud_off", title: "Core indisponível", body: "A instância opera em modo autônomo: usa cache de identidade, enfileira eventos de ledger e reconcilia ao reconectar. O território segue no ar." },
+        { icon: "undo", title: "Falha de deploy", body: "Rollback automático para a versão anterior; migração revertida quando possível. O território nunca fica fora por um update." },
+        { icon: "vpn_lock", title: "Instância soberana desconectada", body: "Território segue funcionando local; federação e consolidação de payouts pausam até reconectar. Cockpit sinaliza o estado." },
+        { icon: "backup", title: "Backup atrasado/falho", body: "Alerta P1 no cockpit e bloqueio de novo deploy até o backup verificado — nunca atualizar sem ponto de restauração." },
+        { icon: "join_inner", title: "Conflito de identidade", body: "O Core é a autoridade de globalUserId; conflitos resolvem pela identidade global, mantendo perfis locais por território." },
+      ],
+      slaMetrics: [
+        { value: "99,9%", label: "SLA de uptime (instância gerenciada)" },
+        { value: "≤ 15 min", label: "RPO de backup (gerenciada)" },
+        { value: "auto", label: "Rollback em falha de deploy" },
+        { value: "30s", label: "Intervalo de heartbeat ao Core" },
+      ],
+      obsTags: ["Logs estruturados", "Métricas (Prometheus)", "Traces", "Alertas no cockpit", "Telemetria agregada no Core", "Status público de uptime"],
+      dod: [
+        "Provisionar um território nos dois modos (gerenciado e soberano) ponta a ponta.",
+        "Instância registra-se, publica no diretório e fica verde no cockpit.",
+        "Deploy com migração e rollback automático testados; território sem downtime.",
+        "Federação opt-in funcionando: identidade, diretório e mensagens cross-território.",
+        "Modo autônomo: território opera com o Core fora e reconcilia ao voltar.",
+        "Backups verificados, observabilidade e alertas visíveis no cockpit.",
+      ],
+      coreRoles: [
+        "Registro & descoberta de instâncias e territórios (diretório).",
+        "Identidade federada — login único do morador entre territórios.",
+        "Catálogo de releases e canais de atualização.",
+        "Agregação de telemetria e saúde das instâncias.",
+        "Consolidação do ledger global de splits e payouts.",
+      ],
+      stackParts: ["API .NET", "PostgreSQL", "Object Storage", "Realtime", "Workers/Jobs", "PSP/PIX"],
+      modes: [
+        { icon: "cloud_done", title: "Gerenciada (managed)", accent: "#377B57", bg: "#EAF5EE", border: "rgba(55,123,87,0.2)", body: "A plataforma hospeda e opera a infra (uptime, segurança, backup, atualizações). O implementador cuida só do negócio. Caminho recomendado — \"para em pé\" sozinho." },
+        { icon: "vpn_lock", title: "Soberana (self-hosted)", accent: "#2A6FDB", bg: "#EAF0FB", border: "rgba(42,111,219,0.2)", body: "O implementador/coletivo hospeda na própria infra (soberania de dados) e se conecta ao Core por federação. Recebe pacote, IaC, chaves e runbook; responsável pela operação." },
+      ],
+      topoInstances: [
+        { name: "Litoral Norte", meta: "managed · Camburi, Boiçucanga" },
+        { name: "Maresias", meta: "soberana · self-hosted" },
+        { name: "Outra região", meta: "managed · território C" },
+      ],
+      controlPlane: [
+        { icon: "verified", text: "Registro & autenticação da instância (mTLS + token de instância)." },
+        { icon: "favorite", text: "Heartbeat & health/telemetria reportados ao Core." },
+        { icon: "system_update", text: "Pull de releases e regras de split vigentes." },
+        { icon: "sync", text: "Push de eventos de ledger para consolidação de payouts." },
+      ],
+      dataPlane: [
+        { icon: "fingerprint", text: "Resolução de identidade federada do morador entre territórios." },
+        { icon: "link", text: "Links/menções e mensagens entre moradores de territórios distintos." },
+        { icon: "storefront", text: "Marketplace inter-territorial opcional (opt-in)." },
+        { icon: "shield", text: "Eventos assinados; o território permanece como fronteira de dados." },
+      ],
+      lifecycle: [
+        { n: "1", title: "Solicitação & modo", body: "No cockpit, o implementador pede um novo território/instância e escolhe o modo (gerenciada ou soberana)." },
+        { n: "2", title: "Provisionamento", body: "Managed: o Core provisiona recursos (IaC) e injeta segredos. Soberana: gera pacote (Helm/Compose), par de chaves e guia de implantação." },
+        { n: "3", title: "Registro no Core", body: "A instância autentica, recebe seu id, sincroniza identidade federada e publica o território no diretório." },
+        { n: "4", title: "Bootstrap & health", body: "Migrações de schema, seed do território e health check verde antes de expor ao app." },
+        { n: "5", title: "Disponível & monitorada", body: "O território aparece no app; cockpit mostra operacional, com health, backups e alertas contínuos." },
+        { n: "6", title: "Atualização", body: "Core publica release: managed faz rollout automático com migração + rollback; soberana recebe aviso e aplica de forma assistida." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

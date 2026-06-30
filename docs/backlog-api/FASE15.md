@@ -4,8 +4,8 @@
 **Prioridade**: 🔴 CRÍTICA (Sustentabilidade financeira)  
 **Depende de**: Fase 6 (Pagamentos), Fase 7 (Payout)  
 **Estimativa Total**: 480 horas  
-**Status**: ⏳ Pendente  
-**Nota**: Esta fase está na Onda 1 (Fundação de Governança e Sustentabilidade), antes da Fase 16 (Finalização). Crítica para sustentabilidade financeira da plataforma.
+**Status**: ✅ Completo (base implementada) · 🔄 **Reposicionamento** via [FASE55](./FASE55.md)  
+**Nota**: Com o [Realinhamento de Sustentação Operacional](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md), esta fase evolui para **billing comercial open-core** (planos Loja/Pro para comerciantes) + apoio recorrente. Morador permanece gratuito. Ver [Adendo Monetização](../handoff/arquitetura-c4/Adendo%20de%20Monetizacao%20-%20Handoff%20Arah.dc.html).
 
 ---
 

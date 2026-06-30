@@ -1,0 +1,51 @@
+name: Agent Pilot — Billing
+description: Piloto assistido PR7 — quote/split visível no checkout
+title: "[Pilot/Billing] "
+labels: ["agent-task", "area/backend"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Piloto de operação por agentes (PR 7). Ver [AGENT_PILOT_BILLING.md](../docs/ops/AGENT_PILOT_BILLING.md).
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área inicial
+      options:
+        - area/backend
+        - area/flutter
+        - area/docs
+    validations:
+      required: true
+  - type: textarea
+    id: intent
+    attributes:
+      label: Intenção
+      placeholder: "Expor quote com split antes do PIX no checkout territorial..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite
+      value: |
+        - [ ] Split visível antes do PIX
+        - [ ] Testes passam (run-tests)
+        - [ ] sync-docs aplicado
+        - [ ] Gates QA/Security verdes
+    validations:
+      required: true
+  - type: input
+    id: phase_ref
+    attributes:
+      label: Fase
+      value: "FASE15, FASE55"
+  - type: checkboxes
+    id: pilot
+    attributes:
+      label: Piloto PR7
+      options:
+        - label: Consultar domain agents carteira-arata / monetizacao-split
+          required: true
+        - label: Registrar métricas ao fechar PRs
+          required: true

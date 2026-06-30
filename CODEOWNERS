@@ -1,0 +1,19 @@
+# CODEOWNERS — roteamento humano + agentes
+# Orquestrador usa estes paths para delegar. Ajuste @sraphaz para times reais quando existirem.
+
+/.agents/                   @sraphaz
+/.skills/                   @sraphaz
+/AGENTS.md                  @sraphaz
+
+/backend/                   @sraphaz
+/frontend/arah.app/         @sraphaz
+/frontend/wiki/             @sraphaz
+/frontend/portal/           @sraphaz
+/frontend/devportal/        @sraphaz
+
+/docs/                      @sraphaz
+/scripts/                   @sraphaz
+/.github/                   @sraphaz
+
+/docker-compose.yml         @sraphaz
+/Dockerfile                 @sraphaz

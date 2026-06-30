@@ -1,0 +1,14 @@
+id: carteira-arata
+name: Domain — Carteira Aratá
+description: Consultivo para ledger, split, conciliação e billing territorial.
+consult_only: true
+scope:
+  paths:
+    - docs/**/billing*
+    - docs/**/carteira*
+    - docs/backlog-api/FASE15.md
+references:
+  - docs/backlog-api/FASE15.md
+  - docs/backlog-api/FASE55.md
+skills:
+  - code-review

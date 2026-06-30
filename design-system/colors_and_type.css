@@ -1,0 +1,233 @@
+/* ============================================================================
+   ARAH / ARAPONGA — Design Tokens
+   Território-primeiro & Comunidade-primeiro.
+   ----------------------------------------------------------------------------
+   Source of truth:
+     - Web portal (Next.js)  → forest palette, Geist + Sora, glass surfaces
+       frontend/portal/tailwind.config.ts, app/globals.css, app/fonts.ts
+     - Mobile app (Flutter, Material 3) → dark-default green theme
+       frontend/arah.app/lib/core/theme/app_design_tokens.dart
+       frontend/arah.app/lib/core/config/constants.dart
+   Two surfaces, one nature: warm forest greens, calm and rooted.
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   FONTS — Geist (body/UI) + Sora (display/headings)
+   The mobile app uses the platform Material 3 type scale (Roboto); the portal
+   is the brand voice, so Geist + Sora lead the system.
+---------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Geist";
+  src: url("fonts/Geist-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sora";
+  src: url("fonts/Sora-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+:root {
+  /* ==========================================================================
+     COLOR — FOREST SCALE (web portal brand palette)
+     ========================================================================== */
+  --forest-50:  #F1F8F4;
+  --forest-100: #E2F1E8;
+  --forest-200: #C6E3D2;
+  --forest-300: #9FCEB4;
+  --forest-400: #6FB28C;
+  --forest-500: #4F956F;
+  --forest-600: #377B57;
+  --forest-700: #2B6246;
+  --forest-800: #214D37;
+  --forest-900: #173525;
+  --forest-950: #0E2117; /* extended for deep headings */
+
+  /* ==========================================================================
+     COLOR — MOBILE APP (Material 3). Dark is the default brand surface.
+     ========================================================================== */
+  /* Dark theme (default) */
+  --app-primary-dark:           #81C784; /* soft canopy green */
+  --app-surface-dark:           #121212;
+  --app-surface-variant-dark:   #1E1E1E;
+  --app-on-surface-dark:        #E8E8E8;
+  --app-on-surface-var-dark:    #B0B0B0;
+  --app-outline-dark:           #404040;
+
+  /* Light theme */
+  --app-primary-light:          #1B5E20; /* deep leaf green */
+  --app-surface-light:          #FAFAFA;
+  --app-surface-container-light:#F5F5F5;
+  --app-on-surface-light:       #1C1C1C;
+  --app-on-surface-var-light:   #5C5C5C;
+  --app-outline-light:          #E0E0E0;
+
+  /* Feed content-type accents (left border + icon on feed cards) */
+  --feed-general: #4F956F; /* forest-500 — neutral note */
+  --feed-event:   #2A6FDB; /* calendar / invite */
+  --feed-tip:     #C9962B; /* helpful, warm amber */
+  --feed-alert:   #C0492F; /* attention, terracotta-red */
+
+  /* ==========================================================================
+     COLOR — PREMIUM APP UI KIT (refined evolution, ui_kits/app)
+     The premium recreation deepens surfaces, lightens the canopy accent, and
+     warms the semantics for a high-end minimalist feel. Source of truth for
+     the interactive kit (mirrors its components.jsx `T` palette).
+     ========================================================================== */
+  --premium-bg:        #0B0C0A; /* deepest base */
+  --premium-surface:   #0E100D; /* app surface */
+  --premium-card:      #191B17; /* flat card (use cardGrad for depth) */
+  --premium-card-hi:   #20231E; /* elevated */
+  --premium-card-grad: linear-gradient(160deg, #1C201A 0%, #161814 100%); /* @kind color */
+  --premium-line:      rgba(255,255,255,0.07);
+  --premium-line-hi:   rgba(255,255,255,0.13);
+  --premium-fg:        #F2F4EE;
+  --premium-fg2:       #A6AC9E; /* muted */
+  --premium-fg3:       #6B7164; /* subtle */
+  --premium-canopy:    #A6D6B9; /* accent on dark */
+  --premium-canopy-solid:#81C784;
+  --premium-green-grad:linear-gradient(150deg, #93D29C 0%, #6FB98C 100%); /* @kind color */
+  --premium-green-glow:0 8px 24px rgba(129,199,132,0.30);
+  --premium-alert:     #E8A06A; /* warm terracotta-amber */
+  --premium-event:     #86AEEA; /* soft blue */
+  --premium-water:     #6FC5D6; /* território health: água */
+
+  /* ==========================================================================
+     SEMANTIC — LIGHT (web portal default; color-scheme: light)
+     ========================================================================== */
+  --bg:            var(--forest-50);
+  --fg:            var(--forest-900);   /* body text */
+  --fg-strong:     var(--forest-950);   /* headings */
+  --fg-muted:      var(--forest-700);   /* secondary text */
+  --fg-subtle:     var(--forest-600);   /* tertiary / captions */
+  --primary:       var(--forest-600);
+  --primary-strong:var(--forest-800);
+  --on-primary:    #FFFFFF;
+  --border:        rgba(23, 53, 37, 0.12);
+  --border-strong: rgba(23, 53, 37, 0.22);
+  --check:         var(--forest-600);   /* ✓ bullet color */
+
+  /* ==========================================================================
+     GLASS SURFACES (signature portal motif)
+     ========================================================================== */
+  --glass-bg:           rgba(255, 255, 255, 0.88);
+  --glass-bg-soft:      rgba(255, 255, 255, 0.65); /* inner panels */
+  --glass-border:       rgba(255, 255, 255, 0.70);
+  --glass-shadow:       0 20px 50px rgba(20, 40, 28, 0.15);
+  --glass-hover-shadow: 0 24px 60px rgba(20, 40, 28, 0.20);
+  --glass-radius:       32px;
+  --glass-blur:         16px;
+
+  /* ==========================================================================
+     RADII (mobile constants + portal glass)
+     ========================================================================== */
+  --radius-sm:   8px;   /* app radiusSm — snackbars, chips */
+  --radius-md:   12px;  /* app radiusMd — cards */
+  --radius-lg:   16px;  /* app radiusLg — sheets */
+  --radius-xl:   24px;  /* portal inner panels */
+  --radius-2xl:  32px;  /* portal glass card */
+  --radius-pill: 999px;
+
+  /* ==========================================================================
+     SPACING (mobile AppConstants — 4 / 8 / 16 / 24 / 32)
+     ========================================================================== */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --touch-target: 44px;     /* minTouchTargetSize */
+
+  /* ==========================================================================
+     ELEVATION / SHADOW
+     ========================================================================== */
+  --shadow-sm: 0 1px 2px rgba(20, 40, 28, 0.08);
+  --shadow-md: 0 8px 24px rgba(20, 40, 28, 0.12);
+  --shadow-lg: 0 20px 50px rgba(20, 40, 28, 0.15);
+  --shadow-image: 0 10px 30px rgba(20, 40, 28, 0.18);
+
+  /* ==========================================================================
+     MOTION (portal reveal-on-scroll + app durations)
+     ========================================================================== */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --dur-fast:    150ms;   /* @kind other */
+  --dur-normal:  250ms;   /* @kind other */
+  --dur-reveal:  800ms;   /* @kind other */
+  --reveal-translate: 20px;
+  --transition-smooth: all 0.3s var(--ease-smooth);
+
+  /* ==========================================================================
+     TYPE — families + fluid scale
+     ========================================================================== */
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif; /* @kind font */
+  --font-sans:    "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif; /* @kind font */
+  --font-mono:    ui-monospace, "SF Mono", Menlo, Consolas, monospace; /* @kind font */
+
+  /* Display / headings (Sora) — clamp for fluid web layouts */
+  --text-hero:   700 clamp(3rem, 6vw, 4.5rem)/1.04 var(--font-display);   /* H1 / 48–72px */
+  --text-h1:     600 clamp(2rem, 3.5vw, 2.5rem)/1.1 var(--font-display);  /* 32–40px */
+  --text-h2:     600 clamp(1.5rem, 2.4vw, 1.875rem)/1.15 var(--font-display);
+  --text-h3:     600 1.125rem/1.3 var(--font-display);                    /* 18px */
+
+  /* Body / UI (Geist) */
+  --text-lead:   400 1.25rem/1.6 var(--font-sans);    /* 20px lead paragraph */
+  --text-body:   400 1rem/1.65 var(--font-sans);      /* 16px */
+  --text-sm:     400 0.875rem/1.6 var(--font-sans);   /* 14px */
+  --text-xs:     500 0.75rem/1.4 var(--font-sans);    /* 12px labels */
+
+  /* Tracking */
+  --tracking-tight: -0.02em;  /* big display */
+  --tracking-wide:  0.08em;   /* eyebrows / uppercase labels */
+}
+
+/* ----------------------------------------------------------------------------
+   DARK — mirrors the Flutter app's default dark surface.
+   Add data-theme="dark" to any container to preview app-style chrome.
+---------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --bg:            var(--app-surface-dark);
+  --fg:            var(--app-on-surface-dark);
+  --fg-strong:     #FFFFFF;
+  --fg-muted:      var(--app-on-surface-var-dark);
+  --fg-subtle:     var(--app-on-surface-var-dark);
+  --primary:       var(--app-primary-dark);
+  --primary-strong:var(--app-primary-dark);
+  --on-primary:    #102016;
+  --border:        var(--app-outline-dark);
+  --border-strong: #555;
+  --glass-bg:      rgba(30, 30, 30, 0.86);
+  --glass-bg-soft: rgba(40, 40, 40, 0.6);
+  --glass-border:  rgba(255, 255, 255, 0.08);
+}
+
+/* ----------------------------------------------------------------------------
+   SEMANTIC ELEMENT DEFAULTS — opt-in via .arah-type on a wrapper.
+---------------------------------------------------------------------------- */
+.arah-type {
+  font: var(--text-body);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.arah-type h1 { font: var(--text-h1); color: var(--fg-strong); letter-spacing: var(--tracking-tight); margin: 0; }
+.arah-type h2 { font: var(--text-h2); color: var(--fg-strong); letter-spacing: var(--tracking-tight); margin: 0; }
+.arah-type h3 { font: var(--text-h3); color: var(--fg-strong); margin: 0; }
+.arah-type p  { font: var(--text-body); color: var(--fg-muted); margin: 0 0 1em; text-wrap: pretty; }
+.arah-type .eyebrow {
+  font: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--primary);
+}
+.arah-type code {
+  font: 0.9em var(--font-mono);
+  background: var(--forest-100);
+  color: var(--forest-800);
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+}

@@ -1,0 +1,30 @@
+id: flutter
+name: Flutter Agent
+description: App mobile território-primeiro (Material 3, Riverpod).
+triggers:
+  - issue:label=area/flutter
+  - orchestrator:delegate
+scope:
+  paths:
+    - frontend/arah.app/**
+  commands:
+    - flutter analyze
+    - flutter test
+    - flutter gen-l10n
+skills:
+  - run-tests
+  - gen-l10n
+  - sync-docs
+  - open-pr
+  - code-review
+consult:
+  domain:
+    - territorio-membership
+    - feed-conteudo
+    - mapa-lugares
+  specialists:
+    - flutter
+guardrails:
+  no_merge: true
+  require_ci: true
+  max_diff_files: 35

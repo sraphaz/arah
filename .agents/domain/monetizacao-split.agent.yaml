@@ -1,0 +1,8 @@
+id: monetizacao-split
+name: Monetização & Split
+mode: consult
+enrich: Camadas de receita, planos comerciais e ganchos de cobrança.
+validate: Taxa, split por FeeSplitRule vigente e payouts (Adendo monetização).
+references:
+  - docs/backlog-api/FASE55.md
+  - docs/handoff/arquitetura-c4/Adendo de Monetizacao - Handoff Arah.dc.html

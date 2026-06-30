@@ -21,7 +21,53 @@
   "onboardingDescription": "To see the feed and join the community, choose a territory near you.",
   "useMyLocation": "Use my location",
   "enableLocationHint": "Enable location to see nearby territories.",
-  "noTerritoryInRegion": "No territory found in this region. Try a larger radius or enable location.",
+  "noTerritoryInRegion": "No territory registered near you yet.",
+  "registerMunicipalityTitle": "Register your municipality",
+  "registerMunicipalityDescription": "We use the official IBGE boundary to create your city territory so you can enter as a visitor.",
+  "registerMunicipalityButton": "Register {city}",
+  "@registerMunicipalityButton": {
+    "placeholders": {
+      "city": { "type": "String" }
+    }
+  },
+  "registerMunicipalityButtonGeneric": "Register my municipality",
+  "registerMunicipalityLoading": "Fetching official boundary...",
+  "registerMunicipalitySuccess": "Territory {city} is ready to select.",
+  "@registerMunicipalitySuccess": {
+    "placeholders": {
+      "city": { "type": "String" }
+    }
+  },
+  "registerMunicipalityFailed": "Could not fetch IBGE boundary. Adjust the pin and draw your cell.",
+  "proposeTerritoryButton": "Draw my cell",
+  "proposeTerritoryTitle": "Propose territory",
+  "proposeTerritoryDescription": "Adjust the pin on the map, confirm city and state, and draw the boundary. A curator will validate before activation; you get provisional visitor access.",
+  "proposeTerritoryTapPin": "Tap the map to adjust the territory center.",
+  "proposeTerritoryTapPolygon": "Tap the map to add polygon vertices (minimum 3).",
+  "proposeTerritoryCity": "City",
+  "proposeTerritoryState": "State",
+  "proposeTerritoryNameOptional": "Cell name (optional)",
+  "proposeTerritoryPolygonMode": "Draw polygon",
+  "proposeTerritoryPolygonModeHint": "Off: uses a circle with adjustable radius.",
+  "proposeTerritoryRadiusLabel": "Radius: {km} km",
+  "@proposeTerritoryRadiusLabel": {
+    "placeholders": {
+      "km": { "type": "String" }
+    }
+  },
+  "proposeTerritoryClearPolygon": "Clear polygon",
+  "proposeTerritorySubmit": "Submit proposal",
+  "proposeTerritorySubmitting": "Submitting proposal...",
+  "proposeTerritorySuccess": "Proposal submitted: {name}. Provisional access until validation.",
+  "@proposeTerritorySuccess": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "proposeTerritoryCityStateRequired": "Enter city and state (2 letters).",
+  "proposeTerritoryPolygonMinPoints": "The polygon needs at least 3 points.",
+  "territoryPendingBadge": "Awaiting curator",
+  "onboardingPendingTerritoryHint": "This territory is under validation. You can enter provisionally as a visitor.",
   "onboardingNearbyTitle": "Near you",
   "onboardingAllTerritoriesTitle": "All territories",
   "onboardingOrChooseFromList": "Or choose a territory from the list below",

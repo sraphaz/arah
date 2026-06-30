@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#16271D; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.tl { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.tl:hover { color:#377B57; border-left-color:#9FCEB4; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } .main { padding:0 !important; } section { break-inside:avoid; } }
+</style>
+</helmet>
+
+<div class="shell" style="display:grid; grid-template-columns:262px 1fr; max-width:1300px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:28px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:18px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:22px; padding-left:2px;">Backlog atualizado</span>
+    <a class="tl" href="#b1">B1 · O que mudou</a>
+    <a class="tl" href="#b2">B2 · Frentes de trabalho</a>
+    <a class="tl" href="#b3">B3 · Impacto no backlog atual</a>
+    <a class="tl" href="#b4">B4 · Backlog priorizado</a>
+    <a class="tl" href="#b5">B5 · Roadmap em ondas</a>
+    <a class="tl" href="#b6">B6 · Riscos &amp; dependências</a>
+    <div style="margin-top:22px; padding-top:18px; border-top:1px solid rgba(23,53,37,0.12);">
+      <a class="tl" href="Adendo de Monetizacao - Handoff Arah.dc.html">↗ Adendo de monetização</a>
+      <a class="tl" href="Anexo Handoff - Operacao Instancias e Federacao.dc.html">↗ Anexo: operação &amp; federação</a>
+      <a class="tl" href="Plano Operacional e Pipelines - Arah.dc.html">↗ Plano operacional &amp; pipelines</a>
+      <a class="tl" href="Arquitetura C4 Arah.dc.html">↗ Arquitetura C4</a>
+    </div>
+  </nav>
+
+  <main class="main" style="padding:54px clamp(24px,5vw,76px); max-width:920px; min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:38px; margin-bottom:46px;">
+      <div style="font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:14px;">Planejamento de produto · impacto</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.04; margin:0 0 18px; color:#0E2117;">Backlog <span style="color:#377B57;">atualizado</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:64ch; margin:0;">Como o backlog atual (48 fases, focado nas funcionalidades comunitárias) absorve a nova <b>camada de sustentação</b>: monetização, cockpit do implementador e operação multi-instância com federação. O que entra, o que muda e em que ordem.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:26px;">
+        <sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:16px 20px; min-width:140px;"><div style="font-family:'Sora'; font-weight:700; font-size:1.7rem; color:{{ s.color }}; letter-spacing:-0.02em;">{{ s.value }}</div><div style="font-size:12.5px; color:#5A6B5C; margin-top:6px; line-height:1.4;">{{ s.label }}</div></div>
+        </sc-for>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); border-radius:14px; padding:16px 18px; margin-top:24px;">
+        <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">info</span>
+        <div style="font-size:0.92rem; line-height:1.55; color:#2B6246;">Princípio: a camada de sustentação <b>não atrasa</b> as funcionalidades comunitárias — ela viabiliza financiá-las. Fases existentes ganham "ganchos" de receita; nada essencial fica atrás de paywall.</div>
+      </div>
+    </header>
+
+    <!-- B1 -->
+    <section id="b1" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">B1</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">O que mudou</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Três decisões de produto recentes ampliam o escopo do backlog original.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;">
+        <sc-for list="{{ whatsNew }}" as="w" hint-placeholder-count="3">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+            <span class="msr" style="font-size:24px; color:#377B57;">{{ w.icon }}</span>
+            <h3 style="font-family:'Sora'; font-weight:700; font-size:1.1rem; color:#0E2117; margin:13px 0 8px;">{{ w.title }}</h3>
+            <p style="font-size:0.92rem; color:#46584A; line-height:1.55; margin:0;">{{ w.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- B2 -->
+    <section id="b2" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">B2</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Frentes de trabalho</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">A nova camada se organiza em seis frentes (épicos). Cada uma referencia os documentos de handoff correspondentes.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <sc-for list="{{ epics }}" as="e" hint-placeholder-count="6">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:20px 22px; display:grid; grid-template-columns:auto 1fr auto; gap:18px; align-items:center;">
+            <div style="width:46px; height:46px; border-radius:13px; background:{{ e.tint }}; display:flex; align-items:center; justify-content:center;"><span class="msr" style="font-size:24px; color:{{ e.color }};">{{ e.icon }}</span></div>
+            <div><h3 style="font-family:'Sora'; font-weight:700; font-size:1.08rem; color:#0E2117; margin:0 0 4px;">{{ e.title }}</h3><p style="font-size:0.9rem; color:#5A6B5C; line-height:1.5; margin:0;">{{ e.body }}</p></div>
+            <div style="text-align:right;"><div style="font-family:'Sora'; font-weight:700; font-size:1.4rem; color:{{ e.color }};">{{ e.count }}</div><div style="font-size:11px; color:#9FB0A2;">itens</div></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- B3 -->
+    <section id="b3" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">B3</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Impacto no backlog atual</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Fases existentes que ganham "ganchos" da nova camada — sem reescrever o que já estava planejado.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.8fr; gap:14px; padding:13px 20px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; font-weight:600;"><span>Fase / domínio existente</span><span>O que muda</span><span>Tipo</span></div>
+        <sc-for list="{{ impact }}" as="i" hint-placeholder-count="6">
+          <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.8fr; gap:14px; padding:14px 20px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center;">
+            <span style="font-size:0.92rem; font-weight:600; color:#16271D;">{{ i.phase }}</span>
+            <span style="font-size:0.9rem; color:#46584A; line-height:1.45;">{{ i.change }}</span>
+            <span><span style="font-size:11px; font-weight:600; color:{{ i.color }}; background:{{ i.bg }}; padding:4px 10px; border-radius:999px;">{{ i.type }}</span></span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <!-- B4 -->
+    <section id="b4" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">B4</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Backlog priorizado (consolidado)</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Une o backlog de monetização (Adendo A10) e o de operação (Anexo O10) numa ordem única. <b>P0</b> destrava a primeira receita; <b>P1</b> amplia camadas e gestão; <b>P2</b> escala rede e capital.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:48px 1.8fr 1fr; gap:14px; padding:13px 20px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; font-weight:600;"><span></span><span>Item</span><span>Frente</span></div>
+        <sc-for list="{{ prioritized }}" as="p" hint-placeholder-count="10">
+          <div style="display:grid; grid-template-columns:48px 1.8fr 1fr; gap:14px; padding:13px 20px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center;">
+            <span style="font-size:11px; font-weight:700; color:{{ p.pColor }}; background:{{ p.pBg }}; padding:4px 8px; border-radius:7px; text-align:center;">{{ p.priority }}</span>
+            <span style="font-size:0.93rem; font-weight:500; color:#16271D;">{{ p.item }}</span>
+            <span style="font-size:0.85rem; color:#5A6B5C;">{{ p.epic }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- B5 -->
+    <section id="b5" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">B5</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Roadmap em ondas</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Quatro ondas de entrega — cada uma fecha um ciclo de valor sem deixar o território no escuro.</p>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <sc-for list="{{ waves }}" as="w" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-left:4px solid {{ w.color }}; border-radius:14px; padding:22px 24px;">
+            <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:10px;">
+              <span style="font-family:'Sora'; font-weight:700; font-size:1.15rem; color:#0E2117;">{{ w.name }}</span>
+              <span style="font-size:12px; font-weight:600; color:{{ w.color }};">{{ w.window }}</span>
+              <span style="margin-left:auto; font-size:12.5px; color:#5A6B5C; font-style:italic;">{{ w.goal }}</span>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:7px;">
+              <sc-for list="{{ w.items }}" as="it" hint-placeholder-count="4"><span style="font-size:0.84rem; color:#2B4A38; background:#F1F8F4; border:1px solid rgba(55,123,87,0.14); padding:5px 11px; border-radius:999px;">{{ it }}</span></sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- B6 -->
+    <section id="b6" style="margin-bottom:30px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">B6</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Riscos &amp; dependências</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;">
+        <sc-for list="{{ risks }}" as="r" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;"><span class="msr" style="font-size:19px; color:{{ r.color }};">{{ r.icon }}</span><b style="font-family:'Sora'; font-size:0.98rem; color:#0E2117;">{{ r.title }}</b></div>
+            <p style="font-size:0.9rem; color:#46584A; line-height:1.55; margin:0;">{{ r.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      summary: [
+        { value: '7', label: 'novas frentes (épicos), incl. fundação técnica', color: '#377B57' },
+        { value: '+40', label: 'novos itens de backlog', color: '#377B57' },
+        { value: '9', label: 'fases existentes tocadas (ganchos)', color: '#A8632F' },
+        { value: '5', label: 'ondas de entrega (com a Onda 0)', color: '#2A6FDB' },
+      ],
+      prioritized: [
+        { priority: 'P0', pColor: '#A8632F', pBg: '#FBF0E6', item: 'Planos & billing comercial (assinar loja)', epic: 'Monetização' },
+        { priority: 'P0', pColor: '#A8632F', pBg: '#FBF0E6', item: 'Carteira Aratá: ledger, taxa & split', epic: 'Monetização' },
+        { priority: 'P0', pColor: '#A8632F', pBg: '#FBF0E6', item: 'Payouts automáticos por período', epic: 'Monetização' },
+        { priority: 'P0', pColor: '#A8632F', pBg: '#FBF0E6', item: 'Painel de transparência público', epic: 'Transparência' },
+        { priority: 'P0', pColor: '#A8632F', pBg: '#FBF0E6', item: 'Cockpit: visão geral, territórios, receita', epic: 'Cockpit' },
+        { priority: 'P0', pColor: '#A8632F', pBg: '#FBF0E6', item: 'Registro de instância & health no Core', epic: 'Operação' },
+        { priority: 'P1', pColor: '#2A6FDB', pBg: '#EAF0FB', item: 'Medição de consumo (IA/mídia/notif.)', epic: 'Monetização' },
+        { priority: 'P1', pColor: '#2A6FDB', pBg: '#EAF0FB', item: 'Governança de taxas (proposta/votação)', epic: 'Transparência' },
+        { priority: 'P1', pColor: '#2A6FDB', pBg: '#EAF0FB', item: 'Cockpit: onboarding, operações, configurações', epic: 'Cockpit' },
+        { priority: 'P1', pColor: '#2A6FDB', pBg: '#EAF0FB', item: 'App: visão leve do implementador', epic: 'App' },
+        { priority: 'P1', pColor: '#2A6FDB', pBg: '#EAF0FB', item: 'Deploy com migração & rollback automático', epic: 'Operação' },
+        { priority: 'P1', pColor: '#2A6FDB', pBg: '#EAF0FB', item: 'Patrocínio & doação', epic: 'Monetização' },
+        { priority: 'P2', pColor: '#74806E', pBg: '#F2F7F1', item: 'Federação entre instâncias (opt-in)', epic: 'Operação' },
+        { priority: 'P2', pColor: '#74806E', pBg: '#F2F7F1', item: 'Modo soberano (self-hosted) completo', epic: 'Operação' },
+        { priority: 'P2', pColor: '#74806E', pBg: '#F2F7F1', item: 'Fundo territorial & aportes', epic: 'Capital' },
+        { priority: 'P2', pColor: '#74806E', pBg: '#F2F7F1', item: 'Cockpit: formação & mentoria', epic: 'Cockpit' },
+      ],
+      waves: [
+        { name: 'Onda 0 — Fundação técnica', window: 'semanas 1–8', color: '#74806E', goal: 'a plataforma sai do papel e sobe', items: ['CI/CD + GHCR', 'Arah Core mínimo', 'IaC + 1ª instância', 'Observabilidade'] },
+        { name: 'Onda 1 — Fundação de receita', window: 'meses 2–4', color: '#377B57', goal: 'o território fatura pela primeira vez', items: ['Billing comercial', 'Carteira Aratá + split', 'Payouts', 'Cockpit núcleo', 'Registro de instância'] },
+        { name: 'Onda 2 — Transparência & gestão', window: '3–6 meses', color: '#2A6FDB', goal: 'confiança e operação do dia a dia', items: ['Painel de transparência', 'Governança de taxas', 'Consumo medido', 'Cockpit completo', 'Deploy + rollback'] },
+        { name: 'Onda 3 — Rede & federação', window: '6–12 meses', color: '#A8632F', goal: 'crescer para múltiplos territórios', items: ['Federação opt-in', 'Identidade federada', 'App do implementador', 'Modo soberano', 'Patrocínios'] },
+        { name: 'Onda 4 — Escala & capital', window: '12 meses+', color: '#5A4FB5', goal: 'sustentar a expansão', items: ['Fundo territorial', 'Coordenação regional', 'Marketplace inter-territorial', 'Observabilidade avançada'] },
+      ],
+      risks: [
+        { icon: 'gavel', color: '#A8632F', title: 'Conformidade financeira', body: 'Split, repasses e PIX exigem cuidado regulatório (PSP, KYC do comerciante, nota fiscal). Tratar cedo, na Onda 1.' },
+        { icon: 'lan', color: '#A8632F', title: 'Complexidade multi-instância', body: 'Federação e modo soberano aumentam a superfície de operação. Começar managed; soberano só na Onda 3.' },
+        { icon: 'link', color: '#2A6FDB', title: 'Dependência do Core', body: 'Identidade, diretório e ledger dependem do Core. Garantir modo autônomo da instância para não acoplar uptime.' },
+        { icon: 'groups', color: '#2A6FDB', title: 'Governança das taxas', body: 'Mudança de taxa precisa de processo de conselho maduro para não gerar atrito com a comunidade.' },
+      ],
+      whatsNew: [
+        { icon: 'terminal', title: 'Fundação técnica', body: 'A plataforma ainda não roda: entram CI/CD, Arah Core, infra como código e observabilidade para subir o 1º território. Ref.: Plano Operacional & Pipelines.' },
+        { icon: 'paid', title: 'Monetização open-core', body: 'Assinaturas comerciais, taxa transacional com split, payouts, doações/patrocínio e capital — sem custo para o morador.' },
+        { icon: 'dashboard', title: 'Cockpit do implementador', body: 'Painel web de gestão: territórios, comércios, receita/repasses, onboarding, formação, patrocínios, operações e configurações.' },
+        { icon: 'lan', title: 'Multi-instância & federação', body: 'Modelo Core + instâncias (gerenciada/soberana), provisionamento, deploy, saúde e federação entre territórios.' },
+      ],
+      epics: [
+        { icon: 'terminal', color: '#A8632F', tint: '#FBF0E6', title: 'Plataforma & fundação técnica', count: '6', body: 'CI/CD, Arah Core (registro/identidade/releases/ledger), infra como código e observabilidade. Ref.: Plano Operacional.' },
+        { icon: 'paid', color: '#377B57', tint: '#E2F1E8', title: 'Monetização & billing', count: '8', body: 'Planos comerciais, carteira Aratá com split, payouts, medição de consumo. Ref.: Adendo A3–A7.' },
+        { icon: 'monitoring', color: '#2A6FDB', tint: '#E5EEFB', title: 'Transparência & governança de taxas', count: '5', body: 'Painel público de receita, proposta/votação de taxas, prestação de contas. Ref.: Adendo A6, A8.' },
+        { icon: 'dashboard', color: '#377B57', tint: '#E2F1E8', title: 'Cockpit do implementador (web)', count: '7', body: 'As 8 telas do cockpit + endpoints /implementers. Ref.: Adendo A12 + Cockpit.' },
+        { icon: 'smartphone', color: '#C9962B', tint: '#F8EFD7', title: 'App — papel do implementador', count: '4', body: 'Visão leve no app: repasse, alertas de onboarding e atalho à transparência. Ref.: Adendo A5, A12.' },
+        { icon: 'lan', color: '#2B6246', tint: '#E2F1E8', title: 'Operação, instâncias & federação', count: '8', body: 'Core, provisioning, deploy/rollback, health, backups, federação. Ref.: Anexo O1–O10.' },
+        { icon: 'savings', color: '#5A4FB5', tint: '#ECE9FA', title: 'Capital territorial', count: '2', body: 'Fundo de investimento territorial e aportes (anjo/revenue-share). Ref.: Adendo A9.' },
+      ],
+      impact: [
+        { phase: 'Marketplace / Mercado', change: 'Ganha cálculo de taxa, split visível e repasse no checkout.', type: 'alterada', color: '#2A6FDB', bg: '#EAF0FB' },
+        { phase: 'Minha loja', change: 'Passa a exigir assinatura comercial (plano Loja/Pro) para vender.', type: 'alterada', color: '#2A6FDB', bg: '#EAF0FB' },
+        { phase: 'Carteira Aratá (F22)', change: 'Ganha ledger de taxas, split por regra e payouts automáticos.', type: 'ampliada', color: '#377B57', bg: '#EAF5EE' },
+        { phase: 'Assinaturas (F15)', change: 'Reposicionada como billing comercial + apoio recorrente.', type: 'alterada', color: '#2A6FDB', bg: '#EAF0FB' },
+        { phase: 'Governança & votação', change: 'Novo objeto: proposta/votação de taxas e splits do território.', type: 'ampliada', color: '#377B57', bg: '#EAF5EE' },
+        { phase: 'Métricas/Insights (F24/25)', change: 'Alimenta o painel de transparência público e exportável.', type: 'ampliada', color: '#377B57', bg: '#EAF5EE' },
+        { phase: 'Assistente IA / Mídia', change: 'Passa a ser consumo medido e cobrável por uso.', type: 'alterada', color: '#2A6FDB', bg: '#EAF0FB' },
+        { phase: 'Arquitetura / Deploy', change: 'De instância única para multi-instância federada via Core.', type: 'estrutural', color: '#A8632F', bg: '#FBF0E6' },
+        { phase: 'Identidade & Auth', change: 'Ganha identidade federada (login entre territórios).', type: 'ampliada', color: '#377B57', bg: '#EAF5EE' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+id: backlog-to-issue
+description: Converte item de backlog/descoberta em issue com critérios de aceite.
+inputs:
+  source: enum [FASE*.md, REALINHAMENTO, handoff, ad_hoc]
+outputs:
+  - title
+  - acceptance_criteria
+  - suggested_labels
+  - suggested_agent
+template: .github/ISSUE_TEMPLATE/agent-task.yml

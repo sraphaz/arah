@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#16271D; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.tl { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.tl:hover { color:#377B57; border-left-color:#9FCEB4; }
+.mono { font-family:ui-monospace,"SF Mono",Menlo,monospace; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } .main { padding:0 !important; } section { break-inside:avoid; } }
+</style>
+</helmet>
+
+<div class="shell" style="display:grid; grid-template-columns:262px 1fr; max-width:1300px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:28px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:18px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:22px; padding-left:2px;">Plano operacional</span>
+    <a class="tl" href="#p1">P1 · Ponto de partida (hoje)</a>
+    <a class="tl" href="#p2">P2 · Cadeia de ferramentas</a>
+    <a class="tl" href="#p3">P3 · Repositórios</a>
+    <a class="tl" href="#p4">P4 · Pipelines CI/CD</a>
+    <a class="tl" href="#p5">P5 · Ambientes &amp; promoção</a>
+    <a class="tl" href="#p6">P6 · Responsabilidades (RACI)</a>
+    <a class="tl" href="#p7">P7 · Do zero ao 1º território</a>
+    <a class="tl" href="#p8">P8 · Visão final do produto</a>
+    <a class="tl" href="#p9">P9 · Está tudo fechado?</a>
+    <div style="margin-top:22px; padding-top:18px; border-top:1px solid rgba(23,53,37,0.12);">
+      <a class="tl" href="Anexo Handoff - Operacao Instancias e Federacao.dc.html">↗ Anexo: operação &amp; federação</a>
+      <a class="tl" href="Backlog Atualizado - Arah.dc.html">↗ Backlog atualizado</a>
+      <a class="tl" href="Arquitetura C4 Arah.dc.html">↗ Arquitetura C4</a>
+    </div>
+  </nav>
+
+  <main class="main" style="padding:54px clamp(24px,5vw,76px); max-width:920px; min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:38px; margin-bottom:46px;">
+      <div style="font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:14px;">Plano operacional · DevOps &amp; entrega</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.04; margin:0 0 18px; color:#0E2117;">Do GitHub ao território <span style="color:#377B57;">no ar</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:64ch; margin:0;">Como tudo isto será operacionalizado nas ferramentas — partindo do que temos <b>hoje</b> (código no GitHub, plataforma ainda sem rodar) até a primeira instância de território em produção. Define a cadeia de ferramentas, os pipelines, quem responde por quê, e fecha a visão final do produto.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:26px; font-size:13px; color:#74806E;">
+        <span><b style="color:#46584A;">Versão</b> 1.0 · demonstrativo</span>
+        <span><b style="color:#46584A;">Base</b> repo sraphaz/arah</span>
+        <span><b style="color:#46584A;">Estado</b> pré-produção</span>
+        <span><b style="color:#46584A;">Idioma</b> pt-BR</span>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#FBF0E6; border:1px solid rgba(168,99,47,0.2); border-radius:14px; padding:16px 18px; margin-top:24px;">
+        <span class="msr" style="font-size:20px; color:#A8632F; flex-shrink:0;">construction</span>
+        <div style="font-size:0.92rem; line-height:1.55; color:#7A4A22;">A plataforma ainda <b>não está rodando</b>. Este documento é a versão <b>demonstrativa e operacional</b> do alvo: nomes de ferramentas, fluxos e papéis são propostas de referência (ex.: GitHub Actions, GHCR, Terraform/Helm) — ajustáveis na adoção.</div>
+      </div>
+    </header>
+
+    <!-- P1 -->
+    <section id="p1" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P1</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Ponto de partida (hoje)</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">O que já existe e o que falta para sair do código para o ar.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;"><span class="msr" style="font-size:20px; color:#377B57;">check_circle</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">O que já temos</b></div>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ haveNow }}" as="h" hint-placeholder-count="4"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.92rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#377B57; flex-shrink:0;">check</span><span>{{ h }}</span></div></sc-for>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;"><span class="msr" style="font-size:20px; color:#A8632F;">pending</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">O que falta</b></div>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ missingNow }}" as="m" hint-placeholder-count="5"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.92rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#A8632F; flex-shrink:0;">arrow_forward</span><span>{{ m }}</span></div></sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- P2 -->
+    <section id="p2" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P2</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Cadeia de ferramentas</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Cada necessidade operacional mapeada a uma ferramenta, com o estado de adoção. GitHub é o centro de gravidade — código, CI, artefatos e secrets.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:1.1fr 1.2fr 0.7fr; gap:14px; padding:13px 20px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; font-weight:600;"><span>Necessidade</span><span>Ferramenta</span><span>Estado</span></div>
+        <sc-for list="{{ toolchain }}" as="t" hint-placeholder-count="10">
+          <div style="display:grid; grid-template-columns:1.1fr 1.2fr 0.7fr; gap:14px; padding:12px 20px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center;">
+            <span style="font-size:0.9rem; font-weight:500; color:#16271D;">{{ t.need }}</span>
+            <span style="font-size:0.88rem; color:#46584A;"><span class="mono" style="background:#F4F8F4; border:1px solid rgba(23,53,37,0.08); padding:2px 7px; border-radius:5px;">{{ t.tool }}</span></span>
+            <span><span style="font-size:11px; font-weight:600; color:{{ t.color }}; background:{{ t.bg }}; padding:4px 10px; border-radius:999px;">{{ t.state }}</span></span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- P3 -->
+    <section id="p3" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P3</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Repositórios</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">Organização sob <span class="mono" style="background:#F4F8F4; border:1px solid rgba(23,53,37,0.08); padding:2px 7px; border-radius:5px;">github.com/arah</span>. Polyrepo por responsabilidade, com CI próprio e dono claro.</p>
+      <div style="display:flex; flex-direction:column; gap:11px;">
+        <sc-for list="{{ repos }}" as="r" hint-placeholder-count="6">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:14px; padding:16px 20px; display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:center;">
+            <span class="msr" style="font-size:22px; color:{{ r.color }};">{{ r.icon }}</span>
+            <div><div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;"><code class="mono" style="font-size:0.92rem; font-weight:600; color:#0E2117;">{{ r.name }}</code><span style="font-size:11px; color:{{ r.color }}; background:{{ r.bg }}; padding:2px 9px; border-radius:999px;">{{ r.stack }}</span></div><div style="font-size:0.86rem; color:#5A6B5C; margin-top:4px; line-height:1.45;">{{ r.body }}</div></div>
+            <span style="font-size:0.8rem; color:#74806E; text-align:right; white-space:nowrap;">{{ r.owner }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <!-- P4 -->
+    <section id="p4" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P4</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Pipelines CI/CD</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Quatro pipelines no GitHub Actions cobrem o ciclo: da mudança de código ao território no ar e atualizado. Cada etapa é automática salvo os <b>gates</b> marcados.</p>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <sc-for list="{{ pipelines }}" as="p" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-left:4px solid {{ p.color }}; border-radius:14px; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;"><span class="msr" style="font-size:20px; color:{{ p.color }};">{{ p.icon }}</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">{{ p.name }}</b><span style="margin-left:auto; font-size:11.5px; color:#74806E;">{{ p.trigger }}</span></div>
+            <div style="display:flex; flex-wrap:wrap; align-items:center; gap:7px;">
+              <sc-for list="{{ p.steps }}" as="s" hint-placeholder-count="5">
+                <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.82rem; color:{{ s.fg }}; background:{{ s.bg }}; border:1px solid {{ s.bd }}; padding:6px 11px; border-radius:9px;"><span class="msr" style="font-size:15px;">{{ s.icon }}</span>{{ s.label }}</span>
+                <span class="msr stepsep" style="font-size:16px; color:#9FCEB4;">chevron_right</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:0.84rem; color:#74806E; margin:14px 0 0;"><span class="msr" style="font-size:15px; color:#A8632F; vertical-align:-2px;">lock</span> Etapas em âmbar são <b>gates</b> (aprovação manual ou verificação obrigatória) antes de prosseguir.</p>
+    </section>
+
+    <!-- P5 -->
+    <section id="p5" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P5</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Ambientes &amp; promoção</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Promoção linear com gate entre staging e produção. Produção é <b>multi-instância</b>: cada território roda seu próprio ambiente, provisionado pela <span class="mono">arah.infra</span>.</p>
+      <div style="display:flex; align-items:stretch; gap:10px; flex-wrap:wrap;">
+        <sc-for list="{{ envs }}" as="e" hint-placeholder-count="3">
+          <div style="flex:1; min-width:180px; background:#fff; border:1px solid rgba(23,53,37,0.12); border-top:4px solid {{ e.color }}; border-radius:14px; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:19px; color:{{ e.color }};">{{ e.icon }}</span><b style="font-family:'Sora'; font-size:1rem; color:#0E2117;">{{ e.name }}</b></div>
+            <p style="font-size:0.88rem; color:#46584A; line-height:1.5; margin:0 0 10px;">{{ e.body }}</p>
+            <div style="font-size:11.5px; color:#74806E;">{{ e.gate }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- P6 -->
+    <section id="p6" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P6</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Responsabilidades (RACI)</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 18px; max-width:70ch;">Quem responde por cada atividade. <b class="mono">R</b> responsável · <b class="mono">A</b> aprova · <b class="mono">C</b> consultado · <b class="mono">I</b> informado.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden; font-size:0.86rem;">
+        <div style="display:grid; grid-template-columns:1.6fr repeat(4,0.7fr); gap:8px; padding:12px 18px; background:#F2F7F1; border-bottom:1px solid rgba(23,53,37,0.10); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:#74806E; font-weight:600;">
+          <span>Atividade</span><span style="text-align:center;">Plataforma</span><span style="text-align:center;">Dev/SRE</span><span style="text-align:center;">Implementador</span><span style="text-align:center;">Comunidade</span>
+        </div>
+        <sc-for list="{{ raci }}" as="r" hint-placeholder-count="8">
+          <div style="display:grid; grid-template-columns:1.6fr repeat(4,0.7fr); gap:8px; padding:11px 18px; border-bottom:1px solid rgba(23,53,37,0.06); align-items:center;">
+            <span style="color:#16271D; font-weight:500;">{{ r.act }}</span>
+            <span style="text-align:center; font-weight:700; color:{{ r.c0 }};">{{ r.v0 }}</span>
+            <span style="text-align:center; font-weight:700; color:{{ r.c1 }};">{{ r.v1 }}</span>
+            <span style="text-align:center; font-weight:700; color:{{ r.c2 }};">{{ r.v2 }}</span>
+            <span style="text-align:center; font-weight:700; color:{{ r.c3 }};">{{ r.v3 }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- P7 -->
+    <section id="p7" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P7</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Do zero ao primeiro território</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Os marcos para sair do código de hoje até um território-piloto (ex.: Camburi) no ar, gerando receita.</p>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <sc-for list="{{ milestones }}" as="m" hint-placeholder-count="6">
+          <div style="display:flex; gap:16px; padding-bottom:20px;">
+            <div style="display:flex; flex-direction:column; align-items:center;"><span style="width:38px; height:38px; border-radius:11px; background:{{ m.tint }}; color:{{ m.color }}; font-family:'Sora'; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ m.tag }}</span><span style="width:2px; flex:1; background:rgba(23,53,37,0.10); margin-top:4px;"></span></div>
+            <div style="padding-top:5px;"><div style="display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;"><b style="font-family:'Sora'; font-size:1.06rem; color:#0E2117;">{{ m.title }}</b><span style="font-size:0.82rem; color:{{ m.color }}; font-weight:600;">{{ m.window }}</span></div><p style="font-size:0.93rem; color:#46584A; line-height:1.6; margin:5px 0 0;">{{ m.body }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- P8 -->
+    <section id="p8" style="margin-bottom:52px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P8</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Visão final do produto</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 24px; max-width:70ch;">Como todas as superfícies se conectam quando tudo estiver no ar. O <b>Arah Core</b> federa; as <b>instâncias</b> servem territórios; as <b>superfícies</b> atendem cada público.</p>
+      <div style="background:linear-gradient(175deg,#F4F9F4,#FBFCF9); border:1px solid rgba(23,53,37,0.12); border-radius:18px; padding:26px 24px; margin-bottom:20px;">
+        <div style="display:flex; justify-content:center; margin-bottom:14px;"><div style="background:#214D37; color:#fff; border-radius:13px; padding:13px 22px; text-align:center;"><div style="display:flex; align-items:center; gap:8px; justify-content:center;"><span class="msr" style="font-size:19px;">hub</span><b style="font-family:'Sora'; font-size:14px;">Arah Core</b></div><div style="font-size:10.5px; opacity:.82; margin-top:2px;">identidade federada · diretório · releases · ledger</div></div></div>
+        <div style="display:flex; justify-content:center; margin-bottom:12px;"><span class="msr" style="font-size:22px; color:#9FCEB4;">swap_vert</span></div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px;">
+          <sc-for list="{{ surfaces }}" as="s" hint-placeholder-count="5">
+            <div style="background:#fff; border:1.5px solid {{ s.border }}; border-radius:13px; padding:14px 15px;"><div style="display:flex; align-items:center; gap:7px; margin-bottom:6px;"><span class="msr" style="font-size:18px; color:{{ s.color }};">{{ s.icon }}</span><b style="font-family:'Sora'; font-size:12.5px; color:#0E2117;">{{ s.name }}</b></div><div style="font-size:10.5px; color:#74806E; line-height:1.45; margin-bottom:7px;">{{ s.body }}</div><span style="font-size:10px; font-weight:600; color:{{ s.stColor }}; background:{{ s.stBg }}; padding:2px 8px; border-radius:999px;">{{ s.status }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;">
+        <sc-for list="{{ finalPrinciples }}" as="f" hint-placeholder-count="3">
+          <div style="display:flex; gap:11px; align-items:flex-start; background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:13px; padding:16px 18px;"><span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">{{ f.icon }}</span><div><b style="font-family:'Sora'; font-size:0.96rem; color:#0E2117; display:block; margin-bottom:3px;">{{ f.title }}</b><span style="font-size:0.86rem; color:#5A6B5C; line-height:1.5;">{{ f.body }}</span></div></div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- P9 -->
+    <section id="p9" style="margin-bottom:30px;">
+      <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:13px; color:#9FB0A2; letter-spacing:.08em; margin-bottom:6px;">P9</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6rem,3vw,2rem); letter-spacing:-0.02em; color:#0E2117; margin:0 0 16px;">Está tudo fechado?</h2>
+      <p style="font-size:1rem; line-height:1.7; color:#3A4A3E; margin:0 0 22px; max-width:70ch;">O que já está <b>fechado na documentação</b> (pronto para construir) e o que <b>falta executar</b>. A visão de produto está completa; a execução começa pelos pipelines.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;"><span class="msr" style="font-size:20px; color:#377B57;">task_alt</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">Fechado (documentado)</b></div>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ closed }}" as="c" hint-placeholder-count="6"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.91rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#377B57; flex-shrink:0;">check</span><span>{{ c }}</span></div></sc-for>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;"><span class="msr" style="font-size:20px; color:#A8632F;">pending_actions</span><b style="font-family:'Sora'; font-size:1.05rem; color:#0E2117;">Falta executar</b></div>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ todo }}" as="t" hint-placeholder-count="6"><div style="display:flex; gap:9px; align-items:flex-start; font-size:0.91rem; color:#3A4A3E; line-height:1.5;"><span class="msr" style="font-size:17px; color:#A8632F; flex-shrink:0;">arrow_forward</span><span>{{ t }}</span></div></sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; gap:11px; align-items:flex-start; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); border-radius:14px; padding:16px 18px; margin-top:18px;">
+        <span class="msr" style="font-size:20px; color:#377B57; flex-shrink:0;">verified</span>
+        <div style="font-size:0.93rem; line-height:1.55; color:#2B6246;"><b>Visão de produto: fechada.</b> Site, app, cockpit, arquitetura, monetização, operação/federação e backlog estão consistentes entre si. O próximo passo é executar a Onda 1 (fundação de receita) sobre os pipelines acima.</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const ST = { done:{state:'temos',color:'#377B57',bg:'#EAF5EE'}, build:{state:'a configurar',color:'#A8632F',bg:'#FBF0E6'}, new:{state:'a construir',color:'#2A6FDB',bg:'#EAF0FB'} };
+    const stp = (icon, label, gate) => gate
+      ? { icon, label, fg:'#A8632F', bg:'#FBF0E6', bd:'rgba(168,99,47,0.2)' }
+      : { icon, label, fg:'#2B6246', bg:'#F1F8F4', bd:'rgba(55,123,87,0.15)' };
+    const LC = { R:'#377B57', A:'#2A6FDB', C:'#A8632F', I:'#74806E', '–':'#C2CABE' };
+    const raciRow = (act, l) => ({ act, v0:l[0], c0:LC[l[0]], v1:l[1], c1:LC[l[1]], v2:l[2], c2:LC[l[2]], v3:l[3], c3:LC[l[3]] });
+    return {
+      pipelines: [
+        { name:'Aplicação (app · api · cockpit)', icon:'merge', color:'#377B57', trigger:'push / pull request',
+          steps:[ stp('commit','PR'), stp('rule','lint + testes'), stp('build','build'), stp('package_2','imagem GHCR'), stp('cloud_upload','deploy staging'), stp('verified_user','promover prod', true) ] },
+        { name:'Release do Core', icon:'sell', color:'#2A6FDB', trigger:'tag vX.Y.Z',
+          steps:[ stp('sell','tag'), stp('description','changelog'), stp('publish','publicar release'), stp('campaign','canal stable'), stp('notifications','notificar instâncias') ] },
+        { name:'Provisionar instância de território', icon:'add_to_queue', color:'#A8632F', trigger:'pedido no cockpit',
+          steps:[ stp('add','solicitação'), stp('settings_suggest','terraform apply'), stp('verified','registrar no Core'), stp('database','migrar schema'), stp('favorite','health check', true), stp('public','publicar território') ] },
+        { name:'Atualizar instância', icon:'system_update', color:'#2B6246', trigger:'nova release stable',
+          steps:[ stp('download','detecta release'), stp('backup','backup', true), stp('sync','aplicar migração'), stp('science','smoke test'), stp('undo','rollback se falha') ] },
+      ],
+      envs: [
+        { name:'dev', icon:'code', color:'#86AEEA', body:'Branch/PR de cada dev. Dados sintéticos, sem PIX real.', gate:'Deploy automático por PR' },
+        { name:'staging', icon:'science', color:'#E8A06A', body:'Integração contínua. Testes e2e, sandbox de PSP.', gate:'Verde nos testes → libera prod' },
+        { name:'prod (multi-instância)', icon:'rocket_launch', color:'#377B57', body:'Uma instância por território, observada e com backups. PIX real.', gate:'Aprovação + gate de backup' },
+      ],
+      raci: [
+        raciRow('Código & revisão (PR)', ['C','R','–','–']),
+        raciRow('Pipelines CI/CD', ['A','R','I','I']),
+        raciRow('Releases & versões', ['R','C','I','I']),
+        raciRow('Provisionar instância (gerenciada)', ['R','A','C','I']),
+        raciRow('Operar instância soberana', ['C','I','R','I']),
+        raciRow('Backups & uptime (gerenciada)', ['R','A','I','I']),
+        raciRow('Onboarding & suporte ao comércio', ['I','–','R','C']),
+        raciRow('Governança de taxas', ['I','–','C','R']),
+        raciRow('Moderação & curadoria', ['–','–','C','R']),
+        raciRow('Dados & LGPD do território', ['A','C','R','C']),
+      ],
+      milestones: [
+        { tag:'M0', title:'Hoje — código no GitHub', window:'agora', color:'#74806E', tint:'#F2F7F1', body:'App, API e portal versionados; specs e design system prontos. Sem CI/CD nem produção.' },
+        { tag:'M1', title:'Fundação CI/CD', window:'semanas 1–3', color:'#377B57', tint:'#EAF5EE', body:'GitHub Actions, GHCR, ambientes dev/staging, secrets e observabilidade básica.' },
+        { tag:'M2', title:'Arah Core mínimo', window:'semanas 3–6', color:'#2A6FDB', tint:'#EAF0FB', body:'Registro de instância, identidade federada e catálogo de releases operando.' },
+        { tag:'M3', title:'Infra + 1ª instância (managed)', window:'semanas 5–8', color:'#A8632F', tint:'#FBF0E6', body:'Terraform/Helm provisionam a instância-piloto; deploy staging → prod com gate de backup.' },
+        { tag:'M4', title:'Monetização v1', window:'semanas 7–12', color:'#377B57', tint:'#EAF5EE', body:'Billing comercial, carteira Aratá com split e payouts automáticos rodando no piloto.' },
+        { tag:'M5', title:'Cockpit + transparência · go-live', window:'semana 12+', color:'#377B57', tint:'#EAF5EE', body:'Camburi no ar: comércios assinando, taxa/split à vista e repasse liquidado. Primeiro território próspero.' },
+      ],
+      surfaces: [
+        { name:'App — morador', icon:'smartphone', color:'#377B57', border:'#4F956F', body:'Feed, mapa, mercado, carteira.', status:'em dev', stColor:'#A8632F', stBg:'#FBF0E6' },
+        { name:'App — implementador', icon:'badge', color:'#377B57', border:'#9FCEB4', body:'Visão leve: repasse, onboarding, saúde.', status:'previsto', stColor:'#2A6FDB', stBg:'#EAF0FB' },
+        { name:'Cockpit web', icon:'dashboard', color:'#2A6FDB', border:'#9FBEE8', body:'Gestão da rede de territórios.', status:'previsto', stColor:'#2A6FDB', stBg:'#EAF0FB' },
+        { name:'Instâncias', icon:'dns', color:'#A8632F', border:'#E0B98E', body:'Stack que serve cada território.', status:'a provisionar', stColor:'#2A6FDB', stBg:'#EAF0FB' },
+        { name:'Portal / site', icon:'public', color:'#377B57', border:'#9FCEB4', body:'Marca e captação de implementadores.', status:'em dev', stColor:'#A8632F', stBg:'#FBF0E6' },
+      ],
+      finalPrinciples: [
+        { icon:'lock_open', title:'Núcleo aberto', body:'Código livre e auditável; sustento por operação e serviço, não por paywall.' },
+        { icon:'forest', title:'Território como fronteira', body:'Dados ficam na instância; federação é opt-in pela governança.' },
+        { icon:'visibility', title:'Transparência por padrão', body:'Receita, split e repasses públicos e conferíveis em tempo real.' },
+      ],
+      closed: [
+        'Visão de produto e arquitetura (C4 + federação).',
+        'Modelo de monetização, split e governança de taxas.',
+        'Cockpit do implementador (telas e fluxos).',
+        'Operação multi-instância e responsabilidades.',
+        'Backlog priorizado e roadmap em ondas.',
+        'Cadeia de ferramentas e desenho dos pipelines.',
+      ],
+      todo: [
+        'Configurar GitHub Actions, GHCR e ambientes.',
+        'Construir o Arah Core (registro, identidade, releases, ledger).',
+        'Escrever IaC (Terraform/Helm) e provisionar a 1ª instância.',
+        'Implementar billing, carteira/split e payouts (Onda 1).',
+        'Integrar gateway PIX/PSP e observabilidade em produção.',
+        'Rodar o piloto e validar a definição de pronto.',
+      ],
+      haveNow: [
+        "Código-base no GitHub (sraphaz/arah): app Flutter, API .NET, portal Next.",
+        "Design system, UI kit premium e specs de handoff completos.",
+        "Modelo de domínio e arquitetura C4 definidos.",
+        "Backlog e roadmap em ondas priorizados.",
+      ],
+      missingNow: [
+        "CI/CD formal (build, testes, deploy) — ainda não há pipelines.",
+        "Registry de imagens e infraestrutura como código (IaC).",
+        "Ambientes (dev/staging/prod) e segredos gerenciados.",
+        "Arah Core operável (registro, federação, ledger) e primeira instância.",
+        "Observabilidade, backups e gateway PIX em produção.",
+      ],
+      toolchain: [
+        { need:'Código & revisão (PRs)', tool:'GitHub', ...ST.done },
+        { need:'CI — build & testes', tool:'GitHub Actions', ...ST.build },
+        { need:'Artefatos / imagens', tool:'GHCR (Container Registry)', ...ST.build },
+        { need:'Infra como código', tool:'Terraform + Helm', ...ST.new },
+        { need:'Orquestração', tool:'Kubernetes / Containers', ...ST.new },
+        { need:'Banco de dados', tool:'PostgreSQL gerenciado', ...ST.new },
+        { need:'Mídia & entrega', tool:'Object Storage + CDN', ...ST.new },
+        { need:'Observabilidade', tool:'Prometheus + Grafana + logs', ...ST.new },
+        { need:'Erros & traces', tool:'Sentry / OpenTelemetry', ...ST.new },
+        { need:'Segredos', tool:'GitHub Secrets / Vault', ...ST.build },
+        { need:'Pagamentos', tool:'Gateway PIX / PSP', ...ST.new },
+        { need:'Federação & registro', tool:'Arah Core (próprio)', ...ST.new },
+      ],
+      repos: [
+        { name:'arah.api', stack:'.NET', color:'#377B57', bg:'#EAF5EE', icon:'api', body:'API REST /v1, módulos DDD, billing, carteira Aratá & split.', owner:'Backend' },
+        { name:'arah.app', stack:'Flutter', color:'#377B57', bg:'#EAF5EE', icon:'smartphone', body:'App mobile território-primeiro + visão leve do implementador.', owner:'Mobile' },
+        { name:'arah.cockpit', stack:'Web', color:'#2A6FDB', bg:'#EAF0FB', icon:'dashboard', body:'Painel web de gestão do implementador.', owner:'Frontend' },
+        { name:'arah.core', stack:'serviço', color:'#2A6FDB', bg:'#EAF0FB', icon:'hub', body:'Registro/descoberta, identidade federada, releases, ledger global.', owner:'Plataforma' },
+        { name:'arah.infra', stack:'IaC', color:'#A8632F', bg:'#FBF0E6', icon:'settings_suggest', body:'Terraform + Helm: provisionamento de instâncias e ambientes.', owner:'DevOps/SRE' },
+        { name:'arah.portal', stack:'Next.js', color:'#377B57', bg:'#EAF5EE', icon:'public', body:'Site institucional e materiais da marca.', owner:'Frontend' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

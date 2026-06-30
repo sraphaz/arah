@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.toclink { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.toclink:hover { color:#377B57; border-left-color:#9FCEB4; }
+.toclink.sub { font-size:12.5px; color:#74806E; padding-left:24px; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } }
+</style>
+</helmet>
+<div class="shell" style="display:grid; grid-template-columns:268px 1fr; max-width:1320px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:30px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:19px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:22px; padding-left:2px;">Arquitetura · Modelo C4</span>
+    <a class="toclink" href="#visao">Vis&atilde;o geral &amp; conven&ccedil;&otilde;es</a>
+    <div style="font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#74806E; margin:18px 0 6px; padding-left:12px;">Modelo C4</div>
+    <a class="toclink" href="#c1">N&iacute;vel 1 · Contexto</a>
+    <a class="toclink" href="#c2">N&iacute;vel 2 · Containers</a>
+    <a class="toclink" href="#c3a">N&iacute;vel 3 · App Flutter</a>
+    <a class="toclink" href="#c3b">N&iacute;vel 3 · API .NET</a>
+    <a class="toclink" href="#dominios">Mapa de dom&iacute;nios</a>
+    <a class="toclink" href="#deploy">Implanta&ccedil;&atilde;o</a>
+    <div style="font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#74806E; margin:18px 0 6px; padding-left:12px;">Sequ&ecirc;ncias · implementadas</div>
+    <sc-for list="{{ implNav }}" as="n" hint-placeholder-count="6">
+      <a class="toclink sub" href="#{{ n.id }}">{{ n.label }}</a>
+    </sc-for>
+    <div style="font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#2A6FDB; margin:18px 0 6px; padding-left:12px;">Sequ&ecirc;ncias · monetiza&ccedil;&atilde;o</div>
+    <sc-for list="{{ monetNav }}" as="n" hint-placeholder-count="6">
+      <a class="toclink sub" href="#{{ n.id }}">{{ n.label }}</a>
+    </sc-for>
+    <div style="font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#2B6246; margin:18px 0 6px; padding-left:12px;">Sequ&ecirc;ncias · infra &amp; federa&ccedil;&atilde;o</div>
+    <sc-for list="{{ opsNav }}" as="n" hint-placeholder-count="3">
+      <a class="toclink sub" href="#{{ n.id }}">{{ n.label }}</a>
+    </sc-for>
+    <div style="font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#74806E; margin:18px 0 6px; padding-left:12px;">Sequ&ecirc;ncias · previstas</div>
+    <sc-for list="{{ plannedNav }}" as="n" hint-placeholder-count="6">
+      <a class="toclink sub" href="#{{ n.id }}">{{ n.label }}</a>
+    </sc-for>
+  </nav>
+
+  <main style="padding:54px clamp(24px,5vw,76px); max-width:1040px; min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:40px;">
+      <div style="font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:14px;">Documenta&ccedil;&atilde;o de arquitetura</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.3rem,5vw,3.5rem); letter-spacing:-0.035em; line-height:1.03; margin:0 0 18px; color:#0E2117;">Desenho arquitetural da<br/>plataforma <span style="color:#377B57;">Arah</span></h1>
+      <p style="font-size:1.14rem; line-height:1.6; color:#2B6246; max-width:60ch; margin:0;">Modelo <b>C4</b> completo &mdash; Contexto, Containers e Componentes &mdash; com diagramas de sequ&ecirc;ncia de <b>todas as funcionalidades</b> implementadas e previstas do app comunit&aacute;rio territ&oacute;rio-primeiro.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:28px; font-size:13px; color:#74806E;">
+        <span><b style="color:#16271D;">Sistema</b> Plataforma Arah / Araponga</span>
+        <span><b style="color:#16271D;">Cliente</b> Flutter + Material 3 (Riverpod)</span>
+        <span><b style="color:#16271D;">Servidor</b> API .NET · DDD · REST /v1</span>
+        <span><b style="color:#16271D;">Base</b> repo sraphaz/arah</span>
+      </div>
+    </header>
+
+    <section id="visao" style="padding:38px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+      <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">Vis&atilde;o geral</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">Como ler este documento</h2>
+      <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch;">O <b>modelo C4</b> descreve software em quatro n&iacute;veis de zoom. Aqui cobrimos os tr&ecirc;s primeiros &mdash; do panorama de pessoas e sistemas at&eacute; os componentes internos &mdash; e fechamos com os <b>fluxos de sequ&ecirc;ncia</b> de cada funcionalidade. Tudo &eacute; filtrado pelo <b>territ&oacute;rio ativo</b>: nada &eacute; global por padr&atilde;o.</p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin:26px 0 8px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:16px 18px; background:#fff;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span style="width:26px;height:26px;border-radius:8px;background:#214D37;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Sora';font-weight:700;font-size:13px;">1</span><b style="font-family:'Sora';font-size:15px;color:#0E2117;">Contexto</b></div>
+          <p style="font-size:13px; color:#74806E; margin:0; line-height:1.5;">Quem usa o Arah e com quais sistemas externos ele conversa.</p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:16px 18px; background:#fff;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span style="width:26px;height:26px;border-radius:8px;background:#377B57;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Sora';font-weight:700;font-size:13px;">2</span><b style="font-family:'Sora';font-size:15px;color:#0E2117;">Containers</b></div>
+          <p style="font-size:13px; color:#74806E; margin:0; line-height:1.5;">As pe&ccedil;as execut&aacute;veis: app, API, banco, realtime, storage.</p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:16px 18px; background:#fff;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span style="width:26px;height:26px;border-radius:8px;background:#4F956F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Sora';font-weight:700;font-size:13px;">3</span><b style="font-family:'Sora';font-size:15px;color:#0E2117;">Componentes</b></div>
+          <p style="font-size:13px; color:#74806E; margin:0; line-height:1.5;">O interior do app (camadas) e da API (m&oacute;dulos DDD).</p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; padding:16px 18px; background:#fff;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span style="width:26px;height:26px;border-radius:8px;background:#A8632F;color:#fff;display:flex;align-items:center;justify-content:center;"><span class="msr" style="font-size:16px;">sync_alt</span></span><b style="font-family:'Sora';font-size:15px;color:#0E2117;">Sequ&ecirc;ncias</b></div>
+          <p style="font-size:13px; color:#74806E; margin:0; line-height:1.5;">O passo-a-passo de cada funcionalidade, com endpoints.</p>
+        </div>
+      </div>
+
+      <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.12rem; margin:30px 0 12px; color:#0E2117;">Legenda visual</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;">
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#2B6246;"><span style="width:34px;height:22px;border-radius:7px;background:#214D37;"></span> Pessoa / ator</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#2B6246;"><span style="width:34px;height:22px;border-radius:7px;background:#377B57;"></span> Sistema Arah</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#2B6246;"><span style="width:34px;height:22px;border-radius:7px;background:#fff;border:1.5px solid #4F956F;"></span> Container</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#2B6246;"><span style="width:34px;height:22px;border-radius:7px;background:#F2F7F1;border:1px solid rgba(23,53,37,0.18);"></span> Componente</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#2B6246;"><span style="width:34px;height:22px;border-radius:7px;background:#6B7164;"></span> Sistema externo</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#2B6246;"><span style="display:inline-block;width:26px;border-top:2px solid #214D37;"></span> Chamada</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#2B6246;"><span style="display:inline-block;width:26px;border-top:1.5px dashed #2B6246;"></span> Resposta</span>
+        <span style="display:inline-flex; align-items:center; gap:6px; font-size:13px; color:#2B6246;"><span style="font-family:ui-monospace,monospace;font-size:11px;background:#FBF0E6;color:#A8632F;padding:1px 7px;border-radius:6px;">GET /endpoint</span> integra&ccedil;&atilde;o</span>
+      </div>
+    </section>
+    <section id="c1" style="padding:40px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">N&iacute;vel 1 &middot; Contexto do sistema</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">O Arah e o mundo ao redor</h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch; margin:0 0 26px;">Tr&ecirc;s papéis humanos &mdash; <b>visitante</b>, <b>morador</b> e <b>curador</b> &mdash; usam a plataforma a partir do app. O sistema conversa com servi&ccedil;os externos para login, mapas, pagamentos, push e localiza&ccedil;&atilde;o. O papel é por território.</p>
+
+  <div style="border:1px solid rgba(23,53,37,0.12); border-radius:22px; background:linear-gradient(170deg,#F4F9F4,#FBFCF9); padding:34px clamp(16px,3vw,40px); overflow:hidden;">
+    <div style="display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1.05fr); align-items:center; gap:clamp(8px,1.6vw,22px);">
+
+      <!-- ACTORS -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; align-items:center;">
+          <div style="flex:1; min-width:0; background:#214D37; color:#fff; border-radius:14px; padding:13px 15px; box-shadow:0 6px 16px rgba(20,40,28,0.16);">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:18px;">person</span><b style="font-family:'Sora';font-size:14px;">Visitante</b></div>
+            <div style="font-size:11px; opacity:.82; margin-top:3px; line-height:1.35;">V&ecirc; o feed público e o mapa do território.</div>
+          </div>
+          <div style="position:relative; width:clamp(40px,5vw,74px); height:2px; background:#214D37; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #214D37;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9.5px; color:#74806E; background:#F6FAF6; padding:0 4px;">usa</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div style="flex:1; min-width:0; background:#214D37; color:#fff; border-radius:14px; padding:13px 15px; box-shadow:0 6px 16px rgba(20,40,28,0.16);">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:18px;">forest</span><b style="font-family:'Sora';font-size:14px;">Morador</b></div>
+            <div style="font-size:11px; opacity:.82; margin-top:3px; line-height:1.35;">Publica, vende, vota, participa da vida local.</div>
+          </div>
+          <div style="position:relative; width:clamp(40px,5vw,74px); height:2px; background:#214D37; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #214D37;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9.5px; color:#74806E; background:#F6FAF6; padding:0 4px;">usa</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div style="flex:1; min-width:0; background:#214D37; color:#fff; border-radius:14px; padding:13px 15px; box-shadow:0 6px 16px rgba(20,40,28,0.16);">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:18px;">shield_person</span><b style="font-family:'Sora';font-size:14px;">Curador</b></div>
+            <div style="font-size:11px; opacity:.82; margin-top:3px; line-height:1.35;">Modera, confirma residências, abre elei&ccedil;&otilde;es.</div>
+          </div>
+          <div style="position:relative; width:clamp(40px,5vw,74px); height:2px; background:#214D37; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #214D37;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9.5px; color:#74806E; background:#F6FAF6; padding:0 4px;">gere</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SYSTEM -->
+      <div style="background:#377B57; color:#fff; border-radius:20px; padding:22px 18px; width:clamp(150px,18vw,230px); box-shadow:0 16px 40px rgba(20,40,28,0.28); text-align:center;">
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:46px; height:46px; border-radius:13px; background:rgba(255,255,255,0.16); margin-bottom:12px;"><span class="msr" style="font-size:26px;">eco</span></div>
+        <div style="font-family:'Sora'; font-weight:700; font-size:1.25rem; letter-spacing:-0.01em;">Plataforma Arah</div>
+        <div style="font-size:11px; opacity:.8; margin-top:4px; font-style:italic;">[Sistema de software]</div>
+        <div style="font-size:12.5px; opacity:.92; margin-top:10px; line-height:1.5;">Extens&atilde;o digital do território vivo: feed, mapa, eventos, mercado, governan&ccedil;a e economia &mdash; tudo escopado ao território ativo.</div>
+      </div>
+
+      <!-- EXTERNALS -->
+      <div style="display:flex; flex-direction:column; gap:13px;">
+        <div style="display:flex; align-items:center;">
+          <div style="position:relative; width:clamp(40px,5vw,68px); height:2px; background:#6B7164; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #6B7164;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9px; color:#74806E; background:#F6FAF6; padding:0 3px;">autentica</span>
+          </div>
+          <div style="flex:1; min-width:0; background:#6B7164; color:#fff; border-radius:13px; padding:11px 14px;">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:17px;">login</span><b style="font-family:'Sora';font-size:13px;">Google Identity</b></div>
+            <div style="font-size:10.5px; opacity:.82; margin-top:2px;">OAuth / login social</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div style="position:relative; width:clamp(40px,5vw,68px); height:2px; background:#6B7164; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #6B7164;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9px; color:#74806E; background:#F6FAF6; padding:0 3px;">tiles</span>
+          </div>
+          <div style="flex:1; min-width:0; background:#6B7164; color:#fff; border-radius:13px; padding:11px 14px;">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:17px;">map</span><b style="font-family:'Sora';font-size:13px;">OpenStreetMap</b></div>
+            <div style="font-size:10.5px; opacity:.82; margin-top:2px;">Tiles do mapa do território</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div style="position:relative; width:clamp(40px,5vw,68px); height:2px; background:#6B7164; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #6B7164;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9px; color:#74806E; background:#F6FAF6; padding:0 3px;">cobra PIX</span>
+          </div>
+          <div style="flex:1; min-width:0; background:#6B7164; color:#fff; border-radius:13px; padding:11px 14px;">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:17px;">payments</span><b style="font-family:'Sora';font-size:13px;">Provedor PIX / PSP</b></div>
+            <div style="font-size:10.5px; opacity:.82; margin-top:2px;">Pagamentos &amp; repasses</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div style="position:relative; width:clamp(40px,5vw,68px); height:2px; background:#6B7164; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #6B7164;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9px; color:#74806E; background:#F6FAF6; padding:0 3px;">push</span>
+          </div>
+          <div style="flex:1; min-width:0; background:#6B7164; color:#fff; border-radius:13px; padding:11px 14px;">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:17px;">notifications_active</span><b style="font-family:'Sora';font-size:13px;">FCM / APNs</b></div>
+            <div style="font-size:10.5px; opacity:.82; margin-top:2px;">Notifica&ccedil;&otilde;es push</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div style="position:relative; width:clamp(40px,5vw,68px); height:2px; background:#6B7164; flex-shrink:0;">
+            <div style="position:absolute; right:-1px; top:-4px; width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #6B7164;"></div>
+            <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9px; color:#74806E; background:#F6FAF6; padding:0 3px;">GPS</span>
+          </div>
+          <div style="flex:1; min-width:0; background:#6B7164; color:#fff; border-radius:13px; padding:11px 14px;">
+            <div style="display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:17px;">my_location</span><b style="font-family:'Sora';font-size:13px;">Dispositivo (GPS)</b></div>
+            <div style="font-size:10.5px; opacity:.82; margin-top:2px;">Localiza&ccedil;&atilde;o privada</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:12.5px; color:#74806E; margin:14px 0 0; line-height:1.5;"><span class="msr" style="font-size:15px; color:#377B57; vertical-align:-2px;">info</span> A localiza&ccedil;&atilde;o nunca é exposta a outros usuários &mdash; serve apenas para sugerir o território e estimar presen&ccedil;a. Visibilidade e papéis s&atilde;o sempre impostos pelo servidor.</p>
+</section>
+<section id="c2" style="padding:40px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">N&iacute;vel 2 &middot; Containers</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">As pe&ccedil;as execut&aacute;veis</h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch; margin:0 0 26px;">O app fala com a <b>API .NET</b> por REST sobre HTTPS (JWT), recebe tempo-real pelo <b>gateway</b> e envia m&iacute;dia direto ao <b>storage</b> via URL assinada. A API orquestra banco, storage, workers e os servi&ccedil;os externos.</p>
+
+  <div style="border:1px solid rgba(23,53,37,0.12); border-radius:22px; background:linear-gradient(175deg,#F4F9F4,#FBFCF9); padding:30px clamp(14px,3vw,34px);">
+
+    <!-- CLIENTS -->
+    <div style="font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#74806E; text-align:center; margin-bottom:12px;">Clientes</div>
+    <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:14px; max-width:560px; margin:0 auto;">
+      <div style="background:#fff; border:1.5px solid #4F956F; border-radius:14px; padding:14px 16px; box-shadow:0 6px 16px rgba(20,40,28,0.08);">
+        <div style="display:flex; align-items:center; gap:8px;"><span class="msr" style="font-size:20px; color:#377B57;">smartphone</span><b style="font-family:'Sora';font-size:14.5px;color:#0E2117;">App Mobile</b></div>
+        <div style="font-size:10.5px; color:#74806E; font-style:italic; margin-top:2px;">[Flutter · Material 3 · Riverpod]</div>
+        <div style="font-size:12px; color:#2B6246; margin-top:6px; line-height:1.45;">O produto. Feed, mapa, mercado, jornadas &mdash; tudo escopado ao território ativo.</div>
+      </div>
+      <div style="background:#fff; border:1.5px solid #4F956F; border-radius:14px; padding:14px 16px; box-shadow:0 6px 16px rgba(20,40,28,0.08);">
+        <div style="display:flex; align-items:center; gap:8px;"><span class="msr" style="font-size:20px; color:#377B57;">language</span><b style="font-family:'Sora';font-size:14.5px;color:#0E2117;">Portal Web</b></div>
+        <div style="font-size:10.5px; color:#74806E; font-style:italic; margin-top:2px;">[Next.js]</div>
+        <div style="font-size:12px; color:#2B6246; margin-top:6px; line-height:1.45;">Voz da marca: manifesto, funcionalidades, chamado &agrave;s comunidades.</div>
+      </div>
+    </div>
+
+    <!-- connector clients -> boundary -->
+    <div style="display:flex; justify-content:center; gap:40px; margin:4px 0;">
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <span style="font-size:10px; color:#74806E; background:#fff; padding:1px 8px; border:1px solid rgba(23,53,37,0.12); border-radius:999px; margin:8px 0 2px;">REST /v1 · JWT</span>
+        <div style="width:2px; height:16px; background:#4F956F;"></div>
+        <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #4F956F;"></div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <span style="font-size:10px; color:#74806E; background:#fff; padding:1px 8px; border:1px solid rgba(23,53,37,0.12); border-radius:999px; margin:8px 0 2px;">WebSocket / SSE</span>
+        <div style="width:2px; height:16px; background:#4F956F;"></div>
+        <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #4F956F;"></div>
+      </div>
+    </div>
+
+    <!-- SYSTEM BOUNDARY -->
+    <div style="border:1.5px dashed #377B57; border-radius:18px; padding:16px clamp(12px,2.5vw,22px) 20px; background:rgba(226,241,232,0.35); position:relative; margin-top:4px;">
+      <span style="position:absolute; top:-10px; left:18px; background:#F6FAF5; padding:0 10px; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#377B57;">Limite do sistema · servidor Arah</span>
+
+      <!-- API hub -->
+      <div style="background:#377B57; color:#fff; border-radius:14px; padding:15px 18px; box-shadow:0 10px 26px rgba(20,40,28,0.22); margin-top:6px;">
+        <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;"><span class="msr" style="font-size:21px;">dns</span><b style="font-family:'Sora';font-size:15px;">API Application</b><span style="font-size:10.5px; font-style:italic; opacity:.82;">[.NET · DDD · REST /v1]</span></div>
+        <div style="font-size:12px; opacity:.92; margin-top:5px; line-height:1.45;">Autentica&ccedil;&atilde;o, escopo territorial, regras de papel/visibilidade, paginar por cursor, idempot&ecirc;ncia em pagamentos. Exp&otilde;e os m&oacute;dulos de dom&iacute;nio.</div>
+      </div>
+
+      <!-- connectors API -> supporting -->
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:2px 0;">
+        <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:2px;height:14px;background:#9FCEB4;"></div><span style="font-size:9px;color:#74806E;text-align:center;line-height:1.2;">WS / SSE</span></div>
+        <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:2px;height:14px;background:#9FCEB4;"></div><span style="font-size:9px;color:#74806E;text-align:center;line-height:1.2;">enfileira jobs</span></div>
+        <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:2px;height:14px;background:#9FCEB4;"></div><span style="font-size:9px;color:#74806E;text-align:center;line-height:1.2;">EF Core · SQL</span></div>
+        <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:2px;height:14px;background:#9FCEB4;"></div><span style="font-size:9px;color:#74806E;text-align:center;line-height:1.2;">URLs assinadas</span></div>
+      </div>
+
+      <!-- supporting containers -->
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+        <div style="background:#fff; border:1.5px solid #4F956F; border-radius:12px; padding:11px 12px;">
+          <div style="display:flex; align-items:center; gap:6px;"><span class="msr" style="font-size:17px;color:#377B57;">bolt</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Realtime Gateway</b></div>
+          <div style="font-size:9.5px; color:#74806E; font-style:italic; margin-top:2px;">[WebSocket / SSE]</div>
+          <div style="font-size:10.5px; color:#2B6246; margin-top:4px; line-height:1.4;">Chat, novos posts &amp; alertas, notifica&ccedil;&otilde;es ao vivo.</div>
+        </div>
+        <div style="background:#fff; border:1.5px solid #4F956F; border-radius:12px; padding:11px 12px;">
+          <div style="display:flex; align-items:center; gap:6px;"><span class="msr" style="font-size:17px;color:#377B57;">manufacturing</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Background Workers</b></div>
+          <div style="font-size:9.5px; color:#74806E; font-style:italic; margin-top:2px;">[Jobs / fila]</div>
+          <div style="font-size:10.5px; color:#2B6246; margin-top:4px; line-height:1.4;">Push, reconcilia&ccedil;&atilde;o de pagamento, agregados.</div>
+        </div>
+        <div style="background:#fff; border:1.5px solid #4F956F; border-left:5px solid #4F956F; border-radius:12px; padding:11px 12px;">
+          <div style="display:flex; align-items:center; gap:6px;"><span class="msr" style="font-size:17px;color:#377B57;">database</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Banco relacional</b></div>
+          <div style="font-size:9.5px; color:#74806E; font-style:italic; margin-top:2px;">[PostgreSQL]</div>
+          <div style="font-size:10.5px; color:#2B6246; margin-top:4px; line-height:1.4;">Territórios, membros, posts, pedidos, elei&ccedil;&otilde;es.</div>
+        </div>
+        <div style="background:#fff; border:1.5px solid #4F956F; border-left:5px solid #4F956F; border-radius:12px; padding:11px 12px;">
+          <div style="display:flex; align-items:center; gap:6px;"><span class="msr" style="font-size:17px;color:#377B57;">folder_open</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Object Storage</b></div>
+          <div style="font-size:9.5px; color:#74806E; font-style:italic; margin-top:2px;">[Blob / S3]</div>
+          <div style="font-size:10.5px; color:#2B6246; margin-top:4px; line-height:1.4;">M&iacute;dia (fotos), upload por URL assinada.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- connector boundary -> externals -->
+    <div style="display:flex; justify-content:center; gap:clamp(18px,5vw,60px); margin:2px 0;">
+      <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #6B7164;"></div><div style="width:2px;height:14px;background:#6B7164;"></div><span style="font-size:9px;color:#74806E;margin-top:2px;">OAuth</span></div>
+      <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #6B7164;"></div><div style="width:2px;height:14px;background:#6B7164;"></div><span style="font-size:9px;color:#74806E;margin-top:2px;">cobra · webhook</span></div>
+      <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #6B7164;"></div><div style="width:2px;height:14px;background:#6B7164;"></div><span style="font-size:9px;color:#74806E;margin-top:2px;">push</span></div>
+      <div style="display:flex; flex-direction:column; align-items:center;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #b9b3a6;"></div><div style="width:2px;height:14px;background:#b9b3a6; background-image:repeating-linear-gradient(#b9b3a6 0 3px,transparent 3px 6px);"></div><span style="font-size:9px;color:#74806E;margin-top:2px;">tiles (app)</span></div>
+    </div>
+
+    <!-- externals -->
+    <div style="font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#74806E; text-align:center; margin:6px 0 10px;">Servi&ccedil;os externos</div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+      <div style="background:#6B7164; color:#fff; border-radius:12px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;">login</span><b style="font-family:'Sora';font-size:12px;">Google Identity</b></div><div style="font-size:10px;opacity:.82;margin-top:2px;">Login social</div></div>
+      <div style="background:#6B7164; color:#fff; border-radius:12px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;">payments</span><b style="font-family:'Sora';font-size:12px;">PIX / PSP</b></div><div style="font-size:10px;opacity:.82;margin-top:2px;">Pagamentos</div></div>
+      <div style="background:#6B7164; color:#fff; border-radius:12px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;">notifications_active</span><b style="font-family:'Sora';font-size:12px;">FCM / APNs</b></div><div style="font-size:10px;opacity:.82;margin-top:2px;">Push</div></div>
+      <div style="background:#6B7164; color:#fff; border-radius:12px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;">map</span><b style="font-family:'Sora';font-size:12px;">OpenStreetMap</b></div><div style="font-size:10px;opacity:.82;margin-top:2px;">Tiles do mapa</div></div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.1rem; margin:28px 0 10px; color:#0E2117;">Rela&ccedil;&otilde;es entre containers</h3>
+  <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+      <thead><tr style="background:#F2F7F1;">
+        <th style="text-align:left; padding:9px 14px; font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:#74806E; font-weight:600;">Origem</th>
+        <th style="text-align:left; padding:9px 14px; font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:#74806E; font-weight:600;">Destino</th>
+        <th style="text-align:left; padding:9px 14px; font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:#74806E; font-weight:600;">Protocolo &amp; prop&oacute;sito</th>
+      </tr></thead>
+      <tbody style="color:#2B6246;">
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">App Mobile</b></td><td style="padding:8px 14px;">API Application</td><td style="padding:8px 14px;">HTTPS · REST /v1 · JWT &mdash; todas as opera&ccedil;&otilde;es de dom&iacute;nio</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">App Mobile</b></td><td style="padding:8px 14px;">Realtime Gateway</td><td style="padding:8px 14px;">WebSocket / SSE &mdash; chat, novos posts, alertas, notifica&ccedil;&otilde;es</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">App Mobile</b></td><td style="padding:8px 14px;">Object Storage</td><td style="padding:8px 14px;">PUT direto via URL assinada &mdash; upload de m&iacute;dia</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">App Mobile</b></td><td style="padding:8px 14px;">OpenStreetMap</td><td style="padding:8px 14px;">HTTPS &mdash; tiles do mapa (cache local da regi&atilde;o)</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">API Application</b></td><td style="padding:8px 14px;">Banco relacional</td><td style="padding:8px 14px;">EF Core · SQL &mdash; persist&ecirc;ncia do dom&iacute;nio</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">API Application</b></td><td style="padding:8px 14px;">Object Storage</td><td style="padding:8px 14px;">Emite URLs assinadas; confirma refer&ecirc;ncia de m&iacute;dia</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">API Application</b></td><td style="padding:8px 14px;">Google Identity</td><td style="padding:8px 14px;">OAuth &mdash; valida&ccedil;&atilde;o do token social</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">API Application</b></td><td style="padding:8px 14px;">PIX / PSP</td><td style="padding:8px 14px;">HTTPS &mdash; cobran&ccedil;a; recebe webhook de confirma&ccedil;&atilde;o</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">Background Workers</b></td><td style="padding:8px 14px;">FCM / APNs</td><td style="padding:8px 14px;">Despacho de push por dispositivo</td></tr>
+        <tr style="border-top:1px solid rgba(23,53,37,0.08);"><td style="padding:8px 14px;"><b style="color:#16271D;">Realtime · Workers</b></td><td style="padding:8px 14px;">Banco relacional</td><td style="padding:8px 14px;">Leem/gravam estado compartilhado</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section id="c3a" style="padding:40px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">N&iacute;vel 3 &middot; Componentes &mdash; App Mobile</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">Dentro do app Flutter</h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch; margin:0 0 26px;">Arquitetura em <b>quatro camadas</b> (Clean Architecture com Riverpod). A depend&ecirc;ncia aponta sempre para baixo: a UI consome controllers, que orquestram casos de uso do dom&iacute;nio, que falam com reposit&oacute;rios. A camada de dados une <b>fonte remota</b> e <b>cache local</b> (offline-first).</p>
+
+  <div style="display:grid; grid-template-columns:1fr 168px; gap:14px; align-items:stretch;">
+    <!-- layers column -->
+    <div style="border:1px solid rgba(23,53,37,0.12); border-radius:20px; background:linear-gradient(175deg,#F4F9F4,#FBFCF9); padding:18px clamp(12px,2.5vw,22px); display:flex; flex-direction:column; gap:8px;">
+
+      <!-- Presentation -->
+      <div style="border:1.5px solid #4F956F; border-radius:14px; background:#fff; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><span class="msr" style="font-size:18px;color:#377B57;">widgets</span><b style="font-family:'Sora';font-size:13.5px;color:#0E2117;">Presentation</b><span style="font-size:10px;color:#74806E;font-style:italic;">telas &amp; widgets puros · 4 estados de UI</span></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">Telas (Feed, Mapa, Mercado, Perfil&hellip;)</span>
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">TopBar &middot; BottomNav</span>
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">JourneyShell &middot; SuccessView</span>
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">Card &middot; Chip &middot; RoleBadge</span>
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">PixPay &middot; Skeletons</span>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:center;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #9FCEB4;"></div></div>
+
+      <!-- Application -->
+      <div style="border:1.5px solid #4F956F; border-radius:14px; background:#fff; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><span class="msr" style="font-size:18px;color:#377B57;">tune</span><b style="font-family:'Sora';font-size:13.5px;color:#0E2117;">Application</b><span style="font-size:10px;color:#74806E;font-style:italic;">controllers Riverpod · estado de tela · a&ccedil;&otilde;es otimistas</span></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">AuthController</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">TerritoryController</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">FeedController</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">MapController</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">MarketController</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">GovernanceController</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">NotificationController</span>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:center;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #9FCEB4;"></div></div>
+
+      <!-- Domain -->
+      <div style="border:1.5px solid #4F956F; border-radius:14px; background:#fff; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><span class="msr" style="font-size:18px;color:#377B57;">schema</span><b style="font-family:'Sora';font-size:13.5px;color:#0E2117;">Domain</b><span style="font-size:10px;color:#74806E;font-style:italic;">entidades &amp; casos de uso · independente de framework</span></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">Entidades (Territory, Membership, Post, Event, Order, Election&hellip;)</span>
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">Regras de papel &amp; visibilidade</span>
+          <span style="font-size:11px; background:#F2F7F1; border:1px solid rgba(23,53,37,0.1); color:#2B6246; padding:3px 9px; border-radius:999px;">Valida&ccedil;&otilde;es</span>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:center;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #9FCEB4;"></div></div>
+
+      <!-- Data -->
+      <div style="border:1.5px solid #4F956F; border-radius:14px; background:#fff; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><span class="msr" style="font-size:18px;color:#377B57;">storage</span><b style="font-family:'Sora';font-size:13.5px;color:#0E2117;">Data</b><span style="font-size:10px;color:#74806E;font-style:italic;">reposit&oacute;rios · remoto + local · stale-while-revalidate</span></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">Repositories</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">API client (dio + interceptors)</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">Cache local (Drift / Isar)</span>
+          <span style="font-size:11px; background:#FBF0E6; border:1px solid rgba(168,99,47,0.22); color:#A8632F; padding:3px 9px; border-radius:999px;">Outbox offline (gap)</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">Realtime client</span>
+          <span style="font-size:11px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.18); color:#2B6246; padding:3px 9px; border-radius:999px;">Media uploader</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(23,53,37,0.14); font-size:10.5px; color:#74806E;">
+          <span><span class="msr" style="font-size:13px; color:#377B57; vertical-align:-2px;">arrow_outward</span> &rarr; API .NET (REST)</span>
+          <span><span class="msr" style="font-size:13px; color:#377B57; vertical-align:-2px;">arrow_outward</span> &rarr; Realtime (WS/SSE)</span>
+          <span><span class="msr" style="font-size:13px; color:#377B57; vertical-align:-2px;">arrow_outward</span> &rarr; Object Storage</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- cross-cutting rail -->
+    <div style="border:1.5px dashed #A8632F; border-radius:18px; background:#FFF8EE; padding:14px 13px; display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#A8632F;">Transversais</div>
+      <div style="display:flex; align-items:flex-start; gap:7px;"><span class="msr" style="font-size:16px;color:#A8632F;">alt_route</span><div><b style="font-size:11.5px;color:#16271D;font-family:'Sora';">go_router</b><div style="font-size:10px;color:#74806E;line-height:1.35;">Rotas tipadas, overlays, deep links.</div></div></div>
+      <div style="display:flex; align-items:flex-start; gap:7px;"><span class="msr" style="font-size:16px;color:#A8632F;">lock</span><div><b style="font-size:11.5px;color:#16271D;font-family:'Sora';">Secure Storage</b><div style="font-size:10px;color:#74806E;line-height:1.35;">JWT + refresh em Keychain/Keystore.</div></div></div>
+      <div style="display:flex; align-items:flex-start; gap:7px;"><span class="msr" style="font-size:16px;color:#A8632F;">notifications</span><div><b style="font-size:11.5px;color:#16271D;font-family:'Sora';">Push registry</b><div style="font-size:10px;color:#74806E;line-height:1.35;">Registro de token FCM/APNs.</div></div></div>
+      <div style="display:flex; align-items:flex-start; gap:7px;"><span class="msr" style="font-size:16px;color:#A8632F;">image</span><div><b style="font-size:11.5px;color:#16271D;font-family:'Sora';">Image cache</b><div style="font-size:10px;color:#74806E;line-height:1.35;">cached_network_image + blurhash.</div></div></div>
+    </div>
+  </div>
+  <p style="font-size:12.5px; color:#74806E; margin:14px 0 0; line-height:1.5;"><span class="msr" style="font-size:15px; color:#A8632F; vertical-align:-2px;">construction</span> A maior lacuna estrutural é a camada de dados <b>offline-first</b> (cache local + remoto, outbox de a&ccedil;&otilde;es, revalida&ccedil;&atilde;o) &mdash; deve ser definida antes de escalar as telas.</p>
+</section>
+<section id="c3b" style="padding:40px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">N&iacute;vel 3 &middot; Componentes &mdash; API .NET</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">Dentro da API (m&oacute;dulos DDD)</h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch; margin:0 0 26px;">Toda requisi&ccedil;&atilde;o atravessa um <b>pipeline transversal</b> antes de chegar ao m&oacute;dulo de dom&iacute;nio. Cada m&oacute;dulo é um <i>bounded context</i> que persiste via EF Core e publica eventos para realtime, workers e push.</p>
+
+  <div style="border:1px solid rgba(23,53,37,0.12); border-radius:20px; background:linear-gradient(175deg,#F4F9F4,#FBFCF9); padding:20px clamp(12px,2.5vw,24px);">
+
+    <!-- pipeline -->
+    <div style="font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#74806E; margin-bottom:10px;">Pipeline de requisi&ccedil;&atilde;o</div>
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-bottom:20px;">
+      <span style="font-size:11.5px; background:#377B57; color:#fff; padding:5px 11px; border-radius:9px; font-family:'Sora'; font-weight:600;">Controllers /v1</span>
+      <span class="msr" style="font-size:16px; color:#9FCEB4;">chevron_right</span>
+      <span style="font-size:11.5px; background:#fff; border:1px solid #4F956F; color:#2B6246; padding:5px 11px; border-radius:9px;">Auth · JWT/refresh</span>
+      <span class="msr" style="font-size:16px; color:#9FCEB4;">chevron_right</span>
+      <span style="font-size:11.5px; background:#fff; border:1px solid #4F956F; color:#2B6246; padding:5px 11px; border-radius:9px;">Escopo territorial</span>
+      <span class="msr" style="font-size:16px; color:#9FCEB4;">chevron_right</span>
+      <span style="font-size:11.5px; background:#fff; border:1px solid #4F956F; color:#2B6246; padding:5px 11px; border-radius:9px;">Valida&ccedil;&atilde;o &amp; papel</span>
+      <span class="msr" style="font-size:16px; color:#9FCEB4;">chevron_right</span>
+      <span style="font-size:11.5px; background:#fff; border:1px solid #4F956F; color:#2B6246; padding:5px 11px; border-radius:9px;">Idempot&ecirc;ncia</span>
+      <span class="msr" style="font-size:16px; color:#9FCEB4;">chevron_right</span>
+      <span style="font-size:11.5px; background:#fff; border:1px solid #4F956F; color:#2B6246; padding:5px 11px; border-radius:9px;">Envelope de erro · cursor</span>
+    </div>
+
+    <!-- domain modules -->
+    <div style="font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#74806E; margin-bottom:10px;">M&oacute;dulos de dom&iacute;nio <span style="color:#377B57;">&bull; implementados</span></div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:9px; margin-bottom:18px;">
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">badge</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Identity &amp; Auth</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Login, JWT, refresh, OAuth Google.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">forest</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Territories</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Pr&oacute;ximos, fronteira, feature flags.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">how_to_reg</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Membership</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Papéis, residência, presen&ccedil;a.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">eco</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Feed &amp; Content</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Posts, coment&aacute;rios, curtidas, reports.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">map</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Map &amp; Entities</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Pins, lugares, trilhas; curadoria.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">event</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Events</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Eventos, participa&ccedil;&atilde;o.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">storefront</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Marketplace</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Lojas, itens, carrinho, pedidos.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">payments</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Payments</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">PIX, idempot&ecirc;ncia, repasse.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">how_to_vote</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Governance</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Elei&ccedil;&otilde;es, voto secreto.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">shield_person</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Moderation</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Fila, decis&otilde;es, san&ccedil;&otilde;es, auditoria.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">chat</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Messaging</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Conversas e threads.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">notifications</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Notifications</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Inbox, deep-links, despacho.</div></div>
+      <div style="background:#F2F7F1; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">image</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Media</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">URLs assinadas, blurhash.</div></div>
+    </div>
+
+    <!-- planned modules -->
+    <div style="font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#74806E; margin-bottom:10px;">M&oacute;dulos de economia &amp; servi&ccedil;os <span style="color:#A8632F;">&bull; previstos</span></div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:9px; margin-bottom:18px;">
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">groups_2</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Group Buys</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Compra coletiva, tiers (F17).</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">cottage</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Bookings</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Hospedagem, bem-estar (F18/E10).</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">swap_horiz</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Economy</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Demandas, trocas, entregas (F19-21).</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">account_balance_wallet</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Wallet (Arat&aacute;)</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Moeda territorial (F22).</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">concierge</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Services</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Bab&aacute;s, alug&aacute;veis, hub digital.</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">subscriptions</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Subscriptions</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Apoio recorrente PIX (F15).</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">school</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Learning &amp; Seeds</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Oficinas, banco de sementes (F45/48).</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">monitoring</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Insights</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Sa&uacute;de &amp; métricas do território (F24/25).</div></div>
+      <div style="background:#FFF8EE; border:1px solid rgba(168,99,47,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#A8632F;">smart_toy</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">AI Assistant</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Chat ancorado nos dados locais (F27).</div></div>
+    </div>
+
+    <!-- monetization modules -->
+    <div style="font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#74806E; margin-bottom:10px;">M&oacute;dulos de monetiza&ccedil;&atilde;o &amp; receita <span style="color:#2A6FDB;">&bull; previstos</span></div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:9px; margin-bottom:18px;">
+      <div style="background:#EAF0FB; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">subscriptions</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Billing &amp; Plans</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Planos comerciais, cobran&ccedil;a recorrente PIX.</div></div>
+      <div style="background:#EAF0FB; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">pie_chart</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Ledger &amp; Split</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Taxa, split por regra vigente, cr&eacute;ditos.</div></div>
+      <div style="background:#EAF0FB; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">payments</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Payouts</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Repasses liquidados por per&iacute;odo.</div></div>
+      <div style="background:#EAF0FB; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">monitoring</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Transparency</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Painel p&uacute;blico de receita, export.</div></div>
+      <div style="background:#EAF0FB; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">volunteer_activism</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Sponsorship &amp; Fund</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Patroc&iacute;nio, doa&ccedil;&atilde;o, fundo territorial.</div></div>
+      <div style="background:#EAF0FB; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">speed</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Consumption Metering</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Uso de IA / m&iacute;dia / notifica&ccedil;&otilde;es.</div></div>
+      <div style="background:#EAF0FB; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">how_to_vote</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Fee Governance</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Proposta &amp; vota&ccedil;&atilde;o de taxas/split.</div></div>
+    </div>
+
+    <!-- infra row -->
+    <div style="display:flex; justify-content:center; margin:2px 0;"><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #9FCEB4;"></div></div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:9px;">
+      <div style="background:#fff; border:1.5px solid #4F956F; border-left:5px solid #4F956F; border-radius:11px; padding:9px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">database</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">EF Core &rarr; DB</b></div></div>
+      <div style="background:#fff; border:1.5px solid #4F956F; border-radius:11px; padding:9px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">bolt</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">Realtime publisher</b></div></div>
+      <div style="background:#fff; border:1.5px solid #4F956F; border-radius:11px; padding:9px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">manufacturing</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">Job dispatcher</b></div></div>
+      <div style="background:#fff; border:1.5px solid #4F956F; border-radius:11px; padding:9px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">credit_card</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">PSP gateway</b></div></div>
+    </div>
+  </div>
+</section>
+<section id="dominios" style="padding:40px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">Mapa de dom&iacute;nios</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">Todas as funcionalidades num s&oacute; desenho</h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:66ch; margin:0 0 24px;">O <b>território</b> escopa tudo; a <b>membership</b> (papel) autoriza cada a&ccedil;&atilde;o. Os dom&iacute;nios de neg&oacute;cio se agrupam em quatro &aacute;reas e se conectam a um <b>barramento de servi&ccedil;os compartilhados</b> &mdash; pagamentos, notifica&ccedil;&otilde;es, m&iacute;dia e tempo-real. Cada chip leva ao fluxo de sequ&ecirc;ncia correspondente.</p>
+
+  <div style="border:1px solid rgba(23,53,37,0.12); border-radius:22px; background:linear-gradient(175deg,#F4F9F4,#FBFCF9); padding:22px clamp(13px,2.5vw,26px);">
+
+    <!-- territory scope -->
+    <div style="background:#214D37; color:#fff; border-radius:13px; padding:10px 16px; display:flex; align-items:center; gap:9px; justify-content:center; text-align:center;">
+      <span class="msr" style="font-size:18px;">forest</span><b style="font-family:'Sora';font-size:13.5px;">Território ativo</b><span style="font-size:11px;opacity:.82;">&mdash; escopa feed, mapa, mercado, governan&ccedil;a e economia</span>
+    </div>
+    <div style="display:flex; justify-content:center;"><div style="width:2px;height:14px;background:#9FCEB4;"></div></div>
+
+    <!-- identity gate -->
+    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:4px;">
+      <a href="#auth" style="text-decoration:none; background:#fff; border:1.5px solid #4F956F; border-radius:11px; padding:9px 14px; display:flex; align-items:center; gap:7px;"><span class="msr" style="font-size:16px;color:#377B57;">badge</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Identity &amp; Auth</b></a>
+      <span class="msr" style="font-size:18px;color:#9FCEB4;align-self:center;">arrow_forward</span>
+      <a href="#residence" style="text-decoration:none; background:#377B57; color:#fff; border-radius:11px; padding:9px 14px; display:flex; align-items:center; gap:7px; box-shadow:0 6px 16px rgba(20,40,28,0.16);"><span class="msr" style="font-size:16px;">how_to_reg</span><b style="font-family:'Sora';font-size:12.5px;">Membership &middot; papel (porteiro)</b></a>
+    </div>
+    <div style="text-align:center; font-size:10.5px; color:#74806E; margin-bottom:12px;">visitante &middot; morador &middot; curador &mdash; rege visibilidade e participa&ccedil;&atilde;o em cada dom&iacute;nio abaixo</div>
+
+    <!-- domain clusters -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;">
+
+      <div style="border:1px solid rgba(23,53,37,0.14); border-radius:14px; background:#fff; padding:13px 14px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:9px;"><span class="msr" style="font-size:17px;color:#377B57;">eco</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Conte&uacute;do &amp; lugar</b></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <a href="#feed" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Feed &amp; posts</a>
+          <a href="#post" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Coment&aacute;rios</a>
+          <a href="#map" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Mapa &amp; entidades</a>
+          <a href="#events" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Eventos</a>
+          <a href="#messages" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Mensagens</a>
+        </div>
+      </div>
+
+      <div style="border:1px solid rgba(23,53,37,0.14); border-radius:14px; background:#fff; padding:13px 14px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:9px;"><span class="msr" style="font-size:17px;color:#377B57;">storefront</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Economia &amp; mercado</b></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <a href="#market" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Mercado</a>
+          <a href="#store" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Minha loja</a>
+          <a href="#groupbuy" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Compra coletiva</a>
+          <a href="#hosting" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Hospedagem</a>
+          <a href="#rentals" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Alug&eacute;is</a>
+          <a href="#deliveries" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Entregas</a>
+          <a href="#demands" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Demandas</a>
+          <a href="#trades" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Trocas</a>
+          <a href="#wallet" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Carteira Arat&aacute;</a>
+          <a href="#subscriptions" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Assinaturas</a>
+          <a href="#nanny" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Bab&aacute;s</a>
+          <a href="#wellness" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Bem-estar</a>
+          <a href="#digital" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Hub digital</a>
+        </div>
+      </div>
+
+      <div style="border:1px solid rgba(23,53,37,0.14); border-radius:14px; background:#fff; padding:13px 14px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:9px;"><span class="msr" style="font-size:17px;color:#377B57;">how_to_vote</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Governan&ccedil;a</b></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <a href="#elections" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Elei&ccedil;&otilde;es &amp; voto</a>
+          <a href="#curation" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Curadoria &amp; modera&ccedil;&atilde;o</a>
+          <a href="#residence" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Confirmar residência</a>
+        </div>
+      </div>
+
+      <div style="border:1px solid rgba(23,53,37,0.14); border-radius:14px; background:#fff; padding:13px 14px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:9px;"><span class="msr" style="font-size:17px;color:#377B57;">spa</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Vida &amp; dados</b></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <a href="#learning" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Aprendizado &amp; sementes</a>
+          <a href="#insights" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Sa&uacute;de &amp; m&eacute;tricas</a>
+          <a href="#ai" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Assistente IA</a>
+          <a href="#achievements" style="text-decoration:none;font-size:11px;background:#FFF8EE;border:1px solid rgba(168,99,47,0.22);color:#A8632F;padding:3px 9px;border-radius:999px;">Conquistas</a>
+          <a href="#notifications" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Notifica&ccedil;&otilde;es</a>
+          <a href="#profile" style="text-decoration:none;font-size:11px;background:#EAF5EE;border:1px solid rgba(55,123,87,0.18);color:#2B6246;padding:3px 9px;border-radius:999px;">Perfil</a>
+        </div>
+      </div>
+
+      <div style="border:1px solid rgba(42,111,219,0.20); border-radius:14px; background:#fff; padding:13px 14px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:9px;"><span class="msr" style="font-size:17px;color:#2A6FDB;">paid</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Monetiza&ccedil;&atilde;o &amp; sustento</b></div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <a href="#m-ativarloja" style="text-decoration:none;font-size:11px;background:#EAF0FB;border:1px solid rgba(42,111,219,0.22);color:#2A6FDB;padding:3px 9px;border-radius:999px;">Ativar loja</a>
+          <a href="#m-pagamento" style="text-decoration:none;font-size:11px;background:#EAF0FB;border:1px solid rgba(42,111,219,0.22);color:#2A6FDB;padding:3px 9px;border-radius:999px;">Taxa &amp; split</a>
+          <a href="#m-repasse" style="text-decoration:none;font-size:11px;background:#EAF0FB;border:1px solid rgba(42,111,219,0.22);color:#2A6FDB;padding:3px 9px;border-radius:999px;">Repasses</a>
+          <a href="#m-transparencia" style="text-decoration:none;font-size:11px;background:#EAF0FB;border:1px solid rgba(42,111,219,0.22);color:#2A6FDB;padding:3px 9px;border-radius:999px;">Transpar&ecirc;ncia</a>
+          <a href="#m-taxas" style="text-decoration:none;font-size:11px;background:#EAF0FB;border:1px solid rgba(42,111,219,0.22);color:#2A6FDB;padding:3px 9px;border-radius:999px;">Governan&ccedil;a de taxas</a>
+          <a href="#m-fundo" style="text-decoration:none;font-size:11px;background:#EAF0FB;border:1px solid rgba(42,111,219,0.22);color:#2A6FDB;padding:3px 9px;border-radius:999px;">Fundo territorial</a>
+          <a href="#m-cockpit" style="text-decoration:none;font-size:11px;background:#EAF0FB;border:1px solid rgba(42,111,219,0.22);color:#2A6FDB;padding:3px 9px;border-radius:999px;">Cockpit do implementador</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- connectors down to shared bus -->
+    <div style="display:flex; justify-content:center; gap:60px; margin:10px 0 2px;">
+      <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #9FCEB4;"></div>
+      <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #9FCEB4;"></div>
+      <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid #9FCEB4;"></div>
+    </div>
+
+    <!-- shared services bus -->
+    <div style="border:1.5px dashed #377B57; border-radius:14px; background:rgba(226,241,232,0.4); padding:13px 14px;">
+      <div style="font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#377B57; margin-bottom:9px; text-align:center;">Barramento de servi&ccedil;os compartilhados</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px;">
+        <a href="#market" style="text-decoration:none; background:#fff; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">payments</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Payments (PIX/PSP)</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Mercado, hospedagem, alug&eacute;is, assinaturas, carteira.</div></a>
+        <a href="#push" style="text-decoration:none; background:#fff; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">notifications</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Notifications</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Alertas, eventos, pedidos, elei&ccedil;&otilde;es, modera&ccedil;&atilde;o.</div></a>
+        <a href="#publish" style="text-decoration:none; background:#fff; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">image</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Media</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Feed, mapa, perfil, lojas (URLs assinadas).</div></a>
+        <a href="#messages" style="text-decoration:none; background:#fff; border:1px solid rgba(23,53,37,0.14); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#377B57;">bolt</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Realtime</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Mensagens, feed ao vivo, entregas, push.</div></a>
+        <a href="#m-pagamento" style="text-decoration:none; background:#fff; border:1px solid rgba(42,111,219,0.22); border-radius:11px; padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:16px;color:#2A6FDB;">pie_chart</span><b style="font-family:'Sora';font-size:12px;color:#0E2117;">Ledger &amp; Split</b></div><div style="font-size:10px;color:#74806E;margin-top:3px;line-height:1.4;">Taxa, split, cr&eacute;ditos e repasses audit&aacute;veis.</div></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- key interconnections -->
+  <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.1rem; margin:26px 0 12px; color:#0E2117;">Interconex&otilde;es-chave</h3>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px;">
+    <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">hub</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Território</b> &rarr; escopa todos os dom&iacute;nios; trocar de território invalida caches e recarrega tudo.</div></div>
+    <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">key</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Membership</b> &rarr; autoriza cada a&ccedil;&atilde;o por papel; visibilidade &eacute; imposta no servidor.</div></div>
+    <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">payments</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Payments</b> &larr; serve mercado, hospedagem, alug&eacute;is, assinaturas e carteira (idempotente).</div></div>
+    <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">campaign</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Notifications</b> &larr; alimentado por alertas, eventos, pedidos, elei&ccedil;&otilde;es e modera&ccedil;&atilde;o; resolve deep links.</div></div>
+    <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">shield_person</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Curadoria</b> &rarr; governa entidades do mapa, posts sinalizados e confirma&ccedil;&atilde;o de residência.</div></div>
+    <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">bolt</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Realtime</b> &rarr; entrega mensagens, novos posts/alertas, posi&ccedil;&atilde;o de entregas e notifica&ccedil;&otilde;es ao vivo.</div></div>
+  </div>
+</section>
+
+<section id="deploy" style="padding:40px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">Implanta&ccedil;&atilde;o</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">Onde cada pe&ccedil;a roda</h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch; margin:0 0 26px;">O app vive no dispositivo (com cache e secure storage); o servidor roda na nuvem; m&iacute;dia e tiles passam por CDN. Tudo sobre TLS.</p>
+
+  <div style="border:1px solid rgba(23,53,37,0.12); border-radius:22px; background:linear-gradient(175deg,#F4F9F4,#FBFCF9); padding:24px clamp(14px,3vw,28px);">
+    <div style="display:grid; grid-template-columns:200px 1fr; gap:18px; align-items:start;">
+
+      <!-- device node -->
+      <div style="border:1.5px solid #214D37; border-radius:16px; background:#fff; padding:14px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:4px;"><span class="msr" style="font-size:18px;color:#214D37;">smartphone</span><b style="font-family:'Sora';font-size:12.5px;color:#0E2117;">Dispositivo</b></div>
+        <div style="font-size:10px;color:#74806E;font-style:italic;margin-bottom:10px;">[iOS / Android]</div>
+        <div style="background:#377B57; color:#fff; border-radius:11px; padding:10px 12px; margin-bottom:8px;"><b style="font-family:'Sora';font-size:12px;">App Mobile</b><div style="font-size:10px;opacity:.85;margin-top:2px;">Flutter · cache local · outbox</div></div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span style="font-size:9.5px;background:#F2F7F1;border:1px solid rgba(23,53,37,0.12);color:#2B6246;padding:2px 7px;border-radius:7px;">Secure storage</span>
+          <span style="font-size:9.5px;background:#F2F7F1;border:1px solid rgba(23,53,37,0.12);color:#2B6246;padding:2px 7px;border-radius:7px;">Tiles cache</span>
+        </div>
+      </div>
+
+      <!-- cloud node -->
+      <div style="border:1.5px dashed #377B57; border-radius:16px; background:rgba(226,241,232,0.32); padding:16px; position:relative;">
+        <span style="position:absolute; top:-10px; left:16px; background:#F6FAF5; padding:0 9px; font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#377B57;">Provedor de nuvem</span>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:6px;">
+          <div style="background:#377B57; color:#fff; border-radius:11px; padding:11px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;">dns</span><b style="font-family:'Sora';font-size:11.5px;">API .NET</b></div><div style="font-size:9.5px;opacity:.85;margin-top:3px;">Container · auto-scale</div></div>
+          <div style="background:#fff; border:1.5px solid #4F956F; border-radius:11px; padding:11px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">bolt</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">Realtime</b></div><div style="font-size:9.5px;color:#74806E;margin-top:3px;">WS/SSE · sticky</div></div>
+          <div style="background:#fff; border:1.5px solid #4F956F; border-radius:11px; padding:11px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">manufacturing</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">Workers</b></div><div style="font-size:9.5px;color:#74806E;margin-top:3px;">Fila de jobs</div></div>
+          <div style="background:#fff; border:1.5px solid #4F956F; border-left:5px solid #4F956F; border-radius:11px; padding:11px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">database</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">PostgreSQL</b></div><div style="font-size:9.5px;color:#74806E;margin-top:3px;">Banco gerenciado</div></div>
+          <div style="background:#fff; border:1.5px solid #4F956F; border-left:5px solid #4F956F; border-radius:11px; padding:11px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">folder_open</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">Object Storage</b></div><div style="font-size:9.5px;color:#74806E;margin-top:3px;">Blob/S3 + CDN</div></div>
+          <div style="background:#fff; border:1.5px solid #4F956F; border-radius:11px; padding:11px 12px;"><div style="display:flex;align-items:center;gap:6px;"><span class="msr" style="font-size:15px;color:#377B57;">shield</span><b style="font-family:'Sora';font-size:11.5px;color:#0E2117;">Gateway / TLS</b></div><div style="font-size:9.5px;color:#74806E;margin-top:3px;">HTTPS, rate-limit</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- external SaaS strip -->
+    <div style="margin-top:14px; padding-top:14px; border-top:1px dashed rgba(23,53,37,0.16);">
+      <div style="font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#74806E; margin-bottom:9px;">SaaS externo</div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <span style="font-size:11px;background:#6B7164;color:#fff;padding:5px 11px;border-radius:9px;display:inline-flex;align-items:center;gap:5px;"><span class="msr" style="font-size:14px;">login</span>Google Identity</span>
+        <span style="font-size:11px;background:#6B7164;color:#fff;padding:5px 11px;border-radius:9px;display:inline-flex;align-items:center;gap:5px;"><span class="msr" style="font-size:14px;">payments</span>PIX / PSP</span>
+        <span style="font-size:11px;background:#6B7164;color:#fff;padding:5px 11px;border-radius:9px;display:inline-flex;align-items:center;gap:5px;"><span class="msr" style="font-size:14px;">notifications_active</span>FCM / APNs</span>
+        <span style="font-size:11px;background:#6B7164;color:#fff;padding:5px 11px;border-radius:9px;display:inline-flex;align-items:center;gap:5px;"><span class="msr" style="font-size:14px;">map</span>OpenStreetMap (CDN de tiles)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:40px 0 8px; scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#A8632F; margin-bottom:8px;">Diagramas de sequ&ecirc;ncia</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">Como cada funcionalidade flui</h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch; margin:0;">Um fluxo por funcionalidade, com os participantes (ator, app, API, banco, externos) e as chamadas esperadas. Linha cheia = chamada; linha tracejada = resposta. Endpoints s&atilde;o ilustrativos &mdash; alinhar com o Swagger do backend.</p>
+</section>
+
+<!-- IMPLEMENTED SEQUENCES -->
+<div style="margin:8px 0 0;">
+  <div style="display:inline-flex; align-items:center; gap:7px; background:#EAF5EE; border:1px solid rgba(55,123,87,0.2); color:#377B57; padding:5px 13px; border-radius:999px; font-size:12px; font-weight:600; font-family:'Sora'; margin:14px 0 4px;"><span class="msr" style="font-size:15px;">check_circle</span> Funcionalidades implementadas</div>
+</div>
+<sc-for list="{{ diagramsImpl }}" as="d" hint-placeholder-count="6">
+  <section id="{{ d.id }}" style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px clamp(14px,2.5vw,24px); margin:16px 0; scroll-margin-top:20px;">
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:4px;">
+      <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.18rem; margin:0; color:#0E2117;">{{ d.title }}</h3>
+      <span style="font-size:10.5px; font-weight:600; padding:2px 9px; border-radius:999px; background:{{ d.tagColor }}; color:#fff;">{{ d.tag }}</span>
+    </div>
+    <p style="font-size:13px; color:#74806E; margin:0 0 16px; line-height:1.5;">{{ d.summary }}</p>
+    <div style="{{ d.headStyle }}">
+      <sc-for list="{{ d.participants }}" as="p" hint-placeholder-count="4">
+        <div style="{{ p.headStyle }}">{{ p.label }}<div style="{{ p.typeStyle }}">{{ p.type }}</div></div>
+      </sc-for>
+    </div>
+    <div style="{{ d.bodyStyle }}">
+      <div style="position:absolute; inset:0; pointer-events:none;">
+        <sc-for list="{{ d.participants }}" as="p" hint-placeholder-count="4">
+          <div style="{{ p.line }}"></div>
+        </sc-for>
+      </div>
+      <sc-for list="{{ d.messages }}" as="m" hint-placeholder-count="5">
+        <div style="{{ m.rowStyle }}">
+          <sc-if value="{{ m.isMsg }}">
+            <div style="{{ m.barStyle }}"></div>
+            <div style="{{ m.headStyle }}"></div>
+            <div style="{{ m.labelStyle }}">{{ m.label }} <sc-if value="{{ m.endpoint }}"><span style="{{ m.epStyle }}">{{ m.endpoint }}</span></sc-if></div>
+          </sc-if>
+          <sc-if value="{{ m.isSelf }}">
+            <div style="{{ m.loopStyle }}"></div>
+            <div style="{{ m.headStyle }}"></div>
+            <div style="{{ m.labelStyle }}">{{ m.label }} <sc-if value="{{ m.endpoint }}"><span style="{{ m.epStyle }}">{{ m.endpoint }}</span></sc-if></div>
+          </sc-if>
+          <sc-if value="{{ m.isNote }}">
+            <div style="{{ m.boxStyle }}">{{ m.label }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</sc-for>
+
+<!-- PLANNED SEQUENCES -->
+<div style="margin:30px 0 0;">
+  <div style="display:inline-flex; align-items:center; gap:7px; background:#FBF0E6; border:1px solid rgba(168,99,47,0.22); color:#A8632F; padding:5px 13px; border-radius:999px; font-size:12px; font-weight:600; font-family:'Sora'; margin:6px 0 4px;"><span class="msr" style="font-size:15px;">schedule</span> Funcionalidades previstas (roadmap)</div>
+</div>
+<sc-for list="{{ diagramsPlanned }}" as="d" hint-placeholder-count="6">
+  <section id="{{ d.id }}" style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px clamp(14px,2.5vw,24px); margin:16px 0; scroll-margin-top:20px;">
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:4px;">
+      <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.18rem; margin:0; color:#0E2117;">{{ d.title }}</h3>
+      <span style="font-size:10.5px; font-weight:600; padding:2px 9px; border-radius:999px; background:{{ d.tagColor }}; color:#fff;">{{ d.tag }}</span>
+    </div>
+    <p style="font-size:13px; color:#74806E; margin:0 0 16px; line-height:1.5;">{{ d.summary }}</p>
+    <div style="{{ d.headStyle }}">
+      <sc-for list="{{ d.participants }}" as="p" hint-placeholder-count="4">
+        <div style="{{ p.headStyle }}">{{ p.label }}<div style="{{ p.typeStyle }}">{{ p.type }}</div></div>
+      </sc-for>
+    </div>
+    <div style="{{ d.bodyStyle }}">
+      <div style="position:absolute; inset:0; pointer-events:none;">
+        <sc-for list="{{ d.participants }}" as="p" hint-placeholder-count="4">
+          <div style="{{ p.line }}"></div>
+        </sc-for>
+      </div>
+      <sc-for list="{{ d.messages }}" as="m" hint-placeholder-count="5">
+        <div style="{{ m.rowStyle }}">
+          <sc-if value="{{ m.isMsg }}">
+            <div style="{{ m.barStyle }}"></div>
+            <div style="{{ m.headStyle }}"></div>
+            <div style="{{ m.labelStyle }}">{{ m.label }} <sc-if value="{{ m.endpoint }}"><span style="{{ m.epStyle }}">{{ m.endpoint }}</span></sc-if></div>
+          </sc-if>
+          <sc-if value="{{ m.isSelf }}">
+            <div style="{{ m.loopStyle }}"></div>
+            <div style="{{ m.headStyle }}"></div>
+            <div style="{{ m.labelStyle }}">{{ m.label }} <sc-if value="{{ m.endpoint }}"><span style="{{ m.epStyle }}">{{ m.endpoint }}</span></sc-if></div>
+          </sc-if>
+          <sc-if value="{{ m.isNote }}">
+            <div style="{{ m.boxStyle }}">{{ m.label }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</sc-for>
+<!-- INSERT -->
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  // ---- sequence diagram specs (filled in later) ----
+  get seqImpl() {
+    const U = { id: 'u', label: 'Usu\u00e1rio', kind: 'user', type: 'ator' };
+    const A = { id: 'a', label: 'App', kind: 'app', type: 'Flutter' };
+    const API = { id: 'api', label: 'API .NET', kind: 'api', type: 'REST /v1' };
+    const DB = { id: 'db', label: 'Banco', kind: 'data', type: 'PostgreSQL' };
+    const G = (b) => Object.assign({ kind: 'ext' }, b);
+    const G_TAG = 'implementada', G_COLOR = '#377B57';
+    return [
+      {
+        id: 'auth', title: 'Autentica\u00e7\u00e3o & sess\u00e3o', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Login por e-mail/senha ou Google; emite JWT de acesso e refresh token guardados em secure storage.',
+        participants: [U, A, G({ id: 'g', label: 'Google ID', type: 'OAuth' }), API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Informa e-mail/senha ou toca em Google' },
+          { from: 'a', to: 'g', label: 'Fluxo OAuth (login social)' },
+          { from: 'g', to: 'a', label: 'id_token', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Login', endpoint: 'POST /auth/login' },
+          { from: 'api', to: 'db', label: 'Valida credenciais & cria sess\u00e3o' },
+          { from: 'db', to: 'api', label: 'usu\u00e1rio', kind: 'return' },
+          { from: 'api', to: 'a', label: 'JWT + refresh token', kind: 'return' },
+          { from: 'a', to: 'a', label: 'Guarda em secure storage' },
+          { from: 'a', to: 'u', label: 'Abre onboarding / feed', kind: 'return' },
+        ],
+      },
+      {
+        id: 'onboarding', title: 'Onboarding territorial', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Permiss\u00e3o de localiza\u00e7\u00e3o \u2192 territ\u00f3rios pr\u00f3ximos \u2192 entrar como visitante. Localiza\u00e7\u00e3o \u00e9 privada.',
+        participants: [U, A, G({ id: 'gps', label: 'GPS', type: 'dispositivo' }), API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Concede permiss\u00e3o de localiza\u00e7\u00e3o' },
+          { from: 'a', to: 'gps', label: 'Solicita posi\u00e7\u00e3o' },
+          { from: 'gps', to: 'a', label: 'lat / lng (privado)', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Territ\u00f3rios pr\u00f3ximos', endpoint: 'GET /territories/nearby' },
+          { from: 'api', to: 'db', label: 'Busca por raio' },
+          { from: 'db', to: 'api', label: 'territ\u00f3rios', kind: 'return' },
+          { from: 'api', to: 'a', label: 'lista por dist\u00e2ncia', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Escolhe territ\u00f3rio \u00b7 "Continuar como visitante"' },
+          { from: 'a', to: 'api', label: 'Entrar', endpoint: 'POST /territories/{id}/enter' },
+          { from: 'api', to: 'db', label: 'Cria membership visitor' },
+          { from: 'api', to: 'a', label: 'v\u00ednculo criado', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Abre o Feed (banner de visitante)', kind: 'return' },
+        ],
+      },
+      {
+        id: 'feed', title: 'Carregar o feed', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Timeline escopada ao territ\u00f3rio, paginada por cursor, com cache stale-while-revalidate.',
+        participants: [U, A, { id: 'c', label: 'Cache local', kind: 'data', type: 'Drift/Isar' }, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre o Feed do territ\u00f3rio' },
+          { from: 'a', to: 'c', label: 'L\u00ea \u00faltimo estado conhecido' },
+          { from: 'c', to: 'a', label: 'posts em cache', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Mostra feed (stale) na hora', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Revalida', endpoint: 'GET /territories/{id}/feed?cursor' },
+          { from: 'api', to: 'db', label: 'Query escopada + pagina\u00e7\u00e3o' },
+          { from: 'db', to: 'api', label: 'posts', kind: 'return' },
+          { from: 'api', to: 'a', label: 'p\u00e1gina + nextCursor', kind: 'return' },
+          { from: 'a', to: 'c', label: 'Grava em cache' },
+          { from: 'a', to: 'u', label: 'Atualiza a UI', kind: 'return' },
+          { kind: 'note', label: 'Scroll infinito por cursor \u00b7 revalida\u00e7\u00e3o em segundo plano' },
+        ],
+      },
+      {
+        id: 'post', title: 'Post: curtir & comentar', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Detalhe do post com intera\u00e7\u00f5es otimistas \u2014 a UI atualiza antes da confirma\u00e7\u00e3o do servidor.',
+        participants: [U, A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre um post' },
+          { from: 'a', to: 'api', label: 'Detalhe + coment\u00e1rios', endpoint: 'GET /posts/{id}' },
+          { from: 'api', to: 'a', label: 'post + coment\u00e1rios', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Curte (otimista)' },
+          { from: 'a', to: 'u', label: 'Atualiza na hora', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Curtir', endpoint: 'POST /posts/{id}/like' },
+          { from: 'u', to: 'a', label: 'Comenta' },
+          { from: 'a', to: 'api', label: 'Comentar', endpoint: 'POST /posts/{id}/comments' },
+          { from: 'api', to: 'a', label: 'coment\u00e1rio criado', kind: 'return' },
+          { kind: 'note', label: 'Falha \u2192 reverte estado otimista + toast discreto' },
+        ],
+      },
+      {
+        id: 'publish', title: 'Publicar post (com m\u00eddia)', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'A foto sobe direto ao storage por URL assinada; depois o post referencia a m\u00eddia.',
+        participants: [U, A, API, G({ id: 'st', label: 'Object Storage', type: 'Blob/S3' }), DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Escreve t\u00edtulo/conte\u00fado, anexa foto' },
+          { from: 'a', to: 'api', label: 'Solicita URL de upload' },
+          { from: 'api', to: 'a', label: 'presigned URL', kind: 'return' },
+          { from: 'a', to: 'st', label: 'PUT foto (direto)' },
+          { from: 'st', to: 'a', label: '200 OK', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Publicar (refs, tipo, visibilidade)', endpoint: 'POST /posts' },
+          { from: 'api', to: 'db', label: 'Grava post + geoAnchors' },
+          { from: 'api', to: 'a', label: 'post criado', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Volta ao feed', kind: 'return' },
+        ],
+      },
+      {
+        id: 'territory-switch', title: 'Trocar de territ\u00f3rio', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Trocar de territ\u00f3rio invalida caches escopados e recarrega todo o conte\u00fado, levando ao Feed.',
+        participants: [U, A, { id: 'c', label: 'Cache local', kind: 'data', type: 'Drift/Isar' }, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre seletor e troca de territ\u00f3rio' },
+          { from: 'a', to: 'c', label: 'Invalida caches escopados' },
+          { from: 'a', to: 'api', label: 'Recarrega (header X-Territory-Id)' },
+          { from: 'api', to: 'db', label: 'Valida membership + query' },
+          { from: 'db', to: 'api', label: 'dados', kind: 'return' },
+          { from: 'api', to: 'a', label: 'conte\u00fado do novo territ\u00f3rio', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Abre o Feed do novo territ\u00f3rio', kind: 'return' },
+        ],
+      },
+      {
+        id: 'map', title: 'Mapa: tiles, entidades, pin', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Tiles vêm do OSM (com cache da regi\u00e3o); entidades confirmadas vêm da API.',
+        participants: [U, A, G({ id: 'osm', label: 'OpenStreetMap', type: 'tiles' }), API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre o Mapa' },
+          { from: 'a', to: 'osm', label: 'GET tiles (cache da regi\u00e3o)' },
+          { from: 'osm', to: 'a', label: 'tiles', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Entidades', endpoint: 'GET /territories/{id}/map-entities' },
+          { from: 'api', to: 'db', label: 'Pins confirmados pela curadoria' },
+          { from: 'db', to: 'api', label: 'entidades', kind: 'return' },
+          { from: 'api', to: 'a', label: 'pins (lugares, trilhas, alertas)', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Toca em um pin' },
+          { from: 'a', to: 'u', label: 'Mostra detalhe do pin', kind: 'return' },
+        ],
+      },
+      {
+        id: 'events', title: 'Eventos: ver & participar', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Lista de eventos do territ\u00f3rio; participa\u00e7\u00e3o alterna entre interessado e confirmado (otimista).',
+        participants: [U, A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre Eventos' },
+          { from: 'a', to: 'api', label: 'Eventos do territ\u00f3rio', endpoint: 'GET /territories/{id}/events' },
+          { from: 'api', to: 'a', label: 'eventos', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Toca "Tenho interesse / Confirmar"' },
+          { from: 'a', to: 'u', label: 'Atualiza otimista', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Participa\u00e7\u00e3o', endpoint: 'POST /events/{id}/participation' },
+          { from: 'api', to: 'db', label: 'Grava participa\u00e7\u00e3o' },
+          { from: 'api', to: 'a', label: 'estado atualizado', kind: 'return' },
+        ],
+      },
+      {
+        id: 'messages', title: 'Mensagens (tempo real)', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Hist\u00f3rico via REST; troca ao vivo via WebSocket com reconcilia\u00e7\u00e3o por id do servidor.',
+        participants: [U, A, API, { id: 'rt', label: 'Realtime', kind: 'api', type: 'WS/SSE' }, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre conversa' },
+          { from: 'a', to: 'api', label: 'Hist\u00f3rico', endpoint: 'GET /conversations/{id}/messages' },
+          { from: 'api', to: 'a', label: 'mensagens', kind: 'return' },
+          { from: 'a', to: 'rt', label: 'Abre WebSocket (assina thread)' },
+          { from: 'u', to: 'a', label: 'Envia mensagem (otimista)' },
+          { from: 'a', to: 'rt', label: 'envia msg' },
+          { from: 'rt', to: 'db', label: 'persiste' },
+          { from: 'rt', to: 'a', label: 'entrega + reconcilia por id', kind: 'return' },
+          { from: 'rt', to: 'a', label: 'mensagens de outros (ao vivo)', kind: 'return' },
+        ],
+      },
+      {
+        id: 'notifications', title: 'Notifica\u00e7\u00f5es & deep link', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Inbox in-app; cada notifica\u00e7\u00e3o resolve para uma rota (arah://territory/{tid}/post/{id}).',
+        participants: [U, A, API],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre o inbox de notifica\u00e7\u00f5es' },
+          { from: 'a', to: 'api', label: 'Lista', endpoint: 'GET /notifications' },
+          { from: 'api', to: 'a', label: 'notifica\u00e7\u00f5es', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Toca numa notifica\u00e7\u00e3o' },
+          { from: 'a', to: 'a', label: 'Resolve deep link (arah://\u2026)' },
+          { from: 'a', to: 'api', label: 'Marca lida (otimista)', endpoint: 'POST /notifications/{id}/read' },
+          { from: 'a', to: 'u', label: 'Abre a tela do recurso', kind: 'return' },
+        ],
+      },
+      {
+        id: 'profile', title: 'Perfil: ver & editar', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Identidade, papel no territ\u00f3rio, stats e interesses; edi\u00e7\u00e3o em bottom sheet.',
+        participants: [U, A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre o Perfil' },
+          { from: 'a', to: 'api', label: 'Meu perfil', endpoint: 'GET /me/profile' },
+          { from: 'api', to: 'a', label: 'perfil + papel + stats', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Edita (bottom sheet) e salva' },
+          { from: 'a', to: 'api', label: 'Atualiza', endpoint: 'PUT /me/profile' },
+          { from: 'api', to: 'db', label: 'Grava' },
+          { from: 'api', to: 'a', label: 'perfil atualizado', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Fecha o sheet', kind: 'return' },
+        ],
+      },
+      {
+        id: 'market', title: 'Mercado & checkout PIX', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Sacola \u2192 pagamento PIX (idempotente) \u2192 webhook confirma \u2192 vendedor notificado.',
+        participants: [U, A, API, G({ id: 'psp', label: 'PIX / PSP', type: 'pagamentos' }), DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Explora itens, adiciona \u00e0 sacola' },
+          { from: 'a', to: 'api', label: 'Lojas & sacola', endpoint: 'POST /cart/items' },
+          { from: 'api', to: 'a', label: 'sacola', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Escolhe entrega e paga' },
+          { from: 'a', to: 'api', label: 'Checkout (Idempotency-Key)', endpoint: 'POST /checkout' },
+          { from: 'api', to: 'psp', label: 'Cria cobran\u00e7a PIX' },
+          { from: 'psp', to: 'api', label: 'QR + copia-e-cola', kind: 'return' },
+          { from: 'api', to: 'a', label: 'dados do PIX', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Mostra QR PIX', kind: 'return' },
+          { from: 'psp', to: 'api', label: 'webhook: pago' },
+          { from: 'api', to: 'db', label: 'Pedido pago; notifica vendedor' },
+          { from: 'api', to: 'a', label: 'pedido confirmado (push)', kind: 'return' },
+        ],
+      },
+      {
+        id: 'store', title: 'Minha loja (vendedor)', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Morador abre loja, configura PIX/taxa/repasse e gerencia produtos.',
+        participants: [{ id: 'u', label: 'Morador', kind: 'user', type: 'vendedor' }, A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre loja (onboarding vendedor)' },
+          { from: 'a', to: 'api', label: 'Criar loja', endpoint: 'POST /stores' },
+          { from: 'api', to: 'a', label: 'loja criada', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Configura PIX, taxa, repasse' },
+          { from: 'a', to: 'api', label: 'Pagamento', endpoint: 'PUT /stores/{id}/payment' },
+          { from: 'u', to: 'a', label: 'Adiciona produto' },
+          { from: 'a', to: 'api', label: 'Criar item', endpoint: 'POST /items' },
+          { from: 'api', to: 'db', label: 'Grava' },
+          { from: 'api', to: 'a', label: 'produto ativo', kind: 'return' },
+        ],
+      },
+      {
+        id: 'elections', title: 'Elei\u00e7\u00f5es & vota\u00e7\u00e3o', tag: 'implementada \u00b7 F14', tagColor: G_COLOR,
+        summary: 'S\u00f3 moradores votam; voto secreto, um por morador; resultados em barras de percentual.',
+        participants: [{ id: 'u', label: 'Morador', kind: 'user', type: 'eleitor' }, A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre Elei\u00e7\u00f5es' },
+          { from: 'a', to: 'api', label: 'Elei\u00e7\u00f5es', endpoint: 'GET /territories/{id}/elections' },
+          { from: 'api', to: 'a', label: 'abertas / encerradas', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Seleciona candidato e confirma' },
+          { from: 'a', to: 'api', label: 'Votar', endpoint: 'POST /elections/{id}/vote' },
+          { from: 'api', to: 'db', label: 'Valida papel \u00b7 1 voto \u00b7 an\u00f4nimo' },
+          { from: 'db', to: 'api', label: 'registrado', kind: 'return' },
+          { from: 'api', to: 'a', label: 'voto computado', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Mostra resultados', kind: 'return' },
+        ],
+      },
+      {
+        id: 'curation', title: 'Curadoria & modera\u00e7\u00e3o', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Curador resolve a fila (entidades, posts, residências); toda decis\u00e3o gera auditoria.',
+        participants: [{ id: 'u', label: 'Curador', kind: 'user', type: 'gestor' }, A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre a fila de curadoria' },
+          { from: 'a', to: 'api', label: 'Fila', endpoint: 'GET /territories/{id}/moderation-queue' },
+          { from: 'api', to: 'a', label: 'entidades / posts / residências', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Aprova ou recusa' },
+          { from: 'a', to: 'api', label: 'Decis\u00e3o', endpoint: 'POST /moderation/{id}/decision' },
+          { from: 'api', to: 'db', label: 'Aplica decis\u00e3o + registro de auditoria' },
+          { from: 'api', to: 'a', label: 'decis\u00e3o registrada', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Atualiza a fila', kind: 'return' },
+        ],
+      },
+      {
+        id: 'token-refresh', title: 'Renova\u00e7\u00e3o de token (401)', tag: G_TAG, tagColor: G_COLOR,
+        summary: 'Em 401, o app tenta um refresh transparente uma vez e repete a requisi\u00e7\u00e3o original.',
+        participants: [A, API],
+        messages: [
+          { from: 'a', to: 'api', label: 'Requisi\u00e7\u00e3o com access token' },
+          { from: 'api', to: 'a', label: '401 Unauthorized', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Refresh', endpoint: 'POST /auth/refresh' },
+          { from: 'api', to: 'a', label: 'novo access + refresh', kind: 'return' },
+          { from: 'a', to: 'a', label: 'Atualiza secure storage' },
+          { from: 'a', to: 'api', label: 'Repete a requisi\u00e7\u00e3o original' },
+          { from: 'api', to: 'a', label: '200 OK', kind: 'return' },
+          { kind: 'note', label: 'Se o refresh falhar \u2192 logout e limpa dados sens\u00edveis' },
+        ],
+      },
+    ];
+  }
+  get seqPlanned() {
+    const A = { id: 'a', label: 'App', kind: 'app', type: 'Flutter' };
+    const API = { id: 'api', label: 'API .NET', kind: 'api', type: 'REST /v1' };
+    const DB = { id: 'db', label: 'Banco', kind: 'data', type: 'PostgreSQL' };
+    const PSP = { id: 'psp', label: 'PIX / PSP', kind: 'ext', type: 'pagamentos' };
+    const U = (label, type) => ({ id: 'u', label: label || 'Usu\u00e1rio', kind: 'user', type: type || 'morador' });
+    const LED = { id: 'led', label: 'Ledger & Split', kind: 'data', type: 'cont\u00e1bil' };
+    const JOB = { id: 'job', label: 'Worker', kind: 'api', type: 'agendado' };
+    const C = '#A8632F';
+    const M = '#2A6FDB', M_TAG = 'monetiza\u00e7\u00e3o';
+    return [
+      {
+        id: 'm-ativarloja', title: 'Ativar loja (assinatura comercial)', tag: M_TAG, tagColor: M,
+        summary: 'O comerciante assina um plano que habilita a loja; o morador nunca paga para participar.',
+        participants: [U('Comerciante', 'morador'), A, API, PSP, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Toca em "Ativar loja"' },
+          { from: 'a', to: 'api', label: 'Planos do território', endpoint: 'GET /territories/{id}/plans' },
+          { from: 'api', to: 'a', label: 'Loja / Pro + consumo', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Escolhe plano e paga PIX' },
+          { from: 'a', to: 'api', label: 'Assinar (Idempotency-Key)', endpoint: 'POST /merchants/{id}/subscription' },
+          { from: 'api', to: 'psp', label: 'Cobran\u00e7a recorrente PIX' },
+          { from: 'psp', to: 'api', label: 'confirma\u00e7\u00e3o', kind: 'return' },
+          { from: 'api', to: 'db', label: 'Cria Subscription + habilita loja' },
+          { from: 'api', to: 'a', label: 'loja habilitada', kind: 'return' },
+          { from: 'a', to: 'u', label: '"Sua loja est\u00e1 no ar"', kind: 'return' },
+          { kind: 'note', label: 'Morador nunca paga \u2014 cobran\u00e7a s\u00f3 sobre atividade comercial' },
+        ],
+      },
+      {
+        id: 'm-pagamento', title: 'Pagamento com taxa & split', tag: M_TAG, tagColor: M,
+        summary: 'Taxa e split s\u00e3o calculados no servidor e exibidos antes de pagar; o cliente nunca calcula taxa.',
+        participants: [U('Comprador', 'morador'), A, API, LED, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Confirma compra no mercado' },
+          { from: 'a', to: 'api', label: 'Cota\u00e7\u00e3o', endpoint: 'POST /transactions/{id}/quote' },
+          { from: 'api', to: 'led', label: 'Calcula fee + split (regra vigente)' },
+          { from: 'led', to: 'api', label: 'feeAmount + split', kind: 'return' },
+          { from: 'api', to: 'a', label: 'valor ao vendedor, taxa, split', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Mostra taxa e split antes de pagar', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Paga (PIX)' },
+          { from: 'a', to: 'api', label: 'Confirmar', endpoint: 'POST /transactions' },
+          { from: 'api', to: 'led', label: 'Credita carteiras (impl/fundo/plataforma)' },
+          { from: 'api', to: 'db', label: 'Grava transa\u00e7\u00e3o + comprovante' },
+          { from: 'api', to: 'a', label: 'comprovante transparente', kind: 'return' },
+          { kind: 'note', label: 'Split server-side e imut\u00e1vel no cliente' },
+        ],
+      },
+      {
+        id: 'm-repasse', title: 'Repasse / payout ao implementador', tag: M_TAG, tagColor: M,
+        summary: 'Job fecha o per\u00edodo, consolida cr\u00e9ditos por carteira e liquida via PIX, com extrato auditável.',
+        participants: [JOB, API, LED, PSP, U('Implementador', 'gestor')],
+        messages: [
+          { from: 'job', to: 'api', label: 'Fecha per\u00edodo (mensal)' },
+          { from: 'api', to: 'led', label: 'Consolida cr\u00e9ditos por carteira' },
+          { from: 'led', to: 'api', label: 'saldos a repassar', kind: 'return' },
+          { from: 'api', to: 'psp', label: 'Transfere PIX (Idempotency-Key)' },
+          { from: 'psp', to: 'api', label: 'liquida\u00e7\u00e3o', kind: 'return' },
+          { from: 'api', to: 'led', label: 'Registra Payout liquidado' },
+          { from: 'api', to: 'u', label: 'Notifica repasse + extrato', kind: 'return' },
+          { kind: 'note', label: 'Estornos ajustam payouts futuros proporcionalmente' },
+        ],
+      },
+      {
+        id: 'm-transparencia', title: 'Painel de transparência', tag: M_TAG, tagColor: M,
+        summary: 'Qualquer morador consulta receita, repasses e volume do território em tempo real; export\u00e1vel.',
+        participants: [U('Qualquer morador', 'morador'), A, API, LED],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre Painel de transparência' },
+          { from: 'a', to: 'api', label: 'Receita do território', endpoint: 'GET /territories/{id}/revenue' },
+          { from: 'api', to: 'led', label: 'Agrega receita, repasses, volume' },
+          { from: 'led', to: 'api', label: 'totais + split por destinat\u00e1rio', kind: 'return' },
+          { from: 'api', to: 'a', label: 'dados em tempo real', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Receita, repasses e com\u00e9rcios \u00e0 vista', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Exporta relat\u00f3rio' },
+          { from: 'a', to: 'api', label: 'Exportar', endpoint: 'GET /territories/{id}/revenue/export' },
+          { kind: 'note', label: 'P\u00fablico a qualquer morador \u00b7 export\u00e1vel ao conselho' },
+        ],
+      },
+      {
+        id: 'm-taxas', title: 'Governan\u00e7a de taxas', tag: M_TAG, tagColor: M,
+        summary: 'Curador prop\u00f5e taxa/split; o conselho vota; se aprovada, gera regra com vig\u00eancia futura.',
+        participants: [{ id: 'cur', label: 'Curador', kind: 'user', type: 'gestor' }, API, DB, { id: 'cons', label: 'Conselho', kind: 'user', type: 'moradores' }],
+        messages: [
+          { from: 'cur', to: 'api', label: 'Propor taxa/split', endpoint: 'POST /territories/{id}/fee-proposals' },
+          { from: 'api', to: 'db', label: 'Cria proposta + pr\u00e9via de impacto' },
+          { from: 'api', to: 'cur', label: 'em vota\u00e7\u00e3o', kind: 'return' },
+          { from: 'cons', to: 'api', label: 'Votam (qu\u00f3rum)' },
+          { from: 'api', to: 'db', label: 'Apura resultado' },
+          { from: 'db', to: 'api', label: 'aprovada', kind: 'return' },
+          { from: 'api', to: 'db', label: 'Nova FeeSplitRule (effectiveFrom)' },
+          { from: 'api', to: 'cons', label: 'Notifica vig\u00eancia futura', kind: 'return' },
+          { kind: 'note', label: 'Nunca retroage \u00b7 regra anterior arquivada e auditável' },
+        ],
+      },
+      {
+        id: 'm-fundo', title: 'Aporte no fundo territorial', tag: M_TAG, tagColor: M,
+        summary: 'Investidor-anjo aporta no fundo do território e recebe cota/revenue-share, com contas abertas.',
+        participants: [U('Investidor-anjo', 'apoiador'), A, API, PSP, LED],
+        messages: [
+          { from: 'u', to: 'a', label: 'Escolhe aportar no fundo do território' },
+          { from: 'a', to: 'api', label: 'Criar aporte', endpoint: 'POST /territories/{id}/fund/contributions' },
+          { from: 'u', to: 'a', label: 'Confirma valor (PIX)' },
+          { from: 'a', to: 'psp', label: 'Cobran\u00e7a PIX (Idempotency-Key)' },
+          { from: 'psp', to: 'a', label: 'confirma\u00e7\u00e3o', kind: 'return' },
+          { from: 'a', to: 'api', label: 'Confirmar aporte' },
+          { from: 'api', to: 'led', label: 'Credita TerritoryFund + emite cota/RS' },
+          { from: 'api', to: 'a', label: 'comprovante + cota', kind: 'return' },
+          { kind: 'note', label: 'Presta\u00e7\u00e3o de contas no painel de transparência' },
+        ],
+      },
+      {
+        id: 'm-cockpit', title: 'Cockpit / gest\u00e3o do implementador', tag: M_TAG, tagColor: M,
+        summary: 'Painel web do implementador: agrega a rede de territórios, mostra repasses e faz onboarding de com\u00e9rcios.',
+        participants: [{ id: 'u', label: 'Implementador', kind: 'user', type: 'gestor' }, { id: 'ck', label: 'Cockpit Web', kind: 'app', type: 'painel' }, API, LED, DB],
+        messages: [
+          { from: 'u', to: 'ck', label: 'Abre o cockpit' },
+          { from: 'ck', to: 'api', label: 'Resumo da rede', endpoint: 'GET /implementers/me/overview' },
+          { from: 'api', to: 'led', label: 'Agrega receita & repasses dos territórios' },
+          { from: 'led', to: 'api', label: 'KPIs + pr\u00f3ximo repasse', kind: 'return' },
+          { from: 'api', to: 'ck', label: 'vis\u00e3o geral', kind: 'return' },
+          { from: 'ck', to: 'u', label: 'KPIs, gr\u00e1fico e atividade', kind: 'return' },
+          { from: 'u', to: 'ck', label: 'Convida um com\u00e9rcio' },
+          { from: 'ck', to: 'api', label: 'Onboard', endpoint: 'POST /implementers/me/merchants/invite' },
+          { from: 'api', to: 'db', label: 'Cria convite + v\u00ednculo ao implementador' },
+          { from: 'api', to: 'ck', label: 'convite enviado', kind: 'return' },
+          { kind: 'note', label: 'Coordenador alterna territórios pelo seletor "Toda a rede"' },
+        ],
+      },
+      {
+        id: 'inf-provision', title: 'Provisionar inst\u00e2ncia de território', tag: 'infra · federa\u00e7\u00e3o', tagColor: '#2B6246',
+        summary: 'O implementador sobe uma nova implementa\u00e7\u00e3o; ela registra-se no Core e publica o território no diret\u00f3rio.',
+        participants: [{ id: 'u', label: 'Implementador', kind: 'user', type: 'gestor' }, { id: 'ck', label: 'Cockpit', kind: 'app', type: 'painel' }, { id: 'core', label: 'Arah Core', kind: 'api', type: 'hub' }, { id: 'inst', label: 'Inst\u00e2ncia', kind: 'app', type: 'stack' }, DB],
+        messages: [
+          { from: 'u', to: 'ck', label: 'Solicita novo território (escolhe modo)' },
+          { from: 'ck', to: 'core', label: 'Provisionar', endpoint: 'POST /core/instances' },
+          { from: 'core', to: 'inst', label: 'Cria stack + segredos (managed) / pacote (soberano)' },
+          { from: 'inst', to: 'core', label: 'Registrar & trocar chaves', endpoint: 'POST /core/instances/{id}/register' },
+          { from: 'core', to: 'inst', label: 'id + identidade federada', kind: 'return' },
+          { from: 'inst', to: 'db', label: 'Migra\u00e7\u00f5es + seed do território' },
+          { from: 'inst', to: 'core', label: 'Publica território no diret\u00f3rio' },
+          { from: 'core', to: 'ck', label: 'inst\u00e2ncia verde', kind: 'return' },
+          { from: 'ck', to: 'u', label: 'Território dispon\u00edvel', kind: 'return' },
+          { kind: 'note', label: 'Health check verde antes de expor ao app' },
+        ],
+      },
+      {
+        id: 'inf-deploy', title: 'Atualiza\u00e7\u00e3o / deploy da inst\u00e2ncia', tag: 'infra · federa\u00e7\u00e3o', tagColor: '#2B6246',
+        summary: 'O Core publica uma release; a inst\u00e2ncia aplica com migra\u00e7\u00e3o e rollback autom\u00e1tico em caso de falha.',
+        participants: [{ id: 'core', label: 'Arah Core', kind: 'api', type: 'hub' }, { id: 'inst', label: 'Inst\u00e2ncia', kind: 'app', type: 'stack' }, { id: 'ck', label: 'Cockpit', kind: 'app', type: 'painel' }, { id: 'u', label: 'Implementador', kind: 'user', type: 'gestor' }],
+        messages: [
+          { from: 'core', to: 'core', label: 'Publica release (canal stable)' },
+          { from: 'inst', to: 'core', label: 'Consulta releases', endpoint: 'GET /core/releases?channel=stable' },
+          { from: 'core', to: 'inst', label: 'v2.4.2 + schemaVersion', kind: 'return' },
+          { from: 'inst', to: 'inst', label: 'Aplica migra\u00e7\u00e3o (auto/assistido)' },
+          { from: 'inst', to: 'ck', label: 'deploy conclu\u00eddo', kind: 'return' },
+          { from: 'ck', to: 'u', label: 'Notifica vers\u00e3o em produ\u00e7\u00e3o', kind: 'return' },
+          { kind: 'note', label: 'Falha \u2192 rollback autom\u00e1tico; território sem downtime' },
+        ],
+      },
+      {
+        id: 'inf-federacao', title: 'Federa\u00e7\u00e3o entre inst\u00e2ncias', tag: 'infra · federa\u00e7\u00e3o', tagColor: '#2B6246',
+        summary: 'Conte\u00fado entre territórios de inst\u00e2ncias diferentes via descoberta no Core e eventos assinados (opt-in).',
+        participants: [{ id: 'u', label: 'Morador', kind: 'user', type: 'morador' }, { id: 'inst', label: 'Inst\u00e2ncia A', kind: 'app', type: 'stack' }, { id: 'core', label: 'Arah Core', kind: 'api', type: 'hub' }, { id: 'instb', label: 'Inst\u00e2ncia B', kind: 'app', type: 'stack' }],
+        messages: [
+          { from: 'u', to: 'inst', label: 'Menciona morador de outro território' },
+          { from: 'inst', to: 'core', label: 'Resolve identidade & endpoint', endpoint: 'GET /federation/identity/{id}' },
+          { from: 'core', to: 'inst', label: 'globalUserId + endpoint da Inst\u00e2ncia B', kind: 'return' },
+          { from: 'inst', to: 'instb', label: 'Evento federado assinado', endpoint: 'POST /federation/events' },
+          { from: 'instb', to: 'inst', label: 'entregue (realtime)', kind: 'return' },
+          { from: 'inst', to: 'u', label: 'Mostra conte\u00fado cross-território', kind: 'return' },
+          { kind: 'note', label: 'Opt-in por território · dados ficam na inst\u00e2ncia de origem' },
+        ],
+      },
+      {
+        id: 'residence', title: 'Confirmar residência', tag: 'prevista \u00b7 gap', tagColor: C,
+        summary: 'Visitante \u2192 morador: presen\u00e7a por GPS + comprovante; status pending at\u00e9 a curadoria aprovar.',
+        participants: [U('Visitante', 'visitante'), A, API, DB, { id: 'cur', label: 'Curador', kind: 'user', type: 'gestor' }],
+        messages: [
+          { from: 'u', to: 'a', label: 'Banner "Confirme residência" \u2192 abre jornada' },
+          { from: 'a', to: 'api', label: 'Presen\u00e7a (GPS + tempo)', endpoint: 'POST /memberships/{id}/presence' },
+          { from: 'u', to: 'a', label: 'Anexa comprovante' },
+          { from: 'a', to: 'api', label: 'Solicitar residência', endpoint: 'POST /memberships/{id}/request-resident' },
+          { from: 'api', to: 'db', label: 'status = pending' },
+          { from: 'api', to: 'a', label: 'solicita\u00e7\u00e3o enviada', kind: 'return' },
+          { from: 'a', to: 'u', label: '"Aguarde an\u00e1lise"', kind: 'return' },
+          { from: 'cur', to: 'api', label: 'Aprova (curadoria)' },
+          { from: 'api', to: 'a', label: 'Notifica: agora \u00e9 morador', kind: 'return' },
+          { kind: 'note', label: 'Gap no cliente: upload, verifica\u00e7\u00e3o de identidade e estado pending' },
+        ],
+      },
+      {
+        id: 'groupbuy', title: 'Compra coletiva', tag: 'prevista \u00b7 F17', tagColor: C,
+        summary: 'Ades\u00e3o de fam\u00edlias move o tier de pre\u00e7o; push ao bater a meta ou fechar o prazo.',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Vê campanha (meta, progresso, tiers)' },
+          { from: 'a', to: 'api', label: 'Campanha', endpoint: 'GET /group-buys/{id}' },
+          { from: 'api', to: 'a', label: 'tiers + progresso', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Entra na compra' },
+          { from: 'a', to: 'api', label: 'Aderir', endpoint: 'POST /group-buys/{id}/join' },
+          { from: 'api', to: 'db', label: 'Atualiza ades\u00e3o & tier ativo' },
+          { from: 'api', to: 'a', label: 'tier atualizado', kind: 'return' },
+          { from: 'api', to: 'a', label: 'meta batida (push)', kind: 'return' },
+        ],
+      },
+      {
+        id: 'hosting', title: 'Hospedagem', tag: 'prevista \u00b7 F18', tagColor: C,
+        summary: 'Busca por datas/h\u00f3spedes \u2192 reserva paga por PIX \u2192 anfitri\u00e3o notificado.',
+        participants: [U(), A, API, PSP, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Busca estadia (datas, h\u00f3spedes)' },
+          { from: 'a', to: 'api', label: 'An\u00fancios', endpoint: 'GET /territories/{id}/listings' },
+          { from: 'api', to: 'a', label: 'casas / quartos / camping', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Revisa & paga PIX' },
+          { from: 'a', to: 'api', label: 'Reservar (Idempotency-Key)', endpoint: 'POST /bookings' },
+          { from: 'api', to: 'psp', label: 'Cobran\u00e7a PIX' },
+          { from: 'psp', to: 'api', label: 'confirma\u00e7\u00e3o', kind: 'return' },
+          { from: 'api', to: 'db', label: 'Reserva; notifica anfitri\u00e3o' },
+          { from: 'api', to: 'a', label: 'reserva confirmada', kind: 'return' },
+        ],
+      },
+      {
+        id: 'demands', title: 'Demandas & ofertas', tag: 'prevista \u00b7 F19', tagColor: C,
+        summary: 'Publicar demanda/oferta; responder abre um chat com o autor.',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Publica demanda / oferta' },
+          { from: 'a', to: 'api', label: 'Criar', endpoint: 'POST /demands' },
+          { from: 'api', to: 'db', label: 'Grava' },
+          { from: 'api', to: 'a', label: 'publicada', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Outro morador responde' },
+          { from: 'a', to: 'api', label: 'Abre chat', endpoint: 'POST /conversations' },
+          { from: 'api', to: 'a', label: 'conversa criada', kind: 'return' },
+        ],
+      },
+      {
+        id: 'trades', title: 'Trocas comunit\u00e1rias', tag: 'prevista \u00b7 F20', tagColor: C,
+        summary: 'Escambo / doa\u00e7\u00e3o: proponho o que ofere\u00e7o e o que quero em troca.',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Prop\u00f5e troca (ofere\u00e7o / quero)' },
+          { from: 'a', to: 'api', label: 'Criar proposta', endpoint: 'POST /trades' },
+          { from: 'api', to: 'db', label: 'Grava proposta' },
+          { from: 'api', to: 'a', label: 'proposta enviada', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Aguarda aceite', kind: 'return' },
+        ],
+      },
+      {
+        id: 'deliveries', title: 'Entregas', tag: 'prevista \u00b7 F21', tagColor: C,
+        summary: 'Solicita\u00e7\u00e3o com frete local; acompanhamento da posi\u00e7\u00e3o do entregador no mapa.',
+        participants: [U(), A, API, { id: 'rt', label: 'Realtime', kind: 'api', type: 'WS/SSE' }, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Solicita entrega (retirada, destino)' },
+          { from: 'a', to: 'api', label: 'Criar (frete local)', endpoint: 'POST /deliveries' },
+          { from: 'api', to: 'db', label: 'Cria entrega' },
+          { from: 'api', to: 'a', label: 'entrega criada', kind: 'return' },
+          { from: 'a', to: 'rt', label: 'Assina atualiza\u00e7\u00e3o de posi\u00e7\u00e3o' },
+          { from: 'rt', to: 'a', label: 'posi\u00e7\u00e3o do entregador (ao vivo)', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Acompanha no mapa', kind: 'return' },
+        ],
+      },
+      {
+        id: 'wallet', title: 'Carteira territorial (Arat\u00e1)', tag: 'prevista \u00b7 F22', tagColor: C,
+        summary: 'Saldo, extrato e transfer\u00eancia entre moradores (opera\u00e7\u00e3o financeira idempotente).',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Vê saldo + extrato' },
+          { from: 'a', to: 'api', label: 'Carteira', endpoint: 'GET /wallet' },
+          { from: 'api', to: 'a', label: 'saldo + transa\u00e7\u00f5es', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Envia valor a um morador' },
+          { from: 'a', to: 'api', label: 'Transferir (Idempotency-Key)', endpoint: 'POST /wallet/transfer' },
+          { from: 'api', to: 'db', label: 'D\u00e9bito / cr\u00e9dito at\u00f4mico' },
+          { from: 'api', to: 'a', label: 'transfer\u00eancia ok', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Recibo', kind: 'return' },
+          { kind: 'note', label: 'Vis\u00e3o: PIX/cart\u00e3o primeiro; moeda territorial depois' },
+        ],
+      },
+      {
+        id: 'nanny', title: 'Bab\u00e1s', tag: 'prevista \u00b7 E10', tagColor: C,
+        summary: 'Lista verificada; solicita\u00e7\u00e3o com dia/detalhes; pagamento liberado s\u00f3 ap\u00f3s o servi\u00e7o.',
+        participants: [U(), A, API, { id: 'b', label: 'Bab\u00e1', kind: 'user', type: 'verificada' }],
+        messages: [
+          { from: 'u', to: 'a', label: 'Busca bab\u00e1s (filtros, s\u00f3 verificadas)' },
+          { from: 'a', to: 'api', label: 'Lista', endpoint: 'GET /services/nannies' },
+          { from: 'api', to: 'a', label: 'bab\u00e1s verificadas', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Escolhe dia/hor\u00e1rio/detalhes' },
+          { from: 'a', to: 'api', label: 'Solicitar', endpoint: 'POST /service-requests' },
+          { from: 'api', to: 'b', label: 'Notifica solicita\u00e7\u00e3o' },
+          { from: 'b', to: 'a', label: 'aceita / contrap\u00f5e', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Abre chat p/ combinar', kind: 'return' },
+        ],
+      },
+      {
+        id: 'wellness', title: 'Bem-estar: agendamento', tag: 'prevista \u00b7 E10', tagColor: C,
+        summary: 'Escolhe espa\u00e7o ou profissional + hor\u00e1rio na agenda compartilhada e reserva o slot.',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Escolhe servi\u00e7o + hor\u00e1rio na agenda' },
+          { from: 'a', to: 'api', label: 'Disponibilidade', endpoint: 'GET /wellness/availability' },
+          { from: 'api', to: 'a', label: 'slots livres', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Confirma' },
+          { from: 'a', to: 'api', label: 'Reservar', endpoint: 'POST /bookings/wellness' },
+          { from: 'api', to: 'db', label: 'Reserva o slot' },
+          { from: 'api', to: 'a', label: 'reserva confirmada', kind: 'return' },
+        ],
+      },
+      {
+        id: 'rentals', title: 'Alug\u00e9is', tag: 'prevista \u00b7 F46', tagColor: C,
+        summary: 'Equipamentos por per\u00edodo, pagos por PIX.',
+        participants: [U(), A, API, PSP, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Escolhe equipamento e per\u00edodo' },
+          { from: 'a', to: 'api', label: 'Alugar (Idempotency-Key)', endpoint: 'POST /rentals' },
+          { from: 'api', to: 'psp', label: 'Cobran\u00e7a PIX' },
+          { from: 'psp', to: 'api', label: 'confirmado', kind: 'return' },
+          { from: 'api', to: 'db', label: 'Aluguel reservado' },
+          { from: 'api', to: 'a', label: 'confirmado', kind: 'return' },
+        ],
+      },
+      {
+        id: 'digital', title: 'Hub digital', tag: 'prevista \u00b7 F26', tagColor: C,
+        summary: 'Contratar servi\u00e7o digital local; prestador envia proposta e combina pelo chat.',
+        participants: [U(), A, API, { id: 'p', label: 'Prestador', kind: 'user', type: 'local' }],
+        messages: [
+          { from: 'u', to: 'a', label: 'Contrata servi\u00e7o digital local' },
+          { from: 'a', to: 'api', label: 'Solicitar', endpoint: 'POST /digital-requests' },
+          { from: 'api', to: 'p', label: 'Notifica prestador' },
+          { from: 'p', to: 'a', label: 'envia proposta', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Aceita \u2192 combina pelo chat' },
+          { from: 'a', to: 'u', label: 'Abre conversa', kind: 'return' },
+        ],
+      },
+      {
+        id: 'subscriptions', title: 'Assinaturas', tag: 'prevista \u00b7 F15', tagColor: C,
+        summary: 'Plano de apoio recorrente com mandato PIX.',
+        participants: [U(), A, API, PSP, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Escolhe plano de apoio' },
+          { from: 'a', to: 'api', label: 'Assinar', endpoint: 'POST /subscriptions' },
+          { from: 'api', to: 'psp', label: 'Mandato PIX recorrente' },
+          { from: 'psp', to: 'api', label: 'ativo', kind: 'return' },
+          { from: 'api', to: 'db', label: 'Assinatura ativa' },
+          { from: 'api', to: 'a', label: 'confirmada', kind: 'return' },
+        ],
+      },
+      {
+        id: 'learning', title: 'Aprendizado & sementes', tag: 'prevista \u00b7 F45 / F48', tagColor: C,
+        summary: 'Oficinas de saberes locais e banco de sementes: matricular ou solicitar muda.',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Vê oficina / muda' },
+          { from: 'a', to: 'api', label: 'Cat\u00e1logo', endpoint: 'GET /courses \u00b7 /seeds' },
+          { from: 'api', to: 'a', label: 'oficinas / esp\u00e9cies', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Matricula / solicita muda' },
+          { from: 'a', to: 'api', label: 'Inscrever', endpoint: 'POST /courses/{id}/enroll' },
+          { from: 'api', to: 'db', label: 'Grava' },
+          { from: 'api', to: 'a', label: 'confirmado', kind: 'return' },
+        ],
+      },
+      {
+        id: 'insights', title: 'Sa\u00fade & m\u00e9tricas do territ\u00f3rio', tag: 'prevista \u00b7 F24 / F25', tagColor: C,
+        summary: 'Indicadores vivos e pulso da comunidade, agregados pelo servidor.',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Abre painel de sa\u00fade / m\u00e9tricas' },
+          { from: 'a', to: 'api', label: 'Indicadores', endpoint: 'GET /territories/{id}/health' },
+          { from: 'api', to: 'db', label: 'Agrega indicadores vivos' },
+          { from: 'db', to: 'api', label: 's\u00e9ries', kind: 'return' },
+          { from: 'api', to: 'a', label: 'indicadores', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Mostra o pulso da comunidade', kind: 'return' },
+        ],
+      },
+      {
+        id: 'ai', title: 'Assistente IA', tag: 'prevista \u00b7 F27', tagColor: C,
+        summary: 'Chat ancorado nos dados do territ\u00f3rio (RAG): busca contexto local antes de responder.',
+        participants: [U(), A, API, DB, { id: 'ai', label: 'Modelo IA', kind: 'ext', type: 'LLM' }],
+        messages: [
+          { from: 'u', to: 'a', label: 'Pergunta sobre o territ\u00f3rio' },
+          { from: 'a', to: 'api', label: 'Chat', endpoint: 'POST /ai/chat' },
+          { from: 'api', to: 'db', label: 'Busca contexto local (RAG)' },
+          { from: 'db', to: 'api', label: 'dados do territ\u00f3rio', kind: 'return' },
+          { from: 'api', to: 'ai', label: 'Prompt + contexto' },
+          { from: 'ai', to: 'api', label: 'resposta', kind: 'return' },
+          { from: 'api', to: 'a', label: 'resposta ancorada', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Mostra a resposta', kind: 'return' },
+        ],
+      },
+      {
+        id: 'achievements', title: 'Conquistas', tag: 'prevista \u00b7 F42', tagColor: C,
+        summary: 'Gamifica\u00e7\u00e3o harmoniosa: participar dispara avalia\u00e7\u00e3o de regras de conquista.',
+        participants: [U(), A, API, DB],
+        messages: [
+          { from: 'u', to: 'a', label: 'Participa (post, evento, mutir\u00e3o)' },
+          { from: 'a', to: 'api', label: 'A\u00e7\u00e3o de dom\u00ednio' },
+          { from: 'api', to: 'db', label: 'Avalia regras de conquista' },
+          { from: 'api', to: 'a', label: 'conquista desbloqueada (push)', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Mostra o selo', kind: 'return' },
+        ],
+      },
+      {
+        id: 'push', title: 'Notifica\u00e7\u00f5es push (FCM/APNs)', tag: 'prevista \u00b7 gap', tagColor: C,
+        summary: 'Registro de token por dispositivo; workers despacham push; toque resolve deep link.',
+        participants: [U(), A, API, { id: 'w', label: 'Workers', kind: 'api', type: 'jobs' }, { id: 'fcm', label: 'FCM / APNs', kind: 'ext', type: 'push' }],
+        messages: [
+          { from: 'a', to: 'api', label: 'Registra token do dispositivo' },
+          { from: 'api', to: 'w', label: 'Evento do territ\u00f3rio (ex.: alerta)' },
+          { from: 'w', to: 'fcm', label: 'Despacha push (prioridade alta)' },
+          { from: 'fcm', to: 'a', label: 'Entrega no dispositivo', kind: 'return' },
+          { from: 'a', to: 'u', label: 'Exibe a notifica\u00e7\u00e3o', kind: 'return' },
+          { from: 'u', to: 'a', label: 'Toca \u2192 deep link' },
+          { kind: 'note', label: 'Gap: push real (FCM/APNs) al\u00e9m do inbox in-app' },
+        ],
+      },
+    ];
+  }
+
+  // ---- geometry engine: turn a spec into positioned styles ----
+  layout(spec) {
+    const ps = spec.participants;
+    const N = ps.length;
+    const cx = (i) => ((i + 0.5) / N) * 100;
+    const idx = (id) => ps.findIndex((p) => p.id === id);
+    const typeColor = {
+      user: '#214D37', app: '#377B57', api: '#2B6246',
+      data: '#4F956F', ext: '#6B7164', client: '#214D37',
+    };
+    const participants = ps.map((p, i) => ({
+      label: p.label,
+      type: p.type || '',
+      headStyle: {
+        textAlign: 'center', padding: '9px 8px', borderRadius: '10px',
+        background: (typeColor[p.kind] || '#377B57'), color: '#fff',
+        fontFamily: "'Sora',sans-serif", fontWeight: 600, fontSize: '12.5px',
+        lineHeight: 1.2, alignSelf: 'end',
+      },
+      typeStyle: { fontSize: '9.5px', fontWeight: 500, opacity: 0.78, marginTop: '2px', fontFamily: "'Geist',sans-serif" },
+      line: { position: 'absolute', left: cx(i) + '%', top: 0, bottom: 0, width: 0, borderLeft: '1.5px dashed rgba(23,53,37,0.2)' },
+    }));
+    const ROW = 60;
+    const messages = spec.messages.map((m, k) => {
+      if (m.kind === 'note') {
+        return {
+          isNote: true, label: m.label,
+          rowStyle: { position: 'relative', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+          boxStyle: {
+            background: '#FFF8EE', border: '1px solid rgba(168,99,47,0.28)', color: '#A8632F',
+            fontSize: '12px', fontWeight: 500, padding: '5px 14px', borderRadius: '8px', maxWidth: '80%',
+            textAlign: 'center', fontFamily: "'Geist',sans-serif",
+          },
+        };
+      }
+      const a = idx(m.from), b = idx(m.to);
+      if (a === b) {
+        const x = cx(a);
+        return {
+          isSelf: true, label: m.label, endpoint: m.endpoint || '',
+          rowStyle: { position: 'relative', height: ROW + 'px' },
+          loopStyle: {
+            position: 'absolute', top: '14px', left: x + '%', width: '34px', height: '24px',
+            border: '2px solid #214D37', borderLeft: 'none', borderRadius: '0 9px 9px 0',
+          },
+          headStyle: {
+            position: 'absolute', top: '36px', left: 'calc(' + x + '% - 1px)', width: 0, height: 0,
+            borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '8px solid #214D37',
+          },
+          labelStyle: {
+            position: 'absolute', top: '8px', left: 'calc(' + x + '% + 42px)', maxWidth: '46%',
+            fontSize: '12px', color: '#16271D', fontWeight: 500, lineHeight: 1.35, fontFamily: "'Geist',sans-serif",
+          },
+          epStyle: { fontFamily: 'ui-monospace,monospace', fontSize: '10.5px', background: '#FBF0E6', color: '#A8632F', padding: '0 6px', borderRadius: '5px', marginTop: '3px', display: 'inline-block' },
+        };
+      }
+      const lo = Math.min(cx(a), cx(b)), hi = Math.max(cx(a), cx(b)), span = hi - lo;
+      const right = cx(b) > cx(a);
+      const dashed = m.kind === 'return';
+      const col = dashed ? '#2B6246' : '#214D37';
+      const head = { position: 'absolute', top: '50%', transform: 'translateY(-50%)', width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent' };
+      if (right) { head.left = 'calc(' + hi + '% - 7px)'; head.borderLeft = '8px solid ' + col; }
+      else { head.left = lo + '%'; head.borderRight = '8px solid ' + col; }
+      return {
+        isMsg: true, label: m.label, endpoint: m.endpoint || '',
+        rowStyle: { position: 'relative', height: ROW + 'px' },
+        barStyle: { position: 'absolute', top: '50%', left: lo + '%', width: span + '%', height: 0, borderTop: (dashed ? '1.5px dashed ' + col : '2px solid ' + col) },
+        headStyle: head,
+        labelStyle: {
+          position: 'absolute', bottom: '52%', left: lo + '%', width: span + '%', textAlign: 'center',
+          fontSize: '12px', color: dashed ? '#2B6246' : '#16271D', fontWeight: dashed ? 400 : 500, lineHeight: 1.3,
+          paddingBottom: '4px', fontFamily: "'Geist',sans-serif",
+        },
+        epStyle: { fontFamily: 'ui-monospace,monospace', fontSize: '10.5px', background: '#FBF0E6', color: '#A8632F', padding: '0 6px', borderRadius: '5px', whiteSpace: 'nowrap' },
+      };
+    });
+    const headStyle = { display: 'grid', gridTemplateColumns: 'repeat(' + N + ',1fr)', gap: '6px', alignItems: 'end', marginBottom: '6px' };
+    const bodyStyle = { position: 'relative', paddingTop: '6px' };
+    return { id: spec.id, title: spec.title, tag: spec.tag, tagColor: spec.tagColor, summary: spec.summary, participants, messages, headStyle, bodyStyle };
+  }
+
+  renderVals() {
+    const impl = this.seqImpl.map((s) => this.layout(s));
+    const planned = this.seqPlanned.map((s) => this.layout(s));
+    return {
+      diagramsImpl: impl,
+      diagramsPlanned: planned,
+      implNav: this.seqImpl.map((s) => ({ id: s.id, label: s.title })),
+      monetNav: this.seqPlanned.filter((s) => s.id.indexOf('m-') === 0).map((s) => ({ id: s.id, label: s.title })),
+      opsNav: this.seqPlanned.filter((s) => s.id.indexOf('inf-') === 0).map((s) => ({ id: s.id, label: s.title })),
+      plannedNav: this.seqPlanned.filter((s) => s.id.indexOf('m-') !== 0 && s.id.indexOf('inf-') !== 0).map((s) => ({ id: s.id, label: s.title })),
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,70 +1,77 @@
-# Ingestão de dados – seed Camburi
+# Seeds — territórios e massa de teste
 
-O conteúdo do território **Camburi** (São Sebastião, SP) é populado por **ingestão de dados**, não por lógica de seed dentro da aplicação.
+## Territórios padrão (litoral SP)
 
-## O que é ingerido
+| Arquivo | Região | Centro aprox. |
+|---------|--------|---------------|
+| `seed-camburi.sql` | Camburi, São Sebastião/SP | -23.76, -45.64 |
+| `seed-boicucanga.sql` | Boiçucanga, São Sebastião/SP | -23.78, -45.59 |
 
-- **Território** Camburi (centroide -23.76281, -45.63691, raio 3,5 km), se ainda não existir.
-- **Usuário** seed "Comunidade Camburi" (auth `seed` / `seed-camburi`).
-- **Membership** desse usuário no território (Resident).
-- **3 posts** no feed do território.
-- **2 eventos** no território.
-- **2 alertas de saúde** no território (base para testar a funcionalidade de alertas no front).
+Aplicados automaticamente por `scripts/run-local-stack.ps1`.
 
-## Como executar
+## Massa de socorro (capital e outras regiões)
 
-Para um **quick start** completo (API + BFF + seeds + app), veja [docs/STABLE_RELEASE_APP_ONBOARDING.md](../../docs/STABLE_RELEASE_APP_ONBOARDING.md#como-rodar-o-projeto-getting-started).
+Se você testa **longe do litoral** (ex.: Grande São Paulo, interior, outro estado), o onboarding com raio de **10 km** não encontra Camburi/Boiçucanga.
 
-### 0) Stack local (automático)
-
-Ao subir o stack com `.\scripts\run-local-stack.ps1` (Docker), o script **executa o seed automaticamente** no container Postgres usando `docker cp` + `psql -f` (UTF-8 preservado; não usa pipe do PowerShell). Não é necessário ter `psql` instalado no host.
-
-### 1) Só SQL (manual)
-
-Com **psql** e conexão ao Postgres (ex.: banco já criado pelo Docker):
-
-```bash
-# Linux/macOS
-psql -h localhost -p 5432 -U Arah -d Arah -f scripts/seed/seed-camburi.sql
-
-# Windows (PowerShell)
-& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -p 5432 -U Arah -d Arah -f scripts/seed/seed-camburi.sql
-```
-
-Ou use o script PowerShell que descobre o `psql` e usa variáveis de ambiente (ou padrões):
+### Preset São Paulo capital
 
 ```powershell
-.\scripts\seed\run-seed-camburi.ps1
+.\scripts\seed\run-seed-territory-local.ps1 -Preset sao-paulo-centro
 ```
 
-O SQL é **idempotente**: pode rodar mais de uma vez; território e usuário não duplicam, e posts/eventos só são inseridos se ainda não existirem.
+Cria **Centro — São Paulo/SP** (Paulista, Sé, Pinheiros…) com raio 12 km.
 
-### 2) Território pela API e depois SQL
+Também roda no `run-local-stack.ps1` após os seeds do litoral.
 
-Se preferir criar o território pela API administrativa:
+### Contorno oficial IBGE (recomendado para município inteiro)
 
-1. `POST /api/v1/admin/seed/territories/camburi` (com usuário admin autenticado).
-2. Depois rode o SQL acima. O script detecta o território "Camburi" em São Sebastião/SP e associa usuário, posts e eventos a ele (mesmo que o território tenha sido criado pela API com outro ID).
+Para desenho geométrico **alinhado à fonte governamental** (limites legais do município, SIRGAS 2000):
 
-## Arquivos
+```powershell
+.\scripts\seed\fetch-ibge-municipality-boundary.ps1 -City Socorro -Uf SP -Apply
+```
 
-| Arquivo | Descrição |
-|--------|-----------|
-| `seed-camburi.sql` | Script SQL de ingestão (território opcional + usuário + membership + posts + eventos). |
-| `seed-boicucanga.sql` | Script SQL: território Boiçucanga (São Sebastião, SP), polígono 11 vértices + usuário seed, membership, 3 posts, 2 eventos, 2 alertas (base mínima para testar feed, eventos e alertas no front). |
-| `run-seed-camburi.ps1` | Script PowerShell que executa o SQL (usa `psql` e variáveis de ambiente ou padrões). |
-| `README.md` | Este arquivo. |
+O script:
 
-O `run-local-stack.ps1` executa em sequência `seed-camburi.sql` e `seed-boicucanga.sql` para permitir testar a alternância entre territórios na tela de seleção.
+1. Resolve o **código IBGE** via API de Localidades (`3552106` = Socorro/SP).
+2. Baixa a **malha municipal** via API de Malhas v3 (GeoJSON).
+3. Grava `BoundaryPolygonJson` no Postgres (contorno no mapa do app).
+4. Gera SQL reutilizável em `scripts/seed/seed-{cidade}-{UF}-ibge.sql`.
 
-## Variáveis de ambiente (opcional)
+**Fontes oficiais:**
 
-Para `run-seed-camburi.ps1` ou para montar o comando `psql` manualmente:
+| Fonte | Uso |
+|-------|-----|
+| [IBGE — API Localidades](https://servicodados.ibge.gov.br/api/docs/localidades) | Nome → código do município |
+| [IBGE — API Malhas v3](https://servicodados.ibge.gov.br/api/docs/malhas?versao=3) | Polígono simplificado (web/mobile) |
+| [IBGE — Malha Municipal (SHP)](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais.html) | Download completo para GIS |
 
-- `POSTGRES_HOST` (default: `localhost`)
-- `POSTGRES_PORT` (default: `5432`)
-- `POSTGRES_DB` (default: `Arah`)
-- `POSTGRES_USER` (default: `Arah`)
-- `POSTGRES_PASSWORD` (default: `Arah`)
+Parâmetros úteis: `-Resolucao` (0–5), `-Qualidade` (minima \| intermediaria \| maxima), `-IbgeCode`, `-OutputSql`.
 
-Se o backend estiver no Docker com `docker-compose`, use `Host=localhost` e a porta exposta do Postgres (ex.: 5432).
+### Sua cidade (círculo aproximado, sem IBGE)
+
+1. Abra Google Maps → clique direito no seu bairro → copie lat/lng.
+2. Execute:
+
+```powershell
+.\scripts\seed\run-seed-territory-local.ps1 `
+  -Name "Centro" `
+  -City "Sua Cidade" `
+  -State "UF" `
+  -Latitude -25.4284 `
+  -Longitude -49.2733 `
+  -RadiusKm 10
+```
+
+Requisito: Postgres no ar (`docker compose` ou `run-local-stack.ps1`).
+
+## Produto (pendente)
+
+Quando **não houver território próximo**, o app deve oferecer cadastro da região (cidade + coordenadas), não deixar o usuário preso no onboarding.
+
+**Visão:** onboarding detecta lista vazia → reverse geocode (cidade/UF) → busca malha IBGE → cria território com `BoundaryPolygon` → usuário confirma e entra.
+
+- API: `POST /api/v1/territories/suggestions` (já aceita polígono ou raio).
+- Falta: serviço backend `IbgeBoundaryResolver`, jornada BFF e UI no app.
+
+Ver `frontend/arah.app/docs/CORRECOES_PENDENTES.md` §5 e §6.

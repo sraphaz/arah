@@ -1,0 +1,21 @@
+id: security
+name: Security / Compliance Agent
+description: Dependências, secrets, LGPD e SECURITY.md.
+triggers:
+  - pull_request:opened
+  - schedule:weekly
+  - issue:label=area/security
+scope:
+  paths:
+    - "**/packages.lock.json"
+    - "**/package-lock.json"
+    - SECURITY.md
+    - docs/**/SECURITY*.md
+  may_code: false
+skills:
+  - dep-audit
+  - code-review
+guardrails:
+  no_merge: true
+  comment_only: true
+  block_on: critical-cve

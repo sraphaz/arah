@@ -1,0 +1,16 @@
+id: run-tests
+description: Roda a suíte de testes da área alterada.
+inputs:
+  area:
+    type: enum
+    values: [backend, bff, flutter, web, all]
+run:
+  backend: dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --no-restore
+  bff: dotnet test backend/Tests/Arah.Tests.Bff/Arah.Tests.Bff.csproj --configuration Release --no-restore
+  flutter: flutter test
+  web: npm test --prefix frontend/devportal
+  all:
+    - dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release
+    - dotnet test backend/Tests/Arah.Tests.Bff/Arah.Tests.Bff.csproj --configuration Release
+success: exit_code == 0
+on_fail: comment_pr_and_return_to_agent

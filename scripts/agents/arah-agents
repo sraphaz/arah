@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Wrapper POSIX para arah-agents.ps1 (CI Linux/macOS)
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if command -v pwsh >/dev/null 2>&1; then
+  exec pwsh -NoProfile -File "$SCRIPT_DIR/arah-agents.ps1" "$@"
+fi
+exec powershell -NoProfile -File "$SCRIPT_DIR/arah-agents.ps1" "$@"

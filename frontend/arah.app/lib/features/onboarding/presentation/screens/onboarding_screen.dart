@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,11 +47,44 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   bool _requestingLocation = false;
   /// Território escolhido na lista; null = usar o mais próximo. Só altera mapa e botão Continuar; não completa onboarding.
   String? _selectedTerritoryId;
+  /// Nome do território selecionado (preenchido quando a seleção vem da busca, que não está na lista de próximos).
+  String? _selectedTerritoryName;
+
+  final _searchController = TextEditingController();
+  Timer? _searchDebounce;
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _requestLocationOnce();
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+      if (mounted) setState(() => _searchQuery = value.trim());
+    });
+  }
+
+  void _clearSearch() {
+    _searchDebounce?.cancel();
+    _searchController.clear();
+    setState(() => _searchQuery = '');
+  }
+
+  void _selectFromSearch(TerritoryItem t) {
+    setState(() {
+      _selectedTerritoryId = t.id;
+      _selectedTerritoryName = t.name;
+    });
   }
 
   Future<void> _requestLocationOnce() async {
@@ -88,10 +123,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
-  Future<void> _completeWith(TerritorySuggestion territory) async {
-    await _completeWithId(territory.id);
-  }
-
   /// Volta para a tela de login/cadastro (faz logout). O router observa authStateProvider;
   /// ao ficar sem token, o redirect envia para /login. Não chamar context.go para não
   /// disputar com o redirect (que poderia ainda ver token antigo).
@@ -124,6 +155,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           setState(() => _selectedTerritoryId = nearestSuggestion.id);
         }
       });
+    }
+
+    // Território efetivo para concluir: seleção explícita (lista ou busca) ou o mais próximo.
+    final effectiveId = _selectedTerritoryId ?? (hasGeo ? nearestSuggestion?.id : null);
+    String? effectiveName = _selectedTerritoryName;
+    if (effectiveName == null && effectiveId != null) {
+      final list = suggestedAsync.valueOrNull ?? const <TerritorySuggestion>[];
+      for (final t in list) {
+        if (t.id == effectiveId) {
+          effectiveName = t.name;
+          break;
+        }
+      }
     }
 
     return ArahScaffold(
@@ -220,6 +264,44 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               ),
               const SizedBox(height: AppConstants.spacingLg),
+              // Busca de território (funciona sem geolocalização): encontrar por nome/cidade.
+              Text(
+                l10n.onboardingSearchTitle,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: AppConstants.spacingSm),
+              TextField(
+                controller: _searchController,
+                onChanged: _onSearchChanged,
+                textInputAction: TextInputAction.search,
+                enabled: !_completing,
+                decoration: InputDecoration(
+                  hintText: l10n.searchTerritoriesHint,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          tooltip: l10n.clear,
+                          onPressed: _clearSearch,
+                        )
+                      : null,
+                  border: const OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+              if (_searchQuery.isNotEmpty) ...[
+                const SizedBox(height: AppConstants.spacingSm),
+                _SearchResults(
+                  query: _searchQuery,
+                  selectedTerritoryId: _selectedTerritoryId,
+                  onSelect: _selectFromSearch,
+                  completing: _completing,
+                ),
+              ],
+              const SizedBox(height: AppConstants.spacingLg),
               // Mapa: contorno do território selecionado na lista (ou o mais próximo se nenhum selecionado)
               _OnboardingMap(
                 centerLat: hasGeo ? geo.latitude : _defaultCenterLat,
@@ -229,7 +311,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ),
               const SizedBox(height: AppConstants.spacingLg),
               // Botão Continuar: ao tocar, o usuário se torna visitante do território (único momento).
-              if (hasGeo) ...[
+              if (effectiveId != null) ...[
                 Text(
                   l10n.onboardingVisitorOnContinue,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -237,13 +319,23 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                 ),
                 const SizedBox(height: AppConstants.spacingSm),
-                _ContinueButton(
-                  suggestedAsync: suggestedAsync,
-                  nearestSuggestion: nearestSuggestion,
-                  selectedTerritoryId: _selectedTerritoryId,
-                  completing: _completing,
-                  onCompleteWith: _completeWith,
-                  l10n: l10n,
+                FilledButton.icon(
+                  onPressed: _completing ? null : () => _completeWithId(effectiveId),
+                  icon: _completing
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        )
+                      : const Icon(Icons.check_circle_outline, size: AppConstants.iconSizeMd),
+                  label: Text(
+                    effectiveName != null
+                        ? l10n.onboardingContinueWith(effectiveName)
+                        : l10n.continueButton,
+                  ),
                 ),
                 const SizedBox(height: AppConstants.spacingLg),
               ],
@@ -282,60 +374,64 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 }
 
-/// Botão Continuar: usa o território selecionado na lista (ou o mais próximo). Só completa ao tocar aqui.
-class _ContinueButton extends StatelessWidget {
-  const _ContinueButton({
-    required this.suggestedAsync,
-    required this.nearestSuggestion,
+/// Resultados da busca de territórios (jornada `territories/search`); seleção atualiza o destaque e o botão Continuar.
+class _SearchResults extends ConsumerWidget {
+  const _SearchResults({
+    required this.query,
     required this.selectedTerritoryId,
+    required this.onSelect,
     required this.completing,
-    required this.onCompleteWith,
-    required this.l10n,
   });
 
-  final AsyncValue<List<TerritorySuggestion>> suggestedAsync;
-  final TerritorySuggestion? nearestSuggestion;
+  final String query;
   final String? selectedTerritoryId;
+  final void Function(TerritoryItem) onSelect;
   final bool completing;
-  final void Function(TerritorySuggestion) onCompleteWith;
-  final AppLocalizations l10n;
 
   @override
-  Widget build(BuildContext context) {
-    final isLoading = suggestedAsync.isLoading;
-    final list = suggestedAsync.valueOrNull ?? [];
-    TerritorySuggestion? effective = nearestSuggestion;
-    if (selectedTerritoryId != null) {
-      for (final t in list) {
-        if (t.id == selectedTerritoryId) {
-          effective = t;
-          break;
-        }
-      }
-    }
-    final canContinue = effective != null && !completing && !isLoading && !suggestedAsync.hasError;
-
-    return FilledButton.icon(
-      onPressed: canContinue ? () => onCompleteWith(effective!) : null,
-      icon: isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            )
-          : Icon(
-              canContinue ? Icons.check_circle_outline : Icons.hourglass_empty,
-              size: AppConstants.iconSizeMd,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(territoriesSearchProvider(query));
+    return async.when(
+      data: (list) {
+        if (list.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingSm),
+            child: Text(
+              AppLocalizations.of(context)!.noSearchResults,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             ),
-      label: Text(
-        isLoading
-            ? l10n.onboardingLoadingTerritories
-            : (effective != null
-                ? l10n.onboardingContinueWith(effective.name)
-                : l10n.continueButton),
+          );
+        }
+        return ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: list.length,
+          separatorBuilder: (_, __) => const SizedBox(height: AppConstants.spacingSm),
+          itemBuilder: (context, index) {
+            final t = list[index];
+            return _TerritorySuggestionCard(
+              name: t.name,
+              subtitle: t.description ?? '',
+              isSelected: t.id == selectedTerritoryId,
+              onTap: completing ? null : () => onSelect(t),
+            );
+          },
+        );
+      },
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppConstants.spacingMd),
+        child: Center(child: SizedBox(height: 28, width: 28, child: CircularProgressIndicator(strokeWidth: 2))),
+      ),
+      error: (err, _) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingSm),
+        child: Text(
+          err is ApiException ? err.userMessage : AppLocalizations.of(context)!.errorLoad,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+        ),
       ),
     );
   }

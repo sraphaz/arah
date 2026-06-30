@@ -358,5 +358,6 @@
   "close": "Close",
   "searchTerritoriesHint": "Search territory by name or city",
   "noSearchResults": "No territory found for the search.",
-  "clear": "Clear"
+  "clear": "Clear",
+  "onboardingSearchTitle": "Search territory"
 }

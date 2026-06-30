@@ -1918,6 +1918,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Limpar'**
   String get clear;
+
+  /// No description provided for @onboardingSearchTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar território'**
+  String get onboardingSearchTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

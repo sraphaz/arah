@@ -34,6 +34,7 @@ class FeedPostCard extends StatelessWidget {
     this.onLikePressed,
     this.onCommentPressed,
     this.onSharePressed,
+    this.onTap,
   });
 
   final String title;
@@ -50,6 +51,8 @@ class FeedPostCard extends StatelessWidget {
   final VoidCallback? onLikePressed;
   final VoidCallback? onCommentPressed;
   final VoidCallback? onSharePressed;
+  /// Toque no corpo do card (abre o detalhe do post). Botões de interação têm precedência.
+  final VoidCallback? onTap;
 
   static Color _colorForType(FeedPostType t) {
     switch (t) {
@@ -113,7 +116,9 @@ class FeedPostCard extends StatelessWidget {
               color: typeColor,
             ),
             Expanded(
-              child: Padding(
+              child: InkWell(
+                onTap: onTap,
+                child: Padding(
                 padding: AppDesignTokens.cardPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,6 +216,7 @@ class FeedPostCard extends StatelessWidget {
                       ],
                     ),
                   ],
+                ),
                 ),
               ),
             ),

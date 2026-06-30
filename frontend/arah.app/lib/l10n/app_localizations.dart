@@ -1924,6 +1924,18 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Buscar território'**
   String get onboardingSearchTitle;
+
+  /// No description provided for @postDetailTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicação'**
+  String get postDetailTitle;
+
+  /// No description provided for @feedTypeTip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dica'**
+  String get feedTypeTip;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

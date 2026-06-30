@@ -359,5 +359,7 @@
   "searchTerritoriesHint": "Search territory by name or city",
   "noSearchResults": "No territory found for the search.",
   "clear": "Clear",
-  "onboardingSearchTitle": "Search territory"
+  "onboardingSearchTitle": "Search territory",
+  "postDetailTitle": "Post",
+  "feedTypeTip": "Tip"
 }

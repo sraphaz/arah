@@ -14,6 +14,7 @@ import '../../domain/feed_interaction.dart';
 import '../providers/feed_provider.dart';
 import '../widgets/feed_post_card.dart';
 import '../widgets/feed_comments_sheet.dart';
+import 'post_detail_screen.dart';
 
 /// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação, pull-to-refresh e scroll infinito.
 class FeedScreen extends ConsumerStatefulWidget {
@@ -228,6 +229,14 @@ class _FeedListState extends ConsumerState<_FeedList> {
     super.dispose();
   }
 
+  void _openDetail(String postId) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PostDetailScreen(territoryId: widget.territoryId, postId: postId),
+      ),
+    );
+  }
+
   Future<void> _openComments(String postId, String title) async {
     await FeedCommentsSheet.show(
       context,
@@ -386,6 +395,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
             isLiked: interactions.liked,
             isShared: interactions.shared,
             mediaUrls: mediaUrls,
+            onTap: postId.isEmpty ? null : () => _openDetail(postId),
             onMorePressed: canDelete ? () => _showPostMenu(postId: postId, canDelete: canDelete) : null,
             onLikePressed: postId.isEmpty
                 ? null

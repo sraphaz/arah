@@ -1,0 +1,106 @@
+﻿{
+    "source":  "github-issues",
+    "timestamp":  "2026-07-01T02:13:05.6337533Z",
+    "phases":  [
+                   {
+                       "id":  "FASE52",
+                       "title":  "FASE52 — Fundação Técnica e CI/CD",
+                       "wave":  "S0",
+                       "priority":  "P0",
+                       "status":  "in_progress",
+                       "issue_number":  303,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/303",
+                       "doc":  "docs/backlog-api/FASE52.md"
+                   },
+                   {
+                       "id":  "FASE53",
+                       "title":  "FASE53 — Arah Core",
+                       "wave":  "S0",
+                       "priority":  "P0",
+                       "status":  "in_progress",
+                       "issue_number":  306,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/306",
+                       "doc":  "docs/backlog-api/FASE53.md"
+                   },
+                   {
+                       "id":  "FASE54",
+                       "title":  "FASE54 — IaC e 1ª Instância",
+                       "wave":  "S0",
+                       "priority":  "P0",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE54.md"
+                   },
+                   {
+                       "id":  "FASE55",
+                       "title":  "FASE55 — Monetização Open-Core",
+                       "wave":  "S1",
+                       "priority":  "P0",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE55.md"
+                   },
+                   {
+                       "id":  "FASE56",
+                       "title":  "FASE56 — Transparência e Taxas",
+                       "wave":  "S2",
+                       "priority":  "P0",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE56.md"
+                   },
+                   {
+                       "id":  "FASE57",
+                       "title":  "FASE57 — Cockpit Implementador",
+                       "wave":  "S1",
+                       "priority":  "P0",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE57.md"
+                   },
+                   {
+                       "id":  "FASE58",
+                       "title":  "FASE58 — Operação Multi-Instância",
+                       "wave":  "S1",
+                       "priority":  "P1",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE58.md"
+                   },
+                   {
+                       "id":  "FASE59",
+                       "title":  "FASE59 — Federação",
+                       "wave":  "S3",
+                       "priority":  "P1",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE59.md"
+                   },
+                   {
+                       "id":  "FASE60",
+                       "title":  "FASE60 — App Implementador",
+                       "wave":  "S3",
+                       "priority":  "P1",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE60.md"
+                   },
+                   {
+                       "id":  "FASE61",
+                       "title":  "FASE61 — Capital Territorial",
+                       "wave":  "S4",
+                       "priority":  "P2",
+                       "status":  "pending",
+                       "issue_number":  null,
+                       "issue_url":  null,
+                       "doc":  "docs/backlog-api/FASE61.md"
+                   }
+               ]
+}

@@ -1,0 +1,32 @@
+name: Project board sync
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, closed, reopened]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+  projects: write
+
+jobs:
+  sync-board:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconcile phase issues
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/agents/github-project.ps1 reconcile
+
+      - name: Sync project board status
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/agents/github-project.ps1 sync-project

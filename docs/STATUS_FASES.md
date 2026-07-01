@@ -6,7 +6,7 @@
 **Total de Fases**: [Calcular dinamicamente com `node scripts/get-phase-count.mjs`]  
 **Nota**: O número total de fases é calculado automaticamente contando arquivos `FASE*.md` em `docs/backlog-api/`. Ver `docs/PROJECT_PHASES_CONFIG.md` para mais informações.  
 **Fases Completas**: 16 (Fases 1-12, 13, 14, 15, 16)  
-**Fases em Andamento**: 0  
+**Fases em Andamento**: 2 (FASE52, FASE53 — Onda S0)  
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
 
@@ -18,7 +18,7 @@
 |--------|------------|------------|
 | ✅ Completo | 16 | 55% |
 | ⏳ Pendente | 15 | 45% |
-| 🚧 Em Andamento | 0 | 0% |
+| 🚧 Em Andamento | 2 | 7% |
 
 ---
 

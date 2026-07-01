@@ -1,13 +1,13 @@
 # GitHub Project v2 — configuração operacional
-# Bootstrap: ./scripts/agents/github-project.ps1 ensure
-# Sync fila:  ./scripts/agents/github-project.ps1 sync-queue
+# Bootstrap: ./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
+# Sync board: ./scripts/agents/arah-agents.ps1 github-project -Skill sync-project
 
 title: "Arah — Sustentação (F52–61)"
 description: |
-  Kanban operacional das fases de sustentação. Issues são criadas por next-phase
-  e backlog-to-issue; specs técnicas permanecem em docs/specs/ e docs/backlog-api/.
+  Kanban operacional das fases de sustentação (infra, Core, federação).
+  Issues são criadas por next-phase e backlog-to-issue; contratos em docs/specs/ e docs/backlog-api/.
 
-# Número do project (preencher após `ensure` — ver docs/ops/GITHUB_PROJECT_MANAGEMENT.md)
+# Preenchido automaticamente por `github-project bootstrap` / CI github-sync
 project_number: null
 
 # Mapeamento wave → milestone (título em .github/milestones.yml)
@@ -18,10 +18,44 @@ wave_milestones:
   S3: "Onda S3 — Federação"
   S4: "Onda S4 — Capital"
 
-# Colunas sugeridas no Project (criar manualmente ou via gh project field-create)
+# Frentes do handoff C4 (agrupamento lógico no board)
+frentes:
+  - id: fundacao-tecnica
+    title: "Fundação técnica (CI/CD, Core, IaC)"
+    phases: [FASE52, FASE53, FASE54]
+    wave: S0
+  - id: monetizacao
+    title: "Monetização & billing"
+    phases: [FASE55, FASE56]
+    wave: S1
+  - id: cockpit
+    title: "Cockpit implementador"
+    phases: [FASE57, FASE60]
+    wave: S1
+  - id: operacao-federacao
+    title: "Operação multi-instância & federação"
+    phases: [FASE58, FASE59]
+    wave: S3
+  - id: capital
+    title: "Capital territorial"
+    phases: [FASE61]
+    wave: S4
+
+# Colunas Status do Project (sync automático via sync-project)
 columns:
   - Backlog
   - Ready
   - In Progress
   - Review
   - Done
+
+# Views criadas automaticamente no bootstrap (GraphQL createProjectV2View)
+views:
+  - name: "Kanban — Sustentação"
+    layout: board
+  - name: "Tabela — Por onda"
+    layout: table
+  - name: "Tabela — Infra & Federação"
+    layout: table
+  - name: "Roadmap — Ondas S0–S4"
+    layout: roadmap

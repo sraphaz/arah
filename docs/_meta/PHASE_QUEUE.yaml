@@ -4,10 +4,11 @@
 # Complementar: docs/STATUS_FASES.md (dashboard humano)
 
 version: 1
-updated: 2026-06-30
+updated: 2026-07-01
 policy: |
   Após merge em main, o repo abre issue da próxima fase pendente (se não existir).
-  Prioridade: infra agentes concluída → Onda S0 (52-54) → S1 (55-57) → demais.
+  Prioridade: Onda S0 (infra: CI/CD, Core, IaC) → S1 (piloto + cockpit) → S2 (transparência)
+  → S3 (multi-instância + federação) → S4 (capital). GitHub Project reflete ondas via milestones/labels.
 
 queue:
   - id: doc-deflation-wave2
@@ -23,16 +24,20 @@ queue:
     title: "FASE52 — Fundação Técnica e CI/CD"
     area: area/ops
     doc: docs/backlog-api/FASE52.md
+    spec_id: FASE52-cicd
     priority: P0
     wave: S0
+    frente: fundacao-tecnica
     blocked_by: []
 
   - id: FASE53
     title: "FASE53 — Arah Core"
     area: area/ops
     doc: docs/backlog-api/FASE53.md
+    spec_id: FASE53-arah-core
     priority: P0
     wave: S0
+    frente: fundacao-tecnica
     blocked_by: [FASE52]
 
   - id: FASE54
@@ -41,6 +46,7 @@ queue:
     doc: docs/backlog-api/FASE54.md
     priority: P0
     wave: S0
+    frente: fundacao-tecnica
     blocked_by: [FASE52, FASE53]
 
   - id: FASE55
@@ -73,7 +79,8 @@ queue:
     doc: docs/backlog-api/FASE58.md
     priority: P1
     wave: S1
-    blocked_by: [FASE54, FASE57]
+    frente: operacao-federacao
+    blocked_by: [FASE52, FASE53, FASE54]
 
   - id: FASE59
     title: "FASE59 — Federação"
@@ -81,7 +88,8 @@ queue:
     doc: docs/backlog-api/FASE59.md
     priority: P1
     wave: S3
-    blocked_by: [FASE58]
+    frente: operacao-federacao
+    blocked_by: [FASE53, FASE58]
 
   - id: FASE60
     title: "FASE60 — App Implementador"

@@ -166,7 +166,7 @@ Scripts: [choreograph-agents.ps1](scripts/agents/choreograph-agents.ps1), [post-
 
 Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml), [agents-pr-steward.yml](.github/workflows/agents-pr-steward.yml), [spec-harness.yml](.github/workflows/spec-harness.yml)
 
-Fila de fases: [docs/_meta/PHASE_QUEUE.yaml](docs/_meta/PHASE_QUEUE.yaml) · **GitHub Issues/Project**: [GITHUB_PROJECT_MANAGEMENT.md](docs/ops/GITHUB_PROJECT_MANAGEMENT.md)
+Fila de fases: [docs/_meta/PHASE_QUEUE.yaml](docs/_meta/PHASE_QUEUE.yaml) · **GitHub Issues/Project**: [GITHUB_PROJECT_MANAGEMENT.md](docs/ops/GITHUB_PROJECT_MANAGEMENT.md) · bootstrap: `./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap`
 
 ---
 

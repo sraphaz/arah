@@ -14,7 +14,7 @@ milestones:
     state: open
 
   - title: "Onda S3 — Federação"
-    description: "FASE59 federação, FASE60 app implementador"
+    description: "FASE58 multi-instância (deploy/health), FASE59 federação opt-in, FASE60 app implementador"
     state: open
 
   - title: "Onda S4 — Capital"

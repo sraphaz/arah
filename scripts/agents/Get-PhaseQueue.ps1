@@ -35,6 +35,9 @@ function Get-PhaseQueue {
         } elseif ($current -and $line -match '^\s+wave:\s*(.+)$') {
             $current.wave = $Matches[1].Trim()
             $inBlockedList = $false
+        } elseif ($current -and $line -match '^\s+frente:\s*(.+)$') {
+            $current.frente = $Matches[1].Trim()
+            $inBlockedList = $false
         } elseif ($current -and $line -match '^\s+spec_id:\s*(.+)$') {
             $current.spec_id = $Matches[1].Trim()
             $inBlockedList = $false

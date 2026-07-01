@@ -33,23 +33,24 @@ O Arah adota um modelo **híbrido**: contratos técnicos no repo (specs SDD, ADR
 
 ---
 
-## Bootstrap (uma vez)
+## Bootstrap (uma vez ou via CI)
 
 ```powershell
-# 1) Labels e milestones no repo
+# Pipeline completo (labels, project, issues, board, phase-status)
+./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
+
+# Ou passo a passo
 ./scripts/agents/arah-agents.ps1 ensure-labels
 ./scripts/agents/arah-agents.ps1 sync-milestones
-
-# 2) Criar GitHub Project v2
 ./scripts/agents/arah-agents.ps1 github-project -Skill ensure
-
-# 3) Copiar project_number para .github/project/arah-sustentacao.yml
-#    project_number: <número retornado>
-
-# 4) Sincronizar fila → Issues (fases desbloqueadas)
+./scripts/agents/arah-agents.ps1 github-project -Skill reconcile
 ./scripts/agents/arah-agents.ps1 github-project -Skill sync-queue -DryRun
 ./scripts/agents/arah-agents.ps1 github-project -Skill sync-queue
+./scripts/agents/arah-agents.ps1 github-project -Skill sync-project
 ```
+
+**Scope local:** `gh auth refresh -h github.com -s project,read:project`  
+**CI:** workflow `github-sync.yml` roda `bootstrap` semanalmente e em push de `PHASE_QUEUE.yaml`.
 
 ---
 
@@ -99,11 +100,10 @@ Campos custom (opcional): Wave, Priority, Spec-Id — hoje cobertos por **labels
 
 ## Workflow CI
 
-`.github/workflows/github-sync.yml`:
-
-- Sync labels/milestones quando YAML muda  
-- Exporta `phase-status.generated.json` semanalmente  
-- Commit automático do snapshot (bot)
+| Workflow | Gatilho | Ação |
+|----------|---------|------|
+| `github-sync.yml` | push `PHASE_QUEUE.yaml`, semanal | `bootstrap` → labels, project, issues, board, `phase-status.generated.json` |
+| `project-board-sync.yml` | issue/PR aberto, fechado, label | `reconcile` + `sync-project` (coluna Status) |
 
 ---
 

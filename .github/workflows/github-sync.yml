@@ -1,4 +1,4 @@
-name: GitHub Sync (labels, milestones, phase status)
+name: GitHub Sync (labels, milestones, project, phase status)
 
 on:
   push:
@@ -6,7 +6,10 @@ on:
     paths:
       - '.github/labels.yml'
       - '.github/milestones.yml'
+      - '.github/project/**'
       - 'docs/_meta/PHASE_QUEUE.yaml'
+      - 'scripts/agents/github-project.ps1'
+      - 'scripts/agents/GitHub-ProjectApi.ps1'
   workflow_dispatch:
   schedule:
     - cron: '0 6 * * 1'
@@ -14,6 +17,8 @@ on:
 permissions:
   contents: write
   issues: write
+  pull-requests: read
+  projects: write
 
 jobs:
   sync:
@@ -33,19 +38,24 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: ./scripts/agents/sync-github-milestones.ps1
 
+      - name: Bootstrap GitHub Project (ensure + reconcile + queue + board)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/agents/github-project.ps1 bootstrap
+
       - name: Export phase status from Issues
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: ./scripts/agents/export-phase-status.ps1
 
-      - name: Commit phase status snapshot (if changed)
+      - name: Commit ops snapshots (if changed)
         if: github.ref == 'refs/heads/main'
         shell: pwsh
         run: |
-          if (-not (Test-Path .github/phase-status.generated.json)) { exit 0 }
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/phase-status.generated.json
-          git diff --staged --quiet || git commit -m "chore(ops): atualizar phase-status de Issues GitHub"
+          git add .github/phase-status.generated.json .github/project/arah-sustentacao.yml
+          git diff --staged --quiet || git commit -m "chore(ops): sync GitHub Project e phase-status"
           git push

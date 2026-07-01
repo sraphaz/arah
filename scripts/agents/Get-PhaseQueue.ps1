@@ -480,7 +480,8 @@ function Test-PhaseIssueMarker {
     $escaped = [regex]::Escape($PhaseId)
     if ($Issue.body -match "arah-next-phase id=$escaped(\s|-->)") { return $true }
     if ($Issue.body -match "arah-phase-draft id=$escaped(\s|-->)") { return $true }
-    if ($Issue.body -match "arah-phase-epic" -and $Issue.title -match "\b$escaped\b") { return $true }
+    if ($Issue.title -match "\[Epic\].*\b$escaped\b") { return $true }
+    if ($Issue.title -match "\[Backlog\].*\b$escaped\b") { return $true }
     return $false
 }
 

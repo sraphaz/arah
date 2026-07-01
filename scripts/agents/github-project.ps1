@@ -211,7 +211,14 @@ function Invoke-SyncBacklogIssues {
     $queueExtras = Get-PhaseQueue -Root $Root | Where-Object { $_.id -notmatch '^FASE' }
     $allItems = @($roadmap) + @($queueExtras)
 
-    $allIssues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url | ConvertFrom-Json
+    $rawIssues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Não foi possível listar issues (rate limit?) — sync-backlog abortado para evitar duplicatas."
+        $report = [ordered]@{ created = @(); count = 0; dry_run = [bool]$DryRun; aborted = $true; error = ($rawIssues -join ' ') }
+        if ($Json) { $report | ConvertTo-Json -Depth 5 } else { $report | ConvertTo-Json -Depth 5 }
+        return
+    }
+    $allIssues = $rawIssues | ConvertFrom-Json
     $repo = gh repo view --json nameWithOwner -q .nameWithOwner
     $owner = ($repo -split '/')[0]
     $cfg = Get-ProjectConfig -Root $Root
@@ -270,7 +277,7 @@ function Invoke-SyncBacklogIssues {
             continue
         }
 
-        Start-Sleep -Milliseconds 800
+        Start-Sleep -Milliseconds 1200
 
         if ($issueUrl -match '/issues/(\d+)') {
             $issueNum = [int]$Matches[1]

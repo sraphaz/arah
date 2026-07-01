@@ -1,0 +1,25 @@
+id: address-bot-review
+description: |
+  Coleta apontamentos de bots no PR, gera checklist e falha se houver threads não resolvidas
+  em arquivos tocados pelo diff.
+inputs:
+  pr_number: integer
+  base_ref: string
+run:
+  script: scripts/agents/address-bot-review.ps1
+bot_patterns:
+  - coderabbit
+  - dependabot
+  - github-actions
+  - cursor
+  - bugbot
+  - codeql
+  - trivy
+resolution:
+  - fix_in_same_pr
+  - reply_with_rationale_and_link
+  - dismiss_if_false_positive_with_comment
+on_unresolved: block_ready_for_merge
+references:
+  - .agents/templates/bot-review-checklist.md
+  - docs/21_CODE_REVIEW.md

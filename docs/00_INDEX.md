@@ -4,6 +4,8 @@
 
 Este documento organiza toda a documentação do projeto Arah de forma estruturada e fácil de navegar.
 
+**Desinflação da documentação**: a raiz de `docs/` tinha 240+ arquivos `.md`. Migração em ondas — ver **[DOC_DEFLATION_PLAN.md](./_meta/DOC_DEFLATION_PLAN.md)**. Inventário completo: **[INDEX.generated.md](./INDEX.generated.md)**.
+
 **Reorganização federal:** Foi criada uma estrutura por domínios (produto, arquitetura, API, BFF, app Flutter, operações, governança, backlog, wiki, técnico) e arquivados PRs/temporários. Ver **[Plano de Reorganização Federal](./PLANO_REORGANIZACAO_FEDERAL.md)** para a estrutura completa e pastas `01-produto/` … `11-tecnico-especial/`, `archive/`.
 
 ## Estrutura da Documentação

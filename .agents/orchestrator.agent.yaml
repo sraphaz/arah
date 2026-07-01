@@ -19,6 +19,8 @@ routing:
   area/ops: release
   area/security: security
   area/planning: planner
+  area/pr-review: pr-steward
+  ready-for-merge: pr-steward
 guardrails:
   no_merge: true
   require_ci: true

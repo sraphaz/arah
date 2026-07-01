@@ -1,6 +1,6 @@
 # Operação por agentes
 
-**Versão**: 1.1  
+**Versão**: 1.2  
 **Data**: 2026-06-30  
 **Handoff HTML**: [Operacao por Agentes - Arah.dc.html](../handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
 
@@ -25,6 +25,7 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 | **5** | Agentes de código calibrados | ✅ |
 | **6** | QA, Security & Release gates | ✅ |
 | **7** | Piloto assistido (billing) | ✅ |
+| **8** | PR Steward + next-phase | ✅ |
 
 ---
 
@@ -35,8 +36,8 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 | Artefato | Caminho |
 |----------|---------|
 | Manual central | [AGENTS.md](../../AGENTS.md) |
-| Manifests | [.agents/](../../.agents/) (18 agentes) |
-| Skills | [.skills/](../../.skills/) (11 skills) |
+| Manifests | [.agents/](../../.agents/) (19 agentes) |
+| Skills | [.skills/](../../.skills/) (13 skills) |
 | CODEOWNERS | [CODEOWNERS](../../CODEOWNERS) |
 | Issue template | [agent-task.yml](../../.github/ISSUE_TEMPLATE/agent-task.yml) |
 | Validação CI | [agents-validate.yml](../../.github/workflows/agents-validate.yml) |
@@ -88,6 +89,22 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 | Runbook | [AGENT_PILOT_BILLING.md](AGENT_PILOT_BILLING.md) |
 | Issue template | [agent-pilot-billing.yml](../../.github/ISSUE_TEMPLATE/agent-pilot-billing.yml) |
 
+### PR 8 — PR Steward (review, bots, next-phase)
+
+| Artefato | Caminho |
+|----------|---------|
+| Agente | [pr-steward.agent.yaml](../../.agents/pr-steward.agent.yaml) |
+| Workflow | [agents-pr-steward.yml](../../.github/workflows/agents-pr-steward.yml) |
+| Fila de fases | [PHASE_QUEUE.yaml](../_meta/PHASE_QUEUE.yaml) |
+| Checklist bots | [bot-review-checklist.md](../../.agents/templates/bot-review-checklist.md) |
+| Scripts | [address-bot-review.ps1](../../scripts/agents/address-bot-review.ps1), [pr-ready.ps1](../../scripts/agents/pr-ready.ps1), [next-phase.ps1](../../scripts/agents/next-phase.ps1) |
+| Skills | [address-bot-review.skill.yaml](../../.skills/address-bot-review.skill.yaml), [next-phase.skill.yaml](../../.skills/next-phase.skill.yaml) |
+
+**Comportamento:**
+- Em cada PR: audita bots, posta checklist, label `ready-for-merge` só se CI verde **e** zero apontamentos de bot.
+- Após push em `main`: `next-phase.ps1` abre issue `[Agent]` da próxima fase desbloqueada na fila.
+- Merge continua **humano** (`guardrails.no_merge: true` no manifest).
+
 ---
 
 ## Uso rápido
@@ -98,6 +115,9 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 ./scripts/agents/arah-agents.ps1 validate
 ./scripts/agents/arah-agents.ps1 gates
 ./scripts/agents/arah-agents.ps1 ensure-labels   # gh label create
+./scripts/agents/arah-agents.ps1 bot-review -PrNumber <N>
+./scripts/agents/arah-agents.ps1 pr-ready -PrNumber <N>
+./scripts/agents/arah-agents.ps1 next-phase -DryRun
 ./scripts/agents/invoke-skill.ps1 -Skill sync-docs
 ```
 
@@ -124,4 +144,4 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 
 - [REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](../backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)
 - [.cursorrules](../../.cursorrules)
-
+

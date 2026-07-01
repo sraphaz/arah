@@ -1,6 +1,6 @@
 # AGENTS.md — Manual de operação por agentes
 
-**Versão**: 1.1  
+**Versão**: 1.2  
 **Data**: 2026-06-30  
 **Repo**: `sraphaz/arah`
 
@@ -23,8 +23,12 @@ Este arquivo é a **fonte de verdade** para agentes (Cursor, CI, `arah-agents`).
 ## Fluxo
 
 ```
-Intenção (humano) → Orquestrador → Agente + skills → PR → CI + QA → Aprovação (humano) → Merge
+Intenção (humano) → Orquestrador → Agente + skills → PR → CI + PR Steward (bots) → ready-for-merge → Merge (humano) → next-phase
 ```
+
+### Regra obrigatória — bots
+
+**Todo apontamento de bot** (CodeRabbit, Dependabot, GitHub Actions, Cursor, CodeQL) **deve ser resolvido ou respondido** antes do merge. O agente `pr-steward` audita cada PR e só aplica `ready-for-merge` quando CI está verde **e** não há apontamentos pendentes.
 
 ---
 
@@ -39,6 +43,7 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + QA → 
 | `flutter` | Flutter Agent | `area/flutter` | `frontend/arah.app/` | [.agents/flutter.agent.yaml](.agents/flutter.agent.yaml) |
 | `web` | Web Agent | `area/web` | wiki, portal, devportal | [.agents/web.agent.yaml](.agents/web.agent.yaml) |
 | `qa` | Review / QA Agent | PR aberto | todos os PRs | [.agents/qa.agent.yaml](.agents/qa.agent.yaml) |
+| `pr-steward` | PR Steward (Review & Merge) | PR, push main | bots, merge prep, next-phase | [.agents/pr-steward.agent.yaml](.agents/pr-steward.agent.yaml) |
 | `release` | Release / DevOps | merge main, tag | `.github/`, infra | [.agents/release.agent.yaml](.agents/release.agent.yaml) |
 | `security` | Security / Compliance | PR, agenda | deps, secrets, SECURITY | [.agents/security.agent.yaml](.agents/security.agent.yaml) |
 
@@ -61,6 +66,8 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + QA → 
 | [dep-audit](.skills/dep-audit.skill.yaml) | CVEs, secrets |
 | [doc-taxonomy](.skills/doc-taxonomy.skill.yaml) | Taxonomia docs + índice |
 | [iac-plan](.skills/iac-plan.skill.yaml) | terraform/helm dry-run |
+| [address-bot-review](.skills/address-bot-review.skill.yaml) | Auditar apontamentos de bots no PR |
+| [next-phase](.skills/next-phase.skill.yaml) | Abrir issue da próxima fase (`docs/_meta/PHASE_QUEUE.yaml`) |
 
 ---
 
@@ -72,9 +79,14 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + QA → 
 ./scripts/agents/arah-agents.ps1 validate
 ./scripts/agents/arah-agents.ps1 gates
 ./scripts/agents/arah-agents.ps1 ensure-labels
+./scripts/agents/arah-agents.ps1 bot-review -PrNumber 300
+./scripts/agents/arah-agents.ps1 pr-ready -PrNumber 300
+./scripts/agents/arah-agents.ps1 next-phase -DryRun
 ```
 
-Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml)
+Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml), [agents-pr-steward.yml](.github/workflows/agents-pr-steward.yml)
+
+Fila de fases: [docs/_meta/PHASE_QUEUE.yaml](docs/_meta/PHASE_QUEUE.yaml)
 
 ---
 
@@ -106,7 +118,7 @@ Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Fl
 ### Guardrails
 - **Nunca** merge automático em `main`/prod.
 - **Nunca** secrets no diff.
-- CI verde antes de review.
+- CI verde **e** apontamentos de bots resolvidos antes de merge (`pr-steward`).
 
 ---
 

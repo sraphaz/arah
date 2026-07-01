@@ -1,0 +1,121 @@
+name: Agents PR Steward
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action'
+        required: true
+        type: choice
+        options:
+          - bot-review
+          - next-phase
+          - both
+      pr_number:
+        description: 'PR number (bot-review only)'
+        required: false
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  pr-steward:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'push' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bot review audit (PR)
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review' || (github.event_name == 'workflow_dispatch' && inputs.action != 'next-phase')
+        id: audit
+        shell: pwsh
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: |
+          if (-not $env:PR_NUMBER) { Write-Host 'No PR number'; exit 0 }
+          & ./scripts/agents/address-bot-review.ps1 -PrNumber ([int]$env:PR_NUMBER) -Json | Set-Content audit.json
+          Get-Content audit.json
+          exit 0
+
+      - name: Post bot review checklist
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('audit.json')) return;
+            const audit = JSON.parse(fs.readFileSync('audit.json', 'utf8'));
+            const template = fs.readFileSync('.agents/templates/bot-review-checklist.md', 'utf8');
+            const marker = '<!-- arah-pr-steward -->';
+            const status = audit.failed_checks?.length
+              ? `Checks falhando: ${audit.failed_checks.join(', ')}`
+              : audit.bot_comments > 0
+                ? `${audit.bot_comments} apontamento(s) de bot — resolver/responder`
+                : 'CI OK — revisar checklist';
+            const body = `${template}\n\n**Status:** ${status}`;
+            const pr = context.payload.pull_request?.number;
+            if (!pr) return;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr
+            });
+            const existing = comments.find(c => c.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr,
+                body
+              });
+            }
+
+      - name: Label ready-for-merge when CI green
+        if: github.event_name == 'pull_request' && steps.audit.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('audit.json')) return;
+            const audit = JSON.parse(fs.readFileSync('audit.json', 'utf8'));
+            if (!audit.ready || audit.failed_checks?.length || audit.bot_comments > 0) return;
+            const pr = context.payload.pull_request.number;
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr,
+                labels: ['ready-for-merge']
+              });
+            } catch (e) {
+              core.info('Label ready-for-merge may not exist yet — create via ensure-labels');
+            }
+
+  next-phase:
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && (inputs.action == 'next-phase' || inputs.action == 'both'))
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Open next phase issue
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/agents/next-phase.ps1

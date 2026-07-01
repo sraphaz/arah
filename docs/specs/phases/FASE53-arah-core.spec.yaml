@@ -15,12 +15,14 @@ acceptance:
   - id: AC-53-2
     then: "POST /core/instances registra instância e retorna id"
   - id: AC-53-3
-    then: "POST /core/instances/{id}/heartbeat persiste telemetria"
+    then: "POST /core/instances/{id}/heartbeat persiste telemetria (services, uptime)"
   - id: AC-53-4
-    then: "GET /core/releases?channel=stable lista releases"
+    then: "GET /core/instances lista instâncias com telemetria agregada"
   - id: AC-53-5
-    then: "Testes unitários para regras de registro e heartbeat"
+    then: "GET /core/releases?channel=stable lista releases"
   - id: AC-53-6
+    then: "Testes unitários e integração para registro, listagem e heartbeat"
+  - id: AC-53-7
     then: "Instância degrada graciosamente se Core indisponível (spec FASE54+)"
 
 harness:

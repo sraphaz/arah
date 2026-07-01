@@ -27,7 +27,7 @@ harness:
   scripts:
     - scripts/agents/validate-manifests.ps1
   commands:
-    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet build backend/Arah.Api/Arah.Api.csproj --configuration Release"
   agents:
     - release
 

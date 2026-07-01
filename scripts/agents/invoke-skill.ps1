@@ -254,6 +254,16 @@ try {
 
         }
 
+        'respond-bot-review' {
+
+            if ($Issue -le 0) {
+                Write-Error 'respond-bot-review requires -Issue (PR number)'
+                exit 1
+            }
+            & (Join-Path $ScriptDir 'respond-bot-review.ps1') -PrNumber $Issue
+
+        }
+
         default {
 
             Write-Host (Get-Content $SkillFile -Raw)

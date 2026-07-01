@@ -34,6 +34,8 @@ public sealed class CoreInstanceRegistryTests
         Assert.NotNull(updated);
         Assert.Equal(CoreInstanceStatus.Online, updated!.Status);
         Assert.Equal(at, updated.LastHeartbeatUtc);
+        Assert.Equal("healthy", updated.LastServices!["api"]);
+        Assert.Equal(TimeSpan.FromHours(1), updated.LastUptime);
     }
 
     [Fact]

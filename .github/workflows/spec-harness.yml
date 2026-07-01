@@ -35,7 +35,7 @@ jobs:
 
       - name: Run harness
         shell: pwsh
-        run: ./scripts/harness/run-harness.ps1 -Json | Tee-Object -FilePath harness-report.json
+        run: ./scripts/harness/run-harness.ps1
 
       - name: Upload harness report
         uses: actions/upload-artifact@v4

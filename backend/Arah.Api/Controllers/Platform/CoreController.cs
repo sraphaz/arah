@@ -1,12 +1,14 @@
 using Arah.Api.Contracts.Core;
 using Arah.Core.Application;
 using Arah.Core.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Arah.Api.Controllers.Platform;
 
 [ApiController]
 [Route("api/v1/core")]
+[Authorize(Policy = "SystemAdmin")]
 [Produces("application/json")]
 [Tags("Arah Core")]
 public sealed class CoreController : ControllerBase

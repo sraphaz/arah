@@ -21,6 +21,7 @@ scope:
   may_code: true
 skills:
   - address-bot-review
+  - respond-bot-review
   - code-review
   - run-tests
   - spec-validate

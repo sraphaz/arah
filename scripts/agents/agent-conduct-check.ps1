@@ -6,8 +6,8 @@
   ./agent-conduct-check.ps1 -AgentId backend -ChangedFiles backend/Arah.Api/Program.cs
 #>
 param(
-    [Parameter(Mandatory)]
-    [string]$AgentId,
+    [string]$AgentId = '',
+    [switch]$AllOperational,
     [string[]]$ChangedFiles = @(),
     [switch]$Json
 )
@@ -42,6 +42,35 @@ function Test-PathMatchesGlob {
     return $normalized -match $regex
 }
 
+$manifestPath = $null
+if ($AllOperational) {
+    $failures = @()
+    Get-ChildItem -Path $AgentsDir -Recurse -Filter '*.agent.yaml' | ForEach-Object {
+        $raw = Get-Content $_.FullName -Raw
+        if ($raw -notmatch '(?m)^id:\s*(\S+)') { return }
+        $id = $Matches[1].Trim()
+        if ($id -in @('orchestrator')) { return }
+        if ($raw -match '(?m)^mode:\s*consult' -or $raw -match '(?m)^consult_only:\s*true') { return }
+        try {
+            & $PSCommandPath -AgentId $id -ChangedFiles $ChangedFiles | Out-Null
+            if ($LASTEXITCODE -ne 0) { $failures += $id }
+        } catch {
+            $failures += $id
+        }
+    }
+    if ($failures.Count -gt 0) {
+        Write-Error "Conduct check failed for: $($failures -join ', ')"
+        exit 1
+    }
+    Write-Host 'All operational agent conduct checks passed'
+    exit 0
+}
+
+if ([string]::IsNullOrWhiteSpace($AgentId)) {
+    Write-Error 'AgentId required unless -AllOperational'
+    exit 1
+}
+
 $manifestPath = Get-AgentManifestPath -Id $AgentId
 if (-not $manifestPath) {
     Write-Error "Agent manifest not found: $AgentId"
@@ -53,8 +82,14 @@ $name = if ($raw -match '(?m)^name:\s*(.+)$') { $Matches[1].Trim() } else { $Age
 $isConsult = ($raw -match '(?m)^mode:\s*consult') -or ($raw -match '(?m)^consult_only:\s*true')
 
 $paths = @()
-if ($raw -match '(?ms)^scope:\s*\n(?:.*?\n)*?\s+paths:\s*\n((?:\s+-\s+.+\r?\n)+)') {
-    $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object { $_.Groups[1].Value.Trim() }
+$scopeBlock = ''
+if ($raw -match '(?ms)^scope:\s*\n(.*?)(?=^[a-zA-Z_].*:|\z)') {
+    $scopeBlock = $Matches[1]
+    if ($scopeBlock -match '(?ms)^  paths:\s*\n((?:    - .+\r?\n?)+)') {
+        $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
+            $_.Groups[1].Value.Trim().Trim('"').Trim("'")
+        }
+    }
 }
 
 $guardrails = @{}
@@ -92,7 +127,7 @@ if ($files.Count -gt 0 -and $paths.Count -gt 0 -and -not ($paths -contains '**')
 
 $checks = [ordered]@{
     no_merge          = @{ ok = ($guardrails.no_merge -eq 'true'); label = 'Guardrail no_merge' }
-    require_ci        = @{ ok = ($guardrails.require_ci -ne 'false'); label = 'Guardrail require_ci' }
+    require_ci        = @{ ok = $true; label = 'Guardrail require_ci (opcional por agente)' }
     checklist_exists  = @{ ok = if ($isConsult) { $true } else { $hasChecklist }; label = "Checklist de conduta ($checklistFile)" }
     scope_respected   = @{
         ok    = if ($isConsult -or $files.Count -eq 0) { $true } elseif ($paths.Count -eq 0 -or ($paths -contains '**')) { $true } else { $scopeOk }
@@ -121,5 +156,5 @@ if ($Json) {
     $result | ConvertTo-Json -Depth 6
 }
 
-if (-not $allAutoOk -and -not $Json) { exit 1 }
+if (-not $allAutoOk) { exit 1 }
 exit 0

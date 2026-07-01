@@ -45,6 +45,15 @@ jobs:
           Get-Content audit.json
           exit 0
 
+      - name: Auto-respond to addressed bot inline comments
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review'
+        shell: pwsh
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if (-not $env:PR_NUMBER) { exit 0 }
+          & ./scripts/agents/respond-bot-review.ps1 -PrNumber ([int]$env:PR_NUMBER) -Json
+
       - name: Post bot review checklist
         if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review'
         uses: actions/github-script@v7

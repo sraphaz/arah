@@ -1,10 +1,11 @@
 namespace Arah.Core.Application;
 
+using System.Collections.Concurrent;
 using Arah.Core.Domain;
 
 public sealed class InMemoryCoreInstanceRegistry : ICoreInstanceRegistry
 {
-    private readonly Dictionary<Guid, CoreInstance> _instances = new();
+    private readonly ConcurrentDictionary<Guid, CoreInstance> _instances = new();
 
     public CoreInstance Register(string mode, Uri baseUrl, string version)
     {
@@ -23,6 +24,6 @@ public sealed class InMemoryCoreInstanceRegistry : ICoreInstanceRegistry
             throw new InvalidOperationException($"Instance {instanceId} not registered");
         }
 
-        instance.MarkOnline(report.ReportedAtUtc);
+        instance.ApplyHeartbeat(report);
     }
 }

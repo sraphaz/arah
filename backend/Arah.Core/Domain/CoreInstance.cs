@@ -13,6 +13,8 @@ public sealed class CoreInstance
     public CoreInstanceStatus Status { get; private set; }
     public DateTimeOffset RegisteredAtUtc { get; }
     public DateTimeOffset? LastHeartbeatUtc { get; private set; }
+    public IReadOnlyDictionary<string, string>? LastServices { get; private set; }
+    public TimeSpan? LastUptime { get; private set; }
 
     public CoreInstance(Guid id, string mode, Uri baseUrl, string version)
     {
@@ -29,11 +31,17 @@ public sealed class CoreInstance
         RegisteredAtUtc = DateTimeOffset.UtcNow;
     }
 
-    public void MarkOnline(DateTimeOffset heartbeatUtc)
+    public void ApplyHeartbeat(HealthCheckReport report)
     {
-        LastHeartbeatUtc = heartbeatUtc;
+        ArgumentNullException.ThrowIfNull(report);
+        LastHeartbeatUtc = report.ReportedAtUtc;
+        LastServices = report.Services;
+        LastUptime = report.Uptime;
         Status = CoreInstanceStatus.Online;
     }
+
+    public void MarkOnline(DateTimeOffset heartbeatUtc) =>
+        ApplyHeartbeat(new HealthCheckReport(Id, new Dictionary<string, string>(), TimeSpan.Zero, heartbeatUtc));
 
     public void MarkOffline()
     {

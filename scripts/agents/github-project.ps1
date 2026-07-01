@@ -51,30 +51,37 @@ try {
             $cfg = Get-ProjectConfig -Root $Root
             $title = if ($cfg) { $cfg.title } else { 'Arah — Sustentação (F52–61)' }
 
-            $projects = gh project list --owner $owner --limit 50 --format json 2>$null | ConvertFrom-Json
-            $existing = $null
-            if ($projects -and $projects.projects) {
-                $existing = $projects.projects | Where-Object { $_.title -eq $title } | Select-Object -First 1
-            }
+            try {
+                $projects = gh project list --owner $owner --limit 50 --format json 2>$null | ConvertFrom-Json
+                $existing = $null
+                if ($projects -and $projects.projects) {
+                    $existing = $projects.projects | Where-Object { $_.title -eq $title } | Select-Object -First 1
+                }
 
-            if ($existing) {
-                $num = $existing.number
-                Write-Host "Project exists: #$num — $title"
-                Write-Host "Set project_number: $num in .github/project/arah-sustentacao.yml"
-                if ($Json) { @{ project_number = $num; title = $title; url = $existing.url } | ConvertTo-Json }
+                if ($existing) {
+                    $num = $existing.number
+                    Write-Host "Project exists: #$num — $title"
+                    Write-Host "Set project_number: $num in .github/project/arah-sustentacao.yml"
+                    if ($Json) { @{ project_number = $num; title = $title; url = $existing.url } | ConvertTo-Json }
+                    exit 0
+                }
+
+                if ($DryRun) {
+                    Write-Host "Would create project: $title"
+                    exit 0
+                }
+
+                $created = gh project create --owner $owner --title $title --format json | ConvertFrom-Json
+                Write-Host "Created project #$($created.number): $($created.url)"
+                Write-Host "Add to .github/project/arah-sustentacao.yml: project_number: $($created.number)"
+                if ($Json) { $created | ConvertTo-Json }
+                exit 0
+            } catch {
+                Write-Warning "gh project unavailable (scope read:project / project:write?). Create project manually in GitHub UI."
+                Write-Host "Labels/milestones synced. Set project_number in .github/project/arah-sustentacao.yml when ready."
+                if ($Json) { @{ warning = 'project_scope_missing'; title = $title } | ConvertTo-Json }
                 exit 0
             }
-
-            if ($DryRun) {
-                Write-Host "Would create project: $title"
-                exit 0
-            }
-
-            $created = gh project create --owner $owner --title $title --format json | ConvertFrom-Json
-            Write-Host "Created project #$($created.number): $($created.url)"
-            Write-Host "Add to .github/project/arah-sustentacao.yml: project_number: $($created.number)"
-            if ($Json) { $created | ConvertTo-Json }
-            exit 0
         }
 
         'sync-queue' {

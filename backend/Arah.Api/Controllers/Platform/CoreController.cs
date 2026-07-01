@@ -44,6 +44,14 @@ public sealed class CoreController : ControllerBase
         return CreatedAtAction(nameof(GetInstance), new { id = instance.Id }, response);
     }
 
+    [HttpGet("instances")]
+    [ProducesResponseType(typeof(IEnumerable<CoreInstanceResponse>), StatusCodes.Status200OK)]
+    public ActionResult<IEnumerable<CoreInstanceResponse>> ListInstances()
+    {
+        var list = _instances.ListAll().Select(ToResponse);
+        return Ok(list);
+    }
+
     [HttpGet("instances/{id:guid}")]
     [ProducesResponseType(typeof(CoreInstanceResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -91,5 +99,7 @@ public sealed class CoreController : ControllerBase
             instance.Version,
             instance.Status.ToString(),
             instance.RegisteredAtUtc,
-            instance.LastHeartbeatUtc);
+            instance.LastHeartbeatUtc,
+            instance.LastServices,
+            instance.LastUptime.HasValue ? (long)instance.LastUptime.Value.TotalSeconds : null);
 }

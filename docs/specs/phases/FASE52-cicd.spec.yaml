@@ -21,7 +21,7 @@ acceptance:
   - id: AC-52-5
     then: "docs/ops/CI_CD_PIPELINE.md documenta fluxo e secrets"
   - id: AC-52-6
-    then: "Observabilidade baseline (Prometheus/OTel) — pendente incremento"
+    then: "Observabilidade baseline — /metrics Prometheus + smoke CD (docs/ops/OBSERVABILITY_BASELINE.md)"
 
 harness:
   scripts:

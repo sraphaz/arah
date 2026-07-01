@@ -48,7 +48,7 @@ Estabelecer a cadeia de entrega do código ao ambiente executável: pipelines CI
 - [x] Staging recebe deploy automático (`deploy-staging.yml`); prod exige gate (`deploy-production.yml`)
 - [x] Secrets não aparecem em logs nem no repositório — ver [CI_CD_PIPELINE.md](../ops/CI_CD_PIPELINE.md)
 - [x] Health check `/health` respondendo em staging (API + BFF)
-- [ ] Observabilidade baseline (Prometheus/OTel) — incremento restante
+- [x] Observabilidade baseline — `/metrics` (Prometheus) + OpenTelemetry no API; smoke CD em `cd.yml` — ver [OBSERVABILITY_BASELINE.md](../ops/OBSERVABILITY_BASELINE.md)
 
 ---
 

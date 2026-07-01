@@ -17,6 +17,9 @@ public sealed class InMemoryCoreInstanceRegistry : ICoreInstanceRegistry
     public CoreInstance? GetById(Guid id) =>
         _instances.TryGetValue(id, out var instance) ? instance : null;
 
+    public IReadOnlyList<CoreInstance> ListAll() =>
+        _instances.Values.OrderBy(i => i.RegisteredAtUtc).ToList();
+
     public void RecordHeartbeat(Guid instanceId, HealthCheckReport report)
     {
         if (!_instances.TryGetValue(instanceId, out var instance))

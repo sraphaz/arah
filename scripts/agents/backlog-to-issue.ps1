@@ -87,6 +87,10 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "gh issue create failed: $issueUrl" }
 
     $repo = gh repo view --json nameWithOwner -q .nameWithOwner
+    $wave = if ($item.wave) { $item.wave } else { '' }
+    $milestoneTitle = Resolve-MilestoneForWave -Root $Root -Wave $wave
+    if ($milestoneTitle -and $issueUrl -match '/issues/(\d+)') {
+        $issueNum = $Matches[1]
         $milestones = gh api "repos/$repo/milestones?state=open" | ConvertFrom-Json
         $ms = $milestones | Where-Object { $_.title -eq $milestoneTitle } | Select-Object -First 1
         if ($ms) {

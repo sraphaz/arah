@@ -16,6 +16,8 @@ public sealed class CoreInstanceService
 
     public CoreInstance? GetById(Guid id) => _registry.GetById(id);
 
+    public IReadOnlyList<CoreInstance> ListAll() => _registry.ListAll();
+
     public void RecordHeartbeat(Guid instanceId, IReadOnlyDictionary<string, string> services, TimeSpan uptime)
     {
         var report = new HealthCheckReport(

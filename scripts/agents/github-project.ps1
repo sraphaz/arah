@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 
 <#
 
@@ -193,9 +193,7 @@ function Invoke-ProjectEnsure {
 
     }
 
-    if ($Json) { $result | ConvertTo-Json } else { $result | ConvertTo-Json }
-
-    return $result
+    $result | ConvertTo-Json
 
 }
 
@@ -509,7 +507,7 @@ function Invoke-ProjectReconcile {
 
             if ($ms) {
 
-                gh api -X PATCH "repos/$repo/issues/$($issue.number)" -f milestone=$ms.number | Out-Null
+                gh api -X PATCH "repos/$repo/issues/$($issue.number)" -F milestone=$ms.number | Out-Null
 
             }
 
@@ -559,7 +557,7 @@ try {
 
                 Invoke-ProjectReconcile -Json:$Json | Out-Null
 
-                & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue
+                & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -Json:$Json
 
                 Invoke-ProjectSyncBoard -Json:$Json
 
@@ -573,7 +571,7 @@ try {
 
                 Invoke-ProjectReconcile -DryRun -Json:$Json
 
-                & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -DryRun
+                & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -DryRun -Json:$Json
 
                 Invoke-ProjectSyncBoard -DryRun -Json:$Json
 
@@ -585,7 +583,7 @@ try {
 
         'ensure' {
 
-            Invoke-ProjectEnsure -DryRun:$DryRun -Json:$Json | Out-Null
+            Invoke-ProjectEnsure -DryRun:$DryRun -Json:$Json
 
             exit 0
 

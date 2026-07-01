@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   Helpers GraphQL/gh para GitHub Project v2 (bootstrap, views, status).
@@ -127,7 +127,7 @@ function Set-ProjectNumberInConfig {
     } else {
         $raw = $raw -replace '(?m)^project_number:\s*null', "project_number: $ProjectNumber"
     }
-    Set-Content -Path $path -Value $raw.TrimEnd() + "`n" -Encoding UTF8 -NoNewline
+    Set-Content -Path $path -Value ($raw.TrimEnd() + "`n") -Encoding UTF8 -NoNewline
     return $true
 }
 
@@ -252,6 +252,9 @@ function Resolve-PhaseStatusColumn {
                 return 'Backlog'
             }
         }
+        # Fase desbloqueada: 'In Progress' se há issue aberta, senão 'Ready'
+        if ($Issue -and $Issue.state -eq 'OPEN') { return 'In Progress' }
+        return 'Ready'
     }
 
     if ($Issue -and $Issue.state -eq 'OPEN') { return 'In Progress' }
@@ -410,7 +413,7 @@ function Set-ProjectConfigInYaml {
             $raw = $raw -replace '(?m)^project_number:\s*(\d+)', "project_number: `$1`nproject_url: `"$ProjectUrl`""
         }
     }
-    Set-Content -Path $path -Value $raw.TrimEnd() + "`n" -Encoding UTF8 -NoNewline
+    Set-Content -Path $path -Value ($raw.TrimEnd() + "`n") -Encoding UTF8 -NoNewline
     return $true
 }
 
@@ -482,7 +485,8 @@ CI:
         title          = $Title
         dry_run        = [bool]$DryRun
     }
-    if ($Json) { $result | ConvertTo-Json } else { $result | ConvertTo-Json }
+    # Retorna o objeto ao chamador (Invoke-ProjectEnsure faz a serialização);
+    # não emitir no pipeline aqui para não poluir o valor capturado.
     return $result
 }
 

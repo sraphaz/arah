@@ -55,7 +55,7 @@ Autenticação: mTLS + token de instância.
 ## Critérios de aceite
 
 - [ ] Instância registra-se e recebe id + par de chaves
-- [x] Heartbeat a cada 30s; status visível no Core (listagem + telemetria via GET /instances)
+- [x] Heartbeat a cada 30s; status visível no Core (listagem + telemetria via GET /core/instances)
 - [ ] Release publicada via tag; instâncias consultam canal stable
 - [ ] Território publicado no diretório global
 - [ ] Instância opera em modo autônomo se Core indisponível (cache + fila)

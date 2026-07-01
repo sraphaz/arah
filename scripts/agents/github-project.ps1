@@ -168,57 +168,18 @@ function Invoke-ProjectEnsure {
 
     $projectNumber = if ($cfg -and $cfg.project_number -gt 0) { $cfg.project_number } else { 0 }
 
-
-
     if ($projectNumber -le 0) {
-
-        try {
-
-            $projects = gh project list --owner $owner --limit 50 --format json 2>$null | ConvertFrom-Json
-
-            $existing = $null
-
-            if ($projects -and $projects.projects) {
-
-                $existing = $projects.projects | Where-Object { $_.title -eq $title } | Select-Object -First 1
-
-            }
-
-            if ($existing) {
-
-                $projectNumber = [int]$existing.number
-
-            } elseif (-not $DryRun) {
-
-                $created = gh project create --owner $owner --title $title --format json | ConvertFrom-Json
-
-                $projectNumber = [int]$created.number
-
-            }
-
-        } catch {
-
-            Write-Warning "gh project unavailable — scope project necessário: gh auth refresh -h github.com -s project,read:project"
-
-            if ($Json) { @{ warning = 'project_scope_missing'; title = $title } | ConvertTo-Json }
-
-            return @{ project_number = 0; title = $title; warning = 'project_scope_missing' }
-
+        $boot = Ensure-ProjectV2Bootstrap -Root $Root -Title $title -DryRun:$DryRun -Json:$Json
+        if ($boot.project_number) { $projectNumber = [int]$boot.project_number }
+        if ($projectNumber -le 0) {
+            return $boot
         }
-
+    } elseif (-not $DryRun) {
+        $existing = Find-ProjectV2ByTitle -Owner $owner -Title $title
+        if ($existing) {
+            Set-ProjectConfigInYaml -Root $Root -ProjectNumber ([int]$existing.number) -ProjectUrl $existing.url | Out-Null
+        }
     }
-
-
-
-    if ($projectNumber -gt 0 -and -not $DryRun) {
-
-        gh project link $projectNumber --owner $owner --repo $repoObj.nameWithOwner 2>$null | Out-Null
-
-        Set-ProjectNumberInConfig -Root $Root -ProjectNumber $projectNumber | Out-Null
-
-    }
-
-
 
     $result = [ordered]@{
 

@@ -11,7 +11,6 @@ permissions:
   contents: read
   issues: write
   pull-requests: read
-  projects: write
 
 jobs:
   sync-board:
@@ -19,14 +18,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Reconcile phase issues
+      - name: Reconcile + sync board
+        if: ${{ secrets.GH_PROJECT_TOKEN != '' }}
         shell: pwsh
         env:
-          GH_TOKEN: ${{ github.token }}
-        run: ./scripts/agents/github-project.ps1 reconcile
+          GH_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+          GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+        run: |
+          ./scripts/agents/github-project.ps1 reconcile
+          ./scripts/agents/github-project.ps1 sync-project
 
-      - name: Sync project board status
+      - name: Resolve project URL from config
+        id: project
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: ./scripts/agents/github-project.ps1 sync-project
+        run: |
+          $path = '.github/project/arah-sustentacao.yml'
+          if (-not (Test-Path $path)) { exit 0 }
+          $raw = Get-Content $path -Raw
+          if ($raw -match '(?m)^project_url:\s*"(https://[^"]+)"') {
+            "url=$($Matches[1])" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Add new issue to project board
+        if: github.event_name == 'issues' && github.event.action == 'opened' && steps.project.outputs.url != '' && secrets.GH_PROJECT_TOKEN != ''
+        uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: ${{ steps.project.outputs.url }}
+          github-token: ${{ secrets.GH_PROJECT_TOKEN }}

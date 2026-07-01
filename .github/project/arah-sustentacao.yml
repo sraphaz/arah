@@ -7,8 +7,9 @@ description: |
   Kanban operacional das fases de sustentação (infra, Core, federação).
   Issues são criadas por next-phase e backlog-to-issue; contratos em docs/specs/ e docs/backlog-api/.
 
-# Preenchido automaticamente por `github-project bootstrap` / CI github-sync
+# Preenchido automaticamente por `github-project bootstrap` / CI
 project_number: null
+project_url: null
 
 # Mapeamento wave → milestone (título em .github/milestones.yml)
 wave_milestones:

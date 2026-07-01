@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — GitHub Project PAT + bootstrap real (2026-07-01)
+
+- **Causa raiz**: `GITHUB_TOKEN` não acessa Projects v2; bootstrap falhava silenciosamente
+- GraphQL `Ensure-ProjectV2Bootstrap` + secret `GH_PROJECT_TOKEN` (PAT classic `project`+`repo`)
+- Workflow dedicado `project-bootstrap.yml` (workflow_dispatch)
+- `phase-status` como artifact CI; repo guarda só `project_number`/`project_url`
+- `actions/add-to-project` em novas issues com `epic/phase`
+
 ### Adicionado — GitHub Project bootstrap (2026-07-01)
 
 - `github-project bootstrap` — pipeline completo (Project v2, views, board, phase-status)

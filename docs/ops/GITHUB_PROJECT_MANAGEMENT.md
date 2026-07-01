@@ -33,6 +33,41 @@ O Arah adota um modelo **híbrido**: contratos técnicos no repo (specs SDD, ADR
 
 ---
 
+## Por que o Project não aparece?
+
+O **`GITHUB_TOKEN` do Actions não acessa Projects v2** (limitação do GitHub). É necessário um PAT com scope `project` uma única vez.
+
+### Setup (5 min, uma vez)
+
+1. **Criar PAT** — GitHub → Settings → Developer settings → Personal access tokens → **Tokens (classic)**  
+   Scopes: `project`, `repo`
+
+2. **Gravar secret** — Repo `arah` → Settings → Secrets and variables → Actions → **New repository secret**  
+   Nome: `GH_PROJECT_TOKEN` · Valor: o PAT
+
+3. **Bootstrap** — Actions → **Bootstrap GitHub Project** → Run workflow  
+   Cria o board, views, liga ao repo, popula FASE52–61 e grava `project_url` no YAML.
+
+4. **Local (opcional)**  
+   ```powershell
+   gh auth refresh -h github.com -s project,read:project
+   ./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
+   ```
+
+Após o bootstrap, abra: `https://github.com/users/SEU_USER/projects/N` (URL em `.github/project/arah-sustentacao.yml`).
+
+### Fonte de verdade (gestão no GitHub, não no repo)
+
+| O quê | Onde vive |
+|-------|-----------|
+| Status operacional (em progresso / feito) | **Issues** + coluna Status do **Project** |
+| Ondas S0–S4 | **Milestones** + labels `wave/*` |
+| Prioridade | Labels `priority/*` |
+| Contrato técnico (AC, specs) | Repo: `docs/specs/`, `FASE*.md` |
+| Snapshot machine-readable | Artifact CI `phase-status` (não é mais commitado em todo sync) |
+
+---
+
 ## Bootstrap (uma vez ou via CI)
 
 ```powershell
@@ -102,8 +137,9 @@ Campos custom (opcional): Wave, Priority, Spec-Id — hoje cobertos por **labels
 
 | Workflow | Gatilho | Ação |
 |----------|---------|------|
-| `github-sync.yml` | push `PHASE_QUEUE.yaml`, semanal | `bootstrap` → labels, project, issues, board, `phase-status.generated.json` |
-| `project-board-sync.yml` | issue/PR aberto, fechado, label | `reconcile` + `sync-project` (coluna Status) |
+| **`project-bootstrap.yml`** | manual (`workflow_dispatch`) | **Cria** Project + views (requer `GH_PROJECT_TOKEN`) |
+| `github-sync.yml` | push `main`, semanal | labels/milestones + bootstrap se secret existir |
+| `project-board-sync.yml` | issue/PR | reconcile + sync coluna Status + add-to-project |
 
 ---
 

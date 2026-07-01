@@ -11,7 +11,7 @@
 | Onda | O quê | Risco | Comando |
 |------|--------|-------|---------|
 | **1** | PR, RESUMO, ANALISE, AVALIACAO, planos de sessão → `_archive/` + **stub** no path antigo | Baixo | `./scripts/agents/migrate-docs-deflate.ps1 -Wave 1` |
-| **2** | `NN_*.md` numerados → pastas semânticas (`product/`, `architecture/`, …) + stub | Médio | Wave 2 (futuro) |
+| **2** | `NN_*.md` numerados → pastas semânticas (`product/`, `architecture/`, …) + stub | Médio | `./scripts/agents/migrate-docs-deflate.ps1 -Wave 2` |
 | **3** | Consolidar duplicatas (CHANGELOG, STRUCTURE vs README) | Médio | Manual + Docs Steward |
 
 **Stub**: arquivo curto no path original com front-matter `redirect:` e link — wiki e links antigos continuam resolvendo.

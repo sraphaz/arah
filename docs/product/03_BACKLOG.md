@@ -1,0 +1,254 @@
+# Backlog
+
+**Versão**: 2.2  
+**Data**: 2025-01-20  
+**Última Atualização**: 2026-02-06  
+**Status**: ✅ MVP Completo + Fases 1-8 Implementadas
+
+---
+
+## Observações de status
+- **Já desenvolvido**: baseado no estado atual documentado do projeto.
+- Itens MVP abaixo mantêm critérios de aceite curtos.
+
+## Epic 1 — Território e vínculo
+### Feature: Cadastro e autenticação
+- [MVP] **Cadastro e login obrigatórios para consulta** *(já desenvolvido)*
+  - Critérios de aceite:
+    - Consultas de feed e mapa exigem usuário autenticado.
+    - Usuário não autenticado é direcionado ao cadastro/login.
+
+### Feature: Descoberta de território por presença
+- [MVP] **Busca de territórios próximos via localização** *(já desenvolvido)*
+  - Critérios de aceite:
+    - Usuário vê territórios próximos a partir de sua posição atual.
+    - Resultados respeitam raio (`radiusKm`) e limite (`limit`).
+    - Não existe opção de associação remota no MVP.
+    - Sem permissão de localização, o fluxo orienta o usuário a habilitar acesso.
+- [MVP] **Entrada como visitor** *(já desenvolvido)*
+  - Critérios de aceite:
+    - Usuário entra no território com papel visitor.
+    - O vínculo fica registrado como visitor.
+
+### Feature: Vínculo visitor/resident
+- [MVP] **Solicitação de vínculo resident** *(já desenvolvido)*
+  - Critérios de aceite:
+    - Usuário pode solicitar mudança para resident.
+    - Status de vínculo fica como pending/approved.
+    - Sem localização válida (lat/lng), a solicitação é bloqueada.
+- [MVP] **Status de vínculo visível no perfil**
+  - Critérios de aceite:
+    - Perfil do usuário exibe visitor ou resident.
+
+## Epic 2 — Feed e mapa integrados
+### Feature: Feed do território e feed pessoal
+- [MVP] **Feed do território com posts georreferenciados** *(já desenvolvido)*
+  - Critérios de aceite:
+    - Feed do território lista posts associados ao território.
+    - Posts podem ter 0..N GeoAnchors; sem geo, o post só aparece no feed.
+    - Sem vínculo válido, o usuário recebe orientação para declarar vínculo.
+- [MVP] **Eventos do território (abertos)**
+  - Critérios de aceite:
+    - Visitantes e moradores podem criar eventos com data/hora e local obrigatório.
+    - Evento registra se o criador era visitante ou morador no momento da criação.
+    - Participações Interested/Confirmed são registradas.
+    - Eventos aparecem no feed e no mapa via filtros.
+- [MVP] **Feed pessoal do usuário**
+  - Critérios de aceite:
+    - Usuário vê seus próprios posts em um feed pessoal.
+
+### Feature: Mapa + feed integrados
+- [MVP] **Pins no mapa para posts** *(já desenvolvido)*
+  - Critérios de aceite:
+    - Post aparece no mapa quando tiver GeoAnchor(s).
+    - Pin expõe dados mínimos (id, type, lat/lng, title, status).
+- [POST-MVP] **Sincronia timeline ↔ mapa (pin)**
+  - Critérios de aceite:
+    - Ao navegar na timeline, o pin correspondente é destacado (UI).
+    - Ao tocar no pin, o post é destacado/aberto no feed (UI).
+    - Conteúdo oculto por moderação não aparece no mapa.
+- [MVP] **Filtro de feed por entidade territorial**
+  - Critérios de aceite:
+    - Feed pode filtrar posts associados a uma entidade.
+    - Entidades são sugeridas por visitantes ou moradores e confirmadas por moradores.
+    - Moradores podem se relacionar com entidades do território.
+
+## Epic 3 — Postagem e GeoAnchor
+### Feature: Criação de post
+- [POST-MVP] **Post com múltiplas mídias**
+  - Critérios de aceite:
+    - Post pode conter mais de uma mídia.
+- [MVP] **Post com múltiplos GeoAnchors**
+  - Critérios de aceite:
+    - Post aceita 0..N GeoAnchors.
+    - GeoAnchors são derivados de mídia quando disponíveis; request do client não define anchors.
+    - Sem geolocalização, o post ainda pode ser publicado (mas não aparece no mapa).
+
+### Feature: GeoAnchor avançado
+- [POST-MVP] **Memórias, galeria e pins visuais avançados**
+
+## Epic 4 — Visibilidade e círculo interno
+### Feature: Visibilidade por papel
+- [MVP] **Visitor/resident** *(já desenvolvido)*
+  - Critérios de aceite:
+    - Conteúdo respeita visibilidade para visitor e resident.
+    - Termos de aceite de papel: `VISITOR` tem acesso apenas a conteúdo público; `RESIDENT` validado acessa conteúdo restrito do território.
+
+### Feature: Friends (círculo interno)
+- [POST-MVP] **Solicitação e aceite de amizade**
+- [POST-MVP] **Stories visíveis apenas para friends**
+
+## Epic 5 — Moderação e segurança
+### Feature: Reports e bloqueio
+- [MVP] **Reportar post**
+  - Critérios de aceite:
+    - Usuário reporta um post com motivo e detalhes.
+    - Reports repetidos na mesma janela são ignorados.
+- [MVP] **Reportar usuário**
+  - Critérios de aceite:
+    - Usuário reporta um usuário com motivo e detalhes.
+    - Reports repetidos na mesma janela são ignorados.
+- [MVP] **Bloquear usuário**
+  - Critérios de aceite:
+    - Usuário bloqueado não aparece no feed pessoal/território do bloqueador.
+    - Usuário bloqueado não aparece no mapa do bloqueador.
+
+### Feature: Moderação automática (básica)
+- [MVP] **Threshold de reports únicos por janela de tempo**
+  - Critérios de aceite:
+    - Acionamento automático para ocultar conteúdo ou restringir usuário.
+    - Ação automática gera registro de auditoria.
+- [POST-MVP] **Score de risco e escalonamento avançado**
+
+### Feature: Sanções territoriais e globais
+- [MVP] **Sanções por território**
+  - Critérios de aceite:
+    - Restrição/suspensão pode ser aplicada apenas em um território.
+- [MVP] **Sanções globais**
+  - Critérios de aceite:
+    - Banimento global bloqueia acesso a todos os territórios.
+
+## Epic 6 — Notificações
+### Feature: Notificações in-app
+- [MVP] **Inbox de notificações com outbox**
+  - Critérios de aceite:
+    - Eventos relevantes (post/report) geram mensagens em outbox na mesma transação.
+    - Worker converte mensagens em notificações persistidas por usuário.
+    - Usuário pode listar notificações e marcá-las como lidas.
+
+## Epic 7 — Admin e observabilidade
+### Feature: Visão administrativa
+- [POST-MVP] **Painel admin de territórios, erros e relatórios**
+- [POST-MVP] **Saúde do sistema e indicadores**
+
+## Epic 8 — Integrações e observabilidade técnica
+### Feature: Provedor de mapas
+- [MVP] **Integração base com provedor de mapas**
+  - Critérios de aceite:
+    - Configuração permite trocar o provedor de mapas.
+    - Suporte a pins/cluster básico para posts.
+
+### Feature: Observabilidade mínima
+- [MVP] **Logs e métricas essenciais**
+  - Critérios de aceite:
+    - Erros de geolocalização são registrados.
+    - Há métricas para requisições e falhas de moderação.
+
+## Epic 9 — Gaps e boas práticas para o modelo de rede
+### Feature: Presença e privacidade
+- [MVP] **Consentimento explícito de localização**
+  - Critérios de aceite:
+    - Usuário aprova uso de localização e entende por que é necessário.
+- [MVP] **Heurística de presença física**
+  - Critérios de aceite:
+    - Vínculo territorial depende de sinais locais (ex.: GPS e tempo mínimo no território).
+
+### Feature: Segurança e governança mínima
+- [MVP] **Auditoria de decisões de moderação**
+  - Critérios de aceite:
+    - Toda ação de moderação gera registro com autor, data e justificativa.
+- [MVP] **Proteção contra abuso de reports**
+  - Critérios de aceite:
+    - Reports duplicados são ignorados por janela de tempo.
+    - Threshold considera apenas reports únicos.
+
+## Epic 10 — Serviços Territoriais
+### Feature: Busca de Babás (Babysitters)
+- [POST-MVP] **Busca de babás no território**
+  - Critérios de aceite:
+    - Usuário pode buscar babás disponíveis no território atual.
+    - Busca permite filtrar por: disponibilidade (horários/dias), experiência (anos, faixas etárias atendidas), localização (raio), avaliações mínimas, preço/hora.
+    - Resultados mostram perfil resumido: foto, nome, avaliação média, preço/hora, disponibilidade próxima, distância.
+    - Busca considera apenas babás ativas e verificadas no território.
+- [POST-MVP] **Cadastro de babá**
+  - Critérios de aceite:
+    - Usuário pode se cadastrar como babá no território.
+    - Formulário inclui: experiência (anos, número de crianças já cuidadas, faixas etárias atendidas), certificações (primeiros socorros, curso de babá, etc.), disponibilidade (horários semanais, dias da semana, disponibilidade imediata), preço/hora, área de atuação (raio em km), descrição pessoal, fotos, referências (opcional).
+    - Babá pode definir múltiplos territórios onde atua.
+    - Perfil de babá requer verificação de identidade (mesmo sistema de verificação de resident).
+    - Status do perfil: pendente, ativo, inativo, suspenso (por moderação).
+- [POST-MVP] **Perfil detalhado de babá**
+  - Critérios de aceite:
+    - Perfil mostra: informações completas, galeria de fotos, avaliações e comentários de contratantes anteriores, disponibilidade em calendário, histórico de serviços (quantidade, tipos de serviços), badges/verificações (identidade verificada, certificações, membro do território há X tempo).
+    - Contratante pode ver avaliações detalhadas e contatar babá via chat interno ou telefone (se babá permitir).
+- [POST-MVP] **Sistema de avaliações e recomendações**
+  - Critérios de aceite:
+    - Contratantes podem avaliar babá após serviço concluído (1-5 estrelas, comentário opcional).
+    - Avaliações são públicas e vinculadas ao perfil da babá.
+    - Sistema calcula média de avaliações e número total.
+    - Babá pode responder avaliações.
+    - Sistema de recomendações: babás bem avaliadas aparecem primeiro nos resultados.
+- [POST-MVP] **Solicitação e contratação de serviço**
+  - Critérios de aceite:
+    - Contratante pode solicitar serviço diretamente do perfil da babá.
+    - Solicitação inclui: data/hora, duração estimada, número e idades das crianças, necessidades especiais, localização.
+    - Babá recebe notificação e pode aceitar, recusar ou fazer contraproposta.
+    - Chat integrado para negociar detalhes antes da confirmação.
+    - Após aceite, serviço fica confirmado e aparece no calendário de ambos.
+- [POST-MVP] **Integração com sistema de pagamentos**
+  - Critérios de aceite:
+    - Contratante pode pagar via plataforma (integração com Marketplace/pagamentos existente).
+    - Pagamento pode ser antecipado ou após serviço (conforme acordo).
+    - Sistema registra transação e libera pagamento após confirmação de conclusão.
+    - Taxa de plataforma aplicável (configurável por território).
+
+### Feature: Espaços e Prestadores de Wellness
+- [POST-MVP] **Cadastro de espaços de wellness**
+  - Critérios de aceite:
+    - Espaços físicos (yoga centers, espaços holísticos, spas, centros de bem-estar) podem se cadastrar no território.
+    - Formulário inclui: nome, descrição, endereço, fotos, tipos de serviços oferecidos (yoga, massagem, terapia sonora, etc.), capacidade, equipamentos disponíveis, políticas de uso.
+    - Espaço pode compartilhar agenda (horários disponíveis para profissionais marcarem).
+    - Agenda compartilhada mostra: dias da semana, horários livres/ocupados, duração de slots, regras de reserva (antecipação mínima, cancelamento).
+    - Status do espaço: pendente, ativo, inativo, suspenso.
+- [POST-MVP] **Cadastro de prestadores de serviços de wellness**
+  - Critérios de aceite:
+    - Profissionais (professores de yoga, massagistas, terapeutas de som, etc.) podem criar perfil de prestador.
+    - Formulário inclui: especialidades, certificações, experiência, descrição, fotos, preços, área de atuação.
+    - Prestador pode ter agenda pessoal (horários disponíveis para atender clientes).
+    - Verificação de identidade obrigatória.
+- [POST-MVP] **Busca de espaços e prestadores**
+  - Critérios de aceite:
+    - Busca permite encontrar espaços e prestadores separadamente ou combinados.
+    - Filtros para espaços: tipo de serviço, localização, capacidade, equipamentos, disponibilidade de agenda compartilhada.
+    - Filtros para prestadores: especialidade, certificações, localização, preço, avaliações.
+    - Resultados mostram: perfil resumido, disponibilidade, distância, avaliações.
+- [POST-MVP] **Reserva de horários em espaços compartilhados**
+  - Critérios de aceite:
+    - Prestador pode visualizar agenda compartilhada de um espaço.
+    - Prestador pode solicitar reserva de horário específico na agenda do espaço.
+    - Solicitação inclui: data/hora, duração, tipo de serviço, número de participantes esperados.
+    - Espaço recebe notificação e pode aprovar, rejeitar ou fazer contraproposta.
+    - Após aprovação, horário fica reservado e aparece como ocupado na agenda do espaço.
+    - Prestador pode cancelar reserva (conforme políticas do espaço).
+- [POST-MVP] **Gestão de agenda compartilhada**
+  - Critérios de aceite:
+    - Espaço pode definir horários disponíveis para reserva (slots recorrentes ou pontuais).
+    - Espaço pode bloquear horários (manutenção, eventos privados).
+    - Espaço pode ver todas as reservas pendentes e confirmadas.
+    - Espaço pode definir regras: antecipação mínima, duração mínima/máxima, cancelamento.
+- [POST-MVP] **Integração com clientes**
+  - Critérios de aceite:
+    - Clientes podem buscar prestadores e ver em quais espaços eles atendem.
+    - Cliente pode agendar sessão diretamente com prestador (usa agenda pessoal do prestador ou espaço reservado).
+    - Sistema mostra disponibilidade do prestador considerando reservas em espaços e agenda pessoal.
+    - Integração com pagamentos para sessões agendadas.

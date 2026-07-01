@@ -1,22 +1,13 @@
-# Domínios públicos do Arah
+﻿---
+title: "13 DOMAIN ROUTING (relocado)"
+status: deprecated
+redirect: backend/13_DOMAIN_ROUTING.md
+owner: docs-steward
+updated: 2026-06-30
+---
 
-## Visão geral
-
-A apresentação pública (landing) usa o domínio `https://Arah.app/`, servida como página estática no Gamma.
-O Developer Portal fica em `https://devportal.Arah.app/` e é servido pelo GitHub Pages.
-
-## Domínios públicos
-
-- `Arah.app` → landing pública (página estática no Gamma).
-- `devportal.Arah.app` → Developer Portal (GitHub Pages, servido diretamente).
-
-## Lógica de publicação e navegação
-
-- **Sem redirects automáticos**: A navegação é feita apenas através de links clicáveis pelo usuário.
-- O Developer Portal sempre exibe um banner com link para voltar ao `Arah.app`.
-- Não existe página intermediária - o Developer Portal é servido diretamente em `devportal.Arah.app`.
-
-## Validação rápida
-
-- Abra `https://Arah.app/` e confirme que é a landing pública.
-- Abra `https://devportal.Arah.app/` e confirme que é o Developer Portal completo.
+> **Documento relocado** — conteúdo ativo em subpasta semântica.
+>
+> Novo caminho: [backend/13_DOMAIN_ROUTING.md](backend/13_DOMAIN_ROUTING.md)
+>
+> Use [00_INDEX.md](./00_INDEX.md) ou [INDEX.generated.md](./INDEX.generated.md) para navegar.

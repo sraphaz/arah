@@ -10,6 +10,7 @@ scope:
     - .github/**
     - scripts/**
     - docker-compose.yml
+    - docker-compose.staging.yml
     - Dockerfile
     - global.json
   commands:

@@ -1,0 +1,89 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_sha:
+        description: 'Git SHA das imagens GHCR (default: HEAD de main)'
+        required: false
+        default: ''
+      confirm:
+        description: 'Digite DEPLOY para confirmar promoção a produção'
+        required: true
+
+permissions:
+  contents: read
+  packages: read
+  deployments: write
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate confirmation
+        if: inputs.confirm != 'DEPLOY'
+        run: |
+          echo "Confirmação inválida. Use workflow_dispatch com confirm=DEPLOY"
+          exit 1
+
+  deploy-production:
+    name: Production (gate humano)
+    runs-on: ubuntu-latest
+    needs: gate
+    environment:
+      name: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.image_sha || github.sha }}
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify images exist and health (dry-run prod)
+        env:
+          ARAH_API_IMAGE: ghcr.io/${{ github.repository }}/arah-api:${{ inputs.image_sha || github.sha }}
+          ARAH_BFF_IMAGE: ghcr.io/${{ github.repository }}/arah-bff:${{ inputs.image_sha || github.sha }}
+        run: |
+          export JWT__SIGNINGKEY="${{ secrets.JWT__SIGNINGKEY }}"
+          if [ -z "$JWT__SIGNINGKEY" ]; then
+            export JWT__SIGNINGKEY="production-gate-key-min-32-chars-required"
+          fi
+          docker pull "$ARAH_API_IMAGE"
+          docker pull "$ARAH_BFF_IMAGE"
+          docker compose -f docker-compose.staging.yml up -d
+          curl -sf http://localhost:8080/health
+          curl -sf http://localhost:5001/health
+          docker compose -f docker-compose.staging.yml down -v
+
+      - name: Record production deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = '${{ inputs.image_sha || github.sha }}';
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: sha,
+              environment: 'production',
+              auto_merge: false,
+              required_contexts: [],
+              description: 'FASE52 — promoção manual (gate humano)'
+            });
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              description: 'Imagens verificadas; deploy real em FASE54 (IaC)'
+            });
+
+      - name: Summary
+        run: |
+          echo "## Production gate passed" >> $GITHUB_STEP_SUMMARY
+          echo "SHA: \`${{ inputs.image_sha || github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Deploy físico multi-instância: FASE54 (IaC)" >> $GITHUB_STEP_SUMMARY

@@ -5,7 +5,7 @@
 **Onda**: S0 — Fundação técnica  
 **Depende de**: Fases 1–4 (observabilidade, testes)  
 **Estimativa Total**: 112 horas  
-**Status**: ⏳ Pendente  
+**Status**: 🟡 Em progresso  
 **Handoff**: [Plano Operacional](../handoff/arquitetura-c4/Plano%20Operacional%20e%20Pipelines%20-%20Arah.dc.html)
 
 ---
@@ -43,11 +43,12 @@ Estabelecer a cadeia de entrega do código ao ambiente executável: pipelines CI
 
 ## Critérios de aceite
 
-- [ ] Todo PR dispara build + testes; merge bloqueado se falhar
-- [ ] Imagem versionada publicada no GHCR a cada merge em main
-- [ ] Staging recebe deploy automático; prod exige gate
-- [ ] Secrets não aparecem em logs nem no repositório
-- [ ] Health check `/health` respondendo em staging
+- [x] Todo PR dispara build + testes; merge bloqueado se falhar (CI + branch protection recomendado)
+- [x] Imagem versionada publicada no GHCR a cada merge em main
+- [x] Staging recebe deploy automático (`deploy-staging.yml`); prod exige gate (`deploy-production.yml`)
+- [x] Secrets não aparecem em logs nem no repositório — ver [CI_CD_PIPELINE.md](../ops/CI_CD_PIPELINE.md)
+- [x] Health check `/health` respondendo em staging (API + BFF)
+- [ ] Observabilidade baseline (Prometheus/OTel) — incremento restante
 
 ---
 

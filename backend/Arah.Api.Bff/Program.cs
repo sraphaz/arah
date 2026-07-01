@@ -88,6 +88,14 @@ app.UseStaticFiles();
 
 app.MapControllers();
 
+app.MapGet("/health", () => Results.Ok(new { status = "healthy", service = "arah-bff" }))
+    .AllowAnonymous()
+    .ExcludeFromDescription();
+
+app.MapGet("/liveness", () => Results.Ok(new { status = "ok" }))
+    .AllowAnonymous()
+    .ExcludeFromDescription();
+
 // Documentação de todas as jornadas expostas pelo BFF (proxy para a API)
 app.MapGet("/bff/journeys", () =>
 {

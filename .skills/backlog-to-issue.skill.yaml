@@ -1,10 +1,14 @@
 id: backlog-to-issue
-description: Converte item de backlog/descoberta em issue com critérios de aceite.
+description: Converte item de backlog/descoberta em issue com critérios de aceite e spec SDD.
 inputs:
   source: enum [FASE*.md, REALINHAMENTO, handoff, ad_hoc]
 outputs:
   - title
   - acceptance_criteria
+  - spec_id
   - suggested_labels
   - suggested_agent
 template: .github/ISSUE_TEMPLATE/agent-task.yml
+notes: |
+  Fases S0+ (52–61): criar ou referenciar docs/specs/phases/{id}.spec.yaml via spec-author.
+  Labels sugeridas: area/backend|ops|spec + agent-task.

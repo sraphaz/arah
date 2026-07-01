@@ -11,16 +11,24 @@ scope:
 skills:
   - backlog-to-issue
   - open-pr
+  - harness-run
 routing:
   area/backend: backend
   area/flutter: flutter
   area/web: web
   area/docs: docs-steward
+  area/spec: spec-steward
+  area/sdd: spec-steward
   area/ops: release
   area/security: security
   area/planning: planner
   area/pr-review: pr-steward
   ready-for-merge: pr-steward
+co_route:
+  docs/specs/**: spec-steward
+  scripts/harness/**: spec-steward
+  backend/Arah.Core/**: backend
+  .github/workflows/spec-harness.yml: release
 guardrails:
   no_merge: true
   require_ci: true

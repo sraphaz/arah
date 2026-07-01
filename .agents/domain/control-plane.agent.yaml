@@ -1,0 +1,16 @@
+id: control-plane
+name: Control Plane (Arah Core)
+mode: consult
+enrich: |
+  Registro de instâncias, catálogo de releases, heartbeat/telemetria, identidade federada.
+  Core é hub operacional — nunca armazena posts, memberships ou dados de território.
+validate: |
+  Entidades Instance/Release/HealthCheckReport; endpoints /core/*; degradação graciosa
+  se Core indisponível; mTLS e diretório federado conforme fase.
+references:
+  - docs/specs/phases/FASE53-arah-core.spec.yaml
+  - docs/backlog-api/FASE53.md
+  - docs/backlog-api/FASE58.md
+  - docs/backlog-api/FASE59.md
+  - docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html
+  - backend/Arah.Core/

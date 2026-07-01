@@ -1,6 +1,6 @@
 # AGENTS.md — Manual de operação por agentes
 
-**Versão**: 1.3  
+**Versão**: 1.4  
 **Data**: 2026-07-01  
 **Repo**: `sraphaz/arah`
 
@@ -17,6 +17,23 @@ Este arquivo é a **fonte de verdade** para agentes (Cursor, CI, `arah-agents`).
 3. **Escopo mínimo** — cada agente só toca paths permitidos (ver `.agents/*.agent.yaml`).
 4. **Doc como código** — `sync-docs` no mesmo PR que código; doc desatualizada = bug.
 5. **Território-primeiro** — mesma ética do produto: agentes pequenos, desacoplados.
+6. **Spec-before-code** — fases S0+ exigem spec em `docs/specs/` e `Spec-Id:` no PR.
+
+---
+
+## SDD — quem faz o quê
+
+| Objeto | Agente principal | Co-agentes | Skills |
+|--------|------------------|------------|--------|
+| `docs/specs/*.yaml` | `spec-steward` | `docs-steward`, `planner` | `spec-author`, `spec-validate`, `harness-run` |
+| `scripts/harness/` | `spec-steward` | `release` | `harness-run`, `spec-validate` |
+| `backend/Arah.Core/` | `backend` | `spec-steward` | `run-tests`, `harness-run`, consult `control-plane` |
+| `.github/workflows/spec-harness.yml` | `release` | `spec-steward` | `harness-run` |
+| FASE52–61 backlog | `planner` | `spec-steward` | `spec-author`, `backlog-to-issue` |
+
+**Co-roteamento automático** (orquestrador): paths em `co_route` disparam agentes adicionais no PR. Ver [.agents/orchestrator.agent.yaml](.agents/orchestrator.agent.yaml).
+
+**Gate SDD**: `spec-gate-check.ps1` (incluído em `run-gates` / `agents-gates`).
 
 ---
 
@@ -56,16 +73,23 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | `orchestrator` | Orquestrador | issue/PR + label | Roteia, não coda | [.agents/orchestrator.agent.yaml](.agents/orchestrator.agent.yaml) |
 | `planner` | Planner / Backlog Steward | descoberta, agenda | backlog, STATUS_FASES | [.agents/planner.agent.yaml](.agents/planner.agent.yaml) |
 | `docs-steward` | Docs Steward | merge, agenda | `docs/`, README, CHANGELOG | [.agents/docs-steward.agent.yaml](.agents/docs-steward.agent.yaml) |
-| `backend` | Backend Agent | `area/backend` | `backend/Arah.Api*`, tests | [.agents/backend.agent.yaml](.agents/backend.agent.yaml) |
+| `backend` | Backend Agent | `area/backend` | API, BFF, **Arah.Core**, tests | [.agents/backend.agent.yaml](.agents/backend.agent.yaml) |
 | `flutter` | Flutter Agent | `area/flutter` | `frontend/arah.app/` | [.agents/flutter.agent.yaml](.agents/flutter.agent.yaml) |
 | `web` | Web Agent | `area/web` | wiki, portal, devportal | [.agents/web.agent.yaml](.agents/web.agent.yaml) |
 | `qa` | Review / QA Agent | PR aberto | todos os PRs | [.agents/qa.agent.yaml](.agents/qa.agent.yaml) |
 | `pr-steward` | PR Steward (Review & Merge) | PR, push main | bots, merge prep, next-phase | [.agents/pr-steward.agent.yaml](.agents/pr-steward.agent.yaml) |
-| `spec-steward` | Spec Steward (SDD) | PR specs/código | `docs/specs/`, harness | [.agents/spec-steward.agent.yaml](.agents/spec-steward.agent.yaml) |
+| `spec-steward` | Spec Steward (SDD) | `area/spec`, PR specs | specs, harness, PLATFORM_STATE | [.agents/spec-steward.agent.yaml](.agents/spec-steward.agent.yaml) |
 | `release` | Release / DevOps | merge main, tag | `.github/`, infra | [.agents/release.agent.yaml](.agents/release.agent.yaml) |
 | `security` | Security / Compliance | PR, agenda | deps, secrets, SECURITY | [.agents/security.agent.yaml](.agents/security.agent.yaml) |
 
 **Consultivos** (não abrem PR sozinhos): `.agents/domain/`, `.agents/specialists/`
+
+| Tipo | ID | Foco |
+|------|-----|------|
+| Domain | `control-plane` | Arah Core, instâncias, releases, federação |
+| Domain | `territorio-membership`, `monetizacao-split`, … | Ver `.agents/domain/` |
+| Specialist | `core-control-plane` | `Arah.Core`, endpoints `/core/*` |
+| Specialist | `dotnet`, `bff`, `nextjs`, `flutter` | Stack |
 
 ---
 
@@ -87,6 +111,8 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | [address-bot-review](.skills/address-bot-review.skill.yaml) | Auditar apontamentos de bots no PR |
 | [next-phase](.skills/next-phase.skill.yaml) | Abrir issue da próxima fase (`docs/_meta/PHASE_QUEUE.yaml`) |
 | [spec-validate](.skills/spec-validate.skill.yaml) | Valida specs SDD + harness |
+| [spec-author](.skills/spec-author.skill.yaml) | Cria/atualiza spec a partir do template |
+| [harness-run](.skills/harness-run.skill.yaml) | Executa harness completo ou por Spec-Id |
 | [agent-activate](.skills/agent-activate.skill.yaml) | Publicar checklist de conduta na issue/PR |
 
 ---
@@ -95,7 +121,7 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 
 ```powershell
 ./scripts/agents/arah-agents.ps1 orchestrate -Labels area/backend
-./scripts/agents/arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
+./scripts/agents/arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Core/Domain/CoreInstance.cs,docs/specs/phases/FASE53-arah-core.spec.yaml
 ./scripts/agents/arah-agents.ps1 validate
 ./scripts/agents/arah-agents.ps1 harness
 ./scripts/agents/arah-agents.ps1 spec-validate
@@ -119,6 +145,8 @@ Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Fl
 
 ### Backend
 - Use **`Arah.sln`**, não `Araponga.sln`. Namespaces `Arah.*`.
+- **Arah Core**: `backend/Arah.Core/` — control plane; consultar domain `control-plane`.
+- PRs de fase: corpo com `Spec-Id: FASE53-arah-core` (ou id da spec).
 - JWT obrigatório: `JWT__SIGNINGKEY=...` (ex.: `dev-only-change-me` em dev).
 - Default InMemory — Postgres opcional via `Persistence__Provider=Postgres`.
 - API: `dotnet run --project backend/Arah.Api` → `:5178`. BFF: `backend/Arah.Api.Bff` → `:5005`, `Bff__ApiBaseUrl=http://localhost:5178`.
@@ -135,8 +163,8 @@ Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Fl
 - Jornadas BFF: `BffJourneyRegistry` (skill `register-bff-journey`).
 
 ### Documentação (obrigatório em todo PR)
-- `docs/CHANGELOG.md`, `docs/STATUS_FASES.md`, fases em `docs/backlog-api/` quando aplicável.
-- Ver [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md) e [.cursorrules](.cursorrules).
+- `docs/CHANGELOG.md`, `docs/STATUS_FASES.md`, fases em `docs/backlog-api/`, **specs** em `docs/specs/` quando aplicável.
+- Ver [docs/_meta/SDD_AND_HARNESS.md](docs/_meta/SDD_AND_HARNESS.md), [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md).
 
 ### Guardrails
 - **Nunca** merge automático em `main`/prod.
@@ -148,4 +176,7 @@ Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Fl
 ## Referências
 
 - [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md)
+- [docs/_meta/SDD_AND_HARNESS.md](docs/_meta/SDD_AND_HARNESS.md)
+- [docs/specs/README.md](docs/specs/README.md)
+- [docs/ops/PLATFORM_STATE.md](docs/ops/PLATFORM_STATE.md)
 - [REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](docs/backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)

@@ -1,0 +1,18 @@
+id: spec-author
+name: Spec Author
+description: Cria ou atualiza spec SDD a partir do template e liga à fase/backlog.
+inputs:
+  spec_id: kebab-case único (ex. FASE53-arah-core)
+  phase: opcional (ex. FASE53)
+  owner: backend | flutter | web | ops | docs-steward
+steps:
+  - copy: docs/specs/_template.spec.yaml → docs/specs/phases/{spec_id}.spec.yaml
+  - fill: id, title, acceptance (id + then), harness.commands, links.docs
+  - run: scripts/harness/validate-specs.ps1 -SpecId {spec_id}
+  - sync: docs/backlog-api/FASE*.md, STATUS_FASES, PHASE_QUEUE.yaml
+references:
+  - docs/specs/README.md
+  - docs/_meta/SDD_AND_HARNESS.md
+guardrails:
+  - spec-before-code
+  - acceptance-must-be-verifiable

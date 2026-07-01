@@ -65,6 +65,29 @@ function Get-RoutingTable {
     return $routes
 }
 
+function Get-CoRouteTable {
+    $orchestrator = Join-Path $AgentsDir 'orchestrator.agent.yaml'
+    if (-not (Test-Path $orchestrator)) { return @{} }
+
+    $raw = Get-Content $orchestrator -Raw
+    $coRoutes = @{}
+    if ($raw -match '(?ms)^co_route:\s*\n((?:\s+.+\r?\n)+)') {
+        foreach ($line in ($Matches[1] -split "`n")) {
+            if ($line -match '^\s+(.+):\s+(\S+)') {
+                $coRoutes[$Matches[1].Trim()] = $Matches[2].Trim()
+            }
+        }
+    }
+    return $coRoutes
+}
+
+function Parse-SpecIdFromBody {
+    param([string]$Body)
+    if ([string]::IsNullOrWhiteSpace($Body)) { return $null }
+    if ($Body -match '(?mi)^Spec-Id:\s*(\S+)') { return $Matches[1].Trim() }
+    return $null
+}
+
 function Get-AgentManifestPath {
     param([string]$AgentId)
     $direct = Join-Path $AgentsDir "$AgentId.agent.yaml"
@@ -131,7 +154,7 @@ function Parse-IssueBodyForArea {
 
     if ([string]::IsNullOrWhiteSpace($Body)) { return $null }
     if ($Body -match '(?m)^###\s*Área\s*\r?\n\r?\n(area/\S+)') { return $Matches[1] }
-    if ($Body -match '(?m)^area/(backend|flutter|web|docs|ops|security|planning)\b') { return $Matches[0].Trim() }
+    if ($Body -match '(?m)^area/(backend|flutter|web|docs|ops|security|planning|spec|sdd|pr-review)\b') { return $Matches[0].Trim() }
     return $null
 }
 
@@ -254,6 +277,42 @@ function Resolve-AgentsFromPaths {
     }
 }
 
+function Resolve-CoAgentsFromFiles {
+    param([string[]]$Files)
+
+    $coRoutes = Get-CoRouteTable
+    $found = @{}
+    foreach ($file in $Files) {
+        foreach ($pattern in $coRoutes.Keys) {
+            if (Test-PathMatchesGlob -FilePath $file -Pattern $pattern) {
+                $agent = $coRoutes[$pattern]
+                if (-not $found.ContainsKey($agent)) { $found[$agent] = @() }
+                if ($found[$agent] -notcontains $file) { $found[$agent] += $file }
+            }
+        }
+    }
+    return $found.GetEnumerator() | Sort-Object Name | ForEach-Object {
+        @{ agent = $_.Key; files = $_.Value }
+    }
+}
+
+function Resolve-PrimaryFromPathAgents {
+    param([array]$PathAgents)
+
+    if ($PathAgents.Count -eq 0) { return $null }
+    if ($PathAgents.Count -eq 1) { return $PathAgents[0].agent }
+
+    $priority = @(
+        'backend', 'flutter', 'web', 'release', 'spec-steward',
+        'docs-steward', 'planner', 'security', 'pr-steward'
+    )
+    $ids = @($PathAgents | ForEach-Object { $_.agent })
+    foreach ($p in $priority) {
+        if ($ids -contains $p) { return $p }
+    }
+    return $PathAgents[0].agent
+}
+
 function Invoke-Orchestrate {
     $gh = Read-GitHubEvent -Path $EventPath
     $effectiveEvent = if ($Event -ne 'manual') { $Event } else { $gh.eventName }
@@ -268,31 +327,44 @@ function Invoke-Orchestrate {
     }
 
     $files = Normalize-FileList -Files $ChangedFiles
+    $specId = Parse-SpecIdFromBody -Body $gh.body
     $agentId = Resolve-AgentFromLabels -LabelList $labelList
     $pathAgents = @()
-    if (-not $agentId -and $files.Count -gt 0) {
+    if ($files.Count -gt 0) {
         $pathAgents = @(Resolve-AgentsFromPaths -Files $files)
-        if ($pathAgents.Count -eq 1) {
-            $agentId = $pathAgents[0].agent
+    }
+    if ($pathAgents.Count -eq 0 -and $gh.changed.Count -gt 0) {
+        $pathAgents = @(Resolve-AgentsFromPaths -Files (Normalize-FileList -Files $gh.changed))
+        if ($files.Count -eq 0) { $files = Normalize-FileList -Files $gh.changed }
+    }
+
+    if (-not $agentId -and $pathAgents.Count -gt 0) {
+        $agentId = Resolve-PrimaryFromPathAgents -PathAgents $pathAgents
+    }
+
+    $coRouteHits = @(Resolve-CoAgentsFromFiles -Files $files)
+    $coAgents = @()
+    foreach ($hit in $coRouteHits) {
+        if ($hit.agent -and $hit.agent -ne $agentId -and $coAgents -notcontains $hit.agent) {
+            $coAgents += $hit.agent
         }
     }
-    if (-not $agentId -and $gh.changed.Count -gt 0) {
-        $pathAgents = @(Resolve-AgentsFromPaths -Files (Normalize-FileList -Files $gh.changed))
-        if ($pathAgents.Count -eq 1) {
-            $agentId = $pathAgents[0].agent
-        }
+    if ($specId -and $coAgents -notcontains 'spec-steward' -and $agentId -ne 'spec-steward') {
+        $coAgents += 'spec-steward'
     }
 
     $resolvedId = if ($agentId) { $agentId } else { 'orchestrator' }
     $summary = Read-AgentSummary -AgentId $resolvedId
 
     $message = if ($agentId) {
-        "Delegate to agent '$agentId' ($($summary.name)). Read AGENTS.md and apply skills from .skills/."
+        $coMsg = if ($coAgents.Count -gt 0) { " Co-agents: $($coAgents -join ', ')." } else { '' }
+        $specMsg = if ($specId) { " Spec-Id: $specId." } else { '' }
+        "Delegate to agent '$agentId' ($($summary.name)).$coMsg$specMsg Read AGENTS.md and apply skills from .skills/."
     } elseif ($pathAgents.Count -gt 1) {
         $names = ($pathAgents | ForEach-Object { $_.agent }) -join ', '
         "Multiple agents match changed paths: $names. Add an area/* label or split the PR."
     } else {
-        'No area/* label matched. Add area/backend|flutter|web|docs|ops|security|planning or label agent-task with Área filled.'
+        'No area/* label matched. Add area/backend|flutter|web|docs|spec|ops|security|planning or label agent-task with Área filled.'
     }
 
     $result = [ordered]@{
@@ -303,6 +375,8 @@ function Invoke-Orchestrate {
         agent_name    = $summary.name
         manifest      = $summary.manifest
         skills        = @($summary.skills)
+        spec_id       = $specId
+        co_agents     = @($coAgents)
         path_agents   = @($pathAgents | ForEach-Object {
             @{
                 agent = $_.agent
@@ -409,6 +483,8 @@ switch ($Command) {
             @{ name = 'area/flutter'; color = 'FBCA04'; description = 'App Flutter arah.app' },
             @{ name = 'area/web'; color = '5319E7'; description = 'Wiki, portal, devportal' },
             @{ name = 'area/docs'; color = '0075CA'; description = 'Documentação e taxonomia' },
+            @{ name = 'area/spec'; color = '006B75'; description = 'Spec-Driven Design (YAML specs + harness)' },
+            @{ name = 'area/sdd'; color = '006B75'; description = 'Alias SDD — roteia para spec-steward' },
             @{ name = 'area/ops'; color = 'D93F0B'; description = 'CI/CD, release, infra' },
             @{ name = 'area/security'; color = 'B60205'; description = 'Segurança e compliance' },
             @{ name = 'area/planning'; color = 'C5DEF5'; description = 'Backlog e planejamento' },

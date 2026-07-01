@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Agentes SDD + Arah Core (2026-07-01)
+
+- Co-roteamento orquestrador (`area/spec`, `co_route` para specs/Core)
+- Domain `control-plane`, specialist `core-control-plane`
+- Skills `spec-author`, `harness-run`; gate `spec-gate-check.ps1`
+- Checklist dedicado `spec-steward`; agentes backend/qa/pr-steward/release/planner evoluídos
+
 ### Adicionado — Spec-Driven Design + Harness (2026-07-01)
 
 - `docs/specs/` — specs YAML com critérios de aceite (FASE52, FASE53, operabilidade, agentes)

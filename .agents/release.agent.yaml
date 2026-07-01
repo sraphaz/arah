@@ -1,6 +1,6 @@
 id: release
 name: Release / DevOps Agent
-description: CI/CD, versões, changelog de release, IaC (quando existir).
+description: CI/CD, harness CI, versões, changelog de release, IaC (quando existir).
 triggers:
   - push:branch=main
   - issue:label=area/ops
@@ -9,6 +9,7 @@ scope:
   paths:
     - .github/**
     - scripts/**
+    - scripts/harness/**
     - docker-compose.yml
     - docker-compose.staging.yml
     - Dockerfile
@@ -19,7 +20,12 @@ skills:
   - release-cut
   - iac-plan
   - run-tests
+  - harness-run
+  - spec-validate
   - open-pr
+consult:
+  domain:
+    - control-plane
 checklist: checklists/release.checklist.md
 guardrails:
   no_merge: true

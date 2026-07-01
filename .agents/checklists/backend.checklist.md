@@ -3,8 +3,13 @@
 <!-- arah-conduct-checklist:backend -->
 
 ### Escopo permitido
-- [ ] Alterações apenas em `backend/Arah.*`, `backend/Tests/**`
-- [ ] Sem mudanças em Flutter, wiki ou docs fora de sync-docs
+- [ ] Alterações em `backend/Arah.*`, `backend/Tests/**` (inclui **`Arah.Core`**)
+- [ ] Sem mudanças em Flutter, wiki ou docs fora de sync-docs / spec
+
+### SDD (fases S0+)
+- [ ] PR inclui `Spec-Id: <id>` ou spec atualizada em `docs/specs/`
+- [ ] `./scripts/agents/arah-agents.ps1 spec-validate` passa
+- [ ] Critérios `acceptance` da spec cobertos por testes (`dotnet test --filter FullyQualifiedName~Core` se Core)
 
 ### Antes do PR
 - [ ] `dotnet build` e `dotnet test` passam localmente ou via CI
@@ -16,9 +21,13 @@
 
 ### Skills (ordem sugerida)
 1. `run-tests` (area backend)
-2. `register-bff-journey` (se BFF alterado)
-3. `sync-docs`
-4. `open-pr`
+2. `spec-validate` / `harness-run` (se fase S0+ ou Arah.Core)
+3. `register-bff-journey` (se BFF alterado)
+4. `sync-docs`
+5. `open-pr`
+
+### Consultar quando Core/federação
+- [ ] Domain `control-plane` + specialist `core-control-plane`
 
 ### Proibido
 - [ ] Commit direto em `main`

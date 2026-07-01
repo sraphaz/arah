@@ -11,7 +11,7 @@ intent: |
 
 acceptance:
   - id: AC-AG-1
-    then: "validate-manifests.ps1 passa (20 agentes, 15+ skills)"
+    then: "validate-manifests.ps1 passa (22 agentes, 17 skills)"
   - id: AC-AG-2
     then: "agents.yml posta ativação + artifact agent-activity.json"
   - id: AC-AG-3

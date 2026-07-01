@@ -157,6 +157,23 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 
 **Onda S / FASE52+** — CI/CD, Arah Core, IaC ([REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](../backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md))
 
+### PR 10 — Agentes SDD + Arah Core (2026-07-01)
+
+| Artefato | Caminho |
+|----------|---------|
+| Spec Steward checklist | [.agents/checklists/spec-steward.checklist.md](../../.agents/checklists/spec-steward.checklist.md) |
+| Domain control-plane | [.agents/domain/control-plane.agent.yaml](../../.agents/domain/control-plane.agent.yaml) |
+| Specialist Core | [.agents/specialists/core-control-plane.agent.yaml](../../.agents/specialists/core-control-plane.agent.yaml) |
+| Skills | [spec-author](../../.skills/spec-author.skill.yaml), [harness-run](../../.skills/harness-run.skill.yaml) |
+| Gate SDD | [spec-gate-check.ps1](../../scripts/agents/spec-gate-check.ps1) |
+| Co-roteamento | [orchestrator.agent.yaml](../../.agents/orchestrator.agent.yaml) `co_route` |
+| Labels | `area/spec`, `area/sdd` |
+
+**Comportamento:**
+- PR com `docs/specs/` ou `Arah.Core` aciona **spec-steward** como co-agente.
+- `run-gates` inclui `spec-gate-check` (Spec-Id + validate-specs).
+- Backend consulta `control-plane` / `core-control-plane` para FASE53+.
+
 ---
 
 ## Referências

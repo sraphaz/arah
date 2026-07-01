@@ -6,20 +6,31 @@ description: |
 triggers:
   - pull_request:opened
   - pull_request:synchronize
+  - issue:label=area/spec
+  - issue:label=area/sdd
   - issue:label=area/docs
   - workflow_dispatch
 scope:
   paths:
     - docs/specs/**
     - docs/_meta/SDD_AND_HARNESS.md
+    - docs/ops/PLATFORM_STATE.md
     - scripts/harness/**
+    - scripts/agents/spec-gate-check.ps1
     - .github/workflows/spec-harness.yml
   may_code: true
 skills:
   - spec-validate
+  - spec-author
+  - harness-run
   - sync-docs
   - open-pr
-checklist: checklists/docs-steward.checklist.md
+consult:
+  domain:
+    - control-plane
+  specialists:
+    - core-control-plane
+checklist: checklists/spec-steward.checklist.md
 guardrails:
   no_merge: true
   require_ci: true

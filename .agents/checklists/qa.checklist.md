@@ -9,6 +9,7 @@
 ### Checklist de review
 - [ ] Clean Architecture e SOLID
 - [ ] Testes para comportamento novo
+- [ ] **Spec-Id** e critérios `acceptance` atendidos (SDD)
 - [ ] Escopo atômico do PR
 - [ ] sync-docs aplicado
 - [ ] Mobile-first e acessibilidade (se UI)
@@ -17,6 +18,7 @@
 ### Skills
 1. `code-review`
 2. `run-tests` (área inferida do diff)
+3. `spec-validate` (se `docs/specs/` ou `Arah.Core` no diff)
 
 ### Referência
 - [docs/governance/21_CODE_REVIEW.md](../../docs/governance/21_CODE_REVIEW.md)

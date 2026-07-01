@@ -1,19 +1,22 @@
 id: planner
 name: Planner (Backlog Steward)
-description: Converte descobertas e épicos em issues priorizadas com critérios de aceite.
+description: Converte descobertas e épicos em issues priorizadas com specs e critérios de aceite.
 triggers:
   - issue:label=area/planning
   - schedule:weekly
 scope:
   paths:
     - docs/backlog-api/**
+    - docs/specs/**
     - docs/02_ROADMAP.md
     - docs/03_BACKLOG.md
     - docs/STATUS_FASES.md
+    - docs/_meta/PHASE_QUEUE.yaml
     - docs/handoff/**
   may_code: false
 skills:
   - backlog-to-issue
+  - spec-author
   - sync-docs
   - open-pr
 checklist: checklists/planner.checklist.md

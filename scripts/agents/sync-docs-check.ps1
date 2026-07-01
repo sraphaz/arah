@@ -74,6 +74,19 @@ if ($hasAgentsChange -and ($files -notcontains 'docs/ops/AGENT_OPERATION.md')) {
     $warnings += 'Infra de agentes alterada — atualize docs/ops/AGENT_OPERATION.md.'
 }
 
+$hasSpecOrCore = $files | Where-Object {
+    $n = $_.Replace('\', '/')
+    $n -match '^docs/specs/' -or $n -match '^backend/Arah\.Core/' -or $n -match '^scripts/harness/'
+}
+if ($hasSpecOrCore -and ($files -notcontains 'docs/ops/PLATFORM_STATE.md')) {
+    $warnings += 'SDD/Core alterado — considere atualizar docs/ops/PLATFORM_STATE.md.'
+}
+
+$hasCoreCode = $files | Where-Object { $_.Replace('\', '/') -match '^backend/Arah\.Core/' }
+if ($hasCoreCode -and -not ($files | Where-Object { $_.Replace('\', '/') -match '^docs/specs/' })) {
+    $warnings += 'Arah.Core alterado sem docs/specs/ — inclua Spec-Id no PR ou atualize a spec da fase.'
+}
+
 $inflationPattern = '^(PR_|RESUMO_|ANALISE_|AVALIACAO_|IMPLEMENTACAO_.*_PLANO|CORRECOES_PENDENTES)'
 foreach ($f in $files) {
     $norm = $f.Replace('\', '/')

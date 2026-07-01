@@ -188,6 +188,29 @@ try {
 
         }
 
+        'spec-validate' {
+
+            & (Join-Path $Root 'scripts/harness/validate-specs.ps1')
+
+        }
+
+        'harness-run' {
+
+            $hParams = @{}
+            if ($env:ARAH_SPEC_ID) { $hParams['SpecId'] = $env:ARAH_SPEC_ID }
+            & (Join-Path $Root 'scripts/harness/run-harness.ps1') @hParams
+
+        }
+
+        'spec-author' {
+
+            Write-Host 'spec-author: copie docs/specs/_template.spec.yaml → docs/specs/phases/<id>.spec.yaml'
+            Write-Host 'Preencha acceptance + harness; rode spec-validate. Ver .skills/spec-author.skill.yaml'
+
+            exit 0
+
+        }
+
         default {
 
             Write-Host (Get-Content $SkillFile -Raw)

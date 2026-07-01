@@ -37,7 +37,13 @@ if ($route.agent -and $route.agent -ne 'orchestrator') {
     $agentList += $route.agent
 }
 
-    foreach ($pa in @($route.path_agents)) {
+foreach ($co in @($route.co_agents)) {
+    if ($co -and $co -ne 'orchestrator' -and $agentList -notcontains $co) {
+        $agentList += $co
+    }
+}
+
+foreach ($pa in @($route.path_agents)) {
         if ($pa.agent -and $pa.agent -ne 'orchestrator' -and $agentList -notcontains $pa.agent) {
             $agentList += $pa.agent
         }

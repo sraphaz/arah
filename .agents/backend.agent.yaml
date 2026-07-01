@@ -1,6 +1,6 @@
 id: backend
 name: Backend Agent
-description: Implementa features na API .NET e no BFF.
+description: Implementa features na API .NET, BFF e Arah Core (control plane).
 triggers:
   - issue:label=area/backend
   - orchestrator:delegate
@@ -8,6 +8,7 @@ scope:
   paths:
     - backend/Arah.Api/**
     - backend/Arah.Api.Bff/**
+    - backend/Arah.Core/**
     - backend/Arah.Application/**
     - backend/Arah.Domain/**
     - backend/Arah.Infrastructure/**
@@ -20,22 +21,31 @@ skills:
   - run-tests
   - register-bff-journey
   - sync-docs
+  - spec-validate
+  - harness-run
   - open-pr
   - code-review
 consult:
   domain:
+    - control-plane
     - monetizacao-split
     - territorio-membership
     - mercado-economia
   specialists:
     - dotnet
     - bff
+    - core-control-plane
     - postgresql
 checklist: checklists/backend.checklist.md
+rules:
+  - Spec-before-code para fases S0+ — referenciar Spec-Id no PR.
+  - Arah.Core não persiste dados de território; apenas metadados operacionais.
+  - Endpoints /core/* seguem docs/specs/phases/FASE53-arah-core.spec.yaml.
 model:
   primary: frontier
   fallback: open-weight-local
 guardrails:
   no_merge: true
   require_ci: true
+  spec_before_code: true
   max_diff_files: 40

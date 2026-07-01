@@ -1,0 +1,14 @@
+id: harness-run
+name: Harness Run
+description: Executa harness SDD completo ou filtrado por spec.
+steps:
+  - script: scripts/harness/validate-specs.ps1
+  - script: scripts/harness/run-harness.ps1
+parameters:
+  SpecId: opcional — filtra uma spec
+  SkipTests: opcional — pula harness.commands
+outputs:
+  - harness-report.json
+references:
+  - docs/_meta/SDD_AND_HARNESS.md
+  - .github/workflows/spec-harness.yml

@@ -15,15 +15,19 @@ permissions:
 jobs:
   sync-board:
     runs-on: ubuntu-latest
+    # secrets não podem ser usados em expressões if:; mapeamos para env de job
+    env:
+      GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Reconcile + sync board
-        if: ${{ secrets.GH_PROJECT_TOKEN != '' }}
+        if: ${{ env.GH_PROJECT_TOKEN != '' }}
         shell: pwsh
         env:
-          GH_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
-          GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+          GH_TOKEN: ${{ env.GH_PROJECT_TOKEN }}
         run: |
           ./scripts/agents/github-project.ps1 reconcile
           ./scripts/agents/github-project.ps1 sync-project
@@ -40,8 +44,8 @@ jobs:
           }
 
       - name: Add new issue to project board
-        if: github.event_name == 'issues' && github.event.action == 'opened' && steps.project.outputs.url != '' && secrets.GH_PROJECT_TOKEN != ''
+        if: ${{ github.event_name == 'issues' && github.event.action == 'opened' && steps.project.outputs.url != '' && env.GH_PROJECT_TOKEN != '' }}
         uses: actions/add-to-project@v1.0.2
         with:
           project-url: ${{ steps.project.outputs.url }}
-          github-token: ${{ secrets.GH_PROJECT_TOKEN }}
+          github-token: ${{ env.GH_PROJECT_TOKEN }}

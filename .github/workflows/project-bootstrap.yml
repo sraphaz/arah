@@ -9,13 +9,15 @@ on:
 permissions:
   contents: write
   issues: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Require GH_PROJECT_TOKEN
         shell: pwsh
@@ -32,6 +34,7 @@ jobs:
              Name: GH_PROJECT_TOKEN
           3. Re-execute este workflow (Actions → Bootstrap GitHub Project → Run workflow)
           "@
+            exit 1
           }
 
       - name: Bootstrap (project, views, issues, board)
@@ -48,13 +51,21 @@ jobs:
           path: .github/phase-status.generated.json
           if-no-files-found: warn
 
-      - name: Commit project config (project_number + URL)
-        shell: pwsh
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/project/arah-sustentacao.yml
-          git diff --staged --quiet && exit 0
-          git commit -m "chore(ops): registrar GitHub Project (bootstrap)"
-          git pull --rebase origin main
-          git push
+      # Sem commit direto em main: abre PR para aprovação humana (política de agentes)
+      - name: Open PR with project config (project_number + URL)
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_PROJECT_TOKEN }}
+          add-paths: .github/project/arah-sustentacao.yml
+          base: main
+          branch: chore/github-project-bootstrap
+          delete-branch: true
+          commit-message: "chore(ops): registrar GitHub Project (bootstrap)"
+          title: "chore(ops): registrar GitHub Project (bootstrap)"
+          labels: area/ops
+          body: |
+            Atualização automática de `project_number`/`project_url` em
+            `.github/project/arah-sustentacao.yml` após bootstrap do GitHub Project v2.
+
+            Gerado pelo workflow **Bootstrap GitHub Project** (`workflow_dispatch`).
+            Requer aprovação humana — sem merge automático em `main`.

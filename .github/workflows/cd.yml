@@ -66,11 +66,12 @@ jobs:
             metrics_ok=1
             echo "Prometheus /metrics OK"
           else
-            echo "WARN: /metrics not exposing Prometheus text (baseline FASE52)"
+            echo "ERROR: /metrics not exposing Prometheus text (FASE52 baseline regression)"
           fi
           docker logs arah-smoke 2>&1 | tail -20
           docker stop arah-smoke
           if [ "$ok" != "1" ]; then echo "Health smoke failed"; exit 1; fi
+          if [ "$metrics_ok" != "1" ]; then echo "Metrics smoke failed"; exit 1; fi
       - name: Release agent activity (FASE52)
         if: always()
         shell: pwsh

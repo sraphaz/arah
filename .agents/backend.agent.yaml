@@ -31,6 +31,7 @@ consult:
     - dotnet
     - bff
     - postgresql
+checklist: checklists/backend.checklist.md
 model:
   primary: frontier
   fallback: open-weight-local

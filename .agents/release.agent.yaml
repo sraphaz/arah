@@ -19,6 +19,7 @@ skills:
   - iac-plan
   - run-tests
   - open-pr
+checklist: checklists/release.checklist.md
 guardrails:
   no_merge: true
   require_ci: true

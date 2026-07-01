@@ -29,6 +29,7 @@ consult:
     - dotnet
     - flutter
     - nextjs
+checklist: checklists/pr-steward.checklist.md
 bot_authors:
   - coderabbitai
   - dependabot

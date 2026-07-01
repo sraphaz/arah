@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -24,6 +24,9 @@ param(
     [string]$Area = 'backend',
     [int]$Wave = 1,
     [int]$PrNumber = 0,
+    [int]$Issue = 0,
+    [string]$Agent = '',
+    [string]$Trigger = 'manual',
     [switch]$Json,
     [switch]$DryRun
 )
@@ -361,9 +364,12 @@ Comandos:
   bot-review    Audita apontamentos de bots em um PR (obrigatório antes merge)
   pr-ready      Verifica CI + bots; indica ready-for-merge
   next-phase    Abre issue [Agent] da próxima fase (PHASE_QUEUE.yaml)
+  activate      Publica checklist de conduta do agente (issue/PR)
 
 Exemplos:
   ./arah-agents.ps1 orchestrate -Labels area/backend
+  ./arah-agents.ps1 activate -Agent backend -Issue 301
+  ./arah-agents.ps1 activate -Agent backend -PrNumber 300 -ChangedFiles backend/Arah.Api/Program.cs
   ./arah-agents.ps1 bot-review -PrNumber 300
   ./arah-agents.ps1 pr-ready -PrNumber 300
   ./arah-agents.ps1 next-phase -DryRun
@@ -443,6 +449,26 @@ switch ($Command) {
         if ($DryRun) { $params.DryRun = $true }
         if ($Json) { $params.Json = $true }
         & (Join-Path $PSScriptRoot 'next-phase.ps1') @params
+    }
+    'activate' {
+        if (-not $Agent) {
+            Write-Error 'activate requires -Agent (ex: backend, flutter, release)'
+            exit 1
+        }
+        if ($PrNumber -le 0 -and $Issue -le 0 -and -not $DryRun) {
+            Write-Error 'activate requires -PrNumber or -Issue (use -DryRun to preview local)'
+            exit 1
+        }
+        $params = @{
+            AgentId = $Agent
+            Trigger = $Trigger
+        }
+        if ($PrNumber -gt 0) { $params.PrNumber = $PrNumber }
+        if ($Issue -gt 0) { $params.IssueNumber = $Issue }
+        if ($ChangedFiles.Count -gt 0) { $params.ChangedFiles = $ChangedFiles }
+        if ($Json) { $params.Json = $true }
+        if (-not $DryRun) { $params.PostComment = $true }
+        & (Join-Path $PSScriptRoot 'post-agent-activity.ps1') @params
     }
     default { Show-Help }
 }

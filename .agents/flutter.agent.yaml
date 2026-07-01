@@ -24,6 +24,7 @@ consult:
     - mapa-lugares
   specialists:
     - flutter
+checklist: checklists/flutter.checklist.md
 guardrails:
   no_merge: true
   require_ci: true

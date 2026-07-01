@@ -1,7 +1,7 @@
 # Operação por agentes
 
-**Versão**: 1.2  
-**Data**: 2026-06-30  
+**Versão**: 1.3  
+**Data**: 2026-07-01  
 **Handoff HTML**: [Operacao por Agentes - Arah.dc.html](../handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
 
 ---
@@ -26,6 +26,7 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 | **6** | QA, Security & Release gates | ✅ |
 | **7** | Piloto assistido (billing) | ✅ |
 | **8** | PR Steward + next-phase | ✅ |
+| **9** | Visibilidade + checklists de conduta + FASE52 smoke | ✅ |
 
 ---
 
@@ -37,7 +38,7 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 |----------|---------|
 | Manual central | [AGENTS.md](../../AGENTS.md) |
 | Manifests | [.agents/](../../.agents/) (19 agentes) |
-| Skills | [.skills/](../../.skills/) (13 skills) |
+| Skills | [.skills/](../../.skills/) (14 skills) |
 | CODEOWNERS | [CODEOWNERS](../../CODEOWNERS) |
 | Issue template | [agent-task.yml](../../.github/ISSUE_TEMPLATE/agent-task.yml) |
 | Validação CI | [agents-validate.yml](../../.github/workflows/agents-validate.yml) |
@@ -104,6 +105,24 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 - Em cada PR: audita bots, posta checklist, label `ready-for-merge` só se CI verde **e** zero apontamentos de bot.
 - Após push em `main`: `next-phase.ps1` abre issue `[Agent]` da próxima fase desbloqueada na fila.
 - Merge continua **humano** (`guardrails.no_merge: true` no manifest).
+
+### PR 9 — Visibilidade e conduta dos agentes
+
+| Artefato | Caminho |
+|----------|---------|
+| Checklists | [.agents/checklists/](../../.agents/checklists/) (9 agentes + `_shared`) |
+| Ativação CI | [run-agent-activation.ps1](../../scripts/agents/run-agent-activation.ps1) |
+| Post comentário | [post-agent-activity.ps1](../../scripts/agents/post-agent-activity.ps1) |
+| Verificação auto | [agent-conduct-check.ps1](../../scripts/agents/agent-conduct-check.ps1) |
+| Skill | [agent-activate.skill.yaml](../../.skills/agent-activate.skill.yaml) |
+| Workflow | [agents.yml](../../.github/workflows/agents.yml) (artifact `agent-activity-*.json`) |
+| FASE52 smoke | [cd.yml](../../.github/workflows/cd.yml) job `smoke-test-api` |
+
+**Onde ver a ação do agente:**
+1. Comentário na issue/PR (`<!-- arah-agent-activity:{id} -->`)
+2. Artifact no run do workflow **Agents Orchestrate**
+3. Step summary no CD (Release Agent)
+4. CLI: `arah-agents activate -Agent … -Issue N`
 
 ---
 

@@ -16,6 +16,7 @@ skills:
   - backlog-to-issue
   - sync-docs
   - open-pr
+checklist: checklists/planner.checklist.md
 guardrails:
   no_merge: true
   require_ci: false

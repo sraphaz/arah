@@ -15,6 +15,7 @@ scope:
 skills:
   - dep-audit
   - code-review
+checklist: checklists/security.checklist.md
 guardrails:
   no_merge: true
   comment_only: true

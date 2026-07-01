@@ -18,6 +18,7 @@ skills:
   - sync-docs
   - doc-taxonomy
   - open-pr
+checklist: checklists/docs-steward.checklist.md
 guardrails:
   no_merge: true
   require_ci: true

@@ -55,6 +55,39 @@ jobs:
           & ./scripts/agents/arah-agents.ps1 orchestrate @params | Set-Content -Path route.json -Encoding utf8
           Get-Content route.json
 
+      - name: Activate agents (checklists visíveis)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_FILES: ${{ steps.pr_files.outputs.files }}
+        run: |
+          $issue = [int]'${{ github.event.issue.number || 0 }}'
+          $pr = [int]'${{ github.event.pull_request.number || 0 }}'
+          $changed = @()
+          if ($env:PR_FILES) {
+            $changed = $env:PR_FILES -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          }
+          $trigger = "${{ github.event_name }}:${{ github.event.action }}"
+          $params = @{
+            RouteFile  = 'route.json'
+            Trigger    = $trigger
+            PostComment = $true
+          }
+          if ($issue -gt 0) { $params.IssueNumber = $issue }
+          if ($pr -gt 0) { $params.PrNumber = $pr }
+          if ($changed.Count -gt 0) { $params.ChangedFiles = $changed }
+          & ./scripts/agents/run-agent-activation.ps1 @params
+
+      - name: Upload agent activity log
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-activity-${{ github.run_id }}
+          path: agent-activity.json
+          if-no-files-found: warn
+
       - name: Apply area label from issue template
         if: github.event_name == 'issues' && github.event.action == 'opened'
         uses: actions/github-script@v7

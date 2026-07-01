@@ -1,0 +1,56 @@
+id: solutions-architect
+name: Solutions Architect (Uncle Bob)
+description: |
+  Arquiteto consultivo: Clean Architecture, ADRs, fronteiras de bounded context,
+  diagramas LikeC4 e exportação SVG com design system. Acionado em mudanças estruturais.
+mode: consult
+triggers:
+  - issue:label=area/architecture
+  - pull_request:opened
+  - pull_request:synchronize
+  - orchestrator:co_route
+scope:
+  paths:
+    - backend/Arah.Core/**
+    - backend/Arah.Api/**
+    - backend/Arah.Application/**
+    - backend/Arah.Domain/**
+    - backend/Arah.Infrastructure/**
+    - backend/Arah.Modules.*/**
+    - docs/architecture/**
+    - docs/design/*.likec4
+    - docs/design/**/*
+    - docs/architecture/likec4/**
+    - docs/architecture/diagrams/**
+    - docs/architecture/adrs/**
+    - docs/architecture/ADR-REGISTRY.yaml
+    - docs/**/10_ARCHITECTURE*.md
+  may_code: true
+skills:
+  - register-adr
+  - architecture-review
+  - likec4-export
+  - spec-author
+  - code-review
+consult:
+  domain:
+    - control-plane
+    - territorio-membership
+  specialists:
+    - dotnet
+    - core-control-plane
+checklist: checklists/solutions-architect.checklist.md
+autonomy:
+  - activate
+  - consult_post
+  - invoke_skill
+rules:
+  - Dependency rule — Domain não referencia Infrastructure ou Api.
+  - Territory neutro — sem lógica social em Territory.
+  - Decisão estrutural nova → **register-adr** (ADR-020+ em docs/architecture/adrs/).
+  - Diagrama LikeC4 atualizado quando fronteiras ou containers mudam.
+guardrails:
+  no_merge: true
+  require_ci: true
+  comment_only: false
+  max_diff_files: 30

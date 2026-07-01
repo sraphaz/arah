@@ -53,6 +53,13 @@ foreach ($pa in @($route.path_agents)) {
         foreach ($extra in @('qa', 'pr-steward')) {
             if ($agentList -notcontains $extra) { $agentList += $extra }
         }
+        $hasArchitect = $files | Where-Object {
+            $n = $_.Replace('\', '/')
+            $n -match '^backend/Arah\.Core/' -or $n -match '^docs/architecture/'
+        }
+        if ($hasArchitect -and $agentList -notcontains 'solutions-architect') {
+            $agentList += 'solutions-architect'
+        }
     }
 
     $files = @($ChangedFiles)

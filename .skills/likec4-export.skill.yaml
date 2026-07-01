@@ -1,0 +1,13 @@
+id: likec4-export
+name: LikeC4 Export
+description: Exporta diagramas LikeC4 para PNG e SVG com tokens do design system Arah.
+steps:
+  - script: scripts/diagrams/export-likec4.ps1
+  - script: scripts/diagrams/apply-arah-design-tokens.ps1
+parameters:
+  Theme: dark
+  OutputDir: docs/architecture/diagrams
+references:
+  - docs/architecture/likec4/
+  - docs/design/README_LIKEC4.md
+  - design-system/colors_and_type.css

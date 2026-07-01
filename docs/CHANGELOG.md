@@ -9,6 +9,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Solutions Architect + ADRs (2026-07-01)
+
+- Agente **`solutions-architect`** (Uncle Bob, LikeC4, consultivo)
+- Skill **`register-adr`** + `scripts/agents/register-adr.ps1`
+- ADRs individuais: `docs/architecture/adrs/` + **`ADR-REGISTRY.yaml`**
+- **ADR-020**: Arah Core como control plane separado (FASE53)
+- Gate `architecture-review-check.ps1` em `run-gates`
+- Label `area/architecture`; co-roteamento automático em PRs estruturais
+
 ### Adicionado — Agentes SDD + Arah Core (2026-07-01)
 
 - Co-roteamento orquestrador (`area/spec`, `co_route` para specs/Core)

@@ -211,6 +211,28 @@ try {
 
         }
 
+        'register-adr' {
+
+            if (-not $Title) {
+                Write-Error 'register-adr requires -Title'
+                exit 1
+            }
+            $params = @{ Title = $Title }
+            if ($env:ARAH_ADR_STATUS) { $params['Status'] = $env:ARAH_ADR_STATUS }
+            if ($env:ARAH_ADR_CONTEXT) { $params['Context'] = $env:ARAH_ADR_CONTEXT }
+            if ($env:ARAH_ADR_DECISION) { $params['Decision'] = $env:ARAH_ADR_DECISION }
+            if ($env:ARAH_ADR_CONSEQUENCES) { $params['Consequences'] = $env:ARAH_ADR_CONSEQUENCES }
+            if ($env:ARAH_SPEC_ID) { $params['SpecId'] = $env:ARAH_SPEC_ID }
+            & (Join-Path $ScriptDir 'register-adr.ps1') @params
+
+        }
+
+        'architecture-review' {
+
+            & (Join-Path $ScriptDir 'architecture-review-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
+
+        }
+
         default {
 
             Write-Host (Get-Content $SkillFile -Raw)

@@ -353,6 +353,20 @@ function Invoke-Orchestrate {
         $coAgents += 'spec-steward'
     }
 
+    $hasStructural = $false
+    foreach ($f in $files) {
+        $n = $f.Replace('\', '/')
+        if ($n -match '^backend/Arah\.Core/' -or
+            $n -match '^docs/architecture/' -or
+            $n -match '^docs/design/.*\.likec4$') {
+            $hasStructural = $true
+            break
+        }
+    }
+    if ($hasStructural -and $coAgents -notcontains 'solutions-architect' -and $agentId -ne 'solutions-architect') {
+        $coAgents += 'solutions-architect'
+    }
+
     $resolvedId = if ($agentId) { $agentId } else { 'orchestrator' }
     $summary = Read-AgentSummary -AgentId $resolvedId
 
@@ -483,6 +497,7 @@ switch ($Command) {
             @{ name = 'area/flutter'; color = 'FBCA04'; description = 'App Flutter arah.app' },
             @{ name = 'area/web'; color = '5319E7'; description = 'Wiki, portal, devportal' },
             @{ name = 'area/docs'; color = '0075CA'; description = 'Documentação e taxonomia' },
+            @{ name = 'area/architecture'; color = '5319E7'; description = 'Arquitetura, ADRs, LikeC4 — Solutions Architect' },
             @{ name = 'area/spec'; color = '006B75'; description = 'Spec-Driven Design (YAML specs + harness)' },
             @{ name = 'area/sdd'; color = '006B75'; description = 'Alias SDD — roteia para spec-steward' },
             @{ name = 'area/ops'; color = 'D93F0B'; description = 'CI/CD, release, infra' },

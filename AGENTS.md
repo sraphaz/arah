@@ -27,7 +27,8 @@ Este arquivo é a **fonte de verdade** para agentes (Cursor, CI, `arah-agents`).
 |--------|------------------|------------|--------|
 | `docs/specs/*.yaml` | `spec-steward` | `docs-steward`, `planner` | `spec-author`, `spec-validate`, `harness-run` |
 | `scripts/harness/` | `spec-steward` | `release` | `harness-run`, `spec-validate` |
-| `backend/Arah.Core/` | `backend` | `spec-steward` | `run-tests`, `harness-run`, consult `control-plane` |
+| `backend/Arah.Core/` | `backend` | `spec-steward`, **`solutions-architect`** | `register-adr`, `run-tests`, `harness-run` |
+| `docs/architecture/adrs/` | **`solutions-architect`** | `docs-steward` | **`register-adr`**, `likec4-export`, `architecture-review` |
 | `.github/workflows/spec-harness.yml` | `release` | `spec-steward` | `harness-run` |
 | FASE52–61 backlog | `planner` | `spec-steward` | `spec-author`, `backlog-to-issue` |
 
@@ -79,6 +80,7 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | `qa` | Review / QA Agent | PR aberto | todos os PRs | [.agents/qa.agent.yaml](.agents/qa.agent.yaml) |
 | `pr-steward` | PR Steward (Review & Merge) | PR, push main | bots, merge prep, next-phase | [.agents/pr-steward.agent.yaml](.agents/pr-steward.agent.yaml) |
 | `spec-steward` | Spec Steward (SDD) | `area/spec`, PR specs | specs, harness, PLATFORM_STATE | [.agents/spec-steward.agent.yaml](.agents/spec-steward.agent.yaml) |
+| **`solutions-architect`** | **Solutions Architect** | `area/architecture`, mudanças estruturais | **ADRs**, LikeC4, Clean Architecture | [.agents/solutions-architect.agent.yaml](.agents/solutions-architect.agent.yaml) |
 | `release` | Release / DevOps | merge main, tag | `.github/`, infra | [.agents/release.agent.yaml](.agents/release.agent.yaml) |
 | `security` | Security / Compliance | PR, agenda | deps, secrets, SECURITY | [.agents/security.agent.yaml](.agents/security.agent.yaml) |
 
@@ -110,6 +112,8 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | [iac-plan](.skills/iac-plan.skill.yaml) | terraform/helm dry-run |
 | [address-bot-review](.skills/address-bot-review.skill.yaml) | Auditar apontamentos de bots no PR |
 | [next-phase](.skills/next-phase.skill.yaml) | Abrir issue da próxima fase (`docs/_meta/PHASE_QUEUE.yaml`) |
+| [register-adr](.skills/register-adr.skill.yaml) | **Cria ADR-020+** + registry + índice (Solutions Architect) |
+| [architecture-review](.skills/architecture-review.skill.yaml) | Gate Uncle Bob + exige ADR em mudança estrutural |
 | [spec-validate](.skills/spec-validate.skill.yaml) | Valida specs SDD + harness |
 | [spec-author](.skills/spec-author.skill.yaml) | Cria/atualiza spec a partir do template |
 | [harness-run](.skills/harness-run.skill.yaml) | Executa harness completo ou por Spec-Id |

@@ -1,0 +1,51 @@
+name: GitHub Sync (labels, milestones, phase status)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/labels.yml'
+      - '.github/milestones.yml'
+      - 'docs/_meta/PHASE_QUEUE.yaml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync labels
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/agents/sync-github-labels.ps1
+
+      - name: Sync milestones
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/agents/sync-github-milestones.ps1
+
+      - name: Export phase status from Issues
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/agents/export-phase-status.ps1
+
+      - name: Commit phase status snapshot (if changed)
+        if: github.ref == 'refs/heads/main'
+        shell: pwsh
+        run: |
+          if (-not (Test-Path .github/phase-status.generated.json)) { exit 0 }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/phase-status.generated.json
+          git diff --staged --quiet || git commit -m "chore(ops): atualizar phase-status de Issues GitHub"
+          git push

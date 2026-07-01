@@ -1,6 +1,6 @@
 id: docs-steward
 name: Docs Steward
-description: Mantém taxonomia, índices e doc-sync; trata doc desatualizada como bug.
+description: Mantém taxonomia, índices, doc-sync e specs SDD; doc desatualizada = bug.
 triggers:
   - pull_request:merged
   - issue:label=area/docs
@@ -8,6 +8,7 @@ triggers:
 scope:
   paths:
     - docs/**
+    - docs/specs/**
     - README.md
     - CONTRIBUTING.md
     - AGENTS.md
@@ -17,6 +18,8 @@ scope:
 skills:
   - sync-docs
   - doc-taxonomy
+  - spec-author
+  - spec-validate
   - open-pr
 checklist: checklists/docs-steward.checklist.md
 guardrails:

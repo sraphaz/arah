@@ -1,6 +1,6 @@
 id: qa
 name: Review / QA Agent
-description: Checklist de qualidade, coesão e testes em todo PR.
+description: Checklist de qualidade, coesão, testes e aderência a specs em todo PR.
 triggers:
   - pull_request:opened
   - pull_request:synchronize
@@ -11,15 +11,19 @@ scope:
 skills:
   - code-review
   - run-tests
+  - spec-validate
+  - harness-run
 consult:
   domain:
     - territorio-membership
     - monetizacao-split
     - governanca-transparencia
+    - control-plane
   specialists:
     - dotnet
     - flutter
     - nextjs
+    - core-control-plane
 checklist: checklists/qa.checklist.md
 guardrails:
   no_merge: true

@@ -3,6 +3,13 @@ name: Monetização & Split
 mode: consult
 enrich: Camadas de receita, planos comerciais e ganchos de cobrança.
 validate: Taxa, split por FeeSplitRule vigente e payouts (Adendo monetização).
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - backend/**/Subscriptions/**
+    - backend/**/Stripe/**
+    - backend/Arah.Modules.Subscriptions/**
 references:
   - docs/backlog-api/FASE55.md
   - docs/handoff/arquitetura-c4/Adendo de Monetizacao - Handoff Arah.dc.html

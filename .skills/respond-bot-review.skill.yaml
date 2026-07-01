@@ -1,0 +1,8 @@
+id: respond-bot-review
+name: Respond Bot Review
+description: Responde automaticamente a comentários inline de bots quando o fix já está no PR.
+steps:
+  - script: scripts/agents/respond-bot-review.ps1
+references:
+  - scripts/agents/address-bot-review.ps1
+  - .agents/pr-steward.agent.yaml

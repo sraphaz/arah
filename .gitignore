@@ -38,3 +38,9 @@ logs/
 .DS_Store
 Thumbs.db
 
+# Agent / harness artifacts (gerados localmente ou no CI)
+harness-report.json
+agent-activity.json
+route.json
+audit.json
+

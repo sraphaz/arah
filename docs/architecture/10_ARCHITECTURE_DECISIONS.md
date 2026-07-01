@@ -1,4 +1,4 @@
-# Decisões Arquiteturais
+﻿# Decisões Arquiteturais
 
 Este documento registra decisões arquiteturais importantes tomadas durante o desenvolvimento do projeto Arah.
 
@@ -615,8 +615,20 @@ Sim, **um projeto por módulo faz sentido** e é uma opção válida:
 
 ---
 
-## Referências
 
+## ADR-020: Arah Core como control plane separado
+
+**Status**: Aceito  
+**Data**: 2026-06-30  
+**Arquivo**: [docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md](./adrs/ADR-020-arah-core-como-control-plane-separado.md)  
+**Spec-Id**: FASE53-arah-core  **LikeC4**: containers  
+
+Resumo: Projeto backend/Arah.Core isolado; endpoints api/v1/core/* na API; registries in-memory inicialmente; dados de territorio permanecem na instancia.
+
+---
+
+## Referências
 - [Product Vision](./01_PRODUCT_VISION.md)
 - [User Stories](./04_USER_STORIES.md)
 - [Arquitetura C4](./14_C4_ARCHITECTURE.md)
+

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: AGENTS.md — Operação por agentes
+    url: https://github.com/sraphaz/arah/blob/main/AGENTS.md
+    about: Manual de agentes, skills e roteamento
+  - name: STATUS_FASES.md — Visão de fases
+    url: https://github.com/sraphaz/arah/blob/main/docs/STATUS_FASES.md
+    about: Dashboard humano (Issues/GitHub Project são fonte operacional)
+  - name: Documentação (wiki)
+    url: https://github.com/sraphaz/arah/tree/main/docs
+    about: Specs, ADRs, backlog detalhado

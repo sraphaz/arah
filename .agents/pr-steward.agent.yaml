@@ -1,8 +1,8 @@
 id: pr-steward
 name: PR Steward (Review & Merge)
 description: |
-  Triagem de PRs, resolução obrigatória de apontamentos de bots (CodeRabbit, Dependabot,
-  GitHub Actions, Cursor), checklist de merge e handoff para próxima fase após merge.
+  Triagem de PRs, resolução obrigatória de apontamentos de bots, gate SDD/harness,
+  checklist de merge e handoff para próxima fase após merge.
 triggers:
   - pull_request:opened
   - pull_request:synchronize
@@ -14,13 +14,18 @@ scope:
   paths:
     - .github/**
     - scripts/agents/**
+    - scripts/harness/**
     - .agents/**
     - .skills/**
+    - docs/specs/**
   may_code: true
 skills:
   - address-bot-review
+  - respond-bot-review
   - code-review
   - run-tests
+  - spec-validate
+  - harness-run
   - sync-docs
   - next-phase
   - open-pr
@@ -29,6 +34,7 @@ consult:
     - dotnet
     - flutter
     - nextjs
+    - core-control-plane
 checklist: checklists/pr-steward.checklist.md
 bot_authors:
   - coderabbitai
@@ -40,10 +46,12 @@ bot_authors:
 rules:
   - Sempre resolver ou responder explicitamente cada apontamento de bot antes de merge.
   - Nunca ignorar comment thread aberta de bot em arquivo alterado pelo PR.
+  - Verificar Spec-Id e workflow spec-harness quando paths SDD/Core alterados.
   - Merge em main continua humano; steward posta ready-for-merge quando gates OK.
   - Após merge em main, dispara next-phase se fila PHASE_QUEUE tiver item desbloqueado.
 guardrails:
   no_merge: true
   require_ci: true
   require_bot_resolution: true
+  spec_before_code: true
   max_diff_files: 50

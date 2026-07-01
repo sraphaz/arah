@@ -1,0 +1,32 @@
+id: platform-operability
+version: "1.0.0"
+title: "Matriz de operabilidade da plataforma (7 níveis)"
+owner: ops
+status: active
+phase: null
+
+intent: |
+  Garantir visibilidade consistente do estado do produto, arquitetura, dev, CI/CD,
+  agentes, sustentação e governança — fonte para README e agentes.
+
+acceptance:
+  - id: AC-PLAT-1
+    then: "docs/ops/PLATFORM_STATE.md existe e cobre níveis 1–7"
+  - id: AC-PLAT-2
+    then: "README referencia PLATFORM_STATE.md e operação por agentes"
+  - id: AC-PLAT-3
+    then: "validate-specs.ps1 passa para esta spec"
+
+harness:
+  scripts:
+    - scripts/harness/validate-specs.ps1
+  commands: []
+
+links:
+  docs:
+    - docs/ops/PLATFORM_STATE.md
+    - docs/STATUS_FASES.md
+  tests: []
+
+guardrails:
+  - sync-docs-on-behavior-change

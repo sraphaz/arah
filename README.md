@@ -100,6 +100,7 @@ O backend segue princípios de **Clean Architecture**, com separação clara de 
 
 backend/
 ├── Arah.Api # API HTTP (controllers, endpoints, middlewares)
+├── Arah.Core # Control plane (FASE53): registro de instâncias, releases
 ├── Arah.Application # Casos de uso / regras de aplicação
 ├── Arah.Domain # Modelo de domínio (territory, regras centrais)
 ├── Arah.Infrastructure # Persistência, integrações, adapters
@@ -143,16 +144,40 @@ Guia completo (pré-requisitos, fluxo de onboarding, o que está implementado e 
 
 ---
 
+## Estado da plataforma e operabilidade
+
+**Fonte de verdade**: **[docs/ops/PLATFORM_STATE.md](./docs/ops/PLATFORM_STATE.md)** — operabilidade em 7 níveis (produto, arquitetura, qualidade, CI/CD, agentes, sustentação 52–61, governança documental).
+
+| Nível | Resumo (2026-07) |
+|-------|------------------|
+| Produto | Onboarding, território, marketplace, eventos — app + BFF operacionais localmente |
+| Arquitetura | Clean Architecture; **Arah Core** (FASE53) em progresso |
+| Qualidade | CI + testes + **Spec Harness (SDD)** |
+| CI/CD | Staging automático, gate produção manual (FASE52 🟡) |
+| Agentes | 20 agentes, PR Steward, `next-phase`, harness |
+| Sustentação | Onda S0: FASE52 → FASE53 → FASE54 |
+
+**Specs (SDD)**: [docs/specs/](./docs/specs/) · **Agentes**: [AGENTS.md](./AGENTS.md) · **CI/CD**: [docs/ops/CI_CD_PIPELINE.md](./docs/ops/CI_CD_PIPELINE.md)
+
+```powershell
+.\scripts\run-local-stack.ps1
+.\scripts\agents\arah-agents.ps1 harness
+.\scripts\harness\validate-specs.ps1
+```
+
+---
+
 ## Documentação
 
 **[Índice Completo da Documentação](./docs/00_INDEX.md)** — Navegação estruturada
 
 ### Fases e Roadmap
-- [**Backlog de Fases (48 fases completas)** →  `docs/backlog-api/`](./docs/backlog-api/) — **48 fases planejadas, 12 completas (Fases 1-12), 36 pendentes**
-- [**Resumo Detalhado de Todas as Fases** → `docs/backlog-api/README.md`](./docs/backlog-api/README.md) — Resumo completo organizado por ondas estratégicas
-- [Roadmap Completo](./docs/02_ROADMAP.md) — Visão de longo prazo
-- [Mapa Completo das Fases](./docs/backlog-api/MAPA_FASES.md) — Mapa centralizado de todas as fases
-- [Estrutura da Documentação](./docs/STRUCTURE.md) — Onde encontrar cada documento
+- [**Backlog de Fases (61 fases)** → `docs/backlog-api/`](./docs/backlog-api/) — 51 comunitárias + 10 sustentação (52–61); ver [PROJECT_PHASES_CONFIG.md](./docs/PROJECT_PHASES_CONFIG.md)
+- [**Estado por fase** → `docs/STATUS_FASES.md`](./docs/STATUS_FASES.md)
+- [**Specs SDD** → `docs/specs/`](./docs/specs/) — critérios de aceite machine-readable
+- [Roadmap Completo](./docs/02_ROADMAP.md)
+- [Mapa Completo das Fases](./docs/backlog-api/MAPA_FASES.md)
+- [Estrutura da Documentação](./docs/STRUCTURE.md)
 
 ### Visão e Produto
 - [Visão do Produto](./docs/01_PRODUCT_VISION.md) — Princípios e valores
@@ -180,6 +205,13 @@ Documentação técnica das fases de implementação: Instalador, Modularizaçã
 - **[Modularização](./docs/TECNICO_MODULARIZACAO.md)** 🧩 — Arquitetura modular e organização por domínios (15 módulos, feature flags, dependências)
 - **[Backend for Frontend (BFF)](./docs/AVALIACAO_BFF_BACKEND_FOR_FRONTEND.md)** 🔌 — Camada de abstração para interfaces (jornadas, contratos, exemplos)
 - **[Frontend Flutter](./docs/24_FLUTTER_FRONTEND_PLAN.md)** 📱 — Planejamento completo do app mobile (arquitetura, stack, funcionalidades, UX/UI)
+
+### Operações, agentes e SDD
+- [**Estado da plataforma**](./docs/ops/PLATFORM_STATE.md) — operabilidade em todos os níveis
+- [**SDD + Harness Engineering**](./docs/_meta/SDD_AND_HARNESS.md) — spec-before-code
+- [Operação por agentes](./docs/ops/AGENT_OPERATION.md)
+- [Pipeline CI/CD](./docs/ops/CI_CD_PIPELINE.md)
+- [AGENTS.md](./AGENTS.md) — manual de agentes
 
 ### Operações e Segurança
 - [Documentação de Segurança](./docs/SECURITY_CONFIGURATION.md) — Configuração segura

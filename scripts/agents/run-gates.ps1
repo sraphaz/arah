@@ -41,6 +41,12 @@ try {
         Invoke-Step 'validate-manifests' {
             & (Join-Path $ScriptDir 'validate-manifests.ps1')
         }
+        Invoke-Step 'spec-gate-check' {
+            & (Join-Path $ScriptDir 'spec-gate-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
+        }
+        Invoke-Step 'architecture-review-check' {
+            & (Join-Path $ScriptDir 'architecture-review-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
+        }
     }
 
     if ($Gate -in 'security', 'all') {

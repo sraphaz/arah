@@ -4,6 +4,8 @@ checklist:
   - docs/CHANGELOG.md se mudança significativa
   - docs/STATUS_FASES.md se mudou fase
   - docs/backlog-api/FASE*.md se completou item de fase
+  - docs/specs/phases/*.spec.yaml se mudou critério de aceite ou harness
+  - docs/ops/PLATFORM_STATE.md se mudou operabilidade
   - docs/backlog-api/README.md se mudou status de onda
   - README.md se mudou funcionalidade principal
   - docs/60_API_LÓGICA_NEGÓCIO.md ou subdocs se mudou API/contrato

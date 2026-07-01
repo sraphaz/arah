@@ -1,9 +1,17 @@
 id: carteira-arata
 name: Domain — Carteira Aratá
 description: Consultivo para ledger, split, conciliação e billing territorial.
+mode: consult
 consult_only: true
+enrich: Ledger territorial, splits, reconciliação e billing sem extrair dados de territory para Core.
+validate: Payouts e saldos consistentes com FeeSplitRule; LGPD em export financeiro.
+autonomy:
+  - consult_post
 scope:
   paths:
+    - backend/**/SellerBalance/**
+    - backend/**/Payout/**
+    - backend/**/PlatformFinancial/**
     - docs/**/billing*
     - docs/**/carteira*
     - docs/backlog-api/FASE15.md

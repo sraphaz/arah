@@ -8,11 +8,13 @@
 - [ ] Não prescrever implementação — intenção + AC
 
 ### Antes de abrir issue
-- [ ] Label `area/*` correta
+- [ ] Label `area/*` correta (`area/spec` para specs-only)
 - [ ] Referência de fase/backlog no corpo
+- [ ] Spec YAML criada ou referenciada (`spec-author`) para fases S0+
 - [ ] Guardrails confirmados (template agent-task)
 - [ ] Prioridade coerente com `PHASE_QUEUE.yaml`
 
 ### Skills
 1. `backlog-to-issue`
-2. `sync-docs` (se STATUS_FASES mudar)
+2. `spec-author` (fases 52–61)
+3. `sync-docs` (se STATUS_FASES mudar)

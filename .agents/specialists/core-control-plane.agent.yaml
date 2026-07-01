@@ -1,0 +1,11 @@
+id: core-control-plane
+name: Arah Core (.NET)
+mode: consult
+focus: |
+  Projeto backend/Arah.Core, CoreController, registries in-memory, seed de releases,
+  extensão para Postgres e autenticação mTLS entre instâncias.
+references:
+  - backend/Arah.Core/
+  - backend/Arah.Api/Controllers/Platform/CoreController.cs
+  - docs/specs/phases/FASE53-arah-core.spec.yaml
+  - docs/ops/PLATFORM_STATE.md

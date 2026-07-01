@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'sync-milestones', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'github-project', 'backlog-to-issue', 'export-phase-status', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -27,6 +27,10 @@ param(
     [int]$Issue = 0,
     [string]$Agent = '',
     [string]$Trigger = 'manual',
+    [string]$SpecId = '',
+    [string]$RouteFile = '',
+    [switch]$ExecuteAutonomy,
+    [switch]$SkipTests,
     [switch]$Json,
     [switch]$DryRun
 )
@@ -61,6 +65,29 @@ function Get-RoutingTable {
         }
     }
     return $routes
+}
+
+function Get-CoRouteTable {
+    $orchestrator = Join-Path $AgentsDir 'orchestrator.agent.yaml'
+    if (-not (Test-Path $orchestrator)) { return @{} }
+
+    $raw = Get-Content $orchestrator -Raw
+    $coRoutes = @{}
+    if ($raw -match '(?ms)^co_route:\s*\n((?:\s+.+\r?\n)+)') {
+        foreach ($line in ($Matches[1] -split "`n")) {
+            if ($line -match '^\s+(.+):\s+(\S+)') {
+                $coRoutes[$Matches[1].Trim()] = $Matches[2].Trim()
+            }
+        }
+    }
+    return $coRoutes
+}
+
+function Parse-SpecIdFromBody {
+    param([string]$Body)
+    if ([string]::IsNullOrWhiteSpace($Body)) { return $null }
+    if ($Body -match '(?mi)^Spec-Id:\s*(\S+)') { return $Matches[1].Trim() }
+    return $null
 }
 
 function Get-AgentManifestPath {
@@ -129,7 +156,7 @@ function Parse-IssueBodyForArea {
 
     if ([string]::IsNullOrWhiteSpace($Body)) { return $null }
     if ($Body -match '(?m)^###\s*Área\s*\r?\n\r?\n(area/\S+)') { return $Matches[1] }
-    if ($Body -match '(?m)^area/(backend|flutter|web|docs|ops|security|planning)\b') { return $Matches[0].Trim() }
+    if ($Body -match '(?m)^area/(backend|flutter|web|docs|ops|security|planning|spec|sdd|pr-review)\b') { return $Matches[0].Trim() }
     return $null
 }
 
@@ -252,6 +279,42 @@ function Resolve-AgentsFromPaths {
     }
 }
 
+function Resolve-CoAgentsFromFiles {
+    param([string[]]$Files)
+
+    $coRoutes = Get-CoRouteTable
+    $found = @{}
+    foreach ($file in $Files) {
+        foreach ($pattern in $coRoutes.Keys) {
+            if (Test-PathMatchesGlob -FilePath $file -Pattern $pattern) {
+                $agent = $coRoutes[$pattern]
+                if (-not $found.ContainsKey($agent)) { $found[$agent] = @() }
+                if ($found[$agent] -notcontains $file) { $found[$agent] += $file }
+            }
+        }
+    }
+    return $found.GetEnumerator() | Sort-Object Name | ForEach-Object {
+        @{ agent = $_.Key; files = $_.Value }
+    }
+}
+
+function Resolve-PrimaryFromPathAgents {
+    param([array]$PathAgents)
+
+    if ($PathAgents.Count -eq 0) { return $null }
+    if ($PathAgents.Count -eq 1) { return $PathAgents[0].agent }
+
+    $priority = @(
+        'backend', 'flutter', 'web', 'release', 'spec-steward',
+        'docs-steward', 'planner', 'security', 'pr-steward'
+    )
+    $ids = @($PathAgents | ForEach-Object { $_.agent })
+    foreach ($p in $priority) {
+        if ($ids -contains $p) { return $p }
+    }
+    return $PathAgents[0].agent
+}
+
 function Invoke-Orchestrate {
     $gh = Read-GitHubEvent -Path $EventPath
     $effectiveEvent = if ($Event -ne 'manual') { $Event } else { $gh.eventName }
@@ -266,31 +329,58 @@ function Invoke-Orchestrate {
     }
 
     $files = Normalize-FileList -Files $ChangedFiles
+    $specId = Parse-SpecIdFromBody -Body $gh.body
     $agentId = Resolve-AgentFromLabels -LabelList $labelList
     $pathAgents = @()
-    if (-not $agentId -and $files.Count -gt 0) {
+    if ($files.Count -gt 0) {
         $pathAgents = @(Resolve-AgentsFromPaths -Files $files)
-        if ($pathAgents.Count -eq 1) {
-            $agentId = $pathAgents[0].agent
+    }
+    if ($pathAgents.Count -eq 0 -and $gh.changed.Count -gt 0) {
+        $pathAgents = @(Resolve-AgentsFromPaths -Files (Normalize-FileList -Files $gh.changed))
+        if ($files.Count -eq 0) { $files = Normalize-FileList -Files $gh.changed }
+    }
+
+    if (-not $agentId -and $pathAgents.Count -gt 0) {
+        $agentId = Resolve-PrimaryFromPathAgents -PathAgents $pathAgents
+    }
+
+    $coRouteHits = @(Resolve-CoAgentsFromFiles -Files $files)
+    $coAgents = @()
+    foreach ($hit in $coRouteHits) {
+        if ($hit.agent -and $hit.agent -ne $agentId -and $coAgents -notcontains $hit.agent) {
+            $coAgents += $hit.agent
         }
     }
-    if (-not $agentId -and $gh.changed.Count -gt 0) {
-        $pathAgents = @(Resolve-AgentsFromPaths -Files (Normalize-FileList -Files $gh.changed))
-        if ($pathAgents.Count -eq 1) {
-            $agentId = $pathAgents[0].agent
+    if ($specId -and $coAgents -notcontains 'spec-steward' -and $agentId -ne 'spec-steward') {
+        $coAgents += 'spec-steward'
+    }
+
+    $hasStructural = $false
+    foreach ($f in $files) {
+        $n = $f.Replace('\', '/')
+        if ($n -match '^backend/Arah\.Core/' -or
+            $n -match '^docs/architecture/' -or
+            $n -match '^docs/design/.*\.likec4$') {
+            $hasStructural = $true
+            break
         }
+    }
+    if ($hasStructural -and $coAgents -notcontains 'solutions-architect' -and $agentId -ne 'solutions-architect') {
+        $coAgents += 'solutions-architect'
     }
 
     $resolvedId = if ($agentId) { $agentId } else { 'orchestrator' }
     $summary = Read-AgentSummary -AgentId $resolvedId
 
     $message = if ($agentId) {
-        "Delegate to agent '$agentId' ($($summary.name)). Read AGENTS.md and apply skills from .skills/."
+        $coMsg = if ($coAgents.Count -gt 0) { " Co-agents: $($coAgents -join ', ')." } else { '' }
+        $specMsg = if ($specId) { " Spec-Id: $specId." } else { '' }
+        "Delegate to agent '$agentId' ($($summary.name)).$coMsg$specMsg Read AGENTS.md and apply skills from .skills/."
     } elseif ($pathAgents.Count -gt 1) {
         $names = ($pathAgents | ForEach-Object { $_.agent }) -join ', '
         "Multiple agents match changed paths: $names. Add an area/* label or split the PR."
     } else {
-        'No area/* label matched. Add area/backend|flutter|web|docs|ops|security|planning or label agent-task with Área filled.'
+        'No area/* label matched. Add area/backend|flutter|web|docs|spec|ops|security|planning or label agent-task with Área filled.'
     }
 
     $result = [ordered]@{
@@ -301,6 +391,8 @@ function Invoke-Orchestrate {
         agent_name    = $summary.name
         manifest      = $summary.manifest
         skills        = @($summary.skills)
+        spec_id       = $specId
+        co_agents     = @($coAgents)
         path_agents   = @($pathAgents | ForEach-Object {
             @{
                 agent = $_.agent
@@ -310,6 +402,20 @@ function Invoke-Orchestrate {
         suggest_label = $areaFromBody
         message       = $message
         dry_run       = [bool]$DryRun
+    }
+
+    if ($files.Count -gt 0 -or $effectiveEvent -match 'pull_request') {
+        try {
+            $chRaw = & (Join-Path $PSScriptRoot 'choreograph-agents.ps1') -ChangedFiles $files -Trigger $effectiveEvent -Json
+            $ch = $chRaw | ConvertFrom-Json
+            $result.choreography = @{
+                matched_rules   = $ch.matched_rules
+                domain_consults = $ch.domain_consults
+                operational     = $ch.operational
+            }
+        } catch {
+            $result.choreography_error = $_.Exception.Message
+        }
     }
 
     if ($Json) {
@@ -357,7 +463,11 @@ Comandos:
   route-pr      Infere agentes a partir de arquivos alterados
   skill         Executa skill (delega invoke-skill.ps1)
   validate      Valida manifests .agents/ e .skills/
-  ensure-labels Imprime comandos gh para criar labels area/*
+  ensure-labels   Sincroniza labels de .github/labels.yml
+  sync-milestones Sincroniza milestones de .github/milestones.yml
+  github-project  Project v2 — ensure | sync-queue | status (-Skill)
+  backlog-to-issue Cria issue épico a partir de fase (-SpecId FASE53)
+  export-phase-status Exporta status das fases de Issues → JSON
   doc-index     Regenera docs/INDEX.generated.md
   doc-deflate   Arquiva PR/RESUMO/ANALISE da raiz docs/ (wave 1)
   gates         Executa run-gates.ps1 (qa/security/release)
@@ -365,8 +475,14 @@ Comandos:
   pr-ready      Verifica CI + bots; indica ready-for-merge
   next-phase    Abre issue [Agent] da próxima fase (PHASE_QUEUE.yaml)
   activate      Publica checklist de conduta do agente (issue/PR)
+  harness       Executa harness SDD (specs + agentes + comandos ligados)
+  spec-validate Valida YAML em docs/specs/
+  choreograph   Resolve coreografia (domínio + skills autônomas)
 
 Exemplos:
+  ./arah-agents.ps1 harness
+  ./arah-agents.ps1 spec-validate
+  ./arah-agents.ps1 harness -SpecId FASE53-arah-core
   ./arah-agents.ps1 orchestrate -Labels area/backend
   ./arah-agents.ps1 activate -Agent backend -Issue 301
   ./arah-agents.ps1 activate -Agent backend -PrNumber 300 -ChangedFiles backend/Arah.Api/Program.cs
@@ -375,6 +491,7 @@ Exemplos:
   ./arah-agents.ps1 next-phase -DryRun
   ./arah-agents.ps1 orchestrate -EventPath `$env:GITHUB_EVENT_PATH -Json
   ./arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
+  ./arah-agents.ps1 choreograph -ChangedFiles backend/Arah.Core/x.cs -Json
   ./arah-agents.ps1 skill -Skill run-tests -Area backend
   ./arah-agents.ps1 validate
 
@@ -390,27 +507,41 @@ switch ($Command) {
             Write-Error 'skill requires -Skill'
             exit 1
         }
-        & (Join-Path $PSScriptRoot 'invoke-skill.ps1') -Skill $Skill -Area $Area
+        & (Join-Path $PSScriptRoot 'invoke-skill.ps1') -Skill $Skill -Area $Area -ChangedFiles $ChangedFiles -Agent $Agent -Title $Title -Issue $Issue
     }
     'validate' {
         & (Join-Path $PSScriptRoot 'validate-manifests.ps1')
     }
     'ensure-labels' {
-        $areas = @(
-            @{ name = 'agent-task'; color = '0E8A16'; description = 'Tarefa operada por agente' },
-            @{ name = 'area/backend'; color = '1D76DB'; description = 'Backend .NET / BFF' },
-            @{ name = 'area/flutter'; color = 'FBCA04'; description = 'App Flutter arah.app' },
-            @{ name = 'area/web'; color = '5319E7'; description = 'Wiki, portal, devportal' },
-            @{ name = 'area/docs'; color = '0075CA'; description = 'Documentação e taxonomia' },
-            @{ name = 'area/ops'; color = 'D93F0B'; description = 'CI/CD, release, infra' },
-            @{ name = 'area/security'; color = 'B60205'; description = 'Segurança e compliance' },
-            @{ name = 'area/planning'; color = 'C5DEF5'; description = 'Backlog e planejamento' },
-            @{ name = 'area/pr-review'; color = '1B7F37'; description = 'PR Steward — review e bots' },
-            @{ name = 'ready-for-merge'; color = '0E8A16'; description = 'PR aprovado pelo steward; humano mergeia' }
-        )
-        foreach ($label in $areas) {
-            Write-Host "gh label create `"$($label.name)`" --color $($label.color) --description `"$($label.description)`" --force"
+        & (Join-Path $PSScriptRoot 'sync-github-labels.ps1')
+    }
+    'sync-milestones' {
+        & (Join-Path $PSScriptRoot 'sync-github-milestones.ps1')
+    }
+    'github-project' {
+        $sub = 'help'
+        if ($Skill -in @('ensure', 'sync-queue', 'status', 'help')) { $sub = $Skill }
+        $params = @{ Command = $sub }
+        if ($Json) { $params.Json = $true }
+        if ($DryRun) { $params.DryRun = $true }
+        & (Join-Path $PSScriptRoot 'github-project.ps1') @params
+    }
+    'backlog-to-issue' {
+        if (-not $SpecId -and -not $Title) {
+            Write-Error 'backlog-to-issue requires -SpecId (PhaseId e.g. FASE53) or -Title as SourceFile path'
+            exit 1
         }
+        $params = @{}
+        if ($SpecId) { $params.PhaseId = $SpecId }
+        if ($Title) { $params.SourceFile = $Title }
+        if ($DryRun) { $params.DryRun = $true }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'backlog-to-issue.ps1') @params
+    }
+    'export-phase-status' {
+        $params = @{}
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'export-phase-status.ps1') @params
     }
     'doc-index' {
         & (Join-Path $PSScriptRoot 'generate-docs-index.ps1')
@@ -469,6 +600,27 @@ switch ($Command) {
         if ($Json) { $params.Json = $true }
         if (-not $DryRun) { $params.PostComment = $true }
         & (Join-Path $PSScriptRoot 'post-agent-activity.ps1') @params
+    }
+    'harness' {
+        $params = @{}
+        if ($SpecId) { $params.SpecId = $SpecId }
+        if ($SkipTests) { $params.SkipTests = $true }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path (Join-Path $Root 'scripts/harness') 'run-harness.ps1') @params
+    }
+    'spec-validate' {
+        $params = @{}
+        if ($SpecId) { $params.SpecId = $SpecId }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path (Join-Path $Root 'scripts/harness') 'validate-specs.ps1') @params
+    }
+    'choreograph' {
+        $params = @{ Json = $true }
+        if ($ChangedFiles.Count -gt 0) { $params.ChangedFiles = $ChangedFiles }
+        if ($RouteFile) { $params.RouteFile = $RouteFile }
+        if ($Trigger -ne 'manual') { $params.Trigger = $Trigger }
+        if ($ExecuteAutonomy) { $params.ExecuteAutonomy = $true }
+        & (Join-Path $PSScriptRoot 'choreograph-agents.ps1') @params
     }
     default { Show-Help }
 }

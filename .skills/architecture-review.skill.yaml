@@ -1,0 +1,20 @@
+id: architecture-review
+name: Architecture Review
+description: Revisão arquitetural Uncle Bob — dependency rule, ADRs, fronteiras, LikeC4.
+steps:
+  - script: scripts/agents/architecture-review-check.ps1
+references:
+  - docs/architecture/adrs/README.md
+  - docs/architecture/ADR-REGISTRY.yaml
+  - docs/architecture/10_ARCHITECTURE_DECISIONS.md
+  - docs/governance/21_CODE_REVIEW.md
+  - docs/governance/22_COHESION_AND_TESTS.md
+  - docs/design/README_LIKEC4.md
+  - .cursorrules
+checks:
+  - clean_architecture_dependency_rule
+  - territory_neutral_entity
+  - adr_required_for_structural_change
+  - likec4_model_sync
+  - spec_id_present_for_phase_code
+output: markdown_comment_on_pr

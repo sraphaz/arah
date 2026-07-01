@@ -1,6 +1,6 @@
 # Operação por agentes
 
-**Versão**: 1.3  
+**Versão**: 1.4  
 **Data**: 2026-07-01  
 **Handoff HTML**: [Operacao por Agentes - Arah.dc.html](../handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
 
@@ -156,6 +156,59 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 ## Próximo passo pós-infra agentes
 
 **Onda S / FASE52+** — CI/CD, Arah Core, IaC ([REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](../backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md))
+
+### PR 10 — Agentes SDD + Arah Core (2026-07-01)
+
+| Artefato | Caminho |
+|----------|---------|
+| Spec Steward checklist | [.agents/checklists/spec-steward.checklist.md](../../.agents/checklists/spec-steward.checklist.md) |
+| Domain control-plane | [.agents/domain/control-plane.agent.yaml](../../.agents/domain/control-plane.agent.yaml) |
+| Specialist Core | [.agents/specialists/core-control-plane.agent.yaml](../../.agents/specialists/core-control-plane.agent.yaml) |
+| Skills | [spec-author](../../.skills/spec-author.skill.yaml), [harness-run](../../.skills/harness-run.skill.yaml) |
+| Gate SDD | [spec-gate-check.ps1](../../scripts/agents/spec-gate-check.ps1) |
+| Co-roteamento | [orchestrator.agent.yaml](../../.agents/orchestrator.agent.yaml) `co_route` |
+| Labels | `area/spec`, `area/sdd` |
+
+**Comportamento:**
+- PR com `docs/specs/` ou `Arah.Core` aciona **spec-steward** como co-agente.
+- `run-gates` inclui `spec-gate-check` (Spec-Id + validate-specs).
+- Backend consulta `control-plane` / `core-control-plane` para FASE53+.
+
+### PR 11 — Coreografia + LikeC4 + domínio consultivo (2026-07-01)
+
+| Artefato | Caminho |
+|----------|---------|
+| Coreografia | [.agents/choreography.yaml](../../.agents/choreography.yaml) |
+| Engine | [choreograph-agents.ps1](../../scripts/agents/choreograph-agents.ps1) |
+| Ativação (reescrita) | [run-agent-activation.ps1](../../scripts/agents/run-agent-activation.ps1) |
+| Parecer domínio | [post-domain-consult.ps1](../../scripts/agents/post-domain-consult.ps1) |
+| LikeC4 model | [docs/architecture/likec4/](../architecture/likec4/) |
+| Export diagramas | [export-likec4.ps1](../../scripts/diagrams/export-likec4.ps1), [apply-arah-design-tokens.ps1](../../scripts/diagrams/apply-arah-design-tokens.ps1) |
+| Skills | [likec4-export](../../.skills/likec4-export.skill.yaml), [domain-consult](../../.skills/domain-consult.skill.yaml) |
+| Domain agents (paths) | [.agents/domain/](../../.agents/domain/) — `scope.paths` + `autonomy: consult_post` |
+
+**Comportamento:**
+- Todo PR: regra `pr-always` aciona **qa** + **pr-steward**; com `-ExecuteAutonomy` no CI, skills das regras matched são invocadas.
+- PR com Marketplace → parecer `mercado-economia`; Core → `control-plane` + `architecture-review`.
+- `orchestrate` enriquece `route.json` com bloco `choreography` (regras + domínios).
+- CLI: `arah-agents choreograph`, `skill -Skill likec4-export`.
+
+### PR 12 — Gestão via GitHub (Issues, Project, labels) (2026-07-01)
+
+| Artefato | Caminho |
+|----------|---------|
+| Labels canônicas | [.github/labels.yml](../../.github/labels.yml) |
+| Milestones ondas | [.github/milestones.yml](../../.github/milestones.yml) |
+| Project config | [.github/project/arah-sustentacao.yml](../../.github/project/arah-sustentacao.yml) |
+| Template épico | [phase-epic.yml](../../.github/ISSUE_TEMPLATE/phase-epic.yml) |
+| Scripts | [sync-github-labels.ps1](../../scripts/agents/sync-github-labels.ps1), [github-project.ps1](../../scripts/agents/github-project.ps1), [backlog-to-issue.ps1](../../scripts/agents/backlog-to-issue.ps1) |
+| Workflow | [github-sync.yml](../../.github/workflows/github-sync.yml) |
+| Runbook | [GITHUB_PROJECT_MANAGEMENT.md](./GITHUB_PROJECT_MANAGEMENT.md) |
+
+**Comportamento:**
+- `PHASE_QUEUE.yaml` → Issues `[Epic]` com labels `wave/*`, `priority/*`, milestone
+- Status operacional: Issues fechadas = fase concluída (fallback `STATUS_FASES.md`)
+- Specs/ADRs/FASE*.md permanecem no repo como contrato técnico
 
 ---
 

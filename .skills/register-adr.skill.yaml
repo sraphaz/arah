@@ -1,0 +1,22 @@
+id: register-adr
+name: Register ADR
+description: |
+  Cria ADR-020+ em docs/architecture/adrs/, atualiza ADR-REGISTRY.yaml
+  e índice em 10_ARCHITECTURE_DECISIONS.md. Responsabilidade do Solutions Architect.
+inputs:
+  title: obrigatório
+  status: proposed | accepted | deprecated | superseded
+  context: por que decidir agora
+  decision: o que foi escolhido
+  consequences: trade-offs
+  spec_id: opcional — liga à spec SDD
+  likec4_view: opcional — view LikeC4 relacionada
+steps:
+  - script: scripts/agents/register-adr.ps1
+references:
+  - docs/architecture/adrs/README.md
+  - docs/architecture/ADR-REGISTRY.yaml
+  - docs/architecture/10_ARCHITECTURE_DECISIONS.md
+guardrails:
+  - structural-change-requires-adr
+  - human-review-before-accept-status

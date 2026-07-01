@@ -1,0 +1,27 @@
+# GitHub Project v2 — configuração operacional
+# Bootstrap: ./scripts/agents/github-project.ps1 ensure
+# Sync fila:  ./scripts/agents/github-project.ps1 sync-queue
+
+title: "Arah — Sustentação (F52–61)"
+description: |
+  Kanban operacional das fases de sustentação. Issues são criadas por next-phase
+  e backlog-to-issue; specs técnicas permanecem em docs/specs/ e docs/backlog-api/.
+
+# Número do project (preencher após `ensure` — ver docs/ops/GITHUB_PROJECT_MANAGEMENT.md)
+project_number: null
+
+# Mapeamento wave → milestone (título em .github/milestones.yml)
+wave_milestones:
+  S0: "Onda S0 — Fundação"
+  S1: "Onda S1 — Go-live piloto"
+  S2: "Onda S2 — Transparência"
+  S3: "Onda S3 — Federação"
+  S4: "Onda S4 — Capital"
+
+# Colunas sugeridas no Project (criar manualmente ou via gh project field-create)
+columns:
+  - Backlog
+  - Ready
+  - In Progress
+  - Review
+  - Done

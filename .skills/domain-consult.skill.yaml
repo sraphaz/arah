@@ -1,0 +1,8 @@
+id: domain-consult
+name: Domain Consult
+description: Publica parecer consultivo de agentes de domínio (negócio) no PR/issue.
+steps:
+  - script: scripts/agents/post-domain-consult.ps1
+references:
+  - .agents/domain/
+  - .agents/choreography.yaml

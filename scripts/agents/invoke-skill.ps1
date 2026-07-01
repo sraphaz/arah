@@ -188,6 +188,93 @@ try {
 
         }
 
+        'spec-validate' {
+
+            & (Join-Path $Root 'scripts/harness/validate-specs.ps1')
+
+        }
+
+        'harness-run' {
+
+            $hParams = @{}
+            if ($env:ARAH_SPEC_ID) { $hParams['SpecId'] = $env:ARAH_SPEC_ID }
+            & (Join-Path $Root 'scripts/harness/run-harness.ps1') @hParams
+
+        }
+
+        'spec-author' {
+
+            Write-Host 'spec-author: copie docs/specs/_template.spec.yaml → docs/specs/phases/<id>.spec.yaml'
+            Write-Host 'Preencha acceptance + harness; rode spec-validate. Ver .skills/spec-author.skill.yaml'
+
+            exit 0
+
+        }
+
+        'register-adr' {
+
+            if (-not $Title) {
+                Write-Error 'register-adr requires -Title'
+                exit 1
+            }
+            $params = @{ Title = $Title }
+            if ($env:ARAH_ADR_STATUS) { $params['Status'] = $env:ARAH_ADR_STATUS }
+            if ($env:ARAH_ADR_CONTEXT) { $params['Context'] = $env:ARAH_ADR_CONTEXT }
+            if ($env:ARAH_ADR_DECISION) { $params['Decision'] = $env:ARAH_ADR_DECISION }
+            if ($env:ARAH_ADR_CONSEQUENCES) { $params['Consequences'] = $env:ARAH_ADR_CONSEQUENCES }
+            if ($env:ARAH_SPEC_ID) { $params['SpecId'] = $env:ARAH_SPEC_ID }
+            & (Join-Path $ScriptDir 'register-adr.ps1') @params
+
+        }
+
+        'architecture-review' {
+
+            & (Join-Path $ScriptDir 'architecture-review-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
+
+        }
+
+        'likec4-export' {
+
+            & (Join-Path $Root 'scripts/diagrams/export-likec4.ps1')
+
+        }
+
+        'domain-consult' {
+
+            if (-not $Agent) {
+                Write-Error 'domain-consult requires -Agent (domain id, e.g. mercado-economia)'
+                exit 1
+            }
+            $params = @{
+                DomainId     = $Agent
+                ChangedFiles = $ChangedFiles
+            }
+            if ($Issue -gt 0) { $params.PrNumber = $Issue }
+            & (Join-Path $ScriptDir 'post-domain-consult.ps1') @params
+
+        }
+
+        'respond-bot-review' {
+
+            if ($Issue -le 0) {
+                Write-Error 'respond-bot-review requires -Issue (PR number)'
+                exit 1
+            }
+            & (Join-Path $ScriptDir 'respond-bot-review.ps1') -PrNumber $Issue
+
+        }
+
+        'backlog-to-issue' {
+
+            $phaseId = if ($Title) { $Title } elseif ($env:ARAH_PHASE_ID) { $env:ARAH_PHASE_ID } else { '' }
+            if (-not $phaseId) {
+                Write-Error 'backlog-to-issue requires -Title (PhaseId e.g. FASE53) or ARAH_PHASE_ID'
+                exit 1
+            }
+            & (Join-Path $ScriptDir 'backlog-to-issue.ps1') -PhaseId $phaseId
+
+        }
+
         default {
 
             Write-Host (Get-Content $SkillFile -Raw)

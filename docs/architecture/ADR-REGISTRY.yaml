@@ -1,0 +1,36 @@
+﻿# ADR Registry — fonte machine-readable para register-adr e architecture-review
+version: 1
+updated: 2026-06-30
+next_number: 21
+policy: |
+  ADR-001..019 vivem em 10_ARCHITECTURE_DECISIONS.md (legado).
+  ADR-020+ em docs/architecture/adrs/ADR-NNN-slug.md via register-adr.ps1.
+
+adrs:
+  - id: ADR-001
+    title: Marketplace Implementado Antes do POST-MVP
+    status: accepted
+    file: docs/architecture/10_ARCHITECTURE_DECISIONS.md
+    legacy: true
+  - id: ADR-002
+    title: Sistema de Notificações com Outbox/Inbox
+    status: accepted
+    file: docs/architecture/10_ARCHITECTURE_DECISIONS.md
+    legacy: true
+  - id: ADR-003
+    title: Separação Território vs Camadas Sociais
+    status: accepted
+    file: docs/architecture/10_ARCHITECTURE_DECISIONS.md
+    legacy: true
+  - id: ADR-019
+    title: Avaliação de simetria dos testes
+    status: accepted
+    file: docs/architecture/10_ARCHITECTURE_DECISIONS.md
+    legacy: true
+  - id: ADR-020
+    title: "Arah Core como control plane separado"
+    status: accepted
+    file: docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md
+    spec_id: FASE53-arah-core
+    date: 2026-06-30
+

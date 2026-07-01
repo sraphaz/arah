@@ -1,0 +1,82 @@
+name: Phase Epic (FASE52+)
+description: Épico de fase de sustentação — vincula spec SDD e documento FASE*.md
+title: "[Epic] FASE"
+labels:
+  - agent-task
+  - epic/phase
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Épico operacional no **GitHub** (Issue + Project). Contrato técnico permanece em
+        `docs/backlog-api/FASE*.md` e `docs/specs/phases/*.spec.yaml`.
+  - type: input
+    id: phase_id
+    attributes:
+      label: ID da fase
+      placeholder: "FASE53"
+    validations:
+      required: true
+  - type: input
+    id: spec_id
+    attributes:
+      label: Spec-Id (SDD)
+      placeholder: "FASE53-arah-core"
+  - type: dropdown
+    id: wave
+    attributes:
+      label: Onda
+      options:
+        - S0
+        - S1
+        - S2
+        - S3
+        - S4
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridade
+      options:
+        - P0
+        - P1
+        - P2
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área (roteamento)
+      options:
+        - area/ops
+        - area/backend
+        - area/web
+        - area/flutter
+        - area/spec
+        - area/architecture
+    validations:
+      required: true
+  - type: textarea
+    id: blocked_by
+    attributes:
+      label: Bloqueado por (IDs, um por linha)
+      placeholder: |
+        FASE52
+  - type: textarea
+    id: doc_link
+    attributes:
+      label: Documento de fase
+      placeholder: "docs/backlog-api/FASE53.md"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite (resumo)
+      placeholder: |
+        - [ ] Spec harness verde
+        - [ ] Testes da área passam
+        - [ ] sync-docs aplicado
+    validations:
+      required: true

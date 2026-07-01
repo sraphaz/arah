@@ -9,6 +9,53 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Gestão via GitHub (Issues, Project, labels) (2026-07-01)
+
+- `.github/labels.yml`, `.github/milestones.yml`, `.github/project/arah-sustentacao.yml`
+- Templates `phase-epic.yml`, `config.yml` (issue chooser)
+- Scripts: `sync-github-labels`, `sync-github-milestones`, `backlog-to-issue`, `github-project`, `export-phase-status`
+- Workflow `github-sync.yml`; docs/ops/GITHUB_PROJECT_MANAGEMENT.md
+- `next-phase` cria Issues `[Epic]` com labels wave/priority + milestone
+
+### Adicionado — Coreografia + LikeC4 + domínio consultivo (2026-07-01)
+
+- **`.agents/choreography.yaml`** — regras de co-ativação (Core, specs, marketplace, governance, monetization, PR sempre qa+pr-steward)
+- **`choreograph-agents.ps1`**, **`post-domain-consult.ps1`**; `run-agent-activation` integrado
+- Skills **`likec4-export`**, **`domain-consult`**; export LikeC4 + tokens design system
+- **`docs/architecture/likec4/`** — modelo C4; CLI `arah-agents choreograph`
+- Domain agents com `scope.paths` e parecer consultivo automático em PR
+
+### Adicionado — Solutions Architect + ADRs (2026-07-01)
+
+- Agente **`solutions-architect`** (Uncle Bob, LikeC4, consultivo)
+- Skill **`register-adr`** + `scripts/agents/register-adr.ps1`
+- ADRs individuais: `docs/architecture/adrs/` + **`ADR-REGISTRY.yaml`**
+- **ADR-020**: Arah Core como control plane separado (FASE53)
+- Gate `architecture-review-check.ps1` em `run-gates`
+- Label `area/architecture`; co-roteamento automático em PRs estruturais
+
+### Adicionado — Agentes SDD + Arah Core (2026-07-01)
+
+- Co-roteamento orquestrador (`area/spec`, `co_route` para specs/Core)
+- Domain `control-plane`, specialist `core-control-plane`
+- Skills `spec-author`, `harness-run`; gate `spec-gate-check.ps1`
+- Checklist dedicado `spec-steward`; agentes backend/qa/pr-steward/release/planner evoluídos
+
+### Adicionado — Spec-Driven Design + Harness (2026-07-01)
+
+- `docs/specs/` — specs YAML com critérios de aceite (FASE52, FASE53, operabilidade, agentes)
+- `docs/_meta/SDD_AND_HARNESS.md`, `docs/ops/PLATFORM_STATE.md`
+- Scripts `scripts/harness/validate-specs.ps1`, `run-harness.ps1`
+- Workflow `.github/workflows/spec-harness.yml`
+- Agente `spec-steward` + skill `spec-validate`
+- CLI: `arah-agents harness`, `spec-validate`
+
+### Adicionado — FASE53 Arah Core (início) (2026-07-01)
+
+- Projeto `backend/Arah.Core` — entidades control plane (Instance, Release, HealthCheckReport)
+- Endpoints `api/v1/core/instances`, heartbeat, releases
+- Testes unitários em `Arah.Tests.Core`
+
 ### Adicionado — Operação por agentes (2026-06-30)
 
 - `AGENTS.md`, `.agents/`, `.skills/`, `CODEOWNERS`, templates e scripts em `scripts/agents/`

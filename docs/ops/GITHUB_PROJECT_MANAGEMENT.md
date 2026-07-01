@@ -39,8 +39,9 @@ O **`GITHUB_TOKEN` do Actions não acessa Projects v2** (limitação do GitHub).
 
 ### Setup (5 min, uma vez)
 
-1. **Criar PAT** — GitHub → Settings → Developer settings → Personal access tokens → **Tokens (classic)**  
-   Scopes: `project`, `repo`
+1. **Criar PAT** — GitHub → Settings → Developer settings → **Personal access tokens → Tokens (classic)**  
+   Scopes: **`project`** + **`repo`**  
+   ⚠️ Fine-grained com só permissão de repositório **não funciona** — Projects é permissão de **conta** (Account → Projects: Read and write).
 
 2. **Gravar secret** — Repo `arah` → Settings → Secrets and variables → Actions → **New repository secret**  
    Nome: `GH_PROJECT_TOKEN` · Valor: o PAT

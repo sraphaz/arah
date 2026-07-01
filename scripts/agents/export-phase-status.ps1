@@ -20,8 +20,8 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
 
 Push-Location $Root
 try {
-    $queue = Get-PhaseQueue -Root $Root
-    $issues = gh issue list --state all --limit 200 --json number,title,state,body,labels,url | ConvertFrom-Json
+    $queue = Get-PhaseRoadmap -Root $Root
+    $issues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url | ConvertFrom-Json
     $phases = @()
 
     foreach ($item in $queue) {

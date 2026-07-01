@@ -12,7 +12,47 @@ labels:
 
   - name: epic/phase
     color: 7057ff
-    description: Épico de fase sustentação (FASE52+)
+    description: Épico de fase do roadmap (FASE1–61)
+
+  - name: wave/C1
+    color: E4E669
+    description: Onda C1 — Fundação crítica (1–8)
+
+  - name: wave/C2
+    color: E4E669
+    description: Onda C2 — MVP essencial (9–12)
+
+  - name: wave/C3
+    color: C2E0C6
+    description: Onda C3 — Comunicação e governança (13–16)
+
+  - name: wave/C4
+    color: C2E0C6
+    description: Onda C4 — BFF e arquitetura
+
+  - name: wave/C5
+    color: BFDADC
+    description: Onda C5 — Soberania territorial
+
+  - name: wave/C6
+    color: BFDADC
+    description: Onda C6 — Economia local (19–24)
+
+  - name: wave/C7
+    color: FEF2C0
+    description: Onda C7 — Autonomia digital (25–28)
+
+  - name: wave/C8
+    color: FEF2C0
+    description: Onda C8 — Mobile avançado (29)
+
+  - name: wave/C9
+    color: F9D0C4
+    description: Onda C9 — Hospedagem e expansão (30–31)
+
+  - name: wave/C10
+    color: F9D0C4
+    description: Onda C10 — Diferenciais (42–51)
 
   - name: area/backend
     color: 1D76DB

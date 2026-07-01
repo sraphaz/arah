@@ -1,12 +1,23 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Parseia docs/_meta/PHASE_QUEUE.yaml (shared por next-phase, github-project, backlog-to-issue).
+  Fila operacional (PHASE_QUEUE.yaml) e roadmap completo (backlog + meta).
 #>
-function Get-PhaseQueue {
+
+function Get-PhaseQueueYamlPath {
+    param([string]$Root)
+    return Join-Path $Root 'docs/_meta/PHASE_QUEUE.yaml'
+}
+
+function Get-PhaseRoadmapMetaPath {
+    param([string]$Root)
+    return Join-Path $Root 'docs/_meta/PHASE_ROADMAP_META.yaml'
+}
+
+function Parse-PhaseQueueYaml {
     param([string]$Root)
 
-    $path = Join-Path $Root 'docs/_meta/PHASE_QUEUE.yaml'
+    $path = Get-PhaseQueueYamlPath -Root $Root
     if (-not (Test-Path $path)) {
         throw "Missing $path"
     }
@@ -63,11 +74,249 @@ function Get-PhaseQueue {
     return $items
 }
 
+function Get-PhaseQueue {
+    param([string]$Root)
+    return Parse-PhaseQueueYaml -Root $Root
+}
+
+function Get-PhaseRoadmapMeta {
+    param([string]$Root)
+
+    $path = Get-PhaseRoadmapMetaPath -Root $Root
+    $meta = @{ completed = @(); overrides = @{} }
+    if (-not (Test-Path $path)) { return $meta }
+
+    $section = ''
+    $currentId = $null
+    foreach ($line in Get-Content $path) {
+        if ($line -match '^completed:\s*$') { $section = 'completed'; continue }
+        if ($line -match '^overrides:\s*$') { $section = 'overrides'; continue }
+        if ($section -eq 'completed' -and $line -match '^\s+-\s+(\S+)\s*$') {
+            $meta.completed += $Matches[1].Trim()
+        } elseif ($section -eq 'overrides' -and $line -match '^\s+(\S+):\s*$') {
+            $currentId = $Matches[1].Trim()
+            $meta.overrides[$currentId] = @{ id = $currentId; blocked_by = @() }
+        } elseif ($section -eq 'overrides' -and $currentId -and $line -match '^\s+title:\s*"(.+)"$') {
+            $meta.overrides[$currentId].title = $Matches[1]
+        } elseif ($section -eq 'overrides' -and $currentId -and $line -match '^\s+doc:\s*(.+)$') {
+            $meta.overrides[$currentId].doc = $Matches[1].Trim()
+        } elseif ($section -eq 'overrides' -and $currentId -and $line -match '^\s+wave:\s*(.+)$') {
+            $meta.overrides[$currentId].wave = $Matches[1].Trim()
+        } elseif ($section -eq 'overrides' -and $currentId -and $line -match '^\s+area:\s*(.+)$') {
+            $meta.overrides[$currentId].area = $Matches[1].Trim()
+        } elseif ($section -eq 'overrides' -and $currentId -and $line -match '^\s+priority:\s*(.+)$') {
+            $meta.overrides[$currentId].priority = $Matches[1].Trim()
+        } elseif ($section -eq 'overrides' -and $currentId -and $line -match '^\s+blocked_by:\s*\[(.*)\]\s*$') {
+            $inner = $Matches[1].Trim()
+            if ($inner) {
+                $meta.overrides[$currentId].blocked_by = $inner -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+            }
+        }
+    }
+    return $meta
+}
+
+function Get-DefaultWaveForPhaseId {
+    param([string]$PhaseId)
+
+    if ($PhaseId -match '^FASE(\d+)$') {
+        $n = [int]$Matches[1]
+        if ($n -ge 52) { return $null }
+        if ($n -le 8) { return 'C1' }
+        if ($n -le 12) { return 'C2' }
+        if ($n -le 16) { return 'C3' }
+        if ($n -le 18) { return 'C5' }
+        if ($n -le 24) { return 'C6' }
+        if ($n -le 28) { return 'C7' }
+        if ($n -eq 29) { return 'C8' }
+        if ($n -le 31) { return 'C9' }
+        return 'C10'
+    }
+    if ($PhaseId -eq 'FASE14_5') { return 'C3' }
+    if ($PhaseId -eq 'FASE17_BFF') { return 'C4' }
+    return 'C10'
+}
+
+function Get-DefaultAreaForPhaseId {
+    param([string]$PhaseId)
+
+    if ($PhaseId -match '^FASE(\d+)$') {
+        $n = [int]$Matches[1]
+        if ($n -ge 57 -and $n -le 60) {
+            if ($n -eq 60) { return 'area/flutter' }
+            return 'area/web'
+        }
+        if ($n -ge 52) { return 'area/ops' }
+        if ($n -in 29, 60) { return 'area/flutter' }
+        if ($n -in 57) { return 'area/web' }
+    }
+    return 'area/backend'
+}
+
+function Parse-PhaseMarkdownHeader {
+    param([string]$FilePath)
+
+    $result = @{
+        title = $null
+        status_line = $null
+        blocked_by = @()
+        completed = $false
+    }
+    if (-not (Test-Path $FilePath)) { return $result }
+
+    $header = Get-Content $FilePath -TotalCount 20
+    foreach ($line in $header) {
+        if (-not $result.title -and $line -match '^#\s+(.+)$') {
+            $result.title = $Matches[1].Trim()
+        }
+        if ($line -match '^\*\*Status\*\*:\s*(.+)$') {
+            $result.status_line = $Matches[1].Trim()
+            if ($result.status_line -match '(?i)complet|✅') {
+                $result.completed = $true
+            }
+        }
+        if ($line -match '^\*\*Depende de\*\*:\s*(.+)$') {
+            $deps = [regex]::Matches($Matches[1], '(?i)Fase\s*(\d+(?:\.\d+)?)|FASE(\d+)')
+            foreach ($m in $deps) {
+                if ($m.Groups[1].Success -and $m.Groups[1].Value -eq '14.5') {
+                    $result.blocked_by += 'FASE14_5'
+                } elseif ($m.Groups[1].Success) {
+                    $result.blocked_by += "FASE$($m.Groups[1].Value)"
+                } elseif ($m.Groups[2].Success) {
+                    $result.blocked_by += "FASE$($m.Groups[2].Value)"
+                }
+            }
+        }
+    }
+    return $result
+}
+
+function Get-PhaseSortKey {
+    param([string]$PhaseId)
+
+    if ($PhaseId -match '^FASE(\d+)$') { return [int]$Matches[1] * 100 }
+    if ($PhaseId -eq 'FASE14_5') { return 145 }
+    if ($PhaseId -eq 'FASE17_BFF') { return 1705 }
+    return 99999
+}
+
+function Merge-PhaseRoadmapItem {
+    param(
+        [hashtable]$Base,
+        [hashtable]$Override
+    )
+
+    $merged = @{}
+    foreach ($key in $Base.Keys) { $merged[$key] = $Base[$key] }
+    if ($Override) {
+        foreach ($key in $Override.Keys) {
+            if ($null -ne $Override[$key] -and $Override[$key] -ne '') {
+                $merged[$key] = $Override[$key]
+            }
+        }
+    }
+    if (-not $merged.area) { $merged.area = Get-DefaultAreaForPhaseId -PhaseId $merged.id }
+    if (-not $merged.priority) { $merged.priority = 'P1' }
+    if (-not $merged.blocked_by) { $merged.blocked_by = @() }
+    return $merged
+}
+
+function Get-PhaseRoadmap {
+    <#
+    .SYNOPSIS
+      Roadmap completo: todos os FASE*.md do backlog + extras + overrides da fila operacional.
+    #>
+    param([string]$Root)
+
+    $meta = Get-PhaseRoadmapMeta -Root $Root
+    $queueOverrides = @{}
+    foreach ($q in (Parse-PhaseQueueYaml -Root $Root)) {
+        if ($q.id -match '^FASE') { $queueOverrides[$q.id] = $q }
+    }
+
+    $backlogDir = Join-Path $Root 'docs/backlog-api'
+    $discovered = @{}
+
+    foreach ($file in Get-ChildItem -Path $backlogDir -Filter 'FASE*.md' -File) {
+        if ($file.Name -notmatch '^FASE(\d+)\.md$') { continue }
+        $phaseId = $file.BaseName
+        $doc = "docs/backlog-api/$($file.Name)"
+        $parsed = Parse-PhaseMarkdownHeader -FilePath $file.FullName
+        $title = if ($parsed.title) { $parsed.title } else { $phaseId }
+        $discovered[$phaseId] = @{
+            id = $phaseId
+            title = $title
+            doc = $doc
+            wave = Get-DefaultWaveForPhaseId -PhaseId $phaseId
+            area = Get-DefaultAreaForPhaseId -PhaseId $phaseId
+            priority = 'P1'
+            blocked_by = @($parsed.blocked_by)
+            status = if ($parsed.completed -or ($meta.completed -contains $phaseId)) { 'completed' } else { $null }
+        }
+    }
+
+    foreach ($extra in @('FASE14_5', 'FASE17_BFF')) {
+        $fileName = if ($extra -eq 'FASE14_5') { 'FASE14_5.md' } else { 'FASE17_BFF.md' }
+        $filePath = Join-Path $backlogDir $fileName
+        if (-not (Test-Path $filePath)) { continue }
+        $parsed = Parse-PhaseMarkdownHeader -FilePath $filePath
+        $discovered[$extra] = @{
+            id = $extra
+            title = if ($parsed.title) { $parsed.title } else { $extra }
+            doc = "docs/backlog-api/$fileName"
+            wave = Get-DefaultWaveForPhaseId -PhaseId $extra
+            area = Get-DefaultAreaForPhaseId -PhaseId $extra
+            priority = 'P1'
+            blocked_by = @($parsed.blocked_by)
+            status = if ($parsed.completed) { 'completed' } else { $null }
+        }
+    }
+
+    foreach ($phaseId in $meta.overrides.Keys) {
+        if (-not $discovered.ContainsKey($phaseId)) {
+            $ov = $meta.overrides[$phaseId]
+            $discovered[$phaseId] = @{
+                id = $phaseId
+                title = $ov.title
+                doc = $ov.doc
+                wave = $ov.wave
+                area = $ov.area
+                priority = $ov.priority
+                blocked_by = @($ov.blocked_by)
+                status = $null
+            }
+        }
+    }
+
+    $roadmap = @()
+    foreach ($phaseId in ($discovered.Keys | Sort-Object { Get-PhaseSortKey -PhaseId $_ })) {
+        $item = Merge-PhaseRoadmapItem -Base $discovered[$phaseId] -Override $meta.overrides[$phaseId]
+        if ($queueOverrides.ContainsKey($phaseId)) {
+            $item = Merge-PhaseRoadmapItem -Base $item -Override $queueOverrides[$phaseId]
+        }
+        if ($meta.completed -contains $phaseId -and $item.status -ne 'completed') {
+            $item.status = 'completed'
+        }
+        if ($item.id -match '^FASE(\d+)$' -and [int]$Matches[1] -ge 52) {
+            if (-not $item.era) { $item.era = 'sustentacao' }
+        } else {
+            if (-not $item.era) { $item.era = 'community' }
+        }
+        $roadmap += $item
+    }
+    return $roadmap
+}
+
 function Get-PhaseQueueItem {
     param([string]$Root, [string]$PhaseId)
-    $item = Get-PhaseQueue -Root $Root | Where-Object { $_.id -eq $PhaseId } | Select-Object -First 1
-    if (-not $item) { throw "Phase not in queue: $PhaseId" }
-    return $item
+
+    $fromQueue = Get-PhaseQueue -Root $Root | Where-Object { $_.id -eq $PhaseId } | Select-Object -First 1
+    if ($fromQueue) { return $fromQueue }
+
+    $fromRoadmap = Get-PhaseRoadmap -Root $Root | Where-Object { $_.id -eq $PhaseId } | Select-Object -First 1
+    if ($fromRoadmap) { return $fromRoadmap }
+
+    throw "Phase not in queue: $PhaseId"
 }
 
 function Get-ProjectConfig {
@@ -81,7 +330,7 @@ function Get-ProjectConfig {
     if ($raw -match '(?m)^project_url:\s*"(.+)"') { $cfg.project_url = $Matches[1] }
     if ($raw -match '(?ms)^wave_milestones:\s*\n((?:  .+\r?\n)+)') {
         foreach ($line in ($Matches[1] -split "`n")) {
-            if ($line -match '^\s+(S\d):\s*"(.+)"') {
+            if ($line -match '^\s+((?:C|S)\d+):\s*"(.+)"') {
                 $cfg.wave_milestones[$Matches[1]] = $Matches[2]
             }
         }

@@ -37,6 +37,13 @@ jobs:
             exit 1
           }
 
+      - name: Diagnose GH_PROJECT_TOKEN (scopes)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+          GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+        run: ./scripts/agents/test-project-token.ps1
+
       - name: Bootstrap (project, views, issues, board)
         shell: pwsh
         env:

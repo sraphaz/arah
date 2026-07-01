@@ -1,6 +1,46 @@
-# Milestones (ondas de sustentação) — sync: ./scripts/agents/sync-github-milestones.ps1
+# Milestones (ondas) — sync: ./scripts/agents/sync-github-milestones.ps1
 
 milestones:
+  - title: "Onda C1 — Fundação crítica (1–8)"
+    description: "Fases 1–8 — segurança, qualidade, performance, pagamentos, mídia"
+    state: open
+
+  - title: "Onda C2 — MVP essencial (9–12)"
+    description: "Fases 9–12 — perfil, mídias, edição, otimizações"
+    state: open
+
+  - title: "Onda C3 — Comunicação e governança (13–16)"
+    description: "Fases 13–16 + 14.5 — emails, governança, subscriptions"
+    state: open
+
+  - title: "Onda C4 — BFF e arquitetura (17)"
+    description: "FASE17_BFF — Backend for Frontend"
+    state: open
+
+  - title: "Onda C5 — Soberania territorial (16–18)"
+    description: "Fases 16–18 — entregas, gamificação, saúde territorial"
+    state: open
+
+  - title: "Onda C6 — Economia local (19–24)"
+    description: "Fases 19–24 — moeda, integrações, trocas"
+    state: open
+
+  - title: "Onda C7 — Autonomia digital (25–28)"
+    description: "Fases 25–28 — hub serviços, IA, negociação, sementes"
+    state: open
+
+  - title: "Onda C8 — Mobile avançado (29)"
+    description: "Fase 29 — suporte mobile avançado"
+    state: open
+
+  - title: "Onda C9 — Hospedagem e expansão (30–31)"
+    description: "Fases 30–31"
+    state: open
+
+  - title: "Onda C10 — Diferenciais (42–51)"
+    description: "Fases 42–51 — expansão e diferenciais"
+    state: open
+
   - title: "Onda S0 — Fundação"
     description: "FASE52 CI/CD, FASE53 Core, FASE54 IaC"
     state: open
@@ -14,7 +54,7 @@ milestones:
     state: open
 
   - title: "Onda S3 — Federação"
-    description: "FASE58 multi-instância (deploy/health), FASE59 federação opt-in, FASE60 app implementador"
+    description: "FASE58 multi-instância, FASE59 federação, FASE60 app implementador"
     state: open
 
   - title: "Onda S4 — Capital"

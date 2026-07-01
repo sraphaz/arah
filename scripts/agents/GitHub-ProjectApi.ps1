@@ -12,15 +12,25 @@ function Test-GhProjectScope {
 function Invoke-GhGraphql {
     param(
         [Parameter(Mandatory)][string]$Query,
-        [hashtable]$Variables = @{}
+        [hashtable]$Variables = @{},
+        [switch]$AllowPartialErrors
     )
     $payload = @{ query = $Query; variables = $Variables }
     $json = $payload | ConvertTo-Json -Compress -Depth 20
-    $raw = $json | gh api graphql --input - 2>&1
-    if ($LASTEXITCODE -ne 0) { throw "GraphQL failed: $raw" }
-    $result = $raw | ConvertFrom-Json
-    if ($result.errors) {
-        throw "GraphQL errors: $($result.errors | ConvertTo-Json -Compress)"
+    $raw = $json | gh api graphql --input - 2>&1 | Out-String
+    $result = $null
+    try {
+        $result = $raw | ConvertFrom-Json
+    } catch {
+        throw "GraphQL failed (invalid JSON): $raw"
+    }
+    if ($result.errors -and -not $AllowPartialErrors) {
+        if (-not $result.data) {
+            throw "GraphQL errors: $($result.errors | ConvertTo-Json -Compress)"
+        }
+    }
+    if ($LASTEXITCODE -ne 0 -and -not $result.data) {
+        throw "GraphQL failed: $raw"
     }
     return $result
 }
@@ -228,6 +238,7 @@ function Resolve-PhaseStatusColumn {
         [array]$OpenPrs = @()
     )
 
+    if ($PhaseItem -and $PhaseItem.status -eq 'completed') { return 'Done' }
     if ($Issue -and $Issue.state -eq 'CLOSED') { return 'Done' }
 
     $issueNum = if ($Issue) { $Issue.number } else { $null }
@@ -302,34 +313,59 @@ function Get-OwnerNodeId {
 }
 
 function Find-ProjectV2ByTitle {
-    param([string]$Owner, [string]$Title)
-    $ownerType = Get-ProjectOwnerType -Owner $Owner
-    if ($ownerType -eq 'organization') {
-        $q = @'
-query($o: String!) {
-  organization(login: $o) {
-    projectsV2(first: 30) {
+    param(
+        [string]$Owner,
+        [string]$Title,
+        [int]$ProjectNumber = 0
+    )
+
+    if ($ProjectNumber -gt 0) {
+        try {
+            $one = Get-ProjectV2Node -Owner $Owner -ProjectNumber $ProjectNumber
+            if ($one) {
+                if ($Title -and $one.title -ne $Title) {
+                    Write-Warning "Project #$ProjectNumber título '$($one.title)' difere do config '$Title' — usando mesmo assim."
+                }
+                return $one
+            }
+        } catch {
+            Write-Warning "project by number #$ProjectNumber : $_"
+        }
+    }
+
+  # gh CLI — evita list GraphQL quando há projects inacessíveis no PAT
+    try {
+        $listed = gh project list --owner $Owner --limit 50 --format json 2>$null | ConvertFrom-Json
+        if ($listed -and $listed.projects) {
+            $hit = $listed.projects | Where-Object { $_.title -eq $Title } | Select-Object -First 1
+            if ($hit) {
+                return @{ id = $hit.id; number = [int]$hit.number; title = $hit.title; url = $hit.url }
+            }
+        }
+    } catch {
+        Write-Warning "gh project list: $_"
+    }
+
+    $q = @'
+query {
+  viewer {
+    login
+    projectsV2(first: 50) {
       nodes { id number title url }
     }
   }
 }
 '@
-        $r = Invoke-GhGraphql -Query $q -Variables @{ o = $Owner }
-        $nodes = $r.data.organization.projectsV2.nodes
-    } else {
-        $q = @'
-query($o: String!) {
-  user(login: $o) {
-    projectsV2(first: 30) {
-      nodes { id number title url }
+    try {
+        $r = Invoke-GhGraphql -Query $q -AllowPartialErrors
+        $nodes = @($r.data.viewer.projectsV2.nodes | Where-Object { $_ -and $_.title })
+        $match = $nodes | Where-Object { $_.title -eq $Title } | Select-Object -First 1
+        if ($match) { return $match }
+    } catch {
+        Write-Warning "viewer projectsV2: $_"
     }
-  }
-}
-'@
-        $r = Invoke-GhGraphql -Query $q -Variables @{ o = $Owner }
-        $nodes = $r.data.user.projectsV2.nodes
-    }
-    return $nodes | Where-Object { $_.title -eq $Title } | Select-Object -First 1
+
+    return $null
 }
 
 function New-ProjectV2 {
@@ -352,7 +388,7 @@ mutation($ownerId: ID!, $title: String!) {
 '@
     }
     $vars = @{ ownerId = $OwnerId; title = $Title }
-    if ($RepositoryId) { $vars.repositoryId = $RepositoryId }
+    if ($RepositoryId) { $vars.repoId = $RepositoryId }
     $r = Invoke-GhGraphql -Query $q -Variables $vars
     return $r.data.createProjectV2.projectV2
 }
@@ -430,8 +466,8 @@ function Ensure-ProjectV2Bootstrap {
 Token sem scope project. GITHUB_TOKEN do Actions NÃO acessa Projects v2.
 
 Uma vez:
-  1) GitHub → Settings → Developer settings → PAT (classic)
-     scopes: project + repo
+  1) GitHub → Settings → Developer settings → PAT **Tokens (classic)**
+     scopes: **project** + **repo** (fine-grained NÃO basta só repo)
   2) Repo → Settings → Secrets → Actions → GH_PROJECT_TOKEN
 
 Local:
@@ -455,18 +491,31 @@ CI:
     $projectUrl = $null
     $projectId = $null
 
-    $existing = Find-ProjectV2ByTitle -Owner $owner -Title $Title
+    $existing = Find-ProjectV2ByTitle -Owner $owner -Title $Title -ProjectNumber $projectNumber
     if ($existing) {
         $projectNumber = [int]$existing.number
         $projectUrl = $existing.url
         $projectId = $existing.id
     } elseif (-not $DryRun) {
-        $ownerId = Get-OwnerNodeId -Owner $owner
-        $repoId = Get-RepositoryNodeId -Owner $owner -Name $repoName
-        $created = New-ProjectV2 -OwnerId $ownerId -Title $Title -RepositoryId $repoId
-        $projectNumber = [int]$created.number
-        $projectUrl = $created.url
-        $projectId = $created.id
+        try {
+            $ownerId = Get-OwnerNodeId -Owner $owner
+            $repoId = Get-RepositoryNodeId -Owner $owner -Name $repoName
+            $created = New-ProjectV2 -OwnerId $ownerId -Title $Title -RepositoryId $repoId
+            $projectNumber = [int]$created.number
+            $projectUrl = $created.url
+            $projectId = $created.id
+        } catch {
+            $hint = @'
+Falha ao criar Project. Verifique o PAT (GH_PROJECT_TOKEN):
+
+  PAT CLASSIC (recomendado): scopes project + repo
+  PAT fine-grained: Account permissions → Projects → Read and write
+  Se org com SAML: github.com/settings/tokens → Configure SSO → Authorize
+
+NÃO use fine-grained só com permissões de repositório — Projects é permissão de CONTA.
+'@
+            Write-Error "$hint`n`nErro: $_"
+        }
     }
 
     if ($projectNumber -gt 0 -and $projectId -and -not $DryRun) {
@@ -504,6 +553,9 @@ function Find-ProjectItemForPhase {
             if ($issue -and ($issue.body -match "arah-next-phase id=$([regex]::Escape($PhaseId))" -or $issue.title -match [regex]::Escape($PhaseId))) {
                 return @{ item_id = $item.id; issue = $issue; kind = 'issue' }
             }
+        }
+        if ($content -and $content.body -and $content.body -match "arah-phase-draft id=$([regex]::Escape($PhaseId))") {
+            return @{ item_id = $item.id; issue = $null; kind = 'draft' }
         }
         if ($content -and $content.title -and $content.title -match [regex]::Escape($PhaseId)) {
             return @{ item_id = $item.id; issue = $null; kind = 'draft' }

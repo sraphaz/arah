@@ -465,7 +465,7 @@ Comandos:
   validate      Valida manifests .agents/ e .skills/
   ensure-labels   Sincroniza labels de .github/labels.yml
   sync-milestones Sincroniza milestones de .github/milestones.yml
-  github-project  Project v2 — bootstrap | ensure | sync-queue | sync-project | reconcile | status (-Skill)
+  github-project  Project v2 — bootstrap | sync-backlog | sync-project | reconcile | status (-Skill)
   backlog-to-issue Cria issue épico a partir de fase (-SpecId FASE53)
   export-phase-status Exporta status das fases de Issues → JSON
   doc-index     Regenera docs/INDEX.generated.md
@@ -520,7 +520,7 @@ switch ($Command) {
     }
     'github-project' {
         $sub = 'help'
-        if ($Skill -in @('bootstrap', 'ensure', 'sync-queue', 'sync-project', 'reconcile', 'status', 'help')) { $sub = $Skill }
+        if ($Skill -in @('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'reconcile', 'status', 'help')) { $sub = $Skill }
         $params = @{ Command = $sub }
         if ($Json) { $params.Json = $true }
         if ($DryRun) { $params.DryRun = $true }

@@ -30,6 +30,9 @@ jobs:
           GH_TOKEN: ${{ env.GH_PROJECT_TOKEN }}
         run: |
           ./scripts/agents/github-project.ps1 reconcile
+          if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
+            ./scripts/agents/github-project.ps1 sync-backlog
+          }
           ./scripts/agents/github-project.ps1 sync-project
 
       - name: Resolve project URL from config

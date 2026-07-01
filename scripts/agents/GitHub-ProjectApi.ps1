@@ -124,6 +124,27 @@ query($owner: String!, $number: Int!) {
     return $node
 }
 
+function Add-ProjectV2DraftIssue {
+    param(
+        [string]$ProjectId,
+        [string]$Title,
+        [string]$Body
+    )
+    $mutation = @'
+mutation($projectId: ID!, $title: String!, $body: String!) {
+  addProjectV2DraftIssue(input: { projectId: $projectId, title: $title, body: $body }) {
+    projectItem { id }
+  }
+}
+'@
+    $r = Invoke-GhGraphql -Query $mutation -Variables @{
+        projectId = $ProjectId
+        title     = $Title
+        body      = $Body
+    }
+    return $r.data.addProjectV2DraftIssue.projectItem.id
+}
+
 function Set-ProjectNumberInConfig {
     param(
         [string]$Root,
@@ -550,14 +571,14 @@ function Find-ProjectItemForPhase {
         $content = $item.content
         if ($content -and $content.number) {
             $issue = $AllIssues | Where-Object { $_.number -eq $content.number } | Select-Object -First 1
-            if ($issue -and ($issue.body -match "arah-next-phase id=$([regex]::Escape($PhaseId))" -or $issue.title -match [regex]::Escape($PhaseId))) {
+            if ($issue -and (Test-PhaseIssueMarker -Issue $issue -PhaseId $PhaseId)) {
                 return @{ item_id = $item.id; issue = $issue; kind = 'issue' }
             }
         }
-        if ($content -and $content.body -and $content.body -match "arah-phase-draft id=$([regex]::Escape($PhaseId))") {
+        if ($content -and $content.body -and $content.body -match "arah-phase-draft id=$([regex]::Escape($PhaseId))(\s|-->)") {
             return @{ item_id = $item.id; issue = $null; kind = 'draft' }
         }
-        if ($content -and $content.title -and $content.title -match [regex]::Escape($PhaseId)) {
+        if ($content -and $content.title -and $content.title -match "\b$([regex]::Escape($PhaseId))\b") {
             return @{ item_id = $item.id; issue = $null; kind = 'draft' }
         }
     }

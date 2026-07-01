@@ -22,7 +22,7 @@ param(
 
     [Parameter(Position = 0)]
 
-    [ValidateSet('bootstrap', 'ensure', 'sync-queue', 'sync-project', 'reconcile', 'status', 'help')]
+    [ValidateSet('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'reconcile', 'status', 'help')]
 
     [string]$Command = 'help',
 
@@ -56,6 +56,7 @@ github-project — GitHub-native backlog (Issues + Project v2)
 
   ensure        Cria project (se não existir) e grava project_number no YAML
 
+  sync-backlog   Cria issues para todo o roadmap (49 fases + itens da fila)
   sync-queue    Abre issues para fases desbloqueadas sem issue aberta
 
   sync-project  Adiciona épicos ao Project e atualiza coluna Status
@@ -199,6 +200,92 @@ function Invoke-ProjectEnsure {
 
 
 
+function Invoke-SyncBacklogIssues {
+    <#
+    .SYNOPSIS
+      Cria issues GitHub para todo item do roadmap sem issue (inclui fases concluídas → issue fechada).
+    #>
+    param([switch]$DryRun, [switch]$Json)
+
+    $roadmap = Get-PhaseRoadmap -Root $Root
+    $queueExtras = Get-PhaseQueue -Root $Root | Where-Object { $_.id -notmatch '^FASE' }
+    $allItems = @($roadmap) + @($queueExtras)
+
+    $allIssues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url | ConvertFrom-Json
+    $repo = gh repo view --json nameWithOwner -q .nameWithOwner
+    $owner = ($repo -split '/')[0]
+    $cfg = Get-ProjectConfig -Root $Root
+    $projectNumber = if ($cfg) { $cfg.project_number } else { 0 }
+
+    $created = @()
+
+    foreach ($item in $allItems) {
+        $existing = Get-PhaseIssueAnyState -Root $Root -PhaseId $item.id -AllIssues $allIssues
+        if ($existing) { continue }
+
+        $labels = Get-PhaseIssueLabels -Item $item
+        if ($item.status -eq 'completed') {
+            $labels += 'status/done'
+        } elseif ($item.blocked_by -and $item.blocked_by.Count -gt 0) {
+            $blocked = $false
+            foreach ($dep in $item.blocked_by) {
+                if ($dep -match '^FASE' -and -not (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $dep)) {
+                    $blocked = $true
+                    break
+                }
+            }
+            if ($blocked) { $labels += 'status/blocked' }
+        }
+
+        $title = if ($item.id -match '^FASE') { "[Epic] $($item.title)" } else { "[Backlog] $($item.title)" }
+        $body = if ($item.id -match '^FASE') {
+            New-PhaseIssueBody -Item $item -Root $Root -Source 'sync-backlog'
+        } else {
+            @"
+## Item de backlog (sync-backlog)
+
+**Id:** $($item.id)
+**Documento:** $($item.doc)
+
+---
+<!-- arah-next-phase id=$($item.id) -->
+<!-- arah-phase-epic -->
+"@
+        }
+
+        if ($DryRun) {
+            $created += @{ id = $item.id; action = 'would-create'; title = $title; closed = ($item.status -eq 'completed') }
+            continue
+        }
+
+        $labelParams = @()
+        foreach ($l in ($labels | Select-Object -Unique)) { $labelParams += '--label'; $labelParams += $l }
+        $issueUrl = gh issue create --title $title --body $body @labelParams 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Falha ao criar issue $($item.id): $issueUrl"
+            continue
+        }
+
+        if ($issueUrl -match '/issues/(\d+)') {
+            $issueNum = [int]$Matches[1]
+            Set-IssueMilestoneForWave -Repo $repo -IssueNumber $issueNum -Root $Root -Wave $item.wave | Out-Null
+            if ($item.status -eq 'completed') {
+                gh issue close $issueNum --comment 'Fase concluída — issue de histórico para o Project.' 2>$null | Out-Null
+            }
+            if ($projectNumber -gt 0) {
+                Add-IssueToGitHubProject -IssueUrl $issueUrl -ProjectNumber $projectNumber -Owner $owner -Root $Root | Out-Null
+            }
+            $created += @{ id = $item.id; issue = $issueNum; url = $issueUrl; closed = ($item.status -eq 'completed') }
+            $allIssues += [pscustomobject]@{ number = $issueNum; title = $title; state = $(if ($item.status -eq 'completed') { 'CLOSED' } else { 'OPEN' }); body = $body; labels = @{ name = $labels }; url = $issueUrl }
+        }
+    }
+
+    $report = [ordered]@{ created = $created; count = $created.Count; dry_run = [bool]$DryRun }
+    if ($Json) { $report | ConvertTo-Json -Depth 5 } else { $report | ConvertTo-Json -Depth 5 }
+}
+
+
+
 function Invoke-ProjectSyncBoard {
 
     param([switch]$DryRun, [switch]$Json)
@@ -299,13 +386,7 @@ function Invoke-ProjectSyncBoard {
 
         if ($item.id -notmatch '^FASE') { continue }
 
-        $issue = $allIssues | Where-Object {
-
-            $_.body -match "arah-next-phase id=$([regex]::Escape($item.id))" -or
-
-            ($_.title -match [regex]::Escape($item.id) -and ($_.labels.name -contains 'epic/phase' -or $_.labels.name -contains 'agent-task'))
-
-        } | Select-Object -First 1
+        $issue = $allIssues | Where-Object { Test-PhaseIssueMarker -Issue $_ -PhaseId $item.id } | Select-Object -First 1
 
 
 
@@ -348,9 +429,20 @@ function Invoke-ProjectSyncBoard {
                 $draftNote = if ($item.status -eq 'completed') { 'Fase concluída (histórico).' } else { 'Placeholder — issue abre quando fase desbloquear.' }
                 $draftBody = "$draftNote`n`n<!-- arah-phase-draft id=$($item.id) -->"
 
+                $draftAdded = $false
                 gh project item-create --owner $owner --project-number $projectNumber --title $draftTitle --body $draftBody 2>$null | Out-Null
+                if ($LASTEXITCODE -eq 0) { $draftAdded = $true }
 
-                if ($LASTEXITCODE -eq 0) {
+                if (-not $draftAdded) {
+                    try {
+                        Add-ProjectV2DraftIssue -ProjectId $project.id -Title $draftTitle -Body $draftBody | Out-Null
+                        $draftAdded = $true
+                    } catch {
+                        Write-Warning "Draft $($item.id): $_"
+                    }
+                }
+
+                if ($draftAdded) {
 
                     $added += @{ phase = $item.id; action = 'draft-added' }
 
@@ -498,13 +590,13 @@ function Invoke-ProjectReconcile {
 
         if ($milestoneTitle) {
 
-            $milestones = gh api "repos/$repo/milestones?state=open" | ConvertFrom-Json
+            $milestones = gh api "repos/$repo/milestones?state=open&per_page=100" | ConvertFrom-Json
 
             $ms = $milestones | Where-Object { $_.title -eq $milestoneTitle } | Select-Object -First 1
 
             if ($ms) {
 
-                gh api -X PATCH "repos/$repo/issues/$($issue.number)" -F milestone=$ms.number | Out-Null
+                Set-IssueMilestoneForWave -Repo $repo -IssueNumber $issue.number -Root $Root -Wave $item.wave | Out-Null
 
             }
 
@@ -554,6 +646,8 @@ try {
 
                 Invoke-ProjectReconcile -Json:$Json | Out-Null
 
+                Invoke-SyncBacklogIssues -Json:$Json
+
                 & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -Json:$Json
 
                 Invoke-ProjectSyncBoard -Json:$Json
@@ -581,6 +675,16 @@ try {
         'ensure' {
 
             Invoke-ProjectEnsure -DryRun:$DryRun -Json:$Json
+
+            exit 0
+
+        }
+
+        'sync-backlog' {
+
+            Invoke-SyncBacklogIssues -DryRun:$DryRun -Json:$Json
+
+            if (-not $DryRun) { Invoke-ProjectSyncBoard -Json:$Json | Out-Null }
 
             exit 0
 

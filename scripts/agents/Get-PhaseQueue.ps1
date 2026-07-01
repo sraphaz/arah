@@ -471,19 +471,68 @@ function Test-PhaseCompleteFromGitHub {
     return $false
 }
 
+function Test-PhaseIssueMarker {
+    param(
+        [object]$Issue,
+        [string]$PhaseId
+    )
+    if (-not $Issue) { return $false }
+    $escaped = [regex]::Escape($PhaseId)
+    if ($Issue.body -match "arah-next-phase id=$escaped(\s|-->)") { return $true }
+    if ($Issue.body -match "arah-phase-draft id=$escaped(\s|-->)") { return $true }
+    if ($Issue.body -match "arah-phase-epic" -and $Issue.title -match "\b$escaped\b") { return $true }
+    return $false
+}
+
+function Get-PhaseIssueAnyState {
+    param(
+        [string]$Root,
+        [string]$PhaseId,
+        [array]$AllIssues = @()
+    )
+
+    if ($AllIssues.Count -eq 0 -and (Get-Command gh -ErrorAction SilentlyContinue)) {
+        Push-Location $Root
+        try {
+            $AllIssues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url | ConvertFrom-Json
+        } finally { Pop-Location }
+    }
+
+    $hit = $AllIssues | Where-Object { Test-PhaseIssueMarker -Issue $_ -PhaseId $PhaseId } | Select-Object -First 1
+    return $hit
+}
+
 function Test-PhaseOpenIssue {
     param([string]$Root, [string]$PhaseId, [array]$OpenIssues = @())
 
     if ($OpenIssues.Count -eq 0 -and (Get-Command gh -ErrorAction SilentlyContinue)) {
         Push-Location $Root
         try {
-            $OpenIssues = gh issue list --state open --limit 200 --json title,body,labels | ConvertFrom-Json
+            $OpenIssues = gh issue list --state open --limit 500 --json title,body,labels | ConvertFrom-Json
         } finally { Pop-Location }
     }
 
     foreach ($issue in $OpenIssues) {
-        if ($issue.body -match "arah-next-phase id=$([regex]::Escape($PhaseId))") { return $true }
-        if ($issue.title -match [regex]::Escape($PhaseId)) { return $true }
+        if (Test-PhaseIssueMarker -Issue $issue -PhaseId $PhaseId) { return $true }
     }
     return $false
+}
+
+function Set-IssueMilestoneForWave {
+    param(
+        [string]$Repo,
+        [int]$IssueNumber,
+        [string]$Root,
+        [string]$Wave
+    )
+    if (-not $Wave) { return $false }
+    $milestoneTitle = Resolve-MilestoneForWave -Root $Root -Wave $Wave
+    if (-not $milestoneTitle) { return $false }
+    $milestones = gh api "repos/$Repo/milestones?state=open&per_page=100" | ConvertFrom-Json
+    $ms = $milestones | Where-Object { $_.title -eq $milestoneTitle } | Select-Object -First 1
+    if (-not $ms) { return $false }
+    $milestoneNum = [int]$ms.number
+    $patch = @{ milestone = $milestoneNum } | ConvertTo-Json -Compress
+    $patch | gh api -X PATCH "repos/$Repo/issues/$IssueNumber" --input - 2>$null | Out-Null
+    return ($LASTEXITCODE -eq 0)
 }

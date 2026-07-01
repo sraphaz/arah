@@ -238,6 +238,7 @@ function Resolve-PhaseStatusColumn {
         [array]$OpenPrs = @()
     )
 
+    if ($PhaseItem -and $PhaseItem.status -eq 'completed') { return 'Done' }
     if ($Issue -and $Issue.state -eq 'CLOSED') { return 'Done' }
 
     $issueNum = if ($Issue) { $Issue.number } else { $null }
@@ -321,7 +322,12 @@ function Find-ProjectV2ByTitle {
     if ($ProjectNumber -gt 0) {
         try {
             $one = Get-ProjectV2Node -Owner $Owner -ProjectNumber $ProjectNumber
-            if ($one -and $one.title -eq $Title) { return $one }
+            if ($one) {
+                if ($Title -and $one.title -ne $Title) {
+                    Write-Warning "Project #$ProjectNumber título '$($one.title)' difere do config '$Title' — usando mesmo assim."
+                }
+                return $one
+            }
         } catch {
             Write-Warning "project by number #$ProjectNumber : $_"
         }
@@ -547,6 +553,9 @@ function Find-ProjectItemForPhase {
             if ($issue -and ($issue.body -match "arah-next-phase id=$([regex]::Escape($PhaseId))" -or $issue.title -match [regex]::Escape($PhaseId))) {
                 return @{ item_id = $item.id; issue = $issue; kind = 'issue' }
             }
+        }
+        if ($content -and $content.body -and $content.body -match "arah-phase-draft id=$([regex]::Escape($PhaseId))") {
+            return @{ item_id = $item.id; issue = $null; kind = 'draft' }
         }
         if ($content -and $content.title -and $content.title -match [regex]::Escape($PhaseId)) {
             return @{ item_id = $item.id; issue = $null; kind = 'draft' }

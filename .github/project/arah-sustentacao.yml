@@ -1,48 +1,89 @@
-# GitHub Project v2 — configuração operacional
-# Bootstrap: ./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
-# Sync board: ./scripts/agents/arah-agents.ps1 github-project -Skill sync-project
+# GitHub Project v2 — roadmap completo Arah
+# Project manual: https://github.com/users/sraphaz/projects/3
+# Sync: ./scripts/agents/github-project.ps1 sync-project
+# Bootstrap: ./scripts/agents/github-project.ps1 bootstrap
 
-title: "Arah — Sustentação (F52–61)"
+title: "Arah — Roadmap"
 description: |
-  Kanban operacional das fases de sustentação (infra, Core, federação).
-  Issues são criadas por next-phase e backlog-to-issue; contratos em docs/specs/ e docs/backlog-api/.
+  Kanban operacional de todas as fases (comunidade 1–51 + sustentação 52–61).
+  Issues criadas por next-phase/sync-queue; contratos em docs/specs/ e docs/backlog-api/.
 
-# Preenchido automaticamente por `github-project bootstrap` / CI
-project_number: null
-project_url: null
+project_number: 3
+project_url: "https://github.com/users/sraphaz/projects/3"
 
 # Mapeamento wave → milestone (título em .github/milestones.yml)
 wave_milestones:
+  C1: "Onda C1 — Fundação crítica (1–8)"
+  C2: "Onda C2 — MVP essencial (9–12)"
+  C3: "Onda C3 — Comunicação e governança (13–16)"
+  C4: "Onda C4 — BFF e arquitetura (17)"
+  C5: "Onda C5 — Soberania territorial (16–18)"
+  C6: "Onda C6 — Economia local (19–24)"
+  C7: "Onda C7 — Autonomia digital (25–28)"
+  C8: "Onda C8 — Mobile avançado (29)"
+  C9: "Onda C9 — Hospedagem e expansão (30–31)"
+  C10: "Onda C10 — Diferenciais (42–51)"
   S0: "Onda S0 — Fundação"
   S1: "Onda S1 — Go-live piloto"
   S2: "Onda S2 — Transparência"
   S3: "Onda S3 — Federação"
   S4: "Onda S4 — Capital"
 
-# Frentes do handoff C4 (agrupamento lógico no board)
+# Agrupamento lógico no board
 frentes:
+  - id: fundacao-critica
+    title: "Fundação crítica (1–8)"
+    phases: [FASE1, FASE2, FASE3, FASE4, FASE5, FASE6, FASE7, FASE8]
+    wave: C1
+  - id: mvp
+    title: "MVP essencial (9–12)"
+    phases: [FASE9, FASE10, FASE11, FASE12]
+    wave: C2
+  - id: governanca
+    title: "Comunicação e governança (13–16)"
+    phases: [FASE13, FASE14, FASE14_5, FASE15, FASE16]
+    wave: C3
+  - id: bff
+    title: "BFF e integração"
+    phases: [FASE17_BFF]
+    wave: C4
+  - id: economia-local
+    title: "Economia local (17–24)"
+    phases: [FASE17, FASE18, FASE19, FASE20, FASE21, FASE22, FASE23, FASE24]
+    wave: C6
+  - id: autonomia
+    title: "Autonomia digital (25–28)"
+    phases: [FASE25, FASE26, FASE27, FASE28]
+    wave: C7
+  - id: mobile
+    title: "Mobile avançado"
+    phases: [FASE29]
+    wave: C8
+  - id: expansao
+    title: "Expansão e diferenciais (30–51)"
+    phases: [FASE30, FASE31, FASE42, FASE43, FASE44, FASE48, FASE50, FASE51]
+    wave: C10
   - id: fundacao-tecnica
-    title: "Fundação técnica (CI/CD, Core, IaC)"
+    title: "Sustentação — Fundação técnica (CI/CD, Core, IaC)"
     phases: [FASE52, FASE53, FASE54]
     wave: S0
   - id: monetizacao
-    title: "Monetização & billing"
+    title: "Sustentação — Monetização & billing"
     phases: [FASE55, FASE56]
     wave: S1
   - id: cockpit
-    title: "Cockpit implementador"
+    title: "Sustentação — Cockpit implementador"
     phases: [FASE57, FASE60]
     wave: S1
   - id: operacao-federacao
-    title: "Operação multi-instância & federação"
+    title: "Sustentação — Operação multi-instância & federação"
     phases: [FASE58, FASE59]
     wave: S3
   - id: capital
-    title: "Capital territorial"
+    title: "Sustentação — Capital territorial"
     phases: [FASE61]
     wave: S4
 
-# Colunas Status do Project (sync automático via sync-project)
 columns:
   - Backlog
   - Ready
@@ -50,13 +91,12 @@ columns:
   - Review
   - Done
 
-# Views criadas automaticamente no bootstrap (GraphQL createProjectV2View)
 views:
-  - name: "Kanban — Sustentação"
+  - name: "Kanban — Roadmap"
     layout: board
   - name: "Tabela — Por onda"
     layout: table
-  - name: "Tabela — Infra & Federação"
+  - name: "Tabela — Sustentação (52–61)"
     layout: table
-  - name: "Roadmap — Ondas S0–S4"
+  - name: "Roadmap — Completo"
     layout: roadmap

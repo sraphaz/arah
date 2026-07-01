@@ -1,0 +1,42 @@
+# Metadados do roadmap completo — complementa descoberta automática em docs/backlog-api/FASE*.md
+# Ondas C* = comunidade (1–51) · S* = sustentação operacional (52–61)
+# Sync: Get-PhaseRoadmap em scripts/agents/Get-PhaseQueue.ps1
+
+version: 1
+updated: 2026-07-01
+
+# Fases concluídas (board → coluna Done mesmo sem issue)
+completed:
+  - FASE1
+  - FASE2
+  - FASE3
+  - FASE4
+  - FASE5
+  - FASE6
+  - FASE7
+  - FASE8
+  - FASE9
+  - FASE10
+  - FASE11
+  - FASE12
+  - FASE13
+  - FASE14
+  - FASE15
+  - FASE16
+
+# Overrides por fase (wave, área, prioridade, dependências)
+overrides:
+  FASE14_5:
+    title: "FASE14.5 — Itens Faltantes Fases 1–14"
+    doc: docs/backlog-api/FASE14_5.md
+    wave: C3
+    area: area/backend
+    priority: P1
+    blocked_by: [FASE14]
+  FASE17_BFF:
+    title: "FASE17 — Backend for Frontend (BFF)"
+    doc: docs/backlog-api/FASE17_BFF.md
+    wave: C4
+    area: area/backend
+    priority: P1
+    blocked_by: [FASE1, FASE4, FASE6, FASE8]

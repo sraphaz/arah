@@ -227,9 +227,9 @@ function Invoke-ProjectSyncBoard {
 
     $viewNames = Get-ProjectViewsFromConfig -Root $Root
 
-    $queue = Get-PhaseQueue -Root $Root
+    $queue = Get-PhaseRoadmap -Root $Root
 
-    $allIssues = gh issue list --state all --limit 200 --json number,title,state,body,labels,url | ConvertFrom-Json
+    $allIssues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url | ConvertFrom-Json
 
     $openPrs = Get-OpenPullRequestsForRepo -Repo $repo
 
@@ -299,10 +299,6 @@ function Invoke-ProjectSyncBoard {
 
         if ($item.id -notmatch '^FASE') { continue }
 
-        if ($item.status -eq 'completed') { continue }
-
-
-
         $issue = $allIssues | Where-Object {
 
             $_.body -match "arah-next-phase id=$([regex]::Escape($item.id))" -or
@@ -349,7 +345,8 @@ function Invoke-ProjectSyncBoard {
 
                 $draftTitle = "[Epic] $($item.title)"
 
-                $draftBody = "Placeholder board — issue será aberta quando fase desbloquear.`n`n<!-- arah-phase-draft id=$($item.id) -->"
+                $draftNote = if ($item.status -eq 'completed') { 'Fase concluída (histórico).' } else { 'Placeholder — issue abre quando fase desbloquear.' }
+                $draftBody = "$draftNote`n`n<!-- arah-phase-draft id=$($item.id) -->"
 
                 gh project item-create --owner $owner --project-number $projectNumber --title $draftTitle --body $draftBody 2>$null | Out-Null
 
@@ -419,9 +416,9 @@ function Invoke-ProjectReconcile {
 
 
 
-    $queue = Get-PhaseQueue -Root $Root
+    $queue = Get-PhaseRoadmap -Root $Root
 
-    $openIssues = gh issue list --state open --limit 200 --json number,title,body,labels,url | ConvertFrom-Json
+    $openIssues = gh issue list --state open --limit 500 --json number,title,body,labels,url | ConvertFrom-Json
 
     $repo = gh repo view --json nameWithOwner -q .nameWithOwner
 
@@ -595,7 +592,7 @@ try {
 
             $queue = Get-PhaseQueue -Root $Root
 
-            $openIssues = gh issue list --state open --limit 200 --json title,body,labels | ConvertFrom-Json
+            $openIssues = gh issue list --state open --limit 500 --json title,body,labels | ConvertFrom-Json
 
             $created = @()
 
@@ -673,7 +670,7 @@ try {
 
         'status' {
 
-            $issues = gh issue list --state all --limit 200 --json number,title,state,labels,url,body | ConvertFrom-Json
+            $issues = gh issue list --state all --limit 500 --json number,title,state,labels,url,body | ConvertFrom-Json
 
             $epics = @($issues | Where-Object {
 

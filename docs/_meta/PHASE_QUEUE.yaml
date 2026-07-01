@@ -1,7 +1,8 @@
 # Fila de fases — machine-readable; **Issues GitHub** são fonte operacional de status.
-# Sync: ./scripts/agents/github-project.ps1 sync-queue
+# Sync operacional (next-phase): apenas esta fila (prioridade sustentação S0+).
+# Roadmap completo no Project: Get-PhaseRoadmap (todos os FASE*.md + PHASE_ROADMAP_META.yaml).
+# Project: https://github.com/users/sraphaz/projects/3
 # Docs: docs/ops/GITHUB_PROJECT_MANAGEMENT.md
-# Complementar: docs/STATUS_FASES.md (dashboard humano)
 
 version: 1
 updated: 2026-07-01

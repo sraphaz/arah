@@ -1,9 +1,11 @@
 # Gestão de projeto via GitHub (Issues, Labels, Milestones, Projects)
 
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Data**: 2026-07-01
 
 O Arah adota um modelo **híbrido**: contratos técnicos no repo (specs SDD, ADRs, `FASE*.md`), **execução e status** no GitHub.
+
+**Project ativo:** [sraphaz/projects/3](https://github.com/users/sraphaz/projects/3) — roadmap completo (49 fases + extras).
 
 ---
 
@@ -11,12 +13,14 @@ O Arah adota um modelo **híbrido**: contratos técnicos no repo (specs SDD, ADR
 
 | Recurso | Onde | Uso |
 |---------|------|-----|
-| **Issues** | `[Epic] FASE52…` | Épicos de fase, AC resumidos, link para docs |
-| **Labels** | `.github/labels.yml` | `area/*`, `wave/S0`, `priority/P0`, `epic/phase` |
-| **Milestones** | `.github/milestones.yml` | Ondas S0–S4 |
-| **Project v2** | `.github/project/arah-sustentacao.yml` | Kanban (após bootstrap) |
+| **Issues** | `[Epic] FASE…` | Épicos de fase, AC resumidos, link para docs |
+| **Labels** | `.github/labels.yml` | `area/*`, `wave/C1`…`C10`, `wave/S0`…`S4`, `epic/phase` |
+| **Milestones** | `.github/milestones.yml` | Ondas comunidade (C1–C10) + sustentação (S0–S4) |
+| **Project v2** | `.github/project/arah-sustentacao.yml` | Kanban — `project_number: 3` |
+| **Roadmap meta** | `docs/_meta/PHASE_ROADMAP_META.yaml` | Fases concluídas + overrides |
+| **Fila operacional** | `docs/_meta/PHASE_QUEUE.yaml` | Prioridade next-phase (FASE52+) |
 | **Templates** | `.github/ISSUE_TEMPLATE/` | Agent Task, Phase Epic, config chooser |
-| **Status JSON** | `.github/phase-status.generated.json` | Snapshot gerado por CI de Issues |
+| **Status JSON** | `.github/phase-status.generated.json` | Snapshot gerado por CI |
 
 ---
 
@@ -70,13 +74,18 @@ $env:GH_PROJECT_TOKEN = 'ghp_...'
 ./scripts/agents/test-project-token.ps1
 ```
 
-#### Alternativa: Project manual (sem PAT)
+#### Alternativa: Project manual (sem criar via API)
 
-1. https://github.com/users/sraphaz/projects/new
-2. Nome: `Arah — Sustentação (F52–61)`
-3. **Link to repository** → `sraphaz/arah`
+1. https://github.com/users/sraphaz/projects/3 (já criado)
+2. **Link to repository** → `sraphaz/arah` (se ainda não ligou)
+3. Actions → **Bootstrap GitHub Project** → Run workflow (popula 49 fases no board)
 
-O bootstrap automatiza views + issues no board; manual cria só o quadro vazio.
+Ou local (com PAT `project`):
+
+```powershell
+gh auth refresh -h github.com -s project,read:project
+./scripts/agents/github-project.ps1 bootstrap
+```
 
 ---
 

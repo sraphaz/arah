@@ -2,7 +2,15 @@ id: governanca-transparencia
 name: Governança & Transparência
 mode: consult
 enrich: Propostas, quórum e prestação de contas.
-validate: Taxas votadas pelo conselho; painel público correto.
+validate: Taxas votadas pelo conselho; painel público correto; moderação comunitária.
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - backend/**/Moderation/**
+    - backend/**/Voting/**
+    - backend/**/Votings/**
+    - backend/Arah.Modules.Moderation/**
 references:
   - docs/GOVERNANCE_SYSTEM.md
   - docs/backlog-api/FASE56.md

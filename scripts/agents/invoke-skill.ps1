@@ -233,6 +233,27 @@ try {
 
         }
 
+        'likec4-export' {
+
+            & (Join-Path $Root 'scripts/diagrams/export-likec4.ps1')
+
+        }
+
+        'domain-consult' {
+
+            if (-not $Agent) {
+                Write-Error 'domain-consult requires -Agent (domain id, e.g. mercado-economia)'
+                exit 1
+            }
+            $params = @{
+                DomainId     = $Agent
+                ChangedFiles = $ChangedFiles
+            }
+            if ($Issue -gt 0) { $params.PrNumber = $Issue }
+            & (Join-Path $ScriptDir 'post-domain-consult.ps1') @params
+
+        }
+
         default {
 
             Write-Host (Get-Content $SkillFile -Raw)

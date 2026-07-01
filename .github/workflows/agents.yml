@@ -79,6 +79,7 @@ jobs:
           if ($issue -gt 0) { $params.IssueNumber = $issue }
           if ($pr -gt 0) { $params.PrNumber = $pr }
           if ($changed.Count -gt 0) { $params.ChangedFiles = $changed }
+          if ($pr -gt 0) { $params.ExecuteAutonomy = $true }
           & ./scripts/agents/run-agent-activation.ps1 @params
 
       - name: Upload agent activity log
@@ -171,6 +172,14 @@ jobs:
                 .map(p => `- \`${p.agent}\` (${(p.files || []).length} arquivo(s))`)
                 .join('\n');
             }
+            const ch = payload.choreography || {};
+            let choreoSection = '';
+            if (ch.domain_consults && ch.domain_consults.length > 0) {
+              choreoSection += '\n**Pareceres de domínio:** ' + ch.domain_consults.map(d => `\`${d}\``).join(', ');
+            }
+            if (ch.matched_rules && ch.matched_rules.length > 0) {
+              choreoSection += '\n**Regras de coreografia:** ' + ch.matched_rules.map(r => `\`${r}\``).join(', ');
+            }
             const body = [
               '<!-- arah-orchestrator -->',
               '## Orquestrador Arah — PR',
@@ -178,6 +187,7 @@ jobs:
               `**Agente principal:** \`${payload.agent}\` — ${payload.agent_name}`,
               `**Skills sugeridas:** ${skills}`,
               pathSection,
+              choreoSection,
               '',
               '**QA agent** revisará este PR (checklist em `.agents/qa.agent.yaml`).',
               '',

@@ -1,6 +1,6 @@
 # AGENTS.md — Manual de operação por agentes
 
-**Versão**: 1.4  
+**Versão**: 1.5  
 **Data**: 2026-07-01  
 **Repo**: `sraphaz/arah`
 
@@ -118,8 +118,34 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | [spec-author](.skills/spec-author.skill.yaml) | Cria/atualiza spec a partir do template |
 | [harness-run](.skills/harness-run.skill.yaml) | Executa harness completo ou por Spec-Id |
 | [agent-activate](.skills/agent-activate.skill.yaml) | Publicar checklist de conduta na issue/PR |
+| [likec4-export](.skills/likec4-export.skill.yaml) | Exporta LikeC4 → PNG/SVG com tokens Arah |
+| [domain-consult](.skills/domain-consult.skill.yaml) | Parecer consultivo de agente de domínio |
 
 ---
+
+## Coreografia (PR 11)
+
+Após o roteamento do orquestrador, [`.agents/choreography.yaml`](.agents/choreography.yaml) aplica **co-ativação** e **autonomia consultiva**:
+
+| Regra | Paths (resumo) | Agentes |
+|-------|----------------|---------|
+| `core-control-plane` | `backend/Arah.Core/**` | backend, solutions-architect, spec-steward, domain `control-plane` |
+| `architecture-docs` | `docs/architecture/**`, LikeC4 | solutions-architect (+ skills export/review) |
+| `territory-membership` | Territories, Memberships | domain `territorio-membership` |
+| `marketplace` | Marketplace, Cart, Stores | domain `mercado-economia` |
+| `governance` | Moderation, Voting | domain `governanca-transparencia` |
+| `monetization` | Subscriptions, Stripe, Payout | domain `monetizacao-split`, `carteira-arata` |
+| `specs-sdd` | `docs/specs/**`, harness | spec-steward (+ spec-validate, harness-run) |
+| `pr-always` | `**` (somente PR) | qa, pr-steward |
+
+**Tipos:** operacionais publicam checklist; domínio publica **parecer consultivo** (`<!-- arah-domain-consult:{id} -->`). Em PRs, `-ExecuteAutonomy` invoca skills declaradas nas regras.
+
+```powershell
+./scripts/agents/arah-agents.ps1 choreograph -ChangedFiles backend/Arah.Core/x.cs -Trigger pull_request -Json
+./scripts/agents/arah-agents.ps1 skill -Skill likec4-export
+```
+
+Scripts: [choreograph-agents.ps1](scripts/agents/choreograph-agents.ps1), [post-domain-consult.ps1](scripts/agents/post-domain-consult.ps1), [export-likec4.ps1](scripts/diagrams/export-likec4.ps1)
 
 ## CLI `arah-agents`
 
@@ -129,6 +155,7 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 ./scripts/agents/arah-agents.ps1 validate
 ./scripts/agents/arah-agents.ps1 harness
 ./scripts/agents/arah-agents.ps1 spec-validate
+./scripts/agents/arah-agents.ps1 choreograph -ChangedFiles backend/Arah.Core/x.cs -Json
 ./scripts/agents/arah-agents.ps1 ensure-labels
 ./scripts/agents/arah-agents.ps1 bot-review -PrNumber 300
 ./scripts/agents/arah-agents.ps1 pr-ready -PrNumber 300

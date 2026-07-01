@@ -50,6 +50,7 @@ if (-not $manifestPath) {
 
 $raw = Get-Content $manifestPath -Raw
 $name = if ($raw -match '(?m)^name:\s*(.+)$') { $Matches[1].Trim() } else { $AgentId }
+$isConsult = ($raw -match '(?m)^mode:\s*consult') -or ($raw -match '(?m)^consult_only:\s*true')
 
 $paths = @()
 if ($raw -match '(?ms)^scope:\s*\n(?:.*?\n)*?\s+paths:\s*\n((?:\s+-\s+.+\r?\n)+)') {
@@ -92,9 +93,9 @@ if ($files.Count -gt 0 -and $paths.Count -gt 0 -and -not ($paths -contains '**')
 $checks = [ordered]@{
     no_merge          = @{ ok = ($guardrails.no_merge -eq 'true'); label = 'Guardrail no_merge' }
     require_ci        = @{ ok = ($guardrails.require_ci -ne 'false'); label = 'Guardrail require_ci' }
-    checklist_exists  = @{ ok = $hasChecklist; label = "Checklist de conduta ($checklistFile)" }
+    checklist_exists  = @{ ok = if ($isConsult) { $true } else { $hasChecklist }; label = "Checklist de conduta ($checklistFile)" }
     scope_respected   = @{
-        ok    = if ($files.Count -eq 0) { $true } elseif ($paths.Count -eq 0 -or ($paths -contains '**')) { $true } else { $scopeOk }
+        ok    = if ($isConsult -or $files.Count -eq 0) { $true } elseif ($paths.Count -eq 0 -or ($paths -contains '**')) { $true } else { $scopeOk }
         label = 'Escopo de paths respeitado'
         detail = if ($scopeViolations.Count -gt 0) { ($scopeViolations -join ', ') } else { $null }
     }

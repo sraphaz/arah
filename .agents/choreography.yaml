@@ -1,0 +1,103 @@
+# Coreografia de agentes — autonomia e co-ativação
+version: 1
+updated: 2026-07-01
+policy: |
+  Regras aplicadas após roteamento do orquestrador. Agentes de domínio (negócio)
+  publicam parecer consultivo; operacionais ativam checklist + skills.
+
+rules:
+  - id: core-control-plane
+    paths:
+      - backend/Arah.Core/**
+    agents:
+      - id: backend
+        type: operational
+        autonomy: [activate]
+      - id: solutions-architect
+        type: operational
+        autonomy: [activate, consult_post, invoke_skill]
+        skills: [architecture-review]
+      - id: spec-steward
+        type: operational
+        autonomy: [activate]
+      - id: control-plane
+        type: domain
+        autonomy: [consult_post]
+
+  - id: architecture-docs
+    paths:
+      - docs/architecture/**
+      - docs/design/*.likec4
+      - docs/architecture/likec4/**
+    agents:
+      - id: solutions-architect
+        type: operational
+        autonomy: [activate, invoke_skill]
+        skills: [likec4-export, architecture-review]
+
+  - id: territory-membership
+    paths:
+      - backend/**/Territories/**
+      - backend/**/Memberships/**
+      - backend/Arah.Domain/Territories/**
+    agents:
+      - id: territorio-membership
+        type: domain
+        autonomy: [consult_post]
+
+  - id: marketplace
+    paths:
+      - backend/Arah.Modules.Marketplace/**
+      - backend/**/Marketplace/**
+      - backend/**/Cart/**
+      - backend/**/Stores/**
+    agents:
+      - id: mercado-economia
+        type: domain
+        autonomy: [consult_post]
+
+  - id: governance
+    paths:
+      - backend/**/Moderation/**
+      - backend/**/Voting/**
+      - backend/**/Votings/**
+    agents:
+      - id: governanca-transparencia
+        type: domain
+        autonomy: [consult_post]
+
+  - id: monetization
+    paths:
+      - backend/**/Subscriptions/**
+      - backend/**/Stripe/**
+      - backend/**/SellerBalance/**
+      - backend/**/Payout/**
+    agents:
+      - id: monetizacao-split
+        type: domain
+        autonomy: [consult_post]
+      - id: carteira-arata
+        type: domain
+        autonomy: [consult_post]
+
+  - id: specs-sdd
+    paths:
+      - docs/specs/**
+      - scripts/harness/**
+    agents:
+      - id: spec-steward
+        type: operational
+        autonomy: [activate, invoke_skill]
+        skills: [spec-validate, harness-run]
+
+  - id: pr-always
+    paths:
+      - "**"
+    when: pull_request
+    agents:
+      - id: qa
+        type: operational
+        autonomy: [activate]
+      - id: pr-steward
+        type: operational
+        autonomy: [activate]

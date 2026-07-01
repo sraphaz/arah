@@ -1,6 +1,6 @@
 # Operação por agentes
 
-**Versão**: 1.3  
+**Versão**: 1.4  
 **Data**: 2026-07-01  
 **Handoff HTML**: [Operacao por Agentes - Arah.dc.html](../handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
 
@@ -173,6 +173,25 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 - PR com `docs/specs/` ou `Arah.Core` aciona **spec-steward** como co-agente.
 - `run-gates` inclui `spec-gate-check` (Spec-Id + validate-specs).
 - Backend consulta `control-plane` / `core-control-plane` para FASE53+.
+
+### PR 11 — Coreografia + LikeC4 + domínio consultivo (2026-07-01)
+
+| Artefato | Caminho |
+|----------|---------|
+| Coreografia | [.agents/choreography.yaml](../../.agents/choreography.yaml) |
+| Engine | [choreograph-agents.ps1](../../scripts/agents/choreograph-agents.ps1) |
+| Ativação (reescrita) | [run-agent-activation.ps1](../../scripts/agents/run-agent-activation.ps1) |
+| Parecer domínio | [post-domain-consult.ps1](../../scripts/agents/post-domain-consult.ps1) |
+| LikeC4 model | [docs/architecture/likec4/](../architecture/likec4/) |
+| Export diagramas | [export-likec4.ps1](../../scripts/diagrams/export-likec4.ps1), [apply-arah-design-tokens.ps1](../../scripts/diagrams/apply-arah-design-tokens.ps1) |
+| Skills | [likec4-export](../../.skills/likec4-export.skill.yaml), [domain-consult](../../.skills/domain-consult.skill.yaml) |
+| Domain agents (paths) | [.agents/domain/](../../.agents/domain/) — `scope.paths` + `autonomy: consult_post` |
+
+**Comportamento:**
+- Todo PR: regra `pr-always` aciona **qa** + **pr-steward**; com `-ExecuteAutonomy` no CI, skills das regras matched são invocadas.
+- PR com Marketplace → parecer `mercado-economia`; Core → `control-plane` + `architecture-review`.
+- `orchestrate` enriquece `route.json` com bloco `choreography` (regras + domínios).
+- CLI: `arah-agents choreograph`, `skill -Skill likec4-export`.
 
 ---
 

@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -28,6 +28,8 @@ param(
     [string]$Agent = '',
     [string]$Trigger = 'manual',
     [string]$SpecId = '',
+    [string]$RouteFile = '',
+    [switch]$ExecuteAutonomy,
     [switch]$SkipTests,
     [switch]$Json,
     [switch]$DryRun
@@ -402,6 +404,20 @@ function Invoke-Orchestrate {
         dry_run       = [bool]$DryRun
     }
 
+    if ($files.Count -gt 0) {
+        try {
+            $chRaw = & (Join-Path $PSScriptRoot 'choreograph-agents.ps1') -ChangedFiles $files -Trigger $effectiveEvent -Json
+            $ch = $chRaw | ConvertFrom-Json
+            $result.choreography = @{
+                matched_rules   = $ch.matched_rules
+                domain_consults = $ch.domain_consults
+                operational     = $ch.operational
+            }
+        } catch {
+            $result.choreography_error = $_.Exception.Message
+        }
+    }
+
     if ($Json) {
         $result | ConvertTo-Json -Depth 6
     } else {
@@ -457,6 +473,7 @@ Comandos:
   activate      Publica checklist de conduta do agente (issue/PR)
   harness       Executa harness SDD (specs + agentes + comandos ligados)
   spec-validate Valida YAML em docs/specs/
+  choreograph   Resolve coreografia (domínio + skills autônomas)
 
 Exemplos:
   ./arah-agents.ps1 harness
@@ -470,6 +487,7 @@ Exemplos:
   ./arah-agents.ps1 next-phase -DryRun
   ./arah-agents.ps1 orchestrate -EventPath `$env:GITHUB_EVENT_PATH -Json
   ./arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
+  ./arah-agents.ps1 choreograph -ChangedFiles backend/Arah.Core/x.cs -Json
   ./arah-agents.ps1 skill -Skill run-tests -Area backend
   ./arah-agents.ps1 validate
 
@@ -485,7 +503,7 @@ switch ($Command) {
             Write-Error 'skill requires -Skill'
             exit 1
         }
-        & (Join-Path $PSScriptRoot 'invoke-skill.ps1') -Skill $Skill -Area $Area
+        & (Join-Path $PSScriptRoot 'invoke-skill.ps1') -Skill $Skill -Area $Area -ChangedFiles $ChangedFiles -Agent $Agent -Title $Title -Issue $Issue
     }
     'validate' {
         & (Join-Path $PSScriptRoot 'validate-manifests.ps1')
@@ -580,6 +598,14 @@ switch ($Command) {
         if ($SpecId) { $params.SpecId = $SpecId }
         if ($Json) { $params.Json = $true }
         & (Join-Path (Join-Path $Root 'scripts/harness') 'validate-specs.ps1') @params
+    }
+    'choreograph' {
+        $params = @{ Json = $true }
+        if ($ChangedFiles.Count -gt 0) { $params.ChangedFiles = $ChangedFiles }
+        if ($RouteFile) { $params.RouteFile = $RouteFile }
+        if ($Trigger -ne 'manual') { $params.Trigger = $Trigger }
+        if ($ExecuteAutonomy) { $params.ExecuteAutonomy = $true }
+        & (Join-Path $PSScriptRoot 'choreograph-agents.ps1') @params
     }
     default { Show-Help }
 }

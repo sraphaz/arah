@@ -7,10 +7,16 @@ enrich: |
 validate: |
   Entidades Instance/Release/HealthCheckReport; endpoints /core/*; degradação graciosa
   se Core indisponível; mTLS e diretório federado conforme fase.
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - backend/Arah.Core/**
+    - docs/specs/phases/FASE53-arah-core.spec.yaml
+    - docs/specs/phases/FASE58*.spec.yaml
+    - docs/specs/phases/FASE59*.spec.yaml
 references:
   - docs/specs/phases/FASE53-arah-core.spec.yaml
   - docs/backlog-api/FASE53.md
-  - docs/backlog-api/FASE58.md
-  - docs/backlog-api/FASE59.md
+  - docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md
   - docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html
-  - backend/Arah.Core/

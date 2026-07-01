@@ -1,9 +1,19 @@
 id: mercado-economia
 name: Domain — Mercado & Economia Local
 description: Consultivo para items, marketplace territorial e economia circular.
+mode: consult
 consult_only: true
+enrich: Items territoriais, stores, cart e checkout respeitando vínculo ao territory.
+validate: Nomenclatura items (nunca listings); escopo por territoryId; preços locais.
+autonomy:
+  - consult_post
 scope:
   paths:
+    - backend/Arah.Modules.Marketplace/**
+    - backend/**/Marketplace/**
+    - backend/**/Cart/**
+    - backend/**/Stores/**
+    - backend/**/Items/**
     - docs/**/mercado*
     - docs/**/marketplace*
 references:

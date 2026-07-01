@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Coreografia + LikeC4 + domínio consultivo (2026-07-01)
+
+- **`.agents/choreography.yaml`** — regras de co-ativação (Core, specs, marketplace, governance, monetization, PR sempre qa+pr-steward)
+- **`choreograph-agents.ps1`**, **`post-domain-consult.ps1`**; `run-agent-activation` integrado
+- Skills **`likec4-export`**, **`domain-consult`**; export LikeC4 + tokens design system
+- **`docs/architecture/likec4/`** — modelo C4; CLI `arah-agents choreograph`
+- Domain agents com `scope.paths` e parecer consultivo automático em PR
+
 ### Adicionado — Solutions Architect + ADRs (2026-07-01)
 
 - Agente **`solutions-architect`** (Uncle Bob, LikeC4, consultivo)

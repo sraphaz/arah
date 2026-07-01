@@ -12,6 +12,13 @@ Get-ChildItem -Path (Join-Path $Root '.agents') -Recurse -Filter '*.agent.yaml' 
             $errors += "$($_.FullName): missing '$field'"
         }
     }
+    if ($raw -match '(?m)^checklist:\s*(.+)$') {
+        $rel = $Matches[1].Trim()
+        $clPath = Join-Path $Root ".agents/$rel"
+        if (-not (Test-Path $clPath)) {
+            $errors += "$($_.FullName): checklist not found at .agents/$rel"
+        }
+    }
 }
 
 Get-ChildItem -Path (Join-Path $Root '.skills') -Filter '*.skill.yaml' | ForEach-Object {

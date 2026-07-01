@@ -20,6 +20,7 @@ skills:
 consult:
   specialists:
     - nextjs
+checklist: checklists/web.checklist.md
 guardrails:
   no_merge: true
   require_ci: true

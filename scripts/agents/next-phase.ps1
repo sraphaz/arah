@@ -57,6 +57,9 @@ function Get-SimpleYamlQueue {
             $inBlockedList = $true
         } elseif ($inBlockedList -and $line -match '^\s+-\s+(FASE\d+|doc-[\w-]+)\s*$') {
             $current.blocked_by += $Matches[1].Trim()
+        } elseif ($current -and $line -match '^\s+status:\s*(.+)$') {
+            $current.status = $Matches[1].Trim()
+            $inBlockedList = $false
         } elseif ($current -and -not $inBlockedList) {
             $inBlockedList = $false
         }
@@ -99,6 +102,7 @@ try {
         if ($blocked) { continue }
         if (Test-PhaseOpenIssue -PhaseId $item.id) { continue }
         if ($item.id -match '^FASE' -and (Test-PhaseComplete -PhaseId $item.id)) { continue }
+        if ($item.status -eq 'completed') { continue }
         $selected = $item
         break
     }

@@ -1,0 +1,23 @@
+id: agent-activate
+name: Agent Activate
+description: Publica checklist de conduta e verificações automáticas quando um agente é acionado.
+triggers:
+  - orchestrator:delegate
+  - workflow:agents.yml
+inputs:
+  agent_id:
+    required: true
+  issue_number:
+    required: false
+  pr_number:
+    required: false
+  changed_files:
+    required: false
+steps:
+  - script: scripts/agents/post-agent-activity.ps1
+    args:
+      - AgentId: "{{agent_id}}"
+      - PostComment: true
+references:
+  - .agents/checklists/_shared.conduct.md
+  - scripts/agents/agent-conduct-check.ps1

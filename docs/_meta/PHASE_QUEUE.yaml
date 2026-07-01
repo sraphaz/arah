@@ -15,6 +15,7 @@ queue:
     priority: P1
     blocked_by: []
     kind: maintenance
+    status: completed
 
   - id: FASE52
     title: "FASE52 — Fundação Técnica e CI/CD"

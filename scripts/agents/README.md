@@ -16,5 +16,8 @@
 | [address-bot-review.ps1](address-bot-review.ps1) | Audita apontamentos de bots em PR |
 | [pr-ready.ps1](pr-ready.ps1) | CI + bots → ready-for-merge |
 | [next-phase.ps1](next-phase.ps1) | Abre issue da próxima fase (`PHASE_QUEUE.yaml`) |
+| [post-agent-activity.ps1](post-agent-activity.ps1) | Comentário de ativação + checklist |
+| [run-agent-activation.ps1](run-agent-activation.ps1) | Ativa agentes após orquestração (CI) |
+| [agent-conduct-check.ps1](agent-conduct-check.ps1) | Verificações automáticas de conduta |
 
 Ver [docs/ops/AGENT_OPERATION.md](../../docs/ops/AGENT_OPERATION.md).

@@ -1,7 +1,7 @@
 # AGENTS.md — Manual de operação por agentes
 
-**Versão**: 1.2  
-**Data**: 2026-06-30  
+**Versão**: 1.3  
+**Data**: 2026-07-01  
 **Repo**: `sraphaz/arah`
 
 Este arquivo é a **fonte de verdade** para agentes (Cursor, CI, `arah-agents`). Regras longas permanecem em `.cursorrules`; **procedimentos executáveis** vivem em `.skills/`.
@@ -29,6 +29,23 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + PR Stew
 ### Regra obrigatória — bots
 
 **Todo apontamento de bot** (CodeRabbit, Dependabot, GitHub Actions, Cursor, CodeQL) **deve ser resolvido ou respondido** antes do merge. O agente `pr-steward` audita cada PR e só aplica `ready-for-merge` quando CI está verde **e** não há apontamentos pendentes.
+
+---
+
+## Visibilidade — quando um agente é acionado
+
+Ao rotear uma issue ou PR, o CI **publica comentários visíveis** com checklist de conduta:
+
+| Onde ver | O quê |
+|----------|--------|
+| **Issue / PR** | Comentário `## Agente acionado: …` com marker `<!-- arah-agent-activity:backend -->` |
+| **GitHub Actions** | Artifact `agent-activity-{run_id}.json` no workflow **Agents Orchestrate** |
+| **CD pipeline** | Step summary + artifact `agent-activity-release` (Release Agent) |
+| **Local** | `./scripts/agents/arah-agents.ps1 activate -Agent backend -Issue N -DryRun` |
+
+Cada agente operacional tem checklist em [`.agents/checklists/`](.agents/checklists/) + conduta compartilhada em [`_shared.conduct.md`](.agents/checklists/_shared.conduct.md).
+
+Verificações **automáticas** (escopo, guardrails, checklist presente): `agent-conduct-check.ps1`.
 
 ---
 
@@ -68,6 +85,7 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + PR Stew
 | [iac-plan](.skills/iac-plan.skill.yaml) | terraform/helm dry-run |
 | [address-bot-review](.skills/address-bot-review.skill.yaml) | Auditar apontamentos de bots no PR |
 | [next-phase](.skills/next-phase.skill.yaml) | Abrir issue da próxima fase (`docs/_meta/PHASE_QUEUE.yaml`) |
+| [agent-activate](.skills/agent-activate.skill.yaml) | Publicar checklist de conduta na issue/PR |
 
 ---
 
@@ -82,6 +100,8 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + PR Stew
 ./scripts/agents/arah-agents.ps1 bot-review -PrNumber 300
 ./scripts/agents/arah-agents.ps1 pr-ready -PrNumber 300
 ./scripts/agents/arah-agents.ps1 next-phase -DryRun
+./scripts/agents/arah-agents.ps1 activate -Agent backend -Issue 301
+./scripts/agents/arah-agents.ps1 activate -Agent backend -PrNumber 300 -DryRun
 ```
 
 Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml), [agents-pr-steward.yml](.github/workflows/agents-pr-steward.yml)

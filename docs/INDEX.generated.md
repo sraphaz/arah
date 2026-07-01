@@ -52,6 +52,7 @@
 | [RESUMO_VALIDACAO_FASES](docs/_archive/sessions/RESUMO_VALIDACAO_FASES.md) | - | - |
 | [DOC_DEFLATION_PLAN](docs/_meta/DOC_DEFLATION_PLAN.md) | - | - |
 | [DOC_TAXONOMY](docs/_meta/DOC_TAXONOMY.md) | - | - |
+| [SDD_AND_HARNESS](docs/_meta/SDD_AND_HARNESS.md) | - | - |
 | [00_INDEX](docs/00_INDEX.md) | - | - |
 | [WIKI_COMPATIBILITY_GUARANTEE](docs/10-wiki-devportal/WIKI_COMPATIBILITY_GUARANTEE.md) | - | - |
 | [ALINHAMENTO_FASES_25_28](docs/ALINHAMENTO_FASES_25_28.md) | - | - |
@@ -85,6 +86,10 @@
 | [10_ARCHITECTURE_DECISIONS](docs/architecture/10_ARCHITECTURE_DECISIONS.md) | - | - |
 | [11_ARCHITECTURE_SERVICES](docs/architecture/11_ARCHITECTURE_SERVICES.md) | - | - |
 | [Arquitetura C4](docs/architecture/14_C4_ARCHITECTURE.md) | - | - |
+| [_template](docs/architecture/adrs/_template.md) | - | - |
+| [ADR-020-arah-core-como-control-plane-separado](docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md) | - | - |
+| [README](docs/architecture/adrs/README.md) | - | - |
+| [README](docs/architecture/diagrams/README.md) | - | - |
 | [Kanban sem título 1](docs/archive/Kanban sem título 1.md) | - | - |
 | [Kanban sem título](docs/archive/Kanban sem título.md) | - | - |
 | [PR_ADICIONAR_PAGINACAO](docs/archive/prs/PR_ADICIONAR_PAGINACAO.md) | - | - |
@@ -428,6 +433,8 @@
 | [AGENT_OPERATION](docs/ops/AGENT_OPERATION.md) | - | - |
 | [AGENT_PILOT_BILLING](docs/ops/AGENT_PILOT_BILLING.md) | - | - |
 | [CI_CD_PIPELINE](docs/ops/CI_CD_PIPELINE.md) | - | - |
+| [GITHUB_PROJECT_MANAGEMENT](docs/ops/GITHUB_PROJECT_MANAGEMENT.md) | - | - |
+| [PLATFORM_STATE](docs/ops/PLATFORM_STATE.md) | - | - |
 | [ORDEM_FASES_POR_PRIORIDADE](docs/ORDEM_FASES_POR_PRIORIDADE.md) | - | - |
 | [PAGINAS_CONTEXTUALIZACAO_PADRAO](docs/PAGINAS_CONTEXTUALIZACAO_PADRAO.md) | - | - |
 | [PERFORMANCE_TEST_RESULTS](docs/PERFORMANCE_TEST_RESULTS.md) | - | - |
@@ -491,6 +498,7 @@
 | [SECURITY_CONFIGURATION](docs/SECURITY_CONFIGURATION.md) | - | - |
 | [SEPARACAO_ARQUIVOS_RACIONAL](docs/SEPARACAO_ARQUIVOS_RACIONAL.md) | - | - |
 | [SETUP](docs/SETUP.md) | - | - |
+| [README](docs/specs/README.md) | - | - |
 | [STABLE_RELEASE_APP_ONBOARDING](docs/STABLE_RELEASE_APP_ONBOARDING.md) | - | - |
 | [STATUS_FASES](docs/STATUS_FASES.md) | - | - |
 | [STATUS_TESTES_PRODUCAO](docs/STATUS_TESTES_PRODUCAO.md) | - | - |

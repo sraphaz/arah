@@ -168,11 +168,30 @@ Campos custom (opcional): Wave, Priority, Spec-Id — hoje cobertos por **labels
 
 ---
 
+## Project v2 — views (manual)
+
+A API GraphQL **não expõe mais** `createProjectV2View`. Views extras do board são criadas **no UI** do project:
+
+1. Abra [Arah — Roadmap (Project #3)](https://github.com/users/sraphaz/projects/3)
+2. **+ New view** → escolha layout (Board, Table, Roadmap)
+3. Sugestões em `.github/project/arah-sustentacao.yml` → `views:`
+
+| View sugerida | Layout |
+|---------------|--------|
+| Kanban — Roadmap | Board (agrupar por Status) |
+| Tabela — Por onda | Table (campo Milestone ou label wave) |
+| Tabela — Sustentação (52–61) | Table (filtro label `wave/S0` … `wave/S4`) |
+| Roadmap — Completo | Roadmap (Start/End date se configurado) |
+
+O sync (`sync-project` / `sync-status`) **não tenta** criar views — evita warnings de API deprecada.
+
+---
+
 ## Workflow CI
 
 | Workflow | Gatilho | Ação |
 |----------|---------|------|
-| **`project-bootstrap.yml`** | manual (`workflow_dispatch`) | **Cria** Project + views (requer `GH_PROJECT_TOKEN`) |
+| **`project-bootstrap.yml`** | manual (`workflow_dispatch`) | Bootstrap completo (issues, board, status; views manuais no UI) |
 | `github-sync.yml` | push `main`, semanal | labels/milestones + bootstrap se secret existir |
 | `project-board-sync.yml` | issue/PR | reconcile + sync coluna Status + add-to-project |
 

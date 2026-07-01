@@ -514,9 +514,10 @@ function Invoke-ProjectSyncBoard {
 
 
     if (-not $DryRun) {
-
-        Ensure-ProjectViews -ProjectId $project.id -ViewNames $viewNames -ExistingViews $project.views.nodes | Out-Null
-
+        $viewsReport = Ensure-ProjectViews -ProjectId $project.id -ViewNames $viewNames -ExistingViews $project.views.nodes
+        if ($viewsReport.manual -and $viewsReport.missing.Count -gt 0) {
+            Write-Verbose $viewsReport.hint
+        }
     }
 
 

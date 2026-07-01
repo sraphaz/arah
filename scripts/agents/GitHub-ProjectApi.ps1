@@ -262,37 +262,27 @@ mutation($fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
 }
 
 function Ensure-ProjectViews {
+    <#
+    .SYNOPSIS
+      Compara views configuradas com as existentes no Project.
+      GitHub removeu createProjectV2View da API GraphQL — views extras são manuais no UI.
+    #>
     param(
         [string]$ProjectId,
         [array]$ViewNames,
         [array]$ExistingViews
     )
     $existing = @($ExistingViews | ForEach-Object { $_.name })
-    $created = @()
-    foreach ($name in $ViewNames) {
-        if ($existing -contains $name) { continue }
-        $layout = if ($name -match 'Kanban|Board') { 'BOARD' }
-                  elseif ($name -match 'Roadmap') { 'ROADMAP' }
-                  else { 'TABLE' }
-        $mutation = @'
-mutation($projectId: ID!, $name: String!, $layout: ProjectV2ViewsLayout!) {
-  createProjectV2View(input: { projectId: $projectId, name: $name, layout: $layout }) {
-    projectView { id name layout }
-  }
-}
-'@
-        try {
-            Invoke-GhGraphql -Query $mutation -Variables @{
-                projectId = $ProjectId
-                name      = $name
-                layout    = $layout
-            } | Out-Null
-            $created += $name
-        } catch {
-            Write-Warning "View '$name' not created: $_"
-        }
+    $missing = @($ViewNames | Where-Object { $existing -notcontains $_ })
+    return @{
+        created = @()
+        existing = $existing
+        missing  = $missing
+        manual   = ($missing.Count -gt 0)
+        hint     = if ($missing.Count -gt 0) {
+            'Views do Project v2 não são criáveis via API. Adicione em Project → + New view: ' + ($missing -join ', ')
+        } else { $null }
     }
-    return $created
 }
 
 function Find-StatusOptionForTarget {

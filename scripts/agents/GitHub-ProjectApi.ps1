@@ -438,6 +438,21 @@ function Test-GhProjectTokenAvailable {
     }
 }
 
+function Get-GraphqlRateLimitRemaining {
+    try {
+        $rl = gh api rate_limit --jq '.resources.graphql' 2>$null | ConvertFrom-Json
+        if ($rl) { return [int]$rl.remaining }
+    } catch { }
+    return -1
+}
+
+function Test-GraphqlRateLimitAvailable {
+    param([int]$Minimum = 50)
+    $remaining = Get-GraphqlRateLimitRemaining
+    if ($remaining -lt 0) { return $true }
+    return ($remaining -ge $Minimum)
+}
+
 function Get-RepositoryNodeId {
     param([string]$Owner, [string]$Name)
     $q = 'query($o: String!, $n: String!) { repository(owner: $o, name: $n) { id } }'

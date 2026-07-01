@@ -471,6 +471,78 @@ function Test-PhaseCompleteFromGitHub {
     return $false
 }
 
+function Get-PhaseIdFromIssue {
+    param([object]$Issue)
+    if (-not $Issue) { return $null }
+    if ($Issue.body -match 'arah-next-phase id=(FASE[\w\.]+)') { return $Matches[1] }
+    if ($Issue.body -match 'arah-phase-draft id=(FASE[\w\.]+)') { return $Matches[1] }
+    if ($Issue.title -match '\[Epic\]\s*(FASE[\w\.]+)') { return $Matches[1] }
+    if ($Issue.title -match '\[Epic\]\s*Fase\s*(\d+(?:[_.]\d+)?)') {
+        $n = $Matches[1] -replace '\.', '_'
+        return "FASE$n"
+    }
+    if ($Issue.title -match '\b(FASE\d+(?:_\w+)?)\b') { return $Matches[1] }
+    return $null
+}
+
+function Get-GhRepoFullName {
+    param([string]$Root = (Get-Location).Path)
+    Push-Location $Root
+    try {
+        $remote = git remote get-url origin 2>$null
+        if ($remote -match 'github\.com[:/]([^/]+/[^/.]+)') {
+            return $Matches[1] -replace '\.git$', ''
+        }
+    } finally { Pop-Location }
+    $view = gh repo view --json nameWithOwner -q .nameWithOwner 2>$null
+    if ($view) { return $view }
+    throw 'Não foi possível resolver owner/repo'
+}
+
+function Get-AllRepoIssuesRest {
+    param(
+        [string]$Repo,
+        [string]$Label = '',
+        [int]$MaxPages = 10
+    )
+    $all = @()
+    for ($page = 1; $page -le $MaxPages; $page++) {
+        $path = "repos/$Repo/issues?state=all&per_page=100&page=$page"
+        if ($Label) { $path += "&labels=$([uri]::EscapeDataString($Label))" }
+        $batch = gh api $path 2>$null | ConvertFrom-Json
+        if (-not $batch -or @($batch).Count -eq 0) { break }
+        $issues = @($batch | Where-Object { -not $_.pull_request })
+        $all += $issues
+        if (@($batch).Count -lt 100) { break }
+        Start-Sleep -Milliseconds 200
+    }
+    return $all
+}
+
+function Close-IssueRest {
+    param(
+        [string]$Repo,
+        [int]$IssueNumber,
+        [string]$Comment = ''
+    )
+    gh api -X PATCH "repos/$Repo/issues/$IssueNumber" -f state=closed 2>$null | Out-Null
+    if ($LASTEXITCODE -ne 0) { return $false }
+    if ($Comment) {
+        gh api -X POST "repos/$Repo/issues/$IssueNumber/comments" -f body=$Comment 2>$null | Out-Null
+    }
+    return ($LASTEXITCODE -eq 0)
+}
+
+function Select-CanonicalPhaseIssue {
+    param([array]$Issues)
+    if (-not $Issues -or $Issues.Count -eq 0) { return $null }
+    $withMarker = @($Issues | Where-Object { $_.body -match 'arah-next-phase id=' })
+    if ($withMarker.Count -gt 0) {
+        return $withMarker | Sort-Object { [int]$_.number } | Select-Object -First 1
+    }
+    return $Issues | Sort-Object { [int]$_.number } | Select-Object -First 1
+}
+
 function Test-PhaseIssueMarker {
     param(
         [object]$Issue,

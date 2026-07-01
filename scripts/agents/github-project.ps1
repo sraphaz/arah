@@ -22,7 +22,7 @@ param(
 
     [Parameter(Position = 0)]
 
-    [ValidateSet('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'sync-status', 'reconcile', 'status', 'help')]
+    [ValidateSet('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'sync-status', 'dedupe-backlog', 'reconcile', 'status', 'help')]
 
     [string]$Command = 'help',
 
@@ -61,6 +61,7 @@ github-project — GitHub-native backlog (Issues + Project v2)
 
   sync-project  Adiciona épicos ao Project e atualiza coluna Status
   sync-status   Apenas atualiza coluna Status (mapeia Todo/In Progress/Done do GitHub)
+  dedupe-backlog Fecha issues duplicadas de épico (mantém a canônica por fase)
 
   reconcile     Normaliza issues [Agent] FASE* → [Epic] com labels/milestone
 
@@ -300,6 +301,64 @@ function Invoke-SyncBacklogIssues {
 
 
 
+function Invoke-DedupePhaseIssues {
+    param([switch]$DryRun, [switch]$Json)
+
+    $repo = Get-GhRepoFullName -Root $Root
+    $allIssues = Get-AllRepoIssuesRest -Repo $repo -Label 'epic/phase'
+    if ($allIssues.Count -eq 0) {
+        Write-Warning 'Nenhuma issue epic/phase encontrada'
+        return
+    }
+
+    $byPhase = @{}
+    foreach ($issue in $allIssues) {
+        $phaseId = Get-PhaseIdFromIssue -Issue $issue
+        if (-not $phaseId) { continue }
+        if (-not $byPhase.ContainsKey($phaseId)) { $byPhase[$phaseId] = @() }
+        $byPhase[$phaseId] += $issue
+    }
+
+    $closed = @()
+    $kept = @()
+
+    foreach ($phaseId in ($byPhase.Keys | Sort-Object)) {
+        $group = @($byPhase[$phaseId])
+        if ($group.Count -le 1) {
+            if ($group.Count -eq 1) { $kept += @{ phase = $phaseId; issue = $group[0].number } }
+            continue
+        }
+
+        $canonical = Select-CanonicalPhaseIssue -Issues $group
+        $kept += @{ phase = $phaseId; issue = $canonical.number; duplicates = $group.Count - 1 }
+
+        foreach ($dup in $group) {
+            if ($dup.number -eq $canonical.number) { continue }
+            if ($DryRun) {
+                $closed += @{ phase = $phaseId; issue = $dup.number; action = 'would-close'; keep = $canonical.number }
+                continue
+            }
+            $comment = "Duplicata do épico **$phaseId** — mantida #$($canonical.number). Fechada por ``dedupe-backlog``."
+            $ok = Close-IssueRest -Repo $repo -IssueNumber $dup.number -Comment $comment
+            if ($ok) {
+                $closed += @{ phase = $phaseId; issue = $dup.number; keep = $canonical.number }
+            }
+            Start-Sleep -Milliseconds 400
+        }
+    }
+
+    $report = [ordered]@{
+        epic_issues   = $allIssues.Count
+        phases        = $byPhase.Count
+        kept          = $kept
+        closed        = $closed
+        closed_count  = $closed.Count
+        dry_run       = [bool]$DryRun
+    }
+    if ($Json) { $report | ConvertTo-Json -Depth 5 } else { $report | ConvertTo-Json -Depth 5 }
+}
+
+
 function Invoke-ProjectUpdateStatuses {
     param(
         [object]$Project,
@@ -390,6 +449,15 @@ function Invoke-ProjectSyncBoard {
     $openPrs = Get-OpenPullRequestsForRepo -Repo $repo
 
 
+
+    if (-not (Test-GraphqlRateLimitAvailable -Minimum 100)) {
+        $remaining = Get-GraphqlRateLimitRemaining
+        Write-Warning "GraphQL rate limit baixo ($remaining) — sync do board adiado. Rode dedupe-backlog e depois workflow_dispatch quando o limite resetar."
+        if ($Json) {
+            @{ skipped = $true; reason = 'graphql_rate_limit'; remaining = $remaining } | ConvertTo-Json
+        }
+        return
+    }
 
     try {
 
@@ -859,6 +927,14 @@ try {
         'sync-status' {
 
             Invoke-ProjectSyncBoard -StatusOnly -DryRun:$DryRun -Json:$Json
+
+            exit 0
+
+        }
+
+        'dedupe-backlog' {
+
+            Invoke-DedupePhaseIssues -DryRun:$DryRun -Json:$Json
 
             exit 0
 

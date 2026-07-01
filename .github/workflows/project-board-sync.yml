@@ -1,5 +1,9 @@
 name: Project board sync
 
+concurrency:
+  group: project-board-sync-${{ github.repository }}
+  cancel-in-progress: true
+
 on:
   issues:
     types: [opened, edited, labeled, unlabeled, closed, reopened]
@@ -31,8 +35,9 @@ jobs:
         run: |
           ./scripts/agents/github-project.ps1 reconcile
           if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
+            ./scripts/agents/github-project.ps1 dedupe-backlog
             ./scripts/agents/github-project.ps1 sync-backlog
-            ./scripts/agents/github-project.ps1 sync-project
+            ./scripts/agents/github-project.ps1 sync-status
           } else {
             ./scripts/agents/github-project.ps1 sync-status
           }

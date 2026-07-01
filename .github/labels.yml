@@ -134,6 +134,10 @@ labels:
     color: D93F0B
     description: Bloqueado por dependência
 
+  - name: status/done
+    color: 0E8A16
+    description: Fase ou item concluído (histórico)
+
   - name: status/in-progress
     color: 1D76DB
     description: Em implementação (issue ou PR ativo)

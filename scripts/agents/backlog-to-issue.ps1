@@ -57,9 +57,10 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
 
 Push-Location $Root
 try {
-    if (Test-PhaseOpenIssue -Root $Root -PhaseId $item.id) {
-        $msg = "Issue já aberta para $($item.id)"
-        if ($Json) { @{ ok = $false; message = $msg; phase = $item.id } | ConvertTo-Json } else { Write-Host $msg }
+    $anyIssue = Get-PhaseIssueAnyState -Root $Root -PhaseId $item.id
+    if ($anyIssue) {
+        $msg = "Issue já existe para $($item.id) (#$($anyIssue.number))"
+        if ($Json) { @{ ok = $false; message = $msg; phase = $item.id; issue = $anyIssue.number } | ConvertTo-Json } else { Write-Host $msg }
         exit 0
     }
 
@@ -90,12 +91,8 @@ try {
     $wave = if ($item.wave) { $item.wave } else { '' }
     $milestoneTitle = Resolve-MilestoneForWave -Root $Root -Wave $wave
     if ($milestoneTitle -and $issueUrl -match '/issues/(\d+)') {
-        $issueNum = $Matches[1]
-        $milestones = gh api "repos/$repo/milestones?state=open" | ConvertFrom-Json
-        $ms = $milestones | Where-Object { $_.title -eq $milestoneTitle } | Select-Object -First 1
-        if ($ms) {
-            gh api -X PATCH "repos/$repo/issues/$issueNum" -f milestone=$ms.number | Out-Null
-        }
+        $issueNum = [int]$Matches[1]
+        Set-IssueMilestoneForWave -Repo $repo -IssueNumber $issueNum -Root $Root -Wave $wave | Out-Null
     }
 
     $cfg = Get-ProjectConfig -Root $Root

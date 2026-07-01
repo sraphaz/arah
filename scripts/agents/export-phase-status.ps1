@@ -27,7 +27,7 @@ try {
     foreach ($item in $queue) {
         if ($item.id -notmatch '^FASE') { continue }
 
-        $issue = $issues | Where-Object { $_.body -match "arah-next-phase id=$($item.id)" } | Select-Object -First 1
+        $issue = $issues | Where-Object { Test-PhaseIssueMarker -Issue $_ -PhaseId $item.id } | Select-Object -First 1
         if (-not $issue) {
             $issue = $issues | Where-Object { $_.title -match [regex]::Escape($item.id) -and ($_.labels.name -contains 'epic/phase') } | Select-Object -First 1
         }

@@ -262,9 +262,15 @@ function Invoke-SyncBacklogIssues {
         foreach ($l in ($labels | Select-Object -Unique)) { $labelParams += '--label'; $labelParams += $l }
         $issueUrl = gh issue create --title $title --body $body @labelParams 2>&1
         if ($LASTEXITCODE -ne 0) {
+            if ($issueUrl -match 'rate limit') {
+                Write-Warning "Rate limit GitHub — pausando após $($created.Count) issues. Reexecute sync-backlog mais tarde."
+                break
+            }
             Write-Warning "Falha ao criar issue $($item.id): $issueUrl"
             continue
         }
+
+        Start-Sleep -Milliseconds 800
 
         if ($issueUrl -match '/issues/(\d+)') {
             $issueNum = [int]$Matches[1]
@@ -646,11 +652,15 @@ try {
 
                 Invoke-ProjectReconcile -Json:$Json | Out-Null
 
-                Invoke-SyncBacklogIssues -Json:$Json
+                Invoke-SyncBacklogIssues -Json:$Json | Out-Null
 
-                & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -Json:$Json
+                try {
+                    & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -Json:$Json | Out-Null
+                } catch {
+                    Write-Warning "sync-queue: $_"
+                }
 
-                Invoke-ProjectSyncBoard -Json:$Json
+                Invoke-ProjectSyncBoard -Json:$Json | Out-Null
 
                 & (Join-Path $PSScriptRoot 'export-phase-status.ps1') | Out-Null
 

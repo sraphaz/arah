@@ -1,6 +1,6 @@
-﻿# Índice gerado — docs
+# Índice gerado — docs
 
-> Gerado em **2026-06-30** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
+> Gerado em **2026-07-01** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
 > Exclui stubs `status: deprecated` na raiz (ver `_archive/`).
 
 | Documento | Owner | Updated |
@@ -48,8 +48,8 @@
 | [RESUMO_REAVALIACAO_BLOCKCHAIN](docs/_archive/sessions/RESUMO_REAVALIACAO_BLOCKCHAIN.md) | - | - |
 | [RESUMO_REORGANIZACAO_DEMANDAS_GAMIFICACAO](docs/_archive/sessions/RESUMO_REORGANIZACAO_DEMANDAS_GAMIFICACAO.md) | - | - |
 | [RESUMO_VALIDACAO_COERENCIA_FASES](docs/_archive/sessions/RESUMO_VALIDACAO_COERENCIA_FASES.md) | - | - |
-| [RESUMO_VALIDACAO_FASES](docs/_archive/sessions/RESUMO_VALIDACAO_FASES.md) | - | - |
 | [RESUMO_VALIDACAO_FASES_1_14_5](docs/_archive/sessions/RESUMO_VALIDACAO_FASES_1_14_5.md) | - | - |
+| [RESUMO_VALIDACAO_FASES](docs/_archive/sessions/RESUMO_VALIDACAO_FASES.md) | - | - |
 | [DOC_DEFLATION_PLAN](docs/_meta/DOC_DEFLATION_PLAN.md) | - | - |
 | [DOC_TAXONOMY](docs/_meta/DOC_TAXONOMY.md) | - | - |
 | [00_INDEX](docs/00_INDEX.md) | - | - |
@@ -97,8 +97,8 @@
 | [PR_FASE10_COMPLETA](docs/archive/prs/PR_FASE10_COMPLETA.md) | - | - |
 | [PR_FASE10_VIDEOS_SUPORTE](docs/archive/prs/PR_FASE10_VIDEOS_SUPORTE.md) | - | - |
 | [PR_FASE12_COMPLETA](docs/archive/prs/PR_FASE12_COMPLETA.md) | - | - |
-| [PR_FASE2_QUALIDADE_CODIGO](docs/archive/prs/PR_FASE2_QUALIDADE_CODIGO.md) | - | - |
 | [PR_FASE2_QUALIDADE_CODIGO_FINAL](docs/archive/prs/PR_FASE2_QUALIDADE_CODIGO_FINAL.md) | - | - |
+| [PR_FASE2_QUALIDADE_CODIGO](docs/archive/prs/PR_FASE2_QUALIDADE_CODIGO.md) | - | - |
 | [PR_FASE3_PERFORMANCE_ESCALABILIDADE](docs/archive/prs/PR_FASE3_PERFORMANCE_ESCALABILIDADE.md) | - | - |
 | [PR_FASE4_OBSERVABILIDADE_MONITORAMENTO](docs/archive/prs/PR_FASE4_OBSERVABILIDADE_MONITORAMENTO.md) | - | - |
 | [PR_FASE5_SEGURANCA_AVANCADA](docs/archive/prs/PR_FASE5_SEGURANCA_AVANCADA.md) | - | - |
@@ -142,9 +142,8 @@
 | [AVALIACAO_COMPLETA_FASES_1_16](docs/backlog-api/AVALIACAO_COMPLETA_FASES_1_16.md) | - | - |
 | [CHECKLIST_PRE_PR_FASE14_5](docs/backlog-api/CHECKLIST_PRE_PR_FASE14_5.md) | - | - |
 | [ESTRUTURA_DOCUMENTOS](docs/backlog-api/ESTRUTURA_DOCUMENTOS.md) | - | - |
-| [FASE1](docs/backlog-api/FASE1.md) | - | - |
 | [FASE1_5](docs/backlog-api/FASE1_5.md) | - | - |
-| [FASE10](docs/backlog-api/FASE10.md) | - | - |
+| [FASE1](docs/backlog-api/FASE1.md) | - | - |
 | [FASE10_AUDIO_MAPA_IMPACTO](docs/backlog-api/FASE10_AUDIO_MAPA_IMPACTO.md) | - | - |
 | [FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO](docs/backlog-api/FASE10_CONFIG_FLEXIBILIZACAO_AVALIACAO.md) | - | - |
 | [FASE10_CONFIG_MIDIAS_IMPLEMENTACAO](docs/backlog-api/FASE10_CONFIG_MIDIAS_IMPLEMENTACAO.md) | - | - |
@@ -153,22 +152,22 @@
 | [FASE10_STORAGE_CONFIG_ADMIN](docs/backlog-api/FASE10_STORAGE_CONFIG_ADMIN.md) | - | - |
 | [FASE10_VIDEOS_IMPLEMENTACAO](docs/backlog-api/FASE10_VIDEOS_IMPLEMENTACAO.md) | - | - |
 | [FASE10_VIDEOS_MAPA_IMPACTO](docs/backlog-api/FASE10_VIDEOS_MAPA_IMPACTO.md) | - | - |
-| [FASE11](docs/backlog-api/FASE11.md) | - | - |
+| [FASE10](docs/backlog-api/FASE10.md) | - | - |
 | [FASE11_VERIFICACAO](docs/backlog-api/FASE11_VERIFICACAO.md) | - | - |
-| [FASE12](docs/backlog-api/FASE12.md) | - | - |
+| [FASE11](docs/backlog-api/FASE11.md) | - | - |
 | [FASE12_RESULTADOS](docs/backlog-api/FASE12_RESULTADOS.md) | - | - |
-| [FASE12_STATUS](docs/backlog-api/FASE12_STATUS.md) | - | - |
 | [FASE12_STATUS_COMPLETO](docs/backlog-api/FASE12_STATUS_COMPLETO.md) | - | - |
+| [FASE12_STATUS](docs/backlog-api/FASE12_STATUS.md) | - | - |
+| [FASE12](docs/backlog-api/FASE12.md) | - | - |
 | [FASE13](docs/backlog-api/FASE13.md) | - | - |
-| [FASE14](docs/backlog-api/FASE14.md) | - | - |
-| [FASE14_5](docs/backlog-api/FASE14_5.md) | - | - |
 | [FASE14_5_IMPLEMENTACAO_FINAL](docs/backlog-api/FASE14_5_IMPLEMENTACAO_FINAL.md) | - | - |
+| [FASE14_5](docs/backlog-api/FASE14_5.md) | - | - |
 | [FASE14_8](docs/backlog-api/FASE14_8.md) | - | - |
-| [FASE15](docs/backlog-api/FASE15.md) | - | - |
+| [FASE14](docs/backlog-api/FASE14.md) | - | - |
 | [FASE15_COMPLETUDE_RESUMO](docs/backlog-api/FASE15_COMPLETUDE_RESUMO.md) | - | - |
 | [FASE15_IMPLEMENTACAO_STATUS](docs/backlog-api/FASE15_IMPLEMENTACAO_STATUS.md) | - | - |
 | [FASE15_INTEGRACOES_REAIS](docs/backlog-api/FASE15_INTEGRACOES_REAIS.md) | - | - |
-| [FASE16](docs/backlog-api/FASE16.md) | - | - |
+| [FASE15](docs/backlog-api/FASE15.md) | - | - |
 | [FASE16_CENARIOS_TESTE_FASE15](docs/backlog-api/FASE16_CENARIOS_TESTE_FASE15.md) | - | - |
 | [FASE16_COMPLETA](docs/backlog-api/FASE16_COMPLETA.md) | - | - |
 | [FASE16_COMPLETUDE_FINAL](docs/backlog-api/FASE16_COMPLETUDE_FINAL.md) | - | - |
@@ -182,8 +181,9 @@
 | [FASE16_TESTES_RECUPERACAO_RESUMO](docs/backlog-api/FASE16_TESTES_RECUPERACAO_RESUMO.md) | - | - |
 | [FASE16_VALIDACAO_COBERTURA_TESTES](docs/backlog-api/FASE16_VALIDACAO_COBERTURA_TESTES.md) | - | - |
 | [FASE16_VALIDACAO_ENDPOINTS](docs/backlog-api/FASE16_VALIDACAO_ENDPOINTS.md) | - | - |
-| [FASE17](docs/backlog-api/FASE17.md) | - | - |
+| [FASE16](docs/backlog-api/FASE16.md) | - | - |
 | [FASE17_BFF](docs/backlog-api/FASE17_BFF.md) | - | - |
+| [FASE17](docs/backlog-api/FASE17.md) | - | - |
 | [FASE18](docs/backlog-api/FASE18.md) | - | - |
 | [FASE19](docs/backlog-api/FASE19.md) | - | - |
 | [FASE2](docs/backlog-api/FASE2.md) | - | - |
@@ -245,8 +245,8 @@
 | [FASE10_PENDENCIAS_IMPLEMENTADAS](docs/backlog-api/implementacoes/FASE10_PENDENCIAS_IMPLEMENTADAS.md) | - | - |
 | [FASE10_RESUMO_FINAL](docs/backlog-api/implementacoes/FASE10_RESUMO_FINAL.md) | - | - |
 | [FASE10_REVISAO_ESTADO](docs/backlog-api/implementacoes/FASE10_REVISAO_ESTADO.md) | - | - |
-| [FASE10_STATUS](docs/backlog-api/implementacoes/FASE10_STATUS.md) | - | - |
 | [FASE10_STATUS_PREPARACAO](docs/backlog-api/implementacoes/FASE10_STATUS_PREPARACAO.md) | - | - |
+| [FASE10_STATUS](docs/backlog-api/implementacoes/FASE10_STATUS.md) | - | - |
 | [FASE10_VALIDACOES_SEGURANCA](docs/backlog-api/implementacoes/FASE10_VALIDACOES_SEGURANCA.md) | - | - |
 | [FASE14_IMPLEMENTACAO_RESUMO](docs/backlog-api/implementacoes/FASE14_IMPLEMENTACAO_RESUMO.md) | - | - |
 | [FASE2_IMPLEMENTACAO_PROGRESSO](docs/backlog-api/implementacoes/FASE2_IMPLEMENTACAO_PROGRESSO.md) | - | - |
@@ -299,10 +299,10 @@
 | [CURSOR_DOCUMENTATION_RULES](docs/CURSOR_DOCUMENTATION_RULES.md) | - | - |
 | [DATABASE_INDEXES](docs/DATABASE_INDEXES.md) | - | - |
 | [DEPLOYMENT_MULTI_INSTANCE](docs/DEPLOYMENT_MULTI_INSTANCE.md) | - | - |
-| [README_LIKEC4](docs/design/README_LIKEC4.md) | - | - |
 | [DESIGN_SYSTEM_IDENTIDADE_VISUAL](docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md) | - | - |
 | [DESIGN_SYSTEM_TOKENS](docs/DESIGN_SYSTEM_TOKENS.md) | - | - |
 | [design-review-devportal](docs/design-review-devportal.md) | - | - |
+| [README_LIKEC4](docs/design/README_LIKEC4.md) | - | - |
 | [DEVELOPMENT](docs/DEVELOPMENT.md) | - | - |
 | [DEVPORTAL_404_DIAGNOSTICO](docs/DEVPORTAL_404_DIAGNOSTICO.md) | - | - |
 | [DEVPORTAL_404_TROUBLESHOOTING](docs/DEVPORTAL_404_TROUBLESHOOTING.md) | - | - |
@@ -386,11 +386,11 @@
 | [23_CONEXOES_CIRCULO_AMIGOS](docs/funcional/23_CONEXOES_CIRCULO_AMIGOS.md) | - | - |
 | [README](docs/funcional/README.md) | - | - |
 | [GAPS_FASES_10_12_COBERTURA](docs/GAPS_FASES_10_12_COBERTURA.md) | - | - |
+| [GOVERNANCE_SYSTEM](docs/GOVERNANCE_SYSTEM.md) | - | - |
 | [21_CODE_REVIEW](docs/governance/21_CODE_REVIEW.md) | - | - |
 | [22_COHESION_AND_TESTS](docs/governance/22_COHESION_AND_TESTS.md) | - | - |
 | [30_MODERATION](docs/governance/30_MODERATION.md) | - | - |
 | [41_CONTRIBUTING](docs/governance/41_CONTRIBUTING.md) | - | - |
-| [GOVERNANCE_SYSTEM](docs/GOVERNANCE_SYSTEM.md) | - | - |
 | [README](docs/handoff/arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/README.md) | - | - |
 | [README](docs/handoff/README.md) | - | - |
 | [IMPLEMENTATION_SUMMARY](docs/IMPLEMENTATION_SUMMARY.md) | - | - |
@@ -411,8 +411,8 @@
 | [MENTORIA](docs/MENTORIA.md) | - | - |
 | [METRICS](docs/METRICS.md) | - | - |
 | [MONITORING](docs/MONITORING.md) | - | - |
-| [NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS](docs/NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS.md) | - | - |
 | [NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS_RESUMO](docs/NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS_RESUMO.md) | - | - |
+| [NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS](docs/NIVEIS_ABSTRACAO_EVOLUCAO_MICROSERVICOS.md) | - | - |
 | [NOTIFICATION_CONFIG_ADVANCED](docs/NOTIFICATION_CONFIG_ADVANCED.md) | - | - |
 | [ONBOARDING_ANALISTAS_FUNCIONAIS](docs/ONBOARDING_ANALISTAS_FUNCIONAIS.md) | - | - |
 | [ONBOARDING_DEVELOPERS](docs/ONBOARDING_DEVELOPERS.md) | - | - |
@@ -431,8 +431,8 @@
 | [PAGINAS_CONTEXTUALIZACAO_PADRAO](docs/PAGINAS_CONTEXTUALIZACAO_PADRAO.md) | - | - |
 | [PERFORMANCE_TEST_RESULTS](docs/PERFORMANCE_TEST_RESULTS.md) | - | - |
 | [PHASE1_SUMMARY](docs/PHASE1_SUMMARY.md) | - | - |
-| [PLANO_90_PORCENTO_COBERTURA](docs/PLANO_90_PORCENTO_COBERTURA.md) | - | - |
 | [PLANO_90_PORCENTO_COBERTURA_DETALHADO](docs/PLANO_90_PORCENTO_COBERTURA_DETALHADO.md) | - | - |
+| [PLANO_90_PORCENTO_COBERTURA](docs/PLANO_90_PORCENTO_COBERTURA.md) | - | - |
 | [PLANO_ACAO_10_10_RESULTADOS](docs/PLANO_ACAO_10_10_RESULTADOS.md) | - | - |
 | [PLANO_ACAO_DEVPORTAL_EXEMPLOS](docs/PLANO_ACAO_DEVPORTAL_EXEMPLOS.md) | - | - |
 | [PLANO_EXTRACAO_BFF_APLICACAO_EXTERNA](docs/PLANO_EXTRACAO_BFF_APLICACAO_EXTERNA.md) | - | - |
@@ -453,8 +453,8 @@
 | [37_PLANO_ACAO_EXECUTIVO_CURSOR](docs/product/37_PLANO_ACAO_EXECUTIVO_CURSOR.md) | - | - |
 | [38_MAPA_FUNCIONALIDADES_MERCADO](docs/product/38_MAPA_FUNCIONALIDADES_MERCADO.md) | - | - |
 | [39_ESTRATEGIA_CONVERGENCIA_MERCADO](docs/product/39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) | - | - |
-| [61_USER_PREFERENCES_PLAN](docs/product/61_USER_PREFERENCES_PLAN.md) | - | - |
 | [61_USER_PREFERENCES_PLAN_RESUMO](docs/product/61_USER_PREFERENCES_PLAN_RESUMO.md) | - | - |
+| [61_USER_PREFERENCES_PLAN](docs/product/61_USER_PREFERENCES_PLAN.md) | - | - |
 | [70_AVALIACAO_GERAL_APLICACAO](docs/product/70_AVALIACAO_GERAL_APLICACAO.md) | - | - |
 | [PROJECT_PHASES_CONFIG](docs/PROJECT_PHASES_CONFIG.md) | - | - |
 | [PROJECT_STRUCTURE](docs/PROJECT_STRUCTURE.md) | - | - |
@@ -475,8 +475,8 @@
 | [REFACTOR_VALIDATION_CHECKLIST](docs/refactoring/REFACTOR_VALIDATION_CHECKLIST.md) | - | - |
 | [refactor-plan-asset-territory-store](docs/refactoring/refactor-plan-asset-territory-store.md) | - | - |
 | [refactor-plan-membership-2fa](docs/refactoring/refactor-plan-membership-2fa.md) | - | - |
-| [RELEASE](docs/RELEASE.md) | - | - |
 | [RELEASE_MVP_ESSENCIAL](docs/RELEASE_MVP_ESSENCIAL.md) | - | - |
+| [RELEASE](docs/RELEASE.md) | - | - |
 | [REORGANIZACAO_NUMERACAO_COERENTE](docs/REORGANIZACAO_NUMERACAO_COERENTE.md) | - | - |
 | [REPOSICIONAMENTO_MOEDA_TERRITORIAL](docs/REPOSICIONAMENTO_MOEDA_TERRITORIAL.md) | - | - |
 | [RESULT_PATTERN](docs/RESULT_PATTERN.md) | - | - |
@@ -509,8 +509,8 @@
 | [VALIDACAO_INFRAESTRUTURA_INTEGRIDADE](docs/VALIDACAO_INFRAESTRUTURA_INTEGRIDADE.md) | - | - |
 | [VALIDACAO_MODULARIZACAO](docs/VALIDACAO_MODULARIZACAO.md) | - | - |
 | [README](docs/validation/README.md) | - | - |
-| [VALIDACAO_SEGURANCA](docs/validation/VALIDACAO_SEGURANCA.md) | - | - |
 | [VALIDACAO_SEGURANCA_PAYOUT_FASE7](docs/validation/VALIDACAO_SEGURANCA_PAYOUT_FASE7.md) | - | - |
+| [VALIDACAO_SEGURANCA](docs/validation/VALIDACAO_SEGURANCA.md) | - | - |
 | [VOTING_SYSTEM](docs/VOTING_SYSTEM.md) | - | - |
 | [WCAG_CONTRASTE_VALIDACAO_COMPLETA](docs/WCAG_CONTRASTE_VALIDACAO_COMPLETA.md) | - | - |
 | [WIKI_HOME](docs/WIKI_HOME.md) | - | - |

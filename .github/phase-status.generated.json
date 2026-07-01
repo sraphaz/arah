@@ -1,7 +1,444 @@
 ﻿{
     "source":  "github-issues",
-    "timestamp":  "2026-07-01T02:20:30.1981583Z",
+    "timestamp":  "2026-07-01T19:06:38.7498400Z",
+    "project":  "https://github.com/users/sraphaz/projects/3",
+    "summary":  {
+                    "total":  49,
+                    "completed":  16,
+                    "in_progress":  33,
+                    "pending":  0,
+                    "blocked":  0
+                },
     "phases":  [
+                   {
+                       "id":  "FASE1",
+                       "title":  "Fase 1: Segurança e Fundação Crítica",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  311,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/311",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE1.md"
+                   },
+                   {
+                       "id":  "FASE14_5",
+                       "title":  "FASE14.5 — Itens Faltantes Fases 1–14",
+                       "wave":  "C3",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  312,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/312",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE14_5.md"
+                   },
+                   {
+                       "id":  "FASE2",
+                       "title":  "Fase 2: Qualidade de Código e Confiabilidade",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  314,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/314",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE2.md"
+                   },
+                   {
+                       "id":  "FASE3",
+                       "title":  "Fase 3: Performance e Escalabilidade",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  316,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/316",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE3.md"
+                   },
+                   {
+                       "id":  "FASE4",
+                       "title":  "Fase 4: Observabilidade e Monitoramento",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  317,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/317",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE4.md"
+                   },
+                   {
+                       "id":  "FASE5",
+                       "title":  "Fase 5: Segurança Avançada",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  319,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/319",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE5.md"
+                   },
+                   {
+                       "id":  "FASE6",
+                       "title":  "Fase 6: Funcionalidades de Negócio",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  321,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/321",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE6.md"
+                   },
+                   {
+                       "id":  "FASE7",
+                       "title":  "Fase 7: Sistema de Payout e Gestão Financeira",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  323,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/323",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE7.md"
+                   },
+                   {
+                       "id":  "FASE8",
+                       "title":  "Fase 8: Infraestrutura de Mídia e Armazenamento",
+                       "wave":  "C1",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  324,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/324",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE8.md"
+                   },
+                   {
+                       "id":  "FASE9",
+                       "title":  "Fase 9: Perfil de Usuário Completo",
+                       "wave":  "C2",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  326,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/326",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE9.md"
+                   },
+                   {
+                       "id":  "FASE10",
+                       "title":  "Fase 10: Mídias em Conteúdo",
+                       "wave":  "C2",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  328,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/328",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE10.md"
+                   },
+                   {
+                       "id":  "FASE11",
+                       "title":  "Fase 11: Edição, Gestão e Estatísticas Completas",
+                       "wave":  "C2",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  330,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/330",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE11.md"
+                   },
+                   {
+                       "id":  "FASE12",
+                       "title":  "Fase 12: Otimizações Finais e Conclusão",
+                       "wave":  "C2",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  332,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/332",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE12.md"
+                   },
+                   {
+                       "id":  "FASE13",
+                       "title":  "Fase 13: Conector de Envio de Emails",
+                       "wave":  "C3",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  334,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/334",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE13.md"
+                   },
+                   {
+                       "id":  "FASE14",
+                       "title":  "Fase 14: Governança Comunitária e Sistema de Votação",
+                       "wave":  "C3",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  312,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/312",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE14.md"
+                   },
+                   {
+                       "id":  "FASE15",
+                       "title":  "Fase 15: Subscriptions \u0026 Recurring Payments",
+                       "wave":  "C3",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  335,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/335",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE15.md"
+                   },
+                   {
+                       "id":  "FASE16",
+                       "title":  "Fase 16: Finalização Completa das Fases 1-15",
+                       "wave":  "C3",
+                       "priority":  "P1",
+                       "status":  "completed",
+                       "issue_number":  337,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/337",
+                       "issue_state":  "CLOSED",
+                       "doc":  "docs/backlog-api/FASE16.md"
+                   },
+                   {
+                       "id":  "FASE17",
+                       "title":  "Fase 17: Sistema de Compra Coletiva e Organização Comunitária de Alimentos",
+                       "wave":  "C5",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  339,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/339",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE17.md"
+                   },
+                   {
+                       "id":  "FASE17_BFF",
+                       "title":  "FASE17 — Backend for Frontend (BFF)",
+                       "wave":  "C4",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  341,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/341",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE17_BFF.md"
+                   },
+                   {
+                       "id":  "FASE18",
+                       "title":  "Fase 18: Sistema de Hospedagem Territorial",
+                       "wave":  "C5",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  343,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/343",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE18.md"
+                   },
+                   {
+                       "id":  "FASE19",
+                       "title":  "Fase 19: Sistema de Demandas e Ofertas",
+                       "wave":  "C6",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  345,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/345",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE19.md"
+                   },
+                   {
+                       "id":  "FASE20",
+                       "title":  "Fase 20: Sistema de Trocas Comunitárias",
+                       "wave":  "C6",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  346,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/346",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE20.md"
+                   },
+                   {
+                       "id":  "FASE21",
+                       "title":  "Fase 21: Sistema de Entregas Territoriais",
+                       "wave":  "C6",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  348,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/348",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE21.md"
+                   },
+                   {
+                       "id":  "FASE22",
+                       "title":  "Fase 22: Sistema de Moeda Territorial (Mint e Economia Local)",
+                       "wave":  "C6",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  350,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/350",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE22.md"
+                   },
+                   {
+                       "id":  "FASE23",
+                       "title":  "Fase 23: Inteligência Artificial",
+                       "wave":  "C6",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  352,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/352",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE23.md"
+                   },
+                   {
+                       "id":  "FASE24",
+                       "title":  "Fase 24: Saúde Territorial e Monitoramento",
+                       "wave":  "C6",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  355,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/355",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE24.md"
+                   },
+                   {
+                       "id":  "FASE25",
+                       "title":  "Fase 25: Dashboard de Métricas Comunitárias",
+                       "wave":  "C7",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  356,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/356",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE25.md"
+                   },
+                   {
+                       "id":  "FASE26",
+                       "title":  "Fase 26: Hub de Serviços Digitais Base",
+                       "wave":  "C7",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  357,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/357",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE26.md"
+                   },
+                   {
+                       "id":  "FASE27",
+                       "title":  "Fase 27: Chat com IA e Consumo Consciente",
+                       "wave":  "C7",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  358,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/358",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE27.md"
+                   },
+                   {
+                       "id":  "FASE28",
+                       "title":  "Fase 28: Negociação Territorial e Assinatura Coletiva de Serviços Digitais",
+                       "wave":  "C7",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  360,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/360",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE28.md"
+                   },
+                   {
+                       "id":  "FASE29",
+                       "title":  "Fase 48: Banco de Sementes e Mudas Territorial",
+                       "wave":  "C8",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  362,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/362",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE29.md"
+                   },
+                   {
+                       "id":  "FASE30",
+                       "title":  "Fase 30: Mobile Avançado",
+                       "wave":  "C9",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  365,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/365",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE30.md"
+                   },
+                   {
+                       "id":  "FASE31",
+                       "title":  "Fase 31: Avaliação e Escolha de Blockchain",
+                       "wave":  "C9",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  368,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/368",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE31.md"
+                   },
+                   {
+                       "id":  "FASE42",
+                       "title":  "Fase 42: Sistema de Gamificação Harmoniosa",
+                       "wave":  "C10",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  371,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/371",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE42.md"
+                   },
+                   {
+                       "id":  "FASE43",
+                       "title":  "Fase 43: Arquitetura Modular e Deploy Dual (Monolito/Distribuído)",
+                       "wave":  "C10",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  373,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/373",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE43.md"
+                   },
+                   {
+                       "id":  "FASE44",
+                       "title":  "Fase 44: Integrações Externas",
+                       "wave":  "C10",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  376,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/376",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE44.md"
+                   },
+                   {
+                       "id":  "FASE48",
+                       "title":  "Fase 48: Banco de Sementes e Mudas Territorial",
+                       "wave":  "C10",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  378,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/378",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE48.md"
+                   },
+                   {
+                       "id":  "FASE50",
+                       "title":  "Fase 50: Busca de Babás (Babysitters) - Serviços Territoriais",
+                       "wave":  "C10",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  382,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/382",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE50.md"
+                   },
+                   {
+                       "id":  "FASE51",
+                       "title":  "Fase 51: Espaços e Prestadores de Wellness - Agendas Compartilhadas",
+                       "wave":  "C10",
+                       "priority":  "P1",
+                       "status":  "in_progress",
+                       "issue_number":  386,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/386",
+                       "issue_state":  "OPEN",
+                       "doc":  "docs/backlog-api/FASE51.md"
+                   },
                    {
                        "id":  "FASE52",
                        "title":  "FASE52 — Fundação Técnica e CI/CD",
@@ -10,6 +447,7 @@
                        "status":  "in_progress",
                        "issue_number":  303,
                        "issue_url":  "https://github.com/sraphaz/arah/issues/303",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE52.md"
                    },
                    {
@@ -20,6 +458,7 @@
                        "status":  "in_progress",
                        "issue_number":  306,
                        "issue_url":  "https://github.com/sraphaz/arah/issues/306",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE53.md"
                    },
                    {
@@ -27,9 +466,10 @@
                        "title":  "FASE54 — IaC e 1ª Instância",
                        "wave":  "S0",
                        "priority":  "P0",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  389,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/389",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE54.md"
                    },
                    {
@@ -37,9 +477,10 @@
                        "title":  "FASE55 — Monetização Open-Core",
                        "wave":  "S1",
                        "priority":  "P0",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  393,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/393",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE55.md"
                    },
                    {
@@ -47,9 +488,10 @@
                        "title":  "FASE56 — Transparência e Taxas",
                        "wave":  "S2",
                        "priority":  "P0",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  395,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/395",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE56.md"
                    },
                    {
@@ -57,9 +499,10 @@
                        "title":  "FASE57 — Cockpit Implementador",
                        "wave":  "S1",
                        "priority":  "P0",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  398,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/398",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE57.md"
                    },
                    {
@@ -67,9 +510,10 @@
                        "title":  "FASE58 — Operação Multi-Instância",
                        "wave":  "S1",
                        "priority":  "P1",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  402,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/402",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE58.md"
                    },
                    {
@@ -77,9 +521,10 @@
                        "title":  "FASE59 — Federação",
                        "wave":  "S3",
                        "priority":  "P1",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  406,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/406",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE59.md"
                    },
                    {
@@ -87,9 +532,10 @@
                        "title":  "FASE60 — App Implementador",
                        "wave":  "S3",
                        "priority":  "P1",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  410,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/410",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE60.md"
                    },
                    {
@@ -97,9 +543,10 @@
                        "title":  "FASE61 — Capital Territorial",
                        "wave":  "S4",
                        "priority":  "P2",
-                       "status":  "pending",
-                       "issue_number":  null,
-                       "issue_url":  null,
+                       "status":  "in_progress",
+                       "issue_number":  412,
+                       "issue_url":  "https://github.com/sraphaz/arah/issues/412",
+                       "issue_state":  "OPEN",
                        "doc":  "docs/backlog-api/FASE61.md"
                    }
                ]

@@ -512,6 +512,16 @@ function Get-AllRepoIssuesRest {
         $batch = gh api $path 2>$null | ConvertFrom-Json
         if (-not $batch -or @($batch).Count -eq 0) { break }
         $issues = @($batch | Where-Object { -not $_.pull_request })
+        foreach ($issue in $issues) {
+            if ($issue.state) {
+                $issue | Add-Member -NotePropertyName 'state' -NotePropertyValue ($issue.state.ToUpper()) -Force
+            }
+            if ($issue.html_url -and -not $issue.url) {
+                $issue | Add-Member -NotePropertyName 'url' -NotePropertyValue $issue.html_url -Force
+            } elseif ($issue.html_url) {
+                $issue | Add-Member -NotePropertyName 'url' -NotePropertyValue $issue.html_url -Force
+            }
+        }
         $all += $issues
         if (@($batch).Count -lt 100) { break }
         Start-Sleep -Milliseconds 200
@@ -538,6 +548,10 @@ function Select-CanonicalPhaseIssue {
     if (-not $Issues -or $Issues.Count -eq 0) { return $null }
     $withMarker = @($Issues | Where-Object { $_.body -match 'arah-next-phase id=' })
     if ($withMarker.Count -gt 0) {
+        $open = @($withMarker | Where-Object { $_.state -eq 'OPEN' })
+        if ($open.Count -gt 0) {
+            return $open | Sort-Object { [int]$_.number } | Select-Object -First 1
+        }
         return $withMarker | Sort-Object { [int]$_.number } | Select-Object -First 1
     }
     return $Issues | Sort-Object { [int]$_.number } | Select-Object -First 1
@@ -571,8 +585,8 @@ function Get-PhaseIssueAnyState {
         } finally { Pop-Location }
     }
 
-    $hit = $AllIssues | Where-Object { Test-PhaseIssueMarker -Issue $_ -PhaseId $PhaseId } | Select-Object -First 1
-    return $hit
+    $hit = $AllIssues | Where-Object { Test-PhaseIssueMarker -Issue $_ -PhaseId $PhaseId }
+    return Select-CanonicalPhaseIssue -Issues @($hit)
 }
 
 function Test-PhaseOpenIssue {

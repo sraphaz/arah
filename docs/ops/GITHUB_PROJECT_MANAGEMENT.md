@@ -193,7 +193,7 @@ O sync (`sync-project` / `sync-status`) **não tenta** criar views — evita war
 |----------|---------|------|
 | **`project-bootstrap.yml`** | manual (`workflow_dispatch`) | Bootstrap completo (issues, board, status; views manuais no UI) |
 | `github-sync.yml` | push `main`, semanal | labels/milestones + bootstrap se secret existir |
-| `project-board-sync.yml` | issue/PR | reconcile + sync coluna Status + add-to-project |
+| `project-board-sync.yml` | issue/PR / manual | reconcile + sync-status + export `phase-status.generated.json` |
 
 ---
 

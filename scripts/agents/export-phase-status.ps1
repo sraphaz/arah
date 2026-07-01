@@ -21,22 +21,36 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
 Push-Location $Root
 try {
     $queue = Get-PhaseRoadmap -Root $Root
-    $issues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url | ConvertFrom-Json
+    $repo = Get-GhRepoFullName -Root $Root
+    $issues = Get-AllRepoIssuesRest -Repo $repo -Label 'epic/phase'
+    if ($issues.Count -lt 40) {
+        $issues = Get-AllRepoIssuesRest -Repo $repo
+    }
     $phases = @()
+    $counts = @{ completed = 0; in_progress = 0; pending = 0; blocked = 0 }
 
     foreach ($item in $queue) {
         if ($item.id -notmatch '^FASE') { continue }
 
-        $issue = $issues | Where-Object { Test-PhaseIssueMarker -Issue $_ -PhaseId $item.id } | Select-Object -First 1
-        if (-not $issue) {
-            $issue = $issues | Where-Object { $_.title -match [regex]::Escape($item.id) -and ($_.labels.name -contains 'epic/phase') } | Select-Object -First 1
-        }
+        $issue = Get-PhaseIssueAnyState -Root $Root -PhaseId $item.id -AllIssues $issues
 
         $status = if ($item.status -eq 'completed') { 'completed' }
                   elseif ($issue -and $issue.state -eq 'OPEN') { 'in_progress' }
                   elseif ($issue -and $issue.state -eq 'CLOSED') { 'completed' }
                   elseif (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $item.id) { 'completed' }
                   else { 'pending' }
+
+        $blocked = $false
+        foreach ($dep in $item.blocked_by) {
+            if ($dep -match '^FASE' -and -not (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $dep)) {
+                $blocked = $true
+                break
+            }
+        }
+        if ($blocked -and $status -eq 'pending') { $status = 'blocked'; $counts.blocked++ }
+        elseif ($status -eq 'completed') { $counts.completed++ }
+        elseif ($status -eq 'in_progress') { $counts.in_progress++ }
+        else { $counts.pending++ }
 
         $phases += [ordered]@{
             id           = $item.id
@@ -46,6 +60,7 @@ try {
             status       = $status
             issue_number = if ($issue) { $issue.number } else { $null }
             issue_url    = if ($issue) { $issue.url } else { $null }
+            issue_state  = if ($issue) { $issue.state } else { $null }
             doc          = $item.doc
         }
     }
@@ -53,6 +68,14 @@ try {
     $report = [ordered]@{
         source    = 'github-issues'
         timestamp = (Get-Date).ToUniversalTime().ToString('o')
+        project   = 'https://github.com/users/sraphaz/projects/3'
+        summary   = [ordered]@{
+            total       = $phases.Count
+            completed   = $counts.completed
+            in_progress = $counts.in_progress
+            pending     = $counts.pending
+            blocked     = $counts.blocked
+        }
         phases    = $phases
     }
 

@@ -9,6 +9,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Project board operacional completo (2026-07-01)
+
+- `sync-status` — mapeia colunas Status (Backlog/Ready/In Progress/Done) no Project #3
+- `dedupe-backlog` — fecha issues `epic/phase` duplicadas (REST)
+- `Remove-OrphanProjectDrafts` — remove drafts quando issue canônica existe no board
+- `export-phase-status` — 49 fases, REST paginado, summary + issue links
+- `.github/phase-status.generated.json` — snapshot atualizado (16 done, 33 com issue aberta)
+- Workflow `project-board-sync` — concurrency, export + commit do snapshot no dispatch
+
 ### Adicionado — GitHub Project PAT + bootstrap real (2026-07-01)
 
 - **Causa raiz**: `GITHUB_TOKEN` não acessa Projects v2; bootstrap falhava silenciosamente

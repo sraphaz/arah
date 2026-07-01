@@ -285,6 +285,56 @@ function Ensure-ProjectViews {
     }
 }
 
+function Remove-ProjectV2Item {
+    param(
+        [string]$ProjectId,
+        [string]$ItemId
+    )
+    $mutation = @'
+mutation($projectId: ID!, $itemId: ID!) {
+  deleteProjectV2Item(input: { projectId: $projectId, itemId: $itemId }) {
+    deletedItemId
+  }
+}
+'@
+    Invoke-GhGraphql -Query $mutation -Variables @{
+        projectId = $ProjectId
+        itemId    = $ItemId
+    } | Out-Null
+    return $true
+}
+
+function Remove-OrphanProjectDrafts {
+    param(
+        [object]$Project,
+        [array]$Queue,
+        [array]$AllIssues,
+        [switch]$DryRun
+    )
+    $removed = @()
+    foreach ($item in $Queue) {
+        if ($item.id -notmatch '^FASE') { continue }
+        $boardItems = Find-AllProjectItemsForPhase -ProjectNode $Project -PhaseId $item.id -AllIssues $AllIssues
+        $issues = @($boardItems | Where-Object { $_.kind -eq 'issue' })
+        $drafts = @($boardItems | Where-Object { $_.kind -eq 'draft' })
+        if ($issues.Count -eq 0 -or $drafts.Count -eq 0) { continue }
+        foreach ($draft in $drafts) {
+            if ($DryRun) {
+                $removed += @{ phase = $item.id; item_id = $draft.item_id; action = 'would-remove-draft' }
+                continue
+            }
+            try {
+                Remove-ProjectV2Item -ProjectId $Project.id -ItemId $draft.item_id | Out-Null
+                $removed += @{ phase = $item.id; item_id = $draft.item_id; action = 'draft-removed' }
+                Start-Sleep -Milliseconds 200
+            } catch {
+                Write-Warning "Draft $($item.id): $_"
+            }
+        }
+    }
+    return $removed
+}
+
 function Find-StatusOptionForTarget {
     param(
         [object]$StatusField,

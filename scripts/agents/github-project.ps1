@@ -392,6 +392,7 @@ function Invoke-ProjectUpdateStatuses {
         if ($existingItems.Count -eq 0) { continue }
 
         foreach ($existingItem in $existingItems) {
+            if ($existingItem.kind -eq 'draft') { continue }
             if ($DryRun) {
                 $updated += @{ phase = $item.id; status = $targetStatus; option = $option.name; action = 'would-update' }
                 continue
@@ -432,7 +433,7 @@ function Invoke-ProjectSyncBoard {
 
 
 
-    $repo = gh repo view --json nameWithOwner -q .nameWithOwner
+    $repo = Get-GhRepoFullName -Root $Root
 
     $owner = ($repo -split '/')[0]
 
@@ -444,7 +445,10 @@ function Invoke-ProjectSyncBoard {
 
     $queue = Get-PhaseRoadmap -Root $Root
 
-    $allIssues = gh issue list --state all --limit 500 --json number,title,state,body,labels,url | ConvertFrom-Json
+    $allIssues = Get-AllRepoIssuesRest -Repo $repo -Label 'epic/phase'
+    if ($allIssues.Count -lt 40) {
+        $allIssues = Get-AllRepoIssuesRest -Repo $repo
+    }
 
     $openPrs = Get-OpenPullRequestsForRepo -Repo $repo
 
@@ -500,9 +504,18 @@ function Invoke-ProjectSyncBoard {
             Write-Warning 'Campo Status não encontrado no project'
             return
         }
+        $draftsRemoved = @()
+        if (-not $DryRun) {
+            $draftsRemoved = Remove-OrphanProjectDrafts -Project $project -Queue $queue -AllIssues $allIssues
+            if ($draftsRemoved.Count -gt 0) {
+                $project = Get-ProjectV2Node -Owner $owner -ProjectNumber $projectNumber
+                $statusField = Get-StatusFieldFromProject -ProjectNode $project
+            }
+        }
         $statusResult = Invoke-ProjectUpdateStatuses -Project $project -StatusField $statusField -Queue $queue -AllIssues $allIssues -OpenPrs $openPrs -DryRun:$DryRun
         $report = [ordered]@{
             project_number = $projectNumber
+            drafts_removed = $draftsRemoved
             status_updated = $statusResult.status_updated
             status_skipped = $statusResult.status_skipped
             dry_run        = [bool]$DryRun

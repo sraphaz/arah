@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
   pull-requests: read
 
@@ -25,7 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          token: ${{ secrets.GH_PROJECT_TOKEN }}
+          persist-credentials: true
 
       - name: Reconcile + sync board
         if: ${{ env.GH_PROJECT_TOKEN != '' }}
@@ -41,6 +42,27 @@ jobs:
           } else {
             ./scripts/agents/github-project.ps1 sync-status
           }
+
+      - name: Export phase status
+        if: ${{ env.GH_PROJECT_TOKEN != '' }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ env.GH_PROJECT_TOKEN }}
+        run: ./scripts/agents/export-phase-status.ps1
+
+      - name: Commit phase-status snapshot
+        if: ${{ env.GH_PROJECT_TOKEN != '' && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ env.GH_PROJECT_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/phase-status.generated.json
+          git diff --staged --quiet && exit 0
+          git commit -m "chore(ops): atualizar phase-status.generated.json"
+          git pull --rebase origin main
+          git push
 
       - name: Resolve project URL from config
         id: project

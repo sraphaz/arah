@@ -18,6 +18,8 @@ body:
         - area/flutter
         - area/web
         - area/docs
+        - area/spec
+        - area/architecture
         - area/ops
         - area/security
         - area/planning

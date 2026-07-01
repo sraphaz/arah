@@ -1,0 +1,99 @@
+# Labels canônicas — sincronizar com: ./scripts/agents/sync-github-labels.ps1
+# Fonte de verdade para roteamento de agentes (area/*, agent-task, wave/*, priority/*)
+
+labels:
+  - name: agent-task
+    color: 0E8A16
+    description: Tarefa operada por agente
+
+  - name: ready-for-merge
+    color: 0E8A16
+    description: PR aprovado pelo steward; merge humano
+
+  - name: epic/phase
+    color: 7057ff
+    description: Épico de fase sustentação (FASE52+)
+
+  - name: area/backend
+    color: 1D76DB
+    description: Backend .NET / BFF / Core
+
+  - name: area/flutter
+    color: FBCA04
+    description: App Flutter arah.app
+
+  - name: area/web
+    color: 5319E7
+    description: Wiki, portal, devportal
+
+  - name: area/docs
+    color: 0075CA
+    description: Documentação e taxonomia
+
+  - name: area/architecture
+    color: 5319E7
+    description: Arquitetura, ADRs, LikeC4
+
+  - name: area/spec
+    color: 006B75
+    description: Spec-Driven Design (YAML + harness)
+
+  - name: area/sdd
+    color: 006B75
+    description: Alias SDD — spec-steward
+
+  - name: area/ops
+    color: D93F0B
+    description: CI/CD, release, infra
+
+  - name: area/security
+    color: B60205
+    description: Segurança e compliance
+
+  - name: area/planning
+    color: C5DEF5
+    description: Backlog e planejamento
+
+  - name: area/pr-review
+    color: 1B7F37
+    description: PR Steward — review e bots
+
+  - name: wave/S0
+    color: E4E669
+    description: Onda S0 — Fundação (FASE52-54)
+
+  - name: wave/S1
+    color: C2E0C6
+    description: Onda S1 — Go-live piloto
+
+  - name: wave/S2
+    color: BFDADC
+    description: Onda S2 — Transparência
+
+  - name: wave/S3
+    color: FEF2C0
+    description: Onda S3 — Federação e app implementador
+
+  - name: wave/S4
+    color: F9D0C4
+    description: Onda S4 — Capital territorial
+
+  - name: priority/P0
+    color: B60205
+    description: Prioridade P0
+
+  - name: priority/P1
+    color: D93F0B
+    description: Prioridade P1
+
+  - name: priority/P2
+    color: FBCA04
+    description: Prioridade P2
+
+  - name: status/blocked
+    color: D93F0B
+    description: Bloqueado por dependência
+
+  - name: status/in-progress
+    color: 1D76DB
+    description: Em implementação (issue ou PR ativo)

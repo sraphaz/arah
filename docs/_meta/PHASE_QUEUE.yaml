@@ -1,5 +1,7 @@
-# Fila de fases — fonte machine-readable para next-phase (Docs Steward / PR Steward)
-# Sincronizar com docs/STATUS_FASES.md e REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md
+# Fila de fases — machine-readable; **Issues GitHub** são fonte operacional de status.
+# Sync: ./scripts/agents/github-project.ps1 sync-queue
+# Docs: docs/ops/GITHUB_PROJECT_MANAGEMENT.md
+# Complementar: docs/STATUS_FASES.md (dashboard humano)
 
 version: 1
 updated: 2026-06-30

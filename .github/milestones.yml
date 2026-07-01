@@ -1,0 +1,22 @@
+# Milestones (ondas de sustentação) — sync: ./scripts/agents/sync-github-milestones.ps1
+
+milestones:
+  - title: "Onda S0 — Fundação"
+    description: "FASE52 CI/CD, FASE53 Core, FASE54 IaC"
+    state: open
+
+  - title: "Onda S1 — Go-live piloto"
+    description: "FASE55 monetização, FASE57 cockpit, FASE58 multi-instância"
+    state: open
+
+  - title: "Onda S2 — Transparência"
+    description: "FASE56 taxas e transparência"
+    state: open
+
+  - title: "Onda S3 — Federação"
+    description: "FASE59 federação, FASE60 app implementador"
+    state: open
+
+  - title: "Onda S4 — Capital"
+    description: "FASE61 capital territorial"
+    state: open

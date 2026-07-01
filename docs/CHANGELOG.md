@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Gestão via GitHub (Issues, Project, labels) (2026-07-01)
+
+- `.github/labels.yml`, `.github/milestones.yml`, `.github/project/arah-sustentacao.yml`
+- Templates `phase-epic.yml`, `config.yml` (issue chooser)
+- Scripts: `sync-github-labels`, `sync-github-milestones`, `backlog-to-issue`, `github-project`, `export-phase-status`
+- Workflow `github-sync.yml`; docs/ops/GITHUB_PROJECT_MANAGEMENT.md
+- `next-phase` cria Issues `[Epic]` com labels wave/priority + milestone
+
 ### Adicionado — Coreografia + LikeC4 + domínio consultivo (2026-07-01)
 
 - **`.agents/choreography.yaml`** — regras de co-ativação (Core, specs, marketplace, governance, monetization, PR sempre qa+pr-steward)

@@ -193,6 +193,23 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 - `orchestrate` enriquece `route.json` com bloco `choreography` (regras + domínios).
 - CLI: `arah-agents choreograph`, `skill -Skill likec4-export`.
 
+### PR 12 — Gestão via GitHub (Issues, Project, labels) (2026-07-01)
+
+| Artefato | Caminho |
+|----------|---------|
+| Labels canônicas | [.github/labels.yml](../../.github/labels.yml) |
+| Milestones ondas | [.github/milestones.yml](../../.github/milestones.yml) |
+| Project config | [.github/project/arah-sustentacao.yml](../../.github/project/arah-sustentacao.yml) |
+| Template épico | [phase-epic.yml](../../.github/ISSUE_TEMPLATE/phase-epic.yml) |
+| Scripts | [sync-github-labels.ps1](../../scripts/agents/sync-github-labels.ps1), [github-project.ps1](../../scripts/agents/github-project.ps1), [backlog-to-issue.ps1](../../scripts/agents/backlog-to-issue.ps1) |
+| Workflow | [github-sync.yml](../../.github/workflows/github-sync.yml) |
+| Runbook | [GITHUB_PROJECT_MANAGEMENT.md](./GITHUB_PROJECT_MANAGEMENT.md) |
+
+**Comportamento:**
+- `PHASE_QUEUE.yaml` → Issues `[Epic]` com labels `wave/*`, `priority/*`, milestone
+- Status operacional: Issues fechadas = fase concluída (fallback `STATUS_FASES.md`)
+- Specs/ADRs/FASE*.md permanecem no repo como contrato técnico
+
 ---
 
 ## Referências

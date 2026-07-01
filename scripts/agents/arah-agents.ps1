@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'sync-milestones', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'github-project', 'backlog-to-issue', 'export-phase-status', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -463,7 +463,11 @@ Comandos:
   route-pr      Infere agentes a partir de arquivos alterados
   skill         Executa skill (delega invoke-skill.ps1)
   validate      Valida manifests .agents/ e .skills/
-  ensure-labels Imprime comandos gh para criar labels area/*
+  ensure-labels   Sincroniza labels de .github/labels.yml
+  sync-milestones Sincroniza milestones de .github/milestones.yml
+  github-project  Project v2 — ensure | sync-queue | status (-Skill)
+  backlog-to-issue Cria issue épico a partir de fase (-SpecId FASE53)
+  export-phase-status Exporta status das fases de Issues → JSON
   doc-index     Regenera docs/INDEX.generated.md
   doc-deflate   Arquiva PR/RESUMO/ANALISE da raiz docs/ (wave 1)
   gates         Executa run-gates.ps1 (qa/security/release)
@@ -509,24 +513,35 @@ switch ($Command) {
         & (Join-Path $PSScriptRoot 'validate-manifests.ps1')
     }
     'ensure-labels' {
-        $areas = @(
-            @{ name = 'agent-task'; color = '0E8A16'; description = 'Tarefa operada por agente' },
-            @{ name = 'area/backend'; color = '1D76DB'; description = 'Backend .NET / BFF' },
-            @{ name = 'area/flutter'; color = 'FBCA04'; description = 'App Flutter arah.app' },
-            @{ name = 'area/web'; color = '5319E7'; description = 'Wiki, portal, devportal' },
-            @{ name = 'area/docs'; color = '0075CA'; description = 'Documentação e taxonomia' },
-            @{ name = 'area/architecture'; color = '5319E7'; description = 'Arquitetura, ADRs, LikeC4 — Solutions Architect' },
-            @{ name = 'area/spec'; color = '006B75'; description = 'Spec-Driven Design (YAML specs + harness)' },
-            @{ name = 'area/sdd'; color = '006B75'; description = 'Alias SDD — roteia para spec-steward' },
-            @{ name = 'area/ops'; color = 'D93F0B'; description = 'CI/CD, release, infra' },
-            @{ name = 'area/security'; color = 'B60205'; description = 'Segurança e compliance' },
-            @{ name = 'area/planning'; color = 'C5DEF5'; description = 'Backlog e planejamento' },
-            @{ name = 'area/pr-review'; color = '1B7F37'; description = 'PR Steward — review e bots' },
-            @{ name = 'ready-for-merge'; color = '0E8A16'; description = 'PR aprovado pelo steward; humano mergeia' }
-        )
-        foreach ($label in $areas) {
-            Write-Host "gh label create `"$($label.name)`" --color $($label.color) --description `"$($label.description)`" --force"
+        & (Join-Path $PSScriptRoot 'sync-github-labels.ps1')
+    }
+    'sync-milestones' {
+        & (Join-Path $PSScriptRoot 'sync-github-milestones.ps1')
+    }
+    'github-project' {
+        $sub = 'help'
+        if ($Skill -in @('ensure', 'sync-queue', 'status', 'help')) { $sub = $Skill }
+        $params = @{ Command = $sub }
+        if ($Json) { $params.Json = $true }
+        if ($DryRun) { $params.DryRun = $true }
+        & (Join-Path $PSScriptRoot 'github-project.ps1') @params
+    }
+    'backlog-to-issue' {
+        if (-not $SpecId -and -not $Title) {
+            Write-Error 'backlog-to-issue requires -SpecId (PhaseId e.g. FASE53) or -Title as SourceFile path'
+            exit 1
         }
+        $params = @{}
+        if ($SpecId) { $params.PhaseId = $SpecId }
+        if ($Title) { $params.SourceFile = $Title }
+        if ($DryRun) { $params.DryRun = $true }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'backlog-to-issue.ps1') @params
+    }
+    'export-phase-status' {
+        $params = @{}
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'export-phase-status.ps1') @params
     }
     'doc-index' {
         & (Join-Path $PSScriptRoot 'generate-docs-index.ps1')

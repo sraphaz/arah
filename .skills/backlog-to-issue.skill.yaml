@@ -8,7 +8,8 @@ outputs:
   - spec_id
   - suggested_labels
   - suggested_agent
-template: .github/ISSUE_TEMPLATE/agent-task.yml
+run:
+  script: scripts/agents/backlog-to-issue.ps1
 notes: |
   Fases S0+ (52–61): criar ou referenciar docs/specs/phases/{id}.spec.yaml via spec-author.
   Labels sugeridas: area/backend|ops|spec + agent-task.

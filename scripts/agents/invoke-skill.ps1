@@ -264,6 +264,17 @@ try {
 
         }
 
+        'backlog-to-issue' {
+
+            $phaseId = if ($Title) { $Title } elseif ($env:ARAH_PHASE_ID) { $env:ARAH_PHASE_ID } else { '' }
+            if (-not $phaseId) {
+                Write-Error 'backlog-to-issue requires -Title (PhaseId e.g. FASE53) or ARAH_PHASE_ID'
+                exit 1
+            }
+            & (Join-Path $ScriptDir 'backlog-to-issue.ps1') -PhaseId $phaseId
+
+        }
+
         default {
 
             Write-Host (Get-Content $SkillFile -Raw)

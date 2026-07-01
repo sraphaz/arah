@@ -35,6 +35,9 @@ function Get-PhaseQueue {
         } elseif ($current -and $line -match '^\s+wave:\s*(.+)$') {
             $current.wave = $Matches[1].Trim()
             $inBlockedList = $false
+        } elseif ($current -and $line -match '^\s+frente:\s*(.+)$') {
+            $current.frente = $Matches[1].Trim()
+            $inBlockedList = $false
         } elseif ($current -and $line -match '^\s+spec_id:\s*(.+)$') {
             $current.spec_id = $Matches[1].Trim()
             $inBlockedList = $false
@@ -75,6 +78,7 @@ function Get-ProjectConfig {
     $cfg = @{ wave_milestones = @{}; project_number = $null; title = 'Arah Sustentação' }
     if ($raw -match '(?m)^title:\s*"(.+)"') { $cfg.title = $Matches[1] }
     if ($raw -match '(?m)^project_number:\s*(\d+)') { $cfg.project_number = [int]$Matches[1] }
+    if ($raw -match '(?m)^project_url:\s*"(.+)"') { $cfg.project_url = $Matches[1] }
     if ($raw -match '(?ms)^wave_milestones:\s*\n((?:  .+\r?\n)+)') {
         foreach ($line in ($Matches[1] -split "`n")) {
             if ($line -match '^\s+(S\d):\s*"(.+)"') {
@@ -158,11 +162,35 @@ function Add-IssueToGitHubProject {
     param(
         [string]$IssueUrl,
         [int]$ProjectNumber,
-        [string]$Owner
+        [string]$Owner,
+        [string]$Root = ''
     )
     if ($ProjectNumber -le 0) { return $false }
+
+    $ok = $false
     gh project item-add $ProjectNumber --owner $Owner --url $IssueUrl 2>$null | Out-Null
-    return ($LASTEXITCODE -eq 0)
+    if ($LASTEXITCODE -eq 0) { return $true }
+
+    if (-not (Get-Command Invoke-GhGraphql -ErrorAction SilentlyContinue)) {
+        $apiPath = Join-Path $PSScriptRoot 'GitHub-ProjectApi.ps1'
+        if (Test-Path $apiPath) { . $apiPath }
+    }
+    if (-not (Test-GhProjectTokenAvailable)) { return $false }
+
+    try {
+        $repo = gh repo view --json nameWithOwner -q .nameWithOwner
+        $repoName = ($repo -split '/')[1]
+        if ($IssueUrl -match '/issues/(\d+)') {
+            $num = [int]$Matches[1]
+            $project = Get-ProjectV2Node -Owner $Owner -ProjectNumber $ProjectNumber
+            $issueNodeId = Get-IssueNodeId -Owner $Owner -RepoName $repoName -IssueNumber $num
+            Add-IssueToProjectViaGraphql -ProjectId $project.id -IssueNodeId $issueNodeId | Out-Null
+            return $true
+        }
+    } catch {
+        Write-Warning "GraphQL item-add failed: $_"
+    }
+    return $false
 }
 
 function Resolve-MilestoneForWave {

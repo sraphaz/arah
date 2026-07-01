@@ -41,6 +41,7 @@ Implementar o **Arah Core** mínimo: hub que coordena instâncias sem possuir da
 
 ```
 POST /core/instances              — provisionar/registrar instância
+GET  /core/instances              — listar instâncias (telemetria agregada)
 POST /core/instances/{id}/heartbeat — telemetria
 GET  /core/releases?channel=stable — releases disponíveis
 POST /core/directory/territories  — publicar território no diretório
@@ -54,7 +55,7 @@ Autenticação: mTLS + token de instância.
 ## Critérios de aceite
 
 - [ ] Instância registra-se e recebe id + par de chaves
-- [ ] Heartbeat a cada 30s; status visível no Core
+- [x] Heartbeat a cada 30s; status visível no Core (listagem + telemetria via GET /core/instances)
 - [ ] Release publicada via tag; instâncias consultam canal stable
 - [ ] Território publicado no diretório global
 - [ ] Instância opera em modo autônomo se Core indisponível (cache + fila)

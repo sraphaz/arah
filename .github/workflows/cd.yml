@@ -61,9 +61,17 @@ jobs:
             sleep 2
           done
           curl -sf http://localhost:8080/health || true
+          metrics_ok=0
+          if curl -sf http://localhost:8080/metrics | head -5 | grep -qE '^# HELP|^process_'; then
+            metrics_ok=1
+            echo "Prometheus /metrics OK"
+          else
+            echo "ERROR: /metrics not exposing Prometheus text (FASE52 baseline regression)"
+          fi
           docker logs arah-smoke 2>&1 | tail -20
           docker stop arah-smoke
           if [ "$ok" != "1" ]; then echo "Health smoke failed"; exit 1; fi
+          if [ "$metrics_ok" != "1" ]; then echo "Metrics smoke failed"; exit 1; fi
       - name: Release agent activity (FASE52)
         if: always()
         shell: pwsh

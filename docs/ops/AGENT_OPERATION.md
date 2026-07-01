@@ -201,11 +201,14 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 | Milestones ondas | [.github/milestones.yml](../../.github/milestones.yml) |
 | Project config | [.github/project/arah-sustentacao.yml](../../.github/project/arah-sustentacao.yml) |
 | Template épico | [phase-epic.yml](../../.github/ISSUE_TEMPLATE/phase-epic.yml) |
-| Scripts | [sync-github-labels.ps1](../../scripts/agents/sync-github-labels.ps1), [github-project.ps1](../../scripts/agents/github-project.ps1), [backlog-to-issue.ps1](../../scripts/agents/backlog-to-issue.ps1) |
-| Workflow | [github-sync.yml](../../.github/workflows/github-sync.yml) |
+| Scripts | [sync-github-labels.ps1](../../scripts/agents/sync-github-labels.ps1), [GitHub-ProjectApi.ps1](../../scripts/agents/GitHub-ProjectApi.ps1), [github-project.ps1](../../scripts/agents/github-project.ps1), [backlog-to-issue.ps1](../../scripts/agents/backlog-to-issue.ps1) |
+| Workflows | [github-sync.yml](../../.github/workflows/github-sync.yml), [project-board-sync.yml](../../.github/workflows/project-board-sync.yml) |
+| Snapshot | [.github/phase-status.generated.json](../../.github/phase-status.generated.json) |
 | Runbook | [GITHUB_PROJECT_MANAGEMENT.md](./GITHUB_PROJECT_MANAGEMENT.md) |
 
 **Comportamento:**
+- `github-project bootstrap` — labels, milestones, Project v2, views, issues, colunas Status
+- `project-board-sync.yml` — atualiza board a cada issue/PR (infra/federação refletidas por onda)
 - `PHASE_QUEUE.yaml` → Issues `[Epic]` com labels `wave/*`, `priority/*`, milestone
 - Status operacional: Issues fechadas = fase concluída (fallback `STATUS_FASES.md`)
 - Specs/ADRs/FASE*.md permanecem no repo como contrato técnico

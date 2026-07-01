@@ -51,7 +51,8 @@ Este documento é a **fonte de verdade** para o README e para agentes. Níveis d
 | Deploy staging automático | ✅ | `deploy-staging.yml` |
 | Gate produção manual | ✅ | `deploy-production.yml` |
 | Health `/health` API + BFF | ✅ | smoke + staging |
-| Observabilidade baseline prod | ⏳ | FASE52 restante |
+| Observabilidade baseline prod | 🟡 | FASE52 em progresso |
+| GitHub Project (board F52–61) | 🟡 | bootstrap via `github-sync.yml` |
 
 ---
 
@@ -63,6 +64,7 @@ Este documento é a **fonte de verdade** para o README e para agentes. Níveis d
 | Orquestrador + checklists conduta | ✅ | [AGENT_OPERATION.md](./AGENT_OPERATION.md) |
 | PR Steward (bots → merge humano) | ✅ | `agents-pr-steward.yml` |
 | next-phase (fila PHASE_QUEUE) | ✅ | [PHASE_QUEUE.yaml](../_meta/PHASE_QUEUE.yaml) |
+| GitHub Project v2 (board ondas) | 🟡 | `github-project bootstrap` · [GITHUB_PROJECT_MANAGEMENT.md](./GITHUB_PROJECT_MANAGEMENT.md) |
 | Harness agentes | ✅ | [specs/harness/agent-operation.spec.yaml](../specs/harness/agent-operation.spec.yaml) |
 
 ---
@@ -106,6 +108,7 @@ Detalhe: [STATUS_FASES.md](../STATUS_FASES.md) · [REALINHAMENTO_SUSTENTACAO_OPE
 
 # Fases
 ./scripts/agents/next-phase.ps1 -DryRun
+./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
 ```
 
 ---

@@ -12,7 +12,9 @@ public sealed record CoreInstanceResponse(
     string Version,
     string Status,
     DateTimeOffset RegisteredAtUtc,
-    DateTimeOffset? LastHeartbeatUtc);
+    DateTimeOffset? LastHeartbeatUtc,
+    IReadOnlyDictionary<string, string>? LastServices = null,
+    long? LastUptimeSeconds = null);
 
 public sealed record CoreHeartbeatRequest(
     IReadOnlyDictionary<string, string> Services,

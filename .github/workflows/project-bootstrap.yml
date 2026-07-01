@@ -1,0 +1,71 @@
+name: Bootstrap GitHub Project
+
+# GITHUB_TOKEN não acessa Projects v2 — requer secret GH_PROJECT_TOKEN (PAT classic: project + repo)
+# Repo → Settings → Secrets → Actions → New repository secret
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Require GH_PROJECT_TOKEN
+        shell: pwsh
+        env:
+          GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+        run: |
+          if (-not $env:GH_PROJECT_TOKEN) {
+            Write-Error @"
+          Secret GH_PROJECT_TOKEN ausente.
+
+          1. GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+             Scopes: project, repo
+          2. Repo arah → Settings → Secrets and variables → Actions → New repository secret
+             Name: GH_PROJECT_TOKEN
+          3. Re-execute este workflow (Actions → Bootstrap GitHub Project → Run workflow)
+          "@
+            exit 1
+          }
+
+      - name: Bootstrap (project, views, issues, board)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+          GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+        run: ./scripts/agents/github-project.ps1 bootstrap
+
+      - name: Upload phase-status artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase-status
+          path: .github/phase-status.generated.json
+          if-no-files-found: warn
+
+      # Sem commit direto em main: abre PR para aprovação humana (política de agentes)
+      - name: Open PR with project config (project_number + URL)
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_PROJECT_TOKEN }}
+          add-paths: .github/project/arah-sustentacao.yml
+          base: main
+          branch: chore/github-project-bootstrap
+          delete-branch: true
+          commit-message: "chore(ops): registrar GitHub Project (bootstrap)"
+          title: "chore(ops): registrar GitHub Project (bootstrap)"
+          labels: area/ops
+          body: |
+            Atualização automática de `project_number`/`project_url` em
+            `.github/project/arah-sustentacao.yml` após bootstrap do GitHub Project v2.
+
+            Gerado pelo workflow **Bootstrap GitHub Project** (`workflow_dispatch`).
+            Requer aprovação humana — sem merge automático em `main`.

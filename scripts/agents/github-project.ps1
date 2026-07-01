@@ -1,139 +1,726 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
+
 <#
+
 .SYNOPSIS
-  GitHub Project v2 + sync da fila PHASE_QUEUE para Issues.
+
+  GitHub Project v2 + sync da fila PHASE_QUEUE para Issues e Project board.
+
 .EXAMPLE
-  ./github-project.ps1 ensure
-  ./github-project.ps1 sync-queue -DryRun
-  ./github-project.ps1 status
+
+  ./github-project.ps1 bootstrap
+
+  ./github-project.ps1 sync-queue
+
+  ./github-project.ps1 sync-project
+
+  ./github-project.ps1 reconcile
+
 #>
+
 param(
+
     [Parameter(Position = 0)]
-    [ValidateSet('ensure', 'sync-queue', 'status', 'help')]
+
+    [ValidateSet('bootstrap', 'ensure', 'sync-queue', 'sync-project', 'reconcile', 'status', 'help')]
+
     [string]$Command = 'help',
+
     [switch]$DryRun,
+
     [switch]$Json
+
 )
 
+
+
 $ErrorActionPreference = 'Stop'
+
 $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+
 . (Join-Path $PSScriptRoot 'Get-PhaseQueue.ps1')
 
+. (Join-Path $PSScriptRoot 'GitHub-ProjectApi.ps1')
+
+
+
 function Show-ProjectHelp {
+
     @"
+
 github-project — GitHub-native backlog (Issues + Project v2)
 
-  ensure      Cria project (se não existir) e imprime project_number
-  sync-queue  Abre issues para fases desbloqueadas sem issue aberta
-  status      Lista issues de épico abertas (arah-phase-epic)
 
-Configure project_number em .github/project/arah-sustentacao.yml após ensure.
+
+  bootstrap     Labels, milestones, project, views, issues, board (pipeline completo)
+
+  ensure        Cria project (se não existir) e grava project_number no YAML
+
+  sync-queue    Abre issues para fases desbloqueadas sem issue aberta
+
+  sync-project  Adiciona épicos ao Project e atualiza coluna Status
+
+  reconcile     Normaliza issues [Agent] FASE* → [Epic] com labels/milestone
+
+  status        Lista issues de épico (arah-phase-epic)
+
+
+
+Requer gh com scope project: gh auth refresh -h github.com -s project,read:project
+
 "@
+
 }
+
+
+
+function Get-ProjectColumnsFromConfig {
+
+    param([string]$Root)
+
+    $path = Join-Path $Root '.github/project/arah-sustentacao.yml'
+
+    if (-not (Test-Path $path)) { return @('Backlog', 'Ready', 'In Progress', 'Review', 'Done') }
+
+    $cols = @()
+
+    $inCols = $false
+
+    foreach ($line in Get-Content $path) {
+
+        if ($line -match '^columns:') { $inCols = $true; continue }
+
+        if ($inCols -and $line -match '^\s+-\s+(.+)$') { $cols += $Matches[1].Trim() }
+
+        elseif ($inCols -and $line -match '^\w') { break }
+
+    }
+
+    if ($cols.Count -eq 0) { return @('Backlog', 'Ready', 'In Progress', 'Review', 'Done') }
+
+    return $cols
+
+}
+
+
+
+function Get-ProjectViewsFromConfig {
+
+    param([string]$Root)
+
+    $path = Join-Path $Root '.github/project/arah-sustentacao.yml'
+
+    if (-not (Test-Path $path)) {
+
+        return @('Kanban — Sustentação', 'Tabela — Por onda', 'Tabela — Por área')
+
+    }
+
+    $views = @()
+
+    $inViews = $false
+
+    foreach ($line in Get-Content $path) {
+
+        if ($line -match '^views:') { $inViews = $true; continue }
+
+        if ($inViews -and $line -match '^\s+-\s+name:\s*"(.+)"') { $views += $Matches[1] }
+
+        elseif ($inViews -and $line -match '^[a-z_]+:') { break }
+
+    }
+
+    if ($views.Count -eq 0) {
+
+        return @('Kanban — Sustentação', 'Tabela — Por onda', 'Tabela — Por área')
+
+    }
+
+    return $views
+
+}
+
+
+
+function Invoke-ProjectEnsure {
+
+    param([switch]$DryRun, [switch]$Json)
+
+
+
+    & (Join-Path $PSScriptRoot 'sync-github-labels.ps1') | Out-Null
+
+    & (Join-Path $PSScriptRoot 'sync-github-milestones.ps1') | Out-Null
+
+
+
+    $cfg = Get-ProjectConfig -Root $Root
+
+    $title = if ($cfg) { $cfg.title } else { 'Arah — Sustentação (F52–61)' }
+
+    $repo = gh repo view --json nameWithOwner,url -q '{nameWithOwner: .nameWithOwner, url: .url}'
+
+    $repoObj = $repo | ConvertFrom-Json
+
+    $owner = ($repoObj.nameWithOwner -split '/')[0]
+
+
+
+    $projectNumber = if ($cfg -and $cfg.project_number -gt 0) { $cfg.project_number } else { 0 }
+
+    if ($projectNumber -le 0) {
+        $boot = Ensure-ProjectV2Bootstrap -Root $Root -Title $title -DryRun:$DryRun -Json:$Json
+        if ($boot.project_number) { $projectNumber = [int]$boot.project_number }
+        if ($projectNumber -le 0) {
+            return $boot
+        }
+    } elseif (-not $DryRun) {
+        $existing = Find-ProjectV2ByTitle -Owner $owner -Title $title
+        if ($existing) {
+            Set-ProjectConfigInYaml -Root $Root -ProjectNumber ([int]$existing.number) -ProjectUrl $existing.url | Out-Null
+        }
+    }
+
+    $result = [ordered]@{
+
+        project_number = $projectNumber
+
+        title          = $title
+
+        repo           = $repoObj.nameWithOwner
+
+        dry_run        = [bool]$DryRun
+
+    }
+
+    $result | ConvertTo-Json
+
+}
+
+
+
+function Invoke-ProjectSyncBoard {
+
+    param([switch]$DryRun, [switch]$Json)
+
+
+
+    $cfg = Get-ProjectConfig -Root $Root
+
+    if (-not $cfg -or $cfg.project_number -le 0) {
+
+        Write-Warning 'project_number não configurado — rode bootstrap ou ensure primeiro'
+
+        return
+
+    }
+
+
+
+    $repo = gh repo view --json nameWithOwner -q .nameWithOwner
+
+    $owner = ($repo -split '/')[0]
+
+    $projectNumber = $cfg.project_number
+
+    $columns = Get-ProjectColumnsFromConfig -Root $Root
+
+    $viewNames = Get-ProjectViewsFromConfig -Root $Root
+
+    $queue = Get-PhaseQueue -Root $Root
+
+    $allIssues = gh issue list --state all --limit 200 --json number,title,state,body,labels,url | ConvertFrom-Json
+
+    $openPrs = Get-OpenPullRequestsForRepo -Repo $repo
+
+
+
+    try {
+
+        $project = Get-ProjectV2Node -Owner $owner -ProjectNumber $projectNumber
+
+    } catch {
+
+        Write-Warning "Não foi possível ler project #$projectNumber : $_"
+
+        return
+
+    }
+
+
+
+    if (-not $project) {
+
+        Write-Warning "Project #$projectNumber não encontrado"
+
+        return
+
+    }
+
+
+
+    $statusField = Get-StatusFieldFromProject -ProjectNode $project
+
+    if ($statusField -and -not $DryRun) {
+
+        try {
+
+            Update-ProjectStatusOptions -FieldId $statusField.id -OptionNames $columns | Out-Null
+
+            $project = Get-ProjectV2Node -Owner $owner -ProjectNumber $projectNumber
+
+            $statusField = Get-StatusFieldFromProject -ProjectNode $project
+
+        } catch {
+
+            Write-Warning "Status options: $_"
+
+        }
+
+    }
+
+
+
+    if (-not $DryRun) {
+
+        Ensure-ProjectViews -ProjectId $project.id -ViewNames $viewNames -ExistingViews $project.views.nodes | Out-Null
+
+    }
+
+
+
+    $added = @()
+
+    $updated = @()
+
+
+
+    foreach ($item in $queue) {
+
+        if ($item.id -notmatch '^FASE') { continue }
+
+        if ($item.status -eq 'completed') { continue }
+
+
+
+        $issue = $allIssues | Where-Object {
+
+            $_.body -match "arah-next-phase id=$([regex]::Escape($item.id))" -or
+
+            ($_.title -match [regex]::Escape($item.id) -and ($_.labels.name -contains 'epic/phase' -or $_.labels.name -contains 'agent-task'))
+
+        } | Select-Object -First 1
+
+
+
+        $targetStatus = Resolve-PhaseStatusColumn -Issue $issue -PhaseItem $item -Root $Root -OpenPrs $openPrs
+
+        $existingItem = Find-ProjectItemForPhase -ProjectNode $project -PhaseId $item.id -AllIssues $allIssues
+
+
+
+        if (-not $existingItem) {
+
+            if ($DryRun) {
+
+                $added += @{ phase = $item.id; action = 'would-add'; status = $targetStatus }
+
+                continue
+
+            }
+
+
+
+            if ($issue) {
+
+                $ok = Add-IssueToGitHubProject -IssueUrl $issue.url -ProjectNumber $projectNumber -Owner $owner
+
+                if ($ok) {
+
+                    $added += @{ phase = $item.id; action = 'issue-added'; issue = $issue.number }
+
+                    $project = Get-ProjectV2Node -Owner $owner -ProjectNumber $projectNumber
+
+                    $existingItem = Find-ProjectItemForPhase -ProjectNode $project -PhaseId $item.id -AllIssues $allIssues
+
+                }
+
+            } else {
+
+                $draftTitle = "[Epic] $($item.title)"
+
+                $draftBody = "Placeholder board — issue será aberta quando fase desbloquear.`n`n<!-- arah-phase-draft id=$($item.id) -->"
+
+                gh project item-create --owner $owner --project-number $projectNumber --title $draftTitle --body $draftBody 2>$null | Out-Null
+
+                if ($LASTEXITCODE -eq 0) {
+
+                    $added += @{ phase = $item.id; action = 'draft-added' }
+
+                    $project = Get-ProjectV2Node -Owner $owner -ProjectNumber $projectNumber
+
+                    $existingItem = Find-ProjectItemForPhase -ProjectNode $project -PhaseId $item.id -AllIssues $allIssues
+
+                }
+
+            }
+
+        }
+
+
+
+        if ($existingItem -and $statusField -and -not $DryRun) {
+
+            $option = $statusField.options | Where-Object { $_.name -eq $targetStatus } | Select-Object -First 1
+
+            if ($option) {
+
+                $ok = Set-ProjectItemStatus -ProjectId $project.id -ItemId $existingItem.item_id -StatusFieldId $statusField.id -OptionId $option.id
+
+                if ($ok) {
+
+                    $updated += @{ phase = $item.id; status = $targetStatus; item = $existingItem.item_id }
+
+                }
+
+            }
+
+        } elseif ($DryRun) {
+
+            $updated += @{ phase = $item.id; status = $targetStatus; action = 'would-update' }
+
+        }
+
+    }
+
+
+
+    $report = [ordered]@{
+
+        project_number = $projectNumber
+
+        added          = $added
+
+        status_updated = $updated
+
+        dry_run        = [bool]$DryRun
+
+    }
+
+    if ($Json) { $report | ConvertTo-Json -Depth 5 } else { $report | ConvertTo-Json -Depth 5 }
+
+}
+
+
+
+function Invoke-ProjectReconcile {
+
+    param([switch]$DryRun, [switch]$Json)
+
+
+
+    $queue = Get-PhaseQueue -Root $Root
+
+    $openIssues = gh issue list --state open --limit 200 --json number,title,body,labels,url | ConvertFrom-Json
+
+    $repo = gh repo view --json nameWithOwner -q .nameWithOwner
+
+    $fixed = @()
+
+
+
+    foreach ($item in $queue) {
+
+        if ($item.id -notmatch '^FASE') { continue }
+
+
+
+        $issue = $openIssues | Where-Object { $_.title -match [regex]::Escape($item.id) } | Select-Object -First 1
+
+        if (-not $issue) { continue }
+
+
+
+        $needsEpicTitle = $issue.title -notmatch '^\[Epic\]'
+
+        $labels = @($issue.labels.name)
+
+        $expected = Get-PhaseIssueLabels -Item $item
+
+        $missingLabels = @($expected | Where-Object { $_ -notin $labels })
+
+
+
+        if (-not $needsEpicTitle -and $missingLabels.Count -eq 0 -and $issue.body -match 'arah-phase-epic') { continue }
+
+
+
+        if ($DryRun) {
+
+            $fixed += @{ phase = $item.id; issue = $issue.number; would_fix = $true }
+
+            continue
+
+        }
+
+
+
+        if ($needsEpicTitle) {
+
+            $newTitle = "[Epic] $($item.title)"
+
+            gh issue edit $issue.number --title $newTitle | Out-Null
+
+        }
+
+
+
+        foreach ($label in $missingLabels) {
+
+            gh issue edit $issue.number --add-label $label 2>$null | Out-Null
+
+        }
+
+
+
+        if ($issue.body -notmatch 'arah-phase-epic') {
+
+            $marker = "`n<!-- arah-next-phase id=$($item.id) -->`n<!-- arah-phase-epic -->"
+
+            gh issue edit $issue.number --body "$($issue.body)$marker" 2>$null | Out-Null
+
+        } elseif ($issue.body -notmatch "arah-next-phase id=$([regex]::Escape($item.id))") {
+
+            gh issue edit $issue.number --body "$($issue.body)`n<!-- arah-next-phase id=$($item.id) -->" 2>$null | Out-Null
+
+        }
+
+
+
+        $milestoneTitle = Resolve-MilestoneForWave -Root $Root -Wave $item.wave
+
+        if ($milestoneTitle) {
+
+            $milestones = gh api "repos/$repo/milestones?state=open" | ConvertFrom-Json
+
+            $ms = $milestones | Where-Object { $_.title -eq $milestoneTitle } | Select-Object -First 1
+
+            if ($ms) {
+
+                gh api -X PATCH "repos/$repo/issues/$($issue.number)" -F milestone=$ms.number | Out-Null
+
+            }
+
+        }
+
+
+
+        $fixed += @{ phase = $item.id; issue = $issue.number; labels_added = $missingLabels }
+
+    }
+
+
+
+    $report = [ordered]@{ reconciled = $fixed; count = $fixed.Count; dry_run = [bool]$DryRun }
+
+    if ($Json) { $report | ConvertTo-Json -Depth 4 } else { $report | ConvertTo-Json -Depth 4 }
+
+}
+
+
 
 if ($Command -eq 'help') { Show-ProjectHelp; exit 0 }
 
+
+
 if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+
     Write-Error 'gh CLI required'
+
     exit 1
+
 }
 
+
+
 Push-Location $Root
+
 try {
-    $repo = gh repo view --json nameWithOwner -q .nameWithOwner
-    $owner = ($repo -split '/')[0]
 
     switch ($Command) {
-        'ensure' {
-            & (Join-Path $PSScriptRoot 'sync-github-labels.ps1') | Out-Null
-            & (Join-Path $PSScriptRoot 'sync-github-milestones.ps1') | Out-Null
 
-            $cfg = Get-ProjectConfig -Root $Root
-            $title = if ($cfg) { $cfg.title } else { 'Arah — Sustentação (F52–61)' }
+        'bootstrap' {
 
-            $projects = gh project list --owner $owner --limit 50 --format json 2>$null | ConvertFrom-Json
-            $existing = $null
-            if ($projects -and $projects.projects) {
-                $existing = $projects.projects | Where-Object { $_.title -eq $title } | Select-Object -First 1
+            if (-not $DryRun) {
+
+                Invoke-ProjectEnsure -Json:$Json | Out-Null
+
+                Invoke-ProjectReconcile -Json:$Json | Out-Null
+
+                & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -Json:$Json
+
+                Invoke-ProjectSyncBoard -Json:$Json
+
+                & (Join-Path $PSScriptRoot 'export-phase-status.ps1') | Out-Null
+
+            } else {
+
+                Write-Host 'Dry-run bootstrap:'
+
+                Invoke-ProjectEnsure -DryRun -Json:$Json
+
+                Invoke-ProjectReconcile -DryRun -Json:$Json
+
+                & (Join-Path $PSScriptRoot 'github-project.ps1') -Command sync-queue -DryRun -Json:$Json
+
+                Invoke-ProjectSyncBoard -DryRun -Json:$Json
+
             }
 
-            if ($existing) {
-                $num = $existing.number
-                Write-Host "Project exists: #$num — $title"
-                Write-Host "Set project_number: $num in .github/project/arah-sustentacao.yml"
-                if ($Json) { @{ project_number = $num; title = $title; url = $existing.url } | ConvertTo-Json }
-                exit 0
-            }
-
-            if ($DryRun) {
-                Write-Host "Would create project: $title"
-                exit 0
-            }
-
-            $created = gh project create --owner $owner --title $title --format json | ConvertFrom-Json
-            Write-Host "Created project #$($created.number): $($created.url)"
-            Write-Host "Add to .github/project/arah-sustentacao.yml: project_number: $($created.number)"
-            if ($Json) { $created | ConvertTo-Json }
             exit 0
+
+        }
+
+        'ensure' {
+
+            Invoke-ProjectEnsure -DryRun:$DryRun -Json:$Json
+
+            exit 0
+
         }
 
         'sync-queue' {
+
             & (Join-Path $PSScriptRoot 'sync-github-labels.ps1') | Out-Null
+
             $queue = Get-PhaseQueue -Root $Root
+
             $openIssues = gh issue list --state open --limit 200 --json title,body,labels | ConvertFrom-Json
+
             $created = @()
 
+
+
             foreach ($item in $queue) {
+
                 if ($item.status -eq 'completed') { continue }
 
+
+
                 $blocked = $false
+
                 foreach ($dep in $item.blocked_by) {
+
                     if (-not (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $dep)) {
+
                         if ($dep -match '^FASE') { $blocked = $true; break }
+
                     }
+
                 }
+
                 if ($blocked) { continue }
+
                 if (Test-PhaseOpenIssue -Root $Root -PhaseId $item.id -OpenIssues $openIssues) { continue }
+
                 if ($item.id -match '^FASE' -and (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $item.id)) { continue }
 
+
+
                 if ($DryRun) {
+
                     $created += @{ phase = $item.id; action = 'would-create' }
+
                     continue
+
                 }
 
+
+
                 $params = @{ PhaseId = $item.id; Json = $true }
+
                 $out = & (Join-Path $PSScriptRoot 'backlog-to-issue.ps1') @params | ConvertFrom-Json
+
                 $created += @{ phase = $item.id; issue = $out.issue; ok = [bool]$out.issue }
+
             }
 
+
+
             $report = [ordered]@{ created = $created; count = $created.Count; dry_run = [bool]$DryRun }
+
             if ($Json) { $report | ConvertTo-Json -Depth 4 } else { $report | ConvertTo-Json -Depth 4 }
+
             exit 0
+
+        }
+
+        'sync-project' {
+
+            Invoke-ProjectSyncBoard -DryRun:$DryRun -Json:$Json
+
+            exit 0
+
+        }
+
+        'reconcile' {
+
+            Invoke-ProjectReconcile -DryRun:$DryRun -Json:$Json
+
+            exit 0
+
         }
 
         'status' {
+
             $issues = gh issue list --state all --limit 200 --json number,title,state,labels,url,body | ConvertFrom-Json
+
             $epics = @($issues | Where-Object {
+
                 $_.body -match 'arah-phase-epic' -or ($_.labels.name -contains 'epic/phase')
+
             })
 
+
+
             $report = [ordered]@{
+
                 total_epics = $epics.Count
+
                 open        = @($epics | Where-Object { $_.state -eq 'OPEN' }).Count
+
                 closed      = @($epics | Where-Object { $_.state -eq 'CLOSED' }).Count
+
                 items       = @($epics | ForEach-Object {
+
                     @{
+
                         number = $_.number
+
                         title  = $_.title
+
                         state  = $_.state
+
                         url    = $_.url
+
                     }
+
                 })
+
             }
+
             if ($Json) { $report | ConvertTo-Json -Depth 5 } else { $report | ConvertTo-Json -Depth 5 }
+
             exit 0
+
         }
+
     }
+
 } finally {
+
     Pop-Location
+
 }
+
+

@@ -1,0 +1,51 @@
+name: Project board sync
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, closed, reopened]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  sync-board:
+    runs-on: ubuntu-latest
+    # secrets não podem ser usados em expressões if:; mapeamos para env de job
+    env:
+      GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Reconcile + sync board
+        if: ${{ env.GH_PROJECT_TOKEN != '' }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ env.GH_PROJECT_TOKEN }}
+        run: |
+          ./scripts/agents/github-project.ps1 reconcile
+          ./scripts/agents/github-project.ps1 sync-project
+
+      - name: Resolve project URL from config
+        id: project
+        shell: pwsh
+        run: |
+          $path = '.github/project/arah-sustentacao.yml'
+          if (-not (Test-Path $path)) { exit 0 }
+          $raw = Get-Content $path -Raw
+          if ($raw -match '(?m)^project_url:\s*"(https://[^"]+)"') {
+            "url=$($Matches[1])" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Add new issue to project board
+        if: ${{ github.event_name == 'issues' && github.event.action == 'opened' && steps.project.outputs.url != '' && env.GH_PROJECT_TOKEN != '' }}
+        uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: ${{ steps.project.outputs.url }}
+          github-token: ${{ env.GH_PROJECT_TOKEN }}

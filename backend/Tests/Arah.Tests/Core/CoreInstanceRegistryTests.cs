@@ -39,6 +39,19 @@ public sealed class CoreInstanceRegistryTests
     }
 
     [Fact]
+    public void ListAll_ReturnsRegisteredInOrder()
+    {
+        var registry = new InMemoryCoreInstanceRegistry();
+        registry.Register("a", new Uri("https://a.example"), "1.0.0");
+        registry.Register("b", new Uri("https://b.example"), "2.0.0");
+
+        var list = registry.ListAll();
+        Assert.Equal(2, list.Count);
+        Assert.Equal("a", list[0].Mode);
+        Assert.Equal("b", list[1].Mode);
+    }
+
+    [Fact]
     public void RecordHeartbeat_WhenUnknown_Throws()
     {
         var registry = new InMemoryCoreInstanceRegistry();

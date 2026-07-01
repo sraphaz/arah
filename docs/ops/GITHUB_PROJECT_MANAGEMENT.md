@@ -33,23 +33,59 @@ O Arah adota um modelo **híbrido**: contratos técnicos no repo (specs SDD, ADR
 
 ---
 
-## Bootstrap (uma vez)
+## Por que o Project não aparece?
+
+O **`GITHUB_TOKEN` do Actions não acessa Projects v2** (limitação do GitHub). É necessário um PAT com scope `project` uma única vez.
+
+### Setup (5 min, uma vez)
+
+1. **Criar PAT** — GitHub → Settings → Developer settings → Personal access tokens → **Tokens (classic)**  
+   Scopes: `project`, `repo`
+
+2. **Gravar secret** — Repo `arah` → Settings → Secrets and variables → Actions → **New repository secret**  
+   Nome: `GH_PROJECT_TOKEN` · Valor: o PAT
+
+3. **Bootstrap** — Actions → **Bootstrap GitHub Project** → Run workflow  
+   Cria o board, views, liga ao repo, popula FASE52–61 e grava `project_url` no YAML.
+
+4. **Local (opcional)**  
+   ```powershell
+   gh auth refresh -h github.com -s project,read:project
+   ./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
+   ```
+
+Após o bootstrap, abra: `https://github.com/users/SEU_USER/projects/N` (URL em `.github/project/arah-sustentacao.yml`).
+
+### Fonte de verdade (gestão no GitHub, não no repo)
+
+| O quê | Onde vive |
+|-------|-----------|
+| Status operacional (em progresso / feito) | **Issues** + coluna Status do **Project** |
+| Ondas S0–S4 | **Milestones** + labels `wave/*` |
+| Prioridade | Labels `priority/*` |
+| Contrato técnico (AC, specs) | Repo: `docs/specs/`, `FASE*.md` |
+| Snapshot machine-readable | Artifact CI `phase-status` (não é mais commitado em todo sync) |
+
+---
+
+## Bootstrap (uma vez ou via CI)
 
 ```powershell
-# 1) Labels e milestones no repo
+# Pipeline completo (labels, project, issues, board, phase-status)
+./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
+
+# Ou passo a passo
 ./scripts/agents/arah-agents.ps1 ensure-labels
 ./scripts/agents/arah-agents.ps1 sync-milestones
-
-# 2) Criar GitHub Project v2
 ./scripts/agents/arah-agents.ps1 github-project -Skill ensure
-
-# 3) Copiar project_number para .github/project/arah-sustentacao.yml
-#    project_number: <número retornado>
-
-# 4) Sincronizar fila → Issues (fases desbloqueadas)
+./scripts/agents/arah-agents.ps1 github-project -Skill reconcile
 ./scripts/agents/arah-agents.ps1 github-project -Skill sync-queue -DryRun
 ./scripts/agents/arah-agents.ps1 github-project -Skill sync-queue
+./scripts/agents/arah-agents.ps1 github-project -Skill sync-project
 ```
+
+**Scope local:** `gh auth refresh -h github.com -s project,read:project`  
+**CI:** workflow `github-sync.yml` roda `bootstrap` semanalmente e em push de `PHASE_QUEUE.yaml`.
 
 ---
 
@@ -99,11 +135,11 @@ Campos custom (opcional): Wave, Priority, Spec-Id — hoje cobertos por **labels
 
 ## Workflow CI
 
-`.github/workflows/github-sync.yml`:
-
-- Sync labels/milestones quando YAML muda  
-- Exporta `phase-status.generated.json` semanalmente  
-- Commit automático do snapshot (bot)
+| Workflow | Gatilho | Ação |
+|----------|---------|------|
+| **`project-bootstrap.yml`** | manual (`workflow_dispatch`) | **Cria** Project + views (requer `GH_PROJECT_TOKEN`) |
+| `github-sync.yml` | push `main`, semanal | labels/milestones + bootstrap se secret existir |
+| `project-board-sync.yml` | issue/PR | reconcile + sync coluna Status + add-to-project |
 
 ---
 

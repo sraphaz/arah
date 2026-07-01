@@ -80,6 +80,38 @@ rules:
         type: domain
         autonomy: [consult_post]
 
+  - id: infra-deploy
+    paths:
+      - .github/workflows/deploy-staging.yml
+      - .github/workflows/deploy-production.yml
+      - .github/workflows/cd.yml
+      - docker-compose.yml
+      - Dockerfile
+      - docs/ops/CI_CD_PIPELINE.md
+    agents:
+      - id: backend
+        type: operational
+        autonomy: [activate]
+      - id: release
+        type: operational
+        autonomy: [activate]
+      - id: control-plane
+        type: domain
+        autonomy: [consult_post]
+
+  - id: federation-handoff
+    paths:
+      - docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html
+      - docs/backlog-api/FASE58.md
+      - docs/backlog-api/FASE59.md
+    agents:
+      - id: control-plane
+        type: domain
+        autonomy: [consult_post]
+      - id: solutions-architect
+        type: operational
+        autonomy: [consult_post]
+
   - id: specs-sdd
     paths:
       - docs/specs/**

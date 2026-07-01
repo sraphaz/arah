@@ -37,25 +37,50 @@ O Arah adota um modelo **híbrido**: contratos técnicos no repo (specs SDD, ADR
 
 O **`GITHUB_TOKEN` do Actions não acessa Projects v2** (limitação do GitHub). É necessário um PAT com scope `project` uma única vez.
 
-### Setup (5 min, uma vez)
+### Setup (5 min, uma vez) — **PAT classic obrigatório**
 
-1. **Criar PAT** — GitHub → Settings → Developer settings → **Personal access tokens → Tokens (classic)**  
-   Scopes: **`project`** + **`repo`**  
-   ⚠️ Fine-grained com só permissão de repositório **não funciona** — Projects é permissão de **conta** (Account → Projects: Read and write).
+> ⚠️ **Fine-grained NÃO funciona** para Projects do seu usuário (`sraphaz`).  
+> Só **Tokens (classic)** com scope **`project`** (leitura + escrita).
 
-2. **Gravar secret** — Repo `arah` → Settings → Secrets and variables → Actions → **New repository secret**  
-   Nome: `GH_PROJECT_TOKEN` · Valor: o PAT
+#### Passo a passo (classic)
 
-3. **Bootstrap** — Actions → **Bootstrap GitHub Project** → Run workflow  
-   Cria o board, views, liga ao repo, popula FASE52–61 e grava `project_url` no YAML.
+1. Abra: **https://github.com/settings/tokens** (não "Fine-grained tokens")
+2. **Generate new token** → **Generate new token (classic)**
+3. Note: ex. `arah-project-bootstrap`
+4. Expiration: 90 dias ou No expiration (sua escolha)
+5. Marque os scopes:
+   - ✅ **`repo`** (checkbox inteiro — Full control of private repositories)
+   - ✅ **`project`** (checkbox inteiro — **não** é só "read"; o scope chama-se `project`)
+6. **Generate token** → copie o `ghp_...` (só aparece uma vez)
+7. Repo **arah** → **Settings** → **Secrets and variables** → **Actions**
+8. **New repository secret** → Name: `GH_PROJECT_TOKEN` → Value: o `ghp_...`
+9. Actions → **Bootstrap GitHub Project** → **Run workflow**
 
-4. **Local (opcional)**  
-   ```powershell
-   gh auth refresh -h github.com -s project,read:project
-   ./scripts/agents/arah-agents.ps1 github-project -Skill bootstrap
-   ```
+#### Como saber se errou o tipo
 
-Após o bootstrap, abra: `https://github.com/users/SEU_USER/projects/N` (URL em `.github/project/arah-sustentacao.yml`).
+| Sintoma | Causa |
+|---------|--------|
+| `Resource not accessible by personal access token` | Fine-grained ou classic sem `project` |
+| Workflow "Diagnose" mostra `fine-grained-or-unknown` | Criou em Fine-grained em vez de classic |
+| `x-oauth-scopes` sem `project` | Classic sem marcar **project** |
+
+Teste local após configurar secret:
+```powershell
+$env:GH_PROJECT_TOKEN = 'ghp_...'
+./scripts/agents/test-project-token.ps1
+```
+
+#### Alternativa: Project manual (sem PAT)
+
+1. https://github.com/users/sraphaz/projects/new
+2. Nome: `Arah — Sustentação (F52–61)`
+3. **Link to repository** → `sraphaz/arah`
+
+O bootstrap automatiza views + issues no board; manual cria só o quadro vazio.
+
+---
+
+### Setup resumido (referência)
 
 ### Fonte de verdade (gestão no GitHub, não no repo)
 

@@ -121,7 +121,73 @@ query($owner: String!, $number: Int!) {
     }
     $result = Invoke-GhGraphql -Query $query -Variables @{ owner = $Owner; number = $ProjectNumber }
     $node = if ($ownerType -eq 'organization') { $result.data.organization.projectV2 } else { $result.data.user.projectV2 }
+    if ($node) {
+        $node = Merge-ProjectV2AllItems -Owner $Owner -ProjectNumber $ProjectNumber -BaseNode $node
+    }
     return $node
+}
+
+function Merge-ProjectV2AllItems {
+    param(
+        [string]$Owner,
+        [int]$ProjectNumber,
+        [object]$BaseNode
+    )
+    $ownerType = Get-ProjectOwnerType -Owner $Owner
+    $itemsQuery = if ($ownerType -eq 'organization') {
+        @'
+query($owner: String!, $number: Int!, $after: String) {
+  organization(login: $owner) {
+    projectV2(number: $number) {
+      items(first: 100, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          content {
+            ... on Issue { number url title state }
+            ... on DraftIssue { title body }
+          }
+        }
+      }
+    }
+  }
+}
+'@
+    } else {
+        @'
+query($owner: String!, $number: Int!, $after: String) {
+  user(login: $owner) {
+    projectV2(number: $number) {
+      items(first: 100, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          content {
+            ... on Issue { number url title state }
+            ... on DraftIssue { title body }
+          }
+        }
+      }
+    }
+  }
+}
+'@
+    }
+
+    $allNodes = @()
+    $cursor = $null
+    do {
+        $vars = @{ owner = $Owner; number = $ProjectNumber }
+        if ($cursor) { $vars.after = $cursor }
+        $result = Invoke-GhGraphql -Query $itemsQuery -Variables $vars
+        $project = if ($ownerType -eq 'organization') { $result.data.organization.projectV2 } else { $result.data.user.projectV2 }
+        $page = $project.items
+        if ($page.nodes) { $allNodes += @($page.nodes) }
+        if ($page.pageInfo.hasNextPage) { $cursor = $page.pageInfo.endCursor } else { $cursor = $null }
+    } while ($cursor)
+
+    $BaseNode | Add-Member -NotePropertyName 'items' -NotePropertyValue @{ nodes = $allNodes } -Force
+    return $BaseNode
 }
 
 function Add-ProjectV2DraftIssue {
@@ -229,6 +295,59 @@ mutation($projectId: ID!, $name: String!, $layout: ProjectV2ViewsLayout!) {
     return $created
 }
 
+function Find-StatusOptionForTarget {
+    param(
+        [object]$StatusField,
+        [string]$TargetStatus
+    )
+    if (-not $StatusField -or -not $StatusField.options) { return $null }
+
+    $exact = $StatusField.options | Where-Object { $_.name -eq $TargetStatus } | Select-Object -First 1
+    if ($exact) { return $exact }
+
+    $aliases = @{
+        'Backlog'       = @('Backlog', 'Todo', 'No Status', 'New')
+        'Ready'         = @('Ready', 'Todo', 'Backlog')
+        'In Progress'   = @('In Progress', 'In progress', 'Doing')
+        'Review'        = @('Review', 'In review', 'In Review', 'In Progress')
+        'Done'          = @('Done', 'Complete', 'Completed')
+    }
+    $candidates = if ($aliases.ContainsKey($TargetStatus)) { $aliases[$TargetStatus] } else { @($TargetStatus) }
+    foreach ($name in $candidates) {
+        $hit = $StatusField.options | Where-Object { $_.name -ieq $name } | Select-Object -First 1
+        if ($hit) { return $hit }
+    }
+    return $null
+}
+
+function Set-ProjectItemStatusViaGraphql {
+    param(
+        [string]$ProjectId,
+        [string]$ItemId,
+        [string]$StatusFieldId,
+        [string]$OptionId
+    )
+    $mutation = @'
+mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+  updateProjectV2ItemFieldValue(input: {
+    projectId: $projectId
+    itemId: $itemId
+    fieldId: $fieldId
+    value: { singleSelectOptionId: $optionId }
+  }) {
+    projectV2Item { id }
+  }
+}
+'@
+    Invoke-GhGraphql -Query $mutation -Variables @{
+        projectId = $ProjectId
+        itemId    = $ItemId
+        fieldId   = $StatusFieldId
+        optionId  = $OptionId
+    } | Out-Null
+    return $true
+}
+
 function Set-ProjectItemStatus {
     param(
         [string]$ProjectId,
@@ -241,7 +360,13 @@ function Set-ProjectItemStatus {
         --id $ItemId `
         --field-id $StatusFieldId `
         --single-select-option-id $OptionId 2>$null | Out-Null
-    return ($LASTEXITCODE -eq 0)
+    if ($LASTEXITCODE -eq 0) { return $true }
+    try {
+        Set-ProjectItemStatusViaGraphql -ProjectId $ProjectId -ItemId $ItemId -StatusFieldId $StatusFieldId -OptionId $OptionId | Out-Null
+        return $true
+    } catch {
+        return $false
+    }
 }
 
 function Get-OpenPullRequestsForRepo {
@@ -566,21 +691,34 @@ function Find-ProjectItemForPhase {
         [string]$PhaseId,
         [array]$AllIssues = @()
     )
+    $all = Find-AllProjectItemsForPhase -ProjectNode $ProjectNode -PhaseId $PhaseId -AllIssues $AllIssues
+    if ($all.Count -gt 0) { return $all[0] }
+    return $null
+}
 
+function Find-AllProjectItemsForPhase {
+    param(
+        [object]$ProjectNode,
+        [string]$PhaseId,
+        [array]$AllIssues = @()
+    )
+    $found = @()
     foreach ($item in $ProjectNode.items.nodes) {
         $content = $item.content
         if ($content -and $content.number) {
             $issue = $AllIssues | Where-Object { $_.number -eq $content.number } | Select-Object -First 1
             if ($issue -and (Test-PhaseIssueMarker -Issue $issue -PhaseId $PhaseId)) {
-                return @{ item_id = $item.id; issue = $issue; kind = 'issue' }
+                $found += @{ item_id = $item.id; issue = $issue; kind = 'issue' }
+                continue
             }
         }
         if ($content -and $content.body -and $content.body -match "arah-phase-draft id=$([regex]::Escape($PhaseId))(\s|-->)") {
-            return @{ item_id = $item.id; issue = $null; kind = 'draft' }
+            $found += @{ item_id = $item.id; issue = $null; kind = 'draft' }
+            continue
         }
         if ($content -and $content.title -and $content.title -match "\b$([regex]::Escape($PhaseId))\b") {
-            return @{ item_id = $item.id; issue = $null; kind = 'draft' }
+            $found += @{ item_id = $item.id; issue = $null; kind = 'draft' }
         }
     }
-    return $null
+    return $found
 }

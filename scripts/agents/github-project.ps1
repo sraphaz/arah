@@ -22,7 +22,7 @@ param(
 
     [Parameter(Position = 0)]
 
-    [ValidateSet('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'reconcile', 'status', 'help')]
+    [ValidateSet('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'sync-status', 'reconcile', 'status', 'help')]
 
     [string]$Command = 'help',
 
@@ -60,6 +60,7 @@ github-project — GitHub-native backlog (Issues + Project v2)
   sync-queue    Abre issues para fases desbloqueadas sem issue aberta
 
   sync-project  Adiciona épicos ao Project e atualiza coluna Status
+  sync-status   Apenas atualiza coluna Status (mapeia Todo/In Progress/Done do GitHub)
 
   reconcile     Normaliza issues [Agent] FASE* → [Epic] com labels/milestone
 
@@ -299,9 +300,64 @@ function Invoke-SyncBacklogIssues {
 
 
 
+function Invoke-ProjectUpdateStatuses {
+    param(
+        [object]$Project,
+        [object]$StatusField,
+        [array]$Queue,
+        [array]$AllIssues,
+        [array]$OpenPrs,
+        [switch]$DryRun
+    )
+
+    $updated = @()
+    $skipped = @()
+
+    foreach ($item in $Queue) {
+        if ($item.id -notmatch '^FASE') { continue }
+
+        $issue = $AllIssues | Where-Object { Test-PhaseIssueMarker -Issue $_ -PhaseId $item.id } | Select-Object -First 1
+        $targetStatus = Resolve-PhaseStatusColumn -Issue $issue -PhaseItem $item -Root $Root -OpenPrs $OpenPrs
+        $option = Find-StatusOptionForTarget -StatusField $StatusField -TargetStatus $targetStatus
+
+        if (-not $option) {
+            $skipped += @{
+                phase     = $item.id
+                target    = $targetStatus
+                available = @($StatusField.options | ForEach-Object { $_.name })
+            }
+            continue
+        }
+
+        $existingItems = Find-AllProjectItemsForPhase -ProjectNode $Project -PhaseId $item.id -AllIssues $AllIssues
+        if ($existingItems.Count -eq 0) { continue }
+
+        foreach ($existingItem in $existingItems) {
+            if ($DryRun) {
+                $updated += @{ phase = $item.id; status = $targetStatus; option = $option.name; action = 'would-update' }
+                continue
+            }
+
+            $ok = Set-ProjectItemStatus -ProjectId $Project.id -ItemId $existingItem.item_id -StatusFieldId $StatusField.id -OptionId $option.id
+            if ($ok) {
+                $updated += @{ phase = $item.id; status = $targetStatus; option = $option.name; item = $existingItem.item_id }
+            }
+            Start-Sleep -Milliseconds 300
+        }
+    }
+
+    return @{ status_updated = $updated; status_skipped = $skipped }
+}
+
+
 function Invoke-ProjectSyncBoard {
 
-    param([switch]$DryRun, [switch]$Json)
+    param(
+        [switch]$DryRun,
+        [switch]$Json,
+        [switch]$StatusOnly,
+        [switch]$ConfigureStatusColumns
+    )
 
 
 
@@ -361,22 +417,30 @@ function Invoke-ProjectSyncBoard {
 
     $statusField = Get-StatusFieldFromProject -ProjectNode $project
 
-    if ($statusField -and -not $DryRun) {
-
+    if ($statusField -and $ConfigureStatusColumns -and -not $DryRun) {
         try {
-
             Update-ProjectStatusOptions -FieldId $statusField.id -OptionNames $columns | Out-Null
-
             $project = Get-ProjectV2Node -Owner $owner -ProjectNumber $projectNumber
-
             $statusField = Get-StatusFieldFromProject -ProjectNode $project
-
         } catch {
-
             Write-Warning "Status options: $_"
-
         }
+    }
 
+    if ($StatusOnly) {
+        if (-not $statusField) {
+            Write-Warning 'Campo Status não encontrado no project'
+            return
+        }
+        $statusResult = Invoke-ProjectUpdateStatuses -Project $project -StatusField $statusField -Queue $queue -AllIssues $allIssues -OpenPrs $openPrs -DryRun:$DryRun
+        $report = [ordered]@{
+            project_number = $projectNumber
+            status_updated = $statusResult.status_updated
+            status_skipped = $statusResult.status_skipped
+            dry_run        = [bool]$DryRun
+        }
+        if ($Json) { $report | ConvertTo-Json -Depth 5 } else { $report | ConvertTo-Json -Depth 5 }
+        return
     }
 
 
@@ -473,23 +537,34 @@ function Invoke-ProjectSyncBoard {
 
         if ($existingItem -and $statusField -and -not $DryRun) {
 
-            $option = $statusField.options | Where-Object { $_.name -eq $targetStatus } | Select-Object -First 1
+            $option = Find-StatusOptionForTarget -StatusField $statusField -TargetStatus $targetStatus
 
             if ($option) {
 
-                $ok = Set-ProjectItemStatus -ProjectId $project.id -ItemId $existingItem.item_id -StatusFieldId $statusField.id -OptionId $option.id
-
-                if ($ok) {
-
-                    $updated += @{ phase = $item.id; status = $targetStatus; item = $existingItem.item_id }
-
+                $itemsToUpdate = Find-AllProjectItemsForPhase -ProjectNode $project -PhaseId $item.id -AllIssues $allIssues
+                foreach ($boardItem in $itemsToUpdate) {
+                    $ok = Set-ProjectItemStatus -ProjectId $project.id -ItemId $boardItem.item_id -StatusFieldId $statusField.id -OptionId $option.id
+                    if ($ok) {
+                        $updated += @{ phase = $item.id; status = $targetStatus; option = $option.name; item = $boardItem.item_id }
+                    }
+                    Start-Sleep -Milliseconds 300
                 }
+
+            } else {
+
+                Write-Warning "Status option não encontrada para $($item.id) → $targetStatus (disponíveis: $(@($statusField.options.name) -join ', '))"
 
             }
 
         } elseif ($DryRun) {
 
-            $updated += @{ phase = $item.id; status = $targetStatus; action = 'would-update' }
+            $option = if ($statusField) { Find-StatusOptionForTarget -StatusField $statusField -TargetStatus $targetStatus } else { $null }
+            $updated += @{
+                phase  = $item.id
+                status = $targetStatus
+                option = if ($option) { $option.name } else { $null }
+                action = 'would-update'
+            }
 
         }
 
@@ -776,6 +851,14 @@ try {
         'sync-project' {
 
             Invoke-ProjectSyncBoard -DryRun:$DryRun -Json:$Json
+
+            exit 0
+
+        }
+
+        'sync-status' {
+
+            Invoke-ProjectSyncBoard -StatusOnly -DryRun:$DryRun -Json:$Json
 
             exit 0
 

@@ -30,7 +30,7 @@
 
 | Fase | Nome | Prioridade | Onda | Status | Documentação |
 |------|------|------------|------|--------|--------------|
-| 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | ⏳ Pendente | [FASE52.md](./backlog-api/FASE52.md) |
+| 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | 🟡 Em progresso | [FASE52.md](./backlog-api/FASE52.md) · [CI/CD](../ops/CI_CD_PIPELINE.md) |
 | 53 | Arah Core | 🔴 P0 | S0 | ⏳ Pendente | [FASE53.md](./backlog-api/FASE53.md) |
 | 54 | IaC e 1ª Instância | 🔴 P0 | S0 | ⏳ Pendente | [FASE54.md](./backlog-api/FASE54.md) |
 | 55 | Monetização Open-Core | 🔴 P0 | S1 | ⏳ Pendente | [FASE55.md](./backlog-api/FASE55.md) |

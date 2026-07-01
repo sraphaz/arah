@@ -1,0 +1,37 @@
+# Staging — imagens GHCR (FASE52)
+# Uso: ARAH_API_IMAGE=ghcr.io/owner/arah/arah-api:sha docker compose -f docker-compose.staging.yml up
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: arah
+      POSTGRES_PASSWORD: arah
+      POSTGRES_DB: arah
+    ports:
+      - "5432:5432"
+
+  api:
+    image: ${ARAH_API_IMAGE:?set ARAH_API_IMAGE}
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ASPNETCORE_ENVIRONMENT: Staging
+      JWT__SIGNINGKEY: ${JWT__SIGNINGKEY:?set JWT__SIGNINGKEY}
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=arah;Username=arah;Password=arah
+      Persistence__Provider: Postgres
+      Persistence__ApplyMigrations: "true"
+    ports:
+      - "8080:8080"
+
+  bff:
+    image: ${ARAH_BFF_IMAGE:?set ARAH_BFF_IMAGE}
+    depends_on:
+      - api
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5001
+      ASPNETCORE_ENVIRONMENT: Staging
+      Bff__ApiBaseUrl: http://api:8080
+    ports:
+      - "5001:5001"

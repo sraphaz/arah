@@ -1,0 +1,99 @@
+name: Deploy Staging
+
+on:
+  workflow_run:
+    workflows: [CD]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: read
+  deployments: write
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  deploy-staging:
+    name: Staging (API + BFF)
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    environment:
+      name: staging
+      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy stack and verify health
+        id: deploy
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          ARAH_API_IMAGE: ghcr.io/${{ github.repository }}/arah-api:${{ github.event.workflow_run.head_sha }}
+          ARAH_BFF_IMAGE: ghcr.io/${{ github.repository }}/arah-bff:${{ github.event.workflow_run.head_sha }}
+        run: |
+          export JWT__SIGNINGKEY="${{ secrets.JWT__SIGNINGKEY }}"
+          if [ -z "$JWT__SIGNINGKEY" ]; then
+            export JWT__SIGNINGKEY="staging-ci-key-minimum-32-characters-long"
+          fi
+          docker pull "$ARAH_API_IMAGE"
+          docker pull "$ARAH_BFF_IMAGE"
+          docker compose -f docker-compose.staging.yml up -d
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8080/health && curl -sf http://localhost:5001/health; then
+              echo "Staging health OK"
+              exit 0
+            fi
+            sleep 5
+          done
+          docker compose -f docker-compose.staging.yml logs
+          exit 1
+
+      - name: Create GitHub Deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = '${{ github.event.workflow_run.head_sha }}';
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: sha,
+              environment: 'staging',
+              auto_merge: false,
+              required_contexts: [],
+              description: 'FASE52 — deploy automático pós-CD'
+            });
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              environment_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/pkgs/container/arah-api`,
+              description: 'API + BFF healthy (/health, /liveness)'
+            });
+
+      - name: Release agent summary
+        if: always()
+        shell: pwsh
+        run: |
+          @"
+          ## Deploy Staging — FASE52
+          **SHA:** ``${{ github.event.workflow_run.head_sha }}``
+          **Status:** ${{ job.status }}
+          **Imagens:** ``ghcr.io/${{ github.repository }}/arah-api|arah-bff:${{ github.event.workflow_run.head_sha }}``
+          "@ | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Teardown
+        if: always()
+        run: docker compose -f docker-compose.staging.yml down -v 2>/dev/null || true

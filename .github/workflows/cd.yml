@@ -40,14 +40,21 @@ jobs:
     needs: build-and-push-api
     steps:
       - uses: actions/checkout@v4
-      - name: Build image for smoke test
-        run: docker build -f backend/Arah.Api/Dockerfile -t arah-api-smoke .
-      - name: Run container and probe health
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull published image and smoke test
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}/arah-api:${{ github.sha }}
         run: |
+          docker pull "$IMAGE"
           docker run -d --name arah-smoke \
             -e ASPNETCORE_ENVIRONMENT=Development \
             -e JWT__SIGNINGKEY=dev-smoke-test-key-min-32-chars \
-            -p 8080:8080 arah-api-smoke
+            -p 8080:8080 "$IMAGE"
           ok=0
           for i in $(seq 1 30); do
             if curl -sf http://localhost:8080/liveness; then ok=1; break; fi

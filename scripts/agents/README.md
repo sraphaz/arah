@@ -12,7 +12,7 @@
 | [gen-l10n.ps1](gen-l10n.ps1) | Flutter l10n |
 | [validate-manifests.ps1](validate-manifests.ps1) | Valida `.agents/` e `.skills/` |
 | [generate-docs-index.ps1](generate-docs-index.ps1) | Gera `docs/INDEX.generated.md` |
-| [migrate-docs-deflate.ps1](migrate-docs-deflate.ps1) | Wave 1: arquiva PR/RESUMO/ANALISE → `_archive/` |
+| [migrate-docs-deflate.ps1](migrate-docs-deflate.ps1) | Wave 1: arquiva PR/RESUMO/ANALISE → `_archive/`; Wave 2: `NN_*.md` → pastas semânticas |
 | [address-bot-review.ps1](address-bot-review.ps1) | Audita apontamentos de bots em PR |
 | [pr-ready.ps1](pr-ready.ps1) | CI + bots → ready-for-merge |
 | [next-phase.ps1](next-phase.ps1) | Abre issue da próxima fase (`PHASE_QUEUE.yaml`) |

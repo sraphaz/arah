@@ -14,18 +14,23 @@ namespace Arah.Api.Controllers.Platform;
 public sealed class CoreController : ControllerBase
 {
     private readonly CoreInstanceService _instances;
+    private readonly CoreDirectoryService _directory;
     private readonly ICoreReleaseCatalog _releases;
 
-    public CoreController(CoreInstanceService instances, ICoreReleaseCatalog releases)
+    public CoreController(
+        CoreInstanceService instances,
+        CoreDirectoryService directory,
+        ICoreReleaseCatalog releases)
     {
         _instances = instances;
+        _directory = directory;
         _releases = releases;
     }
 
     [HttpPost("instances")]
-    [ProducesResponseType(typeof(CoreInstanceResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(RegisterCoreInstanceResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<CoreInstanceResponse> RegisterInstance([FromBody] RegisterCoreInstanceRequest request)
+    public ActionResult<RegisterCoreInstanceResponse> RegisterInstance([FromBody] RegisterCoreInstanceRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Mode) ||
             string.IsNullOrWhiteSpace(request.BaseUrl) ||
@@ -39,9 +44,11 @@ public sealed class CoreController : ControllerBase
             return BadRequest("baseUrl must be an absolute URI");
         }
 
-        var instance = _instances.Register(request.Mode, baseUrl, request.Version);
-        var response = ToResponse(instance);
-        return CreatedAtAction(nameof(GetInstance), new { id = instance.Id }, response);
+        var registration = _instances.Register(request.Mode, baseUrl, request.Version);
+        var response = new RegisterCoreInstanceResponse(
+            ToResponse(registration.Instance),
+            registration.PrivateKeyPem);
+        return CreatedAtAction(nameof(GetInstance), new { id = registration.Instance.Id }, response);
     }
 
     [HttpGet("instances")]
@@ -91,15 +98,56 @@ public sealed class CoreController : ControllerBase
         return Ok(list);
     }
 
+    [HttpPost("directory/territories")]
+    [ProducesResponseType(typeof(DirectoryTerritoryResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<DirectoryTerritoryResponse> PublishTerritory([FromBody] PublishDirectoryTerritoryRequest request)
+    {
+        if (request.TerritoryId == Guid.Empty || request.InstanceId == Guid.Empty)
+        {
+            return BadRequest("territoryId and instanceId are required");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            return BadRequest("name is required");
+        }
+
+        try
+        {
+            var entry = _directory.PublishTerritory(request.TerritoryId, request.InstanceId, request.Name);
+            return Created(
+                $"api/v1/core/directory/territories",
+                ToDirectoryResponse(entry));
+        }
+        catch (InvalidOperationException)
+        {
+            return NotFound("instance is not registered");
+        }
+    }
+
+    [HttpGet("directory/territories")]
+    [ProducesResponseType(typeof(IEnumerable<DirectoryTerritoryResponse>), StatusCodes.Status200OK)]
+    public ActionResult<IEnumerable<DirectoryTerritoryResponse>> ListDirectoryTerritories()
+    {
+        var list = _directory.ListTerritories().Select(ToDirectoryResponse);
+        return Ok(list);
+    }
+
     private static CoreInstanceResponse ToResponse(CoreInstance instance) =>
         new(
             instance.Id,
             instance.Mode,
             instance.BaseUrl.ToString(),
             instance.Version,
+            instance.PublicKeyPem,
             instance.Status.ToString(),
             instance.RegisteredAtUtc,
             instance.LastHeartbeatUtc,
             instance.LastServices,
             instance.LastUptime.HasValue ? (long)instance.LastUptime.Value.TotalSeconds : null);
+
+    private static DirectoryTerritoryResponse ToDirectoryResponse(DirectoryTerritoryEntry entry) =>
+        new(entry.TerritoryId, entry.InstanceId, entry.Name, entry.PublishedAtUtc);
 }

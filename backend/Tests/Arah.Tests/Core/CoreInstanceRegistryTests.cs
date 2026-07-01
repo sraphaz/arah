@@ -10,9 +10,12 @@ public sealed class CoreInstanceRegistryTests
     public void Register_WhenValid_ReturnsPendingInstance()
     {
         var registry = new InMemoryCoreInstanceRegistry();
-        var instance = registry.Register("standalone", new Uri("https://instance.example"), "1.0.0");
+        var registration = registry.Register("standalone", new Uri("https://instance.example"), "1.0.0");
+        var instance = registration.Instance;
 
         Assert.NotEqual(Guid.Empty, instance.Id);
+        Assert.False(string.IsNullOrWhiteSpace(instance.PublicKeyPem));
+        Assert.False(string.IsNullOrWhiteSpace(registration.PrivateKeyPem));
         Assert.Equal(CoreInstanceStatus.Pending, instance.Status);
     }
 
@@ -20,7 +23,8 @@ public sealed class CoreInstanceRegistryTests
     public void RecordHeartbeat_WhenRegistered_MarksOnline()
     {
         var registry = new InMemoryCoreInstanceRegistry();
-        var instance = registry.Register("standalone", new Uri("https://instance.example"), "1.0.0");
+        var registration = registry.Register("standalone", new Uri("https://instance.example"), "1.0.0");
+        var instance = registration.Instance;
         var at = DateTimeOffset.UtcNow;
         var report = new HealthCheckReport(
             instance.Id,

@@ -10,23 +10,26 @@ public sealed class CoreInstance
     public string Mode { get; }
     public Uri BaseUrl { get; }
     public string Version { get; }
+    public string PublicKeyPem { get; }
     public CoreInstanceStatus Status { get; private set; }
     public DateTimeOffset RegisteredAtUtc { get; }
     public DateTimeOffset? LastHeartbeatUtc { get; private set; }
     public IReadOnlyDictionary<string, string>? LastServices { get; private set; }
     public TimeSpan? LastUptime { get; private set; }
 
-    public CoreInstance(Guid id, string mode, Uri baseUrl, string version)
+    public CoreInstance(Guid id, string mode, Uri baseUrl, string version, string publicKeyPem)
     {
         if (id == Guid.Empty) throw new ArgumentException("Id required", nameof(id));
         ArgumentException.ThrowIfNullOrWhiteSpace(mode);
         ArgumentNullException.ThrowIfNull(baseUrl);
         ArgumentException.ThrowIfNullOrWhiteSpace(version);
+        ArgumentException.ThrowIfNullOrWhiteSpace(publicKeyPem);
 
         Id = id;
         Mode = mode.Trim();
         BaseUrl = baseUrl;
         Version = version.Trim();
+        PublicKeyPem = publicKeyPem;
         Status = CoreInstanceStatus.Pending;
         RegisteredAtUtc = DateTimeOffset.UtcNow;
     }

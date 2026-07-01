@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — FASE53 Arah Core MVP (2026-07-01)
+
+- Registro de instância com par RSA (`RegisterCoreInstanceResponse` + `PublicKeyPem`)
+- Diretório global: `POST/GET /api/v1/core/directory/territories`
+- Federação base: `POST/GET /api/v1/federation/identity`
+- Testes Core: 13 passando (unit + integração)
+- FASE52 marcada completa em `PHASE_ROADMAP_META.yaml`
+
 ### Adicionado — Project board operacional completo (2026-07-01)
 
 - `sync-status` — mapeia colunas Status (Backlog/Ready/In Progress/Done) no Project #3

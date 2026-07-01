@@ -11,7 +11,7 @@ public sealed class CoreInstanceService
         _registry = registry;
     }
 
-    public CoreInstance Register(string mode, Uri baseUrl, string version) =>
+    public InstanceRegistrationResult Register(string mode, Uri baseUrl, string version) =>
         _registry.Register(mode, baseUrl, version);
 
     public CoreInstance? GetById(Guid id) => _registry.GetById(id);

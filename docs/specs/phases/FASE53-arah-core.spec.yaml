@@ -23,6 +23,12 @@ acceptance:
   - id: AC-53-6
     then: "Testes unitários e integração para registro, listagem e heartbeat"
   - id: AC-53-7
+    then: "POST /core/directory/territories publica território; GET lista diretório"
+  - id: AC-53-8
+    then: "GET /federation/identity/{globalUserId} resolve identidade federada"
+  - id: AC-53-9
+    then: "Registro de instância retorna par de chaves RSA (private key uma vez)"
+  - id: AC-53-10
     then: "Instância degrada graciosamente se Core indisponível (spec FASE54+)"
 
 harness:

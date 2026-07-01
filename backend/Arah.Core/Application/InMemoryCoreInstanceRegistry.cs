@@ -7,11 +7,12 @@ public sealed class InMemoryCoreInstanceRegistry : ICoreInstanceRegistry
 {
     private readonly ConcurrentDictionary<Guid, CoreInstance> _instances = new();
 
-    public CoreInstance Register(string mode, Uri baseUrl, string version)
+    public InstanceRegistrationResult Register(string mode, Uri baseUrl, string version)
     {
-        var instance = new CoreInstance(Guid.NewGuid(), mode, baseUrl, version);
+        var (publicKeyPem, privateKeyPem) = InstanceKeyPairGenerator.CreateRsa2048();
+        var instance = new CoreInstance(Guid.NewGuid(), mode, baseUrl, version, publicKeyPem);
         _instances[instance.Id] = instance;
-        return instance;
+        return new InstanceRegistrationResult(instance, privateKeyPem);
     }
 
     public CoreInstance? GetById(Guid id) =>

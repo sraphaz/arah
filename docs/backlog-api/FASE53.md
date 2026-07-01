@@ -5,7 +5,7 @@
 **Onda**: S0 — Fundação técnica  
 **Depende de**: FASE52  
 **Estimativa Total**: 140 horas  
-**Status**: 🟡 Em progresso (skeleton + endpoints mínimos)  
+**Status**: 🟡 Em progresso (MVP control plane — registro, heartbeat, releases, diretório, federação base)  
 **Spec SDD**: [docs/specs/phases/FASE53-arah-core.spec.yaml](../specs/phases/FASE53-arah-core.spec.yaml)
 **Handoff**: [Anexo Operação O1–O7](../handoff/arquitetura-c4/Anexo%20Handoff%20-%20Operacao%20Instancias%20e%20Federacao.dc.html)
 
@@ -54,11 +54,12 @@ Autenticação: mTLS + token de instância.
 
 ## Critérios de aceite
 
-- [ ] Instância registra-se e recebe id + par de chaves
+- [x] Instância registra-se e recebe id + par de chaves RSA (private key só na resposta de registro)
 - [x] Heartbeat a cada 30s; status visível no Core (listagem + telemetria via GET /core/instances)
-- [ ] Release publicada via tag; instâncias consultam canal stable
-- [ ] Território publicado no diretório global
-- [ ] Instância opera em modo autônomo se Core indisponível (cache + fila)
+- [x] Release publicada via seed; instâncias consultam canal stable (`GET /core/releases?channel=stable`)
+- [x] Território publicado no diretório global (`POST /core/directory/territories`)
+- [x] Identidade federada resolvível (`GET /federation/identity/{globalUserId}`)
+- [ ] Instância opera em modo autônomo se Core indisponível (cache + fila — FASE54+)
 
 ---
 

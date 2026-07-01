@@ -1,12 +1,10 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-06-30  
+**Última Atualização**: 2026-07-01  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
-**Prioridade atual**: 🔴 **Sustentação Operacional (Fases 52–61)** — ver [Realinhamento](./backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)  
-**Total de Fases**: [Calcular dinamicamente com `node scripts/get-phase-count.mjs`]  
-**Nota**: O número total de fases é calculado automaticamente contando arquivos `FASE*.md` em `docs/backlog-api/`. Ver `docs/PROJECT_PHASES_CONFIG.md` para mais informações.  
-**Fases Completas**: 16 (Fases 1-12, 13, 14, 15, 16)  
-**Fases em Andamento**: 2 (FASE52, FASE53 — Onda S0)  
+**Fase 52**: ✅ Completa (CI/CD + pipelines)  
+**Prioridade atual**: 🔴 **FASE53 — Arah Core** (Onda S0)  
+**Fases em Andamento**: FASE53 (control plane MVP)  
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
 
@@ -30,7 +28,7 @@
 
 | Fase | Nome | Prioridade | Onda | Status | Documentação |
 |------|------|------------|------|--------|--------------|
-| 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | 🟡 Em progresso | [FASE52.md](./backlog-api/FASE52.md) · [CI/CD](../ops/CI_CD_PIPELINE.md) |
+| 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | ✅ Completo | [FASE52.md](./backlog-api/FASE52.md) · [CI/CD](../ops/CI_CD_PIPELINE.md) |
 | 53 | Arah Core | 🔴 P0 | S0 | 🟡 Em progresso | [FASE53.md](./backlog-api/FASE53.md) · [spec](../specs/phases/FASE53-arah-core.spec.yaml) |
 | 54 | IaC e 1ª Instância | 🔴 P0 | S0 | ⏳ Pendente | [FASE54.md](./backlog-api/FASE54.md) |
 | 55 | Monetização Open-Core | 🔴 P0 | S1 | ⏳ Pendente | [FASE55.md](./backlog-api/FASE55.md) |

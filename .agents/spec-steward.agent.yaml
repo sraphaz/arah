@@ -1,0 +1,26 @@
+id: spec-steward
+name: Spec Steward (SDD)
+description: |
+  Governa specs YAML, harness e aderência spec-before-code. Valida critérios de aceite
+  e liga specs a testes e agentes.
+triggers:
+  - pull_request:opened
+  - pull_request:synchronize
+  - issue:label=area/docs
+  - workflow_dispatch
+scope:
+  paths:
+    - docs/specs/**
+    - docs/_meta/SDD_AND_HARNESS.md
+    - scripts/harness/**
+    - .github/workflows/spec-harness.yml
+  may_code: true
+skills:
+  - spec-validate
+  - sync-docs
+  - open-pr
+checklist: checklists/docs-steward.checklist.md
+guardrails:
+  no_merge: true
+  require_ci: true
+  spec_before_code: true

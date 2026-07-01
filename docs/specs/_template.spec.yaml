@@ -1,0 +1,34 @@
+# Copie para docs/specs/features/<nome>.spec.yaml ou docs/specs/phases/<fase>.spec.yaml
+
+id: example-feature
+version: "1.0.0"
+title: "Título da capability"
+owner: backend
+status: draft
+phase: null
+
+intent: |
+  Uma ou duas frases — o quê e por quê. Sem prescrever implementação.
+
+acceptance:
+  - id: AC-1
+    then: "Comportamento verificável e mensurável"
+  - id: AC-2
+    then: "Teste ou comando do harness passa"
+
+harness:
+  commands:
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release"
+  scripts: []
+  agents:
+    - backend
+
+links:
+  docs: []
+  tests: []
+  handoff: []
+
+guardrails:
+  - territory-first
+  - no-merge-automatic
+  - sync-docs-on-behavior-change

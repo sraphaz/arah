@@ -5,7 +5,8 @@
 **Onda**: S0 — Fundação técnica  
 **Depende de**: FASE52  
 **Estimativa Total**: 140 horas  
-**Status**: ⏳ Pendente  
+**Status**: 🟡 Em progresso (skeleton + endpoints mínimos)  
+**Spec SDD**: [docs/specs/phases/FASE53-arah-core.spec.yaml](../specs/phases/FASE53-arah-core.spec.yaml)
 **Handoff**: [Anexo Operação O1–O7](../handoff/arquitetura-c4/Anexo%20Handoff%20-%20Operacao%20Instancias%20e%20Federacao.dc.html)
 
 ---

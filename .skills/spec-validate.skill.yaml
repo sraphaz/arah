@@ -1,0 +1,11 @@
+id: spec-validate
+name: Spec Validate
+description: Valida specs SDD e executa harness ligado.
+triggers:
+  - workflow:spec-harness.yml
+steps:
+  - script: scripts/harness/validate-specs.ps1
+  - script: scripts/harness/run-harness.ps1
+references:
+  - docs/specs/README.md
+  - docs/_meta/SDD_AND_HARNESS.md

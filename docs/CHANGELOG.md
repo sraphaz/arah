@@ -9,6 +9,21 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Spec-Driven Design + Harness (2026-07-01)
+
+- `docs/specs/` — specs YAML com critérios de aceite (FASE52, FASE53, operabilidade, agentes)
+- `docs/_meta/SDD_AND_HARNESS.md`, `docs/ops/PLATFORM_STATE.md`
+- Scripts `scripts/harness/validate-specs.ps1`, `run-harness.ps1`
+- Workflow `.github/workflows/spec-harness.yml`
+- Agente `spec-steward` + skill `spec-validate`
+- CLI: `arah-agents harness`, `spec-validate`
+
+### Adicionado — FASE53 Arah Core (início) (2026-07-01)
+
+- Projeto `backend/Arah.Core` — entidades control plane (Instance, Release, HealthCheckReport)
+- Endpoints `api/v1/core/instances`, heartbeat, releases
+- Testes unitários em `Arah.Tests.Core`
+
 ### Adicionado — Operação por agentes (2026-06-30)
 
 - `AGENTS.md`, `.agents/`, `.skills/`, `CODEOWNERS`, templates e scripts em `scripts/agents/`

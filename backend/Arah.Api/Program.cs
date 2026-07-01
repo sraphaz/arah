@@ -1,6 +1,7 @@
 using System.Reflection;
 using Arah.Api.Configuration;
 using Arah.Api.Extensions;
+using Arah.Core;
 using Arah.Api.HealthChecks;
 using Arah.Api.Middleware;
 using Arah.Api.Security;
@@ -395,6 +396,8 @@ builder.Services.AddSingleton<Arah.Application.Interfaces.IDistributedCacheServi
 
 // Application services
 builder.Services.AddApplicationServices();
+builder.Services.AddArahCore();
+builder.Services.AddArahCoreSeedReleases();
 
 // Event handlers
 builder.Services.AddEventHandlers();

@@ -1,0 +1,42 @@
+id: FASE53-arah-core
+version: "1.0.0"
+title: "FASE53 — Arah Core (control plane)"
+owner: ops
+status: active
+phase: FASE53
+
+intent: |
+  Hub mínimo que coordena instâncias: registro, identidade federada, catálogo de
+  releases e agregação de telemetria — sem dados de território.
+
+acceptance:
+  - id: AC-53-1
+    then: "Projeto backend/Arah.Core com entidades Instance, Release, HealthCheckReport"
+  - id: AC-53-2
+    then: "POST /core/instances registra instância e retorna id"
+  - id: AC-53-3
+    then: "POST /core/instances/{id}/heartbeat persiste telemetria"
+  - id: AC-53-4
+    then: "GET /core/releases?channel=stable lista releases"
+  - id: AC-53-5
+    then: "Testes unitários para regras de registro e heartbeat"
+  - id: AC-53-6
+    then: "Instância degrada graciosamente se Core indisponível (spec FASE54+)"
+
+harness:
+  commands:
+    - "dotnet build backend/Arah.Core/Arah.Core.csproj --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Core"
+  agents:
+    - backend
+    - release
+
+links:
+  docs:
+    - docs/backlog-api/FASE53.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html
+
+guardrails:
+  - clean-architecture
+  - territory-data-stays-on-instance

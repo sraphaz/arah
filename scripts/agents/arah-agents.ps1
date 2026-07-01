@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -27,6 +27,8 @@ param(
     [int]$Issue = 0,
     [string]$Agent = '',
     [string]$Trigger = 'manual',
+    [string]$SpecId = '',
+    [switch]$SkipTests,
     [switch]$Json,
     [switch]$DryRun
 )
@@ -365,8 +367,13 @@ Comandos:
   pr-ready      Verifica CI + bots; indica ready-for-merge
   next-phase    Abre issue [Agent] da próxima fase (PHASE_QUEUE.yaml)
   activate      Publica checklist de conduta do agente (issue/PR)
+  harness       Executa harness SDD (specs + agentes + comandos ligados)
+  spec-validate Valida YAML em docs/specs/
 
 Exemplos:
+  ./arah-agents.ps1 harness
+  ./arah-agents.ps1 spec-validate
+  ./arah-agents.ps1 harness -SpecId FASE53-arah-core
   ./arah-agents.ps1 orchestrate -Labels area/backend
   ./arah-agents.ps1 activate -Agent backend -Issue 301
   ./arah-agents.ps1 activate -Agent backend -PrNumber 300 -ChangedFiles backend/Arah.Api/Program.cs
@@ -469,6 +476,19 @@ switch ($Command) {
         if ($Json) { $params.Json = $true }
         if (-not $DryRun) { $params.PostComment = $true }
         & (Join-Path $PSScriptRoot 'post-agent-activity.ps1') @params
+    }
+    'harness' {
+        $params = @{}
+        if ($SpecId) { $params.SpecId = $SpecId }
+        if ($SkipTests) { $params.SkipTests = $true }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path (Join-Path $Root 'scripts/harness') 'run-harness.ps1') @params
+    }
+    'spec-validate' {
+        $params = @{}
+        if ($SpecId) { $params.SpecId = $SpecId }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path (Join-Path $Root 'scripts/harness') 'validate-specs.ps1') @params
     }
     default { Show-Help }
 }

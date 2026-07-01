@@ -1,0 +1,39 @@
+id: agent-operation-harness
+version: "1.0.0"
+title: "Harness de operação por agentes"
+owner: docs-steward
+status: active
+phase: null
+
+intent: |
+  Repositório operável por agentes com manifests válidos, checklists de conduta,
+  visibilidade em issue/PR e gates reproduzíveis.
+
+acceptance:
+  - id: AC-AG-1
+    then: "validate-manifests.ps1 passa (20 agentes, 15+ skills)"
+  - id: AC-AG-2
+    then: "agents.yml posta ativação + artifact agent-activity.json"
+  - id: AC-AG-3
+    then: "Cada agente operacional tem checklist em .agents/checklists/"
+  - id: AC-AG-4
+    then: "pr-steward exige resolução de bots antes de ready-for-merge"
+  - id: AC-AG-5
+    then: "next-phase.ps1 respeita PHASE_QUEUE.yaml"
+
+harness:
+  scripts:
+    - scripts/agents/validate-manifests.ps1
+    - scripts/agents/agent-conduct-check.ps1
+  commands: []
+  agents:
+    - orchestrator
+    - pr-steward
+
+links:
+  docs:
+    - AGENTS.md
+    - docs/ops/AGENT_OPERATION.md
+
+guardrails:
+  - no-merge-automatic

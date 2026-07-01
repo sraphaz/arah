@@ -61,6 +61,7 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | `web` | Web Agent | `area/web` | wiki, portal, devportal | [.agents/web.agent.yaml](.agents/web.agent.yaml) |
 | `qa` | Review / QA Agent | PR aberto | todos os PRs | [.agents/qa.agent.yaml](.agents/qa.agent.yaml) |
 | `pr-steward` | PR Steward (Review & Merge) | PR, push main | bots, merge prep, next-phase | [.agents/pr-steward.agent.yaml](.agents/pr-steward.agent.yaml) |
+| `spec-steward` | Spec Steward (SDD) | PR specs/código | `docs/specs/`, harness | [.agents/spec-steward.agent.yaml](.agents/spec-steward.agent.yaml) |
 | `release` | Release / DevOps | merge main, tag | `.github/`, infra | [.agents/release.agent.yaml](.agents/release.agent.yaml) |
 | `security` | Security / Compliance | PR, agenda | deps, secrets, SECURITY | [.agents/security.agent.yaml](.agents/security.agent.yaml) |
 
@@ -85,6 +86,7 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | [iac-plan](.skills/iac-plan.skill.yaml) | terraform/helm dry-run |
 | [address-bot-review](.skills/address-bot-review.skill.yaml) | Auditar apontamentos de bots no PR |
 | [next-phase](.skills/next-phase.skill.yaml) | Abrir issue da próxima fase (`docs/_meta/PHASE_QUEUE.yaml`) |
+| [spec-validate](.skills/spec-validate.skill.yaml) | Valida specs SDD + harness |
 | [agent-activate](.skills/agent-activate.skill.yaml) | Publicar checklist de conduta na issue/PR |
 
 ---
@@ -95,7 +97,8 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 ./scripts/agents/arah-agents.ps1 orchestrate -Labels area/backend
 ./scripts/agents/arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
 ./scripts/agents/arah-agents.ps1 validate
-./scripts/agents/arah-agents.ps1 gates
+./scripts/agents/arah-agents.ps1 harness
+./scripts/agents/arah-agents.ps1 spec-validate
 ./scripts/agents/arah-agents.ps1 ensure-labels
 ./scripts/agents/arah-agents.ps1 bot-review -PrNumber 300
 ./scripts/agents/arah-agents.ps1 pr-ready -PrNumber 300
@@ -104,7 +107,7 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 ./scripts/agents/arah-agents.ps1 activate -Agent backend -PrNumber 300 -DryRun
 ```
 
-Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml), [agents-pr-steward.yml](.github/workflows/agents-pr-steward.yml)
+Workflows: [agents.yml](.github/workflows/agents.yml), [agents-gates.yml](.github/workflows/agents-gates.yml), [agents-pr-steward.yml](.github/workflows/agents-pr-steward.yml), [spec-harness.yml](.github/workflows/spec-harness.yml)
 
 Fila de fases: [docs/_meta/PHASE_QUEUE.yaml](docs/_meta/PHASE_QUEUE.yaml)
 

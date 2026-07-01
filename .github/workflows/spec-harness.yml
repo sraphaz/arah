@@ -1,0 +1,59 @@
+name: Spec Harness (SDD)
+
+on:
+  pull_request:
+    paths:
+      - 'docs/specs/**'
+      - 'scripts/harness/**'
+      - 'backend/**'
+      - '.agents/**'
+      - '.github/workflows/spec-harness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/specs/**'
+      - 'scripts/harness/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  harness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Validate specs (SDD)
+        shell: pwsh
+        run: ./scripts/harness/validate-specs.ps1
+
+      - name: Run harness
+        shell: pwsh
+        run: ./scripts/harness/run-harness.ps1 -Json | Tee-Object -FilePath harness-report.json
+
+      - name: Upload harness report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: harness-report-${{ github.run_id }}
+          path: harness-report.json
+          if-no-files-found: warn
+
+      - name: Step summary
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path harness-report.json) {
+            $r = Get-Content harness-report.json -Raw | ConvertFrom-Json
+            @"
+          ## Spec Harness
+          **OK:** $($r.ok)
+          **Steps:** $($r.steps.Count)
+          "@ | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          }

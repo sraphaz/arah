@@ -1,0 +1,43 @@
+id: FASE52-cicd
+version: "1.0.0"
+title: "FASE52 — Fundação CI/CD"
+owner: ops
+status: active
+phase: FASE52
+
+intent: |
+  Cadeia PR → CI → GHCR → staging automático → gate manual produção,
+  com health checks e secrets fora do repositório.
+
+acceptance:
+  - id: AC-52-1
+    then: "Todo PR dispara CI (build + test)"
+  - id: AC-52-2
+    then: "Merge main publica imagens ghcr.io/.../arah-api e arah-bff com tag sha"
+  - id: AC-52-3
+    then: "deploy-staging.yml valida /health API e BFF após CD"
+  - id: AC-52-4
+    then: "deploy-production.yml exige confirm=DEPLOY e environment production"
+  - id: AC-52-5
+    then: "docs/ops/CI_CD_PIPELINE.md documenta fluxo e secrets"
+  - id: AC-52-6
+    then: "Observabilidade baseline (Prometheus/OTel) — pendente incremento"
+
+harness:
+  scripts:
+    - scripts/agents/validate-manifests.ps1
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+  agents:
+    - release
+
+links:
+  docs:
+    - docs/backlog-api/FASE52.md
+    - docs/ops/CI_CD_PIPELINE.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Plano Operacional e Pipelines - Arah.dc.html
+
+guardrails:
+  - no-secrets-in-repo
+  - production-gate-human

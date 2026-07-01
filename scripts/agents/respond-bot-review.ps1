@@ -56,13 +56,12 @@ Endereçado: heartbeat persiste `LastServices`, `LastUptime` e `LastHeartbeatUtc
 
         if (-not $reply) { continue }
 
-        $existing = gh api "repos/$repo/pulls/comments/$($c.id)/replies" 2>$null | ConvertFrom-Json
-        if ($existing -and @($existing).Count -gt 0) {
-            $already = @($existing) | Where-Object { $_.body -match 'arah-bot-response:pr-steward' }
-            if ($already) { continue }
-        }
+        $already = @($comments | Where-Object {
+            $_.in_reply_to_id -eq $c.id -and $_.body -match 'arah-bot-response:pr-steward'
+        })
+        if ($already.Count -gt 0) { continue }
 
-        gh api "repos/$repo/pulls/$PrNumber/comments/$($c.id)/replies" -f body="$reply" | Out-Null
+        gh api -X POST "repos/$repo/pulls/$PrNumber/comments/$($c.id)/replies" -f body="$reply" | Out-Null
         $replies += [ordered]@{ comment_id = $c.id; path = $path; author = $author }
     }
 

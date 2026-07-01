@@ -136,9 +136,8 @@ if ($PostComment) {
             $result.comment_action = 'updated'
             $result.comment_id = $match.id
         } else {
-            $created = gh issue comment $targetNumber --body "$body" --json url,id | ConvertFrom-Json
+            gh issue comment $targetNumber --body "$body" | Out-Null
             $result.comment_action = 'created'
-            $result.comment_url = $created.url
         }
     } finally {
         Pop-Location
@@ -146,8 +145,18 @@ if ($PostComment) {
 }
 
 if ($Json) {
-    $out = $result.Clone()
-    $out.Remove('body')
+    $out = [ordered]@{
+        agent         = $result.agent
+        agent_name    = $result.agent_name
+        timestamp_utc = $result.timestamp_utc
+        trigger       = $result.trigger
+        target        = $result.target
+        conduct_ok    = $result.conduct_ok
+        skills        = $result.skills
+        marker        = $result.marker
+    }
+    if ($result.comment_action) { $out.comment_action = $result.comment_action }
+    if ($result.comment_id) { $out.comment_id = $result.comment_id }
     $out | ConvertTo-Json -Depth 6
 } else {
     Write-Host $body

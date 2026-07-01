@@ -404,7 +404,7 @@ function Invoke-Orchestrate {
         dry_run       = [bool]$DryRun
     }
 
-    if ($files.Count -gt 0) {
+    if ($files.Count -gt 0 -or $effectiveEvent -match 'pull_request') {
         try {
             $chRaw = & (Join-Path $PSScriptRoot 'choreograph-agents.ps1') -ChangedFiles $files -Trigger $effectiveEvent -Json
             $ch = $chRaw | ConvertFrom-Json

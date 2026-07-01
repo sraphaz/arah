@@ -52,8 +52,10 @@ function Parse-ChoreographyRules {
         if ($block -notmatch '^(\S+)') { continue }
         $ruleId = $Matches[1].Trim()
         $paths = @()
-        if ($block -match '(?ms)^    paths:\s*\n((?:      - .+\r?\n)+)') {
-            $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object { $_.Groups[1].Value.Trim() }
+        if ($block -match '(?ms)^    paths:\s*\n((?:      - .+\r?\n?)+)') {
+            $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
+                $_.Groups[1].Value.Trim().Trim('"').Trim("'")
+            }
         }
         $when = if ($block -match '(?m)^    when:\s+(\S+)') { $Matches[1].Trim() } else { $null }
         $agents = @()

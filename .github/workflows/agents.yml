@@ -180,6 +180,9 @@ jobs:
             if (ch.matched_rules && ch.matched_rules.length > 0) {
               choreoSection += '\n**Regras de coreografia:** ' + ch.matched_rules.map(r => `\`${r}\``).join(', ');
             }
+            if (ch.operational && ch.operational.length > 0) {
+              choreoSection += '\n**Agentes co-ativados:** ' + ch.operational.map(d => `\`${d}\``).join(', ');
+            }
             const body = [
               '<!-- arah-orchestrator -->',
               '## Orquestrador Arah — PR',

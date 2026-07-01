@@ -21,6 +21,7 @@ body:
         - area/ops
         - area/security
         - area/planning
+        - area/pr-review
     validations:
       required: true
   - type: textarea
@@ -56,5 +57,5 @@ body:
           required: true
         - label: Escopo limitado à área selecionada
           required: true
-        - label: CI verde antes de review
+        - label: CI verde e apontamentos de bots resolvidos antes de merge
           required: true

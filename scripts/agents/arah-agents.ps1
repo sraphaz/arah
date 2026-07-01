@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'gates', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -22,6 +22,8 @@ param(
     [string[]]$ChangedFiles = @(),
     [string]$Skill = '',
     [string]$Area = 'backend',
+    [int]$Wave = 1,
+    [int]$PrNumber = 0,
     [switch]$Json,
     [switch]$DryRun
 )
@@ -354,10 +356,17 @@ Comandos:
   validate      Valida manifests .agents/ e .skills/
   ensure-labels Imprime comandos gh para criar labels area/*
   doc-index     Regenera docs/INDEX.generated.md
+  doc-deflate   Arquiva PR/RESUMO/ANALISE da raiz docs/ (wave 1)
   gates         Executa run-gates.ps1 (qa/security/release)
+  bot-review    Audita apontamentos de bots em um PR (obrigatório antes merge)
+  pr-ready      Verifica CI + bots; indica ready-for-merge
+  next-phase    Abre issue [Agent] da próxima fase (PHASE_QUEUE.yaml)
 
 Exemplos:
   ./arah-agents.ps1 orchestrate -Labels area/backend
+  ./arah-agents.ps1 bot-review -PrNumber 300
+  ./arah-agents.ps1 pr-ready -PrNumber 300
+  ./arah-agents.ps1 next-phase -DryRun
   ./arah-agents.ps1 orchestrate -EventPath `$env:GITHUB_EVENT_PATH -Json
   ./arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
   ./arah-agents.ps1 skill -Skill run-tests -Area backend
@@ -389,7 +398,9 @@ switch ($Command) {
             @{ name = 'area/docs'; color = '0075CA'; description = 'Documentação e taxonomia' },
             @{ name = 'area/ops'; color = 'D93F0B'; description = 'CI/CD, release, infra' },
             @{ name = 'area/security'; color = 'B60205'; description = 'Segurança e compliance' },
-            @{ name = 'area/planning'; color = 'C5DEF5'; description = 'Backlog e planejamento' }
+            @{ name = 'area/planning'; color = 'C5DEF5'; description = 'Backlog e planejamento' },
+            @{ name = 'area/pr-review'; color = '1B7F37'; description = 'PR Steward — review e bots' },
+            @{ name = 'ready-for-merge'; color = '0E8A16'; description = 'PR aprovado pelo steward; humano mergeia' }
         )
         foreach ($label in $areas) {
             Write-Host "gh label create `"$($label.name)`" --color $($label.color) --description `"$($label.description)`" --force"
@@ -398,10 +409,40 @@ switch ($Command) {
     'doc-index' {
         & (Join-Path $PSScriptRoot 'generate-docs-index.ps1')
     }
+    'doc-deflate' {
+        $params = @{ Wave = $Wave }
+        if ($DryRun) { $params.DryRun = $true }
+        & (Join-Path $PSScriptRoot 'migrate-docs-deflate.ps1') @params
+        & (Join-Path $PSScriptRoot 'generate-docs-index.ps1')
+    }
     'gates' {
         $params = @{}
         if ($ChangedFiles.Count -gt 0) { $params.ChangedFiles = $ChangedFiles }
         & (Join-Path $PSScriptRoot 'run-gates.ps1') @params
+    }
+    'bot-review' {
+        if ($PrNumber -le 0) {
+            Write-Error 'bot-review requires -PrNumber'
+            exit 1
+        }
+        $params = @{ PrNumber = $PrNumber }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'address-bot-review.ps1') @params
+    }
+    'pr-ready' {
+        if ($PrNumber -le 0) {
+            Write-Error 'pr-ready requires -PrNumber'
+            exit 1
+        }
+        $params = @{ PrNumber = $PrNumber }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'pr-ready.ps1') @params
+    }
+    'next-phase' {
+        $params = @{}
+        if ($DryRun) { $params.DryRun = $true }
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'next-phase.ps1') @params
     }
     default { Show-Help }
 }

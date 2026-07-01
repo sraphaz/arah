@@ -1,0 +1,97 @@
+# Fila de fases — fonte machine-readable para next-phase (Docs Steward / PR Steward)
+# Sincronizar com docs/STATUS_FASES.md e REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md
+
+version: 1
+updated: 2026-06-30
+policy: |
+  Após merge em main, o repo abre issue da próxima fase pendente (se não existir).
+  Prioridade: infra agentes concluída → Onda S0 (52-54) → S1 (55-57) → demais.
+
+queue:
+  - id: doc-deflation-wave2
+    title: "Docs: Wave 2 desinflação (NN_*.md → pastas semânticas)"
+    area: area/docs
+    doc: docs/_meta/DOC_DEFLATION_PLAN.md
+    priority: P1
+    blocked_by: []
+    kind: maintenance
+
+  - id: FASE52
+    title: "FASE52 — Fundação Técnica e CI/CD"
+    area: area/ops
+    doc: docs/backlog-api/FASE52.md
+    priority: P0
+    wave: S0
+    blocked_by: []
+
+  - id: FASE53
+    title: "FASE53 — Arah Core"
+    area: area/ops
+    doc: docs/backlog-api/FASE53.md
+    priority: P0
+    wave: S0
+    blocked_by: [FASE52]
+
+  - id: FASE54
+    title: "FASE54 — IaC e 1ª Instância"
+    area: area/ops
+    doc: docs/backlog-api/FASE54.md
+    priority: P0
+    wave: S0
+    blocked_by: [FASE52, FASE53]
+
+  - id: FASE55
+    title: "FASE55 — Monetização Open-Core"
+    area: area/backend
+    doc: docs/backlog-api/FASE55.md
+    priority: P0
+    wave: S1
+    blocked_by: [FASE52, FASE53, FASE54]
+
+  - id: FASE56
+    title: "FASE56 — Transparência e Taxas"
+    area: area/backend
+    doc: docs/backlog-api/FASE56.md
+    priority: P0
+    wave: S2
+    blocked_by: [FASE55]
+
+  - id: FASE57
+    title: "FASE57 — Cockpit Implementador"
+    area: area/web
+    doc: docs/backlog-api/FASE57.md
+    priority: P0
+    wave: S1
+    blocked_by: [FASE52, FASE54]
+
+  - id: FASE58
+    title: "FASE58 — Operação Multi-Instância"
+    area: area/ops
+    doc: docs/backlog-api/FASE58.md
+    priority: P1
+    wave: S1
+    blocked_by: [FASE54, FASE57]
+
+  - id: FASE59
+    title: "FASE59 — Federação"
+    area: area/backend
+    doc: docs/backlog-api/FASE59.md
+    priority: P1
+    wave: S3
+    blocked_by: [FASE58]
+
+  - id: FASE60
+    title: "FASE60 — App Implementador"
+    area: area/flutter
+    doc: docs/backlog-api/FASE60.md
+    priority: P1
+    wave: S3
+    blocked_by: [FASE57]
+
+  - id: FASE61
+    title: "FASE61 — Capital Territorial"
+    area: area/backend
+    doc: docs/backlog-api/FASE61.md
+    priority: P2
+    wave: S4
+    blocked_by: [FASE55, FASE56]

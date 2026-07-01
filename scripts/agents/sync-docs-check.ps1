@@ -74,6 +74,14 @@ if ($hasAgentsChange -and ($files -notcontains 'docs/ops/AGENT_OPERATION.md')) {
     $warnings += 'Infra de agentes alterada — atualize docs/ops/AGENT_OPERATION.md.'
 }
 
+$inflationPattern = '^(PR_|RESUMO_|ANALISE_|AVALIACAO_|IMPLEMENTACAO_.*_PLANO|CORRECOES_PENDENTES)'
+foreach ($f in $files) {
+    $norm = $f.Replace('\', '/')
+    if ($norm -match "^docs/[^/]+\.md$" -and (Split-Path $norm -Leaf) -match $inflationPattern) {
+        $errors += "Doc inflacionada na raiz de docs/: $norm — use backlog-api/, ops/, issue/PR ou _archive/. Ver docs/_meta/DOC_DEFLATION_PLAN.md"
+    }
+}
+
 foreach ($w in $warnings) { Write-Warning $w }
 foreach ($e in $errors) { Write-Error $e }
 

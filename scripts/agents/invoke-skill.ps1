@@ -168,6 +168,26 @@ try {
 
         }
 
+        'address-bot-review' {
+
+            if ($Issue -le 0) {
+
+                Write-Error 'address-bot-review requires -Issue (PR number)'
+
+                exit 1
+
+            }
+
+            & (Join-Path $ScriptDir 'address-bot-review.ps1') -PrNumber $Issue
+
+        }
+
+        'next-phase' {
+
+            & (Join-Path $ScriptDir 'next-phase.ps1')
+
+        }
+
         default {
 
             Write-Host (Get-Content $SkillFile -Raw)

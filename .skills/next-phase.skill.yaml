@@ -1,0 +1,15 @@
+id: next-phase
+description: |
+  Após merge em main, abre issue Agent Task para a próxima fase desbloqueada em PHASE_QUEUE.yaml.
+inputs:
+  dry_run: boolean
+run:
+  script: scripts/agents/next-phase.ps1
+sources:
+  - docs/_meta/PHASE_QUEUE.yaml
+  - docs/STATUS_FASES.md
+  - docs/backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md
+guardrails:
+  - one_open_issue_per_phase_id
+  - skip_if_blocked_by_incomplete
+  - label_agent_task_and_area

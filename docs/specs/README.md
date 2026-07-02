@@ -78,8 +78,10 @@ Ver [SDD_AND_HARNESS.md](../_meta/SDD_AND_HARNESS.md) e `scripts/harness/run-har
 ## Rastreabilidade AC ↔ teste (gate automático)
 
 - Acceptance em formato **EARS**: `when` (gatilho) + `then` (resposta verificável).
-- `status: covered` **exige** `covered_by` (filtro `dotnet test`); `status: manual`
-  **exige** `evidence`. O `validate-specs.ps1` falha o CI se a regra for violada (DOD-09).
+- `status: covered` **exige** `covered_by` — referência ao teste que cobre o AC no runner
+  da stack do owner (ex.: filtro `dotnet test` no backend, `flutter test` no app,
+  `npm test` na web); `status: manual` **exige** `evidence`.
+  O `validate-specs.ps1` falha o CI se a regra for violada (DOD-09).
 
 ---
 

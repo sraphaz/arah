@@ -130,12 +130,12 @@ arquivo existente. E contagens/valores dinâmicos nunca devem ser hardcoded em s
 
 ## 📊 Estatísticas
 
-- **Total de lições críticas**: 1
-- **Total de lições importantes**: 0
+- **Total de lições críticas**: 2 (LIC-001, LIC-002)
+- **Total de lições importantes**: 1 (LIC-003)
 - **Total de lições de otimização**: 0
-- **Diretrizes atualizadas**: 2 (`CURSOR_DESIGN_RULES.md`, `.cursorrules`)
-- **Componentes corrigidos**: 29 ocorrências em `globals.css`
-- **Taxa de resolução**: 100% (29/29 corrigidas)
+- **Diretrizes atualizadas**: 4 (`CURSOR_DESIGN_RULES.md`, `.cursorrules`, `AGENTS.md`, `.cursor/rules/domain-agents-autonomy.mdc`)
+- **Componentes corrigidos**: 39 ocorrências (29 em `globals.css` via LIC-001 + 10 wiki/Flutter via LIC-002) e 6 manifests/gates via LIC-003
+- **Taxa de resolução**: 100% (39/39 corrigidas)
 
 ---
 

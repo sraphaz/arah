@@ -68,6 +68,8 @@ cada regra mapeia paths → agentes. Ao tocar em `backend/**/Feed/**`, por exemp
 ```powershell
 dotnet build backend/Arah.sln -c Release
 dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj
+# Se tocou em módulos, rode também as suítes afetadas (projetos separados):
+# dotnet test backend/Tests/Arah.Tests.Modules.<Modulo>/Arah.Tests.Modules.<Modulo>.csproj
 ./scripts/agents/arah-agents.ps1 spec-validate
 ./scripts/agents/run-gates.ps1          # QA + Security + Design + SDD
 ```

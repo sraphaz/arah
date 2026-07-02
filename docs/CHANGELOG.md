@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Corrigido — Apontamentos de revisão do PR 426 (2026-07-02)
+
+- **Harness**: filtros `dotnet test` com `|` nas specs FASE56/58/61 agora entre aspas simples — o PowerShell interpretava o `|` como pipe e quebrava o comando
+- **`validate-specs.ps1`**: regex do bloco `acceptance` sem modo singleline — o capture não vaza mais para `harness:`/`guardrails:`, evitando falso `covered_by`/`evidence` no último AC
+- **Coreografia**: regra `community-connections` cobre os paths de frontend do manifest (`features/{chat,connections,notifications}`); `design-ux.agent.yaml` sincronizado com `frontend/**/tailwind.config.ts`
+- **Docs**: Estatísticas de `LICOES_APRENDIDAS.md` atualizadas (LIC-002/003); `specs/README.md` generaliza o runner de cobertura por stack; `AGENT_QUICKSTART.md` inclui suítes `Arah.Tests.Modules.*`; checklist backend menciona caminho `manual`/`evidence`
+- **`agent-metrics.ps1`**: regravado com BOM UTF-8 (PS 5.1 renderizava acentos como mojibake)
+
 ### Adicionado — Validação da estratégia de agentes vs mercado + cobertura completa de domínios (2026-07-02)
 
 - **`docs/ops/AGENT_STRATEGY_VALIDATION.md`** — benchmark da malha de agentes contra práticas de mercado 2026 (GitHub Spec Kit, AWS Kiro/EARS, padrão AGENTS.md/AAIF, multi-agente com permissão mínima e merge humano): estratégia conforme em todos os pilares; gaps e recomendações priorizadas (P0: specs FASE56–61 antes de código, gate `covered_by`; P1: EARS nos acceptance, passo clarify; P2: métricas de efetividade, worktrees paralelos)

@@ -34,7 +34,7 @@ acceptance:
 harness:
   commands:
     - "dotnet build Arah.sln --configuration Release"
-    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Revenue|FullyQualifiedName~FeeProposal"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter 'FullyQualifiedName~Revenue|FullyQualifiedName~FeeProposal'"
   agents:
     - backend
     - spec-steward

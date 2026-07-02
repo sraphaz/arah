@@ -54,7 +54,8 @@ function Test-SpecFile {
 
     # Gate de rastreabilidade AC <-> teste (DoD par. 2 / DOD-09):
     # status covered exige covered_by; status manual exige evidence.
-    if ($raw -match '(?ms)^acceptance:\s*\r?\n((?:  .+\r?\n?)+)') {
+    # (?m) sem 's': '.' não cruza newline, então o bloco para na próxima seção top-level.
+    if ($raw -match '(?m)^acceptance:[ \t]*\r?\n((?:[ \t]+\S.*\r?\n?)+)') {
         $acceptanceBlock = $Matches[1]
         $acItems = [regex]::Split($acceptanceBlock, '(?m)^  - id:\s*')
         foreach ($item in $acItems) {

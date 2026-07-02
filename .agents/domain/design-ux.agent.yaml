@@ -28,6 +28,7 @@ scope:
     - frontend/arah.app/**
     - frontend/shared/styles/**
     - frontend/**/*.css
+    - frontend/**/tailwind.config.ts
     - docs/design/**
     - docs/**/design*
     - docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md

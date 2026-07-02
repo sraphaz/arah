@@ -33,7 +33,7 @@ acceptance:
 harness:
   commands:
     - "dotnet build Arah.sln --configuration Release"
-    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Sponsorship|FullyQualifiedName~TerritoryFund"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter 'FullyQualifiedName~Sponsorship|FullyQualifiedName~TerritoryFund'"
   agents:
     - backend
     - spec-steward

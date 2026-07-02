@@ -108,6 +108,9 @@ rules:
       - backend/Arah.Modules.Alerts/**
       - backend/**/Alerts/**
       - backend/Arah.Domain/Social/**
+      - frontend/arah.app/lib/features/chat/**
+      - frontend/arah.app/lib/features/connections/**
+      - frontend/arah.app/lib/features/notifications/**
     agents:
       - id: comunidade-conexoes
         type: domain

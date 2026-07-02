@@ -37,7 +37,7 @@ acceptance:
 harness:
   commands:
     - "dotnet build backend/Arah.Core/Arah.Core.csproj --configuration Release"
-    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Deployment|FullyQualifiedName~Backup|FullyQualifiedName~Instance"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter 'FullyQualifiedName~Deployment|FullyQualifiedName~Backup|FullyQualifiedName~Instance'"
   scripts:
     - scripts/provision/verify-pilot-instance.ps1
   agents:

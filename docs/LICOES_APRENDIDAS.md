@@ -1,7 +1,7 @@
 # Lições Aprendidas - Arah
 
 **Última Atualização**: 2026-07-02  
-**Total de Lições**: 3  
+**Total de Lições**: 4  
 **Status**: Documento Vivo
 
 ---
@@ -124,7 +124,33 @@ arquivo existente. E contagens/valores dinâmicos nunca devem ser hardcoded em s
 
 ### 🟢 Otimizações
 
-*(Nenhuma lição de otimização ainda documentada)*
+#### LIC-004 - Contexto fixo e comunicação ativa entre agentes inflam consumo de API
+**Data**: 2026-07-02  
+**Categoria**: Otimização  
+**Revisão Origem**: análise de consumo Cursor Ultra (API 44% com 21 dias restantes no ciclo)
+
+**Contexto**:
+Três ofensores identificados: (1) `.cursorrules` monolítico (~60 KB) e `AGENTS.md` (~15 KB)
+injetados em toda requisição; (2) hook `stop` com `followup_message` gerando turno extra de
+modelo a cada interação; (3) ~1.478 skills globais do usuário com catálogo inteiro injetado
+em todas as conversas de todos os projetos.
+
+**Lição**:
+Contexto de agentes deve seguir modelo **pull, não push**: núcleo mínimo always-apply,
+regras/skills escopadas por glob ou sob demanda, comunicação entre agentes passiva (arquivo
++ CI) sem turnos extras de modelo. Catálogos grandes de skills usam roteador + índice
+pesquisável (tags/categoria), nunca injeção em massa.
+
+**Ação Tomada**:
+1. ✅ `.cursorrules` v2.0 (~4 KB) + regras escopadas (`backend-standards`, `frontend-design`, `docs-organization`, `domain-agents-autonomy`).
+2. ✅ Hook `stop` passivo — grava `.cursor/domain-review.md` sem `followup_message`.
+3. ✅ Skills globais movidas para `skills-backup/`; única skill global `skill-router` + `INDEX.md` com tags.
+4. ✅ `AGENTS.md` v2.0 enxuto; detalhes em `docs/ops/AGENT_OPERATION.md` (PR 14).
+
+**Prevenção Futura**:
+- Não voltar a `alwaysApply: true` em rules volumosas sem justificativa.
+- Novas skills Cursor do repo: apontar para `.skills/*.yaml`, não duplicar corpo.
+- Manter pasta global de skills pequena; catálogo grande fica em backup + índice.
 
 ---
 
@@ -132,8 +158,8 @@ arquivo existente. E contagens/valores dinâmicos nunca devem ser hardcoded em s
 
 - **Total de lições críticas**: 2 (LIC-001, LIC-002)
 - **Total de lições importantes**: 1 (LIC-003)
-- **Total de lições de otimização**: 0
-- **Diretrizes atualizadas**: 4 (`CURSOR_DESIGN_RULES.md`, `.cursorrules`, `AGENTS.md`, `.cursor/rules/domain-agents-autonomy.mdc`)
+- **Total de lições de otimização**: 1 (LIC-004)
+- **Diretrizes atualizadas**: 8 (inclui `.cursorrules` v2.0, `AGENTS.md` v2.0, 4 rules em `.cursor/rules/`, `AGENT_OPERATION.md`, `AGENT_QUICKSTART.md`)
 - **Componentes corrigidos**: 39 ocorrências (29 em `globals.css` via LIC-001 + 10 wiki/Flutter via LIC-002) e 6 manifests/gates via LIC-003
 - **Taxa de resolução**: 100% (39/39 corrigidas)
 
@@ -161,15 +187,17 @@ arquivo existente. E contagens/valores dinâmicos nunca devem ser hardcoded em s
 | LIC-001 | 2025-01-20 | 🔴 Crítico | Cores Hardcoded Proibidas | ✅ Resolvido |
 | LIC-002 | 2026-07-02 | 🔴 Crítico | Cores hardcoded exigem agente + gate de design | ✅ Resolvido |
 | LIC-003 | 2026-07-02 | 🟡 Importante | Integridade referencial de manifests de agentes | ✅ Resolvido |
+| LIC-004 | 2026-07-02 | 🟢 Otimização | Contexto fixo e comunicação ativa inflam API | ✅ Resolvido |
 
 ---
 
 **Próximas Ações**:
+- Monitorar consumo de API no Cursor após PR 14 (contexto em camadas + skill-router)
 - Monitorar conformidade de cores nos próximos PRs
 - Criar script automatizado de verificação de conformidade
 - Revisar outras diretrizes para garantir linguagem explícita e proibitiva
 
 ---
 
-**Última Revisão**: 2025-01-20  
-**Próxima Revisão Periódica**: 2025-04-20 (trimestral)
+**Última Revisão**: 2026-07-02  
+**Próxima Revisão Periódica**: 2026-10-02 (trimestral)

@@ -1,0 +1,58 @@
+---
+description: Padrões de backend .NET — Clean Architecture, SOLID, Clean Code, testes, segurança e performance
+globs: backend/**
+alwaysApply: false
+---
+
+# Padrões de Backend (.NET)
+
+## Clean Architecture (obrigatório)
+
+Camadas com dependências apontando para dentro (Domain no centro):
+
+- **Domain** (`Arah.Domain`): entidades, value objects, interfaces de repositório, exceções de domínio. Não depende de NADA (sem frameworks, sem persistência).
+- **Application** (`Arah.Application`): use cases/services, DTOs de aplicação, interfaces de serviços externos. Depende só de Domain.
+- **Infrastructure**: implementações de repositórios e serviços externos, mappers, DbContext. Implementa interfaces de Application/Domain.
+- **Api** (`Arah.Api`, `Arah.Api.Bff`): controllers, middlewares, DTOs de API. Apenas coordena e delega para use cases.
+
+❌ NUNCA importe Infrastructure/Api em Domain ou Application. ❌ NUNCA coloque lógica de negócio em controllers.
+
+## SOLID, YAGNI, KISS e Clean Code (obrigatório)
+
+- Uma responsabilidade por classe/função; funções pequenas (< 20 linhas), classes pequenas (< 200 linhas).
+- Dependa de abstrações (interfaces + DI), não de implementações.
+- Não implemente "para o futuro" (YAGNI); prefira a solução simples (KISS).
+- Nomes que revelam intenção; sem comentários redundantes (comentário explica "por quê", não "o quê").
+- Early return / guard clauses; comandos separados de consultas.
+
+## Convenções
+
+- Classes/métodos/propriedades: `PascalCase`; interfaces: `IPascalCase`; campos privados: `_camelCase`; locais/parâmetros: `camelCase`.
+- Métodos assíncronos terminam em `Async`, sempre com `CancellationToken`; NUNCA `.Result`/`.Wait()`.
+- Use `Result<T>`/`Result` para operações que podem falhar; NUNCA retorne `null` de métodos públicos; valide null com `ArgumentNullException.ThrowIfNull`.
+- Nullable reference types: `string?` para opcional, `string` para obrigatório.
+
+## Testes
+
+- Cobertura > 90%; casos de erro e edge cases cobertos.
+- Nome: `MethodName_Scenario_ExpectedBehavior`; xUnit `[Fact]`; `InMemoryDataStore` para isolamento; `WebApplicationFactory<T>` para E2E.
+- Testes de use case usam mocks de interfaces (não dependem de Infrastructure).
+
+## Segurança
+
+- Valide TODA entrada (FluentValidation em DTOs); valide lat/lng em ranges válidos.
+- `[Authorize]` em controllers; verifique membership role (visitor/resident) e ownership de território quando aplicável.
+- NUNCA logue senhas, tokens ou dados pessoais; nunca secrets no diff.
+
+## Performance
+
+- Paginação em TODAS as listagens; evite N+1 (`.Include()` ou projeções); cache com invalidação para queries frequentes.
+
+## Validação antes de PR
+
+```bash
+dotnet build --no-restore --configuration Release   # sem erros
+dotnet test --no-build --configuration Release      # todos verdes
+```
+
+Nunca crie PR com build quebrado, testes falhando ou conflitos com `origin/main`.

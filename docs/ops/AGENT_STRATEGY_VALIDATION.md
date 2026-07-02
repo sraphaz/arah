@@ -127,7 +127,10 @@ implementadas em 2026-07-02** (mesmo PR desta validação):
 8. ✅ **Consolidar sistemas de skills**: `.skills/` é a fonte de verdade; as skills Cursor
    (`.cursor/skills/arah-*`) já apenas referenciam os YAML correspondentes — regra registrada
    no `AGENT_QUICKSTART.md` (nova skill = YAML primeiro, Cursor só aponta).
-9. ⏳ **Revisão periódica de conteúdo dos checklists**: contínua — o
+9. ✅ **Contexto sob demanda (consumo de API)**: PR 14 — `.cursorrules` enxuto (~4 KB),
+   regras escopadas por glob, hook `stop` passivo (sem `followup_message`), skills globais
+   do usuário via `skill-router` + índice em `skills-backup/` (modelo pull, não push).
+10. ⏳ **Revisão periódica de conteúdo dos checklists**: contínua — o
    `validate-manifests.ps1` verifica existência e integridade referencial, não conteúdo;
    revisar checklists quando módulos novos surgirem.
 

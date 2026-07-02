@@ -34,8 +34,13 @@ Pré-requisitos: PowerShell 7+, .NET 8 SDK, `gh` CLI autenticado, Flutter (se ap
 ./scripts/agents/arah-agents.ps1 ensure-labels
 ```
 
-No Cursor, nada a configurar: `.cursor/hooks.json` já ativa o autoreview de domínio a cada
-interação e `.cursor/rules/domain-agents-autonomy.mdc` aplica o Definition of Done.
+No Cursor, nada a configurar:
+
+- **Contexto em camadas**: `.cursorrules` (núcleo ~4 KB) + regras escopadas em
+  `.cursor/rules/` (só entram quando você toca `backend/**`, `frontend/**`, `docs/**`).
+- **Hook passivo**: `.cursor/hooks.json` grava pareceres em `.cursor/domain-review.md`
+  sem turnos extras de modelo; a rule `domain-agents-autonomy.mdc` instrui a ler o arquivo
+  ao tocar código de domínio. No PR, o CI publica os pareceres como comentários.
 
 ---
 
@@ -60,9 +65,10 @@ cada regra mapeia paths → agentes. Ao tocar em `backend/**/Feed/**`, por exemp
 1. **Pegue uma issue** (ou crie via `backlog-to-issue`). Fases S0+ têm `Spec-Id`.
 2. **Leia a spec** em `docs/specs/` — implemente **apenas** o que ela descreve.
    Sem spec? Crie primeiro (skill `spec-author`, template `docs/specs/_template.spec.yaml`).
-3. **Implemente**. A cada interação o hook gera `.cursor/domain-review.md` com os pareceres
-   dos agentes de domínio acionados pelo seu diff. **Você DEVE endereçar cada item de
-   "Validar no PR" antes de concluir** (rule `domain-agents-autonomy.mdc`).
+3. **Implemente**. O hook gera `.cursor/domain-review.md` com pareceres dos domínios
+   acionados pelo seu diff (comunicação passiva — sem turno extra automático). Antes de
+   concluir, **leia o parecer e enderece cada item de "Validar no PR"** aplicável
+   (rule `domain-agents-autonomy.mdc` quando em `backend/**` ou `frontend/**`).
 4. **Valide localmente**:
 
 ```powershell
@@ -163,8 +169,9 @@ powershell -NoProfile -File scripts/agents/domain-autoreview.ps1 -Force -Json
 2. Referencie a skill nos manifests dos agentes que podem usá-la.
 3. Adicione na tabela de skills do `AGENTS.md`.
 
-> **Fonte de verdade**: `.skills/*.skill.yaml`. Skills Cursor (`.cursor/skills/arah-*`)
-> apenas **apontam** para o YAML correspondente — nunca duplicam a lógica.
+> **Fonte de verdade**: `.skills/*.skill.yaml`. Skills Cursor (`.cursor/skills/arah-*`:
+> `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult`) apenas
+> **apontam** para o YAML ou script correspondente — nunca duplicam a lógica.
 
 ### Nova fase/épico
 
@@ -189,7 +196,7 @@ powershell -NoProfile -File scripts/agents/domain-autoreview.ps1 -Force -Json
 
 - [AGENTS.md](../../AGENTS.md) — manual central
 - [AGENT_STRATEGY_VALIDATION.md](./AGENT_STRATEGY_VALIDATION.md) — validação vs mercado
-- [AGENT_OPERATION.md](./AGENT_OPERATION.md) — histórico de construção (PRs 1–13)
+- [AGENT_OPERATION.md](./AGENT_OPERATION.md) — histórico de construção (PRs 1–14)
 - [SDD_AND_HARNESS.md](../_meta/SDD_AND_HARNESS.md) — spec-driven development
 - [DEFINITION_OF_DONE.md](../governance/DEFINITION_OF_DONE.md) — DoD rigor total
 - [GITHUB_PROJECT_MANAGEMENT.md](./GITHUB_PROJECT_MANAGEMENT.md) — board e issues

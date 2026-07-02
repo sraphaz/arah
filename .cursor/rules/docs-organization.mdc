@@ -1,0 +1,39 @@
+---
+description: Organização de arquivos e documentação obrigatória — onde colocar cada tipo de arquivo e quais docs atualizar em cada mudança
+globs: docs/**,*.md,*.txt
+alwaysApply: false
+---
+
+# Organização de arquivos e documentação
+
+## Raiz limpa (regra crítica)
+
+A raiz do repositório contém APENAS: `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `LICENSE*`, `AGENTS.md`, `.editorconfig`, `.cursorrules`, `global.json`, `package*.json`, `docker-compose.yml`, `Dockerfile` e os diretórios (`backend/`, `frontend/`, `docs/`, `design/`, `scripts/`, `.github/`, `.agents/`, `.skills/`, `.cursor/`).
+
+❌ NUNCA crie na raiz: `pr_body_*.txt`, `PR_*.md`, `RESUMO_*.md`, `CORRECAO_*.md`, `FASE*.md` ou qualquer arquivo temporário.
+
+Destinos corretos:
+- Documentação técnica → `/docs/` (fases em `/docs/backlog-api/`, specs em `/docs/specs/`)
+- Scripts + guias de script → `/scripts/`
+- Wireframes/design → `/design/`
+- Descrição de PR → corpo da PR no GitHub (nunca arquivo no repo)
+
+## Documentação como código (obrigatório em todo PR)
+
+Documentação desatualizada é bug crítico. Mapeamento mudança → documento:
+
+| Mudança | Atualizar |
+|---------|-----------|
+| Lógica de negócio / endpoints | `docs/60_API_LÓGICA_NEGÓCIO.md` |
+| Decisão arquitetural | `docs/10_ARCHITECTURE_DECISIONS.md` (ADRs em `docs/architecture/adrs/`) |
+| Modelo de domínio | `docs/12_DOMAIN_MODEL.md` |
+| Fase do backlog | `docs/backlog-api/FASE*.md` + `docs/STATUS_FASES.md` |
+| Mudança significativa | `docs/CHANGELOG.md` |
+| Funcionalidades principais | `README.md` |
+| Configuração/segurança | `docs/SECURITY_CONFIGURATION.md` |
+
+Mapeamento completo: `docs/CURSOR_DOCUMENTATION_RULES.md`.
+
+## Pós-revisão (auto-aprendizado)
+
+Após revisões técnicas, capture lições em `docs/LICOES_APRENDIDAS.md` e atualize as diretrizes correspondentes (`docs/PROCESSO_AUTO_APRENDIZADO_REVISOES.md`).

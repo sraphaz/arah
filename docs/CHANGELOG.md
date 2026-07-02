@@ -12,11 +12,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### Alterado — Contexto em camadas + comunicação passiva entre agentes (otimização de consumo de API) (2026-07-02)
 
 - **`.cursorrules` v2.0**: de ~60 KB always-apply para núcleo de ~4 KB (princípios, guardrails, ponteiros) — redução de ~95% do contexto fixo injetado em cada requisição do Cursor
-- **Regras escopadas por glob** em `.cursor/rules/`: `backend-standards.mdc` (`backend/**` — Clean Architecture, SOLID, testes, segurança), `frontend-design.mdc` (`frontend/**` — tokens, mobile-first, acessibilidade), `docs-organization.mdc` (`docs/**`, `*.md` — raiz limpa, mapeamento doc-como-código); só entram no contexto quando arquivos correspondentes são tocados
+- **Regras escopadas por glob** em `.cursor/rules/`: `backend-standards.mdc` (`backend/**`), `frontend-design.mdc` (`frontend/**`), `docs-organization.mdc` (`docs/**`, `*.md`) — só entram no contexto quando arquivos correspondentes são tocados
 - **Hook `stop` passivo** (`.cursor/hooks/domain-review.ps1`): continua gerando os pareceres em `.cursor/domain-review.md`, mas não injeta mais `followup_message` — elimina o turno extra de modelo (rodada completa de API) a cada interação; CI (`agents.yml`) permanece a instância autoritativa publicando pareceres no PR
 - **`domain-agents-autonomy.mdc`**: de `alwaysApply: true` para escopo `backend/**`,`frontend/**`; instrui leitura do parecer por arquivo (comunicação passiva)
 - **Novas skills Cursor** (descoberta sob demanda): `arah-open-pr` e `arah-domain-consult` em `.cursor/skills/`
 - **`AGENTS.md` v2.0**: enxugado de ~15 KB para ~5 KB; tabelas de SDD, coreografia e skills movidas para `docs/ops/AGENT_OPERATION.md` (PR 14)
+- **Lição LIC-004** em `docs/LICOES_APRENDIDAS.md` — contexto fixo e comunicação ativa entre agentes inflam consumo de API
 
 ### Corrigido — Apontamentos de revisão do PR 426 (2026-07-02)
 

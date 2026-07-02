@@ -19,6 +19,10 @@ $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 
 if ($ChangedFiles.Count -eq 0) {
     $ChangedFiles = @(git diff --name-only "$BaseRef...HEAD" 2>$null)
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "design-gate-check: não foi possível resolver o diff contra '$BaseRef' — falhando por segurança (fail closed)"
+        exit 1
+    }
 }
 
 # Arquivos onde literais de cor são a fonte de verdade (definição de tokens/tema).
@@ -64,7 +68,7 @@ foreach ($file in $ChangedFiles) {
                     $violations += "${normalized}:${lineNo}: cor hex inline — use var(--...) ou token"
                 }
             }
-            '^\.css$' {
+            '^\.(css|scss)$' {
                 # Hex/rgb permitidos apenas ao definir custom properties (--foo: ...).
                 if ($line -notmatch '^\s*--[\w-]+\s*:' -and ($line -match '#[0-9a-fA-F]{3,8}\b' -or $line -match '\brgba?\(')) {
                     $violations += "${normalized}:${lineNo}: cor literal em CSS fora de definição de token — use var(--...)"

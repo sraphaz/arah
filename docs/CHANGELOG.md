@@ -9,10 +9,20 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Validação da estratégia de agentes vs mercado + cobertura completa de domínios (2026-07-02)
+
+- **`docs/ops/AGENT_STRATEGY_VALIDATION.md`** — benchmark da malha de agentes contra práticas de mercado 2026 (GitHub Spec Kit, AWS Kiro/EARS, padrão AGENTS.md/AAIF, multi-agente com permissão mínima e merge humano): estratégia conforme em todos os pilares; gaps e recomendações priorizadas (P0: specs FASE56–61 antes de código, gate `covered_by`; P1: EARS nos acceptance, passo clarify; P2: métricas de efetividade, worktrees paralelos)
+- **`docs/ops/AGENT_QUICKSTART.md`** — guia de operação por agentes para novos devs: fluxo dia a dia, CLI, DoD resumido, como estender a malha (novo agente/skill/fase), guardrails
+- **4 novos agentes de domínio** (fechando cobertura dos módulos do backend): `feed-conteudo` (Feed/Events/Media), `mapa-lugares` (Map/Assets/Geo), `comunidade-conexoes` (Chat/Connections/Notifications/Alerts), `identidade-privacidade` (Users/Auth/Policies/LGPD — co-ativa agente `security`)
+- **Coreografia v2** (`.agents/choreography.yaml`): regras `feed-content`, `map-places`, `community-connections`, `identity-privacy`; regra `federation-handoff` agora cobre código de federação em runtime (`FederationController`, `Arah.Core/Application/Federation*`)
+- **Referências quebradas corrigidas**: criada skill `agent-activate` (citada em AGENTS.md mas inexistente); criado specialist `postgresql` (citado por `backend.agent.yaml`); `docs-steward` sem `CHANGELOG.md` de raiz; `agent-operation.spec.yaml` sem contagem hardcoded de agentes/skills
+- Catálogos atualizados: `.agents/README.md` completo (12 operacionais + 11 domínio + 6 especialistas), `AGENTS.md` (tabelas consultivos/coreografia/referências), `.cursor/rules/domain-agents-autonomy.mdc` (mapeamento), `docs/ops/PLATFORM_STATE.md` (29 agentes + 22 skills)
+- `docs/specs/README.md` — lista todas as specs (inclui platform/harness) e sinaliza pendência spec-before-code de FASE56–61; pasta `docs/specs/features/` criada
+
 ### Adicionado — Agente autônomo de Design (UX/UI) (2026-07-02)
 
 - **Novo agente de domínio `design-ux`** (`.agents/domain/design-ux.agent.yaml`): especialista consultivo que garante identidade high-premium, acessibilidade (WCAG AA), mobile-first e uso de tokens (nunca cor hardcoded), em web e Flutter
-- **Coreografia** (`.agents/choreography.yaml`): regra `design-ux` aciona o agente automaticamente ao tocar em `frontend/**`, tokens compartilhados e `docs/**/design*` — parecer local (hook `stop`) e no PR (CI `agents.yml`)
+- **Coreografia** (`.agents/choreography.yaml`): regra `design-ux` aciona o agente automaticamente ao tocar em `frontend/**`, tokens compartilhados, `docs/design/**` e `docs/**/design*` — parecer local (hook `stop`) e no PR (workflow `agents.yml`/Agents Orchestrate; o gate roda em `agents-gates.yml` via `run-gates.ps1`)
 - Catálogo atualizado: `AGENTS.md` (consultivos + tabela de coreografia), `.cursor/rules/domain-agents-autonomy.mdc` (mapeamento), `docs/ops/PLATFORM_STATE.md` (24 agentes)
 - **Auditoria** `docs/design/AUDITORIA_DESIGN.md` — 8 gaps mapeados (DSG-01..08) com evidência, severidade e ordem de correção
 - **Corrigido DSG-01 (wiki)**: 5 cores arbitrárias `bg-[#...]` no Mermaid fullscreen → classes configuradas `bg-accent`/`bg-link` (`frontend/wiki/app/mermaid/fullscreen/page.tsx`)

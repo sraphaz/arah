@@ -1,0 +1,35 @@
+id: mapa-lugares
+name: Domain — Mapa, Lugares & Assets Territoriais
+description: Consultivo para o mapa vivo do território — MapEntity, assets curados e geolocalização.
+mode: consult
+consult_only: true
+enrich: |
+  O mapa é a leitura do território real: entidades de mapa e assets curados
+  representam lugares vivos (nascentes, trilhas, feiras, pontos de cuidado).
+  MapEntity é neutra como o Territory — a curadoria (capability Curator) é
+  camada social separada. Geolocalização de pessoas é dado sensível; o mapa
+  mostra o lugar, não rastreia quem passa por ele.
+validate: |
+  - [ ] Lat/lng validados em ranges válidos (-90..90 / -180..180)
+  - [ ] MapEntity/asset escopados por territoryId; sem vazamento entre territórios
+  - [ ] Curadoria de assets exige capability Curator verificada no servidor
+  - [ ] Nenhuma localização pessoal contínua persistida (sem tracking de usuários)
+  - [ ] Paginação/bounding-box em consultas geoespaciais; sem N+1
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - backend/Arah.Modules.Map/**
+    - backend/**/Map/**
+    - backend/Arah.Modules.Assets/**
+    - backend/**/Assets/**
+    - backend/Arah.Application/Services/Map/**
+    - backend/Arah.Application/Services/Assets/**
+    - backend/Arah.Domain/Geo/**
+    - frontend/arah.app/lib/features/map/**
+    - frontend/arah.app/lib/features/explore/**
+references:
+  - docs/backend/12_DOMAIN_MODEL.md
+  - docs/product/05_GLOSSARY.md
+skills:
+  - code-review

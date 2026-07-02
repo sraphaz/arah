@@ -83,7 +83,7 @@ mesmo rigor aplicado a backend/domínio deve valer para design.
 - Backlog `design-quality` inclui **DSG-08** (gate CI anti-cor-hardcoded) como prevenção estrutural.
 
 **Prevenção Futura**:
-- ✅ Agente `design-ux` publica parecer (local via hook `stop` + CI via `agents.yml`).
+- ✅ Agente `design-ux` publica parecer (local via hook `stop` + CI via `agents.yml`/Agents Orchestrate; gate em `agents-gates.yml` via `run-gates.ps1`).
 - ✅ DSG-08: gate `scripts/agents/design-gate-check.ps1` (no `run-gates.ps1`/QA) falha o PR ao detectar `[#...]`, hex inline, cor literal em CSS ou `Color(0x...)`/`Colors.*` fora dos arquivos de token.
 
 **Métrica de Sucesso**:

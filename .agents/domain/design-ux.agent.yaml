@@ -28,6 +28,7 @@ scope:
     - frontend/arah.app/**
     - frontend/shared/styles/**
     - frontend/**/*.css
+    - docs/design/**
     - docs/**/design*
     - docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md
     - docs/CURSOR_DESIGN_RULES.md

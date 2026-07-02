@@ -89,10 +89,18 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | Tipo | ID | Foco |
 |------|-----|------|
 | Domain | `control-plane` | Arah Core, instâncias, releases, federação |
-| Domain | `territorio-membership`, `monetizacao-split`, … | Ver `.agents/domain/` |
+| Domain | `territorio-membership` | Território neutro, membership, papéis |
+| Domain | `mercado-economia` | Items, marketplace, cart, stores |
+| Domain | `monetizacao-split` | Assinaturas, FeeSplitRule, split |
+| Domain | `carteira-arata` | Ledger, payout, reconciliação |
+| Domain | `governanca-transparencia` | Moderação, votação, transparência |
 | Domain | `design-ux` | Identidade high-premium, UX/UI, acessibilidade e design system (web + app) |
+| Domain | `feed-conteudo` | Feed, eventos, mídia — sem engajamento infinito |
+| Domain | `mapa-lugares` | Mapa vivo, MapEntity, assets curados, geo |
+| Domain | `comunidade-conexoes` | Chat, conexões, notificações, alertas territoriais |
+| Domain | `identidade-privacidade` | Users, auth, LGPD, políticas de dados |
 | Specialist | `core-control-plane` | `Arah.Core`, endpoints `/core/*` |
-| Specialist | `dotnet`, `bff`, `nextjs`, `flutter` | Stack |
+| Specialist | `dotnet`, `bff`, `nextjs`, `flutter`, `postgresql` | Stack |
 
 ---
 
@@ -136,6 +144,10 @@ Após o roteamento do orquestrador, [`.agents/choreography.yaml`](.agents/choreo
 | `marketplace` | Marketplace, Cart, Stores | domain `mercado-economia` |
 | `governance` | Moderation, Voting | domain `governanca-transparencia` |
 | `monetization` | Subscriptions, Stripe, Payout | domain `monetizacao-split`, `carteira-arata` |
+| `feed-content` | Feed, Events, Media | domain `feed-conteudo` |
+| `map-places` | Map, Assets, Geo | domain `mapa-lugares` |
+| `community-connections` | Chat, Connections, Notifications, Alerts | domain `comunidade-conexoes` |
+| `identity-privacy` | Users, Auth, Policies (LGPD) | domain `identidade-privacidade` + security |
 | `design-ux` | `frontend/**`, tokens, `docs/**/design*` | domain `design-ux` |
 | `specs-sdd` | `docs/specs/**`, harness | spec-steward (+ spec-validate, harness-run) |
 | `pr-always` | `**` (somente PR) | qa, pr-steward |
@@ -217,6 +229,8 @@ Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Fl
 
 ## Referências
 
+- [docs/ops/AGENT_QUICKSTART.md](docs/ops/AGENT_QUICKSTART.md) — **guia de operação para novos devs**
+- [docs/ops/AGENT_STRATEGY_VALIDATION.md](docs/ops/AGENT_STRATEGY_VALIDATION.md) — validação da estratégia vs mercado (SDD, guardrails, multi-agente)
 - [docs/governance/DEFINITION_OF_DONE.md](docs/governance/DEFINITION_OF_DONE.md)
 - [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md)
 - [docs/_meta/SDD_AND_HARNESS.md](docs/_meta/SDD_AND_HARNESS.md)

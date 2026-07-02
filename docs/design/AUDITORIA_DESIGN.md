@@ -64,6 +64,6 @@ Classificação atual por superfície:
 
 ## Como o agente age (autônomo)
 
-- **Local**: ao tocar em `frontend/**` ou `docs/**/design*`, o hook `stop` aciona `design-ux` via coreografia (`.agents/choreography.yaml`) e grava o parecer em `.cursor/domain-review.md`.
-- **CI**: `agents.yml` publica o parecer no PR.
+- **Local**: ao tocar em `frontend/**`, `docs/design/**` ou `docs/**/design*`, o hook `stop` aciona `design-ux` via coreografia (`.agents/choreography.yaml`) e grava o parecer em `.cursor/domain-review.md`.
+- **CI**: `agents.yml` (Agents Orchestrate) publica o parecer como comentário no PR; o gate anti-cor-hardcoded (`design-gate-check.ps1`) roda em `agents-gates.yml` via `run-gates.ps1`.
 - **Checklist** (bloco `validate` do manifesto): cores via token, mobile-first, escala 8px, WCAG AA, semântica/aria, consistência cross-plataforma, estados (loading/vazio/erro/foco).

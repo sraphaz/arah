@@ -55,7 +55,7 @@ Ver [SDD_AND_HARNESS.md](../_meta/SDD_AND_HARNESS.md) e `scripts/harness/run-har
 
 ---
 
-## Specs ativas (S0–S1)
+## Specs existentes
 
 | Spec | Fase | Status |
 |------|------|--------|
@@ -63,6 +63,12 @@ Ver [SDD_AND_HARNESS.md](../_meta/SDD_AND_HARNESS.md) e `scripts/harness/run-har
 | [FASE53-arah-core.spec.yaml](./phases/FASE53-arah-core.spec.yaml) | FASE53 | completed |
 | [FASE54-iac.spec.yaml](./phases/FASE54-iac.spec.yaml) | FASE54 | active |
 | [FASE55-monetization.spec.yaml](./phases/FASE55-monetization.spec.yaml) | FASE55 | active |
+| [operability.spec.yaml](./platform/operability.spec.yaml) | plataforma | active |
+| [agent-operation.spec.yaml](./harness/agent-operation.spec.yaml) | harness | active |
+
+> **Pendência (spec-before-code)**: FASE56–61 estão na `PHASE_QUEUE.yaml` mas ainda **sem spec**.
+> Nenhuma delas pode iniciar implementação antes de spec autorada e revisada
+> (skill `spec-author`, gate `spec-gate-check.ps1`).
 
 ---
 

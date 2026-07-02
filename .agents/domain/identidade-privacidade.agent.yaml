@@ -1,0 +1,38 @@
+id: identidade-privacidade
+name: Domain — Identidade, Privacidade & LGPD
+description: Consultivo para usuários, autenticação, políticas de dados e conformidade LGPD — o Arah não é produto de vigilância.
+mode: consult
+consult_only: true
+enrich: |
+  Identidade a serviço da pessoa, não da plataforma: User é global, mas o
+  vínculo com o território (1 Resident por User) é escolha consciente.
+  Privacidade por padrão: base legal registrada, aceite de termos versionado,
+  export e eliminação de dados como direito, PII nunca em logs. Verificação
+  de identidade só onde a confiança exige (marketplace, curadoria).
+validate: |
+  - [ ] Nenhuma senha, token ou PII em logs ou mensagens de erro
+  - [ ] Aceite de termos/privacidade versionado e auditável (nunca sobrescrito)
+  - [ ] Export de dados (LGPD) cobre as áreas tocadas; eliminação respeita retenção legal
+  - [ ] Invariante 1 Resident por User preservada em qualquer mudança de membership
+  - [ ] Autorização verificada no servidor (role + capability), nunca só no cliente
+  - [ ] Dados sensíveis criptografados em repouso quando aplicável
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - backend/Arah.Domain/Users/**
+    - backend/Arah.Application/Services/Users/**
+    - backend/Arah.Application/Services/Platform/Auth*
+    - backend/Arah.Application/Services/Platform/*Policy*
+    - backend/Arah.Application/Services/Platform/*DataExport*
+    - backend/Arah.Domain/Policies/**
+    - backend/**/Policies/**
+    - backend/Arah.Api/Controllers/Users/**
+    - frontend/arah.app/lib/features/auth/**
+    - frontend/arah.app/lib/features/profile/**
+references:
+  - docs/backend/12_DOMAIN_MODEL.md
+  - docs/product/05_GLOSSARY.md
+  - SECURITY.md
+skills:
+  - code-review

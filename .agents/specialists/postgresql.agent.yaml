@@ -1,0 +1,8 @@
+id: postgresql
+name: PostgreSQL / EF Core
+mode: consult
+focus: Persistência Postgres opcional (Persistence__Provider=Postgres), migrations EF Core, índices, paginação eficiente, prevenção de N+1.
+references:
+  - backend/Arah.Infrastructure/
+  - backend/Arah.Api/Program.cs
+  - docs/architecture/10_ARCHITECTURE_DECISIONS.md

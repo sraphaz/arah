@@ -1,0 +1,38 @@
+id: feed-conteudo
+name: Domain — Feed, Eventos & Conteúdo
+description: Consultivo para posts, eventos territoriais e pipeline de mídia — presença do território, não engajamento infinito.
+mode: consult
+consult_only: true
+enrich: |
+  O feed é a memória viva do território: posts geo-ancorados, eventos e mídia
+  existem para fortalecer o vínculo entre pessoas e lugar. Baixa excitação —
+  sem ranking de engajamento, sem métricas de vaidade, sem loop infinito.
+  Visibilidade é imposta no servidor pela membership (visitor/resident),
+  nunca no cliente. Mídia trafega por proxy autenticado, sem URL pública.
+validate: |
+  - [ ] Todo post/evento é escopado por territoryId; sem vazamento entre territórios
+  - [ ] Visibilidade (public/residents) imposta no servidor via membership
+  - [ ] Paginação em todas as listagens de feed/eventos; sem N+1
+  - [ ] Mídia servida via proxy autenticado (sem URL pública direta)
+  - [ ] Sem mecânica de engajamento infinito (autoplay, ranking por reação)
+  - [ ] Edição/remoção respeita autoria + capabilities de moderação
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - backend/Arah.Modules.Feed/**
+    - backend/**/Feed/**
+    - backend/Arah.Modules.Events/**
+    - backend/**/Events/**
+    - backend/Arah.Application/Services/Feed/**
+    - backend/Arah.Application/Services/Events/**
+    - backend/Arah.Domain/Media/**
+    - backend/Arah.Application/Services/Media/**
+    - frontend/arah.app/lib/features/feed/**
+    - frontend/arah.app/lib/features/events/**
+references:
+  - docs/backend/12_DOMAIN_MODEL.md
+  - docs/product/05_GLOSSARY.md
+  - docs/product/01_PRODUCT_VISION.md
+skills:
+  - code-review

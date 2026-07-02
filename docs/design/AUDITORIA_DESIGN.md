@@ -47,6 +47,7 @@ Classificação atual por superfície:
 ## Corrigido nesta passada
 
 - **DSG-01**: 5 usos de `bg-[#...]` → classes configuradas `bg-accent`/`bg-accent-hover`/`bg-link`/`bg-link-hover` (Tailwind da wiki). Zero cores arbitrárias no arquivo.
+- **DSG-01b** (descoberto pelo gate): 22 hex hardcoded nos `themeVariables` do Mermaid (`MermaidDiagram.tsx` + fullscreen) → adapter `frontend/wiki/lib/mermaid-theme.ts` que deriva o tema dos design tokens em runtime (`getComputedStyle` + fallback SSR espelhando tokens). Fonte única para os 2 consumidores.
 - **DSG-02**: onboarding Flutter passa a usar `AppDesignTokens.territoryBoundary` e `AppDesignTokens.locationPin` (tokens já existentes) em vez de `Color(0xFF228B22)`/`Colors.orange`.
 - **DSG-08**: gate `scripts/agents/design-gate-check.ps1` integrado ao `run-gates.ps1` (QA, roda em todo PR via `agents-gates.yml`). Falha o PR se arquivo de frontend alterado tiver Tailwind arbitrária `[#...]`, hex inline, cor literal em CSS fora de `--token:` ou `Color(0x...)`/`Colors.*` fora do tema Flutter. Testado: passa nos arquivos corrigidos, detecta 9 violações no CSS legado do devportal.
 

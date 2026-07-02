@@ -25,7 +25,8 @@ if ($ChangedFiles.Count -eq 0) {
 $tokenFileGlobs = @(
     'frontend/shared/styles/*',
     'frontend/*/tailwind.config.ts',
-    'frontend/arah.app/lib/core/theme/*'
+    'frontend/arah.app/lib/core/theme/*',
+    'frontend/wiki/lib/mermaid-theme.ts'
 )
 
 function Test-IsTokenFile {

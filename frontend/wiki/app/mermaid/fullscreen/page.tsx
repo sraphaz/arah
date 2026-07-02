@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { buildMermaidThemeVariables } from "@/lib/mermaid-theme";
 
 function MermaidFullscreenContent() {
   const searchParams = useSearchParams();
@@ -45,40 +46,11 @@ function MermaidFullscreenContent() {
         // Carrega Mermaid dinamicamente
         const mermaid = (await import("mermaid")).default;
         
-        // Configuracao do Mermaid no estilo do devportal
+        // Tema derivado dos design tokens (fonte única — LIC-001)
         mermaid.initialize({
           startOnLoad: false,
           theme: "dark",
-          themeVariables: {
-            primaryColor: "#4dd4a8",
-            primaryTextColor: "#ffffff",
-            primaryBorderColor: "#4dd4a8",
-            lineColor: "#7dd3ff",
-            secondaryColor: "#2a2a2a",
-            tertiaryColor: "#3a3a3a",
-            background: "#1a1a1a",
-            mainBkg: "#2a2a2a",
-            secondBkg: "#3a3a3a",
-            textColor: "#ffffff",
-            border1: "#4dd4a8",
-            border2: "#7dd3ff",
-            noteBkgColor: "#2a2a2a",
-            noteTextColor: "#ffffff",
-            noteBorderColor: "#4dd4a8",
-            actorBorder: "#4dd4a8",
-            actorBkg: "#2a2a2a",
-            actorTextColor: "#ffffff",
-            actorLineColor: "#7dd3ff",
-            signalColor: "#7dd3ff",
-            signalTextColor: "#ffffff",
-            labelBoxBkgColor: "#2a2a2a",
-            labelBoxBorderColor: "#4dd4a8",
-            labelTextColor: "#ffffff",
-            loopTextColor: "#ffffff",
-            activationBorderColor: "#4dd4a8",
-            activationBkgColor: "#2a2a2a",
-            sequenceNumberColor: "#ffffff",
-          },
+          themeVariables: buildMermaidThemeVariables(),
           flowchart: {
             nodeSpacing: 50,
             rankSpacing: 80,

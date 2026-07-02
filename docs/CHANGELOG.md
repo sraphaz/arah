@@ -16,6 +16,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Catálogo atualizado: `AGENTS.md` (consultivos + tabela de coreografia), `.cursor/rules/domain-agents-autonomy.mdc` (mapeamento), `docs/ops/PLATFORM_STATE.md` (24 agentes)
 - **Auditoria** `docs/design/AUDITORIA_DESIGN.md` — 8 gaps mapeados (DSG-01..08) com evidência, severidade e ordem de correção
 - **Corrigido DSG-01 (wiki)**: 5 cores arbitrárias `bg-[#...]` no Mermaid fullscreen → classes configuradas `bg-accent`/`bg-link` (`frontend/wiki/app/mermaid/fullscreen/page.tsx`)
+- **Corrigido DSG-01b (wiki)**: 22 hex nos `themeVariables` do Mermaid (2 componentes) → adapter `lib/mermaid-theme.ts` derivando o tema dos design tokens (descoberto pelo próprio gate DSG-08)
 - **Corrigido DSG-02 (Flutter)**: `Color(0xFF228B22)`/`Colors.orange` fora do tema no onboarding → `AppDesignTokens.territoryBoundary`/`locationPin` (`propose_territory_sheet.dart`, `onboarding_screen.dart`)
 - **Gate DSG-08**: `scripts/agents/design-gate-check.ps1` integrado ao `run-gates.ps1` (QA) — falha o PR se arquivo de frontend alterado tiver cor hardcoded (Tailwind `[#...]`, hex inline, CSS fora de `--token:`, `Color(0x...)`/`Colors.*` fora do tema)
 - Backlog `docs/_meta/PHASE_QUEUE.yaml` — entrada `design-quality` (P1) para DSG-03..07 (devportal→tokens, espaçamento 8px, a11y landing, unificar glass, contraste syntax)

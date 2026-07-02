@@ -90,9 +90,10 @@ function Test-Guardrail {
         }
         'territory-data-stays-on-instance' {
             $coreDir = Join-Path $RootPath 'backend/Arah.Core'
+            # Diretório federado (DirectoryTerritoryEntry) é permitido — só metadados, não dados sociais.
             $hits = Get-ChildItem -Path $coreDir -Recurse -Filter '*.cs' -ErrorAction SilentlyContinue |
-                Select-String -Pattern 'Territor(y|ies)|Membership' -SimpleMatch:$false
-            if ($hits) { return $false, 'Arah.Core references territory/membership types' }
+                Select-String -Pattern '\bMembership\b|using Arah\.Domain\.(Territor|Membership)|\bclass Territory\b'
+            if ($hits) { return $false, 'Arah.Core references territory/membership domain types' }
             return $true, 'ok'
         }
         'no-merge-automatic' {

@@ -139,7 +139,8 @@ foreach ($rule in $rules) {
         }
         if ($ExecuteAutonomy -and $a.skills.Count -gt 0) {
             foreach ($sk in $a.skills) {
-                $skillRuns += @{ agent = $a.id; skill = $sk; rule = $rule.id }
+                # PSCustomObject (não hashtable): Select-Object -Property em hashtable retorna nulls no PS 5.1.
+                $skillRuns += [pscustomobject]@{ agent = $a.id; skill = $sk; rule = $rule.id }
             }
         }
     }
@@ -158,7 +159,9 @@ if ($ExecuteAutonomy -and $skillRuns.Count -gt 0) {
     try {
         foreach ($sr in ($skillRuns | Select-Object -Property agent, skill, rule -Unique)) {
             try {
-                & (Join-Path $ScriptDir 'invoke-skill.ps1') -Skill $sr.skill -ChangedFiles $files
+                # Redireciona stdout da skill para o host: quando -Json está ativo, o stdout
+                # deste script precisa conter apenas o JSON final (consumido por run-agent-activation).
+                & (Join-Path $ScriptDir 'invoke-skill.ps1') -Skill $sr.skill -ChangedFiles $files | Out-Host
                 $executedSkills += @{ skill = $sr.skill; agent = $sr.agent; ok = $true }
             } catch {
                 $executedSkills += @{ skill = $sr.skill; agent = $sr.agent; ok = $false; error = $_.Exception.Message }

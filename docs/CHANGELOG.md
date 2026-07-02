@@ -9,9 +9,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Contexto em camadas + comunicação passiva entre agentes (otimização de consumo de API) (2026-07-02)
+
+- **`.cursorrules` v2.0**: de ~60 KB always-apply para núcleo de ~4 KB (princípios, guardrails, ponteiros) — redução de ~95% do contexto fixo injetado em cada requisição do Cursor
+- **Regras escopadas por glob** em `.cursor/rules/`: `backend-standards.mdc` (`backend/**` — Clean Architecture, SOLID, testes, segurança), `frontend-design.mdc` (`frontend/**` — tokens, mobile-first, acessibilidade), `docs-organization.mdc` (`docs/**`, `*.md` — raiz limpa, mapeamento doc-como-código); só entram no contexto quando arquivos correspondentes são tocados
+- **Hook `stop` passivo** (`.cursor/hooks/domain-review.ps1`): continua gerando os pareceres em `.cursor/domain-review.md`, mas não injeta mais `followup_message` — elimina o turno extra de modelo (rodada completa de API) a cada interação; CI (`agents.yml`) permanece a instância autoritativa publicando pareceres no PR
+- **`domain-agents-autonomy.mdc`**: de `alwaysApply: true` para escopo `backend/**`,`frontend/**`; instrui leitura do parecer por arquivo (comunicação passiva)
+- **Novas skills Cursor** (descoberta sob demanda): `arah-open-pr` e `arah-domain-consult` em `.cursor/skills/`
+- **`AGENTS.md` v2.0**: enxugado de ~15 KB para ~5 KB; tabelas de SDD, coreografia e skills movidas para `docs/ops/AGENT_OPERATION.md` (PR 14)
+
 ### Corrigido — Apontamentos de revisão do PR 426 (2026-07-02)
 
 - **Harness**: filtros `dotnet test` com `|` nas specs FASE56/58/61 agora entre aspas simples — o PowerShell interpretava o `|` como pipe e quebrava o comando
+- **Harness (spec-before-code)**: specs `draft` validam estrutura mas **pulam** `scripts`/`commands` — fases sem implementação (FASE56–61) não falham mais o CI com "no test matches filter", `flutter test` ausente ou health check de instância não provisionada
 - **`validate-specs.ps1`**: regex do bloco `acceptance` sem modo singleline — o capture não vaza mais para `harness:`/`guardrails:`, evitando falso `covered_by`/`evidence` no último AC
 - **Coreografia**: regra `community-connections` cobre os paths de frontend do manifest (`features/{chat,connections,notifications}`); `design-ux.agent.yaml` sincronizado com `frontend/**/tailwind.config.ts`
 - **Docs**: Estatísticas de `LICOES_APRENDIDAS.md` atualizadas (LIC-002/003); `specs/README.md` generaliza o runner de cobertura por stack; `AGENT_QUICKSTART.md` inclui suítes `Arah.Tests.Modules.*`; checklist backend menciona caminho `manual`/`evidence`

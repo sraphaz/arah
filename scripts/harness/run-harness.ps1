@@ -175,6 +175,11 @@ foreach ($file in $specFiles) {
     $id = $Matches[1].Trim()
     if ($SpecId -and $id -ne $SpecId) { continue }
 
+    # Specs draft ainda não têm implementação (spec-before-code): valida estrutura
+    # (agents, guardrails, links), mas não executa scripts/commands da fase.
+    $specStatus = if ($raw -match '(?m)^status:\s*(\S+)') { $Matches[1].Trim() } else { '' }
+    $isDraft = $specStatus -eq 'draft'
+
     $harnessBlock = Get-YamlSectionBlock -Raw $raw -Key 'harness'
     $linksBlock = Get-YamlSectionBlock -Raw $raw -Key 'links'
     $guardrails = Get-IndentedList -Block $raw -Key 'guardrails' -Indent 0
@@ -217,6 +222,10 @@ foreach ($file in $specFiles) {
             Add-Step "script:$id" $false "missing $rel"
             continue
         }
+        if ($isDraft) {
+            Add-Step "script:$id" $true "$rel — skipped (spec draft)"
+            continue
+        }
         try {
             if ($rel -match 'agent-conduct-check\.ps1$') {
                 & $path -AllOperational | Out-Null
@@ -232,6 +241,10 @@ foreach ($file in $specFiles) {
     if (-not $SkipTests) {
         foreach ($cmd in (Get-IndentedList -Block $harnessBlock -Key 'commands')) {
             if ([string]::IsNullOrWhiteSpace($cmd)) { continue }
+            if ($isDraft) {
+                Add-Step "command:$id" $true "$cmd — skipped (spec draft)"
+                continue
+            }
             Push-Location $Root
             try {
                 Invoke-HarnessCommand -Command $cmd

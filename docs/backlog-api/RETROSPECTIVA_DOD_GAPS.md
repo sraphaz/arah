@@ -55,7 +55,7 @@ Prioridade: **P0** desbloqueia rigor mínimo; **P1** reduz risco; **P2** melhori
 | DOD-06 | backend | Monetização FASE55 paralela ao ledger existente | Unificar `RefundService`/`PayoutConsolidationService` com `SellerPayoutService` + `FinancialTransaction` (fonte única) | P1 | ⏳ backlog |
 | DOD-07 | backend | `FeeSplitRule` + planos comerciais só InMemory | Persistência Postgres (repo + seed/migration) | P1 | ⏳ backlog |
 | DOD-08 | spec/backend | FASE1–FASE51 sem spec/AC | Backfill de spec por **risco/domínio** (monetização, control-plane, moderação, marketplace primeiro) — não em bloco | P2 | ⏳ backlog |
-| DOD-09 | qa | Sem gate que exija `covered_by` em AC `covered` | `spec-validate`: falhar se AC `covered` sem `covered_by` | P1 | ⏳ backlog |
+| DOD-09 | qa | Sem gate que exija `covered_by` em AC `covered` | `spec-validate`: falhar se AC `covered` sem `covered_by` | P1 | ✅ feito (2026-07-02: `validate-specs.ps1` falha AC `covered` sem `covered_by` e `manual` sem `evidence`) |
 | DOD-10 | ops/qa | Evidência de ACs `manual` não coletada em CI | CD anexar logs (verify-pilot, health, GHCR) como artifact vinculado ao AC | P2 | ⏳ backlog |
 
 ---

@@ -12,7 +12,6 @@ scope:
     - README.md
     - CONTRIBUTING.md
     - AGENTS.md
-    - CHANGELOG.md
     - docs/CHANGELOG.md
   may_code: false
 skills:

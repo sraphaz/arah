@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { buildMermaidThemeVariables } from "@/lib/mermaid-theme";
 
 function MermaidFullscreenContent() {
   const searchParams = useSearchParams();
@@ -45,40 +46,11 @@ function MermaidFullscreenContent() {
         // Carrega Mermaid dinamicamente
         const mermaid = (await import("mermaid")).default;
         
-        // Configuracao do Mermaid no estilo do devportal
+        // Tema derivado dos design tokens (fonte única — LIC-001)
         mermaid.initialize({
           startOnLoad: false,
           theme: "dark",
-          themeVariables: {
-            primaryColor: "#4dd4a8",
-            primaryTextColor: "#ffffff",
-            primaryBorderColor: "#4dd4a8",
-            lineColor: "#7dd3ff",
-            secondaryColor: "#2a2a2a",
-            tertiaryColor: "#3a3a3a",
-            background: "#1a1a1a",
-            mainBkg: "#2a2a2a",
-            secondBkg: "#3a3a3a",
-            textColor: "#ffffff",
-            border1: "#4dd4a8",
-            border2: "#7dd3ff",
-            noteBkgColor: "#2a2a2a",
-            noteTextColor: "#ffffff",
-            noteBorderColor: "#4dd4a8",
-            actorBorder: "#4dd4a8",
-            actorBkg: "#2a2a2a",
-            actorTextColor: "#ffffff",
-            actorLineColor: "#7dd3ff",
-            signalColor: "#7dd3ff",
-            signalTextColor: "#ffffff",
-            labelBoxBkgColor: "#2a2a2a",
-            labelBoxBorderColor: "#4dd4a8",
-            labelTextColor: "#ffffff",
-            loopTextColor: "#ffffff",
-            activationBorderColor: "#4dd4a8",
-            activationBkgColor: "#2a2a2a",
-            sequenceNumberColor: "#ffffff",
-          },
+          themeVariables: buildMermaidThemeVariables(),
           flowchart: {
             nodeSpacing: 50,
             rankSpacing: 80,
@@ -199,7 +171,7 @@ function MermaidFullscreenContent() {
           <p className="text-forest-300 mb-4">{error}</p>
           <button
             onClick={handleClose}
-            className="px-4 py-2 bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded font-semibold"
+            className="px-4 py-2 bg-accent hover:bg-accent-hover text-forest-950 rounded font-semibold"
           >
             Fechar
           </button>
@@ -221,7 +193,7 @@ function MermaidFullscreenContent() {
       {/* Botão de fechar */}
       <button
         onClick={handleClose}
-        className="fixed top-4 right-4 z-[10000] bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all hover:scale-110"
+        className="fixed top-4 right-4 z-[10000] bg-accent hover:bg-accent-hover text-forest-950 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all hover:scale-110"
         aria-label="Fechar"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -238,7 +210,7 @@ function MermaidFullscreenContent() {
             e.stopPropagation();
             handleZoomIn();
           }}
-          className="px-3 py-2 bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded font-semibold transition-all"
+          className="px-3 py-2 bg-accent hover:bg-accent-hover text-forest-950 rounded font-semibold transition-all"
           aria-label="Zoom in"
         >
           +
@@ -249,7 +221,7 @@ function MermaidFullscreenContent() {
             e.stopPropagation();
             handleZoomOut();
           }}
-          className="px-3 py-2 bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded font-semibold transition-all"
+          className="px-3 py-2 bg-accent hover:bg-accent-hover text-forest-950 rounded font-semibold transition-all"
           aria-label="Zoom out"
         >
           −
@@ -260,7 +232,7 @@ function MermaidFullscreenContent() {
             e.stopPropagation();
             handleResetZoom();
           }}
-          className="px-3 py-2 bg-[#7dd3ff] hover:bg-[#8de3ff] text-forest-950 rounded text-xs font-semibold transition-all"
+          className="px-3 py-2 bg-link hover:bg-link-hover text-forest-950 rounded text-xs font-semibold transition-all"
           aria-label="Resetar zoom"
         >
           Reset

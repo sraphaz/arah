@@ -1,4 +1,14 @@
 # Copie para docs/specs/features/<nome>.spec.yaml ou docs/specs/phases/<fase>.spec.yaml
+#
+# Critérios de aceite no formato EARS (Easy Approach to Requirements Syntax):
+#   when: gatilho/condição observável ("Quando <evento>", "Enquanto <estado>")
+#   then: resposta verificável do sistema ("o sistema deve <comportamento mensurável>")
+# `when` é opcional para requisitos ubíquos ("O sistema deve sempre...").
+#
+# Rastreabilidade AC ↔ teste (Definition of Done §2):
+#   status: pending | covered | manual
+#   covered_by: filtro dotnet test (ex.: "FullyQualifiedName~MeuController") — obrigatório se covered
+#   evidence: artefato verificável (script, workflow, screenshot) — obrigatório se manual
 
 id: example-feature
 version: "1.0.0"
@@ -12,9 +22,13 @@ intent: |
 
 acceptance:
   - id: AC-1
-    then: "Comportamento verificável e mensurável"
+    when: "Quando o usuário executa a ação X"
+    then: "o sistema deve responder com comportamento verificável e mensurável"
+    status: pending
   - id: AC-2
-    then: "Teste ou comando do harness passa"
+    when: "Quando o endpoint /exemplo recebe payload válido"
+    then: "retorna 200 com contrato documentado; teste de integração HTTP cobre o AC"
+    status: pending
 
 harness:
   commands:

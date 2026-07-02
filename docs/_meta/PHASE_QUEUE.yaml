@@ -30,7 +30,19 @@ queue:
     blocked_by: []
     # Itens abertos: DOD-05 (PaymentService), DOD-06 (unificar ledger),
     # DOD-07 (Postgres FeeSplitRule/planos), DOD-08 (backfill spec por risco),
-    # DOD-09 (gate covered_by), DOD-10 (evidência CI). DOD-01..04 já feitos.
+    # DOD-10 (evidência CI). DOD-01..04 e DOD-09 (gate covered_by) já feitos.
+
+  - id: design-quality
+    title: "Design high-premium — fechar gaps de UX/UI mapeados pelo agente design-ux"
+    area: area/web
+    doc: docs/design/AUDITORIA_DESIGN.md
+    priority: P1
+    kind: maintenance
+    blocked_by: []
+    # Itens abertos: DSG-03 (devportal → tokens compartilhados),
+    # DSG-04 (espaçamento 8px no portal), DSG-05 (a11y landing portal),
+    # DSG-06 (unificar glass tokens cross-plataforma), DSG-07 (contraste syntax WCAG).
+    # DSG-01/02 (cores hardcoded) e DSG-08 (gate CI design-gate-check) já corrigidos.
 
   - id: FASE52
     title: "FASE52 — Fundação Técnica e CI/CD"
@@ -56,6 +68,7 @@ queue:
     title: "FASE54 — IaC e 1ª Instância"
     area: area/ops
     doc: docs/backlog-api/FASE54.md
+    spec_id: FASE54-iac
     priority: P0
     wave: S0
     frente: fundacao-tecnica
@@ -65,6 +78,7 @@ queue:
     title: "FASE55 — Monetização Open-Core"
     area: area/backend
     doc: docs/backlog-api/FASE55.md
+    spec_id: FASE55-monetization
     priority: P0
     wave: S1
     blocked_by: [FASE52, FASE53, FASE54]
@@ -73,6 +87,7 @@ queue:
     title: "FASE56 — Transparência e Taxas"
     area: area/backend
     doc: docs/backlog-api/FASE56.md
+    spec_id: FASE56-transparency
     priority: P0
     wave: S2
     blocked_by: [FASE55]
@@ -81,6 +96,7 @@ queue:
     title: "FASE57 — Cockpit Implementador"
     area: area/web
     doc: docs/backlog-api/FASE57.md
+    spec_id: FASE57-cockpit
     priority: P0
     wave: S1
     blocked_by: [FASE52, FASE54]
@@ -89,6 +105,7 @@ queue:
     title: "FASE58 — Operação Multi-Instância"
     area: area/ops
     doc: docs/backlog-api/FASE58.md
+    spec_id: FASE58-multi-instance
     priority: P1
     wave: S1
     frente: operacao-federacao
@@ -98,6 +115,7 @@ queue:
     title: "FASE59 — Federação"
     area: area/backend
     doc: docs/backlog-api/FASE59.md
+    spec_id: FASE59-federation
     priority: P1
     wave: S3
     frente: operacao-federacao
@@ -107,6 +125,7 @@ queue:
     title: "FASE60 — App Implementador"
     area: area/flutter
     doc: docs/backlog-api/FASE60.md
+    spec_id: FASE60-implementer-app
     priority: P1
     wave: S3
     blocked_by: [FASE57]
@@ -115,6 +134,7 @@ queue:
     title: "FASE61 — Capital Territorial"
     area: area/backend
     doc: docs/backlog-api/FASE61.md
+    spec_id: FASE61-territorial-capital
     priority: P2
     wave: S4
     blocked_by: [FASE55, FASE56]

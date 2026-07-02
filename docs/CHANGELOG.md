@@ -9,6 +9,53 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Contexto em camadas + comunicação passiva entre agentes (otimização de consumo de API) (2026-07-02)
+
+- **`.cursorrules` v2.0**: de ~60 KB always-apply para núcleo de ~4 KB (princípios, guardrails, ponteiros) — redução de ~95% do contexto fixo injetado em cada requisição do Cursor
+- **Regras escopadas por glob** em `.cursor/rules/`: `backend-standards.mdc` (`backend/**`), `frontend-design.mdc` (`frontend/**`), `docs-organization.mdc` (`docs/**`, `*.md`) — só entram no contexto quando arquivos correspondentes são tocados
+- **Hook `stop` passivo** (`.cursor/hooks/domain-review.ps1`): continua gerando os pareceres em `.cursor/domain-review.md`, mas não injeta mais `followup_message` — elimina o turno extra de modelo (rodada completa de API) a cada interação; CI (`agents.yml`) permanece a instância autoritativa publicando pareceres no PR
+- **`domain-agents-autonomy.mdc`**: de `alwaysApply: true` para escopo `backend/**`,`frontend/**`; instrui leitura do parecer por arquivo (comunicação passiva)
+- **Novas skills Cursor** (descoberta sob demanda): `arah-open-pr` e `arah-domain-consult` em `.cursor/skills/`
+- **`AGENTS.md` v2.0**: enxugado de ~15 KB para ~5 KB; tabelas de SDD, coreografia e skills movidas para `docs/ops/AGENT_OPERATION.md` (PR 14)
+- **Lição LIC-004** em `docs/LICOES_APRENDIDAS.md` — contexto fixo e comunicação ativa entre agentes inflam consumo de API
+
+### Corrigido — Apontamentos de revisão do PR 426 (2026-07-02)
+
+- **Harness**: filtros `dotnet test` com `|` nas specs FASE56/58/61 agora entre aspas simples — o PowerShell interpretava o `|` como pipe e quebrava o comando
+- **Harness (spec-before-code)**: specs `draft` validam estrutura mas **pulam** `scripts`/`commands` — fases sem implementação (FASE56–61) não falham mais o CI com "no test matches filter", `flutter test` ausente ou health check de instância não provisionada
+- **`validate-specs.ps1`**: regex do bloco `acceptance` sem modo singleline — o capture não vaza mais para `harness:`/`guardrails:`, evitando falso `covered_by`/`evidence` no último AC
+- **Coreografia**: regra `community-connections` cobre os paths de frontend do manifest (`features/{chat,connections,notifications}`); `design-ux.agent.yaml` sincronizado com `frontend/**/tailwind.config.ts`
+- **Docs**: Estatísticas de `LICOES_APRENDIDAS.md` atualizadas (LIC-002/003); `specs/README.md` generaliza o runner de cobertura por stack; `AGENT_QUICKSTART.md` inclui suítes `Arah.Tests.Modules.*`; checklist backend menciona caminho `manual`/`evidence`
+- **`agent-metrics.ps1`**: regravado com BOM UTF-8 (PS 5.1 renderizava acentos como mojibake)
+
+### Adicionado — Validação da estratégia de agentes vs mercado + cobertura completa de domínios (2026-07-02)
+
+- **`docs/ops/AGENT_STRATEGY_VALIDATION.md`** — benchmark da malha de agentes contra práticas de mercado 2026 (GitHub Spec Kit, AWS Kiro/EARS, padrão AGENTS.md/AAIF, multi-agente com permissão mínima e merge humano): estratégia conforme em todos os pilares; gaps e recomendações priorizadas (P0: specs FASE56–61 antes de código, gate `covered_by`; P1: EARS nos acceptance, passo clarify; P2: métricas de efetividade, worktrees paralelos)
+- **`docs/ops/AGENT_QUICKSTART.md`** — guia de operação por agentes para novos devs: fluxo dia a dia, CLI, DoD resumido, como estender a malha (novo agente/skill/fase), guardrails
+- **4 novos agentes de domínio** (fechando cobertura dos módulos do backend): `feed-conteudo` (Feed/Events/Media), `mapa-lugares` (Map/Assets/Geo), `comunidade-conexoes` (Chat/Connections/Notifications/Alerts), `identidade-privacidade` (Users/Auth/Policies/LGPD — co-ativa agente `security`)
+- **Coreografia v2** (`.agents/choreography.yaml`): regras `feed-content`, `map-places`, `community-connections`, `identity-privacy`; regra `federation-handoff` agora cobre código de federação em runtime (`FederationController`, `Arah.Core/Application/Federation*`)
+- **Referências quebradas corrigidas**: criado specialist `postgresql` (citado por `backend.agent.yaml`); `docs-steward` sem `CHANGELOG.md` de raiz; `agent-operation.spec.yaml` sem contagem hardcoded de agentes/skills
+- **Integridade referencial de manifests** (LIC-003): `validate-manifests.ps1` agora falha se `consult.domain`, `consult.specialists` ou `skills` de um agente referenciarem manifests/skills inexistentes — referência fantasma quebra o CI
+- **Specs FASE56–61 autoradas** (spec-before-code, P0 da validação): `FASE56-transparency`, `FASE57-cockpit`, `FASE58-multi-instance`, `FASE59-federation`, `FASE60-implementer-app`, `FASE61-territorial-capital` em `docs/specs/phases/` — acceptance em EARS, `status: draft`; `PHASE_QUEUE.yaml` com `spec_id` nas fases 54–61
+- **Gate DOD-09 implementado**: `validate-specs.ps1` falha AC `status: covered` sem `covered_by` e `status: manual` sem `evidence` (retrofit: AC-55-7 com `covered_by`, AC-52-5 corrigido para `manual`); retrospectiva DoD atualizada
+- **Template de spec em EARS**: `_template.spec.yaml` documenta `when`/`then` + `status`/`covered_by`/`evidence`; passo **clarify** obrigatório nos checklists de `spec-steward` e `backend`
+- **Novas skills de operação**: `agent-metrics` (`scripts/agents/agent-metrics.ps1` — PRs, tempo→ready-for-merge, apontamentos de bot/PR, pareceres de domínio) e `parallel-attempt` (`scripts/agents/parallel-attempt.ps1` — best-of-N em git worktrees isolados)
+- Catálogos atualizados: `.agents/README.md` completo (12 operacionais + 11 domínio + 6 especialistas), `AGENTS.md` (tabelas consultivos/coreografia/referências), `.cursor/rules/domain-agents-autonomy.mdc` (mapeamento), `docs/ops/PLATFORM_STATE.md` (29 agentes + 22 skills)
+- `docs/specs/README.md` — lista todas as specs (inclui platform/harness) e sinaliza pendência spec-before-code de FASE56–61; pasta `docs/specs/features/` criada
+
+### Adicionado — Agente autônomo de Design (UX/UI) (2026-07-02)
+
+- **Novo agente de domínio `design-ux`** (`.agents/domain/design-ux.agent.yaml`): especialista consultivo que garante identidade high-premium, acessibilidade (WCAG AA), mobile-first e uso de tokens (nunca cor hardcoded), em web e Flutter
+- **Coreografia** (`.agents/choreography.yaml`): regra `design-ux` aciona o agente automaticamente ao tocar em `frontend/**`, tokens compartilhados, `docs/design/**` e `docs/**/design*` — parecer local (hook `stop`) e no PR (workflow `agents.yml`/Agents Orchestrate; o gate roda em `agents-gates.yml` via `run-gates.ps1`)
+- Catálogo atualizado: `AGENTS.md` (consultivos + tabela de coreografia), `.cursor/rules/domain-agents-autonomy.mdc` (mapeamento), `docs/ops/PLATFORM_STATE.md` (24 agentes)
+- **Auditoria** `docs/design/AUDITORIA_DESIGN.md` — 8 gaps mapeados (DSG-01..08) com evidência, severidade e ordem de correção
+- **Corrigido DSG-01 (wiki)**: 5 cores arbitrárias `bg-[#...]` no Mermaid fullscreen → classes configuradas `bg-accent`/`bg-link` (`frontend/wiki/app/mermaid/fullscreen/page.tsx`)
+- **Corrigido DSG-01b (wiki)**: 22 hex nos `themeVariables` do Mermaid (2 componentes) → adapter `lib/mermaid-theme.ts` derivando o tema dos design tokens (descoberto pelo próprio gate DSG-08)
+- **Corrigido DSG-02 (Flutter)**: `Color(0xFF228B22)`/`Colors.orange` fora do tema no onboarding → `AppDesignTokens.territoryBoundary`/`locationPin` (`propose_territory_sheet.dart`, `onboarding_screen.dart`)
+- **Gate DSG-08**: `scripts/agents/design-gate-check.ps1` integrado ao `run-gates.ps1` (QA) — falha o PR se arquivo de frontend alterado tiver cor hardcoded (Tailwind `[#...]`, hex inline, CSS fora de `--token:`, `Color(0x...)`/`Colors.*` fora do tema)
+- Backlog `docs/_meta/PHASE_QUEUE.yaml` — entrada `design-quality` (P1) para DSG-03..07 (devportal→tokens, espaçamento 8px, a11y landing, unificar glass, contraste syntax)
+- Lição `docs/LICOES_APRENDIDAS.md` LIC-002 — regressão de cores exige agente + gate de design, não só diretriz
+
 ### Retrospectiva DoD — gaps de fases anteriores (2026-07-02)
 
 - `docs/backlog-api/RETROSPECTIVA_DOD_GAPS.md` — auditoria das entregas anteriores à nova Definition of Done, com 10 itens acionáveis (DOD-01..10) priorizados

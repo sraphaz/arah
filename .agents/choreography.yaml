@@ -1,6 +1,6 @@
 # Coreografia de agentes — autonomia e co-ativação
-version: 1
-updated: 2026-07-01
+version: 2
+updated: 2026-07-02
 policy: |
   Regras aplicadas após roteamento do orquestrador. Agentes de domínio (negócio)
   publicam parecer consultivo; operacionais ativam checklist + skills.
@@ -68,6 +68,71 @@ rules:
         type: domain
         autonomy: [consult_post]
 
+  - id: feed-content
+    paths:
+      - backend/Arah.Modules.Feed/**
+      - backend/**/Feed/**
+      - backend/Arah.Modules.Events/**
+      - backend/**/Events/**
+      - backend/Arah.Domain/Media/**
+      - backend/Arah.Application/Services/Media/**
+      - frontend/arah.app/lib/features/feed/**
+      - frontend/arah.app/lib/features/events/**
+    agents:
+      - id: feed-conteudo
+        type: domain
+        autonomy: [consult_post]
+
+  - id: map-places
+    paths:
+      - backend/Arah.Modules.Map/**
+      - backend/**/Map/**
+      - backend/Arah.Modules.Assets/**
+      - backend/**/Assets/**
+      - backend/Arah.Domain/Geo/**
+      - frontend/arah.app/lib/features/map/**
+      - frontend/arah.app/lib/features/explore/**
+    agents:
+      - id: mapa-lugares
+        type: domain
+        autonomy: [consult_post]
+
+  - id: community-connections
+    paths:
+      - backend/Arah.Modules.Chat/**
+      - backend/**/Chat/**
+      - backend/Arah.Modules.Connections/**
+      - backend/**/Connections/**
+      - backend/Arah.Modules.Notifications/**
+      - backend/**/Notifications/**
+      - backend/Arah.Modules.Alerts/**
+      - backend/**/Alerts/**
+      - backend/Arah.Domain/Social/**
+      - frontend/arah.app/lib/features/chat/**
+      - frontend/arah.app/lib/features/connections/**
+      - frontend/arah.app/lib/features/notifications/**
+    agents:
+      - id: comunidade-conexoes
+        type: domain
+        autonomy: [consult_post]
+
+  - id: identity-privacy
+    paths:
+      - backend/Arah.Domain/Users/**
+      - backend/Arah.Application/Services/Users/**
+      - backend/Arah.Domain/Policies/**
+      - backend/**/Policies/**
+      - backend/Arah.Api/Controllers/Users/**
+      - frontend/arah.app/lib/features/auth/**
+      - frontend/arah.app/lib/features/profile/**
+    agents:
+      - id: identidade-privacidade
+        type: domain
+        autonomy: [consult_post]
+      - id: security
+        type: operational
+        autonomy: [activate]
+
   - id: monetization
     paths:
       - backend/**/Subscriptions/**
@@ -111,6 +176,8 @@ rules:
       - docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html
       - docs/backlog-api/FASE58.md
       - docs/backlog-api/FASE59.md
+      - backend/Arah.Api/Controllers/Platform/FederationController.cs
+      - backend/Arah.Core/Application/Federation*
     agents:
       - id: control-plane
         type: domain
@@ -128,6 +195,24 @@ rules:
         type: operational
         autonomy: [activate, invoke_skill]
         skills: [spec-validate, harness-run]
+
+  - id: design-ux
+    paths:
+      - frontend/wiki/**
+      - frontend/portal/**
+      - frontend/devportal/**
+      - frontend/arah.app/**
+      - frontend/shared/styles/**
+      - frontend/**/*.css
+      - frontend/**/tailwind.config.ts
+      - docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md
+      - docs/CURSOR_DESIGN_RULES.md
+      - docs/design/**
+      - docs/**/design*
+    agents:
+      - id: design-ux
+        type: domain
+        autonomy: [consult_post]
 
   - id: pr-always
     paths:

@@ -1,7 +1,7 @@
 # Operação por agentes
 
-**Versão**: 1.4  
-**Data**: 2026-07-01  
+**Versão**: 1.5  
+**Data**: 2026-07-02  
 **Handoff HTML**: [Operacao por Agentes - Arah.dc.html](../handoff/Operacao%20por%20Agentes%20-%20Arah.dc.html)
 
 ---
@@ -199,14 +199,47 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 |----------|---------|
 | Hook local (Cursor) | [.cursor/hooks.json](../../.cursor/hooks.json), [.cursor/hooks/domain-review.ps1](../../.cursor/hooks/domain-review.ps1) |
 | Autoreview | [domain-autoreview.ps1](../../scripts/agents/domain-autoreview.ps1) |
-| Rule (alwaysApply) | [.cursor/rules/domain-agents-autonomy.mdc](../../.cursor/rules/domain-agents-autonomy.mdc) |
+| Rule (escopada por glob) | [.cursor/rules/domain-agents-autonomy.mdc](../../.cursor/rules/domain-agents-autonomy.mdc) |
 | Definition of Done | [docs/governance/DEFINITION_OF_DONE.md](../governance/DEFINITION_OF_DONE.md) |
 | CI publica pareceres | [agents.yml](../../.github/workflows/agents.yml) (step "Publish domain agent pareceres") |
 
 **Comportamento:**
-- **Local**: hook `stop` roda o autoreview sobre o `git diff` a cada interação; gera pareceres em `.cursor/domain-review.md` e injeta `followup_message` (idempotente por conjunto de mudanças).
+- **Local**: hook `stop` roda o autoreview sobre o `git diff` a cada interação; gera pareceres em `.cursor/domain-review.md` (idempotente por conjunto de mudanças). Desde o PR 14 **não injeta `followup_message`** — comunicação passiva por arquivo.
 - **CI**: em todo PR, os `domain_consults` da coreografia são publicados como comentários `arah-domain-consult` (não apenas listados).
 - Cobertura de paths ampliada (Financial, Application/Services/Marketplace, Items) e matcher de glob corrigido para `**` em qualquer posição.
+
+### PR 14 — Contexto em camadas + comunicação passiva (otimização de consumo de API) (2026-07-02)
+
+**Motivação:** o modelo anterior injetava ~20 mil tokens fixos por requisição
+(`.cursorrules` ~60 KB always-apply + `AGENTS.md` ~15 KB) e o hook `stop`
+devolvia `followup_message`, gerando um turno extra de modelo (nova rodada de
+API com o contexto inteiro) a cada interação que tocasse paths de domínio —
+inclusive mudanças apenas em docs.
+
+**Novo modelo em 4 camadas (contexto sob demanda):**
+
+| Camada | Artefato | Quando entra no contexto |
+|--------|----------|--------------------------|
+| 0 — Núcleo | [.cursorrules](../../.cursorrules) (~4 KB) | Sempre (princípios, guardrails, ponteiros) |
+| 1 — Regras escopadas | [.cursor/rules/](../../.cursor/rules/) — `backend-standards` (`backend/**`), `frontend-design` (`frontend/**`), `docs-organization` (`docs/**`, `*.md`), `domain-agents-autonomy` (`backend/**`, `frontend/**`, `docs/design/**`) | Só quando arquivos do glob são tocados |
+| 2 — Skills | [.cursor/skills/](../../.cursor/skills/) `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult` → apontam para [.skills/](../../.skills/) | Índice leve sempre; corpo lido só ao usar |
+| 3 — Comunicação passiva | Hook `stop` grava `.cursor/domain-review.md` **sem** followup; CI publica pareceres no PR | Agente lê o arquivo quando a rule escopada instrui |
+
+**Efeitos:**
+- Contexto fixo por requisição: de ~75 KB para ~4 KB (redução ~95%).
+- Zero turnos extras de modelo por hook; pareceres continuam gerados (local) e publicados (CI).
+- Conteúdo integral das regras antigas preservado nas regras escopadas e nos docs já existentes (`docs/CURSOR_DESIGN_RULES.md`, `docs/21_CODE_REVIEW.md`, `docs/CURSOR_DOCUMENTATION_RULES.md`).
+
+**Propriedade SDD (tabela movida de AGENTS.md):**
+
+| Objeto | Agente principal | Co-agentes | Skills |
+|--------|------------------|------------|--------|
+| `docs/specs/*.yaml` | `spec-steward` | `docs-steward`, `planner` | `spec-author`, `spec-validate`, `harness-run` |
+| `scripts/harness/` | `spec-steward` | `release` | `harness-run`, `spec-validate` |
+| `backend/Arah.Core/` | `backend` | `spec-steward`, `solutions-architect` | `register-adr`, `run-tests`, `harness-run` |
+| `docs/architecture/adrs/` | `solutions-architect` | `docs-steward` | `register-adr`, `likec4-export`, `architecture-review` |
+| `.github/workflows/spec-harness.yml` | `release` | `spec-steward` | `harness-run` |
+| FASE52–61 backlog | `planner` | `spec-steward` | `spec-author`, `backlog-to-issue` |
 
 ### PR 12 — Gestão via GitHub (Issues, Project, labels) (2026-07-01)
 

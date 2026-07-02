@@ -47,6 +47,9 @@ try {
         Invoke-Step 'architecture-review-check' {
             & (Join-Path $ScriptDir 'architecture-review-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
         }
+        Invoke-Step 'design-gate-check' {
+            & (Join-Path $ScriptDir 'design-gate-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
+        }
     }
 
     if ($Gate -in 'security', 'all') {

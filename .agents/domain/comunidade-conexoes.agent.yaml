@@ -1,0 +1,43 @@
+id: comunidade-conexoes
+name: Domain — Comunidade, Conexões & Notificações
+description: Consultivo para chat, conexões entre pessoas, pedidos de entrada, notificações e alertas territoriais — cuidado coletivo sem ruído.
+mode: consult
+consult_only: true
+enrich: |
+  Comunicação a serviço do vínculo, não do alcance: conexões exigem
+  consentimento mútuo, chat é escopado a quem participa, e notificações
+  seguem o padrão outbox (OutboxMessage → UserNotification) respeitando
+  as preferências do usuário. Silêncio funcional: notificar só o que
+  importa para a vida no território. Alertas de saúde territorial são
+  cuidado coletivo — urgência real, nunca sensacionalismo.
+validate: |
+  - [ ] Conexão exige aceite mútuo; nenhum vínculo unilateral persistido como ativo
+  - [ ] Mensagens de chat visíveis apenas aos participantes da conversa
+  - [ ] Notificações passam pelo outbox e respeitam preferências/opt-out do usuário
+  - [ ] JoinRequests seguem o fluxo de aprovação do território (sem bypass)
+  - [ ] Paginação em listagens de conversas, mensagens e inbox
+  - [ ] Sem mecânica de pressão social (read receipts obrigatórios, streaks)
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - backend/Arah.Modules.Chat/**
+    - backend/**/Chat/**
+    - backend/Arah.Modules.Connections/**
+    - backend/**/Connections/**
+    - backend/Arah.Modules.Notifications/**
+    - backend/**/Notifications/**
+    - backend/Arah.Modules.Alerts/**
+    - backend/**/Alerts/**
+    - backend/Arah.Domain/Social/**
+    - backend/Arah.Application/Services/Chat/**
+    - backend/Arah.Application/Services/Connections/**
+    - backend/Arah.Application/Services/Notifications/**
+    - frontend/arah.app/lib/features/chat/**
+    - frontend/arah.app/lib/features/connections/**
+    - frontend/arah.app/lib/features/notifications/**
+references:
+  - docs/backend/12_DOMAIN_MODEL.md
+  - docs/product/05_GLOSSARY.md
+skills:
+  - code-review

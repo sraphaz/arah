@@ -1,0 +1,55 @@
+id: FASE56-transparency
+version: "0.1.0"
+title: "FASE56 — Transparência e governança de taxas"
+owner: backend
+status: draft
+phase: FASE56
+
+intent: |
+  Painel público de receita do território e governança comunitária para alterar
+  taxas/splits — confiança pela transparência: morador vê para onde vai cada centavo.
+
+acceptance:
+  - id: AC-56-1
+    when: "Quando qualquer morador acessa GET /territories/{id}/revenue"
+    then: "vê receita total, repasses por destinatário e comércios ativos sem permissão especial"
+    status: pending
+  - id: AC-56-2
+    when: "Quando o conselho solicita GET /territories/{id}/revenue/export"
+    then: "recebe exportação (CSV) consistente com o ledger do período"
+    status: pending
+  - id: AC-56-3
+    when: "Quando uma fee-proposal é aprovada na votação com quórum"
+    then: "gera FeeSplitRule com effectiveFrom futuro; transações anteriores permanecem intactas"
+    status: pending
+  - id: AC-56-4
+    when: "Quando o painel exibe um período"
+    then: "mostra a regra de taxa vigente naquele período (histórico auditável)"
+    status: pending
+  - id: AC-56-5
+    when: "Quando uma fee-proposal é rejeitada"
+    then: "é arquivada com trilha de auditoria (autor, data, resultado)"
+    status: pending
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter 'FullyQualifiedName~Revenue|FullyQualifiedName~FeeProposal'"
+  agents:
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE56.md
+    - docs/backlog-api/FASE14.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Adendo de Monetizacao - Handoff Arah.dc.html
+
+guardrails:
+  - territory-first
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE55-monetization

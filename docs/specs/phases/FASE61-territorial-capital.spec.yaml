@@ -1,0 +1,55 @@
+id: FASE61-territorial-capital
+version: "0.1.0"
+title: "FASE61 — Capital territorial, patrocínios e doações"
+owner: backend
+status: draft
+phase: FASE61
+
+intent: |
+  Capital comunitário além da taxa transacional: patrocínios e doações com consentimento
+  de exibição, fundo territorial governado pela comunidade e revenue-share auditável.
+
+acceptance:
+  - id: AC-61-1
+    when: "Quando uma doação/patrocínio é registrado (POST /sponsorships)"
+    then: "gera lançamento no ledger com comprovante auditável"
+    status: pending
+  - id: AC-61-2
+    when: "Quando o patrocinador não deu displayConsent"
+    then: "a marca não é exibida publicamente em nenhuma superfície"
+    status: pending
+  - id: AC-61-3
+    when: "Quando qualquer morador abre o painel de transparência"
+    then: "vê o saldo do fundo territorial e seus aportes"
+    status: pending
+  - id: AC-61-4
+    when: "Quando recursos do fundo são utilizados"
+    then: "o uso referencia a decisão de governança que o autorizou (FASE14/56)"
+    status: pending
+  - id: AC-61-5
+    then: "Revenue-share de investidor-anjo é rastreável por território no ledger"
+    status: pending
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter 'FullyQualifiedName~Sponsorship|FullyQualifiedName~TerritoryFund'"
+  agents:
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE61.md
+    - docs/backlog-api/FASE56.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Adendo de Monetizacao - Handoff Arah.dc.html
+
+guardrails:
+  - territory-first
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE55-monetization
+  - FASE56-transparency

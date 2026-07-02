@@ -1,4 +1,4 @@
-id: agent-activate
+﻿id: agent-activate
 name: Agent Activate
 description: Publica checklist de conduta e verificações automáticas quando um agente é acionado.
 triggers:

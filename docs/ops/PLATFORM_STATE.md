@@ -60,7 +60,9 @@ Este documento é a **fonte de verdade** para o README e para agentes. Níveis d
 
 | Aspecto | Estado | Doc |
 |---------|--------|-----|
-| 23 agentes + 21 skills | ✅ | [AGENTS.md](../../AGENTS.md) |
+| 29 agentes + 24 skills (contagem via `arah-agents.ps1 validate`) | ✅ | [AGENTS.md](../../AGENTS.md) |
+| Contexto Cursor em camadas (PR 14: `.cursorrules` ~4 KB + rules escopadas) | ✅ | [AGENT_OPERATION.md](./AGENT_OPERATION.md#pr-14--contexto-em-camadas--comunicação-passiva-otimização-de-consumo-de-api-2026-07-02) |
+| Comunicação passiva entre agentes (hook sem followup; CI autoritativo) | ✅ | `.cursor/hooks/domain-review.ps1` |
 | Orquestrador + checklists conduta | ✅ | [AGENT_OPERATION.md](./AGENT_OPERATION.md) |
 | PR Steward (bots → merge humano) | ✅ | `agents-pr-steward.yml` |
 | next-phase (fila PHASE_QUEUE) | ✅ | [PHASE_QUEUE.yaml](../_meta/PHASE_QUEUE.yaml) |

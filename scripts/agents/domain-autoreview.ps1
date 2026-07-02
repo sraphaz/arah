@@ -5,8 +5,8 @@
   Calcula arquivos alterados (git), resolve a coreografia, gera os pareceres de
   domínio e grava a evidência em .cursor/domain-review.md.
 
-  Projetado para ser chamado por um hook do Cursor (evento `stop`) — a cada
-  interação os agentes de domínio agem sem acionamento manual.
+  Projetado para ser chamado pelo hook `stop` do Cursor. Grava pareceres em
+  `.cursor/domain-review.md` de forma passiva (sem followup_message / turno extra).
 
 .PARAMETER Force
   Regenera os pareceres mesmo que o conjunto de mudanças já tenha sido revisado.

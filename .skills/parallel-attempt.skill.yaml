@@ -1,0 +1,15 @@
+id: parallel-attempt
+name: Parallel Attempt (best-of-N)
+description: |
+  Cria git worktrees isolados (branch + diretório por tentativa) para explorar
+  2–5 abordagens em paralelo numa tarefa exploratória; humano escolhe o melhor
+  PR e descarta os demais. Nunca usar para trabalho trivial.
+inputs:
+  name: identificador da tarefa (kebab-case)
+  count: número de tentativas (2–5, default 2)
+run:
+  script: scripts/agents/parallel-attempt.ps1
+guardrails:
+  - no_merge
+  - human_picks_winner
+  - cleanup_after_decision

@@ -1,27 +1,28 @@
 ---
 description: Autonomia dos agentes de domínio e Definition of Done (rigor total)
-alwaysApply: true
+globs: backend/**,frontend/**,docs/design/**,docs/**/design*,docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md,docs/CURSOR_DESIGN_RULES.md
+alwaysApply: false
 ---
 
 # Agentes de domínio autônomos + Definition of Done
 
-A cada mudança em código de domínio, os agentes de domínio agem **sem acionamento manual**.
-O hook `stop` (`.cursor/hooks.json` → `.cursor/hooks/domain-review.ps1`) gera os pareceres em
-`.cursor/domain-review.md`. Você DEVE ler esse arquivo e endereçar cada item de "Validar no PR"
-antes de concluir a tarefa.
+Os agentes de domínio se comunicam de forma **passiva, por arquivo**: o hook `stop`
+(`.cursor/hooks.json` → `.cursor/hooks/domain-review.ps1`) grava os pareceres em
+`.cursor/domain-review.md` sem gerar turnos extras de modelo. No CI, os pareceres
+são publicados como comentários no PR (`agents.yml`).
 
-## Consulta de domínio (obrigatória)
-
-Ao tocar em paths de domínio, rode e honre a coreografia (`.agents/choreography.yaml`):
-
-```
-powershell -NoProfile -File scripts/agents/domain-autoreview.ps1 -Force -Json
-```
+**Antes de concluir uma tarefa que tocou código de domínio**, leia
+`.cursor/domain-review.md` (se existir e for recente) e endereça os itens de
+"Validar no PR" aplicáveis à mudança. Não rode scripts de coreografia manualmente
+— o hook já os executa.
 
 Mapeamento (resumo): `Marketplace/Cart/Stores/Items` → `mercado-economia`;
 `Subscriptions/Stripe/Financial/FeeSplit/Payout/SellerBalance` → `monetizacao-split`, `carteira-arata`;
 `Territories/Memberships` → `territorio-membership`; `Moderation/Voting` → `governanca-transparencia`;
-`Arah.Core` → `control-plane`.
+`Arah.Core`/Federation → `control-plane`; `frontend/**` + `docs/**/design*` → `design-ux`;
+`Feed/Events/Media` → `feed-conteudo`; `Map/Assets/Geo` → `mapa-lugares`;
+`Chat/Connections/Notifications/Alerts` → `comunidade-conexoes`;
+`Users/Auth/Policies (LGPD)` → `identidade-privacidade` (+ agente `security`).
 
 ## Definition of Done (rigor total)
 
@@ -30,7 +31,6 @@ Nenhum item/fase é "pronto" sem TODOS:
 - [ ] Build Release sem erros + `dotnet test` verde (inclui `Arah.Tests.Modules.*` afetados)
 - [ ] Cada critério `acceptance` da spec (`docs/specs/`) tem teste que o cobre (unit + integração HTTP p/ endpoint novo)
 - [ ] Evidência anexada: `harness-report.json` e/ou saída de teste; parecer de domínio endereçado
-- [ ] Parecer de cada agente de domínio acionado revisado e itens de "Validar" resolvidos
 - [ ] `sync-docs` no mesmo PR (CHANGELOG, STATUS_FASES, FASE*, spec)
 - [ ] Sem secrets no diff; sem cores hardcoded (UI); nomenclatura território/items correta
 

@@ -1,0 +1,40 @@
+---
+description: Design system e Clean Code para web (wiki/portal/devportal) e Flutter — cores via tokens, mobile-first, acessibilidade
+globs: frontend/**
+alwaysApply: false
+---
+
+# Frontend — Design e Código Limpo
+
+Referências completas: `docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md`, `docs/CURSOR_DESIGN_RULES.md`.
+
+## Cores — NUNCA hardcoded (regra crítica)
+
+- ❌ PROIBIDO: hex/rgb diretos (`#4dd4a8`) e Tailwind arbitrárias (`dark:bg-[#4dd4a8]`).
+- ✅ OBRIGATÓRIO: variáveis CSS (`var(--accent)`), classes Tailwind configuradas, ou `AppDesignTokens`/`AppColors` no Flutter.
+
+## Mobile-first (obrigatório)
+
+- Base CSS sem media query (mobile); ajustes com `@media (min-width: 1024px)` ou prefixo `lg:`.
+- Espaçamento e tipografia via tokens (escala 8px): `var(--space-8)`, `var(--font-size-3xl)` — sem px arbitrário.
+
+## Acessibilidade
+
+- Contraste WCAG AA; `focus-visible`; navegação por teclado; alvo de toque >= 44px.
+- HTML semântico (`<header>`, `<nav>`, `<main>`, `<button>` para ação, `<a>` para navegação); `alt`/`aria-label` sempre; sem CSS/JS inline.
+
+## Clean Code (HTML/CSS/JS/TS)
+
+- Classes/IDs em `kebab-case`; nomes descritivos.
+- CSS organizado por funcionalidade; sem `!important` desnecessário; arquivos < 200 linhas.
+- JS: `const`/`let`, funções pequenas (< 20 linhas), `addEventListener` (nunca `onclick` inline), early returns, tratamento explícito de erros.
+
+## Princípios de design do produto
+
+- Baixa excitação e foco; silêncio funcional; ação consciente; sem animações celebratórias nem engajamento infinito.
+- Território como referência visual; consistência de tokens entre web e app.
+
+## Específicos do stack
+
+- Wiki: porta **3001**, base **/wiki**; `next lint` quebrado — use `npm test` e `type-check`.
+- Flutter: BFF only (`--dart-define=BFF_BASE_URL=...`); l10n via `flutter gen-l10n` + cópia para `lib/l10n/`; `flutter_map` 8.x usa `MapOptions.onTap`; jornadas via `BffJourneyRegistry`.

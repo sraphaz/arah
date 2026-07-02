@@ -50,6 +50,8 @@ Tornar o repositório **governável** (specs como contrato) e **produtivo** (har
 
 - Alteração em `docs/specs/` → `validate-specs` obrigatório
 - Alteração de código sem spec `active` para a fase → warning em `sync-docs-check` (features críticas)
+- Specs `draft` (spec-before-code): o harness valida estrutura (agents, guardrails, links),
+  mas **pula** `scripts`/`commands` — passam a executar quando a spec vira `active`
 
 ---
 

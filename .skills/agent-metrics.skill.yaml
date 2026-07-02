@@ -1,0 +1,16 @@
+id: agent-metrics
+name: Agent Metrics
+description: |
+  Mede a efetividade da operação por agentes: PRs por origem, tempo abertura →
+  ready-for-merge, apontamentos de bot por PR e pareceres de domínio publicados.
+  Sem medição não há calibração de autonomia.
+inputs:
+  days: número de dias da janela (default 30)
+run:
+  script: scripts/agents/agent-metrics.ps1
+sources:
+  - GitHub PRs (gh CLI)
+  - comentários arah-domain-consult
+  - eventos de label ready-for-merge
+guardrails:
+  - read_only

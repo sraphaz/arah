@@ -1,6 +1,6 @@
-# Pipeline CI/CD — FASE52
+# Pipeline CI/CD — FASE52 + FASE54
 
-**Status**: em implementação (FASE52)  
+**Status**: FASE52 ✅ · FASE54 código entregue (config ops: [PILOT_STAGING_CONFIG_TODO.md](./PILOT_STAGING_CONFIG_TODO.md))  
 **Dono**: Release / DevOps Agent  
 **Handoff**: [Plano Operacional](../handoff/arquitetura-c4/Plano%20Operacional%20e%20Pipelines%20-%20Arah.dc.html)
 
@@ -11,7 +11,7 @@
 ```
 PR → CI (build + test) → merge main
   → CD (Docker → GHCR + smoke /health)
-  → Deploy Staging (automático, environment staging)
+  → Deploy Staging (automático: health + verify-pilot-instance FASE54)
   → Deploy Production (manual, environment production + confirm DEPLOY)
 ```
 
@@ -19,7 +19,7 @@ PR → CI (build + test) → merge main
 |----------|---------|---------|
 | [ci.yml](../../.github/workflows/ci.yml) | PR + push main | Build, testes, Trivy, Codecov |
 | [cd.yml](../../.github/workflows/cd.yml) | push main, tags | Imagens GHCR `arah-api`, `arah-bff`, app artifacts |
-| [deploy-staging.yml](../../.github/workflows/deploy-staging.yml) | CD concluído | Stack staging + `/health` API e BFF |
+| [deploy-staging.yml](../../.github/workflows/deploy-staging.yml) | CD concluído | Stack staging + `/health` + **FASE54** `verify-pilot-instance.ps1` |
 | [deploy-production.yml](../../.github/workflows/deploy-production.yml) | `workflow_dispatch` | Gate humano; verificação antes de prod real (FASE54) |
 
 ---
@@ -49,8 +49,11 @@ Configure em **Settings → Environments**:
 | Secret | Onde | Obrigatório |
 |--------|------|-------------|
 | `JWT__SIGNINGKEY` | staging/production | Recomendado (≥32 chars prod) |
+| `STRIPE__SECRETKEY` | staging | Opcional — PSP sandbox FASE54 (`sk_test_...`) |
 | `GITHUB_TOKEN` | CI/CD | Automático |
 | `CODECOV_TOKEN` | CI | Opcional |
+
+Detalhes e checklist: [PILOT_STAGING_CONFIG_TODO.md](./PILOT_STAGING_CONFIG_TODO.md).
 
 **Nunca** commitar secrets. Fallback apenas em CI de smoke quando secret ausente.
 
@@ -65,7 +68,18 @@ $env:JWT__SIGNINGKEY = "dev-only-change-me-min-32-chars"
 docker compose -f docker-compose.staging.yml up -d
 curl http://localhost:8080/health
 curl http://localhost:5001/health
+./scripts/provision/verify-pilot-instance.ps1 -SkipStripeCheck
 ```
+
+### Piloto local (compose dedicado)
+
+```powershell
+./scripts/provision/provision-pilot-instance.ps1 -SkipStripeCheck
+# ou com HTTPS:
+./scripts/provision/provision-pilot-instance.ps1 -WithHttps -SkipStripeCheck
+```
+
+Ver [infrastructure/pilot/README.md](../../infrastructure/pilot/README.md).
 
 ---
 
@@ -74,15 +88,18 @@ curl http://localhost:5001/health
 - [x] PR → build + testes (CI)
 - [x] Merge main → imagem GHCR versionada
 - [x] Staging deploy automático + health
+- [x] FASE54 — verify piloto no CI (`verify-pilot-instance.ps1`)
 - [x] Prod → gate manual (`Deploy Production`, confirm=`DEPLOY`)
-- [x] Secrets documentados (este arquivo)
+- [x] Secrets documentados (este arquivo + PILOT_STAGING_CONFIG_TODO)
 - [ ] Observabilidade baseline (Prometheus/OTel) — próximo incremento FASE52
-- [ ] Deploy físico multi-instância — FASE54 (IaC)
+- [ ] Deploy físico multi-instância cloud — pós-piloto (Terraform/Helm alvo)
 
 ---
 
 ## Referências
 
 - [FASE52.md](../backlog-api/FASE52.md)
+- [FASE54.md](../backlog-api/FASE54.md)
+- [PILOT_STAGING_CONFIG_TODO.md](./PILOT_STAGING_CONFIG_TODO.md)
 - [AGENT_OPERATION.md](./AGENT_OPERATION.md)
 - [release.checklist.md](../../.agents/checklists/release.checklist.md)

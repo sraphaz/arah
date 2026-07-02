@@ -1,8 +1,18 @@
 id: monetizacao-split
 name: Monetização & Split
 mode: consult
-enrich: Camadas de receita, planos comerciais e ganchos de cobrança.
-validate: Taxa, split por FeeSplitRule vigente e payouts (Adendo monetização).
+enrich: |
+  Camadas de receita (assinatura, comissão de transação, planos comerciais)
+  e ganchos de cobrança. FeeSplitRule é versionada e imutável: nunca editar
+  regra vigente, apenas superssedê-la (SupersededAtUtc) e criar nova versão.
+  Split é sempre calculado pela regra vigente na data da transação.
+validate: |
+  - [ ] Split soma 100% e usa a FeeSplitRule vigente (effectiveFromUtc) da transação
+  - [ ] Cálculo financeiro usa arredondamento bancário (banker's rounding) e não perde centavos
+  - [ ] Regra vigente é imutável — alteração cria nova versão, não muta a antiga
+  - [ ] Ação comercial exige assinatura ativa com MarketplaceAdvanced (CommercialStoreGate)
+  - [ ] Endpoint quote/receipt tem teste de integração HTTP cobrindo o AC da spec
+  - [ ] Sem valores hardcoded de taxa; parametrizado por território
 autonomy:
   - consult_post
 scope:
@@ -10,6 +20,10 @@ scope:
     - backend/**/Subscriptions/**
     - backend/**/Stripe/**
     - backend/Arah.Modules.Subscriptions/**
+    - backend/Arah.Domain/Financial/**
+    - backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs
+    - backend/Arah.Application/Services/Marketplace/CommercialStoreGateService.cs
 references:
   - docs/backlog-api/FASE55.md
+  - docs/specs/phases/FASE55-monetization.spec.yaml
   - docs/handoff/arquitetura-c4/Adendo de Monetizacao - Handoff Arah.dc.html

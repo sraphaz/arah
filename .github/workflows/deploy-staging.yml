@@ -46,6 +46,7 @@ jobs:
           if [ -z "$JWT__SIGNINGKEY" ]; then
             export JWT__SIGNINGKEY="staging-ci-key-minimum-32-characters-long"
           fi
+          export STRIPE__SECRETKEY="${{ secrets.STRIPE__SECRETKEY }}"
           docker pull "$ARAH_API_IMAGE"
           docker pull "$ARAH_BFF_IMAGE"
           docker compose -f docker-compose.staging.yml up -d
@@ -59,6 +60,17 @@ jobs:
           done
           docker compose -f docker-compose.staging.yml logs
           exit 1
+
+      - name: FASE54 — verify pilot instance on Core
+        shell: pwsh
+        env:
+          STRIPE__SECRETKEY: ${{ secrets.STRIPE__SECRETKEY }}
+        run: |
+          $skipStripe = [string]::IsNullOrWhiteSpace($env:STRIPE__SECRETKEY)
+          ./scripts/provision/verify-pilot-instance.ps1 `
+            -ApiBaseUrl http://localhost:8080 `
+            -InstanceBaseUrl http://localhost:8080 `
+            -SkipStripeCheck:$skipStripe
 
       - name: Create GitHub Deployment
         uses: actions/github-script@v7
@@ -88,10 +100,11 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## Deploy Staging — FASE52
+          ## Deploy Staging — FASE52 / FASE54
           **SHA:** ``${{ github.event.workflow_run.head_sha }}``
           **Status:** ${{ job.status }}
           **Imagens:** ``ghcr.io/${{ github.repository }}/arah-api|arah-bff:${{ github.event.workflow_run.head_sha }}``
+          **FASE54:** verify-pilot-instance (Core register + heartbeat + JWT)
           "@ | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
 
       - name: Teardown

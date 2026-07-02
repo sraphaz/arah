@@ -12,19 +12,38 @@ intent: |
 acceptance:
   - id: AC-54-1
     then: "infrastructure/pilot/docker-compose.pilot.yml sobe API + Postgres do zero"
+    status: manual
+    evidence: "docs/ops/PILOT_STAGING_CONFIG_TODO.md — execução manual (sem teste automatizado)"
   - id: AC-54-2
     then: "scripts/provision/register-core-instance.ps1 registra instância no Core"
+    status: manual
+    evidence: "script provision; cobertura HTTP em CoreControllerIntegration (registro)"
   - id: AC-54-3
-    then: "Health /health verde após deploy piloto"
+    then: "scripts/provision/verify-pilot-instance.ps1 valida health, JWT e instância Online no Core"
+    status: manual
+    evidence: "script verify-pilot-instance.ps1 executado no CD (deploy-staging.yml)"
   - id: AC-54-4
     then: "Instância usa ICoreAvailabilityCache quando Core indisponível"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreAvailabilityCache"
   - id: AC-54-5
-    then: "Backup inicial documentado (RPO ≤ 15 min — staging)"
+    then: "scripts/provision/backup-pilot-db.ps1 + RPO ≤ 15 min documentado"
+    status: manual
+    evidence: "infrastructure/pilot/README.md (RPO); execução manual do backup"
+  - id: AC-54-6
+    then: "HTTPS opcional via Caddy profile em infrastructure/pilot"
+    status: manual
+    evidence: "infrastructure/pilot/Caddyfile + compose profile caddy"
+  - id: AC-54-7
+    then: "scripts/provision/verify-stripe-sandbox.ps1 quando STRIPE__SECRETKEY definido"
+    status: manual
+    evidence: "script condicional; requer secret (ver PILOT_STAGING_CONFIG_TODO.md)"
 
 harness:
   commands:
     - "dotnet build backend/Arah.Core/Arah.Core.csproj --configuration Release"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Core"
+    - "dotnet build backend/Arah.Infrastructure/Arah.Infrastructure.csproj --configuration Release"
   agents:
     - backend
     - release
@@ -33,6 +52,8 @@ links:
   docs:
     - docs/backlog-api/FASE54.md
     - infrastructure/pilot/README.md
+    - docs/ops/PILOT_STAGING_CONFIG_TODO.md
+    - docs/ops/CI_CD_PIPELINE.md
 
 guardrails:
   - no-secrets-in-repo

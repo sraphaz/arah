@@ -1,0 +1,37 @@
+---
+description: Autonomia dos agentes de domínio e Definition of Done (rigor total)
+alwaysApply: true
+---
+
+# Agentes de domínio autônomos + Definition of Done
+
+A cada mudança em código de domínio, os agentes de domínio agem **sem acionamento manual**.
+O hook `stop` (`.cursor/hooks.json` → `.cursor/hooks/domain-review.ps1`) gera os pareceres em
+`.cursor/domain-review.md`. Você DEVE ler esse arquivo e endereçar cada item de "Validar no PR"
+antes de concluir a tarefa.
+
+## Consulta de domínio (obrigatória)
+
+Ao tocar em paths de domínio, rode e honre a coreografia (`.agents/choreography.yaml`):
+
+```
+powershell -NoProfile -File scripts/agents/domain-autoreview.ps1 -Force -Json
+```
+
+Mapeamento (resumo): `Marketplace/Cart/Stores/Items` → `mercado-economia`;
+`Subscriptions/Stripe/Financial/FeeSplit/Payout/SellerBalance` → `monetizacao-split`, `carteira-arata`;
+`Territories/Memberships` → `territorio-membership`; `Moderation/Voting` → `governanca-transparencia`;
+`Arah.Core` → `control-plane`.
+
+## Definition of Done (rigor total)
+
+Nenhum item/fase é "pronto" sem TODOS:
+
+- [ ] Build Release sem erros + `dotnet test` verde (inclui `Arah.Tests.Modules.*` afetados)
+- [ ] Cada critério `acceptance` da spec (`docs/specs/`) tem teste que o cobre (unit + integração HTTP p/ endpoint novo)
+- [ ] Evidência anexada: `harness-report.json` e/ou saída de teste; parecer de domínio endereçado
+- [ ] Parecer de cada agente de domínio acionado revisado e itens de "Validar" resolvidos
+- [ ] `sync-docs` no mesmo PR (CHANGELOG, STATUS_FASES, FASE*, spec)
+- [ ] Sem secrets no diff; sem cores hardcoded (UI); nomenclatura território/items correta
+
+Detalhes: `docs/governance/DEFINITION_OF_DONE.md`.

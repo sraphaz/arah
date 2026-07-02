@@ -9,6 +9,67 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Retrospectiva DoD — gaps de fases anteriores (2026-07-02)
+
+- `docs/backlog-api/RETROSPECTIVA_DOD_GAPS.md` — auditoria das entregas anteriores à nova Definition of Done, com 10 itens acionáveis (DOD-01..10) priorizados
+- **DOD-01**: `scripts/harness/validate-specs.ps1` passa a aceitar root `status: completed` (antes rejeitava FASE52/53 concluídas)
+- **DOD-02**: `FASE53-arah-core.spec.yaml` — 10 ACs anotados com `covered_by` (unit + integração Core/Federation já existentes)
+- **DOD-03**: `FASE54-iac.spec.yaml` — ACs de script com `status: manual` + `evidence`; `AC-54-4` com `covered_by`
+- **DOD-04**: `FASE52-cicd.spec.yaml` — ACs de workflow com `status: manual` + `evidence`
+- Fila `docs/_meta/PHASE_QUEUE.yaml` — entrada `dod-retrofit` (P1) para os itens abertos (DOD-05..10: PaymentService, unificação de ledger, Postgres, backfill de spec por risco, gate `covered_by`, evidência CI)
+- `spec-validate` verde (6 specs)
+
+### Adicionado — FASE55 payout consolidado + estorno (2026-07-02)
+
+- **Estorno (AC-55-6)**: `POST /api/v1/transactions/{id}/refund` — reverte fee e split proporcionalmente; idempotente (só `Paid` → `Refunded`, segundo estorno retorna 409). `RefundService` + `CheckoutStatus.Refunded`
+- **Payout consolidado (AC-55-5)**: `GET /api/v1/territories/{id}/payouts/consolidated?from=&to=` — agrega o split das transações pagas (exclui estornadas e fora do período) por destinatário. `PayoutConsolidationService` (read-model sobre checkouts)
+- **DRY**: matemática de split extraída para `FeeSplitCalculator` (fonte única, banker's rounding + reconciliação); `TransactionQuoteService` e os novos serviços passam a usá-la
+- Testes: `TransactionsControllerTests` (+4 refund: reverte, idempotente, não-pago 400, inexistente 404), `TerritoryPayoutsControllerTests` (+3: consolida/exclui refunded+fora do período, vazio, `from>to` 400)
+- Spec `FASE55-monetization` — AC-55-5/6 `covered`; harness roda filtro `TerritoryPayoutsController`
+- 22/22 testes FASE55 verdes
+- **Dívida sinalizada**: nenhum código de produção leva `Checkout` a `Paid` (sem `PaymentService`/webhook); payout/refund unificar futuramente com `SellerPayoutService`/ledger `FinancialTransaction` (ver backlog retrospectiva DoD)
+
+### Testes — FASE55 fechando ACs com evidência (2026-07-02)
+
+- `TransactionsControllerTests` — integração HTTP de `POST /transactions/{id}/quote` (AC-55-2) e `GET .../receipt` (AC-55-3): 200 com split, 404 inexistente, 400 quando não pago, reconciliação soma==taxa
+- `FeeSplitRuleTests` — imutabilidade/versionamento (AC-55-4): soma 100%, supersede uma via só, não ativa antes da vigência
+- `TransactionQuoteServiceTests` — banker's rounding + reconciliação (sem centavo perdido)
+- Spec `FASE55-monetization` anotada com `covered_by` por AC; harness roda filtros `TransactionsController` e `FeeSplitRule`
+- 15/15 testes FASE55 verdes (`dotnet test --filter TransactionsController|FeeSplitRule|TransactionQuote`)
+
+### Adicionado — Agentes de domínio autônomos + Definition of Done (2026-07-02)
+
+- **Autonomia local**: hook `stop` (`.cursor/hooks.json` → `.cursor/hooks/domain-review.ps1`) aciona os agentes de domínio a cada interação, sem gatilho manual, gerando pareceres em `.cursor/domain-review.md`
+- **Autonomia no CI**: `agents.yml` publica os pareceres de domínio como comentários (`post-domain-consult.ps1 -PostComment`) em todo PR `opened`/`synchronize`
+- `scripts/agents/domain-autoreview.ps1` — resolve coreografia sobre o `git diff`, gera pareceres e evidência (idempotente por conjunto de mudanças)
+- `.cursor/rules/domain-agents-autonomy.mdc` — rule `alwaysApply` com DoD + consulta de domínio obrigatória
+- `docs/governance/DEFINITION_OF_DONE.md` — DoD formal (rigor total): AC↔teste, evidência, parecer de domínio endereçado
+- Pareceres de domínio enriquecidos (checklists acionáveis) em `monetizacao-split`, `carteira-arata`, `mercado-economia`
+- Cobertura de paths corrigida em `choreography.yaml` (Financial, Application/Services/Marketplace, Items)
+- **Fix**: matcher de glob (`Test-PathMatchesGlob`) agora trata `**` em qualquer posição; parser de block scalar (`enrich:`/`validate:`) corrigido (`(?ms)` → `(?m)`)
+
+### Documentação — FASE54/FASE55 sync (2026-06-30)
+
+- `docs/ops/PILOT_STAGING_CONFIG_TODO.md` — checklist config manual (secrets, Stripe, board)
+- `docs/ops/CI_CD_PIPELINE.md` — passo FASE54 no deploy staging
+- `docs/API.md` — Core, transações, planos comerciais
+- `docs/backlog-api/README.md`, `STATUS_FASES.md` — status 52–55 atualizado
+- `docs/ops/PLATFORM_STATE.md` — prioridade S0 atual
+
+### Adicionado — FASE55 monetização v0 (2026-06-30)
+
+- `FeeSplitRule` versionada + seed por território
+- `POST /api/v1/transactions/{id}/quote` e `GET .../receipt`
+- `GET /api/v1/territories/{id}/plans` (planos comerciais)
+- Gate comercial: `CommercialStoreGateService` bloqueia pagamentos sem `MarketplaceAdvanced`
+
+### Adicionado — FASE54 provisionamento piloto (2026-06-30)
+
+- `PilotAdminBootstrapHostedService` — SystemAdmin em Postgres staging (`Pilot__BootstrapAdminEnabled`)
+- Scripts: `verify-pilot-instance.ps1`, `get-pilot-admin-token.ps1`, `backup-pilot-db.ps1`, `verify-stripe-sandbox.ps1`
+- Deploy staging CI — passo FASE54 pós-health (registro Core + heartbeat + JWT)
+- HTTPS opcional — Caddy profile em `infrastructure/pilot/`
+
 ### Adicionado — Fechamento de fases S0 e FASE54 piloto (2026-07-01)
 
 - FASE53 ✅ — token de instância, `POST /core/releases`, `ICoreAvailabilityCache`

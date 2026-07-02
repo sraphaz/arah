@@ -1,4 +1,6 @@
 # Piloto FASE54 — API + PostgreSQL (reproduzível do zero)
+name: pilot
+
 services:
   postgres:
     image: postgres:16
@@ -25,19 +27,25 @@ services:
         condition: service_healthy
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:8080
-      ASPNETCORE_ENVIRONMENT: Development
-      JWT__SIGNINGKEY: pilot-only-change-me
+      ASPNETCORE_ENVIRONMENT: Staging
+      JWT__SIGNINGKEY: pilot-only-change-me-minimum-32-chars
       ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=arah_pilot;Username=arah;Password=arah
       Persistence__Provider: Postgres
       Persistence__ApplyMigrations: "true"
+      Pilot__BootstrapAdminEnabled: "true"
+      Stripe__SecretKey: ${STRIPE__SECRETKEY:-}
     ports:
       - "8080:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 30s
+
+  caddy:
+    profiles: ["https"]
+    image: caddy:2
+    depends_on:
+      - api
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
 
 volumes:
   arah_pilot_pgdata:

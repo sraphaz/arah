@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "stop": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .cursor/hooks/domain-review.ps1",
+        "timeout": 90,
+        "loop_limit": 1
+      }
+    ]
+  }
+}

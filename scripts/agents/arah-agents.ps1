@@ -224,17 +224,12 @@ function Test-PathMatchesGlob {
     $glob = $Pattern.Replace('\', '/')
 
     if ($glob -eq '**' -or $glob -eq '**/*') { return $true }
-    if ($glob.EndsWith('/**')) {
-        $prefix = $glob.Substring(0, $glob.Length - 3)
-        return $normalized.StartsWith("$prefix/")
-    }
-    if ($glob.EndsWith('**')) {
-        $prefix = $glob.TrimEnd('*').TrimEnd('/')
-        return $normalized.StartsWith($prefix)
-    }
-
-    $regex = '^' + [regex]::Escape($glob).Replace('\*\*', '.*').Replace('\*', '[^/]*') + '$'
-    return $normalized -match $regex
+    # Convert glob to regex handling '**' anywhere (including mid-path segments).
+    $re = [regex]::Escape($glob)
+    $re = $re -replace '\\\*\\\*/', '(?:.*/)?'
+    $re = $re -replace '\\\*\\\*', '.*'
+    $re = $re -replace '\\\*', '[^/]*'
+    return $normalized -match ('^' + $re + '$')
 }
 
 function Resolve-AgentsFromPaths {

@@ -253,6 +253,40 @@ public sealed class InMemoryDataStore
             stripePriceId: null,
             stripeProductId: null));
 
+        var commercialLojaPlanId = Guid.Parse("00000000-0000-0000-0000-000000000002");
+        SubscriptionPlans.Add(new SubscriptionPlan(
+            commercialLojaPlanId,
+            "LOJA",
+            "Plano comercial para vender no marketplace (FASE55)",
+            SubscriptionPlanTier.BASIC,
+            PlanScope.Territory,
+            territoryB.Id,
+            49.90m,
+            SubscriptionBillingCycle.MONTHLY,
+            new List<FeatureCapability>
+            {
+                FeatureCapability.MarketplaceBasic,
+                FeatureCapability.MarketplaceAdvanced,
+            },
+            new Dictionary<string, object> { ["maxMarketplaceItems"] = 100 },
+            isDefault: false,
+            trialDays: 14,
+            createdByUserId: Guid.Empty,
+            stripePriceId: null,
+            stripeProductId: null));
+
+        foreach (var territory in Territories.Where(t => t.Status == TerritoryStatus.Active))
+        {
+            FeeSplitRules.Add(new FeeSplitRule(
+                Guid.NewGuid(),
+                territory.Id,
+                "marketplace",
+                implementerSharePercent: 40m,
+                territoryFundSharePercent: 30m,
+                platformSharePercent: 30m,
+                effectiveFromUtc: DateTimeOffset.UtcNow.AddYears(-1)));
+        }
+
         TerritoryEvents = new List<TerritoryEvent>
         {
             new(
@@ -404,6 +438,7 @@ public sealed class InMemoryDataStore
     public List<PlatformRevenueTransaction> PlatformRevenueTransactions { get; } = new();
     public List<PlatformExpenseTransaction> PlatformExpenseTransactions { get; } = new();
     public List<ReconciliationRecord> ReconciliationRecords { get; } = new();
+    public List<FeeSplitRule> FeeSplitRules { get; } = new();
 
     public ConcurrentDictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();

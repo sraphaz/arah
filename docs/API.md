@@ -31,6 +31,29 @@
 - `POST /api/v1/votings/{id}/vote` - Votar
 - `POST /api/v1/votings/{id}/close` - Fechar votação
 
+### Arah Core (FASE53)
+
+- `POST /api/v1/core/instances` - Registrar instância (SystemAdmin)
+- `GET /api/v1/core/instances` - Listar instâncias
+- `POST /api/v1/core/instances/{id}/heartbeat` - Telemetria (header `X-Arah-Instance-Token`)
+- `GET /api/v1/core/releases` - Catálogo de releases
+- `POST /api/v1/core/directory/territories` - Publicar território no diretório
+- `GET /api/v1/federation/identity/{globalUserId}` - Identidade federada
+
+### Monetização / transações (FASE55 v0)
+
+- `GET /api/v1/territories/{id}/plans` - Planos comerciais do território
+- `POST /api/v1/transactions/{id}/quote` - Cotação com taxa e split (`id` = checkout)
+- `GET /api/v1/transactions/{id}/receipt` - Comprovante (checkout `Paid`)
+- `POST /api/v1/transactions/{id}/refund` - Estorno idempotente (reverte fee/split; AC-55-6)
+- `GET /api/v1/territories/{id}/payouts/consolidated?from=&to=` - Payout consolidado por período (AC-55-5)
+
+### Assinaturas (FASE15 — base FASE55)
+
+- `GET /api/v1/subscription-plans` - Planos globais
+- `GET /api/v1/territories/{id}/subscription-plans` - Planos do território
+- `POST /api/v1/subscriptions` - Criar assinatura (mock Stripe sem secret em dev)
+
 ## Padrões de Resposta
 
 ### Sucesso (200-201)

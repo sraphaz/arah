@@ -1,0 +1,67 @@
+id: FASE55-monetization
+version: "0.1.0"
+title: "FASE55 — Monetização open-core (billing, split, Aratá)"
+owner: backend
+status: active
+phase: FASE55
+
+intent: |
+  Receita open-core: planos comerciais por território, quote com taxa/split transparente
+  antes do pagamento, carteira Aratá e payouts — morador nunca paga pelo núcleo comunitário.
+
+acceptance:
+  - id: AC-55-1
+    then: "Comércio sem assinatura ativa não publica/vende items no marketplace"
+    status: covered
+    covered_by: "FullyQualifiedName~CommercialStoreGate|FullyQualifiedName~StoreService"
+  - id: AC-55-2
+    then: "POST /transactions/{id}/quote retorna grossAmount, feeAmount e split antes do PIX"
+    status: covered
+    covered_by: "FullyQualifiedName~TransactionsController|FullyQualifiedName~TransactionQuote"
+  - id: AC-55-3
+    then: "GET /transactions/{id}/receipt inclui split aplicado (auditável)"
+    status: covered
+    covered_by: "FullyQualifiedName~TransactionsController"
+  - id: AC-55-4
+    then: "FeeSplitRule versionada — alteração usa effectiveFrom, nunca edita regra vigente"
+    status: covered
+    covered_by: "FullyQualifiedName~FeeSplitRule|FullyQualifiedName~TransactionQuote"
+  - id: AC-55-5
+    then: "Payout consolidado por período para implementador/comerciante"
+    status: covered
+    covered_by: "FullyQualifiedName~TerritoryPayoutsController|FullyQualifiedName~PayoutConsolidation"
+  - id: AC-55-6
+    then: "Estorno reverte fee e splits proporcionalmente"
+    status: covered
+    covered_by: "FullyQualifiedName~TransactionsController"
+  - id: AC-55-7
+    then: "Feed/mapa/eventos permanecem acessíveis sem cobrança ao morador"
+    status: covered
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Subscription"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TransactionQuote"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TransactionsController"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TerritoryPayoutsController"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~FeeSplitRule"
+  agents:
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE55.md
+    - docs/backlog-api/FASE15.md
+    - docs/API.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Adendo de Monetizacao - Handoff Arah.dc.html
+
+guardrails:
+  - territory-first
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE54-iac

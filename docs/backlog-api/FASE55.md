@@ -5,7 +5,8 @@
 **Onda**: S1 — Fundação de receita  
 **Depende de**: FASE6, FASE7, FASE15, FASE54  
 **Estimativa Total**: 180 horas  
-**Status**: ⏳ Pendente  
+**Status**: 🟡 Em progresso (quote/receipt + gate comercial v0)  
+**Spec SDD**: [docs/specs/phases/FASE55-monetization.spec.yaml](../specs/phases/FASE55-monetization.spec.yaml)
 **Handoff**: [Adendo Monetização](../handoff/arquitetura-c4/Adendo%20de%20Monetizacao%20-%20Handoff%20Arah.dc.html)
 
 ---
@@ -53,15 +54,47 @@ Implementar o modelo de receita **open-core**: morador nunca paga; comerciantes 
 
 ## Endpoints principais
 
+| Método | Rota | Status FASE55 |
+|--------|------|---------------|
+| `GET` | `/api/v1/territories/{id}/plans` | ✅ v0 — planos comerciais (`MarketplaceAdvanced`) |
+| `POST` | `/api/v1/subscriptions` | ✅ existente — assinatura por usuário (mock Stripe sem secret) |
+| `POST` | `/api/v1/transactions/{id}/quote` | ✅ v0 — `checkout.Id` como `transactionId` |
+| `GET` | `/api/v1/transactions/{id}/receipt` | ✅ v0 — requer `CheckoutStatus.Paid` |
+| `POST` | `/api/v1/transactions/{id}/refund` | ✅ v0 — estorno idempotente; reverte fee/split (AC-55-6) |
+| `GET` | `/api/v1/territories/{id}/payouts/consolidated` | ✅ v0 — payout consolidado por período (AC-55-5) |
+| `POST` | `/merchants/{id}/subscription` | ⏳ — usar `/subscriptions` até alias merchant |
+| `GET` | `/wallets/{id}` | ⏳ FASE22 + FASE55 |
+| `GET` | `/implementers/{id}/payouts` | ⏳ FASE57 |
+| `GET` | `/merchants/{id}/consumption` | ⏳ |
+
+### Quote (resposta v0)
+
+```json
+{
+  "transactionId": "uuid",
+  "grossAmount": 100.00,
+  "feeAmount": 10.00,
+  "netToSeller": 90.00,
+  "split": [
+    { "recipient": "implementer", "amount": 4.00 },
+    { "recipient": "territory_fund", "amount": 3.00 },
+    { "recipient": "platform", "amount": 3.00 }
+  ],
+  "feeSplitRuleId": "uuid"
+}
 ```
-GET  /territories/{id}/plans
-POST /merchants/{id}/subscription
-POST /transactions/{id}/quote
-GET  /transactions/{id}/receipt
-GET  /wallets/{id}
-GET  /implementers/{id}/payouts
-GET  /merchants/{id}/consumption
-```
+
+---
+
+## Implementação v0 (código)
+
+| Componente | Caminho |
+|------------|---------|
+| `FeeSplitRule` | `backend/Arah.Domain/Financial/FeeSplitRule.cs` |
+| Quote / receipt | `TransactionQuoteService`, `TransactionsController` |
+| Gate comercial | `CommercialStoreGateService` → `StoreService.SetPaymentsEnabled` |
+| Seed split | `FeeSplitRuleBootstrapHostedService` (40/30/30 por território) |
+| Plano LOJA (InMemory) | `InMemoryDataStore` — território B |
 
 ---
 
@@ -75,12 +108,19 @@ GET  /merchants/{id}/consumption
 
 ## Critérios de aceite
 
-- [ ] Comércio não vende sem plano ativo
-- [ ] Quote exibe taxa e split antes do PIX
-- [ ] Comprovante auditável com split aplicado
-- [ ] Payout mensal consolidado e liquidado
-- [ ] Estorno reverte fee e splits proporcionalmente
-- [ ] Morador usa feed/mapa/eventos sem cobrança
+- [x] Comércio não vende sem plano ativo — gate em `SetPaymentsEnabled` (v0)
+- [x] Quote exibe taxa e split antes do PIX — `POST /transactions/{id}/quote` (v0)
+- [x] Comprovante auditável com split aplicado — `GET /transactions/{id}/receipt` (v0, requer Paid)
+- [x] Payout consolidado por período — `GET /territories/{id}/payouts/consolidated?from=&to=` (v0, read-model sobre checkouts pagos)
+- [x] Estorno reverte fee e splits proporcionalmente — `POST /transactions/{id}/refund` (v0, idempotente; só transação `Paid`)
+- [x] Morador usa feed/mapa/eventos sem cobrança — plano FREE inalterado
+
+> **Limitação v0 (parecer Carteira Aratá — `DOD-06`)**: o estorno é transição de status
+> (`Paid` → `Refunded`) com reversão **calculada** (fee/split negados e reconciliados). Ainda
+> **não** persiste lançamento reverso append-only no ledger `FinancialTransaction`; o payout
+> consolidado é read-model derivado dos checkouts pagos. A unificação com
+> `SellerPayoutService`/ledger imutável está em `docs/backlog-api/RETROSPECTIVA_DOD_GAPS.md` (DOD-06).
+> A idempotência do estorno é garantida pelo guard de status (segundo estorno → 409).
 
 ---
 

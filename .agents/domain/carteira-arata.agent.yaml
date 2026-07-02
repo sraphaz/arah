@@ -3,8 +3,16 @@ name: Domain — Carteira Aratá
 description: Consultivo para ledger, split, conciliação e billing territorial.
 mode: consult
 consult_only: true
-enrich: Ledger territorial, splits, reconciliação e billing sem extrair dados de territory para Core.
-validate: Payouts e saldos consistentes com FeeSplitRule; LGPD em export financeiro.
+enrich: |
+  Ledger territorial, splits, reconciliação e billing sem extrair dados de
+  territory para o Core. Todo movimento financeiro é rastreável e auditável;
+  saldos derivam de lançamentos, nunca de mutação direta.
+validate: |
+  - [ ] Payouts e saldos batem com a soma dos splits da FeeSplitRule vigente
+  - [ ] Reconciliação: total bruto = soma dos splits (implementador + fundo + plataforma)
+  - [ ] Lançamentos são imutáveis (append-only); estorno gera lançamento reverso
+  - [ ] Export financeiro respeita LGPD (sem PII desnecessária; base legal registrada)
+  - [ ] Idempotência em cobrança/estorno (sem duplicar lançamento por retry de webhook)
 autonomy:
   - consult_post
 scope:
@@ -12,6 +20,8 @@ scope:
     - backend/**/SellerBalance/**
     - backend/**/Payout/**
     - backend/**/PlatformFinancial/**
+    - backend/Arah.Domain/Financial/**
+    - backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs
     - docs/**/billing*
     - docs/**/carteira*
     - docs/backlog-api/FASE15.md

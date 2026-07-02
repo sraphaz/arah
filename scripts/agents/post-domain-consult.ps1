@@ -30,12 +30,12 @@ if (-not (Test-Path $manifestPath)) {
 
 $raw = Get-Content $manifestPath -Raw
 $name = if ($raw -match '(?m)^name:\s*(.+)$') { $Matches[1].Trim() } else { $DomainId }
-$enrich = if ($raw -match '(?ms)^enrich:\s*\|\s*\n((?:  .+\r?\n)+)') { ($Matches[1] -replace '(?m)^  ', '').Trim() }
-          elseif ($raw -match '(?m)^enrich:\s*(.+)$') { $Matches[1].Trim() } else { '' }
-$validate = if ($raw -match '(?ms)^validate:\s*\|\s*\n((?:  .+\r?\n)+)') { ($Matches[1] -replace '(?m)^  ', '').Trim() }
-            elseif ($raw -match '(?m)^validate:\s*(.+)$') { $Matches[1].Trim() } else { '' }
+$enrich = if ($raw -match '(?m)^enrich:[ \t]*\|[ \t]*\r?\n((?:[ \t]{2}.+\r?\n)+)') { ($Matches[1] -replace '(?m)^  ', '').Trim() }
+          elseif ($raw -match '(?m)^enrich:[ \t]+(.+)$') { $Matches[1].Trim() } else { '' }
+$validate = if ($raw -match '(?m)^validate:[ \t]*\|[ \t]*\r?\n((?:[ \t]{2}.+\r?\n)+)') { ($Matches[1] -replace '(?m)^  ', '').Trim() }
+            elseif ($raw -match '(?m)^validate:[ \t]+(.+)$') { $Matches[1].Trim() } else { '' }
 $refs = @()
-if ($raw -match '(?ms)^references:\s*\n((?:  - .+\r?\n)+)') {
+if ($raw -match '(?m)^references:[ \t]*\r?\n((?:[ \t]+-[ \t].+\r?\n)+)') {
     $refs = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object { $_.Groups[1].Value.Trim() }
 }
 
@@ -101,5 +101,5 @@ if ($PostComment -and $targetNumber -gt 0) {
     } finally { Pop-Location }
 }
 
-if ($Json) { $result | ConvertTo-Json -Depth 4 } else { Write-Host $body }
+if ($Json) { $result | ConvertTo-Json -Depth 4 } else { Write-Output $body }
 exit 0

@@ -21,6 +21,17 @@ queue:
     kind: maintenance
     status: completed
 
+  - id: dod-retrofit
+    title: "DoD retrofit — reconciliar fases/PRs anteriores à Definition of Done"
+    area: area/backend
+    doc: docs/backlog-api/RETROSPECTIVA_DOD_GAPS.md
+    priority: P1
+    kind: maintenance
+    blocked_by: []
+    # Itens abertos: DOD-05 (PaymentService), DOD-06 (unificar ledger),
+    # DOD-07 (Postgres FeeSplitRule/planos), DOD-08 (backfill spec por risco),
+    # DOD-09 (gate covered_by), DOD-10 (evidência CI). DOD-01..04 já feitos.
+
   - id: FASE52
     title: "FASE52 — Fundação Técnica e CI/CD"
     area: area/ops

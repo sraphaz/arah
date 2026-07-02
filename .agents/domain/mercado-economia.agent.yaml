@@ -3,8 +3,16 @@ name: Domain — Mercado & Economia Local
 description: Consultivo para items, marketplace territorial e economia circular.
 mode: consult
 consult_only: true
-enrich: Items territoriais, stores, cart e checkout respeitando vínculo ao territory.
-validate: Nomenclatura items (nunca listings); escopo por territoryId; preços locais.
+enrich: |
+  Items territoriais, stores, cart e checkout respeitando o vínculo ao
+  territory. Economia local e circular: o território é a referência, não a
+  loja. Habilitar comércio é ação consciente e explícita do dono da store.
+validate: |
+  - [ ] Nomenclatura "items" (nunca "listings"); "territory" (nunca "place")
+  - [ ] Todo recurso é escopado por territoryId; sem vazamento entre territórios
+  - [ ] Checkout/cart validam disponibilidade e propriedade da store
+  - [ ] Habilitar pagamentos passa pelo gate comercial (assinatura ativa)
+  - [ ] Paginação em todas as listagens; sem N+1
 autonomy:
   - consult_post
 scope:

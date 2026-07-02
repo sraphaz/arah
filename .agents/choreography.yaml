@@ -49,8 +49,10 @@ rules:
     paths:
       - backend/Arah.Modules.Marketplace/**
       - backend/**/Marketplace/**
+      - backend/Arah.Application/Services/Marketplace/**
       - backend/**/Cart/**
       - backend/**/Stores/**
+      - backend/**/Items/**
     agents:
       - id: mercado-economia
         type: domain
@@ -72,6 +74,11 @@ rules:
       - backend/**/Stripe/**
       - backend/**/SellerBalance/**
       - backend/**/Payout/**
+      - backend/**/PlatformFinancial/**
+      - backend/Arah.Domain/Financial/**
+      - backend/**/Financial/**
+      - backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs
+      - backend/Arah.Application/Services/Marketplace/CommercialStoreGateService.cs
     agents:
       - id: monetizacao-split
         type: domain

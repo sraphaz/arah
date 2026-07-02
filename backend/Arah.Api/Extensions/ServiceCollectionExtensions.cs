@@ -101,6 +101,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UserBlockService>();
         services.AddScoped<FeatureFlagService>();
         services.AddScoped<StoreService>();
+        services.AddScoped<CommercialStoreGateService>();
+        services.AddScoped<TransactionQuoteService>();
+        services.AddScoped<RefundService>();
+        services.AddScoped<PayoutConsolidationService>();
         services.AddScoped<StoreItemService>();
         services.AddScoped<InquiryService>();
         services.AddScoped<PlatformFeeService>();
@@ -311,6 +315,14 @@ public static class ServiceCollectionExtensions
                 var transactionScope = sp.GetRequiredService<DbContextTransactionScopeAdapter>();
                 return new CompositeUnitOfWork(participants, transactionScope);
             });
+
+            if (configuration.GetValue<bool>("Pilot:BootstrapAdminEnabled"))
+            {
+                services.AddHostedService<Arah.Infrastructure.Hosting.PilotAdminBootstrapHostedService>();
+            }
+
+            services.TryAddSingleton<IFeeSplitRuleRepository, InMemoryFeeSplitRuleRepository>();
+            services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
         }
         else
         {
@@ -319,6 +331,7 @@ public static class ServiceCollectionExtensions
             services.AddSingleton<InMemoryDataStore>();
             services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
             services.AddInMemoryRepositories();
+            services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
             services.AddSingleton<IEmailQueueRepository>(sp =>
                 new InMemoryEmailQueueRepository(sp.GetRequiredService<InMemoryDataStore>()));
         }
@@ -528,6 +541,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPlatformRevenueTransactionRepository, InMemoryPlatformRevenueTransactionRepository>();
         services.AddSingleton<IPlatformExpenseTransactionRepository, InMemoryPlatformExpenseTransactionRepository>();
         services.AddSingleton<IReconciliationRecordRepository, InMemoryReconciliationRecordRepository>();
+        services.AddSingleton<IFeeSplitRuleRepository, InMemoryFeeSplitRuleRepository>();
 
         // Subscriptions
         services.AddSingleton<ISubscriptionPlanRepository, InMemorySubscriptionPlanRepository>();

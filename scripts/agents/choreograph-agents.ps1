@@ -36,12 +36,12 @@ function Test-PathMatchesGlob {
     $normalized = $FilePath.Replace('\', '/')
     $glob = $Pattern.Replace('\', '/')
     if ($glob -eq '**' -or $glob -eq '**/*') { return $true }
-    if ($glob.EndsWith('/**')) {
-        $prefix = $glob.Substring(0, $glob.Length - 3)
-        return $normalized.StartsWith("$prefix/")
-    }
-    $regex = '^' + [regex]::Escape($glob).Replace('\*\*', '.*').Replace('\*', '[^/]*') + '$'
-    return $normalized -match $regex
+    # Convert glob to regex handling '**' anywhere (including mid-path segments).
+    $re = [regex]::Escape($glob)
+    $re = $re -replace '\\\*\\\*/', '(?:.*/)?'
+    $re = $re -replace '\\\*\\\*', '.*'
+    $re = $re -replace '\\\*', '[^/]*'
+    return $normalized -match ('^' + $re + '$')
 }
 
 function Parse-ChoreographyRules {

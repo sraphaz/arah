@@ -48,7 +48,7 @@ function Test-SpecFile {
     }
 
     $status = Get-SimpleYamlField -Raw $raw -Field 'status'
-    if ($status -and $status -notin @('draft', 'active', 'deprecated')) {
+    if ($status -and $status -notin @('draft', 'active', 'completed', 'deprecated')) {
         $fileErrors += "$rel invalid status: $status"
     }
 

@@ -40,7 +40,7 @@ acceptance:
 
 harness:
   commands:
-    - "dotnet build backend/Arah.sln --configuration Release"
+    - "dotnet build Arah.sln --configuration Release"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Subscription"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TransactionQuote"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TransactionsController"

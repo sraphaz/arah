@@ -52,6 +52,14 @@
   --color-neutral-800: #1f2937;
   --color-neutral-900: #111827;
 
+  /* Forest palette — território (wiki, devportal, portal light mode) */
+  --color-forest-50:  #f1f8f4;
+  --color-forest-200: #c6e3d2;
+  --color-forest-500: #6b8a7d;
+  --color-forest-600: #3d5a4f;
+  --color-forest-900: #1a3d2e;
+  --color-surface-card: #ffffff;
+
   /* Semânticas - Estados e Feedback */
   --color-success: var(--color-primary-400);
   --color-success-hover: var(--color-primary-500);
@@ -214,6 +222,10 @@
   --bg-gradient-accent: radial-gradient(circle at 20% 50%, rgba(77, 212, 168, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(125, 211, 255, 0.03) 0%, transparent 50%);
 
+  /* Header gradients (devportal/wiki) */
+  --header-gradient-light: linear-gradient(180deg, color-mix(in srgb, var(--color-forest-50) 95%, transparent) 0%, color-mix(in srgb, var(--color-forest-50) 80%, transparent) 50%, color-mix(in srgb, var(--color-forest-50) 95%, transparent) 100%);
+  --header-gradient-dark: linear-gradient(180deg, color-mix(in srgb, #0a0e12 95%, transparent) 0%, color-mix(in srgb, #0a0e12 80%, transparent) 50%, color-mix(in srgb, #0a0e12 95%, transparent) 100%);
+
   /* ============================================
      GLASS MORPHISM & WATERMARK - Ecossistema Arah
      ============================================ */
@@ -267,6 +279,11 @@
   --color-dark-850: #141a21;
   --color-dark-900: #0f1419;
   --color-dark-950: #0a0e12;
+
+  /* Texto — dark mode (devportal/wiki) */
+  --color-dark-text: #e8edf2;
+  --color-dark-text-muted: #b8c5d2;
+  --color-dark-text-subtle: #8a97a4;
 
   /* Shadows - Dark Mode (mais pronunciadas) */
   --shadow-dark-xs:   0 1px 2px 0 rgba(0, 0, 0, 0.3);

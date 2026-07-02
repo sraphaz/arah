@@ -9,6 +9,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Corrigido — Design quality epic #427: DSG-03 devportal tokens + DSG-05 portal a11y (2026-07-02)
+
+- **DSG-03**: tokens forest/surface/dark-text em `frontend/shared/styles/design-tokens.css`; devportal deriva `--bg`, `--text`, `--accent` etc. dos tokens compartilhados; `semantic-colors.css` e `color-depth-system.css` reescritos sem hex e importados em `devportal.css`
+- **DSG-05**: portal landing — skip link (`skip-to-content`), landmark `main`, `aria-label` na navegação e links externos, `role="banner"` no header, alt descritivo na imagem da hero
+- `docs/design/AUDITORIA_DESIGN.md` atualizado (DSG-03/05 ✅)
+
 ### Alterado — Contexto em camadas + comunicação passiva entre agentes (otimização de consumo de API) (2026-07-02)
 
 - **`.cursorrules` v2.0**: de ~60 KB always-apply para núcleo de ~4 KB (princípios, guardrails, ponteiros) — redução de ~95% do contexto fixo injetado em cada requisição do Cursor

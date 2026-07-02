@@ -1,4 +1,6 @@
 @import url("../../../shared/styles/design-tokens.css");
+@import url("./semantic-colors.css");
+@import url("./color-depth-system.css");
 
 :root {
   color-scheme: light dark;
@@ -18,45 +20,33 @@
   --body-watermark-size: 720px;
   --gradient-overlay: linear-gradient(180deg, rgba(241, 248, 244, 0.6) 0%, rgba(241, 248, 244, 0.2) 100%);
 
-  /* Paleta de cores - Light mode (Wiki sync) */
-  --bg: #f1f8f4; /* forest-50 - fundo claro da Wiki */
-  --bg-elevated: #ffffff;
-  --bg-card: #ffffff;
-  --bg-muted: #f1f8f4;
-  --border: #c6e3d2; /* forest-200 */
-  --border-subtle: #c6e3d2;
+  /* Paleta de cores - Light mode (tokens compartilhados) */
+  --bg: var(--color-forest-50);
+  --bg-elevated: var(--color-surface-card);
+  --bg-card: var(--color-surface-card);
+  --bg-muted: var(--color-forest-50);
+  --border: var(--color-forest-200);
+  --border-subtle: var(--color-forest-200);
 
-  --text: #1a3d2e; /* WCAG AA: Contraste 7.2:1 (era #172635, ajustado para contraste adequado) */
-  --text-muted: #3d5a4f; /* forest-600 */
-  --text-subtle: #6b8a7d; /* forest-500 */
+  --text: var(--color-forest-900);
+  --text-muted: var(--color-forest-600);
+  --text-subtle: var(--color-forest-500);
 
   /* Cores usando tokens unificados */
-  --accent: var(--color-primary-400, #4dd4a8);
-  --accent-hover: var(--color-primary-500, #3bc495);
-  --accent-strong: var(--color-primary-500, #3bc495);
-  --header-gradient-light: linear-gradient(
-    180deg,
-    rgba(241, 248, 244, 0.95) 0%,
-    rgba(241, 248, 244, 0.8) 50%,
-    rgba(241, 248, 244, 0.95) 100%
-  );
-  --header-gradient-dark: linear-gradient(
-    180deg,
-    rgba(10, 14, 18, 0.95) 0%,
-    rgba(10, 14, 18, 0.8) 50%,
-    rgba(10, 14, 18, 0.95) 100%
-  );
+  --accent: var(--color-primary-400);
+  --accent-hover: var(--color-primary-500);
+  --accent-strong: var(--color-primary-500);
 
   /* Dark mode: Links mantêm cores claras com contraste adequado */
-  --link: var(--color-secondary-300, #7dd3ff);           /* Azul secundário - contraste OK em dark */
-  --link-hover: var(--color-secondary-400, #9de3ff);     /* Azul hover - contraste OK em dark */
+  --link: var(--color-secondary-300);
+  --link-hover: var(--color-secondary-400);
 
-  --warning: var(--color-warning, #f5c842);
-  --danger: var(--color-error, #f26d6d);
-  --success: var(--color-success, #4dd4a8);
+  --warning: var(--color-warning);
+  --danger: var(--color-error);
+  --success: var(--color-success);
 
-  --code-bg: #0a0e12;
-  --code-border: #1a2129;
+  --code-bg: var(--color-dark-950);
+  --code-border: var(--color-dark-850);
 
   /* Escala de shadows (compatibilidade - usar --elevation-* quando possível) */
   --shadow-xs: var(--elevation-1);
@@ -112,20 +102,20 @@
 
 /* Dark mode - Sincronizado com Wiki */
 :root.dark {
-  /* Paleta dark mode */
-  --bg: #0a0e12;
-  --bg-elevated: #0f1419;
-  --bg-card: #141a21;
-  --bg-muted: #1a2129;
-  --border: #25303a;
-  --border-subtle: #1e2830;
+  /* Paleta dark mode (tokens compartilhados) */
+  --bg: var(--color-dark-950);
+  --bg-elevated: var(--color-dark-900);
+  --bg-card: var(--color-dark-850);
+  --bg-muted: var(--color-dark-800);
+  --border: var(--color-dark-800);
+  --border-subtle: var(--color-dark-800);
 
-  --text: #e8edf2;
-  --text-muted: #b8c5d2;
-  --text-subtle: #8a97a4;
+  --text: var(--color-dark-text);
+  --text-muted: var(--color-dark-text-muted);
+  --text-subtle: var(--color-dark-text-subtle);
 
-  --code-bg: #0a0e12;
-  --code-border: #1a2129;
+  --code-bg: var(--color-dark-950);
+  --code-border: var(--color-dark-850);
 
   /* Glass morphism dark */
   --glass-bg: rgba(20, 26, 33, 0.98);
@@ -2532,7 +2522,7 @@ pre code {
 
 .sequence-diagram-container svg#mermaid-svg .messageLine0,
 .sequence-diagram-container svg#mermaid-svg .messageLine1 {
-  stroke: var(--link) !important; /* Azul claro #7dd3ff */
+  stroke: var(--link) !important;
   stroke-width: 2px !important;
 }
 
@@ -2552,7 +2542,7 @@ pre code {
 
 .sequence-diagram-container svg#mermaid-svg .labelBox {
   fill: var(--bg-card) !important;
-  stroke: var(--accent) !important; /* Verde água #4dd4a8 */
+  stroke: var(--accent) !important;
   stroke-width: 2px !important;
 }
 

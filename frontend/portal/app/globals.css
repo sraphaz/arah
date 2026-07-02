@@ -4,6 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .skip-to-content {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .skip-to-content:focus {
+    left: var(--space-4, 1rem);
+    top: var(--space-4, 1rem);
+    width: auto;
+    height: auto;
+    overflow: visible;
+    z-index: 100;
+  }
+}
+
 :root {
   color-scheme: light;
   --glass-bg: rgba(255, 255, 255, 0.88);

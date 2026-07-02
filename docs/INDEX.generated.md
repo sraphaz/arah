@@ -1,6 +1,6 @@
 # Índice gerado — docs
 
-> Gerado em **2026-07-01** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
+> Gerado em **2026-07-02** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
 > Exclui stubs `status: deprecated` na raiz (ver `_archive/`).
 
 | Documento | Owner | Updated |

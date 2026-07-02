@@ -282,6 +282,7 @@
 | [RESUMO_REALINHAMENTO](docs/backlog-api/RESUMO_REALINHAMENTO.md) | - | - |
 | [RESUMO_REORGANIZACAO_FINAL](docs/backlog-api/RESUMO_REORGANIZACAO_FINAL.md) | - | - |
 | [RESUMO_VERIFICACAO_ADERENCIA](docs/backlog-api/RESUMO_VERIFICACAO_ADERENCIA.md) | - | - |
+| [RETROSPECTIVA_DOD_GAPS](docs/backlog-api/RETROSPECTIVA_DOD_GAPS.md) | - | - |
 | [REVISAO_COMPLETA_PRIORIDADES](docs/backlog-api/REVISAO_COMPLETA_PRIORIDADES.md) | - | - |
 | [ROADMAP_VISUAL](docs/backlog-api/ROADMAP_VISUAL.md) | - | - |
 | [TEMPLATE_TDD_BDD_FASES](docs/backlog-api/TEMPLATE_TDD_BDD_FASES.md) | - | - |
@@ -396,6 +397,7 @@
 | [22_COHESION_AND_TESTS](docs/governance/22_COHESION_AND_TESTS.md) | - | - |
 | [30_MODERATION](docs/governance/30_MODERATION.md) | - | - |
 | [41_CONTRIBUTING](docs/governance/41_CONTRIBUTING.md) | - | - |
+| [DEFINITION_OF_DONE](docs/governance/DEFINITION_OF_DONE.md) | - | - |
 | [README](docs/handoff/arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/README.md) | - | - |
 | [README](docs/handoff/README.md) | - | - |
 | [IMPLEMENTATION_SUMMARY](docs/IMPLEMENTATION_SUMMARY.md) | - | - |
@@ -435,6 +437,7 @@
 | [CI_CD_PIPELINE](docs/ops/CI_CD_PIPELINE.md) | - | - |
 | [GITHUB_PROJECT_MANAGEMENT](docs/ops/GITHUB_PROJECT_MANAGEMENT.md) | - | - |
 | [OBSERVABILITY_BASELINE](docs/ops/OBSERVABILITY_BASELINE.md) | - | - |
+| [PILOT_STAGING_CONFIG_TODO](docs/ops/PILOT_STAGING_CONFIG_TODO.md) | - | - |
 | [PLATFORM_STATE](docs/ops/PLATFORM_STATE.md) | - | - |
 | [ORDEM_FASES_POR_PRIORIDADE](docs/ORDEM_FASES_POR_PRIORIDADE.md) | - | - |
 | [PAGINAS_CONTEXTUALIZACAO_PADRAO](docs/PAGINAS_CONTEXTUALIZACAO_PADRAO.md) | - | - |

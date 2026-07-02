@@ -19,6 +19,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - **`AGENTS.md` v2.0**: enxugado de ~15 KB para ~5 KB; tabelas de SDD, coreografia e skills movidas para `docs/ops/AGENT_OPERATION.md` (PR 14)
 - **Lição LIC-004** em `docs/LICOES_APRENDIDAS.md` — contexto fixo e comunicação ativa entre agentes inflam consumo de API
 
+### Corrigido — Harness local com stack Arah em execução (2026-07-02)
+
+- **`scripts/harness/stop-arah-local-processes.ps1`**: encerra `Arah.Bff`/`Arah.Api` órfãos antes de `dotnet build` no harness — evita falso `MSB3027` (exe locked) que cascateava em falhas de teste
+- **`run-harness.ps1`**: invoca o script automaticamente antes de comandos `dotnet build`
+
 ### Corrigido — Apontamentos de revisão do PR 426 (2026-07-02)
 
 - **Harness**: filtros `dotnet test` com `|` nas specs FASE56/58/61 agora entre aspas simples — o PowerShell interpretava o `|` como pipe e quebrava o comando

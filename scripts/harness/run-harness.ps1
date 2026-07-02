@@ -130,6 +130,9 @@ function Resolve-AgentManifest {
 function Invoke-HarnessCommand {
     param([string]$Command)
     if ($Command -match '^(dotnet|npm|flutter)\s+') {
+        if ($Command -match 'dotnet\s+build') {
+            & (Join-Path $HarnessDir 'stop-arah-local-processes.ps1') | Out-Null
+        }
         Invoke-Expression $Command
         if ($LASTEXITCODE -ne 0 -and $null -ne $LASTEXITCODE) { throw "exit $LASTEXITCODE" }
         return

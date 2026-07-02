@@ -1,5 +1,5 @@
-# Staging — imagens GHCR (FASE52)
-# Uso: ARAH_API_IMAGE=ghcr.io/owner/arah/arah-api:sha docker compose -f docker-compose.staging.yml up
+# Staging — imagens GHCR (FASE52 + FASE54 piloto)
+# Uso: ARAH_API_IMAGE=ghcr.io/owner/arah-api:sha docker compose -f docker-compose.staging.yml up
 
 services:
   postgres:
@@ -10,11 +10,17 @@ services:
       POSTGRES_DB: arah
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arah -d arah"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   api:
     image: ${ARAH_API_IMAGE:?set ARAH_API_IMAGE}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:8080
       ASPNETCORE_ENVIRONMENT: Staging
@@ -22,6 +28,8 @@ services:
       ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=arah;Username=arah;Password=arah
       Persistence__Provider: Postgres
       Persistence__ApplyMigrations: "true"
+      Pilot__BootstrapAdminEnabled: "true"
+      Stripe__SecretKey: ${STRIPE__SECRETKEY:-}
     ports:
       - "8080:8080"
 

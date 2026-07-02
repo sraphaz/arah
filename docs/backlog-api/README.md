@@ -261,10 +261,10 @@ backlog-api/
 
 | Fase | Título | Duração | Prioridade | Onda | Status |
 |------|--------|---------|------------|------|--------|
-| **[52](./FASE52.md)** | Fundação Técnica e CI/CD | 28d | 🔴 P0 | S0 | ⏳ Pendente |
-| **[53](./FASE53.md)** | Arah Core (registro, identidade, releases) | 35d | 🔴 P0 | S0 | ⏳ Pendente |
-| **[54](./FASE54.md)** | IaC e 1ª Instância Gerenciada | 28d | 🔴 P0 | S0 | ⏳ Pendente |
-| **[55](./FASE55.md)** | Monetização Open-Core (billing, split, payouts) | 45d | 🔴 P0 | S1 | ⏳ Pendente |
+| **[52](./FASE52.md)** | Fundação Técnica e CI/CD | 28d | 🔴 P0 | S0 | ✅ Completo |
+| **[53](./FASE53.md)** | Arah Core (registro, identidade, releases) | 35d | 🔴 P0 | S0 | ✅ Completo |
+| **[54](./FASE54.md)** | IaC e 1ª Instância Gerenciada | 28d | 🔴 P0 | S0 | 🟡 Código OK — [config ops](../ops/PILOT_STAGING_CONFIG_TODO.md) |
+| **[55](./FASE55.md)** | Monetização Open-Core (billing, split, payouts) | 45d | 🔴 P0 | S1 | 🟡 Em progresso (quote/gate v0) |
 | **[56](./FASE56.md)** | Transparência e Governança de Taxas | 21d | 🔴 P0 | S2 | ⏳ Pendente |
 | **[57](./FASE57.md)** | Cockpit do Implementador (Web) | 35d | 🔴 P0 | S1–S2 | ⏳ Pendente |
 | **[58](./FASE58.md)** | Operação Multi-Instância (deploy, health) | 28d | 🟡 P1 | S1–S2 | ⏳ Pendente |

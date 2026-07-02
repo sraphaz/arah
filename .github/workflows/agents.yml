@@ -82,6 +82,31 @@ jobs:
           if ($pr -gt 0) { $params.ExecuteAutonomy = $true }
           & ./scripts/agents/run-agent-activation.ps1 @params
 
+      - name: Publish domain agent pareceres (PR)
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_FILES: ${{ steps.pr_files.outputs.files }}
+        run: |
+          $pr = [int]'${{ github.event.pull_request.number || 0 }}'
+          if ($pr -le 0) { Write-Host 'No PR number — skipping domain pareceres'; exit 0 }
+          if (-not (Test-Path 'route.json')) { Write-Host 'No route.json — skipping'; exit 0 }
+          $route = Get-Content route.json -Raw | ConvertFrom-Json
+          $domains = @()
+          if ($route.choreography -and $route.choreography.domain_consults) {
+            $domains = @($route.choreography.domain_consults)
+          }
+          if ($domains.Count -eq 0) { Write-Host 'No domain consults matched for this PR'; exit 0 }
+          $changed = @()
+          if ($env:PR_FILES) {
+            $changed = $env:PR_FILES -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          }
+          foreach ($d in $domains) {
+            Write-Host "Publishing domain parecer: $d"
+            & ./scripts/agents/post-domain-consult.ps1 -DomainId $d -PrNumber $pr -ChangedFiles $changed -Trigger 'choreography-ci' -PostComment
+          }
+
       - name: Upload agent activity log
         uses: actions/upload-artifact@v4
         with:

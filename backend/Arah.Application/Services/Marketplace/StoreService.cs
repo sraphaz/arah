@@ -15,6 +15,7 @@ public sealed class StoreService
     private readonly MembershipAccessRules _accessRules;
     private readonly IUnitOfWork _unitOfWork;
     private readonly CacheInvalidationService? _cacheInvalidation;
+    private readonly CommercialStoreGateService? _commercialGate;
 
     public StoreService(
         IStoreRepository storeRepository,
@@ -22,7 +23,8 @@ public sealed class StoreService
         AccessEvaluator accessEvaluator,
         MembershipAccessRules accessRules,
         IUnitOfWork unitOfWork,
-        CacheInvalidationService? cacheInvalidation = null)
+        CacheInvalidationService? cacheInvalidation = null,
+        CommercialStoreGateService? commercialGate = null)
     {
         _storeRepository = storeRepository;
         _userRepository = userRepository;
@@ -30,6 +32,7 @@ public sealed class StoreService
         _accessRules = accessRules;
         _unitOfWork = unitOfWork;
         _cacheInvalidation = cacheInvalidation;
+        _commercialGate = commercialGate;
     }
 
     public async Task<Result<Store>> UpsertMyStoreAsync(
@@ -233,6 +236,18 @@ public sealed class StoreService
         if (!await CanManageStoreAsync(store, userId, cancellationToken))
         {
             return Result<Store>.Failure("Not authorized.");
+        }
+
+        if (enabled && _commercialGate is not null)
+        {
+            var blockReason = await _commercialGate.GetCommerceBlockReasonAsync(
+                store.OwnerUserId,
+                store.TerritoryId,
+                cancellationToken);
+            if (blockReason is not null)
+            {
+                return Result<Store>.Failure(blockReason);
+            }
         }
 
         store.SetPaymentsEnabled(enabled, DateTime.UtcNow);

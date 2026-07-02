@@ -1,10 +1,10 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-07-01  
+**Última Atualização**: 2026-06-30  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
-**Prioridade atual**: 🔴 **FASE54 — IaC e 1ª Instância** (Onda S0)  
-**Fases em Andamento**: FASE54 (piloto)
+**Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
+**Fases em Andamento**: FASE54 (ops), FASE55 (backend)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
 
@@ -30,8 +30,8 @@
 |------|------|------------|------|--------|--------------|
 | 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | ✅ Completo | [FASE52.md](./backlog-api/FASE52.md) · [CI/CD](../ops/CI_CD_PIPELINE.md) |
 | 53 | Arah Core | 🔴 P0 | S0 | ✅ Completo | [FASE53.md](./backlog-api/FASE53.md) · [spec](../specs/phases/FASE53-arah-core.spec.yaml) |
-| 54 | IaC e 1ª Instância | 🔴 P0 | S0 | 🟡 Em progresso | [FASE54.md](./backlog-api/FASE54.md) · [spec](../specs/phases/FASE54-iac.spec.yaml) |
-| 55 | Monetização Open-Core | 🔴 P0 | S1 | ⏳ Pendente | [FASE55.md](./backlog-api/FASE55.md) |
+| 54 | IaC e 1ª Instância | 🔴 P0 | S0 | 🟡 Config ops pendente | [FASE54.md](./backlog-api/FASE54.md) · [config TODO](../ops/PILOT_STAGING_CONFIG_TODO.md) |
+| 55 | Monetização Open-Core | 🔴 P0 | S1 | 🟡 Em progresso (v0) | [FASE55.md](./backlog-api/FASE55.md) · [spec](../specs/phases/FASE55-monetization.spec.yaml) |
 | 56 | Transparência e Taxas | 🔴 P0 | S2 | ⏳ Pendente | [FASE56.md](./backlog-api/FASE56.md) |
 | 57 | Cockpit Implementador | 🔴 P0 | S1–S2 | ⏳ Pendente | [FASE57.md](./backlog-api/FASE57.md) |
 | 58 | Operação Multi-Instância | 🟡 P1 | S1–S2 | ⏳ Pendente | [FASE58.md](./backlog-api/FASE58.md) |

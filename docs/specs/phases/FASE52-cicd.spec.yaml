@@ -12,16 +12,28 @@ intent: |
 acceptance:
   - id: AC-52-1
     then: "Todo PR dispara CI (build + test)"
+    status: manual
+    evidence: ".github/workflows/ci.yml — verificável via run do GitHub Actions"
   - id: AC-52-2
     then: "Merge main publica imagens ghcr.io/.../arah-api e arah-bff com tag sha"
+    status: manual
+    evidence: ".github/workflows (CD) — verificável via pacotes GHCR"
   - id: AC-52-3
     then: "deploy-staging.yml valida /health API e BFF após CD"
+    status: manual
+    evidence: ".github/workflows/deploy-staging.yml — step de health"
   - id: AC-52-4
     then: "deploy-production.yml exige confirm=DEPLOY e environment production"
+    status: manual
+    evidence: ".github/workflows/deploy-production.yml — input confirm + environment"
   - id: AC-52-5
     then: "docs/ops/CI_CD_PIPELINE.md documenta fluxo e secrets"
+    status: covered
+    evidence: "docs/ops/CI_CD_PIPELINE.md"
   - id: AC-52-6
     then: "Observabilidade baseline — /metrics Prometheus + smoke CD (docs/ops/OBSERVABILITY_BASELINE.md)"
+    status: manual
+    evidence: "docs/ops/OBSERVABILITY_BASELINE.md + endpoint /metrics"
 
 harness:
   scripts:

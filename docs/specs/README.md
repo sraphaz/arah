@@ -55,6 +55,17 @@ Ver [SDD_AND_HARNESS.md](../_meta/SDD_AND_HARNESS.md) e `scripts/harness/run-har
 
 ---
 
+## Specs ativas (S0–S1)
+
+| Spec | Fase | Status |
+|------|------|--------|
+| [FASE52-cicd.spec.yaml](./phases/FASE52-cicd.spec.yaml) | FASE52 | completed |
+| [FASE53-arah-core.spec.yaml](./phases/FASE53-arah-core.spec.yaml) | FASE53 | completed |
+| [FASE54-iac.spec.yaml](./phases/FASE54-iac.spec.yaml) | FASE54 | active |
+| [FASE55-monetization.spec.yaml](./phases/FASE55-monetization.spec.yaml) | FASE55 | active |
+
+---
+
 ## Referências
 
 - [PLATFORM_STATE.md](../ops/PLATFORM_STATE.md)

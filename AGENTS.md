@@ -140,6 +140,15 @@ Após o roteamento do orquestrador, [`.agents/choreography.yaml`](.agents/choreo
 
 **Tipos:** operacionais publicam checklist; domínio publica **parecer consultivo** (`<!-- arah-domain-consult:{id} -->`). Em PRs, `-ExecuteAutonomy` invoca skills declaradas nas regras.
 
+### Autonomia dos agentes de domínio (sem acionamento manual)
+
+Os agentes de domínio agem **a cada interação**, automaticamente:
+
+- **Local (Cursor)**: hook `stop` em [.cursor/hooks.json](.cursor/hooks.json) → [.cursor/hooks/domain-review.ps1](.cursor/hooks/domain-review.ps1) executa [domain-autoreview.ps1](scripts/agents/domain-autoreview.ps1), resolve a coreografia e grava pareceres em `.cursor/domain-review.md`. A rule [.cursor/rules/domain-agents-autonomy.mdc](.cursor/rules/domain-agents-autonomy.mdc) obriga endereçar cada item antes de concluir.
+- **CI (PR)**: [agents.yml](.github/workflows/agents.yml) publica os pareceres como comentários (`post-domain-consult.ps1 -PostComment`) em todo `opened`/`synchronize`.
+
+**Definition of Done (rigor total)**: [docs/governance/DEFINITION_OF_DONE.md](docs/governance/DEFINITION_OF_DONE.md) — nenhum item é "pronto" sem AC↔teste, evidência e parecer de domínio endereçado.
+
 ```powershell
 ./scripts/agents/arah-agents.ps1 choreograph -ChangedFiles backend/Arah.Core/x.cs -Trigger pull_request -Json
 ./scripts/agents/arah-agents.ps1 skill -Skill likec4-export
@@ -206,6 +215,7 @@ Monorepo: backend .NET 8 + BFF, web (`frontend/wiki`, `portal`, `devportal`), Fl
 
 ## Referências
 
+- [docs/governance/DEFINITION_OF_DONE.md](docs/governance/DEFINITION_OF_DONE.md)
 - [docs/ops/AGENT_OPERATION.md](docs/ops/AGENT_OPERATION.md)
 - [docs/_meta/SDD_AND_HARNESS.md](docs/_meta/SDD_AND_HARNESS.md)
 - [docs/specs/README.md](docs/specs/README.md)

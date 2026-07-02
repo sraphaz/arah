@@ -115,4 +115,6 @@ Detalhe: [STATUS_FASES.md](../STATUS_FASES.md) · [REALINHAMENTO_SUSTENTACAO_OPE
 
 ## Prioridade atual
 
-**Onda S0**: concluir FASE52 (observabilidade) → **FASE53 Arah Core** → FASE54 IaC.
+**Onda S0**: FASE52 ✅ → FASE53 ✅ → **FASE54** (config ops: [PILOT_STAGING_CONFIG_TODO.md](./PILOT_STAGING_CONFIG_TODO.md)) → **FASE55** (quote/gate v0 em código).
+
+**Provisionamento piloto**: `./scripts/provision/provision-pilot-instance.ps1` · [infrastructure/pilot/README.md](../infrastructure/pilot/README.md)

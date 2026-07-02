@@ -12,24 +12,44 @@ intent: |
 acceptance:
   - id: AC-53-1
     then: "Projeto backend/Arah.Core com entidades Instance, Release, HealthCheckReport"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreInstanceRegistry|FullyQualifiedName~CoreReleaseCatalog"
   - id: AC-53-2
     then: "POST /core/instances registra instância e retorna id"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreControllerIntegration"
   - id: AC-53-3
     then: "POST /core/instances/{id}/heartbeat persiste telemetria (services, uptime)"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreInstanceRegistry"
   - id: AC-53-4
     then: "GET /core/instances lista instâncias com telemetria agregada"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreControllerIntegration"
   - id: AC-53-5
     then: "GET /core/releases?channel=stable lista releases"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreReleaseCatalog"
   - id: AC-53-6
     then: "Testes unitários e integração para registro, listagem e heartbeat"
+    status: covered
+    covered_by: "FullyQualifiedName~Core"
   - id: AC-53-7
     then: "POST /core/directory/territories publica território; GET lista diretório"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreDirectoryService"
   - id: AC-53-8
     then: "GET /federation/identity/{globalUserId} resolve identidade federada"
+    status: covered
+    covered_by: "FullyQualifiedName~FederationControllerIntegration|FullyQualifiedName~FederationIdentityService"
   - id: AC-53-9
     then: "Registro de instância retorna par de chaves RSA (private key uma vez)"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreControllerIntegration"
   - id: AC-53-10
     then: "Instância degrada graciosamente se Core indisponível (spec FASE54+)"
+    status: covered
+    covered_by: "FullyQualifiedName~CoreAvailabilityCache"
 
 harness:
   commands:

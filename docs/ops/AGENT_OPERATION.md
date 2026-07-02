@@ -193,6 +193,21 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 - `orchestrate` enriquece `route.json` com bloco `choreography` (regras + domínios).
 - CLI: `arah-agents choreograph`, `skill -Skill likec4-export`.
 
+### PR 13 — Autonomia de domínio (sem acionamento manual) + DoD (2026-07-02)
+
+| Artefato | Caminho |
+|----------|---------|
+| Hook local (Cursor) | [.cursor/hooks.json](../../.cursor/hooks.json), [.cursor/hooks/domain-review.ps1](../../.cursor/hooks/domain-review.ps1) |
+| Autoreview | [domain-autoreview.ps1](../../scripts/agents/domain-autoreview.ps1) |
+| Rule (alwaysApply) | [.cursor/rules/domain-agents-autonomy.mdc](../../.cursor/rules/domain-agents-autonomy.mdc) |
+| Definition of Done | [docs/governance/DEFINITION_OF_DONE.md](../governance/DEFINITION_OF_DONE.md) |
+| CI publica pareceres | [agents.yml](../../.github/workflows/agents.yml) (step "Publish domain agent pareceres") |
+
+**Comportamento:**
+- **Local**: hook `stop` roda o autoreview sobre o `git diff` a cada interação; gera pareceres em `.cursor/domain-review.md` e injeta `followup_message` (idempotente por conjunto de mudanças).
+- **CI**: em todo PR, os `domain_consults` da coreografia são publicados como comentários `arah-domain-consult` (não apenas listados).
+- Cobertura de paths ampliada (Financial, Application/Services/Marketplace, Items) e matcher de glob corrigido para `**` em qualquer posição.
+
 ### PR 12 — Gestão via GitHub (Issues, Project, labels) (2026-07-01)
 
 | Artefato | Caminho |

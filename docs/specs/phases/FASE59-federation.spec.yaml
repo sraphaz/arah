@@ -1,0 +1,60 @@
+id: FASE59-federation
+version: "0.1.0"
+title: "FASE59 — Federação entre instâncias (opt-in)"
+owner: backend
+status: draft
+phase: FASE59
+
+intent: |
+  Territórios em instâncias distintas conversam por escolha da governança local:
+  identidade federada, diretório global, mensagens assinadas e marketplace inter-territorial.
+  Território é fronteira de dados; federação é opt-in.
+
+acceptance:
+  - id: AC-59-1
+    when: "Quando um morador do território A acessa o território B (instância distinta)"
+    then: "autentica com o globalUserId federado; perfil local do território B é separado"
+    status: pending
+  - id: AC-59-2
+    when: "Quando um território publica no diretório global"
+    then: "o app descobre o território via Core (GET /federation/directory)"
+    status: pending
+  - id: AC-59-3
+    when: "Quando uma mensagem cross-território é enviada"
+    then: "o evento é assinado pela instância de origem e verificado na de destino"
+    status: pending
+  - id: AC-59-4
+    when: "Quando a governança do território desliga a federação"
+    then: "FederationLink é revogado e nenhum dado novo cruza a fronteira"
+    status: pending
+  - id: AC-59-5
+    then: "Dados pessoais nunca cruzam instâncias sem consentimento explícito do usuário"
+    status: pending
+  - id: AC-59-6
+    when: "Quando um implementador soberano (self-hosted) conecta ao Core"
+    then: "recebe pacote de provisionamento + runbook; federação funciona igual à gerenciada"
+    status: pending
+
+harness:
+  commands:
+    - "dotnet build backend/Arah.Core/Arah.Core.csproj --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Federation"
+  agents:
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE59.md
+    - docs/backlog-api/FASE53.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html
+
+guardrails:
+  - territory-data-stays-on-instance
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE53-arah-core
+  - FASE58-multi-instance

@@ -52,6 +52,24 @@ function Test-SpecFile {
         $fileErrors += "$rel invalid status: $status"
     }
 
+    # Gate de rastreabilidade AC <-> teste (DoD par. 2 / DOD-09):
+    # status covered exige covered_by; status manual exige evidence.
+    if ($raw -match '(?ms)^acceptance:\s*\r?\n((?:  .+\r?\n?)+)') {
+        $acceptanceBlock = $Matches[1]
+        $acItems = [regex]::Split($acceptanceBlock, '(?m)^  - id:\s*')
+        foreach ($item in $acItems) {
+            if ($item -notmatch '^(\S+)') { continue }
+            $acId = $Matches[1].Trim()
+            $acStatus = if ($item -match '(?m)^    status:\s*(\S+)') { $Matches[1].Trim() } else { $null }
+            if ($acStatus -eq 'covered' -and $item -notmatch '(?m)^    covered_by:\s*\S') {
+                $fileErrors += "$rel ${acId}: status 'covered' requires 'covered_by' (test filter)"
+            }
+            if ($acStatus -eq 'manual' -and $item -notmatch '(?m)^    evidence:\s*\S') {
+                $fileErrors += "$rel ${acId}: status 'manual' requires 'evidence'"
+            }
+        }
+    }
+
     if ($fileErrors.Count -gt 0) {
         return @{ path = $rel; id = $id; ok = $false; errors = $fileErrors }
     }

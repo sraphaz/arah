@@ -1,0 +1,64 @@
+id: FASE58-multi-instance
+version: "0.1.0"
+title: "FASE58 — Operação multi-instância (deploy, health, backups)"
+owner: ops
+status: draft
+phase: FASE58
+
+intent: |
+  Ciclo de vida operacional das instâncias: deploy com migração e rollback automático,
+  health contínuo, backups verificados — território nunca fica fora por update falho.
+
+acceptance:
+  - id: AC-58-1
+    when: "Quando o Core publica release stable e a instância inicia deploy"
+    then: "backup verificado é gate obrigatório antes da migração de schema"
+    status: pending
+  - id: AC-58-2
+    when: "Quando o smoke test pós-deploy falha"
+    then: "rollback automático restaura a versão anterior sem downtime do território"
+    status: pending
+  - id: AC-58-3
+    when: "Quando um backup diário não é verificado no prazo (RPO ≤ 15 min)"
+    then: "alerta P1 é emitido e novos deploys ficam bloqueados"
+    status: pending
+  - id: AC-58-4
+    when: "Enquanto o Core está indisponível"
+    then: "a instância opera autônoma (degradação graciosa); eventos de ledger enfileirados"
+    status: pending
+  - id: AC-58-5
+    when: "Quando ocorre incidente (deploy, backup, health)"
+    then: "IncidentEvent é registrado e visível no cockpit do implementador"
+    status: pending
+  - id: AC-58-6
+    then: "Logs, métricas e traces das instâncias agregados (observabilidade central)"
+    status: pending
+
+harness:
+  commands:
+    - "dotnet build backend/Arah.Core/Arah.Core.csproj --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Deployment|FullyQualifiedName~Backup|FullyQualifiedName~Instance"
+  scripts:
+    - scripts/provision/verify-pilot-instance.ps1
+  agents:
+    - backend
+    - release
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE58.md
+    - docs/ops/CI_CD_PIPELINE.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html
+    - docs/handoff/arquitetura-c4/Plano Operacional e Pipelines - Arah.dc.html
+
+guardrails:
+  - territory-data-stays-on-instance
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE52-cicd
+  - FASE53-arah-core
+  - FASE54-iac

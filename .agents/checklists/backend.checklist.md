@@ -8,8 +8,9 @@
 
 ### SDD (fases S0+)
 - [ ] PR inclui `Spec-Id: <id>` ou spec atualizada em `docs/specs/`
+- [ ] **Clarify antes de implementar**: ambiguidades da spec listadas e resolvidas (não adivinhar intenção)
 - [ ] `./scripts/agents/arah-agents.ps1 spec-validate` passa
-- [ ] Critérios `acceptance` da spec cobertos por testes (`dotnet test --filter FullyQualifiedName~Core` se Core)
+- [ ] Critérios `acceptance` da spec cobertos por testes com `covered_by` anotado (`dotnet test --filter FullyQualifiedName~Core` se Core)
 
 ### Antes do PR
 - [ ] `dotnet build` e `dotnet test` passam localmente ou via CI

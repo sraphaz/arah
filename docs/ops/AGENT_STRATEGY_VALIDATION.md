@@ -28,7 +28,7 @@ pontos (coreografia path-based, pareceres de domínio autônomos, DoD com evidê
 | Orquestração 1 nível | Orquestrador → especialistas, sem hierarquia profunda | `orchestrator` roteia; coreografia co-ativa; consultivos não abrem PR | ✅ Conforme |
 | Permissão mínima | `tools`/paths restritos por subagente | `scope.paths` + `may_code` + `max_diff_files` por manifest | ✅ Conforme |
 | Quality gates pré-merge | CI verde + review humano + bots resolvidos | `pr-steward` exige CI + zero apontamentos de bot → `ready-for-merge`; merge humano | ✅ Conforme |
-| Rastreabilidade AC ↔ teste | EARS + testes ligados ao requisito | DoD §2: `covered_by`/naming + harness `dotnet test --filter` | ✅ Conforme (gate automático de `covered_by` ainda pendente — DOD-09) |
+| Rastreabilidade AC ↔ teste | EARS + testes ligados ao requisito | DoD §2: `covered_by`/naming + harness `dotnet test --filter` + gate automático em `validate-specs.ps1` (DOD-09 ✅) | ✅ Conforme |
 | Specs como docs duráveis | "Specs outlive the code" | Specs permanecem em `docs/specs/` com status | ✅ Conforme (Arah é *spec-anchored*, não apenas *spec-first*) |
 | Cobertura de domínios | Especialista por domínio de negócio | 7 → **11 agentes de domínio** após esta revisão | ✅ Corrigido nesta revisão (ver §3) |
 
@@ -76,13 +76,13 @@ Coreografia (`.agents/choreography.yaml` v2) ganhou as regras `feed-content`, `m
 
 | Problema | Correção |
 |----------|----------|
-| Skill `agent-activate` citada em `AGENTS.md` mas inexistente | Criada `.skills/agent-activate.skill.yaml` (wrapper de `run-agent-activation.ps1`) |
 | Specialist `postgresql` citado em `backend.agent.yaml` mas inexistente | Criado `.agents/specialists/postgresql.agent.yaml` |
 | Domínios `feed-conteudo`/`mapa-lugares` citados em `flutter.agent.yaml` mas inexistentes | Criados (§3.1) |
 | `docs-steward` com `CHANGELOG.md` na raiz (não existe; regra proíbe) | Removido do scope; mantido `docs/CHANGELOG.md` |
 | `agent-operation.spec.yaml` AC-AG-1 com contagem hardcoded (22/17, real era 24/21) | AC reescrito para contagem dinâmica (regra: nunca hardcode) |
 | `control-plane` não cobria código de federação em runtime | Scope + coreografia incluem `FederationController` e `Arah.Core/Application/Federation*` |
 | `.agents/README.md` listava só 9 agentes | Catálogo completo (operacionais, domínio, especialistas) |
+| `validate-manifests.ps1` não checava referências cruzadas | Agora falha se `consult.domain`/`consult.specialists`/`skills` não resolverem (LIC-003) |
 
 ### 3.3 Documentação de operação
 
@@ -92,46 +92,44 @@ Coreografia (`.agents/choreography.yaml` v2) ganhou as regras `feed-content`, `m
 
 ---
 
-## 4. Recomendações (propostas, não implementadas)
+## 4. Recomendações — status de implementação
 
-Priorizadas por impacto sobre autonomia e qualidade:
+Priorizadas por impacto sobre autonomia e qualidade. **P0/P1 e a maior parte de P2 foram
+implementadas em 2026-07-02** (mesmo PR desta validação):
 
 ### P0 — antes de escalar as fases 56–61
 
-1. **Spec antes de código para FASE56–61**: as fases estão na `PHASE_QUEUE.yaml` mas sem
-   `.spec.yaml`. Pelo próprio gate SDD, nenhuma delas pode iniciar sem spec. Ação: `planner`
-   + `spec-steward` autoram as specs (skill `spec-author`) na abertura de cada issue de fase
-   — de preferência num PR docs-only anterior à implementação, como o mercado recomenda
-   ("review at phase boundaries").
-2. **Gate automático de `covered_by`** (já na fila como DOD-09 em `dod-retrofit`): hoje a
-   rastreabilidade AC↔teste depende de disciplina; o Spec Kit/Kiro automatizam a checagem.
-   `validate-specs.ps1` deve falhar AC `status: covered` sem `covered_by` resolvível.
+1. ✅ **Spec antes de código para FASE56–61**: autoradas as 6 specs em
+   `docs/specs/phases/` (`FASE56-transparency`, `FASE57-cockpit`, `FASE58-multi-instance`,
+   `FASE59-federation`, `FASE60-implementer-app`, `FASE61-territorial-capital`) com
+   acceptance em EARS e `status: draft` (viram `active` após clarify na abertura da fase).
+   `PHASE_QUEUE.yaml` ganhou `spec_id` em todas as fases 54–61.
+2. ✅ **Gate automático de `covered_by`** (DOD-09): `scripts/harness/validate-specs.ps1`
+   falha AC `status: covered` sem `covered_by` e `status: manual` sem `evidence`.
+   Regressão de rigor agora quebra o CI.
 
 ### P1 — qualidade das specs
 
-3. **Adotar sintaxe EARS nos `acceptance`** ("When <gatilho>, the system shall <resposta>").
-   O template atual (`then:` livre) aceita critérios vagos. Basta evoluir
-   `docs/specs/_template.spec.yaml` com campos `when`/`then` e exemplos EARS.
-4. **Passo `/clarify` explícito**: antes de implementar, o agente deve listar ambiguidades da
-   spec e resolvê-las com o humano (o Spec Kit tem comando dedicado). Ação barata: item no
-   checklist do `spec-steward` e do `backend` ("ambiguidades da spec listadas e resolvidas").
-5. **Specs curtas (1–3 páginas)**: manter; se uma fase gerar spec longa, dividir em
-   `docs/specs/features/` (pasta agora existe).
+3. ✅ **Sintaxe EARS nos `acceptance`**: `docs/specs/_template.spec.yaml` documenta
+   `when`/`then` + `status`/`covered_by`/`evidence`; as 6 novas specs já seguem o formato.
+4. ✅ **Passo clarify explícito**: item obrigatório nos checklists do `spec-steward`
+   ("ambiguidades resolvidas antes de ativar") e do `backend` ("clarify antes de implementar").
+5. ✅ **Specs curtas (1–3 páginas)**: mantido; overflow vai para `docs/specs/features/`.
 
 ### P2 — operação e medição
 
-6. **Métricas de efetividade dos agentes**: taxa de PR de agente mesclado sem retrabalho,
-   apontamentos de bot por PR, tempo issue→ready-for-merge. Fonte: artifacts
-   `agent-activity-*.json` + GitHub API. Sem medição, não há como calibrar autonomia.
-7. **Worktrees para tentativas paralelas**: para tarefas exploratórias, rodar 2–3 agentes em
-   `git worktree` isolados e escolher o melhor PR (prática comum em times multi-agente).
-   Candidata a skill futura (`parallel-attempt`).
-8. **Consolidar sistemas de skills**: existem `.skills/*.skill.yaml` (operação) e
-   `.cursor/skills/arah-*/SKILL.md` (Cursor). Manter `.skills/` como fonte de verdade e
-   fazer as skills Cursor apenas apontarem para elas, evitando deriva.
-9. **Checklist `backend.checklist.md`**: manter a proibição `Araponga.*` (correta), mas
-   revisar periodicamente todos os checklists quando módulos novos surgirem — o
-   `validate-manifests.ps1` verifica existência, não conteúdo.
+6. ✅ **Métricas de efetividade dos agentes**: skill `agent-metrics`
+   (`scripts/agents/agent-metrics.ps1`) — PRs por origem, tempo abertura→`ready-for-merge`,
+   apontamentos de bot por PR, pareceres de domínio. Rodar mensalmente para calibrar autonomia.
+7. ✅ **Worktrees para tentativas paralelas**: skill `parallel-attempt`
+   (`scripts/agents/parallel-attempt.ps1`) — best-of-N (2–5) em worktrees isolados;
+   humano escolhe o PR vencedor. Usar só em tarefas exploratórias.
+8. ✅ **Consolidar sistemas de skills**: `.skills/` é a fonte de verdade; as skills Cursor
+   (`.cursor/skills/arah-*`) já apenas referenciam os YAML correspondentes — regra registrada
+   no `AGENT_QUICKSTART.md` (nova skill = YAML primeiro, Cursor só aponta).
+9. ⏳ **Revisão periódica de conteúdo dos checklists**: contínua — o
+   `validate-manifests.ps1` verifica existência e integridade referencial, não conteúdo;
+   revisar checklists quando módulos novos surgirem.
 
 ---
 

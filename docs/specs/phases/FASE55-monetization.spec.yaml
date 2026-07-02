@@ -37,6 +37,7 @@ acceptance:
   - id: AC-55-7
     then: "Feed/mapa/eventos permanecem acessíveis sem cobrança ao morador"
     status: covered
+    covered_by: "FullyQualifiedName~FeedJourneyService"
 
 harness:
   commands:

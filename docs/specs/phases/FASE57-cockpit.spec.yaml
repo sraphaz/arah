@@ -1,0 +1,60 @@
+id: FASE57-cockpit
+version: "0.1.0"
+title: "FASE57 — Cockpit do Implementador (web)"
+owner: web
+status: draft
+phase: FASE57
+
+intent: |
+  Painel web para implementadores gerenciarem territórios, comércios, receita/repasses
+  e operações — superfície principal de gestão da rede (MVP na onda S1).
+
+acceptance:
+  - id: AC-57-1
+    when: "Quando um implementador autenticado acessa GET /implementers/me/overview"
+    then: "vê KPIs da rede (receita, repasse previsto, comércios ativos, territórios)"
+    status: pending
+  - id: AC-57-2
+    when: "Quando o implementador convida um comércio (POST /implementers/me/merchants/invite)"
+    then: "o fluxo de assinatura é disparado no app do comerciante"
+    status: pending
+  - id: AC-57-3
+    when: "Quando o implementador abre Receita & Repasses"
+    then: "vê próximo repasse e histórico exportável, consistente com o payout consolidado (FASE55)"
+    status: pending
+  - id: AC-57-4
+    when: "Quando a instância reporta heartbeat ao Core"
+    then: "o health aparece refletido no cockpit (GET /implementers/me/instances/{id}/health)"
+    status: pending
+  - id: AC-57-5
+    then: "Toda tela do cockpit é mobile-first e usa tokens do design system Arah (sem cor hardcoded)"
+    status: pending
+  - id: AC-57-6
+    when: "Quando um usuário sem papel de implementador tenta acessar /implementers/me/*"
+    then: "recebe 403; autorização imposta no servidor"
+    status: pending
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Implementer"
+  agents:
+    - web
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE57.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Cockpit do Implementador Arah.dc.html
+    - docs/handoff/arquitetura-c4/Programa de Implementadores Arah.dc.html
+
+guardrails:
+  - territory-first
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE52-cicd
+  - FASE54-iac

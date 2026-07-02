@@ -124,6 +124,10 @@ powershell -NoProfile -File scripts/agents/domain-autoreview.ps1 -Force -Json
 ./scripts/agents/arah-agents.ps1 bot-review -PrNumber <N>
 ./scripts/agents/arah-agents.ps1 pr-ready -PrNumber <N>
 ./scripts/agents/arah-agents.ps1 next-phase -DryRun
+
+# Medição e exploração
+./scripts/agents/agent-metrics.ps1 -Days 30              # efetividade dos agentes
+./scripts/agents/parallel-attempt.ps1 -Name tarefa -Count 2   # best-of-N em worktrees
 ```
 
 ---
@@ -156,6 +160,9 @@ powershell -NoProfile -File scripts/agents/domain-autoreview.ps1 -Force -Json
 1. Crie `.skills/<nome>.skill.yaml` com `id` e o script em `scripts/agents/`.
 2. Referencie a skill nos manifests dos agentes que podem usá-la.
 3. Adicione na tabela de skills do `AGENTS.md`.
+
+> **Fonte de verdade**: `.skills/*.skill.yaml`. Skills Cursor (`.cursor/skills/arah-*`)
+> apenas **apontam** para o YAML correspondente — nunca duplicam a lógica.
 
 ### Nova fase/épico
 

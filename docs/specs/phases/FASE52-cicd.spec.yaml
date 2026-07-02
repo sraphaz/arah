@@ -28,7 +28,7 @@ acceptance:
     evidence: ".github/workflows/deploy-production.yml — input confirm + environment"
   - id: AC-52-5
     then: "docs/ops/CI_CD_PIPELINE.md documenta fluxo e secrets"
-    status: covered
+    status: manual
     evidence: "docs/ops/CI_CD_PIPELINE.md"
   - id: AC-52-6
     then: "Observabilidade baseline — /metrics Prometheus + smoke CD (docs/ops/OBSERVABILITY_BASELINE.md)"

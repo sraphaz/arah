@@ -1,7 +1,7 @@
 # Lições Aprendidas - Arah
 
 **Última Atualização**: 2026-07-02  
-**Total de Lições**: 2  
+**Total de Lições**: 3  
 **Status**: Documento Vivo
 
 ---
@@ -94,7 +94,31 @@ mesmo rigor aplicado a backend/domínio deve valer para design.
 
 ### 🟡 Importantes
 
-*(Nenhuma lição importante ainda documentada)*
+#### LIC-003 - Referências fantasma em manifests de agentes passam despercebidas sem validação de integridade
+**Data**: 2026-07-02
+**Categoria**: Importante
+**Revisão Origem**: `docs/ops/AGENT_STRATEGY_VALIDATION.md`
+
+**Contexto**:
+A validação da estratégia de agentes encontrou referências quebradas acumuladas: `flutter.agent.yaml`
+consultava domínios `feed-conteudo`/`mapa-lugares` que não existiam, `backend.agent.yaml` consultava
+specialist `postgresql` inexistente, e specs/docs traziam contagens hardcoded desatualizadas (22/17 vs
+real). O `validate-manifests.ps1` só checava campos obrigatórios e existência de checklist — nunca a
+resolução das referências cruzadas.
+
+**Lição**:
+Manifests declarativos (agentes ↔ domínios ↔ skills) precisam de **validação de integridade
+referencial automatizada**, como chaves estrangeiras: toda referência declarada deve resolver para um
+arquivo existente. E contagens/valores dinâmicos nunca devem ser hardcoded em specs ou docs.
+
+**Ação Tomada**:
+1. ✅ Criados os agentes de domínio faltantes (`feed-conteudo`, `mapa-lugares`, `comunidade-conexoes`, `identidade-privacidade`) e o specialist `postgresql`.
+2. ✅ `validate-manifests.ps1` agora falha se `consult.domain`, `consult.specialists` ou `skills` referenciarem manifests inexistentes.
+3. ✅ `agent-operation.spec.yaml` AC-AG-1 sem contagem hardcoded (contagem dinâmica).
+
+**Prevenção Futura**:
+- ✅ Gate roda em todo PR (`agents-validate.yml` / `run-gates.ps1`) — referência fantasma quebra o CI.
+- Ao citar um agente/skill em manifest ou doc, criá-lo no mesmo PR.
 
 ---
 
@@ -135,6 +159,8 @@ mesmo rigor aplicado a backend/domínio deve valer para design.
 | ID | Data | Categoria | Título | Status |
 |----|------|-----------|--------|--------|
 | LIC-001 | 2025-01-20 | 🔴 Crítico | Cores Hardcoded Proibidas | ✅ Resolvido |
+| LIC-002 | 2026-07-02 | 🔴 Crítico | Cores hardcoded exigem agente + gate de design | ✅ Resolvido |
+| LIC-003 | 2026-07-02 | 🟡 Importante | Integridade referencial de manifests de agentes | ✅ Resolvido |
 
 ---
 

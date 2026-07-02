@@ -8,7 +8,9 @@
 
 ### Antes do PR (spec-before-code)
 - [ ] Spec `*.spec.yaml` existe com `id`, `acceptance`, `status: active|draft`
-- [ ] `./scripts/harness/validate-specs.ps1` passa
+- [ ] Acceptance em formato EARS (`when` + `then` verificável) quando aplicável
+- [ ] **Clarify**: ambiguidades da spec listadas e resolvidas com o humano antes de ativar (nunca deixar o agente "adivinhar")
+- [ ] `./scripts/harness/validate-specs.ps1` passa (inclui gate covered_by/evidence)
 - [ ] `harness.commands` / `harness.scripts` apontam para comandos reais
 - [ ] PR referencia `Spec-Id: <id>` no corpo quando há código de implementação
 

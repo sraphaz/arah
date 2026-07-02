@@ -129,6 +129,8 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 | [agent-activate](.skills/agent-activate.skill.yaml) | Publicar checklist de conduta na issue/PR |
 | [likec4-export](.skills/likec4-export.skill.yaml) | Exporta LikeC4 → PNG/SVG com tokens Arah |
 | [domain-consult](.skills/domain-consult.skill.yaml) | Parecer consultivo de agente de domínio |
+| [agent-metrics](.skills/agent-metrics.skill.yaml) | Métricas de efetividade (PRs, tempo → ready, bots/PR) |
+| [parallel-attempt](.skills/parallel-attempt.skill.yaml) | Worktrees best-of-N para tarefas exploratórias |
 
 ---
 

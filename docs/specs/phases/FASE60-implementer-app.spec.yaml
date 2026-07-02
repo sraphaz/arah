@@ -1,0 +1,55 @@
+id: FASE60-implementer-app
+version: "0.1.0"
+title: "FASE60 — App: papel do implementador (visão leve)"
+owner: flutter
+status: draft
+phase: FASE60
+
+intent: |
+  Visão leve no app mobile para implementadores: repasse do mês, alertas operacionais
+  e atalhos ao cockpit — sem replicar o cockpit web no app.
+
+acceptance:
+  - id: AC-60-1
+    when: "Quando o usuário é verificado no Programa de Implementadores"
+    then: "o papel implementador é ativável e a UI dedicada aparece no app"
+    status: pending
+  - id: AC-60-2
+    when: "Quando o implementador abre o dashboard no app"
+    then: "vê próximo repasse, receita resumida e comércios ativos"
+    status: pending
+  - id: AC-60-3
+    when: "Quando um payout é processado ou onboarding fica pendente"
+    then: "push notification é enviada respeitando as preferências do usuário"
+    status: pending
+  - id: AC-60-4
+    when: "Quando o implementador toca em ação complexa"
+    then: "deep link abre o cockpit web ou o painel de transparência"
+    status: pending
+  - id: AC-60-5
+    then: "Morador comum nunca vê UI de implementador (autorização no servidor + BFF)"
+    status: pending
+
+harness:
+  commands:
+    - "flutter test"
+    - "dotnet test backend/Tests/Arah.Tests.Bff/Arah.Tests.Bff.csproj --configuration Release --filter FullyQualifiedName~Implementer"
+  agents:
+    - flutter
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE60.md
+    - docs/backlog-api/FASE57.md
+  handoff:
+    - docs/handoff/arquitetura-c4/Programa de Implementadores Arah.dc.html
+
+guardrails:
+  - territory-first
+  - no-hardcoded-colors
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE57-cockpit

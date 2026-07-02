@@ -1,21 +1,21 @@
 /**
  * Sistema de Cores Semânticas - DevPortal
- * Base para callouts, alerts e mensagens de status
+ * Base para callouts, alerts e mensagens de status.
+ * Consome design-tokens.css via devportal.css.
  */
 
 :root {
-  /* Cores semânticas baseadas no design system */
-  --semantic-success: var(--accent); /* #4dd4a8 */
-  --semantic-info: var(--link); /* #7dd3ff */
-  --semantic-warning: #fbbf24;
-  --semantic-error: #ef4444;
-  --semantic-tip: var(--link); /* Mesmo que info */
+  --semantic-success: var(--accent);
+  --semantic-info: var(--link);
+  --semantic-warning: var(--color-warning);
+  --semantic-error: var(--color-error);
+  --semantic-tip: var(--link);
   --semantic-note: var(--text-muted);
 }
 
 :root.dark {
-  --semantic-warning: #fbbf24;
-  --semantic-error: #ef4444;
+  --semantic-warning: var(--color-warning);
+  --semantic-error: var(--color-error);
 }
 
 /* Callout base */
@@ -46,34 +46,33 @@
   line-height: var(--line-height-relaxed);
 }
 
-/* Tipos de callout */
 .callout-success {
   border-left-color: var(--semantic-success);
-  background: rgba(77, 212, 168, 0.1);
+  background: var(--accent-subtle);
   color: var(--text);
 }
 
 .callout-info {
   border-left-color: var(--semantic-info);
-  background: rgba(125, 211, 255, 0.1);
+  background: var(--info-bg-subtle);
   color: var(--text);
 }
 
 .callout-warning {
   border-left-color: var(--semantic-warning);
-  background: rgba(251, 191, 36, 0.1);
+  background: var(--warning-bg-subtle);
   color: var(--text);
 }
 
 .callout-error {
   border-left-color: var(--semantic-error);
-  background: rgba(239, 68, 68, 0.1);
+  background: var(--error-bg-subtle);
   color: var(--text);
 }
 
 .callout-tip {
   border-left-color: var(--semantic-tip);
-  background: rgba(125, 211, 255, 0.1);
+  background: var(--info-bg-subtle);
   color: var(--text);
 }
 
@@ -83,22 +82,21 @@
   color: var(--text);
 }
 
-/* Dark mode ajustes */
 :root.dark .callout-success {
-  background: rgba(77, 212, 168, 0.15);
+  background: var(--accent-bg-strong);
 }
 
 :root.dark .callout-info,
 :root.dark .callout-tip {
-  background: rgba(125, 211, 255, 0.15);
+  background: var(--info-bg-subtle);
 }
 
 :root.dark .callout-warning {
-  background: rgba(251, 191, 36, 0.15);
+  background: var(--warning-bg-subtle);
 }
 
 :root.dark .callout-error {
-  background: rgba(239, 68, 68, 0.15);
+  background: var(--error-bg-subtle);
 }
 
 :root.dark .callout-note {

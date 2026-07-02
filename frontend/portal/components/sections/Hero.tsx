@@ -22,7 +22,7 @@ export default function Hero() {
             <div className="flex">
               <Image
                 src="/first_rght_side_cover.png"
-                alt=""
+                alt="Ilustração de comunidade conectada ao território na plataforma Arah"
                 width={800}
                 height={600}
                 className="w-full rounded-3xl object-contain shadow-lg md:max-h-96 transition-transform duration-300 hover:scale-105"

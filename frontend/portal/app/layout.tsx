@@ -55,6 +55,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <body>
+        <a href="#conteudo-principal" className="skip-to-content rounded-lg bg-white px-4 py-2 text-forest-950 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-400">
+          Ir para o conteúdo principal
+        </a>
         <SiteHeader />
         {children}
       </body>

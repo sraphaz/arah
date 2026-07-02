@@ -35,9 +35,9 @@ Classificação atual por superfície:
 |----|-----------|-----|-----------|------------|--------|
 | DSG-01 | wiki | Cores arbitrárias `bg-[#4dd4a8]`/`[#7dd3ff]` no Mermaid fullscreen (5x) | `frontend/wiki/app/mermaid/fullscreen/page.tsx` | 🔴 viola LIC-001 | ✅ corrigido |
 | DSG-02 | Flutter | `Color(0xFF228B22)` e `Colors.orange` fora do tema no onboarding (5x) | `.../onboarding/.../propose_territory_sheet.dart`, `.../onboarding_screen.dart` | 🔴 viola LIC-001 | ✅ corrigido |
-| DSG-03 | devportal | ~47 hex hardcoded; não consome `design-tokens.css` | `frontend/devportal/assets/css/*.css` | 🟠 maior débito de consistência | ⏳ backlog |
+| DSG-03 | devportal | ~47 hex hardcoded; não consome `design-tokens.css` | `frontend/devportal/assets/css/*.css` | 🟠 maior débito de consistência | ✅ corrigido (aliases → `design-tokens.css`; `semantic-colors` + `color-depth-system` importados) |
 | DSG-04 | portal | Espaçamentos fora da escala 8px (`36px`, `56px`) e px literais em tokens | `frontend/portal/app/globals.css` | 🟡 | ⏳ backlog |
-| DSG-05 | portal | Landing sem `aria-label`/`alt`/`role` na página raiz | `frontend/portal/app/page.tsx` (0 ocorrências) | 🟠 a11y | ⏳ backlog |
+| DSG-05 | portal | Landing sem `aria-label`/`alt`/`role` na página raiz | `frontend/portal/app/page.tsx` (0 ocorrências) | 🟠 a11y | ✅ corrigido (skip link, `main` landmark, nav/header aria, alt na hero) |
 | DSG-06 | cross | Deriva de glass tokens entre plataformas (bg 0.98 vs 0.88; raio 24 vs 32) | wiki/portal `globals.css` + Flutter `app_design_tokens.dart` | 🟡 marca | ⏳ backlog |
 | DSG-07 | wiki | `--syntax-*` sem verificação WCAG documentada | `frontend/wiki/app/globals.css` | 🟡 a11y | ⏳ backlog |
 | DSG-08 | cross | Ausência de gate automático que detecte cor hardcoded no CI | — | 🟠 prevenção | ✅ corrigido |
@@ -45,6 +45,11 @@ Classificação atual por superfície:
 ---
 
 ## Corrigido nesta passada
+
+- **DSG-03**: devportal passa a derivar paleta light/dark de `design-tokens.css` (`--color-forest-*`, `--color-dark-*`); `semantic-colors.css` e `color-depth-system.css` sem hex literais, importados por `devportal.css`.
+- **DSG-05**: portal landing com skip link, `main` com `id`/`aria-label`, `header`/`nav` semânticos com `aria-label`, links externos descritos, alt descritivo na hero.
+
+## Corrigido em passada anterior
 
 - **DSG-01**: 5 usos de `bg-[#...]` → classes configuradas `bg-accent`/`bg-accent-hover`/`bg-link`/`bg-link-hover` (Tailwind da wiki). Zero cores arbitrárias no arquivo.
 - **DSG-01b** (descoberto pelo gate): 22 hex hardcoded nos `themeVariables` do Mermaid (`MermaidDiagram.tsx` + fullscreen) → adapter `frontend/wiki/lib/mermaid-theme.ts` que deriva o tema dos design tokens em runtime (`getComputedStyle` + fallback SSR espelhando tokens). Fonte única para os 2 consumidores.

@@ -1,44 +1,40 @@
 /* Sistema de Cores Inteligente - Profundidade e Separação de Contexto */
-/* Paleta: Verde Água → Azul Céu → Verde Musgo (transições sutis) */
+/* Paleta derivada de design-tokens.css (verde água → azul céu → verde musgo) */
 
 :root {
-  /* Cores Base - Paleta Harmônica */
-  --color-water-green: #4dd4a8;      /* Verde água - brilhante, primário */
-  --color-sky-blue: #7dd3ff;         /* Azul céu - luminoso, secundário */
-  --color-moss-green: #6b8a7d;       /* Verde musgo - profundo, terciário */
+  --color-water-green: var(--color-primary-400);
+  --color-sky-blue: var(--color-secondary-300);
+  --color-moss-green: var(--color-forest-500);
 
-  /* Variações com Luminosidade Adequada (Light Mode) */
-  --color-water-green-light: rgba(77, 212, 168, 0.15);  /* Água sutil */
-  --color-water-green-medium: rgba(77, 212, 168, 0.25); /* Água médio */
-  --color-water-green-strong: #3bc495;                  /* Água forte */
+  --color-water-green-light: var(--accent-subtle);
+  --color-water-green-medium: var(--accent-bg-strong);
+  --color-water-green-strong: var(--color-primary-500);
 
-  --color-sky-blue-light: rgba(125, 211, 255, 0.15);    /* Céu sutil */
-  --color-sky-blue-medium: rgba(125, 211, 255, 0.25);   /* Céu médio */
-  --color-sky-blue-strong: #5ab8e0;                     /* Céu forte */
+  --color-sky-blue-light: var(--info-bg-subtle);
+  --color-sky-blue-medium: var(--link-underline-subtle);
+  --color-sky-blue-strong: var(--color-secondary-400);
 
-  --color-moss-green-light: rgba(107, 138, 125, 0.15);  /* Musgo sutil */
-  --color-moss-green-medium: rgba(107, 138, 125, 0.25); /* Musgo médio */
-  --color-moss-green-strong: #5a7a6d;                   /* Musgo forte */
+  --color-moss-green-light: var(--tag-bg-light);
+  --color-moss-green-medium: var(--border-divider-light-medium);
+  --color-moss-green-strong: var(--color-forest-600);
 
-  /* Gradientes de Transição Sutil */
   --gradient-water-to-sky: linear-gradient(135deg, var(--color-water-green-light), var(--color-sky-blue-light));
   --gradient-sky-to-moss: linear-gradient(135deg, var(--color-sky-blue-light), var(--color-moss-green-light));
   --gradient-moss-to-water: linear-gradient(135deg, var(--color-moss-green-light), var(--color-water-green-light));
 }
 
 :root.dark {
-  /* Variações para Dark Mode - Luminosidade Adequada */
-  --color-water-green-light: rgba(77, 212, 168, 0.12);  /* Água sutil dark */
-  --color-water-green-medium: rgba(77, 212, 168, 0.20); /* Água médio dark */
-  --color-water-green-strong: #5ae5b8;                  /* Água forte dark */
+  --color-water-green-light: var(--accent-bg-muted);
+  --color-water-green-medium: var(--accent-bg-active);
+  --color-water-green-strong: var(--color-primary-400);
 
-  --color-sky-blue-light: rgba(125, 211, 255, 0.12);    /* Céu sutil dark */
-  --color-sky-blue-medium: rgba(125, 211, 255, 0.20);   /* Céu médio dark */
-  --color-sky-blue-strong: #7cd1ff;                     /* Céu forte dark */
+  --color-sky-blue-light: var(--info-bg-subtle);
+  --color-sky-blue-medium: var(--border-divider-dark-medium);
+  --color-sky-blue-strong: var(--color-secondary-300);
 
-  --color-moss-green-light: rgba(100, 150, 180, 0.12);  /* Musgo sutil dark (azulado) */
-  --color-moss-green-medium: rgba(100, 150, 180, 0.20); /* Musgo médio dark */
-  --color-moss-green-strong: #6496b4;                   /* Musgo forte dark */
+  --color-moss-green-light: var(--border-sidebar-dark);
+  --color-moss-green-medium: var(--border-divider-dark-medium);
+  --color-moss-green-strong: var(--color-dark-text-subtle);
 }
 
 /* Sidebar - Separação de Contexto por Cores */
@@ -179,7 +175,6 @@
   transform: translateX(2px);
 }
 
-
 /* Profundidade Visual - Indicador de Contexto */
 .sidebar-section::before {
   content: '';
@@ -225,7 +220,6 @@
   );
 }
 
-/* Links Externos - Usar cores para distinção + ícones para serviços conhecidos */
 .sidebar-link-external {
   color: var(--color-moss-green);
   border-left: 2px solid transparent;
@@ -235,7 +229,6 @@
   gap: 0.5rem;
 }
 
-/* Ícones para GitHub, Discord e Arah - manter visíveis */
 .sidebar-link-icon {
   width: 16px;
   height: 16px;
@@ -250,7 +243,6 @@
   transform: scale(1.1);
 }
 
-/* Cores específicas para ícones (harmonia com paleta) */
 .sidebar-link-icon-github .sidebar-link-icon {
   color: var(--color-moss-green);
 }
@@ -275,7 +267,6 @@
   color: var(--color-water-green-strong);
 }
 
-/* Remover ícone genérico ↗ - manter apenas ícones específicos */
 .sidebar-link-external:not(.sidebar-link-icon-github):not(.sidebar-link-icon-discord):not(.sidebar-link-icon-arah)::after {
   display: none;
 }

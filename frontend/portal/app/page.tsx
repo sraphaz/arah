@@ -16,7 +16,7 @@ import Support from "@/components/sections/Support";
 
 export default function Home() {
   return (
-    <main>
+    <main id="conteudo-principal" aria-label="Conteúdo principal da landing do Arah">
       <Hero />
       <Inspiration />
       <Problem />

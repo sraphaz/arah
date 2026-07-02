@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Fechamento de fases S0 e FASE54 piloto (2026-07-01)
+
+- FASE53 ✅ — token de instância, `POST /core/releases`, `ICoreAvailabilityCache`
+- `close-completed-phases.ps1` / `github-project close-phases` — fecha issues completed em ordem
+- FASE54 iniciada — `infrastructure/pilot/`, spec `FASE54-iac`, script `register-core-instance.ps1`
+- `Test-PhaseCompleteFromMeta` — meta YAML como fonte de conclusão
+
 ### Adicionado — FASE53 Arah Core MVP (2026-07-01)
 
 - Registro de instância com par RSA (`RegisterCoreInstanceResponse` + `PublicKeyPem`)

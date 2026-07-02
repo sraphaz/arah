@@ -1,0 +1,43 @@
+# Piloto FASE54 — API + PostgreSQL (reproduzível do zero)
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: arah
+      POSTGRES_PASSWORD: arah
+      POSTGRES_DB: arah_pilot
+    ports:
+      - "5433:5432"
+    volumes:
+      - arah_pilot_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arah -d arah_pilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      JWT__SIGNINGKEY: pilot-only-change-me
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=arah_pilot;Username=arah;Password=arah
+      Persistence__Provider: Postgres
+      Persistence__ApplyMigrations: "true"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  arah_pilot_pgdata:

@@ -13,14 +13,16 @@ namespace Arah.Api.Controllers.Platform;
 [Tags("Arah Core")]
 public sealed class CoreController : ControllerBase
 {
+    private const string InstanceTokenHeader = "X-Arah-Instance-Token";
+
     private readonly CoreInstanceService _instances;
     private readonly CoreDirectoryService _directory;
-    private readonly ICoreReleaseCatalog _releases;
+    private readonly CoreReleaseService _releases;
 
     public CoreController(
         CoreInstanceService instances,
         CoreDirectoryService directory,
-        ICoreReleaseCatalog releases)
+        CoreReleaseService releases)
     {
         _instances = instances;
         _directory = directory;
@@ -47,7 +49,8 @@ public sealed class CoreController : ControllerBase
         var registration = _instances.Register(request.Mode, baseUrl, request.Version);
         var response = new RegisterCoreInstanceResponse(
             ToResponse(registration.Instance),
-            registration.PrivateKeyPem);
+            registration.PrivateKeyPem,
+            registration.InstanceAuthToken);
         return CreatedAtAction(nameof(GetInstance), new { id = registration.Instance.Id }, response);
     }
 
@@ -68,14 +71,24 @@ public sealed class CoreController : ControllerBase
         return instance is null ? NotFound() : Ok(ToResponse(instance));
     }
 
+    [AllowAnonymous]
     [HttpPost("instances/{id:guid}/heartbeat")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult Heartbeat(Guid id, [FromBody] CoreHeartbeatRequest request)
+    public IActionResult Heartbeat(
+        Guid id,
+        [FromBody] CoreHeartbeatRequest request,
+        [FromHeader(Name = InstanceTokenHeader)] string? instanceToken)
     {
         if (_instances.GetById(id) is null)
         {
             return NotFound();
+        }
+
+        if (!IsAuthorizedForInstance(id, instanceToken))
+        {
+            return Unauthorized();
         }
 
         var services = request.Services ?? new Dictionary<string, string>();
@@ -88,14 +101,27 @@ public sealed class CoreController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<CoreReleaseResponse>), StatusCodes.Status200OK)]
     public ActionResult<IEnumerable<CoreReleaseResponse>> ListReleases([FromQuery] string channel = "stable")
     {
-        var list = _releases.ListByChannel(channel)
-            .Select(r => new CoreReleaseResponse(
-                r.Id,
-                r.Version,
-                r.Channel,
-                r.SchemaVersion,
-                r.PublishedAtUtc));
+        var list = _releases.ListByChannel(channel).Select(ToReleaseResponse);
         return Ok(list);
+    }
+
+    [HttpPost("releases")]
+    [ProducesResponseType(typeof(CoreReleaseResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public ActionResult<CoreReleaseResponse> PublishRelease([FromBody] PublishCoreReleaseRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Version) || string.IsNullOrWhiteSpace(request.Channel))
+        {
+            return BadRequest("version and channel are required");
+        }
+
+        if (request.SchemaVersion < 1)
+        {
+            return BadRequest("schemaVersion must be >= 1");
+        }
+
+        var release = _releases.Publish(request.Version, request.Channel, request.SchemaVersion);
+        return Created($"api/v1/core/releases", ToReleaseResponse(release));
     }
 
     [HttpPost("directory/territories")]
@@ -117,9 +143,7 @@ public sealed class CoreController : ControllerBase
         try
         {
             var entry = _directory.PublishTerritory(request.TerritoryId, request.InstanceId, request.Name);
-            return Created(
-                $"api/v1/core/directory/territories",
-                ToDirectoryResponse(entry));
+            return Created("api/v1/core/directory/territories", ToDirectoryResponse(entry));
         }
         catch (InvalidOperationException)
         {
@@ -135,6 +159,16 @@ public sealed class CoreController : ControllerBase
         return Ok(list);
     }
 
+    private bool IsAuthorizedForInstance(Guid instanceId, string? instanceToken)
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return true;
+        }
+
+        return _instances.ValidateAuthToken(instanceId, instanceToken);
+    }
+
     private static CoreInstanceResponse ToResponse(CoreInstance instance) =>
         new(
             instance.Id,
@@ -147,6 +181,9 @@ public sealed class CoreController : ControllerBase
             instance.LastHeartbeatUtc,
             instance.LastServices,
             instance.LastUptime.HasValue ? (long)instance.LastUptime.Value.TotalSeconds : null);
+
+    private static CoreReleaseResponse ToReleaseResponse(CoreRelease release) =>
+        new(release.Id, release.Version, release.Channel, release.SchemaVersion, release.PublishedAtUtc);
 
     private static DirectoryTerritoryResponse ToDirectoryResponse(DirectoryTerritoryEntry entry) =>
         new(entry.TerritoryId, entry.InstanceId, entry.Name, entry.PublishedAtUtc);

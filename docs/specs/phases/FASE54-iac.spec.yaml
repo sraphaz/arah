@@ -1,0 +1,39 @@
+id: FASE54-iac
+version: "1.0.0"
+title: "FASE54 — IaC e 1ª instância piloto"
+owner: ops
+status: active
+phase: FASE54
+
+intent: |
+  Provisionar primeira instância gerenciada via compose/IaC reproduzível,
+  registrar no Core e validar health HTTPS + JWT.
+
+acceptance:
+  - id: AC-54-1
+    then: "infrastructure/pilot/docker-compose.pilot.yml sobe API + Postgres do zero"
+  - id: AC-54-2
+    then: "scripts/provision/register-core-instance.ps1 registra instância no Core"
+  - id: AC-54-3
+    then: "Health /health verde após deploy piloto"
+  - id: AC-54-4
+    then: "Instância usa ICoreAvailabilityCache quando Core indisponível"
+  - id: AC-54-5
+    then: "Backup inicial documentado (RPO ≤ 15 min — staging)"
+
+harness:
+  commands:
+    - "dotnet build backend/Arah.Core/Arah.Core.csproj --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Core"
+  agents:
+    - backend
+    - release
+
+links:
+  docs:
+    - docs/backlog-api/FASE54.md
+    - infrastructure/pilot/README.md
+
+guardrails:
+  - no-secrets-in-repo
+  - territory-data-stays-on-instance

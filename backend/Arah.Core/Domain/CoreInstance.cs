@@ -11,6 +11,7 @@ public sealed class CoreInstance
     public Uri BaseUrl { get; }
     public string Version { get; }
     public string PublicKeyPem { get; }
+    public string InstanceAuthToken { get; private set; } = string.Empty;
     public CoreInstanceStatus Status { get; private set; }
     public DateTimeOffset RegisteredAtUtc { get; }
     public DateTimeOffset? LastHeartbeatUtc { get; private set; }
@@ -33,6 +34,17 @@ public sealed class CoreInstance
         Status = CoreInstanceStatus.Pending;
         RegisteredAtUtc = DateTimeOffset.UtcNow;
     }
+
+    public void SetInstanceAuthToken(string token)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(token);
+        InstanceAuthToken = token;
+    }
+
+    public bool ValidateAuthToken(string? token) =>
+        !string.IsNullOrWhiteSpace(token) &&
+        !string.IsNullOrWhiteSpace(InstanceAuthToken) &&
+        string.Equals(InstanceAuthToken, token, StringComparison.Ordinal);
 
     public void ApplyHeartbeat(HealthCheckReport report)
     {

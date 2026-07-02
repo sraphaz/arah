@@ -2,7 +2,7 @@ id: FASE52-cicd
 version: "1.0.0"
 title: "FASE52 — Fundação CI/CD"
 owner: ops
-status: active
+status: completed
 phase: FASE52
 
 intent: |

@@ -22,7 +22,7 @@ param(
 
     [Parameter(Position = 0)]
 
-    [ValidateSet('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'sync-status', 'dedupe-backlog', 'reconcile', 'status', 'help')]
+    [ValidateSet('bootstrap', 'ensure', 'sync-backlog', 'sync-queue', 'sync-project', 'sync-status', 'dedupe-backlog', 'close-phases', 'reconcile', 'status', 'help')]
 
     [string]$Command = 'help',
 
@@ -61,6 +61,7 @@ github-project — GitHub-native backlog (Issues + Project v2)
 
   sync-project  Adiciona épicos ao Project e atualiza coluna Status
   sync-status   Apenas atualiza coluna Status (mapeia Todo/In Progress/Done do GitHub)
+  close-phases    Fecha issues de fases completed (PHASE_ROADMAP_META) em ordem
   dedupe-backlog Fecha issues duplicadas de épico (mantém a canônica por fase)
 
   reconcile     Normaliza issues [Agent] FASE* → [Epic] com labels/milestone
@@ -949,6 +950,14 @@ try {
         'dedupe-backlog' {
 
             Invoke-DedupePhaseIssues -DryRun:$DryRun -Json:$Json
+
+            exit 0
+
+        }
+
+        'close-phases' {
+
+            & (Join-Path $PSScriptRoot 'close-completed-phases.ps1') -DryRun:$DryRun -Json:$Json
 
             exit 0
 

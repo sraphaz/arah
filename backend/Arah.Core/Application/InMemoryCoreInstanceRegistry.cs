@@ -10,9 +10,17 @@ public sealed class InMemoryCoreInstanceRegistry : ICoreInstanceRegistry
     public InstanceRegistrationResult Register(string mode, Uri baseUrl, string version)
     {
         var (publicKeyPem, privateKeyPem) = InstanceKeyPairGenerator.CreateRsa2048();
+        var authToken = InstanceAuthTokenGenerator.CreateToken();
         var instance = new CoreInstance(Guid.NewGuid(), mode, baseUrl, version, publicKeyPem);
+        instance.SetInstanceAuthToken(authToken);
         _instances[instance.Id] = instance;
-        return new InstanceRegistrationResult(instance, privateKeyPem);
+        return new InstanceRegistrationResult(instance, privateKeyPem, authToken);
+    }
+
+    public bool ValidateAuthToken(Guid instanceId, string? token)
+    {
+        var instance = GetById(instanceId);
+        return instance is not null && instance.ValidateAuthToken(token);
     }
 
     public CoreInstance? GetById(Guid id) =>

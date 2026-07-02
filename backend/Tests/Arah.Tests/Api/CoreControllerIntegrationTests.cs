@@ -66,6 +66,45 @@ public sealed class CoreControllerIntegrationTests
         Assert.NotEqual(Guid.Empty, registration.Instance.Id);
         Assert.Contains("BEGIN PUBLIC KEY", registration.Instance.PublicKeyPem);
         Assert.Contains("BEGIN PRIVATE KEY", registration.PrivateKeyPem);
+        Assert.False(string.IsNullOrWhiteSpace(registration.InstanceAuthToken));
+    }
+
+    [Fact]
+    public async Task Heartbeat_WithInstanceToken_WithoutAdmin_Succeeds()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var (registration, _) = await RegisterInstanceAsync(client, "standalone", "https://hb.example", "1.0.0");
+
+        using var heartbeatClient = factory.CreateClient();
+        heartbeatClient.DefaultRequestHeaders.Add("X-Arah-Instance-Token", registration.InstanceAuthToken);
+
+        var heartbeat = await heartbeatClient.PostAsJsonAsync(
+            $"api/v1/core/instances/{registration.Instance.Id}/heartbeat",
+            new CoreHeartbeatRequest(new Dictionary<string, string> { ["api"] = "ok" }, 60));
+
+        Assert.Equal(HttpStatusCode.NoContent, heartbeat.StatusCode);
+    }
+
+    [Fact]
+    public async Task PublishRelease_WithSystemAdmin_AppearsInStableChannel()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await LoginForTokenAsync(client, "google", "admin-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var publish = await client.PostAsJsonAsync(
+            "api/v1/core/releases",
+            new PublishCoreReleaseRequest("1.2.0", "stable", 1));
+        publish.EnsureSuccessStatusCode();
+
+        var list = await client.GetAsync("api/v1/core/releases?channel=stable");
+        list.EnsureSuccessStatusCode();
+        var releases = await list.Content.ReadFromJsonAsync<List<CoreReleaseResponse>>();
+        Assert.Contains(releases!, r => r.Version == "1.2.0");
     }
 
     [Fact]

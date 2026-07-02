@@ -8,4 +8,5 @@ public interface ICoreInstanceRegistry
     CoreInstance? GetById(Guid id);
     IReadOnlyList<CoreInstance> ListAll();
     void RecordHeartbeat(Guid instanceId, HealthCheckReport report);
+    bool ValidateAuthToken(Guid instanceId, string? token);
 }

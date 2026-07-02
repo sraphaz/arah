@@ -7,7 +7,13 @@ public sealed record RegisterCoreInstanceRequest(
 
 public sealed record RegisterCoreInstanceResponse(
     CoreInstanceResponse Instance,
-    string PrivateKeyPem);
+    string PrivateKeyPem,
+    string InstanceAuthToken);
+
+public sealed record PublishCoreReleaseRequest(
+    string Version,
+    string Channel,
+    int SchemaVersion);
 
 public sealed record CoreInstanceResponse(
     Guid Id,

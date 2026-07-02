@@ -24,6 +24,7 @@ completed:
   - FASE15
   - FASE16
   - FASE52
+  - FASE53
 
 # Overrides por fase (wave, área, prioridade, dependências)
 overrides:

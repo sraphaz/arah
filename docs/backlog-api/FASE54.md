@@ -5,7 +5,8 @@
 **Onda**: S0 — Fundação técnica  
 **Depende de**: FASE52, FASE53  
 **Estimativa Total**: 112 horas  
-**Status**: ⏳ Pendente  
+**Status**: 🟡 Em progresso (piloto compose + registro Core)
+**Spec SDD**: [docs/specs/phases/FASE54-iac.spec.yaml](../specs/phases/FASE54-iac.spec.yaml)  
 **Handoff**: [Plano Operacional P3–P7](../handoff/arquitetura-c4/Plano%20Operacional%20e%20Pipelines%20-%20Arah.dc.html)
 
 ---
@@ -52,10 +53,11 @@ Provisionar a **primeira instância gerenciada** (território-piloto) via IaC: T
 
 ## Critérios de aceite
 
-- [ ] IaC reproduz instância do zero em staging
-- [ ] 1ª instância piloto verde no Core
+- [x] Compose piloto reproduz stack (`infrastructure/pilot/docker-compose.pilot.yml`)
+- [x] Script registra instância no Core (`scripts/provision/register-core-instance.ps1`)
+- [ ] 1ª instância piloto verde no Core (deploy staging)
 - [ ] Backup inicial verificado (RPO ≤ 15 min)
-- [ ] API acessível via HTTPS; JWT funcional
+- [ ] API acessível via HTTPS; JWT funcional em staging
 - [ ] PSP em sandbox conectado
 
 ---

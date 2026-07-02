@@ -2,7 +2,7 @@ id: FASE53-arah-core
 version: "1.0.0"
 title: "FASE53 — Arah Core (control plane)"
 owner: ops
-status: active
+status: completed
 phase: FASE53
 
 intent: |

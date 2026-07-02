@@ -3,8 +3,8 @@
 **Última Atualização**: 2026-07-01  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
-**Prioridade atual**: 🔴 **FASE53 — Arah Core** (Onda S0)  
-**Fases em Andamento**: FASE53 (control plane MVP)  
+**Prioridade atual**: 🔴 **FASE54 — IaC e 1ª Instância** (Onda S0)  
+**Fases em Andamento**: FASE54 (piloto)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
 
@@ -29,8 +29,8 @@
 | Fase | Nome | Prioridade | Onda | Status | Documentação |
 |------|------|------------|------|--------|--------------|
 | 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | ✅ Completo | [FASE52.md](./backlog-api/FASE52.md) · [CI/CD](../ops/CI_CD_PIPELINE.md) |
-| 53 | Arah Core | 🔴 P0 | S0 | 🟡 Em progresso | [FASE53.md](./backlog-api/FASE53.md) · [spec](../specs/phases/FASE53-arah-core.spec.yaml) |
-| 54 | IaC e 1ª Instância | 🔴 P0 | S0 | ⏳ Pendente | [FASE54.md](./backlog-api/FASE54.md) |
+| 53 | Arah Core | 🔴 P0 | S0 | ✅ Completo | [FASE53.md](./backlog-api/FASE53.md) · [spec](../specs/phases/FASE53-arah-core.spec.yaml) |
+| 54 | IaC e 1ª Instância | 🔴 P0 | S0 | 🟡 Em progresso | [FASE54.md](./backlog-api/FASE54.md) · [spec](../specs/phases/FASE54-iac.spec.yaml) |
 | 55 | Monetização Open-Core | 🔴 P0 | S1 | ⏳ Pendente | [FASE55.md](./backlog-api/FASE55.md) |
 | 56 | Transparência e Taxas | 🔴 P0 | S2 | ⏳ Pendente | [FASE56.md](./backlog-api/FASE56.md) |
 | 57 | Cockpit Implementador | 🔴 P0 | S1–S2 | ⏳ Pendente | [FASE57.md](./backlog-api/FASE57.md) |

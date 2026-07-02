@@ -450,8 +450,16 @@ function Resolve-MilestoneForWave {
     return $cfg.wave_milestones[$Wave]
 }
 
+function Test-PhaseCompleteFromMeta {
+    param([string]$Root, [string]$Id)
+    $meta = Get-PhaseRoadmapMeta -Root $Root
+    return $meta.completed -contains $Id
+}
+
 function Test-PhaseCompleteFromGitHub {
     param([string]$Root, [string]$PhaseId)
+
+    if (Test-PhaseCompleteFromMeta -Root $Root -Id $PhaseId) { return $true }
 
     if (-not (Get-Command gh -ErrorAction SilentlyContinue)) { return $false }
 

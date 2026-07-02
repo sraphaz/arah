@@ -12,9 +12,11 @@ public static class CoreServiceCollectionExtensions
         services.AddSingleton<ICoreReleaseCatalog, InMemoryCoreReleaseCatalog>();
         services.AddSingleton<ICoreDirectoryRegistry, InMemoryCoreDirectoryRegistry>();
         services.AddSingleton<IFederationIdentityRegistry, InMemoryFederationIdentityRegistry>();
+        services.AddSingleton<ICoreAvailabilityCache, InMemoryCoreAvailabilityCache>();
         services.AddScoped<CoreInstanceService>();
         services.AddScoped<CoreDirectoryService>();
         services.AddScoped<FederationIdentityService>();
+        services.AddScoped<CoreReleaseService>();
         return services;
     }
 

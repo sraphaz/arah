@@ -16,6 +16,7 @@ public sealed class CoreInstanceRegistryTests
         Assert.NotEqual(Guid.Empty, instance.Id);
         Assert.False(string.IsNullOrWhiteSpace(instance.PublicKeyPem));
         Assert.False(string.IsNullOrWhiteSpace(registration.PrivateKeyPem));
+        Assert.False(string.IsNullOrWhiteSpace(registration.InstanceAuthToken));
         Assert.Equal(CoreInstanceStatus.Pending, instance.Status);
     }
 

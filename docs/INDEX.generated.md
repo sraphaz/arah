@@ -308,6 +308,7 @@
 | [DESIGN_SYSTEM_IDENTIDADE_VISUAL](docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md) | - | - |
 | [DESIGN_SYSTEM_TOKENS](docs/DESIGN_SYSTEM_TOKENS.md) | - | - |
 | [design-review-devportal](docs/design-review-devportal.md) | - | - |
+| [AUDITORIA_DESIGN](docs/design/AUDITORIA_DESIGN.md) | - | - |
 | [README_LIKEC4](docs/design/README_LIKEC4.md) | - | - |
 | [DEVELOPMENT](docs/DEVELOPMENT.md) | - | - |
 | [DEVPORTAL_404_DIAGNOSTICO](docs/DEVPORTAL_404_DIAGNOSTICO.md) | - | - |
@@ -434,6 +435,8 @@
 | [51_PRODUCAO_PLANO_DESEJAVEIS](docs/ops/51_PRODUCAO_PLANO_DESEJAVEIS.md) | - | - |
 | [AGENT_OPERATION](docs/ops/AGENT_OPERATION.md) | - | - |
 | [AGENT_PILOT_BILLING](docs/ops/AGENT_PILOT_BILLING.md) | - | - |
+| [AGENT_QUICKSTART](docs/ops/AGENT_QUICKSTART.md) | - | - |
+| [AGENT_STRATEGY_VALIDATION](docs/ops/AGENT_STRATEGY_VALIDATION.md) | - | - |
 | [CI_CD_PIPELINE](docs/ops/CI_CD_PIPELINE.md) | - | - |
 | [GITHUB_PROJECT_MANAGEMENT](docs/ops/GITHUB_PROJECT_MANAGEMENT.md) | - | - |
 | [OBSERVABILITY_BASELINE](docs/ops/OBSERVABILITY_BASELINE.md) | - | - |

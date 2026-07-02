@@ -1,0 +1,41 @@
+id: design-ux
+name: Domain — Design & Experiência (UX/UI)
+description: Especialista consultivo que garante identidade high-premium, acessibilidade e evolução do design system em todas as interfaces (web e app).
+mode: consult
+consult_only: true
+enrich: |
+  Design de baixa excitação, silêncio funcional e ação consciente — território
+  como referência visual. High-premium = consistência entre superfícies, tokens
+  como fonte única (web e Flutter), hierarquia clara e acessível. Mobile-first
+  obrigatório. Cores sempre via variáveis/tokens, nunca hardcoded. Toda revisão
+  captura lição (LICOES_APRENDIDAS) e evolui as diretrizes.
+validate: |
+  - [ ] Sem cores hardcoded (hex/rgb ou Tailwind arbitrárias) — usa var(--...), classes configuradas ou AppDesignTokens/AppColors no Flutter
+  - [ ] Mobile-first: base sem media query; ajustes em @media (min-width) / lg:
+  - [ ] Espaçamento e tipografia via tokens (escala 8px); sem px arbitrário
+  - [ ] Contraste WCAG AA; focus-visible; navegação por teclado; alvo de toque >= 44px
+  - [ ] HTML semântico + aria-label/alt; sem CSS/JS inline
+  - [ ] Tokens de marca consistentes entre web e app (glass, raio, cores) — sem deriva por plataforma
+  - [ ] Estados cobertos: loading, vazio, erro, foco, hover, desabilitado
+  - [ ] Lição registrada em docs/LICOES_APRENDIDAS.md quando a revisão achar padrão recorrente
+autonomy:
+  - consult_post
+scope:
+  paths:
+    - frontend/wiki/**
+    - frontend/portal/**
+    - frontend/devportal/**
+    - frontend/arah.app/**
+    - frontend/shared/styles/**
+    - frontend/**/*.css
+    - docs/**/design*
+    - docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md
+    - docs/CURSOR_DESIGN_RULES.md
+references:
+  - docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md
+  - docs/CURSOR_DESIGN_RULES.md
+  - docs/REVISAO_ARTE_DESIGN_WIKI.md
+  - docs/LICOES_APRENDIDAS.md
+  - docs/design/AUDITORIA_DESIGN.md
+skills:
+  - code-review

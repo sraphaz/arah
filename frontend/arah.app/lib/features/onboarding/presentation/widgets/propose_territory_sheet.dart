@@ -5,13 +5,14 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/onboarding_models.dart';
 import '../providers/onboarding_providers.dart';
 
 const _mapZoom = 14.0;
-const _boundaryColor = Color(0xFF228B22);
+const _boundaryColor = AppDesignTokens.territoryBoundary;
 
 /// Sheet para propor território: pin ajustável, cidade/UF, raio ou polígono.
 Future<TerritorySuggestion?> showProposeTerritorySheet({
@@ -204,7 +205,7 @@ class _ProposeTerritorySheetState extends ConsumerState<ProposeTerritorySheet> {
                             point: _pin,
                             width: 40,
                             height: 40,
-                            child: const Icon(Icons.location_on, color: Colors.orange, size: 40),
+                            child: const Icon(Icons.location_on, color: AppDesignTokens.locationPin, size: 40),
                           ),
                       ],
                     ),

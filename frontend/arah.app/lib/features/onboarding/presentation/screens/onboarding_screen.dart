@@ -8,6 +8,7 @@ import '../../../../core/config/constants.dart';
 import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
@@ -162,7 +163,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               children: [
                                 const Icon(
                                   Icons.location_on,
-                                  color: Colors.orange,
+                                  color: AppDesignTokens.locationPin,
                                   size: AppConstants.iconSizeLg,
                                 ),
                                 const SizedBox(width: AppConstants.spacingSm),
@@ -363,7 +364,7 @@ class _ContinueButton extends StatelessWidget {
 }
 
 /// Cor do contorno do polígono e do pin do território (verde floresta).
-const _territoryBoundaryColor = Color(0xFF228B22);
+const _territoryBoundaryColor = AppDesignTokens.territoryBoundary;
 
 /// Mapa compacto: sempre visível; contorno do território selecionado (ou mais próximo).
 class _OnboardingMap extends ConsumerWidget {
@@ -419,7 +420,7 @@ class _OnboardingMap extends ConsumerWidget {
                     height: 40,
                     child: const Icon(
                       Icons.person_pin_circle,
-                      color: Colors.orange,
+                      color: AppDesignTokens.locationPin,
                       size: 40,
                     ),
                   ),

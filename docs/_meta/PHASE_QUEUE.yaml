@@ -32,6 +32,18 @@ queue:
     # DOD-07 (Postgres FeeSplitRule/planos), DOD-08 (backfill spec por risco),
     # DOD-09 (gate covered_by), DOD-10 (evidência CI). DOD-01..04 já feitos.
 
+  - id: design-quality
+    title: "Design high-premium — fechar gaps de UX/UI mapeados pelo agente design-ux"
+    area: area/web
+    doc: docs/design/AUDITORIA_DESIGN.md
+    priority: P1
+    kind: maintenance
+    blocked_by: []
+    # Itens abertos: DSG-03 (devportal → tokens compartilhados),
+    # DSG-04 (espaçamento 8px no portal), DSG-05 (a11y landing portal),
+    # DSG-06 (unificar glass tokens cross-plataforma), DSG-07 (contraste syntax WCAG).
+    # DSG-01/02 (cores hardcoded) e DSG-08 (gate CI design-gate-check) já corrigidos.
+
   - id: FASE52
     title: "FASE52 — Fundação Técnica e CI/CD"
     area: area/ops

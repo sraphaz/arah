@@ -9,6 +9,18 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Agente autônomo de Design (UX/UI) (2026-07-02)
+
+- **Novo agente de domínio `design-ux`** (`.agents/domain/design-ux.agent.yaml`): especialista consultivo que garante identidade high-premium, acessibilidade (WCAG AA), mobile-first e uso de tokens (nunca cor hardcoded), em web e Flutter
+- **Coreografia** (`.agents/choreography.yaml`): regra `design-ux` aciona o agente automaticamente ao tocar em `frontend/**`, tokens compartilhados e `docs/**/design*` — parecer local (hook `stop`) e no PR (CI `agents.yml`)
+- Catálogo atualizado: `AGENTS.md` (consultivos + tabela de coreografia), `.cursor/rules/domain-agents-autonomy.mdc` (mapeamento), `docs/ops/PLATFORM_STATE.md` (24 agentes)
+- **Auditoria** `docs/design/AUDITORIA_DESIGN.md` — 8 gaps mapeados (DSG-01..08) com evidência, severidade e ordem de correção
+- **Corrigido DSG-01 (wiki)**: 5 cores arbitrárias `bg-[#...]` no Mermaid fullscreen → classes configuradas `bg-accent`/`bg-link` (`frontend/wiki/app/mermaid/fullscreen/page.tsx`)
+- **Corrigido DSG-02 (Flutter)**: `Color(0xFF228B22)`/`Colors.orange` fora do tema no onboarding → `AppDesignTokens.territoryBoundary`/`locationPin` (`propose_territory_sheet.dart`, `onboarding_screen.dart`)
+- **Gate DSG-08**: `scripts/agents/design-gate-check.ps1` integrado ao `run-gates.ps1` (QA) — falha o PR se arquivo de frontend alterado tiver cor hardcoded (Tailwind `[#...]`, hex inline, CSS fora de `--token:`, `Color(0x...)`/`Colors.*` fora do tema)
+- Backlog `docs/_meta/PHASE_QUEUE.yaml` — entrada `design-quality` (P1) para DSG-03..07 (devportal→tokens, espaçamento 8px, a11y landing, unificar glass, contraste syntax)
+- Lição `docs/LICOES_APRENDIDAS.md` LIC-002 — regressão de cores exige agente + gate de design, não só diretriz
+
 ### Retrospectiva DoD — gaps de fases anteriores (2026-07-02)
 
 - `docs/backlog-api/RETROSPECTIVA_DOD_GAPS.md` — auditoria das entregas anteriores à nova Definition of Done, com 10 itens acionáveis (DOD-01..10) priorizados

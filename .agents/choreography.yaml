@@ -129,6 +129,23 @@ rules:
         autonomy: [activate, invoke_skill]
         skills: [spec-validate, harness-run]
 
+  - id: design-ux
+    paths:
+      - frontend/wiki/**
+      - frontend/portal/**
+      - frontend/devportal/**
+      - frontend/arah.app/**
+      - frontend/shared/styles/**
+      - frontend/**/*.css
+      - frontend/**/tailwind.config.ts
+      - docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md
+      - docs/CURSOR_DESIGN_RULES.md
+      - docs/**/design*
+    agents:
+      - id: design-ux
+        type: domain
+        autonomy: [consult_post]
+
   - id: pr-always
     paths:
       - "**"

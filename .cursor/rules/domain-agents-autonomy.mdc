@@ -21,7 +21,7 @@ powershell -NoProfile -File scripts/agents/domain-autoreview.ps1 -Force -Json
 Mapeamento (resumo): `Marketplace/Cart/Stores/Items` → `mercado-economia`;
 `Subscriptions/Stripe/Financial/FeeSplit/Payout/SellerBalance` → `monetizacao-split`, `carteira-arata`;
 `Territories/Memberships` → `territorio-membership`; `Moderation/Voting` → `governanca-transparencia`;
-`Arah.Core` → `control-plane`.
+`Arah.Core` → `control-plane`; `frontend/**` + `docs/**/design*` → `design-ux`.
 
 ## Definition of Done (rigor total)
 

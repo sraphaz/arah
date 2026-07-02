@@ -60,7 +60,7 @@ Este documento é a **fonte de verdade** para o README e para agentes. Níveis d
 
 | Aspecto | Estado | Doc |
 |---------|--------|-----|
-| 23 agentes + 21 skills | ✅ | [AGENTS.md](../../AGENTS.md) |
+| 24 agentes + 21 skills | ✅ | [AGENTS.md](../../AGENTS.md) |
 | Orquestrador + checklists conduta | ✅ | [AGENT_OPERATION.md](./AGENT_OPERATION.md) |
 | PR Steward (bots → merge humano) | ✅ | `agents-pr-steward.yml` |
 | next-phase (fila PHASE_QUEUE) | ✅ | [PHASE_QUEUE.yaml](../_meta/PHASE_QUEUE.yaml) |

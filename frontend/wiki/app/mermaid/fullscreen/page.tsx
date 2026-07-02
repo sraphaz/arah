@@ -199,7 +199,7 @@ function MermaidFullscreenContent() {
           <p className="text-forest-300 mb-4">{error}</p>
           <button
             onClick={handleClose}
-            className="px-4 py-2 bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded font-semibold"
+            className="px-4 py-2 bg-accent hover:bg-accent-hover text-forest-950 rounded font-semibold"
           >
             Fechar
           </button>
@@ -221,7 +221,7 @@ function MermaidFullscreenContent() {
       {/* Botão de fechar */}
       <button
         onClick={handleClose}
-        className="fixed top-4 right-4 z-[10000] bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all hover:scale-110"
+        className="fixed top-4 right-4 z-[10000] bg-accent hover:bg-accent-hover text-forest-950 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all hover:scale-110"
         aria-label="Fechar"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -238,7 +238,7 @@ function MermaidFullscreenContent() {
             e.stopPropagation();
             handleZoomIn();
           }}
-          className="px-3 py-2 bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded font-semibold transition-all"
+          className="px-3 py-2 bg-accent hover:bg-accent-hover text-forest-950 rounded font-semibold transition-all"
           aria-label="Zoom in"
         >
           +
@@ -249,7 +249,7 @@ function MermaidFullscreenContent() {
             e.stopPropagation();
             handleZoomOut();
           }}
-          className="px-3 py-2 bg-[#4dd4a8] hover:bg-[#5ee5b9] text-forest-950 rounded font-semibold transition-all"
+          className="px-3 py-2 bg-accent hover:bg-accent-hover text-forest-950 rounded font-semibold transition-all"
           aria-label="Zoom out"
         >
           −
@@ -260,7 +260,7 @@ function MermaidFullscreenContent() {
             e.stopPropagation();
             handleResetZoom();
           }}
-          className="px-3 py-2 bg-[#7dd3ff] hover:bg-[#8de3ff] text-forest-950 rounded text-xs font-semibold transition-all"
+          className="px-3 py-2 bg-link hover:bg-link-hover text-forest-950 rounded text-xs font-semibold transition-all"
           aria-label="Resetar zoom"
         >
           Reset

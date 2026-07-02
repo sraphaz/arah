@@ -1,7 +1,7 @@
 # Lições Aprendidas - Arah
 
-**Última Atualização**: 2025-01-20  
-**Total de Lições**: 1  
+**Última Atualização**: 2026-07-02  
+**Total de Lições**: 2  
 **Status**: Documento Vivo
 
 ---
@@ -53,6 +53,42 @@ Diretrizes devem ser **explícitas e proibitivas** sobre o que NÃO fazer, não 
 - Antes: 29 ocorrências de cores hardcoded
 - Depois: 0 ocorrências (100% conformidade)
 - Efetividade: Problema eliminado completamente
+
+---
+
+#### LIC-002 - Cores hardcoded reaparecem sem agente/gate dedicado de design
+**Data**: 2026-07-02
+**Categoria**: Crítico
+**Revisão Origem**: `docs/design/AUDITORIA_DESIGN.md`
+
+**Contexto**:
+Mesmo após LIC-001, a auditoria autônoma encontrou novas violações: Tailwind arbitrárias
+(`bg-[#4dd4a8]`/`[#7dd3ff]`) no Mermaid fullscreen da wiki e `Color(0xFF228B22)`/`Colors.orange`
+fora do tema no onboarding Flutter. A regressão ocorreu porque não havia inteligência de design
+**contínua e autônoma** revisando cada mudança de frontend, nem gate de CI que barrasse cores fora
+de token.
+
+**Lição**:
+Diretriz proibitiva (LIC-001) não basta: é preciso um **agente de domínio autônomo** que revise
+frontend a cada interação e um **gate automatizado** que falhe o PR ao detectar cor hardcoded. O
+mesmo rigor aplicado a backend/domínio deve valer para design.
+
+**Ação Tomada**:
+1. ✅ Criado agente `design-ux` (`.agents/domain/design-ux.agent.yaml`) + regra na coreografia → acionamento automático em `frontend/**` e `docs/**/design*`.
+2. ✅ Corrigidas as violações (DSG-01 wiki, DSG-02 Flutter) usando classes/tokens configurados.
+3. ✅ Auditoria `docs/design/AUDITORIA_DESIGN.md` + backlog `design-quality` no `PHASE_QUEUE`.
+
+**Diretriz Atualizada**:
+- `AGENTS.md` e `.cursor/rules/domain-agents-autonomy.mdc`: `design-ux` no catálogo e mapeamento.
+- Backlog `design-quality` inclui **DSG-08** (gate CI anti-cor-hardcoded) como prevenção estrutural.
+
+**Prevenção Futura**:
+- ✅ Agente `design-ux` publica parecer (local via hook `stop` + CI via `agents.yml`).
+- ✅ DSG-08: gate `scripts/agents/design-gate-check.ps1` (no `run-gates.ps1`/QA) falha o PR ao detectar `[#...]`, hex inline, cor literal em CSS ou `Color(0x...)`/`Colors.*` fora dos arquivos de token.
+
+**Métrica de Sucesso**:
+- Antes: 10 novas ocorrências (5 wiki + 5 Flutter) sem revisão autônoma de design.
+- Depois: 0 ocorrências nesses arquivos; agente de design ativo em todo PR de frontend.
 
 ---
 

@@ -90,6 +90,7 @@ Verificações **automáticas** (escopo, guardrails, checklist presente): `agent
 |------|-----|------|
 | Domain | `control-plane` | Arah Core, instâncias, releases, federação |
 | Domain | `territorio-membership`, `monetizacao-split`, … | Ver `.agents/domain/` |
+| Domain | `design-ux` | Identidade high-premium, UX/UI, acessibilidade e design system (web + app) |
 | Specialist | `core-control-plane` | `Arah.Core`, endpoints `/core/*` |
 | Specialist | `dotnet`, `bff`, `nextjs`, `flutter` | Stack |
 
@@ -135,6 +136,7 @@ Após o roteamento do orquestrador, [`.agents/choreography.yaml`](.agents/choreo
 | `marketplace` | Marketplace, Cart, Stores | domain `mercado-economia` |
 | `governance` | Moderation, Voting | domain `governanca-transparencia` |
 | `monetization` | Subscriptions, Stripe, Payout | domain `monetizacao-split`, `carteira-arata` |
+| `design-ux` | `frontend/**`, tokens, `docs/**/design*` | domain `design-ux` |
 | `specs-sdd` | `docs/specs/**`, harness | spec-steward (+ spec-validate, harness-run) |
 | `pr-always` | `**` (somente PR) | qa, pr-steward |
 

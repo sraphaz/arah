@@ -86,8 +86,9 @@ No JSON gerado, cada nó tem um id com namespace (`agent:`, `skill:`, `rule:` �
 | Aresta | De → Para | Significado |
 |---|---|---|
 | `matches_rule` | PathPattern → ChoreographyRule | mudança no path casa com a regra |
+| `scopes_agent` | PathPattern → Agent | glob no scope.paths do manifest do agente |
 | `activates_agent` | ChoreographyRule → Agent | ativa agente operacional |
-| `consults_domain_agent` | ChoreographyRule/Agent → Agent | aciona parecer de domínio |
+| `consults_domain_agent` | ChoreographyRule → Agent; Agent → Agent (manifest) | aciona parecer consultivo de domínio |
 | `may_invoke_skill` | Agent → Skill | agente pode invocar skill |
 | `requires_skill` | ChoreographyRule → Skill | skill declarada na rule (autonomy) |
 | `requires_spec` | ChoreographyRule → Spec | paths SDD exigem spec válida |

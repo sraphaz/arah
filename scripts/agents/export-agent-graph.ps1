@@ -33,60 +33,11 @@ $WorkflowsDir = Join-Path $Root '.github/workflows'
 if (-not $OutFile) { $OutFile = Join-Path $Root 'docs/_meta/agent-graph.generated.json' }
 if (-not $MermaidOut) { $MermaidOut = Join-Path $Root 'docs/_meta/agent-graph.generated.mmd' }
 
+. (Join-Path $PSScriptRoot 'choreography-parser.ps1')
+
 function Get-RelPath {
     param([string]$FullPath)
     return $FullPath.Replace($Root + [IO.Path]::DirectorySeparatorChar, '').Replace('\', '/')
-}
-
-# --- Parser da coreografia (mesmo estilo de choreograph-agents.ps1) ----------
-function Parse-ChoreographyRules {
-    param([string]$Raw)
-    $rules = @()
-    $blocks = [regex]::Split($Raw, '(?m)^  - id: ')
-    foreach ($block in $blocks) {
-        if ($block -notmatch '^(\S+)') { continue }
-        $ruleId = $Matches[1].Trim()
-        $paths = @()
-        # (?m) sem Singleline: '.' não cruza linha, então a lista de paths para
-        # na próxima chave irmã (agents:) e não engole entradas de agente.
-        if ($block -match '(?m)^    paths:\s*\r?\n((?:      - [^\r\n]+\r?\n?)+)') {
-            $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
-                $_.Groups[1].Value.Trim().Trim('"').Trim("'")
-            }
-        }
-        $when = if ($block -match '(?m)^    when:\s+(\S+)') { $Matches[1].Trim() } else { $null }
-        $agents = @()
-        if ($block -match '(?ms)^    agents:\s*\n((?:      - .+\r?\n?)+)') {
-            $agentSection = $Matches[1]
-            $agentChunks = [regex]::Split($agentSection, '(?m)^      - id: ')
-            foreach ($chunk in $agentChunks) {
-                if ($chunk -notmatch '^(\S+)') { continue }
-                $aid = $Matches[1].Trim()
-                $sub = $chunk
-                $type = if ($sub -match '(?m)^        type:\s+(\S+)') { $Matches[1] } else { 'operational' }
-                $autonomy = @()
-                if ($sub -match '(?m)^        autonomy:\s*\[(.+)\]') {
-                    $autonomy = $Matches[1] -split ',' | ForEach-Object { $_.Trim() }
-                }
-                $skills = @()
-                if ($sub -match '(?m)^        skills:\s*\[(.+)\]') {
-                    $skills = $Matches[1] -split ',' | ForEach-Object { $_.Trim() }
-                } elseif ($sub -match '(?ms)^        skills:\s*\n((?:          - .+\r?\n?)+)') {
-                    $skills = [regex]::Matches($Matches[1], '^\s+-\s+(\S+)', 'Multiline') | ForEach-Object { $_.Groups[1].Value }
-                }
-                $agents += [ordered]@{
-                    id       = $aid
-                    kind     = $type
-                    autonomy = @($autonomy)
-                    skills   = @($skills)
-                }
-            }
-        }
-        if ($paths.Count -gt 0) {
-            $rules += [ordered]@{ id = $ruleId; when = $when; paths = @($paths); agents = @($agents) }
-        }
-    }
-    return $rules
 }
 
 # --- Helpers de YAML simples (regex) ----------------------------------------
@@ -199,16 +150,22 @@ if (Test-Path $ChoreoPath) {
     $rules = Parse-ChoreographyRules -Raw (Get-Content $ChoreoPath -Raw)
 }
 
-# --- 4) PathPatterns (agregados das rules) -----------------------------------
+# --- 4) PathPatterns (rules + scope.paths dos manifests) ---------------------
 $pathMap = @{}
 foreach ($rule in $rules) {
     foreach ($p in $rule.paths) {
-        if (-not $pathMap.ContainsKey($p)) { $pathMap[$p] = @() }
-        if ($pathMap[$p] -notcontains $rule.id) { $pathMap[$p] += $rule.id }
+        if (-not $pathMap.ContainsKey($p)) { $pathMap[$p] = @{ rules = @(); agents = @() } }
+        if ($pathMap[$p].rules -notcontains $rule.id) { $pathMap[$p].rules += $rule.id }
+    }
+}
+foreach ($a in $agents) {
+    foreach ($p in $a.paths) {
+        if (-not $pathMap.ContainsKey($p)) { $pathMap[$p] = @{ rules = @(); agents = @() } }
+        if ($pathMap[$p].agents -notcontains $a.id) { $pathMap[$p].agents += $a.id }
     }
 }
 $paths = @($pathMap.GetEnumerator() | Sort-Object Name | ForEach-Object {
-    [ordered]@{ pattern = $_.Key; rules = @($_.Value) }
+    [ordered]@{ pattern = $_.Key; rules = @($_.Value.rules); agents = @($_.Value.agents) }
 })
 
 # --- 5) Domains (agentes de domínio + rules que os acionam) ------------------
@@ -330,8 +287,6 @@ foreach ($rule in $rules) {
     foreach ($a in $rule.agents) {
         if ($a.kind -eq 'domain') {
             Add-Edge "rule:$($rule.id)" "agent:$($a.id)" 'consults_domain_agent'
-        } elseif ($a.autonomy -contains 'activate') {
-            Add-Edge "rule:$($rule.id)" "agent:$($a.id)" 'activates_agent'
         } else {
             Add-Edge "rule:$($rule.id)" "agent:$($a.id)" 'activates_agent'
         }
@@ -349,6 +304,7 @@ if ($sddRule) {
 }
 
 foreach ($a in $agents) {
+    foreach ($p in $a.paths) { Add-Edge "path:$p" "agent:$($a.id)" 'scopes_agent' 'manifest' }
     foreach ($sk in $a.skills) {
         if ($skillIds -contains $sk) { Add-Edge "agent:$($a.id)" "skill:$sk" 'may_invoke_skill' 'manifest' }
     }

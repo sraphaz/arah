@@ -18,6 +18,8 @@ $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $ChoreoPath = Join-Path $Root '.agents/choreography.yaml'
 $ScriptDir = $PSScriptRoot
 
+. (Join-Path $PSScriptRoot 'choreography-parser.ps1')
+
 function Normalize-FileList {
     param([string[]]$Files)
     $normalized = @()
@@ -42,56 +44,6 @@ function Test-PathMatchesGlob {
     $re = $re -replace '\\\*\\\*', '.*'
     $re = $re -replace '\\\*', '[^/]*'
     return $normalized -match ('^' + $re + '$')
-}
-
-function Parse-ChoreographyRules {
-    param([string]$Raw)
-    $rules = @()
-    $blocks = [regex]::Split($Raw, '(?m)^  - id: ')
-    foreach ($block in $blocks) {
-        if ($block -notmatch '^(\S+)') { continue }
-        $ruleId = $Matches[1].Trim()
-        $paths = @()
-        # (?m) sem Singleline: '.' não cruza linha, então a lista de paths para
-        # na próxima chave irmã (agents:) e não engole entradas de agente.
-        if ($block -match '(?m)^    paths:\s*\r?\n((?:      - [^\r\n]+\r?\n?)+)') {
-            $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
-                $_.Groups[1].Value.Trim().Trim('"').Trim("'")
-            }
-        }
-        $when = if ($block -match '(?m)^    when:\s+(\S+)') { $Matches[1].Trim() } else { $null }
-        $agents = @()
-        if ($block -match '(?ms)^    agents:\s*\n((?:      - .+\r?\n?)+)') {
-            $agentSection = $Matches[1]
-            $agentChunks = [regex]::Split($agentSection, '(?m)^      - id: ')
-            foreach ($chunk in $agentChunks) {
-                if ($chunk -notmatch '^(\S+)') { continue }
-                $aid = $Matches[1].Trim()
-                $sub = $chunk
-                $type = if ($sub -match '(?m)^        type:\s+(\S+)') { $Matches[1] } else { 'operational' }
-                $autonomy = @()
-                if ($sub -match '(?m)^        autonomy:\s*\[(.+)\]') {
-                    $autonomy = $Matches[1] -split ',' | ForEach-Object { $_.Trim() }
-                }
-                $skills = @()
-                if ($sub -match '(?m)^        skills:\s*\[(.+)\]') {
-                    $skills = $Matches[1] -split ',' | ForEach-Object { $_.Trim() }
-                } elseif ($sub -match '(?ms)^        skills:\s*\n((?:          - .+\r?\n?)+)') {
-                    $skills = [regex]::Matches($Matches[1], '^\s+-\s+(\S+)', 'Multiline') | ForEach-Object { $_.Groups[1].Value }
-                }
-                $agents += @{
-                    id       = $aid
-                    type     = $type
-                    autonomy = $autonomy
-                    skills   = $skills
-                }
-            }
-        }
-        if ($paths.Count -gt 0) {
-            $rules += @{ id = $ruleId; paths = $paths; when = $when; agents = $agents }
-        }
-    }
-    return $rules
 }
 
 $files = Normalize-FileList -Files $ChangedFiles

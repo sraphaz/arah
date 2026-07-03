@@ -61,6 +61,8 @@ nodes:
     source: .agents/choreography.yaml (rules[].paths) + .agents/**/*.agent.yaml (scope.paths)
     fields:
       pattern: string
+      rules: list<ChoreographyRule.id>?
+      agents: list<Agent.id>?   # scope.paths dos manifests
 
   Domain:
     id_namespace: domain
@@ -146,15 +148,20 @@ edges:
     to: ChoreographyRule
     meaning: Uma mudança nesse path casa com a regra.
 
+  scopes_agent:
+    from: PathPattern
+    to: Agent
+    meaning: Glob está no scope.paths do manifest do agente (escopo permitido).
+
   activates_agent:
     from: ChoreographyRule
     to: Agent
     meaning: Rule ativa agente operacional (autonomy contém `activate`).
 
   consults_domain_agent:
-    from: ChoreographyRule
+    from: ChoreographyRule | Agent
     to: Agent
-    meaning: Rule aciona parecer consultivo de agente de domínio.
+    meaning: "Rule ou manifest declara consulta a agente de domínio (parecer consultivo)."
 
   may_invoke_skill:
     from: Agent
@@ -194,7 +201,7 @@ edges:
   blocked_by_guardrail:
     from: Agent
     to: Guardrail
-    meaning: Agente opera sob o guardrail (ex.: no_merge=true).
+    meaning: "Agente opera sob o guardrail (ex.: no_merge=true)."
 
   documented_by:
     from: any

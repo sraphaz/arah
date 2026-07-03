@@ -2,7 +2,7 @@
     "schema":  ".agents/agent-graph.schema.yaml",
     "version":  1,
     "generator":  "scripts/agents/export-agent-graph.ps1",
-    "generated_at":  "2026-07-03T03:08:14Z",
+    "generated_at":  "2026-07-03T03:17:49Z",
     "sources":  [
                     ".agents/choreography.yaml",
                     ".agents/**/*.agent.yaml",
@@ -14,7 +14,7 @@
                   "agents":  29,
                   "skills":  24,
                   "rules":  15,
-                  "paths":  84,
+                  "paths":  145,
                   "domains":  11,
                   "specs":  12,
                   "harnesses":  12,
@@ -22,7 +22,7 @@
                   "guardrails":  16,
                   "workflows":  16,
                   "review_gates":  5,
-                  "edges":  332
+                  "edges":  485
               },
     "nodes":  {
                   "agents":  [
@@ -1042,25 +1042,22 @@
                              ],
                   "rules":  [
                                 {
-                                    "id":  "core-control-plane",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/Arah.Core/**"
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "backend",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "backend",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    },
                                                    {
-                                                       "id":  "solutions-architect",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate",
                                                                         "consult_post",
@@ -1068,33 +1065,38 @@
                                                                     ],
                                                        "skills":  [
                                                                       "architecture-review"
-                                                                  ]
+                                                                  ],
+                                                       "id":  "solutions-architect",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    },
                                                    {
-                                                       "id":  "spec-steward",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "spec-steward",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    },
                                                    {
-                                                       "id":  "control-plane",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "control-plane",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "core-control-plane"
                                 },
                                 {
-                                    "id":  "architecture-docs",
-                                    "when":  null,
                                     "paths":  [
                                                   "docs/architecture/**",
                                                   "docs/design/*.likec4",
@@ -1102,8 +1104,6 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "solutions-architect",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate",
                                                                         "invoke_skill"
@@ -1111,13 +1111,16 @@
                                                        "skills":  [
                                                                       "likec4-export",
                                                                       "architecture-review"
-                                                                  ]
+                                                                  ],
+                                                       "id":  "solutions-architect",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "architecture-docs"
                                 },
                                 {
-                                    "id":  "territory-membership",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/**/Territories/**",
                                                   "backend/**/Memberships/**",
@@ -1125,20 +1128,21 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "territorio-membership",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "territorio-membership",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "territory-membership"
                                 },
                                 {
-                                    "id":  "marketplace",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/Arah.Modules.Marketplace/**",
                                                   "backend/**/Marketplace/**",
@@ -1149,20 +1153,21 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "mercado-economia",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "mercado-economia",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "marketplace"
                                 },
                                 {
-                                    "id":  "governance",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/**/Moderation/**",
                                                   "backend/**/Voting/**",
@@ -1170,20 +1175,21 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "governanca-transparencia",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "governanca-transparencia",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "governance"
                                 },
                                 {
-                                    "id":  "feed-content",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/Arah.Modules.Feed/**",
                                                   "backend/**/Feed/**",
@@ -1196,20 +1202,21 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "feed-conteudo",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "feed-conteudo",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "feed-content"
                                 },
                                 {
-                                    "id":  "map-places",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/Arah.Modules.Map/**",
                                                   "backend/**/Map/**",
@@ -1221,20 +1228,21 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "mapa-lugares",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "mapa-lugares",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "map-places"
                                 },
                                 {
-                                    "id":  "community-connections",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/Arah.Modules.Chat/**",
                                                   "backend/**/Chat/**",
@@ -1251,20 +1259,21 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "comunidade-conexoes",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "comunidade-conexoes",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "community-connections"
                                 },
                                 {
-                                    "id":  "identity-privacy",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/Arah.Domain/Users/**",
                                                   "backend/Arah.Application/Services/Users/**",
@@ -1276,30 +1285,32 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "identidade-privacidade",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "identidade-privacidade",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    },
                                                    {
-                                                       "id":  "security",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "security",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "identity-privacy"
                                 },
                                 {
-                                    "id":  "monetization",
-                                    "when":  null,
                                     "paths":  [
                                                   "backend/**/Subscriptions/**",
                                                   "backend/**/Stripe/**",
@@ -1313,30 +1324,32 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "monetizacao-split",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "monetizacao-split",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    },
                                                    {
-                                                       "id":  "carteira-arata",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "carteira-arata",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "monetization"
                                 },
                                 {
-                                    "id":  "infra-deploy",
-                                    "when":  null,
                                     "paths":  [
                                                   ".github/workflows/deploy-staging.yml",
                                                   ".github/workflows/deploy-production.yml",
@@ -1347,40 +1360,43 @@
                                               ],
                                     "agents":  [
                                                    {
+                                                       "autonomy":  [
+                                                                        "activate"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
                                                        "id":  "backend",
-                                                       "kind":  "operational",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   },
+                                                   {
                                                        "autonomy":  [
                                                                         "activate"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
-                                                   },
-                                                   {
+                                                                  ],
                                                        "id":  "release",
-                                                       "kind":  "operational",
-                                                       "autonomy":  [
-                                                                        "activate"
-                                                                    ],
-                                                       "skills":  [
-
-                                                                  ]
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    },
                                                    {
-                                                       "id":  "control-plane",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "control-plane",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "infra-deploy"
                                 },
                                 {
-                                    "id":  "federation-handoff",
-                                    "when":  null,
                                     "paths":  [
                                                   "docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html",
                                                   "docs/backlog-api/FASE58.md",
@@ -1390,38 +1406,38 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "control-plane",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "control-plane",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    },
                                                    {
-                                                       "id":  "solutions-architect",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "solutions-architect",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "federation-handoff"
                                 },
                                 {
-                                    "id":  "specs-sdd",
-                                    "when":  null,
                                     "paths":  [
                                                   "docs/specs/**",
                                                   "scripts/harness/**"
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "spec-steward",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate",
                                                                         "invoke_skill"
@@ -1429,13 +1445,16 @@
                                                        "skills":  [
                                                                       "spec-validate",
                                                                       "harness-run"
-                                                                  ]
+                                                                  ],
+                                                       "id":  "spec-steward",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "specs-sdd"
                                 },
                                 {
-                                    "id":  "design-ux",
-                                    "when":  null,
                                     "paths":  [
                                                   "frontend/wiki/**",
                                                   "frontend/portal/**",
@@ -1451,45 +1470,50 @@
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "design-ux",
-                                                       "kind":  "domain",
                                                        "autonomy":  [
                                                                         "consult_post"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "design-ux",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  null,
+                                    "id":  "design-ux"
                                 },
                                 {
-                                    "id":  "pr-always",
-                                    "when":  "pull_request",
                                     "paths":  [
                                                   "**"
                                               ],
                                     "agents":  [
                                                    {
-                                                       "id":  "qa",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "qa",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    },
                                                    {
-                                                       "id":  "pr-steward",
-                                                       "kind":  "operational",
                                                        "autonomy":  [
                                                                         "activate"
                                                                     ],
                                                        "skills":  [
 
-                                                                  ]
+                                                                  ],
+                                                       "id":  "pr-steward",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
                                                    }
-                                               ]
+                                               ],
+                                    "when":  "pull_request",
+                                    "id":  "pr-always"
                                 }
                             ],
                   "paths":  [
@@ -1497,505 +1521,1324 @@
                                     "pattern":  "**",
                                     "rules":  [
                                                   "pr-always"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "qa"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "**/package-lock.json",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "security"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "**/packages.lock.json",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "security"
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".agents/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "pr-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".github/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "pr-steward",
+                                                   "release"
+                                               ]
                                 },
                                 {
                                     "pattern":  ".github/workflows/cd.yml",
                                     "rules":  [
                                                   "infra-deploy"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
                                 },
                                 {
                                     "pattern":  ".github/workflows/deploy-production.yml",
                                     "rules":  [
                                                   "infra-deploy"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
                                 },
                                 {
                                     "pattern":  ".github/workflows/deploy-staging.yml",
                                     "rules":  [
                                                   "infra-deploy"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".github/workflows/spec-harness.yml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "spec-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".skills/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "pr-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "AGENTS.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "docs-steward"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Alerts/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Assets/**",
                                     "rules":  [
                                                   "map-places"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Cart/**",
                                     "rules":  [
                                                   "marketplace"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mercado-economia"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Chat/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Connections/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Events/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Feed/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Financial/**",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Items/**",
                                     "rules":  [
                                                   "marketplace"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mercado-economia"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Map/**",
                                     "rules":  [
                                                   "map-places"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Marketplace/**",
                                     "rules":  [
                                                   "marketplace"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mercado-economia"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Memberships/**",
                                     "rules":  [
                                                   "territory-membership"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "territorio-membership"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Moderation/**",
                                     "rules":  [
                                                   "governance"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "governanca-transparencia"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Notifications/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Payout/**",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/PlatformFinancial/**",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Policies/**",
                                     "rules":  [
                                                   "identity-privacy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/SellerBalance/**",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Stores/**",
                                     "rules":  [
                                                   "marketplace"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mercado-economia"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Stripe/**",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "monetizacao-split"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Subscriptions/**",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "monetizacao-split"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Territories/**",
                                     "rules":  [
                                                   "territory-membership"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "territorio-membership"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Voting/**",
                                     "rules":  [
                                                   "governance"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "governanca-transparencia"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/**/Votings/**",
                                     "rules":  [
                                                   "governance"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "governanca-transparencia"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Api.Bff/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "backend"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Api/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "backend",
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Api/Controllers/Platform/CoreController.cs",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "control-plane"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Api/Controllers/Platform/FederationController.cs",
                                     "rules":  [
                                                   "federation-handoff"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "control-plane"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Api/Controllers/Users/**",
                                     "rules":  [
                                                   "identity-privacy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "backend",
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Assets/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Chat/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Connections/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Events/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Feed/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Map/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Application/Services/Marketplace/**",
                                     "rules":  [
                                                   "marketplace"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Application/Services/Marketplace/CommercialStoreGateService.cs",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "monetizacao-split"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata",
+                                                   "monetizacao-split"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Application/Services/Media/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Notifications/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Platform/*DataExport*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Platform/*Policy*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Application/Services/Platform/Auth*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Application/Services/Users/**",
                                     "rules":  [
                                                   "identity-privacy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Core/**",
                                     "rules":  [
                                                   "core-control-plane"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "backend",
+                                                   "control-plane",
+                                                   "solutions-architect"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Core/Application/Federation*",
                                     "rules":  [
                                                   "federation-handoff"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Domain/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "backend",
+                                                   "solutions-architect"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Domain/Financial/**",
                                     "rules":  [
                                                   "monetization"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata",
+                                                   "monetizacao-split"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Domain/Geo/**",
                                     "rules":  [
                                                   "map-places"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Domain/Media/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Domain/Policies/**",
                                     "rules":  [
                                                   "identity-privacy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Domain/Social/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Domain/Territories/**",
                                     "rules":  [
                                                   "territory-membership"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "territorio-membership"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Domain/Users/**",
                                     "rules":  [
                                                   "identity-privacy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Infrastructure.Shared/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "backend"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Infrastructure/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "backend",
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Modules.*/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Alerts/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Assets/**",
                                     "rules":  [
                                                   "map-places"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Chat/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Connections/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Events/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Feed/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Map/**",
                                     "rules":  [
                                                   "map-places"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Marketplace/**",
                                     "rules":  [
                                                   "marketplace"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mercado-economia"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Modules.Moderation/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "governanca-transparencia"
+                                               ]
                                 },
                                 {
                                     "pattern":  "backend/Arah.Modules.Notifications/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Arah.Modules.Subscriptions/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "monetizacao-split"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/Tests/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "backend"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "CONTRIBUTING.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "docs-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docker-compose.staging.yml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "release"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docker-compose.yml",
                                     "rules":  [
                                                   "infra-deploy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "release"
+                                               ]
                                 },
                                 {
                                     "pattern":  "Dockerfile",
                                     "rules":  [
                                                   "infra-deploy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "release"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "docs-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/**/10_ARCHITECTURE*.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/**/billing*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/**/carteira*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/**/design*",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/**/marketplace*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "mercado-economia"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/**/mercado*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "mercado-economia"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/**/SECURITY*.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "security"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/_meta/PHASE_QUEUE.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "planner"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/_meta/SDD_AND_HARNESS.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "spec-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/02_ROADMAP.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "planner"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/03_BACKLOG.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "planner"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/architecture/**",
                                     "rules":  [
                                                   "architecture-docs"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/architecture/ADR-REGISTRY.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/architecture/adrs/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/architecture/diagrams/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/architecture/likec4/**",
                                     "rules":  [
                                                   "architecture-docs"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/backlog-api/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "planner"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/backlog-api/FASE15.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "carteira-arata"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/backlog-api/FASE58.md",
                                     "rules":  [
                                                   "federation-handoff"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/backlog-api/FASE59.md",
                                     "rules":  [
                                                   "federation-handoff"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/CHANGELOG.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "docs-steward"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/CURSOR_DESIGN_RULES.md",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/design/**",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/design/**/*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/design/*.likec4",
                                     "rules":  [
                                                   "architecture-docs"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "solutions-architect"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/handoff/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "planner"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/handoff/arquitetura-c4/Anexo Handoff - Operacao Instancias e Federacao.dc.html",
                                     "rules":  [
                                                   "federation-handoff"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/ops/CI_CD_PIPELINE.md",
                                     "rules":  [
                                                   "infra-deploy"
-                                              ]
+                                              ],
+                                    "agents":  [
+
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/ops/PLATFORM_STATE.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "spec-steward"
+                                               ]
                                 },
                                 {
                                     "pattern":  "docs/specs/**",
                                     "rules":  [
                                                   "specs-sdd"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "docs-steward",
+                                                   "planner",
+                                                   "pr-steward",
+                                                   "spec-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/phases/FASE53-arah-core.spec.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "control-plane"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/phases/FASE58*.spec.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "control-plane"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/phases/FASE59*.spec.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "control-plane"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/STATUS_FASES.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "planner"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/**/*.css",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/**/tailwind.config.ts",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/**",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux",
+                                                   "flutter"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "frontend/arah.app/**/territor*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "territorio-membership"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/auth/**",
                                     "rules":  [
                                                   "identity-privacy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/chat/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/connections/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/events/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/explore/**",
                                     "rules":  [
                                                   "map-places"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/feed/**",
                                     "rules":  [
                                                   "feed-content"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "feed-conteudo"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/map/**",
                                     "rules":  [
                                                   "map-places"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "mapa-lugares"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/notifications/**",
                                     "rules":  [
                                                   "community-connections"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "comunidade-conexoes"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/arah.app/lib/features/profile/**",
                                     "rules":  [
                                                   "identity-privacy"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "identidade-privacidade"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/devportal/**",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux",
+                                                   "web"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/portal/**",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux",
+                                                   "web"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/shared/styles/**",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux"
+                                               ]
                                 },
                                 {
                                     "pattern":  "frontend/wiki/**",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "design-ux",
+                                                   "web"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "global.json",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "release"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "README.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "docs-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "scripts/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "release"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "scripts/agents/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "pr-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "scripts/agents/spec-gate-check.ps1",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "spec-steward"
+                                               ]
                                 },
                                 {
                                     "pattern":  "scripts/harness/**",
                                     "rules":  [
                                                   "specs-sdd"
-                                              ]
+                                              ],
+                                    "agents":  [
+                                                   "pr-steward",
+                                                   "release",
+                                                   "spec-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "SECURITY.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "security"
+                                               ]
                                 }
                             ],
                   "domains":  [
@@ -4354,13 +5197,13 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
-                      "via":  "architecture-docs"
+                      "via":  "core-control-plane"
                   },
                   {
                       "from":  "agent:solutions-architect",
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
-                      "via":  "core-control-plane"
+                      "via":  "architecture-docs"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -4372,13 +5215,13 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:likec4-export",
                       "type":  "may_invoke_skill",
-                      "via":  "architecture-docs"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:solutions-architect",
                       "to":  "skill:likec4-export",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "architecture-docs"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -4396,13 +5239,13 @@
                       "from":  "agent:spec-steward",
                       "to":  "skill:harness-run",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "specs-sdd"
                   },
                   {
                       "from":  "agent:spec-steward",
                       "to":  "skill:harness-run",
                       "type":  "may_invoke_skill",
-                      "via":  "specs-sdd"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:spec-steward",
@@ -4629,6 +5472,924 @@
                       "type":  "requires_spec"
                   },
                   {
+                      "from":  "path:**/package-lock.json",
+                      "to":  "agent:security",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:**/packages.lock.json",
+                      "to":  "agent:security",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:**",
+                      "to":  "agent:qa",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.agents/**",
+                      "to":  "agent:pr-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.github/**",
+                      "to":  "agent:pr-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.github/**",
+                      "to":  "agent:release",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.github/workflows/spec-harness.yml",
+                      "to":  "agent:spec-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.skills/**",
+                      "to":  "agent:pr-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:AGENTS.md",
+                      "to":  "agent:docs-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Alerts/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Assets/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Cart/**",
+                      "to":  "agent:mercado-economia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Chat/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Connections/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Events/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Feed/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Items/**",
+                      "to":  "agent:mercado-economia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Map/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Marketplace/**",
+                      "to":  "agent:mercado-economia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Memberships/**",
+                      "to":  "agent:territorio-membership",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Moderation/**",
+                      "to":  "agent:governanca-transparencia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Notifications/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Payout/**",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/PlatformFinancial/**",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Policies/**",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/SellerBalance/**",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Stores/**",
+                      "to":  "agent:mercado-economia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Stripe/**",
+                      "to":  "agent:monetizacao-split",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Subscriptions/**",
+                      "to":  "agent:monetizacao-split",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Territories/**",
+                      "to":  "agent:territorio-membership",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Voting/**",
+                      "to":  "agent:governanca-transparencia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Votings/**",
+                      "to":  "agent:governanca-transparencia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Api.Bff/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Api/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Api/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Api/Controllers/Platform/CoreController.cs",
+                      "to":  "agent:control-plane",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Api/Controllers/Platform/FederationController.cs",
+                      "to":  "agent:control-plane",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Api/Controllers/Users/**",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Assets/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Chat/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Connections/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Events/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Feed/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Map/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Marketplace/CommercialStoreGateService.cs",
+                      "to":  "agent:monetizacao-split",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs",
+                      "to":  "agent:monetizacao-split",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Media/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Notifications/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Platform/*DataExport*",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Platform/*Policy*",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Platform/Auth*",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/Services/Users/**",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Core/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Core/**",
+                      "to":  "agent:control-plane",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Core/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Financial/**",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Financial/**",
+                      "to":  "agent:monetizacao-split",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Geo/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Media/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Policies/**",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Social/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Territories/**",
+                      "to":  "agent:territorio-membership",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Domain/Users/**",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Infrastructure.Shared/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Infrastructure/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Infrastructure/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.*/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Alerts/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Assets/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Chat/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Connections/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Events/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Feed/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Map/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Marketplace/**",
+                      "to":  "agent:mercado-economia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Moderation/**",
+                      "to":  "agent:governanca-transparencia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Notifications/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.Subscriptions/**",
+                      "to":  "agent:monetizacao-split",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/Tests/**",
+                      "to":  "agent:backend",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:CONTRIBUTING.md",
+                      "to":  "agent:docs-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docker-compose.staging.yml",
+                      "to":  "agent:release",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docker-compose.yml",
+                      "to":  "agent:release",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:Dockerfile",
+                      "to":  "agent:release",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**/10_ARCHITECTURE*.md",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**/billing*",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**/carteira*",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**/design*",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**/marketplace*",
+                      "to":  "agent:mercado-economia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**/mercado*",
+                      "to":  "agent:mercado-economia",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**/SECURITY*.md",
+                      "to":  "agent:security",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/**",
+                      "to":  "agent:docs-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/_meta/PHASE_QUEUE.yaml",
+                      "to":  "agent:planner",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/_meta/SDD_AND_HARNESS.md",
+                      "to":  "agent:spec-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/02_ROADMAP.md",
+                      "to":  "agent:planner",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/03_BACKLOG.md",
+                      "to":  "agent:planner",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/architecture/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/architecture/ADR-REGISTRY.yaml",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/architecture/adrs/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/architecture/diagrams/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/architecture/likec4/**",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/**",
+                      "to":  "agent:planner",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/FASE15.md",
+                      "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/CHANGELOG.md",
+                      "to":  "agent:docs-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/CURSOR_DESIGN_RULES.md",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/design/**/*",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/design/**",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/design/*.likec4",
+                      "to":  "agent:solutions-architect",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/handoff/**",
+                      "to":  "agent:planner",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/ops/PLATFORM_STATE.md",
+                      "to":  "agent:spec-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/**",
+                      "to":  "agent:docs-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/**",
+                      "to":  "agent:planner",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/**",
+                      "to":  "agent:pr-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/**",
+                      "to":  "agent:spec-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/phases/FASE53-arah-core.spec.yaml",
+                      "to":  "agent:control-plane",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/phases/FASE58*.spec.yaml",
+                      "to":  "agent:control-plane",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/phases/FASE59*.spec.yaml",
+                      "to":  "agent:control-plane",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/STATUS_FASES.md",
+                      "to":  "agent:planner",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/**/*.css",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/**/tailwind.config.ts",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/**/territor*",
+                      "to":  "agent:territorio-membership",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/**",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/**",
+                      "to":  "agent:flutter",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/auth/**",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/chat/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/connections/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/events/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/explore/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/feed/**",
+                      "to":  "agent:feed-conteudo",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/map/**",
+                      "to":  "agent:mapa-lugares",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/notifications/**",
+                      "to":  "agent:comunidade-conexoes",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/arah.app/lib/features/profile/**",
+                      "to":  "agent:identidade-privacidade",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/devportal/**",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/devportal/**",
+                      "to":  "agent:web",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/portal/**",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/portal/**",
+                      "to":  "agent:web",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/shared/styles/**",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/wiki/**",
+                      "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/wiki/**",
+                      "to":  "agent:web",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:global.json",
+                      "to":  "agent:release",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:README.md",
+                      "to":  "agent:docs-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:scripts/**",
+                      "to":  "agent:release",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:scripts/agents/**",
+                      "to":  "agent:pr-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:scripts/agents/spec-gate-check.ps1",
+                      "to":  "agent:spec-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:scripts/harness/**",
+                      "to":  "agent:pr-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:scripts/harness/**",
+                      "to":  "agent:release",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:scripts/harness/**",
+                      "to":  "agent:spec-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:SECURITY.md",
+                      "to":  "agent:security",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "harness:agent-operation-harness",
                       "to":  "agent:orchestrator",
                       "type":  "validated_by"
@@ -4842,13 +6603,13 @@
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-3"
+                      "via":  "AC-55-6"
                   },
                   {
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-6"
+                      "via":  "AC-55-3"
                   },
                   {
                       "from":  "spec:FASE55-monetization",

@@ -172,7 +172,11 @@ try {
 # retorna exit 1 apenas para erros; warnings de defasagem não bloqueiam).
 try {
     & (Join-Path $HarnessDir 'validate-agent-graph.ps1') | Out-Null
-    Add-Step 'validate-agent-graph' $true
+    if ($LASTEXITCODE -ne 0) {
+        Add-Step 'validate-agent-graph' $false "exit code $LASTEXITCODE"
+    } else {
+        Add-Step 'validate-agent-graph' $true
+    }
 } catch {
     Add-Step 'validate-agent-graph' $false $_.Exception.Message
 }

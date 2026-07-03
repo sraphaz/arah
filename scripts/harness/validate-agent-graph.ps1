@@ -37,6 +37,8 @@ $GraphJson = Join-Path $Root 'docs/_meta/agent-graph.generated.json'
 
 $CriticalRules = @('identity-privacy', 'monetization', 'infra-deploy', 'core-control-plane', 'federation-handoff')
 
+. (Join-Path $Root 'scripts/agents/choreography-parser.ps1')
+
 $errors = @()
 $warnings = @()
 
@@ -50,43 +52,6 @@ function Get-YamlListItems {
             ForEach-Object { $_.Groups[1].Value.Trim() })
     }
     return @()
-}
-
-function Parse-ChoreographyRules {
-    param([string]$Raw)
-    $rules = @()
-    $blocks = [regex]::Split($Raw, '(?m)^  - id: ')
-    foreach ($block in $blocks) {
-        # Ignora o preâmbulo/comentários; rule ids são lowercase-dashed seguidos de newline.
-        if ($block -notmatch '^([a-z][\w-]*)\r?\n') { continue }
-        $ruleId = $Matches[1].Trim()
-        $paths = @()
-        # (?m) sem Singleline: '.' não cruza linha, então a lista de paths para
-        # na próxima chave irmã (agents:) e não engole entradas de agente.
-        if ($block -match '(?m)^    paths:\s*\r?\n((?:      - [^\r\n]+\r?\n?)+)') {
-            $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
-                $_.Groups[1].Value.Trim().Trim('"').Trim("'")
-            }
-        }
-        $agents = @()
-        if ($block -match '(?ms)^    agents:\s*\n((?:      - .+\r?\n?)+)') {
-            $agentChunks = [regex]::Split($Matches[1], '(?m)^      - id: ')
-            foreach ($chunk in $agentChunks) {
-                if ($chunk -notmatch '^(\S+)') { continue }
-                $aid = $Matches[1].Trim()
-                $type = if ($chunk -match '(?m)^        type:\s+(\S+)') { $Matches[1] } else { 'operational' }
-                $skills = @()
-                if ($chunk -match '(?m)^        skills:\s*\[(.+)\]') {
-                    $skills = $Matches[1] -split ',' | ForEach-Object { $_.Trim() }
-                } elseif ($chunk -match '(?ms)^        skills:\s*\n((?:          - .+\r?\n?)+)') {
-                    $skills = [regex]::Matches($Matches[1], '^\s+-\s+(\S+)', 'Multiline') | ForEach-Object { $_.Groups[1].Value }
-                }
-                $agents += @{ id = $aid; kind = $type; skills = @($skills) }
-            }
-        }
-        $rules += @{ id = $ruleId; paths = @($paths); agents = @($agents) }
-    }
-    return $rules
 }
 
 function Test-AgentManifestExists {
@@ -132,10 +97,9 @@ foreach ($rule in $rules) {
 
     if ($CriticalRules -contains $rule.id) {
         $hasDomain = @($rule.agents | Where-Object { $_.kind -eq 'domain' }).Count -gt 0
-        $hasOperational = @($rule.agents | Where-Object { $_.kind -ne 'domain' }).Count -gt 0
-        $hasSkill = @($rule.agents | Where-Object { $_.skills.Count -gt 0 }).Count -gt 0
-        if (-not ($hasDomain -or $hasOperational -or $hasSkill)) {
-            $errors += "critical rule '$($rule.id)': needs a domain consult, operational agent or coherent skill"
+        $hasSkillGate = @($rule.agents | Where-Object { $_.skills.Count -gt 0 }).Count -gt 0
+        if (-not ($hasDomain -or $hasSkillGate)) {
+            $errors += "critical rule '$($rule.id)': needs domain consult or agent with declared skill"
         }
     }
 }

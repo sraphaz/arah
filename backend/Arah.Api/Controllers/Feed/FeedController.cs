@@ -94,27 +94,10 @@ public sealed class FeedController : ControllerBase
             return Unauthorized();
         }
 
-        // Convergência geo/território: se o cliente enviar X-Geo-Latitude/X-Geo-Longitude, exige que a posição esteja no raio do território (salvo bypass por flag ou permissão).
-        if (GeoHeaderReader.TryGetCoordinates(Request.Headers, out var userLat, out var userLon))
+        var geoBlock = await EnforceGeoConvergenceAsync(resolvedTerritoryId.Value, userContext.User?.Id, cancellationToken);
+        if (geoBlock is not null)
         {
-            var bypass = await _geoBypass.ShouldBypassGeoEnforcementAsync(resolvedTerritoryId.Value, userContext.User?.Id, cancellationToken);
-            if (!bypass)
-            {
-                var territory = await _territoryService.GetByIdAsync(resolvedTerritoryId.Value, cancellationToken);
-                if (territory is not null)
-                {
-                    var maxRadiusKm = territory.RadiusKm ?? Constants.Geo.VerificationRadiusKm;
-                    var distanceKm = GeographyHelper.DistanceKm(userLat, userLon, territory.Latitude, territory.Longitude);
-                    if (distanceKm > maxRadiusKm)
-                    {
-                        return StatusCode(StatusCodes.Status403Forbidden, new
-                        {
-                            error = "Geolocation does not converge with the observed territory.",
-                            detail = $"User position is {distanceKm:F1} km from territory center. Maximum allowed: {maxRadiusKm:F1} km.",
-                        });
-                    }
-                }
-            }
+            return (ActionResult)geoBlock;
         }
 
         var effectivePrioritize = prioritizeConnections
@@ -135,32 +118,9 @@ public sealed class FeedController : ControllerBase
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
 
-        var response = new List<FeedItemResponse>();
-        foreach (var post in posts)
-        {
-            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
-            var eventSummary = ResolveEventSummary(post, eventLookup);
-            var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
-
-            const int maxInt32 = int.MaxValue;
-            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
-            response.Add(new FeedItemResponse(
-                post.Id,
-                post.Title,
-                post.Content,
-                post.Type.ToString().ToUpperInvariant(),
-                post.Visibility.ToString().ToUpperInvariant(),
-                post.Status.ToString().ToUpperInvariant(),
-                post.MapEntityId,
-                eventSummary,
-                post.Type == PostType.Alert,
-                postCounts.LikeCount,
-                postCounts.ShareCount,
-                post.CreatedAtUtc,
-                mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaCount,
-                post.Tags?.Count > 0 ? post.Tags : null));
-        }
+        var response = posts
+            .Select(post => BuildFeedItemResponse(post, counts, eventLookup, mediaUrlsByPost, includeTags: true))
+            .ToList();
 
         return Ok(response);
     }
@@ -215,30 +175,9 @@ public sealed class FeedController : ControllerBase
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
 
         const int maxInt32 = int.MaxValue;
-        var items = new List<FeedItemResponse>();
-        foreach (var post in pagedResult.Items)
-        {
-            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
-            var eventSummary = ResolveEventSummary(post, eventLookup);
-            var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
-
-            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
-            items.Add(new FeedItemResponse(
-                post.Id,
-                post.Title,
-                post.Content,
-                post.Type.ToString().ToUpperInvariant(),
-                post.Visibility.ToString().ToUpperInvariant(),
-                post.Status.ToString().ToUpperInvariant(),
-                post.MapEntityId,
-                eventSummary,
-                post.Type == PostType.Alert,
-                postCounts.LikeCount,
-                postCounts.ShareCount,
-                post.CreatedAtUtc,
-                mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaCount));
-        }
+        var items = pagedResult.Items
+            .Select(post => BuildFeedItemResponse(post, counts, eventLookup, mediaUrlsByPost, includeTags: false))
+            .ToList();
 
         var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
         var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
@@ -275,32 +214,9 @@ public sealed class FeedController : ControllerBase
         var counts = await _feedService.GetCountsByPostIdsAsync(postIds, cancellationToken);
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
 
-        var response = new List<FeedItemResponse>();
-        foreach (var post in posts)
-        {
-            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
-            var eventSummary = ResolveEventSummary(post, eventLookup);
-            var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
-
-            const int maxInt32 = int.MaxValue;
-            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
-            response.Add(new FeedItemResponse(
-                post.Id,
-                post.Title,
-                post.Content,
-                post.Type.ToString().ToUpperInvariant(),
-                post.Visibility.ToString().ToUpperInvariant(),
-                post.Status.ToString().ToUpperInvariant(),
-                post.MapEntityId,
-                eventSummary,
-                post.Type == PostType.Alert,
-                postCounts.LikeCount,
-                postCounts.ShareCount,
-                post.CreatedAtUtc,
-                mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaCount,
-                post.Tags?.Count > 0 ? post.Tags : null));
-        }
+        var response = posts
+            .Select(post => BuildFeedItemResponse(post, counts, eventLookup, mediaUrlsByPost, includeTags: true))
+            .ToList();
 
         return Ok(response);
     }
@@ -330,30 +246,9 @@ public sealed class FeedController : ControllerBase
         var mediaUrlsByPost = await LoadMediaUrlsByPostIdsAsync(postIds, cancellationToken);
 
         const int maxInt32 = int.MaxValue;
-        var items = new List<FeedItemResponse>();
-        foreach (var post in pagedResult.Items)
-        {
-            var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
-            var eventSummary = ResolveEventSummary(post, eventLookup);
-            var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
-
-            var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
-            items.Add(new FeedItemResponse(
-                post.Id,
-                post.Title,
-                post.Content,
-                post.Type.ToString().ToUpperInvariant(),
-                post.Visibility.ToString().ToUpperInvariant(),
-                post.Status.ToString().ToUpperInvariant(),
-                post.MapEntityId,
-                eventSummary,
-                post.Type == PostType.Alert,
-                postCounts.LikeCount,
-                postCounts.ShareCount,
-                post.CreatedAtUtc,
-                mediaUrls.Count > 0 ? mediaUrls : null,
-                mediaCount));
-        }
+        var items = pagedResult.Items
+            .Select(post => BuildFeedItemResponse(post, counts, eventLookup, mediaUrlsByPost, includeTags: false))
+            .ToList();
 
         var safeTotalCount = pagedResult.TotalCount > maxInt32 ? maxInt32 : pagedResult.TotalCount;
         var safeTotalPages = pagedResult.TotalPages > maxInt32 ? maxInt32 : pagedResult.TotalPages;
@@ -703,6 +598,73 @@ public sealed class FeedController : ControllerBase
             evt.CreatedByMembership.ToString().ToUpperInvariant(),
             summary.InterestedCount,
             summary.ConfirmedCount);
+    }
+
+    // Convergência geo/território: se o cliente enviar X-Geo-Latitude/X-Geo-Longitude, exige que a posição
+    // esteja no raio do território (salvo bypass por flag ou permissão). Retorna null quando OK ou o 403 a bloquear.
+    private async Task<IActionResult?> EnforceGeoConvergenceAsync(Guid territoryId, Guid? userId, CancellationToken cancellationToken)
+    {
+        if (!GeoHeaderReader.TryGetCoordinates(Request.Headers, out var userLat, out var userLon))
+        {
+            return null;
+        }
+
+        var bypass = await _geoBypass.ShouldBypassGeoEnforcementAsync(territoryId, userId, cancellationToken);
+        if (bypass)
+        {
+            return null;
+        }
+
+        var territory = await _territoryService.GetByIdAsync(territoryId, cancellationToken);
+        if (territory is null)
+        {
+            return null;
+        }
+
+        var maxRadiusKm = territory.RadiusKm ?? Constants.Geo.VerificationRadiusKm;
+        var distanceKm = GeographyHelper.DistanceKm(userLat, userLon, territory.Latitude, territory.Longitude);
+        if (distanceKm <= maxRadiusKm)
+        {
+            return null;
+        }
+
+        return StatusCode(StatusCodes.Status403Forbidden, new
+        {
+            error = "Geolocation does not converge with the observed territory.",
+            detail = $"User position is {distanceKm:F1} km from territory center. Maximum allowed: {maxRadiusKm:F1} km.",
+        });
+    }
+
+    private static FeedItemResponse BuildFeedItemResponse(
+        CommunityPost post,
+        IReadOnlyDictionary<Guid, PostCounts> counts,
+        IReadOnlyDictionary<Guid, Application.Models.EventSummary> eventLookup,
+        IReadOnlyDictionary<Guid, IReadOnlyList<string>> mediaUrlsByPost,
+        bool includeTags)
+    {
+        var postCounts = counts.GetValueOrDefault(post.Id, new PostCounts(0, 0));
+        var eventSummary = ResolveEventSummary(post, eventLookup);
+        var mediaUrls = mediaUrlsByPost.GetValueOrDefault(post.Id, Array.Empty<string>());
+
+        const int maxInt32 = int.MaxValue;
+        var mediaCount = mediaUrls.Count > maxInt32 ? maxInt32 : mediaUrls.Count;
+
+        return new FeedItemResponse(
+            post.Id,
+            post.Title,
+            post.Content,
+            post.Type.ToString().ToUpperInvariant(),
+            post.Visibility.ToString().ToUpperInvariant(),
+            post.Status.ToString().ToUpperInvariant(),
+            post.MapEntityId,
+            eventSummary,
+            post.Type == PostType.Alert,
+            postCounts.LikeCount,
+            postCounts.ShareCount,
+            post.CreatedAtUtc,
+            mediaUrls.Count > 0 ? mediaUrls : null,
+            mediaCount,
+            includeTags && post.Tags?.Count > 0 ? post.Tags : null);
     }
 
     private async Task<IReadOnlyList<string>> LoadMediaUrlsForPostAsync(Guid postId, CancellationToken cancellationToken)

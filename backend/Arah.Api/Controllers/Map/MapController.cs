@@ -237,37 +237,20 @@ public sealed class MapController : ControllerBase
             return Unauthorized();
         }
 
-        var typeSet = ParseTypes(types);
-        var includeEntities = typeSet.Contains("entity");
-        var includeAssets = typeSet.Contains("asset");
-        var includeAlerts = typeSet.Contains("alert");
-        var includePosts = typeSet.Contains("post");
-        var includeMedia = typeSet.Contains("media");
-        var includeEvents = typeSet.Contains("event");
-
+        var filters = ParsePinFilters(types);
         var pins = new List<MapPinResponse>();
 
-        if (includeEntities)
+        if (filters.Entities)
         {
             var entities = await _mapService.ListEntitiesAsync(
                 resolvedTerritoryId.Value,
                 userContext.User?.Id,
                 cancellationToken);
 
-            pins.AddRange(entities.Select(entity => new MapPinResponse(
-                "entity",
-                entity.Latitude,
-                entity.Longitude,
-                entity.Name,
-                null,
-                null,
-                null,
-                null,
-                entity.Id,
-                entity.Status.ToString().ToUpperInvariant())));
+            pins.AddRange(BuildEntityPins(entities));
         }
 
-        if (includeAssets)
+        if (filters.Assets)
         {
             var assetTypeList = assetId is null ? ParseCsv(assetTypes) : null;
             var assets = await _assetRepository.ListAsync(
@@ -278,31 +261,10 @@ public sealed class MapController : ControllerBase
                 null,
                 cancellationToken);
 
-            if (assets.Count > 0)
-            {
-                var assetIds = assets.Select(asset => asset.Id).ToList();
-                var anchors = await _assetGeoAnchorRepository.ListByAssetIdsAsync(assetIds, cancellationToken);
-                var assetLookup = assets.ToDictionary(asset => asset.Id, asset => asset);
-
-                pins.AddRange(anchors.Select(anchor =>
-                {
-                    var asset = assetLookup[anchor.AssetId];
-                    return new MapPinResponse(
-                        "asset",
-                        anchor.Latitude,
-                        anchor.Longitude,
-                        asset.Name,
-                        asset.Id,
-                        null,
-                        null,
-                        null,
-                        null,
-                        asset.Status.ToString().ToUpperInvariant());
-                }));
-            }
+            pins.AddRange(await BuildAssetPinsAsync(assets, cancellationToken));
         }
 
-        if (includePosts || includeAlerts || includeMedia)
+        if (filters.Posts || filters.Alerts || filters.Media)
         {
             var posts = await _feedService.ListForTerritoryAsync(
                 resolvedTerritoryId.Value,
@@ -313,45 +275,10 @@ public sealed class MapController : ControllerBase
                 prioritizeConnections: false,
                 cancellationToken);
 
-            var postIds = posts.Select(post => post.Id).ToList();
-            var anchors = await _postGeoAnchorRepository.ListByPostIdsAsync(postIds, cancellationToken);
-            var postLookup = posts.ToDictionary(post => post.Id, post => post);
-
-            foreach (var anchor in anchors.Where(anchor => postLookup.ContainsKey(anchor.PostId)))
-            {
-                var post = postLookup[anchor.PostId];
-                var pinType = ResolvePostPinType(post, anchor.Type, includeMedia);
-
-                if (pinType == "alert" && !includeAlerts)
-                {
-                    continue;
-                }
-
-                if (pinType == "post" && !includePosts)
-                {
-                    continue;
-                }
-
-                if (pinType == "media" && !includeMedia)
-                {
-                    continue;
-                }
-
-                pins.Add(new MapPinResponse(
-                    pinType,
-                    anchor.Latitude,
-                    anchor.Longitude,
-                    post.Title,
-                    null,
-                    pinType is "post" or "alert" ? post.Id : null,
-                    pinType == "media" ? post.Id : null,
-                    null,
-                    null,
-                    post.Status.ToString().ToUpperInvariant()));
-            }
+            pins.AddRange(await BuildPostPinsAsync(posts, filters, cancellationToken));
         }
 
-        if (includeEvents)
+        if (filters.Events)
         {
             var events = await _eventsService.ListEventsAsync(
                 resolvedTerritoryId.Value,
@@ -360,17 +287,7 @@ public sealed class MapController : ControllerBase
                 null,
                 cancellationToken);
 
-            pins.AddRange(events.Select(summary => new MapPinResponse(
-                "event",
-                summary.Event.Latitude,
-                summary.Event.Longitude,
-                summary.Event.Title,
-                null,
-                null,
-                null,
-                summary.Event.Id,
-                null,
-                summary.Event.Status.ToString().ToUpperInvariant())));
+            pins.AddRange(BuildEventPins(events));
         }
 
         return Ok(pins);
@@ -404,20 +321,13 @@ public sealed class MapController : ControllerBase
             return Unauthorized();
         }
 
-        var typeSet = ParseTypes(types);
-        var includeEntities = typeSet.Contains("entity");
-        var includeAssets = typeSet.Contains("asset");
-        var includeAlerts = typeSet.Contains("alert");
-        var includePosts = typeSet.Contains("post");
-        var includeMedia = typeSet.Contains("media");
-        var includeEvents = typeSet.Contains("event");
-
+        var filters = ParsePinFilters(types);
         var pins = new List<MapPinResponse>();
 
         // Para paginação, limitamos a busca de cada tipo
         var pagination = new PaginationParameters(pageNumber, pageSize);
 
-        if (includeEntities)
+        if (filters.Entities)
         {
             var entitiesPaged = await _mapService.ListEntitiesPagedAsync(
                 resolvedTerritoryId.Value,
@@ -425,20 +335,10 @@ public sealed class MapController : ControllerBase
                 pagination,
                 cancellationToken);
 
-            pins.AddRange(entitiesPaged.Items.Select(entity => new MapPinResponse(
-                "entity",
-                entity.Latitude,
-                entity.Longitude,
-                entity.Name,
-                null,
-                null,
-                null,
-                null,
-                entity.Id,
-                entity.Status.ToString().ToUpperInvariant())));
+            pins.AddRange(BuildEntityPins(entitiesPaged.Items));
         }
 
-        if (includeAssets)
+        if (filters.Assets)
         {
             var assetTypeList = assetId is null ? ParseCsv(assetTypes) : null;
             var assetsPaged = await _assetService.ListPagedAsync(
@@ -449,31 +349,11 @@ public sealed class MapController : ControllerBase
                 pagination,
                 cancellationToken);
 
-            if (assetsPaged.Items.Count > 0)
-            {
-                var assetIds = assetsPaged.Items.Select(asset => asset.Asset.Id).ToList();
-                var anchors = await _assetGeoAnchorRepository.ListByAssetIdsAsync(assetIds, cancellationToken);
-                var assetLookup = assetsPaged.Items.ToDictionary(item => item.Asset.Id, item => item.Asset);
-
-                pins.AddRange(anchors.Select(anchor =>
-                {
-                    var asset = assetLookup[anchor.AssetId];
-                    return new MapPinResponse(
-                        "asset",
-                        anchor.Latitude,
-                        anchor.Longitude,
-                        asset.Name,
-                        asset.Id,
-                        null,
-                        null,
-                        null,
-                        null,
-                        asset.Status.ToString().ToUpperInvariant());
-                }));
-            }
+            var assets = assetsPaged.Items.Select(item => item.Asset).ToList();
+            pins.AddRange(await BuildAssetPinsAsync(assets, cancellationToken));
         }
 
-        if (includePosts || includeAlerts || includeMedia)
+        if (filters.Posts || filters.Alerts || filters.Media)
         {
             var postsPaged = await _feedService.ListForTerritoryPagedAsync(
                 resolvedTerritoryId.Value,
@@ -485,45 +365,10 @@ public sealed class MapController : ControllerBase
                 prioritizeConnections: false,
                 cancellationToken);
 
-            var postIds = postsPaged.Items.Select(post => post.Id).ToList();
-            var anchors = await _postGeoAnchorRepository.ListByPostIdsAsync(postIds, cancellationToken);
-            var postLookup = postsPaged.Items.ToDictionary(post => post.Id, post => post);
-
-            foreach (var anchor in anchors.Where(anchor => postLookup.ContainsKey(anchor.PostId)))
-            {
-                var post = postLookup[anchor.PostId];
-                var pinType = ResolvePostPinType(post, anchor.Type, includeMedia);
-
-                if (pinType == "alert" && !includeAlerts)
-                {
-                    continue;
-                }
-
-                if (pinType == "post" && !includePosts)
-                {
-                    continue;
-                }
-
-                if (pinType == "media" && !includeMedia)
-                {
-                    continue;
-                }
-
-                pins.Add(new MapPinResponse(
-                    pinType,
-                    anchor.Latitude,
-                    anchor.Longitude,
-                    post.Title,
-                    null,
-                    pinType is "post" or "alert" ? post.Id : null,
-                    pinType == "media" ? post.Id : null,
-                    null,
-                    null,
-                    post.Status.ToString().ToUpperInvariant()));
-            }
+            pins.AddRange(await BuildPostPinsAsync(postsPaged.Items, filters, cancellationToken));
         }
 
-        if (includeEvents)
+        if (filters.Events)
         {
             var eventsPaged = await _eventsService.ListEventsPagedAsync(
                 resolvedTerritoryId.Value,
@@ -533,17 +378,7 @@ public sealed class MapController : ControllerBase
                 pagination,
                 cancellationToken);
 
-            pins.AddRange(eventsPaged.Items.Select(summary => new MapPinResponse(
-                "event",
-                summary.Event.Latitude,
-                summary.Event.Longitude,
-                summary.Event.Title,
-                null,
-                null,
-                null,
-                summary.Event.Id,
-                null,
-                summary.Event.Status.ToString().ToUpperInvariant())));
+            pins.AddRange(BuildEventPins(eventsPaged.Items));
         }
 
         // Ordenar por tipo (primeiro campo do MapPinResponse) e aplicar paginação final
@@ -570,6 +405,133 @@ public sealed class MapController : ControllerBase
             pagination.PageNumber < safeTotalPages);
 
         return Ok(response);
+    }
+
+    // TODO(clean-arch): move pin assembly into an Application use case (controller should only coordinate).
+    private readonly record struct PinFilters(
+        bool Entities,
+        bool Assets,
+        bool Alerts,
+        bool Posts,
+        bool Media,
+        bool Events);
+
+    private static PinFilters ParsePinFilters(string? types)
+    {
+        var typeSet = ParseTypes(types);
+        return new PinFilters(
+            Entities: typeSet.Contains("entity"),
+            Assets: typeSet.Contains("asset"),
+            Alerts: typeSet.Contains("alert"),
+            Posts: typeSet.Contains("post"),
+            Media: typeSet.Contains("media"),
+            Events: typeSet.Contains("event"));
+    }
+
+    private static List<MapPinResponse> BuildEntityPins(IEnumerable<MapEntity> entities)
+    {
+        return entities.Select(entity => new MapPinResponse(
+            "entity",
+            entity.Latitude,
+            entity.Longitude,
+            entity.Name,
+            null,
+            null,
+            null,
+            null,
+            entity.Id,
+            entity.Status.ToString().ToUpperInvariant())).ToList();
+    }
+
+    private async Task<List<MapPinResponse>> BuildAssetPinsAsync(
+        IReadOnlyList<TerritoryAsset> assets,
+        CancellationToken cancellationToken)
+    {
+        if (assets.Count == 0)
+        {
+            return new List<MapPinResponse>();
+        }
+
+        var assetIds = assets.Select(asset => asset.Id).ToList();
+        var anchors = await _assetGeoAnchorRepository.ListByAssetIdsAsync(assetIds, cancellationToken);
+        var assetLookup = assets.ToDictionary(asset => asset.Id, asset => asset);
+
+        return anchors.Select(anchor =>
+        {
+            var asset = assetLookup[anchor.AssetId];
+            return new MapPinResponse(
+                "asset",
+                anchor.Latitude,
+                anchor.Longitude,
+                asset.Name,
+                asset.Id,
+                null,
+                null,
+                null,
+                null,
+                asset.Status.ToString().ToUpperInvariant());
+        }).ToList();
+    }
+
+    private async Task<List<MapPinResponse>> BuildPostPinsAsync(
+        IReadOnlyList<CommunityPost> posts,
+        PinFilters filters,
+        CancellationToken cancellationToken)
+    {
+        var pins = new List<MapPinResponse>();
+        var postIds = posts.Select(post => post.Id).ToList();
+        var anchors = await _postGeoAnchorRepository.ListByPostIdsAsync(postIds, cancellationToken);
+        var postLookup = posts.ToDictionary(post => post.Id, post => post);
+
+        foreach (var anchor in anchors.Where(anchor => postLookup.ContainsKey(anchor.PostId)))
+        {
+            var post = postLookup[anchor.PostId];
+            var pinType = ResolvePostPinType(post, anchor.Type, filters.Media);
+
+            if (pinType == "alert" && !filters.Alerts)
+            {
+                continue;
+            }
+
+            if (pinType == "post" && !filters.Posts)
+            {
+                continue;
+            }
+
+            if (pinType == "media" && !filters.Media)
+            {
+                continue;
+            }
+
+            pins.Add(new MapPinResponse(
+                pinType,
+                anchor.Latitude,
+                anchor.Longitude,
+                post.Title,
+                null,
+                pinType is "post" or "alert" ? post.Id : null,
+                pinType == "media" ? post.Id : null,
+                null,
+                null,
+                post.Status.ToString().ToUpperInvariant()));
+        }
+
+        return pins;
+    }
+
+    private static List<MapPinResponse> BuildEventPins(IEnumerable<Arah.Application.Models.EventSummary> events)
+    {
+        return events.Select(summary => new MapPinResponse(
+            "event",
+            summary.Event.Latitude,
+            summary.Event.Longitude,
+            summary.Event.Title,
+            null,
+            null,
+            null,
+            summary.Event.Id,
+            null,
+            summary.Event.Status.ToString().ToUpperInvariant())).ToList();
     }
 
     private static string ResolvePostPinType(CommunityPost post, string anchorType, bool includeMedia)

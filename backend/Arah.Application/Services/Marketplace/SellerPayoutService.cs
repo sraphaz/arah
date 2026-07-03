@@ -95,11 +95,66 @@ public sealed class SellerPayoutService
         }
 
         // Converter valores para centavos
-        var grossAmountInCents = (long)(checkout.ItemsSubtotalAmount.Value * 100);
-        var platformFeeInCents = (long)(checkout.PlatformFeeAmount.Value * 100);
-        var netAmountInCents = grossAmountInCents - platformFeeInCents;
+        var (grossAmountInCents, platformFeeInCents, netAmountInCents) = ComputeCheckoutAmounts(checkout);
 
-        // Criar SellerTransaction
+        var sellerTransaction = await AddSellerTransactionAsync(
+            checkout,
+            store,
+            grossAmountInCents,
+            platformFeeInCents,
+            cancellationToken);
+
+        var sellerBalance = await AccrueSellerPendingBalanceAsync(
+            checkout,
+            store,
+            netAmountInCents,
+            cancellationToken);
+
+        // Verificar configuração de payout para aplicar retenção e valor mínimo
+        await TryMarkTransactionAsReadyForPayoutAsync(
+            sellerTransaction,
+            sellerBalance,
+            checkout.TerritoryId,
+            cancellationToken);
+
+        var sellerFinancialTransaction = await AddSellerFinancialTransactionAsync(
+            checkout,
+            store,
+            sellerTransaction,
+            netAmountInCents,
+            cancellationToken);
+
+        await AddPlatformRevenueLedgerAsync(
+            checkout,
+            platformFeeInCents,
+            sellerFinancialTransaction,
+            cancellationToken);
+
+        await AccruePlatformRevenueBalanceAsync(checkout, platformFeeInCents, cancellationToken);
+
+        // Auditoria
+        await LogSellerTransactionCreatedAsync(checkout, store, sellerTransaction, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return OperationResult.Success();
+    }
+
+    private static (long GrossAmountInCents, long PlatformFeeInCents, long NetAmountInCents) ComputeCheckoutAmounts(Checkout checkout)
+    {
+        var grossAmountInCents = (long)(checkout.ItemsSubtotalAmount!.Value * 100);
+        var platformFeeInCents = (long)(checkout.PlatformFeeAmount!.Value * 100);
+        var netAmountInCents = grossAmountInCents - platformFeeInCents;
+        return (grossAmountInCents, platformFeeInCents, netAmountInCents);
+    }
+
+    private async Task<SellerTransaction> AddSellerTransactionAsync(
+        Checkout checkout,
+        Store store,
+        long grossAmountInCents,
+        long platformFeeInCents,
+        CancellationToken cancellationToken)
+    {
         var sellerTransaction = new SellerTransaction(
             Guid.NewGuid(),
             checkout.TerritoryId,
@@ -111,8 +166,15 @@ public sealed class SellerPayoutService
             checkout.Currency);
 
         await _sellerTransactionRepository.AddAsync(sellerTransaction, cancellationToken);
+        return sellerTransaction;
+    }
 
-        // Atualizar ou criar SellerBalance
+    private async Task<SellerBalance> AccrueSellerPendingBalanceAsync(
+        Checkout checkout,
+        Store store,
+        long netAmountInCents,
+        CancellationToken cancellationToken)
+    {
         var sellerBalance = await _sellerBalanceRepository.GetByTerritoryAndSellerAsync(
             checkout.TerritoryId,
             store.OwnerUserId,
@@ -130,14 +192,16 @@ public sealed class SellerPayoutService
 
         sellerBalance.AddPendingAmount(netAmountInCents);
         await _sellerBalanceRepository.UpdateAsync(sellerBalance, cancellationToken);
+        return sellerBalance;
+    }
 
-        // Verificar configuração de payout para aplicar retenção e valor mínimo
-        await TryMarkTransactionAsReadyForPayoutAsync(
-            sellerTransaction,
-            sellerBalance,
-            checkout.TerritoryId,
-            cancellationToken);
-
+    private async Task<FinancialTransaction> AddSellerFinancialTransactionAsync(
+        Checkout checkout,
+        Store store,
+        SellerTransaction sellerTransaction,
+        long netAmountInCents,
+        CancellationToken cancellationToken)
+    {
         // Criar FinancialTransaction para rastreabilidade
         var financialTransaction = new FinancialTransaction(
             Guid.NewGuid(),
@@ -168,6 +232,15 @@ public sealed class SellerPayoutService
             "Initial status when seller transaction created");
         await _transactionStatusHistoryRepository.AddAsync(statusHistory, cancellationToken);
 
+        return financialTransaction;
+    }
+
+    private async Task AddPlatformRevenueLedgerAsync(
+        Checkout checkout,
+        long platformFeeInCents,
+        FinancialTransaction sellerFinancialTransaction,
+        CancellationToken cancellationToken)
+    {
         // Criar PlatformRevenueTransaction (fee da plataforma)
         var platformRevenueTransaction = new PlatformRevenueTransaction(
             Guid.NewGuid(),
@@ -198,11 +271,17 @@ public sealed class SellerPayoutService
         platformRevenueTransaction.SetFinancialTransactionId(platformFeeTransaction.Id);
 
         // Relacionar transações
-        financialTransaction.AddRelatedTransaction(platformFeeTransaction.Id);
-        platformFeeTransaction.AddRelatedTransaction(financialTransaction.Id);
-        await _financialTransactionRepository.UpdateAsync(financialTransaction, cancellationToken);
+        sellerFinancialTransaction.AddRelatedTransaction(platformFeeTransaction.Id);
+        platformFeeTransaction.AddRelatedTransaction(sellerFinancialTransaction.Id);
+        await _financialTransactionRepository.UpdateAsync(sellerFinancialTransaction, cancellationToken);
         await _financialTransactionRepository.UpdateAsync(platformFeeTransaction, cancellationToken);
+    }
 
+    private async Task AccruePlatformRevenueBalanceAsync(
+        Checkout checkout,
+        long platformFeeInCents,
+        CancellationToken cancellationToken)
+    {
         // Atualizar ou criar PlatformFinancialBalance
         var platformBalance = await _platformFinancialBalanceRepository.GetByTerritoryIdAsync(
             checkout.TerritoryId,
@@ -219,8 +298,14 @@ public sealed class SellerPayoutService
 
         platformBalance.AddRevenue(platformFeeInCents);
         await _platformFinancialBalanceRepository.UpdateAsync(platformBalance, cancellationToken);
+    }
 
-        // Auditoria
+    private async Task LogSellerTransactionCreatedAsync(
+        Checkout checkout,
+        Store store,
+        SellerTransaction sellerTransaction,
+        CancellationToken cancellationToken)
+    {
         await _auditLogger.LogAsync(
             new Models.AuditEntry(
                 "seller.transaction.created",
@@ -229,10 +314,6 @@ public sealed class SellerPayoutService
                 sellerTransaction.Id,
                 DateTime.UtcNow),
             cancellationToken);
-
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        return OperationResult.Success();
     }
 
     /// <summary>
@@ -601,6 +682,41 @@ public sealed class SellerPayoutService
         var payout = payoutResult.Value!;
         var payoutId = payout.PayoutId;
 
+        await StartPayoutForTransactionsAsync(transactions, payoutId, userId, cancellationToken);
+
+        await MarkSellerBalancePaidAsync(territoryId, sellerUserId, amountInCents, cancellationToken);
+
+        var expenseFinancialTransaction = await AddPayoutExpenseTransactionAsync(
+            territoryId,
+            sellerUserId,
+            currency,
+            amountInCents,
+            payoutId,
+            transactions,
+            cancellationToken);
+
+        await AddPlatformExpenseTransactionsAsync(
+            transactions,
+            territoryId,
+            currency,
+            payoutId,
+            expenseFinancialTransaction,
+            cancellationToken);
+
+        await AccruePlatformExpenseBalanceAsync(territoryId, currency, amountInCents, cancellationToken);
+
+        // Auditoria (usar primeira transação como relatedEntityId já que payoutId é string)
+        await LogPayoutCreatedAsync(territoryId, userId, transactions, cancellationToken);
+
+        return OperationResult.Success();
+    }
+
+    private async Task StartPayoutForTransactionsAsync(
+        List<SellerTransaction> transactions,
+        string payoutId,
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
         // Atualizar todas as transações
         foreach (var transaction in transactions)
         {
@@ -632,7 +748,14 @@ public sealed class SellerPayoutService
 
             await _sellerTransactionRepository.UpdateAsync(transaction, cancellationToken);
         }
+    }
 
+    private async Task MarkSellerBalancePaidAsync(
+        Guid territoryId,
+        Guid sellerUserId,
+        long amountInCents,
+        CancellationToken cancellationToken)
+    {
         // Atualizar SellerBalance
         var sellerBalance = await _sellerBalanceRepository.GetByTerritoryAndSellerAsync(
             territoryId,
@@ -644,7 +767,17 @@ public sealed class SellerPayoutService
             sellerBalance.MarkAsPaid(amountInCents);
             await _sellerBalanceRepository.UpdateAsync(sellerBalance, cancellationToken);
         }
+    }
 
+    private async Task<FinancialTransaction> AddPayoutExpenseTransactionAsync(
+        Guid territoryId,
+        Guid sellerUserId,
+        string currency,
+        long amountInCents,
+        string payoutId,
+        List<SellerTransaction> transactions,
+        CancellationToken cancellationToken)
+    {
         // Criar FinancialTransaction para despesa (uma única transação financeira para todo o payout)
         var expenseFinancialTransaction = new FinancialTransaction(
             Guid.NewGuid(),
@@ -663,7 +796,17 @@ public sealed class SellerPayoutService
             });
 
         await _financialTransactionRepository.AddAsync(expenseFinancialTransaction, cancellationToken);
+        return expenseFinancialTransaction;
+    }
 
+    private async Task AddPlatformExpenseTransactionsAsync(
+        List<SellerTransaction> transactions,
+        Guid territoryId,
+        string currency,
+        string payoutId,
+        FinancialTransaction expenseFinancialTransaction,
+        CancellationToken cancellationToken)
+    {
         // Criar PlatformExpenseTransaction para cada transação
         foreach (var transaction in transactions)
         {
@@ -679,7 +822,14 @@ public sealed class SellerPayoutService
             expenseTransaction.SetFinancialTransactionId(expenseFinancialTransaction.Id);
             await _platformExpenseTransactionRepository.AddAsync(expenseTransaction, cancellationToken);
         }
+    }
 
+    private async Task AccruePlatformExpenseBalanceAsync(
+        Guid territoryId,
+        string currency,
+        long amountInCents,
+        CancellationToken cancellationToken)
+    {
         // Atualizar PlatformFinancialBalance
         var platformBalance = await _platformFinancialBalanceRepository.GetByTerritoryIdAsync(
             territoryId,
@@ -696,8 +846,14 @@ public sealed class SellerPayoutService
 
         platformBalance.AddExpense(amountInCents);
         await _platformFinancialBalanceRepository.UpdateAsync(platformBalance, cancellationToken);
+    }
 
-        // Auditoria (usar primeira transação como relatedEntityId já que payoutId é string)
+    private async Task LogPayoutCreatedAsync(
+        Guid territoryId,
+        Guid userId,
+        List<SellerTransaction> transactions,
+        CancellationToken cancellationToken)
+    {
         await _auditLogger.LogAsync(
             new Models.AuditEntry(
                 "seller.payout.created",
@@ -706,8 +862,6 @@ public sealed class SellerPayoutService
                 transactions.First().Id,
                 DateTime.UtcNow),
             cancellationToken);
-
-        return OperationResult.Success();
     }
 
     /// <summary>

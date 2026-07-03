@@ -25,6 +25,7 @@ skills:
   - harness-run
   - open-pr
   - code-review
+  - craft-review
 consult:
   domain:
     - control-plane

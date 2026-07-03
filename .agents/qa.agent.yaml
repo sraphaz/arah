@@ -10,6 +10,7 @@ scope:
   may_code: false
 skills:
   - code-review
+  - craft-review
   - run-tests
   - spec-validate
   - harness-run

@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'sync-milestones', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'github-project', 'backlog-to-issue', 'export-phase-status', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'sync-milestones', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'export-graph', 'validate-graph', 'github-project', 'backlog-to-issue', 'export-phase-status', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -473,6 +473,8 @@ Comandos:
   harness       Executa harness SDD (specs + agentes + comandos ligados)
   spec-validate Valida YAML em docs/specs/
   choreograph   Resolve coreografia (domínio + skills autônomas)
+  export-graph  Gera docs/_meta/agent-graph.generated.json (Agent Graph)
+  validate-graph Valida consistência do Agent Graph (rules/skills/agentes)
 
 Exemplos:
   ./arah-agents.ps1 harness
@@ -616,6 +618,16 @@ switch ($Command) {
         if ($Trigger -ne 'manual') { $params.Trigger = $Trigger }
         if ($ExecuteAutonomy) { $params.ExecuteAutonomy = $true }
         & (Join-Path $PSScriptRoot 'choreograph-agents.ps1') @params
+    }
+    'export-graph' {
+        $params = @{}
+        if ($Json) { $params.Json = $true }
+        & (Join-Path $PSScriptRoot 'export-agent-graph.ps1') @params
+    }
+    'validate-graph' {
+        $params = @{}
+        if ($Json) { $params.Json = $true }
+        & (Join-Path (Join-Path $Root 'scripts/harness') 'validate-agent-graph.ps1') @params
     }
     default { Show-Help }
 }

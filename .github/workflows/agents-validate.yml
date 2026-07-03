@@ -8,6 +8,10 @@ on:
       - 'AGENTS.md'
       - 'CODEOWNERS'
       - 'scripts/agents/**'
+      - 'scripts/harness/**'
+      - 'docs/specs/**'
+      - 'docs/_meta/**'
+      - 'docs/ops/AGENT_GRAPH.md'
       - '.github/workflows/agents-validate.yml'
       - '.github/workflows/agents.yml'
   push:
@@ -16,6 +20,14 @@ on:
       - '.agents/**'
       - '.skills/**'
       - 'AGENTS.md'
+      - 'CODEOWNERS'
+      - 'scripts/agents/**'
+      - 'scripts/harness/**'
+      - 'docs/specs/**'
+      - 'docs/_meta/**'
+      - 'docs/ops/AGENT_GRAPH.md'
+      - '.github/workflows/agents-validate.yml'
+      - '.github/workflows/agents.yml'
 
 permissions:
   contents: read
@@ -25,9 +37,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Validate agent & skill manifests
         shell: pwsh
         run: ./scripts/agents/validate-manifests.ps1
+
+  validate-agent-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate Agent Graph (integridade + defasagem)
+        shell: pwsh
+        run: ./scripts/harness/validate-agent-graph.ps1
+
+  agent-graph-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Tooling tests (yaml-lite, choreography-parser, craft-review)
+        shell: pwsh
+        run: ./scripts/agents/tests/agent-graph.tests.ps1
+      - name: MCP tests (globToRegex, gating por evento)
+        run: node scripts/agents/tests/mcp.test.mjs
 
   agent-pr-checklist:
     if: github.event_name == 'pull_request'

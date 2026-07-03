@@ -55,8 +55,24 @@ Tornar o repositório **governável** (specs como contrato) e **produtivo** (har
 
 ---
 
+## Agent Graph
+
+O grafo operacional ([AGENT_GRAPH.md](../ops/AGENT_GRAPH.md)) espelha as specs e
+o harness: cada spec vira nó `spec:` com `requires_harness`; `harness.agents`
+gera `validated_by`; e os guardrails executáveis de `run-harness.ps1`
+(`clean-architecture`, `territory-data-stays-on-instance`, …) viram
+`enforced_by_workflow` → `spec-harness.yml`. Gerar/validar:
+
+```powershell
+./scripts/agents/export-agent-graph.ps1
+./scripts/harness/validate-agent-graph.ps1
+```
+
+---
+
 ## Referências
 
 - [docs/specs/README.md](../specs/README.md)
 - [PLATFORM_STATE.md](../ops/PLATFORM_STATE.md)
 - [AGENT_OPERATION.md](../ops/AGENT_OPERATION.md)
+- [AGENT_GRAPH.md](../ops/AGENT_GRAPH.md)

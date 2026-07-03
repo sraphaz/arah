@@ -36,16 +36,18 @@ Consultivos (parecer, não codam): domain agents em [`.agents/domain/`](.agents/
 
 Roteamento e co-ativação: [`.agents/orchestrator.agent.yaml`](.agents/orchestrator.agent.yaml) + [`.agents/choreography.yaml`](.agents/choreography.yaml).
 
+**Agent Graph**: o grafo operacional (agentes ↔ skills ↔ rules ↔ paths ↔ domínios ↔ specs ↔ harnesses ↔ guardrails ↔ workflows ↔ gates) é formalizado em [`docs/ops/AGENT_GRAPH.md`](docs/ops/AGENT_GRAPH.md), com schema em [`.agents/agent-graph.schema.yaml`](.agents/agent-graph.schema.yaml) e artefato gerado em [`docs/_meta/agent-graph.generated.json`](docs/_meta/agent-graph.generated.json) (`./scripts/agents/arah-agents.ps1 export-graph` / `validate-graph`). Serve para auditar e explicar "por que este agente/skill/harness foi acionado"; não substitui o orquestrador.
+
 ## Skills
 
-Catálogo executável em [`.skills/`](.skills/) (24 skills: run-tests, open-pr, sync-docs, spec-validate, harness-run, register-adr, next-phase, address-bot-review, etc.), invocáveis via:
+Catálogo executável em [`.skills/`](.skills/) (25 skills: run-tests, open-pr, sync-docs, spec-validate, harness-run, register-adr, architecture-review, craft-review, next-phase, address-bot-review, etc.), invocáveis via:
 
 ```powershell
 ./scripts/agents/invoke-skill.ps1 -Skill <nome> [args]
 ./scripts/agents/arah-agents.ps1 <comando>
 ```
 
-Skills do Cursor (descoberta sob demanda) em [`.cursor/skills/`](.cursor/skills/): `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult`.
+Skills do Cursor (descoberta sob demanda) em [`.cursor/skills/`](.cursor/skills/): `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult`, `arah-craft`.
 
 ## Comunicação entre agentes (modelo passivo)
 

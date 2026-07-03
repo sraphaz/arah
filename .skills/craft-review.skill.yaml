@@ -1,0 +1,50 @@
+id: craft-review
+name: Craft Review (Uncle Bob)
+description: >-
+  Disciplina de software craftsmanship no ciclo projetar -> desenvolver ->
+  testar (Clean Code, Clean Architecture, SOLID, TDD). Complementa
+  architecture-review (fronteiras/ADR) e code-review (checklist de PR); não
+  substitui linter/formatter nem os testes automatizados.
+owner: solutions-architect
+mode: guide
+phases:
+  design:
+    intent: Projetar antes de codar — fronteiras, responsabilidade e simplicidade.
+    checks:
+      - dependency_rule            # dependências apontam para dentro (Api->Infra->App->Domain)
+      - single_responsibility      # cada unidade tem uma razão para mudar
+      - pattern_justified          # padrão só entra na 3a duplicação/2o eixo de mudança (sem cargo cult)
+      - yagni_kiss                 # sem abstração especulativa
+  develop:
+    intent: Desenvolver limpo — funções pequenas, nomes que revelam intenção.
+    checks:
+      - small_functions            # função curta, um nível de abstração
+      - intention_revealing_names  # nomes revelam intenção (territory/items/membership)
+      - result_over_null           # Result<T> em vez de null; async com CancellationToken
+      - no_needless_repetition     # DRY; extrair duplicação
+      - no_opacity                 # código legível, sem comentários que narram o óbvio
+  test:
+    intent: Testar como requisito, não como sobra — TDD e comportamento.
+    checks:
+      - tests_for_behavior_change  # toda mudança de comportamento tem teste
+      - coverage_above_90          # cobertura > 90% na área alterada
+      - tests_first_when_tdd       # escrever teste antes quando aplicável
+      - acceptance_covered_by      # AC da spec ligada a covered_by (rastreabilidade fina)
+steps:
+  - script: scripts/agents/craft-review-check.ps1
+references:
+  - docs/governance/21_CODE_REVIEW.md
+  - docs/governance/22_COHESION_AND_TESTS.md
+  - docs/governance/DEFINITION_OF_DONE.md
+  - docs/12_DOMAIN_MODEL.md
+  - .cursorrules
+smells:
+  - rigidity
+  - fragility
+  - immobility
+  - viscosity
+  - needless_complexity
+  - needless_repetition
+  - opacity
+output: markdown_comment_on_pr
+gate: soft

@@ -4,6 +4,8 @@ description: |
   Cria git worktrees isolados (branch + diretório por tentativa) para explorar
   2–5 abordagens em paralelo numa tarefa exploratória; humano escolhe o melhor
   PR e descarta os demais. Nunca usar para trabalho trivial.
+# Ferramenta exploratória de operador (CLI), não acionada por coreografia.
+activation: [cli]
 inputs:
   name: identificador da tarefa (kebab-case)
   count: número de tentativas (2–5, default 2)

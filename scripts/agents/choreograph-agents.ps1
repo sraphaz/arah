@@ -18,6 +18,8 @@ $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $ChoreoPath = Join-Path $Root '.agents/choreography.yaml'
 $ScriptDir = $PSScriptRoot
 
+. (Join-Path $PSScriptRoot 'choreography-parser.ps1')
+
 function Normalize-FileList {
     param([string[]]$Files)
     $normalized = @()
@@ -42,54 +44,6 @@ function Test-PathMatchesGlob {
     $re = $re -replace '\\\*\\\*', '.*'
     $re = $re -replace '\\\*', '[^/]*'
     return $normalized -match ('^' + $re + '$')
-}
-
-function Parse-ChoreographyRules {
-    param([string]$Raw)
-    $rules = @()
-    $blocks = [regex]::Split($Raw, '(?m)^  - id: ')
-    foreach ($block in $blocks) {
-        if ($block -notmatch '^(\S+)') { continue }
-        $ruleId = $Matches[1].Trim()
-        $paths = @()
-        if ($block -match '(?ms)^    paths:\s*\n((?:      - .+\r?\n?)+)') {
-            $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
-                $_.Groups[1].Value.Trim().Trim('"').Trim("'")
-            }
-        }
-        $when = if ($block -match '(?m)^    when:\s+(\S+)') { $Matches[1].Trim() } else { $null }
-        $agents = @()
-        if ($block -match '(?ms)^    agents:\s*\n((?:      - .+\r?\n?)+)') {
-            $agentSection = $Matches[1]
-            $agentChunks = [regex]::Split($agentSection, '(?m)^      - id: ')
-            foreach ($chunk in $agentChunks) {
-                if ($chunk -notmatch '^(\S+)') { continue }
-                $aid = $Matches[1].Trim()
-                $sub = $chunk
-                $type = if ($sub -match '(?m)^        type:\s+(\S+)') { $Matches[1] } else { 'operational' }
-                $autonomy = @()
-                if ($sub -match '(?m)^        autonomy:\s*\[(.+)\]') {
-                    $autonomy = $Matches[1] -split ',' | ForEach-Object { $_.Trim() }
-                }
-                $skills = @()
-                if ($sub -match '(?m)^        skills:\s*\[(.+)\]') {
-                    $skills = $Matches[1] -split ',' | ForEach-Object { $_.Trim() }
-                } elseif ($sub -match '(?ms)^        skills:\s*\n((?:          - .+\r?\n?)+)') {
-                    $skills = [regex]::Matches($Matches[1], '^\s+-\s+(\S+)', 'Multiline') | ForEach-Object { $_.Groups[1].Value }
-                }
-                $agents += @{
-                    id       = $aid
-                    type     = $type
-                    autonomy = $autonomy
-                    skills   = $skills
-                }
-            }
-        }
-        if ($paths.Count -gt 0) {
-            $rules += @{ id = $ruleId; paths = $paths; when = $when; agents = $agents }
-        }
-    }
-    return $rules
 }
 
 $files = Normalize-FileList -Files $ChangedFiles
@@ -137,7 +91,9 @@ foreach ($rule in $rules) {
         } else {
             if ($operational -notcontains $a.id) { $operational += $a.id }
         }
-        if ($ExecuteAutonomy -and $a.skills.Count -gt 0) {
+        # Plano de acionamento é sempre registrado (auditável), mesmo sem execução;
+        # -ExecuteAutonomy apenas decide se os skills são de fato rodados abaixo.
+        if ($a.skills.Count -gt 0 -and ($a.autonomy -contains 'invoke_skill')) {
             foreach ($sk in $a.skills) {
                 # PSCustomObject (não hashtable): Select-Object -Property em hashtable retorna nulls no PS 5.1.
                 $skillRuns += [pscustomobject]@{ agent = $a.id; skill = $sk; rule = $rule.id }

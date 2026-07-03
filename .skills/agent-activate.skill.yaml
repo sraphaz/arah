@@ -1,6 +1,8 @@
 ﻿id: agent-activate
 name: Agent Activate
 description: Publica checklist de conduta e verificações automáticas quando um agente é acionado.
+# Acionada por evento (orchestrator/workflow), não por coreografia de paths.
+activation: [orchestrator, workflow]
 triggers:
   - orchestrator:delegate
   - workflow:agents.yml

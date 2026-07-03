@@ -16,7 +16,7 @@ rules:
       - id: solutions-architect
         type: operational
         autonomy: [activate, consult_post, invoke_skill]
-        skills: [architecture-review]
+        skills: [architecture-review, craft-review]
       - id: spec-steward
         type: operational
         autonomy: [activate]
@@ -33,7 +33,7 @@ rules:
       - id: solutions-architect
         type: operational
         autonomy: [activate, invoke_skill]
-        skills: [likec4-export, architecture-review]
+        skills: [likec4-export, architecture-review, craft-review]
 
   - id: territory-membership
     paths:
@@ -214,6 +214,44 @@ rules:
         type: domain
         autonomy: [consult_post]
 
+  - id: craft-backend
+    paths:
+      - backend/Arah.Api/**
+      - backend/Arah.Api.Bff/**
+      - backend/Arah.Application/**
+      - backend/Arah.Domain/**
+      - backend/Arah.Infrastructure/**
+      - backend/Arah.Modules.*/**
+    agents:
+      - id: backend
+        type: operational
+        autonomy: [activate, invoke_skill]
+        skills: [craft-review]
+      - id: solutions-architect
+        type: operational
+        autonomy: [consult_post, invoke_skill]
+        skills: [craft-review]
+
+  - id: craft-flutter
+    paths:
+      - frontend/arah.app/lib/**
+    agents:
+      - id: flutter
+        type: operational
+        autonomy: [activate, invoke_skill]
+        skills: [craft-review]
+
+  - id: craft-web
+    paths:
+      - frontend/wiki/**
+      - frontend/portal/**
+      - frontend/devportal/**
+    agents:
+      - id: web
+        type: operational
+        autonomy: [activate, invoke_skill]
+        skills: [craft-review]
+
   - id: pr-always
     paths:
       - "**"
@@ -221,7 +259,8 @@ rules:
     agents:
       - id: qa
         type: operational
-        autonomy: [activate]
+        autonomy: [activate, invoke_skill]
+        skills: [craft-review]
       - id: pr-steward
         type: operational
         autonomy: [activate]

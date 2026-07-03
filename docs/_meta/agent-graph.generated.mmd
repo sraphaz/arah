@@ -1,0 +1,85 @@
+flowchart LR
+  %% Gerado por scripts/agents/export-agent-graph.ps1 — não editar à mão
+  subgraph CHOREOGRAPHY["Coreografia (paths -> rules)"]
+    rule_architecture_docs["architecture-docs"]
+    rule_community_connections["community-connections"]
+    rule_core_control_plane["core-control-plane"]
+    rule_craft_backend["craft-backend"]
+    rule_craft_flutter["craft-flutter"]
+    rule_craft_web["craft-web"]
+    rule_design_ux["design-ux"]
+    rule_federation_handoff["federation-handoff"]
+    rule_feed_content["feed-content"]
+    rule_governance["governance"]
+    rule_identity_privacy["identity-privacy"]
+    rule_infra_deploy["infra-deploy"]
+    rule_map_places["map-places"]
+    rule_marketplace["marketplace"]
+    rule_monetization["monetization"]
+    rule_pr_always["pr-always"]
+    rule_specs_sdd["specs-sdd"]
+    rule_territory_membership["territory-membership"]
+  end
+  subgraph OPERATIONAL["Agentes operacionais"]
+    agent_backend(["backend"])
+    agent_flutter(["flutter"])
+    agent_pr_steward(["pr-steward"])
+    agent_qa(["qa"])
+    agent_release(["release"])
+    agent_security(["security"])
+    agent_solutions_architect(["solutions-architect"])
+    agent_spec_steward(["spec-steward"])
+    agent_web(["web"])
+  end
+  subgraph DOMAIN["Agentes de domínio (consultivos)"]
+    agent_carteira_arata{{"carteira-arata"}}
+    agent_comunidade_conexoes{{"comunidade-conexoes"}}
+    agent_control_plane{{"control-plane"}}
+    agent_design_ux{{"design-ux"}}
+    agent_feed_conteudo{{"feed-conteudo"}}
+    agent_governanca_transparencia{{"governanca-transparencia"}}
+    agent_identidade_privacidade{{"identidade-privacidade"}}
+    agent_mapa_lugares{{"mapa-lugares"}}
+    agent_mercado_economia{{"mercado-economia"}}
+    agent_monetizacao_split{{"monetizacao-split"}}
+    agent_territorio_membership{{"territorio-membership"}}
+  end
+  rule_architecture_docs --> agent_solutions_architect
+  rule_community_connections -. consulta .-> agent_comunidade_conexoes
+  rule_core_control_plane --> agent_backend
+  rule_core_control_plane -. consulta .-> agent_control_plane
+  rule_core_control_plane --> agent_solutions_architect
+  rule_core_control_plane --> agent_spec_steward
+  rule_craft_backend --> agent_backend
+  rule_craft_backend --> agent_solutions_architect
+  rule_craft_flutter --> agent_flutter
+  rule_craft_web --> agent_web
+  rule_design_ux -. consulta .-> agent_design_ux
+  rule_federation_handoff -. consulta .-> agent_control_plane
+  rule_federation_handoff --> agent_solutions_architect
+  rule_feed_content -. consulta .-> agent_feed_conteudo
+  rule_governance -. consulta .-> agent_governanca_transparencia
+  rule_identity_privacy -. consulta .-> agent_identidade_privacidade
+  rule_identity_privacy --> agent_security
+  rule_infra_deploy --> agent_backend
+  rule_infra_deploy -. consulta .-> agent_control_plane
+  rule_infra_deploy --> agent_release
+  rule_map_places -. consulta .-> agent_mapa_lugares
+  rule_marketplace -. consulta .-> agent_mercado_economia
+  rule_monetization -. consulta .-> agent_carteira_arata
+  rule_monetization -. consulta .-> agent_monetizacao_split
+  rule_pr_always --> agent_pr_steward
+  rule_pr_always --> agent_qa
+  rule_specs_sdd --> agent_spec_steward
+  rule_territory_membership -. consulta .-> agent_territorio_membership
+  subgraph REVIEW["Pipeline de revisão (termina em humano)"]
+    gate_ci["ci"]
+    gate_qa["qa"]
+    gate_bot_review["bot-review"]
+    gate_pr_steward["pr-steward"]
+    gate_human_review[["human-review"]]
+  end
+  gate_bot_review --> gate_pr_steward
+  gate_ci --> gate_pr_steward
+  gate_pr_steward --> gate_human_review
+  gate_qa --> gate_pr_steward

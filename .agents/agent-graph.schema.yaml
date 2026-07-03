@@ -1,0 +1,191 @@
+# Agent Graph — schema (modelo declarativo)
+#
+# Descreve os TIPOS de nós e de relações do grafo operacional do Arah.
+# Não é infraestrutura: é o vocabulário estável usado por
+#   - scripts/agents/export-agent-graph.ps1   (gera docs/_meta/agent-graph.generated.json)
+#   - scripts/harness/validate-agent-graph.ps1 (valida consistência)
+#   - docs/ops/AGENT_GRAPH.md                  (explicação)
+#
+# Fonte inicial de verdade: .agents/choreography.yaml, cruzada com
+# .agents/**/*.agent.yaml, .skills/*.skill.yaml, docs/specs/**/*.spec.yaml e
+# .github/workflows/*.yml. Sem dependências pesadas — só metadados já existentes.
+
+version: 1
+updated: 2026-07-02
+kind: agent-graph-schema
+
+# ---------------------------------------------------------------------------
+# NÓS — cada node type tem um id estável (namespace:valor no JSON gerado).
+# ---------------------------------------------------------------------------
+nodes:
+  Agent:
+    id_namespace: agent
+    description: >-
+      Ator do sistema. Operacionais abrem PR; de domínio publicam parecer
+      consultivo; specialists enriquecem contexto técnico.
+    source: .agents/**/*.agent.yaml
+    fields:
+      id: string
+      name: string
+      kind: enum[operational, domain, specialist]
+      manifest: path
+      skills: list<Skill.id>
+      consults: { domain: list<Agent.id>, specialists: list<Agent.id> }
+      paths: list<PathPattern.pattern>
+      guardrails: map<Guardrail.id, bool>
+
+  Skill:
+    id_namespace: skill
+    description: Procedimento executável reaproveitável, invocado por agentes.
+    source: .skills/*.skill.yaml
+    fields:
+      id: string
+      description: string
+      manifest: path
+
+  ChoreographyRule:
+    id_namespace: rule
+    description: >-
+      Regra de co-ativação: casa paths com agentes (operacionais ativados,
+      domínios consultados) e skills declaradas.
+    source: .agents/choreography.yaml
+    fields:
+      id: string
+      when: string?        # ex.: pull_request
+      paths: list<PathPattern.pattern>
+      agents: list<{ id, kind, autonomy, skills }>
+
+  PathPattern:
+    id_namespace: path
+    description: Glob que localiza mudanças e dispara rules/agentes.
+    source: .agents/choreography.yaml (rules[].paths) + .agents/**/*.agent.yaml (scope.paths)
+    fields:
+      pattern: string
+
+  Domain:
+    id_namespace: domain
+    description: >-
+      Domínio de negócio consultivo (mapeado a um agente de domínio e às rules
+      que o acionam). Nunca coda; só publica parecer.
+    source: .agents/domain/*.agent.yaml + choreography.yaml (agents de type domain)
+    fields:
+      id: string
+      agent: Agent.id
+      rules: list<ChoreographyRule.id>
+
+  Spec:
+    id_namespace: spec
+    description: Contrato de aceite (SDD). Precede o código em fases S0+.
+    source: docs/specs/**/*.spec.yaml
+    fields:
+      id: string
+      status: enum[draft, active, completed, deprecated]
+      manifest: path
+      harness_agents: list<Agent.id>
+      guardrails: list<Guardrail.id>
+
+  Harness:
+    id_namespace: harness
+    description: >-
+      Execução reproduzível ligada a uma spec (commands/scripts/agents/links)
+      validada por run-harness.ps1.
+    source: docs/specs/**/*.spec.yaml (bloco harness) + scripts/harness/**
+    fields:
+      id: string          # normalmente == Spec.id
+      spec: Spec.id
+      commands: list<string>
+
+  Guardrail:
+    id_namespace: guardrail
+    description: >-
+      Invariante de segurança/processo (ex.: no_merge, clean-architecture).
+      Declarado em manifests/specs e/ou executável em run-harness.ps1.
+    source: .agents/**/*.agent.yaml (guardrails), docs/specs (guardrails), scripts/harness/run-harness.ps1 (Test-Guardrail)
+    fields:
+      id: string
+      executable: bool     # tem verificação em run-harness.ps1
+      enforced_by: list<Workflow.id>
+
+  Workflow:
+    id_namespace: workflow
+    description: GitHub Actions que impõe gates (CI, harness, gates, steward).
+    source: .github/workflows/*.yml
+    fields:
+      id: string
+      path: path
+      role: string?
+
+  ReviewGate:
+    id_namespace: gate
+    description: >-
+      Portão de revisão antes do merge (QA, PR Steward, bots, revisão humana).
+      A revisão humana é o gate terminal e obrigatório.
+    source: choreography.yaml (pr-always), .agents/pr-steward.agent.yaml, workflows
+    fields:
+      id: string
+      kind: enum[automated, bot, human]
+
+# ---------------------------------------------------------------------------
+# RELAÇÕES — arestas direcionadas. `via` registra a rule/origem que a produziu,
+# permitindo responder "por que este agente/skill/harness foi acionado?".
+# ---------------------------------------------------------------------------
+edges:
+  matches_rule:
+    from: PathPattern
+    to: ChoreographyRule
+    meaning: Uma mudança nesse path casa com a regra.
+
+  activates_agent:
+    from: ChoreographyRule
+    to: Agent
+    meaning: Rule ativa agente operacional (autonomy contém `activate`).
+
+  consults_domain_agent:
+    from: ChoreographyRule
+    to: Agent
+    meaning: Rule aciona parecer consultivo de agente de domínio.
+
+  may_invoke_skill:
+    from: Agent
+    to: Skill
+    meaning: Agente pode invocar a skill (manifest ou autonomy `invoke_skill`).
+
+  requires_skill:
+    from: ChoreographyRule
+    to: Skill
+    meaning: Skill declarada na rule (executada com -ExecuteAutonomy no CI).
+
+  requires_spec:
+    from: ChoreographyRule
+    to: Spec
+    meaning: Paths SDD exigem spec válida (spec-before-code).
+
+  requires_harness:
+    from: Spec
+    to: Harness
+    meaning: Spec é validada por um harness reproduzível.
+
+  validated_by:
+    from: Harness
+    to: Agent
+    meaning: Harness lista o agente responsável pela execução/aceite.
+
+  requires_human_review:
+    from: ReviewGate
+    to: ReviewGate
+    meaning: Gate encaminha para revisão humana terminal (merge humano).
+
+  blocked_by_guardrail:
+    from: Agent
+    to: Guardrail
+    meaning: Agente opera sob o guardrail (ex.: no_merge=true).
+
+  documented_by:
+    from: any
+    to: path
+    meaning: Nó tem documentação/contrato associado.
+
+  enforced_by_workflow:
+    from: Guardrail
+    to: Workflow
+    meaning: Guardrail é imposto por um workflow de CI.

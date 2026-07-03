@@ -168,6 +168,15 @@ try {
     Add-Step 'validate-manifests' $false $_.Exception.Message
 }
 
+# 2.5) Agent Graph — soft gate: falha só em inconsistências críticas (o script
+# retorna exit 1 apenas para erros; warnings de defasagem não bloqueiam).
+try {
+    & (Join-Path $HarnessDir 'validate-agent-graph.ps1') | Out-Null
+    Add-Step 'validate-agent-graph' $true
+} catch {
+    Add-Step 'validate-agent-graph' $false $_.Exception.Message
+}
+
 # 3) Per-spec harness
 $specFiles = Get-ChildItem -Path $SpecsRoot -Recurse -Filter '*.spec.yaml' |
     Where-Object { $_.Name -ne '_template.spec.yaml' }

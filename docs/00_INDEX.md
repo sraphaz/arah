@@ -23,6 +23,7 @@ Documentos sobre a visão do produto, roadmap e funcionalidades.
 Documentos técnicos sobre arquitetura, decisões e design.
 
 - **[Operação por agentes](./ops/AGENT_OPERATION.md)** ⭐ — Repo operável por agentes (AGENTS.md, manifests, skills)
+- **[Agent Graph (Grafo Operacional)](./ops/AGENT_GRAPH.md)** — Formalização auditável das relações entre agentes, skills, rules, paths, domínios, specs, harnesses, guardrails e workflows
 - **[Handoff — Arquitetura C4 e Sustentação](./handoff/README.md)** ⭐ — Documentação interativa C4, monetização, operação multi-instância, cockpit
 - **[Realinhamento Sustentação Operacional](./backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** ⭐ — Prioridades de backlog pós-C4 (Fases 52–61)
 - **[Decisões Arquiteturais (ADRs)](./10_ARCHITECTURE_DECISIONS.md)** - Decisões arquiteturais importantes (ADR-001 a ADR-009)

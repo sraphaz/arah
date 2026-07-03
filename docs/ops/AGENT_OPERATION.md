@@ -137,8 +137,15 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 ./scripts/agents/arah-agents.ps1 bot-review -PrNumber <N>
 ./scripts/agents/arah-agents.ps1 pr-ready -PrNumber <N>
 ./scripts/agents/arah-agents.ps1 next-phase -DryRun
+./scripts/agents/arah-agents.ps1 export-graph     # gera Agent Graph (JSON)
+./scripts/agents/arah-agents.ps1 validate-graph   # audita consistência do grafo
 ./scripts/agents/invoke-skill.ps1 -Skill sync-docs
 ```
+
+**Agent Graph**: formaliza o grafo operacional (agentes ↔ skills ↔ rules ↔ paths
+↔ domínios ↔ specs ↔ harnesses ↔ guardrails ↔ workflows ↔ gates) como artefato
+auditável. Fonte inicial: `.agents/choreography.yaml`. Ver
+[AGENT_GRAPH.md](AGENT_GRAPH.md).
 
 Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 

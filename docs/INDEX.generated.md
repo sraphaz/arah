@@ -58,6 +58,7 @@
 | [ALINHAMENTO_FASES_25_28](docs/ALINHAMENTO_FASES_25_28.md) | - | - |
 | [README](docs/analysis/README.md) | - | - |
 | [RELATORIO_ADERENCIA_FASES_1_13](docs/analysis/RELATORIO_ADERENCIA_FASES_1_13.md) | - | - |
+| [REVISAO_CLEAN_ARCHITECTURE_UNCLE_BOB](docs/analysis/REVISAO_CLEAN_ARCHITECTURE_UNCLE_BOB.md) | - | - |
 | [API](docs/API.md) | - | - |
 | [60_00_API_EVIDENCIAS](docs/api/60_00_API_EVIDENCIAS.md) | - | - |
 | [60_00_API_PAGINACAO](docs/api/60_00_API_PAGINACAO.md) | - | - |

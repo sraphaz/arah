@@ -1,4 +1,5 @@
 using Arah.Api.Contracts.Transactions;
+using Arah.Application.Interfaces;
 using Arah.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,16 @@ public sealed class TransactionsController : ControllerBase
 {
     private readonly TransactionQuoteService _quotes;
     private readonly RefundService _refunds;
+    private readonly PaymentService _payments;
 
-    public TransactionsController(TransactionQuoteService quotes, RefundService refunds)
+    public TransactionsController(
+        TransactionQuoteService quotes,
+        RefundService refunds,
+        PaymentService payments)
     {
         _quotes = quotes;
         _refunds = refunds;
+        _payments = payments;
     }
 
     [HttpPost("{transactionId:guid}/quote")]
@@ -105,6 +111,78 @@ public sealed class TransactionsController : ControllerBase
             refund.FeeSplitRuleId,
             refund.RefundedAtUtc));
     }
+
+    [HttpPost("{transactionId:guid}/pay")]
+    [ProducesResponseType(typeof(TransactionPayResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<TransactionPayResponse>> Pay(
+        Guid transactionId,
+        [FromBody] TransactionPayRequest? request,
+        CancellationToken cancellationToken)
+    {
+        var method = ParsePaymentMethod(request?.Method);
+        var result = await _payments.InitiatePaymentAsync(transactionId, method, cancellationToken);
+        if (result.IsFailure)
+        {
+            var message = result.Error ?? "Payment initiation failed.";
+            return message.Contains("not found", StringComparison.OrdinalIgnoreCase)
+                ? NotFound(new { error = message })
+                : BadRequest(new { error = message });
+        }
+
+        var payment = result.Value!;
+        return Ok(new TransactionPayResponse(
+            payment.TransactionId,
+            payment.Status.ToString(),
+            payment.GatewayPaymentId,
+            payment.Method.ToString().ToLowerInvariant(),
+            payment.PixCopyPasteCode,
+            payment.InitiatedAtUtc));
+    }
+
+    [HttpPost("{transactionId:guid}/confirm-payment")]
+    [ProducesResponseType(typeof(TransactionConfirmPaymentResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<TransactionConfirmPaymentResponse>> ConfirmPayment(
+        Guid transactionId,
+        [FromBody] TransactionConfirmPaymentRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.GatewayPaymentId))
+        {
+            return BadRequest(new { error = "GatewayPaymentId is required." });
+        }
+
+        var result = await _payments.ConfirmPaymentAsync(
+            transactionId,
+            request.GatewayPaymentId,
+            cancellationToken);
+
+        if (result.IsFailure)
+        {
+            var message = result.Error ?? "Payment confirmation failed.";
+            return message.Contains("not found", StringComparison.OrdinalIgnoreCase)
+                ? NotFound(new { error = message })
+                : BadRequest(new { error = message });
+        }
+
+        var confirm = result.Value!;
+        return Ok(new TransactionConfirmPaymentResponse(
+            confirm.TransactionId,
+            confirm.Status.ToString(),
+            confirm.GatewayPaymentId,
+            confirm.PaidAtUtc,
+            confirm.AlreadyPaid));
+    }
+
+    private static PaymentMethod ParsePaymentMethod(string? method) =>
+        method?.Trim().ToLowerInvariant() switch
+        {
+            "stripe" => PaymentMethod.Stripe,
+            _ => PaymentMethod.Pix
+        };
 
     private static TransactionQuoteResponse ToQuoteResponse(TransactionQuoteResult quote) =>
         new(

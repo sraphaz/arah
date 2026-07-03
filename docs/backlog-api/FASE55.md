@@ -112,15 +112,8 @@ Implementar o modelo de receita **open-core**: morador nunca paga; comerciantes 
 - [x] Quote exibe taxa e split antes do PIX — `POST /transactions/{id}/quote` (v0)
 - [x] Comprovante auditável com split aplicado — `GET /transactions/{id}/receipt` (v0, requer Paid)
 - [x] Payout consolidado por período — `GET /territories/{id}/payouts/consolidated?from=&to=` (v0, read-model sobre checkouts pagos)
-- [x] Estorno reverte fee e splits proporcionalmente — `POST /transactions/{id}/refund` (v0, idempotente; só transação `Paid`)
+- [x] Estorno reverte fee e splits proporcionalmente — `POST /transactions/{id}/refund` (ledger append-only via `ReversePaidCheckoutAsync`; idempotente)
 - [x] Morador usa feed/mapa/eventos sem cobrança — plano FREE inalterado
-
-> **Limitação v0 (parecer Carteira Aratá — `DOD-06`)**: o estorno é transição de status
-> (`Paid` → `Refunded`) com reversão **calculada** (fee/split negados e reconciliados). Ainda
-> **não** persiste lançamento reverso append-only no ledger `FinancialTransaction`; o payout
-> consolidado é read-model derivado dos checkouts pagos. A unificação com
-> `SellerPayoutService`/ledger imutável está em `docs/backlog-api/RETROSPECTIVA_DOD_GAPS.md` (DOD-06).
-> A idempotência do estorno é garantida pelo guard de status (segundo estorno → 409).
 
 ---
 

@@ -104,6 +104,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CommercialStoreGateService>();
         services.AddScoped<TransactionQuoteService>();
         services.AddScoped<RefundService>();
+        services.AddScoped<PaymentService>();
         services.AddScoped<PayoutConsolidationService>();
         services.AddScoped<StoreItemService>();
         services.AddScoped<InquiryService>();
@@ -204,6 +205,7 @@ public static class ServiceCollectionExtensions
 
         // Payout Gateway
         services.AddScoped<IPayoutGateway, Arah.Infrastructure.Payments.MockPayoutGateway>();
+        // IPaymentGateway é registrado por ambiente em Program.cs (mock apenas fora de produção).
 
         // Email Configuration (aplicável a ambos InMemory e Postgres)
         // Deve ser registrado aqui, não em AddPostgresRepositories, pois precisa estar disponível em testes
@@ -321,7 +323,7 @@ public static class ServiceCollectionExtensions
                 services.AddHostedService<Arah.Infrastructure.Hosting.PilotAdminBootstrapHostedService>();
             }
 
-            services.TryAddSingleton<IFeeSplitRuleRepository, InMemoryFeeSplitRuleRepository>();
+            services.AddScoped<IFeeSplitRuleRepository, PostgresFeeSplitRuleRepository>();
             services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
         }
         else

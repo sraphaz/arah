@@ -118,8 +118,32 @@ public sealed class SellerBalance
         {
             throw new InvalidOperationException($"Cannot cancel {amountInCents}. Pending amount: {PendingAmountInCents}");
         }
-        
+
         PendingAmountInCents -= amountInCents;
         UpdatedAtUtc = DateTime.UtcNow;
+    }
+
+    public void ReverseHeldAmount(long amountInCents)
+    {
+        if (amountInCents <= 0)
+        {
+            throw new ArgumentException("Amount must be positive", nameof(amountInCents));
+        }
+
+        if (PendingAmountInCents >= amountInCents)
+        {
+            CancelPendingAmount(amountInCents);
+            return;
+        }
+
+        if (ReadyForPayoutAmountInCents >= amountInCents)
+        {
+            ReadyForPayoutAmountInCents -= amountInCents;
+            UpdatedAtUtc = DateTime.UtcNow;
+            return;
+        }
+
+        throw new InvalidOperationException(
+            $"Cannot reverse {amountInCents}. Pending: {PendingAmountInCents}, ready: {ReadyForPayoutAmountInCents}");
     }
 }

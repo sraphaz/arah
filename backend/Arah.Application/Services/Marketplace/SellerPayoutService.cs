@@ -236,6 +236,185 @@ public sealed class SellerPayoutService
     }
 
     /// <summary>
+    /// Reverte ledger de checkout pago (DOD-06). Append-only: lançamentos negativos em
+    /// <see cref="FinancialTransaction"/>; cancela <see cref="SellerTransaction"/> pendente.
+    /// Idempotente se já revertido.
+    /// </summary>
+    public async Task<OperationResult> ReversePaidCheckoutAsync(
+        Guid checkoutId,
+        CancellationToken cancellationToken)
+    {
+        var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+        if (checkout is null)
+        {
+            return OperationResult.Failure("Checkout not found.");
+        }
+
+        if (checkout.Status != CheckoutStatus.Paid)
+        {
+            return OperationResult.Failure($"Checkout is not paid. Current status: {checkout.Status}");
+        }
+
+        var existingLedger = await _financialTransactionRepository.GetByRelatedEntityIdAsync(
+            checkoutId,
+            "Checkout",
+            cancellationToken);
+
+        if (existingLedger.Any(t =>
+                t.Type == TransactionType.Refund ||
+                (t.Metadata?.ContainsKey("refundOfCheckout") == true &&
+                 t.Metadata["refundOfCheckout"] == checkoutId.ToString())))
+        {
+            return OperationResult.Success();
+        }
+
+        if (checkout.TotalAmount is null ||
+            checkout.PlatformFeeAmount is null ||
+            checkout.ItemsSubtotalAmount is null)
+        {
+            return OperationResult.Failure("Checkout amounts are not set.");
+        }
+
+        var platformFeeInCents = (long)(checkout.PlatformFeeAmount.Value * 100);
+        var netAmountInCents = (long)(checkout.ItemsSubtotalAmount.Value * 100) - platformFeeInCents;
+
+        var sellerTransaction = await _sellerTransactionRepository.GetByCheckoutIdAsync(checkoutId, cancellationToken);
+        if (sellerTransaction is not null)
+        {
+            if (sellerTransaction.Status == SellerTransactionStatus.Paid)
+            {
+                return OperationResult.Failure("Cannot refund: seller payout already completed.");
+            }
+
+            if (sellerTransaction.Status == SellerTransactionStatus.ProcessingPayout)
+            {
+                return OperationResult.Failure("Cannot refund while payout is processing.");
+            }
+
+            var sellerBalance = await _sellerBalanceRepository.GetByTerritoryAndSellerAsync(
+                checkout.TerritoryId,
+                sellerTransaction.SellerUserId,
+                cancellationToken);
+
+            if (sellerBalance is not null &&
+                sellerTransaction.Status is SellerTransactionStatus.Pending or SellerTransactionStatus.ReadyForPayout)
+            {
+                sellerBalance.ReverseHeldAmount(sellerTransaction.NetAmountInCents);
+                await _sellerBalanceRepository.UpdateAsync(sellerBalance, cancellationToken);
+            }
+
+            if (sellerTransaction.Status != SellerTransactionStatus.Canceled)
+            {
+                sellerTransaction.Cancel();
+                await _sellerTransactionRepository.UpdateAsync(sellerTransaction, cancellationToken);
+            }
+        }
+
+        var originalSellerTx = existingLedger.FirstOrDefault(t => t.Type == TransactionType.Seller);
+        var originalFeeTx = existingLedger.FirstOrDefault(t => t.Type == TransactionType.PlatformFee);
+
+        var refundMetadata = new Dictionary<string, string>
+        {
+            { "refundOfCheckout", checkoutId.ToString() }
+        };
+
+        var sellerRefund = new FinancialTransaction(
+            Guid.NewGuid(),
+            checkout.TerritoryId,
+            TransactionType.Refund,
+            -netAmountInCents,
+            checkout.Currency,
+            $"Refund seller portion for checkout {checkoutId}",
+            checkoutId,
+            "Checkout",
+            refundMetadata);
+
+        var feeRefund = new FinancialTransaction(
+            Guid.NewGuid(),
+            checkout.TerritoryId,
+            TransactionType.Refund,
+            -platformFeeInCents,
+            checkout.Currency,
+            $"Refund platform fee for checkout {checkoutId}",
+            checkoutId,
+            "Checkout",
+            refundMetadata);
+
+        if (originalSellerTx is not null)
+        {
+            sellerRefund.AddRelatedTransaction(originalSellerTx.Id);
+            originalSellerTx.AddRelatedTransaction(sellerRefund.Id);
+            await _financialTransactionRepository.UpdateAsync(originalSellerTx, cancellationToken);
+        }
+
+        if (originalFeeTx is not null)
+        {
+            feeRefund.AddRelatedTransaction(originalFeeTx.Id);
+            originalFeeTx.AddRelatedTransaction(feeRefund.Id);
+            await _financialTransactionRepository.UpdateAsync(originalFeeTx, cancellationToken);
+        }
+
+        // Define o status final antes de persistir: repositórios que mapeiam o agregado
+        // no AddAsync (Postgres) não capturam mutações posteriores no objeto de domínio.
+        sellerRefund.UpdateStatus(TransactionStatus.Completed);
+        feeRefund.UpdateStatus(TransactionStatus.Completed);
+
+        await _financialTransactionRepository.AddAsync(sellerRefund, cancellationToken);
+        await _financialTransactionRepository.AddAsync(feeRefund, cancellationToken);
+
+        await _transactionStatusHistoryRepository.AddAsync(
+            new TransactionStatusHistory(
+                Guid.NewGuid(),
+                sellerRefund.Id,
+                TransactionStatus.Pending,
+                TransactionStatus.Completed,
+                null,
+                "Refund seller portion"),
+            cancellationToken);
+
+        await _transactionStatusHistoryRepository.AddAsync(
+            new TransactionStatusHistory(
+                Guid.NewGuid(),
+                feeRefund.Id,
+                TransactionStatus.Pending,
+                TransactionStatus.Completed,
+                null,
+                "Refund platform fee"),
+            cancellationToken);
+
+        if (platformFeeInCents > 0)
+        {
+            var platformBalance = await _platformFinancialBalanceRepository.GetByTerritoryIdAsync(
+                checkout.TerritoryId,
+                cancellationToken);
+
+            if (platformBalance is not null)
+            {
+                platformBalance.ReverseRevenue(platformFeeInCents);
+                await _platformFinancialBalanceRepository.UpdateAsync(platformBalance, cancellationToken);
+            }
+        }
+
+        await _auditLogger.LogAsync(
+            new Models.AuditEntry(
+                "checkout.refunded",
+                checkout.BuyerUserId,
+                checkout.TerritoryId,
+                checkoutId,
+                DateTime.UtcNow),
+            cancellationToken);
+
+        // Status do checkout muda no MESMO commit da reversão do ledger — evita estado
+        // inconsistente (ledger revertido mas checkout ainda Paid) e mantém idempotência.
+        checkout.SetStatus(CheckoutStatus.Refunded, DateTime.UtcNow);
+        await _checkoutRepository.UpdateAsync(checkout, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return OperationResult.Success();
+    }
+
+    /// <summary>
     /// Tenta marcar transação como ReadyForPayout baseado na configuração (retenção e valor mínimo).
     /// </summary>
     private async Task TryMarkTransactionAsReadyForPayoutAsync(

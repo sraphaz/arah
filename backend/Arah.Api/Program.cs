@@ -396,6 +396,20 @@ builder.Services.AddSingleton<Arah.Application.Interfaces.IDistributedCacheServi
 
 // Application services
 builder.Services.AddApplicationServices();
+
+// Payment gateway (entrada de cobrança): o mock só é aceitável fora de produção.
+// Em produção, sem PSP real integrado, usa-se um gateway que falha explicitamente em vez
+// de criar intenções de pagamento falsas (pi_mock_*) que nenhum provedor real aprovaria.
+if (builder.Environment.IsProduction())
+{
+    builder.Services.AddSingleton<Arah.Application.Interfaces.IPaymentGateway, Arah.Infrastructure.Payments.UnavailablePaymentGateway>();
+}
+else
+{
+    // Singleton: o estado das intenções precisa sobreviver entre requisições (criar vs. confirmar).
+    builder.Services.AddSingleton<Arah.Application.Interfaces.IPaymentGateway, Arah.Infrastructure.Payments.MockPaymentGateway>();
+}
+
 builder.Services.AddArahCore();
 builder.Services.AddArahCoreSeedReleases();
 

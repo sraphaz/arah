@@ -141,4 +141,38 @@ public sealed class Checkout
         Status = status;
         UpdatedAtUtc = updatedAtUtc;
     }
+
+    /// <summary>
+    /// Marca o checkout como aguardando confirmação de pagamento (Created → AwaitingPayment).
+    /// </summary>
+    public void MarkAsAwaitingPayment(DateTime atUtc)
+    {
+        if (Status is not CheckoutStatus.Created)
+        {
+            throw new InvalidOperationException(
+                $"Cannot mark checkout as awaiting payment from status {Status}.");
+        }
+
+        Status = CheckoutStatus.AwaitingPayment;
+        UpdatedAtUtc = atUtc;
+    }
+
+    /// <summary>
+    /// Marca o checkout como pago (Created/AwaitingPayment → Paid). Idempotente se já Paid.
+    /// </summary>
+    public void MarkAsPaid(DateTime atUtc)
+    {
+        if (Status == CheckoutStatus.Paid)
+        {
+            return;
+        }
+
+        if (Status is not (CheckoutStatus.Created or CheckoutStatus.AwaitingPayment))
+        {
+            throw new InvalidOperationException($"Cannot mark checkout as paid from status {Status}.");
+        }
+
+        Status = CheckoutStatus.Paid;
+        UpdatedAtUtc = atUtc;
+    }
 }

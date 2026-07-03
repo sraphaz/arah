@@ -185,8 +185,8 @@
       },
       "BouncyCastle.Cryptography": {
         "type": "Transitive",
-        "resolved": "2.6.1",
-        "contentHash": "vZsG2YILhthgRqO+ZVgRff4ZFKKTl0v7kqaVBLCtRvpREhfBP33pcWrdA3PRYgWuFL1RxiUFvjMUHTdBZlJcoA=="
+        "resolved": "2.6.2",
+        "contentHash": "7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w=="
       },
       "Castle.Core": {
         "type": "Transitive",
@@ -229,42 +229,12 @@
         "resolved": "19.0.3",
         "contentHash": "kq9feqMojMj9aABrHb/ABEPaH2Y4dSclseSahAru6qxCeqVQNLLTgw/6vZMauzI1yBUL2fz03ub5yEd5btLfvg=="
       },
-      "Google.Protobuf": {
-        "type": "Transitive",
-        "resolved": "3.22.5",
-        "contentHash": "tTMtDZPbLxJew8pk7NBdqhLqC4OipfkZdwPuCEUNr2AoDo1siUGcxFqJK0wDewTL8ge5Cjrb16CToMPxBUHMGA=="
-      },
-      "Grpc.Core.Api": {
-        "type": "Transitive",
-        "resolved": "2.52.0",
-        "contentHash": "SQiPyBczG4vKPmI6Fd+O58GcxxDSFr6nfRAJuBDUNj+PgdokhjWJvZE/La1c09AkL2FVm/jrDloG89nkzmVF7A==",
-        "dependencies": {
-          "System.Memory": "4.5.3"
-        }
-      },
-      "Grpc.Net.Client": {
-        "type": "Transitive",
-        "resolved": "2.52.0",
-        "contentHash": "hWVH9g/Nnjz40ni//2S8UIOyEmhueQREoZIkD0zKHEPqLxXcNlbp4eebXIOicZtkwDSx0TFz9NpkbecEDn6rBw==",
-        "dependencies": {
-          "Grpc.Net.Common": "2.52.0",
-          "Microsoft.Extensions.Logging.Abstractions": "3.0.3"
-        }
-      },
-      "Grpc.Net.Common": {
-        "type": "Transitive",
-        "resolved": "2.52.0",
-        "contentHash": "di9qzpdx525IxumZdYmu6sG2y/gXJyYeZ1ruFUzB9BJ1nj4kU1/dTAioNCMt1VLRvNVDqh8S8B1oBdKhHJ4xRg==",
-        "dependencies": {
-          "Grpc.Core.Api": "2.52.0"
-        }
-      },
       "MailKit": {
         "type": "Transitive",
-        "resolved": "4.14.1",
-        "contentHash": "Rawu+h3lSSjKra0AxR+IUB99VQ7jWI+MvxThekqLhf+ic7VQ7a69lmPFW+LXuRYHla4ADcn3x16Gsvju3LTq9w==",
+        "resolved": "4.16.0",
+        "contentHash": "trJ82DOpAmo8i1jO1vNE+dGn4mPRyeYfy4swRcAGgMJhPoI1Kohf4OFJJf0+YIj4iUxgxPn8W+ht7e7KiYzSjg==",
         "dependencies": {
-          "MimeKit": "4.14.0",
+          "MimeKit": "4.16.0",
           "System.Formats.Asn1": "8.0.1"
         }
       },
@@ -753,10 +723,10 @@
       },
       "MimeKit": {
         "type": "Transitive",
-        "resolved": "4.14.0",
-        "contentHash": "g0LtsMC8DCTkc030C3UgVqbltOJmV5cz4AX8ASowz2ZA+lxopXSYtC1XXYmenxy606aWFLwi5Xy4cC/zyYjbjQ==",
+        "resolved": "4.16.0",
+        "contentHash": "X0LFxeM4gPRIhODyY/HYS9b+zRZ7y//v59rFzgS6wLxcPuZThnMtNZHtrr0fjLyRRkg3gqJBtvW36XfUzZ7Djw==",
         "dependencies": {
-          "BouncyCastle.Cryptography": "2.6.1",
+          "BouncyCastle.Cryptography": "2.6.2",
           "System.Security.Cryptography.Pkcs": "8.0.1"
         }
       },
@@ -786,29 +756,29 @@
       },
       "OpenTelemetry": {
         "type": "Transitive",
-        "resolved": "1.9.0",
-        "contentHash": "7scS6BUhwYeSXEDGhCxMSezmvyCoDU5kFQbmfyW9iVvVTcWhec+1KIN33/LOCdBXRkzt2y7+g03mkdAB0XZ9Fw==",
+        "resolved": "1.15.3",
+        "contentHash": "N0i6WjPoHPbZyms1ugbDIFAJFuGlpeExJMU/+XSL0lQRUkg/D0utFkDoLXf8Z1km5B+xVZ2GyMXXiX8qdeNmPg==",
         "dependencies": {
           "Microsoft.Extensions.Diagnostics.Abstractions": "8.0.0",
           "Microsoft.Extensions.Logging.Configuration": "8.0.0",
-          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.9.0"
+          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.15.3"
         }
       },
       "OpenTelemetry.Api": {
         "type": "Transitive",
-        "resolved": "1.9.0",
-        "contentHash": "Xz8ZvM1Lm0m7BbtGBnw2JlPo++YKyMp08zMK5p0mf+cIi5jeMt2+QsYu9X6YEAbjCxBQYwEak5Z8sY6Ig2WcwQ==",
+        "resolved": "1.15.3",
+        "contentHash": "fX+fkCysfPut+qCcT3bKqyX4QN9Saf4CgX8HLOHywEVD+Xr7sULtfuypITpoDysjx8R59dn/3mWhgimMH8cm/g==",
         "dependencies": {
-          "System.Diagnostics.DiagnosticSource": "8.0.0"
+          "System.Diagnostics.DiagnosticSource": "10.0.0"
         }
       },
       "OpenTelemetry.Api.ProviderBuilderExtensions": {
         "type": "Transitive",
-        "resolved": "1.9.0",
-        "contentHash": "L0D4LBR5JFmwLun5MCWVGapsJLV0ANZ+XXu9NEI3JE/HRKkRuUO+J2MuHD5DBwiU//QMYYM4B22oev1hVLoHDQ==",
+        "resolved": "1.15.3",
+        "contentHash": "SYn0lqYDwLMWhv/zlNGsQcl2yX++yTumanX46bmOZE/ZDOd1WjPBO2kZaZgKLEZTZk48pavIFGJ6vOvxXgWVFQ==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
-          "OpenTelemetry.Api": "1.9.0"
+          "OpenTelemetry.Api": "1.15.3"
         }
       },
       "OpenTelemetry.Exporter.Console": {
@@ -830,13 +800,11 @@
       },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
         "type": "Transitive",
-        "resolved": "1.9.0",
-        "contentHash": "qzFOP3V2eYIVbug3U4BJzzidHe9JhAJ42WZ/H8pUp/45Ry3MQQg/+e/ZieClJcxKnpbkXi7dUq1rpvuNp+yBYA==",
+        "resolved": "1.15.3",
+        "contentHash": "FEXJepcseTGbATiCkUfP7ipoFEYYfl/0UmmUwi0KxCPg9PaUA8ab2P1LGopK+/HExasJ1ZutFhZrN6WvUIR23g==",
         "dependencies": {
-          "Google.Protobuf": "[3.22.5, 4.0.0)",
-          "Grpc.Net.Client": "[2.52.0, 3.0.0)",
-          "Microsoft.Extensions.Configuration.Binder": "8.0.1",
-          "OpenTelemetry": "1.9.0"
+          "Microsoft.Extensions.Configuration.Binder": "8.0.2",
+          "OpenTelemetry": "1.15.3"
         }
       },
       "OpenTelemetry.Exporter.Prometheus.AspNetCore": {
@@ -1357,11 +1325,6 @@
           "System.Runtime.Extensions": "4.3.0"
         }
       },
-      "System.Memory": {
-        "type": "Transitive",
-        "resolved": "4.5.3",
-        "contentHash": "3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA=="
-      },
       "System.Memory.Data": {
         "type": "Transitive",
         "resolved": "1.0.2",
@@ -1773,19 +1736,32 @@
         "type": "Project",
         "dependencies": {
           "Arah.Application": "[1.0.0, )",
+          "Arah.Core": "[1.0.0, )",
           "Arah.Infrastructure": "[1.0.0, )",
           "Arah.Infrastructure.Shared": "[1.0.0, )",
           "Arah.Modules.Admin.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Alerts": "[1.0.0, )",
+          "Arah.Modules.Alerts.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Assets": "[1.0.0, )",
+          "Arah.Modules.Assets.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Chat": "[1.0.0, )",
+          "Arah.Modules.Chat.Infrastructure": "[1.0.0, )",
+          "Arah.Modules.Connections": "[1.0.0, )",
+          "Arah.Modules.Connections.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Events": "[1.0.0, )",
+          "Arah.Modules.Events.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Feed": "[1.0.0, )",
+          "Arah.Modules.Feed.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Map": "[1.0.0, )",
+          "Arah.Modules.Map.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Marketplace": "[1.0.0, )",
+          "Arah.Modules.Marketplace.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Moderation": "[1.0.0, )",
+          "Arah.Modules.Moderation.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Notifications": "[1.0.0, )",
+          "Arah.Modules.Notifications.Infrastructure": "[1.0.0, )",
           "Arah.Modules.Subscriptions": "[1.0.0, )",
+          "Arah.Modules.Subscriptions.Infrastructure": "[1.0.0, )",
           "FluentValidation.AspNetCore": "[11.3.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "Microsoft.AspNetCore.Diagnostics.HealthChecks": "[2.2.0, )",
@@ -1794,7 +1770,7 @@
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[8.0.0, )",
           "OpenTelemetry.Exporter.Console": "[1.9.0, )",
           "OpenTelemetry.Exporter.Jaeger": "[1.6.0-rc.1, )",
-          "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.9.0, )",
+          "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.15.3, )",
           "OpenTelemetry.Exporter.Prometheus.AspNetCore": "[1.9.0-beta.1, )",
           "OpenTelemetry.Extensions.Hosting": "[1.9.0, )",
           "OpenTelemetry.Instrumentation.AspNetCore": "[1.9.0, )",
@@ -1842,6 +1818,15 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.2, )"
         }
       },
+      "arah.core": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.2, )",
+          "Microsoft.Extensions.Hosting.Abstractions": "[8.0.1, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[8.0.2, )"
+        }
+      },
       "arah.domain": {
         "type": "Project",
         "dependencies": {
@@ -1861,7 +1846,7 @@
           "Arah.Modules.Marketplace": "[1.0.0, )",
           "Arah.Modules.Moderation": "[1.0.0, )",
           "Azure.Storage.Blobs": "[12.21.1, )",
-          "MailKit": "[4.14.1, )",
+          "MailKit": "[4.16.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "[8.0.11, )",
@@ -1901,6 +1886,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.alerts.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Alerts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1911,6 +1905,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.assets.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Assets": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1921,6 +1924,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.chat.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Chat": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1930,6 +1942,15 @@
         "type": "Project",
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.connections.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Connections": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1940,6 +1961,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.events.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Events": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1951,6 +1981,16 @@
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
           "Arah.Modules.Map": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.feed.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Feed": "[1.0.0, )",
+          "Arah.Modules.Map": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1961,6 +2001,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.map.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Map": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1971,6 +2020,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.marketplace.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Marketplace": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1981,6 +2039,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.moderation.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Moderation": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1991,6 +2058,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.notifications.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Notifications": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -2001,6 +2077,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.subscriptions.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Subscriptions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"

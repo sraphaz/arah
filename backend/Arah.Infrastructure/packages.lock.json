@@ -633,9 +633,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.assets": {
@@ -643,9 +641,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.chat": {
@@ -653,18 +649,14 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.connections": {
         "type": "Project",
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.events": {
@@ -672,9 +664,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.feed": {
@@ -683,9 +673,7 @@
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
           "Arah.Modules.Map": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.map": {
@@ -693,9 +681,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.marketplace": {
@@ -703,9 +689,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.moderation": {
@@ -713,9 +697,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.notifications": {
@@ -723,9 +705,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.modules.subscriptions": {
@@ -733,9 +713,7 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[8.0.8, )",
-          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
         }
       },
       "arah.shared": {

@@ -1253,6 +1253,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.alerts.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Alerts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1263,6 +1272,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.assets.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Assets": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1273,6 +1291,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.chat.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Chat": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1282,6 +1309,15 @@
         "type": "Project",
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.connections.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Connections": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1292,6 +1328,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.events.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Events": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1303,6 +1348,16 @@
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
           "Arah.Modules.Map": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.feed.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Feed": "[1.0.0, )",
+          "Arah.Modules.Map": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1313,6 +1368,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.map.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Map": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1323,6 +1387,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.marketplace.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Marketplace": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1333,6 +1406,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.moderation.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Moderation": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1343,6 +1425,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.notifications.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Notifications": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"
@@ -1353,6 +1444,15 @@
         "dependencies": {
           "Arah.Application.Abstractions": "[1.0.0, )",
           "Arah.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[8.0.1, )"
+        }
+      },
+      "arah.modules.subscriptions.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "Arah.Application.Abstractions": "[1.0.0, )",
+          "Arah.Domain": "[1.0.0, )",
+          "Arah.Modules.Subscriptions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[8.0.8, )",
           "Microsoft.Extensions.Caching.Memory": "[8.0.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[8.0.8, )"

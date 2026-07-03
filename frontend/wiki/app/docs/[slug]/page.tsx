@@ -1,24 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { readdir, readFile } from "fs/promises";
+import { readdir } from "fs/promises";
 import { join } from "path";
-import matter from "gray-matter";
-import { remark } from "remark";
-import remarkHtml from "remark-html";
-import remarkGfm from "remark-gfm";
-import sanitizeHtml from "sanitize-html";
 // Header, Sidebar e Footer agora estão no layout.tsx raiz
 import { TableOfContents } from "../../../components/layout/TableOfContents";
-import { ContentSections } from "./content-sections";
 import { ContentSectionsProgressive } from "./content-sections-progressive";
-
-// Helper function para extrair texto de HTML de forma segura
-function getTextContent(html: string): string {
-  return sanitizeHtml(html, {
-    allowedTags: [],
-    allowedAttributes: {},
-  });
-}
+import { processMarkdownContent } from "../../../lib/document";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -55,116 +42,6 @@ const slugToFile: Record<string, string> = {
   "60_API_LÓGICA_NEGÓCIO": "60_API_LÓGICA_NEGÓCIO.md",
 };
 
-function processMarkdownLinks(html: string, basePath: string = '/wiki'): string {
-  // Processa links <a href="/docs/..."> para <a href="/wiki/docs/...">
-  // Também processa links relativos que terminam com .md
-  return html.replace(
-    /<a\s+([^>]*\s+)?href=["']([^"']+)["']([^>]*)>/gi,
-    (match, before, href, after) => {
-      // Ignora se já começa com basePath ou é link externo
-      if (href.startsWith(basePath) || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) {
-        return match;
-      }
-
-      // Se é link relativo que termina com .md, converte para /wiki/docs/... (sem .md)
-      if (href.endsWith('.md')) {
-        const slug = href.replace(/^\.\/|\.md$/g, '');
-        const newHref = `${basePath}/docs/${slug}`;
-        return `<a ${before || ''}href="${newHref}"${after || ''}>`;
-      }
-
-      // Se começa com /, adiciona basePath
-      if (href.startsWith('/')) {
-        const newHref = `${basePath}${href}`;
-        return `<a ${before || ''}href="${newHref}"${after || ''}>`;
-      }
-
-      // Links relativos sem .md - mantém como está
-      return match;
-    }
-  );
-}
-
-async function getDocContent(fileName: string) {
-  try {
-    const docsPath = join(process.cwd(), "..", "..", "docs", fileName);
-    const fileContents = await readFile(docsPath, "utf8");
-    const { content, data } = matter(fileContents);
-
-    const processedContent = await remark()
-      .use(remarkHtml)
-      .use(remarkGfm)
-      .process(content);
-
-    // Adiciona IDs aos headings para navegação (garantindo unicidade)
-    let htmlContent = processedContent.toString();
-
-    // Extrai o primeiro H1 do markdown para usar como título se não houver frontmatter title
-    let firstH1Title: string | null = null;
-    htmlContent = htmlContent.replace(
-      /<h1[^>]*>(.*?)<\/h1>/gi,
-      (match, text) => {
-        // Se ainda não capturamos o primeiro H1, usa-o como título
-        if (firstH1Title === null) {
-          firstH1Title = getTextContent(text).trim();
-        }
-        // Remove o H1 do conteúdo (não renderiza, evita duplicação)
-        return '';
-      }
-    );
-
-    const usedIds = new Map<string, number>(); // Rastreia IDs já usados e seus contadores
-
-    htmlContent = htmlContent.replace(
-      /<h([2-4])>(.*?)<\/h\1>/gi,
-      (match, level, text) => {
-        // Usa sanitize-html para remover HTML de forma segura
-        const cleanText = getTextContent(text);
-        let baseId = cleanText
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-          .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with dash
-          .replace(/^-+|-+$/g, ''); // Remove leading/trailing dashes
-
-        // Garante ID único: se já existe, adiciona sufixo numérico
-        let id = baseId;
-        if (usedIds.has(baseId)) {
-          const count = (usedIds.get(baseId) || 0) + 1;
-          usedIds.set(baseId, count);
-          id = `${baseId}-${count}`;
-        } else {
-          usedIds.set(baseId, 0);
-        }
-
-        return `<h${level} id="${id}">${text}</h${level}>`;
-      }
-    );
-
-    // Processa links no HTML renderizado para incluir basePath
-    htmlContent = processMarkdownLinks(htmlContent, '/wiki');
-
-    // Helper para remover prefixos numéricos (00_, 01_, etc.) do nome do arquivo
-    function removeNumericPrefix(text: string): string {
-      return text.replace(/^\d+_/, "");
-    }
-
-    // Gera título: usa frontmatter title, ou primeiro H1 do markdown, ou nome do arquivo
-    const fileNameWithoutExt = fileName.replace(".md", "");
-    const titleWithoutPrefix = removeNumericPrefix(fileNameWithoutExt);
-    const fallbackTitle = titleWithoutPrefix.replace(/_/g, " ");
-
-    return {
-      content: htmlContent,
-      frontMatter: data,
-      title: data.title || firstH1Title || fallbackTitle,
-    };
-  } catch (error) {
-    console.error(`Error reading ${fileName}:`, error);
-    return null;
-  }
-}
-
 async function getAllDocs() {
   try {
     const docsPath = join(process.cwd(), "..", "..", "docs");
@@ -193,7 +70,7 @@ export default async function DocPage({ params }: PageProps) {
   // Decodifica o slug caso tenha sido URL-encoded (ex: %C3%93 -> Ó)
   const decodedSlug = decodeURIComponent(slug);
   const fileName = slugToFile[decodedSlug] || slugToFile[slug] || `${decodedSlug}.md`;
-  const doc = await getDocContent(fileName);
+  const doc = await processMarkdownContent(fileName);
 
   if (!doc) {
     notFound();

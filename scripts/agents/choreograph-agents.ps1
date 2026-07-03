@@ -91,7 +91,9 @@ foreach ($rule in $rules) {
         } else {
             if ($operational -notcontains $a.id) { $operational += $a.id }
         }
-        if ($ExecuteAutonomy -and $a.skills.Count -gt 0) {
+        # Plano de acionamento é sempre registrado (auditável), mesmo sem execução;
+        # -ExecuteAutonomy apenas decide se os skills são de fato rodados abaixo.
+        if ($a.skills.Count -gt 0 -and ($a.autonomy -contains 'invoke_skill')) {
             foreach ($sk in $a.skills) {
                 # PSCustomObject (não hashtable): Select-Object -Property em hashtable retorna nulls no PS 5.1.
                 $skillRuns += [pscustomobject]@{ agent = $a.id; skill = $sk; rule = $rule.id }

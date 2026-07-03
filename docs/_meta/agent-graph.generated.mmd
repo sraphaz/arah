@@ -5,6 +5,9 @@ flowchart LR
     rule_architecture_docs["architecture-docs"]
     rule_community_connections["community-connections"]
     rule_core_control_plane["core-control-plane"]
+    rule_craft_backend["craft-backend"]
+    rule_craft_flutter["craft-flutter"]
+    rule_craft_web["craft-web"]
     rule_design_ux["design-ux"]
     rule_federation_handoff["federation-handoff"]
     rule_feed_content["feed-content"]
@@ -20,12 +23,14 @@ flowchart LR
   end
   subgraph OPERATIONAL["Agentes operacionais"]
     agent_backend(["backend"])
+    agent_flutter(["flutter"])
     agent_pr_steward(["pr-steward"])
     agent_qa(["qa"])
     agent_release(["release"])
     agent_security(["security"])
     agent_solutions_architect(["solutions-architect"])
     agent_spec_steward(["spec-steward"])
+    agent_web(["web"])
   end
   subgraph DOMAIN["Agentes de domínio (consultivos)"]
     agent_carteira_arata{{"carteira-arata"}}
@@ -46,6 +51,10 @@ flowchart LR
   rule_core_control_plane -. consulta .-> agent_control_plane
   rule_core_control_plane --> agent_solutions_architect
   rule_core_control_plane --> agent_spec_steward
+  rule_craft_backend --> agent_backend
+  rule_craft_backend --> agent_solutions_architect
+  rule_craft_flutter --> agent_flutter
+  rule_craft_web --> agent_web
   rule_design_ux -. consulta .-> agent_design_ux
   rule_federation_handoff -. consulta .-> agent_control_plane
   rule_federation_handoff --> agent_solutions_architect

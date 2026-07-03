@@ -233,6 +233,12 @@ try {
 
         }
 
+        'craft-review' {
+
+            & (Join-Path $ScriptDir 'craft-review-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
+
+        }
+
         'likec4-export' {
 
             & (Join-Path $Root 'scripts/diagrams/export-likec4.ps1')

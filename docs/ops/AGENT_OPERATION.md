@@ -197,6 +197,7 @@ Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 **Comportamento:**
 - Todo PR: regra `pr-always` aciona **qa** + **pr-steward**; com `-ExecuteAutonomy` no CI, skills das regras matched são invocadas.
 - PR com Marketplace → parecer `mercado-economia`; Core → `control-plane` + `architecture-review`.
+- Craft (projetar/desenvolver/testar): regras `craft-backend`/`craft-flutter`/`craft-web` acionam `backend`/`flutter`/`web` (e `solutions-architect` no backend) invocando `craft-review`; `qa` também invoca no `pr-always`.
 - `orchestrate` enriquece `route.json` com bloco `choreography` (regras + domínios).
 - CLI: `arah-agents choreograph`, `skill -Skill likec4-export`.
 
@@ -229,7 +230,7 @@ inclusive mudanças apenas em docs.
 |--------|----------|--------------------------|
 | 0 — Núcleo | [.cursorrules](../../.cursorrules) (~4 KB) | Sempre (princípios, guardrails, ponteiros) |
 | 1 — Regras escopadas | [.cursor/rules/](../../.cursor/rules/) — `backend-standards` (`backend/**`), `frontend-design` (`frontend/**`), `docs-organization` (`docs/**`, `*.md`), `domain-agents-autonomy` (`backend/**`, `frontend/**`, `docs/design/**`) | Só quando arquivos do glob são tocados |
-| 2 — Skills | [.cursor/skills/](../../.cursor/skills/) `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult` → apontam para [.skills/](../../.skills/) | Índice leve sempre; corpo lido só ao usar |
+| 2 — Skills | [.cursor/skills/](../../.cursor/skills/) `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult`, `arah-craft` → apontam para [.skills/](../../.skills/) | Índice leve sempre; corpo lido só ao usar |
 | 3 — Comunicação passiva | Hook `stop` grava `.cursor/domain-review.md` **sem** followup; CI publica pareceres no PR | Agente lê o arquivo quando a rule escopada instrui |
 
 **Efeitos:**

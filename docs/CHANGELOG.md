@@ -9,6 +9,16 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Skill de craftsmanship (Uncle Bob) acionada pelos agentes no ciclo projetar→desenvolver→testar (2026-07-03)
+
+- **Nova skill `craft-review`** (`.skills/craft-review.skill.yaml`): disciplina Clean Code/Clean Architecture/SOLID/TDD em três fases (projetar, desenvolver, testar), complementando `architecture-review` (fronteiras/ADR) e `code-review` (checklist de PR)
+- **Script `scripts/agents/craft-review-check.ps1`** (soft): imprime o checklist por fase e avisa sobre mudança de código sem teste; `-Strict` promove a gate duro; wired em `invoke-skill.ps1`
+- **Skill de descoberta do Cursor** `.cursor/skills/arah-craft/` para o agente interativo carregar sob demanda ao projetar/codar/testar
+- **Fiação nos agentes**: `craft-review` adicionada a `solutions-architect`, `backend`, `flutter`, `web` e `qa`
+- **Coreografia**: novas rules `craft-backend`/`craft-flutter`/`craft-web` (invocam `craft-review` no desenvolvimento; `solutions-architect` co-ativado no backend); `pr-always` passa a invocar `craft-review` no `qa`; `core-control-plane`/`architecture-docs` incluem `craft-review` no `solutions-architect`
+- **`choreograph-agents.ps1`**: `skill_invocations` agora é sempre registrado (plano auditável), independente de `-ExecuteAutonomy` (que passa a controlar só a execução)
+- Agent graph regenerado (25 skills, 18 rules); `AGENTS.md` e `docs/ops/AGENT_OPERATION.md` atualizados
+
 ### Corrigido — Design quality epic #427: DSG-03 devportal tokens + DSG-05 portal a11y (2026-07-02)
 
 - **DSG-03**: tokens forest/surface/dark-text em `frontend/shared/styles/design-tokens.css`; devportal deriva `--bg`, `--text`, `--accent` etc. dos tokens compartilhados; `semantic-colors.css` e `color-depth-system.css` reescritos sem hex e importados em `devportal.css`

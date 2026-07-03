@@ -40,14 +40,14 @@ Roteamento e co-ativação: [`.agents/orchestrator.agent.yaml`](.agents/orchestr
 
 ## Skills
 
-Catálogo executável em [`.skills/`](.skills/) (24 skills: run-tests, open-pr, sync-docs, spec-validate, harness-run, register-adr, next-phase, address-bot-review, etc.), invocáveis via:
+Catálogo executável em [`.skills/`](.skills/) (25 skills: run-tests, open-pr, sync-docs, spec-validate, harness-run, register-adr, architecture-review, craft-review, next-phase, address-bot-review, etc.), invocáveis via:
 
 ```powershell
 ./scripts/agents/invoke-skill.ps1 -Skill <nome> [args]
 ./scripts/agents/arah-agents.ps1 <comando>
 ```
 
-Skills do Cursor (descoberta sob demanda) em [`.cursor/skills/`](.cursor/skills/): `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult`.
+Skills do Cursor (descoberta sob demanda) em [`.cursor/skills/`](.cursor/skills/): `arah-run-tests`, `arah-sync-docs`, `arah-open-pr`, `arah-domain-consult`, `arah-craft`.
 
 ## Comunicação entre agentes (modelo passivo)
 

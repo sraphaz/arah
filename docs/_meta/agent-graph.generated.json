@@ -2,7 +2,7 @@
     "schema":  ".agents/agent-graph.schema.yaml",
     "version":  1,
     "generator":  "scripts/agents/export-agent-graph.ps1",
-    "generated_at":  "2026-07-03T03:17:49Z",
+    "generated_at":  "2026-07-03T03:28:55Z",
     "sources":  [
                     ".agents/choreography.yaml",
                     ".agents/**/*.agent.yaml",
@@ -12,9 +12,9 @@
                 ],
     "stats":  {
                   "agents":  29,
-                  "skills":  24,
-                  "rules":  15,
-                  "paths":  145,
+                  "skills":  25,
+                  "rules":  18,
+                  "paths":  146,
                   "domains":  11,
                   "specs":  12,
                   "harnesses":  12,
@@ -22,7 +22,7 @@
                   "guardrails":  16,
                   "workflows":  16,
                   "review_gates":  5,
-                  "edges":  485
+                  "edges":  518
               },
     "nodes":  {
                   "agents":  [
@@ -38,7 +38,8 @@
                                                     "spec-validate",
                                                     "harness-run",
                                                     "open-pr",
-                                                    "code-review"
+                                                    "code-review",
+                                                    "craft-review"
                                                 ],
                                      "consults":  {
                                                       "domain":  [
@@ -447,7 +448,8 @@
                                                     "gen-l10n",
                                                     "sync-docs",
                                                     "open-pr",
-                                                    "code-review"
+                                                    "code-review",
+                                                    "craft-review"
                                                 ],
                                      "consults":  {
                                                       "domain":  [
@@ -578,6 +580,7 @@
                                      "manifest":  ".agents/qa.agent.yaml",
                                      "skills":  [
                                                     "code-review",
+                                                    "craft-review",
                                                     "run-tests",
                                                     "spec-validate",
                                                     "harness-run"
@@ -678,6 +681,7 @@
                                      "skills":  [
                                                     "register-adr",
                                                     "architecture-review",
+                                                    "craft-review",
                                                     "likec4-export",
                                                     "spec-author",
                                                     "code-review"
@@ -896,7 +900,8 @@
                                                     "run-tests",
                                                     "sync-docs",
                                                     "open-pr",
-                                                    "code-review"
+                                                    "code-review",
+                                                    "craft-review"
                                                 ],
                                      "consults":  {
                                                       "domain":  [
@@ -948,6 +953,11 @@
                                      "id":  "code-review",
                                      "description":  "Aplica checklist de revisão ao diff do PR.",
                                      "manifest":  ".skills/code-review.skill.yaml"
+                                 },
+                                 {
+                                     "id":  "craft-review",
+                                     "description":  "\u003e-",
+                                     "manifest":  ".skills/craft-review.skill.yaml"
                                  },
                                  {
                                      "id":  "dep-audit",
@@ -1064,7 +1074,8 @@
                                                                         "invoke_skill"
                                                                     ],
                                                        "skills":  [
-                                                                      "architecture-review"
+                                                                      "architecture-review",
+                                                                      "craft-review"
                                                                   ],
                                                        "id":  "solutions-architect",
                                                        "type":  "operational",
@@ -1110,7 +1121,8 @@
                                                                     ],
                                                        "skills":  [
                                                                       "likec4-export",
-                                                                      "architecture-review"
+                                                                      "architecture-review",
+                                                                      "craft-review"
                                                                   ],
                                                        "id":  "solutions-architect",
                                                        "type":  "operational",
@@ -1486,15 +1498,98 @@
                                 },
                                 {
                                     "paths":  [
+                                                  "backend/Arah.Api/**",
+                                                  "backend/Arah.Api.Bff/**",
+                                                  "backend/Arah.Application/**",
+                                                  "backend/Arah.Domain/**",
+                                                  "backend/Arah.Infrastructure/**",
+                                                  "backend/Arah.Modules.*/**"
+                                              ],
+                                    "agents":  [
+                                                   {
+                                                       "autonomy":  [
+                                                                        "activate",
+                                                                        "invoke_skill"
+                                                                    ],
+                                                       "skills":  [
+                                                                      "craft-review"
+                                                                  ],
+                                                       "id":  "backend",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post",
+                                                                        "invoke_skill"
+                                                                    ],
+                                                       "skills":  [
+                                                                      "craft-review"
+                                                                  ],
+                                                       "id":  "solutions-architect",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   }
+                                               ],
+                                    "when":  null,
+                                    "id":  "craft-backend"
+                                },
+                                {
+                                    "paths":  [
+                                                  "frontend/arah.app/lib/**"
+                                              ],
+                                    "agents":  [
+                                                   {
+                                                       "autonomy":  [
+                                                                        "activate",
+                                                                        "invoke_skill"
+                                                                    ],
+                                                       "skills":  [
+                                                                      "craft-review"
+                                                                  ],
+                                                       "id":  "flutter",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   }
+                                               ],
+                                    "when":  null,
+                                    "id":  "craft-flutter"
+                                },
+                                {
+                                    "paths":  [
+                                                  "frontend/wiki/**",
+                                                  "frontend/portal/**",
+                                                  "frontend/devportal/**"
+                                              ],
+                                    "agents":  [
+                                                   {
+                                                       "autonomy":  [
+                                                                        "activate",
+                                                                        "invoke_skill"
+                                                                    ],
+                                                       "skills":  [
+                                                                      "craft-review"
+                                                                  ],
+                                                       "id":  "web",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   }
+                                               ],
+                                    "when":  null,
+                                    "id":  "craft-web"
+                                },
+                                {
+                                    "paths":  [
                                                   "**"
                                               ],
                                     "agents":  [
                                                    {
                                                        "autonomy":  [
-                                                                        "activate"
+                                                                        "activate",
+                                                                        "invoke_skill"
                                                                     ],
                                                        "skills":  [
-
+                                                                      "craft-review"
                                                                   ],
                                                        "id":  "qa",
                                                        "type":  "operational",
@@ -1836,7 +1931,7 @@
                                 {
                                     "pattern":  "backend/Arah.Api.Bff/**",
                                     "rules":  [
-
+                                                  "craft-backend"
                                               ],
                                     "agents":  [
                                                    "backend"
@@ -1845,7 +1940,7 @@
                                 {
                                     "pattern":  "backend/Arah.Api/**",
                                     "rules":  [
-
+                                                  "craft-backend"
                                               ],
                                     "agents":  [
                                                    "backend",
@@ -1882,7 +1977,7 @@
                                 {
                                     "pattern":  "backend/Arah.Application/**",
                                     "rules":  [
-
+                                                  "craft-backend"
                                               ],
                                     "agents":  [
                                                    "backend",
@@ -2048,7 +2143,7 @@
                                 {
                                     "pattern":  "backend/Arah.Domain/**",
                                     "rules":  [
-
+                                                  "craft-backend"
                                               ],
                                     "agents":  [
                                                    "backend",
@@ -2131,7 +2226,7 @@
                                 {
                                     "pattern":  "backend/Arah.Infrastructure/**",
                                     "rules":  [
-
+                                                  "craft-backend"
                                               ],
                                     "agents":  [
                                                    "backend",
@@ -2141,7 +2236,7 @@
                                 {
                                     "pattern":  "backend/Arah.Modules.*/**",
                                     "rules":  [
-
+                                                  "craft-backend"
                                               ],
                                     "agents":  [
                                                    "solutions-architect"
@@ -2656,6 +2751,15 @@
                                                ]
                                 },
                                 {
+                                    "pattern":  "frontend/arah.app/lib/**",
+                                    "rules":  [
+                                                  "craft-flutter"
+                                              ],
+                                    "agents":  [
+
+                                               ]
+                                },
+                                {
                                     "pattern":  "frontend/arah.app/lib/features/auth/**",
                                     "rules":  [
                                                   "identity-privacy"
@@ -2739,7 +2843,8 @@
                                 {
                                     "pattern":  "frontend/devportal/**",
                                     "rules":  [
-                                                  "design-ux"
+                                                  "design-ux",
+                                                  "craft-web"
                                               ],
                                     "agents":  [
                                                    "design-ux",
@@ -2749,7 +2854,8 @@
                                 {
                                     "pattern":  "frontend/portal/**",
                                     "rules":  [
-                                                  "design-ux"
+                                                  "design-ux",
+                                                  "craft-web"
                                               ],
                                     "agents":  [
                                                    "design-ux",
@@ -2768,7 +2874,8 @@
                                 {
                                     "pattern":  "frontend/wiki/**",
                                     "rules":  [
-                                                  "design-ux"
+                                                  "design-ux",
+                                                  "craft-web"
                                               ],
                                     "agents":  [
                                                    "design-ux",
@@ -3923,6 +4030,26 @@
                       "type":  "activates_agent"
                   },
                   {
+                      "from":  "rule:craft-backend",
+                      "to":  "agent:backend",
+                      "type":  "activates_agent"
+                  },
+                  {
+                      "from":  "rule:craft-backend",
+                      "to":  "agent:solutions-architect",
+                      "type":  "activates_agent"
+                  },
+                  {
+                      "from":  "rule:craft-flutter",
+                      "to":  "agent:flutter",
+                      "type":  "activates_agent"
+                  },
+                  {
+                      "from":  "rule:craft-web",
+                      "to":  "agent:web",
+                      "type":  "activates_agent"
+                  },
+                  {
                       "from":  "rule:federation-handoff",
                       "to":  "agent:solutions-architect",
                       "type":  "activates_agent"
@@ -4596,6 +4723,16 @@
                       "type":  "matches_rule"
                   },
                   {
+                      "from":  "path:backend/Arah.Api.Bff/**",
+                      "to":  "rule:craft-backend",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Api/**",
+                      "to":  "rule:craft-backend",
+                      "type":  "matches_rule"
+                  },
+                  {
                       "from":  "path:backend/Arah.Api/Controllers/Platform/FederationController.cs",
                       "to":  "rule:federation-handoff",
                       "type":  "matches_rule"
@@ -4603,6 +4740,11 @@
                   {
                       "from":  "path:backend/Arah.Api/Controllers/Users/**",
                       "to":  "rule:identity-privacy",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Application/**",
+                      "to":  "rule:craft-backend",
                       "type":  "matches_rule"
                   },
                   {
@@ -4641,6 +4783,11 @@
                       "type":  "matches_rule"
                   },
                   {
+                      "from":  "path:backend/Arah.Domain/**",
+                      "to":  "rule:craft-backend",
+                      "type":  "matches_rule"
+                  },
+                  {
                       "from":  "path:backend/Arah.Domain/Financial/**",
                       "to":  "rule:monetization",
                       "type":  "matches_rule"
@@ -4673,6 +4820,16 @@
                   {
                       "from":  "path:backend/Arah.Domain/Users/**",
                       "to":  "rule:identity-privacy",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Infrastructure/**",
+                      "to":  "rule:craft-backend",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:backend/Arah.Modules.*/**",
+                      "to":  "rule:craft-backend",
                       "type":  "matches_rule"
                   },
                   {
@@ -4806,6 +4963,11 @@
                       "type":  "matches_rule"
                   },
                   {
+                      "from":  "path:frontend/arah.app/lib/**",
+                      "to":  "rule:craft-flutter",
+                      "type":  "matches_rule"
+                  },
+                  {
                       "from":  "path:frontend/arah.app/lib/features/auth/**",
                       "to":  "rule:identity-privacy",
                       "type":  "matches_rule"
@@ -4852,7 +5014,17 @@
                   },
                   {
                       "from":  "path:frontend/devportal/**",
+                      "to":  "rule:craft-web",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:frontend/devportal/**",
                       "to":  "rule:design-ux",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:frontend/portal/**",
+                      "to":  "rule:craft-web",
                       "type":  "matches_rule"
                   },
                   {
@@ -4863,6 +5035,11 @@
                   {
                       "from":  "path:frontend/shared/styles/**",
                       "to":  "rule:design-ux",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:frontend/wiki/**",
+                      "to":  "rule:craft-web",
                       "type":  "matches_rule"
                   },
                   {
@@ -4878,6 +5055,18 @@
                   {
                       "from":  "agent:backend",
                       "to":  "skill:code-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:backend",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "craft-backend"
+                  },
+                  {
+                      "from":  "agent:backend",
+                      "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
                   },
@@ -4974,6 +5163,18 @@
                   {
                       "from":  "agent:flutter",
                       "to":  "skill:code-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:flutter",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "craft-flutter"
+                  },
+                  {
+                      "from":  "agent:flutter",
+                      "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
                   },
@@ -5123,6 +5324,18 @@
                   },
                   {
                       "from":  "agent:qa",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:qa",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "pr-always"
+                  },
+                  {
+                      "from":  "agent:qa",
                       "to":  "skill:harness-run",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
@@ -5191,7 +5404,7 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "architecture-docs"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -5203,7 +5416,7 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
-                      "via":  "architecture-docs"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -5213,15 +5426,39 @@
                   },
                   {
                       "from":  "agent:solutions-architect",
-                      "to":  "skill:likec4-export",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "craft-backend"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "core-control-plane"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "architecture-docs"
                   },
                   {
                       "from":  "agent:solutions-architect",
                       "to":  "skill:likec4-export",
                       "type":  "may_invoke_skill",
                       "via":  "architecture-docs"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:likec4-export",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -5263,13 +5500,13 @@
                       "from":  "agent:spec-steward",
                       "to":  "skill:spec-validate",
                       "type":  "may_invoke_skill",
-                      "via":  "specs-sdd"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:spec-steward",
                       "to":  "skill:spec-validate",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "specs-sdd"
                   },
                   {
                       "from":  "agent:spec-steward",
@@ -5280,6 +5517,18 @@
                   {
                       "from":  "agent:web",
                       "to":  "skill:code-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:web",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "craft-web"
+                  },
+                  {
+                      "from":  "agent:web",
+                      "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
                   },
@@ -5389,6 +5638,12 @@
                   },
                   {
                       "from":  "rule:architecture-docs",
+                      "to":  "skill:craft-review",
+                      "type":  "requires_skill",
+                      "via":  "architecture-docs"
+                  },
+                  {
+                      "from":  "rule:architecture-docs",
                       "to":  "skill:likec4-export",
                       "type":  "requires_skill",
                       "via":  "architecture-docs"
@@ -5398,6 +5653,42 @@
                       "to":  "skill:architecture-review",
                       "type":  "requires_skill",
                       "via":  "core-control-plane"
+                  },
+                  {
+                      "from":  "rule:core-control-plane",
+                      "to":  "skill:craft-review",
+                      "type":  "requires_skill",
+                      "via":  "core-control-plane"
+                  },
+                  {
+                      "from":  "rule:craft-backend",
+                      "to":  "skill:craft-review",
+                      "type":  "requires_skill",
+                      "via":  "craft-backend"
+                  },
+                  {
+                      "from":  "rule:craft-backend",
+                      "to":  "skill:craft-review",
+                      "type":  "requires_skill",
+                      "via":  "craft-backend"
+                  },
+                  {
+                      "from":  "rule:craft-flutter",
+                      "to":  "skill:craft-review",
+                      "type":  "requires_skill",
+                      "via":  "craft-flutter"
+                  },
+                  {
+                      "from":  "rule:craft-web",
+                      "to":  "skill:craft-review",
+                      "type":  "requires_skill",
+                      "via":  "craft-web"
+                  },
+                  {
+                      "from":  "rule:pr-always",
+                      "to":  "skill:craft-review",
+                      "type":  "requires_skill",
+                      "via":  "pr-always"
                   },
                   {
                       "from":  "rule:specs-sdd",
@@ -6525,12 +6816,6 @@
                       "from":  "spec:FASE53-arah-core",
                       "to":  "test:FullyQualifiedName~CoreControllerIntegration",
                       "type":  "verified_by_test",
-                      "via":  "AC-53-2"
-                  },
-                  {
-                      "from":  "spec:FASE53-arah-core",
-                      "to":  "test:FullyQualifiedName~CoreControllerIntegration",
-                      "type":  "verified_by_test",
                       "via":  "AC-53-4"
                   },
                   {
@@ -6538,6 +6823,12 @@
                       "to":  "test:FullyQualifiedName~CoreControllerIntegration",
                       "type":  "verified_by_test",
                       "via":  "AC-53-9"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-2"
                   },
                   {
                       "from":  "spec:FASE53-arah-core",
@@ -6603,13 +6894,13 @@
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-6"
+                      "via":  "AC-55-3"
                   },
                   {
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-3"
+                      "via":  "AC-55-6"
                   },
                   {
                       "from":  "spec:FASE55-monetization",

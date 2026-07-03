@@ -29,6 +29,7 @@ scope:
 skills:
   - register-adr
   - architecture-review
+  - craft-review
   - likec4-export
   - spec-author
   - code-review

@@ -2,7 +2,7 @@
     "schema":  ".agents/agent-graph.schema.yaml",
     "version":  1,
     "generator":  "scripts/agents/export-agent-graph.ps1",
-    "generated_at":  "2026-07-03T01:31:44Z",
+    "generated_at":  "2026-07-03T02:25:21Z",
     "sources":  [
                     ".agents/choreography.yaml",
                     ".agents/**/*.agent.yaml",
@@ -14,14 +14,14 @@
                   "agents":  29,
                   "skills":  24,
                   "rules":  15,
-                  "paths":  102,
+                  "paths":  84,
                   "domains":  11,
                   "specs":  12,
                   "harnesses":  12,
                   "guardrails":  16,
                   "workflows":  16,
                   "review_gates":  5,
-                  "edges":  338
+                  "edges":  314
               },
     "nodes":  {
                   "agents":  [
@@ -1044,11 +1044,7 @@
                                     "id":  "core-control-plane",
                                     "when":  null,
                                     "paths":  [
-                                                  "backend/Arah.Core/**",
-                                                  "id: backend",
-                                                  "id: solutions-architect",
-                                                  "id: spec-steward",
-                                                  "id: control-plane"
+                                                  "backend/Arah.Core/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1101,8 +1097,7 @@
                                     "paths":  [
                                                   "docs/architecture/**",
                                                   "docs/design/*.likec4",
-                                                  "docs/architecture/likec4/**",
-                                                  "id: solutions-architect"
+                                                  "docs/architecture/likec4/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1125,8 +1120,7 @@
                                     "paths":  [
                                                   "backend/**/Territories/**",
                                                   "backend/**/Memberships/**",
-                                                  "backend/Arah.Domain/Territories/**",
-                                                  "id: territorio-membership"
+                                                  "backend/Arah.Domain/Territories/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1150,8 +1144,7 @@
                                                   "backend/Arah.Application/Services/Marketplace/**",
                                                   "backend/**/Cart/**",
                                                   "backend/**/Stores/**",
-                                                  "backend/**/Items/**",
-                                                  "id: mercado-economia"
+                                                  "backend/**/Items/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1172,8 +1165,7 @@
                                     "paths":  [
                                                   "backend/**/Moderation/**",
                                                   "backend/**/Voting/**",
-                                                  "backend/**/Votings/**",
-                                                  "id: governanca-transparencia"
+                                                  "backend/**/Votings/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1199,8 +1191,7 @@
                                                   "backend/Arah.Domain/Media/**",
                                                   "backend/Arah.Application/Services/Media/**",
                                                   "frontend/arah.app/lib/features/feed/**",
-                                                  "frontend/arah.app/lib/features/events/**",
-                                                  "id: feed-conteudo"
+                                                  "frontend/arah.app/lib/features/events/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1225,8 +1216,7 @@
                                                   "backend/**/Assets/**",
                                                   "backend/Arah.Domain/Geo/**",
                                                   "frontend/arah.app/lib/features/map/**",
-                                                  "frontend/arah.app/lib/features/explore/**",
-                                                  "id: mapa-lugares"
+                                                  "frontend/arah.app/lib/features/explore/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1256,8 +1246,7 @@
                                                   "backend/Arah.Domain/Social/**",
                                                   "frontend/arah.app/lib/features/chat/**",
                                                   "frontend/arah.app/lib/features/connections/**",
-                                                  "frontend/arah.app/lib/features/notifications/**",
-                                                  "id: comunidade-conexoes"
+                                                  "frontend/arah.app/lib/features/notifications/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1282,9 +1271,7 @@
                                                   "backend/**/Policies/**",
                                                   "backend/Arah.Api/Controllers/Users/**",
                                                   "frontend/arah.app/lib/features/auth/**",
-                                                  "frontend/arah.app/lib/features/profile/**",
-                                                  "id: identidade-privacidade",
-                                                  "id: security"
+                                                  "frontend/arah.app/lib/features/profile/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1321,9 +1308,7 @@
                                                   "backend/Arah.Domain/Financial/**",
                                                   "backend/**/Financial/**",
                                                   "backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs",
-                                                  "backend/Arah.Application/Services/Marketplace/CommercialStoreGateService.cs",
-                                                  "id: monetizacao-split",
-                                                  "id: carteira-arata"
+                                                  "backend/Arah.Application/Services/Marketplace/CommercialStoreGateService.cs"
                                               ],
                                     "agents":  [
                                                    {
@@ -1357,10 +1342,7 @@
                                                   ".github/workflows/cd.yml",
                                                   "docker-compose.yml",
                                                   "Dockerfile",
-                                                  "docs/ops/CI_CD_PIPELINE.md",
-                                                  "id: backend",
-                                                  "id: release",
-                                                  "id: control-plane"
+                                                  "docs/ops/CI_CD_PIPELINE.md"
                                               ],
                                     "agents":  [
                                                    {
@@ -1403,9 +1385,7 @@
                                                   "docs/backlog-api/FASE58.md",
                                                   "docs/backlog-api/FASE59.md",
                                                   "backend/Arah.Api/Controllers/Platform/FederationController.cs",
-                                                  "backend/Arah.Core/Application/Federation*",
-                                                  "id: control-plane",
-                                                  "id: solutions-architect"
+                                                  "backend/Arah.Core/Application/Federation*"
                                               ],
                                     "agents":  [
                                                    {
@@ -1435,8 +1415,7 @@
                                     "when":  null,
                                     "paths":  [
                                                   "docs/specs/**",
-                                                  "scripts/harness/**",
-                                                  "id: spec-steward"
+                                                  "scripts/harness/**"
                                               ],
                                     "agents":  [
                                                    {
@@ -1467,8 +1446,7 @@
                                                   "docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md",
                                                   "docs/CURSOR_DESIGN_RULES.md",
                                                   "docs/design/**",
-                                                  "docs/**/design*",
-                                                  "id: design-ux"
+                                                  "docs/**/design*"
                                               ],
                                     "agents":  [
                                                    {
@@ -1487,9 +1465,7 @@
                                     "id":  "pr-always",
                                     "when":  "pull_request",
                                     "paths":  [
-                                                  "**",
-                                                  "id: qa",
-                                                  "id: pr-steward"
+                                                  "**"
                                               ],
                                     "agents":  [
                                                    {
@@ -2012,120 +1988,6 @@
                                     "pattern":  "frontend/wiki/**",
                                     "rules":  [
                                                   "design-ux"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: backend",
-                                    "rules":  [
-                                                  "core-control-plane",
-                                                  "infra-deploy"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: carteira-arata",
-                                    "rules":  [
-                                                  "monetization"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: comunidade-conexoes",
-                                    "rules":  [
-                                                  "community-connections"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: control-plane",
-                                    "rules":  [
-                                                  "core-control-plane",
-                                                  "infra-deploy",
-                                                  "federation-handoff"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: design-ux",
-                                    "rules":  [
-                                                  "design-ux"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: feed-conteudo",
-                                    "rules":  [
-                                                  "feed-content"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: governanca-transparencia",
-                                    "rules":  [
-                                                  "governance"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: identidade-privacidade",
-                                    "rules":  [
-                                                  "identity-privacy"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: mapa-lugares",
-                                    "rules":  [
-                                                  "map-places"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: mercado-economia",
-                                    "rules":  [
-                                                  "marketplace"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: monetizacao-split",
-                                    "rules":  [
-                                                  "monetization"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: pr-steward",
-                                    "rules":  [
-                                                  "pr-always"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: qa",
-                                    "rules":  [
-                                                  "pr-always"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: release",
-                                    "rules":  [
-                                                  "infra-deploy"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: security",
-                                    "rules":  [
-                                                  "identity-privacy"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: solutions-architect",
-                                    "rules":  [
-                                                  "core-control-plane",
-                                                  "architecture-docs",
-                                                  "federation-handoff"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: spec-steward",
-                                    "rules":  [
-                                                  "core-control-plane",
-                                                  "specs-sdd"
-                                              ]
-                                },
-                                {
-                                    "pattern":  "id: territorio-membership",
-                                    "rules":  [
-                                                  "territory-membership"
                                               ]
                                 },
                                 {
@@ -3622,126 +3484,6 @@
                   {
                       "from":  "path:frontend/wiki/**",
                       "to":  "rule:design-ux",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: backend",
-                      "to":  "rule:core-control-plane",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: backend",
-                      "to":  "rule:infra-deploy",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: carteira-arata",
-                      "to":  "rule:monetization",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: comunidade-conexoes",
-                      "to":  "rule:community-connections",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: control-plane",
-                      "to":  "rule:core-control-plane",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: control-plane",
-                      "to":  "rule:federation-handoff",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: control-plane",
-                      "to":  "rule:infra-deploy",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: design-ux",
-                      "to":  "rule:design-ux",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: feed-conteudo",
-                      "to":  "rule:feed-content",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: governanca-transparencia",
-                      "to":  "rule:governance",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: identidade-privacidade",
-                      "to":  "rule:identity-privacy",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: mapa-lugares",
-                      "to":  "rule:map-places",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: mercado-economia",
-                      "to":  "rule:marketplace",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: monetizacao-split",
-                      "to":  "rule:monetization",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: pr-steward",
-                      "to":  "rule:pr-always",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: qa",
-                      "to":  "rule:pr-always",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: release",
-                      "to":  "rule:infra-deploy",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: security",
-                      "to":  "rule:identity-privacy",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: solutions-architect",
-                      "to":  "rule:architecture-docs",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: solutions-architect",
-                      "to":  "rule:core-control-plane",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: solutions-architect",
-                      "to":  "rule:federation-handoff",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: spec-steward",
-                      "to":  "rule:core-control-plane",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: spec-steward",
-                      "to":  "rule:specs-sdd",
-                      "type":  "matches_rule"
-                  },
-                  {
-                      "from":  "path:id: territorio-membership",
-                      "to":  "rule:territory-membership",
                       "type":  "matches_rule"
                   },
                   {

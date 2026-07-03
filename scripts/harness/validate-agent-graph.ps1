@@ -48,7 +48,9 @@ function Parse-ChoreographyRules {
         if ($block -notmatch '^([a-z][\w-]*)\r?\n') { continue }
         $ruleId = $Matches[1].Trim()
         $paths = @()
-        if ($block -match '(?ms)^    paths:\s*\n((?:      - .+\r?\n?)+)') {
+        # (?m) sem Singleline: '.' não cruza linha, então a lista de paths para
+        # na próxima chave irmã (agents:) e não engole entradas de agente.
+        if ($block -match '(?m)^    paths:\s*\r?\n((?:      - [^\r\n]+\r?\n?)+)') {
             $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
                 $_.Groups[1].Value.Trim().Trim('"').Trim("'")
             }
@@ -134,21 +136,32 @@ foreach ($cr in $CriticalRules) {
 }
 
 # --- Consistência do artefato gerado -----------------------------------------
+# Compara o conteúdo INTEIRO do grafo (nós + arestas), não só contagens: regenera
+# em memória e confronta com o commitado, ignorando o campo volátil generated_at.
+function Get-GraphFingerprint {
+    param($Graph)
+    if ($null -eq $Graph) { return $null }
+    $Graph.generated_at = ''
+    return ($Graph | ConvertTo-Json -Depth 20 -Compress)
+}
+
+$exportScript = Join-Path $Root 'scripts/agents/export-agent-graph.ps1'
 if (-not (Test-Path $GraphJson)) {
     $warnings += "artefato ausente: docs/_meta/agent-graph.generated.json (rode scripts/agents/export-agent-graph.ps1)"
+} elseif (-not (Test-Path $exportScript)) {
+    $warnings += "export script ausente: scripts/agents/export-agent-graph.ps1 — não foi possível checar defasagem"
 } else {
     try {
-        $graph = Get-Content $GraphJson -Raw | ConvertFrom-Json
-        $jsonRuleCount = $graph.stats.rules
-        $jsonSkillCount = $graph.stats.skills
-        if ($jsonRuleCount -ne $rules.Count) {
-            $warnings += "artefato defasado: rules no JSON ($jsonRuleCount) != coreografia ($($rules.Count)) — reexporte o grafo"
-        }
-        if ($jsonSkillCount -ne $skillIds.Count) {
-            $warnings += "artefato defasado: skills no JSON ($jsonSkillCount) != .skills/ ($($skillIds.Count)) — reexporte o grafo"
+        $committed = Get-Content $GraphJson -Raw | ConvertFrom-Json
+        $freshRaw = & $exportScript -Json
+        $fresh = ($freshRaw -join "`n") | ConvertFrom-Json
+        $committedFp = Get-GraphFingerprint -Graph $committed
+        $freshFp = Get-GraphFingerprint -Graph $fresh
+        if ($committedFp -ne $freshFp) {
+            $warnings += "artefato defasado: docs/_meta/agent-graph.generated.json difere do grafo regenerado (nós/arestas mudaram) — rode scripts/agents/export-agent-graph.ps1"
         }
     } catch {
-        $errors += "artefato inválido: falha ao ler docs/_meta/agent-graph.generated.json — $($_.Exception.Message)"
+        $errors += "artefato inválido: falha ao ler/regenerar o grafo — $($_.Exception.Message)"
     }
 }
 

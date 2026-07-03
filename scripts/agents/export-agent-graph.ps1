@@ -42,7 +42,9 @@ function Parse-ChoreographyRules {
         if ($block -notmatch '^(\S+)') { continue }
         $ruleId = $Matches[1].Trim()
         $paths = @()
-        if ($block -match '(?ms)^    paths:\s*\n((?:      - .+\r?\n?)+)') {
+        # (?m) sem Singleline: '.' não cruza linha, então a lista de paths para
+        # na próxima chave irmã (agents:) e não engole entradas de agente.
+        if ($block -match '(?m)^    paths:\s*\r?\n((?:      - [^\r\n]+\r?\n?)+)') {
             $paths = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object {
                 $_.Groups[1].Value.Trim().Trim('"').Trim("'")
             }

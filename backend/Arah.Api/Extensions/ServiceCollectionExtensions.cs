@@ -54,6 +54,21 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
+        services.AddPlatformServices();
+        services.AddFeedServices();
+        services.AddConnectionServices();
+        services.AddCoreApplicationServices();
+        services.AddSubscriptionServices();
+        services.AddSupportingServices();
+        services.AddJourneyServices();
+        services.AddPolicyServices();
+        services.AddAccessAndSecurityServices();
+
+        return services;
+    }
+
+    private static IServiceCollection AddPlatformServices(this IServiceCollection services)
+    {
         // Platform services (cross-cutting)
         services.AddScoped<MembershipAccessRules>();
         // AccessEvaluator será registrado depois para permitir injeção dos serviços de políticas
@@ -72,6 +87,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<TerritoryFeatureFlagGuard>();
         services.AddScoped<IGeoConvergenceBypassService, GeoConvergenceBypassService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddFeedServices(this IServiceCollection services)
+    {
         // Feed services (refactored)
         services.AddScoped<PostCreationService>();
         services.AddScoped<PostEditService>();
@@ -79,10 +99,20 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PostFilterService>();
         services.AddScoped<FeedService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddConnectionServices(this IServiceCollection services)
+    {
         // Connections (Círculo de Amigos)
         services.AddScoped<ConnectionService>();
         services.AddScoped<ConnectionPrivacyService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddCoreApplicationServices(this IServiceCollection services)
+    {
         // Other services
         services.AddScoped<TerritoryService>();
         services.AddScoped<IMunicipalityTerritoryProvisioningService, MunicipalityTerritoryProvisioningService>();
@@ -114,6 +144,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UserProfileService>();
         services.AddScoped<UserProfileStatsService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddSubscriptionServices(this IServiceCollection services)
+    {
         // Subscription services
         services.AddScoped<SubscriptionService>();
         services.AddScoped<CouponService>();
@@ -133,6 +168,12 @@ public static class ServiceCollectionExtensions
 
         // Manter compatibilidade com IStripeSubscriptionService
         services.AddScoped<Arah.Application.Interfaces.IStripeSubscriptionService, Arah.Infrastructure.Payments.StripeSubscriptionService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddSupportingServices(this IServiceCollection services)
+    {
         services.AddScoped<UserInterestService>();
         services.AddScoped<VotingService>();
         services.AddScoped<TerritoryModerationService>();
@@ -172,6 +213,11 @@ public static class ServiceCollectionExtensions
         });
         services.AddScoped<Arah.Application.Services.EmailQueueService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddJourneyServices(this IServiceCollection services)
+    {
         // BFF Backends (usados pela API que ainda expõe /api/v2/journeys; o BFF é app separada que faz proxy para estes endpoints)
         services.AddScoped<IFeedJourneyBackend, InProcessFeedJourneyBackend>();
         services.AddScoped<IOnboardingJourneyBackend, InProcessOnboardingJourneyBackend>();
@@ -181,6 +227,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IOnboardingJourneyService, OnboardingJourneyService>();
         services.AddScoped<IEventJourneyService, EventJourneyService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddPolicyServices(this IServiceCollection services)
+    {
         // Policies services
         services.AddScoped<TermsOfServiceService>();
         services.AddScoped<TermsAcceptanceService>();
@@ -188,6 +239,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PrivacyPolicyAcceptanceService>();
         services.AddScoped<PolicyRequirementService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddAccessAndSecurityServices(this IServiceCollection services)
+    {
         // AccessEvaluator (registrado depois para permitir injeção dos serviços de políticas)
         services.AddScoped<AccessEvaluator>(sp =>
         {
@@ -246,96 +302,11 @@ public static class ServiceCollectionExtensions
 
         if (isPostgres)
         {
-            // Registrar infraestrutura compartilhada primeiro (SharedDbContext e repositórios compartilhados)
-            services.AddSharedInfrastructure(configuration);
-            services.AddSharedCrossCuttingServices(configuration);
-
-            // Registrar módulos (que registram suas próprias infraestruturas)
-            var modules = new IModule[]
-            {
-                new FeedModule(),
-                new MarketplaceModule(),
-                new EventsModule(),
-                new MapModule(),
-                new ChatModule(),
-                new SubscriptionsModule(),
-                new ModerationModule(),
-                new NotificationsModule(),
-                new AlertsModule(),
-                new AssetsModule(),
-                new AdminModule(),
-                new ConnectionsModule()
-            };
-
-            // Criar logger temporário para ModuleRegistry
-            using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Information));
-            var moduleRegistryLogger = loggerFactory.CreateLogger<ModuleRegistry>();
-            var moduleRegistry = new ModuleRegistry(modules, moduleRegistryLogger);
-            moduleRegistry.Apply(services, configuration);
-            services.AddSingleton<IModuleRegistry>(moduleRegistry);
-
-            // Registrar repositórios compartilhados adicionais (que não estão em módulos nem em Shared)
-            // Nota: A maioria dos repositórios ainda está em Arah.Infrastructure.Postgres
-            // e será migrada gradualmente para os módulos apropriados
-            services.AddPostgresRepositories(configuration);
-
-            // Connection Pool Metrics Service (usa IServiceScopeFactory para resolver DbContext por chamada; evita Singleton+Scoped)
-            services.AddSingleton<ConnectionPoolMetricsService>(sp =>
-            {
-                var scopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                var logger = sp.GetRequiredService<ILogger<ConnectionPoolMetricsService>>();
-                return new ConnectionPoolMetricsService(scopeFactory, logger);
-            });
-
-            // Workers e serviços de background
-            services.AddHostedService<OutboxDispatcherWorker>();
-            services.AddHostedService<Arah.Infrastructure.Background.PayoutProcessingWorker>();
-            services.AddHostedService<Arah.Infrastructure.Background.SubscriptionRenewalWorker>();
-            services.AddHostedService<Arah.Infrastructure.Email.EmailQueueWorker>();
-            services.AddHostedService<Arah.Infrastructure.Email.EventReminderWorker>();
-
-            // Manter ArahDbContext temporariamente para compatibilidade (será removido na Fase 6)
-            services.AddDbContext<ArahDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("Postgres"), npgsqlOptions =>
-                {
-                    npgsqlOptions.EnableRetryOnFailure(
-                        maxRetryCount: 3,
-                        maxRetryDelay: TimeSpan.FromSeconds(5),
-                        errorCodesToAdd: null);
-                    npgsqlOptions.CommandTimeout(30);
-                }));
-
-            // Participantes do UoW composto: contexto principal e shared (módulos registram os deles no próprio Apply)
-            services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<ArahDbContext>()));
-            services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<SharedDbContext>()));
-
-            services.AddScoped<DbContextTransactionScopeAdapter>();
-            // IUnitOfWork = CompositeUnitOfWork: CommitAsync persiste todos os participantes; transação explícita delega ao adapter do contexto principal (ADR-017).
-            services.AddScoped<IUnitOfWork>(sp =>
-            {
-                var participants = sp.GetServices<IUnitOfWorkParticipant>().ToList();
-                var transactionScope = sp.GetRequiredService<DbContextTransactionScopeAdapter>();
-                return new CompositeUnitOfWork(participants, transactionScope);
-            });
-
-            if (configuration.GetValue<bool>("Pilot:BootstrapAdminEnabled"))
-            {
-                services.AddHostedService<Arah.Infrastructure.Hosting.PilotAdminBootstrapHostedService>();
-            }
-
-            services.AddScoped<IFeeSplitRuleRepository, PostgresFeeSplitRuleRepository>();
-            services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
+            services.AddPostgresInfrastructure(configuration);
         }
         else
         {
-            // Shared InMemory (core: Territory, User, Membership, JoinRequest, UserPreferences, etc.)
-            services.AddSharedInMemoryRepositories();
-            services.AddSingleton<InMemoryDataStore>();
-            services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
-            services.AddInMemoryRepositories();
-            services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
-            services.AddSingleton<IEmailQueueRepository>(sp =>
-                new InMemoryEmailQueueRepository(sp.GetRequiredService<InMemoryDataStore>()));
+            services.AddInMemoryInfrastructure();
         }
 
         // Fallback: garantir repositórios de mídia quando Postgres (evita falha de DI se o bloco inicial não tiver sido executado)
@@ -347,6 +318,114 @@ public static class ServiceCollectionExtensions
             services.TryAddScoped<IMediaStorageConfigRepository, PostgresMediaStorageConfigRepository>();
         }
 
+        services.AddCrossCuttingInfrastructure(configuration);
+        services.AddStorageInfrastructure(configuration);
+        services.AddDistributedCacheInfrastructure(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddPostgresInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Registrar infraestrutura compartilhada primeiro (SharedDbContext e repositórios compartilhados)
+        services.AddSharedInfrastructure(configuration);
+        services.AddSharedCrossCuttingServices(configuration);
+
+        // Registrar módulos (que registram suas próprias infraestruturas)
+        var modules = new IModule[]
+        {
+            new FeedModule(),
+            new MarketplaceModule(),
+            new EventsModule(),
+            new MapModule(),
+            new ChatModule(),
+            new SubscriptionsModule(),
+            new ModerationModule(),
+            new NotificationsModule(),
+            new AlertsModule(),
+            new AssetsModule(),
+            new AdminModule(),
+            new ConnectionsModule()
+        };
+
+        // Criar logger temporário para ModuleRegistry
+        using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Information));
+        var moduleRegistryLogger = loggerFactory.CreateLogger<ModuleRegistry>();
+        var moduleRegistry = new ModuleRegistry(modules, moduleRegistryLogger);
+        moduleRegistry.Apply(services, configuration);
+        services.AddSingleton<IModuleRegistry>(moduleRegistry);
+
+        // Registrar repositórios compartilhados adicionais (que não estão em módulos nem em Shared)
+        // Nota: A maioria dos repositórios ainda está em Arah.Infrastructure.Postgres
+        // e será migrada gradualmente para os módulos apropriados
+        services.AddPostgresRepositories(configuration);
+
+        // Connection Pool Metrics Service (usa IServiceScopeFactory para resolver DbContext por chamada; evita Singleton+Scoped)
+        services.AddSingleton<ConnectionPoolMetricsService>(sp =>
+        {
+            var scopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+            var logger = sp.GetRequiredService<ILogger<ConnectionPoolMetricsService>>();
+            return new ConnectionPoolMetricsService(scopeFactory, logger);
+        });
+
+        // Workers e serviços de background
+        services.AddHostedService<OutboxDispatcherWorker>();
+        services.AddHostedService<Arah.Infrastructure.Background.PayoutProcessingWorker>();
+        services.AddHostedService<Arah.Infrastructure.Background.SubscriptionRenewalWorker>();
+        services.AddHostedService<Arah.Infrastructure.Email.EmailQueueWorker>();
+        services.AddHostedService<Arah.Infrastructure.Email.EventReminderWorker>();
+
+        // Manter ArahDbContext temporariamente para compatibilidade (será removido na Fase 6)
+        services.AddDbContext<ArahDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("Postgres"), npgsqlOptions =>
+            {
+                npgsqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 3,
+                    maxRetryDelay: TimeSpan.FromSeconds(5),
+                    errorCodesToAdd: null);
+                npgsqlOptions.CommandTimeout(30);
+            }));
+
+        // Participantes do UoW composto: contexto principal e shared (módulos registram os deles no próprio Apply)
+        services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<ArahDbContext>()));
+        services.AddScoped<IUnitOfWorkParticipant>(sp => new DbContextUnitOfWorkParticipant(sp.GetRequiredService<SharedDbContext>()));
+
+        services.AddScoped<DbContextTransactionScopeAdapter>();
+        // IUnitOfWork = CompositeUnitOfWork: CommitAsync persiste todos os participantes; transação explícita delega ao adapter do contexto principal (ADR-017).
+        services.AddScoped<IUnitOfWork>(sp =>
+        {
+            var participants = sp.GetServices<IUnitOfWorkParticipant>().ToList();
+            var transactionScope = sp.GetRequiredService<DbContextTransactionScopeAdapter>();
+            return new CompositeUnitOfWork(participants, transactionScope);
+        });
+
+        if (configuration.GetValue<bool>("Pilot:BootstrapAdminEnabled"))
+        {
+            services.AddHostedService<Arah.Infrastructure.Hosting.PilotAdminBootstrapHostedService>();
+        }
+
+        services.AddScoped<IFeeSplitRuleRepository, PostgresFeeSplitRuleRepository>();
+        services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddInMemoryInfrastructure(this IServiceCollection services)
+    {
+        // Shared InMemory (core: Territory, User, Membership, JoinRequest, UserPreferences, etc.)
+        services.AddSharedInMemoryRepositories();
+        services.AddSingleton<InMemoryDataStore>();
+        services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
+        services.AddInMemoryRepositories();
+        services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
+        services.AddSingleton<IEmailQueueRepository>(sp =>
+            new InMemoryEmailQueueRepository(sp.GetRequiredService<InMemoryDataStore>()));
+
+        return services;
+    }
+
+    private static IServiceCollection AddCrossCuttingInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
         // Email Configuration (aplicável a ambos InMemory e Postgres)
         services.Configure<EmailConfiguration>(configuration.GetSection("Email"));
 
@@ -368,6 +447,11 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<Arah.Application.Interfaces.IRefreshTokenStore, Arah.Infrastructure.InMemory.InMemoryRefreshTokenStore>();
         services.AddSingleton<Arah.Infrastructure.Security.ISecretsService, Arah.Infrastructure.Security.EnvironmentSecretsService>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddStorageInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
         var storageProvider = configuration.GetValue<string>("Storage:Provider") ?? "Local";
         if (string.Equals(storageProvider, "S3", StringComparison.OrdinalIgnoreCase))
         {
@@ -410,6 +494,11 @@ public static class ServiceCollectionExtensions
             services.AddSingleton<IAsyncMediaProcessor, NoOpAsyncMediaProcessor>();
         }
 
+        return services;
+    }
+
+    private static IServiceCollection AddDistributedCacheInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
         // Distributed Cache para URLs de mídia (se Redis estiver configurado)
         var redisConnection = configuration.GetConnectionString("Redis");
         if (!string.IsNullOrWhiteSpace(redisConnection))

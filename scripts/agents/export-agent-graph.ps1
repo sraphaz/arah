@@ -34,40 +34,11 @@ if (-not $OutFile) { $OutFile = Join-Path $Root 'docs/_meta/agent-graph.generate
 if (-not $MermaidOut) { $MermaidOut = Join-Path $Root 'docs/_meta/agent-graph.generated.mmd' }
 
 . (Join-Path $PSScriptRoot 'choreography-parser.ps1')
+. (Join-Path $PSScriptRoot 'yaml-lite.ps1')
 
 function Get-RelPath {
     param([string]$FullPath)
     return $FullPath.Replace($Root + [IO.Path]::DirectorySeparatorChar, '').Replace('\', '/')
-}
-
-# --- Helpers de YAML simples (regex) ----------------------------------------
-function Get-ScalarField {
-    param([string]$Raw, [string]$Field)
-    if ($Raw -match "(?m)^$Field\s*:\s*(.+)$") { return $Matches[1].Trim().Trim('"').Trim("'") }
-    return $null
-}
-
-function Get-ListUnderKey {
-    param([string]$Raw, [string]$Key, [int]$Indent)
-    $prefix = ' ' * $Indent
-    $itemPrefix = ' ' * ($Indent + 2)
-    $pattern = '(?m)^{0}{1}:[ \t]*\r?\n((?:{2}-[ \t]+[^\r\n]+\r?\n?)+)' -f $prefix, [regex]::Escape($Key), $itemPrefix
-    if ($Raw -match $pattern) {
-        return @([regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') |
-            ForEach-Object { $_.Groups[1].Value.Trim().Trim('"').Trim("'") })
-    }
-    return @()
-}
-
-# Extrai um bloco top-level YAML até a próxima chave de nível 0. Usa `.*?` lazy
-# com lookahead ancorado (padrão seguro de run-harness.ps1) — sem quantificador
-# aninhado, evitando backtracking catastrófico.
-function Get-TopLevelBlock {
-    param([string]$Raw, [string]$Key)
-    if ($Raw -match "(?ms)^$([regex]::Escape($Key))\s*:\s*\r?\n(.*?)(?=^[A-Za-z_][\w-]*\s*:|\z)") {
-        return $Matches[1]
-    }
-    return ''
 }
 
 function Get-ScopePaths {

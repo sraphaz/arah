@@ -2,7 +2,7 @@
     "schema":  ".agents/agent-graph.schema.yaml",
     "version":  1,
     "generator":  "scripts/agents/export-agent-graph.ps1",
-    "generated_at":  "2026-07-03T03:28:55Z",
+    "generated_at":  "2026-07-03T03:39:27Z",
     "sources":  [
                     ".agents/choreography.yaml",
                     ".agents/**/*.agent.yaml",

@@ -4,6 +4,8 @@ description: |
   Mede a efetividade da operação por agentes: PRs por origem, tempo abertura →
   ready-for-merge, apontamentos de bot por PR e pareceres de domínio publicados.
   Sem medição não há calibração de autonomia.
+# Ferramenta de operador (CLI), não acionada por coreografia de paths.
+activation: [cli]
 inputs:
   days: número de dias da janela (default 30)
 run:

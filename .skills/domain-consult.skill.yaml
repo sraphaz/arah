@@ -1,6 +1,8 @@
 id: domain-consult
 name: Domain Consult
 description: Publica parecer consultivo de agentes de domínio (negócio) no PR/issue.
+# Acionada pelo workflow agents.yml (post-domain-consult) e via CLI invoke-skill.
+activation: [workflow, cli]
 steps:
   - script: scripts/agents/post-domain-consult.ps1
 references:

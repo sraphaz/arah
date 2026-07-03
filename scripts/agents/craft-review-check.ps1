@@ -31,9 +31,11 @@ function Get-ChangedFiles {
     } finally { Pop-Location }
 }
 
+# Inclui o tooling do próprio Ará (PowerShell/Node), não só app code — senão a
+# própria skill de craft ficaria cega para o que a implementa (dogfooding).
 function Test-IsCodeFile {
     param([string]$Path)
-    return $Path -match '\.(cs|dart|ts|tsx|js|jsx)$'
+    return $Path -match '\.(cs|dart|ts|tsx|js|jsx|mjs|cjs|ps1|psm1|py)$'
 }
 
 function Test-IsTestFile {
@@ -59,6 +61,10 @@ function Write-Phase {
     Write-Host "  $Title — $Intent"
     foreach ($i in $Items) { Write-Host "    - $i" }
 }
+
+# Dot-sourced (ex.: testes) apenas define funções; execução real fica no bloco
+# abaixo. InvocationName '.' indica dot-source.
+if ($MyInvocation.InvocationName -eq '.') { return }
 
 $files = Get-ChangedFiles -Provided $ChangedFiles -BaseRef $BaseRef -RepoRoot $Root
 $warnings = @()

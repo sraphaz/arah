@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Corrigido — Craftsmanship no tooling do Agent Graph (aplicando as próprias skills de review) (2026-07-03)
+
+- **DRY**: helpers de leitura YAML duplicados entre `export-agent-graph.ps1` e `validate-agent-graph.ps1` extraídos para `scripts/agents/yaml-lite.ps1` (fonte única, ambos dot-source)
+- **Falsos positivos de órfã**: `agent-activate`, `agent-metrics`, `domain-consult` e `parallel-attempt` declaram `activation:` (orchestrator/workflow/cli); o validador deixa de marcá-las como órfãs (acionadas fora da coreografia de paths)
+- **Dogfooding**: `craft-review-check.ps1` passa a reconhecer `.ps1/.psm1/.mjs/.cjs/.py` como código — antes ignorava a própria linguagem do tooling do Ará
+- **Lacuna de testes fechada**: `scripts/agents/tests/agent-graph.tests.ps1` (PS puro, sem Pester) cobre `yaml-lite`, `choreography-parser` e a detecção do `craft-review`; `craft-review-check.ps1` agora é dot-sourceável (execução principal guardada)
+- Agent graph regenerado e validado (`-Strict`: 0 erro, 0 aviso)
+
 ### Adicionado — Skill de craftsmanship (Uncle Bob) acionada pelos agentes no ciclo projetar→desenvolver→testar (2026-07-03)
 
 - **Nova skill `craft-review`** (`.skills/craft-review.skill.yaml`): disciplina Clean Code/Clean Architecture/SOLID/TDD em três fases (projetar, desenvolver, testar), complementando `architecture-review` (fronteiras/ADR) e `code-review` (checklist de PR)

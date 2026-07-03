@@ -170,6 +170,7 @@ O artefato gerado fica em
 - compara o **conteúdo inteiro** regenerado (não só contagens), ignorando `generated_at`;
 - falha em **arestas órfãs** (endpoint sem nó — integridade referencial);
 - avisa (warning) sobre **skills/agentes órfãos** (declarados mas nunca acionados);
+  skills com um canal próprio (`activation:` — `orchestrator`/`workflow`/`cli`) não são órfãs;
 - roda como **gate de CI** em [`agents-validate.yml`](../../.github/workflows/agents-validate.yml)
   e dentro do harness ([`spec-harness.yml`](../../.github/workflows/spec-harness.yml)).
 

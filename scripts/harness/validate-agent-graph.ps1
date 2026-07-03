@@ -38,21 +38,10 @@ $GraphJson = Join-Path $Root 'docs/_meta/agent-graph.generated.json'
 $CriticalRules = @('identity-privacy', 'monetization', 'infra-deploy', 'core-control-plane', 'federation-handoff')
 
 . (Join-Path $Root 'scripts/agents/choreography-parser.ps1')
+. (Join-Path $Root 'scripts/agents/yaml-lite.ps1')
 
 $errors = @()
 $warnings = @()
-
-function Get-YamlListItems {
-    param([string]$Raw, [string]$Key, [int]$Indent)
-    $prefix = ' ' * $Indent
-    $itemPrefix = ' ' * ($Indent + 2)
-    $pattern = '(?m)^{0}{1}:[ \t]*\r?\n((?:{2}-[ \t]+[^\r\n]+\r?\n?)+)' -f $prefix, [regex]::Escape($Key), $itemPrefix
-    if ($Raw -match $pattern) {
-        return @([regex]::Matches($Matches[1], '^\s+-\s+(\S+)', 'Multiline') |
-            ForEach-Object { $_.Groups[1].Value.Trim() })
-    }
-    return @()
-}
 
 function Test-AgentManifestExists {
     param([string]$AgentId)
@@ -74,6 +63,16 @@ $rules = Parse-ChoreographyRules -Raw (Get-Content $ChoreoPath -Raw)
 
 $skillIds = @(Get-ChildItem -Path $SkillsDir -Filter '*.skill.yaml' |
     ForEach-Object { $_.BaseName -replace '\.skill$', '' } | Select-Object -Unique)
+
+# Skills que declaram um canal de acionamento próprio (orchestrator/workflow/cli)
+# não passam por coreografia de paths — logo não são órfãs mesmo sem rule/manifest.
+$selfActivated = New-Object 'System.Collections.Generic.HashSet[string]'
+foreach ($f in Get-ChildItem -Path $SkillsDir -Filter '*.skill.yaml') {
+    $raw = Get-Content $f.FullName -Raw
+    if ($raw -match '(?m)^activation\s*:') {
+        [void]$selfActivated.Add(($f.BaseName -replace '\.skill$', ''))
+    }
+}
 
 # --- Checagens por rule ------------------------------------------------------
 foreach ($rule in $rules) {
@@ -192,11 +191,11 @@ foreach ($rule in $rules) {
 }
 foreach ($f in $agentFiles) {
     $raw = Get-Content $f.FullName -Raw
-    foreach ($sk in (Get-YamlListItems -Raw $raw -Key 'skills' -Indent 0)) { [void]$referencedSkills.Add($sk) }
+    foreach ($sk in (Get-ListUnderKey -Raw $raw -Key 'skills' -Indent 0)) { [void]$referencedSkills.Add($sk) }
 }
 foreach ($sid in ($skillIds | Sort-Object)) {
-    if (-not $referencedSkills.Contains($sid)) {
-        $warnings += "skill órfã: '$sid' não é referenciada por nenhuma rule nem manifest de agente"
+    if ((-not $referencedSkills.Contains($sid)) -and (-not $selfActivated.Contains($sid))) {
+        $warnings += "skill órfã: '$sid' não é referenciada por rule/manifest nem declara 'activation'"
     }
 }
 
@@ -204,8 +203,8 @@ $referencedAgents = New-Object 'System.Collections.Generic.HashSet[string]'
 foreach ($rule in $rules) { foreach ($a in $rule.agents) { [void]$referencedAgents.Add($a.id) } }
 foreach ($f in $agentFiles) {
     $raw = Get-Content $f.FullName -Raw
-    foreach ($d in (Get-YamlListItems -Raw $raw -Key 'domain' -Indent 2)) { [void]$referencedAgents.Add($d) }
-    foreach ($s in (Get-YamlListItems -Raw $raw -Key 'specialists' -Indent 2)) { [void]$referencedAgents.Add($s) }
+    foreach ($d in (Get-ListUnderKey -Raw $raw -Key 'domain' -Indent 2)) { [void]$referencedAgents.Add($d) }
+    foreach ($s in (Get-ListUnderKey -Raw $raw -Key 'specialists' -Indent 2)) { [void]$referencedAgents.Add($s) }
 }
 # Orquestrador roteia por label/co_route: qualquer id citado ali conta como uso.
 $orchPath = Join-Path $AgentsDir 'orchestrator.agent.yaml'

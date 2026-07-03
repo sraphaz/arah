@@ -39,11 +39,17 @@ acceptance:
     status: covered
     covered_by: "FullyQualifiedName~FeedJourneyService"
 
+  - id: AC-55-8
+    then: "POST /transactions/{id}/pay inicia cobrança e confirmação transiciona checkout para Paid (DOD-05)"
+    status: covered
+    covered_by: "FullyQualifiedName~PaymentService|FullyQualifiedName~TransactionsController"
+
 harness:
   commands:
     - "dotnet build Arah.sln --configuration Release"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Subscription"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TransactionQuote"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~PaymentService"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TransactionsController"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TerritoryPayoutsController"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~FeeSplitRule"

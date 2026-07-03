@@ -1298,6 +1298,43 @@ public static class PostgresMappers
         return transaction;
     }
 
+    public static FeeSplitRuleRecord ToRecord(this FeeSplitRule rule)
+    {
+        return new FeeSplitRuleRecord
+        {
+            Id = rule.Id,
+            TerritoryId = rule.TerritoryId,
+            RevenueType = rule.RevenueType,
+            ImplementerSharePercent = rule.ImplementerSharePercent,
+            TerritoryFundSharePercent = rule.TerritoryFundSharePercent,
+            PlatformSharePercent = rule.PlatformSharePercent,
+            EffectiveFromUtc = rule.EffectiveFromUtc,
+            SupersededAtUtc = rule.SupersededAtUtc
+        };
+    }
+
+    public static FeeSplitRule ToDomain(this FeeSplitRuleRecord record)
+    {
+        var rule = new FeeSplitRule(
+            record.Id,
+            record.TerritoryId,
+            record.RevenueType,
+            record.ImplementerSharePercent,
+            record.TerritoryFundSharePercent,
+            record.PlatformSharePercent,
+            record.EffectiveFromUtc);
+
+        if (record.SupersededAtUtc.HasValue)
+        {
+            var supersededProp = typeof(FeeSplitRule).GetProperty(
+                nameof(FeeSplitRule.SupersededAtUtc),
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            supersededProp?.SetValue(rule, record.SupersededAtUtc);
+        }
+
+        return rule;
+    }
+
     public static PlatformExpenseTransactionRecord ToRecord(this PlatformExpenseTransaction transaction)
     {
         return new PlatformExpenseTransactionRecord

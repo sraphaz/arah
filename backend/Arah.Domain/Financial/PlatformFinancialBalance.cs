@@ -81,6 +81,24 @@ public sealed class PlatformFinancialBalance
         UpdatedAtUtc = DateTime.UtcNow;
     }
     
+    public void ReverseRevenue(long amountInCents)
+    {
+        if (amountInCents <= 0)
+        {
+            throw new ArgumentException("Amount must be positive", nameof(amountInCents));
+        }
+
+        if (amountInCents > TotalRevenueInCents)
+        {
+            throw new InvalidOperationException(
+                $"Cannot reverse {amountInCents}. Total revenue: {TotalRevenueInCents}");
+        }
+
+        TotalRevenueInCents -= amountInCents;
+        RecalculateNetBalance();
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
+
     private void RecalculateNetBalance()
     {
         NetBalanceInCents = TotalRevenueInCents - TotalExpensesInCents;

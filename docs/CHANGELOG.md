@@ -27,6 +27,17 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - **`choreograph-agents.ps1`**: `skill_invocations` agora é sempre registrado (plano auditável), independente de `-ExecuteAutonomy` (que passa a controlar só a execução)
 - Agent graph regenerado (25 skills, 18 rules); `AGENTS.md` e `docs/ops/AGENT_OPERATION.md` atualizados
 
+### Adicionado — FASE55 monetização: fluxo de pagamento + ledger unificado + FeeSplitRule Postgres (DOD-05/06/07) (2026-07-02)
+
+- **DOD-05 — `PaymentService`**: transição de pagamento `Created → AwaitingPayment → Paid`; após confirmar, delega o ledger a `SellerPayoutService.ProcessPaidCheckoutAsync`
+- **`IPaymentGateway`** + **`MockPaymentGateway`**: abstração de cobrança (PIX/Stripe) espelhando o padrão de `IPayoutGateway`
+- **Endpoints**: `POST /api/v1/transactions/{id}/pay`, `POST /api/v1/transactions/{id}/confirm-payment`; webhook mock `POST /api/v1/webhooks/checkout/mock-approved` (dev/testes)
+- **Domínio**: `Checkout.MarkAsAwaitingPayment()` e `Checkout.MarkAsPaid()` com guardas de transição; AC-55-8 na spec FASE55
+- **DOD-06 — estorno no ledger**: `SellerPayoutService.ReversePaidCheckoutAsync` persiste `FinancialTransaction` tipo `Refund` (append-only), cancela `SellerTransaction` pendente e reverte `SellerBalance`/`PlatformFinancialBalance`; `RefundService` delega ao ledger antes de marcar `Refunded`
+- **DOD-07 — FeeSplitRule Postgres**: `FeeSplitRuleRecord`, `PostgresFeeSplitRuleRepository`, migration `AddFeeSplitRules`; branch Postgres passa a usar persistência real
+- **Testes**: `PaymentServiceTests` (unit), `RefundLedgerIntegrationTests` (pay → confirm → refund → ledger) e casos HTTP em `TransactionsControllerTests`
+- **Hardening (revisão de bots #431)**: confirmação valida que o pagamento pertence ao checkout (`PaymentStatusResult.CheckoutId`); `InitiatePaymentAsync` faz commit da transição `AwaitingPayment` (persistência no Postgres); confirmação de checkout já pago reprocessa o ledger de forma idempotente (auto-recuperação); estorno marca `Refunded` no mesmo commit da reversão do ledger (atomicidade/idempotência) e persiste status `Completed` das transações de estorno antes do `AddAsync`; `MockPaymentGateway` singleton e thread-safe (estado sobrevive entre requisições); `IPaymentGateway` mock só fora de produção (`UnavailablePaymentGateway` em produção); `PostgresFeeSplitRuleRepository` compara `RevenueType` case-insensitive
+
 ### Corrigido — Design quality epic #427: DSG-03 devportal tokens + DSG-05 portal a11y (2026-07-02)
 
 - **DSG-03**: tokens forest/surface/dark-text em `frontend/shared/styles/design-tokens.css`; devportal deriva `--bg`, `--text`, `--accent` etc. dos tokens compartilhados; `semantic-colors.css` e `color-depth-system.css` reescritos sem hex e importados em `devportal.css`

@@ -31,6 +31,51 @@ public sealed class TransactionsControllerTests
             updatedAtUtc: DateTime.UtcNow));
     }
 
+    private static (Guid StoreId, Guid CheckoutId) SeedCheckoutWithStore(InMemoryDataStore store, CheckoutStatus status)
+    {
+        var storeId = Guid.NewGuid();
+        var checkoutId = Guid.NewGuid();
+        store.TerritoryStores.Add(new Store(
+            storeId,
+            TestIds.Territory1,
+            TestIds.ResidentUser,
+            "HTTP Payment Store",
+            null,
+            StoreStatus.Active,
+            true,
+            StoreContactVisibility.Public,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            DateTime.UtcNow,
+            DateTime.UtcNow));
+        SeedCheckout(store, checkoutId, status, storeId);
+        return (storeId, checkoutId);
+    }
+
+    private static void SeedCheckout(
+        InMemoryDataStore store,
+        Guid checkoutId,
+        CheckoutStatus status,
+        Guid storeId)
+    {
+        store.Checkouts.Add(new Checkout(
+            checkoutId,
+            territoryId: TestIds.Territory1,
+            buyerUserId: Guid.NewGuid(),
+            storeId: storeId,
+            status: status,
+            currency: "BRL",
+            itemsSubtotalAmount: 100m,
+            platformFeeAmount: 10m,
+            totalAmount: 110m,
+            createdAtUtc: DateTime.UtcNow,
+            updatedAtUtc: DateTime.UtcNow));
+    }
+
     [Fact] // AC-55-2
     public async Task Quote_WhenCheckoutFinalized_Returns200WithSplitByActiveRule()
     {
@@ -174,6 +219,93 @@ public sealed class TransactionsControllerTests
         using var client = factory.CreateClient();
 
         var response = await client.PostAsync($"api/v1/transactions/{Guid.NewGuid()}/refund", content: null);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact] // DOD-05
+    public async Task Pay_WhenCheckoutCreated_Returns200WithGatewayPaymentId()
+    {
+        using var factory = new ApiFactory();
+        var (_, checkoutId) = SeedCheckoutWithStore(factory.GetDataStore(), CheckoutStatus.Created);
+
+        using var client = factory.CreateClient();
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/transactions/{checkoutId}/pay",
+            new TransactionPayRequest("pix"));
+
+        response.EnsureSuccessStatusCode();
+        var payment = await response.Content.ReadFromJsonAsync<TransactionPayResponse>();
+
+        Assert.NotNull(payment);
+        Assert.Equal("AwaitingPayment", payment!.Status);
+        Assert.False(string.IsNullOrWhiteSpace(payment.GatewayPaymentId));
+        Assert.NotNull(payment.PixCopyPasteCode);
+    }
+
+    [Fact] // DOD-05
+    public async Task PayThenMockWebhook_ThenReceipt_ReturnsPaid()
+    {
+        using var factory = new ApiFactory();
+        var (_, checkoutId) = SeedCheckoutWithStore(factory.GetDataStore(), CheckoutStatus.Created);
+
+        using var client = factory.CreateClient();
+        var payResponse = await client.PostAsJsonAsync(
+            $"api/v1/transactions/{checkoutId}/pay",
+            new TransactionPayRequest("pix"));
+        payResponse.EnsureSuccessStatusCode();
+        var payment = await payResponse.Content.ReadFromJsonAsync<TransactionPayResponse>();
+
+        var webhookResponse = await client.PostAsJsonAsync(
+            "api/v1/webhooks/checkout/mock-approved",
+            new { checkoutId, gatewayPaymentId = payment!.GatewayPaymentId });
+        webhookResponse.EnsureSuccessStatusCode();
+
+        var receiptResponse = await client.GetAsync($"api/v1/transactions/{checkoutId}/receipt");
+        receiptResponse.EnsureSuccessStatusCode();
+        var receipt = await receiptResponse.Content.ReadFromJsonAsync<TransactionReceiptResponse>();
+
+        Assert.NotNull(receipt);
+        Assert.Equal("Paid", receipt!.Status);
+        Assert.NotNull(receipt.PaidAtUtc);
+    }
+
+    [Fact] // DOD-05
+    public async Task ConfirmPayment_WhenAlreadyPaid_Returns200WithAlreadyPaidFlag()
+    {
+        using var factory = new ApiFactory();
+        var (_, checkoutId) = SeedCheckoutWithStore(factory.GetDataStore(), CheckoutStatus.Created);
+
+        using var client = factory.CreateClient();
+        var payResponse = await client.PostAsJsonAsync(
+            $"api/v1/transactions/{checkoutId}/pay",
+            new TransactionPayRequest("pix"));
+        var payment = await payResponse.Content.ReadFromJsonAsync<TransactionPayResponse>();
+
+        await client.PostAsJsonAsync(
+            "api/v1/webhooks/checkout/mock-approved",
+            new { checkoutId, gatewayPaymentId = payment!.GatewayPaymentId });
+
+        var confirmResponse = await client.PostAsJsonAsync(
+            $"api/v1/transactions/{checkoutId}/confirm-payment",
+            new TransactionConfirmPaymentRequest(payment.GatewayPaymentId));
+        confirmResponse.EnsureSuccessStatusCode();
+        var confirm = await confirmResponse.Content.ReadFromJsonAsync<TransactionConfirmPaymentResponse>();
+
+        Assert.NotNull(confirm);
+        Assert.True(confirm!.AlreadyPaid);
+        Assert.Equal("Paid", confirm.Status);
+    }
+
+    [Fact] // DOD-05
+    public async Task Pay_WhenTransactionMissing_Returns404()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/transactions/{Guid.NewGuid()}/pay",
+            new TransactionPayRequest("pix"));
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }

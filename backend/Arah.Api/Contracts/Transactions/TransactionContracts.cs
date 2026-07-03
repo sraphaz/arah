@@ -37,6 +37,25 @@ public sealed record TransactionRefundResponse(
     Guid FeeSplitRuleId,
     DateTimeOffset RefundedAtUtc);
 
+public sealed record TransactionPayRequest(string Method = "pix");
+
+public sealed record TransactionPayResponse(
+    Guid TransactionId,
+    string Status,
+    string GatewayPaymentId,
+    string Method,
+    string? PixCopyPasteCode,
+    DateTimeOffset InitiatedAtUtc);
+
+public sealed record TransactionConfirmPaymentRequest(string GatewayPaymentId);
+
+public sealed record TransactionConfirmPaymentResponse(
+    Guid TransactionId,
+    string Status,
+    string GatewayPaymentId,
+    DateTime PaidAtUtc,
+    bool AlreadyPaid);
+
 public sealed record ConsolidatedPayoutLineResponse(string Recipient, decimal Amount);
 
 public sealed record ConsolidatedPayoutResponse(

@@ -74,6 +74,7 @@ public sealed class ArahDbContext : DbContext
     public DbSet<PlatformRevenueTransactionRecord> PlatformRevenueTransactions => Set<PlatformRevenueTransactionRecord>();
     public DbSet<PlatformExpenseTransactionRecord> PlatformExpenseTransactions => Set<PlatformExpenseTransactionRecord>();
     public DbSet<ReconciliationRecordRecord> ReconciliationRecords => Set<ReconciliationRecordRecord>();
+    public DbSet<FeeSplitRuleRecord> FeeSplitRules => Set<FeeSplitRuleRecord>();
 
     // Chat
     public DbSet<ChatConversationRecord> ChatConversations => Set<ChatConversationRecord>();
@@ -1032,6 +1033,19 @@ public sealed class ArahDbContext : DbContext
             entity.HasIndex(r => r.TerritoryId);
             entity.HasIndex(r => new { r.TerritoryId, r.Status });
             entity.HasIndex(r => r.ReconciliationDate);
+        });
+
+        modelBuilder.Entity<FeeSplitRuleRecord>(entity =>
+        {
+            entity.ToTable("fee_split_rules");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.RevenueType).HasMaxLength(64).IsRequired();
+            entity.Property(r => r.ImplementerSharePercent).HasPrecision(5, 2);
+            entity.Property(r => r.TerritoryFundSharePercent).HasPrecision(5, 2);
+            entity.Property(r => r.PlatformSharePercent).HasPrecision(5, 2);
+            entity.Property(r => r.EffectiveFromUtc).HasColumnType("timestamp with time zone");
+            entity.Property(r => r.SupersededAtUtc).HasColumnType("timestamp with time zone");
+            entity.HasIndex(r => new { r.TerritoryId, r.RevenueType });
         });
 
         // -----------------------

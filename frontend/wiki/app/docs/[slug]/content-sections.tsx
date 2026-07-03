@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import sanitizeHtml from "sanitize-html";
+import { getTextContent } from "../../../lib/markdown";
 
 interface Section {
   title: string;
@@ -9,14 +9,6 @@ interface Section {
   isLong: boolean;
   level: number;
   id?: string;
-}
-
-// Helper function para extrair texto de HTML de forma segura
-function getTextContent(html: string): string {
-  return sanitizeHtml(html, {
-    allowedTags: [],
-    allowedAttributes: {},
-  });
 }
 
 function processContentIntoSections(html: string): Section[] {

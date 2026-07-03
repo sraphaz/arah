@@ -9,6 +9,23 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Refatorado — Dependency Rule: módulos com Infrastructure separada (Onda 1) (2026-07-03)
+
+- **11 projetos `.Infrastructure` criados** (`Arah.Modules.{Feed,Marketplace,Events,Map,Chat,Subscriptions,Moderation,Notifications,Alerts,Assets,Connections}.Infrastructure`): EF Core/Npgsql e repositórios Postgres saíram dos csproj principais dos módulos
+- **`Arah.Application` não depende mais de EF Core** (transitivamente): `packages.lock.json` sem `EntityFrameworkCore`; a camada Application referencia apenas Domain + Application.Interfaces de cada módulo
+- **`Arah.Api`** referencia os 11 projetos `.Infrastructure` para composição (DI de `*Module` / DbContexts)
+- **`Arah.Application.csproj`**: referência duplicada a `Arah.Domain` removida; ItemGroups consolidados
+- Build `Arah.sln` Release verde (0 erros)
+
+### Removido / Refatorado — Limpeza Clean Architecture (Onda 0) (2026-07-03)
+
+- **Diretório órfão removido**: `backend/Arah.Tests/` (duplicava arquivos de `backend/Tests/Arah.Tests/` e não estava em nenhuma solution)
+- **Solution morta removida**: `Araponga.sln` na raiz (apontava para projetos `Araponga.*` inexistentes; a solution ativa é `Arah.sln`)
+- **Testes duplicados removidos**: `MarketplaceServiceTests.cs` e `MarketplaceSearchServiceEdgeCasesTests.cs` de `backend/Tests/Arah.Tests/Application/` — as versões canônicas vivem em `backend/Tests/Arah.Tests.Modules.Marketplace/Application/`
+- **Entidade e interface órfãs removidas** (duplicatas pré-modularização): `Arah.Domain.Marketplace.StoreRatingResponse` e `Arah.Application.Interfaces.IStoreRatingResponseRepository` — o código ativo (RatingService, repositórios InMemory/Postgres, DI) usa as versões de `Arah.Modules.Marketplace.Domain` / `Arah.Modules.Marketplace.Application.Interfaces`
+- **DRY na wiki**: páginas `app/page.tsx`, `app/docs/[slug]/page.tsx`, `app/docs/[...slug]/page.tsx` e `app/docs/[slug]/content-sections.tsx` deixam de duplicar `getDocContent`/`getYamlContent`/`processMarkdownLinks`/`getTextContent` locais e passam a reutilizar `lib/document.ts` (`processMarkdownContent`, `getYamlContent`) e `lib/markdown.ts`. `processMarkdownContent` foi estendido com verificação `stat`-antes-de-`read` (null silencioso para arquivos ausentes) e processamento opcional de blocos Mermaid (`processMermaid`); novo helper `getYamlContent` centraliza a leitura de YAML
+- Build `Arah.sln` verde; testes da wiki (jest) e `type-check` verdes
+
 ### Corrigido — Craftsmanship no tooling do Agent Graph (aplicando as próprias skills de review) (2026-07-03)
 
 - **DRY**: helpers de leitura YAML duplicados entre `export-agent-graph.ps1` e `validate-agent-graph.ps1` extraídos para `scripts/agents/yaml-lite.ps1` (fonte única, ambos dot-source)

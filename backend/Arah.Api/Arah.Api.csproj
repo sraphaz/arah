@@ -47,8 +47,8 @@
     <ProjectReference Include="..\Arah.Core\Arah.Core.csproj" />
     <ProjectReference Include="..\Arah.Application\Arah.Application.csproj" />
     <ProjectReference Include="..\Arah.Infrastructure\Arah.Infrastructure.csproj" />
-    <ProjectReference Include="..\Arah.Modules.Feed\Arah.Modules.Feed.csproj" />
     <ProjectReference Include="..\Arah.Infrastructure.Shared\Arah.Infrastructure.Shared.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Feed\Arah.Modules.Feed.csproj" />
     <ProjectReference Include="..\Arah.Modules.Marketplace\Arah.Modules.Marketplace.csproj" />
     <ProjectReference Include="..\Arah.Modules.Events\Arah.Modules.Events.csproj" />
     <ProjectReference Include="..\Arah.Modules.Map\Arah.Modules.Map.csproj" />
@@ -58,7 +58,19 @@
     <ProjectReference Include="..\Arah.Modules.Notifications\Arah.Modules.Notifications.csproj" />
     <ProjectReference Include="..\Arah.Modules.Alerts\Arah.Modules.Alerts.csproj" />
     <ProjectReference Include="..\Arah.Modules.Assets\Arah.Modules.Assets.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Connections\Arah.Modules.Connections.csproj" />
     <ProjectReference Include="..\Arah.Modules.Admin.Infrastructure\Arah.Modules.Admin.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Feed.Infrastructure\Arah.Modules.Feed.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Marketplace.Infrastructure\Arah.Modules.Marketplace.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Events.Infrastructure\Arah.Modules.Events.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Map.Infrastructure\Arah.Modules.Map.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Chat.Infrastructure\Arah.Modules.Chat.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Subscriptions.Infrastructure\Arah.Modules.Subscriptions.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Moderation.Infrastructure\Arah.Modules.Moderation.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Notifications.Infrastructure\Arah.Modules.Notifications.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Alerts.Infrastructure\Arah.Modules.Alerts.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Assets.Infrastructure\Arah.Modules.Assets.Infrastructure.csproj" />
+    <ProjectReference Include="..\Arah.Modules.Connections.Infrastructure\Arah.Modules.Connections.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

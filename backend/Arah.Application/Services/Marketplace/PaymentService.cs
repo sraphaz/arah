@@ -29,15 +29,18 @@ public sealed class PaymentService
     private readonly ICheckoutRepository _checkoutRepository;
     private readonly IPaymentGateway _paymentGateway;
     private readonly SellerPayoutService _sellerPayoutService;
+    private readonly IUnitOfWork _unitOfWork;
 
     public PaymentService(
         ICheckoutRepository checkoutRepository,
         IPaymentGateway paymentGateway,
-        SellerPayoutService sellerPayoutService)
+        SellerPayoutService sellerPayoutService,
+        IUnitOfWork unitOfWork)
     {
         _checkoutRepository = checkoutRepository;
         _paymentGateway = paymentGateway;
         _sellerPayoutService = sellerPayoutService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<PaymentInitiateResult>> InitiatePaymentAsync(
@@ -88,6 +91,8 @@ public sealed class PaymentService
         }
 
         await _checkoutRepository.UpdateAsync(checkout, cancellationToken);
+        // Persiste a transição para AwaitingPayment (necessário no Postgres, que só grava no commit).
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         var intent = gatewayResult.Value!;
         return Result<PaymentInitiateResult>.Success(new PaymentInitiateResult(
@@ -112,6 +117,14 @@ public sealed class PaymentService
 
         if (checkout.Status == CheckoutStatus.Paid)
         {
+            // Idempotente e auto-recuperável: garante que o ledger existe mesmo que um
+            // processamento anterior tenha falhado após marcar o checkout como Paid.
+            var healResult = await _sellerPayoutService.ProcessPaidCheckoutAsync(checkout.Id, cancellationToken);
+            if (healResult.IsFailure)
+            {
+                return Result<PaymentConfirmResult>.Failure(healResult.Error ?? "Failed to process paid checkout.");
+            }
+
             return Result<PaymentConfirmResult>.Success(new PaymentConfirmResult(
                 checkout.Id,
                 checkout.Status,

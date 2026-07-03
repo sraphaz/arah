@@ -60,7 +60,8 @@ public sealed class PaymentServiceTests
         _service = new PaymentService(
             _checkoutRepository,
             _paymentGateway,
-            _sellerPayoutService);
+            _sellerPayoutService,
+            unitOfWork);
     }
 
     private async Task<(Store Store, Checkout Checkout)> SeedStoreAndCheckoutAsync(CheckoutStatus status)

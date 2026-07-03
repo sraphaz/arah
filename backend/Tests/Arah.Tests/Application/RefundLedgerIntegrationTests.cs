@@ -54,7 +54,8 @@ public sealed class RefundLedgerIntegrationTests
         var paymentService = new PaymentService(
             checkoutRepository,
             paymentGateway,
-            sellerPayoutService);
+            sellerPayoutService,
+            unitOfWork);
 
         var refundService = new RefundService(
             checkoutRepository,

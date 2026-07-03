@@ -45,8 +45,14 @@ public enum PaymentIntentStatus
 }
 
 /// <summary>Resultado da consulta de status de pagamento.</summary>
+/// <param name="CheckoutId">
+/// Checkout (transação) ao qual esta intenção de pagamento pertence, quando o gateway
+/// consegue resolvê-lo. Usado para impedir que um pagamento aprovado de outra transação
+/// confirme um checkout diferente. <c>null</c> quando o gateway não expõe o vínculo.
+/// </param>
 public record PaymentStatusResult(
     string GatewayPaymentId,
     PaymentIntentStatus Status,
     string? FailureReason,
-    DateTime? ApprovedAtUtc);
+    DateTime? ApprovedAtUtc,
+    Guid? CheckoutId = null);

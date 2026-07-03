@@ -354,11 +354,13 @@ public sealed class SellerPayoutService
             await _financialTransactionRepository.UpdateAsync(originalFeeTx, cancellationToken);
         }
 
-        await _financialTransactionRepository.AddAsync(sellerRefund, cancellationToken);
-        await _financialTransactionRepository.AddAsync(feeRefund, cancellationToken);
-
+        // Define o status final antes de persistir: repositórios que mapeiam o agregado
+        // no AddAsync (Postgres) não capturam mutações posteriores no objeto de domínio.
         sellerRefund.UpdateStatus(TransactionStatus.Completed);
         feeRefund.UpdateStatus(TransactionStatus.Completed);
+
+        await _financialTransactionRepository.AddAsync(sellerRefund, cancellationToken);
+        await _financialTransactionRepository.AddAsync(feeRefund, cancellationToken);
 
         await _transactionStatusHistoryRepository.AddAsync(
             new TransactionStatusHistory(
@@ -401,6 +403,11 @@ public sealed class SellerPayoutService
                 checkoutId,
                 DateTime.UtcNow),
             cancellationToken);
+
+        // Status do checkout muda no MESMO commit da reversão do ledger — evita estado
+        // inconsistente (ledger revertido mas checkout ainda Paid) e mantém idempotência.
+        checkout.SetStatus(CheckoutStatus.Refunded, DateTime.UtcNow);
+        await _checkoutRepository.UpdateAsync(checkout, cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 

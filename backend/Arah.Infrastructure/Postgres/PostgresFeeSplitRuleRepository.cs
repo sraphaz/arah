@@ -19,10 +19,11 @@ public sealed class PostgresFeeSplitRuleRepository : IFeeSplitRuleRepository
         DateTimeOffset atUtc,
         CancellationToken cancellationToken)
     {
+        var normalizedRevenueType = revenueType.ToLowerInvariant();
         var records = await _dbContext.FeeSplitRules
             .Where(r =>
                 r.TerritoryId == territoryId &&
-                r.RevenueType == revenueType &&
+                r.RevenueType.ToLower() == normalizedRevenueType &&
                 r.EffectiveFromUtc <= atUtc &&
                 r.SupersededAtUtc == null)
             .OrderByDescending(r => r.EffectiveFromUtc)

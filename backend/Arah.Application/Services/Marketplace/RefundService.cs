@@ -73,6 +73,8 @@ public sealed class RefundService
             return Result<TransactionRefundResult>.Failure("No active fee split rule for territory.");
         }
 
+        // ReversePaidCheckoutAsync reverte o ledger E marca o checkout como Refunded no
+        // mesmo commit (atomicidade/idempotência) — este serviço não persiste status por conta própria.
         var ledgerResult = await _sellerPayoutService.ReversePaidCheckoutAsync(transactionId, cancellationToken);
         if (ledgerResult.IsFailure)
         {
@@ -84,12 +86,9 @@ public sealed class RefundService
         var net = FeeSplitCalculator.RoundBankers(gross - fee);
         var reversedSplit = FeeSplitCalculator.Reverse(FeeSplitCalculator.Build(fee, rule));
 
-        checkout.SetStatus(CheckoutStatus.Refunded, atUtc.UtcDateTime);
-        await _checkoutRepository.UpdateAsync(checkout, cancellationToken);
-
         return Result<TransactionRefundResult>.Success(new TransactionRefundResult(
             checkout.Id,
-            checkout.Status,
+            CheckoutStatus.Refunded,
             checkout.Currency,
             -gross,
             -fee,

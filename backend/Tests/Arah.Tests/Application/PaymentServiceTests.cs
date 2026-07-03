@@ -156,6 +156,28 @@ public sealed class PaymentServiceTests
     }
 
     [Fact]
+    public async Task ConfirmPaymentAsync_WhenPaymentBelongsToAnotherCheckout_ReturnsFailure()
+    {
+        var (_, checkoutA) = await SeedStoreAndCheckoutAsync(CheckoutStatus.Created);
+        var (_, checkoutB) = await SeedStoreAndCheckoutAsync(CheckoutStatus.Created);
+
+        var initiateA = await _service.InitiatePaymentAsync(checkoutA.Id, PaymentMethod.Pix, CancellationToken.None);
+        _paymentGateway.SimulatePaymentApproved(initiateA.Value!.GatewayPaymentId);
+
+        // Tentar confirmar o checkout B com o pagamento aprovado do checkout A.
+        var confirm = await _service.ConfirmPaymentAsync(
+            checkoutB.Id,
+            initiateA.Value.GatewayPaymentId,
+            CancellationToken.None);
+
+        Assert.True(confirm.IsFailure);
+        Assert.Contains("does not belong", confirm.Error ?? "", StringComparison.OrdinalIgnoreCase);
+
+        var updatedB = await _checkoutRepository.GetByIdAsync(checkoutB.Id, CancellationToken.None);
+        Assert.NotEqual(CheckoutStatus.Paid, updatedB!.Status);
+    }
+
+    [Fact]
     public async Task ConfirmPaymentAsync_WhenNotApproved_ReturnsFailure()
     {
         var (_, checkout) = await SeedStoreAndCheckoutAsync(CheckoutStatus.Created);

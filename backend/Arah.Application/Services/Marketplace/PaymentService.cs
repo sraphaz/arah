@@ -132,7 +132,14 @@ public sealed class PaymentService
             return Result<PaymentConfirmResult>.Failure(statusResult.Error ?? "Payment status unavailable.");
         }
 
-        if (statusResult.Value!.Status != PaymentIntentStatus.Approved)
+        // Impede que um pagamento aprovado de outra transação confirme este checkout.
+        if (statusResult.Value!.CheckoutId is { } paymentCheckoutId && paymentCheckoutId != transactionId)
+        {
+            return Result<PaymentConfirmResult>.Failure(
+                "Payment does not belong to this transaction.");
+        }
+
+        if (statusResult.Value.Status != PaymentIntentStatus.Approved)
         {
             return Result<PaymentConfirmResult>.Failure(
                 $"Payment not approved. Gateway status: {statusResult.Value.Status}.");

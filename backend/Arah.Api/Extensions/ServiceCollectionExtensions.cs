@@ -205,7 +205,7 @@ public static class ServiceCollectionExtensions
 
         // Payout Gateway
         services.AddScoped<IPayoutGateway, Arah.Infrastructure.Payments.MockPayoutGateway>();
-        services.AddScoped<IPaymentGateway, Arah.Infrastructure.Payments.MockPaymentGateway>();
+        // IPaymentGateway é registrado por ambiente em Program.cs (mock apenas fora de produção).
 
         // Email Configuration (aplicável a ambos InMemory e Postgres)
         // Deve ser registrado aqui, não em AddPostgresRepositories, pois precisa estar disponível em testes

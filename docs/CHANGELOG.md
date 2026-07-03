@@ -17,6 +17,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - **Lacuna de testes fechada**: `scripts/agents/tests/agent-graph.tests.ps1` (PS puro, sem Pester) cobre `yaml-lite`, `choreography-parser` e a detecção do `craft-review`; `craft-review-check.ps1` agora é dot-sourceável (execução principal guardada)
 - Agent graph regenerado e validado (`-Strict`: 0 erro, 0 aviso)
 
+### Corrigido — Apontamentos de bots no PR do Agent Graph (#432) (2026-07-03)
+
+- **MCP `globToRegex`** (bug real pego por teste novo): `*`→`[^/]*` corrompia o `.*` inserido por `**`, então `backend/**` não casava subpaths; corrigido com sentinelas (runtime PS já estava correto via `[regex]::Escape`)
+- **MCP ignora regras de evento**: `matchRulesForPath` pula `when: pull_request` (ex.: `pr-always`), não reporta mais `qa`/`pr-steward` para paths locais arbitrários
+- **CodeQL (mjs)**: `globToRegex` passa a escapar `\` no conjunto de metacaracteres
+- **`.mmd` puro**: `Build-Mermaid` não embrulha mais em cercas ```` ```mermaid ````; arquivo renderiza no Mermaid Live/como `.mmd`
+- **Validador — integridade referencial sempre roda** (não só quando não há erros); **catálogo de skills pelo campo `id:`** do manifest (não pelo filename)
+- **`choreography-parser`**: regras sem `paths` deixam de sumir silenciosamente — entram na lista e o check "regra sem paths" do validador as flagra
+- **`craft-review-check`**: `git fetch` segue `$BaseRef` (não `origin/main` fixo), evitando diff vazio que mascararia o aviso de "mudança sem teste"
+- **CI `agents-validate.yml`**: `persist-credentials: false` nos checkouts; paths de `push` incluem `CODEOWNERS`/`agents-validate.yml`/`agents.yml`; novo job roda os testes PS + Node
+- **Docs**: link `arah-craft/SKILL.md` corrigido (`../../../` para a raiz do repo)
+- Testes novos: `scripts/agents/tests/mcp.test.mjs` (Node) e MCP tornado importável (loop stdio só em execução direta)
+
 ### Adicionado — Skill de craftsmanship (Uncle Bob) acionada pelos agentes no ciclo projetar→desenvolver→testar (2026-07-03)
 
 - **Nova skill `craft-review`** (`.skills/craft-review.skill.yaml`): disciplina Clean Code/Clean Architecture/SOLID/TDD em três fases (projetar, desenvolver, testar), complementando `architecture-review` (fronteiras/ADR) e `code-review` (checklist de PR)

@@ -26,7 +26,12 @@ function Get-ChangedFiles {
     if ($Provided.Count -gt 0) { return @($Provided | Where-Object { $_ }) }
     Push-Location $RepoRoot
     try {
-        git fetch origin main --depth=1 2>$null
+        # Busca o próprio $BaseRef (não um 'origin/main' fixo): se o caller passa
+        # outro ref e ele não estiver buscado, o diff viria vazio e mascararia o
+        # aviso de "mudança sem teste" — justo a heurística deste script.
+        $parts = $BaseRef -split '/', 2
+        if ($parts.Count -eq 2) { git fetch $parts[0] $parts[1] --depth=1 2>$null }
+        else { git fetch --depth=1 2>$null }
         return @(git diff --name-only "$BaseRef...HEAD" 2>$null | Where-Object { $_ })
     } finally { Pop-Location }
 }

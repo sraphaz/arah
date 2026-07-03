@@ -49,9 +49,10 @@ function Parse-ChoreographyRules {
                 }
             }
         }
-        if ($paths.Count -gt 0) {
-            $rules += @{ id = $ruleId; when = $when; paths = @($paths); agents = @($agents) }
-        }
+        # Inclui a regra mesmo sem paths: assim export/choreograph/validate a
+        # enxergam e o check "regra sem paths" do validador pode dispará-la (uma
+        # regra que sumia silenciosamente esconderia parse quebrado).
+        $rules += @{ id = $ruleId; when = $when; paths = @($paths); agents = @($agents) }
     }
     return $rules
 }

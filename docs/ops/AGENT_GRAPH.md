@@ -192,7 +192,8 @@ Para saber por que o `backend` foi ativado ao mudar `backend/Arah.Core/Foo.cs`:
 [`docs/_meta/agent-graph.generated.mmd`](../_meta/agent-graph.generated.mmd): uma
 visão focada e legível (coreografia `rules → agentes operacionais/domínio` +
 pipeline de review gates). Paths, skills, specs e tests ficam só no JSON completo,
-para o diagrama não virar um emaranhado. Renderiza direto no GitHub/Mermaid Live.
+para o diagrama não virar um emaranhado. É um `.mmd` puro (corpo `flowchart`, sem
+cercas markdown): cole no Mermaid Live ou embuta entre cercas ` ```mermaid ` num `.md`.
 
 ## Exposição via MCP (read-only)
 

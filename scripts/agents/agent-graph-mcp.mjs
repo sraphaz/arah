@@ -37,10 +37,15 @@ function loadGraph() {
 function globToRegex(glob) {
   const g = String(glob).replace(/\\/g, '/');
   if (g === '**' || g === '**/*') return /^.*$/;
-  let re = g.replace(/[.+^${}()|[\]]/g, '\\$&');
-  re = re.replace(/\*\*\//g, '(?:.*/)?');
-  re = re.replace(/\*\*/g, '.*');
+  // Escapa metacaracteres regex (inclui '\'); '*' é tratado depois como glob.
+  let re = g.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+  // Sentinelas para '**/' e '**' antes de expandir '*', senão o '*' inserido por
+  // '**' (.* ) seria reprocessado por '*'->[^/]* (bug de ordem).
+  re = re.replace(/\*\*\//g, '\u0000');
+  re = re.replace(/\*\*/g, '\u0001');
   re = re.replace(/\*/g, '[^/]*');
+  re = re.replace(/\u0000/g, '(?:.*/)?');
+  re = re.replace(/\u0001/g, '.*');
   return new RegExp('^' + re + '$');
 }
 
@@ -48,6 +53,10 @@ function matchRulesForPath(graph, path) {
   const norm = String(path).replace(/\\/g, '/');
   const matched = [];
   for (const rule of graph.nodes.rules || []) {
+    // Regras disparadas por evento (ex.: pr-always, when: pull_request) não são
+    // acionadas por path fora de um PR; espelha o gating de choreograph-agents.ps1
+    // para não reportar qa/pr-steward em qualquer caminho local.
+    if (rule.when === 'pull_request') continue;
     const hit = (rule.paths || []).some((p) => globToRegex(p).test(norm));
     if (hit) matched.push(rule);
   }
@@ -183,22 +192,30 @@ function send(obj) {
   process.stdout.write(JSON.stringify(obj) + '\n');
 }
 
-const rl = createInterface({ input: process.stdin });
-rl.on('line', (line) => {
-  const trimmed = line.trim();
-  if (!trimmed) return;
-  let msg;
-  try {
-    msg = JSON.parse(trimmed);
-  } catch {
-    return; // ignora linhas não-JSON
-  }
-  // Notificações (sem id) não recebem resposta.
-  if (msg.id === undefined || msg.id === null) return;
-  try {
-    send({ jsonrpc: '2.0', id: msg.id, result: handle(msg) });
-  } catch (err) {
-    const error = err && err.code ? err : { code: -32603, message: String(err?.message || err) };
-    send({ jsonrpc: '2.0', id: msg.id, error });
-  }
-});
+function serve() {
+  const rl = createInterface({ input: process.stdin });
+  rl.on('line', (line) => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    let msg;
+    try {
+      msg = JSON.parse(trimmed);
+    } catch {
+      return; // ignora linhas não-JSON
+    }
+    // Notificações (sem id) não recebem resposta.
+    if (msg.id === undefined || msg.id === null) return;
+    try {
+      send({ jsonrpc: '2.0', id: msg.id, result: handle(msg) });
+    } catch (err) {
+      const error = err && err.code ? err : { code: -32603, message: String(err?.message || err) };
+      send({ jsonrpc: '2.0', id: msg.id, error });
+    }
+  });
+}
+
+// Loop stdio só quando executado direto; importado (testes) apenas expõe funções.
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+if (isMain) serve();
+
+export { globToRegex, matchRulesForPath, agentsForPath, explainPath };

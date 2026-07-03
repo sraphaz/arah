@@ -318,7 +318,8 @@ function ConvertTo-MermaidId {
 function Build-Mermaid {
     param($Rules, $Agents, $ReviewGates, $Edges)
     $sb = New-Object System.Text.StringBuilder
-    [void]$sb.AppendLine('```mermaid')
+    # Arquivo .mmd puro (sem cercas markdown) — consumidores/Mermaid Live esperam
+    # corpo 'flowchart' cru. Para embutir em .md, adicione as cercas no destino.
     [void]$sb.AppendLine('flowchart LR')
     [void]$sb.AppendLine('  %% Gerado por scripts/agents/export-agent-graph.ps1 — não editar à mão')
 
@@ -378,7 +379,6 @@ function Build-Mermaid {
         $to = 'gate_' + (ConvertTo-MermaidId ($e.to -replace '^gate:', ''))
         [void]$sb.AppendLine("  $from --> $to")
     }
-    [void]$sb.AppendLine('```')
     return $sb.ToString()
 }
 

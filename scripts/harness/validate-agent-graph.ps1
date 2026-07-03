@@ -61,18 +61,20 @@ if (-not (Test-Path $ChoreoPath)) {
 }
 $rules = Parse-ChoreographyRules -Raw (Get-Content $ChoreoPath -Raw)
 
-$skillIds = @(Get-ChildItem -Path $SkillsDir -Filter '*.skill.yaml' |
-    ForEach-Object { $_.BaseName -replace '\.skill$', '' } | Select-Object -Unique)
-
-# Skills que declaram um canal de acionamento próprio (orchestrator/workflow/cli)
-# não passam por coreografia de paths — logo não são órfãs mesmo sem rule/manifest.
+# Catálogo de skills pelo campo 'id:' do manifest (mesma fonte que o export usa),
+# não pelo nome do arquivo — evita divergência silenciosa se id != filename.
+$skillIds = @()
 $selfActivated = New-Object 'System.Collections.Generic.HashSet[string]'
 foreach ($f in Get-ChildItem -Path $SkillsDir -Filter '*.skill.yaml') {
     $raw = Get-Content $f.FullName -Raw
-    if ($raw -match '(?m)^activation\s*:') {
-        [void]$selfActivated.Add(($f.BaseName -replace '\.skill$', ''))
-    }
+    $sid = Get-ScalarField -Raw $raw -Field 'id'
+    if (-not $sid) { $sid = $f.BaseName -replace '\.skill$', '' }
+    $skillIds += $sid
+    # Skills com canal próprio (orchestrator/workflow/cli) não passam por
+    # coreografia de paths — não são órfãs mesmo sem rule/manifest.
+    if ($raw -match '(?m)^activation\s*:') { [void]$selfActivated.Add($sid) }
 }
+$skillIds = @($skillIds | Select-Object -Unique)
 
 # --- Checagens por rule ------------------------------------------------------
 foreach ($rule in $rules) {
@@ -144,7 +146,9 @@ if (-not (Test-Path $GraphJson)) {
 # --- Integridade referencial das arestas -------------------------------------
 # Todo endpoint (from/to) de aresta precisa existir como nó. Aresta órfã indica
 # export quebrado (ex.: over-captura de path) e é tratada como erro crítico.
-if ((Test-Path $GraphJson) -and ($errors.Count -eq 0)) {
+# Roda sempre (mesmo com erros anteriores): endpoints órfãos no JSON commitado
+# não devem passar despercebidos só porque outro check já falhou.
+if (Test-Path $GraphJson) {
     try {
         $graph = Get-Content $GraphJson -Raw | ConvertFrom-Json
         $nodeIds = New-Object 'System.Collections.Generic.HashSet[string]'

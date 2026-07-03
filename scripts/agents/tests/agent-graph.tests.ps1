@@ -68,11 +68,13 @@ rules:
       - id: qa
 "@
 $rules = @(Parse-ChoreographyRules -Raw $choreo)
-Assert-Equal 1 $rules.Count 'regra sem paths é ignorada'
+Assert-Equal 2 $rules.Count 'regra sem paths é mantida (validador flagra depois)'
 Assert-Equal 'sample-rule' $rules[0].id 'id da regra'
 Assert-Equal @('backend/**') $rules[0].paths 'paths da regra'
 Assert-Equal 'backend' @($rules[0].agents)[0].id 'agente da regra'
 Assert-Equal @('run-tests', 'craft-review') @($rules[0].agents)[0].skills 'skills inline da regra'
+Assert-Equal 'no-paths-rule' $rules[1].id 'regra sem paths presente'
+Assert-Equal 0 @($rules[1].paths).Count 'regra sem paths tem paths vazio'
 
 Write-Host 'craft-review-check (detecção de arquivo)'
 . (Join-Path $agentsDir 'craft-review-check.ps1')

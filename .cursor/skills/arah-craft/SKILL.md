@@ -5,7 +5,7 @@ description: Disciplina de craftsmanship (Clean Code, Clean Architecture, SOLID,
 
 # craft-review (Arah) — Uncle Bob no ciclo projetar → desenvolver → testar
 
-Consulte [.skills/craft-review.skill.yaml](../../.skills/craft-review.skill.yaml).
+Consulte [.skills/craft-review.skill.yaml](../../../.skills/craft-review.skill.yaml).
 Complementa `architecture-review` (fronteiras/ADR) e `code-review` (checklist de PR);
 não substitui linter/formatter nem os testes automatizados.
 
@@ -41,6 +41,6 @@ avisos como erro quando quiser promover a gate duro.
 
 ## Referências
 
-- [docs/governance/21_CODE_REVIEW.md](../../docs/governance/21_CODE_REVIEW.md)
-- [docs/governance/22_COHESION_AND_TESTS.md](../../docs/governance/22_COHESION_AND_TESTS.md)
-- [docs/governance/DEFINITION_OF_DONE.md](../../docs/governance/DEFINITION_OF_DONE.md)
+- [docs/governance/21_CODE_REVIEW.md](../../../docs/governance/21_CODE_REVIEW.md)
+- [docs/governance/22_COHESION_AND_TESTS.md](../../../docs/governance/22_COHESION_AND_TESTS.md)
+- [docs/governance/DEFINITION_OF_DONE.md](../../../docs/governance/DEFINITION_OF_DONE.md)

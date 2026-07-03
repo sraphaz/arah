@@ -124,6 +124,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<JoinRequestService>();
         services.AddScoped<EventsService>();
         services.AddScoped<MapService>();
+        services.AddScoped<MapPinsService>();
         services.AddScoped<ActiveTerritoryService>();
         services.AddScoped<HealthService>();
         services.AddScoped<TerritoryAssetService>();

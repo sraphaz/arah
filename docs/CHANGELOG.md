@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Refatorado — Pendências pós-revisão (Ondas 5) (2026-07-03)
+
+- **Wiki CSS**: `globals.css` (~1.4k linhas) fatiado em 16 arquivos temáticos em `frontend/wiki/styles/`; hub de 16 linhas; `postcss-import` no wiki
+- **MapPinsService**: montagem de pins do mapa movida de `MapController` para `Arah.Application/Services/Map/MapPinsService.cs` (`MapPin`, `MapPinFilters`); controller 718→458 linhas
+- **Flutter onboarding**: widgets extraídos para `presentation/widgets/`; `onboarding_screen.dart` 799→148 linhas
+- **Portal**: Jest + testes de `brand` e paleta Tailwind (`npm test`)
+
 ### Refatorado — God classes, SOLID e tokens (Ondas 2–4) (2026-07-03)
 
 - **Onda 2 (God classes)**:

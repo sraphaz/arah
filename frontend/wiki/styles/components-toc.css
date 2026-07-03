@@ -1,0 +1,104 @@
+/* Table of Contents - Enterprise design - Margem reduzida */
+.toc-container {
+  @apply glass-card p-4;
+  /* Altura máxima baseada na viewport menos header e margens */
+  /* top-24 = 96px (6rem), adiciona 32px de margem = 128px total */
+  max-height: calc(100vh - 128px);
+  @apply overflow-y-auto;
+  /* Scroll suave e customizado */
+  scrollbar-width: thin;
+  scrollbar-color: var(--forest-400) transparent;
+  /* Garante que o scroll interno funcione */
+  overscroll-behavior: contain;
+  /* Removido padding excessivo - aproveita melhor espaço */
+}
+
+/* Custom scrollbar para TOC (WebKit browsers) */
+.toc-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.toc-container::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.toc-container::-webkit-scrollbar-thumb {
+  @apply bg-forest-400/40 dark:bg-forest-600/40;
+  border-radius: 3px;
+}
+
+.toc-container::-webkit-scrollbar-thumb:hover {
+  @apply bg-forest-500/60 dark:bg-forest-500/60;
+}
+
+.toc-header {
+  @apply flex items-center space-x-2 mb-3 pb-2;
+  /* Removida borda inferior - design mais limpo, menos encadeamento */
+}
+
+.toc-icon {
+  @apply text-xl;
+}
+
+.toc-title {
+  @apply text-lg font-semibold;
+  @apply text-forest-900 dark:text-forest-50;
+}
+
+.toc-list {
+  @apply space-y-1.5;
+}
+
+.toc-item {
+  @apply list-none;
+}
+
+.toc-item-level-2 {
+  @apply pl-0;
+}
+
+.toc-item-level-3 {
+  @apply pl-4;
+}
+
+.toc-item-level-4 {
+  @apply pl-8;
+}
+
+.toc-link {
+  @apply w-full text-left px-3 py-2 rounded-lg;
+  @apply text-sm text-forest-700 dark:text-forest-300;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/60;
+  transition: var(--transition-slow); /* 300ms - transição suave */
+  @apply border-l-2 border-transparent;
+}
+
+.toc-link:hover {
+  @apply border-forest-400 dark:border-dark-accent;
+  @apply translate-x-1;
+  @apply text-forest-900 dark:text-forest-50;
+}
+
+.toc-item-active .toc-link {
+  @apply bg-forest-200/80 dark:bg-forest-800/90;
+  @apply border-l-4 border-forest-600 dark:border-dark-accent;
+  @apply text-forest-900 dark:text-forest-50;
+  @apply font-semibold;
+  @apply shadow-sm;
+  @apply translate-x-1;
+  /* Adiciona indicação visual mais forte para item ativo */
+  position: relative;
+}
+
+.toc-item-active .toc-link::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  @apply bg-forest-600 dark:bg-dark-accent;
+  border-radius: 0 2px 2px 0;
+  animation: slideInLeft var(--duration-slow) ease-out;
+}

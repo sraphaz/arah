@@ -40,10 +40,14 @@
 
 ## Pendências remanescentes (menores, próximos PRs)
 
-- Fatiar `wiki/app/globals.css` (~1.4k linhas) em arquivos temáticos < 200 linhas.
-- Adicionar testes ao `frontend/portal`.
-- Flutter: extrair sub-widgets de `onboarding_screen.dart` (~760 linhas) e telas > 400 linhas.
-- (Opcional) Mover a montagem de pins do `MapController` para um caso de uso de aplicação (marcado com `// TODO(clean-arch)`).
+Todas as pendências da revisão original foram endereçadas neste PR (exceto itens opcionais de escopo futuro).
+
+| Item | Status |
+|---|---|
+| Fatiar `wiki/app/globals.css` | ✅ 16 arquivos em `frontend/wiki/styles/` + hub 16 linhas |
+| Testes no `frontend/portal` | ✅ Jest (brand + tailwind config) |
+| Flutter `onboarding_screen.dart` | ✅ 799→148 linhas; 7 widgets extraídos |
+| `MapController` pin assembly | ✅ `MapPinsService` na Application |
 
 ---
 

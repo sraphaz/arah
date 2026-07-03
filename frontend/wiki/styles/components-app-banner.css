@@ -1,0 +1,197 @@
+/* App Banner - Call to Action para Lançamento */
+.app-banner-container {
+  @apply my-20;
+}
+
+.app-banner-card {
+  box-shadow: var(--elevation-4);
+  @apply border-2 border-forest-300/50 dark:border-forest-700/50;
+  background: var(--gradient-app-banner-light);
+  position: relative;
+  overflow: hidden;
+}
+
+:root.dark .app-banner-card {
+  background: var(--gradient-app-banner-dark);
+}
+
+/* Padrão de fundo decorativo sutil */
+.app-banner-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--bg-gradient-accent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-banner-grid {
+  @apply grid lg:grid-cols-2 gap-12 items-center relative z-10;
+}
+
+.app-banner-content {
+  @apply space-y-6;
+}
+
+.app-banner-badge {
+  @apply inline-flex items-center space-x-2 px-4 py-2 rounded-full;
+  /* Usa var(--accent) com opacity */
+  background-color: var(--accent-subtle);
+  border: 1px solid var(--accent-subtle);
+  color: var(--accent);
+  @apply font-semibold text-sm;
+  @apply animate-pulse-slow;
+}
+
+.app-banner-badge-icon {
+  @apply text-lg;
+  animation: bounce-slow 2s infinite;
+}
+
+.app-banner-badge-text {
+  @apply tracking-wide uppercase text-xs;
+}
+
+.app-banner-title {
+  @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+  @apply text-forest-900 dark:text-forest-50;
+  @apply leading-tight tracking-tight;
+  background: var(--app-banner-title-light);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:root.dark .app-banner-title {
+  background: var(--app-banner-title-dark);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-banner-description {
+  @apply text-lg md:text-xl text-forest-700 dark:text-forest-300;
+  @apply leading-relaxed;
+  @apply max-w-xl;
+}
+
+.app-banner-features {
+  @apply flex flex-wrap gap-4 mt-6;
+}
+
+.app-banner-feature {
+  @apply flex items-center space-x-2 px-4 py-2 rounded-lg;
+  @apply bg-forest-100/80 dark:bg-forest-900/60;
+  @apply text-forest-700 dark:text-forest-300;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300;
+  @apply hover:bg-forest-200/80 dark:hover:bg-forest-800/80;
+  @apply hover:scale-105;
+}
+
+.app-banner-feature-icon {
+  @apply text-lg;
+}
+
+.app-banner-cta {
+  @apply flex flex-col sm:flex-row gap-4 mt-8;
+}
+
+.app-banner-button-primary {
+  @apply inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl;
+  @apply text-white font-semibold text-base;
+  @apply transition-all duration-300;
+  @apply hover:scale-105 hover:-translate-y-1;
+  @apply active:scale-100;
+  /* Gradient usando variáveis CSS com fallback */
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  box-shadow: var(--elevation-3), var(--shadow-glow);
+}
+
+.app-banner-button-primary:hover {
+  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent-hover-bright) 100%);
+  box-shadow: var(--elevation-4), var(--shadow-glow);
+}
+
+.app-banner-button-secondary {
+  @apply inline-flex items-center justify-center px-8 py-4 rounded-xl;
+  @apply border-2 border-forest-300 dark:border-forest-700;
+  @apply bg-transparent text-forest-700 dark:text-forest-300;
+  @apply font-semibold text-base;
+  @apply transition-all duration-300;
+  @apply hover:bg-forest-100 dark:hover:bg-forest-900;
+  @apply hover:border-forest-400 dark:hover:border-forest-600;
+  @apply hover:scale-105;
+  @apply active:scale-100;
+}
+
+.app-banner-button-icon {
+  @apply w-5 h-5 transition-transform duration-300;
+}
+
+.app-banner-button-primary:hover .app-banner-button-icon {
+  @apply translate-x-1;
+}
+
+.app-banner-visual {
+  @apply relative;
+}
+
+.app-banner-image-wrapper {
+  @apply relative rounded-2xl overflow-hidden;
+  box-shadow: var(--elevation-4);
+  @apply border-2 border-forest-200/80 dark:border-forest-800/80;
+  @apply transform transition-transform duration-500;
+  @apply hover:scale-[1.02];
+}
+
+.app-banner-image {
+  @apply w-full h-auto object-contain;
+  @apply transition-opacity duration-500;
+}
+
+.app-banner-overlay {
+  @apply absolute inset-0 pointer-events-none;
+  background: var(--app-banner-phone-glow);
+  @apply opacity-0 transition-opacity duration-500;
+}
+
+.app-banner-image-wrapper:hover .app-banner-overlay {
+  @apply opacity-100;
+}
+
+/* Animação de pulse suave */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1023px) {
+  .app-banner-grid {
+    @apply grid-cols-1 gap-8;
+  }
+
+  .app-banner-visual {
+    @apply order-first;
+  }
+
+  .app-banner-title {
+    @apply text-3xl md:text-4xl;
+  }
+
+  .app-banner-description {
+    @apply text-base md:text-lg;
+  }
+}

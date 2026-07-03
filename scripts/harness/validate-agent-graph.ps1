@@ -13,7 +13,8 @@
       core-control-plane, federation-handoff) têm gate/domain consult/agente
       operacional/skill coerente;
     - o artefato docs/_meta/agent-graph.generated.json está presente e coerente
-      com o estado atual (warning se ausente/defasado).
+      com o estado atual (warning se ausente/defasado);
+    - integridade referencial: todo endpoint de aresta existe como nó (erro).
   Sem dependências pesadas (parse regex, PS 5.1+). Idempotente e read-only.
 .EXAMPLE
   ./validate-agent-graph.ps1
@@ -162,6 +163,44 @@ if (-not (Test-Path $GraphJson)) {
         }
     } catch {
         $errors += "artefato inválido: falha ao ler/regenerar o grafo — $($_.Exception.Message)"
+    }
+}
+
+# --- Integridade referencial das arestas -------------------------------------
+# Todo endpoint (from/to) de aresta precisa existir como nó. Aresta órfã indica
+# export quebrado (ex.: over-captura de path) e é tratada como erro crítico.
+if ((Test-Path $GraphJson) -and ($errors.Count -eq 0)) {
+    try {
+        $graph = Get-Content $GraphJson -Raw | ConvertFrom-Json
+        $nodeIds = New-Object 'System.Collections.Generic.HashSet[string]'
+        $nodeSpecs = @(
+            @{ ns = 'agent';     items = $graph.nodes.agents;       key = 'id' },
+            @{ ns = 'skill';     items = $graph.nodes.skills;       key = 'id' },
+            @{ ns = 'rule';      items = $graph.nodes.rules;        key = 'id' },
+            @{ ns = 'path';      items = $graph.nodes.paths;        key = 'pattern' },
+            @{ ns = 'domain';    items = $graph.nodes.domains;      key = 'id' },
+            @{ ns = 'spec';      items = $graph.nodes.specs;        key = 'id' },
+            @{ ns = 'harness';   items = $graph.nodes.harnesses;    key = 'id' },
+            @{ ns = 'guardrail'; items = $graph.nodes.guardrails;   key = 'id' },
+            @{ ns = 'workflow';  items = $graph.nodes.workflows;    key = 'id' },
+            @{ ns = 'gate';      items = $graph.nodes.review_gates; key = 'id' }
+        )
+        foreach ($spec in $nodeSpecs) {
+            foreach ($n in @($spec.items)) {
+                if ($null -ne $n) { [void]$nodeIds.Add("$($spec.ns):$($n.$($spec.key))") }
+            }
+        }
+        $dangling = @()
+        foreach ($e in @($graph.edges)) {
+            if (-not $nodeIds.Contains([string]$e.from)) { $dangling += "$($e.type): from '$($e.from)'" }
+            if (-not $nodeIds.Contains([string]$e.to))   { $dangling += "$($e.type): to '$($e.to)'" }
+        }
+        $dangling = @($dangling | Select-Object -Unique)
+        if ($dangling.Count -gt 0) {
+            $errors += "arestas órfãs (endpoint sem nó): $($dangling -join '; ')"
+        }
+    } catch {
+        $errors += "integridade de arestas: falha ao analisar o grafo — $($_.Exception.Message)"
     }
 }
 

@@ -157,7 +157,9 @@ Ver [`docs/_meta/SDD_AND_HARNESS.md`](../_meta/SDD_AND_HARNESS.md).
 O artefato gerado fica em
 [`docs/_meta/agent-graph.generated.json`](../_meta/agent-graph.generated.json) e
 **deve ser commitado no mesmo PR** que altera coreografia/manifests/skills
-(doc como código). A validação avisa quando o JSON está defasado.
+(doc como código). A validação avisa quando o JSON está defasado (comparando o
+conteúdo inteiro regenerado, não só contagens) e falha se houver **arestas
+órfãs** (endpoint sem nó correspondente — integridade referencial).
 
 ### Exemplo de leitura ("por quê?")
 

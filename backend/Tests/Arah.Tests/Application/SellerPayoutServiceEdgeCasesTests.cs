@@ -241,6 +241,109 @@ public sealed class SellerPayoutServiceEdgeCasesTests
     }
 
     [Fact]
+    public async Task ProcessPendingPayoutsAsync_WithSplitPayouts_CommitsEachPayout()
+    {
+        var territoryId = Guid.NewGuid();
+        var sellerUserId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var store = new Store(
+            Guid.NewGuid(),
+            territoryId,
+            sellerUserId,
+            "Test Store",
+            null,
+            StoreStatus.Active,
+            true,
+            StoreContactVisibility.Public,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+        await _storeRepository.AddAsync(store, CancellationToken.None);
+
+        var firstTransaction = new SellerTransaction(
+            Guid.NewGuid(),
+            territoryId,
+            store.Id,
+            Guid.NewGuid(),
+            sellerUserId,
+            5000,
+            0,
+            "BRL");
+        firstTransaction.MarkAsReadyForPayout();
+
+        var secondTransaction = new SellerTransaction(
+            Guid.NewGuid(),
+            territoryId,
+            store.Id,
+            Guid.NewGuid(),
+            sellerUserId,
+            5000,
+            0,
+            "BRL");
+        secondTransaction.MarkAsReadyForPayout();
+
+        await _sellerTransactionRepository.AddAsync(firstTransaction, CancellationToken.None);
+        await _sellerTransactionRepository.AddAsync(secondTransaction, CancellationToken.None);
+
+        var sellerBalance = new SellerBalance(Guid.NewGuid(), territoryId, sellerUserId, "BRL");
+        sellerBalance.AddPendingAmount(10000);
+        sellerBalance.MoveToReadyForPayout(10000);
+        await _sellerBalanceRepository.AddAsync(sellerBalance, CancellationToken.None);
+
+        var config = new TerritoryPayoutConfig(
+            Guid.NewGuid(),
+            territoryId,
+            7,
+            1000,
+            5000,
+            PayoutFrequency.Weekly,
+            true,
+            false,
+            "BRL");
+        await _payoutConfigRepository.AddAsync(config, CancellationToken.None);
+
+        _payoutGatewayMock.SetupSequence(g => g.CreatePayoutAsync(
+                It.IsAny<long>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<Dictionary<string, string>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(OperationResult<PayoutResult>.Success(new PayoutResult("payout-1", PayoutStatus.Pending, DateTime.UtcNow)))
+            .ReturnsAsync(OperationResult<PayoutResult>.Success(new PayoutResult("payout-2", PayoutStatus.Pending, DateTime.UtcNow)));
+
+        var unitOfWorkMock = new Mock<IUnitOfWork>();
+        unitOfWorkMock.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var service = new SellerPayoutService(
+            _checkoutRepository,
+            _storeRepository,
+            _sellerTransactionRepository,
+            _sellerBalanceRepository,
+            _financialTransactionRepository,
+            _transactionStatusHistoryRepository,
+            _platformRevenueTransactionRepository,
+            _platformFinancialBalanceRepository,
+            _platformExpenseTransactionRepository,
+            _payoutConfigRepository,
+            _payoutGatewayMock.Object,
+            _auditLogger,
+            unitOfWorkMock.Object);
+
+        var result = await service.ProcessPendingPayoutsAsync(territoryId, userId, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value);
+        unitOfWorkMock.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task UpdatePayoutStatusAsync_WithNonExistentPayoutId_ReturnsFailure()
     {
         var result = await _service.UpdatePayoutStatusAsync("non-existent-payout-id", CancellationToken.None);

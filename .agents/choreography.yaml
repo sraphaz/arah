@@ -221,6 +221,7 @@ rules:
       - backend/Arah.Application/**
       - backend/Arah.Domain/**
       - backend/Arah.Infrastructure/**
+      - backend/Arah.Infrastructure.Shared/**
       - backend/Arah.Modules.*/**
     agents:
       - id: backend

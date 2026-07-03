@@ -53,8 +53,8 @@ function Get-ScopePaths {
 function Get-SpecAcceptance {
     param([string]$Raw)
     $items = @()
-    if ($Raw -notmatch '(?m)^acceptance:[ \t]*\r?\n((?:[ \t]+\S.*\r?\n?)+)') { return $items }
-    $block = $Matches[1]
+    $block = Get-TopLevelBlock -Raw $Raw -Key 'acceptance'
+    if (-not $block) { return $items }
     foreach ($chunk in [regex]::Split($block, '(?m)^  - id:\s*')) {
         if ($chunk -notmatch '^(\S+)') { continue }
         $acId = $Matches[1].Trim()

@@ -17,21 +17,23 @@ public sealed record TransactionRefundResult(
     DateTimeOffset RefundedAtUtc);
 
 /// <summary>
-/// Estorno FASE55 (AC-55-6) — reverte fee e splits proporcionalmente.
-/// Idempotente: um checkout só pode ser estornado uma vez. Reversão é append de
-/// valores negados (não muta a regra vigente nem os valores originais).
+/// Estorno FASE55 (AC-55-6) — reverte fee e splits proporcionalmente no ledger (DOD-06).
+/// Idempotente: um checkout só pode ser estornado uma vez.
 /// </summary>
 public sealed class RefundService
 {
     private readonly ICheckoutRepository _checkoutRepository;
     private readonly IFeeSplitRuleRepository _feeSplitRules;
+    private readonly SellerPayoutService _sellerPayoutService;
 
     public RefundService(
         ICheckoutRepository checkoutRepository,
-        IFeeSplitRuleRepository feeSplitRules)
+        IFeeSplitRuleRepository feeSplitRules,
+        SellerPayoutService sellerPayoutService)
     {
         _checkoutRepository = checkoutRepository;
         _feeSplitRules = feeSplitRules;
+        _sellerPayoutService = sellerPayoutService;
     }
 
     public async Task<Result<TransactionRefundResult>> RefundAsync(
@@ -69,6 +71,12 @@ public sealed class RefundService
         if (rule is null)
         {
             return Result<TransactionRefundResult>.Failure("No active fee split rule for territory.");
+        }
+
+        var ledgerResult = await _sellerPayoutService.ReversePaidCheckoutAsync(transactionId, cancellationToken);
+        if (ledgerResult.IsFailure)
+        {
+            return Result<TransactionRefundResult>.Failure(ledgerResult.Error ?? "Ledger reversal failed.");
         }
 
         var gross = checkout.ItemsSubtotalAmount.Value;

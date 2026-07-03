@@ -51,9 +51,9 @@ Prioridade: **P0** desbloqueia rigor mínimo; **P1** reduz risco; **P2** melhori
 | DOD-02 | backend | FASE53 sem `covered_by` (AC↔teste) | Anotar 10 ACs (unit+integração Core) | P0 | ✅ feito |
 | DOD-03 | ops | FASE54 ACs de script sem evidência | Marcar `status: manual` + `evidence`; AC-54-4 `covered_by` | P0 | ✅ feito |
 | DOD-04 | ops | FASE52 ACs de workflow sem evidência | Marcar `status: manual` + `evidence` (run/pacote) | P0 | ✅ feito |
-| DOD-05 | backend | Sem `PaymentService`/webhook (Checkout→Paid) | Implementar transição de pagamento (PIX/Stripe) + testes | P1 | ⏳ backlog |
-| DOD-06 | backend | Monetização FASE55 paralela ao ledger existente | Unificar `RefundService`/`PayoutConsolidationService` com `SellerPayoutService` + `FinancialTransaction` (fonte única) | P1 | ⏳ backlog |
-| DOD-07 | backend | `FeeSplitRule` + planos comerciais só InMemory | Persistência Postgres (repo + seed/migration) | P1 | ⏳ backlog |
+| DOD-05 | backend | Sem `PaymentService`/webhook (Checkout→Paid) | Implementar transição de pagamento (PIX/Stripe) + testes | P1 | ✅ feito (2026-07-02: `PaymentService`, `IPaymentGateway`, `MockPaymentGateway`, endpoints `/pay` e `/confirm-payment`, webhook mock) |
+| DOD-06 | backend | Monetização FASE55 paralela ao ledger existente | Unificar `RefundService`/`PayoutConsolidationService` com `SellerPayoutService` + `FinancialTransaction` (fonte única) | P1 | ✅ feito (2026-07-02: `ReversePaidCheckoutAsync`, estorno append-only no ledger) |
+| DOD-07 | backend | `FeeSplitRule` + planos comerciais só InMemory | Persistência Postgres (repo + seed/migration) | P1 | ✅ feito (2026-07-02: `PostgresFeeSplitRuleRepository` + migration `AddFeeSplitRules`; planos comerciais já via `SubscriptionPlan` Postgres) |
 | DOD-08 | spec/backend | FASE1–FASE51 sem spec/AC | Backfill de spec por **risco/domínio** (monetização, control-plane, moderação, marketplace primeiro) — não em bloco | P2 | ⏳ backlog |
 | DOD-09 | qa | Sem gate que exija `covered_by` em AC `covered` | `spec-validate`: falhar se AC `covered` sem `covered_by` | P1 | ✅ feito (2026-07-02: `validate-specs.ps1` falha AC `covered` sem `covered_by` e `manual` sem `evidence`) |
 | DOD-10 | ops/qa | Evidência de ACs `manual` não coletada em CI | CD anexar logs (verify-pilot, health, GHCR) como artifact vinculado ao AC | P2 | ⏳ backlog |
@@ -66,10 +66,11 @@ Prioridade: **P0** desbloqueia rigor mínimo; **P1** reduz risco; **P2** melhori
 - **DOD-02**: `FASE53-arah-core.spec.yaml` — 10 ACs com `covered_by` (mapeados a `CoreControllerIntegration`, `CoreInstanceRegistry`, `CoreReleaseCatalog`, `CoreDirectoryService`, `FederationIdentityService`, `FederationControllerIntegration`, `CoreAvailabilityCache`).
 - **DOD-03**: `FASE54-iac.spec.yaml` — ACs de script com `status: manual` + `evidence`; `AC-54-4` com `covered_by`.
 - **DOD-04**: `FASE52-cicd.spec.yaml` — ACs de workflow com `status: manual` + `evidence`.
+- **DOD-05**: `PaymentService` + `IPaymentGateway`/`MockPaymentGateway` — fluxo `Created → AwaitingPayment → Paid`; endpoints `/pay`, `/confirm-payment`; webhook mock; testes unit + HTTP; AC-55-8 na spec FASE55.
+- **DOD-06**: `SellerPayoutService.ReversePaidCheckoutAsync` — estorno persiste `FinancialTransaction` tipo `Refund` (append-only), cancela `SellerTransaction` pendente, reverte saldos; `RefundService` delega ao ledger.
+- **DOD-07**: `FeeSplitRuleRecord` + `PostgresFeeSplitRuleRepository` + migration `AddFeeSplitRules`; DI Postgres substitui InMemory; planos comerciais já persistiam via `SubscriptionPlan`.
 
 ## Próximos (recomendação de ordem)
 
-1. **DOD-09** (gate que exige `covered_by`) — barato e trava a regressão do rigor.
-2. **DOD-05** (fluxo de pagamento) — destrava a exercitação real de FASE55.
-3. **DOD-06 + DOD-07** (unificação de ledger + Postgres) — consistência da monetização.
-4. **DOD-08** (backfill de spec por risco) — contínuo, uma fase/domínio por vez.
+1. **DOD-08** (backfill de spec por risco) — contínuo, uma fase/domínio por vez (monetização/payout primeiro).
+2. **DOD-10** (evidência CI para ACs `manual`) — anexar logs verify-pilot/health/GHCR como artifact.

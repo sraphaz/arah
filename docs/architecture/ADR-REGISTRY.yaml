@@ -1,7 +1,7 @@
 ﻿# ADR Registry — fonte machine-readable para register-adr e architecture-review
 version: 1
-updated: 2026-06-30
-next_number: 21
+updated: 2026-07-03
+next_number: 22
 policy: |
   ADR-001..019 vivem em 10_ARCHITECTURE_DECISIONS.md (legado).
   ADR-020+ em docs/architecture/adrs/ADR-NNN-slug.md via register-adr.ps1.
@@ -33,4 +33,9 @@ adrs:
     file: docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md
     spec_id: FASE53-arah-core
     date: 2026-06-30
+  - id: ADR-021
+    title: "Convenção de sinalização de erros (Result, nullable, exceptions)"
+    status: accepted
+    file: docs/architecture/adrs/ADR-021-convencao-sinalizacao-de-erros.md
+    date: 2026-07-03
 

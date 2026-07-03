@@ -12,9 +12,10 @@
 |---|---|
 | Onda 0 — limpeza (órfãos, DRY wiki, duplicatas) | ✅ Implementado |
 | Onda 1 — Dependency Rule (Infrastructure separada) | ✅ Implementado |
-| Onda 2 — God classes (PostgresMappers, Program.cs…) | ⏳ Pendente |
-| Onda 3 — SOLID controllers/services | ⏳ Pendente |
-| Onda 4 — Result&lt;T&gt; padronizado, tokens web | ⏳ Pendente |
+| Onda 2 — God classes (PostgresMappers, ArahDbContext, Program.cs, InMemoryDataStore) | ✅ Implementado |
+| Onda 3 — SOLID controllers/services (extract method) | ✅ Implementado |
+| Onda 4 — tokens web unificados | ✅ Implementado |
+| Onda 4 — Result&lt;T&gt; | ✅ Resolvido por convenção (ADR-021) |
 
 ---
 
@@ -30,13 +31,19 @@
 
 ---
 
-## Pendências (próximos PRs)
+## O que foi implementado nas Ondas 2–4 (mesmo PR)
 
-Ver plano completo nas seções 3–6 abaixo. Prioridade:
+- **Onda 2 (God classes)**: `PostgresMappers.cs` → 19 arquivos `partial` por agregado; `ArahDbContext.cs` → 21 arquivos `partial` de configuração + `OnModelCreating` enxuto; `InMemoryDataStore` → seed extraído para `InMemorySeeder`; `Program.cs` → composition root enxuto + extensões (`AddArahObservability/Security/RateLimiting/Swagger`, `UseArahExceptionHandler`, `UseArahPipeline`); `ServiceCollectionExtensions` fatiado por concern.
+- **Onda 3 (SOLID)**: métodos gigantes fatiados via *extract method* (`EventsService.CreateEventAsync` 257→69, `SellerPayoutService.ProcessPaidCheckoutAsync` 179→75, `ChatService.SendTextMessageAsync` 174→45); controllers afinados (`MapController.GetPinsPaged` 226→106; `FeedController` com `EnforceGeoConvergenceAsync`/`BuildFeedItemResponse`).
+- **Onda 4 (tokens)**: literais de cor da wiki mapeados para tokens; paletas Tailwind documentadas como *sync-with-tokens*.
+- **Onda 4 (`Result<T>`)**: resolvido por **convenção** ([ADR-021](../architecture/adrs/ADR-021-convencao-sinalizacao-de-erros.md)) em vez de reescrever ~35 métodos de consulta (evita churn de alto risco).
 
-1. **Onda 2**: fatiar `PostgresMappers.cs`, `ArahDbContext.cs`, `Program.cs`, `InMemoryDataStore.cs`.
-2. **Onda 3**: extrair casos de uso de `MapController`/`FeedController`; fatiar `EventsService`, `ChatService`, `SellerPayoutService`.
-3. **Onda 4**: padronizar `Result<T>`; unificar tokens Tailwind com `design-tokens.css`; testes no `portal`.
+## Pendências remanescentes (menores, próximos PRs)
+
+- Fatiar `wiki/app/globals.css` (~1.4k linhas) em arquivos temáticos < 200 linhas.
+- Adicionar testes ao `frontend/portal`.
+- Flutter: extrair sub-widgets de `onboarding_screen.dart` (~760 linhas) e telas > 400 linhas.
+- (Opcional) Mover a montagem de pins do `MapController` para um caso de uso de aplicação (marcado com `// TODO(clean-arch)`).
 
 ---
 

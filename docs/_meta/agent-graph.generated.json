@@ -2,7 +2,7 @@
     "schema":  ".agents/agent-graph.schema.yaml",
     "version":  1,
     "generator":  "scripts/agents/export-agent-graph.ps1",
-    "generated_at":  "2026-07-03T02:25:21Z",
+    "generated_at":  "2026-07-03T03:08:14Z",
     "sources":  [
                     ".agents/choreography.yaml",
                     ".agents/**/*.agent.yaml",
@@ -18,10 +18,11 @@
                   "domains":  11,
                   "specs":  12,
                   "harnesses":  12,
+                  "tests":  14,
                   "guardrails":  16,
                   "workflows":  16,
                   "review_gates":  5,
-                  "edges":  314
+                  "edges":  332
               },
     "nodes":  {
                   "agents":  [
@@ -2089,6 +2090,38 @@
                                                        ],
                                     "guardrails":  [
                                                        "no-merge-automatic"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-AG-1",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-AG-2",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-AG-3",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-AG-4",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-AG-5",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2101,6 +2134,44 @@
                                     "guardrails":  [
                                                        "no-secrets-in-repo",
                                                        "production-gate-human"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-52-1",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  ".github/workflows/ci.yml — verificável via run do GitHub Actions"
+                                                       },
+                                                       {
+                                                           "id":  "AC-52-2",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  ".github/workflows (CD) — verificável via pacotes GHCR"
+                                                       },
+                                                       {
+                                                           "id":  "AC-52-3",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  ".github/workflows/deploy-staging.yml — step de health"
+                                                       },
+                                                       {
+                                                           "id":  "AC-52-4",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  ".github/workflows/deploy-production.yml — input confirm + environment"
+                                                       },
+                                                       {
+                                                           "id":  "AC-52-5",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "docs/ops/CI_CD_PIPELINE.md"
+                                                       },
+                                                       {
+                                                           "id":  "AC-52-6",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "docs/ops/OBSERVABILITY_BASELINE.md + endpoint /metrics"
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2114,6 +2185,68 @@
                                     "guardrails":  [
                                                        "clean-architecture",
                                                        "territory-data-stays-on-instance"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-53-1",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreInstanceRegistry|FullyQualifiedName~CoreReleaseCatalog",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-2",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreControllerIntegration",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-3",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreInstanceRegistry",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-4",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreControllerIntegration",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-5",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreReleaseCatalog",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-6",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~Core",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-7",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreDirectoryService",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-8",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~FederationControllerIntegration|FullyQualifiedName~FederationIdentityService",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-9",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreControllerIntegration",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-53-10",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreAvailabilityCache",
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2127,6 +2260,50 @@
                                     "guardrails":  [
                                                        "no-secrets-in-repo",
                                                        "territory-data-stays-on-instance"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-54-1",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "docs/ops/PILOT_STAGING_CONFIG_TODO.md — execução manual (sem teste automatizado)"
+                                                       },
+                                                       {
+                                                           "id":  "AC-54-2",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "script provision; cobertura HTTP em CoreControllerIntegration (registro)"
+                                                       },
+                                                       {
+                                                           "id":  "AC-54-3",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "script verify-pilot-instance.ps1 executado no CD (deploy-staging.yml)"
+                                                       },
+                                                       {
+                                                           "id":  "AC-54-4",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CoreAvailabilityCache",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-54-5",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "infrastructure/pilot/README.md (RPO); execução manual do backup"
+                                                       },
+                                                       {
+                                                           "id":  "AC-54-6",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "infrastructure/pilot/Caddyfile + compose profile caddy"
+                                                       },
+                                                       {
+                                                           "id":  "AC-54-7",
+                                                           "status":  "manual",
+                                                           "covered_by":  null,
+                                                           "evidence":  "script condicional; requer secret (ver PILOT_STAGING_CONFIG_TODO.md)"
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2141,6 +2318,50 @@
                                                        "territory-first",
                                                        "no-secrets-in-repo",
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-55-1",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~CommercialStoreGate|FullyQualifiedName~StoreService",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-55-2",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~TransactionsController|FullyQualifiedName~TransactionQuote",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-55-3",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~TransactionsController",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-55-4",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~FeeSplitRule|FullyQualifiedName~TransactionQuote",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-55-5",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~TerritoryPayoutsController|FullyQualifiedName~PayoutConsolidation",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-55-6",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~TransactionsController",
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-55-7",
+                                                           "status":  "covered",
+                                                           "covered_by":  "FullyQualifiedName~FeedJourneyService",
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2155,6 +2376,38 @@
                                                        "territory-first",
                                                        "no-secrets-in-repo",
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-56-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-56-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-56-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-56-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-56-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2170,6 +2423,44 @@
                                                        "territory-first",
                                                        "no-secrets-in-repo",
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-57-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-57-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-57-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-57-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-57-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-57-6",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2185,6 +2476,44 @@
                                                        "territory-data-stays-on-instance",
                                                        "no-secrets-in-repo",
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-58-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-58-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-58-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-58-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-58-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-58-6",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2199,6 +2528,44 @@
                                                        "territory-data-stays-on-instance",
                                                        "no-secrets-in-repo",
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-59-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-59-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-59-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-59-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-59-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-59-6",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2214,6 +2581,38 @@
                                                        "territory-first",
                                                        "no-hardcoded-colors",
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-60-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-60-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-60-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-60-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-60-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2228,6 +2627,38 @@
                                                        "territory-first",
                                                        "no-secrets-in-repo",
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-61-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-61-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-61-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-61-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-61-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 },
                                 {
@@ -2239,6 +2670,26 @@
                                                        ],
                                     "guardrails":  [
                                                        "sync-docs-on-behavior-change"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-PLAT-1",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-PLAT-2",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-PLAT-3",
+                                                           "status":  null,
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
                                                    ]
                                 }
                             ],
@@ -2341,6 +2792,96 @@
                                                    ]
                                     }
                                 ],
+                  "tests":  [
+                                {
+                                    "id":  "FullyQualifiedName~CommercialStoreGate|FullyQualifiedName~StoreService",
+                                    "covers":  [
+                                                   "FASE55-monetization:AC-55-1"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~Core",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-6"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~CoreAvailabilityCache",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-10",
+                                                   "FASE54-iac:AC-54-4"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~CoreControllerIntegration",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-2",
+                                                   "FASE53-arah-core:AC-53-4",
+                                                   "FASE53-arah-core:AC-53-9"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreDirectoryService",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-7"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreInstanceRegistry",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-3"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreReleaseCatalog",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-5"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~CoreInstanceRegistry|FullyQualifiedName~CoreReleaseCatalog",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-1"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~FederationControllerIntegration|FullyQualifiedName~FederationIdentityService",
+                                    "covers":  [
+                                                   "FASE53-arah-core:AC-53-8"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~FeedJourneyService",
+                                    "covers":  [
+                                                   "FASE55-monetization:AC-55-7"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~FeeSplitRule|FullyQualifiedName~TransactionQuote",
+                                    "covers":  [
+                                                   "FASE55-monetization:AC-55-4"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~TerritoryPayoutsController|FullyQualifiedName~PayoutConsolidation",
+                                    "covers":  [
+                                                   "FASE55-monetization:AC-55-5"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~TransactionsController",
+                                    "covers":  [
+                                                   "FASE55-monetization:AC-55-3",
+                                                   "FASE55-monetization:AC-55-6"
+                                               ]
+                                },
+                                {
+                                    "id":  "FullyQualifiedName~TransactionsController|FullyQualifiedName~TransactionQuote",
+                                    "covers":  [
+                                                   "FASE55-monetization:AC-55-2"
+                                               ]
+                                }
+                            ],
                   "guardrails":  [
                                      {
                                          "id":  "block_on",
@@ -3831,13 +4372,13 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:likec4-export",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "architecture-docs"
                   },
                   {
                       "from":  "agent:solutions-architect",
                       "to":  "skill:likec4-export",
                       "type":  "may_invoke_skill",
-                      "via":  "architecture-docs"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -4206,6 +4747,114 @@
                       "from":  "harness:FASE61-territorial-capital",
                       "to":  "agent:spec-steward",
                       "type":  "validated_by"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~Core",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-6"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreAvailabilityCache",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-10"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-2"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-4"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-9"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreDirectoryService",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-7"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreInstanceRegistry",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-3"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration|FullyQualifiedName~CoreReleaseCatalog",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-5"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreInstanceRegistry|FullyQualifiedName~CoreReleaseCatalog",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-1"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~FederationControllerIntegration|FullyQualifiedName~FederationIdentityService",
+                      "type":  "verified_by_test",
+                      "via":  "AC-53-8"
+                  },
+                  {
+                      "from":  "spec:FASE54-iac",
+                      "to":  "test:FullyQualifiedName~CoreAvailabilityCache",
+                      "type":  "verified_by_test",
+                      "via":  "AC-54-4"
+                  },
+                  {
+                      "from":  "spec:FASE55-monetization",
+                      "to":  "test:FullyQualifiedName~CommercialStoreGate|FullyQualifiedName~StoreService",
+                      "type":  "verified_by_test",
+                      "via":  "AC-55-1"
+                  },
+                  {
+                      "from":  "spec:FASE55-monetization",
+                      "to":  "test:FullyQualifiedName~FeedJourneyService",
+                      "type":  "verified_by_test",
+                      "via":  "AC-55-7"
+                  },
+                  {
+                      "from":  "spec:FASE55-monetization",
+                      "to":  "test:FullyQualifiedName~FeeSplitRule|FullyQualifiedName~TransactionQuote",
+                      "type":  "verified_by_test",
+                      "via":  "AC-55-4"
+                  },
+                  {
+                      "from":  "spec:FASE55-monetization",
+                      "to":  "test:FullyQualifiedName~TerritoryPayoutsController|FullyQualifiedName~PayoutConsolidation",
+                      "type":  "verified_by_test",
+                      "via":  "AC-55-5"
+                  },
+                  {
+                      "from":  "spec:FASE55-monetization",
+                      "to":  "test:FullyQualifiedName~TransactionsController",
+                      "type":  "verified_by_test",
+                      "via":  "AC-55-3"
+                  },
+                  {
+                      "from":  "spec:FASE55-monetization",
+                      "to":  "test:FullyQualifiedName~TransactionsController",
+                      "type":  "verified_by_test",
+                      "via":  "AC-55-6"
+                  },
+                  {
+                      "from":  "spec:FASE55-monetization",
+                      "to":  "test:FullyQualifiedName~TransactionsController|FullyQualifiedName~TransactionQuote",
+                      "type":  "verified_by_test",
+                      "via":  "AC-55-2"
                   }
               ]
 }

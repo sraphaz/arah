@@ -12,11 +12,15 @@
 .EXAMPLE
   ./export-agent-graph.ps1
 .EXAMPLE
-  ./export-agent-graph.ps1 -Json          # imprime no stdout, não grava arquivo
+  ./export-agent-graph.ps1 -Json          # imprime JSON no stdout, não grava arquivo
+.EXAMPLE
+  ./export-agent-graph.ps1 -Mermaid       # imprime diagrama Mermaid no stdout
 #>
 param(
     [string]$OutFile = '',
-    [switch]$Json
+    [string]$MermaidOut = '',
+    [switch]$Json,
+    [switch]$Mermaid
 )
 
 $ErrorActionPreference = 'Stop'
@@ -27,6 +31,7 @@ $SkillsDir = Join-Path $Root '.skills'
 $SpecsDir = Join-Path $Root 'docs/specs'
 $WorkflowsDir = Join-Path $Root '.github/workflows'
 if (-not $OutFile) { $OutFile = Join-Path $Root 'docs/_meta/agent-graph.generated.json' }
+if (-not $MermaidOut) { $MermaidOut = Join-Path $Root 'docs/_meta/agent-graph.generated.mmd' }
 
 function Get-RelPath {
     param([string]$FullPath)
@@ -119,6 +124,24 @@ function Get-ScopePaths {
     $scope = Get-TopLevelBlock -Raw $Raw -Key 'scope'
     if (-not $scope) { return @() }
     return Get-ListUnderKey -Raw $scope -Key 'paths' -Indent 2
+}
+
+# Extrai os acceptance criteria de uma spec: id, status, covered_by (filtro de
+# teste) e evidence. Mesmo padrão de validate-specs.ps1 (sem Singleline).
+function Get-SpecAcceptance {
+    param([string]$Raw)
+    $items = @()
+    if ($Raw -notmatch '(?m)^acceptance:[ \t]*\r?\n((?:[ \t]+\S.*\r?\n?)+)') { return $items }
+    $block = $Matches[1]
+    foreach ($chunk in [regex]::Split($block, '(?m)^  - id:\s*')) {
+        if ($chunk -notmatch '^(\S+)') { continue }
+        $acId = $Matches[1].Trim()
+        $status = if ($chunk -match '(?m)^    status:\s*(\S+)') { $Matches[1].Trim() } else { $null }
+        $coveredBy = if ($chunk -match '(?m)^    covered_by:\s*(.+)$') { $Matches[1].Trim().Trim('"').Trim("'") } else { $null }
+        $evidence = if ($chunk -match '(?m)^    evidence:\s*(.+)$') { $Matches[1].Trim().Trim('"').Trim("'") } else { $null }
+        $items += [ordered]@{ id = $acId; status = $status; covered_by = $coveredBy; evidence = $evidence }
+    }
+    return $items
 }
 
 # --- 1) Agents ---------------------------------------------------------------
@@ -220,6 +243,7 @@ if (Test-Path $SpecsDir) {
                 $harnessAgents = Get-ListUnderKey -Raw $harnessBlock -Key 'agents' -Indent 2
             }
             $grs = Get-ListUnderKey -Raw $raw -Key 'guardrails' -Indent 0
+            $acceptance = Get-SpecAcceptance -Raw $raw
             $rel = Get-RelPath $_.FullName
             $specs += [ordered]@{
                 id             = $id
@@ -227,12 +251,30 @@ if (Test-Path $SpecsDir) {
                 manifest       = $rel
                 harness_agents = @($harnessAgents)
                 guardrails     = @($grs)
+                acceptance     = @($acceptance)
             }
             $harnesses += [ordered]@{ id = $id; spec = $id; agents = @($harnessAgents) }
         }
 }
 $specs = @($specs | Sort-Object { $_.id } -Unique)
 $harnesses = @($harnesses | Sort-Object { $_.id } -Unique)
+
+# --- 6b) Tests (filtros covered_by das acceptance criteria) ------------------
+# Rastreabilidade fina AC <-> teste: cada covered_by vira um nó de teste,
+# referenciado pelas specs/ACs que o cobrem.
+$testMap = @{}
+foreach ($s in $specs) {
+    foreach ($ac in $s.acceptance) {
+        if ($ac.covered_by) {
+            if (-not $testMap.ContainsKey($ac.covered_by)) { $testMap[$ac.covered_by] = @() }
+            $ref = "$($s.id):$($ac.id)"
+            if ($testMap[$ac.covered_by] -notcontains $ref) { $testMap[$ac.covered_by] += $ref }
+        }
+    }
+}
+$tests = @($testMap.GetEnumerator() | Sort-Object Name | ForEach-Object {
+    [ordered]@{ id = $_.Key; covers = @($_.Value) }
+})
 
 # --- 7) Guardrails (declarados + executáveis no harness) ---------------------
 # Guardrails com verificação executável em run-harness.ps1 (Test-Guardrail).
@@ -320,6 +362,9 @@ foreach ($s in $specs) {
     Add-Edge "spec:$($s.id)" "harness:$($s.id)" 'requires_harness'
     foreach ($ha in $s.harness_agents) { Add-Edge "harness:$($s.id)" "agent:$ha" 'validated_by' }
     foreach ($g in $s.guardrails) { Add-Edge "spec:$($s.id)" "guardrail:$g" 'blocked_by_guardrail' }
+    foreach ($ac in $s.acceptance) {
+        if ($ac.covered_by) { Add-Edge "spec:$($s.id)" "test:$($ac.covered_by)" 'verified_by_test' $ac.id }
+    }
 }
 
 # Guardrails executáveis são impostos pelo harness (spec-harness.yml)
@@ -334,6 +379,81 @@ Add-Edge "gate:bot-review" "gate:pr-steward" 'requires_human_review'
 Add-Edge "gate:pr-steward" "gate:human-review" 'requires_human_review'
 
 $edges = @($edges | Sort-Object { "$($_.type)|$($_.from)|$($_.to)" })
+
+# --- Diagrama Mermaid (overview) ---------------------------------------------
+# Visão focada e legível: coreografia (rules -> agentes operacionais/domínio) +
+# cadeia de review gates. Paths/skills/specs/tests ficam só no JSON completo.
+function ConvertTo-MermaidId {
+    param([string]$Raw)
+    return ($Raw -replace '[^A-Za-z0-9]', '_')
+}
+
+function Build-Mermaid {
+    param($Rules, $Agents, $ReviewGates, $Edges)
+    $sb = New-Object System.Text.StringBuilder
+    [void]$sb.AppendLine('```mermaid')
+    [void]$sb.AppendLine('flowchart LR')
+    [void]$sb.AppendLine('  %% Gerado por scripts/agents/export-agent-graph.ps1 — não editar à mão')
+
+    $agentKind = @{}
+    foreach ($a in $Agents) { $agentKind[$a.id] = $a.kind }
+
+    # Rules
+    [void]$sb.AppendLine('  subgraph CHOREOGRAPHY["Coreografia (paths -> rules)"]')
+    foreach ($r in ($Rules | Sort-Object { $_.id })) {
+        $rid = 'rule_' + (ConvertTo-MermaidId $r.id)
+        [void]$sb.AppendLine("    $rid[""$($r.id)""]")
+    }
+    [void]$sb.AppendLine('  end')
+
+    # Agentes usados nas rules
+    $usedAgents = @{}
+    foreach ($e in $Edges) {
+        if ($e.type -in @('activates_agent', 'consults_domain_agent') -and $e.from -like 'rule:*') {
+            $aid = $e.to -replace '^agent:', ''
+            $usedAgents[$aid] = $true
+        }
+    }
+    [void]$sb.AppendLine('  subgraph OPERATIONAL["Agentes operacionais"]')
+    foreach ($aid in ($usedAgents.Keys | Where-Object { $agentKind[$_] -ne 'domain' } | Sort-Object)) {
+        $nid = 'agent_' + (ConvertTo-MermaidId $aid)
+        [void]$sb.AppendLine("    $nid([""$aid""])")
+    }
+    [void]$sb.AppendLine('  end')
+    [void]$sb.AppendLine('  subgraph DOMAIN["Agentes de domínio (consultivos)"]')
+    foreach ($aid in ($usedAgents.Keys | Where-Object { $agentKind[$_] -eq 'domain' } | Sort-Object)) {
+        $nid = 'agent_' + (ConvertTo-MermaidId $aid)
+        [void]$sb.AppendLine("    $nid{{""$aid""}}")
+    }
+    [void]$sb.AppendLine('  end')
+
+    # Arestas rule -> agente
+    foreach ($e in ($Edges | Where-Object { $_.from -like 'rule:*' -and $_.type -in @('activates_agent', 'consults_domain_agent') } | Sort-Object { "$($_.from)|$($_.to)" })) {
+        $rid = 'rule_' + (ConvertTo-MermaidId ($e.from -replace '^rule:', ''))
+        $nid = 'agent_' + (ConvertTo-MermaidId ($e.to -replace '^agent:', ''))
+        if ($e.type -eq 'consults_domain_agent') {
+            [void]$sb.AppendLine("  $rid -. consulta .-> $nid")
+        } else {
+            [void]$sb.AppendLine("  $rid --> $nid")
+        }
+    }
+
+    # Cadeia de review gates
+    [void]$sb.AppendLine('  subgraph REVIEW["Pipeline de revisão (termina em humano)"]')
+    foreach ($g in $ReviewGates) {
+        $gid = 'gate_' + (ConvertTo-MermaidId $g.id)
+        $shape = if ($g.kind -eq 'human') { "[[""$($g.id)""]]" } else { "[""$($g.id)""]" }
+        [void]$sb.AppendLine("    $gid$shape")
+    }
+    [void]$sb.AppendLine('  end')
+    foreach ($e in ($Edges | Where-Object { $_.type -eq 'requires_human_review' })) {
+        $from = 'gate_' + (ConvertTo-MermaidId ($e.from -replace '^gate:', ''))
+        $to = 'gate_' + (ConvertTo-MermaidId ($e.to -replace '^gate:', ''))
+        [void]$sb.AppendLine("  $from --> $to")
+    }
+    [void]$sb.AppendLine('```')
+    return $sb.ToString()
+}
 
 # --- Montagem do grafo -------------------------------------------------------
 $graph = [ordered]@{
@@ -356,6 +476,7 @@ $graph = [ordered]@{
         domains     = $domains.Count
         specs       = $specs.Count
         harnesses   = $harnesses.Count
+        tests       = $tests.Count
         guardrails  = $guardrails.Count
         workflows   = $workflows.Count
         review_gates = $reviewGates.Count
@@ -369,6 +490,7 @@ $graph = [ordered]@{
         domains      = @($domains)
         specs        = @($specs)
         harnesses    = @($harnesses)
+        tests        = @($tests)
         guardrails   = @($guardrails)
         workflows    = @($workflows)
         review_gates = @($reviewGates)
@@ -377,14 +499,19 @@ $graph = [ordered]@{
 }
 
 $jsonText = $graph | ConvertTo-Json -Depth 12
+$mermaidText = Build-Mermaid -Rules $rules -Agents $agents -ReviewGates $reviewGates -Edges $edges
 
-if ($Json) {
+if ($Mermaid) {
+    $mermaidText
+} elseif ($Json) {
     $jsonText
 } else {
     $outDir = Split-Path $OutFile -Parent
     if (-not (Test-Path $outDir)) { New-Item -ItemType Directory -Path $outDir -Force | Out-Null }
     [System.IO.File]::WriteAllText($OutFile, $jsonText + "`n", [System.Text.UTF8Encoding]::new($false))
+    [System.IO.File]::WriteAllText($MermaidOut, $mermaidText, [System.Text.UTF8Encoding]::new($false))
     Write-Host "Agent graph exported: $(Get-RelPath $OutFile)"
-    Write-Host "  agents=$($agents.Count) skills=$($skills.Count) rules=$($rules.Count) specs=$($specs.Count) edges=$($edges.Count)"
+    Write-Host "  diagram: $(Get-RelPath $MermaidOut)"
+    Write-Host "  agents=$($agents.Count) skills=$($skills.Count) rules=$($rules.Count) specs=$($specs.Count) tests=$($tests.Count) edges=$($edges.Count)"
 }
 exit 0

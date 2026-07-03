@@ -74,8 +74,9 @@ No JSON gerado, cada nó tem um id com namespace (`agent:`, `skill:`, `rule:` �
 | **ChoreographyRule** | `rule:` | `.agents/choreography.yaml` |
 | **PathPattern** | `path:` | rules[].paths + scope.paths |
 | **Domain** | `domain:` | `.agents/domain/*` + rules de type `domain` |
-| **Spec** | `spec:` | `docs/specs/**/*.spec.yaml` |
+| **Spec** | `spec:` | `docs/specs/**/*.spec.yaml` (inclui `acceptance[]`) |
 | **Harness** | `harness:` | bloco `harness` das specs + `scripts/harness/**` |
+| **Test** | `test:` | `acceptance[].covered_by` das specs (rastreabilidade fina) |
 | **Guardrail** | `guardrail:` | manifests, specs e `run-harness.ps1` (`Test-Guardrail`) |
 | **Workflow** | `workflow:` | `.github/workflows/*.yml` |
 | **ReviewGate** | `gate:` | `pr-always`, `pr-steward`, workflows |
@@ -92,6 +93,7 @@ No JSON gerado, cada nó tem um id com namespace (`agent:`, `skill:`, `rule:` �
 | `requires_spec` | ChoreographyRule → Spec | paths SDD exigem spec válida |
 | `requires_harness` | Spec → Harness | spec validada por harness |
 | `validated_by` | Harness → Agent | agente responsável no harness |
+| `verified_by_test` | Spec → Test | acceptance criterion coberto por filtro de teste (via = AC id) |
 | `requires_human_review` | ReviewGate → ReviewGate | encaminha ao merge humano |
 | `blocked_by_guardrail` | Agent/Spec → Guardrail | opera sob o guardrail |
 | `enforced_by_workflow` | Guardrail → Workflow | guardrail imposto por CI |
@@ -127,6 +129,9 @@ Ver [`docs/_meta/SDD_AND_HARNESS.md`](../_meta/SDD_AND_HARNESS.md).
   `territory-data-stays-on-instance`, `no-merge-automatic`, …) verificados em
   `run-harness.ps1` viram arestas `enforced_by_workflow` → `spec-harness.yml`.
 - A rule `specs-sdd` gera `requires_spec`, materializando *spec-before-code*.
+- **Rastreabilidade fina**: cada `acceptance[].covered_by` da spec vira um nó
+  `test:` com aresta `verified_by_test` (via = id do AC), ligando contrato de
+  aceite ao filtro de teste que o cobre (DoD DOD-09).
 
 ## Como melhora os guardrails
 
@@ -144,9 +149,10 @@ Ver [`docs/_meta/SDD_AND_HARNESS.md`](../_meta/SDD_AND_HARNESS.md).
 ## Uso
 
 ```powershell
-# Gerar/atualizar o artefato
+# Gerar/atualizar o artefato (JSON + diagrama Mermaid)
 ./scripts/agents/export-agent-graph.ps1
 ./scripts/agents/arah-agents.ps1 export-graph
+./scripts/agents/export-agent-graph.ps1 -Mermaid   # imprime só o diagrama
 
 # Validar consistência (erros = crítico; warnings = não bloqueia)
 ./scripts/harness/validate-agent-graph.ps1
@@ -155,11 +161,16 @@ Ver [`docs/_meta/SDD_AND_HARNESS.md`](../_meta/SDD_AND_HARNESS.md).
 ```
 
 O artefato gerado fica em
-[`docs/_meta/agent-graph.generated.json`](../_meta/agent-graph.generated.json) e
+[`docs/_meta/agent-graph.generated.json`](../_meta/agent-graph.generated.json)
+(+ diagrama [`agent-graph.generated.mmd`](../_meta/agent-graph.generated.mmd)) e
 **deve ser commitado no mesmo PR** que altera coreografia/manifests/skills
-(doc como código). A validação avisa quando o JSON está defasado (comparando o
-conteúdo inteiro regenerado, não só contagens) e falha se houver **arestas
-órfãs** (endpoint sem nó correspondente — integridade referencial).
+(doc como código). A validação:
+
+- compara o **conteúdo inteiro** regenerado (não só contagens), ignorando `generated_at`;
+- falha em **arestas órfãs** (endpoint sem nó — integridade referencial);
+- avisa (warning) sobre **skills/agentes órfãos** (declarados mas nunca acionados);
+- roda como **gate de CI** em [`agents-validate.yml`](../../.github/workflows/agents-validate.yml)
+  e dentro do harness ([`spec-harness.yml`](../../.github/workflows/spec-harness.yml)).
 
 ### Exemplo de leitura ("por quê?")
 
@@ -173,34 +184,56 @@ Para saber por que o `backend` foi ativado ao mudar `backend/Arah.Core/Foo.cs`:
 
 ---
 
-## Futuro: exposição via MCP
+## Diagrama (Mermaid)
 
-Este passo **não** implementa MCP. Porém, o desenho já deixa o caminho pronto:
+`export-agent-graph.ps1` também gera
+[`docs/_meta/agent-graph.generated.mmd`](../_meta/agent-graph.generated.mmd): uma
+visão focada e legível (coreografia `rules → agentes operacionais/domínio` +
+pipeline de review gates). Paths, skills, specs e tests ficam só no JSON completo,
+para o diagrama não virar um emaranhado. Renderiza direto no GitHub/Mermaid Live.
 
-- O artefato `agent-graph.generated.json` tem esquema estável (nós + arestas),
-  fácil de servir como *resource* MCP (`arah://agent-graph`).
-- Consultas do tipo *"quais agentes/skills um path dispara"* podem virar *tools*
-  MCP finas por cima do JSON já gerado (ou re-executando o export).
-- Como o graph é derivado e read-only, expô-lo via MCP não muda guardrails: o MCP
-  seria apenas uma janela de leitura/explicação, mantendo o merge humano.
-- Próximo incremento natural: um pequeno servidor MCP que carrega o JSON e
-  responde `explain(path)` / `agents_for(path)` / `skills_for(agent)`.
+## Exposição via MCP (read-only)
 
-## Limitações conhecidas (v1)
+Servidor MCP zero-dependência (Node stdio, JSON-RPC 2.0) em
+[`scripts/agents/agent-graph-mcp.mjs`](../../scripts/agents/agent-graph-mcp.mjs),
+que lê o JSON gerado e expõe:
+
+- **resource** `arah://agent-graph` → o grafo completo;
+- **tools** (só leitura): `agents_for_path(path)`, `explain_path(path)`,
+  `skills_for_agent(agent)`.
+
+Registro no cliente (ex.: `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "arah-agent-graph": {
+      "command": "node",
+      "args": ["scripts/agents/agent-graph-mcp.mjs"]
+    }
+  }
+}
+```
+
+É derivado e read-only: não executa agentes, não escreve nada e não muda
+guardrails — apenas uma janela de leitura/explicação. Mantém o merge humano.
+
+## Limitações conhecidas
 
 - Parsing por regex (não YAML completo): assume a formatação atual dos arquivos.
 - `generated_at` muda a cada export (o restante do JSON é estável/ordenado).
 - Workflows são anotados por um mapa curado de papéis; não há análise semântica
   profunda de cada `.yml`.
-- Arestas de spec cobrem `harness.agents` e `guardrails`; não modelam ainda
-  cada acceptance criterion individual.
+- O diagrama Mermaid é um overview (coreografia + gates); a visão completa é o JSON.
+- Detecção de órfãos é heurística (warning), pois agentes podem ser roteados por
+  label do orchestrator, não só por rules.
 
 ## Próximos passos recomendados
 
-1. Tornar a validação um **gate duro** no harness/CI quando estável (hoje é soft).
-2. Gerar um diagrama (Mermaid/LikeC4) a partir do JSON para navegação visual.
-3. Expor via MCP como resource/tools read-only.
-4. Estender o graph para arestas por acceptance criterion (rastreabilidade fina).
+1. Rastreabilidade reversa teste → AC (quais ACs um filtro de teste cobre) nos relatórios.
+2. Export opcional para LikeC4 além do Mermaid.
+3. Ferramentas MCP adicionais (ex.: `path_for_agent`, `guardrails_for_agent`).
+4. Métricas de cobertura: % de rules com skill declarada, % de specs com teste.
 
 ## Referências
 
@@ -208,4 +241,6 @@ Este passo **não** implementa MCP. Porém, o desenho já deixa o caminho pronto
 - [`docs/_meta/agent-graph.generated.json`](../_meta/agent-graph.generated.json)
 - [`scripts/agents/export-agent-graph.ps1`](../../scripts/agents/export-agent-graph.ps1)
 - [`scripts/harness/validate-agent-graph.ps1`](../../scripts/harness/validate-agent-graph.ps1)
+- [`scripts/agents/agent-graph-mcp.mjs`](../../scripts/agents/agent-graph-mcp.mjs)
+- [`docs/_meta/agent-graph.generated.mmd`](../_meta/agent-graph.generated.mmd)
 - [AGENTS.md](../../AGENTS.md) · [AGENT_OPERATION.md](AGENT_OPERATION.md) · [SDD_AND_HARNESS.md](../_meta/SDD_AND_HARNESS.md)

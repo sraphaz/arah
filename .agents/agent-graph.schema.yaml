@@ -83,6 +83,17 @@ nodes:
       manifest: path
       harness_agents: list<Agent.id>
       guardrails: list<Guardrail.id>
+      acceptance: list<{ id, status, covered_by, evidence }>
+
+  Test:
+    id_namespace: test
+    description: >-
+      Filtro de teste (covered_by de um acceptance criterion) que verifica um AC.
+      Rastreabilidade fina AC <-> teste (DoD DOD-09).
+    source: docs/specs/**/*.spec.yaml (acceptance[].covered_by)
+    fields:
+      id: string          # a string do filtro (ex.: FullyQualifiedName~Core)
+      covers: list<string> # refs "SPEC:AC" cobertas por este filtro
 
   Harness:
     id_namespace: harness
@@ -169,6 +180,11 @@ edges:
     from: Harness
     to: Agent
     meaning: Harness lista o agente responsável pela execução/aceite.
+
+  verified_by_test:
+    from: Spec
+    to: Test
+    meaning: Acceptance criterion da spec é coberto por um filtro de teste (via = AC id).
 
   requires_human_review:
     from: ReviewGate

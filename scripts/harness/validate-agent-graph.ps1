@@ -40,6 +40,18 @@ $CriticalRules = @('identity-privacy', 'monetization', 'infra-deploy', 'core-con
 $errors = @()
 $warnings = @()
 
+function Get-YamlListItems {
+    param([string]$Raw, [string]$Key, [int]$Indent)
+    $prefix = ' ' * $Indent
+    $itemPrefix = ' ' * ($Indent + 2)
+    $pattern = '(?m)^{0}{1}:[ \t]*\r?\n((?:{2}-[ \t]+[^\r\n]+\r?\n?)+)' -f $prefix, [regex]::Escape($Key), $itemPrefix
+    if ($Raw -match $pattern) {
+        return @([regex]::Matches($Matches[1], '^\s+-\s+(\S+)', 'Multiline') |
+            ForEach-Object { $_.Groups[1].Value.Trim() })
+    }
+    return @()
+}
+
 function Parse-ChoreographyRules {
     param([string]$Raw)
     $rules = @()
@@ -181,6 +193,7 @@ if ((Test-Path $GraphJson) -and ($errors.Count -eq 0)) {
             @{ ns = 'domain';    items = $graph.nodes.domains;      key = 'id' },
             @{ ns = 'spec';      items = $graph.nodes.specs;        key = 'id' },
             @{ ns = 'harness';   items = $graph.nodes.harnesses;    key = 'id' },
+            @{ ns = 'test';      items = $graph.nodes.tests;        key = 'id' },
             @{ ns = 'guardrail'; items = $graph.nodes.guardrails;   key = 'id' },
             @{ ns = 'workflow';  items = $graph.nodes.workflows;    key = 'id' },
             @{ ns = 'gate';      items = $graph.nodes.review_gates; key = 'id' }
@@ -202,6 +215,44 @@ if ((Test-Path $GraphJson) -and ($errors.Count -eq 0)) {
     } catch {
         $errors += "integridade de arestas: falha ao analisar o grafo — $($_.Exception.Message)"
     }
+}
+
+# --- Cobertura reversa: peças órfãs (warnings) -------------------------------
+# Skills e agentes declarados mas nunca referenciados — indicam possível peça
+# morta. Não bloqueia (warning), pois pode ser algo planejado/roteado por label.
+$agentFiles = @(Get-ChildItem -Path $AgentsDir -Recurse -Filter '*.agent.yaml')
+
+$referencedSkills = New-Object 'System.Collections.Generic.HashSet[string]'
+foreach ($rule in $rules) {
+    foreach ($a in $rule.agents) { foreach ($sk in $a.skills) { [void]$referencedSkills.Add($sk) } }
+}
+foreach ($f in $agentFiles) {
+    $raw = Get-Content $f.FullName -Raw
+    foreach ($sk in (Get-YamlListItems -Raw $raw -Key 'skills' -Indent 0)) { [void]$referencedSkills.Add($sk) }
+}
+foreach ($sid in ($skillIds | Sort-Object)) {
+    if (-not $referencedSkills.Contains($sid)) {
+        $warnings += "skill órfã: '$sid' não é referenciada por nenhuma rule nem manifest de agente"
+    }
+}
+
+$referencedAgents = New-Object 'System.Collections.Generic.HashSet[string]'
+foreach ($rule in $rules) { foreach ($a in $rule.agents) { [void]$referencedAgents.Add($a.id) } }
+foreach ($f in $agentFiles) {
+    $raw = Get-Content $f.FullName -Raw
+    foreach ($d in (Get-YamlListItems -Raw $raw -Key 'domain' -Indent 2)) { [void]$referencedAgents.Add($d) }
+    foreach ($s in (Get-YamlListItems -Raw $raw -Key 'specialists' -Indent 2)) { [void]$referencedAgents.Add($s) }
+}
+# Orquestrador roteia por label/co_route: qualquer id citado ali conta como uso.
+$orchPath = Join-Path $AgentsDir 'orchestrator.agent.yaml'
+$orchRaw = if (Test-Path $orchPath) { Get-Content $orchPath -Raw } else { '' }
+foreach ($f in $agentFiles) {
+    $raw = Get-Content $f.FullName -Raw
+    $aid = if ($raw -match '(?m)^id:\s*(\S+)') { $Matches[1].Trim() } else { $f.BaseName -replace '\.agent$', '' }
+    if ($aid -eq 'orchestrator') { continue }
+    if ($referencedAgents.Contains($aid)) { continue }
+    if ($orchRaw -match ("(?m)\b" + [regex]::Escape($aid) + "\b")) { continue }
+    $warnings += "agente órfão: '$aid' não é acionado por rule, consult ou roteamento do orchestrator"
 }
 
 # --- Resultado ---------------------------------------------------------------

@@ -8,6 +8,8 @@ on:
       - 'AGENTS.md'
       - 'CODEOWNERS'
       - 'scripts/agents/**'
+      - 'scripts/harness/**'
+      - 'docs/specs/**'
       - '.github/workflows/agents-validate.yml'
       - '.github/workflows/agents.yml'
   push:
@@ -16,6 +18,9 @@ on:
       - '.agents/**'
       - '.skills/**'
       - 'AGENTS.md'
+      - 'scripts/agents/**'
+      - 'scripts/harness/**'
+      - 'docs/specs/**'
 
 permissions:
   contents: read
@@ -28,6 +33,14 @@ jobs:
       - name: Validate agent & skill manifests
         shell: pwsh
         run: ./scripts/agents/validate-manifests.ps1
+
+  validate-agent-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Agent Graph (integridade + defasagem)
+        shell: pwsh
+        run: ./scripts/harness/validate-agent-graph.ps1
 
   agent-pr-checklist:
     if: github.event_name == 'pull_request'

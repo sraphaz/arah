@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using Arah.Api;
 using Arah.Api.Contracts.Auth;
 using Arah.Api.Contracts.Alerts;
+using Arah.Api.Contracts.Common;
 using Arah.Api.Contracts.Assets;
 using Arah.Api.Contracts.Events;
 using Arah.Api.Contracts.Feed;
@@ -14,6 +15,8 @@ using Arah.Api.Contracts.Memberships;
 using Arah.Api.Contracts.Marketplace;
 using Arah.Api.Contracts.Territories;
 using Arah.Infrastructure.InMemory;
+using Arah.Modules.Assets.Domain;
+using Arah.Modules.Map.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -191,13 +194,13 @@ public sealed class ApiScenariosTests
         // Para testar exception handler, precisamos de uma exceção real
         // Vamos testar através de um endpoint que requer autenticação mas não fornece token
         var unauthorizedResponse = await client.GetAsync("api/v1/feed");
-        
+
         // Este deve retornar BadRequest (sem session) ou Unauthorized (sem token)
         // Mas vamos testar o exception handler através de um erro de validação
         var invalidRequest = await client.PostAsJsonAsync(
             "api/v1/territories/suggestions",
             new SuggestTerritoryRequest("", "", "", "", 0, 0));
-        
+
         Assert.Equal(HttpStatusCode.BadRequest, invalidRequest.StatusCode);
         var payload = await invalidRequest.Content.ReadFromJsonAsync<Dictionary<string, object>>();
 
@@ -561,6 +564,101 @@ public sealed class ApiScenariosTests
             $"api/v1/map/entities?territoryId={ActiveTerritoryId}");
         Assert.NotNull(residentMap);
         Assert.Equal(2, residentMap!.Count);
+    }
+
+    [Fact]
+    public async Task MapPinsPaged_PreservesPerTypePagingContract()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var dataStore = factory.GetDataStore();
+        dataStore.TerritoryAssets.Clear();
+        dataStore.AssetGeoAnchors.Clear();
+        dataStore.MapEntities.Clear();
+
+        var createdByUserId = ResidentUserId;
+        var createdAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var firstAsset = new TerritoryAsset(
+            Guid.NewGuid(),
+            ActiveTerritoryId,
+            "natural",
+            "Asset antigo",
+            null,
+            AssetStatus.Active,
+            createdByUserId,
+            createdAt,
+            createdByUserId,
+            createdAt,
+            null,
+            null,
+            null);
+        var secondAsset = new TerritoryAsset(
+            Guid.NewGuid(),
+            ActiveTerritoryId,
+            "natural",
+            "Asset novo",
+            null,
+            AssetStatus.Active,
+            createdByUserId,
+            createdAt.AddMinutes(1),
+            createdByUserId,
+            createdAt.AddMinutes(1),
+            null,
+            null,
+            null);
+
+        dataStore.TerritoryAssets.AddRange(new[] { firstAsset, secondAsset });
+        dataStore.AssetGeoAnchors.AddRange(new[]
+        {
+            new AssetGeoAnchor(Guid.NewGuid(), firstAsset.Id, -23.37, -45.02, createdAt),
+            new AssetGeoAnchor(Guid.NewGuid(), secondAsset.Id, -23.371, -45.021, createdAt.AddMinutes(1))
+        });
+
+        dataStore.MapEntities.AddRange(new[]
+        {
+            new MapEntity(
+                Guid.NewGuid(),
+                ActiveTerritoryId,
+                createdByUserId,
+                "Entidade antiga",
+                "espaço natural",
+                -23.372,
+                -45.022,
+                MapEntityStatus.Validated,
+                MapEntityVisibility.Public,
+                0,
+                createdAt),
+            new MapEntity(
+                Guid.NewGuid(),
+                ActiveTerritoryId,
+                createdByUserId,
+                "Entidade nova",
+                "espaço natural",
+                -23.373,
+                -45.023,
+                MapEntityStatus.Validated,
+                MapEntityVisibility.Public,
+                0,
+                createdAt.AddMinutes(1))
+        });
+
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "map-pins-paged-session");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var token = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var response = await client.GetFromJsonAsync<PagedResponse<MapPinResponse>>(
+            $"api/v1/map/pins/paged?territoryId={ActiveTerritoryId}&types=asset,entity&pageNumber=2&pageSize=1");
+
+        Assert.NotNull(response);
+        Assert.Equal(2, response!.TotalCount);
+        Assert.Equal(2, response.TotalPages);
+        Assert.False(response.HasNextPage);
+        Assert.Single(response.Items);
+        Assert.Equal("entity", response.Items[0].PinType);
     }
 
     [Fact]

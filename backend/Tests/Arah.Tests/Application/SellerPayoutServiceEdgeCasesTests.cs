@@ -241,6 +241,99 @@ public sealed class SellerPayoutServiceEdgeCasesTests
     }
 
     [Fact]
+    public async Task ProcessPendingPayoutsAsync_CommitsOnceAfterAllSellerGroups()
+    {
+        var territoryId = Guid.NewGuid();
+        var firstSellerUserId = Guid.NewGuid();
+        var secondSellerUserId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+
+        var config = new TerritoryPayoutConfig(
+            Guid.NewGuid(),
+            territoryId,
+            7,
+            1000,
+            null,
+            PayoutFrequency.Weekly,
+            true,
+            false,
+            "BRL");
+        await _payoutConfigRepository.AddAsync(config, CancellationToken.None);
+
+        var firstTransaction = new SellerTransaction(
+            Guid.NewGuid(),
+            territoryId,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            firstSellerUserId,
+            2000,
+            200,
+            "BRL");
+        firstTransaction.MarkAsReadyForPayout();
+
+        var secondTransaction = new SellerTransaction(
+            Guid.NewGuid(),
+            territoryId,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            secondSellerUserId,
+            3000,
+            300,
+            "BRL");
+        secondTransaction.MarkAsReadyForPayout();
+
+        await _sellerTransactionRepository.AddAsync(firstTransaction, CancellationToken.None);
+        await _sellerTransactionRepository.AddAsync(secondTransaction, CancellationToken.None);
+
+        var firstBalance = new SellerBalance(Guid.NewGuid(), territoryId, firstSellerUserId, "BRL");
+        firstBalance.AddPendingAmount(firstTransaction.NetAmountInCents);
+        firstBalance.MoveToReadyForPayout(firstTransaction.NetAmountInCents);
+        await _sellerBalanceRepository.AddAsync(firstBalance, CancellationToken.None);
+
+        var secondBalance = new SellerBalance(Guid.NewGuid(), territoryId, secondSellerUserId, "BRL");
+        secondBalance.AddPendingAmount(secondTransaction.NetAmountInCents);
+        secondBalance.MoveToReadyForPayout(secondTransaction.NetAmountInCents);
+        await _sellerBalanceRepository.AddAsync(secondBalance, CancellationToken.None);
+
+        _payoutGatewayMock
+            .Setup(gateway => gateway.CreatePayoutAsync(
+                It.IsAny<long>(),
+                "BRL",
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<Dictionary<string, string>?>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => OperationResult<PayoutResult>.Success(
+                new PayoutResult(Guid.NewGuid().ToString(), PayoutStatus.Pending, DateTime.UtcNow)));
+
+        var unitOfWorkMock = new Mock<IUnitOfWork>();
+        unitOfWorkMock
+            .Setup(unitOfWork => unitOfWork.CommitAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var service = new SellerPayoutService(
+            _checkoutRepository,
+            _storeRepository,
+            _sellerTransactionRepository,
+            _sellerBalanceRepository,
+            _financialTransactionRepository,
+            _transactionStatusHistoryRepository,
+            _platformRevenueTransactionRepository,
+            _platformFinancialBalanceRepository,
+            _platformExpenseTransactionRepository,
+            _payoutConfigRepository,
+            _payoutGatewayMock.Object,
+            _auditLogger,
+            unitOfWorkMock.Object);
+
+        var result = await service.ProcessPendingPayoutsAsync(territoryId, userId, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value);
+        unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
     public async Task UpdatePayoutStatusAsync_WithNonExistentPayoutId_ReturnsFailure()
     {
         var result = await _service.UpdatePayoutStatusAsync("non-existent-payout-id", CancellationToken.None);

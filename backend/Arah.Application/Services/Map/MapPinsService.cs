@@ -112,8 +112,64 @@ public sealed class MapPinsService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        var allPins = await ListPinsAsync(territoryId, userId, filters, assetId, assetTypes, cancellationToken);
-        var ordered = allPins.OrderBy(p => p.PinType).ToList();
+        var pins = new List<MapPin>();
+
+        if (filters.Entities)
+        {
+            var entitiesPaged = await _mapService.ListEntitiesPagedAsync(
+                territoryId,
+                userId,
+                pagination,
+                cancellationToken);
+
+            pins.AddRange(BuildEntityPins(entitiesPaged.Items));
+        }
+
+        if (filters.Assets)
+        {
+            var assetTypeList = assetId is null ? assetTypes : null;
+            var assetsPaged = await _assetRepository.ListPagedAsync(
+                territoryId,
+                assetId,
+                assetTypeList,
+                AssetStatus.Active,
+                null,
+                pagination.Skip,
+                pagination.Take,
+                cancellationToken);
+
+            pins.AddRange(await BuildAssetPinsAsync(assetsPaged, cancellationToken));
+        }
+
+        if (filters.Posts || filters.Alerts || filters.Media)
+        {
+            var postsPaged = await _feedService.ListForTerritoryPagedAsync(
+                territoryId,
+                userId,
+                null,
+                null,
+                pagination,
+                filterByInterests: false,
+                prioritizeConnections: false,
+                cancellationToken);
+
+            pins.AddRange(await BuildPostPinsAsync(postsPaged.Items, filters, cancellationToken));
+        }
+
+        if (filters.Events)
+        {
+            var eventsPaged = await _eventsService.ListEventsPagedAsync(
+                territoryId,
+                null,
+                null,
+                null,
+                pagination,
+                cancellationToken);
+
+            pins.AddRange(BuildEventPins(eventsPaged.Items));
+        }
+
+        var ordered = pins.OrderBy(p => p.PinType).ToList();
         var pagedPins = ordered.Skip(pagination.Skip).Take(pagination.Take).ToList();
 
         return new PagedResult<MapPin>(pagedPins, pagination.PageNumber, pagination.PageSize, ordered.Count);

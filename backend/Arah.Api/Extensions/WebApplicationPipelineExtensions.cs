@@ -94,9 +94,6 @@ public static class WebApplicationPipelineExtensions
         // Swagger only in Development (padrão)
         app.UseArahSwagger();
 
-        // Security Headers — antes de arquivos estáticos (UseStaticFiles pode encerrar o pipeline)
-        app.UseMiddleware<SecurityHeadersMiddleware>();
-
         app.Use(async (context, next) =>
         {
             if (context.Request.Path == "/devportal")
@@ -147,6 +144,9 @@ public static class WebApplicationPipelineExtensions
 
         // CORS
         app.UseCors("Default");
+
+        // Security Headers - deve ficar após arquivos estáticos para não aplicar a CSP estrita nas páginas HTML servidas direto do wwwroot.
+        app.UseMiddleware<SecurityHeadersMiddleware>();
 
         // Correlation ID middleware - registrado primeiro, executa PRIMEIRO
         // Isso garante que o correlation ID esteja disponível quando o RequestLoggingMiddleware executar

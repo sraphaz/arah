@@ -35,7 +35,7 @@ public sealed class SecurityTests
                     null,
                     null,
                     null));
-            
+
             // Primeiras 5 devem passar (ou retornar 200/201)
             Assert.True(
                 response.StatusCode == HttpStatusCode.OK ||
@@ -63,7 +63,7 @@ public sealed class SecurityTests
             sixthResponse.StatusCode == HttpStatusCode.OK ||
             sixthResponse.StatusCode == HttpStatusCode.Created ||
             sixthResponse.StatusCode == HttpStatusCode.BadRequest);
-        
+
         // Se retornou 429, verificar header Retry-After
         if (sixthResponse.StatusCode == HttpStatusCode.TooManyRequests)
         {
@@ -133,13 +133,13 @@ public sealed class SecurityTests
         response.EnsureSuccessStatusCode();
 
         // Verificar security headers (podem estar em Headers ou Content.Headers)
-        var hasFrameOptions = response.Headers.Contains("X-Frame-Options") || 
+        var hasFrameOptions = response.Headers.Contains("X-Frame-Options") ||
                             response.Content.Headers.Contains("X-Frame-Options");
-        var hasContentTypeOptions = response.Headers.Contains("X-Content-Type-Options") || 
+        var hasContentTypeOptions = response.Headers.Contains("X-Content-Type-Options") ||
                                    response.Content.Headers.Contains("X-Content-Type-Options");
-        var hasXssProtection = response.Headers.Contains("X-XSS-Protection") || 
+        var hasXssProtection = response.Headers.Contains("X-XSS-Protection") ||
                              response.Content.Headers.Contains("X-XSS-Protection");
-        var hasReferrerPolicy = response.Headers.Contains("Referrer-Policy") || 
+        var hasReferrerPolicy = response.Headers.Contains("Referrer-Policy") ||
                                response.Content.Headers.Contains("Referrer-Policy");
 
         // Pelo menos alguns headers devem estar presentes
@@ -330,7 +330,7 @@ public sealed class SecurityTests
         var contentHeaders = response.Content.Headers;
 
         // Verificar se pelo menos alguns headers estão presentes
-        var hasSecurityHeaders = 
+        var hasSecurityHeaders =
             headers.Contains("X-Frame-Options") || contentHeaders.Contains("X-Frame-Options") ||
             headers.Contains("X-Content-Type-Options") || contentHeaders.Contains("X-Content-Type-Options") ||
             headers.Contains("X-XSS-Protection") || contentHeaders.Contains("X-XSS-Protection") ||
@@ -338,6 +338,25 @@ public sealed class SecurityTests
             headers.Contains("Content-Security-Policy") || contentHeaders.Contains("Content-Security-Policy");
 
         Assert.True(hasSecurityHeaders, "Pelo menos um security header deve estar presente na resposta");
+    }
+
+    [Fact]
+    public async Task RootPage_CspDoesNotBlockInlineStyles()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/");
+        response.EnsureSuccessStatusCode();
+
+        var hasHeader = response.Headers.TryGetValues("Content-Security-Policy", out var values) ||
+            response.Content.Headers.TryGetValues("Content-Security-Policy", out values);
+        var csp = hasHeader ? string.Join(" ", values!) : string.Empty;
+
+        Assert.True(
+            string.IsNullOrWhiteSpace(csp) ||
+            csp.Contains("style-src 'self' 'unsafe-inline'", StringComparison.Ordinal),
+            "A página estática raiz não deve receber uma CSP que bloqueie seus estilos inline.");
     }
 
     [Fact]
@@ -361,8 +380,8 @@ public sealed class SecurityTests
         for (int i = 0; i < 10; i++)
         {
             var response = await client.GetAsync($"api/v1/feed?territoryId={ActiveTerritoryId}&skip={i * 20}&take=20");
-            
-            if (response.StatusCode == HttpStatusCode.OK || 
+
+            if (response.StatusCode == HttpStatusCode.OK ||
                 response.StatusCode == HttpStatusCode.Unauthorized ||
                 response.StatusCode == HttpStatusCode.Forbidden)
             {

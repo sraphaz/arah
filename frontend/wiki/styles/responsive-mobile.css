@@ -3,7 +3,7 @@
 
 /* Ajusta espaçamento do conteúdo em mobile (quando sidebar está oculta) */
 /* Usando variável de breakpoint padronizada */
-@media (max-width: calc(var(--breakpoint-desktop) - 1px)) {
+@media (max-width: 1023px) {
   main {
     /* Padding responsivo usando clamp() - fluido e modernizado */
     padding-left: clamp(1rem, 4vw, 1.5rem);
@@ -33,7 +33,7 @@
 }
 
 /* Desktop - Espaçamento otimizado */
-@media (min-width: var(--breakpoint-desktop)) {
+@media (min-width: 1024px) {
   main {
     /* Em desktop, respeita sidebar se aplicável */
     padding-left: clamp(1.5rem, 3vw, 2rem);

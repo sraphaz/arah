@@ -12,7 +12,7 @@ public sealed partial class ArahDbContext
             entity.ToTable("users");
             entity.HasKey(u => u.Id);
             entity.Property(u => u.DisplayName).HasMaxLength(200).IsRequired();
-            entity.Property(u => u.Email).HasMaxLength(320).IsRequired();
+            entity.Property(u => u.Email).HasMaxLength(320);
             entity.Property(u => u.AuthProvider).HasMaxLength(80).IsRequired();
             entity.Property(u => u.ExternalId).HasMaxLength(160).IsRequired();
             // 2FA fields
@@ -75,6 +75,10 @@ public sealed partial class ArahDbContext
             entity.HasIndex(d => d.UserId);
             entity.HasIndex(d => d.DeviceToken).IsUnique();
             entity.HasIndex(d => new { d.UserId, d.IsActive });
+            entity.HasOne<UserRecord>()
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

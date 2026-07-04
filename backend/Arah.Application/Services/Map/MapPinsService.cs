@@ -112,73 +112,11 @@ public sealed class MapPinsService
         PaginationParameters pagination,
         CancellationToken cancellationToken)
     {
-        var pins = new List<MapPin>();
+        var allPins = await ListPinsAsync(territoryId, userId, filters, assetId, assetTypes, cancellationToken);
+        var ordered = allPins.OrderBy(p => p.PinType).ToList();
+        var pagedPins = ordered.Skip(pagination.Skip).Take(pagination.Take).ToList();
 
-        if (filters.Entities)
-        {
-            var entitiesPaged = await _mapService.ListEntitiesPagedAsync(
-                territoryId,
-                userId,
-                pagination,
-                cancellationToken);
-
-            pins.AddRange(BuildEntityPins(entitiesPaged.Items));
-        }
-
-        if (filters.Assets)
-        {
-            var assetTypeList = assetId is null ? assetTypes : null;
-            var assetsPaged = await _assetService.ListPagedAsync(
-                territoryId,
-                assetTypeList,
-                AssetStatus.Active,
-                null,
-                pagination,
-                cancellationToken);
-
-            var assets = assetsPaged.Items.Select(item => item.Asset).ToList();
-            pins.AddRange(await BuildAssetPinsAsync(assets, cancellationToken));
-        }
-
-        if (filters.Posts || filters.Alerts || filters.Media)
-        {
-            var postsPaged = await _feedService.ListForTerritoryPagedAsync(
-                territoryId,
-                userId,
-                null,
-                null,
-                pagination,
-                filterByInterests: false,
-                prioritizeConnections: false,
-                cancellationToken);
-
-            pins.AddRange(await BuildPostPinsAsync(postsPaged.Items, filters, cancellationToken));
-        }
-
-        if (filters.Events)
-        {
-            var eventsPaged = await _eventsService.ListEventsPagedAsync(
-                territoryId,
-                null,
-                null,
-                null,
-                pagination,
-                cancellationToken);
-
-            pins.AddRange(BuildEventPins(eventsPaged.Items));
-        }
-
-        // Ordenar por tipo (primeiro campo do MapPin) e aplicar paginação final
-        const int maxInt32 = int.MaxValue;
-        var count = pins.Count;
-        var totalCount = count > maxInt32 ? maxInt32 : count;
-        var pagedPins = pins
-            .OrderBy(p => p.PinType)
-            .Skip(pagination.Skip)
-            .Take(pagination.Take)
-            .ToList();
-
-        return new PagedResult<MapPin>(pagedPins, pagination.PageNumber, pagination.PageSize, totalCount);
+        return new PagedResult<MapPin>(pagedPins, pagination.PageNumber, pagination.PageSize, ordered.Count);
     }
 
     private static List<MapPin> BuildEntityPins(IEnumerable<MapEntity> entities)

@@ -3402,7 +3402,6 @@ namespace Arah.Infrastructure.Postgres.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
 
@@ -3685,6 +3684,15 @@ namespace Arah.Infrastructure.Postgres.Migrations
                     b.HasOne("Arah.Infrastructure.Postgres.Entities.UserRecord", null)
                         .WithOne()
                         .HasForeignKey("Arah.Infrastructure.Postgres.Entities.UserPreferencesRecord", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Arah.Infrastructure.Postgres.Entities.UserDeviceRecord", b =>
+                {
+                    b.HasOne("Arah.Infrastructure.Postgres.Entities.UserRecord", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

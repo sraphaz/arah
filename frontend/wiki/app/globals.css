@@ -8,9 +8,8 @@
 @import "../styles/components-meta.css";
 @import "../styles/utilities-animations.css";
 @import "../styles/utilities-interactive.css";
+@import "../styles/unlayered.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "../styles/unlayered.css";

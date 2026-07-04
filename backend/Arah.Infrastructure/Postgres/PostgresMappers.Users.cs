@@ -133,11 +133,9 @@ public static partial class PostgresMappers
             record.DeviceName,
             record.RegisteredAtUtc);
 
-        // Atualizar LastUsedAtUtc e IsActive usando reflection
-        var lastUsedProp = typeof(UserDevice).GetProperty("LastUsedAtUtc", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-        if (lastUsedProp?.SetMethod != null && record.LastUsedAtUtc.HasValue)
+        if (record.LastUsedAtUtc.HasValue)
         {
-            lastUsedProp.SetValue(device, record.LastUsedAtUtc.Value);
+            device.RestoreLastUsedAt(record.LastUsedAtUtc.Value);
         }
 
         if (!record.IsActive)

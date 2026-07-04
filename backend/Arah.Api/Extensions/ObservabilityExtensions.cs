@@ -65,66 +65,66 @@ public static class ObservabilityExtensions
     /// </summary>
     public static IServiceCollection AddArahObservability(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
-        // OpenTelemetry Configuration
-        var serviceName = "Arah";
-        var serviceVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0";
-
         var otlpEndpoint = configuration["OpenTelemetry:Otlp:Endpoint"];
         var jaegerEndpoint = configuration["OpenTelemetry:Jaeger:Endpoint"];
 
         var otelBuilder = services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource
-                .AddService(serviceName: serviceName, serviceVersion: serviceVersion));
+            .ConfigureResource(ConfigureOpenTelemetryResource);
 
-        // Tracing
-        otelBuilder.WithTracing(tracing =>
-        {
-            tracing
-                .AddAspNetCoreInstrumentation()
-                .AddEntityFrameworkCoreInstrumentation()
-                .AddHttpClientInstrumentation()
-                .AddSource("Arah.*");
-
-            // Exporters
-            if (!string.IsNullOrWhiteSpace(otlpEndpoint))
-            {
-                tracing.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
-            }
-            else if (!string.IsNullOrWhiteSpace(jaegerEndpoint))
-            {
-                tracing.AddJaegerExporter(options => options.Endpoint = new Uri(jaegerEndpoint));
-            }
-            else
-            {
-                // Console exporter para desenvolvimento
-                if (environment.IsDevelopment())
-                {
-                    tracing.AddConsoleExporter();
-                }
-            }
-        });
-
-        // Metrics
-        otelBuilder.WithMetrics(metrics =>
-        {
-            metrics
-                .AddAspNetCoreInstrumentation()
-                .AddHttpClientInstrumentation()
-                .AddMeter("Arah");
-
-            // Exporters
-            if (!string.IsNullOrWhiteSpace(otlpEndpoint))
-            {
-                metrics.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
-            }
-            else if (environment.IsDevelopment())
-            {
-                metrics.AddConsoleExporter();
-            }
-        });
-
-        // Prometheus Metrics - configured via UseMetricServer() in app pipeline
+        otelBuilder.WithTracing(tracing => ConfigureOpenTelemetryTracing(tracing, otlpEndpoint, jaegerEndpoint, environment));
+        otelBuilder.WithMetrics(metrics => ConfigureOpenTelemetryMetrics(metrics, otlpEndpoint, environment));
 
         return services;
+    }
+
+    private static void ConfigureOpenTelemetryResource(ResourceBuilder resource) =>
+        resource.AddService(
+            serviceName: "Arah",
+            serviceVersion: Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0");
+
+    private static void ConfigureOpenTelemetryTracing(
+        TracerProviderBuilder tracing,
+        string? otlpEndpoint,
+        string? jaegerEndpoint,
+        IWebHostEnvironment environment)
+    {
+        tracing
+            .AddAspNetCoreInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddSource("Arah.*");
+
+        if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+        {
+            tracing.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
+        }
+        else if (!string.IsNullOrWhiteSpace(jaegerEndpoint))
+        {
+            tracing.AddJaegerExporter(options => options.Endpoint = new Uri(jaegerEndpoint));
+        }
+        else if (environment.IsDevelopment())
+        {
+            tracing.AddConsoleExporter();
+        }
+    }
+
+    private static void ConfigureOpenTelemetryMetrics(
+        MeterProviderBuilder metrics,
+        string? otlpEndpoint,
+        IWebHostEnvironment environment)
+    {
+        metrics
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddMeter("Arah");
+
+        if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+        {
+            metrics.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
+        }
+        else if (environment.IsDevelopment())
+        {
+            metrics.AddConsoleExporter();
+        }
     }
 }

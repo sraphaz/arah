@@ -94,6 +94,9 @@ public static class WebApplicationPipelineExtensions
         // Swagger only in Development (padrão)
         app.UseArahSwagger();
 
+        // Security Headers — antes de arquivos estáticos (UseStaticFiles pode encerrar o pipeline)
+        app.UseMiddleware<SecurityHeadersMiddleware>();
+
         app.Use(async (context, next) =>
         {
             if (context.Request.Path == "/devportal")
@@ -144,10 +147,6 @@ public static class WebApplicationPipelineExtensions
 
         // CORS
         app.UseCors("Default");
-
-        // IMPORTANTE: No ASP.NET Core, middlewares são executados na ordem de registro (FIFO)
-        // Security Headers - deve ser um dos primeiros para aplicar em todas as respostas
-        app.UseMiddleware<SecurityHeadersMiddleware>();
 
         // Correlation ID middleware - registrado primeiro, executa PRIMEIRO
         // Isso garante que o correlation ID esteja disponível quando o RequestLoggingMiddleware executar

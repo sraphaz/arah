@@ -36,18 +36,7 @@ public static partial class PostgresMappers
     public static SubscriptionPlan ToDomain(this SubscriptionPlanRecord record)
     {
         var capabilities = JsonSerializer.Deserialize<List<FeatureCapability>>(record.CapabilitiesJson) ?? new List<FeatureCapability>();
-        Dictionary<string, object>? limits = null;
-        if (!string.IsNullOrWhiteSpace(record.LimitsJson))
-        {
-            try
-            {
-                limits = JsonSerializer.Deserialize<Dictionary<string, object>>(record.LimitsJson);
-            }
-            catch
-            {
-                // Se falhar, limits permanece null
-            }
-        }
+        var limits = DeserializeSubscriptionLimits(record.LimitsJson);
 
         return new SubscriptionPlan(
             record.Id,
@@ -218,31 +207,8 @@ public static partial class PostgresMappers
 
     public static SubscriptionPlanHistory ToDomain(this SubscriptionPlanHistoryRecord record)
     {
-        Dictionary<string, object>? previousState = null;
-        if (!string.IsNullOrWhiteSpace(record.PreviousStateJson))
-        {
-            try
-            {
-                previousState = JsonSerializer.Deserialize<Dictionary<string, object>>(record.PreviousStateJson);
-            }
-            catch
-            {
-                // Se falhar, previousState permanece null
-            }
-        }
-
-        Dictionary<string, object>? newState = null;
-        if (!string.IsNullOrWhiteSpace(record.NewStateJson))
-        {
-            try
-            {
-                newState = JsonSerializer.Deserialize<Dictionary<string, object>>(record.NewStateJson);
-            }
-            catch
-            {
-                // Se falhar, newState permanece null
-            }
-        }
+        var previousState = DeserializeSubscriptionLimits(record.PreviousStateJson);
+        var newState = DeserializeSubscriptionLimits(record.NewStateJson);
 
         return new SubscriptionPlanHistory(
             record.Id,
@@ -253,4 +219,44 @@ public static partial class PostgresMappers
             newState,
             record.ChangeReason);
     }
+
+    private static Dictionary<string, object>? DeserializeSubscriptionLimits(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return null;
+        }
+
+        try
+        {
+            var raw = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+            if (raw is null)
+            {
+                return null;
+            }
+
+            var limits = new Dictionary<string, object>(raw.Count);
+            foreach (var (key, value) in raw)
+            {
+                limits[key] = ConvertJsonElement(value);
+            }
+
+            return limits;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static object ConvertJsonElement(JsonElement value) =>
+        value.ValueKind switch
+        {
+            JsonValueKind.Number when value.TryGetInt32(out var intValue) => intValue,
+            JsonValueKind.Number when value.TryGetInt64(out var longValue) => longValue,
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.String => value.GetString() ?? string.Empty,
+            _ => value.GetRawText()
+        };
 }

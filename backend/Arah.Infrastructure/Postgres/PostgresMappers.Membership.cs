@@ -73,7 +73,7 @@ public static partial class PostgresMappers
 
     public static MembershipCapability ToDomain(this MembershipCapabilityRecord record)
     {
-        return new MembershipCapability(
+        var capability = new MembershipCapability(
             record.Id,
             record.MembershipId,
             record.CapabilityType,
@@ -81,6 +81,13 @@ public static partial class PostgresMappers
             record.GrantedByUserId,
             record.GrantedByMembershipId,
             record.Reason);
+
+        if (record.RevokedAtUtc.HasValue)
+        {
+            capability.Revoke(record.RevokedAtUtc.Value);
+        }
+
+        return capability;
     }
 
     public static SystemPermissionRecord ToRecord(this SystemPermission permission)

@@ -639,8 +639,6 @@ public sealed class SellerPayoutService
             }
         }
 
-        await _unitOfWork.CommitAsync(cancellationToken);
-
         return OperationResult<int>.Success(processedCount);
     }
 
@@ -707,6 +705,8 @@ public sealed class SellerPayoutService
 
         // Auditoria (usar primeira transação como relatedEntityId já que payoutId é string)
         await LogPayoutCreatedAsync(territoryId, userId, transactions, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return OperationResult.Success();
     }

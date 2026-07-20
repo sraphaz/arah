@@ -39,10 +39,10 @@ queue:
     priority: P1
     kind: maintenance
     blocked_by: []
-    # Itens abertos: DSG-03 (devportal → tokens compartilhados),
-    # DSG-04 (espaçamento 8px no portal), DSG-05 (a11y landing portal),
-    # DSG-06 (unificar glass tokens cross-plataforma), DSG-07 (contraste syntax WCAG).
-    # DSG-01/02 (cores hardcoded) e DSG-08 (gate CI design-gate-check) já corrigidos.
+    # Web abertos: DSG-04 (espaçamento 8px portal), DSG-06 (glass cross), DSG-07 (syntax WCAG).
+    # DSG-01/02/03/05/08 já corrigidos.
+    # App×UI kit: docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md (APP-DS-01..13).
+    # Prioridade app: canônico (01) → tokens/componentes (05–07) → IA Serviços/TopBar (02–04).
 
   - id: FASE52
     title: "FASE52 — Fundação Técnica e CI/CD"

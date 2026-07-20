@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Documentado — Análise profunda Design × App Flutter (2026-07-15)
+
+- Novo `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`: cruzamento tela a tela entre `design-system/` (handoff + UI kit premium) e `frontend/arah.app/`
+- Gaps priorizados `APP-DS-01`..`13` (IA Serviços/TopBar, paleta floresta vs teal, tipografia, hub, componentes, jornadas)
+- Ondas A–D de alinhamento propostas (fundação → IA → telas núcleo → jornadas) — sem mudança de código de produto nesta entrega
+- `docs/design/AUDITORIA_DESIGN.md` e `docs/_meta/PHASE_QUEUE.yaml` (`design-quality`) apontam para a análise
+
 ### Refatorado — Dependency Rule: módulos com Infrastructure separada (Onda 1) (2026-07-03)
 
 - **11 projetos `.Infrastructure` criados** (`Arah.Modules.{Feed,Marketplace,Events,Map,Chat,Subscriptions,Moderation,Notifications,Alerts,Assets,Connections}.Infrastructure`): EF Core/Npgsql e repositórios Postgres saíram dos csproj principais dos módulos

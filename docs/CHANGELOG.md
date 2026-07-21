@@ -9,6 +9,31 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Decidido — ADR-021: design system do app como fonte canônica de UI (2026-07-21)
+
+- [ADR-021](architecture/adrs/ADR-021-design-system-app-canonic.md) (**APP-DS-01** Accepted): canônico = `design-system/handoff` + `ui_kits/app` + `--premium-*`; Flutter deve convergir; `26_FLUTTER_DESIGN_GUIDELINES`, nav em `24_FLUTTER_FRONTEND_PLAN` e `design/app_wireframe_v2.pdf` = legado
+- Bottom-nav canônica: Feed · Explorar · Publicar · Serviços · Perfil; TopBar: território + Mensagens + Notificações
+
+### Corrigido — CI design-gate falso positivo em `colors.*` (2026-07-21)
+
+- `design-gate-check.ps1`: match de `Colors.*` / `Color(0x…)` passa a ser **case-sensitive** (`-cmatch`), evitando flagrar `context.appColors` / variável `colors`
+- Testes Flutter: ExploreScreen (IA Serviços) e `AppDesignTokens.elevation` alinhados ao shell novo
+
+### Alterado — Alinhamento App Flutter ao design canônico (Onda A+B) (2026-07-21)
+
+- **ADR-021**: design-system (handoff + UI kit + `--premium-*`) como fonte canônica de UI do app
+- **Tokens/tema**: paleta floresta premium (`#A6D6B9` / `#0B0C0A`), tipografia Sora + Geist embutidas
+- **IA**: bottom-nav Feed · Explorar · Publicar · **Serviços** · Perfil; TopBar território + Mensagens + Notificações
+- **Hub Serviços** com categorias live/soon; rota `/notifications`; banner-convite de visitante no feed
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
+### Documentado — Análise profunda Design × App Flutter (2026-07-15)
+
+- Novo `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`: cruzamento tela a tela entre `design-system/` (handoff + UI kit premium) e `frontend/arah.app/`
+- Gaps priorizados `APP-DS-01`..`13` (IA Serviços/TopBar, paleta floresta vs teal, tipografia, hub, componentes, jornadas)
+- Ondas A–D de alinhamento propostas (fundação → IA → telas núcleo → jornadas)
+- `docs/design/AUDITORIA_DESIGN.md` e `docs/_meta/PHASE_QUEUE.yaml` (`design-quality`) apontam para a análise
+
 ### Refatorado — Dependency Rule: módulos com Infrastructure separada (Onda 1) (2026-07-03)
 
 - **11 projetos `.Infrastructure` criados** (`Arah.Modules.{Feed,Marketplace,Events,Map,Chat,Subscriptions,Moderation,Notifications,Alerts,Assets,Connections}.Infrastructure`): EF Core/Npgsql e repositórios Postgres saíram dos csproj principais dos módulos

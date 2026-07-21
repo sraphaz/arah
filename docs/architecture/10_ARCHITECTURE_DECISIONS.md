@@ -627,6 +627,17 @@ Resumo: Projeto backend/Arah.Core isolado; endpoints api/v1/core/* na API; regis
 
 ---
 
+## ADR-021: Design system do app como fonte canônica de UI
+
+**Status**: Aceito  
+**Data**: 2026-07-21  
+**Arquivo**: [docs/architecture/adrs/ADR-021-design-system-app-canonic.md](./adrs/ADR-021-design-system-app-canonic.md)  
+**Spec-Id**: APP-DS-01  
+
+Resumo: Fonte canônica visual/IA = `design-system/` (handoff + UI kit + `--premium-*`); Flutter converge; guidelines `26` / nav `24` / wireframe v2 = legado. Bottom-nav: Feed · Explorar · Publicar · Serviços · Perfil; TopBar: território + Mensagens + Notificações.
+
+---
+
 ## Referências
 - [Product Vision](./01_PRODUCT_VISION.md)
 - [User Stories](./04_USER_STORIES.md)

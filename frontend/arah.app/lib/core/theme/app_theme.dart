@@ -1,67 +1,100 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_design_tokens.dart';
 import '../config/constants.dart';
 
-/// Tema Arah: identidade visual alinhada a design-tokens.css (dark padrão).
+/// Tema Arah: identidade premium (ADR-021) — Sora display + Geist corpo, floresta.
 class AppTheme {
   AppTheme._();
 
+  static TextStyle _style({
+    required double size,
+    required FontWeight weight,
+    required Color color,
+    required String fontFamily,
+    double? height,
+    double? letterSpacing,
+  }) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      fontSize: size,
+      fontWeight: weight,
+      color: color,
+      height: height,
+      letterSpacing: letterSpacing,
+    );
+  }
+
   static TextTheme _textTheme(Brightness brightness) {
-    final base = brightness == Brightness.dark
-        ? ThemeData.dark().textTheme
-        : ThemeData.light().textTheme;
-    final inter = GoogleFonts.interTextTheme(base);
     final onSurface = brightness == Brightness.dark
         ? AppDesignTokens.onSurface
         : AppDesignTokens.onSurfaceLight;
     final onMuted = brightness == Brightness.dark
         ? AppDesignTokens.onSurfaceMuted
         : AppDesignTokens.onSurfaceMutedLight;
+    const display = AppDesignTokens.fontFamilyDisplay;
+    const body = AppDesignTokens.fontFamilyBody;
 
-    return inter.copyWith(
-      displaySmall: inter.displaySmall?.copyWith(
-        fontSize: AppDesignTokens.fontSize4xl,
-        fontWeight: FontWeight.w700,
+    return TextTheme(
+      displaySmall: _style(
+        size: AppDesignTokens.fontSize4xl,
+        weight: FontWeight.w700,
+        color: onSurface,
+        fontFamily: display,
         letterSpacing: AppDesignTokens.letterSpacingTight,
-        color: onSurface,
       ),
-      headlineMedium: inter.headlineMedium?.copyWith(
-        fontSize: AppDesignTokens.fontSize2xl,
-        fontWeight: FontWeight.w600,
+      headlineMedium: _style(
+        size: AppDesignTokens.fontSize2xl,
+        weight: FontWeight.w600,
+        color: onSurface,
+        fontFamily: display,
         letterSpacing: AppDesignTokens.letterSpacingTight,
-        color: onSurface,
       ),
-      titleLarge: inter.titleLarge?.copyWith(
-        fontSize: AppDesignTokens.fontSizeXl,
-        fontWeight: FontWeight.w600,
+      titleLarge: _style(
+        size: AppDesignTokens.fontSizeXl,
+        weight: FontWeight.w600,
         color: onSurface,
+        fontFamily: display,
       ),
-      titleMedium: inter.titleMedium?.copyWith(
-        fontSize: AppDesignTokens.fontSizeLg,
-        fontWeight: FontWeight.w600,
+      titleMedium: _style(
+        size: AppDesignTokens.fontSizeLg,
+        weight: FontWeight.w600,
         color: onSurface,
+        fontFamily: display,
       ),
-      bodyLarge: inter.bodyLarge?.copyWith(
-        fontSize: AppDesignTokens.fontSizeBase,
+      bodyLarge: _style(
+        size: AppDesignTokens.fontSizeBase,
+        weight: FontWeight.w400,
+        color: onSurface,
+        fontFamily: body,
         height: 1.5,
-        color: onSurface,
       ),
-      bodyMedium: inter.bodyMedium?.copyWith(
-        fontSize: AppDesignTokens.fontSizeSm,
-        height: 1.5,
+      bodyMedium: _style(
+        size: AppDesignTokens.fontSizeSm,
+        weight: FontWeight.w400,
         color: onMuted,
+        fontFamily: body,
+        height: 1.5,
       ),
-      bodySmall: inter.bodySmall?.copyWith(
-        fontSize: AppDesignTokens.fontSizeXs,
+      bodySmall: _style(
+        size: AppDesignTokens.fontSizeXs,
+        weight: FontWeight.w400,
+        color: onMuted,
+        fontFamily: body,
         height: 1.4,
-        color: onMuted,
       ),
-      labelLarge: inter.labelLarge?.copyWith(
-        fontSize: AppDesignTokens.fontSizeSm,
-        fontWeight: FontWeight.w600,
+      labelLarge: _style(
+        size: AppDesignTokens.fontSizeSm,
+        weight: FontWeight.w600,
+        color: onSurface,
+        fontFamily: body,
         letterSpacing: AppDesignTokens.letterSpacingWide,
+      ),
+      labelSmall: _style(
+        size: AppDesignTokens.fontSizeXs,
+        weight: FontWeight.w500,
+        color: onMuted,
+        fontFamily: body,
       ),
     );
   }
@@ -74,7 +107,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      fontFamily: GoogleFonts.inter().fontFamily,
+      fontFamily: AppDesignTokens.fontFamilyBody,
       textTheme: textTheme,
       colorScheme: ColorScheme(
         brightness: brightness,
@@ -93,7 +126,7 @@ class AppTheme {
       ),
       extensions: [colors],
       appBarTheme: AppBarTheme(
-        centerTitle: true,
+        centerTitle: false,
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: colors.surfaceElevated.withValues(alpha: 0.92),
@@ -129,7 +162,7 @@ class AppTheme {
         backgroundColor: colors.surfaceElevated,
       ),
       cardTheme: CardThemeData(
-        color: colors.surfaceContainer.withValues(alpha: 0.9),
+        color: colors.surfaceContainer,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(

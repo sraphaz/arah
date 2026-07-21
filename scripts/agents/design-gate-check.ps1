@@ -76,10 +76,11 @@ foreach ($file in $ChangedFiles) {
             }
             '^\.dart$' {
                 # Cores diretas fora do tema: Color(0x...) e paleta Material (Colors.*).
-                if ($line -match 'Color\(0x[0-9a-fA-F]{8}\)') {
+                # -cmatch: case-sensitive — não confundir `colors.primary` (AppColors) com `Colors.red`.
+                if ($line -cmatch 'Color\(0x[0-9a-fA-F]{8}\)') {
                     $violations += "${normalized}:${lineNo}: Color(0x...) fora do tema — use AppDesignTokens/AppColors"
                 }
-                if ($line -match '\bColors\.(?!transparent\b)\w+') {
+                if ($line -cmatch '\bColors\.(?!transparent\b)\w+') {
                     $violations += "${normalized}:${lineNo}: Colors.* fora do tema — use AppDesignTokens/AppColors"
                 }
             }

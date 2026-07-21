@@ -24,4 +24,9 @@ class MembershipInfo {
   final String? residencyVerification;
 
   bool get isResident => role.toUpperCase() == 'RESIDENT';
+
+  bool get isVisitor {
+    final r = role.toUpperCase();
+    return r == 'VISITOR' || r == 'VISITANTE' || r.isEmpty;
+  }
 }

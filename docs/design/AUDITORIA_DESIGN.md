@@ -72,10 +72,10 @@ Classificação atual por superfície:
 
 ### App Flutter × UI kit (APP-DS-*) — ver análise completa
 
-1. **APP-DS-01** — declarar fonte canônica (handoff + UI kit) e reconciliar docs `24`–`26`.
-2. **APP-DS-05 → 07** — tokens floresta premium + tipografia + componentes base.
-3. **APP-DS-02 → 04** — IA: Serviços na bottom-nav, TopBar, hub Serviços.
-4. **APP-DS-08 → 12** — redesign Explorar/Perfil/Mercado + jornadas + estados.
+1. ~~**APP-DS-01..06**~~ — ADR-021, tokens floresta, Sora/Geist, shell Serviços+TopBar, hub (2026-07-21).
+2. **APP-DS-07** — RoleBadge, JourneyShell e componentes premium restantes.
+3. **APP-DS-08 → 12** — redesign Explorar/Perfil/Mercado + jornadas + estados.
+4. **APP-DS-13** — gate visual de regressão de IA.
 
 ---
 

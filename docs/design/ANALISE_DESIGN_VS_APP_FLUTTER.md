@@ -213,14 +213,14 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | ID | Gap | Severidade | Dependência |
 |----|-----|------------|-------------|
 | **APP-DS-01** | Declarar fonte canônica (UI kit + handoff) e marcar `26_FLUTTER_DESIGN_GUIDELINES` / wireframe v2 como legado | ✅ Accepted ([ADR-021](../architecture/adrs/ADR-021-design-system-app-canonic.md)) | — |
-| **APP-DS-02** | Trocar 4ª aba Notificações → **Serviços**; Notif/Mensagens na TopBar | 🔴 | APP-DS-01 |
-| **APP-DS-03** | Implementar **TopBar** território-primeiro global no MainShell | 🔴 | APP-DS-02 |
-| **APP-DS-04** | Hub **Serviços** (categorias + live/soon) | 🔴 | APP-DS-02 |
-| **APP-DS-05** | Migrar tokens Flutter canônicos → paleta **premium floresta** (ou dual-theme documentado) | 🔴 | APP-DS-01 |
-| **APP-DS-06** | Tipografia Sora + Geist no Flutter (ou subset aprovado) | 🟠 | APP-DS-05 |
-| **APP-DS-07** | Biblioteca de componentes: Card hairline, RoleBadge, Btn, JourneyShell | 🟠 | APP-DS-05 |
-| **APP-DS-08** | Redesign Explorar (ferramentas do território, não só ícones) | 🟠 | APP-DS-03 |
-| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | 🟠 | APP-DS-07 |
+| **APP-DS-02** | Trocar 4ª aba Notificações → **Serviços**; Notif/Mensagens na TopBar | ✅ | APP-DS-01 |
+| **APP-DS-03** | Implementar **TopBar** território-primeiro global no MainShell | ✅ | APP-DS-02 |
+| **APP-DS-04** | Hub **Serviços** (categorias + live/soon) | ✅ | APP-DS-02 |
+| **APP-DS-05** | Migrar tokens Flutter canônicos → paleta **premium floresta** (ou dual-theme documentado) | ✅ | APP-DS-01 |
+| **APP-DS-06** | Tipografia Sora + Geist no Flutter (ou subset aprovado) | ✅ | APP-DS-05 |
+| **APP-DS-07** | Biblioteca de componentes: Card hairline, RoleBadge, Btn, JourneyShell | 🟠 parcial (tema/card radius; RoleBadge/JourneyShell pendentes) | APP-DS-05 |
+| **APP-DS-08** | Redesign Explorar (ferramentas do território, não só ícones) | 🟡 parcial (ícones removidos; CTA → Serviços) | APP-DS-03 |
+| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | 🟡 parcial (banner ✅; perfil ainda ListTiles) | APP-DS-07 |
 | **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | 🟠 | APP-DS-07 |
 | **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | 🟠 | backend gaps |
 | **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | 🟡 | APP-DS-07 |
@@ -300,4 +300,5 @@ Comparar lado a lado com o Flutter: bottom-nav, top bar, feed card, hub Serviço
 
 ### Changelog deste documento
 
+- **1.1** (2026-07-21): Onda A+B — ADR-021, tokens/fonts, shell Serviços+TopBar, hub, banner visitante; APP-DS-01..06 ✅.
 - **1.0** (2026-07-15): primeira análise profunda design×app; IDs APP-DS-01..13; ondas A–D.

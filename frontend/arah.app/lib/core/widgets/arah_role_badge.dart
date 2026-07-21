@@ -60,6 +60,7 @@ class ArahRoleBadge extends StatelessWidget {
 
     return Semantics(
       label: label,
+      excludeSemantics: true,
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.spacingSm,

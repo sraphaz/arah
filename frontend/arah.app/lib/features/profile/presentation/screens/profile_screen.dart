@@ -327,7 +327,12 @@ class ProfileScreen extends ConsumerWidget {
                   }
                 } catch (e) {
                   if (ctx.mounted) {
-                    showErrorSnackBar(ctx, e is ApiException ? e.userMessage : 'Erro ao salvar');
+                    showErrorSnackBar(
+                      ctx,
+                      e is ApiException
+                          ? e.userMessage
+                          : AppLocalizations.of(ctx)!.errorLoad,
+                    );
                   }
                 }
               },

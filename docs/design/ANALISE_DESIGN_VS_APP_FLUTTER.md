@@ -38,7 +38,7 @@ O app Flutter está **funcionalmente avançado** (API ↔ BFF ↔ jornadas wired
 | **P0 canônico** | `design-system/handoff/Especificacao-Arah.html` | Catálogo 33 telas, nav, jornadas, gaps, DoD frontend |
 | **P0 visual** | `design-system/ui_kits/app/` + `colors_and_type.css` (`--premium-*`) | Protótipo interativo high-fidelity |
 | **P1 código atual** | `frontend/arah.app/lib/core/theme/app_design_tokens.dart` | Tokens reais em produção; divergem do premium |
-| **P2 histórico** | `docs/frontend/flutter/24|25|26_*.md`, `design/app_wireframe_v2.pdf` | Úteis como contexto; **não** usar como alvo sem reconciliar |
+| **P2 histórico** | `docs/frontend/flutter/24_*.md`, `25_*.md`, `26_*.md`, `design/app_wireframe_v2.pdf` | Úteis como contexto; **não** usar como alvo sem reconciliar |
 
 ### 1.2 Conflitos documentais já existentes
 
@@ -65,7 +65,7 @@ Stack:  overlays push/pop (mapa, post, chat, ferramentas)
 Modal:  Jornadas multi-passo (progresso → revisão → sucesso)
 ```
 
-Regras: trocar aba limpa overlays; trocar território → Feed; ferramentas do lugar em Explorar; itens do usuário no Perfil.
+Regras: trocar aba limpa overlays; trocar território → Feed; ferramentas do território em Explorar; itens da pessoa no Perfil.
 
 ### 2.2 Implementado
 
@@ -144,7 +144,7 @@ Legenda de fidelidade visual/UX (não de “API existe”):
 | Feed | `feed_screen.dart` | ✅ | **B** | Cards tipados + skeleton; falta banner visitante, selo papel, fotos hero, chrome top |
 | Detalhe post | `post_detail_screen.dart` | ✅ | **B** | Funcional; visual Material |
 | Publicar | `create_post_screen.dart` | ✅ | **B−** | Form; tipos só General/Alert (spec Tip/Event no card) |
-| Explorar | `explore_screen.dart` | ✅ | **C** | Seletor + 6 IconButtons; não é hub de ferramentas do lugar |
+| Explorar | `explore_screen.dart` | ✅ | **C** | Seletor + CTA Serviços (ferramentas do território no hub) |
 | Mapa | `map_screen.dart` | ✅ | **B+** | Full-bleed OSM + boundary + deep-link — mais próximo do espírito do kit |
 | Eventos | `events_screen.dart` + create | ✅ | **B−** | Lista/FAB; cards sem composição de calendário do kit |
 | Mensagens | `chat_*_screen.dart` | ✅ | **C** | Bolhas sem alinhamento eu/outro; sem entrada na top bar |

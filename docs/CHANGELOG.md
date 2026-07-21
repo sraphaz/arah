@@ -14,6 +14,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - [ADR-021](architecture/adrs/ADR-021-design-system-app-canonic.md) (**APP-DS-01** Accepted): canônico = `design-system/handoff` + `ui_kits/app` + `--premium-*`; Flutter deve convergir; `26_FLUTTER_DESIGN_GUIDELINES`, nav em `24_FLUTTER_FRONTEND_PLAN` e `design/app_wireframe_v2.pdf` = legado
 - Bottom-nav canônica: Feed · Explorar · Publicar · Serviços · Perfil; TopBar: território + Mensagens + Notificações
 
+### Corrigido — CI design-gate falso positivo em `colors.*` (2026-07-21)
+
+- `design-gate-check.ps1`: match de `Colors.*` / `Color(0x…)` passa a ser **case-sensitive** (`-cmatch`), evitando flagrar `context.appColors` / variável `colors`
+- Testes Flutter: ExploreScreen (IA Serviços) e `AppDesignTokens.elevation` alinhados ao shell novo
+
 ### Alterado — Alinhamento App Flutter ao design canônico (Onda A+B) (2026-07-21)
 
 - **ADR-021**: design-system (handoff + UI kit + `--premium-*`) como fonte canônica de UI do app

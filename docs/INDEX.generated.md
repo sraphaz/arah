@@ -1,6 +1,6 @@
 # Índice gerado — docs
 
-> Gerado em **2026-07-20** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
+> Gerado em **2026-07-21** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
 > Exclui stubs `status: deprecated` na raiz (ver `_archive/`).
 
 | Documento | Owner | Updated |
@@ -89,6 +89,7 @@
 | [Arquitetura C4](docs/architecture/14_C4_ARCHITECTURE.md) | - | - |
 | [_template](docs/architecture/adrs/_template.md) | - | - |
 | [ADR-020-arah-core-como-control-plane-separado](docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md) | - | - |
+| [ADR-021-design-system-app-canonic](docs/architecture/adrs/ADR-021-design-system-app-canonic.md) | - | - |
 | [README](docs/architecture/adrs/README.md) | - | - |
 | [README](docs/architecture/diagrams/README.md) | - | - |
 | [Kanban sem título 1](docs/archive/Kanban sem título 1.md) | - | - |
@@ -309,6 +310,7 @@
 | [DESIGN_SYSTEM_IDENTIDADE_VISUAL](docs/DESIGN_SYSTEM_IDENTIDADE_VISUAL.md) | - | - |
 | [DESIGN_SYSTEM_TOKENS](docs/DESIGN_SYSTEM_TOKENS.md) | - | - |
 | [design-review-devportal](docs/design-review-devportal.md) | - | - |
+| [ANALISE_DESIGN_VS_APP_FLUTTER](docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md) | - | - |
 | [AUDITORIA_DESIGN](docs/design/AUDITORIA_DESIGN.md) | - | - |
 | [README_LIKEC4](docs/design/README_LIKEC4.md) | - | - |
 | [DEVELOPMENT](docs/DEVELOPMENT.md) | - | - |

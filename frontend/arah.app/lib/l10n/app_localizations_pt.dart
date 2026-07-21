@@ -1117,6 +1117,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get visitorBannerTitle => 'Você está como visitante';
 
   @override
-  String get visitorBannerCta =>
-      'Confirme residência para votar e ver conteúdo de moradores';
+  String get visitorBannerCta => 'Confirme residência para votar e ver conteúdo de moradores';
+
+  @override
+  String get visitor => 'Visitante';
+
+  @override
+  String get resident => 'Morador';
+
+  @override
+  String get curator => 'Curador';
+
+  @override
+  String get profileTools => 'Ferramentas';
 }

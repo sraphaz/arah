@@ -434,5 +434,9 @@
   "serviceAiAssistant": "AI assistant",
   "serviceAchievements": "Achievements",
   "visitorBannerTitle": "You are visiting as a guest",
-  "visitorBannerCta": "Confirm residency to vote and see resident-only content"
+  "visitorBannerCta": "Confirm residency to vote and see resident-only content",
+  "visitor": "Visitor",
+  "resident": "Resident",
+  "curator": "Curator",
+  "profileTools": "Tools"
 }

@@ -218,9 +218,9 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-04** | Hub **Serviços** (categorias + live/soon) | ✅ | APP-DS-02 |
 | **APP-DS-05** | Migrar tokens Flutter canônicos → paleta **premium floresta** (ou dual-theme documentado) | ✅ | APP-DS-01 |
 | **APP-DS-06** | Tipografia Sora + Geist no Flutter (ou subset aprovado) | ✅ | APP-DS-05 |
-| **APP-DS-07** | Biblioteca de componentes: Card hairline, RoleBadge, Btn, JourneyShell | 🟠 parcial (tema/card radius; RoleBadge/JourneyShell pendentes) | APP-DS-05 |
+| **APP-DS-07** | Biblioteca de componentes: Card hairline, RoleBadge, Btn, JourneyShell | 🟡 parcial (RoleBadge ✅; JourneyShell/Btn premium pendentes) | APP-DS-05 |
 | **APP-DS-08** | Redesign Explorar (ferramentas do território, não só ícones) | 🟡 parcial (ícones removidos; CTA → Serviços) | APP-DS-03 |
-| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | 🟡 parcial (banner ✅; perfil ainda ListTiles) | APP-DS-07 |
+| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | 🟡 parcial (banner ✅; RoleBadge + grade ferramentas ✅; stats finas pendentes) | APP-DS-07 |
 | **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | 🟠 | APP-DS-07 |
 | **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | 🟠 | backend gaps |
 | **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | 🟡 | APP-DS-07 |

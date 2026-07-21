@@ -1117,6 +1117,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get visitorBannerTitle => 'You are visiting as a guest';
 
   @override
-  String get visitorBannerCta =>
-      'Confirm residency to vote and see resident-only content';
+  String get visitorBannerCta => 'Confirm residency to vote and see resident-only content';
+
+  @override
+  String get visitor => 'Visitor';
+
+  @override
+  String get resident => 'Resident';
+
+  @override
+  String get curator => 'Curator';
+
+  @override
+  String get profileTools => 'Tools';
 }

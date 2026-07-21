@@ -2260,6 +2260,30 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Confirme residência para votar e ver conteúdo de moradores'**
   String get visitorBannerCta;
+
+  /// No description provided for @visitor.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visitante'**
+  String get visitor;
+
+  /// No description provided for @resident.
+  ///
+  /// In pt, this message translates to:
+  /// **'Morador'**
+  String get resident;
+
+  /// No description provided for @curator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Curador'**
+  String get curator;
+
+  /// No description provided for @profileTools.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ferramentas'**
+  String get profileTools;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

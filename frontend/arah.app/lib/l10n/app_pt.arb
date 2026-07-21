@@ -434,5 +434,9 @@
   "serviceAiAssistant": "Assistente IA",
   "serviceAchievements": "Conquistas",
   "visitorBannerTitle": "Você está como visitante",
-  "visitorBannerCta": "Confirme residência para votar e ver conteúdo de moradores"
+  "visitorBannerCta": "Confirme residência para votar e ver conteúdo de moradores",
+  "visitor": "Visitante",
+  "resident": "Morador",
+  "curator": "Curador",
+  "profileTools": "Ferramentas"
 }

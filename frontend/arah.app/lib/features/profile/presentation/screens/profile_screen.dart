@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
-import '../../../../core/providers/main_shell_tab_provider.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_brand_header.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
@@ -70,8 +69,7 @@ class ProfileScreen extends ConsumerWidget {
           profile: profile,
           onEditTap: () => _showEditProfileSheet(context, ref, profile),
           onMyTerritory: () => TerritoryIndicatorBar.showTerritorySelectorSheet(context),
-          onNotifications: () =>
-              ref.read(mainShellTabProvider.notifier).state = 3,
+          onNotifications: () => context.push('/notifications'),
           onLogout: () async {
             await ref.read(authStateProvider.notifier).logout();
             if (context.mounted) context.go('/login');

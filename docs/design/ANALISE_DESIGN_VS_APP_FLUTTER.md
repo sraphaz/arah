@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 📋 Diagnóstico — sem mudança de código de produto nesta entrega  
-**Próximo passo**: plano de alinhamento por ondas (ver §8)
+**Status**: 🚧 Alinhamento em andamento (Onda A+B iniciada 2026-07-21)  
+**Próximo passo**: Onda C — redesign high-fidelity das telas núcleo (ver §8)
 
 ---
 
@@ -30,6 +30,8 @@ O app Flutter está **funcionalmente avançado** (API ↔ BFF ↔ jornadas wired
 ## 1. Fontes de verdade (e conflitos)
 
 ### 1.1 Hierarquia recomendada (esta análise)
+
+> **APP-DS-01 — Decidido / Accepted (2026-07-21):** fonte canônica formalizada em [ADR-021](../architecture/adrs/ADR-021-design-system-app-canonic.md). Bottom-nav: Feed · Explorar · Publicar · Serviços · Perfil; TopBar: território + Mensagens + Notificações. Guidelines `26` / nav em `24` / wireframe v2 = legado.
 
 | Prioridade | Artefato | Por quê |
 |------------|----------|---------|
@@ -210,7 +212,7 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 
 | ID | Gap | Severidade | Dependência |
 |----|-----|------------|-------------|
-| **APP-DS-01** | Declarar fonte canônica (UI kit + handoff) e marcar `26_FLUTTER_DESIGN_GUIDELINES` / wireframe v2 como legado | 🔴 | Decisão humana |
+| **APP-DS-01** | Declarar fonte canônica (UI kit + handoff) e marcar `26_FLUTTER_DESIGN_GUIDELINES` / wireframe v2 como legado | ✅ Accepted ([ADR-021](../architecture/adrs/ADR-021-design-system-app-canonic.md)) | — |
 | **APP-DS-02** | Trocar 4ª aba Notificações → **Serviços**; Notif/Mensagens na TopBar | 🔴 | APP-DS-01 |
 | **APP-DS-03** | Implementar **TopBar** território-primeiro global no MainShell | 🔴 | APP-DS-02 |
 | **APP-DS-04** | Hub **Serviços** (categorias + live/soon) | 🔴 | APP-DS-02 |

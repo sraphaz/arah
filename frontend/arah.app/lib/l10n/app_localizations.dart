@@ -18,7 +18,7 @@ import 'app_localizations_pt.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'l10n/app_localizations.dart';
+/// import 'gen_l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -62,8 +62,7 @@ import 'app_localizations_pt.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,8 +82,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -2101,10 +2098,171 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Publicação não encontrada.'**
   String get postNotFound;
+
+  /// No description provided for @services.
+  ///
+  /// In pt, this message translates to:
+  /// **'Serviços'**
+  String get services;
+
+  /// No description provided for @servicesHubSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tudo que a vida no território precisa — economia, serviços, governança e cuidado com o lugar.'**
+  String get servicesHubSubtitle;
+
+  /// No description provided for @servicesCategoryEconomy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Economia local'**
+  String get servicesCategoryEconomy;
+
+  /// No description provided for @servicesCategoryTerritoryServices.
+  ///
+  /// In pt, this message translates to:
+  /// **'Serviços territoriais'**
+  String get servicesCategoryTerritoryServices;
+
+  /// No description provided for @servicesCategoryGovernance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Governança'**
+  String get servicesCategoryGovernance;
+
+  /// No description provided for @servicesCategoryLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vida no território'**
+  String get servicesCategoryLife;
+
+  /// No description provided for @servicesCategoryTools.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ferramentas do território'**
+  String get servicesCategoryTools;
+
+  /// No description provided for @statusLive.
+  ///
+  /// In pt, this message translates to:
+  /// **'No ar'**
+  String get statusLive;
+
+  /// No description provided for @statusSoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em breve'**
+  String get statusSoon;
+
+  /// No description provided for @serviceGroupBuy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compra coletiva'**
+  String get serviceGroupBuy;
+
+  /// No description provided for @serviceHosting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hospedagem'**
+  String get serviceHosting;
+
+  /// No description provided for @serviceDemands.
+  ///
+  /// In pt, this message translates to:
+  /// **'Demandas'**
+  String get serviceDemands;
+
+  /// No description provided for @serviceTrades.
+  ///
+  /// In pt, this message translates to:
+  /// **'Trocas'**
+  String get serviceTrades;
+
+  /// No description provided for @serviceDeliveries.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entregas'**
+  String get serviceDeliveries;
+
+  /// No description provided for @serviceWallet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Carteira'**
+  String get serviceWallet;
+
+  /// No description provided for @serviceBabysitters.
+  ///
+  /// In pt, this message translates to:
+  /// **'Babás'**
+  String get serviceBabysitters;
+
+  /// No description provided for @serviceWellness.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bem-estar'**
+  String get serviceWellness;
+
+  /// No description provided for @serviceRentals.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguéis'**
+  String get serviceRentals;
+
+  /// No description provided for @serviceDigitalHub.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hub digital'**
+  String get serviceDigitalHub;
+
+  /// No description provided for @serviceTerritoryHealth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saúde do território'**
+  String get serviceTerritoryHealth;
+
+  /// No description provided for @serviceMetrics.
+  ///
+  /// In pt, this message translates to:
+  /// **'Métricas'**
+  String get serviceMetrics;
+
+  /// No description provided for @serviceSeeds.
+  ///
+  /// In pt, this message translates to:
+  /// **'Banco de sementes'**
+  String get serviceSeeds;
+
+  /// No description provided for @serviceLearning.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aprendizado'**
+  String get serviceLearning;
+
+  /// No description provided for @serviceAiAssistant.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assistente IA'**
+  String get serviceAiAssistant;
+
+  /// No description provided for @serviceAchievements.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conquistas'**
+  String get serviceAchievements;
+
+  /// No description provided for @visitorBannerTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você está como visitante'**
+  String get visitorBannerTitle;
+
+  /// No description provided for @visitorBannerCta.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirme residência para votar e ver conteúdo de moradores'**
+  String get visitorBannerCta;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2113,25 +2271,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'pt':
-      return AppLocalizationsPt();
+    case 'en': return AppLocalizationsEn();
+    case 'pt': return AppLocalizationsPt();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

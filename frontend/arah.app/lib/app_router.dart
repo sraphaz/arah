@@ -22,6 +22,7 @@ import 'features/governance/presentation/screens/governance_screen.dart';
 import 'features/feed/presentation/screens/post_detail_screen.dart';
 import 'features/assets/presentation/screens/assets_screen.dart';
 import 'features/subscriptions/presentation/screens/subscriptions_screen.dart';
+import 'features/notifications/presentation/screens/notifications_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 /// Rotas com guard de auth e onboarding: sem token → /login; com token sem território → /onboarding; com território → /home.
@@ -143,6 +144,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/subscriptions',
         builder: (_, __) => const SubscriptionsScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (_, __) => const NotificationsScreen(),
       ),
     ],
   );

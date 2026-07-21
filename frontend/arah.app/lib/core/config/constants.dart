@@ -1,4 +1,4 @@
-/// Constantes e design tokens (docs/26_FLUTTER_DESIGN_GUIDELINES).
+/// Constantes de layout (ADR-021 / design-system).
 class AppConstants {
   AppConstants._();
 
@@ -10,11 +10,12 @@ class AppConstants {
   static const double spacing2xl = 48.0;
   static const double spacing3xl = 64.0;
 
-  /// Escala alinhada a design-tokens.css (--radius-*).
+  /// Escala de raios (UI kit: 8 / 12 / 16 / 18–20 cards / pill).
   static const double radiusXs = 4.0;
   static const double radiusSm = 8.0;
   static const double radiusMd = 12.0;
   static const double radiusLg = 16.0;
+  static const double radiusCard = 20.0;
   static const double radiusXl = 24.0;
   static const double radius2xl = 32.0;
 

@@ -1,8 +1,14 @@
 # Diretrizes de Design do App Flutter Arah
 
+> **LEGADO / DEPRECATED (IA e visual)** — 2026-07-21  
+> Este documento **não** é mais a fonte canônica de UI do app.  
+> Fonte oficial: `design-system/handoff/Especificacao-Arah.html`, `design-system/ui_kits/app/` e tokens `--premium-*` em `design-system/colors_and_type.css`.  
+> Decisão: [ADR-021](../../architecture/adrs/ADR-021-design-system-app-canonic.md).  
+> Manter apenas como histórico; não usar como alvo de implementação.
+
 **Versão**: 1.0  
 **Data**: 2025-01-20  
-**Status**: 🎨 Diretrizes Oficiais de Design  
+**Status**: ⚠️ Legado (histórico) — ver ADR-021  
 **Tipo**: Design System e Guia de Estilo Completo
 
 ---

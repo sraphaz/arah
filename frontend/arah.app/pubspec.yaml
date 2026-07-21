@@ -1,5 +1,5 @@
 name: arah_app
-description: Arah - app mobile território-first e comunidade-first. Interface tipo Instagram, conectado ao BFF.
+description: Arah - app mobile território-first e comunidade-first. Design system premium (ADR-021), conectado ao BFF.
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -49,3 +49,10 @@ flutter:
   assets:
     - assets/images/
     - assets/images/arah-icon.svg
+  fonts:
+    - family: Sora
+      fonts:
+        - asset: assets/fonts/Sora-Variable.ttf
+    - family: Geist
+      fonts:
+        - asset: assets/fonts/Geist-Variable.ttf

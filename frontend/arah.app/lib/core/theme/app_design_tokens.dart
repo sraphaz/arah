@@ -2,46 +2,48 @@ import 'package:flutter/material.dart';
 
 import '../config/constants.dart';
 
-/// Tokens alinhados a [frontend/shared/styles/design-tokens.css].
+/// Tokens alinhados ao design system canônico (ADR-021):
+/// `design-system/colors_and_type.css` (`--premium-*`) + handoff/UI kit.
 class AppDesignTokens {
   AppDesignTokens._();
 
   // ---------------------------------------------------------------------------
-  // Paleta – dark mode (padrão do app)
+  // Paleta premium – dark mode (padrão do app)
   // ---------------------------------------------------------------------------
-  static const Color primary = Color(0xFF4DD4A8);
-  static const Color primaryHover = Color(0xFF3BC495);
-  static const Color link = Color(0xFF7DD3FF);
-  static const Color linkHover = Color(0xFF9DE3FF);
+  static const Color primary = Color(0xFFA6D6B9); // --premium-canopy
+  static const Color primaryHover = Color(0xFF81C784); // --premium-canopy-solid
+  static const Color link = Color(0xFF86AEEA); // --premium-event
+  static const Color linkHover = Color(0xFFA8C4F0);
 
-  static const Color surface = Color(0xFF0A0E12);
-  static const Color surfaceElevated = Color(0xFF0F1419);
-  static const Color surfaceCard = Color(0xFF141A21);
-  static const Color onSurface = Color(0xFFE8EDF2);
-  static const Color onSurfaceMuted = Color(0xFFB8C5D2);
-  static const Color onSurfaceSubtle = Color(0xFF8A97A4);
-  static const Color outline = Color(0xFF25303A);
-  static const Color outlineSubtle = Color(0x1A6496B4);
+  static const Color surface = Color(0xFF0B0C0A); // --premium-bg
+  static const Color surfaceElevated = Color(0xFF0E100D); // --premium-surface
+  static const Color surfaceCard = Color(0xFF191B17); // --premium-card
+  static const Color onSurface = Color(0xFFF2F4EE); // --premium-fg
+  static const Color onSurfaceMuted = Color(0xFFA6AC9E); // --premium-fg2
+  static const Color onSurfaceSubtle = Color(0xFF6B7164); // --premium-fg3
+  static const Color outline = Color(0xFF2A2E28);
+  static const Color outlineSubtle = Color(0x12FFFFFF); // hairline ~0.07
 
-  static const Color error = Color(0xFFF26D6D);
-  static const Color warning = Color(0xFFF5C842);
-  static const Color success = Color(0xFF4DD4A8);
-  static const Color info = Color(0xFF7DD3FF);
+  static const Color error = Color(0xFFE07A7A);
+  static const Color warning = Color(0xFFE8A06A); // --premium-alert
+  static const Color success = Color(0xFFA6D6B9);
+  static const Color info = Color(0xFF6FC5D6); // --premium-water
   static const Color earth = Color(0xFF8B7355);
-  static const Color textOnAccent = Color(0xFF0A0E12);
+  static const Color textOnAccent = Color(0xFF0E1F12);
 
-  static const Color accentSubtle = Color(0x264DD4A8);
-  static const Color accentBorderSoft = Color(0x404DD4A8);
-  static const Color territoryBoundary = Color(0xFF16A34A);
-  static const Color locationPin = Color(0xFFF5C842);
+  static const Color accentSubtle = Color(0x24A6D6B9);
+  static const Color accentBorderSoft = Color(0x40A6D6B9);
+  static const Color territoryBoundary = Color(0xFF81C784);
+  static const Color locationPin = Color(0xFFE8A06A);
+  static const Color water = Color(0xFF6FC5D6);
 
-  // Glass morphism (espelho de globals.css)
-  static const Color glassBackgroundDark = Color(0xFA141A21);
-  static const Color glassBorderDark = Color(0x9930393A);
+  // Glass morphism
+  static const Color glassBackgroundDark = Color(0xF2191B17);
+  static const Color glassBorderDark = Color(0x22FFFFFF);
   static const Color glassBackgroundLight = Color(0xFAFFFFFF);
   static const Color glassBorderLight = Color(0x66C6E3D2);
   static const double glassBlur = 24;
-  static const double glassRadius = 24;
+  static const double glassRadius = 20;
 
   // Watermark
   static const double watermarkOpacityDark = 0.015;
@@ -51,8 +53,8 @@ class AppDesignTokens {
   static const double bodyWatermarkSize = 720;
   static const double cardWatermarkSize = 560;
 
-  // Light mode
-  static const Color primaryLight = Color(0xFF3BC495);
+  // Light mode (portal floresta)
+  static const Color primaryLight = Color(0xFF377B57);
   static const Color surfaceLight = Color(0xFFFAFAFA);
   static const Color surfaceCardLight = Color(0xFFF5F5F5);
   static const Color onSurfaceLight = Color(0xFF1C1C1C);
@@ -62,10 +64,13 @@ class AppDesignTokens {
   // Feed – cores semânticas por tipo de post
   static const Color feedTypeAlert = warning;
   static const Color feedTypeEvent = link;
-  static const Color feedTypeTip = primary;
-  static const Color feedTypeGeneral = Color(0xFF9CA3AF);
+  static const Color feedTypeTip = water;
+  static const Color feedTypeGeneral = onSurfaceSubtle;
 
-  // Tipografia – escala 1.125 (CSS)
+  // Tipografia
+  static const String fontFamilyDisplay = 'Sora';
+  static const String fontFamilyBody = 'Geist';
+
   static const double fontSizeXs = 12;
   static const double fontSizeSm = 14;
   static const double fontSizeBase = 16;
@@ -82,18 +87,18 @@ class AppDesignTokens {
   static const EdgeInsets cardPadding = EdgeInsets.all(AppConstants.spacingMd);
   static const double fontSizeSnackBar = 15;
 
-  static double get radiusCard => AppConstants.radiusLg;
+  static double get radiusCard => AppConstants.radiusCard;
   static double get radiusSnackBar => AppConstants.radiusMd;
   static double get radiusButton => AppConstants.radiusMd;
   static EdgeInsets get snackBarInsets =>
       const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd);
 
-  /// Gradiente sutil de fundo (equivalente a --bg-gradient-accent).
+  /// Glow radial verde no topo (UI kit).
   static const List<Color> scaffoldGradientColors = [
-    Color(0x084DD4A8),
-    Color(0x000A0E12),
-    Color(0x087DD3FF),
-    Color(0x000A0E12),
+    Color(0x1481C784),
+    Color(0x000B0C0A),
+    Color(0x0A6FC5D6),
+    Color(0x000B0C0A),
   ];
 
   /// Cor semântica para pins no mapa por tipo.
@@ -109,20 +114,25 @@ class AppDesignTokens {
       case 'media':
         return earth;
       case 'entity':
+      case 'waterfall':
+      case 'spring':
+        return water;
+      case 'viewpoint':
         return territoryBoundary;
       default:
         return primary;
     }
   }
 
-  /// Elevação Material (espelho de --elevation-*).
+  /// Elevação: no escuro preferir borda; sombras discretas.
   static List<BoxShadow> elevation(int level, {bool isDark = true}) {
-    final opacity = isDark ? 0.25 : 0.08;
+    if (isDark && level <= 1) return const [];
+    final opacity = isDark ? 0.35 : 0.08;
     switch (level) {
       case 1:
         return [
           BoxShadow(
-            color: Colors.black.withValues(alpha: opacity * 0.6),
+            color: Colors.black.withValues(alpha: opacity * 0.5),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),
@@ -138,16 +148,16 @@ class AppDesignTokens {
       case 3:
         return [
           BoxShadow(
-            color: Colors.black.withValues(alpha: opacity * 1.4),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+            color: const Color(0x4D81C784),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
           ),
         ];
       default:
         return [
           BoxShadow(
-            color: Colors.black.withValues(alpha: opacity * 1.8),
-            blurRadius: 32,
+            color: Colors.black.withValues(alpha: opacity * 1.4),
+            blurRadius: 24,
             offset: const Offset(0, 8),
           ),
         ];
@@ -326,8 +336,8 @@ class AppColors extends ThemeExtension<AppColors> {
     success: AppDesignTokens.success,
     info: AppDesignTokens.info,
     earth: AppDesignTokens.earth,
-    accentSubtle: Color(0x1A3BC495),
-    accentBorder: Color(0x333BC495),
+    accentSubtle: Color(0x1A377B57),
+    accentBorder: Color(0x33377B57),
     glassBackground: AppDesignTokens.glassBackgroundLight,
     glassBorder: AppDesignTokens.glassBorderLight,
     watermarkOpacity: AppDesignTokens.watermarkOpacityLight,

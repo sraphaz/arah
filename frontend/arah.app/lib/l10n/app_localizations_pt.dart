@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -48,15 +46,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profile => 'Perfil';
 
   @override
-  String get chooseTerritory =>
-      'Escolha um território para ver o feed da região';
+  String get chooseTerritory => 'Escolha um território para ver o feed da região';
 
   @override
   String get territories => 'Territórios';
 
   @override
-  String get territoriesSubtitle =>
-      'Toque em um território para ver o feed da região ou trocar de região.';
+  String get territoriesSubtitle => 'Toque em um território para ver o feed da região ou trocar de região.';
 
   @override
   String get noTerritoryAvailable => 'Nenhum território disponível';
@@ -65,26 +61,22 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingTitle => 'Escolha seu território';
 
   @override
-  String get onboardingDescription =>
-      'Para ver o feed e participar da comunidade, escolha um território próximo a você.';
+  String get onboardingDescription => 'Para ver o feed e participar da comunidade, escolha um território próximo a você.';
 
   @override
   String get useMyLocation => 'Usar minha localização';
 
   @override
-  String get enableLocationHint =>
-      'Ative a localização para ver territórios próximos.';
+  String get enableLocationHint => 'Ative a localização para ver territórios próximos.';
 
   @override
-  String get noTerritoryInRegion =>
-      'Nenhum território cadastrado perto de você ainda.';
+  String get noTerritoryInRegion => 'Nenhum território cadastrado perto de você ainda.';
 
   @override
   String get registerMunicipalityTitle => 'Cadastrar seu município';
 
   @override
-  String get registerMunicipalityDescription =>
-      'Usamos o contorno oficial do IBGE para criar o território da sua cidade e você poder entrar como visitante.';
+  String get registerMunicipalityDescription => 'Usamos o contorno oficial do IBGE para criar o território da sua cidade e você poder entrar como visitante.';
 
   @override
   String registerMunicipalityButton(String city) {
@@ -103,8 +95,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get registerMunicipalityFailed =>
-      'Não foi possível obter o contorno IBGE. Ajuste o pin e desenhe sua célula.';
+  String get registerMunicipalityFailed => 'Não foi possível obter o contorno IBGE. Ajuste o pin e desenhe sua célula.';
 
   @override
   String get proposeTerritoryButton => 'Desenhar minha célula';
@@ -113,16 +104,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get proposeTerritoryTitle => 'Propor território';
 
   @override
-  String get proposeTerritoryDescription =>
-      'Ajuste o pin no mapa, confirme cidade e UF e desenhe o perímetro. Um curador validará antes da ativação; você terá acesso provisório como visitante.';
+  String get proposeTerritoryDescription => 'Ajuste o pin no mapa, confirme cidade e UF e desenhe o perímetro. Um curador validará antes da ativação; você terá acesso provisório como visitante.';
 
   @override
-  String get proposeTerritoryTapPin =>
-      'Toque no mapa para ajustar o centro do território.';
+  String get proposeTerritoryTapPin => 'Toque no mapa para ajustar o centro do território.';
 
   @override
-  String get proposeTerritoryTapPolygon =>
-      'Toque no mapa para adicionar vértices do polígono (mínimo 3).';
+  String get proposeTerritoryTapPolygon => 'Toque no mapa para adicionar vértices do polígono (mínimo 3).';
 
   @override
   String get proposeTerritoryCity => 'Cidade';
@@ -137,8 +125,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get proposeTerritoryPolygonMode => 'Desenhar polígono';
 
   @override
-  String get proposeTerritoryPolygonModeHint =>
-      'Desligado: usa círculo com raio ajustável.';
+  String get proposeTerritoryPolygonModeHint => 'Desligado: usa círculo com raio ajustável.';
 
   @override
   String proposeTerritoryRadiusLabel(String km) {
@@ -160,19 +147,16 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get proposeTerritoryCityStateRequired =>
-      'Informe cidade e UF (2 letras).';
+  String get proposeTerritoryCityStateRequired => 'Informe cidade e UF (2 letras).';
 
   @override
-  String get proposeTerritoryPolygonMinPoints =>
-      'O polígono precisa de pelo menos 3 pontos.';
+  String get proposeTerritoryPolygonMinPoints => 'O polígono precisa de pelo menos 3 pontos.';
 
   @override
   String get territoryPendingBadge => 'Aguardando curador';
 
   @override
-  String get onboardingPendingTerritoryHint =>
-      'Este território está em validação. Você pode entrar provisoriamente como visitante.';
+  String get onboardingPendingTerritoryHint => 'Este território está em validação. Você pode entrar provisoriamente como visitante.';
 
   @override
   String get onboardingNearbyTitle => 'Próximos a você';
@@ -181,19 +165,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingAllTerritoriesTitle => 'Todos os territórios';
 
   @override
-  String get onboardingOrChooseFromList =>
-      'Ou escolha um território na lista abaixo';
+  String get onboardingOrChooseFromList => 'Ou escolha um território na lista abaixo';
 
   @override
   String get onboardingLocationEnabled => 'Localização ativa';
 
   @override
-  String get onboardingLocationPrivacy =>
-      'Sua localização é privada e não fica visível para outros usuários.';
+  String get onboardingLocationPrivacy => 'Sua localização é privada e não fica visível para outros usuários.';
 
   @override
-  String get onboardingAllowLocationToCenter =>
-      'Permita a localização para centralizar o mapa e ver territórios próximos.';
+  String get onboardingAllowLocationToCenter => 'Permita a localização para centralizar o mapa e ver territórios próximos.';
 
   @override
   String onboardingContinueWith(Object name) {
@@ -201,8 +182,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get onboardingVisitorOnContinue =>
-      'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.';
+  String get onboardingVisitorOnContinue => 'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.';
 
   @override
   String get onboardingGettingLocation => 'Obtendo localização...';
@@ -292,8 +272,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noTerritorySelected => 'Nenhum território selecionado';
 
   @override
-  String get chooseTerritoryInExplore =>
-      'Toque em Explorar, escolha um território e volte aqui para publicar.';
+  String get chooseTerritoryInExplore => 'Toque em Explorar, escolha um território e volte aqui para publicar.';
 
   @override
   String get comingSoon => 'Em breve';
@@ -305,8 +284,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sessionExpired => 'Sessão expirada. Faça login novamente.';
 
   @override
-  String get enterToAccess =>
-      'Entre na sua conta para acessar perfil, publicar e notificações.';
+  String get enterToAccess => 'Entre na sua conta para acessar perfil, publicar e notificações.';
 
   @override
   String get map => 'Mapa';
@@ -528,8 +506,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get reportAlert => 'Reportar alerta';
 
   @override
-  String get chooseTerritoryForAlerts =>
-      'Escolha um território para ver alertas.';
+  String get chooseTerritoryForAlerts => 'Escolha um território para ver alertas.';
 
   @override
   String get pending => 'Pendentes';
@@ -706,8 +683,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorLoadConnections => 'Não foi possível carregar conexões.';
 
   @override
-  String get noConnectionsYet =>
-      'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.';
+  String get noConnectionsYet => 'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.';
 
   @override
   String get errorLoadSuggestions => 'Erro ao carregar sugestões.';
@@ -716,8 +692,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorSearch => 'Erro na busca.';
 
   @override
-  String get searchMinCharsHint =>
-      'Digite ao menos 2 caracteres ou veja sugestões acima.';
+  String get searchMinCharsHint => 'Digite ao menos 2 caracteres ou veja sugestões acima.';
 
   @override
   String get connectionRequestIncoming => 'Solicitação recebida';
@@ -778,8 +753,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorLoadAlerts => 'Não foi possível carregar alertas.';
 
   @override
-  String get alertsRequireResidency =>
-      'Alertas do território exigem residência ou curadoria.';
+  String get alertsRequireResidency => 'Alertas do território exigem residência ou curadoria.';
 
   @override
   String get filterAll => 'Todos';
@@ -788,8 +762,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get postDefaultTitle => 'Post';
 
   @override
-  String get chooseTerritoryBeforePost =>
-      'Escolha um território antes de publicar.';
+  String get chooseTerritoryBeforePost => 'Escolha um território antes de publicar.';
 
   @override
   String get addImage => 'Adicionar imagem';
@@ -890,8 +863,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get governanceSubtitle => 'Decisões coletivas do território.';
 
   @override
-  String get chooseTerritoryForGovernance =>
-      'Escolha um território para ver as votações.';
+  String get chooseTerritoryForGovernance => 'Escolha um território para ver as votações.';
 
   @override
   String get noVotings => 'Nenhuma votação no momento.';
@@ -995,8 +967,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get votingTypeFeatureFlag => 'Funcionalidade';
 
   @override
-  String get votingTypeTerritoryCharacterization =>
-      'Caracterização do território';
+  String get votingTypeTerritoryCharacterization => 'Caracterização do território';
 
   @override
   String get votingTypeCommunityPolicy => 'Política comunitária';
@@ -1066,4 +1037,86 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get postNotFound => 'Publicação não encontrada.';
+
+  @override
+  String get services => 'Serviços';
+
+  @override
+  String get servicesHubSubtitle => 'Tudo que a vida no território precisa — economia, serviços, governança e cuidado com o lugar.';
+
+  @override
+  String get servicesCategoryEconomy => 'Economia local';
+
+  @override
+  String get servicesCategoryTerritoryServices => 'Serviços territoriais';
+
+  @override
+  String get servicesCategoryGovernance => 'Governança';
+
+  @override
+  String get servicesCategoryLife => 'Vida no território';
+
+  @override
+  String get servicesCategoryTools => 'Ferramentas do território';
+
+  @override
+  String get statusLive => 'No ar';
+
+  @override
+  String get statusSoon => 'Em breve';
+
+  @override
+  String get serviceGroupBuy => 'Compra coletiva';
+
+  @override
+  String get serviceHosting => 'Hospedagem';
+
+  @override
+  String get serviceDemands => 'Demandas';
+
+  @override
+  String get serviceTrades => 'Trocas';
+
+  @override
+  String get serviceDeliveries => 'Entregas';
+
+  @override
+  String get serviceWallet => 'Carteira';
+
+  @override
+  String get serviceBabysitters => 'Babás';
+
+  @override
+  String get serviceWellness => 'Bem-estar';
+
+  @override
+  String get serviceRentals => 'Aluguéis';
+
+  @override
+  String get serviceDigitalHub => 'Hub digital';
+
+  @override
+  String get serviceTerritoryHealth => 'Saúde do território';
+
+  @override
+  String get serviceMetrics => 'Métricas';
+
+  @override
+  String get serviceSeeds => 'Banco de sementes';
+
+  @override
+  String get serviceLearning => 'Aprendizado';
+
+  @override
+  String get serviceAiAssistant => 'Assistente IA';
+
+  @override
+  String get serviceAchievements => 'Conquistas';
+
+  @override
+  String get visitorBannerTitle => 'Você está como visitante';
+
+  @override
+  String get visitorBannerCta =>
+      'Confirme residência para votar e ver conteúdo de moradores';
 }

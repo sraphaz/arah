@@ -14,6 +14,7 @@ import 'features/events/presentation/screens/events_screen.dart';
 import 'features/connections/presentation/screens/connections_screen.dart';
 import 'features/alerts/presentation/screens/alerts_screen.dart';
 import 'features/membership/presentation/screens/membership_screen.dart';
+import 'features/membership/presentation/screens/residency_journey_screen.dart';
 import 'features/marketplace/presentation/screens/marketplace_screen.dart';
 import 'features/chat/presentation/screens/chat_list_screen.dart';
 import 'features/chat/presentation/screens/chat_conversation_screen.dart';
@@ -101,6 +102,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/membership',
         builder: (_, __) => const MembershipScreen(),
+      ),
+      GoRoute(
+        path: '/residency-journey',
+        builder: (_, __) => const ResidencyJourneyScreen(),
       ),
       GoRoute(
         path: '/marketplace',

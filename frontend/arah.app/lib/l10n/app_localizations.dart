@@ -2284,6 +2284,132 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Ferramentas'**
   String get profileTools;
+
+  /// No description provided for @residencyJourneyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar residência'**
+  String get residencyJourneyTitle;
+
+  /// No description provided for @residencyJourneyBecomeResident.
+  ///
+  /// In pt, this message translates to:
+  /// **'Torne-se morador de {territory}'**
+  String residencyJourneyBecomeResident(String territory);
+
+  /// No description provided for @residencyJourneyPresenceSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Moradores acessam conteúdo restrito, votam e participam da gestão.'**
+  String get residencyJourneyPresenceSubtitle;
+
+  /// No description provided for @residencyJourneyPresenceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Presença no território'**
+  String get residencyJourneyPresenceTitle;
+
+  /// No description provided for @residencyJourneyPresenceHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmada por GPS · privada'**
+  String get residencyJourneyPresenceHint;
+
+  /// No description provided for @residencyJourneyProofTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Envie um comprovante'**
+  String get residencyJourneyProofTitle;
+
+  /// No description provided for @residencyJourneyProofSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta de luz, água, contrato ou declaração da associação. Por enquanto, descreva o comprovante.'**
+  String get residencyJourneyProofSubtitle;
+
+  /// No description provided for @residencyJourneyMessageLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mensagem / comprovante'**
+  String get residencyJourneyMessageLabel;
+
+  /// No description provided for @residencyJourneyMessageHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120'**
+  String get residencyJourneyMessageHint;
+
+  /// No description provided for @residencyJourneyReviewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revise'**
+  String get residencyJourneyReviewTitle;
+
+  /// No description provided for @residencyJourneyReviewTerritory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Território'**
+  String get residencyJourneyReviewTerritory;
+
+  /// No description provided for @residencyJourneyReviewPresence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Presença GPS'**
+  String get residencyJourneyReviewPresence;
+
+  /// No description provided for @residencyJourneyReviewPresenceValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmada'**
+  String get residencyJourneyReviewPresenceValue;
+
+  /// No description provided for @residencyJourneyReviewMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprovante'**
+  String get residencyJourneyReviewMessage;
+
+  /// No description provided for @residencyJourneyReviewMessageEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem mensagem'**
+  String get residencyJourneyReviewMessageEmpty;
+
+  /// No description provided for @residencyJourneyReviewAnalysis.
+  ///
+  /// In pt, this message translates to:
+  /// **'Análise'**
+  String get residencyJourneyReviewAnalysis;
+
+  /// No description provided for @residencyJourneyReviewAnalysisValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Curadoria local'**
+  String get residencyJourneyReviewAnalysisValue;
+
+  /// No description provided for @residencyJourneySendRequest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar solicitação'**
+  String get residencyJourneySendRequest;
+
+  /// No description provided for @residencyJourneyUnderstood.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entendi'**
+  String get residencyJourneyUnderstood;
+
+  /// No description provided for @residencyJourneySuccessTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Solicitação enviada!'**
+  String get residencyJourneySuccessTitle;
+
+  /// No description provided for @residencyJourneySuccessMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.'**
+  String get residencyJourneySuccessMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

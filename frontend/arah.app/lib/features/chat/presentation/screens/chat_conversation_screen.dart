@@ -4,9 +4,11 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/providers/auth_state_provider.dart';
 import '../providers/chat_provider.dart';
 
 class ChatConversationScreen extends ConsumerStatefulWidget {
@@ -51,7 +53,9 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colors = context.appColors;
     final state = ref.watch(chatConversationProvider(widget.conversationId));
+    final currentUserId = ref.watch(currentUserProvider)?.id;
     final timeFormat = DateFormat('HH:mm');
 
     return ArahScaffold(
@@ -60,28 +64,60 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
         children: [
           Expanded(
             child: state.isLoading && state.messages.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: SizedBox(
+                      width: AppConstants.loadingIndicatorSize,
+                      height: AppConstants.loadingIndicatorSize,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: colors.primary,
+                      ),
+                    ),
+                  )
                 : ListView.builder(
                     padding: const EdgeInsets.all(AppConstants.spacingMd),
                     itemCount: state.messages.length,
                     itemBuilder: (context, index) {
                       final msg = state.messages[index];
+                      final isMine = currentUserId != null &&
+                          currentUserId.isNotEmpty &&
+                          msg.senderUserId == currentUserId;
                       return Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
                         child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.sizeOf(context).width * 0.78,
+                          ),
                           margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
-                          padding: const EdgeInsets.all(AppConstants.spacingSm),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppConstants.spacingMd,
+                            vertical: AppConstants.spacingSm,
+                          ),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            color: isMine
+                                ? colors.primary.withValues(alpha: 0.18)
+                                : colors.surfaceContainer,
                             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                            border: Border.all(
+                              color: isMine ? colors.accentBorder : colors.outlineSubtle,
+                            ),
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment:
+                                isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                             children: [
-                              Text(msg.text),
+                              Text(
+                                msg.text,
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: colors.onSurface,
+                                    ),
+                              ),
+                              const SizedBox(height: AppConstants.spacingXs),
                               Text(
                                 timeFormat.format(msg.createdAtUtc.toLocal()),
-                                style: Theme.of(context).textTheme.labelSmall,
+                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                      color: colors.onSurfaceSubtle,
+                                    ),
                               ),
                             ],
                           ),
@@ -100,7 +136,7 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
                       controller: _controller,
                       decoration: InputDecoration(
                         hintText: l10n.messageHint,
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                       onSubmitted: (_) => _send(),
                     ),
@@ -108,12 +144,15 @@ class _ChatConversationScreenState extends ConsumerState<ChatConversationScreen>
                   IconButton(
                     onPressed: _sending ? null : _send,
                     icon: _sending
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                        ? SizedBox(
+                            width: AppConstants.loadingIndicatorSize,
+                            height: AppConstants.loadingIndicatorSize,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: colors.primary,
+                            ),
                           )
-                        : const Icon(Icons.send),
+                        : Icon(Icons.send, color: colors.primary),
                   ),
                 ],
               ),

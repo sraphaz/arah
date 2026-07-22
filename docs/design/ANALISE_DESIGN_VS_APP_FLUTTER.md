@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 🚧 Alinhamento em andamento (Onda A+B iniciada 2026-07-21)  
-**Próximo passo**: Onda C — redesign high-fidelity das telas núcleo (ver §8)
+**Status**: 🚧 Alinhamento em andamento (Onda C em curso 2026-07-21)  
+**Próximo passo**: Onda D — jornadas profundas + Moderação high-fidelity + APP-DS-13
 
 ---
 
@@ -218,11 +218,11 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-04** | Hub **Serviços** (categorias + live/soon) | ✅ | APP-DS-02 |
 | **APP-DS-05** | Migrar tokens Flutter canônicos → paleta **premium floresta** (ou dual-theme documentado) | ✅ | APP-DS-01 |
 | **APP-DS-06** | Tipografia Sora + Geist no Flutter (ou subset aprovado) | ✅ | APP-DS-05 |
-| **APP-DS-07** | Biblioteca de componentes: Card hairline, RoleBadge, Btn, JourneyShell | 🟡 parcial (RoleBadge ✅; JourneyShell/Btn premium pendentes) | APP-DS-05 |
-| **APP-DS-08** | Redesign Explorar (ferramentas do território, não só ícones) | 🟡 parcial (ícones removidos; CTA → Serviços) | APP-DS-03 |
-| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | 🟡 parcial (banner ✅; RoleBadge + grade ferramentas ✅; stats finas pendentes) | APP-DS-07 |
-| **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | 🟠 | APP-DS-07 |
-| **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | 🟠 | backend gaps |
+| **APP-DS-07** | Biblioteca de componentes: Card hairline, RoleBadge, Btn, JourneyShell | ✅ RoleBadge + ArahButton + JourneyShell | APP-DS-05 |
+| **APP-DS-08** | Redesign Explorar (ferramentas do território, não só ícones) | ✅ chips de ferramentas + seletor | APP-DS-03 |
+| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | 🟡 parcial (banner/RoleBadge/grade ✅; stats finas pendentes) | APP-DS-07 |
+| **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | 🟡 parcial (Mercado cards ✅; Chat bolhas ✅; Moderação pendente) | APP-DS-07 |
+| **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | 🟡 UI JourneyShell v0 (`/residency-journey`); upload comprovante ainda gap backend | backend gaps |
 | **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | 🟡 | APP-DS-07 |
 | **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | 🟡 | APP-DS-02 |
 
@@ -300,5 +300,6 @@ Comparar lado a lado com o Flutter: bottom-nav, top bar, feed card, hub Serviço
 
 ### Changelog deste documento
 
+- **1.2** (2026-07-21): Onda C — JourneyShell, jornada residência v0, Mercado cards, Chat bolhas, Explorar chips, shell sem Scaffold aninhado.
 - **1.1** (2026-07-21): Onda A+B — ADR-021, tokens/fonts, shell Serviços+TopBar, hub, banner visitante; APP-DS-01..06 ✅.
 - **1.0** (2026-07-15): primeira análise profunda design×app; IDs APP-DS-01..13; ondas A–D.

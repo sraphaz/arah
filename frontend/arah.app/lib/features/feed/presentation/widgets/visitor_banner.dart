@@ -25,7 +25,7 @@ class VisitorBanner extends ConsumerWidget {
     return Material(
       color: colors.accentSubtle,
       child: InkWell(
-        onTap: () => context.push('/membership'),
+        onTap: () => context.push('/residency-journey'),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.spacingMd,

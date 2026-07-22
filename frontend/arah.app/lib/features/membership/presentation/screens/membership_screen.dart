@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/geo/geo_location_provider.dart';
@@ -55,7 +56,7 @@ class MembershipScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.membership == null && state.error == null) {
       return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: const [ArahListSkeleton()],
       );
     }
@@ -109,19 +110,7 @@ class MembershipScreen extends ConsumerWidget {
         const SizedBox(height: AppConstants.spacingLg),
         if (!isResident) ...[
           FilledButton.icon(
-            onPressed: () async {
-              try {
-                await notifier.becomeResident(message: 'Solicitação via app');
-                if (context.mounted) showSuccessSnackBar(context, l10n.requestSent);
-              } catch (e) {
-                if (context.mounted) {
-                  showErrorSnackBar(
-                    context,
-                    e is ApiException ? e.userMessage : l10n.errorRequestResidency,
-                  );
-                }
-              }
-            },
+            onPressed: () => context.push('/residency-journey'),
             icon: const Icon(Icons.home_work_outlined),
             label: Text(l10n.requestResidency),
           ),

@@ -8,7 +8,6 @@ import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_brand_header.dart';
 import '../../../../core/widgets/arah_role_badge.dart';
-import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../core/widgets/profile_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
@@ -20,6 +19,7 @@ import '../widgets/interests_sheet.dart';
 import '../widgets/preferences_sheet.dart';
 
 /// Perfil: dados do usuário via BFF me/profile; edição (nome, bio) em bottom sheet.
+/// Usada apenas como conteúdo de aba do MainShell (sem Scaffold próprio).
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
@@ -30,26 +30,37 @@ class ProfileScreen extends ConsumerWidget {
     final session = auth.valueOrNull;
 
     if (session == null) {
-      return ArahScaffold(
-        appBar: AppBar(title: Text(l10n.profile)),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppConstants.spacingLg),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ArahBrandHeader(
-                  subtitle: l10n.enterToAccess,
-                  size: ArahBrandHeaderSize.medium,
-                ),
-                const SizedBox(height: AppConstants.spacingLg),
-                FilledButton(
-                  onPressed: () => context.push('/login'),
-                  child: Text(l10n.login),
-                ),
-              ],
+      return Material(
+        color: Theme.of(context).colorScheme.surface,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _ProfileTitleRow(
+              title: l10n.profile,
+              onSettings: null,
             ),
-          ),
+            Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppConstants.spacingLg),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ArahBrandHeader(
+                        subtitle: l10n.enterToAccess,
+                        size: ArahBrandHeaderSize.medium,
+                      ),
+                      const SizedBox(height: AppConstants.spacingLg),
+                      FilledButton(
+                        onPressed: () => context.push('/login'),
+                        child: Text(l10n.login),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -57,74 +68,81 @@ class ProfileScreen extends ConsumerWidget {
     final profileAsync = ref.watch(meProfileProvider);
     final authUser = session.user;
 
-    return ArahScaffold(
-      appBar: AppBar(
-        title: Text(l10n.profile),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => _showSettingsSheet(context),
+    return Material(
+      color: Theme.of(context).colorScheme.surface,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _ProfileTitleRow(
+            title: l10n.profile,
+            onSettings: () => _showSettingsSheet(context),
           ),
-        ],
-      ),
-      body: profileAsync.when(
-        data: (profile) => _ProfileBody(
-          profile: profile,
-          onEditTap: () => _showEditProfileSheet(context, ref, profile),
-          onMyTerritory: () => TerritoryIndicatorBar.showTerritorySelectorSheet(context),
-          onNotifications: () => context.push('/notifications'),
-          onLogout: () async {
-            await ref.read(authStateProvider.notifier).logout();
-            if (context.mounted) context.go('/login');
-          },
-        ),
-        loading: () => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (authUser != null) ...[
-                Text(
-                  authUser.displayName,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                if (authUser.email != null && authUser.email!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: AppConstants.spacingSm),
-                    child: Text(
-                      authUser.email!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+          Expanded(
+            child: profileAsync.when(
+            data: (profile) => _ProfileBody(
+              profile: profile,
+              onEditTap: () => _showEditProfileSheet(context, ref, profile),
+              onMyTerritory: () => TerritoryIndicatorBar.showTerritorySelectorSheet(context),
+              onNotifications: () => context.push('/notifications'),
+              onLogout: () async {
+                await ref.read(authStateProvider.notifier).logout();
+                if (context.mounted) context.go('/login');
+              },
+            ),
+            loading: () => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (authUser != null) ...[
+                    Text(
+                      authUser.displayName,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                  ),
-                const SizedBox(height: AppConstants.spacingLg),
-              ],
-              const ProfileSkeleton(),
-            ],
-          ),
-        ),
-        error: (err, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppConstants.spacingLg),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error_outline, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.error),
-                const SizedBox(height: AppConstants.spacingMd),
-                Text(
-                  err is ApiException ? err.userMessage : l10n.errorLoad,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                    if (authUser.email != null && authUser.email!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppConstants.spacingSm),
+                        child: Text(
+                          authUser.email!,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ),
+                    const SizedBox(height: AppConstants.spacingLg),
+                  ],
+                  const ProfileSkeleton(),
+                ],
+              ),
+            ),
+            error: (err, _) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.spacingLg),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: AppConstants.iconSizeLg,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(height: AppConstants.spacingMd),
+                    Text(
+                      err is ApiException ? err.userMessage : l10n.errorLoad,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: AppConstants.spacingMd),
+                    FilledButton.tonal(
+                      onPressed: () => ref.invalidate(meProfileProvider),
+                      child: Text(l10n.tryAgain),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: AppConstants.spacingMd),
-                FilledButton.tonal(
-                  onPressed: () => ref.invalidate(meProfileProvider),
-                  child: Text(l10n.tryAgain),
-                ),
-              ],
+              ),
             ),
           ),
         ),
+        ],
       ),
     );
   }
@@ -345,6 +363,39 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
+class _ProfileTitleRow extends StatelessWidget {
+  const _ProfileTitleRow({required this.title, required this.onSettings});
+
+  final String title;
+  final VoidCallback? onSettings;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.spacingMd,
+        vertical: AppConstants.spacingSm,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          if (onSettings != null)
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: onSettings,
+              tooltip: title,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ProfileBody extends ConsumerWidget {
   const _ProfileBody({
     required this.profile,
@@ -519,7 +570,8 @@ class _ProfileToolTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final width = (MediaQuery.sizeOf(context).width - AppConstants.spacingMd * 2 - AppConstants.spacingSm) / 2;
+    final width =
+        (MediaQuery.sizeOf(context).width - AppConstants.spacingMd * 2 - AppConstants.spacingSm) / 2;
 
     return SizedBox(
       width: width,

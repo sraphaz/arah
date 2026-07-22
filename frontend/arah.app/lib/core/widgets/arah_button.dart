@@ -6,8 +6,8 @@ import '../theme/arah_motion.dart';
 
 enum ArahButtonVariant { primary, secondary, text }
 
-/// Botão do design system com touch target mínimo e estados de loading.
-class ArahButton extends StatelessWidget {
+/// Botão do design system: variantes, touch mínimo 44px e scale no press.
+class ArahButton extends StatefulWidget {
   const ArahButton({
     super.key,
     required this.label,
@@ -26,60 +26,111 @@ class ArahButton extends StatelessWidget {
   final bool expand;
 
   @override
+  State<ArahButton> createState() => _ArahButtonState();
+}
+
+class _ArahButtonState extends State<ArahButton> {
+  bool _pressed = false;
+
+  bool get _enabled => widget.onPressed != null && !widget.loading;
+
+  @override
   Widget build(BuildContext context) {
-    final enabled = onPressed != null && !loading;
+    final colors = context.appColors;
 
     Widget button;
-    switch (variant) {
+    switch (widget.variant) {
       case ArahButtonVariant.primary:
         button = FilledButton(
-          onPressed: enabled ? () => _handlePress() : null,
+          onPressed: _enabled ? _handlePress : null,
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(
+              AppConstants.minTouchTargetSize,
+              AppConstants.minTouchTargetSize,
+            ),
+            foregroundColor: AppDesignTokens.textOnAccent,
+            backgroundColor: colors.primary,
+          ),
           child: _buildChild(context),
         );
       case ArahButtonVariant.secondary:
         button = OutlinedButton(
-          onPressed: enabled ? () => _handlePress() : null,
+          onPressed: _enabled ? _handlePress : null,
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(
+              AppConstants.minTouchTargetSize,
+              AppConstants.minTouchTargetSize,
+            ),
+            foregroundColor: colors.primary,
+            side: BorderSide(color: colors.accentBorder),
+          ),
           child: _buildChild(context),
         );
       case ArahButtonVariant.text:
         button = TextButton(
-          onPressed: enabled ? () => _handlePress() : null,
+          onPressed: _enabled ? _handlePress : null,
+          style: TextButton.styleFrom(
+            minimumSize: const Size(
+              AppConstants.minTouchTargetSize,
+              AppConstants.minTouchTargetSize,
+            ),
+            foregroundColor: colors.primary,
+          ),
           child: _buildChild(context),
         );
     }
 
-    return expand
-        ? SizedBox(width: double.infinity, child: button)
-        : button;
+    final scaled = AnimatedScale(
+      scale: _pressed && _enabled ? 0.97 : 1.0,
+      duration: ArahMotion.fast,
+      child: Listener(
+        onPointerDown: _enabled ? (_) => setState(() => _pressed = true) : null,
+        onPointerUp: (_) => setState(() => _pressed = false),
+        onPointerCancel: (_) => setState(() => _pressed = false),
+        child: button,
+      ),
+    );
+
+    return widget.expand
+        ? SizedBox(width: double.infinity, child: scaled)
+        : ConstrainedBox(
+            constraints: const BoxConstraints(
+              minWidth: AppConstants.minTouchTargetSize,
+              minHeight: AppConstants.minTouchTargetSize,
+            ),
+            child: scaled,
+          );
   }
 
   void _handlePress() {
     ArahMotion.lightTap();
-    onPressed?.call();
+    widget.onPressed?.call();
   }
 
   Widget _buildChild(BuildContext context) {
-    if (loading) {
+    final colors = context.appColors;
+    if (widget.loading) {
       return SizedBox(
         width: AppConstants.loadingIndicatorSize,
         height: AppConstants.loadingIndicatorSize,
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          color: variant == ArahButtonVariant.primary
-              ? Theme.of(context).colorScheme.onPrimary
-              : context.appColors.primary,
+          color: widget.variant == ArahButtonVariant.primary
+              ? AppDesignTokens.textOnAccent
+              : colors.primary,
         ),
       );
     }
 
-    if (icon == null) return Text(label);
+    if (widget.icon == null) return Text(widget.label);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: AppConstants.iconSizeSm + 4),
+        Icon(widget.icon, size: AppConstants.iconSizeSm + 4),
         const SizedBox(width: AppConstants.spacingSm),
-        Text(label),
+        Flexible(child: Text(widget.label, overflow: TextOverflow.ellipsis)),
       ],
     );
   }

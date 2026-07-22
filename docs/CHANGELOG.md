@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Onda C design app (telas núcleo + jornadas) (2026-07-21)
+
+- **JourneyShell** + **ArahButton**; jornada de residência v0 (`/residency-journey`) via banner/membership
+- **Mercado**: cards de produto, carrinho e empty states
+- **Chat**: bolhas alinhadas (eu à direita) com tokens
+- **Shell**: CreatePost/Profile sem Scaffold aninhado; Explorar com chips de ferramentas
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md` (APP-DS-07/08/10/11)
+
 ### Decidido — ADR-021: design system do app como fonte canônica de UI (2026-07-21)
 
 - [ADR-021](architecture/adrs/ADR-021-design-system-app-canonic.md) (**APP-DS-01** Accepted): canônico = `design-system/handoff` + `ui_kits/app` + `--premium-*`; Flutter deve convergir; `26_FLUTTER_DESIGN_GUIDELINES`, nav em `24_FLUTTER_FRONTEND_PLAN` e `design/app_wireframe_v2.pdf` = legado

@@ -13,14 +13,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class _FakeAuthStateNotifierWithSession extends AuthStateNotifier {
   _FakeAuthStateNotifierWithSession();
   @override
-  Future<AuthSession?> build() async => AuthSession(
+  Future<AuthSession?> build() async => const AuthSession(
         accessToken: 'test-token',
-        user: const AuthUser(id: '1', displayName: 'Test User', email: 'test@test.com'),
+        user: AuthUser(id: '1', displayName: 'Test User', email: 'test@test.com'),
       );
 }
 
 void main() {
-  testWidgets('ProfileScreen when logged in shows profile and app bar', (WidgetTester tester) async {
+  testWidgets('ProfileScreen when logged in shows profile and title', (WidgetTester tester) async {
     final profile = MeProfile(
       id: '1',
       displayName: 'Test User',

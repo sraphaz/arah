@@ -25,6 +25,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    expect(find.text('Explorar'), findsOneWidget);
     expect(find.text('Territórios'), findsOneWidget);
     expect(find.text('Serviços'), findsOneWidget);
   });

@@ -438,5 +438,31 @@
   "visitor": "Visitante",
   "resident": "Morador",
   "curator": "Curador",
-  "profileTools": "Ferramentas"
+  "profileTools": "Ferramentas",
+  "residencyJourneyTitle": "Confirmar residência",
+  "residencyJourneyBecomeResident": "Torne-se morador de {territory}",
+  "@residencyJourneyBecomeResident": {
+    "placeholders": {
+      "territory": {"type": "String"}
+    }
+  },
+  "residencyJourneyPresenceSubtitle": "Moradores acessam conteúdo restrito, votam e participam da gestão.",
+  "residencyJourneyPresenceTitle": "Presença no território",
+  "residencyJourneyPresenceHint": "Confirmada por GPS · privada",
+  "residencyJourneyProofTitle": "Envie um comprovante",
+  "residencyJourneyProofSubtitle": "Conta de luz, água, contrato ou declaração da associação. Por enquanto, descreva o comprovante.",
+  "residencyJourneyMessageLabel": "Mensagem / comprovante",
+  "residencyJourneyMessageHint": "Ex.: Conta de luz em meu nome, Rua das Palmeiras 120",
+  "residencyJourneyReviewTitle": "Revise",
+  "residencyJourneyReviewTerritory": "Território",
+  "residencyJourneyReviewPresence": "Presença GPS",
+  "residencyJourneyReviewPresenceValue": "Confirmada",
+  "residencyJourneyReviewMessage": "Comprovante",
+  "residencyJourneyReviewMessageEmpty": "Sem mensagem",
+  "residencyJourneyReviewAnalysis": "Análise",
+  "residencyJourneyReviewAnalysisValue": "Curadoria local",
+  "residencyJourneySendRequest": "Enviar solicitação",
+  "residencyJourneyUnderstood": "Entendi",
+  "residencyJourneySuccessTitle": "Solicitação enviada!",
+  "residencyJourneySuccessMessage": "A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada."
 }

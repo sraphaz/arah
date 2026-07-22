@@ -1130,4 +1130,73 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get profileTools => 'Ferramentas';
+
+  @override
+  String get residencyJourneyTitle => 'Confirmar residência';
+
+  @override
+  String residencyJourneyBecomeResident(String territory) {
+    return 'Torne-se morador de $territory';
+  }
+
+  @override
+  String get residencyJourneyPresenceSubtitle =>
+      'Moradores acessam conteúdo restrito, votam e participam da gestão.';
+
+  @override
+  String get residencyJourneyPresenceTitle => 'Presença no território';
+
+  @override
+  String get residencyJourneyPresenceHint => 'Confirmada por GPS · privada';
+
+  @override
+  String get residencyJourneyProofTitle => 'Envie um comprovante';
+
+  @override
+  String get residencyJourneyProofSubtitle =>
+      'Conta de luz, água, contrato ou declaração da associação. Por enquanto, descreva o comprovante.';
+
+  @override
+  String get residencyJourneyMessageLabel => 'Mensagem / comprovante';
+
+  @override
+  String get residencyJourneyMessageHint =>
+      'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120';
+
+  @override
+  String get residencyJourneyReviewTitle => 'Revise';
+
+  @override
+  String get residencyJourneyReviewTerritory => 'Território';
+
+  @override
+  String get residencyJourneyReviewPresence => 'Presença GPS';
+
+  @override
+  String get residencyJourneyReviewPresenceValue => 'Confirmada';
+
+  @override
+  String get residencyJourneyReviewMessage => 'Comprovante';
+
+  @override
+  String get residencyJourneyReviewMessageEmpty => 'Sem mensagem';
+
+  @override
+  String get residencyJourneyReviewAnalysis => 'Análise';
+
+  @override
+  String get residencyJourneyReviewAnalysisValue => 'Curadoria local';
+
+  @override
+  String get residencyJourneySendRequest => 'Enviar solicitação';
+
+  @override
+  String get residencyJourneyUnderstood => 'Entendi';
+
+  @override
+  String get residencyJourneySuccessTitle => 'Solicitação enviada!';
+
+  @override
+  String get residencyJourneySuccessMessage =>
+      'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.';
 }

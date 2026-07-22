@@ -1130,4 +1130,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileTools => 'Tools';
+
+  @override
+  String get residencyJourneyTitle => 'Confirm residency';
+
+  @override
+  String residencyJourneyBecomeResident(String territory) {
+    return 'Become a resident of $territory';
+  }
+
+  @override
+  String get residencyJourneyPresenceSubtitle =>
+      'Residents access restricted content, vote, and take part in local governance.';
+
+  @override
+  String get residencyJourneyPresenceTitle => 'Presence in the territory';
+
+  @override
+  String get residencyJourneyPresenceHint => 'Confirmed by GPS · private';
+
+  @override
+  String get residencyJourneyProofTitle => 'Send proof of residency';
+
+  @override
+  String get residencyJourneyProofSubtitle =>
+      'Utility bill, lease, or association letter. For now, describe your proof in a message.';
+
+  @override
+  String get residencyJourneyMessageLabel => 'Message / proof';
+
+  @override
+  String get residencyJourneyMessageHint =>
+      'E.g. Electricity bill in my name, Palm Street 120';
+
+  @override
+  String get residencyJourneyReviewTitle => 'Review';
+
+  @override
+  String get residencyJourneyReviewTerritory => 'Territory';
+
+  @override
+  String get residencyJourneyReviewPresence => 'GPS presence';
+
+  @override
+  String get residencyJourneyReviewPresenceValue => 'Confirmed';
+
+  @override
+  String get residencyJourneyReviewMessage => 'Proof';
+
+  @override
+  String get residencyJourneyReviewMessageEmpty => 'No message';
+
+  @override
+  String get residencyJourneyReviewAnalysis => 'Review';
+
+  @override
+  String get residencyJourneyReviewAnalysisValue => 'Local curation';
+
+  @override
+  String get residencyJourneySendRequest => 'Submit request';
+
+  @override
+  String get residencyJourneyUnderstood => 'Got it';
+
+  @override
+  String get residencyJourneySuccessTitle => 'Request sent!';
+
+  @override
+  String get residencyJourneySuccessMessage =>
+      'Territory curators will review your proof. You will be notified once residency is confirmed.';
 }

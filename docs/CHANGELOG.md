@@ -13,9 +13,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 - **Moderação**: cards com chips/status e empty/error padronizados
 - **Perfil**: `ProfileStatsRow` (contagens ou fallback papel/presença/interesses)
-- **Residência**: anexo de comprovante (upload media + referência na solicitação)
+- **Residência**: anexo de comprovante (upload media + referência na solicitação); falha de upload bloqueia envio com feedback
+- **Perfil**: presença de curador tratada como residente (não visitante)
 - **APP-DS-12**: `ArahErrorState` (Feed/Moderação)
-- **APP-DS-13**: `design-ia-gate-check.ps1` integrado ao `run-gates.ps1`
+- **APP-DS-13**: `design-ia-gate-check.ps1` com checks estruturais + UTF-8 BOM
 - Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
 
 ### Alterado — Onda C design app (telas núcleo + jornadas) (2026-07-21)

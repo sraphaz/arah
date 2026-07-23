@@ -31,7 +31,7 @@ Curadores enxergam e decidem: correlação geográfica, score de relevância exp
 
 - [ ] Sinal relevante (≥ corte da política) abre WorkItem
 - [ ] Decisão auditada (`approve` | `adjust` | `reject`); justificativa em reject/adjust
-- [ ] Sinal stale não pode ser aprovado
+- [ ] Sinal stale ou expired não pode ser aprovado
 - [ ] Idempotência: segunda decisão → 409
 - [ ] Nada publica sem `PublicationDecision` (exceto allowlist — desligada por padrão)
 

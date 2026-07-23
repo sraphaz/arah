@@ -1,5 +1,5 @@
 id: TI-201-signal-review
-version: "0.1.0"
+version: "0.1.1"
 title: "TI-201 — Revisão humana de sinal externo (SignalReview)"
 owner: backend
 status: draft
@@ -28,7 +28,8 @@ acceptance:
     then: "a segunda decisão retorna 409 already_reviewed; a primeira permanece"
     status: pending
   - id: AC-TI-201-5
-    then: "Publicação (Published) exige PublicationDecision humana ou allowlist objetiva com selo de autopublicação"
+    when: "Quando o sistema tenta promover o sinal a Published após SignalReview"
+    then: "Publicação exige PublicationDecision humana ou allowlist objetiva com selo de autopublicação"
     status: pending
 
 harness:
@@ -46,7 +47,11 @@ links:
   handoff:
     - docs/handoff/inteligencia-territorial/Inteligencia Territorial - Handoff de Desenvolvimento.dc.html
     - docs/handoff/inteligencia-territorial/Inteligencia Territorial - Roadmap e Backlog.dc.html
-  tests: []
+  # Planejado em TI-2 (ainda não implementado — status draft / AC pending).
+  # Ao implementar: promover status→covered com covered_by e criar as classes abaixo.
+  tests:
+    - "FullyQualifiedName~SignalReviewDomainTests (AC-TI-201-1, AC-TI-201-2, AC-TI-201-3, AC-TI-201-5)"
+    - "FullyQualifiedName~SignalReviewHttpIntegrationTests (AC-TI-201-4 409 already_reviewed; AC-TI-201-2 HTTP)"
 
 guardrails:
   - territory-first

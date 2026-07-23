@@ -19,6 +19,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - `PHASE_QUEUE.yaml` + `STATUS_FASES.md` + índice do backlog atualizados
 - **Multiagente TI** (consultivos): `signal-scout`, `territorial-analyst`, `source-steward`, `community-brief-writer`, `response-orchestrator`, `intelligence-governance-steward` — coreografia `inteligencia-territorial`; nenhum publica
 - `next-phase` ignora `kind: track` / `TI-*` (Bugbot: fila TI não compete com épicos FASE*)
+- Label canônica `wave/TI` em `.github/labels.yml`; links cross-dir do handoff C4↔TI; `deck-stage.js` para o Deck Executivo
+- Spec TI-201: `when` em AC-TI-201-5 + mapeamento de testes planejados (draft); backlog TI2/TI4 alinhados (stale|expired; EXIF default strip)
 
 ### Corrigido — follow-up Bugbot Onda D (2026-07-23)
 

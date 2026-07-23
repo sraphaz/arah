@@ -19,7 +19,7 @@ A comunidade vira coautora: confirmar, contestar, evidenciar e corrigir — com 
 ## Entregas
 
 - `CommunityVerification` (1 por morador por alerta)
-- Evidência via media/curadoria existente (EXIF strip opt-in)
+- Evidência via media/curadoria existente (EXIF removido por padrão; retenção excepcional e autorizada)
 - Threshold de contestação reabre WorkItem (não despublica sozinho)
 - Correção pública na timeline + notificação a participantes
 - Specs TI-401 / TI-402

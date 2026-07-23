@@ -17,26 +17,26 @@
 @font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
 @font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
 html { scroll-behavior:smooth; }
-body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+body { margin:0; background:var(--bg); color:var(--fg); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
 * { box-sizing:border-box; }
-::selection { background:#C6E3D2; }
-a { color:#2B6246; }
-a:hover { color:#377B57; }
+::selection { background:var(--forest-200); }
+a { color:var(--fg-muted); }
+a:hover { color:var(--primary); }
 .msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
-.toclink { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
-.toclink:hover { color:#377B57; border-left-color:#9FCEB4; }
-.sect { padding:38px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px; }
-.eyebrow { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px; }
-.h2 { font-family:'Sora',sans-serif; font-weight:600; font-size:1.7rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117; }
-.body { font-size:15px; line-height:1.66; color:#2B6246; max-width:68ch; }
-.chip { display:inline-block; font-size:10.5px; font-weight:600; letter-spacing:.05em; border-radius:999px; padding:3px 9px; white-space:nowrap; }
-.mono { font-family:ui-monospace,SFMono-Regular,monospace; font-size:12px; background:#F0F7F2; border-radius:6px; padding:2px 7px; }
-.box { border-radius:12px; padding:12px 14px; font-size:12.5px; line-height:1.45; }
-.box b { font-family:'Sora'; font-size:13px; display:block; margin-bottom:3px; }
-.arrow { display:flex; align-items:center; justify-content:center; color:#74806E; font-size:11.5px; gap:6px; padding:4px 0; }
+.toclink { display:block; font-size:13px; color:var(--fg-muted); padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.toclink:hover { color:var(--primary); border-left-color:var(--forest-300); }
+.sect { padding:38px 0; border-bottom:1px solid var(--border); scroll-margin-top:20px; }
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--primary); margin-bottom:8px; }
+.h2 { font-family:var(--font-display); font-weight:600; font-size:1.7rem; letter-spacing:-0.02em; margin:0 0 10px; color:var(--fg-strong); }
+.body { font-size:15px; line-height:1.66; color:var(--fg-muted); max-width:68ch; }
+.chip { display:inline-block; font-size:10.5px; font-weight:600; letter-spacing:.05em; border-radius:var(--radius-pill); padding:3px 9px; white-space:nowrap; }
+.mono { font-family:var(--font-mono); font-size:12px; background:var(--forest-50); border-radius:6px; padding:2px 7px; }
+.box { border-radius:var(--radius-md); padding:12px 14px; font-size:12.5px; line-height:1.45; }
+.box b { font-family:var(--font-display); font-size:13px; display:block; margin-bottom:3px; }
+.arrow { display:flex; align-items:center; justify-content:center; color:var(--fg-subtle); font-size:11.5px; gap:6px; padding:4px 0; }
 .mtable { width:100%; border-collapse:collapse; font-size:12.5px; }
-.mtable th { text-align:left; font-family:'Sora'; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; padding:9px 10px; border-bottom:2px solid rgba(23,53,37,0.16); }
-.mtable td { padding:10px; border-bottom:1px solid rgba(23,53,37,0.09); vertical-align:top; line-height:1.5; color:#2B6246; }
+.mtable th { text-align:left; font-family:var(--font-display); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--fg-subtle); padding:9px 10px; border-bottom:2px solid var(--border-strong); }
+.mtable td { padding:10px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.5; color:var(--fg-muted); }
 @media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } }
 </style>
 </helmet>
@@ -245,7 +245,7 @@ a:hover { color:#377B57; }
           </tbody>
         </table>
       </div>
-      <p style="font-size:12.5px; color:#74806E; margin:16px 0 0;">Toda transição grava ator, timestamp e justificativa no log de auditoria; estados nunca são sobrescritos — a história completa é reconstruível. Diagramas de sequência por funcionalidade entrarão na atualização do <a href="Arquitetura C4 Arah.dc.html">C4 do Arah</a>.</p>
+      <p style="font-size:12.5px; color:var(--fg-subtle); margin:16px 0 0;">Toda transição grava ator, timestamp e justificativa no log de auditoria; estados nunca são sobrescritos — a história completa é reconstruível. Diagramas de sequência por funcionalidade entrarão na atualização do <a href="../arquitetura-c4/Arquitetura C4 Arah.dc.html">C4 do Arah</a>.</p>
       <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap;">
         <a href="Inteligencia Territorial - Integracao World Monitor.dc.html" style="display:inline-flex; align-items:center; gap:8px; background:#214D37; color:#fff; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Próximo: integração World Monitor <span class="msr" style="font-size:16px;">east</span></a>
         <a href="Inteligencia Territorial - Hub.dc.html" style="display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(23,53,37,0.2); color:#173525; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Voltar ao hub</a>

@@ -780,6 +780,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String get moderationEvidencesTab => 'Evidências';
 
   @override
+  String get moderationEmptyDescription => 'Quando houver itens para curadoria, eles aparecem aqui.';
+
+  @override
+  String get moderationCaseTypeLabel => 'Caso de moderação';
+
+  @override
+  String get residencyVerificationTypeLabel => 'Verificação de residência';
+
+  @override
+  String get moderationStatusPending => 'Pendente';
+
+  @override
+  String get moderationStatusApproved => 'Aprovado';
+
+  @override
+  String get moderationStatusRejected => 'Rejeitado';
+
+  @override
   String get noPermissionOrError => 'Sem permissão ou erro ao carregar.';
 
   @override
@@ -1132,6 +1150,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profileTools => 'Ferramentas';
 
   @override
+  String get profileStatPosts => 'Publicações';
+
+  @override
+  String get profileStatConnections => 'Conexões';
+
+  @override
+  String get profileStatInterests => 'Interesses';
+
+  @override
+  String get profileStatRole => 'Papel';
+
+  @override
+  String get profileStatPresence => 'Presença';
+
+  @override
+  String get profileStatUnavailable => '—';
+
+  @override
   String get residencyJourneyTitle => 'Confirmar residência';
 
   @override
@@ -1140,8 +1176,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get residencyJourneyPresenceSubtitle =>
-      'Moradores acessam conteúdo restrito, votam e participam da gestão.';
+  String get residencyJourneyPresenceSubtitle => 'Moradores acessam conteúdo restrito, votam e participam da gestão.';
 
   @override
   String get residencyJourneyPresenceTitle => 'Presença no território';
@@ -1153,15 +1188,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String get residencyJourneyProofTitle => 'Envie um comprovante';
 
   @override
-  String get residencyJourneyProofSubtitle =>
-      'Conta de luz, água, contrato ou declaração da associação. Por enquanto, descreva o comprovante.';
+  String get residencyJourneyProofSubtitle => 'Conta de luz, água, contrato ou declaração da associação. Descreva e, se quiser, anexe uma foto.';
 
   @override
   String get residencyJourneyMessageLabel => 'Mensagem / comprovante';
 
   @override
-  String get residencyJourneyMessageHint =>
-      'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120';
+  String get residencyJourneyMessageHint => 'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120';
+
+  @override
+  String get residencyJourneyAttachProof => 'Anexar foto do comprovante';
+
+  @override
+  String get residencyJourneyChangeProof => 'Trocar foto';
+
+  @override
+  String get residencyJourneyRemoveProof => 'Remover foto';
+
+  @override
+  String get residencyJourneyProofAttached => 'Comprovante anexado';
+
+  @override
+  String get residencyJourneyProofOptional => 'Opcional';
 
   @override
   String get residencyJourneyReviewTitle => 'Revise';
@@ -1182,6 +1230,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get residencyJourneyReviewMessageEmpty => 'Sem mensagem';
 
   @override
+  String get residencyJourneyReviewProofPhoto => 'Foto';
+
+  @override
+  String get residencyJourneyReviewProofPhotoAttached => 'Anexada';
+
+  @override
+  String get residencyJourneyReviewProofPhotoNone => 'Não anexada';
+
+  @override
   String get residencyJourneyReviewAnalysis => 'Análise';
 
   @override
@@ -1197,6 +1254,5 @@ class AppLocalizationsPt extends AppLocalizations {
   String get residencyJourneySuccessTitle => 'Solicitação enviada!';
 
   @override
-  String get residencyJourneySuccessMessage =>
-      'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.';
+  String get residencyJourneySuccessMessage => 'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.';
 }

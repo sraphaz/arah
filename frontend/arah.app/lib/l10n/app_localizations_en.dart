@@ -780,6 +780,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moderationEvidencesTab => 'Evidence';
 
   @override
+  String get moderationEmptyDescription => 'When there are items to curate, they will show up here.';
+
+  @override
+  String get moderationCaseTypeLabel => 'Moderation case';
+
+  @override
+  String get residencyVerificationTypeLabel => 'Residency verification';
+
+  @override
+  String get moderationStatusPending => 'Pending';
+
+  @override
+  String get moderationStatusApproved => 'Approved';
+
+  @override
+  String get moderationStatusRejected => 'Rejected';
+
+  @override
   String get noPermissionOrError => 'No permission or error loading.';
 
   @override
@@ -1132,6 +1150,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileTools => 'Tools';
 
   @override
+  String get profileStatPosts => 'Posts';
+
+  @override
+  String get profileStatConnections => 'Connections';
+
+  @override
+  String get profileStatInterests => 'Interests';
+
+  @override
+  String get profileStatRole => 'Role';
+
+  @override
+  String get profileStatPresence => 'Presence';
+
+  @override
+  String get profileStatUnavailable => '—';
+
+  @override
   String get residencyJourneyTitle => 'Confirm residency';
 
   @override
@@ -1140,8 +1176,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get residencyJourneyPresenceSubtitle =>
-      'Residents access restricted content, vote, and take part in local governance.';
+  String get residencyJourneyPresenceSubtitle => 'Residents access restricted content, vote, and take part in local governance.';
 
   @override
   String get residencyJourneyPresenceTitle => 'Presence in the territory';
@@ -1153,15 +1188,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get residencyJourneyProofTitle => 'Send proof of residency';
 
   @override
-  String get residencyJourneyProofSubtitle =>
-      'Utility bill, lease, or association letter. For now, describe your proof in a message.';
+  String get residencyJourneyProofSubtitle => 'Utility bill, lease, or association letter. Describe it and optionally attach a photo.';
 
   @override
   String get residencyJourneyMessageLabel => 'Message / proof';
 
   @override
-  String get residencyJourneyMessageHint =>
-      'E.g. Electricity bill in my name, Palm Street 120';
+  String get residencyJourneyMessageHint => 'E.g. Electricity bill in my name, Palm Street 120';
+
+  @override
+  String get residencyJourneyAttachProof => 'Attach proof photo';
+
+  @override
+  String get residencyJourneyChangeProof => 'Change photo';
+
+  @override
+  String get residencyJourneyRemoveProof => 'Remove photo';
+
+  @override
+  String get residencyJourneyProofAttached => 'Proof attached';
+
+  @override
+  String get residencyJourneyProofOptional => 'Optional';
 
   @override
   String get residencyJourneyReviewTitle => 'Review';
@@ -1182,6 +1230,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get residencyJourneyReviewMessageEmpty => 'No message';
 
   @override
+  String get residencyJourneyReviewProofPhoto => 'Photo';
+
+  @override
+  String get residencyJourneyReviewProofPhotoAttached => 'Attached';
+
+  @override
+  String get residencyJourneyReviewProofPhotoNone => 'Not attached';
+
+  @override
   String get residencyJourneyReviewAnalysis => 'Review';
 
   @override
@@ -1197,6 +1254,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get residencyJourneySuccessTitle => 'Request sent!';
 
   @override
-  String get residencyJourneySuccessMessage =>
-      'Territory curators will review your proof. You will be notified once residency is confirmed.';
+  String get residencyJourneySuccessMessage => 'Territory curators will review your proof. You will be notified once residency is confirmed.';
 }

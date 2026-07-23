@@ -17,6 +17,7 @@ import '../../data/models/me_profile.dart';
 import '../providers/me_profile_provider.dart';
 import '../widgets/interests_sheet.dart';
 import '../widgets/preferences_sheet.dart';
+import '../widgets/profile_stats_row.dart';
 
 /// Perfil: dados do usuário via BFF me/profile; edição (nome, bio) em bottom sheet.
 /// Usada apenas como conteúdo de aba do MainShell (sem Scaffold próprio).
@@ -466,6 +467,8 @@ class _ProfileBody extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppConstants.spacingSm),
                 ArahRoleBadge(role: role),
+                const SizedBox(height: AppConstants.spacingMd),
+                ProfileStatsRow(profile: profile),
                 if (profile.email != null && profile.email!.isNotEmpty) ...[
                   const SizedBox(height: AppConstants.spacingSm),
                   Text(

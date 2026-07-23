@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
@@ -10,9 +13,10 @@ import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_card.dart';
 import '../../../../core/widgets/arah_journey_shell.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../feed/presentation/providers/feed_provider.dart';
 import '../providers/membership_provider.dart';
 
-/// Jornada "Confirmar residência" (APP-DS-11 parcial): presença → mensagem → revisão → sucesso.
+/// Jornada "Confirmar residência" (APP-DS-11): presença → mensagem/comprovante → revisão → sucesso.
 class ResidencyJourneyScreen extends ConsumerStatefulWidget {
   const ResidencyJourneyScreen({super.key});
 
@@ -27,6 +31,9 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
   int _step = 0;
   bool _submitting = false;
   final _messageController = TextEditingController();
+  final ImagePicker _imagePicker = ImagePicker();
+  String? _proofImagePath;
+  String? _proofFileName;
 
   @override
   void dispose() {
@@ -42,6 +49,49 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     }
   }
 
+  Future<void> _pickProof() async {
+    final picked = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
+    if (picked == null || !mounted) return;
+    setState(() {
+      _proofImagePath = picked.path;
+      _proofFileName = picked.name;
+    });
+  }
+
+  void _clearProof() {
+    setState(() {
+      _proofImagePath = null;
+      _proofFileName = null;
+    });
+  }
+
+  Future<String?> _buildMessageWithProof() async {
+    final base = _messageController.text.trim();
+    if (_proofImagePath == null) {
+      return base.isEmpty ? null : base;
+    }
+
+    final fileName = (_proofFileName == null || _proofFileName!.isEmpty)
+        ? 'comprovante.jpg'
+        : _proofFileName!;
+
+    try {
+      final mediaId = await ref.read(mediaRepositoryProvider).uploadImage(
+            filePath: _proofImagePath!,
+            fileName: fileName,
+          );
+      final suffix = '[comprovante: media:$mediaId]';
+      return base.isEmpty ? suffix : '$base\n$suffix';
+    } catch (_) {
+      // Upload opcional: se falhar, mantém referência local pelo nome do arquivo.
+      final suffix = '[comprovante: $fileName]';
+      return base.isEmpty ? suffix : '$base\n$suffix';
+    }
+  }
+
   Future<void> _onPrimary() async {
     final l10n = AppLocalizations.of(context)!;
     if (_step < 2) {
@@ -51,9 +101,9 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     if (_step == 2) {
       setState(() => _submitting = true);
       try {
-        final message = _messageController.text.trim();
+        final message = await _buildMessageWithProof();
         await ref.read(membershipProvider.notifier).becomeResident(
-              message: message.isEmpty ? null : message,
+              message: message,
             );
         if (!mounted) return;
         setState(() {
@@ -115,12 +165,16 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
         return _MessageStep(
           l10n: l10n,
           controller: _messageController,
+          proofImagePath: _proofImagePath,
+          onAttachProof: _pickProof,
+          onClearProof: _clearProof,
         );
       case 2:
         return _ReviewStep(
           l10n: l10n,
           territoryName: territoryName,
           message: _messageController.text.trim(),
+          hasProofPhoto: _proofImagePath != null,
         );
       default:
         return _SuccessStep(l10n: l10n);
@@ -194,15 +248,23 @@ class _MessageStep extends StatelessWidget {
   const _MessageStep({
     required this.l10n,
     required this.controller,
+    required this.proofImagePath,
+    required this.onAttachProof,
+    required this.onClearProof,
   });
 
   final AppLocalizations l10n;
   final TextEditingController controller;
+  final String? proofImagePath;
+  final VoidCallback onAttachProof;
+  final VoidCallback onClearProof;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final theme = Theme.of(context);
+    final hasProof = proofImagePath != null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -233,6 +295,70 @@ class _MessageStep extends StatelessWidget {
             alignLabelWithHint: true,
           ),
         ),
+        const SizedBox(height: AppConstants.spacingMd),
+        Text(
+          '${l10n.residencyJourneyAttachProof} · ${l10n.residencyJourneyProofOptional}',
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppConstants.spacingSm),
+        OutlinedButton.icon(
+          onPressed: onAttachProof,
+          icon: Icon(hasProof ? Icons.photo_outlined : Icons.add_photo_alternate_outlined),
+          label: Text(
+            hasProof ? l10n.residencyJourneyChangeProof : l10n.residencyJourneyAttachProof,
+          ),
+        ),
+        if (hasProof) ...[
+          const SizedBox(height: AppConstants.spacingMd),
+          ArahCard(
+            padding: const EdgeInsets.all(AppConstants.spacingSm),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+                  child: Image.file(
+                    File(proofImagePath!),
+                    width: AppConstants.avatarSizeLg,
+                    height: AppConstants.avatarSizeLg,
+                    fit: BoxFit.cover,
+                    semanticLabel: l10n.residencyJourneyProofAttached,
+                  ),
+                ),
+                const SizedBox(width: AppConstants.spacingMd),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.residencyJourneyProofAttached,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: colors.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: AppConstants.spacingXs),
+                      TextButton(
+                        onPressed: onClearProof,
+                        style: TextButton.styleFrom(
+                          foregroundColor: colors.error,
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(
+                            AppConstants.minTouchTargetSize,
+                            AppConstants.minTouchTargetSize,
+                          ),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(l10n.residencyJourneyRemoveProof),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -243,11 +369,13 @@ class _ReviewStep extends StatelessWidget {
     required this.l10n,
     required this.territoryName,
     required this.message,
+    required this.hasProofPhoto,
   });
 
   final AppLocalizations l10n;
   final String territoryName;
   final String message;
+  final bool hasProofPhoto;
 
   @override
   Widget build(BuildContext context) {
@@ -289,6 +417,13 @@ class _ReviewStep extends StatelessWidget {
                 value: message.isEmpty
                     ? l10n.residencyJourneyReviewMessageEmpty
                     : message,
+              ),
+              _ReviewRow(
+                icon: Icons.photo_outlined,
+                label: l10n.residencyJourneyReviewProofPhoto,
+                value: hasProofPhoto
+                    ? l10n.residencyJourneyReviewProofPhotoAttached
+                    : l10n.residencyJourneyReviewProofPhotoNone,
               ),
               _ReviewRow(
                 icon: Icons.shield_outlined,

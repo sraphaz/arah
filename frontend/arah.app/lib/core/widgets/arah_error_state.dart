@@ -20,31 +20,33 @@ class ArahErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return Padding(
-      padding: const EdgeInsets.all(AppConstants.spacingXl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: AppConstants.avatarSizeLg,
-            color: colors.error.withValues(alpha: 0.85),
-          ),
-          const SizedBox(height: AppConstants.spacingMd),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          if (onRetry != null) ...[
-            const SizedBox(height: AppConstants.spacingLg),
-            ArahButton(
-              label: retryLabel ?? 'Tentar de novo',
-              onPressed: onRetry,
-              variant: ArahButtonVariant.secondary,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppConstants.spacingXl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: AppConstants.avatarSizeLg,
+              color: colors.error.withValues(alpha: 0.85),
             ),
+            const SizedBox(height: AppConstants.spacingMd),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            if (onRetry != null) ...[
+              const SizedBox(height: AppConstants.spacingLg),
+              ArahButton(
+                label: retryLabel ?? 'Tentar de novo',
+                onPressed: onRetry,
+                variant: ArahButtonVariant.secondary,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -9,6 +9,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Corrigido — follow-up Bugbot Onda D (2026-07-23)
+
+- Jornada residência: cache do `mediaId` do comprovante (sem re-upload em retry); erros de upload vs solicitação separados
+- `ArahErrorState` centralizado no espaço disponível (Feed/Moderação)
+
 ### Alterado — Onda D design app (moderação, stats, jornadas, gate IA) (2026-07-23)
 
 - **Moderação**: cards com chips/status e empty/error padronizados

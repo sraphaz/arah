@@ -857,6 +857,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorRequestResidency => 'Erro ao solicitar residência.';
 
   @override
+  String get errorUploadProof => 'Não foi possível enviar a foto do comprovante. Tente novamente.';
+
+  @override
   String get moderationEvidenceSuffix => 'evidência';
 
   @override

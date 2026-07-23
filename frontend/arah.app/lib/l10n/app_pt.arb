@@ -343,6 +343,7 @@
   "subscriptionActivated": "Assinatura ativada.",
   "errorSubscribe": "Erro ao assinar.",
   "errorRequestResidency": "Erro ao solicitar residência.",
+  "errorUploadProof": "Não foi possível enviar a foto do comprovante. Tente novamente.",
   "moderationEvidenceSuffix": "evidência",
   "darkMode": "Modo escuro",
   "useSystemTheme": "Usar tema do sistema",

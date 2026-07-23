@@ -857,6 +857,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorRequestResidency => 'Error requesting residency.';
 
   @override
+  String get errorUploadProof => 'Could not upload the proof photo. Please try again.';
+
+  @override
   String get moderationEvidenceSuffix => 'evidence';
 
   @override

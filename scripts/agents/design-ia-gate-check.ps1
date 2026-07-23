@@ -1,12 +1,13 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   Gate leve de regressão de IA do app Flutter (APP-DS-13).
 .DESCRIPTION
   Verifica contratos estruturais do shell alinhados ao ADR-021 / UI kit:
   - MainShell com aba Serviços (não Notificações na 4ª posição)
-  - ArahTopBar presente
+  - ArahTopBar presente e ações de chat/notificações
   - Hub Serviços e JourneyShell existem
+  - Primária premium floresta (canopy) ativa
   Falha o PR se algum contrato quebrar.
 .EXAMPLE
   ./design-ia-gate-check.ps1
@@ -19,58 +20,75 @@ $ErrorActionPreference = 'Stop'
 $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $failures = @()
 
-function Assert-FileContains {
-    param([string]$RelPath, [string]$Pattern, [string]$Hint)
+function Assert-FileMatches {
+    param(
+        [string]$RelPath,
+        [string]$Pattern,
+        [string]$Hint
+    )
     $full = Join-Path $Root $RelPath
     if (-not (Test-Path $full)) {
         $script:failures += "ausente: $RelPath ($Hint)"
         return
     }
-    $text = Get-Content -Raw $full
+    $text = Get-Content -Raw -LiteralPath $full
     if ($text -notmatch $Pattern) {
         $script:failures += "${RelPath}: esperado /$Pattern/ — $Hint"
     }
 }
 
-Assert-FileContains `
+# 4ª aba do shell: IndexedStack alimentado por _buildScreens com ServicesHubScreen
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/features/home/presentation/screens/main_shell_screen.dart" `
-    -Pattern 'ServicesHubScreen' `
-    -Hint '4ª aba do shell deve ser Serviços (ADR-021)'
+    -Pattern '(?s)IndexedStack\([\s\S]*?children:\s*_buildScreens\(\)' `
+    -Hint 'MainShell deve usar IndexedStack com _buildScreens()'
 
-Assert-FileContains `
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/features/home/presentation/screens/main_shell_screen.dart" `
-    -Pattern 'ArahTopBar' `
-    -Hint 'TopBar território-primeiro obrigatória no MainShell'
+    -Pattern '(?s)_buildScreens\(\)[\s\S]*?const\s+ServicesHubScreen\(\)' `
+    -Hint 'ServicesHubScreen deve estar em _buildScreens (ADR-021)'
 
-Assert-FileContains `
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/features/home/presentation/screens/main_shell_screen.dart" `
-    -Pattern 'l10n\.services' `
-    -Hint 'label Serviços na NavigationBar'
+    -Pattern '(?s)NavigationDestination\([\s\S]*?label:\s*l10n\.services' `
+    -Hint 'label Serviços (l10n.services) na NavigationBar'
 
-Assert-FileContains `
+Assert-FileMatches `
+    -RelPath "$AppRoot/lib/features/home/presentation/screens/main_shell_screen.dart" `
+    -Pattern '(?m)^\s*const\s+ArahTopBar\(\),?\s*$' `
+    -Hint 'ArahTopBar instanciada no body do MainShell'
+
+# TopBar: ações ligadas a rotas (não só strings soltas em comentários)
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/core/widgets/arah_top_bar.dart" `
-    -Pattern "/notifications" `
-    -Hint 'TopBar deve abrir notificações'
+    -Pattern "context\.push\(\s*'/notifications'\s*\)" `
+    -Hint 'TopBar deve navegar para /notifications'
 
-Assert-FileContains `
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/core/widgets/arah_top_bar.dart" `
-    -Pattern "/chat" `
-    -Hint 'TopBar deve abrir mensagens'
+    -Pattern "context\.push\(\s*'/chat'\s*\)" `
+    -Hint 'TopBar deve navegar para /chat'
 
-Assert-FileContains `
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/features/services/presentation/screens/services_hub_screen.dart" `
-    -Pattern 'statusLive|statusSoon' `
+    -Pattern '(?m)^\s*class\s+ServicesHubScreen\b' `
+    -Hint 'ServicesHubScreen deve existir'
+
+Assert-FileMatches `
+    -RelPath "$AppRoot/lib/features/services/presentation/screens/services_hub_screen.dart" `
+    -Pattern '\b(statusLive|statusSoon)\b' `
     -Hint 'Hub Serviços com selos live/soon'
 
-Assert-FileContains `
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/core/widgets/arah_journey_shell.dart" `
-    -Pattern 'class ArahJourneyShell' `
-    -Hint 'JourneyShell deve existir'
+    -Pattern '(?m)^\s*class\s+ArahJourneyShell\s+extends\b' `
+    -Hint 'ArahJourneyShell deve ser uma classe Widget'
 
-Assert-FileContains `
+# Primária ativa = canopy (não só menção em comentário)
+Assert-FileMatches `
     -RelPath "$AppRoot/lib/core/theme/app_design_tokens.dart" `
-    -Pattern '0xFFA6D6B9|A6D6B9' `
-    -Hint 'primária premium floresta (canopy)'
+    -Pattern '(?m)^\s*static\s+const\s+Color\s+primary\s*=\s*Color\(0xFFA6D6B9\)' `
+    -Hint 'primária premium floresta (canopy) como Color primary ativa'
 
 if ($failures.Count -gt 0) {
     Write-Warning "design-ia-gate-check: $($failures.Count) falha(s) de contrato de IA:"

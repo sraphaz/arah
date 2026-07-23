@@ -1739,6 +1739,12 @@ abstract class AppLocalizations {
   /// **'Erro ao solicitar residência.'**
   String get errorRequestResidency;
 
+  /// No description provided for @errorUploadProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível enviar a foto do comprovante. Tente novamente.'**
+  String get errorUploadProof;
+
   /// No description provided for @moderationEvidenceSuffix.
   ///
   /// In pt, this message translates to:

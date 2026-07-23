@@ -78,18 +78,12 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
         ? 'comprovante.jpg'
         : _proofFileName!;
 
-    try {
-      final mediaId = await ref.read(mediaRepositoryProvider).uploadImage(
-            filePath: _proofImagePath!,
-            fileName: fileName,
-          );
-      final suffix = '[comprovante: media:$mediaId]';
-      return base.isEmpty ? suffix : '$base\n$suffix';
-    } catch (_) {
-      // Upload opcional: se falhar, mantém referência local pelo nome do arquivo.
-      final suffix = '[comprovante: $fileName]';
-      return base.isEmpty ? suffix : '$base\n$suffix';
-    }
+    final mediaId = await ref.read(mediaRepositoryProvider).uploadImage(
+          filePath: _proofImagePath!,
+          fileName: fileName,
+        );
+    final suffix = '[comprovante: media:$mediaId]';
+    return base.isEmpty ? suffix : '$base\n$suffix';
   }
 
   Future<void> _onPrimary() async {
@@ -113,10 +107,12 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
       } catch (e) {
         if (!mounted) return;
         setState(() => _submitting = false);
-        showErrorSnackBar(
-          context,
-          e is ApiException ? e.userMessage : l10n.errorRequestResidency,
-        );
+        final message = e is ApiException
+            ? e.userMessage
+            : (_proofImagePath != null
+                ? l10n.errorUploadProof
+                : l10n.errorRequestResidency);
+        showErrorSnackBar(context, message);
       }
       return;
     }

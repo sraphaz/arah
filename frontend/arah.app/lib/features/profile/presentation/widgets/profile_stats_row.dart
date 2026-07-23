@@ -29,8 +29,11 @@ class ProfileStatsRow extends ConsumerWidget {
       ArahRoleKind.curator => l10n.curator,
       ArahRoleKind.visitor => l10n.visitor,
     };
-    final presenceLabel =
-        (membership?.isResident ?? false) ? l10n.resident : l10n.visitor;
+    // Curador é presença residente com papel elevado — não marcar como visitante.
+    final presenceLabel = switch (roleKind) {
+      ArahRoleKind.visitor => l10n.visitor,
+      ArahRoleKind.resident || ArahRoleKind.curator => l10n.resident,
+    };
     final interestsValue = profile.interestsCount ??
         (profile.interests.isEmpty ? null : profile.interests.length);
     final dash = l10n.profileStatUnavailable;

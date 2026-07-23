@@ -34,6 +34,10 @@ $enrich = if ($raw -match '(?m)^enrich:[ \t]*\|[ \t]*\r?\n((?:[ \t]{2}.+\r?\n)+)
           elseif ($raw -match '(?m)^enrich:[ \t]+(.+)$') { $Matches[1].Trim() } else { '' }
 $validate = if ($raw -match '(?m)^validate:[ \t]*\|[ \t]*\r?\n((?:[ \t]{2}.+\r?\n)+)') { ($Matches[1] -replace '(?m)^  ', '').Trim() }
             elseif ($raw -match '(?m)^validate:[ \t]+(.+)$') { $Matches[1].Trim() } else { '' }
+$prohibitions = @()
+if ($raw -match '(?m)^prohibitions:[ \t]*\r?\n((?:[ \t]+-[ \t].+\r?\n)+)') {
+    $prohibitions = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object { $_.Groups[1].Value.Trim() }
+}
 $refs = @()
 if ($raw -match '(?m)^references:[ \t]*\r?\n((?:[ \t]+-[ \t].+\r?\n)+)') {
     $refs = [regex]::Matches($Matches[1], '^\s+-\s+(.+)$', 'Multiline') | ForEach-Object { $_.Groups[1].Value.Trim() }
@@ -46,6 +50,15 @@ $filesList = if ($ChangedFiles.Count -gt 0) {
 $refList = if ($refs.Count -gt 0) {
     ($refs | ForEach-Object { "- ``$_``" }) -join "`n"
 } else { '_sem referências_' }
+
+$prohibitionsBlock = if ($prohibitions.Count -gt 0) {
+    $plist = ($prohibitions | ForEach-Object { "- $_" }) -join "`n"
+    @"
+
+### Proibições (invariantes)
+$plist
+"@
+} else { '' }
 
 $timestamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
 $marker = "<!-- arah-domain-consult:$DomainId -->"
@@ -62,7 +75,7 @@ $enrich
 
 ### Validar no PR
 $validate
-
+$prohibitionsBlock
 ### Arquivos relacionados
 $filesList
 

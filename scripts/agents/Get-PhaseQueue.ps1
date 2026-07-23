@@ -52,6 +52,9 @@ function Parse-PhaseQueueYaml {
         } elseif ($current -and $line -match '^\s+spec_id:\s*(.+)$') {
             $current.spec_id = $Matches[1].Trim()
             $inBlockedList = $false
+        } elseif ($current -and $line -match '^\s+kind:\s*(.+)$') {
+            $current.kind = $Matches[1].Trim()
+            $inBlockedList = $false
         } elseif ($current -and $line -match '^\s+blocked_by:\s*\[(.*)\]\s*$') {
             $inner = $Matches[1].Trim()
             if ($inner) {
@@ -61,7 +64,7 @@ function Parse-PhaseQueueYaml {
         } elseif ($current -and $line -match '^\s+blocked_by:\s*$') {
             $current.blocked_by = @()
             $inBlockedList = $true
-        } elseif ($inBlockedList -and $line -match '^\s+-\s+(FASE\d+|doc-[\w-]+)\s*$') {
+        } elseif ($inBlockedList -and $line -match '^\s+-\s+(FASE\d+(?:_\w+)?|TI-\d+|doc-[\w-]+)\s*$') {
             $current.blocked_by += $Matches[1].Trim()
         } elseif ($current -and $line -match '^\s+status:\s*(.+)$') {
             $current.status = $Matches[1].Trim()
@@ -477,6 +480,21 @@ function Test-PhaseCompleteFromGitHub {
     $status = Get-Content (Join-Path $Root 'docs/STATUS_FASES.md') -Raw -ErrorAction SilentlyContinue
     if ($status -and $PhaseId -match '^FASE(\d+)$' -and $status -match "$PhaseId[^\n]*\|\s*✅") { return $true }
     return $false
+}
+
+function Test-PhaseQueueItemEligibleForNextPhase {
+    <#
+    .SYNOPSIS
+      next-phase só auto-abre épicos FASE*. Trilhas TI (kind: track / id TI-*)
+      e itens maintenance/doc ficam fora da seleção automática.
+    #>
+    param([hashtable]$Item)
+    if (-not $Item -or -not $Item.id) { return $false }
+    if ($Item.kind -eq 'track' -or $Item.kind -eq 'maintenance') { return $false }
+    if ($Item.id -match '^TI-') { return $false }
+    if ($Item.id -match '^doc-') { return $false }
+    if ($Item.id -notmatch '^FASE\d+') { return $false }
+    return $true
 }
 
 function Get-PhaseIdFromIssue {

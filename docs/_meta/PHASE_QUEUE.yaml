@@ -9,8 +9,9 @@ updated: 2026-07-23
 policy: |
   Após merge em main, o repo abre issue da próxima fase pendente (se não existir).
   Prioridade: Onda S0 (infra: CI/CD, Core, IaC) → S1 (piloto + cockpit) → S2 (transparência)
-  → S3 (multi-instância + federação) → S4 (capital). Trilha TI (Inteligência Territorial) roda
-  em paralelo aos P0 17–19 com squad distinto; TI-7 só após FASE53. GitHub Project reflete
+  → S3 (multi-instância + federação) → S4 (capital). Trilha TI (Inteligência Territorial,
+  kind: track) fica na fila para roadmap/Project, mas o next-phase automático só seleciona
+  ids FASE* — squad paralelo via planner. TI-7 só após FASE53. GitHub Project reflete
   ondas via milestones/labels.
 
 queue:
@@ -142,12 +143,14 @@ queue:
     blocked_by: [FASE55, FASE56]
 
   # --- Trilha transversal Inteligência Territorial (World Monitor) ---
+  # kind: track → fora do next-phase automático (squad paralelo / planner).
   - id: TI-0
     title: "TI-0 — Pesquisa e contratos (Inteligência Territorial)"
     area: area/docs
     doc: docs/backlog-api/TI0.md
     priority: P0
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: []
 
@@ -157,6 +160,7 @@ queue:
     doc: docs/backlog-api/TI1.md
     priority: P0
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: [TI-0]
 
@@ -167,6 +171,7 @@ queue:
     spec_id: TI-201-signal-review
     priority: P0
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: [TI-1]
 
@@ -176,6 +181,7 @@ queue:
     doc: docs/backlog-api/TI3.md
     priority: P0
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: [TI-2]
 
@@ -185,6 +191,7 @@ queue:
     doc: docs/backlog-api/TI4.md
     priority: P1
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: [TI-3]
 
@@ -194,6 +201,7 @@ queue:
     doc: docs/backlog-api/TI5.md
     priority: P1
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: [TI-4]
 
@@ -203,6 +211,7 @@ queue:
     doc: docs/backlog-api/TI6.md
     priority: P1
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: [TI-4]
 
@@ -212,5 +221,6 @@ queue:
     doc: docs/backlog-api/TI7.md
     priority: P2
     wave: TI
+    kind: track
     frente: inteligencia-territorial
     blocked_by: [FASE53, TI-6, FASE59]

@@ -22,7 +22,10 @@ Mapeamento (resumo): `Marketplace/Cart/Stores/Items` → `mercado-economia`;
 `Arah.Core`/Federation → `control-plane`; `frontend/**` + `docs/**/design*` → `design-ux`;
 `Feed/Events/Media` → `feed-conteudo`; `Map/Assets/Geo` → `mapa-lugares`;
 `Chat/Connections/Notifications/Alerts` → `comunidade-conexoes`;
-`Users/Auth/Policies (LGPD)` → `identidade-privacidade` (+ agente `security`).
+`Users/Auth/Policies (LGPD)` → `identidade-privacidade` (+ agente `security`);
+`Intelligence/` / World Monitor / `TI-*` → multiagente TI: `signal-scout`,
+`territorial-analyst`, `source-steward`, `community-brief-writer`,
+`response-orchestrator`, `intelligence-governance-steward` (nenhum publica).
 
 ## Definition of Done (rigor total)
 

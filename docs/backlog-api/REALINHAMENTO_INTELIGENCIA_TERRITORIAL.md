@@ -125,6 +125,19 @@ Entidades: `SignalProvider`, `TerritorialImpactAssessment`, `TerritorialBrief`, 
 Reuso: fila **WorkItem** existente para `SignalReview`.  
 Flag: `INTELLIGENCE` (off por padrão por território).
 
+### Multiagente (Harness · consultivo)
+
+| Agente | Papel | Publica? |
+|--------|-------|----------|
+| `signal-scout` | Registra sinais (Received) | Não |
+| `territorial-analyst` | Relevância/impacto explicável | Não |
+| `source-steward` | Confiança/freshness de fonte | Não |
+| `community-brief-writer` | Rascunho de brief (marcado IA) | Não |
+| `response-orchestrator` | Sugere ações (não executa) | Não |
+| `intelligence-governance-steward` | Audita invariantes | Não |
+
+Coreografia: rule `inteligencia-territorial` em [`.agents/choreography.yaml`](../../.agents/choreography.yaml).
+
 Territory permanece **geográfico e neutro** — relevância e política ficam em Intelligence/Membership, nunca na entidade Territory.
 
 Handoff técnico: [Handoff de Desenvolvimento](../handoff/inteligencia-territorial/Inteligencia%20Territorial%20-%20Handoff%20de%20Desenvolvimento.dc.html).

@@ -13,6 +13,7 @@ flowchart LR
     rule_governance["governance"]
     rule_identity_privacy["identity-privacy"]
     rule_infra_deploy["infra-deploy"]
+    rule_inteligencia_territorial["inteligencia-territorial"]
     rule_map_places["map-places"]
     rule_marketplace["marketplace"]
     rule_monetization["monetization"]
@@ -33,15 +34,21 @@ flowchart LR
   end
   subgraph DOMAIN["Agentes de domínio (consultivos)"]
     agent_carteira_arata{{"carteira-arata"}}
+    agent_community_brief_writer{{"community-brief-writer"}}
     agent_comunidade_conexoes{{"comunidade-conexoes"}}
     agent_control_plane{{"control-plane"}}
     agent_design_ux{{"design-ux"}}
     agent_feed_conteudo{{"feed-conteudo"}}
     agent_governanca_transparencia{{"governanca-transparencia"}}
     agent_identidade_privacidade{{"identidade-privacidade"}}
+    agent_intelligence_governance_steward{{"intelligence-governance-steward"}}
     agent_mapa_lugares{{"mapa-lugares"}}
     agent_mercado_economia{{"mercado-economia"}}
     agent_monetizacao_split{{"monetizacao-split"}}
+    agent_response_orchestrator{{"response-orchestrator"}}
+    agent_signal_scout{{"signal-scout"}}
+    agent_source_steward{{"source-steward"}}
+    agent_territorial_analyst{{"territorial-analyst"}}
     agent_territorio_membership{{"territorio-membership"}}
   end
   rule_architecture_docs --> agent_solutions_architect
@@ -64,6 +71,15 @@ flowchart LR
   rule_infra_deploy --> agent_backend
   rule_infra_deploy -. consulta .-> agent_control_plane
   rule_infra_deploy --> agent_release
+  rule_inteligencia_territorial --> agent_backend
+  rule_inteligencia_territorial -. consulta .-> agent_community_brief_writer
+  rule_inteligencia_territorial -. consulta .-> agent_intelligence_governance_steward
+  rule_inteligencia_territorial -. consulta .-> agent_response_orchestrator
+  rule_inteligencia_territorial -. consulta .-> agent_signal_scout
+  rule_inteligencia_territorial --> agent_solutions_architect
+  rule_inteligencia_territorial -. consulta .-> agent_source_steward
+  rule_inteligencia_territorial --> agent_spec_steward
+  rule_inteligencia_territorial -. consulta .-> agent_territorial_analyst
   rule_map_places -. consulta .-> agent_mapa_lugares
   rule_marketplace -. consulta .-> agent_mercado_economia
   rule_monetization -. consulta .-> agent_carteira_arata

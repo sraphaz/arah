@@ -41,6 +41,12 @@ Validação da estratégia vs mercado: [docs/ops/AGENT_STRATEGY_VALIDATION.md](.
 | [domain/mapa-lugares.agent.yaml](domain/mapa-lugares.agent.yaml) | Mapa, Lugares & Assets |
 | [domain/comunidade-conexoes.agent.yaml](domain/comunidade-conexoes.agent.yaml) | Comunidade, Conexões & Notificações |
 | [domain/identidade-privacidade.agent.yaml](domain/identidade-privacidade.agent.yaml) | Identidade, Privacidade & LGPD |
+| [domain/signal-scout.agent.yaml](domain/signal-scout.agent.yaml) | TI — Signal Scout (nunca publica) |
+| [domain/territorial-analyst.agent.yaml](domain/territorial-analyst.agent.yaml) | TI — Territorial Analyst |
+| [domain/source-steward.agent.yaml](domain/source-steward.agent.yaml) | TI — Source Steward |
+| [domain/community-brief-writer.agent.yaml](domain/community-brief-writer.agent.yaml) | TI — Community Brief Writer |
+| [domain/response-orchestrator.agent.yaml](domain/response-orchestrator.agent.yaml) | TI — Response Orchestrator (só sugere) |
+| [domain/intelligence-governance-steward.agent.yaml](domain/intelligence-governance-steward.agent.yaml) | TI — Governance Steward (auditoria) |
 
 ## Consultivos — especialistas (profundidade por stack)
 

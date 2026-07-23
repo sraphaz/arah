@@ -1,9 +1,10 @@
 # Coreografia de agentes — autonomia e co-ativação
 version: 2
-updated: 2026-07-02
+updated: 2026-07-23
 policy: |
   Regras aplicadas após roteamento do orquestrador. Agentes de domínio (negócio)
   publicam parecer consultivo; operacionais ativam checklist + skills.
+  Trilha Inteligência Territorial: seis agentes consultivos (nunca publicam).
 
 rules:
   - id: core-control-plane
@@ -185,6 +186,52 @@ rules:
       - id: solutions-architect
         type: operational
         autonomy: [consult_post]
+
+  # Multiagente TI — sinais externos → revisão humana → brief/ação/memória.
+  # Todos consultivos: nunca publicam; governance-steward audita invariantes.
+  - id: inteligencia-territorial
+    paths:
+      - backend/**/Intelligence/**
+      - backend/**/Providers/WorldMonitor/**
+      - docs/handoff/inteligencia-territorial/**
+      - docs/backlog-api/TI*.md
+      - docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md
+      - docs/specs/features/TI-*.spec.yaml
+      - .agents/domain/signal-scout.agent.yaml
+      - .agents/domain/territorial-analyst.agent.yaml
+      - .agents/domain/source-steward.agent.yaml
+      - .agents/domain/community-brief-writer.agent.yaml
+      - .agents/domain/response-orchestrator.agent.yaml
+      - .agents/domain/intelligence-governance-steward.agent.yaml
+    agents:
+      - id: signal-scout
+        type: domain
+        autonomy: [consult_post]
+      - id: territorial-analyst
+        type: domain
+        autonomy: [consult_post]
+      - id: source-steward
+        type: domain
+        autonomy: [consult_post]
+      - id: community-brief-writer
+        type: domain
+        autonomy: [consult_post]
+      - id: response-orchestrator
+        type: domain
+        autonomy: [consult_post]
+      - id: intelligence-governance-steward
+        type: domain
+        autonomy: [consult_post]
+      - id: backend
+        type: operational
+        autonomy: [activate]
+      - id: spec-steward
+        type: operational
+        autonomy: [activate]
+      - id: solutions-architect
+        type: operational
+        autonomy: [consult_post, invoke_skill]
+        skills: [architecture-review]
 
   - id: specs-sdd
     paths:

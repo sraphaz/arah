@@ -29,6 +29,8 @@ co_route:
   docs/specs/**: spec-steward
   scripts/harness/**: spec-steward
   backend/Arah.Core/**: backend
+  backend/**/Intelligence/**: backend
+  docs/handoff/inteligencia-territorial/**: docs-steward
   docs/architecture/**: solutions-architect
   docs/architecture/adrs/**: solutions-architect
   docs/design/*.likec4: solutions-architect

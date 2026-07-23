@@ -17,6 +17,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Incrementos documentados: [`TI0`](backlog-api/TI0.md)…[`TI7`](backlog-api/TI7.md) (trilha transversal; âncoras FASE23/24/44/53)
 - Spec exemplo SDD: [`TI-201-signal-review.spec.yaml`](specs/features/TI-201-signal-review.spec.yaml)
 - `PHASE_QUEUE.yaml` + `STATUS_FASES.md` + índice do backlog atualizados
+- **Multiagente TI** (consultivos): `signal-scout`, `territorial-analyst`, `source-steward`, `community-brief-writer`, `response-orchestrator`, `intelligence-governance-steward` — coreografia `inteligencia-territorial`; nenhum publica
+- `next-phase` ignora `kind: track` / `TI-*` (Bugbot: fila TI não compete com épicos FASE*)
 
 ### Corrigido — follow-up Bugbot Onda D (2026-07-23)
 

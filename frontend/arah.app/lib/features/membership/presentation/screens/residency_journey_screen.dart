@@ -34,6 +34,8 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
   final ImagePicker _imagePicker = ImagePicker();
   String? _proofImagePath;
   String? _proofFileName;
+  /// Media id já enviado — evita re-upload em retry após falha de `becomeResident`.
+  String? _uploadedProofMediaId;
 
   @override
   void dispose() {
@@ -58,6 +60,7 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     setState(() {
       _proofImagePath = picked.path;
       _proofFileName = picked.name;
+      _uploadedProofMediaId = null;
     });
   }
 
@@ -65,6 +68,7 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     setState(() {
       _proofImagePath = null;
       _proofFileName = null;
+      _uploadedProofMediaId = null;
     });
   }
 
@@ -78,10 +82,12 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
         ? 'comprovante.jpg'
         : _proofFileName!;
 
-    final mediaId = await ref.read(mediaRepositoryProvider).uploadImage(
-          filePath: _proofImagePath!,
-          fileName: fileName,
-        );
+    final mediaId = _uploadedProofMediaId ??
+        await ref.read(mediaRepositoryProvider).uploadImage(
+              filePath: _proofImagePath!,
+              fileName: fileName,
+            );
+    _uploadedProofMediaId = mediaId;
     final suffix = '[comprovante: media:$mediaId]';
     return base.isEmpty ? suffix : '$base\n$suffix';
   }
@@ -94,8 +100,19 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     }
     if (_step == 2) {
       setState(() => _submitting = true);
+      late final String? message;
       try {
-        final message = await _buildMessageWithProof();
+        message = await _buildMessageWithProof();
+      } catch (e) {
+        if (!mounted) return;
+        setState(() => _submitting = false);
+        showErrorSnackBar(
+          context,
+          e is ApiException ? e.userMessage : l10n.errorUploadProof,
+        );
+        return;
+      }
+      try {
         await ref.read(membershipProvider.notifier).becomeResident(
               message: message,
             );
@@ -107,12 +124,10 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
       } catch (e) {
         if (!mounted) return;
         setState(() => _submitting = false);
-        final message = e is ApiException
-            ? e.userMessage
-            : (_proofImagePath != null
-                ? l10n.errorUploadProof
-                : l10n.errorRequestResidency);
-        showErrorSnackBar(context, message);
+        showErrorSnackBar(
+          context,
+          e is ApiException ? e.userMessage : l10n.errorRequestResidency,
+        );
       }
       return;
     }

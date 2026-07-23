@@ -148,10 +148,20 @@ class _FeedBody extends StatelessWidget {
       final msg = state.error is ApiException
           ? (state.error as ApiException).userMessage
           : l10n.errorLoad;
-      return ArahErrorState(
-        message: msg,
-        retryLabel: l10n.tryAgain,
-        onRetry: onRetry,
+      return LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: ArahErrorState(
+                message: msg,
+                retryLabel: l10n.tryAgain,
+                onRetry: onRetry,
+              ),
+            ),
+          ),
+        ),
       );
     }
     if (state.isLoading && state.items.isEmpty) {

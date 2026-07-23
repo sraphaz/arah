@@ -17,6 +17,70 @@ import '../../../feed/presentation/providers/feed_provider.dart';
 import '../providers/membership_provider.dart';
 
 /// Jornada "Confirmar residência" (APP-DS-11): presença → mensagem/comprovante → revisão → sucesso.
+typedef ResidencyProofUploader = Future<String> Function({
+  required String filePath,
+  required String fileName,
+});
+
+@visibleForTesting
+class ResidencyProofBuildResult {
+  const ResidencyProofBuildResult({
+    required this.message,
+    required this.uploadedProofMediaId,
+  });
+
+  final String? message;
+  final String? uploadedProofMediaId;
+}
+
+@visibleForTesting
+bool residencyProofUploadCompleted({
+  required String? proofImagePath,
+  required String? uploadedProofMediaId,
+}) {
+  return proofImagePath == null || uploadedProofMediaId != null;
+}
+
+@visibleForTesting
+String residencyFallbackErrorMessage({
+  required bool uploadCompleted,
+  required String uploadErrorMessage,
+  required String requestErrorMessage,
+}) {
+  return uploadCompleted ? requestErrorMessage : uploadErrorMessage;
+}
+
+@visibleForTesting
+Future<ResidencyProofBuildResult> buildResidencyMessageWithProof({
+  required String rawMessage,
+  required String? proofImagePath,
+  required String? proofFileName,
+  required String? uploadedProofMediaId,
+  required ResidencyProofUploader uploadProof,
+}) async {
+  final base = rawMessage.trim();
+  if (proofImagePath == null) {
+    return ResidencyProofBuildResult(
+      message: base.isEmpty ? null : base,
+      uploadedProofMediaId: uploadedProofMediaId,
+    );
+  }
+
+  final fileName = (proofFileName == null || proofFileName.isEmpty)
+      ? 'comprovante.jpg'
+      : proofFileName;
+  final mediaId = uploadedProofMediaId ??
+      await uploadProof(
+        filePath: proofImagePath,
+        fileName: fileName,
+      );
+  final suffix = '[comprovante: media:$mediaId]';
+  return ResidencyProofBuildResult(
+    message: base.isEmpty ? suffix : '$base\n$suffix',
+    uploadedProofMediaId: mediaId,
+  );
+}
+
 class ResidencyJourneyScreen extends ConsumerStatefulWidget {
   const ResidencyJourneyScreen({super.key});
 
@@ -34,6 +98,7 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
   final ImagePicker _imagePicker = ImagePicker();
   String? _proofImagePath;
   String? _proofFileName;
+  String? _uploadedProofMediaId;
 
   @override
   void dispose() {
@@ -58,6 +123,7 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     setState(() {
       _proofImagePath = picked.path;
       _proofFileName = picked.name;
+      _uploadedProofMediaId = null;
     });
   }
 
@@ -65,25 +131,28 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     setState(() {
       _proofImagePath = null;
       _proofFileName = null;
+      _uploadedProofMediaId = null;
     });
   }
 
   Future<String?> _buildMessageWithProof() async {
-    final base = _messageController.text.trim();
-    if (_proofImagePath == null) {
-      return base.isEmpty ? null : base;
-    }
-
-    final fileName = (_proofFileName == null || _proofFileName!.isEmpty)
-        ? 'comprovante.jpg'
-        : _proofFileName!;
-
-    final mediaId = await ref.read(mediaRepositoryProvider).uploadImage(
-          filePath: _proofImagePath!,
-          fileName: fileName,
-        );
-    final suffix = '[comprovante: media:$mediaId]';
-    return base.isEmpty ? suffix : '$base\n$suffix';
+    final result = await buildResidencyMessageWithProof(
+      rawMessage: _messageController.text,
+      proofImagePath: _proofImagePath,
+      proofFileName: _proofFileName,
+      uploadedProofMediaId: _uploadedProofMediaId,
+      uploadProof: ({
+        required String filePath,
+        required String fileName,
+      }) {
+        return ref.read(mediaRepositoryProvider).uploadImage(
+              filePath: filePath,
+              fileName: fileName,
+            );
+      },
+    );
+    _uploadedProofMediaId = result.uploadedProofMediaId;
+    return result.message;
   }
 
   Future<void> _onPrimary() async {
@@ -94,8 +163,13 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
     }
     if (_step == 2) {
       setState(() => _submitting = true);
+      var uploadCompleted = residencyProofUploadCompleted(
+        proofImagePath: _proofImagePath,
+        uploadedProofMediaId: _uploadedProofMediaId,
+      );
       try {
         final message = await _buildMessageWithProof();
+        uploadCompleted = true;
         await ref.read(membershipProvider.notifier).becomeResident(
               message: message,
             );
@@ -109,9 +183,11 @@ class _ResidencyJourneyScreenState extends ConsumerState<ResidencyJourneyScreen>
         setState(() => _submitting = false);
         final message = e is ApiException
             ? e.userMessage
-            : (_proofImagePath != null
-                ? l10n.errorUploadProof
-                : l10n.errorRequestResidency);
+            : residencyFallbackErrorMessage(
+                uploadCompleted: uploadCompleted,
+                uploadErrorMessage: l10n.errorUploadProof,
+                requestErrorMessage: l10n.errorRequestResidency,
+              );
         showErrorSnackBar(context, message);
       }
       return;

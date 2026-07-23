@@ -42,8 +42,7 @@ queue:
     # Web abertos: DSG-04 (espaçamento 8px portal), DSG-06 (glass cross), DSG-07 (syntax WCAG).
     # DSG-01/02/03/05/08 já corrigidos.
     # App×UI kit: docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md (APP-DS-01..13).
-    # Feito 2026-07-21: APP-DS-01..08 (+10/11 parciais) — shell, tokens, JourneyShell, Mercado, Explorar.
-    # Aberto app: APP-DS-09 stats, Moderação UI, jornadas profundas, APP-DS-12/13.
+    # Feito 2026-07-23: APP-DS-01..11 + 13 (Onda A–D). APP-DS-12 parcial (error/empty; motion global aberto).
 
   - id: FASE52
     title: "FASE52 — Fundação Técnica e CI/CD"

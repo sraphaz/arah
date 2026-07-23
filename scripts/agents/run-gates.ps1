@@ -50,6 +50,13 @@ try {
         Invoke-Step 'design-gate-check' {
             & (Join-Path $ScriptDir 'design-gate-check.ps1') -ChangedFiles $ChangedFiles -BaseRef $BaseRef
         }
+        # APP-DS-13: contratos de IA do app Flutter quando o app muda.
+        $flutterTouched = @($ChangedFiles) | Where-Object { $_ -like 'frontend/arah.app/*' }
+        if ($flutterTouched.Count -gt 0 -or $ChangedFiles.Count -eq 0) {
+            Invoke-Step 'design-ia-gate-check' {
+                & (Join-Path $ScriptDir 'design-ia-gate-check.ps1')
+            }
+        }
     }
 
     if ($Gate -in 'security', 'all') {

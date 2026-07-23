@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/arah_empty_state.dart';
+import '../../../../core/widgets/arah_error_state.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -143,7 +144,15 @@ class _FeedBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.error != null && state.items.isEmpty) {
-      return _ErrorView(error: state.error!, onRetry: onRetry);
+      final l10n = AppLocalizations.of(context)!;
+      final msg = state.error is ApiException
+          ? (state.error as ApiException).userMessage
+          : l10n.errorLoad;
+      return ArahErrorState(
+        message: msg,
+        retryLabel: l10n.tryAgain,
+        onRetry: onRetry,
+      );
     }
     if (state.isLoading && state.items.isEmpty) {
       return const SingleChildScrollView(
@@ -450,34 +459,6 @@ class _FeedTypeFilterBar extends StatelessWidget {
             ),
           );
         }).toList(),
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.error, required this.onRetry});
-
-  final Object error;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final msg = error is ApiException ? (error as ApiException).userMessage : l10n.errorLoad;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppConstants.spacingLg),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wifi_off, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.error),
-            const SizedBox(height: AppConstants.spacingMd),
-            Text(msg, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
-            const SizedBox(height: AppConstants.spacingMd),
-            FilledButton.tonal(onPressed: onRetry, child: Text(l10n.tryAgain)),
-          ],
-        ),
       ),
     );
   }

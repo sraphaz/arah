@@ -1589,6 +1589,42 @@ abstract class AppLocalizations {
   /// **'Evidências'**
   String get moderationEvidencesTab;
 
+  /// No description provided for @moderationEmptyDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quando houver itens para curadoria, eles aparecem aqui.'**
+  String get moderationEmptyDescription;
+
+  /// No description provided for @moderationCaseTypeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Caso de moderação'**
+  String get moderationCaseTypeLabel;
+
+  /// No description provided for @residencyVerificationTypeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verificação de residência'**
+  String get residencyVerificationTypeLabel;
+
+  /// No description provided for @moderationStatusPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente'**
+  String get moderationStatusPending;
+
+  /// No description provided for @moderationStatusApproved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aprovado'**
+  String get moderationStatusApproved;
+
+  /// No description provided for @moderationStatusRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitado'**
+  String get moderationStatusRejected;
+
   /// No description provided for @noPermissionOrError.
   ///
   /// In pt, this message translates to:
@@ -1702,6 +1738,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao solicitar residência.'**
   String get errorRequestResidency;
+
+  /// No description provided for @errorUploadProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível enviar a foto do comprovante. Tente novamente.'**
+  String get errorUploadProof;
 
   /// No description provided for @moderationEvidenceSuffix.
   ///
@@ -2285,6 +2327,42 @@ abstract class AppLocalizations {
   /// **'Ferramentas'**
   String get profileTools;
 
+  /// No description provided for @profileStatPosts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicações'**
+  String get profileStatPosts;
+
+  /// No description provided for @profileStatConnections.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conexões'**
+  String get profileStatConnections;
+
+  /// No description provided for @profileStatInterests.
+  ///
+  /// In pt, this message translates to:
+  /// **'Interesses'**
+  String get profileStatInterests;
+
+  /// No description provided for @profileStatRole.
+  ///
+  /// In pt, this message translates to:
+  /// **'Papel'**
+  String get profileStatRole;
+
+  /// No description provided for @profileStatPresence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Presença'**
+  String get profileStatPresence;
+
+  /// No description provided for @profileStatUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'—'**
+  String get profileStatUnavailable;
+
   /// No description provided for @residencyJourneyTitle.
   ///
   /// In pt, this message translates to:
@@ -2324,7 +2402,7 @@ abstract class AppLocalizations {
   /// No description provided for @residencyJourneyProofSubtitle.
   ///
   /// In pt, this message translates to:
-  /// **'Conta de luz, água, contrato ou declaração da associação. Por enquanto, descreva o comprovante.'**
+  /// **'Conta de luz, água, contrato ou declaração da associação. Descreva e, se quiser, anexe uma foto.'**
   String get residencyJourneyProofSubtitle;
 
   /// No description provided for @residencyJourneyMessageLabel.
@@ -2338,6 +2416,36 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120'**
   String get residencyJourneyMessageHint;
+
+  /// No description provided for @residencyJourneyAttachProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anexar foto do comprovante'**
+  String get residencyJourneyAttachProof;
+
+  /// No description provided for @residencyJourneyChangeProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Trocar foto'**
+  String get residencyJourneyChangeProof;
+
+  /// No description provided for @residencyJourneyRemoveProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover foto'**
+  String get residencyJourneyRemoveProof;
+
+  /// No description provided for @residencyJourneyProofAttached.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprovante anexado'**
+  String get residencyJourneyProofAttached;
+
+  /// No description provided for @residencyJourneyProofOptional.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional'**
+  String get residencyJourneyProofOptional;
 
   /// No description provided for @residencyJourneyReviewTitle.
   ///
@@ -2374,6 +2482,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Sem mensagem'**
   String get residencyJourneyReviewMessageEmpty;
+
+  /// No description provided for @residencyJourneyReviewProofPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto'**
+  String get residencyJourneyReviewProofPhoto;
+
+  /// No description provided for @residencyJourneyReviewProofPhotoAttached.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anexada'**
+  String get residencyJourneyReviewProofPhotoAttached;
+
+  /// No description provided for @residencyJourneyReviewProofPhotoNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não anexada'**
+  String get residencyJourneyReviewProofPhotoNone;
 
   /// No description provided for @residencyJourneyReviewAnalysis.
   ///

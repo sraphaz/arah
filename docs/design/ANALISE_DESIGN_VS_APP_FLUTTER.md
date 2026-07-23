@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 🚧 Alinhamento em andamento (Onda C em curso 2026-07-21)  
-**Próximo passo**: Onda D — jornadas profundas + Moderação high-fidelity + APP-DS-13
+**Status**: 🚧 Alinhamento avançado (Onda D 2026-07-23)  
+**Próximo passo**: refinamentos (stats reais do BFF, Moderação polish, motion 150/250 em todas as telas)
 
 ---
 
@@ -220,11 +220,11 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-06** | Tipografia Sora + Geist no Flutter (ou subset aprovado) | ✅ | APP-DS-05 |
 | **APP-DS-07** | Biblioteca de componentes: Card hairline, RoleBadge, Btn, JourneyShell | ✅ RoleBadge + ArahButton + JourneyShell | APP-DS-05 |
 | **APP-DS-08** | Redesign Explorar (ferramentas do território, não só ícones) | ✅ chips de ferramentas + seletor | APP-DS-03 |
-| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | 🟡 parcial (banner/RoleBadge/grade ✅; stats finas pendentes) | APP-DS-07 |
-| **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | 🟡 parcial (Mercado cards ✅; Chat bolhas ✅; Moderação pendente) | APP-DS-07 |
-| **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | 🟡 UI JourneyShell v0 (`/residency-journey`); upload comprovante ainda gap backend | backend gaps |
-| **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | 🟡 | APP-DS-07 |
-| **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | 🟡 | APP-DS-02 |
+| **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | ✅ stats row + RoleBadge + grade + banner | APP-DS-07 |
+| **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | ✅ Mercado/Chat/Moderação em cards | APP-DS-07 |
+| **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | ✅ UI + upload media; pending status fino ainda depende do BFF | backend gaps |
+| **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | 🟡 `ArahErrorState`/`ArahEmptyState` em Feed/Moderação/Mercado; motion global pendente | APP-DS-07 |
+| **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | ✅ `design-ia-gate-check.ps1` no `run-gates` | APP-DS-02 |
 
 ---
 
@@ -300,6 +300,7 @@ Comparar lado a lado com o Flutter: bottom-nav, top bar, feed card, hub Serviço
 
 ### Changelog deste documento
 
+- **1.3** (2026-07-23): Onda D — Moderação cards, ProfileStats, comprovante upload, ArahErrorState, design-ia-gate-check.
 - **1.2** (2026-07-21): Onda C — JourneyShell, jornada residência v0, Mercado cards, Chat bolhas, Explorar chips, shell sem Scaffold aninhado.
 - **1.1** (2026-07-21): Onda A+B — ADR-021, tokens/fonts, shell Serviços+TopBar, hub, banner visitante; APP-DS-01..06 ✅.
 - **1.0** (2026-07-15): primeira análise profunda design×app; IDs APP-DS-01..13; ondas A–D.

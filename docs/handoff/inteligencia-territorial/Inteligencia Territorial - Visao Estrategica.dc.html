@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+a { color:#2B6246; }
+a:hover { color:#377B57; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.toclink { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.toclink:hover { color:#377B57; border-left-color:#9FCEB4; }
+.sect { padding:38px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px; }
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px; }
+.h2 { font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117; }
+.body { font-size:15.5px; line-height:1.68; color:#2B6246; max-width:66ch; }
+.tag { font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; border-radius:999px; padding:3px 9px; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } }
+</style>
+</helmet>
+<div class="shell" style="display:grid; grid-template-columns:268px 1fr; max-width:1320px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:30px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:19px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:18px; padding-left:2px;">Inteligência Territorial · Material 1</span>
+    <a class="toclink" href="Inteligencia Territorial - Hub.dc.html" style="color:#74806E;">← Hub da iniciativa</a>
+    <div style="height:14px;"></div>
+    <sc-for list="{{ toc }}" as="t" hint-placeholder-count="10">
+      <a class="toclink" href="#{{ t.id }}">{{ t.label }}</a>
+    </sc-for>
+  </nav>
+
+  <main style="padding:54px clamp(24px,5vw,76px); max-width:1020px; min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:40px;">
+      <div class="eyebrow" style="letter-spacing:.16em;">Documento de visão estratégica</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.2rem,4.8vw,3.3rem); letter-spacing:-0.035em; line-height:1.04; margin:0 0 18px; color:#0E2117;">Do monitoramento global à <span style="color:#377B57;">consciência e ação territorial</span></h1>
+      <p style="font-size:1.14rem; line-height:1.6; color:#2B6246; max-width:62ch; margin:0;">Por que conectar o Arah ao World Monitor, o que essa ponte cria — e, tão importante quanto, o que ela se recusa a criar.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:26px; font-size:13px; color:#74806E;">
+        <span><b style="color:#16271D;">Iniciativa</b> Arah Territorial Intelligence</span>
+        <span><b style="color:#16271D;">Leitores</b> direção · engenharia · parceiros institucionais</span>
+        <span><b style="color:#16271D;">Status</b> proposta para decisão</span>
+      </div>
+    </header>
+
+    <section id="contexto" class="sect">
+      <div class="eyebrow">1 · Contexto</div>
+      <h2 class="h2">O mundo produz sinais. Os territórios recebem impactos.</h2>
+      <p class="body">Uma frente de chuva extrema se forma dias antes da enchente. A interdição de uma rodovia encarece o frete antes de a prateleira esvaziar. Um surto respiratório numa cidade vizinha antecede a fila no posto de saúde. Esses acontecimentos são observáveis — satélites, agências, redes de sensores e imprensa os registram continuamente — mas quase nunca chegam ao lugar certo, na linguagem certa, com a antecedência certa.</p>
+      <p class="body">Quem vive o território fica entre dois extremos: o silêncio (descobrir o impacto quando ele já aconteceu) e o ruído (feeds globais de crise, alarmistas e sem relação com a vida local). Nenhum dos dois produz ação. Entre observar o mundo e agir no lugar existe hoje uma distância que nenhuma das duas pontas resolve sozinha.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:24px;">
+        <sc-for list="{{ gaps }}" as="g" hint-placeholder-count="3">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+            <span class="msr" style="font-size:22px; color:#A8632F;">{{ g.icon }}</span>
+            <b style="display:block; font-family:'Sora'; font-size:14.5px; color:#0E2117; margin:10px 0 5px;">{{ g.t }}</b>
+            <p style="font-size:13px; line-height:1.55; color:#74806E; margin:0;">{{ g.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="problema" class="sect">
+      <div class="eyebrow">2 · Problema e oportunidade</div>
+      <h2 class="h2">A informação existe; a mediação territorial, não.</h2>
+      <p class="body"><b>O problema não é falta de dados.</b> O World Monitor agrega 65+ provedores e 500+ feeds curados — clima, desastres, saúde, energia, logística, economia, deslocamento — com API e MCP prontos para consumo programático. O que falta é a camada que responde às perguntas que uma comunidade realmente faz:</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#F0F7F2; padding:22px 26px; margin:20px 0; max-width:72ch;">
+        <sc-for list="{{ perguntas }}" as="q" hint-placeholder-count="5">
+          <div style="display:flex; gap:10px; align-items:baseline; padding:5px 0;"><span class="msr" style="font-size:15px; color:#377B57;">help</span><span style="font-size:14.5px; color:#173525;">{{ q }}</span></div>
+        </sc-for>
+      </div>
+      <p class="body"><b>A oportunidade:</b> o Arah já é a infraestrutura social do território — mapa, feed, alertas com validação por curadores, governança, eventos, notificações, moderação com fila de revisão humana. Falta-lhe percepção do mundo externo. O World Monitor já é a percepção do mundo externo; falta-lhe vínculo com comunidades reais. A integração completa os dois sem descaracterizar nenhum.</p>
+    </section>
+
+    <section id="tese" class="sect">
+      <div class="eyebrow">3 · Tese central</div>
+      <h2 class="h2">Inteligência Territorial Regenerativa</h2>
+      <p class="body">A tese desta iniciativa é que <b>sinal externo só vira valor quando atravessa a comunidade</b> — nunca quando a atropela. Por isso a camada proposta não é um painel geopolítico dentro do app, e sim um <b>pipeline com freios humanos</b>:</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:24px 26px; margin:22px 0;">
+        <sc-for list="{{ pipeline }}" as="p" hint-placeholder-count="7">
+          <div style="display:flex; gap:14px; padding:9px 0; border-bottom:1px dashed rgba(23,53,37,0.1); align-items:flex-start;">
+            <span style="flex-shrink:0; width:28px; height:28px; border-radius:9px; background:{{ p.bg }}; color:{{ p.fg }}; display:flex; align-items:center; justify-content:center;"><span class="msr" style="font-size:16px;">{{ p.icon }}</span></span>
+            <div style="min-width:0;">
+              <b style="font-family:'Sora'; font-size:14px; color:#0E2117;">{{ p.t }}</b>
+              <span style="font-size:13.5px; color:#74806E;"> — {{ p.d }}</span>
+            </div>
+          </div>
+        </sc-for>
+        <p style="font-size:12.5px; color:#74806E; margin:12px 0 0;">Etapas em <b style="color:#A8632F;">âmbar</b> exigem pessoas: revisão, verificação comunitária e encerramento nunca são automáticos.</p>
+      </div>
+      <p class="body">Chamamos a camada de <b>regenerativa</b> porque cada ciclo devolve algo ao território: um alerta encerrado vira memória; uma contestação corrige a confiança na fonte; uma ação coletiva vira protocolo para a próxima ocorrência. O sistema aprende com o lugar — não sobre as pessoas.</p>
+    </section>
+
+    <section id="porque-agora" class="sect">
+      <div class="eyebrow">4 · Por que agora</div>
+      <h2 class="h2">As três pontas amadureceram ao mesmo tempo</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:14px; margin-top:6px;">
+        <sc-for list="{{ agora }}" as="a" hint-placeholder-count="3">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:10px;"><span style="width:30px;height:30px;border-radius:9px;background:#214D37;color:#fff;display:flex;align-items:center;justify-content:center;"><span class="msr" style="font-size:17px;">{{ a.icon }}</span></span><b style="font-family:'Sora'; font-size:15px; color:#0E2117;">{{ a.t }}</b></div>
+            <p style="font-size:13.5px; line-height:1.6; color:#2B6246; margin:0;">{{ a.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <p class="body" style="margin-top:20px;">Há também um relógio externo: eventos climáticos extremos deixaram de ser exceção no Brasil, e municípios pequenos — justamente o público território-primeiro do Arah — são os que menos têm estrutura própria de monitoramento e defesa civil. A tese "Dois Mundos" já documentada neste projeto trata essa lacuna como questão de soberania: depender de plataformas globais de atenção para saber o que ameaça o próprio lugar é o oposto de autonomia territorial.</p>
+    </section>
+
+    <section id="relacao" class="sect">
+      <div class="eyebrow">5 · Arah ↔ World Monitor</div>
+      <h2 class="h2">O que cada lado é — e o que a ponte não é</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin:6px 0 22px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;"><span class="msr" style="font-size:20px; color:#377B57;">forest</span><b style="font-family:'Sora'; font-size:16px; color:#0E2117;">Arah</b></div>
+          <p style="font-size:13.5px; line-height:1.62; color:#2B6246; margin:0;">Plataforma comunitária território-primeiro. Organiza a vida local: mapa, feed, alertas validados por curadores, eventos, governança com votação, marketplace, chat, moderação. Clean Architecture .NET + BFF de jornadas + app Flutter. <b>Autoridade: da comunidade.</b></p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 24px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;"><span class="msr" style="font-size:20px; color:#2A6FDB;">public</span><b style="font-family:'Sora'; font-size:16px; color:#0E2117;">World Monitor</b></div>
+          <p style="font-size:13.5px; line-height:1.62; color:#2B6246; margin:0;">Dashboard de inteligência global open source (AGPL-3.0). 65+ provedores, 500+ feeds, sinais de clima, desastres, saúde, infraestrutura, logística e economia, expostos por REST e MCP com OpenAPI, quotas e freshness explícitos. <b>Autoridade: nenhuma — é observação.</b></p>
+        </div>
+      </div>
+      <p class="body">A ponte é <b>um consumidor disciplinado</b>: o Arah trata o World Monitor como um provedor de sinais externo, atrás de uma abstração de domínio (<code style="background:#F0F7F2; padding:2px 7px; border-radius:6px; font-size:13px;">SignalProvider</code>), com quota, cache, freshness e desligamento de emergência. A ponte <b>não é</b>: replicar o painel do World Monitor no app, importar código AGPL para dentro do backend, nem criar uma interface de ansiedade baseada em crises globais.</p>
+    </section>
+
+    <section id="muda" class="sect">
+      <div class="eyebrow">6 · O que muda / o que não muda</div>
+      <h2 class="h2">Uma capacidade nova, sem trair o que o Arah é</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 24px;">
+          <span class="tag" style="background:#E2F1E8; color:#2B6246;">Muda</span>
+          <sc-for list="{{ muda }}" as="m" hint-placeholder-count="6">
+            <div style="display:flex; gap:9px; align-items:baseline; padding:7px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><span class="msr" style="font-size:15px; color:#377B57;">add_circle</span><span style="font-size:13.5px; line-height:1.55; color:#173525;">{{ m }}</span></div>
+          </sc-for>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 24px;">
+          <span class="tag" style="background:#F5EBDD; color:#8A6D3B;">Não muda</span>
+          <sc-for list="{{ naoMuda }}" as="m" hint-placeholder-count="6">
+            <div style="display:flex; gap:9px; align-items:baseline; padding:7px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><span class="msr" style="font-size:15px; color:#74806E;">shield</span><span style="font-size:13.5px; line-height:1.55; color:#173525;">{{ m }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="valor" class="sect">
+      <div class="eyebrow">7 · Valor por público</div>
+      <h2 class="h2">Quem ganha o quê</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-top:6px;">
+        <sc-for list="{{ valor }}" as="v" hint-placeholder-count="9">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:7px;"><span class="msr" style="font-size:19px; color:#377B57;">{{ v.icon }}</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">{{ v.t }}</b></div>
+            <p style="font-size:13px; line-height:1.58; color:#2B6246; margin:0;">{{ v.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="riscos" class="sect">
+      <div class="eyebrow">8 · Riscos</div>
+      <h2 class="h2">O que pode dar errado — e o freio de cada risco</h2>
+      <p class="body" style="margin-bottom:18px;">Análise completa (threat model com 21 vetores) no documento <a href="Inteligencia Territorial - Agentes e Salvaguardas.dc.html">Agentes &amp; salvaguardas</a>. Os cinco riscos que orientam o desenho desde o início:</p>
+      <sc-for list="{{ riscos }}" as="r" hint-placeholder-count="5">
+        <div style="display:grid; grid-template-columns:minmax(180px,240px) 1fr; gap:16px; border:1px solid rgba(23,53,37,0.12); border-radius:14px; background:#fff; padding:16px 20px; margin-bottom:10px;">
+          <div style="display:flex; gap:9px; align-items:flex-start;"><span class="msr" style="font-size:18px; color:#C0492F;">{{ r.icon }}</span><b style="font-family:'Sora'; font-size:13.5px; color:#0E2117; line-height:1.4;">{{ r.t }}</b></div>
+          <p style="font-size:13px; line-height:1.58; color:#2B6246; margin:0;"><b style="color:#377B57;">Freio:</b> {{ r.freio }}</p>
+        </div>
+      </sc-for>
+    </section>
+
+    <section id="principios" class="sect">
+      <div class="eyebrow">9 · Princípios</div>
+      <h2 class="h2">Oito compromissos que valem mais que qualquer feature</h2>
+      <p class="body">Território antes da plataforma · informação não é ação automática · revisão humana por padrão · fonte sempre visível · direito à contestação · privacidade e minimização · sem ansiedade por engajamento · sem decisão opaca de IA. Cada um está detalhado no <a href="Inteligencia Territorial - Hub.dc.html">hub da iniciativa</a> e traduzido em requisitos verificáveis nas <a href="Inteligencia Territorial - Roadmap e Backlog.dc.html">specs SDD</a> — princípio que não vira critério de aceite é decoração.</p>
+    </section>
+
+    <section id="futuro" class="sect" style="border-bottom:none;">
+      <div class="eyebrow">10 · Visão de longo prazo</div>
+      <h2 class="h2">De um território que percebe a uma rede que aprende</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:6px;">
+        <sc-for list="{{ futuro }}" as="f" hint-placeholder-count="3">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:20px 22px;">
+            <span style="font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#74806E;">{{ f.horizonte }}</span>
+            <b style="display:block; font-family:'Sora'; font-size:15px; color:#0E2117; margin:8px 0 6px;">{{ f.t }}</b>
+            <p style="font-size:13px; line-height:1.58; color:#2B6246; margin:0;">{{ f.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <p class="body" style="margin-top:24px;">O resultado final que perseguimos: <b>transformar sinais do mundo em consciência territorial verificável, ação comunitária responsável e memória coletiva</b> — sem retirar das comunidades sua autonomia, sua autoridade e sua relação viva com o lugar.</p>
+      <div style="display:flex; gap:12px; margin-top:30px; flex-wrap:wrap;">
+        <a href="Inteligencia Territorial - Estado Atual e Impacto.dc.html" style="display:inline-flex; align-items:center; gap:8px; background:#214D37; color:#fff; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Próximo: estado atual &amp; impacto <span class="msr" style="font-size:16px;">east</span></a>
+        <a href="Inteligencia Territorial - Hub.dc.html" style="display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(23,53,37,0.2); color:#173525; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Voltar ao hub</a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      toc: [
+        { id: "contexto", label: "1 · Contexto" },
+        { id: "problema", label: "2 · Problema e oportunidade" },
+        { id: "tese", label: "3 · Tese central" },
+        { id: "porque-agora", label: "4 · Por que agora" },
+        { id: "relacao", label: "5 · Arah ↔ World Monitor" },
+        { id: "muda", label: "6 · O que muda / não muda" },
+        { id: "valor", label: "7 · Valor por público" },
+        { id: "riscos", label: "8 · Riscos" },
+        { id: "principios", label: "9 · Princípios" },
+        { id: "futuro", label: "10 · Visão de longo prazo" },
+      ],
+      gaps: [
+        { icon: "notifications_off", t: "Silêncio", d: "O aviso oficial existe, mas não alcança quem mora na área de risco — ou chega genérico demais para orientar decisão." },
+        { icon: "campaign", t: "Ruído", d: "Feeds globais empurram crise contínua sem filtro territorial: geram ansiedade, não preparo." },
+        { icon: "link_off", t: "Desconexão", d: "Quando a informação chega, não há caminho até a ação: quem valida, quem avisa, o que fazer, quem participa." },
+      ],
+      perguntas: [
+        "Esse acontecimento afeta o nosso território — ou só parece grave?",
+        "Qual é o grau de confiança e a validade da informação?",
+        "Quem aqui pode ser afetado: pessoas, produtores, escolas, nascentes, estradas?",
+        "Quem deve ser informado, e quem valida antes de circular?",
+        "Que ação cabe a nós — e qual cabe à prefeitura ou à defesa civil?",
+        "O que aprendemos quando isso terminar?",
+      ],
+      pipeline: [
+        { icon: "sensors", t: "Percepção", d: "sinais chegam do World Monitor por MCP/REST, com fonte, hora e freshness.", bg: "#E2F1E8", fg: "#2B6246" },
+        { icon: "travel_explore", t: "Relevância territorial", d: "geometria do sinal cruzada com a fronteira e os ativos do território.", bg: "#E2F1E8", fg: "#2B6246" },
+        { icon: "balance", t: "Confiança e políticas", d: "fonte, corroboração, validade e política de publicação do território.", bg: "#E2F1E8", fg: "#2B6246" },
+        { icon: "how_to_reg", t: "Revisão humana", d: "curadores e entidades autorizadas decidem publicar, ajustar ou rejeitar.", bg: "#F5EBDD", fg: "#8A6D3B" },
+        { icon: "campaign", t: "Comunicação", d: "brief em linguagem territorial no feed, mapa, alertas e notificações.", bg: "#E2F1E8", fg: "#2B6246" },
+        { icon: "diversity_3", t: "Verificação e ação", d: "moradores confirmam, contestam, anexam evidência; nascem mutirões, votações, protocolos.", bg: "#F5EBDD", fg: "#8A6D3B" },
+        { icon: "history_edu", t: "Memória", d: "encerramento registra o que houve, o que funcionou e o que fica de aprendizado.", bg: "#F5EBDD", fg: "#8A6D3B" },
+      ],
+      agora: [
+        { icon: "forest", t: "O Arah está pronto para receber", d: "Fases 1–16 completas: alertas com validação por curador, fila genérica de revisão humana (WorkItem), notificações via outbox, governança com votação, feature flags por território e observabilidade — exatamente os órgãos que a inteligência territorial precisa. Fato verificado no repositório." },
+        { icon: "api", t: "O World Monitor virou plataforma", d: "REST com OpenAPI (35 serviços), servidor MCP com ~40 ferramentas, planos de API com quotas explícitas, health e freshness públicos. Consumir sinais deixou de ser scraping e virou contrato. Fato verificado no repositório." },
+        { icon: "smart_toy", t: "O método e os agentes existem", d: "Sky-Forge dá o funil de maturação; o Arah Harness dá agentes com guardrails (propõem, nunca aplicam) e o Spec Harness dá specs verificáveis. A camada nasce operável por agentes sob comando humano. Fato verificado nos repositórios." },
+      ],
+      muda: [
+        "O Arah passa a perceber acontecimentos externos relevantes ao território — clima, desastres, saúde, infraestrutura, logística, economia.",
+        "Nasce a Intelligence Inbox: fila de sinais com análise de relevância, confiança e impacto aguardando revisão humana.",
+        "Alertas ganham origem, validade, confiança, freshness, atualizações e encerramento — hoje são texto simples.",
+        "O mapa ganha camada de sinais com geometria (área afetada), não só pins.",
+        "A comunidade ganha confirmação, contestação e envio de evidência sobre informação publicada.",
+        "Governança e eventos podem nascer de um sinal: votação, mutirão, protocolo de resposta.",
+        "Administração ganha gestão de provedores: quota, custo, saúde, política de publicação.",
+      ],
+      naoMuda: [
+        "Territory continua neutro: lugar físico, sem lógica social — sinais vivem em camadas que referenciam o território.",
+        "Curadoria e moderação continuam humanas e territoriais; nenhum agente publica.",
+        "O feed continua da região: sem feed global de crises, sem doomscrolling.",
+        "Privacidade: nenhum dado pessoal sai do Arah para provedores externos.",
+        "O domínio central não conhece o World Monitor — só a abstração SignalProvider.",
+        "O app continua território-primeiro: a inteligência aparece no contexto do lugar, nunca como painel geopolítico.",
+      ],
+      valor: [
+        { icon: "diversity_3", t: "Comunidades", d: "Antecedência com calma: saber o que vem, o que fazer e quem chamar — com fonte e validade visíveis." },
+        { icon: "account_balance", t: "Governos locais", d: "Canal validado de comunicação de risco e registro auditável de cada decisão — sem montar sala de situação própria." },
+        { icon: "handshake", t: "Organizações territoriais", d: "Papel formal de validação institucional e coordenação de resposta dentro da plataforma que a comunidade já usa." },
+        { icon: "storefront", t: "Cooperativas e comércio", d: "Sinais logísticos e de preços (frete, combustível, insumos) traduzidos em impacto local prático." },
+        { icon: "e911_emergency", t: "Defesa civil", d: "Ponte direta entre monitoramento oficial e moradores organizados, com confirmação de recebimento e evidência de campo." },
+        { icon: "medical_services", t: "Saúde", d: "Sinais sanitários regionais com revisão profissional antes de circular — informação que prepara, não que assusta." },
+        { icon: "agriculture", t: "Agricultura", d: "Risco climático e de insumos por janela de cultivo, no vocabulário de quem produz." },
+        { icon: "payments", t: "Economia local", d: "Oportunidades (compras públicas, eventos regionais) e choques (energia, abastecimento) com antecedência para reagir." },
+        { icon: "science", t: "Pesquisadores", d: "Memória territorial estruturada: série histórica de eventos, respostas e resultados por território." },
+      ],
+      riscos: [
+        { icon: "warning", t: "Virar máquina de ansiedade", freio: "política de publicação por território, severidade honesta, sem contadores de crise; sinal sem ação associada não vira notificação." },
+        { icon: "fact_check", t: "Publicar informação errada", freio: "revisão humana por padrão, fonte e confiança visíveis, contestação com evidência e correção pública rastreável." },
+        { icon: "hub", t: "Dependência de um provedor único", freio: "abstração SignalProvider, desligamento de emergência, degradação explícita (stale) e roadmap de fontes oficiais brasileiras." },
+        { icon: "gavel", t: "Uso político ou institucional abusivo", freio: "autoridade sempre da comunidade; papéis de validação auditados; publicação registra quem decidiu e por quê." },
+        { icon: "payments", t: "Custo de API fora de controle", freio: "quotas e planos monitorados, cache com freshness, categorias assinadas por território (só se busca o que alguém usa)." },
+      ],
+      futuro: [
+        { horizonte: "1º ano", t: "Territórios que percebem", d: "Pilotos com categorias objetivas (clima, desastres, estradas) e o ciclo completo sinal → memória rodando em territórios reais." },
+        { horizonte: "2º ano", t: "Instituições que participam", d: "Defesa civil, saúde e prefeituras como validadores formais; protocolos territoriais nascidos de eventos reais; fontes oficiais brasileiras como provedores adicionais." },
+        { horizonte: "3º ano+", t: "Rede federada que aprende", d: "Sinais e aprendizados circulam entre instâncias federadas com confiança explícita — vizinhos avisam vizinhos, sem centro que mande." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

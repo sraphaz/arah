@@ -7,6 +7,8 @@
 **Status**: ⏳ Pendente  
 **Nota**: Renumerada de Fase 22 para Fase 23 (Onda 4: Conformidade e Inteligência)
 
+> **Trilha TI (2026-07)**: a camada *Inteligência Territorial* (sinais externos → revisão humana → brief) ancora assistência de IA **somente como rascunho** (nunca decide publicar). Ver [REALINHAMENTO_INTELIGENCIA_TERRITORIAL](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [TI2](./TI2.md) · [TI3](./TI3.md) (item TI-304).
+
 ---
 
 ## 🎯 Objetivo

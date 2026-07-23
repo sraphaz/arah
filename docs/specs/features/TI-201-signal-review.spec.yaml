@@ -1,0 +1,58 @@
+id: TI-201-signal-review
+version: "0.1.0"
+title: "TI-201 — Revisão humana de sinal externo (SignalReview)"
+owner: backend
+status: draft
+phase: TI-2
+
+intent: |
+  Nenhum sinal externo alcança a comunidade sem decisão humana registrada,
+  exceto categorias da allowlist objetiva definida na política do território
+  (desligada por padrão). Reusa a fila WorkItem existente.
+
+acceptance:
+  - id: AC-TI-201-1
+    when: "Quando um sinal em estado Assessed tem relevância >= corte da política e a flag INTELLIGENCE está ativa"
+    then: "o sistema abre WorkItem tipo SignalReview com fonte, confiança, freshness e score em parcelas"
+    status: pending
+  - id: AC-TI-201-2
+    when: "Quando o revisor submete outcome approve|adjust|reject"
+    then: "reject e adjust exigem justificativa; a decisão fica auditada com ator e policySnapshot"
+    status: pending
+  - id: AC-TI-201-3
+    when: "Quando o sinal está stale ou expired"
+    then: "o sistema bloqueia aprovação (invariante de domínio)"
+    status: pending
+  - id: AC-TI-201-4
+    when: "Quando chega segunda decisão para o mesmo sinal com Idempotency-Key distinta ou repetida"
+    then: "a segunda decisão retorna 409 already_reviewed; a primeira permanece"
+    status: pending
+  - id: AC-TI-201-5
+    then: "Publicação (Published) exige PublicationDecision humana ou allowlist objetiva com selo de autopublicação"
+    status: pending
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Intelligence"
+  agents:
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/TI2.md
+    - docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md
+  handoff:
+    - docs/handoff/inteligencia-territorial/Inteligencia Territorial - Handoff de Desenvolvimento.dc.html
+    - docs/handoff/inteligencia-territorial/Inteligencia Territorial - Roadmap e Backlog.dc.html
+  tests: []
+
+guardrails:
+  - territory-first
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+  - human-review-before-publish
+
+blocked_by:
+  - TI-1

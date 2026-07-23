@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+a { color:#2B6246; }
+a:hover { color:#377B57; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.doccard { display:block; text-decoration:none; border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px; transition:border-color .15s, transform .15s, box-shadow .15s; }
+.doccard:hover { border-color:#9FCEB4; transform:translateY(-2px); box-shadow:0 10px 28px rgba(20,40,28,0.08); }
+</style>
+</helmet>
+<div style="max-width:1180px; margin:0 auto; padding:0 clamp(22px,4vw,56px) 80px;">
+
+  <header style="padding:60px 0 44px; border-bottom:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:26px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:34px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:21px; color:#0E2117;">Arah</b>
+      <span style="font-size:11.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; border:1px solid #C6E3D2; border-radius:999px; padding:5px 12px; margin-left:6px;">Iniciativa · Inteligência Territorial</span>
+    </div>
+    <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.4rem,5.4vw,3.8rem); letter-spacing:-0.035em; line-height:1.02; margin:0 0 18px; color:#0E2117;">Arah Territorial<br/>Intelligence</h1>
+    <p style="font-size:1.16rem; line-height:1.6; color:#2B6246; max-width:62ch; margin:0;">Do monitoramento global à consciência e ação territorial. Pacote completo de concepção, design e handoff da integração entre o <b>Arah</b> e o <b>World Monitor</b> — uma camada de <b>Inteligência Territorial Regenerativa</b>.</p>
+    <div style="display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:26px; font-size:13px; color:#74806E;">
+      <span><b style="color:#16271D;">Base</b> sraphaz/arah · koala73/worldmonitor</span>
+      <span><b style="color:#16271D;">Método</b> Sky-Forge (Shape → Implement)</span>
+      <span><b style="color:#16271D;">Operação</b> Arah Harness · SDD</span>
+      <span><b style="color:#16271D;">Idioma</b> pt-BR</span>
+    </div>
+  </header>
+
+  <section style="padding:36px 0 8px;">
+    <div style="border:1px solid rgba(23,53,37,0.12); border-radius:20px; background:#F0F7F2; padding:26px 28px;">
+      <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:12px;">A ponte</div>
+      <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:13.5px; color:#173525;">
+        <sc-for list="{{ bridge }}" as="b" hint-placeholder-count="8">
+          <span style="display:inline-flex; align-items:center; gap:8px;">
+            <span style="background:#fff; border:1px solid rgba(23,53,37,0.14); border-radius:999px; padding:7px 14px; white-space:nowrap;"><span class="msr" style="font-size:15px; color:#377B57; margin-right:6px;">{{ b.icon }}</span>{{ b.label }}</span>
+            <sc-if value="{{ b.arrow }}" hint-placeholder-val="{{ true }}"><span class="msr" style="font-size:15px; color:#74806E;">east</span></sc-if>
+          </span>
+        </sc-for>
+      </div>
+      <p style="font-size:13.5px; line-height:1.6; color:#2B6246; margin:14px 0 0; max-width:78ch;">Um sinal externo <b>nunca</b> vira alerta comunitário sozinho: passa por relevância territorial, confiança e revisão humana antes de tocar o feed, o mapa ou as notificações — e a comunidade confirma, contesta e encerra.</p>
+    </div>
+  </section>
+
+  <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+    <section style="padding:34px 0 6px;">
+      <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:16px;">
+        <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.45rem; letter-spacing:-0.02em; margin:0; color:#0E2117;">{{ g.title }}</h2>
+        <span style="font-size:12.5px; color:#74806E;">{{ g.sub }}</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px;">
+        <sc-for list="{{ g.docs }}" as="d" hint-placeholder-count="3">
+          <a class="doccard" href="{{ d.href }}">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
+              <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; background:#E2F1E8;"><span class="msr" style="font-size:19px; color:#2B6246;">{{ d.icon }}</span></span>
+              <span style="font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:{{ d.statusColor }}; background:{{ d.statusBg }}; border-radius:999px; padding:4px 10px;">{{ d.status }}</span>
+            </div>
+            <b style="font-family:'Sora',sans-serif; font-size:15.5px; color:#0E2117; display:block; margin-bottom:5px;">{{ d.title }}</b>
+            <p style="font-size:13px; line-height:1.55; color:#74806E; margin:0 0 10px;">{{ d.desc }}</p>
+            <span style="font-size:11.5px; color:#377B57; font-weight:600;">{{ d.materials }}</span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+
+  <section style="margin-top:40px; border-top:1px solid rgba(23,53,37,0.12); padding-top:32px;">
+    <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.45rem; letter-spacing:-0.02em; margin:0 0 16px; color:#0E2117;">Princípios inegociáveis</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px;">
+      <sc-for list="{{ principles }}" as="p" hint-placeholder-count="8">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; background:#fff; padding:14px 16px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span class="msr" style="font-size:18px; color:#377B57;">{{ p.icon }}</span><b style="font-family:'Sora'; font-size:13.5px; color:#0E2117;">{{ p.t }}</b></div>
+          <p style="font-size:12.5px; line-height:1.5; color:#74806E; margin:0;">{{ p.d }}</p>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size:12.5px; color:#74806E; margin:26px 0 0;">Fatos verificados nos repositórios estão marcados como tal em cada documento; hipóteses e recomendações são sempre sinalizadas. Notas de fundamentação: <a href="ti-research-notes.md" style="color:#2B6246;">ti-research-notes.md</a>.</p>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const st = (s) => s === "ok"
+      ? { status: "Disponível", statusColor: "#2B6246", statusBg: "#E2F1E8" }
+      : { status: "Em produção", statusColor: "#8A6D3B", statusBg: "#F5EBDD" };
+    const d = (title, href, icon, desc, materials, s) => ({ title, href, icon, desc, materials, ...st(s) });
+    return {
+      bridge: [
+        { icon: "public", label: "Sinais globais (World Monitor)", arrow: true },
+        { icon: "travel_explore", label: "Relevância territorial", arrow: true },
+        { icon: "fact_check", label: "Validação humana", arrow: true },
+        { icon: "campaign", label: "Comunicação comunitária", arrow: true },
+        { icon: "diversity_3", label: "Ação no território", arrow: true },
+        { icon: "history_edu", label: "Memória coletiva", arrow: false },
+      ],
+      groups: [
+        { title: "Estratégia", sub: "por que, o quê e sobre o quê já existe", docs: [
+          d("Visão estratégica", "Inteligencia Territorial - Visao Estrategica.dc.html", "flag", "Contexto, tese, por que agora, valor por público, riscos e visão de longo prazo.", "Material 1", "ok"),
+          d("Estado atual & impacto no Arah", "Inteligencia Territorial - Estado Atual e Impacto.dc.html", "inventory", "Matriz capacidade × camada do que já existe e o impacto em cada projeto (Domain → CI/CD).", "Materiais 2 · 7 (impacto)", "ok"),
+          d("Mapa de capacidades", "Inteligencia Territorial - Capability Map.dc.html", "grid_view", "25 áreas de capacidade classificadas em MVP, evolução e visão futura.", "Material 3", "ok"),
+        ]},
+        { title: "Engenharia", sub: "arquitetura implementável e contratos", docs: [
+          d("Arquitetura, domínio & estados", "Inteligencia Territorial - Arquitetura e Dominio.dc.html", "account_tree", "C4 da camada de inteligência, modelo de domínio, máquina de estados e fluxos críticos.", "Materiais 4 · 5 · 6", "ok"),
+          d("Handoff de desenvolvimento", "Inteligencia Territorial - Handoff de Desenvolvimento.dc.html", "handyman", "Escopo, 20 decisões, tabelas, endpoints, jobs, testes, rollout e seed de demonstração.", "Material 14", "ok"),
+          d("Integração World Monitor & contratos", "Inteligencia Territorial - Integracao World Monitor.dc.html", "cable", "MCP vs REST, quotas, cache, freshness, mapeamento ferramenta → capacidade e contratos API/BFF.", "Materiais 15 · 16", "ok"),
+          d("Agentes & salvaguardas", "Inteligencia Territorial - Agentes e Salvaguardas.dc.html", "smart_toy", "6 agentes Harness, threat model e licenciamento/compliance (AGPL, LGPD).", "Materiais 17 · 18 · 19", "ok"),
+          d("Roadmap, backlog & specs", "Inteligencia Territorial - Roadmap e Backlog.dc.html", "route", "Incrementos 0–7, backlog implementável e specs SDD para o Spec Harness.", "Materiais 20 · 21 · 22", "ok"),
+        ]},
+        { title: "Produto & design", sub: "jornadas, telas e narrativa", docs: [
+          d("Jornadas & especificação UX", "Inteligencia Territorial - Jornadas e UX.dc.html", "conversion_path", "18 jornadas, inventário de telas do app e da administração, estados e extensões do design system.", "Materiais 7 · 8 · 9 · 10", "ok"),
+          d("Protótipos", "Inteligencia Territorial - Prototipos.dc.html", "smartphone", "10 telas de alta fidelidade: app comunitário (mapa, alerta, confirmação, memória) + painel de curadoria.", "Material 11", "ok"),
+          d("Deck executivo", "Inteligencia Territorial - Deck Executivo.dc.html", "co_present", "20 slides: do mundo que produz sinais à memória territorial — sem hype.", "Material 12", "ok"),
+        ]},
+        { title: "Atualizações nos documentos existentes", sub: "coerência com o que o projeto já tem", docs: [
+          d("Arquitetura C4 Arah", "Arquitetura C4 Arah.dc.html", "layers", "Atualizado: nova seção de Inteligência Territorial com o fluxo da camada.", "Atualizado · seção TI", "ok"),
+          d("Backlog Atualizado", "Backlog Atualizado - Arah.dc.html", "checklist", "Atualizado: trilha TI-0…TI-7 posicionada em relação às fases 17–48.", "Atualizado · trilha TI", "ok"),
+        ]},
+      ],
+      principles: [
+        { icon: "landscape", t: "Território antes da plataforma", d: "O território existe independentemente do aplicativo." },
+        { icon: "pan_tool", t: "Informação não é ação automática", d: "Sinal externo recomenda; não assume autoridade sobre a comunidade." },
+        { icon: "how_to_reg", t: "Revisão humana por padrão", d: "Nada é publicado sem revisão, salvo categorias objetivas autorizadas." },
+        { icon: "source", t: "Fonte sempre visível", d: "Origem, data, validade, confiança e responsável em todo alerta." },
+        { icon: "gavel", t: "Direito à contestação", d: "Confirmar, complementar, contestar, corrigir e anexar evidência." },
+        { icon: "shield_lock", t: "Privacidade e minimização", d: "Sem vigilância individual, perfilamento ou exposição de vulneráveis." },
+        { icon: "spa", t: "Sem ansiedade por engajamento", d: "Sinal só chega com relevância, utilidade e ação associada." },
+        { icon: "psychology_alt", t: "Sem decisão opaca de IA", d: "Toda inferência explicável em linguagem humana." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

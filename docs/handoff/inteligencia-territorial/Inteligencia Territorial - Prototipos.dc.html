@@ -1,0 +1,506 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+body { margin:0; background:#F2F5F1; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+* { box-sizing:border-box; }
+a { color:#2B6246; } a:hover { color:#377B57; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.msr0 { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 0,'wght' 400; line-height:1; vertical-align:middle; }
+/* ------ phone chrome ------ */
+.ph { width:390px; flex-shrink:0; border-radius:42px; background:#0B0C0A; border:1px solid rgba(255,255,255,0.09); box-shadow:0 24px 60px rgba(10,20,14,0.35); overflow:hidden; position:relative; color:#E9EFE9; font-size:14px; }
+.phi { height:762px; display:flex; flex-direction:column; background:radial-gradient(120% 50% at 50% -8%, rgba(129,199,132,0.13), transparent 60%), #0E0F0D; }
+.sb { display:flex; justify-content:space-between; align-items:center; padding:14px 26px 6px; font-family:'Sora'; font-size:13.5px; font-weight:600; color:#E9EFE9; }
+.tb { display:flex; align-items:center; gap:10px; padding:10px 18px 12px; }
+.tb .terr { display:flex; align-items:center; gap:8px; background:#15171399; border:1px solid rgba(255,255,255,0.08); border-radius:999px; padding:7px 14px 7px 9px; font-family:'Sora'; font-weight:600; font-size:13.5px; }
+.card { background:#191B17; border:1px solid rgba(255,255,255,0.07); border-radius:18px; }
+.nav { display:flex; align-items:flex-end; justify-content:space-around; padding:8px 12px 20px; border-top:1px solid rgba(255,255,255,0.07); background:#101210F2; }
+.nav .it { display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:#9AA69A; min-width:52px; }
+.nav .it.on { color:#A6D6B9; }
+.pub { width:52px; height:52px; border-radius:18px; background:#A6D6B9; color:#0E1F12; display:flex; align-items:center; justify-content:center; margin-top:-26px; box-shadow:0 6px 18px rgba(129,199,132,0.35); }
+.chipd { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:600; letter-spacing:.02em; }
+.hair { border-top:1px solid rgba(255,255,255,0.07); }
+.btnp { display:flex; align-items:center; justify-content:center; gap:8px; background:#A6D6B9; color:#0E1F12; border-radius:14px; padding:13px; font-family:'Sora'; font-weight:600; font-size:14px; }
+.btns { display:flex; align-items:center; justify-content:center; gap:8px; background:transparent; border:1px solid rgba(255,255,255,0.14); color:#E9EFE9; border-radius:14px; padding:12px; font-family:'Sora'; font-weight:600; font-size:13.5px; }
+.lbl { font-size:10.5px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#9AA69A; }
+/* ------ desktop chrome ------ */
+.dk { width:1180px; flex-shrink:0; border-radius:20px; background:#0E0F0D; border:1px solid rgba(255,255,255,0.09); box-shadow:0 24px 60px rgba(10,20,14,0.3); overflow:hidden; color:#E9EFE9; font-size:13px; }
+.cap { max-width:390px; }
+.cap b { font-family:'Sora'; font-size:14.5px; color:#0E2117; display:block; margin-bottom:4px; }
+.cap p { font-size:12.5px; line-height:1.55; color:#5C6B5D; margin:0; }
+.frame { display:flex; flex-direction:column; gap:14px; }
+</style>
+</helmet>
+<div style="max-width:1880px; margin:0 auto; padding:46px clamp(20px,3vw,54px) 90px;">
+  <header style="max-width:900px; padding-bottom:34px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:30px;" />
+      <b style="font-family:'Sora'; font-weight:700; font-size:19px; color:#0E2117;">Arah</b>
+      <span style="font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#377B57; border:1px solid #C6E3D2; border-radius:999px; padding:4px 11px;">Inteligência Territorial · Material 11</span>
+    </div>
+    <h1 style="font-family:'Sora'; font-weight:700; font-size:clamp(2rem,4vw,2.9rem); letter-spacing:-0.03em; line-height:1.06; margin:0 0 14px; color:#0E2117;">Protótipos — app comunitário <span style="color:#377B57;">+ painel de revisão</span></h1>
+    <p style="font-size:1.05rem; line-height:1.6; color:#2B6246; max-width:62ch; margin:0;">Alta fidelidade no UI kit premium do Arah (escuro, território-primeiro). Cenário: <b>Socorro, SP</b> — chuva forte na bacia do Rio do Peixe. Nada aqui é painel de guerra: é presença, clareza e ação possível. <a href="Inteligencia Territorial - Hub.dc.html">← Hub</a></p>
+  </header>
+
+  <div style="display:flex; flex-wrap:wrap; gap:34px; align-items:flex-start;">
+
+    <!-- 01 · Mapa com camada de sinais -->
+    <div class="frame" data-screen-label="01 Mapa com sinais">
+      <div class="ph"><div class="phi">
+        <div class="sb"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div class="tb">
+          <span class="terr"><span class="msr" style="font-size:17px; color:#A6D6B9;">forest</span>Socorro · SP<span class="msr0" style="font-size:16px; color:#9AA69A;">expand_more</span></span>
+          <span style="flex:1;"></span>
+          <span class="msr0" style="font-size:21px; color:#E9EFE9;">layers</span>
+          <span class="msr0" style="font-size:21px; color:#E9EFE9;">my_location</span>
+        </div>
+        <div style="flex:1; position:relative; overflow:hidden; background:#11140F;">
+          <div style="position:absolute; inset:0; display:grid; grid-template-columns:repeat(2,50%); grid-template-rows:repeat(3,34%); filter:saturate(0.55) brightness(0.9);">
+            <img src="https://basemaps.cartocdn.com/dark_all/13/3037/4622.png" style="width:100%;height:100%;object-fit:cover;" alt="" /><img src="https://basemaps.cartocdn.com/dark_all/13/3038/4622.png" style="width:100%;height:100%;object-fit:cover;" alt="" />
+            <img src="https://basemaps.cartocdn.com/dark_all/13/3037/4623.png" style="width:100%;height:100%;object-fit:cover;" alt="" /><img src="https://basemaps.cartocdn.com/dark_all/13/3038/4623.png" style="width:100%;height:100%;object-fit:cover;" alt="" />
+            <img src="https://basemaps.cartocdn.com/dark_all/13/3037/4624.png" style="width:100%;height:100%;object-fit:cover;" alt="" /><img src="https://basemaps.cartocdn.com/dark_all/13/3038/4624.png" style="width:100%;height:100%;object-fit:cover;" alt="" />
+          </div>
+          <div style="position:absolute; left:8%; top:16%; width:70%; height:46%; background:rgba(232,160,106,0.16); border:1.5px dashed rgba(232,160,106,0.75); border-radius:38% 52% 46% 40%/44% 38% 54% 42%;"></div>
+          <div style="position:absolute; left:30%; top:33%; transform:translate(-50%,-100%); display:flex; flex-direction:column; align-items:center;">
+            <span style="background:#E8A06A; color:#221206; border-radius:12px 12px 12px 3px; padding:7px 9px; display:flex; align-items:center; box-shadow:0 6px 16px rgba(0,0,0,0.45);"><span class="msr" style="font-size:17px;">rainy</span></span>
+          </div>
+          <div style="position:absolute; left:62%; top:52%; transform:translate(-50%,-100%);"><span style="background:#191B17; border:1px solid rgba(255,255,255,0.18); color:#A6D6B9; border-radius:12px 12px 12px 3px; padding:6px 8px; display:flex;"><span class="msr" style="font-size:15px;">storefront</span></span></div>
+          <div style="position:absolute; left:46%; top:64%; transform:translate(-50%,-100%);"><span style="background:#191B17; border:1px solid rgba(255,255,255,0.18); color:#86AEEA; border-radius:12px 12px 12px 3px; padding:6px 8px; display:flex;"><span class="msr" style="font-size:15px;">event</span></span></div>
+          <div style="position:absolute; left:14px; right:14px; bottom:14px;" class="card">
+            <div style="display:flex; align-items:center; gap:11px; padding:13px 14px;">
+              <span style="width:38px; height:38px; border-radius:12px; background:rgba(232,160,106,0.16); color:#E8A06A; display:flex; align-items:center; justify-content:center;"><span class="msr" style="font-size:21px;">rainy</span></span>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:7px;"><b style="font-family:'Sora'; font-size:13.5px;">Chuva forte até sábado</b><span class="chipd" style="background:rgba(232,160,106,0.16); color:#E8A06A;"><span class="msr" style="font-size:12px;">warning</span>alerta</span></div>
+                <span style="font-size:11.5px; color:#9AA69A;">Bacia do Rio do Peixe · válido até sáb 21h · <span style="color:#A6D6B9;">confirmado por 12 vizinhos</span></span>
+              </div>
+              <span class="msr0" style="font-size:20px; color:#9AA69A;">chevron_right</span>
+            </div>
+          </div>
+          <div style="position:absolute; top:12px; left:14px; display:flex; gap:6px;">
+            <span class="chipd" style="background:#101210E6; border:1px solid rgba(255,255,255,0.1); color:#E8A06A;"><span class="msr" style="font-size:13px;">sensors</span>Sinais · 1</span>
+            <span class="chipd" style="background:#101210E6; border:1px solid rgba(255,255,255,0.1); color:#9AA69A;">Entidades</span>
+            <span class="chipd" style="background:#101210E6; border:1px solid rgba(255,255,255,0.1); color:#9AA69A;">Eventos</span>
+          </div>
+        </div>
+        <div class="nav">
+          <span class="it"><span class="msr0" style="font-size:23px;">forest</span>Início</span>
+          <span class="it on"><span class="msr" style="font-size:23px;">explore</span>Explorar</span>
+          <span class="pub"><span class="msr" style="font-size:26px;">add</span></span>
+          <span class="it"><span class="msr0" style="font-size:23px;">notifications</span>Avisos</span>
+          <span class="it"><span class="msr0" style="font-size:23px;">person</span>Perfil</span>
+        </div>
+      </div></div>
+      <div class="cap"><b>01 · Mapa com camada de sinais</b><p>A área afetada entra como geometria serena (âmbar tracejado), não como mancha vermelha. Chip de camada ligado, card resumo ancorado e pins existentes preservados.</p></div>
+    </div>
+
+    <!-- 02 · Detalhe do alerta -->
+    <div class="frame" data-screen-label="02 Detalhe do alerta">
+      <div class="ph"><div class="phi">
+        <div class="sb"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div class="tb"><span class="msr0" style="font-size:22px;">arrow_back</span><b style="font-family:'Sora'; font-size:15.5px;">Alerta do território</b><span style="flex:1;"></span><span class="msr0" style="font-size:21px;">ios_share</span></div>
+        <div style="flex:1; overflow:hidden; padding:2px 16px 12px; display:flex; flex-direction:column; gap:11px;">
+          <div style="display:flex; gap:7px; flex-wrap:wrap;">
+            <span class="chipd" style="background:rgba(232,160,106,0.16); color:#E8A06A;"><span class="msr" style="font-size:13px;">warning</span>alerta</span>
+            <span class="chipd" style="background:rgba(111,197,214,0.14); color:#6FC5D6;"><span class="msr" style="font-size:13px;">rainy</span>clima</span>
+            <span class="chipd" style="background:rgba(166,214,185,0.13); color:#A6D6B9;"><span class="msr" style="font-size:13px;">verified</span>corroborada · 2 fontes</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.07); color:#9AA69A;"><span class="msr" style="font-size:13px;">schedule</span>há 18 min</span>
+          </div>
+          <h2 style="font-family:'Sora'; font-weight:600; font-size:21px; letter-spacing:-0.01em; line-height:1.25; margin:2px 0 0;">Chuva forte até sábado na bacia do Rio do Peixe</h2>
+          <p style="font-size:13.5px; line-height:1.6; color:#C9D4C9; margin:0;">Volume previsto de 90–130 mm entre quinta e sábado. O rio pode subir rápido nos bairros ribeirinhos. A ponte da estrada da Ponte Preta está sob observação da Defesa Civil.</p>
+          <div class="card" style="padding:13px 14px;">
+            <div class="lbl" style="margin-bottom:8px;">O que fazer</div>
+            <div style="display:flex; gap:9px; align-items:baseline; padding:4px 0;"><span class="msr" style="font-size:15px; color:#A6D6B9;">alt_route</span><span style="font-size:13px; line-height:1.5;">Evite a estrada da Ponte Preta a partir de 6ª de manhã</span></div>
+            <div style="display:flex; gap:9px; align-items:baseline; padding:4px 0;"><span class="msr" style="font-size:15px; color:#A6D6B9;">home_work</span><span style="font-size:13px; line-height:1.5;">Ponto de apoio: CRAS do centro, a partir de 6ª, 8h</span></div>
+            <div style="display:flex; gap:9px; align-items:baseline; padding:4px 0;"><span class="msr" style="font-size:15px; color:#A6D6B9;">call</span><span style="font-size:13px; line-height:1.5;">Defesa Civil: 199 · Conselho de moradores no chat da vila</span></div>
+          </div>
+          <div class="card" style="padding:13px 14px;">
+            <div class="lbl" style="margin-bottom:8px;">Fonte e validade</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; font-size:12.5px;">
+              <span style="color:#9AA69A;">Origem</span><span>World Monitor · GDACS</span>
+              <span style="color:#9AA69A;">Publicado por</span><span>Marta (curadora) · qui 07:40</span>
+              <span style="color:#9AA69A;">Válido até</span><span>sábado, 21h</span>
+              <span style="color:#9AA69A;">Atualizado</span><span>há 18 min · dado fresco</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:9px; margin-top:auto;">
+            <span class="btnp" style="flex:1.4;"><span class="msr" style="font-size:18px;">check_circle</span>Confirmo por aqui</span>
+            <span class="btns" style="flex:1;"><span class="msr0" style="font-size:18px;">flag</span>Contestar</span>
+          </div>
+        </div>
+        <div class="nav">
+          <span class="it on"><span class="msr" style="font-size:23px;">forest</span>Início</span>
+          <span class="it"><span class="msr0" style="font-size:23px;">explore</span>Explorar</span>
+          <span class="pub"><span class="msr" style="font-size:26px;">add</span></span>
+          <span class="it"><span class="msr0" style="font-size:23px;">notifications</span>Avisos</span>
+          <span class="it"><span class="msr0" style="font-size:23px;">person</span>Perfil</span>
+        </div>
+      </div></div>
+      <div class="cap"><b>02 · Detalhe do alerta</b><p>Princípio "fonte sempre visível" como bloco de primeira classe: origem, quem publicou, validade e frescor. Ações práticas antes de qualquer métrica. CTA de confirmação para morador.</p></div>
+    </div>
+
+    <!-- 03 · Timeline e verificação -->
+    <div class="frame" data-screen-label="03 Timeline e verificacao">
+      <div class="ph"><div class="phi">
+        <div class="sb"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div class="tb"><span class="msr0" style="font-size:22px;">arrow_back</span><b style="font-family:'Sora'; font-size:15.5px;">Acompanhamento</b><span style="flex:1;"></span></div>
+        <div style="flex:1; overflow:hidden; padding:2px 16px 14px; display:flex; flex-direction:column; gap:11px;">
+          <div class="card" style="padding:13px 14px; display:flex; gap:12px; align-items:center;">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:baseline; gap:6px;"><b style="font-family:'Sora'; font-size:19px; color:#A6D6B9;">12</b><span style="font-size:12px; color:#9AA69A;">confirmaram</span></div>
+              <div style="display:flex; align-items:baseline; gap:6px;"><b style="font-family:'Sora'; font-size:19px; color:#E8C46A;">1</b><span style="font-size:12px; color:#9AA69A;">contestou</span></div>
+            </div>
+            <div style="flex:2.2; font-size:12px; color:#C9D4C9; line-height:1.55; border-left:1px solid rgba(255,255,255,0.07); padding-left:12px;">A comunidade está confirmando esta informação. Contestações reabrem a revisão — nada some sem explicação.</div>
+          </div>
+          <div class="lbl">Linha do tempo</div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:0; overflow:hidden;">
+            <div style="display:flex; gap:12px;">
+              <div style="display:flex; flex-direction:column; align-items:center;"><span style="width:26px;height:26px;border-radius:9px;background:rgba(134,174,234,0.15);color:#86AEEA;display:flex;align-items:center;justify-content:center;"><span class="msr" style="font-size:14px;">update</span></span><span style="flex:1;width:1.5px;background:rgba(255,255,255,0.08);"></span></div>
+              <div style="padding-bottom:14px;"><b style="font-size:12.5px; font-family:'Sora';">Ponte Preta interditada</b><span style="display:block; font-size:11px; color:#9AA69A; margin:2px 0 4px;">hoje 09:10 · Defesa Civil · atualização</span><span style="font-size:12.5px; color:#C9D4C9; line-height:1.5;">Interdição preventiva até a vistoria de sábado.</span></div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <div style="display:flex; flex-direction:column; align-items:center;"><span style="width:26px;height:26px;border-radius:9px;background:rgba(166,214,185,0.15);color:#A6D6B9;display:flex;align-items:center;justify-content:center;"><span class="msr" style="font-size:14px;">photo_camera</span></span><span style="flex:1;width:1.5px;background:rgba(255,255,255,0.08);"></span></div>
+              <div style="padding-bottom:14px; flex:1;"><b style="font-size:12.5px; font-family:'Sora';">João anexou uma foto</b><span style="display:block; font-size:11px; color:#9AA69A; margin:2px 0 6px;">hoje 08:32 · bairro dos Cubas · evidência</span>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <span style="width:74px; height:52px; border-radius:10px; background:linear-gradient(160deg,#22301F,#101812); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center;"><span class="msr0" style="font-size:20px; color:#9AA69A;">image</span></span>
+                  <span style="font-size:12.5px; color:#C9D4C9; line-height:1.45;">"Rio subiu uns 40 cm desde ontem à noite."</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <div style="display:flex; flex-direction:column; align-items:center;"><span style="width:26px;height:26px;border-radius:9px;background:rgba(232,160,106,0.15);color:#E8A06A;display:flex;align-items:center;justify-content:center;"><span class="msr" style="font-size:14px;">campaign</span></span><span style="flex:1;width:1.5px;background:rgba(255,255,255,0.08);"></span></div>
+              <div style="padding-bottom:14px;"><b style="font-size:12.5px; font-family:'Sora';">Alerta publicado</b><span style="display:block; font-size:11px; color:#9AA69A; margin:2px 0 4px;">qui 07:40 · Marta, curadora</span><span style="font-size:12.5px; color:#C9D4C9; line-height:1.5;">Revisado a partir de 2 fontes corroboradas.</span></div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <div><span style="width:26px;height:26px;border-radius:9px;background:rgba(255,255,255,0.06);color:#9AA69A;display:flex;align-items:center;justify-content:center;"><span class="msr" style="font-size:14px;">sensors</span></span></div>
+              <div><b style="font-size:12.5px; font-family:'Sora';">Sinal recebido</b><span style="display:block; font-size:11px; color:#9AA69A; margin:2px 0 4px;">qui 06:55 · World Monitor · GDACS</span></div>
+            </div>
+          </div>
+          <span class="btns"><span class="msr0" style="font-size:18px;">add_a_photo</span>Enviar evidência</span>
+        </div>
+      </div></div>
+      <div class="cap"><b>03 · Timeline &amp; verificação comunitária</b><p>Histórico append-only legível: do sinal bruto à interdição. Evidência de morador com o mesmo peso visual das atualizações oficiais. Contadores sem ranking, sem gamificação.</p></div>
+    </div>
+
+    <!-- 04 · Confirmar (sheet) -->
+    <div class="frame" data-screen-label="04 Confirmar ocorrencia">
+      <div class="ph"><div class="phi" style="position:relative;">
+        <div class="sb" style="opacity:.4;"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div style="flex:1; opacity:.25; padding:2px 16px;">
+          <h2 style="font-family:'Sora'; font-size:20px; margin:8px 0;">Chuva forte até sábado…</h2>
+          <div class="card" style="height:120px;"></div>
+        </div>
+        <div style="position:absolute; inset:0; background:rgba(5,8,5,0.55); backdrop-filter:blur(2px);"></div>
+        <div style="position:absolute; left:0; right:0; bottom:0; background:#15171380; backdrop-filter:blur(18px); border-top:1px solid rgba(255,255,255,0.1); border-radius:26px 26px 0 0; padding:12px 18px 26px; box-shadow:0 -10px 30px rgba(0,0,0,0.4);">
+          <div style="width:38px; height:4px; border-radius:99px; background:rgba(255,255,255,0.18); margin:0 auto 14px;"></div>
+          <b style="font-family:'Sora'; font-size:17px;">Confirmar por aqui</b>
+          <p style="font-size:12.5px; color:#9AA69A; line-height:1.55; margin:6px 0 14px;">Sua confirmação ajuda vizinhos e a curadoria a entender o que está acontecendo. Sua localização exata não é publicada.</p>
+          <div class="card" style="background:#101210; padding:12px 14px; margin-bottom:10px;">
+            <span style="font-size:13px; color:#C9D4C9;">O que você está vendo? <span style="color:#9AA69A;">(opcional)</span></span>
+            <div style="font-size:13.5px; color:#E9EFE9; margin-top:8px;">Rio subiu uns 40 cm desde ontem à noite<span style="display:inline-block; width:1.5px; height:15px; background:#A6D6B9; vertical-align:-2px; margin-left:1px;"></span></div>
+          </div>
+          <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <span class="chipd" style="background:rgba(166,214,185,0.13); color:#A6D6B9; padding:8px 12px;"><span class="msr" style="font-size:15px;">add_a_photo</span>Anexar foto</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.07); color:#9AA69A; padding:8px 12px;"><span class="msr0" style="font-size:15px;">location_on</span>Incluir bairro · opcional</span>
+          </div>
+          <span class="btnp"><span class="msr" style="font-size:18px;">check_circle</span>Confirmar ocorrência</span>
+          <p style="font-size:11px; color:#9AA69A; text-align:center; margin:10px 0 0;">Uma confirmação por pessoa · você pode editar a sua depois</p>
+        </div>
+      </div></div>
+      <div class="cap"><b>04 · Confirmação comunitária</b><p>Bottom sheet glass sobre o detalhe. Privacidade dita as regras: localização opcional por bairro, nunca coordenada. Uma voz por morador, editável, nunca duplicada.</p></div>
+    </div>
+
+    <!-- 05 · Contestar -->
+    <div class="frame" data-screen-label="05 Contestar informacao">
+      <div class="ph"><div class="phi">
+        <div class="sb"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div class="tb"><span class="msr0" style="font-size:22px;">close</span><b style="font-family:'Sora'; font-size:15.5px;">Contestar informação</b><span style="flex:1;"></span></div>
+        <div style="flex:1; padding:2px 16px 16px; display:flex; flex-direction:column; gap:11px;">
+          <p style="font-size:13px; line-height:1.6; color:#C9D4C9; margin:0;">Contestar não apaga o alerta: reabre a revisão humana. Sua contestação fica visível no acompanhamento, com resposta da curadoria.</p>
+          <div class="lbl" style="margin-top:4px;">Motivo</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-color:#A6D6B9;"><span class="msr" style="font-size:18px; color:#A6D6B9;">radio_button_checked</span><span style="font-size:13.5px;">Não está acontecendo onde eu estou</span></div>
+            <div class="card" style="padding:12px 14px; display:flex; align-items:center; gap:10px;"><span class="msr0" style="font-size:18px; color:#9AA69A;">radio_button_unchecked</span><span style="font-size:13.5px; color:#C9D4C9;">A área marcada está errada</span></div>
+            <div class="card" style="padding:12px 14px; display:flex; align-items:center; gap:10px;"><span class="msr0" style="font-size:18px; color:#9AA69A;">radio_button_unchecked</span><span style="font-size:13.5px; color:#C9D4C9;">A informação está desatualizada</span></div>
+            <div class="card" style="padding:12px 14px; display:flex; align-items:center; gap:10px;"><span class="msr0" style="font-size:18px; color:#9AA69A;">radio_button_unchecked</span><span style="font-size:13.5px; color:#C9D4C9;">Outra razão</span></div>
+          </div>
+          <div class="card" style="background:#101210; padding:12px 14px;">
+            <span style="font-size:13px; color:#C9D4C9;">Conte o que você observa</span>
+            <div style="font-size:13.5px; color:#E9EFE9; margin-top:8px;">Aqui no centro está garoando fraco, sem sinal de rio alto…</div>
+          </div>
+          <span class="chipd" style="background:rgba(255,255,255,0.07); color:#9AA69A; padding:8px 12px; align-self:flex-start;"><span class="msr" style="font-size:15px;">add_a_photo</span>Anexar evidência · opcional</span>
+          <div style="margin-top:auto; display:flex; flex-direction:column; gap:8px;">
+            <span class="btnp" style="background:#E8C46A; color:#221A06;"><span class="msr" style="font-size:18px;">flag</span>Enviar contestação</span>
+            <p style="font-size:11px; color:#9AA69A; text-align:center; margin:0;">A curadoria responde no acompanhamento do alerta</p>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><b>05 · Contestação</b><p>Direito à contestação com responsabilidade: motivo estruturado, relato e evidência opcional. O texto explica o efeito real (reabrir revisão) — sem promessa de remoção.</p></div>
+    </div>
+
+    <!-- 06 · Avisos -->
+    <div class="frame" data-screen-label="06 Avisos">
+      <div class="ph"><div class="phi">
+        <div class="sb"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div class="tb"><b style="font-family:'Sora'; font-size:20px;">Avisos</b><span style="flex:1;"></span><span class="msr0" style="font-size:21px;">tune</span></div>
+        <div style="flex:1; padding:2px 16px; display:flex; flex-direction:column; gap:9px;">
+          <div class="card" style="padding:13px 14px; display:flex; gap:11px; border-color:rgba(232,160,106,0.35);">
+            <span style="width:36px; height:36px; border-radius:11px; background:rgba(232,160,106,0.16); color:#E8A06A; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:19px;">rainy</span></span>
+            <div style="min-width:0;">
+              <b style="font-family:'Sora'; font-size:13.5px;">Alerta do território: chuva forte até sábado</b>
+              <span style="display:block; font-size:11.5px; color:#9AA69A; margin-top:2px;">Socorro · válido até sáb 21h · fonte: World Monitor/GDACS</span>
+              <span style="display:block; font-size:12.5px; color:#C9D4C9; margin-top:5px; line-height:1.5;">Evite a estrada da Ponte Preta. Ponto de apoio no CRAS.</span>
+            </div>
+          </div>
+          <div class="card" style="padding:13px 14px; display:flex; gap:11px;">
+            <span style="width:36px; height:36px; border-radius:11px; background:rgba(134,174,234,0.14); color:#86AEEA; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:19px;">update</span></span>
+            <div><b style="font-family:'Sora'; font-size:13.5px;">Atualização: ponte interditada</b><span style="display:block; font-size:11.5px; color:#9AA69A; margin-top:2px;">há 32 min · alerta que você confirmou</span></div>
+          </div>
+          <div class="card" style="padding:13px 14px; display:flex; gap:11px;">
+            <span style="width:36px; height:36px; border-radius:11px; background:rgba(166,214,185,0.13); color:#A6D6B9; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:19px;">diversity_3</span></span>
+            <div><b style="font-family:'Sora'; font-size:13.5px;">Mutirão: limpeza de bueiros no centro</b><span style="display:block; font-size:11.5px; color:#9AA69A; margin-top:2px;">nasceu do alerta de chuva · 12 confirmados · sáb 8h</span></div>
+          </div>
+          <div class="card" style="padding:13px 14px; display:flex; gap:11px; opacity:.72;">
+            <span style="width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,0.06); color:#9AA69A; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span class="msr" style="font-size:19px;">mode_comment</span></span>
+            <div><b style="font-family:'Sora'; font-size:13.5px;">Ana comentou seu post</b><span style="display:block; font-size:11.5px; color:#9AA69A; margin-top:2px;">ontem · feed da região</span></div>
+          </div>
+          <div style="text-align:center; padding:8px 20px;">
+            <span style="font-size:11.5px; color:#9AA69A; line-height:1.6;">Você recebe avisos de inteligência só nas categorias que assinou (clima, estradas) e a partir de severidade "atenção".</span>
+          </div>
+        </div>
+        <div class="nav">
+          <span class="it"><span class="msr0" style="font-size:23px;">forest</span>Início</span>
+          <span class="it"><span class="msr0" style="font-size:23px;">explore</span>Explorar</span>
+          <span class="pub"><span class="msr" style="font-size:26px;">add</span></span>
+          <span class="it on"><span class="msr" style="font-size:23px;">notifications</span>Avisos</span>
+          <span class="it"><span class="msr0" style="font-size:23px;">person</span>Perfil</span>
+        </div>
+      </div></div>
+      <div class="cap"><b>06 · Avisos</b><p>O alerta convive com a vida normal do feed — sem central de crise. O rodapé lembra o porquê de cada aviso chegar: categorias assinadas e severidade mínima.</p></div>
+    </div>
+
+    <!-- 07 · Preferências -->
+    <div class="frame" data-screen-label="07 Preferencias de inteligencia">
+      <div class="ph"><div class="phi">
+        <div class="sb"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div class="tb"><span class="msr0" style="font-size:22px;">arrow_back</span><b style="font-family:'Sora'; font-size:15.5px;">Avisos do território</b><span style="flex:1;"></span></div>
+        <div style="flex:1; padding:2px 16px 16px; display:flex; flex-direction:column; gap:11px;">
+          <p style="font-size:12.5px; color:#9AA69A; line-height:1.55; margin:0;">Escolha o que faz sentido para a sua vida aqui. Menos é mais: você pode mudar quando quiser.</p>
+          <div class="lbl" style="margin-top:2px;">Categorias assinadas</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <span class="chipd" style="background:rgba(166,214,185,0.16); color:#A6D6B9; padding:9px 13px;"><span class="msr" style="font-size:15px;">rainy</span>Clima</span>
+            <span class="chipd" style="background:rgba(166,214,185,0.16); color:#A6D6B9; padding:9px 13px;"><span class="msr" style="font-size:15px;">flood</span>Rio &amp; enchentes</span>
+            <span class="chipd" style="background:rgba(166,214,185,0.16); color:#A6D6B9; padding:9px 13px;"><span class="msr" style="font-size:15px;">road</span>Estradas</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:9px 13px;"><span class="msr0" style="font-size:15px;">medical_services</span>Saúde</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:9px 13px;"><span class="msr0" style="font-size:15px;">bolt</span>Energia</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:9px 13px;"><span class="msr0" style="font-size:15px;">agriculture</span>Roça &amp; insumos</span>
+          </div>
+          <div class="lbl" style="margin-top:8px;">Me avisar a partir de</div>
+          <div class="card" style="display:flex; padding:5px; gap:4px;">
+            <span style="flex:1; text-align:center; padding:9px 0; border-radius:13px; font-size:12.5px; color:#9AA69A;">informativo</span>
+            <span style="flex:1; text-align:center; padding:9px 0; border-radius:13px; font-size:12.5px; background:rgba(166,214,185,0.16); color:#A6D6B9; font-weight:600;">atenção</span>
+            <span style="flex:1; text-align:center; padding:9px 0; border-radius:13px; font-size:12.5px; color:#9AA69A;">alerta</span>
+            <span style="flex:1; text-align:center; padding:9px 0; border-radius:13px; font-size:12.5px; color:#9AA69A;">crítico</span>
+          </div>
+          <div class="card" style="padding:13px 14px; display:flex; align-items:center; gap:11px;">
+            <span class="msr" style="font-size:19px; color:#A6D6B9;">bedtime</span>
+            <div style="flex:1;"><b style="font-size:13px; font-family:'Sora';">Silêncio à noite</b><span style="display:block; font-size:11.5px; color:#9AA69A;">22h–6h · só alertas críticos passam</span></div>
+            <span style="width:42px; height:25px; border-radius:99px; background:#A6D6B9; position:relative;"><span style="position:absolute; right:3px; top:3px; width:19px; height:19px; border-radius:99px; background:#0E1F12;"></span></span>
+          </div>
+          <div class="card" style="padding:13px 14px; display:flex; align-items:center; gap:11px;">
+            <span class="msr0" style="font-size:19px; color:#9AA69A;">campaign</span>
+            <div style="flex:1;"><b style="font-size:13px; font-family:'Sora';">Resumo semanal do território</b><span style="display:block; font-size:11.5px; color:#9AA69A;">em vez de avisos um a um</span></div>
+            <span style="width:42px; height:25px; border-radius:99px; background:rgba(255,255,255,0.12); position:relative;"><span style="position:absolute; left:3px; top:3px; width:19px; height:19px; border-radius:99px; background:#7d8a7d;"></span></span>
+          </div>
+          <p style="font-size:11px; color:#9AA69A; line-height:1.6; margin-top:auto;">Suas escolhas ficam neste território e não são usadas para perfil ou publicidade.</p>
+        </div>
+      </div></div>
+      <div class="cap"><b>07 · Preferências de inteligência</b><p>Anti-ansiedade operacionalizado: assinatura por categoria, régua de severidade, silêncio noturno e opção de resumo. Rodapé reafirma o compromisso de privacidade.</p></div>
+    </div>
+
+    <!-- 08 · Memória -->
+    <div class="frame" data-screen-label="08 Memoria territorial">
+      <div class="ph"><div class="phi">
+        <div class="sb"><span>9:41</span><span style="display:flex; gap:6px;"><span class="msr" style="font-size:15px;">signal_cellular_alt</span><span class="msr" style="font-size:15px;">wifi</span><span class="msr" style="font-size:15px;">battery_5_bar</span></span></div>
+        <div class="tb"><span class="msr0" style="font-size:22px;">arrow_back</span><b style="font-family:'Sora'; font-size:15.5px;">Memória do território</b><span style="flex:1;"></span><span class="msr0" style="font-size:21px;">search</span></div>
+        <div style="flex:1; padding:2px 16px 16px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:7px;">
+            <span class="chipd" style="background:rgba(166,214,185,0.16); color:#A6D6B9; padding:7px 12px;">Tudo</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:7px 12px;">Clima</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:7px 12px;">Estradas</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:7px 12px;">Saúde</span>
+          </div>
+          <div class="card" style="padding:14px 15px; border-color:rgba(166,214,185,0.3);">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span class="chipd" style="background:rgba(166,214,185,0.16); color:#A6D6B9;"><span class="msr" style="font-size:12px;">task_alt</span>resolvido</span><span style="font-size:11px; color:#9AA69A;">jul 2026 · 9 dias</span></div>
+            <b style="font-family:'Sora'; font-size:14px;">Cheia do Rio do Peixe</b>
+            <p style="font-size:12.5px; color:#C9D4C9; line-height:1.55; margin:6px 0 8px;">Ponte interditada 3 dias; nenhuma família desabrigada. Mutirão de bueiros com 14 pessoas.</p>
+            <div style="background:rgba(166,214,185,0.08); border:1px dashed rgba(166,214,185,0.3); border-radius:12px; padding:9px 11px; font-size:12px; color:#A6D6B9; line-height:1.5;"><span class="msr" style="font-size:14px; margin-right:5px;">school</span>Aprendizado: limpar bueiros do centro em outubro, antes das águas.</div>
+          </div>
+          <div class="card" style="padding:14px 15px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span class="chipd" style="background:rgba(255,255,255,0.07); color:#9AA69A;"><span class="msr" style="font-size:12px;">history</span>expirado</span><span style="font-size:11px; color:#9AA69A;">mai 2026</span></div>
+            <b style="font-family:'Sora'; font-size:14px;">Alta do diesel na região</b>
+            <p style="font-size:12.5px; color:#C9D4C9; line-height:1.55; margin:6px 0 0;">Frete do escoamento subiu ~8%; cooperativa antecipou compras coletivas.</p>
+          </div>
+          <div class="card" style="padding:14px 15px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span class="chipd" style="background:rgba(232,196,106,0.14); color:#E8C46A;"><span class="msr" style="font-size:12px;">published_with_changes</span>corrigido</span><span style="font-size:11px; color:#9AA69A;">abr 2026</span></div>
+            <b style="font-family:'Sora'; font-size:14px;">Suspeita de surto respiratório</b>
+            <p style="font-size:12.5px; color:#C9D4C9; line-height:1.55; margin:6px 0 0;">Contestado por moradores e revisado: caso isolado. Correção publicada em 6 h — a fonte foi rebaixada.</p>
+          </div>
+          <div style="text-align:center; margin-top:auto;"><span style="font-size:11.5px; color:#9AA69A;">A memória é do território — cada evento encerrado vira aprendizado coletivo.</span></div>
+        </div>
+      </div></div>
+      <div class="cap"><b>08 · Memória territorial</b><p>Histórico consultável com desfechos honestos — inclusive a correção. O aprendizado ganha destaque visual próprio: é o que a comunidade leva para o próximo evento.</p></div>
+    </div>
+
+    <!-- 09 · Inbox desktop -->
+    <div class="frame" data-screen-label="09 Intelligence Inbox (admin)">
+      <div class="dk"><div style="display:grid; grid-template-columns:216px 1fr; min-height:640px;">
+        <div style="border-right:1px solid rgba(255,255,255,0.07); padding:18px 14px; display:flex; flex-direction:column; gap:2px; background:#0B0C0A;">
+          <div style="display:flex; align-items:center; gap:8px; padding:4px 8px 16px;"><img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="" style="height:22px;" /><b style="font-family:'Sora'; font-size:14.5px;">Arah · Curadoria</b></div>
+          <span style="display:flex; align-items:center; gap:9px; padding:9px 10px; border-radius:11px; background:rgba(166,214,185,0.13); color:#A6D6B9; font-size:12.5px; font-weight:600;"><span class="msr" style="font-size:17px;">inbox</span>Inteligência<span style="margin-left:auto; background:#E8A06A; color:#221206; border-radius:99px; font-size:10px; padding:1px 7px;">3</span></span>
+          <span style="display:flex; align-items:center; gap:9px; padding:9px 10px; color:#9AA69A; font-size:12.5px;"><span class="msr0" style="font-size:17px;">assignment</span>Fila de revisão</span>
+          <span style="display:flex; align-items:center; gap:9px; padding:9px 10px; color:#9AA69A; font-size:12.5px;"><span class="msr0" style="font-size:17px;">campaign</span>Alertas ativos</span>
+          <span style="display:flex; align-items:center; gap:9px; padding:9px 10px; color:#9AA69A; font-size:12.5px;"><span class="msr0" style="font-size:17px;">history_edu</span>Memória</span>
+          <span style="display:flex; align-items:center; gap:9px; padding:9px 10px; color:#9AA69A; font-size:12.5px;"><span class="msr0" style="font-size:17px;">cable</span>Provedores</span>
+          <div style="margin-top:auto;" class="card"><div style="padding:11px 12px;">
+            <div style="display:flex; align-items:center; gap:7px; margin-bottom:6px;"><span style="width:8px; height:8px; border-radius:99px; background:#A6D6B9;"></span><b style="font-size:11.5px; font-family:'Sora';">World Monitor</b></div>
+            <span style="font-size:10.5px; color:#9AA69A; line-height:1.5;">saudável · quota 412/1.000 hoje<br/>cache fresco · 06:55</span>
+          </div></div>
+        </div>
+        <div style="padding:18px 22px; display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <b style="font-family:'Sora'; font-size:17px;">Intelligence Inbox</b>
+            <span class="chipd" style="background:rgba(232,160,106,0.14); color:#E8A06A;">3 aguardando revisão</span>
+            <span style="flex:1;"></span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:7px 12px;">Socorro · SP</span>
+            <span class="chipd" style="background:rgba(255,255,255,0.06); color:#9AA69A; padding:7px 12px;">Todas as categorias</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+            <div class="card" style="padding:12px 14px;"><span class="lbl">SLA de revisão</span><div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;"><b style="font-family:'Sora'; font-size:20px; color:#A6D6B9;">41 min</b><span style="font-size:11px; color:#9AA69A;">média · meta 60</span></div></div>
+            <div class="card" style="padding:12px 14px;"><span class="lbl">Publicados hoje</span><div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;"><b style="font-family:'Sora'; font-size:20px;">2</b><span style="font-size:11px; color:#9AA69A;">1 rejeitado</span></div></div>
+            <div class="card" style="padding:12px 14px;"><span class="lbl">Contestações abertas</span><div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;"><b style="font-family:'Sora'; font-size:20px; color:#E8C46A;">1</b><span style="font-size:11px; color:#9AA69A;">reabre revisão</span></div></div>
+          </div>
+          <div class="card" style="flex:1; overflow:hidden;">
+            <div style="display:grid; grid-template-columns:1.5fr 110px 130px 150px 120px 90px; padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.07);">
+              <span class="lbl">Sinal</span><span class="lbl">Severidade</span><span class="lbl">Confiança</span><span class="lbl">Território · score</span><span class="lbl">Freshness</span><span class="lbl">Espera</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.5fr 110px 130px 150px 120px 90px; padding:13px 16px; border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(166,214,185,0.05); align-items:center;">
+              <span style="display:flex; align-items:center; gap:9px;"><span class="msr" style="font-size:17px; color:#E8A06A;">rainy</span><span><b style="font-size:12.5px; font-family:'Sora';">Chuva extrema · bacia Rio do Peixe</b><span style="display:block; font-size:10.5px; color:#9AA69A;">GDACS + INMET via WM · sg_91d2</span></span></span>
+              <span class="chipd" style="background:rgba(232,160,106,0.14); color:#E8A06A;">alerta</span>
+              <span style="font-size:11.5px; color:#A6D6B9;"><span class="msr" style="font-size:13px;">verified</span> corroborada·2</span>
+              <span style="font-size:11.5px;">Socorro · <b style="color:#A6D6B9;">0,86</b></span>
+              <span class="chipd" style="background:rgba(166,214,185,0.12); color:#A6D6B9;">fresh · 18 min</span>
+              <span style="font-size:11.5px; color:#E8C46A;">00:41</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.5fr 110px 130px 150px 120px 90px; padding:13px 16px; border-bottom:1px solid rgba(255,255,255,0.05); align-items:center;">
+              <span style="display:flex; align-items:center; gap:9px;"><span class="msr" style="font-size:17px; color:#6FC5D6;">road</span><span><b style="font-size:12.5px; font-family:'Sora';">Interdição parcial SP-147 (obras)</b><span style="display:block; font-size:10.5px; color:#9AA69A;">news via WM · sg_90ab</span></span></span>
+              <span class="chipd" style="background:rgba(111,197,214,0.13); color:#6FC5D6;">atenção</span>
+              <span style="font-size:11.5px; color:#E8C46A;"><span class="msr" style="font-size:13px;">shield_question</span> única fonte</span>
+              <span style="font-size:11.5px;">Socorro · <b>0,61</b></span>
+              <span class="chipd" style="background:rgba(232,196,106,0.12); color:#E8C46A;">aging · 3 h</span>
+              <span style="font-size:11.5px; color:#9AA69A;">02:10</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.5fr 110px 130px 150px 120px 90px; padding:13px 16px; align-items:center; opacity:.8;">
+              <span style="display:flex; align-items:center; gap:9px;"><span class="msr" style="font-size:17px; color:#9AA69A;">bolt</span><span><b style="font-size:12.5px; font-family:'Sora';">Instabilidade energética regional</b><span style="display:block; font-size:10.5px; color:#9AA69A;">energy via WM · sg_8f77</span></span></span>
+              <span class="chipd" style="background:rgba(255,255,255,0.07); color:#9AA69A;">informativo</span>
+              <span style="font-size:11.5px; color:#9AA69A;">não verificada</span>
+              <span style="font-size:11.5px;">Socorro · <b>0,38</b></span>
+              <span class="chipd" style="background:rgba(232,196,106,0.12); color:#E8C46A;">stale · 26 h</span>
+              <span style="font-size:11.5px; color:#9AA69A;">04:52</span>
+            </div>
+          </div>
+          <p style="font-size:11px; color:#9AA69A; margin:0;">Sinais stale não podem ser publicados — aparecem para descarte consciente. Score sempre expandível em parcelas.</p>
+        </div>
+      </div></div>
+      <div class="cap" style="max-width:1180px;"><b>09 · Intelligence Inbox (painel de curadoria, desktop)</b><p>Fila sobre o WorkItem existente: severidade, confiança, score explicável, freshness e espera — sem mapa de guerra, sem vermelho dominante. Saúde e quota do provedor sempre à vista na lateral.</p></div>
+    </div>
+
+    <!-- 10 · Revisão + brief (desktop) -->
+    <div class="frame" data-screen-label="10 Revisao e brief (admin)">
+      <div class="dk"><div style="display:grid; grid-template-columns:1fr 420px; min-height:640px;">
+        <div style="padding:20px 24px; border-right:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="msr0" style="font-size:20px; color:#9AA69A;">arrow_back</span>
+            <b style="font-family:'Sora'; font-size:16px;">Revisão do sinal</b>
+            <span class="chipd" style="background:rgba(232,160,106,0.14); color:#E8A06A;">aguardando revisão</span>
+            <span style="flex:1;"></span><span style="font-size:11px; color:#9AA69A;">sg_91d2 · WorkItem wi_5580</span>
+          </div>
+          <div class="card" style="padding:14px 16px;">
+            <b style="font-family:'Sora'; font-size:15px;">Chuva extrema prevista — bacia do Rio do Peixe</b>
+            <div style="display:flex; gap:7px; margin:8px 0 10px; flex-wrap:wrap;">
+              <span class="chipd" style="background:rgba(111,197,214,0.13); color:#6FC5D6;"><span class="msr" style="font-size:12px;">rainy</span>clima</span>
+              <span class="chipd" style="background:rgba(232,160,106,0.14); color:#E8A06A;">severidade sugerida: alerta</span>
+              <span class="chipd" style="background:rgba(166,214,185,0.13); color:#A6D6B9;"><span class="msr" style="font-size:12px;">verified</span>corroborada · GDACS + INMET</span>
+              <span class="chipd" style="background:rgba(166,214,185,0.12); color:#A6D6B9;">fresh · 18 min</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 14px; font-size:12px; color:#C9D4C9;">
+              <span style="color:#9AA69A;">Janela</span><span>qui 12h → sáb 21h</span>
+              <span style="color:#9AA69A;">Volume</span><span>90–130 mm acumulados</span>
+              <span style="color:#9AA69A;">Fontes</span><span>GDACS (07:12) · INMET (06:40) via World Monitor</span>
+              <span style="color:#9AA69A;">Payload</span><span style="color:#A6D6B9;">ver original ↗</span>
+            </div>
+          </div>
+          <div class="card" style="padding:14px 16px;">
+            <div class="lbl" style="margin-bottom:8px;">Relevância territorial · 0,86 <span style="color:#A6D6B9; text-transform:none; letter-spacing:0;">— por quê?</span></div>
+            <div style="display:flex; flex-direction:column; gap:7px;">
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11.5px; color:#C9D4C9; width:190px;">Interseção geográfica 64%</span><span style="flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,0.07);"><span style="display:block; width:64%; height:6px; border-radius:99px; background:#A6D6B9;"></span></span><span style="font-size:11px; color:#9AA69A;">+0,32</span></div>
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11.5px; color:#C9D4C9; width:190px;">Categoria assinada (clima)</span><span style="flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,0.07);"><span style="display:block; width:50%; height:6px; border-radius:99px; background:#A6D6B9;"></span></span><span style="font-size:11px; color:#9AA69A;">+0,25</span></div>
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11.5px; color:#C9D4C9; width:190px;">3 ativos na área (ponte, escola, captação)</span><span style="flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,0.07);"><span style="display:block; width:42%; height:6px; border-radius:99px; background:#A6D6B9;"></span></span><span style="font-size:11px; color:#9AA69A;">+0,21</span></div>
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11.5px; color:#C9D4C9; width:190px;">Histórico de cheias (jul 2024)</span><span style="flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,0.07);"><span style="display:block; width:16%; height:6px; border-radius:99px; background:#A6D6B9;"></span></span><span style="font-size:11px; color:#9AA69A;">+0,08</span></div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+            <span class="btns" style="flex:1; border-color:rgba(227,122,95,0.4); color:#E37A5F;"><span class="msr0" style="font-size:17px;">block</span>Rejeitar…</span>
+            <span class="btns" style="flex:1;"><span class="msr0" style="font-size:17px;">tune</span>Ajustar severidade</span>
+            <span class="btnp" style="flex:1.6;"><span class="msr" style="font-size:17px;">check</span>Aprovar e editar brief</span>
+          </div>
+        </div>
+        <div style="padding:20px 22px; display:flex; flex-direction:column; gap:11px; background:#0B0C0A;">
+          <div style="display:flex; align-items:center; gap:8px;"><b style="font-family:'Sora'; font-size:14px;">Brief territorial</b><span class="chipd" style="background:rgba(232,196,106,0.14); color:#E8C46A;"><span class="msr" style="font-size:12px;">smart_toy</span>rascunho de IA — edite antes de publicar</span></div>
+          <div class="card" style="background:#101210; padding:13px 15px; flex:1;">
+            <span style="font-size:11px; color:#9AA69A;">Título</span>
+            <div style="font-size:14px; font-family:'Sora'; font-weight:600; margin:4px 0 12px;">Chuva forte até sábado na bacia do Rio do Peixe</div>
+            <span style="font-size:11px; color:#9AA69A;">Mensagem à comunidade</span>
+            <p style="font-size:12.5px; line-height:1.65; color:#E9EFE9; margin:4px 0 12px;">Volume previsto de 90–130 mm entre quinta e sábado. O rio pode subir rápido nos bairros ribeirinhos. Evite a estrada da Ponte Preta a partir de sexta de manhã.<span style="display:inline-block; width:1.5px; height:14px; background:#A6D6B9; vertical-align:-2px;"></span></p>
+            <span style="font-size:11px; color:#9AA69A;">Ações recomendadas</span>
+            <div style="display:flex; flex-direction:column; gap:6px; margin-top:6px;">
+              <span class="chipd" style="background:rgba(166,214,185,0.1); color:#C9D4C9; padding:8px 11px; justify-content:flex-start;"><span class="msr" style="font-size:14px; color:#A6D6B9;">alt_route</span>Evitar estrada da Ponte Preta</span>
+              <span class="chipd" style="background:rgba(166,214,185,0.1); color:#C9D4C9; padding:8px 11px; justify-content:flex-start;"><span class="msr" style="font-size:14px; color:#A6D6B9;">home_work</span>Ponto de apoio: CRAS centro</span>
+              <span class="chipd" style="background:rgba(255,255,255,0.05); color:#9AA69A; padding:8px 11px; justify-content:flex-start;"><span class="msr0" style="font-size:14px;">add</span>Adicionar ação</span>
+            </div>
+          </div>
+          <div class="card" style="padding:12px 14px; display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; font-size:12px;">
+            <span style="color:#9AA69A;">Válido até</span><span>sábado, 21h</span>
+            <span style="color:#9AA69A;">Visibilidade</span><span>todo o território</span>
+            <span style="color:#9AA69A;">Notificar</span><span>assinantes de clima · atenção+</span>
+          </div>
+          <span class="btnp"><span class="msr" style="font-size:17px;">campaign</span>Publicar no território</span>
+          <p style="font-size:10.5px; color:#9AA69A; text-align:center; margin:0;">A publicação registra sua decisão e a política vigente — auditável pela comunidade.</p>
+        </div>
+      </div></div>
+      <div class="cap" style="max-width:1180px;"><b>10 · Revisão do sinal + editor de brief (desktop)</b><p>Score aberto em parcelas ("sem decisão opaca"), rascunho de IA claramente marcado, e o ato de publicar tratado como decisão com responsabilidade — não um botão qualquer.</p></div>
+    </div>
+
+  </div>
+
+  <footer style="margin-top:44px; max-width:900px;">
+    <p style="font-size:13px; color:#5C6B5D; line-height:1.6;">Especificação de estados (loading, vazio, stale, degradado, offline, erro, baixa confiança, expirado, contestado, corrigido) e as 18 jornadas completas: <a href="Inteligencia Territorial - Jornadas e UX.dc.html">Jornadas &amp; especificação UX</a> · <a href="Inteligencia Territorial - Hub.dc.html">Hub da iniciativa</a></p>
+  </footer>
+</div>
+</x-dc>
+</body>
+</html>

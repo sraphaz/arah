@@ -41,6 +41,7 @@ body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-u
     <a class="toclink" href="#c3a">N&iacute;vel 3 · App Flutter</a>
     <a class="toclink" href="#c3b">N&iacute;vel 3 · API .NET</a>
     <a class="toclink" href="#dominios">Mapa de dom&iacute;nios</a>
+    <a class="toclink" href="#ti">Intelig&ecirc;ncia Territorial <span style="font-size:9.5px; background:#E2F1E8; color:#2B6246; border-radius:999px; padding:1px 7px; margin-left:4px;">nova</span></a>
     <a class="toclink" href="#deploy">Implanta&ccedil;&atilde;o</a>
     <div style="font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#74806E; margin:18px 0 6px; padding-left:12px;">Sequ&ecirc;ncias · implementadas</div>
     <sc-for list="{{ implNav }}" as="n" hint-placeholder-count="6">
@@ -609,6 +610,32 @@ body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-u
     <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">campaign</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Notifications</b> &larr; alimentado por alertas, eventos, pedidos, elei&ccedil;&otilde;es e modera&ccedil;&atilde;o; resolve deep links.</div></div>
     <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">shield_person</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Curadoria</b> &rarr; governa entidades do mapa, posts sinalizados e confirma&ccedil;&atilde;o de residência.</div></div>
     <div style="display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(23,53,37,0.12); border-radius:12px; padding:12px 14px; background:#fff;"><span class="msr" style="font-size:18px;color:#214D37;margin-top:1px;">bolt</span><div style="font-size:12.5px;color:#2B6246;line-height:1.45;"><b style="color:#16271D;">Realtime</b> &rarr; entrega mensagens, novos posts/alertas, posi&ccedil;&atilde;o de entregas e notifica&ccedil;&otilde;es ao vivo.</div></div>
+  </div>
+</section>
+
+<section id="ti" style="padding:40px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px;">
+  <div style="font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px;">Nova camada &middot; proposta em decis&atilde;o</div>
+  <h2 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117;">Intelig&ecirc;ncia Territorial <span style="color:#377B57;">(integra&ccedil;&atilde;o World Monitor)</span></h2>
+  <p style="font-size:15.5px; line-height:1.65; color:#2B6246; max-width:64ch;">O Arah passa a <b>perceber sinais externos</b> (clima, desastres, sa&uacute;de, infraestrutura, log&iacute;stica) consumindo o World Monitor por REST/MCP atr&aacute;s da abstra&ccedil;&atilde;o <code style="background:#F0F7F2; padding:2px 7px; border-radius:6px; font-size:13px;">SignalProvider</code> &mdash; o dom&iacute;nio central n&atilde;o conhece o provedor. Nenhum container novo: a camada ocupa os execut&aacute;veis existentes.</p>
+  <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 22px; margin:22px 0; overflow-x:auto;">
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:12.5px; color:#173525;">
+      <span style="background:#EAF1FB; border:1px solid #C4D7F2; border-radius:10px; padding:8px 13px; white-space:nowrap;"><b>World Monitor</b> &middot; REST/MCP</span>
+      <span class="msr" style="font-size:14px; color:#74806E;">east</span>
+      <span style="background:#E2F1E8; border:1px solid #C6E3D2; border-radius:10px; padding:8px 13px; white-space:nowrap;"><b>Adapter</b> Infrastructure/Intelligence</span>
+      <span class="msr" style="font-size:14px; color:#74806E;">east</span>
+      <span style="background:#E2F1E8; border:1px solid #C6E3D2; border-radius:10px; padding:8px 13px; white-space:nowrap;">normaliza&ccedil;&atilde;o &middot; dedup &middot; <b>geo-correla&ccedil;&atilde;o (PostGIS)</b></span>
+      <span class="msr" style="font-size:14px; color:#74806E;">east</span>
+      <span style="background:#F5EBDD; border:1px solid #EAD9BF; border-radius:10px; padding:8px 13px; white-space:nowrap;"><b>revis&atilde;o humana</b> &middot; WorkItem SignalReview</span>
+      <span class="msr" style="font-size:14px; color:#74806E;">east</span>
+      <span style="background:#214D37; color:#fff; border-radius:10px; padding:8px 13px; white-space:nowrap;"><b>alerta enriquecido</b> &middot; feed &middot; mapa &middot; notifica&ccedil;&otilde;es</span>
+      <span class="msr" style="font-size:14px; color:#74806E;">east</span>
+      <span style="background:#fff; border:1px solid rgba(23,53,37,0.2); border-radius:10px; padding:8px 13px; white-space:nowrap;">verifica&ccedil;&atilde;o comunit&aacute;ria &middot; <b>mem&oacute;ria territorial</b></span>
+    </div>
+  </div>
+  <p style="font-size:13px; color:#74806E; margin:0 0 14px;">Reuso decisivo: fila WorkItem (revis&atilde;o auditada), alertas com valida&ccedil;&atilde;o por curador, outbox de notifica&ccedil;&otilde;es e fronteiras de territ&oacute;rio + PostGIS. Estados novos do sinal: Received &rarr; &hellip; &rarr; AwaitingReview &rarr; Published &rarr; Resolved/Archived.</p>
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <a href="Inteligencia Territorial - Arquitetura e Dominio.dc.html" style="display:inline-flex; align-items:center; gap:7px; background:#214D37; color:#fff; border-radius:999px; padding:9px 17px; font-size:12.5px; font-weight:600; text-decoration:none;">C4 completo da camada <span class="msr" style="font-size:14px;">east</span></a>
+    <a href="Inteligencia Territorial - Hub.dc.html" style="display:inline-flex; align-items:center; gap:7px; border:1px solid rgba(23,53,37,0.2); color:#173525; border-radius:999px; padding:9px 17px; font-size:12.5px; font-weight:600; text-decoration:none;">Hub da iniciativa</a>
   </div>
 </section>
 

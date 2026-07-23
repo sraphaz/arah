@@ -2,12 +2,13 @@
 ## Planejamento Estratégico de Desenvolvimento
 
 **Data de Criação**: 2025-01-13  
-**Última Revisão**: 2026-06-30  
+**Última Revisão**: 2026-07-23  
 **Objetivo**: Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado  
-**Estimativa Total**: ~535 dias sequenciais / ~260 dias com paralelização (incl. camada sustentação F52–61)  
+**Estimativa Total**: ~535 dias sequenciais / ~260 dias com paralelização (incl. camada sustentação F52–61) + trilha TI (~25 sem MVP)  
 **Status Atual**: 9.3/10 (após implementação das fases 1-16)  
-**Total de Fases Documentadas**: 61 fases (1-16 completas + 17-51 comunitárias + **52-61 sustentação operacional**)  
-**⭐ Realinhamento 2026-06**: [Sustentação Operacional](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md) · [Handoff C4](../handoff/README.md)
+**Total de Fases Documentadas**: 61 fases (1-16 completas + 17-51 comunitárias + **52-61 sustentação operacional**) + **trilha TI-0…TI-7**  
+**⭐ Realinhamento 2026-06**: [Sustentação Operacional](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md) · [Handoff C4](../handoff/README.md)  
+**⭐ Realinhamento 2026-07**: [Inteligência Territorial / World Monitor](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [Handoff TI](../handoff/inteligencia-territorial/)
 
 **Nota**: O roadmap estratégico menciona fases 31-44 conceituais (Proof of Sweat, Subscriptions, Web3, DAO, etc.), mas sem documentos detalhados. A Fase 30 (Hospedagem) é a primeira fase nova com documento completo.  
 **⭐ Estratégia de Convergência**: Ver [Estratégia de Convergência de Mercado](../39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) | [Mapa de Funcionalidades](../38_MAPA_FUNCIONALIDADES_MERCADO.md)
@@ -53,7 +54,8 @@ backlog-api/
 - **[README.md](./README.md)** - Este arquivo (índice principal)
 - **[ESTRUTURA_DOCUMENTOS.md](./ESTRUTURA_DOCUMENTOS.md)** - Estrutura de organização
 - **[INDICE_DOCUMENTOS.md](./INDICE_DOCUMENTOS.md)** - Índice completo de documentos
-- **[REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** ⭐ **NOVO** — Camada de sustentação (C4, monetização, operação multi-instância)
+- **[REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** ⭐ — Camada de sustentação (C4, monetização, operação multi-instância)
+- **[REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)** ⭐ **NOVO** — Trilha TI-0…TI-7 (World Monitor, revisão humana, âncoras FASE23/24/44)
 - **[RESUMO_EXECUTIVO_ESTRATEGICO.md](./RESUMO_EXECUTIVO_ESTRATEGICO.md)** ⭐ - Resumo executivo para apresentação externa
 - **[ROADMAP_VISUAL.md](./ROADMAP_VISUAL.md)** - Roadmap visual estratégico
 - **[MAPA_CORRELACAO_FUNCIONALIDADES.md](./MAPA_CORRELACAO_FUNCIONALIDADES.md)** - Mapa de correlação com plataformas
@@ -275,6 +277,27 @@ backlog-api/
 **Total**: 290 dias | **Resultado**: Território-piloto no ar, faturando, com transparência e base multi-instância
 
 **Nota**: Ondas S0–S1 têm **prioridade sobre** economia local (F17–19) até go-live piloto.
+
+---
+
+### 🟢 Trilha TI: Inteligência Territorial (TI-0…TI-7) — paralelo ⭐ NOVO 2026-07
+
+**Objetivo**: Sinais globais (World Monitor) → relevância territorial → revisão humana → alerta/ação/memória — sem competir por squad com P0 de economia local (17–19).
+
+**Referência**: [Realinhamento TI](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [Handoff TI](../handoff/inteligencia-territorial/)
+
+| ID | Título | Duração | Prioridade | Âncora | Status |
+|----|--------|---------|------------|--------|--------|
+| **[TI-0](./TI0.md)** | Pesquisa e contratos | ~2 sem | 🔴 P0 | — | ⏳ Pendente |
+| **[TI-1](./TI1.md)** | Fundação + adapter WM | ~4 sem | 🔴 P0 | FASE44 | ⏳ Pendente |
+| **[TI-2](./TI2.md)** | Intelligence Inbox | ~4 sem | 🔴 P0 | FASE23 | ⏳ Pendente |
+| **[TI-3](./TI3.md)** | Publicação territorial | ~5 sem | 🔴 P0 | FASE24 | ⏳ Pendente |
+| **[TI-4](./TI4.md)** | Participação comunitária | ~4 sem | 🟡 P1 | FASE24 | ⏳ Pendente |
+| **[TI-5](./TI5.md)** | Governança e ação | ~3 sem | 🟡 P1 | FASE14/24 | ⏳ Pendente |
+| **[TI-6](./TI6.md)** | Aprendizado / memória | ~3 sem | 🟡 P1 | FASE24 | ⏳ Pendente |
+| **[TI-7](./TI7.md)** | Federação de sinais | TBD | 🟢 P2 | FASE53/59 | ⏳ Pendente |
+
+**MVP**: TI-1→TI-3 ≈ 13 semanas. **Não** altera o contador `FASE*.md` (trilha transversal).
 
 ---
 

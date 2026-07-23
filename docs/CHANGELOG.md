@@ -9,6 +9,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Inteligência Territorial / World Monitor no backlog (2026-07-23)
+
+- Pacote C4 evoluído incorporado: handoff em [`docs/handoff/inteligencia-territorial/`](handoff/inteligencia-territorial/) (Hub + 11 decks + notas de pesquisa)
+- Decks C4 e *Backlog Atualizado* atualizados com container Intelligence e bloco TI-0…TI-7
+- Realinhamento: [`REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md`](backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)
+- Incrementos documentados: [`TI0`](backlog-api/TI0.md)…[`TI7`](backlog-api/TI7.md) (trilha transversal; âncoras FASE23/24/44/53)
+- Spec exemplo SDD: [`TI-201-signal-review.spec.yaml`](specs/features/TI-201-signal-review.spec.yaml)
+- `PHASE_QUEUE.yaml` + `STATUS_FASES.md` + índice do backlog atualizados
+
 ### Corrigido — follow-up Bugbot Onda D (2026-07-23)
 
 - Jornada residência: cache do `mediaId` do comprovante (sem re-upload em retry); erros de upload vs solicitação separados

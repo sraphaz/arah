@@ -1,10 +1,21 @@
 # Handoff — Arquitetura C4 e Sustentação Operacional
 
-**Versão**: 1.0  
-**Data**: 2026-06-30  
-**Origem**: Pacote *Arquitetura C4 Arah* (modelo C4, monetização, operação multi-instância, cockpit do implementador)
+**Versão**: 1.1  
+**Data**: 2026-07-23  
+**Origem**: Pacote *Arquitetura C4 Arah* (modelo C4, monetização, operação multi-instância, cockpit do implementador) + evolução **Inteligência Territorial / World Monitor**
 
-Este diretório concentra a documentação interativa de handoff que define **o que sustenta operacionalmente a plataforma** — além das funcionalidades comunitárias do backlog original.
+Este diretório concentra a documentação interativa de handoff que define **o que sustenta operacionalmente a plataforma** — além das funcionalidades comunitárias do backlog original — e a trilha de **inteligência territorial regenerativa**.
+
+---
+
+## Inteligência Territorial (NOVO · 2026-07)
+
+Pacote completo (Hub + 11 decks + notas de pesquisa):
+
+→ **[inteligencia-territorial/README.md](./inteligencia-territorial/README.md)**  
+→ Realinhamento no backlog: **[REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](../backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)**
+
+Os decks C4 e *Backlog Atualizado* em `arquitetura-c4/` foram atualizados com o container Intelligence e o bloco TI-0…TI-7.
 
 ---
 
@@ -48,12 +59,14 @@ python -m http.server 8080
 
 ## Integração com o backlog
 
-**Ordem de execução**: infraestrutura de agentes (PR 1–4) → **depois** Onda S / FASE52+.
+**Ordem de execução**: infraestrutura de agentes (PR 1–4) → **depois** Onda S / FASE52+ → trilha TI em paralelo aos P0 de economia local (17–19), sem competir por squad.
 
-O realinhamento oficial do backlog está em:
+Realinhamentos oficiais:
 
-- **[REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](../backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** — ondas, prioridades, impacto nas fases existentes
-- **Fases 52–61** — épicos de sustentação mapeados para implementação
+- **[REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](../backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** — ondas S0–S4, fases 52–61
+- **[REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](../backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)** — trilha TI-0…TI-7 (âncoras FASE23/24/44/53)
+- **Fases 52–61** — épicos de sustentação
+- **TI0…TI7** — incrementos de inteligência territorial
 
 ---
 
@@ -64,6 +77,7 @@ O realinhamento oficial do backlog está em:
 3. **Território como fronteira de dados** — federação opt-in; Core coordena, não possui conteúdo
 4. **Transparência por padrão** — taxa, split e repasses visíveis antes e depois do pagamento
 5. **A sustentação não atrasa o comunitário** — viabiliza financiá-lo; funcionalidades ganham ganchos de receita
+6. **Inteligência com revisão humana** — fonte visível; contestação; sem decisão opaca de IA; Territory neutro
 
 ---
 

@@ -9,6 +9,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Inteligência Territorial / World Monitor no backlog (2026-07-23)
+
+- Pacote C4 evoluído incorporado: handoff em [`docs/handoff/inteligencia-territorial/`](handoff/inteligencia-territorial/) (Hub + 11 decks + notas de pesquisa)
+- Decks C4 e *Backlog Atualizado* atualizados com container Intelligence e bloco TI-0…TI-7
+- Realinhamento: [`REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md`](backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)
+- Incrementos documentados: [`TI0`](backlog-api/TI0.md)…[`TI7`](backlog-api/TI7.md) (trilha transversal; âncoras FASE23/24/44/53)
+- Spec exemplo SDD: [`TI-201-signal-review.spec.yaml`](specs/features/TI-201-signal-review.spec.yaml)
+- `PHASE_QUEUE.yaml` + `STATUS_FASES.md` + índice do backlog atualizados
+- **Multiagente TI** (consultivos): `signal-scout`, `territorial-analyst`, `source-steward`, `community-brief-writer`, `response-orchestrator`, `intelligence-governance-steward` — coreografia `inteligencia-territorial`; nenhum publica
+- `next-phase` ignora `kind: track` / `TI-*` (Bugbot: fila TI não compete com épicos FASE*)
+- Label canônica `wave/TI` em `.github/labels.yml`; links cross-dir do handoff C4↔TI; `deck-stage.js` para o Deck Executivo
+- Spec TI-201: `when` em AC-TI-201-5 + mapeamento de testes planejados (draft); backlog TI2/TI4 alinhados (stale|expired; EXIF default strip)
+
 ### Corrigido — follow-up Bugbot Onda D (2026-07-23)
 
 - Jornada residência: cache do `mediaId` do comprovante (sem re-upload em retry); erros de upload vs solicitação separados

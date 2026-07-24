@@ -87,6 +87,14 @@ if (Get-Command Test-IsCodeFile -ErrorAction SilentlyContinue) {
     Write-Host '  [skip] Test-IsCodeFile não exposto (craft-review-check executa direto)'
 }
 
+Write-Host 'next-phase eligibility (TI track)'
+. (Join-Path $agentsDir 'Get-PhaseQueue.ps1')
+Assert-True (Test-PhaseQueueItemEligibleForNextPhase -Item @{ id = 'FASE55'; kind = $null }) 'FASE55 elegível'
+Assert-True (-not (Test-PhaseQueueItemEligibleForNextPhase -Item @{ id = 'TI-0'; kind = 'track' })) 'TI-0 track não elegível'
+Assert-True (-not (Test-PhaseQueueItemEligibleForNextPhase -Item @{ id = 'TI-1' })) 'TI-1 por id não elegível'
+Assert-True (-not (Test-PhaseQueueItemEligibleForNextPhase -Item @{ id = 'dod-retrofit'; kind = 'maintenance' })) 'maintenance não elegível'
+Assert-True (-not (Test-PhaseQueueItemEligibleForNextPhase -Item @{ id = 'doc-deflation-wave2' })) 'doc-* não elegível'
+
 Write-Host ''
 Write-Host "Resultado: $pass ok, $fail falha(s)"
 if ($fail -gt 0) { exit 1 }

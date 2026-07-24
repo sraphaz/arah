@@ -32,7 +32,7 @@ Intenção (humano) → Orquestrador → Agente + skills → PR → CI + PR Stew
 
 Operacionais (abrem PR): `orchestrator`, `planner`, `docs-steward`, `backend`, `flutter`, `web`, `qa`, `pr-steward`, `spec-steward`, `solutions-architect`, `release`, `security`. Manifests em [`.agents/`](.agents/), checklists em [`.agents/checklists/`](.agents/checklists/).
 
-Consultivos (parecer, não codam): domain agents em [`.agents/domain/`](.agents/domain/) — `control-plane`, `territorio-membership`, `mercado-economia`, `monetizacao-split`, `carteira-arata`, `governanca-transparencia`, `design-ux`, `feed-conteudo`, `mapa-lugares`, `comunidade-conexoes`, `identidade-privacidade` — e specialists em [`.agents/specialists/`](.agents/specialists/).
+Consultivos (parecer, não codam): domain agents em [`.agents/domain/`](.agents/domain/) — `control-plane`, `territorio-membership`, `mercado-economia`, `monetizacao-split`, `carteira-arata`, `governanca-transparencia`, `design-ux`, `feed-conteudo`, `mapa-lugares`, `comunidade-conexoes`, `identidade-privacidade`, e multiagente TI (`signal-scout`, `territorial-analyst`, `source-steward`, `community-brief-writer`, `response-orchestrator`, `intelligence-governance-steward`) — e specialists em [`.agents/specialists/`](.agents/specialists/).
 
 Roteamento e co-ativação: [`.agents/orchestrator.agent.yaml`](.agents/orchestrator.agent.yaml) + [`.agents/choreography.yaml`](.agents/choreography.yaml).
 

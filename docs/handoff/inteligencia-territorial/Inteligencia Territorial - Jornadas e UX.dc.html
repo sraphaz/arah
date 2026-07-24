@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+a { color:#2B6246; } a:hover { color:#377B57; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.toclink { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.toclink:hover { color:#377B57; border-left-color:#9FCEB4; }
+.sect { padding:38px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px; }
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px; }
+.h2 { font-family:'Sora',sans-serif; font-weight:600; font-size:1.7rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117; }
+.body { font-size:15px; line-height:1.66; color:#2B6246; max-width:68ch; }
+.chip { display:inline-block; font-size:10.5px; font-weight:600; letter-spacing:.05em; border-radius:999px; padding:3px 9px; white-space:nowrap; }
+.jrow { display:flex; gap:8px; padding:4px 0; font-size:12.5px; line-height:1.55; color:#2B6246; }
+.jrow b { flex-shrink:0; width:88px; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:#74806E; font-weight:600; padding-top:2px; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } }
+</style>
+</helmet>
+<div class="shell" style="display:grid; grid-template-columns:268px 1fr; max-width:1400px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:30px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:19px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:18px; padding-left:2px;">Inteligência Territorial · Materiais 7 · 8 · 9 · 10</span>
+    <a class="toclink" href="Inteligencia Territorial - Hub.dc.html" style="color:#74806E;">← Hub da iniciativa</a>
+    <div style="height:14px;"></div>
+    <a class="toclink" href="#telas">Inventário de telas</a>
+    <a class="toclink" href="#jmorador">Jornadas · morador</a>
+    <a class="toclink" href="#jcuradoria">Jornadas · curadoria</a>
+    <a class="toclink" href="#joperacao">Jornadas · operação</a>
+    <a class="toclink" href="#estados">Estados transversais (UX)</a>
+    <a class="toclink" href="#ds">Extensões do design system</a>
+    <a class="toclink" href="#a11y">Acessibilidade</a>
+  </nav>
+
+  <main style="padding:54px clamp(24px,4vw,66px); min-width:0; max-width:1080px;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:40px;">
+      <div class="eyebrow" style="letter-spacing:.16em;">Jornadas · inventário de telas · especificação UX · design system</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.05; margin:0 0 18px; color:#0E2117;">A experiência inteira,<br/><span style="color:#377B57;">estado por estado</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:66ch; margin:0;">18 jornadas, o inventário completo de telas do app e do painel, os 10 estados transversais que toda tela precisa tratar e as extensões de design system que expressam severidade, confiança e frescor sem depender só de cor.</p>
+    </header>
+
+    <section id="telas" class="sect">
+      <div class="eyebrow">Material 8</div>
+      <h2 class="h2">Inventário de telas</h2>
+      <p class="body" style="margin-bottom:16px;">Telas com protótipo pronto linkam para o <a href="Inteligencia Territorial - Prototipos.dc.html">board de protótipos</a>; as demais estão especificadas aqui e entram na próxima leva visual.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px;">
+        <sc-for list="{{ inventario }}" as="g" hint-placeholder-count="2">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">{{ g.icon }}</span><b style="font-family:'Sora'; font-size:14.5px; color:#0E2117;">{{ g.t }}</b></div>
+            <sc-for list="{{ g.telas }}" as="t" hint-placeholder-count="8">
+              <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed rgba(23,53,37,0.08); font-size:13px;">
+                <span class="chip" style="background:{{ t.bg }}; color:{{ t.fg }}; min-width:64px; text-align:center;">{{ t.tag }}</span>
+                <span style="color:#173525;">{{ t.n }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <sc-for list="{{ gruposJornadas }}" as="gj" hint-placeholder-count="3">
+      <section id="{{ gj.id }}" class="sect">
+        <div class="eyebrow">Material 7 · {{ gj.range }}</div>
+        <h2 class="h2">{{ gj.t }}</h2>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(460px,1fr)); gap:14px; margin-top:10px;">
+          <sc-for list="{{ gj.jornadas }}" as="j" hint-placeholder-count="6">
+            <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:18px 20px;">
+              <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;">
+                <span style="font-family:'Sora'; font-weight:700; font-size:11px; color:#74806E;">{{ j.n }}</span>
+                <b style="font-family:'Sora'; font-size:14px; color:#0E2117;">{{ j.t }}</b>
+              </div>
+              <div class="jrow"><b>Ator · gatilho</b><span>{{ j.gatilho }}</span></div>
+              <div class="jrow"><b>Passos</b><span>{{ j.passos }}</span></div>
+              <div class="jrow"><b>Erros · vazios</b><span>{{ j.erros }}</span></div>
+              <div class="jrow"><b>Resultado</b><span style="color:#2B6246;"><b style="color:#377B57; font-size:12px;">{{ j.resultado }}</b></span></div>
+              <div class="jrow"><b>Risco tratado</b><span style="color:#8A6D3B;">{{ j.risco }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-for>
+
+    <section id="estados" class="sect">
+      <div class="eyebrow">Material 9</div>
+      <h2 class="h2">10 estados transversais — obrigatórios em toda tela de inteligência</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; margin-top:8px;">
+        <sc-for list="{{ estados }}" as="e" hint-placeholder-count="10">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:16px 18px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:7px;"><span class="msr" style="font-size:17px; color:{{ e.cor }};">{{ e.icon }}</span><b style="font-family:'Sora'; font-size:13.5px; color:#0E2117;">{{ e.t }}</b></div>
+            <p style="font-size:12.5px; line-height:1.58; color:#2B6246; margin:0 0 8px;">{{ e.regra }}</p>
+            <div style="font-size:11.5px; color:#74806E; border-top:1px dashed rgba(23,53,37,0.1); padding-top:7px;"><b style="color:#2B6246;">Copy exemplo:</b> "{{ e.copy }}"</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="ds" class="sect">
+      <div class="eyebrow">Material 10</div>
+      <h2 class="h2">Extensões do design system — nunca só cor</h2>
+      <p class="body" style="margin-bottom:16px;">Cada dimensão combina <b>ícone + texto + forma/peso</b>, com cor como reforço. Tokens novos derivam da paleta premium (<span style="font-family:ui-monospace,monospace; font-size:12.5px;">--premium-*</span>); nada de vermelho dominante.</p>
+      <sc-for list="{{ dsext }}" as="d" hint-placeholder-count="5">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px; margin-bottom:12px;">
+          <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:10px;"><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">{{ d.t }}</b><span style="font-size:12px; color:#74806E;">{{ d.regra }}</span></div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; background:#0E0F0D; border-radius:12px; padding:14px;">
+            <sc-for list="{{ d.chips }}" as="c" hint-placeholder-count="4">
+              <span style="display:inline-flex; align-items:center; gap:5px; border-radius:{{ c.raio }}; padding:5px 11px; font-size:11.5px; font-weight:600; background:{{ c.bg }}; color:{{ c.fg }}; border:{{ c.borda }};"><span class="msr" style="font-size:13px;">{{ c.icon }}</span>{{ c.label }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <p style="font-size:12.5px; color:#74806E;">Tokens: <span style="font-family:ui-monospace,monospace; font-size:12px;">--ti-sev-info/atencao/alerta/critico · --ti-conf-official/corrob/single/unverified · --ti-fresh/aging/stale/expired</span> — a definir em <span style="font-family:ui-monospace,monospace; font-size:12px;">colors_and_type.css</span> na implementação.</p>
+    </section>
+
+    <section id="a11y" class="sect" style="border-bottom:none;">
+      <div class="eyebrow">Acessibilidade</div>
+      <h2 class="h2">Regras que valem para todas as telas</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-top:8px;">
+        <sc-for list="{{ a11y }}" as="a" hint-placeholder-count="6">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; background:#fff; padding:15px 17px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><span class="msr" style="font-size:16px; color:#377B57;">{{ a.icon }}</span><b style="font-family:'Sora'; font-size:13px; color:#0E2117;">{{ a.t }}</b></div>
+            <p style="font-size:12.5px; line-height:1.55; color:#2B6246; margin:0;">{{ a.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap;">
+        <a href="Inteligencia Territorial - Prototipos.dc.html" style="display:inline-flex; align-items:center; gap:8px; background:#214D37; color:#fff; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Ver protótipos <span class="msr" style="font-size:16px;">east</span></a>
+        <a href="Inteligencia Territorial - Hub.dc.html" style="display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(23,53,37,0.2); color:#173525; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Voltar ao hub</a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const P = { ok: { tag: "protótipo", bg: "#E2F1E8", fg: "#2B6246" }, spec: { tag: "spec", bg: "#F5EBDD", fg: "#8A6D3B" } };
+    const t = (n, s) => ({ n, ...P[s] });
+    const j = (n, t2, gatilho, passos, erros, resultado, risco) => ({ n, t: t2, gatilho, passos, erros, resultado, risco });
+    return {
+      inventario: [
+        { icon: "smartphone", t: "App comunitário (15)", telas: [
+          t("Mapa com camada de sinais", "ok"), t("Alertas ativos do território", "spec"), t("Detalhe do sinal/alerta", "ok"), t("Timeline de atualizações", "ok"), t("Fontes e evidências", "ok"), t("Impacto esperado", "ok"), t("Ações recomendadas", "ok"), t("Confirmação comunitária", "ok"), t("Contestação", "ok"), t("Envio de evidência", "ok"), t("Preferências de inteligência", "ok"), t("Avisos (kind intelligence)", "ok"), t("Histórico / memória territorial", "ok"), t("Visão por categoria", "spec"), t("Encerramento e aprendizado", "ok"),
+        ]},
+        { icon: "desktop_windows", t: "Administração e curadoria (12)", telas: [
+          t("Intelligence Inbox", "ok"), t("Sinal detalhado + comparação de fontes", "ok"), t("Territórios possivelmente afetados", "spec"), t("Editor de brief", "ok"), t("Simulador de alcance da notificação", "spec"), t("Política de publicação", "spec"), t("Histórico de decisões (auditoria)", "spec"), t("Gestão de providers + configuração WM", "spec"), t("Quotas e custos", "spec"), t("Status MCP/API/cache · dados stale", "spec"), t("Falhas e retentativas", "spec"), t("Métricas do pipeline", "spec"),
+        ]},
+      ],
+      gruposJornadas: [
+        { id: "jmorador", range: "jornadas 1–8", t: "Morador e comunidade", jornadas: [
+          j("01", "Morador recebe alerta", "Morador com categoria assinada · alerta publicado cruza sua preferência", "Push/aviso in-app → detalhe com fonte e validade → ações recomendadas → opcional: confirmar", "Push não entregue → aviso persiste no sino; alerta expirado ao abrir → selo + estado atual", "Informado com calma, sabe o que fazer", "Ansiedade: só severidade ≥ preferência; sem som alarmista; silêncio noturno" },
+          j("02", "Morador confirma ocorrência", "Está vendo o fenômeno · CTA no detalhe", "Confirmo por aqui → nota opcional → foto opcional → bairro opcional → envia", "Sem rede → fila offline com aviso; já confirmou → edita a própria confirmação", "Agregado +1; curadoria ganha olhos no chão", "Localização exata nunca publicada; 1 voz por pessoa" },
+          j("03", "Morador contesta informação", "Informação não bate com o que vê", "Contestar → motivo estruturado → relato → evidência opcional → envia", "Texto vazio → pede motivo; contestação repetida → edita a existente", "Revisão reaberta; resposta pública da curadoria", "Brigading: agregado sem ranking; threshold reabre, nunca despublica" },
+          j("04", "Morador envia evidência", "Alerta ativo · botão na timeline", "Foto/áudio → curadoria de mídia → entra na timeline com autor e hora", "Mídia recusada → motivo claro; EXIF-GPS → aviso e opção de limpar", "Evidência de campo fortalece decisão", "Exposição: curadoria antes de exibir; geo opt-in" },
+          j("05", "Agricultor acompanha risco climático", "Assinou clima + roça · janela de cultivo", "Visão por categoria → sinais da estação → memória de eventos passados", "Sem sinais → estado vazio sereno ('nada por agora — bom sinal')", "Decisão de plantio/colheita informada", "Falso alarme: banda de confiança sempre visível" },
+          j("06", "Comerciante acompanha logística", "Assinou estradas/insumos", "Aviso de interdição → impacto (rotas, frete) → ajusta pedidos/estoque", "Fonte única → selo 'única fonte' com convite a confirmar localmente", "Antecipação prática, sem pânico de desabastecimento", "Especulação: copy factual, sem projeções de preço" },
+          j("07", "Profissional de saúde acompanha sinal sanitário", "Categoria saúde (opt-in profissional)", "Sinal com revisão reforçada → detalhe técnico + fonte → orienta posto/agentes locais", "Sinal não corroborado → visível só na visão profissional, nunca notifica moradores", "Rede de saúde preparada antes da fila", "Pânico sanitário: tom clínico, autopublicação proibida na categoria" },
+          j("08", "Comunidade abre ação coletiva", "Alerta ativo pede resposta (ex.: bueiros)", "No alerta → 'propor mutirão' → evento pré-preenchido com origem → confirmações", "Sem quórum → evento segue como qualquer outro; alerta encerra independente", "Resposta coletiva com contexto herdado", "Autoridade: proposta humana; response-orchestrator só sugere" },
+        ]},
+        { id: "jcuradoria", range: "jornadas 9–14", t: "Curadoria e instituições", jornadas: [
+          j("09", "Moderador/curador revisa sinal", "WorkItem SignalReview aberto · SLA correndo", "Inbox → fonte/confiança/freshness/score em parcelas → aprovar, ajustar ou rejeitar (justificativa)", "Sinal stale → publicação bloqueada, só descarte consciente; dúvida → pedir corroboração", "Decisão auditada em minutos, não horas", "Sobrecarga: SLA watchdog notifica; capability distribuível" },
+          j("10", "Entidade pública valida alerta", "Instituição com papel de validador (Inc. 5)", "Alerta publicado → 'validar como Defesa Civil' → selo institucional na timeline", "Instituição discorda → registra divergência pública (nunca remove o comunitário)", "Confiança em camadas: comunidade + instituição", "Abuso institucional: selo separado, autoridade continua comunitária" },
+          j("11", "Operador converte sinal em brief", "Sinal aprovado na revisão", "Editor → rascunho de IA marcado → edita em linguagem territorial → validade + ações → publica", "Brief sem validade → bloqueio; rascunho IA intocado → aviso 'revise antes'", "Comunicação digna, assinada por gente", "Tecnicismo/alarmismo: template força 'o que fazer' antes de 'quão grave'" },
+          j("12", "Alerta é atualizado", "Novo sinal correlaciona com alerta ativo", "Proposta de update na Inbox → curador publica na timeline → notifica quem interagiu", "Update contraditório → vira correção com destaque; severidade muda com registro", "Timeline viva, sem repost duplicado", "Fadiga: updates agrupados; notificação só em mudança material" },
+          j("13", "Alerta é encerrado", "Situação resolvida ou validade vencida", "Encerrar → resolução escrita ('o que houve, o que funcionou') → agradecimento → arquiva", "Encerramento esquecido → watchdog lembra; expiração automática marca, humano conclui", "Memória territorial ganha um capítulo", "Alerta fantasma: expirado nunca some silenciosamente" },
+          j("14", "Votação nasce de sinal", "Decisão coletiva necessária (ex.: fechar estrada)", "No alerta → 'abrir votação' → jornada governance herda contexto e fonte → votos → resultado", "Quórum não atingido → regras existentes da governança valem", "Decisão informada com lastro em evidência", "Manipulação: fonte e contestações visíveis na votação" },
+        ]},
+        { id: "joperacao", range: "jornadas 15–18", t: "Operação e agentes", jornadas: [
+          j("15", "Usuário configura preferências", "Onboarding da camada ou Perfil → Avisos", "Categorias → severidade mínima → silêncio noturno → resumo semanal", "Tudo desligado → confirmação honesta ('você não receberá avisos de risco')", "Controle real sobre o que chega", "Perfilamento: escolhas locais, sem analytics individual" },
+          j("16", "Administrador configura o World Monitor", "Instância nova ou troca de plano", "Providers → chave wm_ (cofre) → categorias → cadências → política de publicação → teste de saúde", "Chave inválida → erro claro sem vazar valor; quota baixa → sugestão de cadência", "Provedor operando sob política explícita", "Credencial: chave nunca exibida após salvar; log scrubbed" },
+          j("17", "Administrador acompanha quota e disponibilidade", "Rotina ou alarme (80% / unhealthy)", "Painel: consumo vs plano, projeção de custo, saúde por serviço, stale ratio → ações (cadência, categorias, upgrade)", "REDIS_DOWN no WM → banner degradado; ledger local continua contando", "Custo previsível, sem surpresa na fatura", "Estouro: bloqueio preventivo antes do teto do plano" },
+          j("18", "Agente analisa sem publicar", "signal-scout/analyst em ciclo agendado", "Coleta → normaliza → avalia → anexa evidência ao sinal → para (sempre)", "Tentativa de escrita fora de Received → negada por invariante + alerta ao steward", "Fila de revisão alimentada com análise pronta", "Autonomia indevida: nenhuma credencial de publicação existe para agentes" },
+        ]},
+      ],
+      estados: [
+        { icon: "hourglass_top", t: "Carregando", cor: "#74806E", regra: "Skeleton do card de alerta (nunca spinner solto); mapa carrega tiles com placeholder escuro.", copy: "Carregando o retrato do território…" },
+        { icon: "spa", t: "Vazio", cor: "#377B57", regra: "Vazio é boa notícia — tom sereno, sem sugestão de que falta algo; oferece configurar categorias.", copy: "Nenhum sinal ativo por aqui. Bom sinal." },
+        { icon: "history_toggle_off", t: "Desatualizado (stale)", cor: "#8A6D3B", regra: "Selo âmbar com hora da última atualização; conteúdo permanece legível; CTA de recarregar.", copy: "Atualizado há 26 h — o provedor está instável." },
+        { icon: "cloud_off", t: "Degradado (provedor fora)", cor: "#8A6D3B", regra: "Banner discreto no topo da seção de inteligência; alertas publicados intactos com 'fonte pausada'.", copy: "A fonte externa está fora do ar. O que você vê segue válido até nova atualização." },
+        { icon: "wifi_off", t: "Offline", cor: "#74806E", regra: "Último estado em cache com carimbo; ações (confirmar/contestar) entram em fila com aviso.", copy: "Você está offline — mostrando a última versão de qui 07:40." },
+        { icon: "error", t: "Erro", cor: "#A03A26", regra: "Erro nomeia o que falhou e o que fazer; nunca culpa o usuário; 'Tentar de novo' padrão do app.", copy: "Erro ao carregar. Tentar de novo" },
+        { icon: "shield_question", t: "Baixa confiança", cor: "#8A6D3B", regra: "Banda 'única fonte'/'não verificada' com explicação de 1 linha; nunca notifica moradores.", copy: "Fonte única — tratando com cautela até corroborar." },
+        { icon: "event_busy", t: "Expirado", cor: "#74806E", regra: "Selo cinza + data; alerta migra para memória; CTA 'ver estado atual' se houve sucessor.", copy: "Este alerta venceu sábado, 21h." },
+        { icon: "flag", t: "Contestado", cor: "#8A6D3B", regra: "Faixa 'em verificação' sem esconder conteúdo; contadores visíveis; link para a re-revisão.", copy: "Moradores contestaram — a curadoria está verificando." },
+        { icon: "published_with_changes", t: "Corrigido", cor: "#377B57", regra: "Correção no topo da timeline com o erro riscado legível; quem interagiu é notificado.", copy: "Correção: o volume previsto era menor. Obrigado a quem avisou." },
+      ],
+      dsext: [
+        { t: "Severidade", regra: "ícone + rótulo + intensidade do preenchimento (nunca só cor; crítico ganha borda dupla)", chips: [
+          { icon: "info", label: "informativo", bg: "rgba(111,197,214,0.14)", fg: "#6FC5D6", raio: "999px", borda: "none" },
+          { icon: "priority_high", label: "atenção", bg: "rgba(232,196,106,0.14)", fg: "#E8C46A", raio: "999px", borda: "none" },
+          { icon: "warning", label: "alerta", bg: "rgba(232,160,106,0.16)", fg: "#E8A06A", raio: "999px", borda: "none" },
+          { icon: "emergency_home", label: "crítico", bg: "rgba(227,122,95,0.18)", fg: "#E37A5F", raio: "999px", borda: "1.5px solid rgba(227,122,95,0.6)" },
+        ]},
+        { t: "Confiança", regra: "escudo gradua o preenchimento; rótulo diz a razão (nº de fontes)", chips: [
+          { icon: "verified_user", label: "oficial", bg: "rgba(166,214,185,0.16)", fg: "#A6D6B9", raio: "10px", borda: "none" },
+          { icon: "verified", label: "corroborada · 2 fontes", bg: "rgba(166,214,185,0.12)", fg: "#A6D6B9", raio: "10px", borda: "none" },
+          { icon: "shield_question", label: "única fonte", bg: "rgba(232,196,106,0.12)", fg: "#E8C46A", raio: "10px", borda: "none" },
+          { icon: "shield", label: "não verificada", bg: "rgba(255,255,255,0.06)", fg: "#9AA69A", raio: "10px", borda: "1px dashed rgba(255,255,255,0.25)" },
+        ]},
+        { t: "Freshness", regra: "relógio + tempo relativo; stale/expired mudam forma (tracejado)", chips: [
+          { icon: "schedule", label: "fresco · há 18 min", bg: "rgba(166,214,185,0.12)", fg: "#A6D6B9", raio: "999px", borda: "none" },
+          { icon: "schedule", label: "envelhecendo · 3 h", bg: "rgba(232,196,106,0.12)", fg: "#E8C46A", raio: "999px", borda: "none" },
+          { icon: "history_toggle_off", label: "desatualizado · 26 h", bg: "transparent", fg: "#E8C46A", raio: "999px", borda: "1px dashed rgba(232,196,106,0.5)" },
+          { icon: "event_busy", label: "vencido", bg: "transparent", fg: "#9AA69A", raio: "999px", borda: "1px dashed rgba(255,255,255,0.25)" },
+        ]},
+        { t: "Origem", regra: "sempre texto explícito 'via World Monitor · GDACS'; ícone de globo para externo, folha para comunitário", chips: [
+          { icon: "public", label: "via World Monitor · GDACS", bg: "rgba(134,174,234,0.12)", fg: "#86AEEA", raio: "8px", borda: "none" },
+          { icon: "forest", label: "reportado pela comunidade", bg: "rgba(166,214,185,0.12)", fg: "#A6D6B9", raio: "8px", borda: "none" },
+          { icon: "account_balance", label: "validado · Defesa Civil", bg: "rgba(166,214,185,0.16)", fg: "#A6D6B9", raio: "8px", borda: "1px solid rgba(166,214,185,0.4)" },
+        ]},
+        { t: "Status do ciclo", regra: "verbo no particípio + ícone; estados terminais em tom neutro", chips: [
+          { icon: "campaign", label: "publicado", bg: "rgba(166,214,185,0.16)", fg: "#A6D6B9", raio: "999px", borda: "none" },
+          { icon: "flag", label: "em verificação", bg: "rgba(232,196,106,0.14)", fg: "#E8C46A", raio: "999px", borda: "none" },
+          { icon: "published_with_changes", label: "corrigido", bg: "rgba(232,196,106,0.14)", fg: "#E8C46A", raio: "999px", borda: "none" },
+          { icon: "task_alt", label: "resolvido", bg: "rgba(166,214,185,0.13)", fg: "#A6D6B9", raio: "999px", borda: "none" },
+          { icon: "history", label: "arquivado", bg: "rgba(255,255,255,0.06)", fg: "#9AA69A", raio: "999px", borda: "none" },
+        ]},
+      ],
+      a11y: [
+        { icon: "touch_app", t: "Alvos de toque", d: "Mínimo 44 px em toda ação; confirmar/contestar são botões cheios, nunca links." },
+        { icon: "contrast", t: "Contraste", d: "Texto sobre superfícies escuras ≥ 4.5:1; chips semânticos testados nos dois temas." },
+        { icon: "record_voice_over", t: "Leitores de tela", d: "Chips anunciam dimensão + valor ('severidade: alerta'); timeline navegável por cabeçalhos." },
+        { icon: "motion_photos_off", t: "Movimento", d: "Sem pulsos/piscadas em alertas; transições 150–250 ms; respeita reduzir-movimento." },
+        { icon: "translate", t: "Linguagem", d: "pt-BR simples, frases curtas, sem sigla sem expansão; números com unidade por extenso quando ambíguo." },
+        { icon: "wifi_off", t: "Rede fraca", d: "Tudo funcional em 3G: payloads enxutos, mapa opcional, texto primeiro." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

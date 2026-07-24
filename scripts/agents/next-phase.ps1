@@ -28,17 +28,23 @@ try {
 
     $selected = $null
     foreach ($item in $queue) {
+        # next-phase só abre épicos FASE* (sustentação/comunitário).
+        # Trilhas transversais (TI-*, kind: track) e maintenance ficam fora —
+        # squad paralelo / planner; evita Epic TI-0 enquanto FASE* pendente.
+        if (-not (Test-PhaseQueueItemEligibleForNextPhase -Item $item)) { continue }
         if ($item.status -eq 'completed') { continue }
 
         $blocked = $false
         foreach ($dep in $item.blocked_by) {
             if (-not (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $dep)) {
-                if ($dep -match '^FASE') { $blocked = $true; break }
+                # Qualquer dep (FASE*, TI-*, doc-*) bloqueia quando elegível.
+                $blocked = $true
+                break
             }
         }
         if ($blocked) { continue }
         if (Test-PhaseOpenIssue -Root $Root -PhaseId $item.id -OpenIssues $openIssues) { continue }
-        if ($item.id -match '^FASE' -and (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $item.id)) { continue }
+        if (Test-PhaseCompleteFromGitHub -Root $Root -PhaseId $item.id) { continue }
 
         $selected = $item
         break

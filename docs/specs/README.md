@@ -14,9 +14,11 @@ docs/specs/
 ├── _template.spec.yaml       ← copiar para nova spec
 ├── platform/                 ← operabilidade transversal
 ├── phases/                   ← FASE52–61 e épicos
-├── features/                 ← features comunitárias (por domínio)
+├── features/                 ← features comunitárias + trilha TI (ex. TI-201)
 └── harness/                  ← contratos do harness de agentes/CI
 ```
+
+Specs da trilha **Inteligência Territorial**: prefixo `TI-*` em `features/` (ex. [`TI-201-signal-review`](features/TI-201-signal-review.spec.yaml)); índice em [`REALINHAMENTO_INTELIGENCIA_TERRITORIAL`](../backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md).
 
 ---
 

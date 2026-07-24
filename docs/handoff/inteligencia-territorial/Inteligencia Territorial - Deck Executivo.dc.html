@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+body { margin:0; background:#0B0C0A; }
+* { box-sizing:border-box; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+  <section data-label="01 Capa" data-speaker-notes="Abertura: uma frase só. O Arah passa a perceber o mundo sem perder o vínculo com o lugar." style="background:radial-gradient(120% 90% at 50% -10%, rgba(129,199,132,0.16), transparent 55%), #0B0C0A; color:#E9EFE9; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:56px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:56px;" />
+      <span style="font-family:'Sora'; font-weight:700; font-size:34px;">Arah</span>
+      <span style="font-size:24px; letter-spacing:.18em; text-transform:uppercase; color:#A6D6B9; border:1.5px solid rgba(166,214,185,0.4); border-radius:999px; padding:10px 24px; margin-left:10px;">Iniciativa</span>
+    </div>
+    <h1 style="font-family:'Sora'; font-weight:700; font-size:110px; letter-spacing:-0.035em; line-height:1.0; margin:0 0 40px;">Territorial<br/>Intelligence</h1>
+    <p style="font-size:34px; line-height:1.45; color:#C9D4C9; max-width:1150px; margin:0;">Do monitoramento global à consciência e ação territorial — a ponte entre o <b style="color:#E9EFE9;">World Monitor</b> e a vida no lugar.</p>
+    <div style="position:absolute; bottom:70px; left:180px; display:flex; gap:44px; font-size:24px; color:#9AA69A;">
+      <span>Proposta para decisão</span><span>·</span><span>julho 2026</span><span>·</span><span>pt-BR</span>
+    </div>
+  </section>
+
+  <section data-label="02 O mundo produz sinais" data-speaker-notes="Três exemplos concretos e cotidianos. Nada de geopolítica abstrata: chuva, estrada, surto." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">1 · O ponto de partida</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:84px; letter-spacing:-0.03em; line-height:1.04; margin:0 0 64px; color:#0E2117;">O mundo produz sinais<br/>o tempo todo.</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:36px;">
+      <div style="border:1.5px solid rgba(23,53,37,0.14); border-radius:28px; background:#fff; padding:44px 48px;">
+        <span class="msr" style="font-size:56px; color:#377B57;">rainy</span>
+        <p style="font-size:27px; line-height:1.5; margin:26px 0 0; color:#2B6246;">A frente de chuva extrema se forma <b>dias antes</b> da enchente.</p>
+      </div>
+      <div style="border:1.5px solid rgba(23,53,37,0.14); border-radius:28px; background:#fff; padding:44px 48px;">
+        <span class="msr" style="font-size:56px; color:#377B57;">road</span>
+        <p style="font-size:27px; line-height:1.5; margin:26px 0 0; color:#2B6246;">A rodovia interditada encarece o frete <b>antes</b> de a prateleira esvaziar.</p>
+      </div>
+      <div style="border:1.5px solid rgba(23,53,37,0.14); border-radius:28px; background:#fff; padding:44px 48px;">
+        <span class="msr" style="font-size:56px; color:#377B57;">medical_services</span>
+        <p style="font-size:27px; line-height:1.5; margin:26px 0 0; color:#2B6246;">O surto na cidade vizinha antecede <b>a fila</b> no posto de saúde.</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="03 A distância" data-speaker-notes="O problema não é falta de dados — é a mediação territorial que não existe. Silêncio ou ruído." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">2 · O problema</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:76px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 56px; color:#0E2117;">Entre observar o mundo e agir<br/>no lugar existe uma distância.</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:36px; max-width:1420px;">
+      <div style="border-left:6px solid #A8632F; padding:8px 0 8px 40px;">
+        <div style="font-family:'Sora'; font-weight:600; font-size:36px; color:#0E2117; margin-bottom:14px;">Silêncio</div>
+        <p style="font-size:28px; line-height:1.5; color:#2B6246; margin:0;">O aviso existe, mas não chega a quem mora na área de risco — ou chega genérico demais para orientar decisão.</p>
+      </div>
+      <div style="border-left:6px solid #A8632F; padding:8px 0 8px 40px;">
+        <div style="font-family:'Sora'; font-weight:600; font-size:36px; color:#0E2117; margin-bottom:14px;">Ruído</div>
+        <p style="font-size:28px; line-height:1.5; color:#2B6246; margin:0;">Feeds globais de crise, sem filtro territorial: produzem ansiedade — não preparo, não ação.</p>
+      </div>
+    </div>
+    <p style="font-size:30px; color:#2B6246; margin:64px 0 0;">Municípios pequenos — o público território-primeiro do Arah — são os que <b>menos</b> têm estrutura própria de monitoramento.</p>
+  </section>
+
+  <section data-label="04 World Monitor" data-speaker-notes="Fatos verificados no repositório: 65+ provedores, OpenAPI 35 serviços, MCP ~40 tools, AGPL. Autoridade: nenhuma — é observação." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#2A6FDB; margin-bottom:28px;">3 · A ponta que observa</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:76px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 24px; color:#0E2117;">World Monitor: visão ampla.</h2>
+    <p style="font-size:30px; line-height:1.5; color:#2B6246; max-width:1300px; margin:0 0 60px;">Dashboard de inteligência global open source — observação contínua do planeta, pronta para consumo programático.</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:32px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:38px 40px;"><div style="font-family:'Sora'; font-weight:700; font-size:58px; color:#0E2117;">65+</div><div style="font-size:24px; color:#74806E; margin-top:8px;">provedores agregados</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:38px 40px;"><div style="font-family:'Sora'; font-weight:700; font-size:58px; color:#0E2117;">500+</div><div style="font-size:24px; color:#74806E; margin-top:8px;">feeds curados · 15 categorias</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:38px 40px;"><div style="font-family:'Sora'; font-weight:700; font-size:58px; color:#0E2117;">35 + 40</div><div style="font-size:24px; color:#74806E; margin-top:8px;">serviços REST + ferramentas MCP</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:38px 40px;"><div style="font-family:'Sora'; font-weight:700; font-size:58px; color:#0E2117;">AGPL</div><div style="font-size:24px; color:#74806E; margin-top:8px;">aberto · consumo via API</div></div>
+    </div>
+    <p style="font-size:26px; color:#74806E; margin:56px 0 0;">Clima · desastres · saúde · infraestrutura · energia · logística · economia · deslocamento — com quotas, freshness e saúde explícitos.</p>
+  </section>
+
+  <section data-label="05 Arah" data-speaker-notes="A outra ponta: presença territorial real. Fases 1-16 completas; os órgãos que a inteligência precisa já existem." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">4 · A ponta que vive</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:76px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 24px; color:#0E2117;">Arah: presença territorial.</h2>
+    <p style="font-size:30px; line-height:1.5; color:#2B6246; max-width:1300px; margin:0 0 60px;">Extensão digital do território vivo — e a infraestrutura social que um sinal precisa atravessar para virar cuidado.</p>
+    <div style="display:flex; flex-wrap:wrap; gap:20px; max-width:1500px;">
+      <span style="font-size:27px; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:999px; padding:18px 36px;"><span class="msr" style="font-size:30px; color:#377B57; margin-right:12px;">map</span>mapa com pins e fronteiras</span>
+      <span style="font-size:27px; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:999px; padding:18px 36px;"><span class="msr" style="font-size:30px; color:#377B57; margin-right:12px;">campaign</span>alertas validados por curadores</span>
+      <span style="font-size:27px; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:999px; padding:18px 36px;"><span class="msr" style="font-size:30px; color:#377B57; margin-right:12px;">assignment_turned_in</span>fila de revisão humana auditada</span>
+      <span style="font-size:27px; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:999px; padding:18px 36px;"><span class="msr" style="font-size:30px; color:#377B57; margin-right:12px;">how_to_vote</span>governança e votação</span>
+      <span style="font-size:27px; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:999px; padding:18px 36px;"><span class="msr" style="font-size:30px; color:#377B57; margin-right:12px;">notifications</span>notificações com preferências</span>
+      <span style="font-size:27px; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:999px; padding:18px 36px;"><span class="msr" style="font-size:30px; color:#377B57; margin-right:12px;">diversity_3</span>eventos e mutirões</span>
+    </div>
+    <p style="font-size:26px; color:#74806E; margin:56px 0 0;">Clean Architecture .NET · BFF de jornadas · app Flutter · 2.194 testes · fases 1–16 completas — verificado no repositório.</p>
+  </section>
+
+  <section data-label="06 A ponte" data-speaker-notes="O coração da proposta em um diagrama: seis passos, com freios humanos em âmbar." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 150px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">5 · A proposta</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:76px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 70px; color:#0E2117;">A ponte entre os dois.</h2>
+    <div style="display:flex; align-items:stretch; gap:0;">
+      <div style="flex:1; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:34px 30px; text-align:center;"><span class="msr" style="font-size:48px; color:#2A6FDB;">public</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin-top:16px;">Sinais globais</div><div style="font-size:24px; color:#74806E; margin-top:6px;">World Monitor</div></div>
+      <div style="display:flex; align-items:center; padding:0 14px;"><span class="msr" style="font-size:40px; color:#74806E;">east</span></div>
+      <div style="flex:1; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:34px 30px; text-align:center;"><span class="msr" style="font-size:48px; color:#377B57;">travel_explore</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin-top:16px;">Relevância territorial</div><div style="font-size:24px; color:#74806E; margin-top:6px;">geometria × fronteira</div></div>
+      <div style="display:flex; align-items:center; padding:0 14px;"><span class="msr" style="font-size:40px; color:#74806E;">east</span></div>
+      <div style="flex:1; background:#F5EBDD; border:1.5px solid #EAD9BF; border-radius:24px; padding:34px 30px; text-align:center;"><span class="msr" style="font-size:48px; color:#8A6D3B;">how_to_reg</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin-top:16px;">Validação humana</div><div style="font-size:24px; color:#8A6D3B; margin-top:6px;">curadoria decide</div></div>
+      <div style="display:flex; align-items:center; padding:0 14px;"><span class="msr" style="font-size:40px; color:#74806E;">east</span></div>
+      <div style="flex:1; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:34px 30px; text-align:center;"><span class="msr" style="font-size:48px; color:#377B57;">campaign</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin-top:16px;">Comunicação</div><div style="font-size:24px; color:#74806E; margin-top:6px;">feed · mapa · avisos</div></div>
+      <div style="display:flex; align-items:center; padding:0 14px;"><span class="msr" style="font-size:40px; color:#74806E;">east</span></div>
+      <div style="flex:1; background:#F5EBDD; border:1.5px solid #EAD9BF; border-radius:24px; padding:34px 30px; text-align:center;"><span class="msr" style="font-size:48px; color:#8A6D3B;">diversity_3</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin-top:16px;">Ação territorial</div><div style="font-size:24px; color:#8A6D3B; margin-top:6px;">comunidade age</div></div>
+      <div style="display:flex; align-items:center; padding:0 14px;"><span class="msr" style="font-size:40px; color:#74806E;">east</span></div>
+      <div style="flex:1; background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:34px 30px; text-align:center;"><span class="msr" style="font-size:48px; color:#377B57;">history_edu</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin-top:16px;">Memória</div><div style="font-size:24px; color:#74806E; margin-top:6px;">aprendizado coletivo</div></div>
+    </div>
+    <p style="font-size:28px; color:#8A6D3B; margin:64px 0 0;"><span class="msr" style="font-size:30px; margin-right:10px;">pan_tool</span>Etapas em âmbar exigem pessoas. Nenhum sinal vira alerta sozinho.</p>
+  </section>
+
+  <section data-label="07 Inteligencia Territorial Regenerativa" data-speaker-notes="Momento escuro: a definição. Regenerativa porque cada ciclo devolve algo ao território." style="background:radial-gradient(120% 90% at 50% -10%, rgba(129,199,132,0.14), transparent 55%), #0B0C0A; color:#E9EFE9; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#A6D6B9; margin-bottom:36px;">6 · O nome da camada</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:96px; letter-spacing:-0.035em; line-height:1.02; margin:0 0 56px;">Inteligência Territorial<br/><span style="color:#A6D6B9;">Regenerativa</span></h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:40px; max-width:1520px;">
+      <p style="font-size:27px; line-height:1.55; color:#C9D4C9; margin:0;"><b style="color:#E9EFE9;">Percebe</b> o mundo — clima, estradas, saúde, economia — sem virar painel geopolítico.</p>
+      <p style="font-size:27px; line-height:1.55; color:#C9D4C9; margin:0;"><b style="color:#E9EFE9;">Atravessa</b> a comunidade — revisão, confirmação, contestação — em vez de atropelá-la.</p>
+      <p style="font-size:27px; line-height:1.55; color:#C9D4C9; margin:0;"><b style="color:#E9EFE9;">Devolve</b> ao território — cada alerta encerrado vira memória, protocolo e aprendizado.</p>
+    </div>
+  </section>
+
+  <section data-label="08 Como funciona" data-speaker-notes="Pipeline técnico resumido — do adapter à memória. Domínio não conhece o World Monitor." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">7 · Como funciona</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 60px; color:#0E2117;">Um pipeline com freios humanos.</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px 56px; max-width:1520px;">
+      <div style="display:flex; gap:24px; align-items:flex-start;"><span style="flex-shrink:0; width:56px; height:56px; border-radius:16px; background:#214D37; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Sora'; font-weight:700; font-size:26px;">1</span><p style="font-size:26px; line-height:1.5; margin:4px 0 0; color:#2B6246;"><b style="color:#0E2117;">Ingestão disciplinada</b> — adapter próprio, quota contada, cache por freshness, desligamento de emergência.</p></div>
+      <div style="display:flex; gap:24px; align-items:flex-start;"><span style="flex-shrink:0; width:56px; height:56px; border-radius:16px; background:#214D37; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Sora'; font-weight:700; font-size:26px;">2</span><p style="font-size:26px; line-height:1.5; margin:4px 0 0; color:#2B6246;"><b style="color:#0E2117;">Correlação geográfica</b> — geometria do sinal × fronteira do território (PostGIS já existente).</p></div>
+      <div style="display:flex; gap:24px; align-items:flex-start;"><span style="flex-shrink:0; width:56px; height:56px; border-radius:16px; background:#377B57; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Sora'; font-weight:700; font-size:26px;">3</span><p style="font-size:26px; line-height:1.5; margin:4px 0 0; color:#2B6246;"><b style="color:#0E2117;">Impacto explicável</b> — "pode afetar a ponte, 3 produtores e a captação" — score sempre aberto em parcelas.</p></div>
+      <div style="display:flex; gap:24px; align-items:flex-start;"><span style="flex-shrink:0; width:56px; height:56px; border-radius:16px; background:#A8632F; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Sora'; font-weight:700; font-size:26px;">4</span><p style="font-size:26px; line-height:1.5; margin:4px 0 0; color:#2B6246;"><b style="color:#0E2117;">Revisão humana</b> — fila de curadoria auditada (a mesma do Arah de hoje, com um tipo novo).</p></div>
+      <div style="display:flex; gap:24px; align-items:flex-start;"><span style="flex-shrink:0; width:56px; height:56px; border-radius:16px; background:#377B57; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Sora'; font-weight:700; font-size:26px;">5</span><p style="font-size:26px; line-height:1.5; margin:4px 0 0; color:#2B6246;"><b style="color:#0E2117;">Publicação digna</b> — brief em linguagem territorial, com fonte, validade e ações práticas.</p></div>
+      <div style="display:flex; gap:24px; align-items:flex-start;"><span style="flex-shrink:0; width:56px; height:56px; border-radius:16px; background:#A8632F; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Sora'; font-weight:700; font-size:26px;">6</span><p style="font-size:26px; line-height:1.5; margin:4px 0 0; color:#2B6246;"><b style="color:#0E2117;">Verificação e memória</b> — moradores confirmam ou contestam; o encerramento vira aprendizado.</p></div>
+    </div>
+  </section>
+
+  <section data-label="09 Papel da comunidade" data-speaker-notes="A comunidade é coautora: confirma, contesta, evidencia, age. Uma voz por pessoa." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; align-items:center; padding:0 180px; gap:110px;">
+    <div style="flex:1;">
+      <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">8 · Papéis</div>
+      <h2 style="font-family:'Sora'; font-weight:700; font-size:76px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 40px; color:#0E2117;">A comunidade<br/>é coautora.</h2>
+      <p style="font-size:29px; line-height:1.55; color:#2B6246; margin:0;">Quem vive o lugar tem o que nenhum satélite tem: os olhos no chão. A camada trata isso como dado de primeira classe — com respeito e limites.</p>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:22px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 36px; display:flex; gap:22px; align-items:center;"><span class="msr" style="font-size:42px; color:#377B57;">check_circle</span><span style="font-size:26px; color:#2B6246;"><b style="color:#0E2117;">Confirma</b> — "rio subiu 40 cm por aqui" + foto opcional</span></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 36px; display:flex; gap:22px; align-items:center;"><span class="msr" style="font-size:42px; color:#8A6D3B;">flag</span><span style="font-size:26px; color:#2B6246;"><b style="color:#0E2117;">Contesta</b> — reabre a revisão; nunca some sem resposta</span></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 36px; display:flex; gap:22px; align-items:center;"><span class="msr" style="font-size:42px; color:#377B57;">diversity_3</span><span style="font-size:26px; color:#2B6246;"><b style="color:#0E2117;">Age</b> — mutirão, votação e protocolo nascem do alerta</span></div>
+      <div style="background:#F0F7F2; border:1.5px dashed rgba(55,123,87,0.4); border-radius:22px; padding:26px 36px;"><span style="font-size:24px; color:#2B6246;">Uma voz por morador · localização exata nunca publicada · sem ranking, sem gamificação de crise</span></div>
+    </div>
+  </section>
+
+  <section data-label="10 Papel das instituicoes" data-speaker-notes="Instituições validam com selo próprio — mas a autoridade continua da comunidade." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; align-items:center; padding:0 180px; gap:110px;">
+    <div style="flex:1;">
+      <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">9 · Papéis</div>
+      <h2 style="font-family:'Sora'; font-weight:700; font-size:76px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 40px; color:#0E2117;">Instituições somam,<br/>não comandam.</h2>
+      <p style="font-size:29px; line-height:1.55; color:#2B6246; margin:0;">Defesa civil, saúde e prefeitura ganham um papel formal de validação — com selo próprio, responsabilidade registrada e zero poder de apagar a voz comunitária.</p>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:22px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 36px; display:flex; gap:22px; align-items:center;"><span class="msr" style="font-size:42px; color:#377B57;">verified_user</span><span style="font-size:26px; color:#2B6246;"><b style="color:#0E2117;">Selo institucional</b> — "validado · Defesa Civil", auditado</span></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 36px; display:flex; gap:22px; align-items:center;"><span class="msr" style="font-size:42px; color:#377B57;">record_voice_over</span><span style="font-size:26px; color:#2B6246;"><b style="color:#0E2117;">Divergência pública</b> — discordou? registra, não apaga</span></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 36px; display:flex; gap:22px; align-items:center;"><span class="msr" style="font-size:42px; color:#377B57;">cloud</span><span style="font-size:26px; color:#2B6246;"><b style="color:#0E2117;">Fontes oficiais</b> — INMET/CEMADEN entram como provedores futuros</span></div>
+      <div style="background:#F0F7F2; border:1.5px dashed rgba(55,123,87,0.4); border-radius:22px; padding:26px 36px;"><span style="font-size:24px; color:#2B6246;">Canal validado de comunicação de risco — sem montar sala de situação própria</span></div>
+    </div>
+  </section>
+
+  <section data-label="11 Papel da IA" data-speaker-notes="Seis agentes com guardrails do Harness. Nenhum tem credencial de publicar — invariante de domínio, não promessa." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">10 · Papéis</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 20px; color:#0E2117;">A IA propõe. Pessoas decidem.</h2>
+    <p style="font-size:28px; line-height:1.5; color:#2B6246; max-width:1350px; margin:0 0 56px;">Seis agentes no padrão do Arah Harness — e uma regra que não é política, é <b>invariante de domínio</b>: nenhum agente possui credencial capaz de publicar.</p>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:26px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 34px;"><span class="msr" style="font-size:40px; color:#377B57;">radar</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin:14px 0 6px;">signal-scout</div><div style="font-size:24px; color:#74806E; line-height:1.45;">busca e registra sinais · nunca publica</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 34px;"><span class="msr" style="font-size:40px; color:#377B57;">travel_explore</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin:14px 0 6px;">territorial-analyst</div><div style="font-size:24px; color:#74806E; line-height:1.45;">impacto local explicável, score em parcelas</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 34px;"><span class="msr" style="font-size:40px; color:#377B57;">verified</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin:14px 0 6px;">source-steward</div><div style="font-size:24px; color:#74806E; line-height:1.45;">o cético: confiança, freshness, corroboração</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 34px;"><span class="msr" style="font-size:40px; color:#377B57;">edit_note</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin:14px 0 6px;">community-brief-writer</div><div style="font-size:24px; color:#74806E; line-height:1.45;">rascunho em linguagem territorial · sempre marcado</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 34px;"><span class="msr" style="font-size:40px; color:#377B57;">alt_route</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin:14px 0 6px;">response-orchestrator</div><div style="font-size:24px; color:#74806E; line-height:1.45;">sugere ações da memória · não executa</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:30px 34px;"><span class="msr" style="font-size:40px; color:#377B57;">policy</span><div style="font-family:'Sora'; font-weight:600; font-size:25px; margin:14px 0 6px;">governance-steward</div><div style="font-size:24px; color:#74806E; line-height:1.45;">audita políticas, privacidade e desvios</div></div>
+    </div>
+  </section>
+
+  <section data-label="12 O que ja existe" data-speaker-notes="Três encaixes decisivos: WorkItem, alertas+outbox, território neutro+PostGIS. MVP é extensão, não construção." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">11 · Fundação real</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 60px; color:#0E2117;">O Arah já tem os órgãos.<br/>A inteligência é um sentido novo.</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:40px 42px;">
+        <span class="msr" style="font-size:48px; color:#214D37;">assignment_turned_in</span>
+        <div style="font-family:'Sora'; font-weight:600; font-size:27px; margin:20px 0 12px; color:#0E2117;">A fila de revisão já existe</div>
+        <p style="font-size:24px; line-height:1.5; color:#2B6246; margin:0;">WorkItem — fila genérica de revisão humana auditada — ganha um tipo novo: <b>SignalReview</b>.</p>
+      </div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:40px 42px;">
+        <span class="msr" style="font-size:48px; color:#214D37;">campaign</span>
+        <div style="font-family:'Sora'; font-weight:600; font-size:27px; margin:20px 0 12px; color:#0E2117;">O canal de publicação já existe</div>
+        <p style="font-size:24px; line-height:1.5; color:#2B6246; margin:0;">Alerta validado por curador → post no feed → notificação via outbox. A iniciativa o <b>enriquece</b>, não o duplica.</p>
+      </div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:40px 42px;">
+        <span class="msr" style="font-size:48px; color:#214D37;">layers</span>
+        <div style="font-family:'Sora'; font-weight:600; font-size:27px; margin:20px 0 12px; color:#0E2117;">A base geográfica já existe</div>
+        <p style="font-size:24px; line-height:1.5; color:#2B6246; margin:0;">Território neutro com fronteira + PostGIS no banco: a correlação é uma <b>consulta espacial</b>, não um modelo novo de mundo.</p>
+      </div>
+    </div>
+    <p style="font-size:27px; color:#74806E; margin:60px 0 0;">Consequência: o MVP é majoritariamente <b style="color:#2B6246;">extensão</b> — o esforço novo concentra-se em ingestão, correlação e avaliação de impacto.</p>
+  </section>
+
+  <section data-label="13 O que sera acrescentado" data-speaker-notes="Seis blocos novos. Todos desembocam nas capacidades existentes." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">12 · O acréscimo</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 60px; color:#0E2117;">Seis capacidades novas.</h2>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:26px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:32px 36px; display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:40px; color:#A8632F;">sensors</span><div><div style="font-family:'Sora'; font-weight:600; font-size:25px; color:#0E2117;">Ingestão de sinais</div><div style="font-size:24px; color:#74806E; margin-top:6px; line-height:1.45;">provider abstraction + adapter WM</div></div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:32px 36px; display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:40px; color:#A8632F;">travel_explore</span><div><div style="font-family:'Sora'; font-weight:600; font-size:25px; color:#0E2117;">Correlação geográfica</div><div style="font-size:24px; color:#74806E; margin-top:6px; line-height:1.45;">sinal × fronteira × ativos</div></div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:32px 36px; display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:40px; color:#A8632F;">balance</span><div><div style="font-family:'Sora'; font-weight:600; font-size:25px; color:#0E2117;">Confiança &amp; freshness</div><div style="font-size:24px; color:#74806E; margin-top:6px; line-height:1.45;">bandas explicáveis, stale explícito</div></div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:32px 36px; display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:40px; color:#A8632F;">assessment</span><div><div style="font-family:'Sora'; font-weight:600; font-size:25px; color:#0E2117;">Avaliação de impacto</div><div style="font-size:24px; color:#74806E; margin-top:6px; line-height:1.45;">quem e o quê, em língua de gente</div></div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:32px 36px; display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:40px; color:#A8632F;">edit_note</span><div><div style="font-family:'Sora'; font-weight:600; font-size:25px; color:#0E2117;">Brief territorial</div><div style="font-size:24px; color:#74806E; margin-top:6px; line-height:1.45;">tradução digna, assinada, com validade</div></div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:32px 36px; display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:40px; color:#A8632F;">history_edu</span><div><div style="font-family:'Sora'; font-weight:600; font-size:25px; color:#0E2117;">Verificação &amp; memória</div><div style="font-size:24px; color:#74806E; margin-top:6px; line-height:1.45;">participação estruturada + histórico</div></div></div>
+    </div>
+  </section>
+
+  <section data-label="14 Arquitetura" data-speaker-notes="Clean Architecture preservada: domínio genérico; World Monitor só na infraestrutura. Nenhum container novo." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; align-items:center; padding:0 180px; gap:100px;">
+    <div style="flex:1;">
+      <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">13 · Arquitetura</div>
+      <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 40px; color:#0E2117;">O domínio não conhece<br/>o World Monitor.</h2>
+      <p style="font-size:28px; line-height:1.55; color:#2B6246; margin:0 0 30px;">O domínio fala <b>SignalProvider</b>, <b>ExternalSignal</b>, <b>TerritorialAlert</b>. O World Monitor vive num adapter da infraestrutura — trocável, somável, desligável.</p>
+      <p style="font-size:25px; line-height:1.5; color:#74806E; margin:0;">Nenhum container novo · mesmo Postgres (PostGIS) · outbox existente · jobs internos · zero código AGPL incorporado.</p>
+    </div>
+    <div style="flex:1; background:#0E1F12; border-radius:28px; padding:52px 56px; color:#C6E3D2; font-family:ui-monospace,monospace; font-size:24px; line-height:2.0;">
+      Arah.Domain/Intelligence<span style="color:#74806E;"> · genérico</span><br/>
+      Arah.Application<span style="color:#74806E;"> · casos de uso + ports</span><br/>
+      Arah.Infrastructure/<br/>
+      &nbsp;&nbsp;Intelligence/Providers/<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<b style="color:#A6D6B9;">WorldMonitor/</b><span style="color:#74806E;"> · REST · MCP · quota</span><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#74806E;">INMET/ · CEMADEN/ · (futuros)</span><br/>
+      Arah.Api · Arah.Api.Bff<span style="color:#74806E;"> · jornada intelligence</span><br/>
+      Flutter App<span style="color:#74806E;"> · mapa · alerta · participação</span>
+    </div>
+  </section>
+
+  <section data-label="15 Jornada de um alerta" data-speaker-notes="Socorro-SP, cenário completo em 6 momentos — do sinal à memória em 9 dias." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 150px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">14 · Na prática</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 64px; color:#0E2117;">A jornada de um alerta em Socorro, SP.</h2>
+    <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:22px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:28px 26px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#74806E;">qui 06:55</div><span class="msr" style="font-size:38px; color:#2A6FDB; margin:14px 0 10px; display:block;">sensors</span><p style="font-size:24px; line-height:1.45; margin:0; color:#2B6246;">Sinal GDACS chega: chuva extrema na bacia do Rio do Peixe</p></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:28px 26px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#74806E;">qui 07:12</div><span class="msr" style="font-size:38px; color:#377B57; margin:14px 0 10px; display:block;">travel_explore</span><p style="font-size:24px; line-height:1.45; margin:0; color:#2B6246;">Correlação: ponte, escola rural e captação dentro da área</p></div>
+      <div style="background:#F5EBDD; border:1.5px solid #EAD9BF; border-radius:22px; padding:28px 26px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#8A6D3B;">qui 07:40</div><span class="msr" style="font-size:38px; color:#8A6D3B; margin:14px 0 10px; display:block;">how_to_reg</span><p style="font-size:24px; line-height:1.45; margin:0; color:#2B6246;">Curadora Marta revisa, edita o brief e publica com validade</p></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:28px 26px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#74806E;">qui 08:32</div><span class="msr" style="font-size:38px; color:#377B57; margin:14px 0 10px; display:block;">photo_camera</span><p style="font-size:24px; line-height:1.45; margin:0; color:#2B6246;">12 confirmações; João anexa foto do rio subindo</p></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:22px; padding:28px 26px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#74806E;">sáb 08:00</div><span class="msr" style="font-size:38px; color:#377B57; margin:14px 0 10px; display:block;">diversity_3</span><p style="font-size:24px; line-height:1.45; margin:0; color:#2B6246;">Mutirão de bueiros nasce do alerta; Defesa Civil interdita a ponte</p></div>
+      <div style="background:#E2F1E8; border:1.5px solid #C6E3D2; border-radius:22px; padding:28px 26px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#2B6246;">9 dias depois</div><span class="msr" style="font-size:38px; color:#214D37; margin:14px 0 10px; display:block;">history_edu</span><p style="font-size:24px; line-height:1.45; margin:0; color:#2B6246;">Encerrado sem desabrigados. Memória: "limpar bueiros em outubro"</p></div>
+    </div>
+  </section>
+
+  <section data-label="16 Casos de uso" data-speaker-notes="A mesma espinha serve a 8+ cenários — clima é só o primeiro." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">15 · Amplitude</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 60px; color:#0E2117;">Uma espinha, muitos casos.</h2>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:24px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">flood</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Enchentes &amp; deslizamentos</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">local_fire_department</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Incêndios &amp; seca</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">road</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Rodovias &amp; logística</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">bolt</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Energia &amp; conectividade</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">medical_services</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Risco epidemiológico</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">agriculture</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Insumos &amp; produtores</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">water_drop</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Água &amp; abastecimento</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:28px 30px;"><span class="msr" style="font-size:36px; color:#377B57;">storefront</span><div style="font-family:'Sora'; font-weight:600; font-size:24px; margin-top:14px;">Oportunidades &amp; compras públicas</div></div>
+    </div>
+    <p style="font-size:26px; color:#74806E; margin:56px 0 0;">Cada cenário percorre a mesma espinha: sinal → análise → validação → comunicação → ação → evidência → resolução → aprendizado.</p>
+  </section>
+
+  <section data-label="17 Salvaguardas" data-speaker-notes="Princípios viram mecanismo: threat model de 21 vetores, todos com freio arquitetural." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">16 · Salvaguardas</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 60px; color:#0E2117;">Princípio que não vira<br/>mecanismo é decoração.</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 48px; max-width:1560px;">
+      <div style="display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:38px; color:#214D37;">how_to_reg</span><p style="font-size:26px; line-height:1.5; margin:0; color:#2B6246;"><b style="color:#0E2117;">Revisão humana</b> é invariante de domínio — publicar exige decisão registrada, testada por mutação no CI.</p></div>
+      <div style="display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:38px; color:#214D37;">source</span><p style="font-size:26px; line-height:1.5; margin:0; color:#2B6246;"><b style="color:#0E2117;">Fonte sempre visível</b> — bloco obrigatório: origem, data, validade, confiança, responsável.</p></div>
+      <div style="display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:38px; color:#214D37;">gavel</span><p style="font-size:26px; line-height:1.5; margin:0; color:#2B6246;"><b style="color:#0E2117;">Contestação</b> reabre revisão e nunca apaga — correção pública com o erro legível.</p></div>
+      <div style="display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:38px; color:#214D37;">shield_lock</span><p style="font-size:26px; line-height:1.5; margin:0; color:#2B6246;"><b style="color:#0E2117;">Privacidade</b> — nenhum dado pessoal sai; evidência é opt-in com curadoria; sem perfilamento.</p></div>
+      <div style="display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:38px; color:#214D37;">spa</span><p style="font-size:26px; line-height:1.5; margin:0; color:#2B6246;"><b style="color:#0E2117;">Sem ansiedade</b> — categoria assinada + severidade mínima + silêncio noturno; vazio é boa notícia.</p></div>
+      <div style="display:flex; gap:20px; align-items:flex-start;"><span class="msr" style="font-size:38px; color:#214D37;">psychology_alt</span><p style="font-size:26px; line-height:1.5; margin:0; color:#2B6246;"><b style="color:#0E2117;">Sem decisão opaca</b> — score em parcelas, banda de confiança justificada, IA sempre marcada.</p></div>
+    </div>
+    <p style="font-size:25px; color:#74806E; margin:56px 0 0;">Threat model completo: 21 vetores mapeados — de fake news a brigading, de quota exhaustion a abuso institucional — cada um com freio e controle.</p>
+  </section>
+
+  <section data-label="18 Roadmap" data-speaker-notes="Oito incrementos, cada um fecha um ciclo utilizável. TI-0 começa com pesquisa e parecer jurídico." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 150px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">17 · Caminho</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 64px; color:#0E2117;">Oito incrementos, cada um inteiro.</h2>
+    <div style="display:flex; gap:14px; align-items:stretch;">
+      <div style="flex:1; background:#F0F7F2; border:1.5px solid rgba(23,53,37,0.14); border-radius:20px; padding:26px 22px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#2B6246;">TI-0</div><div style="font-size:24px; color:#2B6246; margin-top:10px; line-height:1.4;">Pesquisa, plano de API e parecer jurídico</div><div style="font-size:24px; color:#74806E; margin-top:10px;">~2 sem</div></div>
+      <div style="flex:1; background:#214D37; border-radius:20px; padding:26px 22px; color:#fff;"><div style="font-family:'Sora'; font-weight:700; font-size:24px;">TI-1</div><div style="font-size:24px; margin-top:10px; line-height:1.4;">Fundação: domínio + adapter + flags</div><div style="font-size:24px; opacity:.75; margin-top:10px;">~4 sem</div></div>
+      <div style="flex:1; background:#214D37; border-radius:20px; padding:26px 22px; color:#fff;"><div style="font-family:'Sora'; font-weight:700; font-size:24px;">TI-2</div><div style="font-size:24px; margin-top:10px; line-height:1.4;">Intelligence Inbox e revisão</div><div style="font-size:24px; opacity:.75; margin-top:10px;">~4 sem</div></div>
+      <div style="flex:1; background:#214D37; border-radius:20px; padding:26px 22px; color:#fff;"><div style="font-family:'Sora'; font-weight:700; font-size:24px;">TI-3</div><div style="font-size:24px; margin-top:10px; line-height:1.4;">Publicação: brief, mapa, avisos</div><div style="font-size:24px; opacity:.75; margin-top:10px;">~5 sem</div></div>
+      <div style="flex:1; background:#377B57; border-radius:20px; padding:26px 22px; color:#fff;"><div style="font-family:'Sora'; font-weight:700; font-size:24px;">TI-4</div><div style="font-size:24px; margin-top:10px; line-height:1.4;">Participação: confirmar, contestar, evidência</div><div style="font-size:24px; opacity:.75; margin-top:10px;">~4 sem</div></div>
+      <div style="flex:1; background:#4F956F; border-radius:20px; padding:26px 22px; color:#fff;"><div style="font-family:'Sora'; font-weight:700; font-size:24px;">TI-5·6</div><div style="font-size:24px; margin-top:10px; line-height:1.4;">Governança, ação e memória</div><div style="font-size:24px; opacity:.75; margin-top:10px;">~6 sem</div></div>
+      <div style="flex:1; background:#fff; border:1.5px dashed rgba(23,53,37,0.3); border-radius:20px; padding:26px 22px;"><div style="font-family:'Sora'; font-weight:700; font-size:24px; color:#74806E;">TI-7</div><div style="font-size:24px; color:#74806E; margin-top:10px; line-height:1.4;">Federação entre instâncias</div><div style="font-size:24px; color:#74806E; margin-top:10px;">pós-FASE53</div></div>
+    </div>
+    <p style="font-size:26px; color:#74806E; margin:60px 0 0;">MVP (TI-1→3) em ~13 semanas de trilha paralela · piloto real em Socorro-SP na sequência · custo de dados: US$ 99,99/mês (plano API).</p>
+  </section>
+
+  <section data-label="19 Impactos" data-speaker-notes="Métricas de serviço, não de engajamento. Metas do piloto." style="background:#FBFCF9; color:#173525; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#377B57; margin-bottom:28px;">18 · Medida de sucesso</div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:70px; letter-spacing:-0.03em; line-height:1.06; margin:0 0 24px; color:#0E2117;">Medimos serviço,<br/>não engajamento.</h2>
+    <p style="font-size:28px; line-height:1.5; color:#2B6246; max-width:1300px; margin:0 0 56px;">Nenhuma métrica de vício. As metas do piloto falam de dignidade e utilidade:</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:30px;">
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:36px 38px;"><div style="font-family:'Sora'; font-weight:700; font-size:52px; color:#0E2117;">&lt; 60 min</div><div style="font-size:24px; color:#74806E; margin-top:10px; line-height:1.4;">do sinal à decisão humana (p95)</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:36px 38px;"><div style="font-family:'Sora'; font-weight:700; font-size:52px; color:#0E2117;">&gt; 90%</div><div style="font-size:24px; color:#74806E; margin-top:10px; line-height:1.4;">precisão territorial confirmada pela comunidade</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:36px 38px;"><div style="font-family:'Sora'; font-weight:700; font-size:52px; color:#0E2117;">zero</div><div style="font-size:24px; color:#74806E; margin-top:10px; line-height:1.4;">publicações sem decisão registrada</div></div>
+      <div style="background:#fff; border:1.5px solid rgba(23,53,37,0.14); border-radius:24px; padding:36px 38px;"><div style="font-family:'Sora'; font-weight:700; font-size:52px; color:#0E2117;">100%</div><div style="font-size:24px; color:#74806E; margin-top:10px; line-height:1.4;">dos alertas com fonte, validade e responsável visíveis</div></div>
+    </div>
+    <p style="font-size:26px; color:#74806E; margin:56px 0 0;">E as que celebramos sem meta: correções publicadas com transparência, contestações respondidas, mutirões nascidos de alertas.</p>
+  </section>
+
+  <section data-label="20 Visao de futuro" data-speaker-notes="Fechamento escuro: 3 horizontes e a frase-síntese da iniciativa." style="background:radial-gradient(120% 90% at 50% -10%, rgba(129,199,132,0.14), transparent 55%), #0B0C0A; color:#E9EFE9; font-family:'Geist',sans-serif; display:flex; flex-direction:column; justify-content:center; padding:0 180px;">
+    <div style="font-size:24px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#A6D6B9; margin-bottom:36px;">19 · Visão de futuro</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:40px; margin-bottom:80px;">
+      <div style="border-top:2px solid rgba(166,214,185,0.4); padding-top:26px;"><div style="font-size:24px; color:#9AA69A; margin-bottom:10px;">1º ano</div><div style="font-family:'Sora'; font-weight:600; font-size:30px; margin-bottom:12px;">Territórios que percebem</div><p style="font-size:24px; line-height:1.5; color:#C9D4C9; margin:0;">Pilotos com clima, desastres e estradas — o ciclo completo rodando em lugares reais.</p></div>
+      <div style="border-top:2px solid rgba(166,214,185,0.4); padding-top:26px;"><div style="font-size:24px; color:#9AA69A; margin-bottom:10px;">2º ano</div><div style="font-family:'Sora'; font-weight:600; font-size:30px; margin-bottom:12px;">Instituições que participam</div><p style="font-size:24px; line-height:1.5; color:#C9D4C9; margin:0;">Defesa civil e saúde validando; INMET e CEMADEN como provedores; protocolos vivos.</p></div>
+      <div style="border-top:2px solid rgba(166,214,185,0.4); padding-top:26px;"><div style="font-size:24px; color:#9AA69A; margin-bottom:10px;">3º ano+</div><div style="font-family:'Sora'; font-weight:600; font-size:30px; margin-bottom:12px;">Rede que aprende</div><p style="font-size:24px; line-height:1.5; color:#C9D4C9; margin:0;">Sinais federados entre instâncias soberanas — vizinho avisa vizinho, sem centro.</p></div>
+    </div>
+    <h2 style="font-family:'Sora'; font-weight:700; font-size:54px; letter-spacing:-0.025em; line-height:1.18; margin:0; max-width:1560px;">Sinais do mundo viram consciência verificável, ação responsável e memória coletiva — <span style="color:#A6D6B9;">sem retirar das comunidades sua relação viva com o lugar.</span></h2>
+    <div style="position:absolute; bottom:70px; left:180px; display:flex; align-items:center; gap:16px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:40px;" />
+      <span style="font-family:'Sora'; font-weight:700; font-size:26px;">Arah Territorial Intelligence</span>
+    </div>
+  </section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

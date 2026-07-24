@@ -639,11 +639,15 @@ public sealed class SellerPayoutService
             }
         }
 
+        // Commit único ao final do batch (fronteira transacional compartilhada).
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         return OperationResult<int>.Success(processedCount);
     }
 
     /// <summary>
     /// Cria um payout através do gateway e atualiza transações e saldos.
+    /// Não faz commit — o caller controla a fronteira transacional (batch ou unitário).
     /// </summary>
     private async Task<OperationResult> CreatePayoutAsync(
         Guid territoryId,
@@ -705,8 +709,6 @@ public sealed class SellerPayoutService
 
         // Auditoria (usar primeira transação como relatedEntityId já que payoutId é string)
         await LogPayoutCreatedAsync(territoryId, userId, transactions, cancellationToken);
-
-        await _unitOfWork.CommitAsync(cancellationToken);
 
         return OperationResult.Success();
     }

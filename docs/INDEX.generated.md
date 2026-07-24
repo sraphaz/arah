@@ -90,6 +90,7 @@
 | [_template](docs/architecture/adrs/_template.md) | - | - |
 | [ADR-020-arah-core-como-control-plane-separado](docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md) | - | - |
 | [ADR-021-design-system-app-canonic](docs/architecture/adrs/ADR-021-design-system-app-canonic.md) | - | - |
+| [ADR-022-convencao-sinalizacao-de-erros](docs/architecture/adrs/ADR-022-convencao-sinalizacao-de-erros.md) | - | - |
 | [README](docs/architecture/adrs/README.md) | - | - |
 | [README](docs/architecture/diagrams/README.md) | - | - |
 | [Kanban sem título 1](docs/archive/Kanban sem título 1.md) | - | - |

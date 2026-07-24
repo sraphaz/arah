@@ -1,0 +1,77 @@
+/* Sidebar Navigation - Enterprise design - Mobile-first */
+.sidebar-container {
+  /* Mobile: oculto por padrão */
+  @apply hidden;
+  @apply border-r border-forest-200/80 dark:border-forest-800/80;
+  @apply bg-white/80 dark:bg-forest-950/80 backdrop-blur-xl;
+  @apply sticky top-[88px] h-[calc(100vh-88px)];
+  @apply overflow-y-auto;
+  /* Desktop (lg+): visível, largura fixa - Padronizado */
+  @apply lg:block;
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+}
+
+.sidebar-nav {
+  @apply p-4 space-y-2;
+}
+
+.sidebar-section {
+  @apply mb-4;
+}
+
+.sidebar-section-toggle {
+  @apply w-full flex items-center justify-between;
+  @apply px-3 py-2.5 rounded-xl;
+  @apply text-forest-800 dark:text-forest-200 font-semibold text-sm;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/80;
+  @apply transition-all duration-300;
+  @apply cursor-pointer;
+}
+
+.sidebar-section-title {
+  @apply flex items-center space-x-2;
+}
+
+.sidebar-chevron {
+  @apply w-4 h-4 text-forest-500 dark:text-forest-400;
+  transition: transform var(--transition-slow); /* 300ms - rotação suave */
+}
+
+.sidebar-chevron-open {
+  @apply rotate-180;
+}
+
+.sidebar-items {
+  @apply mt-2 space-y-1 pl-2;
+}
+
+.sidebar-link {
+  @apply block px-3 py-2.5 rounded-lg;
+  @apply text-forest-700 dark:text-forest-300 text-sm;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/60;
+  transition: var(--transition-slow); /* 300ms - transição suave */
+  @apply border-l-2 border-transparent;
+}
+
+.sidebar-link:hover {
+  @apply border-forest-400 dark:border-dark-accent;
+  @apply translate-x-1;
+}
+
+.sidebar-link-active {
+  @apply bg-forest-100 dark:bg-forest-900/80;
+  @apply border-forest-600 dark:border-dark-accent;
+  @apply text-forest-900 dark:text-forest-50;
+  @apply font-medium;
+}
+
+.sidebar-link-title {
+  @apply block;
+}
+
+.sidebar-link-description {
+  @apply block text-xs mt-1;
+  @apply text-forest-500 dark:text-forest-400;
+  @apply opacity-75;
+}

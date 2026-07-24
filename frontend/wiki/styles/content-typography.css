@@ -1,0 +1,172 @@
+@layer components {
+  /* Markdown content - Enterprise typography system - Layout limpo */
+  .markdown-content {
+    @apply prose prose-lg max-w-none;
+    @apply prose-headings:font-bold prose-headings:text-forest-900 dark:prose-headings:text-forest-100;
+    @apply prose-p:text-forest-800 dark:prose-p:text-forest-200 prose-p:leading-relaxed;
+    @apply prose-a:text-forest-600 dark:prose-a:text-dark-link prose-a:font-medium;
+    @apply prose-a:decoration-forest-300 dark:prose-a:decoration-dark-border prose-a:underline-offset-4;
+    @apply prose-strong:text-forest-900 dark:prose-strong:text-forest-50 prose-strong:font-semibold;
+    @apply prose-code:text-forest-800 dark:prose-code:text-forest-100;
+    @apply prose-pre:bg-forest-900 dark:prose-pre:bg-dark-bg prose-pre:text-forest-50;
+    @apply prose-blockquote:border-forest-400 dark:prose-blockquote:border-dark-accent prose-blockquote:text-forest-700 dark:prose-blockquote:text-forest-300;
+    @apply prose-ul:marker:text-forest-500 dark:prose-ul:marker:text-forest-400;
+
+    /* Optimal reading width - aumenta conforme a resolução */
+    max-width: var(--content-width-default);
+  }
+
+  /* Responsivo: conteúdo aproveita melhor espaço em telas maiores */
+  /* Media queries removidas - max-width já configurado via .markdown-content */
+
+  /* Typography hierarchy - Enterprise level */
+  .markdown-content h1 {
+    @apply text-3xl md:text-4xl font-bold text-forest-900 dark:text-forest-50 mb-0 mt-0;
+    @apply pb-6 border-b-2 border-forest-200 dark:border-forest-800;
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: var(--line-height-tight);
+    font-weight: 700;
+  }
+
+  .markdown-content h1:first-child {
+    @apply mt-0;
+  }
+
+  .markdown-content h2 {
+    @apply text-xl md:text-2xl font-bold text-forest-800 dark:text-forest-100 mb-0 mt-10;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    letter-spacing: var(--letter-spacing-tight); /* -0.025em - usa token */
+    line-height: var(--line-height-snug); /* 1.375 - usa token */
+    scroll-margin-top: 120px;
+    font-weight: 700;
+    max-width: 100%; /* Headings podem usar largura completa */
+    font-feature-settings: "kern" 1, "liga" 1, "ss01" 1;
+    /* Removido: bordas inferiores que espremiam conteúdo */
+    /* Removido padding abaixo do título */
+  }
+
+  .markdown-content h3 {
+    @apply text-lg md:text-xl font-semibold text-forest-700 dark:text-forest-200 mb-5 mt-8;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    letter-spacing: var(--letter-spacing-tight); /* -0.025em - usa token */
+    line-height: var(--line-height-normal); /* 1.5 - usa token */
+    font-weight: 600;
+    max-width: 100%;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .markdown-content h4 {
+    @apply text-xl md:text-2xl font-semibold text-forest-700 dark:text-forest-200 mb-4 mt-6;
+    letter-spacing: var(--letter-spacing-normal); /* 0 - usa token */
+    line-height: var(--line-height-normal); /* 1.5 - usa token */
+    font-weight: 600;
+    max-width: 100%;
+  }
+
+  .markdown-content h5 {
+    @apply text-lg md:text-xl font-semibold text-forest-600 dark:text-forest-300 mb-3 mt-8;
+    font-weight: 600;
+  }
+
+  .markdown-content h6 {
+    @apply text-base md:text-lg font-semibold text-forest-600 dark:text-forest-300 mb-2 mt-6;
+    font-weight: 600;
+  }
+
+  /* Paragraphs - Optimized for reading (Market standards: Vercel, Stripe, Linear) */
+  .markdown-content p {
+    @apply mb-6 text-forest-800 dark:text-forest-200;
+    font-size: var(--font-size-base); /* 16px - usa token */
+    line-height: var(--line-height-relaxed); /* 1.75 - usa token */
+    /* Removido max-width - conteúdo usa toda largura disponível */
+    letter-spacing: var(--letter-spacing-normal); /* 0 - usa token */
+    word-spacing: 0.05em; /* Espaçamento entre palavras */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .markdown-content p:last-child {
+    @apply mb-0;
+  }
+
+  /* Primeira linha do parágrafo - atenção visual */
+  .markdown-content p:first-of-type {
+    font-size: var(--font-size-lg); /* 18px - usa token */
+    line-height: var(--line-height-loose); /* 2 - usa token */
+  }
+
+  /* Lists - Enterprise spacing and design (Market standards) */
+  .markdown-content ul,
+  .markdown-content ol {
+    @apply mb-8 pl-8 space-y-4; /* Mais espaço entre itens para respiração */
+    /* Removido max-width - conteúdo usa toda largura disponível */
+  }
+
+  .markdown-content li {
+    @apply text-forest-800 dark:text-forest-200;
+    line-height: var(--line-height-relaxed); /* Mesma line-height dos parágrafos - usa token */
+    position: relative;
+    font-size: var(--font-size-base); /* Consistente com parágrafos - usa token */
+    padding-left: var(--spacing-sm); /* 12px - usa token para espaçamento */
+    margin-bottom: var(--spacing-xxs); /* 4px - usa token */
+  }
+
+  /* Parágrafos dentro de listas */
+  .markdown-content li > p {
+    margin-bottom: 0.75rem;
+  }
+
+  .markdown-content li > p:last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-content ul li::marker {
+    @apply text-forest-500 dark:text-forest-400 font-bold;
+    font-size: 1.25em;
+  }
+
+  /* Styled bullet points for unordered lists */
+  .markdown-content ul > li {
+    padding-left: 0;
+    list-style-type: none;
+  }
+
+  .markdown-content ul > li::before {
+    content: "▸";
+    @apply text-forest-400 dark:text-dark-accent;
+    font-weight: bold;
+    position: absolute;
+    left: -1.5rem;
+    top: 0;
+    font-size: 1.1em;
+    line-height: var(--line-height-relaxed);
+    transition: transform var(--transition-base);
+  }
+
+  .markdown-content ul > li:hover::before {
+    transform: translateX(4px);
+  }
+
+  /* Ordered lists */
+  .markdown-content ol {
+    counter-reset: item;
+  }
+
+  .markdown-content ol > li {
+    counter-increment: item;
+    padding-left: 0;
+    list-style-type: none;
+    position: relative;
+  }
+
+  .markdown-content ol > li::before {
+    content: counter(item) ".";
+    @apply text-forest-500 dark:text-forest-400 font-semibold;
+    position: absolute;
+    left: -1.75rem;
+    top: 0;
+    min-width: 1.5rem;
+    text-align: right;
+  }
+}

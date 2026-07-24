@@ -1,0 +1,94 @@
+/* Heading links - Adicionar ícone de link em headings com ID */
+.markdown-content h2[id],
+.markdown-content h3[id],
+.markdown-content h4[id] {
+  @apply relative;
+  scroll-margin-top: 100px; /* Offset para sticky header */
+}
+
+.markdown-content h2[id]:hover::before,
+.markdown-content h3[id]:hover::before,
+.markdown-content h4[id]:hover::before {
+  content: '#';
+  @apply absolute -left-6 text-forest-400 dark:text-forest-500;
+  @apply opacity-0 group-hover:opacity-100;
+  @apply transition-opacity duration-300;
+  font-weight: normal;
+}
+
+/* Progressive Disclosure - Seções longas */
+.document-section-wrapper {
+  @apply relative;
+}
+
+.document-section-wrapper[data-section-id] {
+  /* Marca visual sutil para seções colapsáveis */
+  @apply border-l-2 border-forest-200 dark:border-forest-800 pl-6 ml-2;
+}
+
+/* Quick Links - Enterprise design */
+.quick-links-container {
+  @apply p-4;
+}
+
+.quick-links-header {
+  @apply flex items-center space-x-2 mb-4;
+}
+
+.quick-links-icon {
+  @apply text-lg;
+}
+
+.quick-links-title {
+  @apply text-sm font-semibold text-forest-700 dark:text-forest-300;
+  @apply uppercase tracking-wide;
+}
+
+.quick-links-list {
+  @apply space-y-1.5;
+}
+
+.quick-links-item {
+  @apply list-none;
+}
+
+.quick-link {
+  @apply flex items-center space-x-3 px-3 py-2.5 rounded-lg;
+  @apply text-sm text-forest-700 dark:text-forest-300;
+  @apply hover:bg-forest-100/80 dark:hover:bg-forest-900/60;
+  @apply transition-all duration-300;
+  @apply w-full;
+}
+
+.quick-link:hover {
+  @apply text-forest-900 dark:text-forest-50;
+  @apply translate-x-1;
+}
+
+.quick-link-icon {
+  @apply text-base flex-shrink-0;
+  @apply group-hover:scale-110 transition-transform duration-300;
+}
+
+.quick-link-content {
+  @apply flex-1 flex flex-col;
+}
+
+.quick-link-label {
+  @apply font-medium;
+}
+
+.quick-link-description {
+  @apply text-xs text-forest-500 dark:text-forest-400;
+  @apply mt-0.5 opacity-75;
+}
+
+.quick-link-external-icon {
+  @apply w-4 h-4 text-forest-400 dark:text-forest-500;
+  @apply flex-shrink-0 opacity-0 group-hover:opacity-100;
+  @apply transition-opacity duration-300;
+}
+
+.sidebar-quick-links {
+  @apply border-t border-forest-200/80 dark:border-forest-800/80;
+}

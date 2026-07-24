@@ -1,0 +1,126 @@
+@layer components {
+  /* Category card - Enterprise design */
+  /* Category Card - Layout limpo sem bordas pesadas */
+  .category-card {
+    @apply h-full;
+    /* Bordas simplificadas - sem encadeamento */
+    border-radius: var(--glass-radius);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--elevation-2);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    transition: var(--transition-smooth);
+    /* Altura automática - permite conteúdo expandir sem scroll interno */
+    display: flex;
+    flex-direction: column;
+    /* Remove min/max height para evitar scroll interno */
+  }
+
+  .category-card:hover {
+    box-shadow: var(--elevation-3);
+    transform: translateY(-2px);
+    border-color: var(--accent-subtle);
+  }
+
+  .category-card__content {
+    /* Padding otimizado - melhor uso do espaço */
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    /* Removido overflow: hidden para evitar scroll interno */
+  }
+
+  @media (min-width: 640px) {
+    .category-card__content {
+      padding: 1.75rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .category-card__content {
+      padding: 2rem 1.75rem;
+    }
+  }
+
+  /* Doc link - Design limpo e legível - Tamanho aumentado para melhor legibilidade */
+  .doc-link {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg;
+    @apply text-base text-forest-700 dark:text-forest-300;
+    @apply hover:text-forest-900 dark:hover:text-forest-50;
+    @apply transition-colors duration-200 ease-out;
+    @apply hover:bg-forest-50/80 dark:hover:bg-forest-900/60;
+    line-height: var(--line-height-normal); /* 1.5 - usa token */
+    font-size: var(--font-size-base); /* 16px - legível, não pequeno */
+  }
+
+  .doc-link-arrow {
+    @apply text-forest-400 dark:text-forest-500;
+    @apply transition-colors duration-200;
+    opacity: 0.7;
+  }
+
+  .doc-link:hover .doc-link-arrow {
+    @apply text-forest-600 dark:text-forest-400;
+    opacity: 1;
+  }
+
+  /* Hero section - Enterprise typography */
+  .hero-title {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+    @apply bg-gradient-to-br from-forest-900 via-forest-800 to-forest-700;
+    @apply dark:from-forest-50 dark:via-forest-100 dark:to-forest-200;
+    @apply bg-clip-text text-transparent;
+    @apply leading-tight mb-6;
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: var(--line-height-tight);
+  }
+
+  .hero-subtitle {
+    @apply text-xl md:text-2xl text-forest-600 dark:text-forest-300;
+    @apply leading-relaxed max-w-3xl;
+    font-weight: 400;
+    letter-spacing: var(--letter-spacing-normal);
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* Buttons refinados - Enterprise design */
+  .btn-primary {
+    @apply bg-forest-600 dark:bg-dark-accent text-white dark:text-forest-950 px-8 py-4 rounded-2xl;
+    @apply font-semibold text-lg;
+    @apply hover:bg-forest-700 dark:hover:bg-dark-accent-hover hover:shadow-xl;
+    @apply active:scale-[0.98];
+    @apply transition-all duration-300 ease-out;
+    @apply relative overflow-hidden;
+    box-shadow: var(--shadow-btn-primary);
+  }
+
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    @apply bg-white dark:bg-forest-900;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width var(--duration-ripple), height var(--duration-ripple);
+    opacity: 0.2;
+  }
+
+  .btn-primary:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .btn-secondary {
+    @apply bg-forest-100 dark:bg-forest-900 text-forest-800 dark:text-forest-100 px-8 py-4 rounded-2xl;
+    @apply font-semibold text-lg;
+    @apply hover:bg-forest-200 dark:hover:bg-forest-800 hover:shadow-lg;
+    @apply active:scale-[0.98];
+    @apply transition-all duration-300 ease-out;
+    border: 1.5px solid var(--glass-border);
+  }
+}

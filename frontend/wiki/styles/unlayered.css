@@ -1,0 +1,12 @@
+/*
+ * Estilos fora de @layer — mantêm a ordem/cascata original (após os utilities
+ * do Tailwind). Importados em bloco por globals.css depois das diretivas
+ * @tailwind para preservar a precedência de sobreposições responsivas.
+ */
+@import "./responsive-breakpoints.css";
+@import "./components-sidebar.css";
+@import "./components-toc.css";
+@import "./components-misc.css";
+@import "./components-diagram.css";
+@import "./components-app-banner.css";
+@import "./responsive-mobile.css";

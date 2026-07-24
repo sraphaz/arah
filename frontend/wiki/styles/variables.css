@@ -1,0 +1,83 @@
+@layer base {
+  :root {
+    color-scheme: light dark;
+    --glass-bg: rgba(255, 255, 255, 0.98);
+    --glass-border: rgba(198, 227, 210, 0.4);
+    --glass-shadow: 0 4px 24px rgba(23, 53, 37, 0.08), 0 2px 8px rgba(23, 53, 37, 0.04);
+    --glass-hover-shadow: 0 8px 32px rgba(23, 53, 37, 0.12), 0 4px 16px rgba(23, 53, 37, 0.08);
+    --glass-radius: 24px;
+    --glass-blur: 24px;
+    --watermark-opacity: 0.035;
+    --watermark-size: 560px;
+    --watermark-bottom: -180px;
+    --watermark-right: -180px;
+    --body-watermark-opacity: 0.025;
+    --body-watermark-size: 720px;
+    --spacing-section: 120px;
+    --spacing-card: 80px;
+    --gradient-overlay: linear-gradient(180deg, rgba(241, 248, 244, 0.6) 0%, rgba(241, 248, 244, 0.2) 100%);
+
+    /* Spacing aliases - convenção Wiki (--spacing-* mapeia para tokens base) */
+    --spacing-xxs: var(--space-1);
+    --spacing-xs: var(--space-2);
+    --spacing-sm: var(--space-3);
+    --spacing-md: var(--space-4);
+    --spacing-lg: var(--space-6);
+    --spacing-xl: var(--space-8);
+    --spacing-2xl: var(--space-12);
+    --spacing-3xl: var(--space-16);
+    --space-xs: var(--spacing-xxs);
+    --space-sm: var(--spacing-xs);
+    --space-md: var(--spacing-md);
+    --space-lg: var(--spacing-lg);
+    --space-xl: var(--spacing-xl);
+    --space-2xl: var(--spacing-2xl);
+    --space-3xl: var(--spacing-3xl);
+
+    /* Content Widths - Optimal reading */
+    --content-width-narrow: 65ch;
+    --content-width-default: 75ch;
+    --content-width-wide: 90ch;
+    --content-max: 1200px;
+
+    /* Breakpoints Padronizados - Unificado Wiki + DevPortal */
+    --breakpoint-mobile: 640px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+    --breakpoint-wide: 1280px;
+    --breakpoint-ultrawide: 1536px;
+    --sidebar-width-mobile: 280px;
+
+    /* Semantic aliases - referenciam tokens compartilhados */
+    --accent: var(--color-primary-400);
+    --accent-hover: var(--color-primary-500);
+    --accent-strong: var(--color-primary-500);
+    --link: var(--color-secondary-300);
+    --link-hover: var(--color-secondary-400);
+    --bg-dark: var(--color-dark-950);
+    --border-dark: var(--color-dark-800);
+
+    /* Syntax highlighting - YAML code blocks */
+    --syntax-base: #e0e0e0;
+    --syntax-keyword: #82aaff;
+    --syntax-string: #c3e88d;
+    --syntax-number: #f78c6c;
+    --syntax-comment: #546e7a;
+    --syntax-literal: #ff5370;
+    --shimmer-highlight: rgba(255, 255, 255, 0.1);
+    --app-banner-title-light: linear-gradient(135deg, rgb(20, 40, 30) 0%, rgb(30, 60, 45) 50%, rgb(40, 80, 60) 100%);
+    --app-banner-title-dark: linear-gradient(135deg, rgb(240, 255, 250) 0%, rgb(200, 250, 230) 50%, rgb(180, 240, 220) 100%);
+    --app-banner-phone-glow: radial-gradient(circle at 50% 0%, rgba(77, 212, 168, 0.02) 50%, transparent 100%);
+  }
+
+  /* Dark mode - identidade visual do devportal */
+  :root.dark {
+    --glass-bg: rgba(20, 26, 33, 0.98);
+    --glass-border: rgba(37, 48, 58, 0.6);
+    --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+    --glass-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+    --watermark-opacity: 0.015;
+    --body-watermark-opacity: 0.01;
+    --gradient-overlay: linear-gradient(180deg, rgba(10, 14, 18, 0.8) 0%, rgba(10, 14, 18, 0.4) 100%);
+  }
+}

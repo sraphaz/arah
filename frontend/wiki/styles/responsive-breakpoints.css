@@ -1,0 +1,62 @@
+/* Responsividade refinada - Enterprise breakpoints */
+@media (max-width: 640px) {
+  .sidebar-container {
+    @apply hidden;
+  }
+
+  /* TOC escondido em mobile muito pequeno ou transformado */
+  .toc-container {
+    @apply hidden sm:block;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  .glass-card__content {
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-title {
+    @apply text-4xl;
+  }
+
+  .hero-subtitle {
+    @apply text-lg;
+  }
+
+  .markdown-content {
+    font-size: var(--font-size-base);
+  }
+
+  .markdown-content h1 {
+    @apply text-3xl md:text-4xl mb-8 mt-12;
+  }
+
+  .markdown-content h2 {
+    @apply text-xl md:text-2xl mb-6 mt-10;
+  }
+
+  .markdown-content p {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (min-width: 768px) {
+  .glass-card__content {
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .glass-card__content {
+    padding: clamp(3rem, 6vw, 5rem) clamp(3rem, 8vw, 6rem);
+  }
+
+  .markdown-content {
+    @apply prose-xl;
+    /* Removido max-width restritivo - conteúdo usa toda largura disponível */
+  }
+}

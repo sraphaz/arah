@@ -24,6 +24,17 @@ COPY backend/Arah.Modules.Marketplace/*.csproj backend/Arah.Modules.Marketplace/
 COPY backend/Arah.Modules.Moderation/*.csproj backend/Arah.Modules.Moderation/
 COPY backend/Arah.Modules.Notifications/*.csproj backend/Arah.Modules.Notifications/
 COPY backend/Arah.Modules.Subscriptions/*.csproj backend/Arah.Modules.Subscriptions/
+COPY backend/Arah.Modules.Alerts.Infrastructure/*.csproj backend/Arah.Modules.Alerts.Infrastructure/
+COPY backend/Arah.Modules.Assets.Infrastructure/*.csproj backend/Arah.Modules.Assets.Infrastructure/
+COPY backend/Arah.Modules.Chat.Infrastructure/*.csproj backend/Arah.Modules.Chat.Infrastructure/
+COPY backend/Arah.Modules.Connections.Infrastructure/*.csproj backend/Arah.Modules.Connections.Infrastructure/
+COPY backend/Arah.Modules.Events.Infrastructure/*.csproj backend/Arah.Modules.Events.Infrastructure/
+COPY backend/Arah.Modules.Feed.Infrastructure/*.csproj backend/Arah.Modules.Feed.Infrastructure/
+COPY backend/Arah.Modules.Map.Infrastructure/*.csproj backend/Arah.Modules.Map.Infrastructure/
+COPY backend/Arah.Modules.Marketplace.Infrastructure/*.csproj backend/Arah.Modules.Marketplace.Infrastructure/
+COPY backend/Arah.Modules.Moderation.Infrastructure/*.csproj backend/Arah.Modules.Moderation.Infrastructure/
+COPY backend/Arah.Modules.Notifications.Infrastructure/*.csproj backend/Arah.Modules.Notifications.Infrastructure/
+COPY backend/Arah.Modules.Subscriptions.Infrastructure/*.csproj backend/Arah.Modules.Subscriptions.Infrastructure/
 
 # 2) Restore
 WORKDIR /src/backend/Arah.Api

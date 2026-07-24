@@ -1,0 +1,88 @@
+@layer base {
+  * {
+    @apply border-forest-200 dark:border-forest-800;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    @apply text-forest-900 dark:text-forest-100 bg-forest-50 dark:bg-forest-950;
+    min-height: 100vh;
+    background-image: url("/wiki/bukeh.jpg");
+    background-repeat: repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* OpenType features para melhor tipografia */
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
+    font-variant-ligatures: common-ligatures;
+    font-kerning: normal;
+    transition: background-color var(--transition-slow), color var(--transition-slow);
+    line-height: var(--line-height-relaxed);
+    font-size: var(--font-size-lg);
+    /* Ajuste fino para sobriedade */
+    letter-spacing: -0.011em;
+  }
+
+  /* Dark mode body background */
+  :root.dark body {
+    background-image: var(--bg-gradient-accent);
+    background-color: var(--bg-dark);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--body-watermark-size);
+    height: var(--body-watermark-size);
+    max-width: 95vw;
+    max-height: 95vh;
+    background-image: url("/wiki/icon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: var(--body-watermark-opacity);
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: soft-light;
+    filter: grayscale(100%) brightness(1.3) contrast(0.9);
+    transition: opacity var(--duration-watermark) ease-in-out;
+  }
+
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Scrollbar personalizada - Enterprise design */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-forest-100 dark:bg-forest-950;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-forest-300 dark:bg-forest-800 rounded-full;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color var(--transition-base);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-forest-400 dark:bg-forest-700;
+  }
+}

@@ -1,0 +1,57 @@
+/* Mobile Responsive - Sidebar - Mobile-first approach - Modernizado */
+/* Nota: O sidebar-container já usa `hidden lg:block`, então não precisa de media query aqui */
+
+/* Ajusta espaçamento do conteúdo em mobile (quando sidebar está oculta) */
+/* Usando variável de breakpoint padronizada */
+@media (max-width: 1023px) {
+  main {
+    /* Padding responsivo usando clamp() - fluido e modernizado */
+    padding-left: clamp(1rem, 4vw, 1.5rem);
+    padding-right: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  /* TOC em mobile - vira um dropdown no topo */
+  /* Nota: Em desktop, o TOC tem scroll interno quando necessário */
+  .toc-container {
+    margin-bottom: var(--spacing-2xl);
+    position: static !important;
+  }
+
+  /* Heading links ajustados para mobile */
+  .markdown-content h2[id]:hover::before,
+  .markdown-content h3[id]:hover::before,
+  .markdown-content h4[id]:hover::before {
+    @apply hidden;
+  }
+
+  /* Previne scroll do body quando menu mobile está aberto */
+  body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+}
+
+/* Desktop - Espaçamento otimizado */
+@media (min-width: 1024px) {
+  main {
+    /* Em desktop, respeita sidebar se aplicável */
+    padding-left: clamp(1.5rem, 3vw, 2rem);
+    padding-right: clamp(1.5rem, 3vw, 2rem);
+  }
+}
+
+/* Print styles */
+@media print {
+  .glass-card {
+    box-shadow: var(--elevation-0);
+    @apply border border-forest-200 dark:border-forest-800;
+    page-break-inside: avoid;
+  }
+
+  .nav-link,
+  .btn-primary,
+  .btn-secondary {
+    @apply hidden;
+  }
+}

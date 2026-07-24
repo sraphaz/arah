@@ -8,7 +8,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Paleta em hex (não var(--x)): utilitários com modificador de opacidade
+      // (ex.: bg-accent/10, border-link/50, dark:bg-dark-accent/15) exigem valores
+      // concretos que o Tailwind possa decompor em canais RGB.
+      // keep in sync with design-tokens.css
       colors: {
+        // accent.DEFAULT == --color-primary-400; link.DEFAULT == --color-secondary-300;
+        // link.hover == --color-secondary-400.
         accent: {
           DEFAULT: "#4dd4a8",
           hover: "#5ee5b9",
@@ -29,9 +35,12 @@ const config: Config = {
           700: "#2B6246",
           800: "#214D37",
           900: "#173525",
-          950: "#0a0e12" // Dark mode background (devportal)
+          950: "#0a0e12" // == --color-dark-950 (fundo dark mode)
         },
         // Cores do devportal para dark mode
+        // bg/bg-card/bg-elevated == --color-dark-950/850/900; text/text-muted/text-subtle
+        // == --color-dark-text/-muted/-subtle; accent/link espelham a paleta acima.
+        // keep in sync with design-tokens.css
         dark: {
           bg: "#0a0e12",
           "bg-elevated": "#0f1419",
@@ -57,7 +66,11 @@ const config: Config = {
   plugins: [
     require('@tailwindcss/typography')
   ],
-  // Configurações de typography refinadas
+  // Configurações de typography refinadas.
+  // rgb() abaixo espelham a paleta forest (ex.: rgb(23,53,37)==forest.900,
+  // rgb(55,123,87)==forest.600, rgb(241,248,244)==forest.50). O plugin de typography
+  // gera custom properties (--tw-prose-*) e exige valores concretos aqui.
+  // keep in sync with design-tokens.css
   typography: {
     DEFAULT: {
       css: {

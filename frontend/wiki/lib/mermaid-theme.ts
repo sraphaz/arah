@@ -14,7 +14,7 @@ const TOKEN_FALLBACKS: Record<string, string> = {
   "--color-dark-850": "#141a21",
   "--color-dark-900": "#0f1419",
   "--color-dark-950": "#0a0e12",
-  "--color-neutral-0": "#ffffff",
+  "--color-surface-card": "#ffffff",
 };
 
 function cssToken(name: string): string {
@@ -32,7 +32,7 @@ export function buildMermaidThemeVariables(): Record<string, string> {
   const surface = cssToken("--color-dark-900");
   const surfaceElevated = cssToken("--color-dark-850");
   const surfaceMuted = cssToken("--color-dark-800");
-  const textOnDark = cssToken("--color-neutral-0");
+  const textOnDark = cssToken("--color-surface-card");
 
   return {
     primaryColor: accent,

@@ -69,4 +69,9 @@ public sealed class UserDevice
     {
         IsActive = false;
     }
+
+    /// <summary>
+    /// Restaura o timestamp de último uso ao reidratar da persistência.
+    /// </summary>
+    public void RestoreLastUsedAt(DateTime lastUsedAtUtc) => LastUsedAtUtc = lastUsedAtUtc;
 }

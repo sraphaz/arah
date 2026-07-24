@@ -1,0 +1,54 @@
+@layer components {
+  /* Breadcrumb refinado */
+  .breadcrumb {
+    @apply flex items-center space-x-3 text-sm text-forest-600 dark:text-forest-400 mb-10;
+    font-size: var(--font-size-sm);
+  }
+
+  .breadcrumb a {
+    @apply hover:text-forest-900 dark:hover:text-forest-100 hover:underline transition-colors;
+  }
+
+  .breadcrumb span {
+    @apply text-forest-400 dark:text-forest-600;
+  }
+
+  /* Metadata badge - Modern design */
+  /* Document Metadata - Padrão internacional discreto (Vercel, Stripe, Linear) */
+  .document-metadata {
+    font-size: var(--font-size-sm); /* 14px - texto pequeno e discreto */
+    color: var(--text-muted); /* Cor neutra - não compete com conteúdo */
+    margin-bottom: var(--space-xl); /* 32px - espaço antes do conteúdo */
+    margin-top: calc(var(--space-sm) * -1); /* -8px - reduz espaço após título */
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm); /* 8px - espaçamento entre elementos */
+    font-variant-numeric: tabular-nums; /* Alinhamento numérico para datas */
+  }
+
+  .document-metadata .separator {
+    color: var(--text-subtle);
+    opacity: 0.5; /* Separador discreto */
+  }
+
+  .document-metadata time {
+    font-variant-numeric: tabular-nums; /* Alinhamento numérico para datas */
+  }
+
+  /* Footer refinado */
+  .footer-link {
+    @apply text-forest-600 dark:text-forest-300 hover:text-forest-900 dark:hover:text-forest-50;
+    @apply underline underline-offset-[0.3em] decoration-2;
+    @apply decoration-forest-300 dark:decoration-forest-700 hover:decoration-forest-500 dark:hover:decoration-forest-400;
+    @apply transition-all duration-300;
+    text-decoration-thickness: 1.5px;
+  }
+
+  /* Focus states acessíveis - Enterprise level */
+  *:focus-visible {
+    outline: 3px solid theme('colors.forest.500');
+    outline-offset: 4px;
+    border-radius: 8px;
+    @apply dark:outline-dark-accent;
+  }
+}

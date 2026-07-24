@@ -362,106 +362,156 @@ public sealed class ChatService
 
         await EnsureParticipantForImplicitConversationsAsync(conversation, userId, cancellationToken);
 
-        if (conversation.Status == ConversationStatus.Locked)
+        var stateError = ValidateConversationState(conversation);
+        if (stateError is not null)
         {
-            return OperationResult<ChatMessage>.Failure("Conversation is locked.");
-        }
-
-        if (conversation.Status == ConversationStatus.Disabled)
-        {
-            return OperationResult<ChatMessage>.Failure("Conversation is disabled.");
+            return OperationResult<ChatMessage>.Failure(stateError);
         }
 
         // Validar mídia se fornecida
         if (mediaId.HasValue && mediaId.Value != Guid.Empty)
         {
-            var mediaAsset = await _mediaAssetRepository.GetByIdAsync(mediaId.Value, cancellationToken);
-            if (mediaAsset is null)
+            var mediaError = await ValidateChatMediaAsync(mediaId.Value, userId, conversation, cancellationToken);
+            if (mediaError is not null)
             {
-                return OperationResult<ChatMessage>.Failure("Media asset not found.");
+                return OperationResult<ChatMessage>.Failure(mediaError);
             }
+        }
 
-            if (mediaAsset.UploadedByUserId != userId || mediaAsset.IsDeleted)
+        var message = BuildTextMessage(conversationId, userId, text);
+        await _messageRepository.AddAsync(message, cancellationToken);
+
+        // Criar MediaAttachment se mídia foi fornecida
+        await PersistMessageMediaAttachmentAsync(mediaId, message.Id, cancellationToken);
+
+        await UpdateConversationStatsAsync(conversationId, message, userId, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+        return OperationResult<ChatMessage>.Success(message);
+    }
+
+    private static string? ValidateConversationState(ChatConversation conversation)
+    {
+        if (conversation.Status == ConversationStatus.Locked)
+        {
+            return "Conversation is locked.";
+        }
+
+        if (conversation.Status == ConversationStatus.Disabled)
+        {
+            return "Conversation is disabled.";
+        }
+
+        return null;
+    }
+
+    private async Task<string?> ValidateChatMediaAsync(
+        Guid mediaId,
+        Guid userId,
+        ChatConversation conversation,
+        CancellationToken cancellationToken)
+    {
+        var mediaAsset = await _mediaAssetRepository.GetByIdAsync(mediaId, cancellationToken);
+        if (mediaAsset is null)
+        {
+            return "Media asset not found.";
+        }
+
+        if (mediaAsset.UploadedByUserId != userId || mediaAsset.IsDeleted)
+        {
+            return "Media asset is invalid or does not belong to the user.";
+        }
+
+        // Validar tipo: apenas imagens e áudios em chat (vídeos não permitidos)
+        if (mediaAsset.MediaType == MediaType.Video)
+        {
+            return "Videos are not allowed in chat messages.";
+        }
+        if (mediaAsset.MediaType != MediaType.Image && mediaAsset.MediaType != MediaType.Audio)
+        {
+            return "Only images and audio are allowed in chat messages.";
+        }
+
+        // Obter limites efetivos da configuração territorial (com fallback para global)
+        // Nota: DMs não têm TerritoryId, então usar limites globais padrão
+        if (conversation.TerritoryId.HasValue)
+        {
+            var chatLimits = await _mediaConfigService.GetEffectiveChatLimitsAsync(
+                conversation.TerritoryId.Value,
+                cancellationToken);
+
+            return ValidateChatMediaAgainstLimits(mediaAsset, chatLimits);
+        }
+
+        return ValidateChatMediaDefaultLimits(mediaAsset);
+    }
+
+    private static string? ValidateChatMediaAgainstLimits(MediaAsset mediaAsset, MediaChatConfig chatLimits)
+    {
+        // Validar imagens
+        if (mediaAsset.MediaType == MediaType.Image)
+        {
+            if (!chatLimits.ImagesEnabled)
             {
-                return OperationResult<ChatMessage>.Failure("Media asset is invalid or does not belong to the user.");
+                return "Images are not enabled for chat in this territory.";
             }
-
-            // Validar tipo: apenas imagens e áudios em chat (vídeos não permitidos)
-            if (mediaAsset.MediaType == MediaType.Video)
+            if (mediaAsset.SizeBytes > chatLimits.MaxImageSizeBytes)
             {
-                return OperationResult<ChatMessage>.Failure("Videos are not allowed in chat messages.");
+                var maxSizeMB = chatLimits.MaxImageSizeBytes / (1024.0 * 1024.0);
+                return $"Image size exceeds {maxSizeMB:F1}MB limit for chat.";
             }
-            if (mediaAsset.MediaType != MediaType.Image && mediaAsset.MediaType != MediaType.Audio)
+            // Validar tipo MIME se configurado
+            if (chatLimits.AllowedImageMimeTypes != null && chatLimits.AllowedImageMimeTypes.Count > 0)
             {
-                return OperationResult<ChatMessage>.Failure("Only images and audio are allowed in chat messages.");
-            }
-
-            // Obter limites efetivos da configuração territorial (com fallback para global)
-            // Nota: DMs não têm TerritoryId, então usar limites globais padrão
-            if (conversation.TerritoryId.HasValue)
-            {
-                var chatLimits = await _mediaConfigService.GetEffectiveChatLimitsAsync(
-                    conversation.TerritoryId.Value,
-                    cancellationToken);
-
-                // Validar imagens
-                if (mediaAsset.MediaType == MediaType.Image)
+                if (!chatLimits.AllowedImageMimeTypes.Contains(mediaAsset.MimeType, StringComparer.OrdinalIgnoreCase))
                 {
-                    if (!chatLimits.ImagesEnabled)
-                    {
-                        return OperationResult<ChatMessage>.Failure("Images are not enabled for chat in this territory.");
-                    }
-                    if (mediaAsset.SizeBytes > chatLimits.MaxImageSizeBytes)
-                    {
-                        var maxSizeMB = chatLimits.MaxImageSizeBytes / (1024.0 * 1024.0);
-                        return OperationResult<ChatMessage>.Failure($"Image size exceeds {maxSizeMB:F1}MB limit for chat.");
-                    }
-                    // Validar tipo MIME se configurado
-                    if (chatLimits.AllowedImageMimeTypes != null && chatLimits.AllowedImageMimeTypes.Count > 0)
-                    {
-                        if (!chatLimits.AllowedImageMimeTypes.Contains(mediaAsset.MimeType, StringComparer.OrdinalIgnoreCase))
-                        {
-                            return OperationResult<ChatMessage>.Failure($"Image MIME type '{mediaAsset.MimeType}' is not allowed for chat.");
-                        }
-                    }
+                    return $"Image MIME type '{mediaAsset.MimeType}' is not allowed for chat.";
                 }
-                // Validar áudios
-                else if (mediaAsset.MediaType == MediaType.Audio)
-                {
-                    if (!chatLimits.AudioEnabled)
-                    {
-                        return OperationResult<ChatMessage>.Failure("Audio is not enabled for chat in this territory.");
-                    }
-                    if (mediaAsset.SizeBytes > chatLimits.MaxAudioSizeBytes)
-                    {
-                        var maxSizeMB = chatLimits.MaxAudioSizeBytes / (1024.0 * 1024.0);
-                        return OperationResult<ChatMessage>.Failure($"Audio size exceeds {maxSizeMB:F1}MB limit for chat.");
-                    }
-                    // Validar tipo MIME se configurado
-                    if (chatLimits.AllowedAudioMimeTypes != null && chatLimits.AllowedAudioMimeTypes.Count > 0)
-                    {
-                        if (!chatLimits.AllowedAudioMimeTypes.Contains(mediaAsset.MimeType, StringComparer.OrdinalIgnoreCase))
-                        {
-                            return OperationResult<ChatMessage>.Failure($"Audio MIME type '{mediaAsset.MimeType}' is not allowed for chat.");
-                        }
-                    }
-                }
             }
-            else
+        }
+        // Validar áudios
+        else if (mediaAsset.MediaType == MediaType.Audio)
+        {
+            if (!chatLimits.AudioEnabled)
             {
-                // Para DMs (sem TerritoryId), usar limites padrão fixos como fallback
-                if (mediaAsset.MediaType == MediaType.Image && mediaAsset.SizeBytes > 5 * 1024 * 1024) // 5MB
+                return "Audio is not enabled for chat in this territory.";
+            }
+            if (mediaAsset.SizeBytes > chatLimits.MaxAudioSizeBytes)
+            {
+                var maxSizeMB = chatLimits.MaxAudioSizeBytes / (1024.0 * 1024.0);
+                return $"Audio size exceeds {maxSizeMB:F1}MB limit for chat.";
+            }
+            // Validar tipo MIME se configurado
+            if (chatLimits.AllowedAudioMimeTypes != null && chatLimits.AllowedAudioMimeTypes.Count > 0)
+            {
+                if (!chatLimits.AllowedAudioMimeTypes.Contains(mediaAsset.MimeType, StringComparer.OrdinalIgnoreCase))
                 {
-                    return OperationResult<ChatMessage>.Failure("Image size exceeds 5MB limit for chat.");
-                }
-                if (mediaAsset.MediaType == MediaType.Audio && mediaAsset.SizeBytes > 2 * 1024 * 1024) // 2MB
-                {
-                    return OperationResult<ChatMessage>.Failure("Audio size exceeds 2MB limit for chat.");
+                    return $"Audio MIME type '{mediaAsset.MimeType}' is not allowed for chat.";
                 }
             }
         }
 
-        var message = new ChatMessage(
+        return null;
+    }
+
+    private static string? ValidateChatMediaDefaultLimits(MediaAsset mediaAsset)
+    {
+        // Para DMs (sem TerritoryId), usar limites padrão fixos como fallback
+        if (mediaAsset.MediaType == MediaType.Image && mediaAsset.SizeBytes > 5 * 1024 * 1024) // 5MB
+        {
+            return "Image size exceeds 5MB limit for chat.";
+        }
+        if (mediaAsset.MediaType == MediaType.Audio && mediaAsset.SizeBytes > 2 * 1024 * 1024) // 2MB
+        {
+            return "Audio size exceeds 2MB limit for chat.";
+        }
+
+        return null;
+    }
+
+    private static ChatMessage BuildTextMessage(Guid conversationId, Guid userId, string text)
+    {
+        return new ChatMessage(
             Guid.NewGuid(),
             conversationId,
             userId,
@@ -472,23 +522,35 @@ public sealed class ChatService
             editedAtUtc: null,
             deletedAtUtc: null,
             deletedByUserId: null);
+    }
 
-        await _messageRepository.AddAsync(message, cancellationToken);
-
-        // Criar MediaAttachment se mídia foi fornecida
-        if (mediaId.HasValue && mediaId.Value != Guid.Empty)
+    private async Task PersistMessageMediaAttachmentAsync(
+        Guid? mediaId,
+        Guid messageId,
+        CancellationToken cancellationToken)
+    {
+        if (!mediaId.HasValue || mediaId.Value == Guid.Empty)
         {
-            var attachment = new MediaAttachment(
-                Guid.NewGuid(),
-                mediaId.Value,
-                MediaOwnerType.ChatMessage,
-                message.Id,
-                0,
-                DateTime.UtcNow);
-
-            await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+            return;
         }
 
+        var attachment = new MediaAttachment(
+            Guid.NewGuid(),
+            mediaId.Value,
+            MediaOwnerType.ChatMessage,
+            messageId,
+            0,
+            DateTime.UtcNow);
+
+        await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+    }
+
+    private async Task UpdateConversationStatsAsync(
+        Guid conversationId,
+        ChatMessage message,
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
         // Atualizar stats (upsert)
         var existingStats = await _statsRepository.GetAsync(conversationId, cancellationToken);
         var newCount = (existingStats?.MessageCount ?? 0) + 1;
@@ -505,9 +567,6 @@ public sealed class ChatService
                 preview,
                 newCount),
             cancellationToken);
-
-        await _unitOfWork.CommitAsync(cancellationToken);
-        return OperationResult<ChatMessage>.Success(message);
     }
 
     public async Task<OperationResult<IReadOnlyList<ConversationParticipant>>> ListParticipantsAsync(

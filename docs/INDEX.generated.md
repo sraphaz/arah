@@ -1,6 +1,6 @@
 # Índice gerado — docs
 
-> Gerado em **2026-07-23** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
+> Gerado em **2026-07-24** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
 > Exclui stubs `status: deprecated` na raiz (ver `_archive/`).
 
 | Documento | Owner | Updated |
@@ -272,6 +272,7 @@
 | [PROGRESS_AUTOMACAO](docs/backlog-api/PROGRESS_AUTOMACAO.md) | - | - |
 | [README](docs/backlog-api/README.md) | - | - |
 | [REALINHAMENTO_ESTRATEGICO_FASES_8_14](docs/backlog-api/REALINHAMENTO_ESTRATEGICO_FASES_8_14.md) | - | - |
+| [REALINHAMENTO_INTELIGENCIA_TERRITORIAL](docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) | - | - |
 | [REALINHAMENTO_SUSTENTACAO_OPERACIONAL](docs/backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md) | - | - |
 | [REORGANIZACAO_ESTRATEGICA_FINAL](docs/backlog-api/REORGANIZACAO_ESTRATEGICA_FINAL.md) | - | - |
 | [RESUMO_EXECUTIVO_ESTRATEGICO](docs/backlog-api/RESUMO_EXECUTIVO_ESTRATEGICO.md) | - | - |
@@ -288,6 +289,14 @@
 | [REVISAO_COMPLETA_PRIORIDADES](docs/backlog-api/REVISAO_COMPLETA_PRIORIDADES.md) | - | - |
 | [ROADMAP_VISUAL](docs/backlog-api/ROADMAP_VISUAL.md) | - | - |
 | [TEMPLATE_TDD_BDD_FASES](docs/backlog-api/TEMPLATE_TDD_BDD_FASES.md) | - | - |
+| [TI0](docs/backlog-api/TI0.md) | - | - |
+| [TI1](docs/backlog-api/TI1.md) | - | - |
+| [TI2](docs/backlog-api/TI2.md) | - | - |
+| [TI3](docs/backlog-api/TI3.md) | - | - |
+| [TI4](docs/backlog-api/TI4.md) | - | - |
+| [TI5](docs/backlog-api/TI5.md) | - | - |
+| [TI6](docs/backlog-api/TI6.md) | - | - |
+| [TI7](docs/backlog-api/TI7.md) | - | - |
 | [BFF_CONTRACT_SUMMARY](docs/BFF_CONTRACT_SUMMARY.md) | - | - |
 | [BFF_DOCUMENTACAO_ATUALIZADA_RESUMO](docs/BFF_DOCUMENTACAO_ATUALIZADA_RESUMO.md) | - | - |
 | [BFF_FLUTTER_EXAMPLE](docs/BFF_FLUTTER_EXAMPLE.md) | - | - |
@@ -403,6 +412,8 @@
 | [41_CONTRIBUTING](docs/governance/41_CONTRIBUTING.md) | - | - |
 | [DEFINITION_OF_DONE](docs/governance/DEFINITION_OF_DONE.md) | - | - |
 | [README](docs/handoff/arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/README.md) | - | - |
+| [README](docs/handoff/inteligencia-territorial/README.md) | - | - |
+| [ti-research-notes](docs/handoff/inteligencia-territorial/ti-research-notes.md) | - | - |
 | [README](docs/handoff/README.md) | - | - |
 | [IMPLEMENTATION_SUMMARY](docs/IMPLEMENTATION_SUMMARY.md) | - | - |
 | [INCIDENT_PLAYBOOK](docs/INCIDENT_PLAYBOOK.md) | - | - |

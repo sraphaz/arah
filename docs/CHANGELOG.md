@@ -1,4 +1,4 @@
-# Changelog - Arah
+﻿# Changelog - Arah
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
@@ -8,6 +8,67 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ---
 
 ## [Unreleased]
+
+### Adicionado — Inteligência Territorial / World Monitor no backlog (2026-07-23)
+
+- Pacote C4 evoluído incorporado: handoff em [`docs/handoff/inteligencia-territorial/`](handoff/inteligencia-territorial/) (Hub + 11 decks + notas de pesquisa)
+- Decks C4 e *Backlog Atualizado* atualizados com container Intelligence e bloco TI-0…TI-7
+- Realinhamento: [`REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md`](backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)
+- Incrementos documentados: [`TI0`](backlog-api/TI0.md)…[`TI7`](backlog-api/TI7.md) (trilha transversal; âncoras FASE23/24/44/53)
+- Spec exemplo SDD: [`TI-201-signal-review.spec.yaml`](specs/features/TI-201-signal-review.spec.yaml)
+- `PHASE_QUEUE.yaml` + `STATUS_FASES.md` + índice do backlog atualizados
+- **Multiagente TI** (consultivos): `signal-scout`, `territorial-analyst`, `source-steward`, `community-brief-writer`, `response-orchestrator`, `intelligence-governance-steward` — coreografia `inteligencia-territorial`; nenhum publica
+- `next-phase` ignora `kind: track` / `TI-*` (Bugbot: fila TI não compete com épicos FASE*)
+- Label canônica `wave/TI` em `.github/labels.yml`; links cross-dir do handoff C4↔TI; `deck-stage.js` para o Deck Executivo
+- Spec TI-201: `when` em AC-TI-201-5 + mapeamento de testes planejados (draft); backlog TI2/TI4 alinhados (stale|expired; EXIF default strip)
+
+### Corrigido — follow-up Bugbot Onda D (2026-07-23)
+
+- Jornada residência: cache do `mediaId` do comprovante (sem re-upload em retry); erros de upload vs solicitação separados
+- `ArahErrorState` centralizado no espaço disponível (Feed/Moderação)
+
+### Alterado — Onda D design app (moderação, stats, jornadas, gate IA) (2026-07-23)
+
+- **Moderação**: cards com chips/status e empty/error padronizados
+- **Perfil**: `ProfileStatsRow` (contagens ou fallback papel/presença/interesses)
+- **Residência**: anexo de comprovante (upload media + referência na solicitação); falha de upload bloqueia envio com feedback
+- **Perfil**: presença de curador tratada como residente (não visitante)
+- **APP-DS-12**: `ArahErrorState` (Feed/Moderação)
+- **APP-DS-13**: `design-ia-gate-check.ps1` com checks estruturais + UTF-8 BOM
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
+### Alterado — Onda C design app (telas núcleo + jornadas) (2026-07-21)
+
+- **JourneyShell** + **ArahButton**; jornada de residência v0 (`/residency-journey`) via banner/membership
+- **Mercado**: cards de produto, carrinho e empty states
+- **Chat**: bolhas alinhadas (eu à direita) com tokens
+- **Shell**: CreatePost/Profile sem Scaffold aninhado; Explorar com chips de ferramentas
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md` (APP-DS-07/08/10/11)
+
+### Decidido — ADR-021: design system do app como fonte canônica de UI (2026-07-21)
+
+- [ADR-021](architecture/adrs/ADR-021-design-system-app-canonic.md) (**APP-DS-01** Accepted): canônico = `design-system/handoff` + `ui_kits/app` + `--premium-*`; Flutter deve convergir; `26_FLUTTER_DESIGN_GUIDELINES`, nav em `24_FLUTTER_FRONTEND_PLAN` e `design/app_wireframe_v2.pdf` = legado
+- Bottom-nav canônica: Feed · Explorar · Publicar · Serviços · Perfil; TopBar: território + Mensagens + Notificações
+
+### Corrigido — CI design-gate falso positivo em `colors.*` (2026-07-21)
+
+- `design-gate-check.ps1`: match de `Colors.*` / `Color(0x…)` passa a ser **case-sensitive** (`-cmatch`), evitando flagrar `context.appColors` / variável `colors`
+- Testes Flutter: ExploreScreen (IA Serviços) e `AppDesignTokens.elevation` alinhados ao shell novo
+
+### Alterado — Alinhamento App Flutter ao design canônico (Onda A+B) (2026-07-21)
+
+- **ADR-021**: design-system (handoff + UI kit + `--premium-*`) como fonte canônica de UI do app
+- **Tokens/tema**: paleta floresta premium (`#A6D6B9` / `#0B0C0A`), tipografia Sora + Geist embutidas
+- **IA**: bottom-nav Feed · Explorar · Publicar · **Serviços** · Perfil; TopBar território + Mensagens + Notificações
+- **Hub Serviços** com categorias live/soon; rota `/notifications`; banner-convite de visitante no feed
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
+### Documentado — Análise profunda Design × App Flutter (2026-07-15)
+
+- Novo `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`: cruzamento tela a tela entre `design-system/` (handoff + UI kit premium) e `frontend/arah.app/`
+- Gaps priorizados `APP-DS-01`..`13` (IA Serviços/TopBar, paleta floresta vs teal, tipografia, hub, componentes, jornadas)
+- Ondas A–D de alinhamento propostas (fundação → IA → telas núcleo → jornadas)
+- `docs/design/AUDITORIA_DESIGN.md` e `docs/_meta/PHASE_QUEUE.yaml` (`design-quality`) apontam para a análise
 
 ### Refatorado — Pendências pós-revisão (Ondas 5) (2026-07-03)
 
@@ -26,7 +87,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - `ServiceCollectionExtensions` → `AddApplicationServices`/`AddInfrastructure` fatiados em helpers por concern
 - **Onda 3 (SOLID / extract method)**: `EventsService.CreateEventAsync` 257→69, `UpdateEventAsync` 122→44; `SellerPayoutService.ProcessPaidCheckoutAsync` 179→75, `CreatePayoutAsync` 147→53; `ChatService.SendTextMessageAsync` 174→45; `FeedController` (`EnforceGeoConvergenceAsync` + `BuildFeedItemResponse` dedup); `MapController.GetPins` 161→74, `GetPinsPaged` 226→106
 - **Onda 4 (tokens)**: literais de cor em `frontend/wiki/app/globals.css` mapeados para tokens de `design-tokens.css` (novos tokens semânticos); paletas Tailwind documentadas como *sync-with-tokens* (não convertidas p/ `var()` por causa de modificadores de opacidade do Tailwind v3)
-- **Onda 4 (`Result<T>`)**: convenção formalizada em **[ADR-021](architecture/adrs/ADR-021-convencao-sinalizacao-de-erros.md)** (`Result<T>` p/ comandos que falham com motivo; `T?` aceitável p/ consultas "get-or-null"; exceções p/ o excepcional) — evita reescrever ~35 métodos de consulta
+- **Onda 4 (`Result<T>`)**: convenção formalizada em **[ADR-022](architecture/adrs/ADR-022-convencao-sinalizacao-de-erros.md)** (`Result<T>` p/ comandos que falham com motivo; `T?` aceitável p/ consultas "get-or-null"; exceções p/ o excepcional) — evita reescrever ~35 métodos de consulta
 - **Docker**: `Dockerfile` raiz copia os 11 novos `Arah.Modules.*.Infrastructure/*.csproj` antes do `dotnet restore` (senão a imagem raiz da API quebra no `publish --no-restore`)
 - Build `Arah.sln` Release verde (0 erros)
 

@@ -1,0 +1,481 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+a { color:#2B6246; }
+a:hover { color:#377B57; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.toclink { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.toclink:hover { color:#377B57; border-left-color:#9FCEB4; }
+.sect { padding:38px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px; }
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px; }
+.h2 { font-family:'Sora',sans-serif; font-weight:600; font-size:1.7rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117; }
+.body { font-size:15px; line-height:1.66; color:#2B6246; max-width:68ch; }
+.chip { display:inline-block; font-size:10.5px; font-weight:600; letter-spacing:.05em; border-radius:999px; padding:3px 9px; white-space:nowrap; }
+.mono { font-family:ui-monospace,SFMono-Regular,monospace; font-size:12px; background:#F0F7F2; border-radius:6px; padding:2px 7px; }
+.mtable { width:100%; border-collapse:collapse; font-size:12.5px; }
+.mtable th { text-align:left; font-family:'Sora'; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; padding:9px 10px; border-bottom:2px solid rgba(23,53,37,0.16); }
+.mtable td { padding:10px; border-bottom:1px solid rgba(23,53,37,0.09); vertical-align:top; line-height:1.5; color:#2B6246; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } }
+</style>
+</helmet>
+<div class="shell" style="display:grid; grid-template-columns:268px 1fr; max-width:1400px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:30px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:19px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:18px; padding-left:2px;">Inteligência Territorial · Material 14</span>
+    <a class="toclink" href="Inteligencia Territorial - Hub.dc.html" style="color:#74806E;">← Hub da iniciativa</a>
+    <div style="height:14px;"></div>
+    <a class="toclink" href="#escopo">1 · Escopo / fora de escopo</a>
+    <a class="toclink" href="#decisoes">2 · Decisões (20)</a>
+    <a class="toclink" href="#adrs">3 · ADRs sugeridos</a>
+    <a class="toclink" href="#dados">4 · Tabelas &amp; migrations</a>
+    <a class="toclink" href="#endpoints">5 · Endpoints</a>
+    <a class="toclink" href="#eventos">6 · Eventos &amp; jobs</a>
+    <a class="toclink" href="#flags">7 · Flags &amp; permissões</a>
+    <a class="toclink" href="#obs">8 · Observabilidade</a>
+    <a class="toclink" href="#testes">9 · Testes &amp; aceite</a>
+    <a class="toclink" href="#rollout">10 · Rollout &amp; rollback</a>
+    <a class="toclink" href="#demo">11 · Dados de demonstração</a>
+    <a class="toclink" href="#riscos">12 · Dependências &amp; riscos</a>
+  </nav>
+
+  <main style="padding:54px clamp(24px,4vw,66px); min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:40px;">
+      <div class="eyebrow" style="letter-spacing:.16em;">Handoff técnico de desenvolvimento</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.05; margin:0 0 18px; color:#0E2117;">Comece a implementar<br/><span style="color:#377B57;">sem reinterpretar o design</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:66ch; margin:0;">Escopo fechado, 20 decisões com recomendação, modelo de dados, endpoints, eventos, jobs, flags, testes, rollout e dados de demonstração — para os Incrementos 1–4 da Inteligência Territorial.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:26px; font-size:13px; color:#74806E;">
+        <span><b style="color:#16271D;">Alvo</b> Incrementos 1–4 (fundação → participação)</span>
+        <span><b style="color:#16271D;">Método</b> spec-before-code (Spec Harness)</span>
+        <span><b style="color:#16271D;">Referências</b> <a href="Inteligencia Territorial - Estado Atual e Impacto.dc.html">Estado atual</a> · <a href="Inteligencia Territorial - Capability Map.dc.html">Capacidades</a></span>
+      </div>
+    </header>
+
+    <section id="escopo" class="sect">
+      <div class="eyebrow">1 · Escopo</div>
+      <h2 class="h2">O que entra — e o que explicitamente não entra</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:8px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <span class="chip" style="background:#E2F1E8; color:#2B6246;">No escopo (Incrementos 1–4)</span>
+          <sc-for list="{{ escopo }}" as="i" hint-placeholder-count="8">
+            <div style="display:flex; gap:9px; align-items:baseline; padding:6px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><span class="msr" style="font-size:15px; color:#377B57;">check_circle</span><span style="font-size:13.5px; line-height:1.55; color:#173525;">{{ i }}</span></div>
+          </sc-for>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <span class="chip" style="background:#FBE9E4; color:#A03A26;">Fora de escopo (por decisão)</span>
+          <sc-for list="{{ foraEscopo }}" as="i" hint-placeholder-count="8">
+            <div style="display:flex; gap:9px; align-items:baseline; padding:6px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><span class="msr" style="font-size:15px; color:#A03A26;">block</span><span style="font-size:13.5px; line-height:1.55; color:#173525;">{{ i }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="decisoes" class="sect">
+      <div class="eyebrow">2 · Decisões</div>
+      <h2 class="h2">20 decisões com recomendação e trade-off</h2>
+      <p class="body" style="margin-bottom:18px;">Cada decisão traz a recomendação (chip verde), a alternativa preterida e quando revisitar. Nenhuma é irreversível; todas viram ADR quando aceitas.</p>
+      <sc-for list="{{ decisoes }}" as="d" hint-placeholder-count="10">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; background:#fff; padding:16px 20px; margin-bottom:10px;">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:8px;">
+            <span style="font-family:'Sora'; font-weight:700; font-size:12px; color:#74806E; min-width:26px;">{{ d.n }}</span>
+            <b style="font-family:'Sora'; font-size:14px; color:#0E2117;">{{ d.t }}</b>
+            <span class="chip" style="background:#214D37; color:#fff;">{{ d.rec }}</span>
+            <span style="font-size:11.5px; color:#74806E;">vs {{ d.alt }}</span>
+          </div>
+          <p style="font-size:13px; line-height:1.58; color:#2B6246; margin:0;">{{ d.just }} <span style="color:#74806E;">Revisar: {{ d.rev }}.</span></p>
+        </div>
+      </sc-for>
+    </section>
+
+    <section id="adrs" class="sect">
+      <div class="eyebrow">3 · ADRs sugeridos</div>
+      <h2 class="h2">Seis registros de decisão para abrir junto com o código</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; margin-top:8px;">
+        <sc-for list="{{ adrs }}" as="a" hint-placeholder-count="6">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; background:#fff; padding:16px 18px;">
+            <span class="mono" style="color:#377B57;">{{ a.id }}</span>
+            <b style="display:block; font-family:'Sora'; font-size:13.5px; color:#0E2117; margin:8px 0 4px;">{{ a.t }}</b>
+            <p style="font-size:12.5px; line-height:1.55; color:#74806E; margin:0;">{{ a.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="dados" class="sect">
+      <div class="eyebrow">4 · Modelo de dados</div>
+      <h2 class="h2">Tabelas novas (schema <span class="mono" style="font-size:1.1rem;">intelligence</span>)</h2>
+      <p class="body" style="margin-bottom:16px;">Postgres existente, com PostGIS para geometria. Colunas-chave abaixo; tipos e índices completos nascem na migration de cada incremento. Convenção de nomes segue o padrão do repositório.</p>
+      <div style="overflow-x:auto; border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff;">
+        <table class="mtable" style="min-width:900px;">
+          <thead><tr><th style="min-width:200px;">Tabela</th><th>Propósito</th><th style="min-width:340px;">Colunas-chave</th><th>Inc.</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ tabelas }}" as="t" hint-placeholder-count="9">
+              <tr>
+                <td><span class="mono">{{ t.nome }}</span></td>
+                <td>{{ t.prop }}</td>
+                <td style="font-family:ui-monospace,monospace; font-size:11.5px;">{{ t.cols }}</td>
+                <td><b style="color:#0E2117;">{{ t.inc }}</b></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px; color:#74806E; margin:14px 0 0;">Migrations: uma por incremento (<span class="mono">AddIntelligenceFoundation</span>, <span class="mono">AddIntelligenceInbox</span>, <span class="mono">AddTerritorialPublication</span>, <span class="mono">AddCommunityParticipation</span>), sempre reversíveis. Índices espaciais GIST em <span class="mono">geometry</span>; único em <span class="mono">(provider_id, external_id)</span>.</p>
+    </section>
+
+    <section id="endpoints" class="sect">
+      <div class="eyebrow">5 · Endpoints</div>
+      <h2 class="h2">Superfície de API — resumo executável</h2>
+      <p class="body" style="margin-bottom:16px;">Padrão do repositório: API interna <span class="mono">/api/v1/*</span>, app consome via BFF <span class="mono">/api/v2/journeys/*</span>. Contratos com exemplos JSON no documento <a href="Inteligencia Territorial - Integracao World Monitor.dc.html">Integração World Monitor &amp; contratos</a>.</p>
+      <div style="overflow-x:auto; border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff;">
+        <table class="mtable" style="min-width:920px;">
+          <thead><tr><th>Método</th><th style="min-width:330px;">Rota</th><th>Função</th><th>Autorização</th><th>Inc.</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ endpoints }}" as="e" hint-placeholder-count="14">
+              <tr>
+                <td><span class="chip" style="background:{{ e.mbg }}; color:{{ e.mfg }};">{{ e.m }}</span></td>
+                <td><span style="font-family:ui-monospace,monospace; font-size:11.5px;">{{ e.rota }}</span></td>
+                <td>{{ e.fn }}</td>
+                <td style="font-size:11.5px;">{{ e.auth }}</td>
+                <td><b style="color:#0E2117;">{{ e.inc }}</b></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px; color:#74806E; margin:14px 0 0;">Regras transversais: paginação cursor-based como no restante da API; idempotência por <span class="mono">Idempotency-Key</span> nos POSTs de revisão/publicação; toda mutação audita ator + justificativa; rate limit próprio (escrita 30 req/min, padrão do repo).</p>
+    </section>
+
+    <section id="eventos" class="sect">
+      <div class="eyebrow">6 · Eventos &amp; jobs</div>
+      <h2 class="h2">O sistema nervoso da camada</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:8px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">bolt</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">Eventos de domínio → outbox</b></div>
+          <sc-for list="{{ eventos }}" as="ev" hint-placeholder-count="8">
+            <div style="padding:5px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><span class="mono">{{ ev.n }}</span><span style="font-size:12px; color:#74806E;"> — {{ ev.d }}</span></div>
+          </sc-for>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">schedule</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">Jobs (hosted services)</b></div>
+          <sc-for list="{{ jobs }}" as="j" hint-placeholder-count="5">
+            <div style="padding:6px 0; border-bottom:1px dashed rgba(23,53,37,0.08);">
+              <span class="mono">{{ j.n }}</span>
+              <p style="font-size:12px; color:#74806E; margin:4px 0 0; line-height:1.5;">{{ j.d }}</p>
+            </div>
+          </sc-for>
+          <p style="font-size:12px; color:#74806E; margin:10px 0 0;">Sem broker novo no MVP: hosted services + outbox existente. Fila dedicada só se o volume provar necessidade (Decisão 3).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="flags" class="sect">
+      <div class="eyebrow">7 · Flags &amp; permissões</div>
+      <h2 class="h2">Quem pode o quê, e o que liga o quê</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:8px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">flag</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">Feature flags (por território)</b></div>
+          <sc-for list="{{ flags }}" as="f" hint-placeholder-count="4">
+            <div style="padding:6px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><span class="mono">{{ f.n }}</span><p style="font-size:12px; color:#74806E; margin:4px 0 0; line-height:1.5;">{{ f.d }}</p></div>
+          </sc-for>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">key</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">Permissões</b></div>
+          <sc-for list="{{ perms }}" as="p" hint-placeholder-count="5">
+            <div style="padding:6px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><b style="font-size:12.5px; color:#0E2117;">{{ p.papel }}</b><p style="font-size:12px; color:#74806E; margin:4px 0 0; line-height:1.5;">{{ p.pode }}</p></div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="obs" class="sect">
+      <div class="eyebrow">8 · Observabilidade</div>
+      <h2 class="h2">Métricas que contam a saúde — não o vício</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px; margin-top:8px;">
+        <sc-for list="{{ metricas }}" as="m" hint-placeholder-count="8">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:14px; background:#fff; padding:14px 16px;">
+            <span class="mono" style="font-size:11px;">{{ m.n }}</span>
+            <p style="font-size:12.5px; line-height:1.5; color:#74806E; margin:6px 0 0;">{{ m.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12.5px; color:#74806E; margin:14px 0 0;">Tudo em Prometheus/OpenTelemetry como o restante; logs estruturados com <span class="mono">signal_id</span> como correlação; tracing do pipeline ingestão→publicação. Alarmes: quota &gt; 80%, provider unhealthy &gt; 15 min, fila de revisão &gt; SLA.</p>
+    </section>
+
+    <section id="testes" class="sect">
+      <div class="eyebrow">9 · Testes &amp; aceite</div>
+      <h2 class="h2">O que precisa passar para cada incremento contar</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:8px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">science</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">Suítes</b></div>
+          <sc-for list="{{ suites }}" as="s" hint-placeholder-count="7">
+            <div style="display:flex; gap:9px; align-items:baseline; padding:5px 0; border-bottom:1px dashed rgba(23,53,37,0.08);"><span class="msr" style="font-size:14px; color:#377B57;">check</span><span style="font-size:13px; line-height:1.5; color:#173525;">{{ s }}</span></div>
+          </sc-for>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">verified</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">Critérios de aceite (amostra por incremento)</b></div>
+          <sc-for list="{{ aceite }}" as="a" hint-placeholder-count="4">
+            <div style="padding:6px 0; border-bottom:1px dashed rgba(23,53,37,0.08);">
+              <b style="font-size:12.5px; color:#0E2117;">{{ a.inc }}</b>
+              <p style="font-size:12px; color:#74806E; margin:4px 0 0; line-height:1.55;">{{ a.crit }}</p>
+            </div>
+          </sc-for>
+          <p style="font-size:12px; color:#74806E; margin:10px 0 0;">Specs SDD completas (intent, actors, NFRs, evidence, rollback) no documento <a href="Inteligencia Territorial - Roadmap e Backlog.dc.html">Roadmap, backlog &amp; specs</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="rollout" class="sect">
+      <div class="eyebrow">10 · Rollout &amp; rollback</div>
+      <h2 class="h2">Lançar escuro, acender por território</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin-top:8px;">
+        <sc-for list="{{ rollout }}" as="r" hint-placeholder-count="4">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+            <span style="font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#74806E;">{{ r.fase }}</span>
+            <b style="display:block; font-family:'Sora'; font-size:14px; color:#0E2117; margin:7px 0 5px;">{{ r.t }}</b>
+            <p style="font-size:12.5px; line-height:1.55; color:#2B6246; margin:0;">{{ r.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border:1px solid rgba(192,73,47,0.25); border-radius:16px; background:#FDF6F4; padding:18px 22px; margin-top:14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><span class="msr" style="font-size:18px; color:#C0492F;">u_turn_left</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">Rollback</b></div>
+        <p style="font-size:13px; line-height:1.6; color:#2B6246; margin:0;">Desligar <span class="mono">INTELLIGENCE</span> no território (UI some, dados ficam) → pausar jobs de ingestão (provider intacto) → em último caso, desabilitar o provedor globalmente (desligamento de emergência). Migrations são additive-only nos Incrementos 1–4: rollback de código nunca exige rollback de banco. Alertas já publicados permanecem com aviso de "fonte pausada" — nunca somem silenciosamente.</p>
+      </div>
+    </section>
+
+    <section id="demo" class="sect">
+      <div class="eyebrow">11 · Dados de demonstração</div>
+      <h2 class="h2">Seed "Socorro, SP" — o ciclo completo em 13 passos</h2>
+      <p class="body" style="margin-bottom:16px;">Território real da Mantiqueira paulista (turismo de aventura, Rio do Peixe, histórico de cheias). O seed cria o cenário completo para demo e testes E2E — dados fictícios plausíveis, pessoas fictícias.</p>
+      <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 26px;">
+        <sc-for list="{{ demo }}" as="d" hint-placeholder-count="13">
+          <div style="display:flex; gap:14px; padding:7px 0; border-bottom:1px dashed rgba(23,53,37,0.08); align-items:baseline;">
+            <span style="flex-shrink:0; font-family:'Sora'; font-weight:700; font-size:11.5px; color:#377B57; min-width:22px;">{{ d.n }}</span>
+            <span style="font-size:13px; line-height:1.55; color:#173525;">{{ d.t }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12.5px; color:#74806E; margin:14px 0 0;">Seed idempotente via endpoint admin existente; fixtures do World Monitor gravadas como respostas mock (sem chamar a API real na demo).</p>
+    </section>
+
+    <section id="riscos" class="sect" style="border-bottom:none;">
+      <div class="eyebrow">12 · Dependências &amp; riscos</div>
+      <h2 class="h2">O que pode travar a implementação</h2>
+      <div style="overflow-x:auto; border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff;">
+        <table class="mtable" style="min-width:760px;">
+          <thead><tr><th style="min-width:220px;">Dependência / risco</th><th>Impacto se falhar</th><th style="min-width:280px;">Plano</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ riscos }}" as="r" hint-placeholder-count="6">
+              <tr>
+                <td><b style="color:#0E2117;">{{ r.t }}</b></td>
+                <td>{{ r.imp }}</td>
+                <td>{{ r.plano }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap;">
+        <a href="Inteligencia Territorial - Integracao World Monitor.dc.html" style="display:inline-flex; align-items:center; gap:8px; background:#214D37; color:#fff; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Próximo: integração &amp; contratos <span class="msr" style="font-size:16px;">east</span></a>
+        <a href="Inteligencia Territorial - Hub.dc.html" style="display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(23,53,37,0.2); color:#173525; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Voltar ao hub</a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const M = { GET: { mbg: "#E2F1E8", mfg: "#2B6246" }, POST: { mbg: "#214D37", mfg: "#fff" }, PUT: { mbg: "#F5EBDD", mfg: "#8A6D3B" } };
+    const e = (m, rota, fn, auth, inc) => ({ m, ...M[m], rota, fn, auth, inc });
+    return {
+      escopo: [
+        "Abstração SignalProvider + adapter World Monitor (REST primeiro) com quota, retry, circuit breaker e desligamento de emergência",
+        "Pipeline: ingestão agendada → normalização → deduplicação → correlação geográfica (PostGIS) → relevância → avaliação de impacto",
+        "Intelligence Inbox sobre WorkItem: revisar, ajustar, aprovar, rejeitar — com auditoria",
+        "Brief territorial + alerta enriquecido (fonte, severidade, confiança, validade, geometria, timeline) publicado em feed, mapa e notificações",
+        "Confirmação, contestação e evidência comunitária (Incremento 4)",
+        "Preferências de inteligência do morador (categorias, severidade mínima, silêncio)",
+        "Gestão de provedores no admin: chave, quota, custo, saúde, política de publicação",
+        "Specs SDD TI-*, testes de contrato com mock do WM, seed de demonstração Socorro-SP",
+      ],
+      foraEscopo: [
+        "Replicar o painel do World Monitor (globo, camadas globais) dentro do app",
+        "Incorporar código AGPL do WM no backend — consumo é só por API/MCP",
+        "Autopublicação ampla — apenas allowlist objetiva, desligada por padrão",
+        "LLM decidindo publicação ou severidade (só rascunho de texto, com revisão)",
+        "Governança/eventos nascidos de alerta (Incremento 5) e memória analítica (6)",
+        "Federação de sinais entre instâncias (Incremento 7)",
+        "Fontes oficiais brasileiras (INMET/CEMADEN) — providers futuros, pós-MVP",
+        "Vigilância individual, rastreamento ou qualquer dado pessoal enviado ao provedor",
+      ],
+      decisoes: [
+        { n: "01", t: "MCP ou REST no MVP", rec: "REST", alt: "MCP", just: "OpenAPI tipada, batch de até 20 ops, quotas e erros documentados, SDKs MIT; MCP fica para exploração assistida por agentes (signal-scout) onde flexibilidade vale mais que tipagem.", rev: "quando agentes operarem ingestão contínua" },
+        { n: "02", t: "Polling ou eventos", rec: "Polling agendado", alt: "webhooks/push", just: "Cadência por categoria (clima 15 min, economia 6 h) casa com o freshness do WM e com o plano de 1.000 req/dia; webhooks do WM (5 regras no plano API) entram depois para breaking de categorias críticas.", rev: "Incremento 3, com volume real medido" },
+        { n: "03", t: "Fila dedicada ou processamento interno", rec: "Hosted services + outbox", alt: "broker (RabbitMQ/SQS)", just: "O volume estimado (centenas de sinais/dia) não justifica infra nova; outbox já garante entrega de notificações. Broker só se métricas provarem gargalo.", rev: "quando p95 do pipeline > 60 s" },
+        { n: "04", t: "Postgres ou armazenamento separado", rec: "Mesmo Postgres (PostGIS)", alt: "store dedicado", just: "PostGIS já sobe no docker-compose; joins com territórios/entidades são o coração da correlação; um banco = uma operação.", rev: "federação (Incremento 7)" },
+        { n: "05", t: "Cache de respostas do provedor", rec: "Redis existente, TTL por freshness", alt: "sem cache", just: "Espelha o modelo de freshness do próprio WM (fresh→stale); economiza quota e dá resposta degradada explícita quando o provedor cai.", rev: "—" },
+        { n: "06", t: "Modelo de deduplicação", rec: "Chave natural + janela", alt: "similaridade semântica", just: "(provider, external_id) único + hash de categoria/geometria/janela temporal para fusão entre fontes. Determinístico e explicável; semântica só na evolução.", rev: "com 2+ provedores ativos" },
+        { n: "07", t: "Geocorrelação", rec: "PostGIS ST_Intersects/DWithin", alt: "serviço geo externo", just: "Fronteiras de território já existem; consulta espacial local é barata, auditável e offline-friendly. Bbox precomputado como fast-path.", rev: "—" },
+        { n: "08", t: "Cálculo de relevância", rec: "Score determinístico", alt: "modelo aprendido", just: "Pesos explicáveis: interseção geográfica, categoria assinada, severidade, ativos atingidos. Todo score mostra as parcelas — princípio 'sem decisão opaca'.", rev: "Incremento 6, com histórico real" },
+        { n: "09", t: "Uso de LLM", rec: "Só rascunho com revisão", alt: "LLM no pipeline decisório", just: "LLM pode rascunhar brief em linguagem territorial e resumir fontes — sempre editável, atribuído e com rastro. Nunca decide publicar, pontuar ou expirar.", rev: "—" },
+        { n: "10", t: "Revisão obrigatória", rec: "Sim, por padrão", alt: "publicação direta", just: "Princípio inegociável. Custa latência; compra confiança. A fila WorkItem já dá SLA visível e auditoria.", rev: "nunca (só a allowlist muda)" },
+        { n: "11", t: "Autopublicação", rec: "Allowlist objetiva por território", alt: "nenhuma / ampla", just: "Categorias objetivas de fonte oficial (ex.: alerta meteorológico severo) podem autopublicar com selo 'publicação automática' — decisão do território, desligada por padrão.", rev: "após 3 meses de operação piloto" },
+        { n: "12", t: "Retenção de dados", rec: "Brutos 90 d · publicados permanentes", alt: "tudo permanente", just: "Sinais não publicados expiram (minimização); alertas publicados e memória territorial ficam — são história do lugar. Compatível com LGPD (nada pessoal nos sinais).", rev: "validação jurídica (M19)" },
+        { n: "13", t: "Atualização de alertas", rec: "Timeline append-only", alt: "editar in-place", just: "AlertUpdate imutável preserva o que a comunidade viu em cada momento; correção nunca apaga o erro, marca-o corrigido.", rev: "—" },
+        { n: "14", t: "Contestação", rec: "Aberta a moradores, com evidência", alt: "só curadores", just: "Direito à contestação é princípio. Anti-brigading: 1 contestação por pessoa, agregado visível, threshold que reabre revisão em vez de despublicar automaticamente.", rev: "com dados do piloto" },
+        { n: "15", t: "Confiança das fontes", rec: "Catálogo inicial + ajuste por correção", alt: "score dinâmico desde o início", just: "Bandas simples (oficial > corroborada > única fonte > não verificada) seeded do catálogo do WM; correções e contestações rebaixam com rastro.", rev: "Incremento 6" },
+        { n: "16", t: "Órgãos oficiais", rec: "Papel de validador (Inc. 5)", alt: "integração de dados imediata", just: "Primeiro pessoas (defesa civil valida no app), depois dados (INMET/CEMADEN como providers). Evita bloquear o MVP em convênios.", rev: "conforme parcerias" },
+        { n: "17", t: "Operação offline", rec: "Último estado + selo stale", alt: "sync completo", just: "App mostra alertas cacheados com carimbo de atualização e aviso de desatualização; nada de sync bidirecional complexo no MVP.", rev: "feedback de campo" },
+        { n: "18", t: "Federação", rec: "Adiar para Incremento 7", alt: "desenhar junto", just: "O domínio nasce com signal_id global e origem explícita (preparado), mas protocolo de confiança federada só depois do Arah Core maduro (FASE53+).", rev: "após FASE53" },
+        { n: "19", t: "Custos de provedor", rec: "Plano API US$ 99,99/mês por operação", alt: "Business US$ 249,99", just: "1.000 req/dia comportam ~15 categorias × 4 territórios em cadência conservadora com batch. Ledger de quota alarma em 80%; upgrade só com demanda real.", rev: "quota > 80% por 2 semanas" },
+        { n: "20", t: "Licenciamento", rec: "Consumo por API + atribuição", alt: "fork/embed AGPL", just: "Sem código AGPL no backend proprietário da instância; atribuição 'dados via World Monitor' visível na fonte de cada sinal. Marca/white-label e ToS de API exigem validação jurídica.", rev: "parecer jurídico (M19)" },
+      ],
+      adrs: [
+        { id: "ADR-TI-01", t: "Provider abstraction no domínio", d: "Domínio conhece SignalProvider genérico; World Monitor vive só em Infrastructure/Intelligence/Providers/WorldMonitor." },
+        { id: "ADR-TI-02", t: "REST no MVP, MCP para agentes", d: "Ingestão determinística por REST/OpenAPI; MCP reservado ao signal-scout exploratório." },
+        { id: "ADR-TI-03", t: "Revisão humana como invariante", d: "Transição para Published exige PublicationDecision com ator humano, exceto allowlist objetiva por flag." },
+        { id: "ADR-TI-04", t: "Timeline append-only de alertas", d: "Updates imutáveis; correção marca, não apaga. Base da auditabilidade e da memória." },
+        { id: "ADR-TI-05", t: "Reuso do WorkItem para revisão", d: "SignalReview é um tipo de WorkItem — sem segunda fila, sem segunda auditoria." },
+        { id: "ADR-TI-06", t: "Retenção 90 d para não publicados", d: "Minimização por padrão; publicados e memória são permanentes e públicos ao território." },
+      ],
+      tabelas: [
+        { nome: "signal_providers", prop: "Provedores registrados, estado e política", cols: "id, name, kind(rest|mcp), base_url, status, quota_daily, emergency_off, options_json", inc: "1" },
+        { nome: "external_signals", prop: "Sinal normalizado e deduplicado", cols: "id, provider_id, external_id, category, severity, confidence, geometry(GIST), starts_at, expires_at, freshness, payload_json, dedupe_hash", inc: "1" },
+        { nome: "signal_territory_matches", prop: "Correlação sinal × território", cols: "signal_id, territory_id, relevance_score, score_parts_json, matched_at", inc: "2" },
+        { nome: "signal_impact_assessments", prop: "Avaliação de impacto explicável", cols: "id, signal_id, territory_id, summary, impacted_entities_json, impacted_assets_json, author(kind agent|human), created_at", inc: "2" },
+        { nome: "territorial_briefs", prop: "Texto territorial editado e assinado", cols: "id, assessment_id, title, body, recommended_actions_json, valid_until, edited_by, status", inc: "3" },
+        { nome: "territorial_alerts", prop: "Alerta publicado (evolução de alerts)", cols: "id, brief_id, territory_id, state, severity, source_block_json, geometry, published_by, published_at", inc: "3" },
+        { nome: "alert_updates", prop: "Timeline append-only", cols: "id, alert_id, kind(update|correction|resolution), body, actor_id, created_at", inc: "3" },
+        { nome: "community_verifications", prop: "Confirmações e contestações", cols: "id, alert_id, user_id, kind(confirm|complement|contest), note, evidence_media_id, created_at — único (alert_id,user_id)", inc: "4" },
+        { nome: "intelligence_policies", prop: "Política de publicação por território", cols: "territory_id, categories_json, autopublish_allowlist_json, min_severity_notify, review_sla_minutes", inc: "1" },
+        { nome: "provider_quota_ledger", prop: "Consumo de quota e custo", cols: "provider_id, date, requests, quota_limit, est_cost_cents", inc: "1" },
+      ],
+      endpoints: [
+        e("GET", "/api/v2/journeys/intelligence/territories/{id}/alerts", "Alertas ativos do território (app)", "membro do território", "3"),
+        e("GET", "/api/v2/journeys/intelligence/alerts/{id}", "Detalhe: fonte, confiança, timeline, impacto", "membro", "3"),
+        e("POST", "/api/v2/journeys/intelligence/alerts/{id}/confirm", "Confirmar ocorrência", "morador", "4"),
+        e("POST", "/api/v2/journeys/intelligence/alerts/{id}/contest", "Contestar com nota/evidência", "morador", "4"),
+        e("POST", "/api/v2/journeys/intelligence/alerts/{id}/evidence", "Anexar evidência (media)", "morador", "4"),
+        e("GET", "/api/v2/journeys/intelligence/preferences", "Preferências de inteligência", "usuário", "3"),
+        e("PUT", "/api/v2/journeys/intelligence/preferences", "Atualizar categorias/severidade/silêncio", "usuário", "3"),
+        e("GET", "/api/v1/intelligence/signals?state=awaiting_review", "Inbox de revisão (admin)", "capability IntelligenceReviewer", "2"),
+        e("GET", "/api/v1/intelligence/signals/{id}", "Sinal completo + assessment + fontes", "IntelligenceReviewer", "2"),
+        e("POST", "/api/v1/intelligence/signals/{id}/review", "Aprovar/ajustar/rejeitar (WorkItem outcome)", "IntelligenceReviewer", "2"),
+        e("POST", "/api/v1/intelligence/signals/{id}/publish", "Publicar brief → alerta + post + notificações", "IntelligenceReviewer", "3"),
+        e("POST", "/api/v1/intelligence/alerts/{id}/update", "Acrescentar atualização/correção/resolução", "IntelligenceReviewer", "3"),
+        e("GET", "/api/v1/intelligence/providers", "Provedores: saúde, quota, custo", "SystemOperator", "1"),
+        e("PUT", "/api/v1/intelligence/providers/{id}", "Configurar/desligar emergencialmente", "SystemOperator", "1"),
+        e("GET", "/api/v1/intelligence/health", "Saúde agregada do pipeline", "SystemOperator", "1"),
+      ],
+      eventos: [
+        { n: "SignalReceived", d: "sinal normalizado persistido" },
+        { n: "SignalMatchedTerritory", d: "correlação criada (score)" },
+        { n: "SignalAwaitingReview", d: "WorkItem SignalReview aberto" },
+        { n: "SignalReviewCompleted", d: "aprovado/ajustado/rejeitado + ator" },
+        { n: "AlertPublished", d: "gera post ALERT + notificações (kind intelligence)" },
+        { n: "AlertUpdated / AlertCorrected", d: "nova entrada na timeline" },
+        { n: "AlertContested", d: "agregado atualizado; threshold reabre revisão" },
+        { n: "AlertResolved / AlertExpired", d: "encerramento → memória territorial" },
+      ],
+      jobs: [
+        { n: "IngestSignalsJob", d: "Por categoria assinada, cadência configurável (clima 15 min · desastres 10 min · economia 6 h). Usa batch do WM; respeita ledger de quota; circuit breaker em 5 falhas." },
+        { n: "FreshnessSweepJob", d: "Rebaixa fresh→aging→stale; expira sinais vencidos; bloqueia publicação de stale; marca alertas com fonte desatualizada." },
+        { n: "ProviderHealthProbeJob", d: "GET /api/health?compact=1 do WM a cada 5 min; abre incidente e degrada UI em unhealthy." },
+        { n: "QuotaLedgerRollupJob", d: "Consolida consumo diário vs plano (1.000/dia); alarma em 80%; projeta custo mensal." },
+        { n: "ReviewSlaWatchdogJob", d: "Sinais aguardando revisão além do SLA notificam curadores; nunca publicam sozinhos." },
+      ],
+      flags: [
+        { n: "INTELLIGENCE", d: "Liga a camada no território. Desligada por padrão; UI e jobs respeitam." },
+        { n: "INTELLIGENCE_CATEGORY_<cat>", d: "Categorias assinadas pelo território (clima, saúde, logística…). Só se busca o que alguém usa." },
+        { n: "INTELLIGENCE_AUTOPUBLISH_OBJECTIVE", d: "Allowlist objetiva de autopublicação com selo automático. Requer política configurada." },
+        { n: "INTELLIGENCE_COMMUNITY_VERIFICATION", d: "Habilita confirmar/contestar/evidência (Incremento 4)." },
+      ],
+      perms: [
+        { papel: "Morador (Resident)", pode: "Ver alertas ResidentsOnly, confirmar, contestar, enviar evidência, configurar preferências." },
+        { papel: "Visitante", pode: "Ver alertas públicos do território ativo. Sem participação na verificação." },
+        { papel: "Capability IntelligenceReviewer", pode: "Revisar sinais, editar brief, publicar, atualizar, encerrar. Curators podem receber a capability no piloto." },
+        { papel: "Validador institucional (Inc. 5)", pode: "Selo institucional em alertas da sua competência; auditado." },
+        { papel: "SystemOperator / Admin", pode: "Providers, quotas, políticas, desligamento de emergência. Nunca edita conteúdo comunitário." },
+      ],
+      metricas: [
+        { n: "ti_signal_to_assessment_seconds", d: "Tempo sinal→avaliação (p50/p95)" },
+        { n: "ti_review_latency_seconds", d: "Tempo avaliação→decisão humana" },
+        { n: "ti_signals_rejected_ratio", d: "Taxa de rejeição na revisão (qualidade da fonte/relevância)" },
+        { n: "ti_geo_precision_ratio", d: "% sinais publicados confirmados no território certo" },
+        { n: "ti_alerts_corrected_total", d: "Correções publicadas (transparência, não vergonha)" },
+        { n: "ti_community_confirm_ratio", d: "Confirmações vs contestações por alerta" },
+        { n: "ti_provider_requests_daily", d: "Consumo vs quota do plano" },
+        { n: "ti_provider_stale_ratio", d: "% respostas servidas de cache stale" },
+      ],
+      suites: [
+        "Unidade (Domain): invariantes — publicar exige decisão; expirado não publica; contestação não apaga histórico",
+        "Contrato: fixtures gravadas da OpenAPI do WM; drift-check no CI contra openapi.yaml",
+        "Integração: pipeline completo com mock do provedor (ingest→publish) em Postgres+PostGIS real",
+        "Geoespacial: fronteiras reais (Socorro), sinais na borda, fusos e horário de verão",
+        "Resiliência: provedor fora, 429 com Retry-After, quota estourada, resposta stale",
+        "Flutter: widget/golden das telas novas; deep-link de notificação → detalhe",
+        "E2E: cenário Socorro completo (13 passos) como teste de aceitação",
+      ],
+      aceite: [
+        { inc: "Incremento 1 — Fundação", crit: "Provider configurável e desligável; sinal do mock persiste normalizado e deduplicado; quota ledger conta; flags respeitadas; zero chamadas reais em CI." },
+        { inc: "Incremento 2 — Inbox", crit: "Sinal relevante abre WorkItem SignalReview; revisor vê fonte/confiança/freshness/impacto; aprovar/rejeitar audita ator e justificativa; nada publica sem decisão." },
+        { inc: "Incremento 3 — Publicação", crit: "Publicar gera alerta enriquecido + post + notificação por preferência; detalhe mostra bloco de fonte completo; stale bloqueia publicação; timeline registra updates." },
+        { inc: "Incremento 4 — Participação", crit: "Morador confirma/contesta 1×; agregado visível; threshold reabre revisão; evidência passa por curadoria de mídia existente." },
+      ],
+      rollout: [
+        { fase: "Fase A", t: "Dark launch", d: "Código em produção com INTELLIGENCE desligada em todos os territórios; jobs rodam em modo dry-run gravando métricas." },
+        { fase: "Fase B", t: "Piloto interno", d: "Socorro-SP com seed + mock; curadores reais treinam na Inbox; SLA e copy ajustados." },
+        { fase: "Fase C", t: "Piloto real", d: "Provedor real ligado (plano API), 2–3 categorias objetivas; comparação com fontes oficiais por 4 semanas." },
+        { fase: "Fase D", t: "Abertura gradual", d: "Territórios optam por adesão via política própria; categorias adicionais conforme quota e feedback." },
+      ],
+      demo: [
+        { n: "01", t: "Sinal climático chega (mock GDACS via WM): chuva extrema prevista, polígono cobrindo a bacia do Rio do Peixe" },
+        { n: "02", t: "Correlação: interseção com a fronteira de Socorro; 2 entidades e 1 asset dentro da área (ponte, escola rural, captação)" },
+        { n: "03", t: "Avaliação de impacto: resumo explicável + score de relevância com parcelas visíveis" },
+        { n: "04", t: "WorkItem SignalReview abre; curadora Marta revisa fonte, ajusta severidade para 'alerta'" },
+        { n: "05", t: "Brief editado: 'Chuva forte entre 5ª e sábado; evite a estrada da Ponte Preta; ponto de apoio no CRAS'" },
+        { n: "06", t: "Publicação: alerta no mapa (polígono), post no feed, notificação a moradores com categoria clima assinada" },
+        { n: "07", t: "Notificação chega respeitando preferências (severidade mínima 'atenção')" },
+        { n: "08", t: "Morador João confirma: 'rio já subiu 40 cm no bairro dos Cubas'" },
+        { n: "09", t: "Fotografia georreferenciada anexada como evidência (curadoria de mídia)" },
+        { n: "10", t: "Atualização na timeline: defesa civil interdita a ponte; severidade mantida" },
+        { n: "11", t: "Mutirão criado a partir do alerta: limpeza de bueiros no centro (12 confirmados)" },
+        { n: "12", t: "Encerramento: chuva passou, ponte liberada; resolução assinada pela curadora" },
+        { n: "13", t: "Memória territorial: evento consultável com linha do tempo, evidências e aprendizado ('limpar bueiros em outubro')" },
+      ],
+      riscos: [
+        { t: "Chave/plano do World Monitor não contratado", imp: "Incrementos 2+ ficam em mock", plano: "Fase A/B rodam 100% em fixtures; contratação na Fase C; decisão 19 já orça o plano." },
+        { t: "Quota de 1.000 req/dia insuficiente", imp: "Sinais atrasados ou categorias cortadas", plano: "Batch + cache por freshness + categorias assinadas; upgrade Business só com ledger provando." },
+        { t: "Qualidade geográfica dos sinais (geometria grosseira)", imp: "Falsos positivos de relevância", plano: "Score exige interseção real; revisão humana filtra; métricas de precisão orientam ajuste de pesos." },
+        { t: "Push FCM ainda não provisionado no app", imp: "Notificação só in-app", plano: "Gap pré-existente já no backlog do app; alerta in-app + feed funcionam desde o Incremento 3." },
+        { t: "Sobrecarga dos curadores", imp: "Fila de revisão estoura SLA", plano: "Watchdog notifica; categorias reduzidas; capability distribuível a mais moradores; nunca autopublica por pressão." },
+        { t: "Validação jurídica AGPL/ToS pendente", imp: "Risco de compliance", plano: "Parecer antes da Fase C; consumo por API + atribuição já minimiza; alternativa: licença comercial WM." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

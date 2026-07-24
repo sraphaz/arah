@@ -18,7 +18,7 @@ import 'app_localizations_pt.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'l10n/app_localizations.dart';
+/// import 'gen_l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -62,8 +62,7 @@ import 'app_localizations_pt.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,8 +82,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -1592,6 +1589,42 @@ abstract class AppLocalizations {
   /// **'Evidências'**
   String get moderationEvidencesTab;
 
+  /// No description provided for @moderationEmptyDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quando houver itens para curadoria, eles aparecem aqui.'**
+  String get moderationEmptyDescription;
+
+  /// No description provided for @moderationCaseTypeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Caso de moderação'**
+  String get moderationCaseTypeLabel;
+
+  /// No description provided for @residencyVerificationTypeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verificação de residência'**
+  String get residencyVerificationTypeLabel;
+
+  /// No description provided for @moderationStatusPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente'**
+  String get moderationStatusPending;
+
+  /// No description provided for @moderationStatusApproved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aprovado'**
+  String get moderationStatusApproved;
+
+  /// No description provided for @moderationStatusRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitado'**
+  String get moderationStatusRejected;
+
   /// No description provided for @noPermissionOrError.
   ///
   /// In pt, this message translates to:
@@ -1705,6 +1738,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao solicitar residência.'**
   String get errorRequestResidency;
+
+  /// No description provided for @errorUploadProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível enviar a foto do comprovante. Tente novamente.'**
+  String get errorUploadProof;
 
   /// No description provided for @moderationEvidenceSuffix.
   ///
@@ -2101,10 +2140,405 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Publicação não encontrada.'**
   String get postNotFound;
+
+  /// No description provided for @services.
+  ///
+  /// In pt, this message translates to:
+  /// **'Serviços'**
+  String get services;
+
+  /// No description provided for @servicesHubSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tudo que a vida no território precisa — economia, serviços, governança e cuidado com o lugar.'**
+  String get servicesHubSubtitle;
+
+  /// No description provided for @servicesCategoryEconomy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Economia local'**
+  String get servicesCategoryEconomy;
+
+  /// No description provided for @servicesCategoryTerritoryServices.
+  ///
+  /// In pt, this message translates to:
+  /// **'Serviços territoriais'**
+  String get servicesCategoryTerritoryServices;
+
+  /// No description provided for @servicesCategoryGovernance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Governança'**
+  String get servicesCategoryGovernance;
+
+  /// No description provided for @servicesCategoryLife.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vida no território'**
+  String get servicesCategoryLife;
+
+  /// No description provided for @servicesCategoryTools.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ferramentas do território'**
+  String get servicesCategoryTools;
+
+  /// No description provided for @statusLive.
+  ///
+  /// In pt, this message translates to:
+  /// **'No ar'**
+  String get statusLive;
+
+  /// No description provided for @statusSoon.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em breve'**
+  String get statusSoon;
+
+  /// No description provided for @serviceGroupBuy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compra coletiva'**
+  String get serviceGroupBuy;
+
+  /// No description provided for @serviceHosting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hospedagem'**
+  String get serviceHosting;
+
+  /// No description provided for @serviceDemands.
+  ///
+  /// In pt, this message translates to:
+  /// **'Demandas'**
+  String get serviceDemands;
+
+  /// No description provided for @serviceTrades.
+  ///
+  /// In pt, this message translates to:
+  /// **'Trocas'**
+  String get serviceTrades;
+
+  /// No description provided for @serviceDeliveries.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entregas'**
+  String get serviceDeliveries;
+
+  /// No description provided for @serviceWallet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Carteira'**
+  String get serviceWallet;
+
+  /// No description provided for @serviceBabysitters.
+  ///
+  /// In pt, this message translates to:
+  /// **'Babás'**
+  String get serviceBabysitters;
+
+  /// No description provided for @serviceWellness.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bem-estar'**
+  String get serviceWellness;
+
+  /// No description provided for @serviceRentals.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguéis'**
+  String get serviceRentals;
+
+  /// No description provided for @serviceDigitalHub.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hub digital'**
+  String get serviceDigitalHub;
+
+  /// No description provided for @serviceTerritoryHealth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saúde do território'**
+  String get serviceTerritoryHealth;
+
+  /// No description provided for @serviceMetrics.
+  ///
+  /// In pt, this message translates to:
+  /// **'Métricas'**
+  String get serviceMetrics;
+
+  /// No description provided for @serviceSeeds.
+  ///
+  /// In pt, this message translates to:
+  /// **'Banco de sementes'**
+  String get serviceSeeds;
+
+  /// No description provided for @serviceLearning.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aprendizado'**
+  String get serviceLearning;
+
+  /// No description provided for @serviceAiAssistant.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assistente IA'**
+  String get serviceAiAssistant;
+
+  /// No description provided for @serviceAchievements.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conquistas'**
+  String get serviceAchievements;
+
+  /// No description provided for @visitorBannerTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você está como visitante'**
+  String get visitorBannerTitle;
+
+  /// No description provided for @visitorBannerCta.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirme residência para votar e ver conteúdo de moradores'**
+  String get visitorBannerCta;
+
+  /// No description provided for @visitor.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visitante'**
+  String get visitor;
+
+  /// No description provided for @resident.
+  ///
+  /// In pt, this message translates to:
+  /// **'Morador'**
+  String get resident;
+
+  /// No description provided for @curator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Curador'**
+  String get curator;
+
+  /// No description provided for @profileTools.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ferramentas'**
+  String get profileTools;
+
+  /// No description provided for @profileStatPosts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicações'**
+  String get profileStatPosts;
+
+  /// No description provided for @profileStatConnections.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conexões'**
+  String get profileStatConnections;
+
+  /// No description provided for @profileStatInterests.
+  ///
+  /// In pt, this message translates to:
+  /// **'Interesses'**
+  String get profileStatInterests;
+
+  /// No description provided for @profileStatRole.
+  ///
+  /// In pt, this message translates to:
+  /// **'Papel'**
+  String get profileStatRole;
+
+  /// No description provided for @profileStatPresence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Presença'**
+  String get profileStatPresence;
+
+  /// No description provided for @profileStatUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'—'**
+  String get profileStatUnavailable;
+
+  /// No description provided for @residencyJourneyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar residência'**
+  String get residencyJourneyTitle;
+
+  /// No description provided for @residencyJourneyBecomeResident.
+  ///
+  /// In pt, this message translates to:
+  /// **'Torne-se morador de {territory}'**
+  String residencyJourneyBecomeResident(String territory);
+
+  /// No description provided for @residencyJourneyPresenceSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Moradores acessam conteúdo restrito, votam e participam da gestão.'**
+  String get residencyJourneyPresenceSubtitle;
+
+  /// No description provided for @residencyJourneyPresenceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Presença no território'**
+  String get residencyJourneyPresenceTitle;
+
+  /// No description provided for @residencyJourneyPresenceHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmada por GPS · privada'**
+  String get residencyJourneyPresenceHint;
+
+  /// No description provided for @residencyJourneyProofTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Envie um comprovante'**
+  String get residencyJourneyProofTitle;
+
+  /// No description provided for @residencyJourneyProofSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta de luz, água, contrato ou declaração da associação. Descreva e, se quiser, anexe uma foto.'**
+  String get residencyJourneyProofSubtitle;
+
+  /// No description provided for @residencyJourneyMessageLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mensagem / comprovante'**
+  String get residencyJourneyMessageLabel;
+
+  /// No description provided for @residencyJourneyMessageHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120'**
+  String get residencyJourneyMessageHint;
+
+  /// No description provided for @residencyJourneyAttachProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anexar foto do comprovante'**
+  String get residencyJourneyAttachProof;
+
+  /// No description provided for @residencyJourneyChangeProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Trocar foto'**
+  String get residencyJourneyChangeProof;
+
+  /// No description provided for @residencyJourneyRemoveProof.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover foto'**
+  String get residencyJourneyRemoveProof;
+
+  /// No description provided for @residencyJourneyProofAttached.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprovante anexado'**
+  String get residencyJourneyProofAttached;
+
+  /// No description provided for @residencyJourneyProofOptional.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional'**
+  String get residencyJourneyProofOptional;
+
+  /// No description provided for @residencyJourneyReviewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revise'**
+  String get residencyJourneyReviewTitle;
+
+  /// No description provided for @residencyJourneyReviewTerritory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Território'**
+  String get residencyJourneyReviewTerritory;
+
+  /// No description provided for @residencyJourneyReviewPresence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Presença GPS'**
+  String get residencyJourneyReviewPresence;
+
+  /// No description provided for @residencyJourneyReviewPresenceValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmada'**
+  String get residencyJourneyReviewPresenceValue;
+
+  /// No description provided for @residencyJourneyReviewMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprovante'**
+  String get residencyJourneyReviewMessage;
+
+  /// No description provided for @residencyJourneyReviewMessageEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem mensagem'**
+  String get residencyJourneyReviewMessageEmpty;
+
+  /// No description provided for @residencyJourneyReviewProofPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto'**
+  String get residencyJourneyReviewProofPhoto;
+
+  /// No description provided for @residencyJourneyReviewProofPhotoAttached.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anexada'**
+  String get residencyJourneyReviewProofPhotoAttached;
+
+  /// No description provided for @residencyJourneyReviewProofPhotoNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não anexada'**
+  String get residencyJourneyReviewProofPhotoNone;
+
+  /// No description provided for @residencyJourneyReviewAnalysis.
+  ///
+  /// In pt, this message translates to:
+  /// **'Análise'**
+  String get residencyJourneyReviewAnalysis;
+
+  /// No description provided for @residencyJourneyReviewAnalysisValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Curadoria local'**
+  String get residencyJourneyReviewAnalysisValue;
+
+  /// No description provided for @residencyJourneySendRequest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar solicitação'**
+  String get residencyJourneySendRequest;
+
+  /// No description provided for @residencyJourneyUnderstood.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entendi'**
+  String get residencyJourneyUnderstood;
+
+  /// No description provided for @residencyJourneySuccessTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Solicitação enviada!'**
+  String get residencyJourneySuccessTitle;
+
+  /// No description provided for @residencyJourneySuccessMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.'**
+  String get residencyJourneySuccessMessage;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2113,25 +2547,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'pt':
-      return AppLocalizationsPt();
+    case 'en': return AppLocalizationsEn();
+    case 'pt': return AppLocalizationsPt();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

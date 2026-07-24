@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+a { color:#2B6246; }
+a:hover { color:#377B57; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.toclink { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.toclink:hover { color:#377B57; border-left-color:#9FCEB4; }
+.sect { padding:38px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px; }
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px; }
+.h2 { font-family:'Sora',sans-serif; font-weight:600; font-size:1.9rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117; }
+.body { font-size:15.5px; line-height:1.68; color:#2B6246; max-width:66ch; }
+.mtable { width:100%; border-collapse:collapse; font-size:12.5px; }
+.mtable th { text-align:left; font-family:'Sora'; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#74806E; padding:10px 10px; border-bottom:2px solid rgba(23,53,37,0.16); background:#FBFCF9; position:sticky; top:0; }
+.mtable td { padding:11px 10px; border-bottom:1px solid rgba(23,53,37,0.09); vertical-align:top; line-height:1.5; color:#2B6246; }
+.chip { display:inline-block; font-size:10.5px; font-weight:600; letter-spacing:.05em; border-radius:999px; padding:3px 9px; white-space:nowrap; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } }
+</style>
+</helmet>
+<div class="shell" style="display:grid; grid-template-columns:268px 1fr; max-width:1400px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:30px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:19px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:18px; padding-left:2px;">Inteligência Territorial · Materiais 2 · 7</span>
+    <a class="toclink" href="Inteligencia Territorial - Hub.dc.html" style="color:#74806E;">← Hub da iniciativa</a>
+    <div style="height:14px;"></div>
+    <a class="toclink" href="#leitura">Como ler</a>
+    <a class="toclink" href="#matriz">Matriz do estado atual</a>
+    <a class="toclink" href="#novas">Capacidades novas</a>
+    <a class="toclink" href="#sintese">Síntese: reuso primeiro</a>
+    <a class="toclink" href="#impacto">Impacto por projeto</a>
+    <a class="toclink" href="#inventario">Migrations, rotas e flags</a>
+  </nav>
+
+  <main style="padding:54px clamp(24px,4vw,66px); min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:40px;">
+      <div class="eyebrow" style="letter-spacing:.16em;">Avaliação do estado atual + impacto</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.05; margin:0 0 18px; color:#0E2117;">O Arah já tem os órgãos.<br/>A inteligência é um <span style="color:#377B57;">sentido novo</span>.</h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:66ch; margin:0;">Inventário verificado do que existe hoje na plataforma, o que cada capacidade precisa mudar para receber sinais externos — e o impacto concreto em cada projeto da solução, do domínio ao CI/CD.</p>
+    </header>
+
+    <section id="leitura" class="sect">
+      <div class="eyebrow">Como ler</div>
+      <h2 class="h2">Três veredictos possíveis por capacidade</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:8px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+          <span class="chip" style="background:#E2F1E8; color:#2B6246;">Existe</span>
+          <p style="font-size:13px; line-height:1.55; color:#74806E; margin:10px 0 0;">Implementado e em uso (verificado na matriz API × BFF × App e no código). A iniciativa <b>reusa</b> — não reconstrói.</p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+          <span class="chip" style="background:#F5EBDD; color:#8A6D3B;">Parcial</span>
+          <p style="font-size:13px; line-height:1.55; color:#74806E; margin:10px 0 0;">Existe uma base, mas falta o que a inteligência exige. A iniciativa <b>estende</b> com mudanças localizadas.</p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+          <span class="chip" style="background:#FBE9E4; color:#A03A26;">Não existe</span>
+          <p style="font-size:13px; line-height:1.55; color:#74806E; margin:10px 0 0;">Capacidade genuinamente nova — o coração da iniciativa. Listada em separado para não inflar o diagnóstico.</p>
+        </div>
+      </div>
+      <p class="body" style="margin-top:18px;">Prioridades: <b>P0</b> = necessária no MVP (Incrementos 1–3) · <b>P1</b> = participação comunitária e operação (Incrementos 4–5) · <b>P2/P3</b> = evolução. Fontes: README, docs/FEATURE_MATRIX_API_BFF_APP.md, docs/backend/12_DOMAIN_MODEL.md, docs/api e docs/funcional do repositório <code style="background:#F0F7F2; padding:2px 7px; border-radius:6px; font-size:12.5px;">sraphaz/arah</code>.</p>
+    </section>
+
+    <section id="matriz" class="sect">
+      <div class="eyebrow">Material 2</div>
+      <h2 class="h2">Matriz do estado atual</h2>
+      <p class="body" style="margin-bottom:20px;">Cada linha é uma capacidade citada no comando-mestre; o veredicto vem do repositório, não de suposição.</p>
+      <div style="overflow-x:auto; border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff;">
+        <table class="mtable" style="min-width:980px;">
+          <thead><tr><th style="min-width:150px;">Capacidade</th><th>Existe hoje?</th><th style="min-width:170px;">Camada atual</th><th style="min-width:330px;">Mudança necessária</th><th>Natureza</th><th>Prio</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ matriz }}" as="r" hint-placeholder-count="12">
+              <tr>
+                <td><b style="color:#0E2117;">{{ r.cap }}</b></td>
+                <td><span class="chip" style="background:{{ r.bg }}; color:{{ r.fg }};">{{ r.status }}</span></td>
+                <td>{{ r.camada }}</td>
+                <td>{{ r.mudanca }}</td>
+                <td style="white-space:nowrap;">{{ r.natureza }}</td>
+                <td><b style="color:#0E2117;">{{ r.prio }}</b></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="novas" class="sect">
+      <div class="eyebrow">Capacidades novas</div>
+      <h2 class="h2">O que realmente não existe hoje</h2>
+      <p class="body" style="margin-bottom:20px;">Seis blocos novos formam a camada de inteligência. Nenhum deles substitui algo existente — todos desembocam nas capacidades acima.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px;">
+        <sc-for list="{{ novas }}" as="n" hint-placeholder-count="6">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:10px; background:#FBE9E4;"><span class="msr" style="font-size:18px; color:#A03A26;">{{ n.icon }}</span></span>
+              <span style="font-size:11px; font-weight:600; color:#74806E;">{{ n.inc }}</span>
+            </div>
+            <b style="font-family:'Sora'; font-size:14.5px; color:#0E2117; display:block; margin-bottom:5px;">{{ n.t }}</b>
+            <p style="font-size:13px; line-height:1.56; color:#2B6246; margin:0;">{{ n.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="sintese" class="sect">
+      <div class="eyebrow">Síntese</div>
+      <h2 class="h2">Reuso primeiro: três encaixes decisivos</h2>
+      <sc-for list="{{ encaixes }}" as="e" hint-placeholder-count="3">
+        <div style="display:grid; grid-template-columns:52px 1fr; gap:16px; border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:20px 22px; margin-bottom:12px;">
+          <span style="width:44px; height:44px; border-radius:12px; background:#214D37; color:#fff; display:flex; align-items:center; justify-content:center;"><span class="msr" style="font-size:22px;">{{ e.icon }}</span></span>
+          <div>
+            <b style="font-family:'Sora'; font-size:15.5px; color:#0E2117;">{{ e.t }}</b>
+            <p style="font-size:13.5px; line-height:1.6; color:#2B6246; margin:6px 0 0;">{{ e.d }}</p>
+          </div>
+        </div>
+      </sc-for>
+      <p class="body" style="margin-top:16px;">A consequência estratégica: <b>o MVP da inteligência territorial é majoritariamente extensão, não construção</b>. O esforço novo concentra-se na ingestão, correlação geográfica e avaliação de impacto — tudo atrás de uma abstração que o domínio central nem percebe.</p>
+    </section>
+
+    <section id="impacto" class="sect">
+      <div class="eyebrow">Material 7 · impacto</div>
+      <h2 class="h2">Impacto por projeto da solução</h2>
+      <p class="body" style="margin-bottom:20px;">O que muda e o que nasce em cada projeto. <span class="chip" style="background:#F5EBDD; color:#8A6D3B;">altera</span> = arquivos existentes tocados · <span class="chip" style="background:#E2F1E8; color:#2B6246;">novo</span> = arquivos/módulos criados.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(430px,1fr)); gap:14px;">
+        <sc-for list="{{ impacto }}" as="p" hint-placeholder-count="11">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:20px 22px;">
+            <div style="display:flex; align-items:center; gap:9px; margin-bottom:12px;">
+              <span class="msr" style="font-size:19px; color:#377B57;">{{ p.icon }}</span>
+              <b style="font-family:'Sora'; font-size:15px; color:#0E2117;">{{ p.proj }}</b>
+            </div>
+            <div style="margin-bottom:10px;">
+              <span class="chip" style="background:#E2F1E8; color:#2B6246; margin-bottom:6px;">novo</span>
+              <sc-for list="{{ p.novo }}" as="i" hint-placeholder-count="3">
+                <div style="font-size:12.5px; line-height:1.55; color:#2B6246; padding:3px 0 3px 14px; border-left:2px solid #C6E3D2; margin:4px 0;">{{ i }}</div>
+              </sc-for>
+            </div>
+            <div>
+              <span class="chip" style="background:#F5EBDD; color:#8A6D3B; margin-bottom:6px;">altera</span>
+              <sc-for list="{{ p.altera }}" as="i" hint-placeholder-count="2">
+                <div style="font-size:12.5px; line-height:1.55; color:#2B6246; padding:3px 0 3px 14px; border-left:2px solid #EAD9BF; margin:4px 0;">{{ i }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="inventario" class="sect" style="border-bottom:none;">
+      <div class="eyebrow">Inventário técnico</div>
+      <h2 class="h2">Migrations, rotas, flags e agentes</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:8px;">
+        <sc-for list="{{ inventario }}" as="v" hint-placeholder-count="4">
+          <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="msr" style="font-size:18px; color:#377B57;">{{ v.icon }}</span><b style="font-family:'Sora'; font-size:14px; color:#0E2117;">{{ v.t }}</b></div>
+            <sc-for list="{{ v.items }}" as="i" hint-placeholder-count="5">
+              <div style="font-size:12px; font-family:ui-monospace,monospace; color:#2B6246; padding:3px 0; border-bottom:1px dashed rgba(23,53,37,0.08);">{{ i }}</div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12.5px; color:#74806E; margin:22px 0 0;">Nomes de tabelas, rotas e flags são <b>proposta</b> — a grafia final segue as convenções observadas no repositório na hora do handoff. Detalhamento completo em <a href="Inteligencia Territorial - Arquitetura e Dominio.dc.html">Arquitetura, domínio &amp; estados</a> e <a href="Inteligencia Territorial - Integracao World Monitor.dc.html">Integração World Monitor</a>.</p>
+      <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap;">
+        <a href="Inteligencia Territorial - Capability Map.dc.html" style="display:inline-flex; align-items:center; gap:8px; background:#214D37; color:#fff; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Próximo: mapa de capacidades <span class="msr" style="font-size:16px;">east</span></a>
+        <a href="Inteligencia Territorial - Hub.dc.html" style="display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(23,53,37,0.2); color:#173525; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Voltar ao hub</a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const S = { sim: { status: "Existe", bg: "#E2F1E8", fg: "#2B6246" }, parc: { status: "Parcial", bg: "#F5EBDD", fg: "#8A6D3B" }, nao: { status: "Não existe", bg: "#FBE9E4", fg: "#A03A26" } };
+    const r = (cap, s, camada, mudanca, natureza, prio) => ({ cap, ...S[s], camada, mudanca, natureza, prio });
+    return {
+      matriz: [
+        r("Mapa", "sim", "App (flutter_map + OSM) · BFF map · API v1", "Camada de sinais com geometria (área afetada, polígono/círculo) sobre os pins atuais; legenda por severidade.", "Extensão", "P0"),
+        r("Pins", "sim", "API/BFF/App — tipos entity, post, event, asset, alert, media", "Novo tipo de pin `signal`/alerta enriquecido com severidade e freshness; deep-link para o detalhe do sinal.", "Extensão", "P0"),
+        r("Alertas", "parc", "API v1 (PENDING → VALIDATED por Curator, cria post ALERT)", "Maior evolução da iniciativa: origem/fonte, severidade, validade, freshness, geometria, timeline de atualizações, contestação e encerramento. O fluxo de validação humana já existe e é preservado.", "Extensão profunda", "P0"),
+        r("Feed", "sim", "API/BFF/App (posts, interações, detalhe)", "Card de brief/alerta territorial no feed com bloco de fonte e confiança; sem mudança no motor do feed.", "Extensão", "P1"),
+        r("Posts", "sim", "Tipos General e Alert; Public/ResidentsOnly", "Post ALERT passa a referenciar o alerta enriquecido (TerritorialAlert) em vez de texto solto.", "Extensão", "P1"),
+        r("Notificações", "sim", "Outbox → UserNotification (kinds alert/post/event/connection)", "Novo kind `intelligence`; roteamento por preferências de categoria/severidade. Push FCM segue gap pré-existente do app.", "Extensão", "P0"),
+        r("Eventos", "sim", "API/BFF/App (criar, participar)", "Evento/mutirão pode nascer de um alerta (origem referenciada) — mudança leve de criação.", "Extensão", "P2"),
+        r("Assets", "sim", "API/BFF/App (upload, curadoria)", "Evidência comunitária reusa upload de mídia; ativos do território entram no cálculo de impacto.", "Extensão", "P1"),
+        r("Entidades (MapEntity)", "sim", "Domain + API/BFF/App", "Cruzamento espacial: entidades dentro da geometria do sinal viram \"possivelmente afetadas\".", "Extensão", "P1"),
+        r("Membership & capabilities", "sim", "Visitor/Resident · Curator/Moderator/EventOrganizer", "Nova capability territorial de revisão de inteligência (ou uso do Curator no MVP) + papel de validador institucional.", "Extensão", "P1"),
+        r("Moderação / WorkItem", "sim", "Fila genérica de revisão humana com requirements de capability", "Novo tipo de WorkItem `SignalReview` — o encaixe mais importante da iniciativa: a fila de revisão já existe.", "Extensão (reuso forte)", "P0"),
+        r("Governança / votação", "sim", "Jornada governance (criar, votar, resultados)", "Votação pode nascer de um alerta (referência de origem); nenhuma mudança no motor.", "Extensão", "P2"),
+        r("Chat", "sim", "Canais/grupos/DM com governança", "Nenhuma mudança no MVP; canal de coordenação de resposta é evolução futura.", "Nenhuma (MVP)", "P3"),
+        r("Preferências", "sim", "UserPreferences + preferências de notificação", "Bloco de preferências de inteligência: categorias assinadas, severidade mínima, silêncio.", "Extensão", "P1"),
+        r("Localização", "sim", "Onboarding geo, fronteira do território, geo-verificação", "Nenhuma coleta nova; a fronteira existente é o insumo da correlação geográfica.", "Nenhuma", "—"),
+        r("Feature flags", "sim", "Por território", "Novas flags: `INTELLIGENCE`, autopublicação objetiva, categorias habilitadas.", "Extensão", "P0"),
+        r("Observabilidade", "sim", "Serilog · Prometheus · OpenTelemetry · health checks", "Métricas do pipeline (ingestão→publicação), saúde/quota do provedor, alertas de stale.", "Extensão", "P0"),
+        r("BFF", "sim", "/api/v2/journeys/* (registry de jornadas)", "Nova jornada `intelligence` registrada no BffJourneyRegistry.", "Extensão", "P0"),
+        r("API", "sim", "150+ endpoints REST /v1", "Novos endpoints de inteligência (sinais, revisão, publicação, providers) sob autorização adequada.", "Extensão", "P0"),
+        r("App Flutter", "sim", "MainShell 5 abas; features por jornada", "Nova feature `intelligence`: camada no mapa, detalhe do sinal, confirmação/contestação, preferências.", "Extensão", "P0"),
+        r("Arah Core (instâncias)", "parc", "FASE53 em progresso — registro de instâncias e releases", "Capacidade `intelligence` habilitável por instância/release; configuração de provedor por instância.", "Extensão", "P1"),
+        r("Agentes (.agents)", "sim", "20 agentes operacionais + consultivos", "6 novos agentes de inteligência (signal-scout … governance-steward) com guardrails próprios.", "Extensão", "P1"),
+        r("Arah Harness", "sim", "Kernel instalado; choreography por paths; signal bus", "Overlay de coreografia + skills para os agentes TI; evidências no ledger.", "Extensão", "P1"),
+        r("SDD / Spec Harness", "sim", "docs/specs + validate-specs.ps1", "Specs `TI-*` machine-readable antes do código (spec-before-code).", "Extensão", "P0"),
+        r("CI/CD", "sim", "Staging automático; gate manual de produção (FASE52)", "Testes de contrato contra mock/sandbox do World Monitor; secret da API key; gates por flag.", "Extensão", "P1"),
+      ],
+      novas: [
+        { icon: "sensors", inc: "Incremento 1–2", t: "Ingestão de sinais externos", d: "Provider abstraction (SignalProvider), adapter World Monitor (MCP/REST), agendamento, normalização e deduplicação. Nada disso existe hoje." },
+        { icon: "travel_explore", inc: "Incremento 2", t: "Correlação geográfica", d: "Cruzar geometria do sinal com fronteiras de territórios e entidades. O Postgres do Arah já sobe com PostGIS — a base está pronta, o motor não." },
+        { icon: "balance", inc: "Incremento 2", t: "Confiança, freshness e política", d: "Escala de confiança por fonte, estados de frescor (fresh→expired) e política de publicação por território (o que exige revisão, o que nunca publica)." },
+        { icon: "assessment", inc: "Incremento 2–3", t: "Avaliação de impacto territorial", d: "De \"chuva extrema na região\" para \"pode afetar a estrada da Serra, 3 produtores e a captação de água\" — explicável em linguagem humana." },
+        { icon: "edit_note", inc: "Incremento 3", t: "Brief territorial", d: "Tradução do sinal técnico para comunicação comunitária, com fonte, validade e ações recomendadas — editada e assinada por quem revisou." },
+        { icon: "history_edu", inc: "Incremento 4–6", t: "Verificação comunitária e memória", d: "Confirmação/contestação de moradores com evidência, resolução com aprendizado e histórico territorial consultável. A validação de curador existe; a participação comunitária estruturada não." },
+      ],
+      encaixes: [
+        { icon: "assignment_turned_in", t: "WorkItem é a fila de revisão pronta", d: "A fila genérica de revisão humana (verificação, curadoria, moderação — com requirements de permissão/capability e outcome auditado) recebe um novo tipo `SignalReview`. A Intelligence Inbox nasce sobre infraestrutura testada em produção, com auditoria de quem decidiu o quê." },
+        { icon: "campaign", t: "Alerta validado + outbox já são o canal de publicação", d: "O fluxo alerta PENDING → validação por Curator → post no feed → notificação via outbox é exatamente o esqueleto da publicação territorial. A iniciativa o enriquece (fonte, severidade, validade, timeline) em vez de criar um segundo canal paralelo." },
+        { icon: "layers", t: "Território neutro + PostGIS já suportam a correlação", d: "Territory guarda fronteira geográfica sem lógica social; o banco sobe com PostGIS. A correlação sinal→território é uma consulta espacial sobre dados que já existem — não um novo modelo de mundo." },
+      ],
+      impacto: [
+        { icon: "category", proj: "Arah.Domain", novo: ["Namespace Intelligence/: ExternalSignal, SignalProvider (conceito), SignalGeometry, categorias/severidade/confiança/freshness (VOs + enums)", "TerritorialImpactAssessment, TerritorialBrief, TerritorialAlert, CommunityVerification, IntelligencePolicy + eventos de domínio", "Invariantes: publicação exige decisão registrada; alerta expira; contestação nunca apaga histórico"], altera: ["Alert atual: evolui para (ou é sucedido por) TerritorialAlert mantendo compatibilidade", "Enums de notificação: novo kind `intelligence`"] },
+        { icon: "settings_suggest", proj: "Arah.Application", novo: ["Casos de uso: IngestSignals, NormalizeAndDeduplicate, CorrelateGeo, AssessImpact, ReviewSignal, PublishBrief, ContestAlert, SubmitEvidence, ResolveAlert", "Ports: ISignalProviderClient, ISignalRepository, IGeoCorrelationService", "Policies de publicação e autorização de revisão"], altera: ["NotificationService: roteamento por preferências de inteligência", "WorkItem handlers: novo tipo SignalReview"] },
+        { icon: "dns", proj: "Arah.Infrastructure", novo: ["Intelligence/Providers/WorldMonitor/: WorldMonitorRestClient, WorldMonitorMcpClient, Mapper, Options, HealthCheck, QuotaTracker", "Jobs: polling agendado por categoria; expiração/stale sweep; retry + circuit breaker", "Repositórios + migrations das tabelas novas; cache Redis de respostas com TTL por freshness"], altera: ["Health checks agregados (provider health)", "Observabilidade: métricas do pipeline"] },
+        { icon: "api", proj: "Arah.Api", novo: ["Endpoints /api/v1/intelligence/* (sinais, revisão, publicação, providers, health, métricas)", "Policies de autorização (capability de revisão, admin de providers)"], altera: ["Rate limiting: janela própria para endpoints de inteligência", "Swagger/portal: documentação dos novos endpoints"] },
+        { icon: "alt_route", proj: "Arah.Api.Bff", novo: ["Jornada `intelligence` (app): sinais do território, detalhe, confirmar, contestar, evidência, preferências", "Jornada `intelligence-admin` (painel): inbox, revisão, brief, providers"], altera: ["BffJourneyRegistry.cs: registro das novas jornadas", "Contratos DTO com bloco de fonte/confiança padronizado"] },
+        { icon: "smartphone", proj: "App Flutter", novo: ["features/intelligence/: camada de sinais no mapa, detalhe do sinal/alerta com timeline, confirmação/contestação/evidência, preferências de inteligência", "Componentes DS: chips de severidade/confiança/freshness"], altera: ["MapScreen: toggle da camada de sinais + legenda", "Notificações: deep-link para detalhe do alerta; tela de preferências ganha bloco de inteligência"] },
+        { icon: "admin_panel_settings", proj: "Administração", novo: ["Painel de revisão (Intelligence Inbox) — recomendação: web admin leve consumindo a jornada admin, já que o app usuário não cobre administração", "Gestão de providers: chave, quota, custo estimado, saúde, desligamento de emergência, política de publicação"], altera: ["Fila WorkItem existente exibe o tipo SignalReview", "Auditoria: decisões de publicação consultáveis"] },
+        { icon: "hub", proj: "Arah Core", novo: ["Capacidade `intelligence` no manifesto de instância/release", "Configuração por instância: provedor, categorias, quotas"], altera: ["Instalador/config: passo opcional de inteligência (flag desligada por padrão)"] },
+        { icon: "smart_toy", proj: "Arah Harness / agentes", novo: ["6 agentes: signal-scout, territorial-analyst, source-steward, community-brief-writer, response-orchestrator, intelligence-governance-steward", "Overlay choreography.intelligence.yaml + skills de operação"], altera: ["AGENTS.md e agent-graph com o novo domínio", "Autonomia: proibições explícitas (nunca publicar) no autonomy.yaml"] },
+        { icon: "rocket_launch", proj: "CI/CD", novo: ["Testes de contrato contra mock do World Monitor (fixtures OpenAPI); sandbox opcional", "Secret WM API key por ambiente; drift-check do contrato"], altera: ["Pipelines: suíte de integração da inteligência atrás de flag", "Gate de produção inclui checklist de política de publicação"] },
+        { icon: "menu_book", proj: "Documentação & specs", novo: ["ADRs: provider abstraction; MCP vs REST; autopublicação objetiva; retenção de sinais", "Specs SDD TI-* no Spec Harness; runbook de operação do provedor"], altera: ["docs/00_INDEX e matriz API×BFF×App com a jornada intelligence", "Wiki: capítulo de inteligência territorial"] },
+      ],
+      inventario: [
+        { icon: "database", t: "Migrations (Postgres + PostGIS)", items: ["external_signals", "signal_impact_assessments", "territorial_briefs", "territorial_alerts (evolução de alerts)", "alert_updates (timeline)", "community_verifications", "signal_evidences", "intelligence_policies", "provider_quota_ledger"] },
+        { icon: "route", t: "Rotas novas", items: ["/api/v1/intelligence/signals…", "/api/v1/intelligence/providers…", "/api/v2/journeys/intelligence/*", "/api/v2/journeys/intelligence-admin/*"] },
+        { icon: "flag", t: "Feature flags (por território)", items: ["INTELLIGENCE", "INTELLIGENCE_AUTOPUBLISH_OBJECTIVE", "INTELLIGENCE_CATEGORY_<categoria>", "INTELLIGENCE_COMMUNITY_VERIFICATION"] },
+        { icon: "smart_toy", t: "Agentes novos", items: ["signal-scout (nunca publica)", "territorial-analyst", "source-steward", "community-brief-writer", "response-orchestrator (sugere, não executa)", "intelligence-governance-steward"] },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

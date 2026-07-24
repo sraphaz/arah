@@ -14,6 +14,7 @@ import 'features/events/presentation/screens/events_screen.dart';
 import 'features/connections/presentation/screens/connections_screen.dart';
 import 'features/alerts/presentation/screens/alerts_screen.dart';
 import 'features/membership/presentation/screens/membership_screen.dart';
+import 'features/membership/presentation/screens/residency_journey_screen.dart';
 import 'features/marketplace/presentation/screens/marketplace_screen.dart';
 import 'features/chat/presentation/screens/chat_list_screen.dart';
 import 'features/chat/presentation/screens/chat_conversation_screen.dart';
@@ -22,6 +23,7 @@ import 'features/governance/presentation/screens/governance_screen.dart';
 import 'features/feed/presentation/screens/post_detail_screen.dart';
 import 'features/assets/presentation/screens/assets_screen.dart';
 import 'features/subscriptions/presentation/screens/subscriptions_screen.dart';
+import 'features/notifications/presentation/screens/notifications_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 /// Rotas com guard de auth e onboarding: sem token → /login; com token sem território → /onboarding; com território → /home.
@@ -102,6 +104,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, __) => const MembershipScreen(),
       ),
       GoRoute(
+        path: '/residency-journey',
+        builder: (_, __) => const ResidencyJourneyScreen(),
+      ),
+      GoRoute(
         path: '/marketplace',
         builder: (_, __) => const MarketplaceScreen(),
       ),
@@ -143,6 +149,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/subscriptions',
         builder: (_, __) => const SubscriptionsScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (_, __) => const NotificationsScreen(),
       ),
     ],
   );

@@ -5,7 +5,10 @@ import 'package:intl/intl.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_empty_state.dart';
+import '../../../../core/widgets/arah_error_state.dart';
 import '../../../../core/widgets/arah_list_skeleton.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -20,7 +23,8 @@ class ModerationScreen extends ConsumerStatefulWidget {
   ConsumerState<ModerationScreen> createState() => _ModerationScreenState();
 }
 
-class _ModerationScreenState extends ConsumerState<ModerationScreen> with SingleTickerProviderStateMixin {
+class _ModerationScreenState extends ConsumerState<ModerationScreen>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
@@ -54,7 +58,10 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     if (territoryId == null || territoryId.isEmpty) {
       return ArahScaffold(
         appBar: AppBar(title: Text(l10n.moderation)),
-        body: Center(child: Text(l10n.chooseTerritoryFirst)),
+        body: ArahEmptyState(
+          icon: Icons.map_outlined,
+          title: l10n.chooseTerritoryFirst,
+        ),
       );
     }
 
@@ -93,7 +100,7 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: const [ArahListSkeleton()],
       );
     }
@@ -101,13 +108,14 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          Padding(
-            padding: const EdgeInsets.all(AppConstants.spacingLg),
-            child: Text(
-              state.error is ApiException
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            child: ArahErrorState(
+              message: state.error is ApiException
                   ? (state.error as ApiException).userMessage
                   : l10n.noPermissionOrError,
-              textAlign: TextAlign.center,
+              retryLabel: l10n.tryAgain,
+              onRetry: () => notifier.refresh(),
             ),
           ),
         ],
@@ -115,75 +123,47 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
     }
     if (state.items.isEmpty) {
       return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: Text(l10n.noQueueItems)))],
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            child: ArahEmptyState(
+              icon: Icons.inbox_outlined,
+              title: l10n.noQueueItems,
+              description: l10n.moderationEmptyDescription,
+            ),
+          ),
+        ],
       );
     }
-    return ListView.builder(
+    return ListView.separated(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       itemCount: state.items.length,
+      separatorBuilder: (_, __) => const SizedBox(height: AppConstants.spacingSm),
       itemBuilder: (context, index) {
         final item = state.items[index];
-        return Card(
-          child: ListTile(
-            title: Text(item.type),
-            subtitle: Text(
-              '${item.status} · ${item.subjectType}'
-              '${item.evidenceId != null ? ' · ${l10n.moderationEvidenceSuffix}' : ''}'
-              ' · ${dateFormat.format(item.createdAtUtc.toLocal())}',
-            ),
-            trailing: _buildActions(context, notifier, item),
-          ),
+        return _WorkItemCard(
+          item: item,
+          dateLabel: dateFormat.format(item.createdAtUtc.toLocal()),
+          onApprove: item.isPending && _canDecide(item)
+              ? () => _decide(context, notifier, item, 'APPROVED')
+              : null,
+          onReject: item.isPending && _canDecide(item)
+              ? () => _decide(context, notifier, item, 'REJECTED')
+              : null,
+          onDownload: item.isPending &&
+                  item.isResidencyVerification &&
+                  item.evidenceId != null
+              ? () => _downloadEvidence(context, notifier, item)
+              : null,
         );
       },
     );
   }
 
-  Widget? _buildActions(BuildContext context, ModerationNotifier notifier, WorkItem item) {
-    final l10n = AppLocalizations.of(context)!;
-    if (!item.isPending) return null;
-    if (item.isResidencyVerification && item.evidenceId != null) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            tooltip: l10n.downloadEvidenceTooltip,
-            icon: const Icon(Icons.download_outlined),
-            onPressed: () => _downloadEvidence(context, notifier, item),
-          ),
-          IconButton(
-            tooltip: l10n.approveTooltip,
-            icon: const Icon(Icons.check_circle_outline),
-            onPressed: () => _decide(context, notifier, item, 'APPROVED'),
-          ),
-          IconButton(
-            tooltip: l10n.rejectTooltip,
-            icon: const Icon(Icons.cancel_outlined),
-            onPressed: () => _decide(context, notifier, item, 'REJECTED'),
-          ),
-        ],
-      );
-    }
-    if (item.isModerationCase || item.isResidencyVerification) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            tooltip: l10n.approveTooltip,
-            icon: const Icon(Icons.check_circle_outline),
-            onPressed: () => _decide(context, notifier, item, 'APPROVED'),
-          ),
-          IconButton(
-            tooltip: l10n.rejectTooltip,
-            icon: const Icon(Icons.cancel_outlined),
-            onPressed: () => _decide(context, notifier, item, 'REJECTED'),
-          ),
-        ],
-      );
-    }
-    return null;
-  }
+  bool _canDecide(WorkItem item) =>
+      item.isModerationCase || item.isResidencyVerification;
 
   Future<void> _decide(
     BuildContext context,
@@ -222,5 +202,184 @@ class _ModerationScreenState extends ConsumerState<ModerationScreen> with Single
         );
       }
     }
+  }
+}
+
+class _WorkItemCard extends StatelessWidget {
+  const _WorkItemCard({
+    required this.item,
+    required this.dateLabel,
+    this.onApprove,
+    this.onReject,
+    this.onDownload,
+  });
+
+  final WorkItem item;
+  final String dateLabel;
+  final VoidCallback? onApprove;
+  final VoidCallback? onReject;
+  final VoidCallback? onDownload;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colors = context.appColors;
+    final theme = Theme.of(context);
+    final hasActions = onApprove != null || onReject != null || onDownload != null;
+
+    return Card(
+      child: Padding(
+        padding: AppDesignTokens.cardPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: AppConstants.spacingSm,
+              runSpacing: AppConstants.spacingXs,
+              children: [
+                _MetaChip(
+                  label: _typeLabel(l10n, item),
+                  foreground: AppDesignTokens.info,
+                  background: AppDesignTokens.info.withValues(alpha: 0.16),
+                  border: AppDesignTokens.info.withValues(alpha: 0.4),
+                ),
+                _MetaChip(
+                  label: _statusLabel(l10n, item.status),
+                  foreground: _statusColor(item.status),
+                  background: _statusColor(item.status).withValues(alpha: 0.16),
+                  border: _statusColor(item.status).withValues(alpha: 0.4),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppConstants.spacingSm),
+            Text(
+              item.subjectType.isNotEmpty ? item.subjectType : _typeLabel(l10n, item),
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppConstants.spacingXs),
+            Text(
+              _subtitle(l10n),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colors.onSurfaceVariant,
+              ),
+            ),
+            if (hasActions) ...[
+              const SizedBox(height: AppConstants.spacingMd),
+              Wrap(
+                spacing: AppConstants.spacingSm,
+                runSpacing: AppConstants.spacingXs,
+                children: [
+                  if (onDownload != null)
+                    OutlinedButton.icon(
+                      onPressed: onDownload,
+                      icon: const Icon(Icons.download_outlined, size: 18),
+                      label: Text(l10n.downloadEvidenceTooltip),
+                    ),
+                  if (onApprove != null)
+                    FilledButton.icon(
+                      onPressed: onApprove,
+                      icon: const Icon(Icons.check_circle_outline, size: 18),
+                      label: Text(l10n.approveTooltip),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: colors.success,
+                        foregroundColor: AppDesignTokens.textOnAccent,
+                        minimumSize: const Size(
+                          AppConstants.minTouchTargetSize,
+                          AppConstants.minTouchTargetSize,
+                        ),
+                      ),
+                    ),
+                  if (onReject != null)
+                    OutlinedButton.icon(
+                      onPressed: onReject,
+                      icon: Icon(Icons.cancel_outlined, size: 18, color: colors.error),
+                      label: Text(l10n.rejectTooltip),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: colors.error,
+                        side: BorderSide(color: colors.error.withValues(alpha: 0.5)),
+                        minimumSize: const Size(
+                          AppConstants.minTouchTargetSize,
+                          AppConstants.minTouchTargetSize,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _subtitle(AppLocalizations l10n) {
+    final parts = <String>[dateLabel];
+    if (item.evidenceId != null) {
+      parts.insert(0, l10n.moderationEvidenceSuffix);
+    }
+    return parts.join(' · ');
+  }
+
+  static String _typeLabel(AppLocalizations l10n, WorkItem item) {
+    if (item.isModerationCase) return l10n.moderationCaseTypeLabel;
+    if (item.isResidencyVerification) return l10n.residencyVerificationTypeLabel;
+    return item.type;
+  }
+
+  static String _statusLabel(AppLocalizations l10n, String status) {
+    switch (status.toUpperCase()) {
+      case 'PENDING':
+        return l10n.moderationStatusPending;
+      case 'APPROVED':
+        return l10n.moderationStatusApproved;
+      case 'REJECTED':
+        return l10n.moderationStatusRejected;
+      default:
+        return status;
+    }
+  }
+
+  /// Status colors limited to warning / success / info design tokens.
+  static Color _statusColor(String status) {
+    switch (status.toUpperCase()) {
+      case 'PENDING':
+        return AppDesignTokens.warning;
+      case 'APPROVED':
+        return AppDesignTokens.success;
+      case 'REJECTED':
+        return AppDesignTokens.info;
+      default:
+        return AppDesignTokens.info;
+    }
+  }
+}
+
+class _MetaChip extends StatelessWidget {
+  const _MetaChip({
+    required this.label,
+    required this.foreground,
+    required this.background,
+    required this.border,
+  });
+
+  final String label;
+  final Color foreground;
+  final Color background;
+  final Color border;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      label: Text(label),
+      labelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: foreground,
+            fontWeight: FontWeight.w600,
+          ),
+      backgroundColor: background,
+      side: BorderSide(color: border),
+      visualDensity: VisualDensity.compact,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingXs),
+    );
   }
 }

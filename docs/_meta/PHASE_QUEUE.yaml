@@ -5,11 +5,14 @@
 # Docs: docs/ops/GITHUB_PROJECT_MANAGEMENT.md
 
 version: 1
-updated: 2026-07-01
+updated: 2026-07-23
 policy: |
   Após merge em main, o repo abre issue da próxima fase pendente (se não existir).
   Prioridade: Onda S0 (infra: CI/CD, Core, IaC) → S1 (piloto + cockpit) → S2 (transparência)
-  → S3 (multi-instância + federação) → S4 (capital). GitHub Project reflete ondas via milestones/labels.
+  → S3 (multi-instância + federação) → S4 (capital). Trilha TI (Inteligência Territorial,
+  kind: track) fica na fila para roadmap/Project, mas o next-phase automático só seleciona
+  ids FASE* — squad paralelo via planner. TI-7 só após FASE53. GitHub Project reflete
+  ondas via milestones/labels.
 
 queue:
   - id: doc-deflation-wave2
@@ -39,10 +42,10 @@ queue:
     priority: P1
     kind: maintenance
     blocked_by: []
-    # Itens abertos: DSG-03 (devportal → tokens compartilhados),
-    # DSG-04 (espaçamento 8px no portal), DSG-05 (a11y landing portal),
-    # DSG-06 (unificar glass tokens cross-plataforma), DSG-07 (contraste syntax WCAG).
-    # DSG-01/02 (cores hardcoded) e DSG-08 (gate CI design-gate-check) já corrigidos.
+    # Web abertos: DSG-04 (espaçamento 8px portal), DSG-06 (glass cross), DSG-07 (syntax WCAG).
+    # DSG-01/02/03/05/08 já corrigidos.
+    # App×UI kit: docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md (APP-DS-01..13).
+    # Feito 2026-07-23: APP-DS-01..11 + 13 (Onda A–D). APP-DS-12 parcial (error/empty; motion global aberto).
 
   - id: FASE52
     title: "FASE52 — Fundação Técnica e CI/CD"
@@ -138,3 +141,86 @@ queue:
     priority: P2
     wave: S4
     blocked_by: [FASE55, FASE56]
+
+  # --- Trilha transversal Inteligência Territorial (World Monitor) ---
+  # kind: track → fora do next-phase automático (squad paralelo / planner).
+  - id: TI-0
+    title: "TI-0 — Pesquisa e contratos (Inteligência Territorial)"
+    area: area/docs
+    doc: docs/backlog-api/TI0.md
+    priority: P0
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: []
+
+  - id: TI-1
+    title: "TI-1 — Fundação + adapter World Monitor"
+    area: area/backend
+    doc: docs/backlog-api/TI1.md
+    priority: P0
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: [TI-0]
+
+  - id: TI-2
+    title: "TI-2 — Intelligence Inbox (SignalReview)"
+    area: area/backend
+    doc: docs/backlog-api/TI2.md
+    spec_id: TI-201-signal-review
+    priority: P0
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: [TI-1]
+
+  - id: TI-3
+    title: "TI-3 — Publicação territorial"
+    area: area/flutter
+    doc: docs/backlog-api/TI3.md
+    priority: P0
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: [TI-2]
+
+  - id: TI-4
+    title: "TI-4 — Participação comunitária"
+    area: area/flutter
+    doc: docs/backlog-api/TI4.md
+    priority: P1
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: [TI-3]
+
+  - id: TI-5
+    title: "TI-5 — Governança e ação"
+    area: area/backend
+    doc: docs/backlog-api/TI5.md
+    priority: P1
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: [TI-4]
+
+  - id: TI-6
+    title: "TI-6 — Aprendizado / memória territorial"
+    area: area/backend
+    doc: docs/backlog-api/TI6.md
+    priority: P1
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: [TI-4]
+
+  - id: TI-7
+    title: "TI-7 — Federação de sinais"
+    area: area/backend
+    doc: docs/backlog-api/TI7.md
+    priority: P2
+    wave: TI
+    kind: track
+    frente: inteligencia-territorial
+    blocked_by: [FASE53, TI-6, FASE59]

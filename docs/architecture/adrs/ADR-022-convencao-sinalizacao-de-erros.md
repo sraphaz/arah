@@ -1,4 +1,4 @@
-# ADR-021: Convenção de sinalização de erros (Result, nullable, exceptions)
+﻿# ADR-022: Convenção de sinalização de erros (Result, nullable, exceptions)
 
 **Status**: accepted
 **Data**: 2026-07-03

@@ -118,6 +118,10 @@ labels:
     color: F9D0C4
     description: Onda S4 — Capital territorial
 
+  - name: wave/TI
+    color: 214D37
+    description: Trilha TI — Inteligência Territorial (paralela às FASE*)
+
   - name: priority/P0
     color: B60205
     description: Prioridade P0

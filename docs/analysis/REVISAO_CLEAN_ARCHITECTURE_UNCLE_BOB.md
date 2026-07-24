@@ -1,4 +1,4 @@
-# Revisão Clean Architecture / Clean Code (Uncle Bob)
+﻿# Revisão Clean Architecture / Clean Code (Uncle Bob)
 
 **Data**: 2026-07-03  
 **Critérios**: skill `uncle-bob-craft` (Clean Code, Clean Architecture, The Clean Coder, Clean Agile)  
@@ -15,7 +15,7 @@
 | Onda 2 — God classes (PostgresMappers, ArahDbContext, Program.cs, InMemoryDataStore) | ✅ Implementado |
 | Onda 3 — SOLID controllers/services (extract method) | ✅ Implementado |
 | Onda 4 — tokens web unificados | ✅ Implementado |
-| Onda 4 — Result&lt;T&gt; | ✅ Resolvido por convenção (ADR-021) |
+| Onda 4 — Result&lt;T&gt; | ✅ Resolvido por convenção (ADR-022) |
 
 ---
 
@@ -36,7 +36,7 @@
 - **Onda 2 (God classes)**: `PostgresMappers.cs` → 19 arquivos `partial` por agregado; `ArahDbContext.cs` → 21 arquivos `partial` de configuração + `OnModelCreating` enxuto; `InMemoryDataStore` → seed extraído para `InMemorySeeder`; `Program.cs` → composition root enxuto + extensões (`AddArahObservability/Security/RateLimiting/Swagger`, `UseArahExceptionHandler`, `UseArahPipeline`); `ServiceCollectionExtensions` fatiado por concern.
 - **Onda 3 (SOLID)**: métodos gigantes fatiados via *extract method* (`EventsService.CreateEventAsync` 257→69, `SellerPayoutService.ProcessPaidCheckoutAsync` 179→75, `ChatService.SendTextMessageAsync` 174→45); controllers afinados (`MapController.GetPinsPaged` 226→106; `FeedController` com `EnforceGeoConvergenceAsync`/`BuildFeedItemResponse`).
 - **Onda 4 (tokens)**: literais de cor da wiki mapeados para tokens; paletas Tailwind documentadas como *sync-with-tokens*.
-- **Onda 4 (`Result<T>`)**: resolvido por **convenção** ([ADR-021](../architecture/adrs/ADR-021-convencao-sinalizacao-de-erros.md)) em vez de reescrever ~35 métodos de consulta (evita churn de alto risco).
+- **Onda 4 (`Result<T>`)**: resolvido por **convenção** ([ADR-022](../architecture/adrs/ADR-022-convencao-sinalizacao-de-erros.md)) em vez de reescrever ~35 métodos de consulta (evita churn de alto risco).
 
 ## Pendências remanescentes (menores, próximos PRs)
 

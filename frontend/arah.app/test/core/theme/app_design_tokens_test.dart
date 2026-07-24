@@ -10,8 +10,10 @@ void main() {
       expect(AppDesignTokens.pinColorForType('asset'), AppDesignTokens.earth);
     });
 
-    test('elevation returns box shadows for levels 1-4', () {
-      expect(AppDesignTokens.elevation(1), isNotEmpty);
+    test('elevation: dark L1 is flat; higher levels and light have shadows', () {
+      expect(AppDesignTokens.elevation(1, isDark: true), isEmpty);
+      expect(AppDesignTokens.elevation(2, isDark: true), isNotEmpty);
+      expect(AppDesignTokens.elevation(1, isDark: false), isNotEmpty);
       expect(AppDesignTokens.elevation(4), isNotEmpty);
     });
   });

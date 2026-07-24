@@ -1,9 +1,10 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-06-30  
+**Última Atualização**: 2026-07-23  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
 **Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
+**Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
@@ -23,6 +24,23 @@
 ## ✅ Fases Completas (1-16)
 
 ## ⏳ Fases Pendentes
+
+### 🟢 Trilha TI — Inteligência Territorial (World Monitor) ⭐ NOVO 2026-07
+
+Trilha **transversal** (não substitui numeração FASE*). Âncoras: FASE23, FASE24, FASE44; TI-7 após FASE53.
+
+| ID | Nome | Prioridade | Status | Documentação |
+|----|------|------------|--------|--------------|
+| TI-0 | Pesquisa e contratos | 🔴 P0 | ⏳ Pendente | [TI0.md](./backlog-api/TI0.md) |
+| TI-1 | Fundação + adapter WM | 🔴 P0 | ⏳ Pendente | [TI1.md](./backlog-api/TI1.md) |
+| TI-2 | Intelligence Inbox | 🔴 P0 | ⏳ Pendente | [TI2.md](./backlog-api/TI2.md) · [spec](./specs/features/TI-201-signal-review.spec.yaml) |
+| TI-3 | Publicação territorial | 🔴 P0 | ⏳ Pendente | [TI3.md](./backlog-api/TI3.md) |
+| TI-4 | Participação comunitária | 🟡 P1 | ⏳ Pendente | [TI4.md](./backlog-api/TI4.md) |
+| TI-5 | Governança e ação | 🟡 P1 | ⏳ Pendente | [TI5.md](./backlog-api/TI5.md) |
+| TI-6 | Aprendizado / memória | 🟡 P1 | ⏳ Pendente | [TI6.md](./backlog-api/TI6.md) |
+| TI-7 | Federação de sinais | 🟢 P2 | ⏳ Pendente | [TI7.md](./backlog-api/TI7.md) |
+
+**Realinhamento**: [REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · **Handoff**: [inteligencia-territorial/](./handoff/inteligencia-territorial/)
 
 ### 🔴 Sustentação Operacional (52–61) — PRIORIDADE ATUAL
 

@@ -4,16 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/widgets/arah_empty_state.dart';
+import '../../../../core/widgets/arah_error_state.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../core/providers/territory_provider.dart';
-import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../../territories/presentation/widgets/territory_selector.dart';
 import '../../domain/feed_interaction.dart';
 import '../providers/feed_provider.dart';
 import '../widgets/feed_post_card.dart';
 import '../widgets/feed_comments_sheet.dart';
+import '../widgets/visitor_banner.dart';
 import 'post_detail_screen.dart';
 
 /// Feed da região. Sem território: mostra seletor. Com território: feed BFF com paginação, pull-to-refresh e scroll infinito.
@@ -47,71 +47,73 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final filterType = ref.watch(filterFeedTypeProvider);
 
     if (territoryId == null || territoryId.isEmpty) {
-      return ArahScaffold(
-        appBar: AppBar(title: Text(l10n.home)),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(AppConstants.spacingMd),
-              child: Text(
-                l10n.chooseTerritory,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(AppConstants.spacingMd),
+            child: Text(
+              l10n.chooseTerritory,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             ),
-            const Expanded(child: TerritorySelector()),
-          ],
-        ),
+          ),
+          const Expanded(child: TerritorySelector()),
+        ],
       );
     }
 
-    return ArahScaffold(
-      appBar: AppBar(
-        title: Text(l10n.home),
-        actions: [
-          IconButton(
-            icon: Icon(
-              filterByInterests ? Icons.filter_list : Icons.filter_list_off,
-              color: filterByInterests ? Theme.of(context).colorScheme.primary : null,
-            ),
-            tooltip: l10n.filterByInterests,
-            onPressed: () {
-              ref.read(filterFeedByInterestsProvider.notifier).state = !filterByInterests;
-              ref.invalidate(feedNotifierProvider(territoryId));
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const TerritoryIndicatorBar(),
-          _FeedTypeFilterBar(
-            selectedType: filterType,
-            onTypeSelected: (type) {
-              ref.read(filterFeedTypeProvider.notifier).state = type;
-            },
-          ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () => notifier.refresh(),
-              child: _FeedBody(
-                state: feedState,
-                territoryId: territoryId,
-                filterType: filterType,
-                onRetry: () => notifier.refresh(),
-                onLoadMore: () => notifier.loadMore(),
-                onGoToCreatePost: widget.onGoToCreatePost,
-                scrollController: _scrollController,
-                onScrollNearBottom: () => notifier.loadMore(),
-                loadMoreThreshold: _loadMoreThreshold,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const VisitorBanner(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingSm),
+          child: Row(
+            children: [
+              Expanded(
+                child: _FeedTypeFilterBar(
+                  selectedType: filterType,
+                  onTypeSelected: (type) {
+                    ref.read(filterFeedTypeProvider.notifier).state = type;
+                  },
+                ),
               ),
+              IconButton(
+                icon: Icon(
+                  filterByInterests ? Icons.filter_list : Icons.filter_list_off,
+                  color: filterByInterests
+                      ? Theme.of(context).colorScheme.primary
+                      : null,
+                ),
+                tooltip: l10n.filterByInterests,
+                onPressed: () {
+                  ref.read(filterFeedByInterestsProvider.notifier).state =
+                      !filterByInterests;
+                  ref.invalidate(feedNotifierProvider(territoryId));
+                },
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () => notifier.refresh(),
+            child: _FeedBody(
+              state: feedState,
+              territoryId: territoryId,
+              filterType: filterType,
+              onRetry: () => notifier.refresh(),
+              onLoadMore: () => notifier.loadMore(),
+              onGoToCreatePost: widget.onGoToCreatePost,
+              scrollController: _scrollController,
+              onScrollNearBottom: () => notifier.loadMore(),
+              loadMoreThreshold: _loadMoreThreshold,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -142,7 +144,15 @@ class _FeedBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.error != null && state.items.isEmpty) {
-      return _ErrorView(error: state.error!, onRetry: onRetry);
+      final l10n = AppLocalizations.of(context)!;
+      final msg = state.error is ApiException
+          ? (state.error as ApiException).userMessage
+          : l10n.errorLoad;
+      return ArahErrorState(
+        message: msg,
+        retryLabel: l10n.tryAgain,
+        onRetry: onRetry,
+      );
     }
     if (state.isLoading && state.items.isEmpty) {
       return const SingleChildScrollView(
@@ -449,34 +459,6 @@ class _FeedTypeFilterBar extends StatelessWidget {
             ),
           );
         }).toList(),
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.error, required this.onRetry});
-
-  final Object error;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final msg = error is ApiException ? (error as ApiException).userMessage : l10n.errorLoad;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppConstants.spacingLg),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wifi_off, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.error),
-            const SizedBox(height: AppConstants.spacingMd),
-            Text(msg, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
-            const SizedBox(height: AppConstants.spacingMd),
-            FilledButton.tonal(onPressed: onRetry, child: Text(l10n.tryAgain)),
-          ],
-        ),
       ),
     );
   }

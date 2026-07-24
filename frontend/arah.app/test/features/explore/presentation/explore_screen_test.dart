@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  testWidgets('ExploreScreen shows title and territories section', (WidgetTester tester) async {
+  testWidgets('ExploreScreen shows territories section and services CTA', (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -18,7 +18,8 @@ void main() {
           locale: const Locale('pt'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const ExploreScreen(),
+          // Shell já fornece Material/TopBar; Explore é conteúdo embutido.
+          home: const Scaffold(body: ExploreScreen()),
         ),
       ),
     );
@@ -26,5 +27,6 @@ void main() {
 
     expect(find.text('Explorar'), findsOneWidget);
     expect(find.text('Territórios'), findsOneWidget);
+    expect(find.text('Serviços'), findsOneWidget);
   });
 }

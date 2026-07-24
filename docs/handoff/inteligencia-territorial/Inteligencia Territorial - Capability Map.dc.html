@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/colors_and_type.css" />
+<link rel="stylesheet" href="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/styles.css" />
+<script src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+<style>
+@font-face { font-family:"Geist"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Geist-VariableFont_wght.ttf") format("truetype"); font-weight:100 900; font-display:swap; }
+@font-face { font-family:"Sora"; src:url("../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/fonts/Sora-VariableFont_wght.ttf") format("truetype"); font-weight:100 800; font-display:swap; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#FBFCF9; color:#173525; font-family:"Geist",system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+* { box-sizing:border-box; }
+::selection { background:#C6E3D2; }
+a { color:#2B6246; }
+a:hover { color:#377B57; }
+.msr { font-family:"Material Symbols Rounded"; font-variation-settings:'FILL' 1,'wght' 500; line-height:1; vertical-align:middle; }
+.toclink { display:block; font-size:13px; color:#2B6246; padding:4px 0 4px 12px; border-left:2px solid transparent; margin-left:-2px; text-decoration:none; transition:color .15s,border-color .15s; }
+.toclink:hover { color:#377B57; border-left-color:#9FCEB4; }
+.sect { padding:38px 0; border-bottom:1px solid rgba(23,53,37,0.12); scroll-margin-top:20px; }
+.eyebrow { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#377B57; margin-bottom:8px; }
+.h2 { font-family:'Sora',sans-serif; font-weight:600; font-size:1.7rem; letter-spacing:-0.02em; margin:0 0 10px; color:#0E2117; }
+.body { font-size:15.5px; line-height:1.68; color:#2B6246; max-width:66ch; }
+.chip { display:inline-block; font-size:10.5px; font-weight:600; letter-spacing:.05em; border-radius:999px; padding:3px 9px; white-space:nowrap; }
+@media print { .toc { display:none !important; } .shell { grid-template-columns:1fr !important; } }
+</style>
+</helmet>
+<div class="shell" style="display:grid; grid-template-columns:268px 1fr; max-width:1400px; margin:0 auto;">
+  <nav class="toc" style="position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:34px 22px; border-right:1px solid rgba(23,53,37,0.12);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px;">
+      <img src="../arquitetura-c4/_ds/arah-design-system-c7fa51b9-1d5e-45c6-ba38-8221b856c4c7/assets/arah-logo.png" alt="Arah" style="height:30px;" />
+      <b style="font-family:'Sora',sans-serif; font-weight:700; font-size:19px; color:#0E2117;">Arah</b>
+    </div>
+    <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#74806E; display:block; margin-bottom:18px; padding-left:2px;">Inteligência Territorial · Material 3</span>
+    <a class="toclink" href="Inteligencia Territorial - Hub.dc.html" style="color:#74806E;">← Hub da iniciativa</a>
+    <div style="height:14px;"></div>
+    <a class="toclink" href="#leitura">Como ler o mapa</a>
+    <sc-for list="{{ clusters }}" as="c" hint-placeholder-count="5">
+      <a class="toclink" href="#{{ c.id }}">{{ c.title }}</a>
+    </sc-for>
+    <a class="toclink" href="#horizonte">Leitura por horizonte</a>
+  </nav>
+
+  <main style="padding:54px clamp(24px,4vw,66px); min-width:0;">
+    <header style="border-bottom:1px solid rgba(23,53,37,0.12); padding-bottom:40px;">
+      <div class="eyebrow" style="letter-spacing:.16em;">Mapa de capacidades</div>
+      <h1 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(2.1rem,4.6vw,3.1rem); letter-spacing:-0.035em; line-height:1.05; margin:0 0 18px; color:#0E2117;">25 capacidades,<br/><span style="color:#377B57;">três horizontes</span></h1>
+      <p style="font-size:1.12rem; line-height:1.6; color:#2B6246; max-width:66ch; margin:0;">O que a camada de inteligência territorial precisa saber fazer — organizado em cinco grupos que seguem o caminho do sinal, do mundo até a memória do lugar.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:26px;">
+        <span class="chip" style="background:var(--forest-800); color:var(--on-primary); padding:6px 14px;">MVP · Incrementos 1–3 · 16 capacidades</span>
+        <span class="chip" style="background:var(--forest-100); color:var(--forest-700); padding:6px 14px;">Evolução · Incrementos 4–6 · 7 capacidades</span>
+        <span class="chip" style="background:#fff; color:var(--fg-subtle); border:1px dashed var(--border-strong); padding:6px 14px;">Futuro · Incremento 7+ · 2 capacidades</span>
+      </div>
+    </header>
+
+    <section id="leitura" class="sect">
+      <div class="eyebrow">Como ler</div>
+      <h2 class="h2">Capacidade ≠ tela ≠ serviço</h2>
+      <p class="body">Cada card é uma <b>capacidade de negócio</b>: algo que a plataforma passa a saber fazer, independentemente de onde o código mora. O horizonte diz <b>quando ela entra</b>; o rodapé de cada card aponta <b>sobre o que ela se apoia</b> no Arah de hoje. A tradução em arquitetura está em <a href="Inteligencia Territorial - Arquitetura e Dominio.dc.html">Arquitetura, domínio &amp; estados</a>; em fases, no <a href="Inteligencia Territorial - Roadmap e Backlog.dc.html">Roadmap</a>.</p>
+    </section>
+
+    <sc-for list="{{ clusters }}" as="c" hint-placeholder-count="5">
+      <section id="{{ c.id }}" class="sect">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+          <span style="width:38px; height:38px; border-radius:11px; background:#214D37; color:#fff; display:flex; align-items:center; justify-content:center;"><span class="msr" style="font-size:20px;">{{ c.icon }}</span></span>
+          <div>
+            <div class="eyebrow" style="margin-bottom:2px;">{{ c.range }}</div>
+            <h2 class="h2" style="margin:0;">{{ c.title }}</h2>
+          </div>
+        </div>
+        <p class="body" style="margin:10px 0 20px;">{{ c.desc }}</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px;">
+          <sc-for list="{{ c.caps }}" as="k" hint-placeholder-count="5">
+            <div style="border:1px solid rgba(23,53,37,0.12); border-radius:16px; background:#fff; padding:18px 20px; display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <span style="font-family:'Sora'; font-weight:700; font-size:12px; color:#74806E;">{{ k.n }}</span>
+                <span class="chip" style="background:{{ k.bg }}; color:{{ k.fg }}; border:{{ k.border }};">{{ k.fase }}</span>
+              </div>
+              <div>
+                <b style="font-family:'Sora'; font-size:14.5px; color:#0E2117; display:block;">{{ k.t }}</b>
+                <span style="font-size:11.5px; color:#74806E;">{{ k.en }}</span>
+              </div>
+              <p style="font-size:13px; line-height:1.56; color:#2B6246; margin:0; flex:1;">{{ k.d }}</p>
+              <div style="border-top:1px dashed rgba(23,53,37,0.12); padding-top:8px; font-size:11.5px; color:#74806E;"><span class="msr" style="font-size:13px; color:#377B57; margin-right:4px;">anchor</span>{{ k.base }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-for>
+
+    <section id="horizonte" class="sect" style="border-bottom:none;">
+      <div class="eyebrow">Leitura por horizonte</div>
+      <h2 class="h2">O que cada horizonte prova</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:14px; margin-top:8px;">
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 24px;">
+          <span class="chip" style="background:#214D37; color:#fff;">MVP · Incrementos 1–3</span>
+          <p style="font-size:13.5px; line-height:1.6; color:#2B6246; margin:12px 0 0;">Prova que <b>o ciclo mínimo é digno</b>: sinal entra, é correlacionado, revisado por gente, publicado com fonte e validade — sem sustos e sem autopublicação além da allowlist objetiva. Custos e quotas visíveis desde o primeiro dia.</p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 24px;">
+          <span class="chip" style="background:#E2F1E8; color:#2B6246;">Evolução · Incrementos 4–6</span>
+          <p style="font-size:13.5px; line-height:1.6; color:#2B6246; margin:12px 0 0;">Prova que <b>a comunidade é coautora</b>: confirmação, contestação e evidência de campo; instituições validando; alertas virando mutirão, votação e protocolo; encerramento vira memória consultável.</p>
+        </div>
+        <div style="border:1px solid rgba(23,53,37,0.12); border-radius:18px; background:#fff; padding:22px 24px;">
+          <span class="chip" style="background:#fff; color:#74806E; border:1px dashed rgba(23,53,37,0.3);">Futuro · Incremento 7+</span>
+          <p style="font-size:13.5px; line-height:1.6; color:#2B6246; margin:12px 0 0;">Prova que <b>a rede aprende sem centralizar</b>: padrões entre eventos, aprendizado entre territórios e federação de sinais com confiança explícita entre instâncias soberanas.</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:30px; flex-wrap:wrap;">
+        <a href="Inteligencia Territorial - Arquitetura e Dominio.dc.html" style="display:inline-flex; align-items:center; gap:8px; background:#214D37; color:#fff; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Próximo: arquitetura &amp; domínio <span class="msr" style="font-size:16px;">east</span></a>
+        <a href="Inteligencia Territorial - Hub.dc.html" style="display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(23,53,37,0.2); color:#173525; border-radius:999px; padding:11px 20px; font-size:13.5px; font-weight:600; text-decoration:none;">Voltar ao hub</a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const F = {
+      mvp: { fase: "MVP", bg: "#214D37", fg: "#fff", border: "none" },
+      evo: { fase: "Evolução", bg: "#E2F1E8", fg: "#2B6246", border: "none" },
+      fut: { fase: "Futuro", bg: "#fff", fg: "#74806E", border: "1px dashed rgba(23,53,37,0.3)" },
+    };
+    const k = (n, t, en, f, d, base) => ({ n, t, en, ...F[f], d, base });
+    return {
+      clusters: [
+        { id: "aquisicao", icon: "sensors", range: "Capacidades 1–5", title: "Aquisição e processamento", desc: "Trazer o sinal do mundo para dentro, limpo e sem duplicatas — sem acoplar o domínio ao provedor.", caps: [
+          k("01", "Aquisição de sinais", "Signal Acquisition", "mvp", "Buscar sinais no World Monitor por MCP/REST em agenda por categoria, com retry, timeout e circuit breaker.", "Novo — jobs Infrastructure; scheduler existente"),
+          k("02", "Gestão de provedores", "Provider Management", "mvp", "Registrar provedores, chaves, quotas, saúde e desligamento de emergência; World Monitor é o primeiro, não o único.", "Novo — SystemConfig e health checks existentes"),
+          k("03", "Normalização", "Signal Normalization", "mvp", "Converter payloads heterogêneos no formato ExternalSignal canônico, com unidade, fuso e geometria padronizados.", "Novo — mapper no adapter"),
+          k("04", "Deduplicação", "Deduplication", "mvp", "Reconhecer o mesmo acontecimento vindo duas vezes (ou de duas fontes) e fundir em um sinal com corroboração.", "Novo — chave natural + janela temporal"),
+          k("05", "Correlação geoespacial", "Geospatial Correlation", "mvp", "Cruzar a geometria do sinal com fronteiras de territórios; marcar entidades e ativos dentro da área.", "PostGIS já presente; fronteiras de Territory existentes"),
+        ]},
+        { id: "confianca", icon: "balance", range: "Capacidades 6–10", title: "Relevância, confiança e revisão", desc: "Decidir o que merece atenção humana — e garantir que nada pule a pessoa que decide.", caps: [
+          k("06", "Relevância territorial", "Territorial Relevance", "mvp", "Pontuar o quanto o sinal importa para cada território: distância, categoria assinada, severidade, ativos atingidos.", "Novo — usa preferências e flags por território"),
+          k("07", "Confiança da informação", "Trust & Confidence", "mvp", "Escala explicável por fonte e corroboração (verificada → não-verificada); aprende com correções ao longo do tempo (evolução).", "Novo — catálogo de fontes do WM como insumo"),
+          k("08", "Gestão de freshness", "Freshness Management", "mvp", "Estados fresh → aging → stale → expired com efeitos visíveis na interface e bloqueio de publicação de sinal vencido.", "Espelha freshness/cache já expostos pelo WM"),
+          k("09", "Avaliação de impacto", "Impact Assessment", "mvp", "Traduzir sinal em impacto local plausível (quem, o quê, quando), sempre explicável em linguagem humana.", "Novo — MapEntity e assets como base; LLM opcional com rastro"),
+          k("10", "Revisão humana", "Human Review", "mvp", "Fila de revisão com aprovação, ajuste, rejeição e justificativa auditada. Nada publica sem passar aqui (salvo allowlist objetiva).", "WorkItem existente — novo tipo SignalReview"),
+        ]},
+        { id: "publicacao", icon: "campaign", range: "Capacidades 11–15", title: "Validação e publicação", desc: "Transformar sinal aprovado em comunicação territorial digna — com fonte, validade e canal certo.", caps: [
+          k("11", "Validação institucional", "Institutional Validation", "evo", "Defesa civil, saúde e prefeitura como validadores formais com selo próprio e responsabilidade registrada.", "Capabilities + entidades existentes"),
+          k("12", "Verificação comunitária", "Community Verification", "evo", "Moradores confirmam, complementam ou contestam com evidência; o alerta mostra o retrato agregado, sem virar enquete de pânico.", "Novo — interações e mídia existentes"),
+          k("13", "Brief territorial", "Territorial Briefing", "mvp", "Editor que traduz o técnico para o territorial: o que está acontecendo, o que fazer, quem procurar, até quando vale.", "Novo — publica via posts/alerts existentes"),
+          k("14", "Publicação de alertas", "Alert Publication", "mvp", "Alerta enriquecido (origem, severidade, confiança, validade, geometria) no feed, mapa e detalhe, com timeline de atualizações.", "Alerts + posts + pins existentes, enriquecidos"),
+          k("15", "Notificações", "Notifications", "mvp", "Notificação por relevância e preferência (categoria, severidade mínima, silêncio) — nunca broadcast indiscriminado.", "Outbox → UserNotification existente; novo kind"),
+        ]},
+        { id: "acao", icon: "diversity_3", range: "Capacidades 16–20", title: "Ação e memória", desc: "Fechar o ciclo: da informação validada à resposta coletiva e ao registro que fica para o território.", caps: [
+          k("16", "Ativação de governança", "Governance Activation", "evo", "Votação nasce de um alerta com um toque, herdando contexto e fonte — decisão coletiva informada.", "Jornada governance existente"),
+          k("17", "Coordenação de resposta", "Event & Response Coordination", "evo", "Mutirões e eventos de resposta criados a partir do alerta, com interesse/confirmação e vínculo de origem.", "Events existentes"),
+          k("18", "Coleta de evidências", "Evidence Collection", "evo", "Fotos, áudios e relatos georreferenciados anexados ao alerta, com curadoria e privacidade por padrão.", "Media/upload + assets existentes"),
+          k("19", "Resolução e encerramento", "Resolution & Closure", "evo", "Encerramento explícito: o que aconteceu, o que funcionou, agradecimento — o oposto de alerta que apaga sozinho.", "Novo — estado final auditado"),
+          k("20", "Memória territorial", "Territorial Memory", "evo", "Histórico consultável de eventos, respostas e aprendizados por território e categoria.", "Novo — read model sobre o ciclo completo"),
+        ]},
+        { id: "plataforma", icon: "shield", range: "Capacidades 21–25", title: "Operação, garantia e rede", desc: "O que mantém a camada saudável, econômica, auditável — e eventualmente federada.", caps: [
+          k("21", "Analytics e aprendizado", "Analytics & Learning", "fut", "Padrões entre eventos e territórios: sazonalidade, precisão por fonte, impacto evitado — sem métricas de vício.", "Novo — sobre a memória territorial"),
+          k("22", "Custo e quota de provedores", "Provider Cost & Quota", "mvp", "Ledger de requisições vs plano (ex.: 1.000/dia no plano API do WM), custo estimado, alarmes antes do teto.", "Novo — rate limits e métricas existentes"),
+          k("23", "Privacidade e segurança", "Privacy & Security", "mvp", "Minimização por padrão: nenhum dado pessoal sai para provedores; localização sensível protegida; threat model vivo.", "Transversal — práticas de segurança existentes"),
+          k("24", "Auditabilidade", "Auditability", "mvp", "Toda transição de estado com quem/quando/por quê; decisões de publicação consultáveis pela comunidade.", "Padrão de auditoria existente (grants, moderação)"),
+          k("25", "Federação entre territórios", "Federation", "fut", "Sinais e aprendizados circulam entre instâncias com confiança explícita — vizinho avisa vizinho, sem centro.", "Arah Core (FASE53) + anexo de federação existente"),
+        ]},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

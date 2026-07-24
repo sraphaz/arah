@@ -18,6 +18,10 @@ O sistema tem **fundação forte**: tokens centralizados na web (`design-tokens.
 O que impede o "high-premium pleno" são **derivas pontuais** (cores fora de token), o **devportal
 legado** desalinhado dos tokens compartilhados e **lacunas de acessibilidade** na landing.
 
+> **Eixo app × UI kit (2026-07-15):** a nota **A-** do Flutter mede disciplina de tokenização,
+> não fidelidade ao protótipo premium. Análise profunda tela a tela, IA e gaps `APP-DS-*`:
+> [ANALISE_DESIGN_VS_APP_FLUTTER.md](./ANALISE_DESIGN_VS_APP_FLUTTER.md).
+
 Classificação atual por superfície:
 
 | Superfície | Tokens | Mobile-first | A11y | Nota |
@@ -60,10 +64,18 @@ Classificação atual por superfície:
 
 ## Recomendação de ordem (backlog `design-quality`)
 
-1. **DSG-03** (devportal → tokens compartilhados) — maior salto de consistência do ecossistema; o gate já bloqueia novas violações em arquivos alterados.
-2. **DSG-05** (a11y da landing do portal) — impacto direto em qualidade percebida.
-3. **DSG-06 + DSG-04** (unificar glass/espaçamento) — refino "premium" de marca.
-4. **DSG-07** (contraste syntax WCAG) — acessibilidade fina.
+### Web / tokens (DSG-*)
+
+1. **DSG-06 + DSG-04** (unificar glass/espaçamento) — refino "premium" de marca.
+2. **DSG-07** (contraste syntax WCAG) — acessibilidade fina.
+3. ~~DSG-03 / DSG-05~~ — já corrigidos.
+
+### App Flutter × UI kit (APP-DS-*) — ver análise completa
+
+1. ~~**APP-DS-01..06**~~ — ADR-021, tokens floresta, Sora/Geist, shell Serviços+TopBar, hub (2026-07-21).
+2. **APP-DS-07** — RoleBadge, JourneyShell e componentes premium restantes.
+3. **APP-DS-08 → 12** — redesign Explorar/Perfil/Mercado + jornadas + estados.
+4. **APP-DS-13** — gate visual de regressão de IA.
 
 ---
 

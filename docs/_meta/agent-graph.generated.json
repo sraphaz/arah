@@ -2,7 +2,7 @@
     "schema":  ".agents/agent-graph.schema.yaml",
     "version":  1,
     "generator":  "scripts/agents/export-agent-graph.ps1",
-    "generated_at":  "2026-07-03T04:13:45Z",
+    "generated_at":  "2026-07-23T22:46:40Z",
     "sources":  [
                     ".agents/choreography.yaml",
                     ".agents/**/*.agent.yaml",
@@ -11,18 +11,18 @@
                     ".github/workflows/*.yml"
                 ],
     "stats":  {
-                  "agents":  29,
+                  "agents":  35,
                   "skills":  25,
-                  "rules":  18,
-                  "paths":  146,
-                  "domains":  11,
-                  "specs":  12,
-                  "harnesses":  12,
+                  "rules":  19,
+                  "paths":  173,
+                  "domains":  17,
+                  "specs":  13,
+                  "harnesses":  13,
                   "tests":  14,
-                  "guardrails":  16,
+                  "guardrails":  17,
                   "workflows":  16,
                   "review_gates":  5,
-                  "edges":  518
+                  "edges":  594
               },
     "nodes":  {
                   "agents":  [
@@ -131,6 +131,34 @@
                                                    "docs/**/billing*",
                                                    "docs/**/carteira*",
                                                    "docs/backlog-api/FASE15.md"
+                                               ],
+                                     "guardrails":  {
+
+                                                    }
+                                 },
+                                 {
+                                     "id":  "community-brief-writer",
+                                     "name":  "Domain — Community Brief Writer (Inteligência Territorial)",
+                                     "kind":  "domain",
+                                     "manifest":  ".agents/domain/community-brief-writer.agent.yaml",
+                                     "skills":  [
+                                                    "code-review"
+                                                ],
+                                     "consults":  {
+                                                      "domain":  [
+
+                                                                 ],
+                                                      "specialists":  [
+
+                                                                      ]
+                                                  },
+                                     "paths":  [
+                                                   "backend/**/Intelligence/**",
+                                                   "backend/**/TerritorialBrief*",
+                                                   "frontend/**/intelligence/**",
+                                                   "docs/handoff/inteligencia-territorial/**",
+                                                   "docs/backlog-api/TI3.md",
+                                                   "docs/specs/features/TI-301*.spec.yaml"
                                                ],
                                      "guardrails":  {
 
@@ -325,6 +353,39 @@
                                                     }
                                  },
                                  {
+                                     "id":  "intelligence-governance-steward",
+                                     "name":  "Domain — Intelligence Governance Steward",
+                                     "kind":  "domain",
+                                     "manifest":  ".agents/domain/intelligence-governance-steward.agent.yaml",
+                                     "skills":  [
+                                                    "code-review",
+                                                    "architecture-review"
+                                                ],
+                                     "consults":  {
+                                                      "domain":  [
+
+                                                                 ],
+                                                      "specialists":  [
+
+                                                                      ]
+                                                  },
+                                     "paths":  [
+                                                   "backend/**/Intelligence/**",
+                                                   "docs/handoff/inteligencia-territorial/**",
+                                                   "docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md",
+                                                   "docs/backlog-api/TI*.md",
+                                                   "docs/specs/features/TI-*.spec.yaml",
+                                                   ".agents/domain/signal-scout.agent.yaml",
+                                                   ".agents/domain/territorial-analyst.agent.yaml",
+                                                   ".agents/domain/source-steward.agent.yaml",
+                                                   ".agents/domain/community-brief-writer.agent.yaml",
+                                                   ".agents/domain/response-orchestrator.agent.yaml"
+                                               ],
+                                     "guardrails":  {
+
+                                                    }
+                                 },
+                                 {
                                      "id":  "mapa-lugares",
                                      "name":  "Domain — Mapa, Lugares \u0026 Assets Territoriais",
                                      "kind":  "domain",
@@ -407,6 +468,116 @@
                                                    "backend/Arah.Domain/Financial/**",
                                                    "backend/Arah.Application/Services/Marketplace/TransactionQuoteService.cs",
                                                    "backend/Arah.Application/Services/Marketplace/CommercialStoreGateService.cs"
+                                               ],
+                                     "guardrails":  {
+
+                                                    }
+                                 },
+                                 {
+                                     "id":  "response-orchestrator",
+                                     "name":  "Domain — Response Orchestrator (Inteligência Territorial)",
+                                     "kind":  "domain",
+                                     "manifest":  ".agents/domain/response-orchestrator.agent.yaml",
+                                     "skills":  [
+                                                    "code-review"
+                                                ],
+                                     "consults":  {
+                                                      "domain":  [
+
+                                                                 ],
+                                                      "specialists":  [
+
+                                                                      ]
+                                                  },
+                                     "paths":  [
+                                                   "backend/**/Intelligence/**",
+                                                   "backend/**/TerritorialMemory*",
+                                                   "backend/**/RecommendedAction*",
+                                                   "docs/handoff/inteligencia-territorial/**",
+                                                   "docs/backlog-api/TI5.md",
+                                                   "docs/specs/features/TI-501*.spec.yaml"
+                                               ],
+                                     "guardrails":  {
+
+                                                    }
+                                 },
+                                 {
+                                     "id":  "signal-scout",
+                                     "name":  "Domain — Signal Scout (Inteligência Territorial)",
+                                     "kind":  "domain",
+                                     "manifest":  ".agents/domain/signal-scout.agent.yaml",
+                                     "skills":  [
+                                                    "code-review"
+                                                ],
+                                     "consults":  {
+                                                      "domain":  [
+
+                                                                 ],
+                                                      "specialists":  [
+
+                                                                      ]
+                                                  },
+                                     "paths":  [
+                                                   "backend/**/Intelligence/**",
+                                                   "backend/**/Intelligence/Providers/**",
+                                                   "docs/handoff/inteligencia-territorial/**",
+                                                   "docs/backlog-api/TI*.md",
+                                                   "docs/specs/features/TI-*.spec.yaml"
+                                               ],
+                                     "guardrails":  {
+
+                                                    }
+                                 },
+                                 {
+                                     "id":  "source-steward",
+                                     "name":  "Domain — Source Steward (Inteligência Territorial)",
+                                     "kind":  "domain",
+                                     "manifest":  ".agents/domain/source-steward.agent.yaml",
+                                     "skills":  [
+                                                    "code-review"
+                                                ],
+                                     "consults":  {
+                                                      "domain":  [
+
+                                                                 ],
+                                                      "specialists":  [
+
+                                                                      ]
+                                                  },
+                                     "paths":  [
+                                                   "backend/**/Intelligence/**",
+                                                   "backend/**/SignalProvider*",
+                                                   "backend/**/Providers/WorldMonitor/**",
+                                                   "docs/handoff/inteligencia-territorial/**",
+                                                   "docs/specs/features/TI-102*.spec.yaml"
+                                               ],
+                                     "guardrails":  {
+
+                                                    }
+                                 },
+                                 {
+                                     "id":  "territorial-analyst",
+                                     "name":  "Domain — Territorial Analyst (Inteligência Territorial)",
+                                     "kind":  "domain",
+                                     "manifest":  ".agents/domain/territorial-analyst.agent.yaml",
+                                     "skills":  [
+                                                    "code-review"
+                                                ],
+                                     "consults":  {
+                                                      "domain":  [
+
+                                                                 ],
+                                                      "specialists":  [
+
+                                                                      ]
+                                                  },
+                                     "paths":  [
+                                                   "backend/**/Intelligence/**",
+                                                   "backend/**/Signal*",
+                                                   "backend/**/ImpactAssessment*",
+                                                   "docs/handoff/inteligencia-territorial/**",
+                                                   "docs/backlog-api/TI2.md",
+                                                   "docs/specs/features/TI-202*.spec.yaml"
                                                ],
                                      "guardrails":  {
 
@@ -1445,6 +1616,126 @@
                                 },
                                 {
                                     "paths":  [
+                                                  "backend/**/Intelligence/**",
+                                                  "backend/**/Providers/WorldMonitor/**",
+                                                  "docs/handoff/inteligencia-territorial/**",
+                                                  "docs/backlog-api/TI*.md",
+                                                  "docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md",
+                                                  "docs/specs/features/TI-*.spec.yaml",
+                                                  ".agents/domain/signal-scout.agent.yaml",
+                                                  ".agents/domain/territorial-analyst.agent.yaml",
+                                                  ".agents/domain/source-steward.agent.yaml",
+                                                  ".agents/domain/community-brief-writer.agent.yaml",
+                                                  ".agents/domain/response-orchestrator.agent.yaml",
+                                                  ".agents/domain/intelligence-governance-steward.agent.yaml"
+                                              ],
+                                    "agents":  [
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "signal-scout",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "territorial-analyst",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "source-steward",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "community-brief-writer",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "response-orchestrator",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "intelligence-governance-steward",
+                                                       "type":  "domain",
+                                                       "kind":  "domain"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "activate"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "backend",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "activate"
+                                                                    ],
+                                                       "skills":  [
+
+                                                                  ],
+                                                       "id":  "spec-steward",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   },
+                                                   {
+                                                       "autonomy":  [
+                                                                        "consult_post",
+                                                                        "invoke_skill"
+                                                                    ],
+                                                       "skills":  [
+                                                                      "architecture-review"
+                                                                  ],
+                                                       "id":  "solutions-architect",
+                                                       "type":  "operational",
+                                                       "kind":  "operational"
+                                                   }
+                                               ],
+                                    "when":  null,
+                                    "id":  "inteligencia-territorial"
+                                },
+                                {
+                                    "paths":  [
                                                   "docs/specs/**",
                                                   "scripts/harness/**"
                                               ],
@@ -1649,6 +1940,60 @@
                                                ]
                                 },
                                 {
+                                    "pattern":  ".agents/domain/community-brief-writer.agent.yaml",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".agents/domain/intelligence-governance-steward.agent.yaml",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".agents/domain/response-orchestrator.agent.yaml",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".agents/domain/signal-scout.agent.yaml",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".agents/domain/source-steward.agent.yaml",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  ".agents/domain/territorial-analyst.agent.yaml",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward"
+                                               ]
+                                },
+                                {
                                     "pattern":  ".github/**",
                                     "rules":  [
 
@@ -1785,6 +2130,38 @@
                                                ]
                                 },
                                 {
+                                    "pattern":  "backend/**/ImpactAssessment*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "territorial-analyst"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/**/Intelligence/**",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "community-brief-writer",
+                                                   "intelligence-governance-steward",
+                                                   "response-orchestrator",
+                                                   "signal-scout",
+                                                   "source-steward",
+                                                   "territorial-analyst"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/**/Intelligence/Providers/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "signal-scout"
+                                               ]
+                                },
+                                {
                                     "pattern":  "backend/**/Items/**",
                                     "rules":  [
                                                   "marketplace"
@@ -1866,12 +2243,48 @@
                                                ]
                                 },
                                 {
+                                    "pattern":  "backend/**/Providers/WorldMonitor/**",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "source-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/**/RecommendedAction*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "response-orchestrator"
+                                               ]
+                                },
+                                {
                                     "pattern":  "backend/**/SellerBalance/**",
                                     "rules":  [
                                                   "monetization"
                                               ],
                                     "agents":  [
                                                    "carteira-arata"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/**/Signal*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "territorial-analyst"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/**/SignalProvider*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "source-steward"
                                                ]
                                 },
                                 {
@@ -1899,6 +2312,24 @@
                                               ],
                                     "agents":  [
                                                    "monetizacao-split"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/**/TerritorialBrief*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "community-brief-writer"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "backend/**/TerritorialMemory*",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "response-orchestrator"
                                                ]
                                 },
                                 {
@@ -2576,6 +3007,52 @@
                                                ]
                                 },
                                 {
+                                    "pattern":  "docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/backlog-api/TI*.md",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward",
+                                                   "signal-scout"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/backlog-api/TI2.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "territorial-analyst"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/backlog-api/TI3.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "community-brief-writer"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/backlog-api/TI5.md",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "response-orchestrator"
+                                               ]
+                                },
+                                {
                                     "pattern":  "docs/CHANGELOG.md",
                                     "rules":  [
 
@@ -2648,6 +3125,20 @@
                                                ]
                                 },
                                 {
+                                    "pattern":  "docs/handoff/inteligencia-territorial/**",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "community-brief-writer",
+                                                   "intelligence-governance-steward",
+                                                   "response-orchestrator",
+                                                   "signal-scout",
+                                                   "source-steward",
+                                                   "territorial-analyst"
+                                               ]
+                                },
+                                {
                                     "pattern":  "docs/ops/CI_CD_PIPELINE.md",
                                     "rules":  [
                                                   "infra-deploy"
@@ -2675,6 +3166,52 @@
                                                    "planner",
                                                    "pr-steward",
                                                    "spec-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/features/TI-*.spec.yaml",
+                                    "rules":  [
+                                                  "inteligencia-territorial"
+                                              ],
+                                    "agents":  [
+                                                   "intelligence-governance-steward",
+                                                   "signal-scout"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/features/TI-102*.spec.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "source-steward"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/features/TI-202*.spec.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "territorial-analyst"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/features/TI-301*.spec.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "community-brief-writer"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "docs/specs/features/TI-501*.spec.yaml",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "response-orchestrator"
                                                ]
                                 },
                                 {
@@ -2720,6 +3257,15 @@
                                               ],
                                     "agents":  [
                                                    "design-ux"
+                                               ]
+                                },
+                                {
+                                    "pattern":  "frontend/**/intelligence/**",
+                                    "rules":  [
+
+                                              ],
+                                    "agents":  [
+                                                   "community-brief-writer"
                                                ]
                                 },
                                 {
@@ -2957,6 +3503,13 @@
                                                 ]
                                   },
                                   {
+                                      "id":  "community-brief-writer",
+                                      "agent":  "community-brief-writer",
+                                      "rules":  [
+                                                    "inteligencia-territorial"
+                                                ]
+                                  },
+                                  {
                                       "id":  "comunidade-conexoes",
                                       "agent":  "comunidade-conexoes",
                                       "rules":  [
@@ -3001,6 +3554,13 @@
                                                 ]
                                   },
                                   {
+                                      "id":  "intelligence-governance-steward",
+                                      "agent":  "intelligence-governance-steward",
+                                      "rules":  [
+                                                    "inteligencia-territorial"
+                                                ]
+                                  },
+                                  {
                                       "id":  "mapa-lugares",
                                       "agent":  "mapa-lugares",
                                       "rules":  [
@@ -3019,6 +3579,34 @@
                                       "agent":  "monetizacao-split",
                                       "rules":  [
                                                     "monetization"
+                                                ]
+                                  },
+                                  {
+                                      "id":  "response-orchestrator",
+                                      "agent":  "response-orchestrator",
+                                      "rules":  [
+                                                    "inteligencia-territorial"
+                                                ]
+                                  },
+                                  {
+                                      "id":  "signal-scout",
+                                      "agent":  "signal-scout",
+                                      "rules":  [
+                                                    "inteligencia-territorial"
+                                                ]
+                                  },
+                                  {
+                                      "id":  "source-steward",
+                                      "agent":  "source-steward",
+                                      "rules":  [
+                                                    "inteligencia-territorial"
+                                                ]
+                                  },
+                                  {
+                                      "id":  "territorial-analyst",
+                                      "agent":  "territorial-analyst",
+                                      "rules":  [
+                                                    "inteligencia-territorial"
                                                 ]
                                   },
                                   {
@@ -3641,6 +4229,53 @@
                                                            "evidence":  null
                                                        }
                                                    ]
+                                },
+                                {
+                                    "id":  "TI-201-signal-review",
+                                    "status":  "draft",
+                                    "manifest":  "docs/specs/features/TI-201-signal-review.spec.yaml",
+                                    "harness_agents":  [
+                                                           "backend",
+                                                           "spec-steward"
+                                                       ],
+                                    "guardrails":  [
+                                                       "territory-first",
+                                                       "no-secrets-in-repo",
+                                                       "sync-docs-on-behavior-change",
+                                                       "human-review-before-publish"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-TI-201-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-TI-201-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-TI-201-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-TI-201-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-TI-201-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
+                                                   ]
                                 }
                             ],
                   "harnesses":  [
@@ -3739,6 +4374,14 @@
                                         "spec":  "platform-operability",
                                         "agents":  [
 
+                                                   ]
+                                    },
+                                    {
+                                        "id":  "TI-201-signal-review",
+                                        "spec":  "TI-201-signal-review",
+                                        "agents":  [
+                                                       "backend",
+                                                       "spec-steward"
                                                    ]
                                     }
                                 ],
@@ -3843,6 +4486,10 @@
                                      },
                                      {
                                          "id":  "comment_only",
+                                         "executable":  false
+                                     },
+                                     {
+                                         "id":  "human-review-before-publish",
                                          "executable":  false
                                      },
                                      {
@@ -4067,6 +4714,21 @@
                   {
                       "from":  "rule:infra-deploy",
                       "to":  "agent:release",
+                      "type":  "activates_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:backend",
+                      "type":  "activates_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:solutions-architect",
+                      "type":  "activates_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:spec-steward",
                       "type":  "activates_agent"
                   },
                   {
@@ -4398,6 +5060,26 @@
                       "type":  "blocked_by_guardrail"
                   },
                   {
+                      "from":  "spec:TI-201-signal-review",
+                      "to":  "guardrail:human-review-before-publish",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:TI-201-signal-review",
+                      "to":  "guardrail:no-secrets-in-repo",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:TI-201-signal-review",
+                      "to":  "guardrail:sync-docs-on-behavior-change",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:TI-201-signal-review",
+                      "to":  "guardrail:territory-first",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
                       "from":  "agent:backend",
                       "to":  "agent:control-plane",
                       "type":  "consults_domain_agent",
@@ -4528,6 +5210,36 @@
                       "type":  "consults_domain_agent"
                   },
                   {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:community-brief-writer",
+                      "type":  "consults_domain_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "consults_domain_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:response-orchestrator",
+                      "type":  "consults_domain_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:signal-scout",
+                      "type":  "consults_domain_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:source-steward",
+                      "type":  "consults_domain_agent"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "agent:territorial-analyst",
+                      "type":  "consults_domain_agent"
+                  },
+                  {
                       "from":  "rule:map-places",
                       "to":  "agent:mapa-lugares",
                       "type":  "consults_domain_agent"
@@ -4588,6 +5300,36 @@
                       "type":  "matches_rule"
                   },
                   {
+                      "from":  "path:.agents/domain/community-brief-writer.agent.yaml",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:.agents/domain/intelligence-governance-steward.agent.yaml",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:.agents/domain/response-orchestrator.agent.yaml",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:.agents/domain/signal-scout.agent.yaml",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:.agents/domain/source-steward.agent.yaml",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:.agents/domain/territorial-analyst.agent.yaml",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
                       "from":  "path:.github/workflows/cd.yml",
                       "to":  "rule:infra-deploy",
                       "type":  "matches_rule"
@@ -4643,6 +5385,11 @@
                       "type":  "matches_rule"
                   },
                   {
+                      "from":  "path:backend/**/Intelligence/**",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
                       "from":  "path:backend/**/Items/**",
                       "to":  "rule:marketplace",
                       "type":  "matches_rule"
@@ -4685,6 +5432,11 @@
                   {
                       "from":  "path:backend/**/Policies/**",
                       "to":  "rule:identity-privacy",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:backend/**/Providers/WorldMonitor/**",
+                      "to":  "rule:inteligencia-territorial",
                       "type":  "matches_rule"
                   },
                   {
@@ -4913,6 +5665,16 @@
                       "type":  "matches_rule"
                   },
                   {
+                      "from":  "path:docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/TI*.md",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
                       "from":  "path:docs/CURSOR_DESIGN_RULES.md",
                       "to":  "rule:design-ux",
                       "type":  "matches_rule"
@@ -4938,6 +5700,11 @@
                       "type":  "matches_rule"
                   },
                   {
+                      "from":  "path:docs/handoff/inteligencia-territorial/**",
+                      "to":  "rule:inteligencia-territorial",
+                      "type":  "matches_rule"
+                  },
+                  {
                       "from":  "path:docs/ops/CI_CD_PIPELINE.md",
                       "to":  "rule:infra-deploy",
                       "type":  "matches_rule"
@@ -4945,6 +5712,11 @@
                   {
                       "from":  "path:docs/specs/**",
                       "to":  "rule:specs-sdd",
+                      "type":  "matches_rule"
+                  },
+                  {
+                      "from":  "path:docs/specs/features/TI-*.spec.yaml",
+                      "to":  "rule:inteligencia-territorial",
                       "type":  "matches_rule"
                   },
                   {
@@ -5113,6 +5885,12 @@
                       "via":  "manifest"
                   },
                   {
+                      "from":  "agent:community-brief-writer",
+                      "to":  "skill:code-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "agent:comunidade-conexoes",
                       "to":  "skill:code-review",
                       "type":  "may_invoke_skill",
@@ -5170,13 +5948,13 @@
                       "from":  "agent:flutter",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "craft-flutter"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:flutter",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "craft-flutter"
                   },
                   {
                       "from":  "agent:flutter",
@@ -5204,6 +5982,18 @@
                   },
                   {
                       "from":  "agent:identidade-privacidade",
+                      "to":  "skill:code-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:intelligence-governance-steward",
+                      "to":  "skill:architecture-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:intelligence-governance-steward",
                       "to":  "skill:code-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
@@ -5389,6 +6179,12 @@
                       "via":  "manifest"
                   },
                   {
+                      "from":  "agent:response-orchestrator",
+                      "to":  "skill:code-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "agent:security",
                       "to":  "skill:code-review",
                       "type":  "may_invoke_skill",
@@ -5397,6 +6193,12 @@
                   {
                       "from":  "agent:security",
                       "to":  "skill:dep-audit",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:signal-scout",
+                      "to":  "skill:code-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
                   },
@@ -5410,17 +6212,29 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:architecture-review",
+                      "type":  "may_invoke_skill",
                       "via":  "core-control-plane"
                   },
                   {
                       "from":  "agent:solutions-architect",
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "inteligencia-territorial"
                   },
                   {
                       "from":  "agent:solutions-architect",
                       "to":  "skill:code-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
                   },
@@ -5434,19 +6248,13 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "core-control-plane"
-                  },
-                  {
-                      "from":  "agent:solutions-architect",
-                      "to":  "skill:craft-review",
-                      "type":  "may_invoke_skill",
-                      "via":  "manifest"
-                  },
-                  {
-                      "from":  "agent:solutions-architect",
-                      "to":  "skill:craft-review",
-                      "type":  "may_invoke_skill",
                       "via":  "architecture-docs"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "core-control-plane"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -5473,16 +6281,22 @@
                       "via":  "manifest"
                   },
                   {
-                      "from":  "agent:spec-steward",
-                      "to":  "skill:harness-run",
+                      "from":  "agent:source-steward",
+                      "to":  "skill:code-review",
                       "type":  "may_invoke_skill",
-                      "via":  "specs-sdd"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:spec-steward",
                       "to":  "skill:harness-run",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:spec-steward",
+                      "to":  "skill:harness-run",
+                      "type":  "may_invoke_skill",
+                      "via":  "specs-sdd"
                   },
                   {
                       "from":  "agent:spec-steward",
@@ -5500,17 +6314,23 @@
                       "from":  "agent:spec-steward",
                       "to":  "skill:spec-validate",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "specs-sdd"
                   },
                   {
                       "from":  "agent:spec-steward",
                       "to":  "skill:spec-validate",
                       "type":  "may_invoke_skill",
-                      "via":  "specs-sdd"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:spec-steward",
                       "to":  "skill:sync-docs",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:territorial-analyst",
+                      "to":  "skill:code-review",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
                   },
@@ -5524,13 +6344,13 @@
                       "from":  "agent:web",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "craft-web"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:web",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "craft-web"
                   },
                   {
                       "from":  "agent:web",
@@ -5611,6 +6431,11 @@
                       "type":  "requires_harness"
                   },
                   {
+                      "from":  "spec:TI-201-signal-review",
+                      "to":  "harness:TI-201-signal-review",
+                      "type":  "requires_harness"
+                  },
+                  {
                       "from":  "gate:bot-review",
                       "to":  "gate:pr-steward",
                       "type":  "requires_human_review"
@@ -5683,6 +6508,12 @@
                       "to":  "skill:craft-review",
                       "type":  "requires_skill",
                       "via":  "craft-web"
+                  },
+                  {
+                      "from":  "rule:inteligencia-territorial",
+                      "to":  "skill:architecture-review",
+                      "type":  "requires_skill",
+                      "via":  "inteligencia-territorial"
                   },
                   {
                       "from":  "rule:pr-always",
@@ -5763,6 +6594,11 @@
                       "type":  "requires_spec"
                   },
                   {
+                      "from":  "rule:specs-sdd",
+                      "to":  "spec:TI-201-signal-review",
+                      "type":  "requires_spec"
+                  },
+                  {
                       "from":  "path:**/package-lock.json",
                       "to":  "agent:security",
                       "type":  "scopes_agent",
@@ -5783,6 +6619,36 @@
                   {
                       "from":  "path:.agents/**",
                       "to":  "agent:pr-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.agents/domain/community-brief-writer.agent.yaml",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.agents/domain/response-orchestrator.agent.yaml",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.agents/domain/signal-scout.agent.yaml",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.agents/domain/source-steward.agent.yaml",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:.agents/domain/territorial-analyst.agent.yaml",
+                      "to":  "agent:intelligence-governance-steward",
                       "type":  "scopes_agent",
                       "via":  "manifest"
                   },
@@ -5859,6 +6725,54 @@
                       "via":  "manifest"
                   },
                   {
+                      "from":  "path:backend/**/ImpactAssessment*",
+                      "to":  "agent:territorial-analyst",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Intelligence/**",
+                      "to":  "agent:community-brief-writer",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Intelligence/**",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Intelligence/**",
+                      "to":  "agent:response-orchestrator",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Intelligence/**",
+                      "to":  "agent:signal-scout",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Intelligence/**",
+                      "to":  "agent:source-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Intelligence/**",
+                      "to":  "agent:territorial-analyst",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Intelligence/Providers/**",
+                      "to":  "agent:signal-scout",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "path:backend/**/Items/**",
                       "to":  "agent:mercado-economia",
                       "type":  "scopes_agent",
@@ -5913,8 +6827,32 @@
                       "via":  "manifest"
                   },
                   {
+                      "from":  "path:backend/**/Providers/WorldMonitor/**",
+                      "to":  "agent:source-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/RecommendedAction*",
+                      "to":  "agent:response-orchestrator",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "path:backend/**/SellerBalance/**",
                       "to":  "agent:carteira-arata",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/Signal*",
+                      "to":  "agent:territorial-analyst",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/SignalProvider*",
+                      "to":  "agent:source-steward",
                       "type":  "scopes_agent",
                       "via":  "manifest"
                   },
@@ -5933,6 +6871,18 @@
                   {
                       "from":  "path:backend/**/Subscriptions/**",
                       "to":  "agent:monetizacao-split",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/TerritorialBrief*",
+                      "to":  "agent:community-brief-writer",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:backend/**/TerritorialMemory*",
+                      "to":  "agent:response-orchestrator",
                       "type":  "scopes_agent",
                       "via":  "manifest"
                   },
@@ -6405,6 +7355,42 @@
                       "via":  "manifest"
                   },
                   {
+                      "from":  "path:docs/backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/TI*.md",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/TI*.md",
+                      "to":  "agent:signal-scout",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/TI2.md",
+                      "to":  "agent:territorial-analyst",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/TI3.md",
+                      "to":  "agent:community-brief-writer",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/backlog-api/TI5.md",
+                      "to":  "agent:response-orchestrator",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "path:docs/CHANGELOG.md",
                       "to":  "agent:docs-steward",
                       "type":  "scopes_agent",
@@ -6447,6 +7433,42 @@
                       "via":  "manifest"
                   },
                   {
+                      "from":  "path:docs/handoff/inteligencia-territorial/**",
+                      "to":  "agent:community-brief-writer",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/handoff/inteligencia-territorial/**",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/handoff/inteligencia-territorial/**",
+                      "to":  "agent:response-orchestrator",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/handoff/inteligencia-territorial/**",
+                      "to":  "agent:signal-scout",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/handoff/inteligencia-territorial/**",
+                      "to":  "agent:source-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/handoff/inteligencia-territorial/**",
+                      "to":  "agent:territorial-analyst",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "path:docs/ops/PLATFORM_STATE.md",
                       "to":  "agent:spec-steward",
                       "type":  "scopes_agent",
@@ -6477,6 +7499,42 @@
                       "via":  "manifest"
                   },
                   {
+                      "from":  "path:docs/specs/features/TI-*.spec.yaml",
+                      "to":  "agent:intelligence-governance-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/features/TI-*.spec.yaml",
+                      "to":  "agent:signal-scout",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/features/TI-102*.spec.yaml",
+                      "to":  "agent:source-steward",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/features/TI-202*.spec.yaml",
+                      "to":  "agent:territorial-analyst",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/features/TI-301*.spec.yaml",
+                      "to":  "agent:community-brief-writer",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:docs/specs/features/TI-501*.spec.yaml",
+                      "to":  "agent:response-orchestrator",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
                       "from":  "path:docs/specs/phases/FASE53-arah-core.spec.yaml",
                       "to":  "agent:control-plane",
                       "type":  "scopes_agent",
@@ -6503,6 +7561,12 @@
                   {
                       "from":  "path:frontend/**/*.css",
                       "to":  "agent:design-ux",
+                      "type":  "scopes_agent",
+                      "via":  "manifest"
+                  },
+                  {
+                      "from":  "path:frontend/**/intelligence/**",
+                      "to":  "agent:community-brief-writer",
                       "type":  "scopes_agent",
                       "via":  "manifest"
                   },
@@ -6801,6 +7865,16 @@
                       "type":  "validated_by"
                   },
                   {
+                      "from":  "harness:TI-201-signal-review",
+                      "to":  "agent:backend",
+                      "type":  "validated_by"
+                  },
+                  {
+                      "from":  "harness:TI-201-signal-review",
+                      "to":  "agent:spec-steward",
+                      "type":  "validated_by"
+                  },
+                  {
                       "from":  "spec:FASE53-arah-core",
                       "to":  "test:FullyQualifiedName~Core",
                       "type":  "verified_by_test",
@@ -6816,7 +7890,7 @@
                       "from":  "spec:FASE53-arah-core",
                       "to":  "test:FullyQualifiedName~CoreControllerIntegration",
                       "type":  "verified_by_test",
-                      "via":  "AC-53-4"
+                      "via":  "AC-53-2"
                   },
                   {
                       "from":  "spec:FASE53-arah-core",
@@ -6828,7 +7902,7 @@
                       "from":  "spec:FASE53-arah-core",
                       "to":  "test:FullyQualifiedName~CoreControllerIntegration",
                       "type":  "verified_by_test",
-                      "via":  "AC-53-2"
+                      "via":  "AC-53-4"
                   },
                   {
                       "from":  "spec:FASE53-arah-core",
@@ -6894,13 +7968,13 @@
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-3"
+                      "via":  "AC-55-6"
                   },
                   {
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-6"
+                      "via":  "AC-55-3"
                   },
                   {
                       "from":  "spec:FASE55-monetization",

@@ -7,6 +7,8 @@
 **Status**: ⏳ Pendente  
 **Nota**: Renumerada de Fase 22 para Fase 44 (Onda 11: Extensões e Integrações)
 
+> **Trilha TI (2026-07)**: o **adapter World Monitor** (REST, quota, health) é o Incremento **[TI-1](./TI1.md)** desta fase — provedor de sinais territoriais, separado das integrações sociais/pagamento abaixo. Ver [REALINHAMENTO_INTELIGENCIA_TERRITORIAL](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [Integração WM](../handoff/inteligencia-territorial/Inteligencia%20Territorial%20-%20Integracao%20World%20Monitor.dc.html).
+
 ---
 
 ## 🎯 Objetivo

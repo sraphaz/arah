@@ -68,166 +68,46 @@ public sealed class EventsService
         IReadOnlyCollection<Guid>? additionalMediaIds,
         CancellationToken cancellationToken)
     {
-        if (territoryId == Guid.Empty)
+        var identifierError = ValidateEventIdentifiers(territoryId, userId);
+        if (identifierError is not null)
         {
-            return Result<EventSummary>.Failure("Territory ID is required.");
+            return Result<EventSummary>.Failure(identifierError);
         }
 
-        if (userId == Guid.Empty)
+        var policyError = await ValidateRequiredPoliciesAsync(userId, cancellationToken);
+        if (policyError is not null)
         {
-            return Result<EventSummary>.Failure("User ID is required.");
+            return Result<EventSummary>.Failure(policyError);
         }
 
-        // Verificar aceite de políticas obrigatórias
-        var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
-        if (policiesResult.IsFailure || !policiesResult.Value)
+        var detailsError = ValidateEventDetails(title, latitude, longitude, startsAtUtc, endsAtUtc);
+        if (detailsError is not null)
         {
-            var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
-            var errorMessage = "You must accept the required terms of service and privacy policies before creating events.";
-            if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
-            {
-                var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
-                var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
-                if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
-                {
-                    errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating events.";
-                }
-            }
-            return Result<EventSummary>.Failure(errorMessage);
+            return Result<EventSummary>.Failure(detailsError);
         }
 
-        if (string.IsNullOrWhiteSpace(title))
-        {
-            return Result<EventSummary>.Failure("Title is required.");
-        }
-
-        if (!GeoCoordinate.IsValid(latitude, longitude))
-        {
-            return Result<EventSummary>.Failure("Invalid latitude/longitude.");
-        }
-
-        if (endsAtUtc is not null && endsAtUtc.Value < startsAtUtc)
-        {
-            return Result<EventSummary>.Failure("EndsAtUtc must be after StartsAtUtc.");
-        }
-
-        // Validar e normalizar mídias
-        var normalizedAdditionalMediaIds = additionalMediaIds?
-            .Where(id => id != Guid.Empty)
-            .Distinct()
-            .ToList();
-
-        var allMediaIds = new List<Guid>();
-        if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
-        {
-            allMediaIds.Add(coverMediaId.Value);
-        }
-        if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
-        {
-            allMediaIds.AddRange(normalizedAdditionalMediaIds);
-        }
+        var (allMediaIds, normalizedAdditionalMediaIds) = CollectMediaIds(coverMediaId, additionalMediaIds);
 
         if (allMediaIds.Count > 0)
         {
-            // Obter limites efetivos da configuração territorial (com fallback para global)
-            var limits = await _mediaConfigService.GetEffectiveContentLimitsAsync(
+            var mediaError = await ValidateEventMediaAsync(
                 territoryId,
-                MediaContentType.Events,
+                userId,
+                allMediaIds,
+                normalizedAdditionalMediaIds,
                 cancellationToken);
-
-            // Validar quantidade máxima de mídias (1 capa + adicionais)
-            const int maxTotalMedia = 6; // 1 capa + 5 adicionais
-            if (allMediaIds.Count > maxTotalMedia)
+            if (mediaError is not null)
             {
-                return Result<EventSummary>.Failure($"Maximum {maxTotalMedia} media items allowed per event (1 cover + {maxTotalMedia - 1} additional).");
-            }
-            if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > limits.MaxMediaCount - 1) // -1 para capa
-            {
-                return Result<EventSummary>.Failure($"Maximum {limits.MaxMediaCount - 1} additional media items allowed per event (plus 1 cover).");
-            }
-
-            var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(allMediaIds, cancellationToken);
-            if (mediaAssets.Count != allMediaIds.Count)
-            {
-                return Result<EventSummary>.Failure("One or more media assets not found.");
-            }
-
-            // Validar que todas as mídias pertencem ao usuário
-            if (mediaAssets.Any(media => media.UploadedByUserId != userId || media.IsDeleted))
-            {
-                return Result<EventSummary>.Failure("One or more media assets are invalid or do not belong to the user.");
-            }
-
-            var images = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Image).ToList();
-            var videos = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Video).ToList();
-            var audios = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Audio).ToList();
-
-            // Validar imagens
-            if (images.Count > 0 && !limits.ImagesEnabled)
-            {
-                return Result<EventSummary>.Failure("Images are not enabled for events in this territory.");
-            }
-
-            // Validar vídeos
-            if (videos.Count > 0 && !limits.VideosEnabled)
-            {
-                return Result<EventSummary>.Failure("Videos are not enabled for events in this territory.");
-            }
-            if (videos.Count > limits.MaxVideoCount)
-            {
-                return Result<EventSummary>.Failure($"Maximum {limits.MaxVideoCount} video(s) allowed per event.");
-            }
-            foreach (var video in videos)
-            {
-                if (video.SizeBytes > limits.MaxVideoSizeBytes)
-                {
-                    var maxSizeMB = limits.MaxVideoSizeBytes / (1024.0 * 1024.0);
-                    return Result<EventSummary>.Failure($"Video size exceeds {maxSizeMB:F1}MB limit for events.");
-                }
-                // Validar tipo MIME se configurado
-                if (limits.AllowedVideoMimeTypes != null && limits.AllowedVideoMimeTypes.Count > 0)
-                {
-                    if (!limits.AllowedVideoMimeTypes.Contains(video.MimeType, StringComparer.OrdinalIgnoreCase))
-                    {
-                        return Result<EventSummary>.Failure($"Video MIME type '{video.MimeType}' is not allowed for events.");
-                    }
-                }
-            }
-
-            // Validar áudios
-            if (audios.Count > 0 && !limits.AudioEnabled)
-            {
-                return Result<EventSummary>.Failure("Audio is not enabled for events in this territory.");
-            }
-            if (audios.Count > limits.MaxAudioCount)
-            {
-                return Result<EventSummary>.Failure($"Maximum {limits.MaxAudioCount} audio(s) allowed per event.");
-            }
-            foreach (var audio in audios)
-            {
-                if (audio.SizeBytes > limits.MaxAudioSizeBytes)
-                {
-                    var maxSizeMB = limits.MaxAudioSizeBytes / (1024.0 * 1024.0);
-                    return Result<EventSummary>.Failure($"Audio size exceeds {maxSizeMB:F1}MB limit for events.");
-                }
-                // Validar tipo MIME se configurado
-                if (limits.AllowedAudioMimeTypes != null && limits.AllowedAudioMimeTypes.Count > 0)
-                {
-                    if (!limits.AllowedAudioMimeTypes.Contains(audio.MimeType, StringComparer.OrdinalIgnoreCase))
-                    {
-                        return Result<EventSummary>.Failure($"Audio MIME type '{audio.MimeType}' is not allowed for events.");
-                    }
-                }
+                return Result<EventSummary>.Failure(mediaError);
             }
         }
 
-        var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
-        var membership = isResident ? MembershipRole.Resident : MembershipRole.Visitor;
+        var membership = await ResolveMembershipAsync(userId, territoryId, cancellationToken);
         var now = DateTime.UtcNow;
 
-        var territoryEvent = new TerritoryEvent(
-            Guid.NewGuid(),
+        var territoryEvent = BuildScheduledEvent(
             territoryId,
+            userId,
             title,
             description,
             startsAtUtc,
@@ -235,75 +115,23 @@ public sealed class EventsService
             latitude,
             longitude,
             locationLabel,
-            userId,
             membership,
-            EventStatus.Scheduled,
-            now,
             now);
 
         await _eventRepository.AddAsync(territoryEvent, cancellationToken);
 
-        // Criar MediaAttachments para as mídias associadas ao evento
-        if (allMediaIds.Count > 0)
-        {
-            // Imagem de capa (DisplayOrder = 0)
-            if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
-            {
-                var coverAttachment = new MediaAttachment(
-                    Guid.NewGuid(),
-                    coverMediaId.Value,
-                    MediaOwnerType.Event,
-                    territoryEvent.Id,
-                    0,
-                    now);
-
-                await _mediaAttachmentRepository.AddAsync(coverAttachment, cancellationToken);
-            }
-
-            // Imagens adicionais (DisplayOrder = 1+)
-            if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
-            {
-                foreach (var (mediaId, index) in normalizedAdditionalMediaIds.Select((id, idx) => (id, idx + 1)))
-                {
-                    var attachment = new MediaAttachment(
-                        Guid.NewGuid(),
-                        mediaId,
-                        MediaOwnerType.Event,
-                        territoryEvent.Id,
-                        index,
-                        now);
-
-                    await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
-                }
-            }
-        }
-
-        var postContent = string.IsNullOrWhiteSpace(description) ? title.Trim() : description.Trim();
-        var post = new CommunityPost(
-            Guid.NewGuid(),
-            territoryId,
-            userId,
-            title,
-            postContent,
-            PostType.General,
-            PostVisibility.Public,
-            PostStatus.Published,
-            null,
+        await PersistEventMediaAttachmentsAsync(
+            territoryEvent.Id,
+            coverMediaId,
+            normalizedAdditionalMediaIds,
+            allMediaIds,
             now,
-            "EVENT",
-            territoryEvent.Id);
+            cancellationToken);
 
-        await _feedRepository.AddPostAsync(post, cancellationToken);
+        await PublishEventPostAsync(territoryEvent, territoryId, userId, title, description, now, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        // Invalidar cache de eventos do território
-        _cacheInvalidation?.InvalidateEventCache(territoryId, territoryEvent.Id);
-
-        // Record business metric
-        ArahMetrics.EventsCreated.Add(1, new KeyValuePair<string, object?>("territory_id", territoryId));
-
-        // Invalidate cache when event is created
-        _eventCache?.InvalidateTerritoryEvents(territoryId);
+        RegisterEventCreatedSideEffects(territoryId, territoryEvent.Id);
 
         var displayName = await ResolveDisplayNameAsync(userId, cancellationToken);
         var summary = new EventSummary(territoryEvent, 0, 0, displayName);
@@ -337,92 +165,30 @@ public sealed class EventsService
             return Result<EventSummary>.Failure("User is not allowed to update this event.");
         }
 
-        var updatedTitle = title ?? territoryEvent.Title;
-        var updatedDescription = description ?? territoryEvent.Description;
-        var updatedStartsAt = startsAtUtc ?? territoryEvent.StartsAtUtc;
-        var updatedEndsAt = endsAtUtc ?? territoryEvent.EndsAtUtc;
-        var updatedLatitude = latitude ?? territoryEvent.Latitude;
-        var updatedLongitude = longitude ?? territoryEvent.Longitude;
-        var updatedLocationLabel = locationLabel ?? territoryEvent.LocationLabel;
-
-        territoryEvent.Update(
-            updatedTitle,
-            updatedDescription,
-            updatedStartsAt,
-            updatedEndsAt,
-            updatedLatitude,
-            updatedLongitude,
-            updatedLocationLabel,
-            DateTime.UtcNow);
+        ApplyEventUpdates(
+            territoryEvent,
+            title,
+            description,
+            startsAtUtc,
+            endsAtUtc,
+            latitude,
+            longitude,
+            locationLabel);
 
         // Atualizar mídias se fornecidas
         if (coverMediaId is not null || additionalMediaIds is not null)
         {
-            // Remover attachments existentes
-            await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Event, territoryEvent.Id, cancellationToken);
-
-            var allMediaIds = new List<Guid>();
-            if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
-            {
-                allMediaIds.Add(coverMediaId.Value);
-            }
-
-            var normalizedAdditionalMediaIds = additionalMediaIds?
-                .Where(id => id != Guid.Empty)
-                .Distinct()
-                .ToList();
-
-            if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
-            {
-                allMediaIds.AddRange(normalizedAdditionalMediaIds);
-            }
-
-            // Adicionar novos attachments
-            if (allMediaIds.Count > 0)
-            {
-                var now = DateTime.UtcNow;
-
-                // Imagem de capa (DisplayOrder = 0)
-                if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
-                {
-                    var coverAttachment = new MediaAttachment(
-                        Guid.NewGuid(),
-                        coverMediaId.Value,
-                        MediaOwnerType.Event,
-                        territoryEvent.Id,
-                        0,
-                        now);
-
-                    await _mediaAttachmentRepository.AddAsync(coverAttachment, cancellationToken);
-                }
-
-                // Imagens adicionais (DisplayOrder = 1+)
-                if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
-                {
-                    foreach (var (mediaId, index) in normalizedAdditionalMediaIds.Select((id, idx) => (id, idx + 1)))
-                    {
-                        var attachment = new MediaAttachment(
-                            Guid.NewGuid(),
-                            mediaId,
-                            MediaOwnerType.Event,
-                            territoryEvent.Id,
-                            index,
-                            now);
-
-                        await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
-                    }
-                }
-            }
+            await ReplaceEventMediaAttachmentsAsync(
+                territoryEvent.Id,
+                coverMediaId,
+                additionalMediaIds,
+                cancellationToken);
         }
 
         await _eventRepository.UpdateAsync(territoryEvent, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        // Invalidar cache de eventos do território
-        _cacheInvalidation?.InvalidateEventCache(territoryEvent.TerritoryId, territoryEvent.Id);
-
-        // Invalidate cache when event is updated
-        _eventCache?.InvalidateTerritoryEvents(territoryEvent.TerritoryId);
+        InvalidateEventCaches(territoryEvent.TerritoryId, territoryEvent.Id);
 
         var summaries = await BuildSummariesAsync(new List<TerritoryEvent> { territoryEvent }, cancellationToken);
         var summary = summaries.FirstOrDefault();
@@ -753,5 +519,391 @@ public sealed class EventsService
     private static double DegreesToRadians(double degrees)
     {
         return degrees * Math.PI / 180.0;
+    }
+
+    private static string? ValidateEventIdentifiers(Guid territoryId, Guid userId)
+    {
+        if (territoryId == Guid.Empty)
+        {
+            return "Territory ID is required.";
+        }
+
+        if (userId == Guid.Empty)
+        {
+            return "User ID is required.";
+        }
+
+        return null;
+    }
+
+    private async Task<string?> ValidateRequiredPoliciesAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var policiesResult = await _accessEvaluator.HasAcceptedRequiredPoliciesAsync(userId, cancellationToken);
+        if (!policiesResult.IsFailure && policiesResult.Value)
+        {
+            return null;
+        }
+
+        var pendingPolicies = await _accessEvaluator.GetPendingPoliciesAsync(userId, cancellationToken);
+        var errorMessage = "You must accept the required terms of service and privacy policies before creating events.";
+        if (pendingPolicies is not null && !pendingPolicies.IsEmpty)
+        {
+            var pendingTermsCount = pendingPolicies.RequiredTerms.Count;
+            var pendingPoliciesCount = pendingPolicies.RequiredPrivacyPolicies.Count;
+            if (pendingTermsCount > 0 || pendingPoliciesCount > 0)
+            {
+                errorMessage = $"You must accept {pendingTermsCount + pendingPoliciesCount} required policy(ies) before creating events.";
+            }
+        }
+
+        return errorMessage;
+    }
+
+    private static string? ValidateEventDetails(
+        string title,
+        double latitude,
+        double longitude,
+        DateTime startsAtUtc,
+        DateTime? endsAtUtc)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return "Title is required.";
+        }
+
+        if (!GeoCoordinate.IsValid(latitude, longitude))
+        {
+            return "Invalid latitude/longitude.";
+        }
+
+        if (endsAtUtc is not null && endsAtUtc.Value < startsAtUtc)
+        {
+            return "EndsAtUtc must be after StartsAtUtc.";
+        }
+
+        return null;
+    }
+
+    private static (List<Guid> AllMediaIds, List<Guid>? NormalizedAdditionalMediaIds) CollectMediaIds(
+        Guid? coverMediaId,
+        IReadOnlyCollection<Guid>? additionalMediaIds)
+    {
+        var normalizedAdditionalMediaIds = additionalMediaIds?
+            .Where(id => id != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        var allMediaIds = new List<Guid>();
+        if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
+        {
+            allMediaIds.Add(coverMediaId.Value);
+        }
+        if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
+        {
+            allMediaIds.AddRange(normalizedAdditionalMediaIds);
+        }
+
+        return (allMediaIds, normalizedAdditionalMediaIds);
+    }
+
+    private async Task<string?> ValidateEventMediaAsync(
+        Guid territoryId,
+        Guid userId,
+        List<Guid> allMediaIds,
+        List<Guid>? normalizedAdditionalMediaIds,
+        CancellationToken cancellationToken)
+    {
+        // Obter limites efetivos da configuração territorial (com fallback para global)
+        var limits = await _mediaConfigService.GetEffectiveContentLimitsAsync(
+            territoryId,
+            MediaContentType.Events,
+            cancellationToken);
+
+        // Validar quantidade máxima de mídias (1 capa + adicionais)
+        const int maxTotalMedia = 6; // 1 capa + 5 adicionais
+        if (allMediaIds.Count > maxTotalMedia)
+        {
+            return $"Maximum {maxTotalMedia} media items allowed per event (1 cover + {maxTotalMedia - 1} additional).";
+        }
+        if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > limits.MaxMediaCount - 1) // -1 para capa
+        {
+            return $"Maximum {limits.MaxMediaCount - 1} additional media items allowed per event (plus 1 cover).";
+        }
+
+        var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(allMediaIds, cancellationToken);
+        if (mediaAssets.Count != allMediaIds.Count)
+        {
+            return "One or more media assets not found.";
+        }
+
+        // Validar que todas as mídias pertencem ao usuário
+        if (mediaAssets.Any(media => media.UploadedByUserId != userId || media.IsDeleted))
+        {
+            return "One or more media assets are invalid or do not belong to the user.";
+        }
+
+        var images = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Image).ToList();
+        var videos = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Video).ToList();
+        var audios = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Audio).ToList();
+
+        // Validar imagens
+        if (images.Count > 0 && !limits.ImagesEnabled)
+        {
+            return "Images are not enabled for events in this territory.";
+        }
+
+        var videoError = ValidateEventVideos(videos, limits);
+        if (videoError is not null)
+        {
+            return videoError;
+        }
+
+        return ValidateEventAudios(audios, limits);
+    }
+
+    private static string? ValidateEventVideos(IReadOnlyList<MediaAsset> videos, MediaContentConfig limits)
+    {
+        if (videos.Count > 0 && !limits.VideosEnabled)
+        {
+            return "Videos are not enabled for events in this territory.";
+        }
+        if (videos.Count > limits.MaxVideoCount)
+        {
+            return $"Maximum {limits.MaxVideoCount} video(s) allowed per event.";
+        }
+        foreach (var video in videos)
+        {
+            if (video.SizeBytes > limits.MaxVideoSizeBytes)
+            {
+                var maxSizeMB = limits.MaxVideoSizeBytes / (1024.0 * 1024.0);
+                return $"Video size exceeds {maxSizeMB:F1}MB limit for events.";
+            }
+            // Validar tipo MIME se configurado
+            if (limits.AllowedVideoMimeTypes != null && limits.AllowedVideoMimeTypes.Count > 0)
+            {
+                if (!limits.AllowedVideoMimeTypes.Contains(video.MimeType, StringComparer.OrdinalIgnoreCase))
+                {
+                    return $"Video MIME type '{video.MimeType}' is not allowed for events.";
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static string? ValidateEventAudios(IReadOnlyList<MediaAsset> audios, MediaContentConfig limits)
+    {
+        if (audios.Count > 0 && !limits.AudioEnabled)
+        {
+            return "Audio is not enabled for events in this territory.";
+        }
+        if (audios.Count > limits.MaxAudioCount)
+        {
+            return $"Maximum {limits.MaxAudioCount} audio(s) allowed per event.";
+        }
+        foreach (var audio in audios)
+        {
+            if (audio.SizeBytes > limits.MaxAudioSizeBytes)
+            {
+                var maxSizeMB = limits.MaxAudioSizeBytes / (1024.0 * 1024.0);
+                return $"Audio size exceeds {maxSizeMB:F1}MB limit for events.";
+            }
+            // Validar tipo MIME se configurado
+            if (limits.AllowedAudioMimeTypes != null && limits.AllowedAudioMimeTypes.Count > 0)
+            {
+                if (!limits.AllowedAudioMimeTypes.Contains(audio.MimeType, StringComparer.OrdinalIgnoreCase))
+                {
+                    return $"Audio MIME type '{audio.MimeType}' is not allowed for events.";
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private async Task<MembershipRole> ResolveMembershipAsync(
+        Guid userId,
+        Guid territoryId,
+        CancellationToken cancellationToken)
+    {
+        var isResident = await _accessEvaluator.IsResidentAsync(userId, territoryId, cancellationToken);
+        return isResident ? MembershipRole.Resident : MembershipRole.Visitor;
+    }
+
+    private static TerritoryEvent BuildScheduledEvent(
+        Guid territoryId,
+        Guid userId,
+        string title,
+        string? description,
+        DateTime startsAtUtc,
+        DateTime? endsAtUtc,
+        double latitude,
+        double longitude,
+        string? locationLabel,
+        MembershipRole membership,
+        DateTime now)
+    {
+        return new TerritoryEvent(
+            Guid.NewGuid(),
+            territoryId,
+            title,
+            description,
+            startsAtUtc,
+            endsAtUtc,
+            latitude,
+            longitude,
+            locationLabel,
+            userId,
+            membership,
+            EventStatus.Scheduled,
+            now,
+            now);
+    }
+
+    private async Task PersistEventMediaAttachmentsAsync(
+        Guid eventId,
+        Guid? coverMediaId,
+        IReadOnlyList<Guid>? normalizedAdditionalMediaIds,
+        IReadOnlyCollection<Guid> allMediaIds,
+        DateTime now,
+        CancellationToken cancellationToken)
+    {
+        if (allMediaIds.Count == 0)
+        {
+            return;
+        }
+
+        // Imagem de capa (DisplayOrder = 0)
+        if (coverMediaId.HasValue && coverMediaId.Value != Guid.Empty)
+        {
+            var coverAttachment = new MediaAttachment(
+                Guid.NewGuid(),
+                coverMediaId.Value,
+                MediaOwnerType.Event,
+                eventId,
+                0,
+                now);
+
+            await _mediaAttachmentRepository.AddAsync(coverAttachment, cancellationToken);
+        }
+
+        // Imagens adicionais (DisplayOrder = 1+)
+        if (normalizedAdditionalMediaIds is not null && normalizedAdditionalMediaIds.Count > 0)
+        {
+            foreach (var (mediaId, index) in normalizedAdditionalMediaIds.Select((id, idx) => (id, idx + 1)))
+            {
+                var attachment = new MediaAttachment(
+                    Guid.NewGuid(),
+                    mediaId,
+                    MediaOwnerType.Event,
+                    eventId,
+                    index,
+                    now);
+
+                await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+            }
+        }
+    }
+
+    private async Task ReplaceEventMediaAttachmentsAsync(
+        Guid eventId,
+        Guid? coverMediaId,
+        IReadOnlyCollection<Guid>? additionalMediaIds,
+        CancellationToken cancellationToken)
+    {
+        // Remover attachments existentes
+        await _mediaAttachmentRepository.DeleteByOwnerAsync(MediaOwnerType.Event, eventId, cancellationToken);
+
+        var (allMediaIds, normalizedAdditionalMediaIds) = CollectMediaIds(coverMediaId, additionalMediaIds);
+
+        // Adicionar novos attachments
+        if (allMediaIds.Count > 0)
+        {
+            var now = DateTime.UtcNow;
+            await PersistEventMediaAttachmentsAsync(
+                eventId,
+                coverMediaId,
+                normalizedAdditionalMediaIds,
+                allMediaIds,
+                now,
+                cancellationToken);
+        }
+    }
+
+    private async Task PublishEventPostAsync(
+        TerritoryEvent territoryEvent,
+        Guid territoryId,
+        Guid userId,
+        string title,
+        string? description,
+        DateTime now,
+        CancellationToken cancellationToken)
+    {
+        var postContent = string.IsNullOrWhiteSpace(description) ? title.Trim() : description.Trim();
+        var post = new CommunityPost(
+            Guid.NewGuid(),
+            territoryId,
+            userId,
+            title,
+            postContent,
+            PostType.General,
+            PostVisibility.Public,
+            PostStatus.Published,
+            null,
+            now,
+            "EVENT",
+            territoryEvent.Id);
+
+        await _feedRepository.AddPostAsync(post, cancellationToken);
+    }
+
+    private static void ApplyEventUpdates(
+        TerritoryEvent territoryEvent,
+        string? title,
+        string? description,
+        DateTime? startsAtUtc,
+        DateTime? endsAtUtc,
+        double? latitude,
+        double? longitude,
+        string? locationLabel)
+    {
+        var updatedTitle = title ?? territoryEvent.Title;
+        var updatedDescription = description ?? territoryEvent.Description;
+        var updatedStartsAt = startsAtUtc ?? territoryEvent.StartsAtUtc;
+        var updatedEndsAt = endsAtUtc ?? territoryEvent.EndsAtUtc;
+        var updatedLatitude = latitude ?? territoryEvent.Latitude;
+        var updatedLongitude = longitude ?? territoryEvent.Longitude;
+        var updatedLocationLabel = locationLabel ?? territoryEvent.LocationLabel;
+
+        territoryEvent.Update(
+            updatedTitle,
+            updatedDescription,
+            updatedStartsAt,
+            updatedEndsAt,
+            updatedLatitude,
+            updatedLongitude,
+            updatedLocationLabel,
+            DateTime.UtcNow);
+    }
+
+    private void RegisterEventCreatedSideEffects(Guid territoryId, Guid eventId)
+    {
+        // Invalidar cache de eventos do território
+        _cacheInvalidation?.InvalidateEventCache(territoryId, eventId);
+
+        // Record business metric
+        ArahMetrics.EventsCreated.Add(1, new KeyValuePair<string, object?>("territory_id", territoryId));
+
+        // Invalidate cache when event is created
+        _eventCache?.InvalidateTerritoryEvents(territoryId);
+    }
+
+    private void InvalidateEventCaches(Guid territoryId, Guid eventId)
+    {
+        // Invalidar cache de eventos do território
+        _cacheInvalidation?.InvalidateEventCache(territoryId, eventId);
+
+        // Invalidate cache when event is updated
+        _eventCache?.InvalidateTerritoryEvents(territoryId);
     }
 }

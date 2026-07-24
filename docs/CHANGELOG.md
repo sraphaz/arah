@@ -1,4 +1,4 @@
-# Changelog - Arah
+﻿# Changelog - Arah
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
@@ -69,6 +69,27 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Gaps priorizados `APP-DS-01`..`13` (IA Serviços/TopBar, paleta floresta vs teal, tipografia, hub, componentes, jornadas)
 - Ondas A–D de alinhamento propostas (fundação → IA → telas núcleo → jornadas)
 - `docs/design/AUDITORIA_DESIGN.md` e `docs/_meta/PHASE_QUEUE.yaml` (`design-quality`) apontam para a análise
+
+### Refatorado — Pendências pós-revisão (Ondas 5) (2026-07-03)
+
+- **Wiki CSS**: `globals.css` (~1.4k linhas) fatiado em 16 arquivos temáticos em `frontend/wiki/styles/`; hub de 16 linhas; `postcss-import` no wiki
+- **MapPinsService**: montagem de pins do mapa movida de `MapController` para `Arah.Application/Services/Map/MapPinsService.cs` (`MapPin`, `MapPinFilters`); controller 718→458 linhas
+- **Flutter onboarding**: widgets extraídos para `presentation/widgets/`; `onboarding_screen.dart` 799→148 linhas
+- **Portal**: Jest + testes de `brand` e paleta Tailwind (`npm test`)
+
+### Refatorado — God classes, SOLID e tokens (Ondas 2–4) (2026-07-03)
+
+- **Onda 2 (God classes)**:
+  - `PostgresMappers.cs` (~2.2k linhas) → 19 arquivos `partial class` por agregado (zero mudança de comportamento; 127 mappers preservados)
+  - `ArahDbContext.cs` (~1.3k linhas, 82 DbSets) → 21 arquivos `partial` de configuração; `OnModelCreating` enxuto delega por agregado
+  - `InMemoryDataStore` → separação store/seed (seed extraído para `InMemorySeeder`)
+  - `Program.cs` (~730 linhas) → composition root enxuto + extensões (`AddArahObservability/Security/RateLimiting/Swagger`, `UseArahExceptionHandler`, `UseArahPipeline`) com ordem de middleware preservada
+  - `ServiceCollectionExtensions` → `AddApplicationServices`/`AddInfrastructure` fatiados em helpers por concern
+- **Onda 3 (SOLID / extract method)**: `EventsService.CreateEventAsync` 257→69, `UpdateEventAsync` 122→44; `SellerPayoutService.ProcessPaidCheckoutAsync` 179→75, `CreatePayoutAsync` 147→53; `ChatService.SendTextMessageAsync` 174→45; `FeedController` (`EnforceGeoConvergenceAsync` + `BuildFeedItemResponse` dedup); `MapController.GetPins` 161→74, `GetPinsPaged` 226→106
+- **Onda 4 (tokens)**: literais de cor em `frontend/wiki/app/globals.css` mapeados para tokens de `design-tokens.css` (novos tokens semânticos); paletas Tailwind documentadas como *sync-with-tokens* (não convertidas p/ `var()` por causa de modificadores de opacidade do Tailwind v3)
+- **Onda 4 (`Result<T>`)**: convenção formalizada em **[ADR-022](architecture/adrs/ADR-022-convencao-sinalizacao-de-erros.md)** (`Result<T>` p/ comandos que falham com motivo; `T?` aceitável p/ consultas "get-or-null"; exceções p/ o excepcional) — evita reescrever ~35 métodos de consulta
+- **Docker**: `Dockerfile` raiz copia os 11 novos `Arah.Modules.*.Infrastructure/*.csproj` antes do `dotnet restore` (senão a imagem raiz da API quebra no `publish --no-restore`)
+- Build `Arah.sln` Release verde (0 erros)
 
 ### Refatorado — Dependency Rule: módulos com Infrastructure separada (Onda 1) (2026-07-03)
 

@@ -1,0 +1,23 @@
+/* API Domain Diagram - Visual explicativo */
+.api-domain-diagram-container {
+  @apply my-16;
+}
+
+.api-domain-diagram-container .glass-card {
+  box-shadow: var(--elevation-4);
+  background: var(--gradient-diagram-light);
+}
+
+:root.dark .api-domain-diagram-container .glass-card {
+  background: var(--gradient-diagram-dark);
+  box-shadow: var(--elevation-4);
+}
+
+.api-domain-diagram-container img {
+  @apply w-full h-auto;
+  transition: transform 0.5s ease;
+}
+
+.api-domain-diagram-container:hover img {
+  transform: scale(1.01);
+}

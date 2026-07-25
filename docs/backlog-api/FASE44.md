@@ -8,6 +8,8 @@
 **Nota**: Renumerada de Fase 22 para Fase 44 (Onda 11: Extensões e Integrações)
 
 > **Trilha TI (2026-07)**: o **adapter World Monitor** (REST, quota, health) é o Incremento **[TI-1](./TI1.md)** desta fase — provedor de sinais territoriais, separado das integrações sociais/pagamento abaixo. Ver [REALINHAMENTO_INTELIGENCIA_TERRITORIAL](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [Integração WM](../handoff/inteligencia-territorial/Inteligencia%20Territorial%20-%20Integracao%20World%20Monitor.dc.html).
+>
+> **Trilha PD (2026-07)**: adapters de **dados públicos** (BrasilAPI como 1º provider de CEP/UF/município/feriados/CNPJ/bancos…) são a trilha **[PD-0…PD-8](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md)** — capacidade **Arah.PublicData**, não um `BrasilApiService` monolítico nem chamada direta do frontend. Ver [public-data-integration.md](../architecture/public-data-integration.md).
 
 ---
 

@@ -2,13 +2,14 @@
 ## Planejamento Estratégico de Desenvolvimento
 
 **Data de Criação**: 2025-01-13  
-**Última Revisão**: 2026-07-23  
+**Última Revisão**: 2026-07-24  
 **Objetivo**: Backlog completo da API - Elevar a aplicação de 7.4-8.0/10 para 10/10 em todas as categorias e convergir com padrões de mercado  
-**Estimativa Total**: ~535 dias sequenciais / ~260 dias com paralelização (incl. camada sustentação F52–61) + trilha TI (~25 sem MVP)  
+**Estimativa Total**: ~535 dias sequenciais / ~260 dias com paralelização (incl. camada sustentação F52–61) + trilha TI (~25 sem MVP) + trilha PD (MVP PD-0…PD-2)  
 **Status Atual**: 9.3/10 (após implementação das fases 1-16)  
-**Total de Fases Documentadas**: 61 fases (1-16 completas + 17-51 comunitárias + **52-61 sustentação operacional**) + **trilha TI-0…TI-7**  
+**Total de Fases Documentadas**: 61 fases (1-16 completas + 17-51 comunitárias + **52-61 sustentação operacional**) + **trilha TI-0…TI-7** + **trilha PD-0…PD-8**  
 **⭐ Realinhamento 2026-06**: [Sustentação Operacional](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md) · [Handoff C4](../handoff/README.md)  
-**⭐ Realinhamento 2026-07**: [Inteligência Territorial / World Monitor](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [Handoff TI](../handoff/inteligencia-territorial/)
+**⭐ Realinhamento 2026-07**: [Inteligência Territorial / World Monitor](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [Handoff TI](../handoff/inteligencia-territorial/)  
+**⭐ Realinhamento 2026-07-24**: [Dados Públicos Territoriais / Arah.PublicData](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md) · [Arquitetura](../architecture/public-data-integration.md)
 
 **Nota**: O roadmap estratégico menciona fases 31-44 conceituais (Proof of Sweat, Subscriptions, Web3, DAO, etc.), mas sem documentos detalhados. A Fase 30 (Hospedagem) é a primeira fase nova com documento completo.  
 **⭐ Estratégia de Convergência**: Ver [Estratégia de Convergência de Mercado](../39_ESTRATEGIA_CONVERGENCIA_MERCADO.md) | [Mapa de Funcionalidades](../38_MAPA_FUNCIONALIDADES_MERCADO.md)
@@ -55,7 +56,8 @@ backlog-api/
 - **[ESTRUTURA_DOCUMENTOS.md](./ESTRUTURA_DOCUMENTOS.md)** - Estrutura de organização
 - **[INDICE_DOCUMENTOS.md](./INDICE_DOCUMENTOS.md)** - Índice completo de documentos
 - **[REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)** ⭐ — Camada de sustentação (C4, monetização, operação multi-instância)
-- **[REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)** ⭐ **NOVO** — Trilha TI-0…TI-7 (World Monitor, revisão humana, âncoras FASE23/24/44)
+- **[REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)** ⭐ — Trilha TI-0…TI-7 (World Monitor, revisão humana, âncoras FASE23/24/44)
+- **[REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md)** ⭐ **NOVO** — Trilha PD-0…PD-8 (Arah.PublicData, BrasilAPI como 1º adapter; MVP PD-0…PD-2)
 - **[RESUMO_EXECUTIVO_ESTRATEGICO.md](./RESUMO_EXECUTIVO_ESTRATEGICO.md)** ⭐ - Resumo executivo para apresentação externa
 - **[ROADMAP_VISUAL.md](./ROADMAP_VISUAL.md)** - Roadmap visual estratégico
 - **[MAPA_CORRELACAO_FUNCIONALIDADES.md](./MAPA_CORRELACAO_FUNCIONALIDADES.md)** - Mapa de correlação com plataformas
@@ -298,6 +300,28 @@ backlog-api/
 | **[TI-7](./TI7.md)** | Federação de sinais | TBD | 🟢 P2 | FASE53/59 | ⏳ Pendente |
 
 **MVP**: TI-1→TI-3 ≈ 13 semanas. **Não** altera o contador `FASE*.md` (trilha transversal).
+
+---
+
+### 🟢 Trilha PD: Dados Públicos Territoriais (PD-0…PD-8) — paralelo ⭐ NOVO 2026-07-24
+
+**Objetivo**: Capacidade **Arah.PublicData** — enriquecer território com dados públicos (BrasilAPI como 1º adapter) via ports, cache e snapshots; sem acoplar o domínio ao fornecedor e sem reduzir território comunitário ao administrativo.
+
+**Referência**: [Realinhamento PD](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md) · [Arquitetura](../architecture/public-data-integration.md) · [ADR-023](../architecture/adrs/ADR-023-arah-publicdata-providers.md) · [ADR-024](../architecture/adrs/ADR-024-territorio-comunitario-vs-referencia-administrativa.md)
+
+| ID | Título | Prioridade | Âncora | Status |
+|----|--------|------------|--------|--------|
+| **[PD-0](./PD0.md)** | Public Data Foundation | 🔴 P0 | — | ⏳ Pendente |
+| **[PD-1](./PD1.md)** | Territorial Addressing (CEP/UF/IBGE/DDD) | 🔴 P0 | Onboarding IBGE, Territory | ⏳ Pendente |
+| **[PD-2](./PD2.md)** | Territorial Calendar (feriados) | 🟡 P1 | Events | ⏳ Pendente |
+| **[PD-3](./PD3.md)** | Territorial Organizations (CNPJ) | 🟡 P1 | Store / Marketplace | ⏳ Pendente |
+| **[PD-4](./PD4.md)** | Financial Reference Data (bancos) | 🟡 P1 | FASE7 | ⏳ Pendente |
+| **[PD-5](./PD5.md)** | Territorial Climate Intelligence | 🟢 P2 | FASE24 / TI | ⏳ Pendente |
+| **[PD-6](./PD6.md)** | Specialized Marketplaces (FIPE) | 🟢 P3 | Categorias marketplace | ⏳ Pendente |
+| **[PD-7](./PD7.md)** | Productive Chains (NCM/câmbio) | 🟢 P3 | Cooperativas / exportação | ⏳ Pendente |
+| **[PD-8](./PD8.md)** | Digital Presence (Registro.br) | 🟢 P3 | FASE26 / premium | ⏳ Pendente |
+
+**MVP**: PD-0→PD-2. **Não** altera o contador `FASE*.md`. Complementa (não substitui) a trilha TI.
 
 ---
 

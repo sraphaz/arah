@@ -29,8 +29,8 @@ try {
     $selected = $null
     foreach ($item in $queue) {
         # next-phase só abre épicos FASE* (sustentação/comunitário).
-        # Trilhas transversais (TI-*, kind: track) e maintenance ficam fora —
-        # squad paralelo / planner; evita Epic TI-0 enquanto FASE* pendente.
+        # Trilhas transversais (TI-*, PD-*, kind: track) e maintenance ficam fora —
+        # squad paralelo / planner; evita Epic TI-0/PD-0 enquanto FASE* pendente.
         if (-not (Test-PhaseQueueItemEligibleForNextPhase -Item $item)) { continue }
         if ($item.status -eq 'completed') { continue }
 

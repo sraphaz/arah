@@ -6,6 +6,8 @@
 **Estimativa Total**: 176 horas  
 **Status**: ✅ **COMPLETO**
 
+> **Trilha PD (2026-07)**: padronização de instituições financeiras (código/ISPB/nome) via dados públicos é o incremento **[PD-4](./PD4.md)** — referência para formulários; **não** substitui `IPayoutGateway` nem valida titularidade. Ver [REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md).
+
 ---
 
 ## 🎯 Objetivo

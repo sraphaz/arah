@@ -148,6 +148,18 @@
     - Configuração permite trocar o provedor de mapas.
     - Suporte a pins/cluster básico para posts.
 
+### Feature: Dados públicos territoriais (Arah.PublicData) — trilha PD
+- [POST-MVP][P0] **Fundação Public Data + endereço assistido (PD-0…PD-2)**
+  - Ver: [`docs/backlog-api/REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md`](../backlog-api/REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md)
+  - Critérios de aceite (resumo):
+    - Lookups (CEP, UF, municípios/IBGE, feriados) passam pela API Arah com cache/snapshot.
+    - Frontend nunca chama BrasilAPI diretamente.
+    - Falha do provider não bloqueia cadastro essencial; correção manual sempre possível.
+    - Territory permanece com identidade comunitária; IBGE/CEP são referência opcional.
+- [POST-MVP][P1] **Organizações formais (CNPJ) e diretório de bancos (PD-3…PD-4)**
+  - CNPJ não auto-aprova nem exclui coletivos informais; bancos não validam titularidade.
+- [POST-MVP][P2+] **Clima, FIPE, NCM/câmbio, Registro.br (PD-5…PD-8)** — só com demanda de produto.
+
 ### Feature: Observabilidade mínima
 - [MVP] **Logs e métricas essenciais**
   - Critérios de aceite:

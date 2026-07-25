@@ -3,8 +3,8 @@
 
 **Versão**: 3.2  
 **Data**: 2025-01-20  
-**Última Atualização**: 2026-06-30  
-**Status**: ✅ MVP + Fases 1-16 Completas | 🔴 **Prioridade: Sustentação Operacional (F52–61)**
+**Última Atualização**: 2026-07-24  
+**Status**: ✅ MVP + Fases 1-16 Completas | 🔴 **Prioridade: Sustentação Operacional (F52–61)** | 🟢 Trilhas TI (World Monitor) + PD (Arah.PublicData / BrasilAPI)
 
 ---
 
@@ -279,6 +279,8 @@ O roadmap estratégico foi reorganizado com base em análise comparativa de merc
 | **Web3 Ready** | Mês 12+ | Blockchain (Fases 31-34) + Wallets (Fase 33) | Médio (quando houver demanda) |
 | **DAO Completa** | Mês 18+ | Tokens (Fase 36) + Governança Tokenizada (Fase 37) | Médio (quando houver demanda) |
 | **Diferenciação** | Mês 18+ | Learning Hub (Fase 46) + Rental System (Fase 47) + IA (Fase 23, 40) | Médio |
+| **Dados públicos (MVP PD)** | Paralelo | PD-0…PD-2 (CEP/UF/IBGE/feriados) — [realinhamento](../backlog-api/REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md) | Alto (UX cadastro) |
+| **Inteligência territorial (MVP TI)** | Paralelo | TI-1…TI-3 (World Monitor) | Alto (alertas) |
 
 ---
 

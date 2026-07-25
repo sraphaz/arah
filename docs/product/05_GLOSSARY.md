@@ -10,9 +10,15 @@
 
 ### Território e Geografia
 
-- **Territory (Território)**: unidade central do sistema; lugar físico real e neutro com fronteiras geográficas definidas. Existe antes do app e continua existindo sem usuários. Organiza contexto e governança, não é um filtro.
+- **Territory (Território)**: unidade central do sistema; lugar físico real e neutro com fronteiras geográficas definidas. Existe antes do app e continua existindo sem usuários. Organiza contexto e governança, não é um filtro. **Não** se reduz a município/UF/CEP (referência administrativa é opcional — ver ADR-024 / trilha PD).
 
 - **GeoAnchor / PostGeoAnchor**: ponto georreferenciado (latitude/longitude) que ancora conteúdo ao território. Permite visualização espacial e integração com mapa.
+
+- **Arah.PublicData / Public Data**: capacidade interna de enriquecer o território com dados públicos estruturados (ports + cache + snapshots). Provedor inicial: BrasilAPI (somente Infrastructure). Trilha de backlog **PD-0…PD-8**.
+
+- **PublicDataSnapshot**: registro de proveniência de um dado público consultado (provider, dataset, validade, hash, payload normalizado, confiança, status). Dado externo = sugestão/referência, não verdade absoluta.
+
+- **Referência administrativa**: UF, município, código IBGE, CEP usados para contextualizar e interoperar — **não** definem a identidade comunitária do Territory.
 
 - **Presença no Território**: requisito fundamental para vínculo no MVP; associação não ocorre remotamente. Geolocalização do usuário valida proximidade física ao território.
 

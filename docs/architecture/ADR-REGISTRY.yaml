@@ -1,7 +1,7 @@
 ﻿# ADR Registry — fonte machine-readable para register-adr e architecture-review
 version: 1
 updated: 2026-07-24
-next_number: 23
+next_number: 25
 policy: |
   ADR-001..019 vivem em 10_ARCHITECTURE_DECISIONS.md (legado).
   ADR-020+ em docs/architecture/adrs/ADR-NNN-slug.md via register-adr.ps1.
@@ -44,3 +44,14 @@ adrs:
     status: accepted
     file: docs/architecture/adrs/ADR-022-convencao-sinalizacao-de-erros.md
     date: 2026-07-03
+  - id: ADR-023
+    title: "Capacidade Arah.PublicData — providers, cache e proveniência"
+    status: proposed
+    file: docs/architecture/adrs/ADR-023-arah-publicdata-providers.md
+    date: 2026-07-24
+  - id: ADR-024
+    title: "Território comunitário vs referência administrativa; dados externos não autoritativos"
+    status: proposed
+    file: docs/architecture/adrs/ADR-024-territorio-comunitario-vs-referencia-administrativa.md
+    date: 2026-07-24
+    related: [ADR-003]

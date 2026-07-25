@@ -9,6 +9,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Dados Públicos Territoriais / Arah.PublicData no backlog (2026-07-24)
+
+- Realinhamento: [`REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md`](backlog-api/REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md) — trilha transversal **PD-0…PD-8** (BrasilAPI como 1º adapter; sem acoplar domínio; MVP PD-0…PD-2)
+- Incrementos: [`PD0`](backlog-api/PD0.md)…[`PD8`](backlog-api/PD8.md)
+- Arquitetura: [`public-data-integration.md`](architecture/public-data-integration.md)
+- ADRs propostas: [ADR-023](architecture/adrs/ADR-023-arah-publicdata-providers.md) (providers/cache/proveniência), [ADR-024](architecture/adrs/ADR-024-territorio-comunitario-vs-referencia-administrativa.md) (território comunitário ≠ administrativo)
+- `PHASE_QUEUE.yaml` (`kind: track`, wave `PD`) + `STATUS_FASES.md` + índice do backlog; âncoras em FASE24/FASE44 e cross-link na trilha TI
+- Matriz de decisão: CEP/UF/IBGE/DDD/feriados no MVP; CNPJ/bancos preparados; clima/FIPE/NCM/câmbio/Registro.br sob demanda; ISBN/corretoras/Pix directory fora do ativo
+
 ### Adicionado — Inteligência Territorial / World Monitor no backlog (2026-07-23)
 
 - Pacote C4 evoluído incorporado: handoff em [`docs/handoff/inteligencia-territorial/`](handoff/inteligencia-territorial/) (Hub + 11 decks + notas de pesquisa)

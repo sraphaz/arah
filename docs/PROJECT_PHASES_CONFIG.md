@@ -96,4 +96,4 @@ export async function getTotalPhases(): Promise<number> {
 
 ---
 
-**Última Verificação Manual**: 2026-07-23 (61 fases `FASE*.md`: 1–51 comunitárias + 52–61 sustentação; trilha transversal **TI-0…TI-7** em `TI*.md` — não entra no contador)
+**Última Verificação Manual**: 2026-07-24 (61 fases `FASE*.md`: 1–51 comunitárias + 52–61 sustentação; trilhas transversais **TI-0…TI-7** e **PD-0…PD-8** em `TI*.md` / `PD*.md` — **não** entram no contador)

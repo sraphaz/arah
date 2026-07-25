@@ -16,6 +16,8 @@ Decisões arquiteturais registradas pelo **Solutions Architect** e revisadas em 
 | ADR-020 | Arah Core como control plane separado | accepted | [ADR-020-arah-core-como-control-plane-separado.md](./ADR-020-arah-core-como-control-plane-separado.md) |
 | ADR-021 | Design system do app como fonte canônica de UI | Accepted | [ADR-021-design-system-app-canonic.md](./ADR-021-design-system-app-canonic.md) |
 | ADR-022 | Convenção de sinalização de erros (Result, nullable, exceptions) | accepted | [ADR-022-convencao-sinalizacao-de-erros.md](./ADR-022-convencao-sinalizacao-de-erros.md) |
+| ADR-023 | Capacidade Arah.PublicData — providers, cache e proveniência | proposed | [ADR-023-arah-publicdata-providers.md](./ADR-023-arah-publicdata-providers.md) |
+| ADR-024 | Território comunitário vs referência administrativa; dados externos não autoritativos | proposed | [ADR-024-territorio-comunitario-vs-referencia-administrativa.md](./ADR-024-territorio-comunitario-vs-referencia-administrativa.md) |
 
 Índice machine-readable: [ADR-REGISTRY.yaml](../ADR-REGISTRY.yaml)
 

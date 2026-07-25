@@ -122,6 +122,10 @@ labels:
     color: 214D37
     description: Trilha TI — Inteligência Territorial (paralela às FASE*)
 
+  - name: wave/PD
+    color: 0E8A16
+    description: Trilha PD — Dados Públicos Territoriais / Arah.PublicData
+
   - name: priority/P0
     color: B60205
     description: Prioridade P0

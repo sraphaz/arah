@@ -9,6 +9,8 @@
 **Nota**: Renumerada de Fase 18 para Fase 24 (Onda 5: Conformidade e Soberania). Fase 18 agora é Hospedagem Territorial.
 
 > **Trilha TI (2026-07)**: alertas enriquecidos, confirmação comunitária, mutirões a partir de sinal e memória territorial ganham implementação via **TI-3…TI-6** (World Monitor + revisão humana). Observações/sensores locais desta fase **complementam** (não substituem) sinais externos. Ver [REALINHAMENTO_INTELIGENCIA_TERRITORIAL](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [TI3](./TI3.md)–[TI6](./TI6.md).
+>
+> **Trilha PD (2026-07)**: previsão/contexto climático de fontes públicas (ex.: BrasilAPI/CPTEC) entra em **[PD-5](./PD5.md)** como um provider entre vários — distinto de observação comunitária e de alerta TI. Fundação de dados públicos: [REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md).
 
 ---
 

@@ -224,3 +224,95 @@ queue:
     kind: track
     frente: inteligencia-territorial
     blocked_by: [FASE53, TI-6, FASE59]
+
+  # --- Trilha transversal Dados Públicos Territoriais (Arah.PublicData / BrasilAPI) ---
+  # kind: track → fora do next-phase automático (squad paralelo / planner).
+  - id: PD-0
+    title: "PD-0 — Public Data Foundation"
+    area: area/backend
+    doc: docs/backlog-api/PD0.md
+    priority: P0
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: []
+
+  - id: PD-1
+    title: "PD-1 — Territorial Addressing (CEP/UF/IBGE/DDD)"
+    area: area/backend
+    doc: docs/backlog-api/PD1.md
+    priority: P0
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]
+
+  - id: PD-2
+    title: "PD-2 — Territorial Calendar (feriados)"
+    area: area/backend
+    doc: docs/backlog-api/PD2.md
+    priority: P1
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]
+
+  - id: PD-3
+    title: "PD-3 — Territorial Organizations (CNPJ)"
+    area: area/backend
+    doc: docs/backlog-api/PD3.md
+    priority: P1
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]
+
+  - id: PD-4
+    title: "PD-4 — Financial Reference Data (bancos)"
+    area: area/backend
+    doc: docs/backlog-api/PD4.md
+    priority: P1
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]
+
+  - id: PD-5
+    title: "PD-5 — Territorial Climate Intelligence"
+    area: area/backend
+    doc: docs/backlog-api/PD5.md
+    priority: P2
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]
+
+  - id: PD-6
+    title: "PD-6 — Specialized Marketplaces (FIPE)"
+    area: area/backend
+    doc: docs/backlog-api/PD6.md
+    priority: P3
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]
+
+  - id: PD-7
+    title: "PD-7 — Productive Chains (NCM/câmbio)"
+    area: area/backend
+    doc: docs/backlog-api/PD7.md
+    priority: P3
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]
+
+  - id: PD-8
+    title: "PD-8 — Digital Presence (Registro.br)"
+    area: area/backend
+    doc: docs/backlog-api/PD8.md
+    priority: P3
+    wave: PD
+    kind: track
+    frente: dados-publicos-territoriais
+    blocked_by: [PD-0]

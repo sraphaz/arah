@@ -485,13 +485,14 @@ function Test-PhaseCompleteFromGitHub {
 function Test-PhaseQueueItemEligibleForNextPhase {
     <#
     .SYNOPSIS
-      next-phase só auto-abre épicos FASE*. Trilhas TI (kind: track / id TI-*)
+      next-phase só auto-abre épicos FASE*. Trilhas TI/PD (kind: track / id TI-*|PD-*)
       e itens maintenance/doc ficam fora da seleção automática.
     #>
     param([hashtable]$Item)
     if (-not $Item -or -not $Item.id) { return $false }
     if ($Item.kind -eq 'track' -or $Item.kind -eq 'maintenance') { return $false }
     if ($Item.id -match '^TI-') { return $false }
+    if ($Item.id -match '^PD-') { return $false }
     if ($Item.id -match '^doc-') { return $false }
     if ($Item.id -notmatch '^FASE\d+') { return $false }
     return $true

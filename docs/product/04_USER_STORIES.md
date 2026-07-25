@@ -206,6 +206,53 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 - Erros de geolocalização são logados com contexto mínimo.
 - Há métricas de requisições e de falhas em report/moderação.
 
+## Pós-MVP — Dados públicos territoriais (trilha PD)
+
+Detalhamento: [`REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md`](../backlog-api/REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md).
+
+### [POST-MVP][P0] Endereço assistido por CEP
+**Como** pessoa cadastrando um endereço  
+**Quero** informar meu CEP e receber uma sugestão de endereço  
+**Para** preencher o formulário com menos erros.
+
+**Critérios de aceite**
+- CEP é normalizado; consulta ocorre pelo backend Arah (nunca direto à BrasilAPI).
+- Resposta pode vir de cache/snapshot; usuário pode corrigir os dados.
+- Falha externa não bloqueia o formulário; origem e data da consulta são registradas.
+
+### [POST-MVP][P0] Município normalizado (IBGE)
+**Como** plataforma  
+**Quero** relacionar territórios a códigos oficiais de município  
+**Para** interoperar com outras bases públicas.
+
+**Critérios de aceite**
+- Territory pode possuir código IBGE opcional; identidade comunitária permanece.
+- Migração de territórios existentes é segura; municípios duplicados na referência são evitados.
+
+### [POST-MVP][P1] Evento em feriado
+**Como** organizador  
+**Quero** ser avisado quando um evento ocorrer em feriado nacional  
+**Para** planejar comunicação e operação.
+
+**Critérios de aceite**
+- Aviso não bloqueia o evento; feriados em cache; ano futuro consultável; indisponibilidade externa não impede criação.
+
+### [POST-MVP][P1] Organização formal (CNPJ)
+**Como** representante de uma organização  
+**Quero** informar o CNPJ e confirmar os dados públicos encontrados  
+**Para** criar um perfil territorial mais confiável.
+
+**Critérios de aceite**
+- Consulta não concede selo automaticamente; usuário confirma vínculo; dados públicos separados dos comunitários; coletivos informais permanecem suportados.
+
+### [POST-MVP][P0] Fallback manual
+**Como** pessoa usando o Arah  
+**Quero** concluir o cadastro mesmo quando a fonte externa estiver indisponível  
+**Para** não depender de um serviço de terceiros.
+
+**Critérios de aceite**
+- Fluxos essenciais (território, evento, loja, endereço, recurso) permanecem utilizáveis com preenchimento manual.
+
 ## Pós-MVP (registro)
 - [POST-MVP] Buscar território por texto (nome/cidade/estado).
 - [POST-MVP] Sugerir território canônico.
@@ -219,3 +266,4 @@ Com base no estado atual documentado no projeto, já existem entregas relacionad
 - [POST-MVP] Admin/observabilidade com visão de territórios, erros e relatórios.
 - [POST-MVP] Produtos/serviços territoriais.
 - [POST-MVP] Integrações externas e indicadores comunitários/ambientais.
+- [POST-MVP] Capacidade Arah.PublicData (trilha PD-0…PD-8) — ver seção acima.

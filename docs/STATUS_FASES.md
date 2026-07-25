@@ -1,10 +1,11 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-07-23  
+**Última Atualização**: 2026-07-24  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
 **Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
-**Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
+**Trilha TI**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
+**Trilha PD**: 🟢 **Dados Públicos Territoriais PD-0…PD-8** (Arah.PublicData / BrasilAPI) — planejada; MVP PD-0…PD-2  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
@@ -41,6 +42,24 @@ Trilha **transversal** (não substitui numeração FASE*). Âncoras: FASE23, FAS
 | TI-7 | Federação de sinais | 🟢 P2 | ⏳ Pendente | [TI7.md](./backlog-api/TI7.md) |
 
 **Realinhamento**: [REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · **Handoff**: [inteligencia-territorial/](./handoff/inteligencia-territorial/)
+
+### 🟢 Trilha PD — Dados Públicos Territoriais (Arah.PublicData) ⭐ NOVO 2026-07
+
+Trilha **transversal** (não substitui numeração FASE*). Provedor inicial: BrasilAPI (só Infrastructure). Complementa TI (sinais) e o IBGE já usado no onboarding. Âncoras: Territory/onboarding, Marketplace, Events, FASE7, FASE24, FASE44.
+
+| ID | Nome | Prioridade | Status | Documentação |
+|----|------|------------|--------|--------------|
+| PD-0 | Public Data Foundation | 🔴 P0 | ⏳ Pendente | [PD0.md](./backlog-api/PD0.md) |
+| PD-1 | Territorial Addressing (CEP/UF/IBGE/DDD) | 🔴 P0 | ⏳ Pendente | [PD1.md](./backlog-api/PD1.md) |
+| PD-2 | Territorial Calendar (feriados) | 🟡 P1 | ⏳ Pendente | [PD2.md](./backlog-api/PD2.md) |
+| PD-3 | Territorial Organizations (CNPJ) | 🟡 P1 | ⏳ Pendente | [PD3.md](./backlog-api/PD3.md) |
+| PD-4 | Financial Reference Data (bancos) | 🟡 P1 | ⏳ Pendente | [PD4.md](./backlog-api/PD4.md) |
+| PD-5 | Territorial Climate Intelligence | 🟢 P2 | ⏳ Pendente | [PD5.md](./backlog-api/PD5.md) |
+| PD-6 | Specialized Marketplaces (FIPE) | 🟢 P3 | ⏳ Pendente | [PD6.md](./backlog-api/PD6.md) |
+| PD-7 | Productive Chains (NCM/câmbio) | 🟢 P3 | ⏳ Pendente | [PD7.md](./backlog-api/PD7.md) |
+| PD-8 | Digital Presence (Registro.br) | 🟢 P3 | ⏳ Pendente | [PD8.md](./backlog-api/PD8.md) |
+
+**Realinhamento**: [REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md](./backlog-api/REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md) · **Arquitetura**: [public-data-integration.md](./architecture/public-data-integration.md) · **ADRs**: [023](./architecture/adrs/ADR-023-arah-publicdata-providers.md), [024](./architecture/adrs/ADR-024-territorio-comunitario-vs-referencia-administrativa.md)
 
 ### 🔴 Sustentação Operacional (52–61) — PRIORIDADE ATUAL
 

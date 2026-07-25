@@ -140,6 +140,10 @@ Coreografia: rule `inteligencia-territorial` em [`.agents/choreography.yaml`](..
 
 Territory permanece **geográfico e neutro** — relevância e política ficam em Intelligence/Membership, nunca na entidade Territory.
 
+### Relação com Dados Públicos (trilha PD)
+
+A trilha **[PD-0…PD-8](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md)** (**Arah.PublicData**, BrasilAPI) fornece **referências estruturadas** (CEP, município/IBGE, feriados, etc.). **Não** substitui `SignalProvider` / World Monitor: PD contextualiza; TI sinaliza e publica com revisão humana. Clima público (PD-5) é provider auxiliar frente a alertas TI e observações FASE24.
+
 Handoff técnico: [Handoff de Desenvolvimento](../handoff/inteligencia-territorial/Inteligencia%20Territorial%20-%20Handoff%20de%20Desenvolvimento.dc.html).
 
 ---
@@ -150,8 +154,9 @@ Handoff técnico: [Handoff de Desenvolvimento](../handoff/inteligencia-territori
 Onda S0–S1 (sustentação)     ──►  go-live piloto
 Onda comunitária 17–19       ──►  economia local (P0 squad A)
 Trilha TI-0…TI-3 (paralela)  ──►  MVP inteligência (squad B)
-FASE23 / FASE24              ──►  ganham corpo via TI-2…TI-4
-FASE44                       ──►  TI-1 (adapter WM)
+Trilha PD-0…PD-2 (paralela)  ──►  MVP dados públicos (squad C / geo)
+FASE23 / FASE24              ──►  ganham corpo via TI-2…TI-4 (+ PD-5 clima depois)
+FASE44                       ──►  TI-1 (adapter WM) + âncora PD (PublicData)
 FASE53 maduro                ──►  desbloqueia TI-7
 ```
 
@@ -186,5 +191,6 @@ FASE53 maduro                ──►  desbloqueia TI-7
 - [Handoff TI — índice](../handoff/inteligencia-territorial/README.md)
 - [Handoff C4](../handoff/README.md)
 - [REALINHAMENTO_SUSTENTACAO_OPERACIONAL](./REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)
+- [REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS](./REALINHAMENTO_DADOS_PUBLICOS_TERRITORIAIS.md)
 - [Arquitetura C4 (HTML atualizado)](../handoff/arquitetura-c4/Arquitetura%20C4%20Arah.dc.html)
 - [Backlog Atualizado (HTML)](../handoff/arquitetura-c4/Backlog%20Atualizado%20-%20Arah.dc.html)

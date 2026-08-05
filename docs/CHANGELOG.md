@@ -9,6 +9,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Onda E design app (motion + stats BFF) (2026-08-05)
+
+- **APP-DS-12**: `ArahMotion` com easing `cubic-bezier(0.16,1,0.3,1)`, press `0.975`, page fade nas rotas push, progresso/AnimatedSwitcher no JourneyShell
+- **Perfil**: enriquecimento de stats via `me/profile/stats` + contagem de conexões aceitas
+- **Empty/Error**: `ArahEmptyState` centralizado; gate IA verifica curve/pressScale
+
 ### Adicionado — Inteligência Territorial / World Monitor no backlog (2026-07-23)
 
 - Pacote C4 evoluído incorporado: handoff em [`docs/handoff/inteligencia-territorial/`](handoff/inteligencia-territorial/) (Hub + 11 decks + notas de pesquisa)

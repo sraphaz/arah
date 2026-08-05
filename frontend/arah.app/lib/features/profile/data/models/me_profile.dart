@@ -1,7 +1,7 @@
 /// Resposta do BFF GET me/profile (UserProfileResponse).
 ///
 /// Contagens (`postsCount`, `connectionsCount`, `interestsCount`) são opcionais —
-/// o BFF pode enviá-las no root, em `stats`, ou omiti-las.
+/// o BFF pode enviá-las no root, em `stats`, via GET `profile/stats`, ou omiti-las.
 class MeProfile {
   const MeProfile({
     required this.id,
@@ -35,11 +35,45 @@ class MeProfile {
   bool get hasStatCounts =>
       postsCount != null || connectionsCount != null || interestsCount != null;
 
+  MeProfile copyWith({
+    String? id,
+    String? displayName,
+    String? email,
+    String? phoneNumber,
+    String? address,
+    DateTime? createdAtUtc,
+    List<String>? interests,
+    String? avatarUrl,
+    String? bio,
+    int? postsCount,
+    int? connectionsCount,
+    int? interestsCount,
+  }) {
+    return MeProfile(
+      id: id ?? this.id,
+      displayName: displayName ?? this.displayName,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      address: address ?? this.address,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      interests: interests ?? this.interests,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      bio: bio ?? this.bio,
+      postsCount: postsCount ?? this.postsCount,
+      connectionsCount: connectionsCount ?? this.connectionsCount,
+      interestsCount: interestsCount ?? this.interestsCount,
+    );
+  }
+
   static MeProfile fromJson(Map<String, dynamic> json) {
     final id = json['id'];
     final createdAt = json['createdAtUtc'];
     final stats = json['stats'];
     final statsMap = stats is Map<String, dynamic> ? stats : null;
+    final interests = (json['interests'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        const <String>[];
 
     return MeProfile(
       id: id?.toString() ?? '',
@@ -48,9 +82,10 @@ class MeProfile {
       phoneNumber: json['phoneNumber'] as String?,
       address: json['address'] as String?,
       createdAtUtc: createdAt != null
-          ? (createdAt is String ? DateTime.tryParse(createdAt) : null) ?? DateTime.now()
+          ? (createdAt is String ? DateTime.tryParse(createdAt) : null) ??
+              DateTime.now()
           : DateTime.now(),
-      interests: (json['interests'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      interests: interests,
       avatarUrl: json['avatarUrl'] as String?,
       bio: json['bio'] as String?,
       postsCount: _readInt(json, statsMap, const [
@@ -63,9 +98,25 @@ class MeProfile {
         'connections',
       ]),
       interestsCount: _readInt(json, statsMap, const [
-        'interestsCount',
-        'interestsTotal',
-      ]),
+            'interestsCount',
+            'interestsTotal',
+          ]) ??
+          (interests.isEmpty ? null : interests.length),
+    );
+  }
+
+  /// Mescla contagens de GET `me/profile/stats` (UserProfileStatsResponse).
+  MeProfile mergeStatsJson(Map<String, dynamic> stats) {
+    return copyWith(
+      postsCount: postsCount ??
+          _asInt(stats['postsCreated']) ??
+          _asInt(stats['postsCount']),
+      connectionsCount: connectionsCount ??
+          _asInt(stats['connectionsCount']) ??
+          _asInt(stats['connections']),
+      interestsCount: interestsCount ??
+          _asInt(stats['interestsCount']) ??
+          (interests.isEmpty ? null : interests.length),
     );
   }
 
@@ -77,7 +128,9 @@ class MeProfile {
     for (final key in keys) {
       final fromRoot = _asInt(json[key]);
       if (fromRoot != null) return fromRoot;
-      if (stats != null) {
+    }
+    if (stats != null) {
+      for (final key in keys) {
         final fromStats = _asInt(stats[key]);
         if (fromStats != null) return fromStats;
       }

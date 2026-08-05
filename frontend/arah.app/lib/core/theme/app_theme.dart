@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_design_tokens.dart';
+import 'arah_motion.dart';
 import '../config/constants.dart';
 
 /// Tema Arah: identidade premium (ADR-021) — Sora display + Geist corpo, floresta.
@@ -109,6 +110,12 @@ class AppTheme {
       brightness: brightness,
       fontFamily: AppDesignTokens.fontFamilyBody,
       textTheme: textTheme,
+      pageTransitionsTheme: PageTransitionsTheme(
+        builders: {
+          for (final platform in TargetPlatform.values)
+            platform: const ArahFadePageTransitionsBuilder(),
+        },
+      ),
       colorScheme: ColorScheme(
         brightness: brightness,
         primary: colors.primary,

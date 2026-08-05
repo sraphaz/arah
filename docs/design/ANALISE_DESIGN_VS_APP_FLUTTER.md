@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 🚧 Alinhamento avançado (Onda D 2026-07-23)  
-**Próximo passo**: refinamentos (stats reais do BFF, Moderação polish, motion 150/250 em todas as telas)
+**Status**: 🚧 Alinhamento avançado (Onda E 2026-08-05)  
+**Próximo passo**: checkout PIX, polish Mercado/Minha loja, jornadas “Em breve” no hub
 
 ---
 
@@ -223,7 +223,7 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | ✅ stats row + RoleBadge + grade + banner | APP-DS-07 |
 | **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | ✅ Mercado/Chat/Moderação em cards | APP-DS-07 |
 | **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | ✅ UI + upload media; pending status fino ainda depende do BFF | backend gaps |
-| **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | 🟡 `ArahErrorState`/`ArahEmptyState` em Feed/Moderação/Mercado; motion global pendente | APP-DS-07 |
+| **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | ✅ empty/error centrados; motion (curve/press/page fade/JourneyShell) global | APP-DS-07 |
 | **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | ✅ `design-ia-gate-check.ps1` no `run-gates` | APP-DS-02 |
 
 ---

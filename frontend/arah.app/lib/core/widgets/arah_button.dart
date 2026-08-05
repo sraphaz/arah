@@ -81,8 +81,9 @@ class _ArahButtonState extends State<ArahButton> {
     }
 
     final scaled = AnimatedScale(
-      scale: _pressed && _enabled ? 0.97 : 1.0,
-      duration: ArahMotion.fast,
+      scale: _pressed && _enabled ? ArahMotion.pressScale : 1.0,
+      duration: ArahMotion.resolve(context, ArahMotion.fast),
+      curve: ArahMotion.emphasized,
       child: Listener(
         onPointerDown: _enabled ? (_) => setState(() => _pressed = true) : null,
         onPointerUp: (_) => setState(() => _pressed = false),

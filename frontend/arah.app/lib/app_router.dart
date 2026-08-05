@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'core/config/app_config.dart';
 import 'core/providers/territory_provider.dart';
+import 'core/theme/arah_motion.dart';
 import 'core/widgets/arah_scaffold.dart';
 import 'core/widgets/arah_loading_indicator.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
@@ -25,6 +26,20 @@ import 'features/assets/presentation/screens/assets_screen.dart';
 import 'features/subscriptions/presentation/screens/subscriptions_screen.dart';
 import 'features/notifications/presentation/screens/notifications_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
+
+GoRoute _fadeRoute({
+  required String path,
+  required Widget Function(BuildContext, GoRouterState) builder,
+}) {
+  return GoRoute(
+    path: path,
+    pageBuilder: (context, state) => ArahMotion.fadePage(
+      key: state.pageKey,
+      name: state.matchedLocation,
+      child: builder(context, state),
+    ),
+  );
+}
 
 /// Rotas com guard de auth e onboarding: sem token → /login; com token sem território → /onboarding; com território → /home.
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -77,45 +92,45 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/home',
         builder: (_, __) => const MainShellScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/map',
         builder: (_, state) {
           final territoryId = state.uri.queryParameters['territoryId'];
           return MapScreen(territoryId: territoryId);
         },
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/events',
         builder: (_, state) {
           final territoryId = state.uri.queryParameters['territoryId'];
           return EventsScreen(territoryId: territoryId);
         },
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/connections',
         builder: (_, __) => const ConnectionsScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/alerts',
         builder: (_, __) => const AlertsScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/membership',
         builder: (_, __) => const MembershipScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/residency-journey',
         builder: (_, __) => const ResidencyJourneyScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/marketplace',
         builder: (_, __) => const MarketplaceScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/chat',
         builder: (_, __) => const ChatListScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/chat/:conversationId',
         builder: (_, state) {
           final id = state.pathParameters['conversationId'] ?? '';
@@ -123,18 +138,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return ChatConversationScreen(conversationId: id, title: title);
         },
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/moderation',
         builder: (_, __) => const ModerationScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/governance',
         builder: (_, state) {
           final territoryId = state.uri.queryParameters['territoryId'];
           return GovernanceScreen(territoryId: territoryId);
         },
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/post',
         builder: (_, state) {
           final territoryId = state.uri.queryParameters['territoryId'] ?? '';
@@ -142,15 +157,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return PostDetailScreen(territoryId: territoryId, postId: postId);
         },
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/assets',
         builder: (_, __) => const AssetsScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/subscriptions',
         builder: (_, __) => const SubscriptionsScreen(),
       ),
-      GoRoute(
+      _fadeRoute(
         path: '/notifications',
         builder: (_, __) => const NotificationsScreen(),
       ),

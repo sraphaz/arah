@@ -50,8 +50,8 @@ O **BFF** expõe tudo sob `/api/v2/journeys/<jornada>/<path>` e faz proxy para a
 | **Connections** (listar, pending, request, accept, reject, privacy) | ✅ | ✅ | ✅ | App: Conexões com busca, sugestões, solicitar/aceitar/rejeitar. |
 | **Assets** (listar, upload, curate) | ✅ | ✅ | ✅ | App: listagem, criação, validar, arquivar e curar (aprovar/rejeitar). |
 | **Media** (upload, info, download) | ✅ | ✅ | ✅ | App: upload ao publicar post; exibição no feed. |
-| **Marketplace** (search, add-to-cart, checkout) | ✅ | ✅ | ✅ | App: busca, adicionar ao carrinho, checkout (v2 + cart v1). |
-| **Marketplace V1** (cart, stores, items) | ✅ | ✅ | ✅ | App: cart v1, busca/checkout v2 e gestão de loja própria (`stores/me`, criar/atualizar). |
+| **Marketplace** (search, add-to-cart, checkout) | ✅ | ✅ | ✅ | App: busca, carrinho, jornada checkout PIX (`/checkout-journey`). |
+| **Marketplace V1** (cart, stores, items, pay) | ✅ | ✅ | ✅ | App: cart/loja; `pay` + `confirm-payment`; toggle `stores/{id}/payments/enable`. |
 | **Subscription plans / Subscriptions** | ✅ | ✅ | ✅ | App: planos, minha assinatura, assinar e cancelar. |
 | **Moderation** (work-items, cases, evidences) | ✅ | ✅ | ✅ | App: fila, casos (decidir), evidências (download + decidir residência). |
 | **Governance** (votings: listar, criar, votar, fechar, resultados) | ✅ | ✅ | ✅ | App: tela Governança (jornada `governance`) — lista votações com filtro de status, votar inline, ver resultados e criar votação. |

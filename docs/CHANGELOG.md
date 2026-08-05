@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Onda F design app (checkout PIX + Mercado/Serviços) (2026-08-05)
+
+- **APP-DS-14**: jornada checkout PIX (`/checkout-journey`) com `ArahJourneyShell` — sacola → recebimento → pagamento → sucesso; wire `pay` + `confirm-payment`
+- **Minha loja**: empty state, toggle `payments/enable`, hint informativo de chave PIX (sem inventar PixKey no backend)
+- **Hub Serviços**: tiles live/soon em `ArahCard` (ícone + chip alinhados ao design)
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
 ### Corrigido — fallback de stats do perfil (2026-08-05)
 
 - `interestsCount` só é preenchido com `interests.length` após stats remotas; lista vazia não força layout de contagens
@@ -642,4 +649,4 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-**Última Atualização**: 2026-01-21
+**Última Atualização**: 2026-08-05

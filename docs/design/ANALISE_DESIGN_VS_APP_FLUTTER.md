@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 🚧 Alinhamento avançado (Onda E 2026-08-05)  
-**Próximo passo**: checkout PIX, polish Mercado/Minha loja, jornadas “Em breve” no hub
+**Status**: 🚧 Alinhamento avançado (Onda F 2026-08-05)  
+**Próximo passo**: CRUD produto na loja, QR PIX real, jornadas Em breve com stub JourneyShell
 
 ---
 
@@ -196,8 +196,8 @@ O UI kit já resolve descoberta de roadmap **sem implementar backend**. O app at
 | Confirmar residência (GPS + comprovante + pending) | 🟡 botões em Membership; **sem** upload/pending/journey |
 | Feed / publicar / comentar | ✅ básico; gaps mídia rica / report |
 | Eventos | ✅ listar/criar/participar |
-| Mercado & checkout PIX | 🟡 checkout stub (`Checkout via app`) |
-| Minha loja / payout | 🟡 CRUD; sem PIX/taxa |
+| Mercado & checkout PIX | ✅ jornada PIX (`/checkout-journey`) + pay/confirm |
+| Minha loja / payout | 🟡 toggle pagamentos + hint PIX; CRUD produto/payout fino pendente |
 | Governança | ✅ |
 | Curadoria | 🟡 API lista; UX rasa |
 | Jornadas multi-passo (reserva, babá, carteira…) | ❌ framework inexistente |
@@ -225,6 +225,7 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | ✅ UI + upload media; pending status fino ainda depende do BFF | backend gaps |
 | **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | ✅ empty/error centrados; motion (curve/press/page fade/JourneyShell) global | APP-DS-07 |
 | **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | ✅ `design-ia-gate-check.ps1` no `run-gates` | APP-DS-02 |
+| **APP-DS-14** | Checkout PIX + polish Mercado/Minha loja + hub Serviços (tiles Em breve) | ✅ jornada 4 passos + payments/enable + ArahCard no hub | APP-DS-07 / backend pay |
 
 ---
 
@@ -300,6 +301,8 @@ Comparar lado a lado com o Flutter: bottom-nav, top bar, feed card, hub Serviço
 
 ### Changelog deste documento
 
+- **1.5** (2026-08-05): Onda F — APP-DS-14 checkout PIX journey, Minha loja payments toggle, hub Serviços ArahCard.
+- **1.4** (2026-08-05): Onda E — APP-DS-12 motion global; stats BFF no perfil.
 - **1.3** (2026-07-23): Onda D — Moderação cards, ProfileStats, comprovante upload, ArahErrorState, design-ia-gate-check.
 - **1.2** (2026-07-21): Onda C — JourneyShell, jornada residência v0, Mercado cards, Chat bolhas, Explorar chips, shell sem Scaffold aninhado.
 - **1.1** (2026-07-21): Onda A+B — ADR-021, tokens/fonts, shell Serviços+TopBar, hub, banner visitante; APP-DS-01..06 ✅.

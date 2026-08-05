@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/arah_card.dart';
 import '../../../../core/widgets/arah_empty_state.dart';
 import '../../../../core/widgets/arah_loading_indicator.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
@@ -48,19 +50,7 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen>
     return items.length;
   }
 
-  Future<void> _checkout(MarketplaceNotifier notifier, AppLocalizations l10n) async {
-    try {
-      await notifier.checkout(message: 'Checkout via app');
-      if (mounted) showSuccessSnackBar(context, l10n.orderSent);
-    } catch (e) {
-      if (mounted) {
-        showErrorSnackBar(
-          context,
-          e is ApiException ? e.userMessage : l10n.errorCheckout,
-        );
-      }
-    }
-  }
+  void _openCheckoutJourney() => context.push('/checkout-journey');
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +89,7 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen>
             _CartBar(
               count: cartCount,
               label: l10n.checkoutWithCount(cartCount),
-              onCheckout: () => _checkout(notifier, l10n),
+              onCheckout: _openCheckoutJourney,
               colors: colors,
             ),
           Expanded(
@@ -415,120 +405,177 @@ class _MyStoreTabState extends State<_MyStoreTab> {
       return const Center(child: ArahLoadingIndicator());
     }
 
+    final store = widget.state.myStore;
+
     return ListView(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
       children: [
-        if (widget.state.myStore != null)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.spacingMd),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: AppConstants.avatarSizeSm,
-                    height: AppConstants.avatarSizeSm,
-                    decoration: BoxDecoration(
-                      color: colors.primary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                    ),
-                    child: Icon(Icons.storefront_outlined, color: colors.primary),
+        if (store == null)
+          ArahEmptyState(
+            icon: Icons.storefront_outlined,
+            title: l10n.openStoreEmptyTitle,
+            description: l10n.openStoreEmptyDescription,
+          ),
+        if (store != null) ...[
+          ArahCard(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: AppConstants.avatarSizeSm,
+                  height: AppConstants.avatarSizeSm,
+                  decoration: BoxDecoration(
+                    color: colors.primary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   ),
-                  const SizedBox(width: AppConstants.spacingMd),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  child: Icon(Icons.storefront_outlined, color: colors.primary),
+                ),
+                const SizedBox(width: AppConstants.spacingMd),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        store.displayName,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: AppConstants.spacingXs),
+                      Text(
+                        l10n.statusLabel(store.status),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: colors.onSurfaceVariant,
+                            ),
+                      ),
+                      if (store.description != null &&
+                          store.description!.isNotEmpty) ...[
+                        const SizedBox(height: AppConstants.spacingSm),
                         Text(
-                          widget.state.myStore!.displayName,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: AppConstants.spacingXs),
-                        Text(
-                          l10n.statusLabel(widget.state.myStore!.status),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          store.description!,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: colors.onSurfaceVariant,
                               ),
                         ),
-                        if (widget.state.myStore!.description != null &&
-                            widget.state.myStore!.description!.isNotEmpty) ...[
-                          const SizedBox(height: AppConstants.spacingSm),
-                          Text(
-                            widget.state.myStore!.description!,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: colors.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
                       ],
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        const SizedBox(height: AppConstants.spacingMd),
-        Text(
-          widget.state.myStore == null ? l10n.createMyStore : l10n.updateStore,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: AppConstants.spacingSm),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(AppConstants.spacingMd),
+          const SizedBox(height: AppConstants.spacingMd),
+          Text(l10n.storePaymentsTitle, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: AppConstants.spacingSm),
+          ArahCard(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: l10n.storeNameLabel,
-                    border: const OutlineInputBorder(),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.storePaymentsEnabled),
+                  subtitle: Text(
+                    store.paymentsEnabled
+                        ? l10n.storePaymentsEnabledHint
+                        : l10n.storePaymentsDisabledHint,
                   ),
-                ),
-                const SizedBox(height: AppConstants.spacingSm),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    labelText: l10n.descriptionLabel,
-                    border: const OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: AppConstants.spacingLg),
-                FilledButton(
-                  onPressed: () async {
-                    final name = _nameController.text.trim();
-                    if (name.isEmpty) {
-                      showErrorSnackBar(context, l10n.informStoreName);
-                      return;
-                    }
+                  value: store.paymentsEnabled,
+                  onChanged: (value) async {
                     try {
-                      await widget.notifier.saveMyStore(
-                        displayName: name,
-                        description: _descriptionController.text.trim().isEmpty
-                            ? null
-                            : _descriptionController.text.trim(),
-                      );
+                      await widget.notifier.setPaymentsEnabled(value);
                       if (context.mounted) {
                         showSuccessSnackBar(
                           context,
-                          widget.state.myStore == null ? l10n.storeCreated : l10n.storeUpdated,
+                          value
+                              ? l10n.storePaymentsEnabled
+                              : l10n.storePaymentsDisabledHint,
                         );
                       }
                     } catch (e) {
                       if (context.mounted) {
                         showErrorSnackBar(
                           context,
-                          e is ApiException ? e.userMessage : l10n.errorSaveStore,
+                          e is ApiException
+                              ? e.userMessage
+                              : l10n.errorSaveStore,
                         );
                       }
                     }
                   },
-                  child: Text(widget.state.myStore == null ? l10n.createStore : l10n.saveChanges),
+                ),
+                const Divider(height: AppConstants.spacingLg),
+                Text(
+                  l10n.storePixKeyLabel,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: AppConstants.spacingXs),
+                Text(
+                  l10n.storePixKeyHint,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colors.onSurfaceVariant,
+                      ),
                 ),
               ],
             ),
+          ),
+        ],
+        const SizedBox(height: AppConstants.spacingMd),
+        Text(
+          store == null ? l10n.createMyStore : l10n.updateStore,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: AppConstants.spacingSm),
+        ArahCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: l10n.storeNameLabel,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: AppConstants.spacingSm),
+              TextField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: l10n.descriptionLabel,
+                  border: const OutlineInputBorder(),
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: AppConstants.spacingLg),
+              FilledButton(
+                onPressed: () async {
+                  final name = _nameController.text.trim();
+                  if (name.isEmpty) {
+                    showErrorSnackBar(context, l10n.informStoreName);
+                    return;
+                  }
+                  try {
+                    await widget.notifier.saveMyStore(
+                      displayName: name,
+                      description: _descriptionController.text.trim().isEmpty
+                          ? null
+                          : _descriptionController.text.trim(),
+                    );
+                    if (context.mounted) {
+                      showSuccessSnackBar(
+                        context,
+                        store == null ? l10n.storeCreated : l10n.storeUpdated,
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      showErrorSnackBar(
+                        context,
+                        e is ApiException ? e.userMessage : l10n.errorSaveStore,
+                      );
+                    }
+                  }
+                },
+                child: Text(store == null ? l10n.createStore : l10n.saveChanges),
+              ),
+            ],
           ),
         ),
       ],

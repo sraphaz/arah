@@ -1258,4 +1258,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get residencyJourneySuccessMessage => 'Territory curators will review your proof. You will be notified once residency is confirmed.';
+
+  @override
+  String get checkoutJourneyTitle => 'Checkout';
+
+  @override
+  String get checkoutBagTitle => 'Your bag';
+
+  @override
+  String get checkoutEmptyCart => 'Your bag is empty. Go back to Marketplace to add items.';
+
+  @override
+  String get checkoutQuantity => 'Quantity';
+
+  @override
+  String get checkoutFulfillmentTitle => 'Fulfillment';
+
+  @override
+  String get checkoutFulfillmentSubtitle => 'Choose pickup in the territory or delivery arranged with the store.';
+
+  @override
+  String get checkoutFulfillmentPickup => 'Pickup';
+
+  @override
+  String get checkoutFulfillmentPickupHint => 'Arrange place and time with the store.';
+
+  @override
+  String get checkoutFulfillmentDelivery => 'Delivery';
+
+  @override
+  String get checkoutFulfillmentDeliveryHint => 'Arranged locally (no automatic shipping).';
+
+  @override
+  String get checkoutReviewTitle => 'Review and pay';
+
+  @override
+  String get checkoutItemsCount => 'Items';
+
+  @override
+  String get checkoutPaymentMethod => 'Payment';
+
+  @override
+  String get checkoutPayPix => 'Pay with PIX';
+
+  @override
+  String get checkoutPixHint => 'We generate a PIX code for you to copy and pay in your bank app.';
+
+  @override
+  String get checkoutSuccessTitle => 'PIX ready';
+
+  @override
+  String get checkoutSuccessMessage => 'Copy the code, pay in your bank app, then tap «I already paid».';
+
+  @override
+  String get checkoutDone => 'Done';
+
+  @override
+  String get pixPayBanner => 'PIX code (copy and paste)';
+
+  @override
+  String get pixCopyCode => 'Copy code';
+
+  @override
+  String get pixCodeCopied => 'PIX code copied';
+
+  @override
+  String get pixCodeUnavailable => 'Code unavailable. Try again in a moment.';
+
+  @override
+  String get pixAlreadyPaid => 'I already paid';
+
+  @override
+  String get pixPaymentConfirmed => 'Payment confirmed';
+
+  @override
+  String get pixPaymentPendingHint => 'Payment not confirmed yet. If you already paid, wait a few seconds and try again.';
+
+  @override
+  String get openStoreEmptyTitle => 'You don\'t have a store yet';
+
+  @override
+  String get openStoreEmptyDescription => 'Create your store in the territory to list items and receive payments.';
+
+  @override
+  String get storePaymentsTitle => 'Payments';
+
+  @override
+  String get storePaymentsEnabled => 'Accept payments';
+
+  @override
+  String get storePaymentsEnabledHint => 'Customers can pay this store\'s orders via PIX.';
+
+  @override
+  String get storePaymentsDisabledHint => 'Payments off — turn on to receive via PIX.';
+
+  @override
+  String get storePixKeyLabel => 'PIX key';
+
+  @override
+  String get storePixKeyHint => 'The store PIX key is configured in the territory payment gateway. Here you only enable or disable accepting payments.';
 }

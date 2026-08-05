@@ -9,6 +9,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Corrigido — fallback de stats do perfil (2026-08-05)
+
+- `interestsCount` só é preenchido com `interests.length` após stats remotas; lista vazia não força layout de contagens
+
 ### Alterado — Onda E design app (motion + stats BFF) (2026-08-05)
 
 - **APP-DS-12**: `ArahMotion` com easing `cubic-bezier(0.16,1,0.3,1)`, press `0.975`, page fade nas rotas push, progresso/AnimatedSwitcher no JourneyShell

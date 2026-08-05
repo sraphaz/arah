@@ -17,6 +17,7 @@ import 'features/alerts/presentation/screens/alerts_screen.dart';
 import 'features/membership/presentation/screens/membership_screen.dart';
 import 'features/membership/presentation/screens/residency_journey_screen.dart';
 import 'features/marketplace/presentation/screens/marketplace_screen.dart';
+import 'features/marketplace/presentation/screens/checkout_journey_screen.dart';
 import 'features/chat/presentation/screens/chat_list_screen.dart';
 import 'features/chat/presentation/screens/chat_conversation_screen.dart';
 import 'features/moderation/presentation/screens/moderation_screen.dart';
@@ -125,6 +126,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       _fadeRoute(
         path: '/marketplace',
         builder: (_, __) => const MarketplaceScreen(),
+      ),
+      _fadeRoute(
+        path: '/checkout-journey',
+        builder: (_, __) => const CheckoutJourneyScreen(),
       ),
       _fadeRoute(
         path: '/chat',

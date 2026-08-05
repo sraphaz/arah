@@ -125,6 +125,35 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     );
     return result;
   }
+
+  Future<Map<String, dynamic>> payWithPix(String transactionId) {
+    return _repo.payWithPix(transactionId);
+  }
+
+  Future<Map<String, dynamic>> confirmPayment({
+    required String transactionId,
+    required String gatewayPaymentId,
+  }) {
+    return _repo.confirmPayment(
+      transactionId: transactionId,
+      gatewayPaymentId: gatewayPaymentId,
+    );
+  }
+
+  Future<void> setPaymentsEnabled(bool enabled) async {
+    final store = state.myStore;
+    if (store == null) return;
+    final updated = await _repo.setPaymentsEnabled(
+      storeId: store.id,
+      enabled: enabled,
+    );
+    state = MarketplaceState(
+      items: state.items,
+      cart: state.cart,
+      myStore: updated,
+      query: state.query,
+    );
+  }
 }
 
 final marketplaceProvider =

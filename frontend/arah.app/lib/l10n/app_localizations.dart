@@ -2536,6 +2536,204 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.'**
   String get residencyJourneySuccessMessage;
+
+  /// No description provided for @checkoutJourneyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Checkout'**
+  String get checkoutJourneyTitle;
+
+  /// No description provided for @checkoutBagTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua sacola'**
+  String get checkoutBagTitle;
+
+  /// No description provided for @checkoutEmptyCart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua sacola está vazia. Volte ao Mercado para adicionar itens.'**
+  String get checkoutEmptyCart;
+
+  /// No description provided for @checkoutQuantity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade'**
+  String get checkoutQuantity;
+
+  /// No description provided for @checkoutFulfillmentTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como receber'**
+  String get checkoutFulfillmentTitle;
+
+  /// No description provided for @checkoutFulfillmentSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha retirada no território ou entrega combinada com a loja.'**
+  String get checkoutFulfillmentSubtitle;
+
+  /// No description provided for @checkoutFulfillmentPickup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retirada'**
+  String get checkoutFulfillmentPickup;
+
+  /// No description provided for @checkoutFulfillmentPickupHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Combine o ponto e horário com a loja.'**
+  String get checkoutFulfillmentPickupHint;
+
+  /// No description provided for @checkoutFulfillmentDelivery.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrega'**
+  String get checkoutFulfillmentDelivery;
+
+  /// No description provided for @checkoutFulfillmentDeliveryHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Combinada localmente (sem frete automático).'**
+  String get checkoutFulfillmentDeliveryHint;
+
+  /// No description provided for @checkoutReviewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisão e pagamento'**
+  String get checkoutReviewTitle;
+
+  /// No description provided for @checkoutItemsCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Itens'**
+  String get checkoutItemsCount;
+
+  /// No description provided for @checkoutPaymentMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento'**
+  String get checkoutPaymentMethod;
+
+  /// No description provided for @checkoutPayPix.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagar com PIX'**
+  String get checkoutPayPix;
+
+  /// No description provided for @checkoutPixHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Geramos um código PIX para você copiar e pagar no app do banco.'**
+  String get checkoutPixHint;
+
+  /// No description provided for @checkoutSuccessTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'PIX gerado'**
+  String get checkoutSuccessTitle;
+
+  /// No description provided for @checkoutSuccessMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Copie o código, pague no banco e toque em «Já paguei» quando concluir.'**
+  String get checkoutSuccessMessage;
+
+  /// No description provided for @checkoutDone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluir'**
+  String get checkoutDone;
+
+  /// No description provided for @pixPayBanner.
+  ///
+  /// In pt, this message translates to:
+  /// **'Código PIX (copia e cola)'**
+  String get pixPayBanner;
+
+  /// No description provided for @pixCopyCode.
+  ///
+  /// In pt, this message translates to:
+  /// **'Copiar código'**
+  String get pixCopyCode;
+
+  /// No description provided for @pixCodeCopied.
+  ///
+  /// In pt, this message translates to:
+  /// **'Código PIX copiado'**
+  String get pixCodeCopied;
+
+  /// No description provided for @pixCodeUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Código indisponível. Tente novamente em instantes.'**
+  String get pixCodeUnavailable;
+
+  /// No description provided for @pixAlreadyPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já paguei'**
+  String get pixAlreadyPaid;
+
+  /// No description provided for @pixPaymentConfirmed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento confirmado'**
+  String get pixPaymentConfirmed;
+
+  /// No description provided for @pixPaymentPendingHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ainda não confirmamos o pagamento. Se já pagou, aguarde alguns segundos e tente de novo.'**
+  String get pixPaymentPendingHint;
+
+  /// No description provided for @openStoreEmptyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você ainda não tem loja'**
+  String get openStoreEmptyTitle;
+
+  /// No description provided for @openStoreEmptyDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Crie sua loja no território para publicar itens e receber pagamentos.'**
+  String get openStoreEmptyDescription;
+
+  /// No description provided for @storePaymentsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamentos'**
+  String get storePaymentsTitle;
+
+  /// No description provided for @storePaymentsEnabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aceitar pagamentos'**
+  String get storePaymentsEnabled;
+
+  /// No description provided for @storePaymentsEnabledHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Clientes podem pagar pedidos desta loja via PIX.'**
+  String get storePaymentsEnabledHint;
+
+  /// No description provided for @storePaymentsDisabledHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamentos desativados — ative para receber via PIX.'**
+  String get storePaymentsDisabledHint;
+
+  /// No description provided for @storePixKeyLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Chave PIX'**
+  String get storePixKeyLabel;
+
+  /// No description provided for @storePixKeyHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.'**
+  String get storePixKeyHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

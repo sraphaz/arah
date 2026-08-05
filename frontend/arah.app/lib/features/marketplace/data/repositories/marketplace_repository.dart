@@ -105,4 +105,49 @@ class MarketplaceRepository {
     }
     return MyStore.fromJson(response.data as Map<String, dynamic>);
   }
+
+  /// POST marketplace-v1/transactions/{id}/pay — inicia PIX (mock gateway em dev).
+  Future<Map<String, dynamic>> payWithPix(String transactionId) async {
+    final response = await _client.post(
+      'marketplace-v1',
+      'transactions/$transactionId/pay',
+      body: const <String, dynamic>{'method': 'pix'},
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('HTTP ${response.statusCode}', statusCode: response.statusCode);
+    }
+    return response.data as Map<String, dynamic>? ?? {};
+  }
+
+  /// POST marketplace-v1/transactions/{id}/confirm-payment
+  Future<Map<String, dynamic>> confirmPayment({
+    required String transactionId,
+    required String gatewayPaymentId,
+  }) async {
+    final response = await _client.post(
+      'marketplace-v1',
+      'transactions/$transactionId/confirm-payment',
+      body: <String, dynamic>{'gatewayPaymentId': gatewayPaymentId},
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('HTTP ${response.statusCode}', statusCode: response.statusCode);
+    }
+    return response.data as Map<String, dynamic>? ?? {};
+  }
+
+  /// POST marketplace-v1/stores/{id}/payments/enable
+  Future<MyStore> setPaymentsEnabled({
+    required String storeId,
+    required bool enabled,
+  }) async {
+    final response = await _client.post(
+      'marketplace-v1',
+      'stores/$storeId/payments/enable',
+      body: <String, dynamic>{'enabled': enabled},
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('HTTP ${response.statusCode}', statusCode: response.statusCode);
+    }
+    return MyStore.fromJson(response.data as Map<String, dynamic>);
+  }
 }

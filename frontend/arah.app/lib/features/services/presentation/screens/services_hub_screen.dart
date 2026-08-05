@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/theme/app_design_tokens.dart';
+import '../../../../core/widgets/arah_card.dart';
 import '../../../../l10n/app_localizations.dart';
 
 /// Hub de Serviços: diretório categorizado (live → rota; soon → SnackBar).
@@ -24,13 +25,16 @@ class ServicesHubScreen extends StatelessWidget {
       children: [
         Text(
           l10n.services,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontFamily: AppDesignTokens.fontFamilyDisplay,
+                letterSpacing: AppDesignTokens.letterSpacingTight,
+              ),
         ),
         const SizedBox(height: AppConstants.spacingXs),
         Text(
           l10n.servicesHubSubtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.appColors.onSurfaceVariant,
               ),
         ),
         const SizedBox(height: AppConstants.spacingLg),
@@ -289,50 +293,87 @@ class _ServiceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final theme = Theme.of(context);
     final isLive = item.isLive;
     final chipLabel = isLive
         ? statusLiveLabel
         : item.phase != null
             ? '$statusSoonLabel · ${item.phase}'
             : statusSoonLabel;
+    final iconColor = isLive
+        ? colors.primary
+        : colors.onSurfaceVariant.withValues(alpha: 0.72);
+    final titleColor = isLive ? colors.onSurface : colors.onSurfaceVariant;
 
-    return Card(
+    return ArahCard(
       margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.spacingMd,
-          vertical: AppConstants.spacingXs,
-        ),
-        leading: Icon(
-          item.icon,
-          color: isLive ? colors.primary : colors.onSurfaceVariant,
-        ),
-        title: Text(item.title),
-        subtitle: item.phase != null && !isLive
-            ? Text(
-                item.phase!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.spacingMd,
+        vertical: AppConstants.spacingMd - 2,
+      ),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: isLive
+                  ? colors.primary.withValues(alpha: 0.12)
+                  : colors.surfaceContainer.withValues(alpha: 0.55),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+            ),
+            child: Icon(item.icon, color: iconColor, size: AppConstants.iconSizeMd),
+          ),
+          const SizedBox(width: AppConstants.spacingMd),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: theme.textTheme.titleSmall?.copyWith(color: titleColor),
+                ),
+                if (!isLive && item.phase != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    item.phase!,
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: colors.onSurfaceSubtle,
                     ),
-              )
-            : null,
-        trailing: Chip(
-          label: Text(chipLabel),
-          labelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: isLive ? colors.success : AppDesignTokens.warning,
-                fontWeight: FontWeight.w600,
-              ),
-          backgroundColor: isLive
-              ? colors.accentSubtle
-              : AppDesignTokens.warning.withValues(alpha: 0.16),
-          side: BorderSide(
-            color: isLive ? colors.accentBorder : AppDesignTokens.warning.withValues(alpha: 0.4),
+                  ),
+                ],
+              ],
+            ),
           ),
-          visualDensity: VisualDensity.compact,
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingXs),
-        ),
-        onTap: onTap,
+          const SizedBox(width: AppConstants.spacingSm),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: isLive
+                  ? colors.accentSubtle
+                  : colors.surfaceContainer.withValues(alpha: 0.7),
+              borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+              border: Border.all(
+                color: isLive
+                    ? colors.accentBorder
+                    : colors.outlineSubtle,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppConstants.spacingSm,
+                vertical: AppConstants.spacingXs,
+              ),
+              child: Text(
+                chipLabel,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: isLive ? colors.success : colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

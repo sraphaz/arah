@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/constants.dart';
 import '../theme/app_design_tokens.dart';
+import '../theme/arah_motion.dart';
 import 'arah_button.dart';
 import 'arah_scaffold.dart';
 
@@ -45,6 +46,7 @@ class ArahJourneyShell extends StatelessWidget {
     final clampedStep = currentStep.clamp(0, safeTotal - 1);
     final progress = (clampedStep + 1) / safeTotal;
     final showBack = onBack != null && clampedStep > 0;
+    final motionDuration = ArahMotion.resolve(context, ArahMotion.normal);
 
     return ArahScaffold(
       showWatermark: false,
@@ -100,11 +102,18 @@ class ArahJourneyShell extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 4,
-                  backgroundColor: colors.surfaceContainer,
-                  color: colors.primary,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: progress),
+                  duration: motionDuration,
+                  curve: ArahMotion.emphasized,
+                  builder: (context, value, _) {
+                    return LinearProgressIndicator(
+                      value: value,
+                      minHeight: 4,
+                      backgroundColor: colors.surfaceContainer,
+                      color: colors.primary,
+                    );
+                  },
                 ),
               ),
             ),
@@ -116,7 +125,27 @@ class ArahJourneyShell extends StatelessWidget {
                   AppConstants.spacingMd + 2,
                   AppConstants.spacingMd,
                 ),
-                child: child,
+                child: AnimatedSwitcher(
+                  duration: motionDuration,
+                  switchInCurve: ArahMotion.emphasized,
+                  switchOutCurve: ArahMotion.emphasized,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.03, 0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: KeyedSubtree(
+                    key: ValueKey<int>(clampedStep),
+                    child: child,
+                  ),
+                ),
               ),
             ),
             DecoratedBox(

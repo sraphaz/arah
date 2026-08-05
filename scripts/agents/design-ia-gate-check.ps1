@@ -90,6 +90,16 @@ Assert-FileMatches `
     -Pattern '(?m)^\s*static\s+const\s+Color\s+primary\s*=\s*Color\(0xFFA6D6B9\)' `
     -Hint 'primária premium floresta (canopy) como Color primary ativa'
 
+Assert-FileMatches `
+    -RelPath "$AppRoot/lib/core/theme/arah_motion.dart" `
+    -Pattern '(?m)^\s*static\s+const\s+Curve\s+emphasized\s*=\s*Cubic\(0\.16,\s*1\.0,\s*0\.3,\s*1\.0\)' `
+    -Hint 'easing canônico cubic-bezier(0.16,1,0.3,1)'
+
+Assert-FileMatches `
+    -RelPath "$AppRoot/lib/core/theme/arah_motion.dart" `
+    -Pattern '(?m)^\s*static\s+const\s+double\s+pressScale\s*=\s*0\.975' `
+    -Hint 'press scale 0.975 do UI kit'
+
 if ($failures.Count -gt 0) {
     Write-Warning "design-ia-gate-check: $($failures.Count) falha(s) de contrato de IA:"
     $failures | ForEach-Object { Write-Warning "  $_" }

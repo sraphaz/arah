@@ -18,7 +18,9 @@ import 'features/membership/presentation/screens/membership_screen.dart';
 import 'features/membership/presentation/screens/residency_journey_screen.dart';
 import 'features/marketplace/presentation/screens/marketplace_screen.dart';
 import 'features/marketplace/presentation/screens/checkout_journey_screen.dart';
+import 'features/marketplace/presentation/screens/add_product_journey_screen.dart';
 import 'features/chat/presentation/screens/chat_list_screen.dart';
+import 'features/services/presentation/screens/coming_soon_journey_screen.dart';
 import 'features/chat/presentation/screens/chat_conversation_screen.dart';
 import 'features/moderation/presentation/screens/moderation_screen.dart';
 import 'features/governance/presentation/screens/governance_screen.dart';
@@ -130,6 +132,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       _fadeRoute(
         path: '/checkout-journey',
         builder: (_, __) => const CheckoutJourneyScreen(),
+      ),
+      _fadeRoute(
+        path: '/add-product-journey',
+        builder: (_, state) {
+          final itemId = state.uri.queryParameters['itemId'];
+          return AddProductJourneyScreen(itemId: itemId);
+        },
+      ),
+      _fadeRoute(
+        path: '/coming-soon',
+        builder: (_, state) {
+          final title = state.uri.queryParameters['title'] ?? '';
+          final phase = state.uri.queryParameters['phase'];
+          return ComingSoonJourneyScreen(title: title, phase: phase);
+        },
       ),
       _fadeRoute(
         path: '/chat',

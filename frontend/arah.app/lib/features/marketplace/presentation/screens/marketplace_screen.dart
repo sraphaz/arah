@@ -516,6 +516,113 @@ class _MyStoreTabState extends State<_MyStoreTab> {
               ],
             ),
           ),
+          const SizedBox(height: AppConstants.spacingMd),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.myProductsTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () => context.push('/add-product-journey'),
+                icon: const Icon(Icons.add, size: 18),
+                label: Text(l10n.addProduct),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppConstants.spacingSm),
+          if (widget.state.isProductsLoading)
+            const Padding(
+              padding: EdgeInsets.all(AppConstants.spacingLg),
+              child: Center(child: ArahLoadingIndicator()),
+            )
+          else if (widget.state.myProducts.isEmpty)
+            ArahCard(
+              child: Text(
+                l10n.myProductsEmpty,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+              ),
+            )
+          else
+            for (final product in widget.state.myProducts)
+              ArahCard(
+                margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
+                onTap: () async {
+                  await context.push('/add-product-journey?itemId=${product.id}');
+                  if (context.mounted) {
+                    await widget.notifier.loadMyProducts();
+                  }
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.inventory_2_outlined, color: colors.primary),
+                    const SizedBox(width: AppConstants.spacingMd),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.title,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          Text(
+                            product.priceLabel,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: colors.onSurfaceVariant,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: l10n.archiveProduct,
+                      onPressed: () async {
+                        final ok = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: Text(l10n.archiveProduct),
+                            content: Text(l10n.archiveProductConfirm),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, false),
+                                child: Text(l10n.cancel),
+                              ),
+                              FilledButton(
+                                onPressed: () => Navigator.pop(ctx, true),
+                                child: Text(l10n.archive),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (ok != true || !context.mounted) return;
+                        try {
+                          await widget.notifier.archiveProduct(product.id);
+                          if (context.mounted) {
+                            showSuccessSnackBar(context, l10n.productArchived);
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            showErrorSnackBar(
+                              context,
+                              e is ApiException
+                                  ? e.userMessage
+                                  : l10n.errorSaveProduct,
+                            );
+                          }
+                        }
+                      },
+                      icon: Icon(
+                        Icons.archive_outlined,
+                        color: colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
         ],
         const SizedBox(height: AppConstants.spacingMd),
         Text(

@@ -1357,4 +1357,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storePixKeyHint => 'The store PIX key is configured in the territory payment gateway. Here you only enable or disable accepting payments.';
+
+  @override
+  String get myProductsTitle => 'My products';
+
+  @override
+  String get myProductsEmpty => 'No products yet. Tap Add to create the first one.';
+
+  @override
+  String get addProduct => 'Add';
+
+  @override
+  String get addProductTitle => 'New product';
+
+  @override
+  String get editProductTitle => 'Edit product';
+
+  @override
+  String get addProductDetailsTitle => 'Details';
+
+  @override
+  String get addProductDescriptionTitle => 'Description';
+
+  @override
+  String get addProductDescriptionHint => 'Describe what it is, how to use it, and local conditions.';
+
+  @override
+  String get addProductReviewTitle => 'Review';
+
+  @override
+  String get productTitleLabel => 'Product name';
+
+  @override
+  String get productCategoryLabel => 'Category';
+
+  @override
+  String get productPricingType => 'Pricing';
+
+  @override
+  String get productPriceLabel => 'Amount';
+
+  @override
+  String get pricingFixed => 'Fixed';
+
+  @override
+  String get pricingNegotiable => 'Negotiable';
+
+  @override
+  String get pricingFree => 'Free';
+
+  @override
+  String get publishProduct => 'Publish';
+
+  @override
+  String get productCreated => 'Product published';
+
+  @override
+  String get productUpdated => 'Product updated';
+
+  @override
+  String get productArchived => 'Product archived';
+
+  @override
+  String get archiveProduct => 'Archive product';
+
+  @override
+  String get archiveProductConfirm => 'The product will no longer appear in Marketplace. You can create another later.';
+
+  @override
+  String get errorSaveProduct => 'Could not save product.';
+
+  @override
+  String get comingSoonJourneyTitle => 'Coming soon';
+
+  @override
+  String get comingSoonVisionTitle => 'On the territory horizon';
+
+  @override
+  String comingSoonVisionMessage(String service) {
+    return '$service will be part of local life — we are designing it carefully.';
+  }
+
+  @override
+  String get comingSoonNotifyTitle => 'Follow along';
+
+  @override
+  String get comingSoonNotifyMessage => 'When it goes live, you will find it here in the Services hub. No rush — collective care first.';
+
+  @override
+  String get comingSoonUnderstood => 'Got it';
 }

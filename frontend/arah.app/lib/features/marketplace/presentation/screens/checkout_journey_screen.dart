@@ -10,6 +10,7 @@ import '../../../../core/theme/arah_motion.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_card.dart';
 import '../../../../core/widgets/arah_journey_shell.dart';
+import '../../../../core/widgets/arah_pix_pay.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/marketplace_provider.dart';
 
@@ -32,7 +33,6 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
   _Fulfillment _fulfillment = _Fulfillment.pickup;
   /// Pedidos já criados no checkout — retry de PIX não recria pedido.
   List<_PendingPixOrder> _pendingOrders = const [];
-  String? _pixCode;
   String? _orderTotalLabel;
 
   void _close() {
@@ -117,14 +117,8 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
         }
 
         if (!mounted) return;
-        final codes = working
-            .map((o) => o.pixCode)
-            .whereType<String>()
-            .where((c) => c.isNotEmpty)
-            .toList();
         setState(() {
           _pendingOrders = List.unmodifiable(working);
-          _pixCode = codes.join('\n\n');
           _orderTotalLabel = working.length == 1
               ? working.first.totalLabel
               : '${working.length} ${l10n.checkoutItemsCount}';
@@ -171,9 +165,14 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
   }
 
   Future<void> _copyPix() async {
-    final code = _pixCode;
-    if (code == null || code.isEmpty) return;
-    await Clipboard.setData(ClipboardData(text: code));
+    final codes = _pendingOrders
+        .map((o) => o.pixCode)
+        .whereType<String>()
+        .where((c) => c.isNotEmpty)
+        .toList();
+    if (codes.isEmpty) return;
+    // Clipboard pode juntar vários códigos; cada QR permanece com um payload.
+    await Clipboard.setData(ClipboardData(text: codes.join('\n\n')));
     ArahMotion.selectionTap();
     if (!mounted) return;
     showSuccessSnackBar(context, AppLocalizations.of(context)!.pixCodeCopied);
@@ -271,7 +270,7 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
       default:
         return _PixSuccessStep(
           l10n: l10n,
-          pixCode: _pixCode,
+          orders: _pendingOrders,
           totalLabel: _orderTotalLabel,
           onConfirmPaid: _submitting ? null : _confirmPaid,
         );
@@ -527,13 +526,13 @@ class _ReviewRow extends StatelessWidget {
 class _PixSuccessStep extends StatelessWidget {
   const _PixSuccessStep({
     required this.l10n,
-    required this.pixCode,
+    required this.orders,
     required this.totalLabel,
     required this.onConfirmPaid,
   });
 
   final AppLocalizations l10n;
-  final String? pixCode;
+  final List<_PendingPixOrder> orders;
   final String? totalLabel;
   final VoidCallback? onConfirmPaid;
 
@@ -543,16 +542,6 @@ class _PixSuccessStep extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Container(
-          width: 88,
-          height: 88,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: colors.success.withValues(alpha: 0.12),
-          ),
-          child: Icon(Icons.qr_code_2, size: 48, color: colors.success),
-        ),
-        const SizedBox(height: AppConstants.spacingLg),
         Text(
           l10n.checkoutSuccessTitle,
           textAlign: TextAlign.center,
@@ -577,24 +566,24 @@ class _PixSuccessStep extends StatelessWidget {
           ),
         ],
         const SizedBox(height: AppConstants.spacingLg),
-        ArahCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                l10n.pixPayBanner,
-                style: theme.textTheme.titleSmall,
-              ),
-              const SizedBox(height: AppConstants.spacingSm),
-              SelectableText(
-                pixCode?.isNotEmpty == true ? pixCode! : l10n.pixCodeUnavailable,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  fontFamily: AppDesignTokens.fontFamilyBody,
-                ),
-              ),
-            ],
+        for (var i = 0; i < orders.length; i++) ...[
+          ArahPixPay(
+            bannerLabel: orders.length > 1
+                ? '${l10n.pixPayBanner} (${i + 1}/${orders.length})'
+                : l10n.pixPayBanner,
+            pixCode: orders[i].pixCode,
+            unavailableLabel: l10n.pixCodeUnavailable,
+            amountLabel: orders.length > 1 ? orders[i].totalLabel : null,
           ),
-        ),
+          if (i < orders.length - 1)
+            const SizedBox(height: AppConstants.spacingMd),
+        ],
+        if (orders.isEmpty)
+          ArahPixPay(
+            bannerLabel: l10n.pixPayBanner,
+            pixCode: null,
+            unavailableLabel: l10n.pixCodeUnavailable,
+          ),
         const SizedBox(height: AppConstants.spacingMd),
         TextButton(
           onPressed: onConfirmPaid,

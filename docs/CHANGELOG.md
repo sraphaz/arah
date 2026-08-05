@@ -649,4 +649,4 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-**Última Atualização**: 2026-01-21
+**Última Atualização**: 2026-08-05

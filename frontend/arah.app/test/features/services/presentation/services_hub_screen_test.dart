@@ -18,6 +18,14 @@ void main() {
 
     expect(find.text('Serviços'), findsWidgets);
     expect(find.text('Marketplace'), findsOneWidget);
-    expect(find.textContaining('Em breve'), findsWidgets);
+
+    // Itens "Em breve" ficam abaixo do fold no ListView lazy — rola até achar.
+    await tester.scrollUntilVisible(
+      find.text('F17'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Em breve'), findsWidgets);
+    expect(find.text('F17'), findsOneWidget);
   });
 }

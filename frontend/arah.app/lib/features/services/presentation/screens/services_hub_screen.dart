@@ -295,11 +295,7 @@ class _ServiceTile extends StatelessWidget {
     final colors = context.appColors;
     final theme = Theme.of(context);
     final isLive = item.isLive;
-    final chipLabel = isLive
-        ? statusLiveLabel
-        : item.phase != null
-            ? '$statusSoonLabel · ${item.phase}'
-            : statusSoonLabel;
+    final chipLabel = isLive ? statusLiveLabel : statusSoonLabel;
     final iconColor = isLive
         ? colors.primary
         : colors.onSurfaceVariant.withValues(alpha: 0.72);
@@ -309,14 +305,14 @@ class _ServiceTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
       padding: const EdgeInsets.symmetric(
         horizontal: AppConstants.spacingMd,
-        vertical: AppConstants.spacingMd - 2,
+        vertical: AppConstants.spacingMd,
       ),
       onTap: onTap,
       child: Row(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: AppConstants.avatarSizeSm,
+            height: AppConstants.avatarSizeSm,
             decoration: BoxDecoration(
               color: isLive
                   ? colors.primary.withValues(alpha: 0.12)
@@ -335,7 +331,7 @@ class _ServiceTile extends StatelessWidget {
                   style: theme.textTheme.titleSmall?.copyWith(color: titleColor),
                 ),
                 if (!isLive && item.phase != null) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppConstants.spacingXs),
                   Text(
                     item.phase!,
                     style: theme.textTheme.bodySmall?.copyWith(

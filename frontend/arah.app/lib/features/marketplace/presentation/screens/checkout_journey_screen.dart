@@ -30,9 +30,9 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
   int _step = 0;
   bool _submitting = false;
   _Fulfillment _fulfillment = _Fulfillment.pickup;
-  String? _orderId;
+  /// Pedidos já criados no checkout — retry de PIX não recria pedido.
+  List<_PendingPixOrder> _pendingOrders = const [];
   String? _pixCode;
-  String? _gatewayPaymentId;
   String? _orderTotalLabel;
 
   void _close() {
@@ -78,28 +78,56 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
     if (_step == 2) {
       setState(() => _submitting = true);
       try {
-        final checkout = await notifier.checkout(
-          message: _fulfillment == _Fulfillment.pickup
-              ? l10n.checkoutFulfillmentPickup
-              : l10n.checkoutFulfillmentDelivery,
-        );
-        final orders = checkout['orders'];
-        if (orders is! List || orders.isEmpty) {
-          throw ApiException(l10n.errorCheckout);
+        var pending = _pendingOrders;
+        if (pending.isEmpty) {
+          final checkout = await notifier.checkout(
+            message: _fulfillment == _Fulfillment.pickup
+                ? l10n.checkoutFulfillmentPickup
+                : l10n.checkoutFulfillmentDelivery,
+          );
+          pending = _parseCheckoutOrders(checkout, l10n);
+          if (!mounted) return;
+          setState(() => _pendingOrders = pending);
         }
-        final first = orders.first;
-        if (first is! Map) throw ApiException(l10n.errorCheckout);
-        final orderId = first['id']?.toString();
-        if (orderId == null || orderId.isEmpty) {
-          throw ApiException(l10n.errorCheckout);
+
+        var working = List<_PendingPixOrder>.from(pending);
+        for (var i = 0; i < working.length; i++) {
+          final order = working[i];
+          if (order.pixCode != null &&
+              order.pixCode!.isNotEmpty &&
+              order.gatewayPaymentId != null &&
+              order.gatewayPaymentId!.isNotEmpty) {
+            continue;
+          }
+          final pay = await notifier.payWithPix(order.orderId);
+          final pixCode = pay['pixCopyPasteCode']?.toString();
+          final gatewayId = pay['gatewayPaymentId']?.toString();
+          if (pixCode == null ||
+              pixCode.isEmpty ||
+              gatewayId == null ||
+              gatewayId.isEmpty) {
+            throw ApiException(l10n.pixCodeUnavailable);
+          }
+          working[i] = order.copyWith(
+            pixCode: pixCode,
+            gatewayPaymentId: gatewayId,
+          );
+          if (!mounted) return;
+          setState(() => _pendingOrders = List.unmodifiable(working));
         }
-        final pay = await notifier.payWithPix(orderId);
+
         if (!mounted) return;
+        final codes = working
+            .map((o) => o.pixCode)
+            .whereType<String>()
+            .where((c) => c.isNotEmpty)
+            .toList();
         setState(() {
-          _orderId = orderId;
-          _pixCode = pay['pixCopyPasteCode']?.toString();
-          _gatewayPaymentId = pay['gatewayPaymentId']?.toString();
-          _orderTotalLabel = _formatMoney(first['total']);
+          _pendingOrders = List.unmodifiable(working);
+          _pixCode = codes.join('\n\n');
+          _orderTotalLabel = working.length == 1
+              ? working.first.totalLabel
+              : '${working.length} ${l10n.checkoutItemsCount}';
           _submitting = false;
           _step = 3;
         });
@@ -117,6 +145,31 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
     _close();
   }
 
+  List<_PendingPixOrder> _parseCheckoutOrders(
+    Map<String, dynamic> checkout,
+    AppLocalizations l10n,
+  ) {
+    final orders = checkout['orders'];
+    if (orders is! List || orders.isEmpty) {
+      throw ApiException(l10n.errorCheckout);
+    }
+    final parsed = <_PendingPixOrder>[];
+    for (final raw in orders) {
+      if (raw is! Map) throw ApiException(l10n.errorCheckout);
+      final orderId = raw['id']?.toString();
+      if (orderId == null || orderId.isEmpty) {
+        throw ApiException(l10n.errorCheckout);
+      }
+      parsed.add(
+        _PendingPixOrder(
+          orderId: orderId,
+          totalLabel: _formatMoney(raw['total']),
+        ),
+      );
+    }
+    return parsed;
+  }
+
   Future<void> _copyPix() async {
     final code = _pixCode;
     if (code == null || code.isEmpty) return;
@@ -128,15 +181,26 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
 
   Future<void> _confirmPaid() async {
     final l10n = AppLocalizations.of(context)!;
-    final orderId = _orderId;
-    final gatewayId = _gatewayPaymentId;
-    if (orderId == null || gatewayId == null) return;
+    final pending = _pendingOrders;
+    final incomplete = pending
+        .where(
+          (o) =>
+              o.gatewayPaymentId == null || o.gatewayPaymentId!.isEmpty,
+        )
+        .toList();
+    if (pending.isEmpty || incomplete.isNotEmpty) {
+      showErrorSnackBar(context, l10n.pixPaymentPendingHint);
+      return;
+    }
     setState(() => _submitting = true);
     try {
-      await ref.read(marketplaceProvider.notifier).confirmPayment(
-            transactionId: orderId,
-            gatewayPaymentId: gatewayId,
-          );
+      final notifier = ref.read(marketplaceProvider.notifier);
+      for (final order in pending) {
+        await notifier.confirmPayment(
+          transactionId: order.orderId,
+          gatewayPaymentId: order.gatewayPaymentId!,
+        );
+      }
       if (!mounted) return;
       setState(() => _submitting = false);
       showSuccessSnackBar(context, l10n.pixPaymentConfirmed);
@@ -212,6 +276,32 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
           onConfirmPaid: _submitting ? null : _confirmPaid,
         );
     }
+  }
+}
+
+class _PendingPixOrder {
+  const _PendingPixOrder({
+    required this.orderId,
+    required this.totalLabel,
+    this.pixCode,
+    this.gatewayPaymentId,
+  });
+
+  final String orderId;
+  final String totalLabel;
+  final String? pixCode;
+  final String? gatewayPaymentId;
+
+  _PendingPixOrder copyWith({
+    String? pixCode,
+    String? gatewayPaymentId,
+  }) {
+    return _PendingPixOrder(
+      orderId: orderId,
+      totalLabel: totalLabel,
+      pixCode: pixCode ?? this.pixCode,
+      gatewayPaymentId: gatewayPaymentId ?? this.gatewayPaymentId,
+    );
   }
 }
 
@@ -410,7 +500,7 @@ class _ReviewRow extends StatelessWidget {
             : null,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingMd - 2),
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingMd),
         child: Row(
           children: [
             Expanded(

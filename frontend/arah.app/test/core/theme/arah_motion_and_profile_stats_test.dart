@@ -15,7 +15,7 @@ void main() {
   });
 
   group('MeProfile', () {
-    test('fromJson maps postsCreated and interests length', () {
+    test('fromJson maps postsCreated; interestsCount only from explicit fields', () {
       final profile = MeProfile.fromJson({
         'id': 'u1',
         'displayName': 'Ana',
@@ -24,7 +24,19 @@ void main() {
         'stats': {'postsCreated': 4},
       });
       expect(profile.postsCount, 4);
-      expect(profile.interestsCount, 2);
+      expect(profile.interestsCount, isNull);
+      expect(profile.hasStatCounts, isTrue);
+    });
+
+    test('fromJson keeps interestsCount null when interests empty and no stats', () {
+      final profile = MeProfile.fromJson({
+        'id': 'u1',
+        'displayName': 'Ana',
+        'createdAtUtc': '2026-01-01T00:00:00Z',
+        'interests': <String>[],
+      });
+      expect(profile.interestsCount, isNull);
+      expect(profile.hasStatCounts, isFalse);
     });
 
     test('mergeStatsJson fills posts from API stats endpoint', () {

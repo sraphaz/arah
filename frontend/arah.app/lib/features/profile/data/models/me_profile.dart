@@ -100,8 +100,7 @@ class MeProfile {
       interestsCount: _readInt(json, statsMap, const [
         'interestsCount',
         'interestsTotal',
-      ]) ??
-          interests.length,
+      ]),
     );
   }
 

@@ -54,7 +54,10 @@ class MeProfileRepository {
     if (connections is int) {
       next = next.copyWith(connectionsCount: connections);
     }
-    if (next.interestsCount == null) {
+    // Só preenche interestsCount quando já há stats remotas — evita
+    // hasStatCounts=true só por lista vazia (layout com dashes em vez de papel/presença).
+    if (next.interestsCount == null &&
+        (next.postsCount != null || next.connectionsCount != null)) {
       next = next.copyWith(interestsCount: next.interests.length);
     }
     return next;

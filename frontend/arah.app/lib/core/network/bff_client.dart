@@ -188,6 +188,26 @@ class BffClient {
     }
   }
 
+  /// PATCH jornada (ex: marketplace-v1/items/{id}).
+  Future<BffResponse> patch(
+    String journey,
+    String pathAndQuery, {
+    Map<String, dynamic>? body,
+    String? sessionIdOverride,
+  }) async {
+    final path = '$journey/$pathAndQuery';
+    try {
+      final response = await _dio.patch<dynamic>(
+        path,
+        data: body,
+        options: Options(headers: _headersFor(sessionIdOverride: sessionIdOverride)),
+      );
+      return _fromResponse(response);
+    } on DioException catch (e, stackTrace) {
+      throw _toApiException(e, stackTrace);
+    }
+  }
+
   /// DELETE jornada (ex: me/interests/{tag}).
   Future<BffResponse> delete(
     String journey,

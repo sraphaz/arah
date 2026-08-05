@@ -255,9 +255,15 @@ public static class BffJourneyRegistry
                 new("stores", "GET", "Lista lojas. Query: territoryId."),
                 new("stores/me", "GET", "Minhas lojas."),
                 new("stores", "POST", "Cria loja. Body conforme API."),
-                new("items", "GET", "Lista itens. Query: territoryId, storeId."),
+                new("stores/{id}/payments/enable", "POST", "Liga/desliga pagamentos da loja."),
+                new("items", "GET", "Lista itens. Query: territoryId."),
+                new("items", "POST", "Cria item (produto/serviço)."),
                 new("items/paged", "GET", "Lista itens paginada."),
-                new("items/{id}", "GET", "Detalhe do item por Id.")
+                new("items/{id}", "GET", "Detalhe do item por Id."),
+                new("items/{id}", "PATCH", "Atualiza item."),
+                new("items/{id}/archive", "POST", "Arquiva item."),
+                new("transactions/{id}/pay", "POST", "Inicia pagamento PIX do pedido."),
+                new("transactions/{id}/confirm-payment", "POST", "Confirma pagamento PIX.")
             },
             [Moderation] = new List<JourneyEndpoint>
             {

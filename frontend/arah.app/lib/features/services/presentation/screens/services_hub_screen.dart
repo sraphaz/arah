@@ -64,9 +64,12 @@ class ServicesHubScreen extends StatelessWidget {
       context.push(route);
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.comingSoon)),
-    );
+    final params = <String, String>{
+      'title': item.title,
+      if (item.phase != null) 'phase': item.phase!,
+    };
+    final query = Uri(queryParameters: params).query;
+    context.push('/coming-soon?$query');
   }
 
   List<_ServiceCategory> _buildCategories(AppLocalizations l10n) {

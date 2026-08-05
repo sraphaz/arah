@@ -518,5 +518,39 @@
   "storePaymentsEnabledHint": "Customers can pay this store's orders via PIX.",
   "storePaymentsDisabledHint": "Payments off — turn on to receive via PIX.",
   "storePixKeyLabel": "PIX key",
-  "storePixKeyHint": "The store PIX key is configured in the territory payment gateway. Here you only enable or disable accepting payments."
+  "storePixKeyHint": "The store PIX key is configured in the territory payment gateway. Here you only enable or disable accepting payments.",
+  "myProductsTitle": "My products",
+  "myProductsEmpty": "No products yet. Tap Add to create the first one.",
+  "addProduct": "Add",
+  "addProductTitle": "New product",
+  "editProductTitle": "Edit product",
+  "addProductDetailsTitle": "Details",
+  "addProductDescriptionTitle": "Description",
+  "addProductDescriptionHint": "Describe what it is, how to use it, and local conditions.",
+  "addProductReviewTitle": "Review",
+  "productTitleLabel": "Product name",
+  "productCategoryLabel": "Category",
+  "productPricingType": "Pricing",
+  "productPriceLabel": "Amount",
+  "pricingFixed": "Fixed",
+  "pricingNegotiable": "Negotiable",
+  "pricingFree": "Free",
+  "publishProduct": "Publish",
+  "productCreated": "Product published",
+  "productUpdated": "Product updated",
+  "productArchived": "Product archived",
+  "archiveProduct": "Archive product",
+  "archiveProductConfirm": "The product will no longer appear in Marketplace. You can create another later.",
+  "errorSaveProduct": "Could not save product.",
+  "comingSoonJourneyTitle": "Coming soon",
+  "comingSoonVisionTitle": "On the territory horizon",
+  "comingSoonVisionMessage": "{service} will be part of local life — we are designing it carefully.",
+  "@comingSoonVisionMessage": {
+    "placeholders": {
+      "service": {"type": "String"}
+    }
+  },
+  "comingSoonNotifyTitle": "Follow along",
+  "comingSoonNotifyMessage": "When it goes live, you will find it here in the Services hub. No rush — collective care first.",
+  "comingSoonUnderstood": "Got it"
 }

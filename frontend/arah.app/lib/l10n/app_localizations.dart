@@ -2734,6 +2734,180 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.'**
   String get storePixKeyHint;
+
+  /// No description provided for @myProductsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meus produtos'**
+  String get myProductsTitle;
+
+  /// No description provided for @myProductsEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum produto publicado. Toque em Adicionar para criar o primeiro.'**
+  String get myProductsEmpty;
+
+  /// No description provided for @addProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar'**
+  String get addProduct;
+
+  /// No description provided for @addProductTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo produto'**
+  String get addProductTitle;
+
+  /// No description provided for @editProductTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar produto'**
+  String get editProductTitle;
+
+  /// No description provided for @addProductDetailsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Detalhes'**
+  String get addProductDetailsTitle;
+
+  /// No description provided for @addProductDescriptionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição'**
+  String get addProductDescriptionTitle;
+
+  /// No description provided for @addProductDescriptionHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conte o que é, como usar e condições do território.'**
+  String get addProductDescriptionHint;
+
+  /// No description provided for @addProductReviewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisão'**
+  String get addProductReviewTitle;
+
+  /// No description provided for @productTitleLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do produto'**
+  String get productTitleLabel;
+
+  /// No description provided for @productCategoryLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Categoria'**
+  String get productCategoryLabel;
+
+  /// No description provided for @productPricingType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço'**
+  String get productPricingType;
+
+  /// No description provided for @productPriceLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor'**
+  String get productPriceLabel;
+
+  /// No description provided for @pricingFixed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fixo'**
+  String get pricingFixed;
+
+  /// No description provided for @pricingNegotiable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Negociável'**
+  String get pricingNegotiable;
+
+  /// No description provided for @pricingFree.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gratuito'**
+  String get pricingFree;
+
+  /// No description provided for @publishProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicar'**
+  String get publishProduct;
+
+  /// No description provided for @productCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produto publicado'**
+  String get productCreated;
+
+  /// No description provided for @productUpdated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produto atualizado'**
+  String get productUpdated;
+
+  /// No description provided for @productArchived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produto arquivado'**
+  String get productArchived;
+
+  /// No description provided for @archiveProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivar produto'**
+  String get archiveProduct;
+
+  /// No description provided for @archiveProductConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'O produto deixa de aparecer no Mercado. Você pode criar outro depois.'**
+  String get archiveProductConfirm;
+
+  /// No description provided for @errorSaveProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao salvar produto.'**
+  String get errorSaveProduct;
+
+  /// No description provided for @comingSoonJourneyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em breve'**
+  String get comingSoonJourneyTitle;
+
+  /// No description provided for @comingSoonVisionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'No horizonte do território'**
+  String get comingSoonVisionTitle;
+
+  /// No description provided for @comingSoonVisionMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'{service} fará parte da vida local — estamos desenhando com calma.'**
+  String comingSoonVisionMessage(String service);
+
+  /// No description provided for @comingSoonNotifyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acompanhe o progresso'**
+  String get comingSoonNotifyTitle;
+
+  /// No description provided for @comingSoonNotifyMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quando estiver no ar, você encontra aqui no hub Serviços. Sem pressa, com cuidado coletivo.'**
+  String get comingSoonNotifyMessage;
+
+  /// No description provided for @comingSoonUnderstood.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entendi'**
+  String get comingSoonUnderstood;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

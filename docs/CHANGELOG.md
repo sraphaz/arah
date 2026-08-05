@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Onda G design app (produtos, QR PIX, Em breve) (2026-08-05)
+
+- **APP-DS-15**: CRUD de produtos na Minha loja (`/add-product-journey`) via `items` API; listar/editar/arquivar
+- **PIX**: `ArahPixPay` com QR scannable a partir do `pixCopyPasteCode` (qr_flutter)
+- **Hub Serviços**: tiles Em breve abrem stub `ArahJourneyShell` (`/coming-soon`)
+- BFF registry: documenta POST/PATCH items, pay/confirm, payments/enable
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
 ### Alterado — Onda F design app (checkout PIX + Mercado/Serviços) (2026-08-05)
 
 - **APP-DS-14**: jornada checkout PIX (`/checkout-journey`) com `ArahJourneyShell` — sacola → recebimento → pagamento → sucesso; wire `pay` + `confirm-payment`

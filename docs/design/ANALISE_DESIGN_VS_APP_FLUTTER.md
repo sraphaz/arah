@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 🚧 Alinhamento avançado (Onda F 2026-08-05)  
-**Próximo passo**: CRUD produto na loja, QR PIX real, jornadas Em breve com stub JourneyShell
+**Status**: 🚧 Alinhamento avançado (Onda G 2026-08-05)  
+**Próximo passo**: upload de foto no produto, payout/saldo vendedor, media rica no feed
 
 ---
 
@@ -196,8 +196,8 @@ O UI kit já resolve descoberta de roadmap **sem implementar backend**. O app at
 | Confirmar residência (GPS + comprovante + pending) | 🟡 botões em Membership; **sem** upload/pending/journey |
 | Feed / publicar / comentar | ✅ básico; gaps mídia rica / report |
 | Eventos | ✅ listar/criar/participar |
-| Mercado & checkout PIX | ✅ jornada PIX (`/checkout-journey`) + pay/confirm |
-| Minha loja / payout | 🟡 toggle pagamentos + hint PIX; CRUD produto/payout fino pendente |
+| Mercado & checkout PIX | ✅ jornada PIX + QR scannable (`ArahPixPay`) |
+| Minha loja / payout | 🟡 CRUD produtos + toggle pagamentos; payout/saldo fino pendente |
 | Governança | ✅ |
 | Curadoria | 🟡 API lista; UX rasa |
 | Jornadas multi-passo (reserva, babá, carteira…) | ❌ framework inexistente |
@@ -226,6 +226,7 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | ✅ empty/error centrados; motion (curve/press/page fade/JourneyShell) global | APP-DS-07 |
 | **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | ✅ `design-ia-gate-check.ps1` no `run-gates` | APP-DS-02 |
 | **APP-DS-14** | Checkout PIX + polish Mercado/Minha loja + hub Serviços (tiles Em breve) | ✅ jornada 4 passos + payments/enable + ArahCard no hub | APP-DS-07 / backend pay |
+| **APP-DS-15** | CRUD produtos na loja + QR PIX + stub JourneyShell Em breve | ✅ `/add-product-journey`, `ArahPixPay`, `/coming-soon` | APP-DS-14 / items API |
 
 ---
 
@@ -301,6 +302,7 @@ Comparar lado a lado com o Flutter: bottom-nav, top bar, feed card, hub Serviço
 
 ### Changelog deste documento
 
+- **1.6** (2026-08-05): Onda G — APP-DS-15 CRUD produtos, QR PIX, ComingSoon JourneyShell.
 - **1.5** (2026-08-05): Onda F — APP-DS-14 checkout PIX journey, Minha loja payments toggle, hub Serviços ArahCard.
 - **1.4** (2026-08-05): Onda E — APP-DS-12 motion global; stats BFF no perfil.
 - **1.3** (2026-07-23): Onda D — Moderação cards, ProfileStats, comprovante upload, ArahErrorState, design-ia-gate-check.

@@ -10,6 +10,7 @@ import '../../../../core/theme/arah_motion.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_card.dart';
 import '../../../../core/widgets/arah_journey_shell.dart';
+import '../../../../core/widgets/arah_pix_pay.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/marketplace_provider.dart';
 
@@ -543,16 +544,6 @@ class _PixSuccessStep extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Container(
-          width: 88,
-          height: 88,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: colors.success.withValues(alpha: 0.12),
-          ),
-          child: Icon(Icons.qr_code_2, size: 48, color: colors.success),
-        ),
-        const SizedBox(height: AppConstants.spacingLg),
         Text(
           l10n.checkoutSuccessTitle,
           textAlign: TextAlign.center,
@@ -569,31 +560,12 @@ class _PixSuccessStep extends StatelessWidget {
             color: colors.onSurfaceVariant,
           ),
         ),
-        if (totalLabel != null) ...[
-          const SizedBox(height: AppConstants.spacingMd),
-          Text(
-            totalLabel!,
-            style: theme.textTheme.titleMedium?.copyWith(color: colors.primary),
-          ),
-        ],
         const SizedBox(height: AppConstants.spacingLg),
-        ArahCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                l10n.pixPayBanner,
-                style: theme.textTheme.titleSmall,
-              ),
-              const SizedBox(height: AppConstants.spacingSm),
-              SelectableText(
-                pixCode?.isNotEmpty == true ? pixCode! : l10n.pixCodeUnavailable,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  fontFamily: AppDesignTokens.fontFamilyBody,
-                ),
-              ),
-            ],
-          ),
+        ArahPixPay(
+          bannerLabel: l10n.pixPayBanner,
+          pixCode: pixCode,
+          unavailableLabel: l10n.pixCodeUnavailable,
+          amountLabel: totalLabel,
         ),
         const SizedBox(height: AppConstants.spacingMd),
         TextButton(

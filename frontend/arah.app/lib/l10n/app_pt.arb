@@ -518,5 +518,39 @@
   "storePaymentsEnabledHint": "Clientes podem pagar pedidos desta loja via PIX.",
   "storePaymentsDisabledHint": "Pagamentos desativados — ative para receber via PIX.",
   "storePixKeyLabel": "Chave PIX",
-  "storePixKeyHint": "A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos."
+  "storePixKeyHint": "A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.",
+  "myProductsTitle": "Meus produtos",
+  "myProductsEmpty": "Nenhum produto publicado. Toque em Adicionar para criar o primeiro.",
+  "addProduct": "Adicionar",
+  "addProductTitle": "Novo produto",
+  "editProductTitle": "Editar produto",
+  "addProductDetailsTitle": "Detalhes",
+  "addProductDescriptionTitle": "Descrição",
+  "addProductDescriptionHint": "Conte o que é, como usar e condições do território.",
+  "addProductReviewTitle": "Revisão",
+  "productTitleLabel": "Nome do produto",
+  "productCategoryLabel": "Categoria",
+  "productPricingType": "Preço",
+  "productPriceLabel": "Valor",
+  "pricingFixed": "Fixo",
+  "pricingNegotiable": "Negociável",
+  "pricingFree": "Gratuito",
+  "publishProduct": "Publicar",
+  "productCreated": "Produto publicado",
+  "productUpdated": "Produto atualizado",
+  "productArchived": "Produto arquivado",
+  "archiveProduct": "Arquivar produto",
+  "archiveProductConfirm": "O produto deixa de aparecer no Mercado. Você pode criar outro depois.",
+  "errorSaveProduct": "Erro ao salvar produto.",
+  "comingSoonJourneyTitle": "Em breve",
+  "comingSoonVisionTitle": "No horizonte do território",
+  "comingSoonVisionMessage": "{service} fará parte da vida local — estamos desenhando com calma.",
+  "@comingSoonVisionMessage": {
+    "placeholders": {
+      "service": {"type": "String"}
+    }
+  },
+  "comingSoonNotifyTitle": "Acompanhe o progresso",
+  "comingSoonNotifyMessage": "Quando estiver no ar, você encontra aqui no hub Serviços. Sem pressa, com cuidado coletivo.",
+  "comingSoonUnderstood": "Entendi"
 }

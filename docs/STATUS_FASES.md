@@ -1,10 +1,11 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-07-23  
+**Última Atualização**: 2026-08-05  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
 **Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
 **Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
+**Design app**: ✅ Ondas A–E (APP-DS-01..13) — shell, tokens, jornadas, motion; próximo: checkout PIX / polish Mercado  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]

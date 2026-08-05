@@ -92,12 +92,12 @@ Assert-FileMatches `
 
 Assert-FileMatches `
     -RelPath "$AppRoot/lib/core/theme/arah_motion.dart" `
-    -Pattern '(?m)^\s*static\s+const\s+Curve\s+emphasized\s*=\s*Cubic\(0\.16,\s*1\.0,\s*0\.3,\s*1\.0\)' `
+    -Pattern '(?m)^\s*static\s+const\s+Curve\s+emphasized\s*=\s*Cubic\(0\.16,\s*1\.0,\s*0\.3,\s*1\.0\)[ \t]*;[ \t]*$' `
     -Hint 'easing canônico cubic-bezier(0.16,1,0.3,1)'
 
 Assert-FileMatches `
     -RelPath "$AppRoot/lib/core/theme/arah_motion.dart" `
-    -Pattern '(?m)^\s*static\s+const\s+double\s+pressScale\s*=\s*0\.975' `
+    -Pattern '(?m)^\s*static\s+const\s+double\s+pressScale\s*=\s*0\.975[ \t]*;[ \t]*$' `
     -Hint 'press scale 0.975 do UI kit'
 
 if ($failures.Count -gt 0) {

@@ -54,7 +54,7 @@ class MeProfileRepository {
     if (connections is int) {
       next = next.copyWith(connectionsCount: connections);
     }
-    if (next.interestsCount == null && next.interests.isNotEmpty) {
+    if (next.interestsCount == null) {
       next = next.copyWith(interestsCount: next.interests.length);
     }
     return next;

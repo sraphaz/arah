@@ -387,7 +387,7 @@ class _FeedListState extends ConsumerState<_FeedList> {
         return TweenAnimationBuilder<double>(
           key: ValueKey(postId.isNotEmpty ? postId : index),
           tween: Tween(begin: 0, end: 1),
-          duration: ArahMotion.normal,
+          duration: ArahMotion.resolve(context, ArahMotion.normal),
           curve: ArahMotion.emphasized,
           builder: (context, value, child) => Opacity(
             opacity: value,

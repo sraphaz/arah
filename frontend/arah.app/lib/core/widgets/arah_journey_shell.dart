@@ -43,7 +43,7 @@ class ArahJourneyShell extends StatelessWidget {
     final colors = context.appColors;
     final theme = Theme.of(context);
     final safeTotal = totalSteps <= 0 ? 1 : totalSteps;
-    final clampedStep = currentStep.clamp(0, safeTotal - 1);
+    final clampedStep = currentStep.clamp(0, safeTotal - 1).toInt();
     final progress = (clampedStep + 1) / safeTotal;
     final showBack = onBack != null && clampedStep > 0;
     final motionDuration = ArahMotion.resolve(context, ArahMotion.normal);

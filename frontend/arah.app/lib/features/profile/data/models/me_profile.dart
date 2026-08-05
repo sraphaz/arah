@@ -98,10 +98,10 @@ class MeProfile {
         'connections',
       ]),
       interestsCount: _readInt(json, statsMap, const [
-            'interestsCount',
-            'interestsTotal',
-          ]) ??
-          (interests.isEmpty ? null : interests.length),
+        'interestsCount',
+        'interestsTotal',
+      ]) ??
+          interests.length,
     );
   }
 
@@ -116,7 +116,7 @@ class MeProfile {
           _asInt(stats['connections']),
       interestsCount: interestsCount ??
           _asInt(stats['interestsCount']) ??
-          (interests.isEmpty ? null : interests.length),
+          interests.length,
     );
   }
 
@@ -128,9 +128,7 @@ class MeProfile {
     for (final key in keys) {
       final fromRoot = _asInt(json[key]);
       if (fromRoot != null) return fromRoot;
-    }
-    if (stats != null) {
-      for (final key in keys) {
+      if (stats != null) {
         final fromStats = _asInt(stats[key]);
         if (fromStats != null) return fromStats;
       }

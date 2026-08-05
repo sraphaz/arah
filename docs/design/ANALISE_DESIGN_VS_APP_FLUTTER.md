@@ -4,7 +4,7 @@
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
 **Status**: 🚧 Alinhamento avançado (Onda G 2026-08-05)  
-**Próximo passo**: upload de foto no produto, payout/saldo vendedor, media rica no feed
+**Próximo passo**: upload de foto no produto, payout/saldo vendedor, mídia rica no feed
 
 ---
 

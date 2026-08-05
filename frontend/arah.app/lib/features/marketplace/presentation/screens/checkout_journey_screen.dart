@@ -33,7 +33,6 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
   _Fulfillment _fulfillment = _Fulfillment.pickup;
   /// Pedidos já criados no checkout — retry de PIX não recria pedido.
   List<_PendingPixOrder> _pendingOrders = const [];
-  String? _pixCode;
   String? _orderTotalLabel;
 
   void _close() {
@@ -118,14 +117,8 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
         }
 
         if (!mounted) return;
-        final codes = working
-            .map((o) => o.pixCode)
-            .whereType<String>()
-            .where((c) => c.isNotEmpty)
-            .toList();
         setState(() {
           _pendingOrders = List.unmodifiable(working);
-          _pixCode = codes.join('\n\n');
           _orderTotalLabel = working.length == 1
               ? working.first.totalLabel
               : '${working.length} ${l10n.checkoutItemsCount}';
@@ -172,9 +165,14 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
   }
 
   Future<void> _copyPix() async {
-    final code = _pixCode;
-    if (code == null || code.isEmpty) return;
-    await Clipboard.setData(ClipboardData(text: code));
+    final codes = _pendingOrders
+        .map((o) => o.pixCode)
+        .whereType<String>()
+        .where((c) => c.isNotEmpty)
+        .toList();
+    if (codes.isEmpty) return;
+    // Clipboard pode juntar vários códigos; cada QR permanece com um payload.
+    await Clipboard.setData(ClipboardData(text: codes.join('\n\n')));
     ArahMotion.selectionTap();
     if (!mounted) return;
     showSuccessSnackBar(context, AppLocalizations.of(context)!.pixCodeCopied);
@@ -272,7 +270,7 @@ class _CheckoutJourneyScreenState extends ConsumerState<CheckoutJourneyScreen> {
       default:
         return _PixSuccessStep(
           l10n: l10n,
-          pixCode: _pixCode,
+          orders: _pendingOrders,
           totalLabel: _orderTotalLabel,
           onConfirmPaid: _submitting ? null : _confirmPaid,
         );
@@ -528,13 +526,13 @@ class _ReviewRow extends StatelessWidget {
 class _PixSuccessStep extends StatelessWidget {
   const _PixSuccessStep({
     required this.l10n,
-    required this.pixCode,
+    required this.orders,
     required this.totalLabel,
     required this.onConfirmPaid,
   });
 
   final AppLocalizations l10n;
-  final String? pixCode;
+  final List<_PendingPixOrder> orders;
   final String? totalLabel;
   final VoidCallback? onConfirmPaid;
 
@@ -560,13 +558,32 @@ class _PixSuccessStep extends StatelessWidget {
             color: colors.onSurfaceVariant,
           ),
         ),
+        if (totalLabel != null) ...[
+          const SizedBox(height: AppConstants.spacingMd),
+          Text(
+            totalLabel!,
+            style: theme.textTheme.titleMedium?.copyWith(color: colors.primary),
+          ),
+        ],
         const SizedBox(height: AppConstants.spacingLg),
-        ArahPixPay(
-          bannerLabel: l10n.pixPayBanner,
-          pixCode: pixCode,
-          unavailableLabel: l10n.pixCodeUnavailable,
-          amountLabel: totalLabel,
-        ),
+        for (var i = 0; i < orders.length; i++) ...[
+          ArahPixPay(
+            bannerLabel: orders.length > 1
+                ? '${l10n.pixPayBanner} (${i + 1}/${orders.length})'
+                : l10n.pixPayBanner,
+            pixCode: orders[i].pixCode,
+            unavailableLabel: l10n.pixCodeUnavailable,
+            amountLabel: orders.length > 1 ? orders[i].totalLabel : null,
+          ),
+          if (i < orders.length - 1)
+            const SizedBox(height: AppConstants.spacingMd),
+        ],
+        if (orders.isEmpty)
+          ArahPixPay(
+            bannerLabel: l10n.pixPayBanner,
+            pixCode: null,
+            unavailableLabel: l10n.pixCodeUnavailable,
+          ),
         const SizedBox(height: AppConstants.spacingMd),
         TextButton(
           onPressed: onConfirmPaid,

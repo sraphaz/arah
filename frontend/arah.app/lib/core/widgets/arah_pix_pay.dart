@@ -24,8 +24,8 @@ class ArahPixPay extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.appColors;
-    final code = pixCode?.trim();
-    final hasCode = code != null && code.isNotEmpty;
+    final code = pixCode?.trim() ?? '';
+    final hasCode = code.isNotEmpty;
 
     return ArahCard(
       child: Column(

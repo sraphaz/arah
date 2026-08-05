@@ -60,6 +60,8 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
   MarketplaceNotifier(this._ref) : super(const MarketplaceState());
 
   final Ref _ref;
+  int _productsLoadGen = 0;
+  int _storeLoadGen = 0;
 
   MarketplaceRepository get _repo =>
       MarketplaceRepository(client: _ref.read(bffClientProvider));
@@ -82,9 +84,14 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     final territoryId = _ref.read(selectedTerritoryIdValueProvider);
     if (territoryId == null || territoryId.isEmpty) return;
 
+    final gen = ++_storeLoadGen;
     state = state.copyWith(isStoreLoading: true, clearError: true);
     try {
       final store = await _repo.getMyStore(territoryId);
+      if (gen != _storeLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId) {
+        return;
+      }
       state = MarketplaceState(
         items: state.items,
         cart: state.cart,
@@ -97,6 +104,10 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
         await loadMyProducts();
       }
     } catch (e) {
+      if (gen != _storeLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId) {
+        return;
+      }
       state = state.copyWith(error: e, isStoreLoading: false);
     }
   }
@@ -105,15 +116,27 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     final territoryId = _ref.read(selectedTerritoryIdValueProvider);
     final store = state.myStore;
     if (territoryId == null || territoryId.isEmpty || store == null) return;
+    final storeId = store.id;
+    final gen = ++_productsLoadGen;
 
     state = state.copyWith(isProductsLoading: true);
     try {
       final products = await _repo.listStoreProducts(
         territoryId: territoryId,
-        storeId: store.id,
+        storeId: storeId,
       );
+      if (gen != _productsLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId ||
+          state.myStore?.id != storeId) {
+        return;
+      }
       state = state.copyWith(myProducts: products, isProductsLoading: false);
     } catch (e) {
+      if (gen != _productsLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId ||
+          state.myStore?.id != storeId) {
+        return;
+      }
       state = state.copyWith(error: e, isProductsLoading: false);
     }
   }
@@ -199,7 +222,13 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       priceAmount: priceAmount,
       currency: currency,
     );
-    await loadMyProducts();
+    // Atualização local: GET items pode vir do cache BFF (TTL 60s).
+    state = state.copyWith(
+      myProducts: [
+        created,
+        ...state.myProducts.where((p) => p.id != created.id),
+      ],
+    );
     return created;
   }
 
@@ -218,22 +247,31 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       description: description,
       category: category,
       pricingType: pricingType,
-      priceAmount: priceAmount,
+      priceAmount: pricingType == 'Fixed' ? priceAmount : null,
+      includePriceAmount: true,
       currency: currency,
     );
-    await loadMyProducts();
+    state = state.copyWith(
+      myProducts: state.myProducts
+          .map((p) => p.id == updated.id ? updated : p)
+          .toList(),
+    );
     return updated;
   }
 
   Future<void> archiveProduct(String itemId) async {
     await _repo.archiveProduct(itemId);
-    await loadMyProducts();
+    state = state.copyWith(
+      myProducts: state.myProducts.where((p) => p.id != itemId).toList(),
+    );
   }
 
   Future<StoreProduct> getProduct(String itemId) => _repo.getProduct(itemId);
 }
 
+/// Não autoDispose: a jornada de produto e o checkout compartilham o mesmo estado
+/// ao navegar entre rotas irmãs (`/marketplace` ↔ `/add-product-journey`).
 final marketplaceProvider =
-    StateNotifierProvider.autoDispose<MarketplaceNotifier, MarketplaceState>((ref) {
+    StateNotifierProvider<MarketplaceNotifier, MarketplaceState>((ref) {
   return MarketplaceNotifier(ref);
 });

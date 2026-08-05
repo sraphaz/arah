@@ -224,6 +224,7 @@ class MarketplaceRepository {
     String? category,
     String? pricingType,
     double? priceAmount,
+    bool includePriceAmount = false,
     String? currency,
     String? type,
   }) async {
@@ -232,7 +233,7 @@ class MarketplaceRepository {
       if (description != null) 'description': description,
       if (category != null) 'category': category,
       if (pricingType != null) 'pricingType': pricingType,
-      if (priceAmount != null) 'priceAmount': priceAmount,
+      if (includePriceAmount || priceAmount != null) 'priceAmount': priceAmount,
       if (currency != null) 'currency': currency,
       if (type != null) 'type': type,
     };

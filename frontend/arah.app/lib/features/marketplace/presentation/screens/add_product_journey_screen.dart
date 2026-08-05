@@ -104,7 +104,7 @@ class _AddProductJourneyScreenState
     if (_titleController.text.trim().isEmpty) return false;
     if (_pricingType == 'Fixed') {
       final amount = double.tryParse(_priceController.text.replaceAll(',', '.'));
-      if (amount == null || amount < 0) return false;
+      if (amount == null || amount <= 0) return false;
     }
     return true;
   }

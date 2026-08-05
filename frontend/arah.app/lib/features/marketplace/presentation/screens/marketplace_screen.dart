@@ -526,12 +526,7 @@ class _MyStoreTabState extends State<_MyStoreTab> {
                 ),
               ),
               TextButton.icon(
-                onPressed: () async {
-                  await context.push('/add-product-journey');
-                  if (context.mounted) {
-                    await widget.notifier.loadMyProducts();
-                  }
-                },
+                onPressed: () => context.push('/add-product-journey'),
                 icon: const Icon(Icons.add, size: 18),
                 label: Text(l10n.addProduct),
               ),

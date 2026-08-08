@@ -9,17 +9,20 @@
 **Nota**: Renumerada de Fase 18 para Fase 24 (Onda 5: Conformidade e Soberania). Fase 18 agora é Hospedagem Territorial.
 
 > **Trilha TI (2026-07)**: alertas enriquecidos, confirmação comunitária, mutirões a partir de sinal e memória territorial ganham implementação via **TI-3…TI-6** (World Monitor + revisão humana). Observações/sensores locais desta fase **complementam** (não substituem) sinais externos. Ver [REALINHAMENTO_INTELIGENCIA_TERRITORIAL](./REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · [TI3](./TI3.md)–[TI6](./TI6.md).
+>
+> **Corpos d'água (2026-08)**: rios, córregos, nascentes e fontes são **entidades curáveis do território** (não campos de `Territory`). Fundação documentada em [CORPOS_DAGUA_TERRITORIO](./CORPOS_DAGUA_TERRITORIO.md); implementação canônica na tarefa **24.0** abaixo. Spec draft: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml).
 
 ---
 
 ## 🎯 Objetivo
 
 Implementar sistema completo de **saúde territorial e monitoramento** que:
+- Permite comunidades **cadastrarem e curarem corpos d'água** (rios, nascentes, fontes) como entidades do território
 - Permite comunidades monitorarem a saúde do seu território (água, ar, solo, biodiversidade, resíduos)
-- Facilita observações colaborativas de saúde
+- Facilita observações colaborativas de saúde **vinculadas** a esses recursos hídricos
 - Integra sensores físicos para monitoramento automatizado
 - Calcula indicadores de saúde territorial
-- Organiza ações territoriais (mutirões, plantio, coleta, manutenção)
+- Organiza ações territoriais (mutirões, plantio, coleta, manutenção de mata ciliar / limpeza de rio)
 - **Gamifica atividades territoriais** (integração com Fase 42)
 - **Gera moeda territorial** por atividades (integração com Fase 22)
 
@@ -27,6 +30,8 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 - ✅ **Colaboração Comunitária**: Observações e ações são comunitárias
 - ✅ **Transparência**: Dados de saúde são públicos (ou para moradores)
 - ✅ **Ação Local**: Foco em ações que melhoram o território
+- ✅ **Cuidado da água**: o rio/nascente é entidade viva do mapa comunitário, não abstração
+- ✅ **Territory neutro**: lógica social e curadoria ficam fora da entidade Territory
 - ✅ **Gamificação Harmoniosa**: Atividades geram contribuições e moeda (Fase 42)
 - ✅ **Autonomia**: Comunidades decidem o que monitorar e como agir
 
@@ -36,8 +41,10 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 
 ### Estado Atual
 - ✅ MER prevê estrutura completa (`HEALTH_OBSERVATION`, `TERRITORY_ACTION`, `SENSOR_DEVICE`, etc.)
+- ✅ `TerritoryAsset` / `MapEntity` permitem recursos naturais genéricos (ex.: nascente); **sem tipagem hídrica rica nem geometria de rio**
 - ✅ `HealthService` básico (apenas alertas simples)
 - ✅ `HealthAlert` domain model básico
+- ❌ Não existe entidade de domínio rica para **rios / cursos d'água** (`RIVER` / `WATERCOURSE_DETAILS`)
 - ❌ Não existe sistema completo de observações de saúde
 - ❌ Não existe sistema de sensores
 - ❌ Não existe sistema de indicadores
@@ -45,6 +52,15 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 - ❌ Não existe gamificação de atividades territoriais
 
 ### Requisitos Funcionais
+
+#### 0. Corpos d'água curáveis (fundação)
+- ✅ Cadastro de rio, córrego, nascente, cachoeira, poço, ponto de água potável como **NaturalAsset** (ou evolução tipada de TerritoryAsset)
+- ✅ Geometria: ponto (fonte/nascente) ou polilinha (curso do rio)
+- ✅ Curadoria: sugestão comunitária → validação por Curator → confirmações
+- ✅ Sensibilidade/acesso para nascentes e captações vulneráveis
+- ✅ Vínculo a posts, pins de mapa, observações `WATER` e ações de manutenção
+- ✅ Nunca vendável; nunca embutido em `Territory`
+- 📄 Detalhes: [CORPOS_DAGUA_TERRITORIO](./CORPOS_DAGUA_TERRITORIO.md)
 
 #### 1. Sistema de Observações de Saúde
 - ✅ Criar observação de saúde (água, ar, solo, biodiversidade, resíduos, segurança, mobilidade, bem-estar)
@@ -90,6 +106,45 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 ---
 
 ## 📋 Tarefas Detalhadas
+
+### Semana 0–1: Fundação hídrica (antes das observações)
+
+#### 24.0 Cadastro curável de corpos d'água (NaturalAsset hídrico)
+**Estimativa**: 32 horas (4 dias)  
+**Status**: ❌ Não implementado  
+**Spec**: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml) · [CORPOS_DAGUA_TERRITORIO](./CORPOS_DAGUA_TERRITORIO.md)
+
+**Tarefas**:
+- [ ] Estender MER/`NaturalAsset` (ou tipar `TerritoryAsset`) com tipos hídricos canônicos:
+  - [ ] `RIVER`, `STREAM`, `SPRING`, `WATERFALL`, `POTABLE_WATER` (`WELL` só em `WATER_POINT_DETAILS.water_type`)
+- [ ] Criar `WATERCOURSE_DETAILS` (LineString GeoJSON ≤500 vértices, WGS84, intersecta território; regime; uso; notas)
+- [ ] Alinhar `WATER_POINT_DETAILS` (potabilidade, último teste, sensibilidade)
+- [ ] Fluxo de curadoria **separado por modelo**:
+  - [ ] NaturalAsset (alvo): `PENDING` → `PUBLISHED` (também `HIDDEN`|`REVIEW`)
+  - [ ] TerritoryAsset (ponte): `PENDING` → `VALIDATED`
+  - [ ] WorkItem de curadoria (reusar padrão AssetCuration)
+- [ ] Autorização de leitura para `HIGH`/`RESTRICTED` em list/get/mapa/pins (server-side)
+- [ ] API: criar/listar/obter/atualizar status de corpos d'água por `territoryId` (paginação + bbox)
+- [ ] Referência de conteúdo: `naturalAssetId` em Post/HealthObservation (mesmo territoryId)
+- [ ] Mapa/Flutter via BFF: pin e filtro “água / rios”; omitir sensíveis sem auth
+- [ ] Garantir invariante: Territory permanece sem campos sociais/hídricos; asset nunca vai ao marketplace
+- [ ] Ponte opcional: migrar/alias de TerritoryAssets `natural` existentes (nascentes)
+- [ ] Testes de domínio + API + curadoria + sensibilidade (mapear AC-WA-1…6)
+- [ ] Documentação: glossário, `09_ASSETS`, API assets/mapa
+
+**Arquivos previstos** (orientação — ajustar à Clean Architecture dos módulos Assets/Map/Health):
+- Domínio NaturalAsset / WatercourseDetails / WaterPointDetails (módulo Assets ou Health compartilhado)
+- Application services + repositórios + controllers
+- Contratos BFF + pins Flutter (`MAPA_PINS`)
+
+**Critérios de Sucesso**:
+- ✅ Comunidade cadastra e cura rio/córrego/nascente/fonte no território
+- ✅ Entidade aparece no mapa com tipagem correta (sem vazar HIGH/RESTRICTED)
+- ✅ Pronto para `RelatedNaturalAssetId` / `naturalAssetId` nas observações e posts (24.1+)
+- ✅ Spec `water-bodies-curation` AC-WA-* cobertos ou rastreados
+- ✅ Testes passando
+
+---
 
 ### Semana 1-2: Modelo de Domínio e Observações de Saúde
 
@@ -471,6 +526,7 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 
 | Tarefa | Estimativa | Status | Prioridade |
 |--------|------------|--------|------------|
+| Corpos d'água curáveis (24.0) | 32h | ❌ Pendente | 🔴 Alta |
 | Modelo de Domínio - Saúde | 24h | ❌ Pendente | 🔴 Alta |
 | Observações de Saúde | 32h | ❌ Pendente | 🔴 Alta |
 | Sistema de Sensores | 32h | ❌ Pendente | 🔴 Alta |
@@ -479,13 +535,16 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 | Coleta de Resíduos | 16h | ❌ Pendente | 🟡 Média |
 | Plantio | 16h | ❌ Pendente | 🟡 Média |
 | Integração Gamificação/Moeda | 16h | ❌ Pendente | 🔴 Alta |
-| **Total** | **200h (35 dias)** | | |
+| **Total** | **232h (~40 dias)** | | |
+
+> **Nota de esforço**: a tarefa 24.0 amplia a fase (~+32h). Duração nominal no índice pode permanecer “35d” até replanejamento formal da onda; o escopo hídrico é **obrigatório** para o diferencial de cuidado da água.
 
 ---
 
 ## ✅ Critérios de Sucesso da Fase 24
 
 ### Funcionalidades
+- ✅ Corpos d'água (rios, nascentes, fontes) cadastráveis e curáveis no território
 - ✅ Sistema completo de observações de saúde funcionando
 - ✅ Sistema de sensores funcionando
 - ✅ Indicadores de saúde sendo calculados

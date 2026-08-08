@@ -9,6 +9,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Corpos d'água do território no backlog (2026-08-08)
+
+- Realinhamento: [`CORPOS_DAGUA_TERRITORIO.md`](backlog-api/CORPOS_DAGUA_TERRITORIO.md) — rios, córregos, nascentes e fontes como **entidades curáveis** (fora de `Territory`)
+- FASE24: tarefa **24.0** (cadastro/curadoria hídrica) + vínculo a observações `WATER`
+- Spec draft SDD: [`water-bodies-curation.spec.yaml`](specs/features/water-bodies-curation.spec.yaml) (`Spec-Id: water-bodies-curation`)
+- Glossário (`TerritoryAsset`, `NaturalAsset`, `WaterBody` alias, detalhes hídricos) · domain model · MER (`RIVER`/`STREAM` + `WATERCOURSE_DETAILS`)
+- Docs funcionais Assets + agente `mapa-lugares`; índices README/STATUS_FASES
+- Follow-up review: vocabulário canônico, máquinas de estado distintas (PUBLISHED vs VALIDATED), geometria LineString, sensibilidade HIGH, filter de harness quotado, Agent Graph regenerado
+
 ### Alterado — Onda I design app (saldo vendedor) (2026-08-08)
 
 - **APP-DS-17**: Minha loja mostra saldo do vendedor (pendente / pronto / pago) via `GET territories/{id}/seller-balance/me`

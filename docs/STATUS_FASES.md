@@ -6,8 +6,7 @@
 **Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
 **Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
 **Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
-
-
+**Capacidade hídrica**: 💧 **Corpos d'água curáveis** — backlog em [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); âncora FASE24.0  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
@@ -44,6 +43,18 @@ Trilha **transversal** (não substitui numeração FASE*). Âncoras: FASE23, FAS
 | TI-7 | Federação de sinais | 🟢 P2 | ⏳ Pendente | [TI7.md](./backlog-api/TI7.md) |
 
 **Realinhamento**: [REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · **Handoff**: [inteligencia-territorial/](./handoff/inteligencia-territorial/)
+
+### 💧 Corpos d'água do território (rios, córregos, nascentes, fontes) ⭐ NOVO 2026-08
+
+Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, córregos, nascentes e fontes como **entidades curáveis** escopadas por território. Âncora de implementação: **FASE24.0**.
+
+| Artefato | Papel |
+|----------|--------|
+| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 |
+| [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico + curadoria |
+| [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD draft · **Spec-Id:** `water-bodies-curation` · AC-WA-1…6 (testes planejados, status pending) |
+
+**Dono consultivo**: `mapa-lugares`.
 
 ### 🔴 Sustentação Operacional (52–61) — PRIORIDADE ATUAL
 

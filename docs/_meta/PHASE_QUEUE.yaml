@@ -44,7 +44,8 @@ queue:
     blocked_by: []
     # Web abertos: DSG-04 (espaçamento 8px portal), DSG-06 (glass cross), DSG-07 (syntax WCAG).
     # DSG-01/02/03/05/08 já corrigidos.
-    # App×UI kit: docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md (APP-DS-01..15).
+    # App×UI kit: docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md (APP-DS-01..16).
+    # Feito 2026-08-08: APP-DS-16 foto do produto (Onda H).
     # Feito 2026-08-05: APP-DS-15 produtos/QR/Em breve (Onda G); APP-DS-14 checkout PIX (Onda F); APP-DS-12 motion (Onda E).
     # Feito 2026-07-23: APP-DS-01..11 + 13 (Onda A–D).
 

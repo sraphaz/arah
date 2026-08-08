@@ -194,6 +194,7 @@ class MarketplaceRepository {
     double? priceAmount,
     String currency = 'BRL',
     String type = 'Product',
+    List<String>? mediaIds,
   }) async {
     final response = await _client.post(
       'marketplace-v1',
@@ -209,6 +210,7 @@ class MarketplaceRepository {
         'priceAmount': priceAmount,
         'currency': currency,
         'status': 'Active',
+        if (mediaIds != null && mediaIds.isNotEmpty) 'mediaIds': mediaIds,
       },
     );
     if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -227,6 +229,8 @@ class MarketplaceRepository {
     bool includePriceAmount = false,
     String? currency,
     String? type,
+    List<String>? mediaIds,
+    bool includeMediaIds = false,
   }) async {
     final body = <String, dynamic>{
       if (title != null) 'title': title,
@@ -236,6 +240,7 @@ class MarketplaceRepository {
       if (includePriceAmount || priceAmount != null) 'priceAmount': priceAmount,
       if (currency != null) 'currency': currency,
       if (type != null) 'type': type,
+      if (includeMediaIds) 'mediaIds': mediaIds ?? const <String>[],
     };
     final response = await _client.patch(
       'marketplace-v1',

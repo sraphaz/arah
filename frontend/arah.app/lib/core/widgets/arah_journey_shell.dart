@@ -45,7 +45,7 @@ class ArahJourneyShell extends StatelessWidget {
     final safeTotal = totalSteps <= 0 ? 1 : totalSteps;
     final clampedStep = currentStep.clamp(0, safeTotal - 1).toInt();
     final progress = (clampedStep + 1) / safeTotal;
-    final showBack = onBack != null && clampedStep > 0;
+    final showBack = onBack != null && clampedStep > 0 && !primaryLoading;
     final motionDuration = ArahMotion.resolve(context, ArahMotion.normal);
 
     return ArahScaffold(
@@ -64,7 +64,10 @@ class ArahJourneyShell extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: showBack ? onBack : onClose,
+                    // Evita voltar/fechar no meio de submit (ex.: upload async).
+                    onPressed: primaryLoading
+                        ? null
+                        : (showBack ? onBack : onClose),
                     icon: Icon(showBack ? Icons.arrow_back : Icons.close),
                     constraints: const BoxConstraints(
                       minWidth: AppConstants.minTouchTargetSize,

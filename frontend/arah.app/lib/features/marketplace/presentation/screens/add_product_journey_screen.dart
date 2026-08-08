@@ -172,8 +172,9 @@ class _AddProductJourneyScreenState
       final fileName = (_photoFileName == null || _photoFileName!.isEmpty)
           ? 'produto.jpg'
           : _photoFileName!;
-      final mediaId = _uploadedMediaId ??
-          await ref.read(mediaRepositoryProvider).uploadImage(
+      final mediaId = (_uploadedMediaId != null && _uploadedMediaId!.isNotEmpty)
+          ? _uploadedMediaId!
+          : await ref.read(mediaRepositoryProvider).uploadImage(
                 fileName: fileName,
                 mimeType: mimeSnapshot,
                 bytes: bytesSnapshot,
@@ -189,10 +190,12 @@ class _AddProductJourneyScreenState
       return (mediaIds: <String>[mediaId], includeMediaIds: true);
     }
 
+    // Sem foto local: limpa cache de upload para não reanexar id antigo.
+    _uploadedMediaId = null;
+
     final clearedExisting = _isEdit &&
         _startedWithPhoto &&
-        (_existingImageUrl == null || _existingImageUrl!.trim().isEmpty) &&
-        (_uploadedMediaId == null || _uploadedMediaId!.isEmpty);
+        (_existingImageUrl == null || _existingImageUrl!.trim().isEmpty);
     if (clearedExisting) {
       return (mediaIds: <String>[], includeMediaIds: true);
     }

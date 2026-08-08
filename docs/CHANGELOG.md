@@ -12,6 +12,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### Alterado — Onda H design app (foto do produto) (2026-08-08)
 
 - **APP-DS-16**: upload de foto na jornada de produto (`media/upload` → `mediaIds` em create/update); remoção limpa mídia no PATCH
+- **API**: `UpdateItem` persiste `MediaIds` (substituir/limpar anexos), alinhado ao create
+- **Upload**: `MediaRepository` envia MIME type e aceita bytes (compatível com Web)
 - **Minha loja**: thumbnail do produto na lista; sem reload pós-edição (evita flash do cache GET BFF 60s)
 - Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
 

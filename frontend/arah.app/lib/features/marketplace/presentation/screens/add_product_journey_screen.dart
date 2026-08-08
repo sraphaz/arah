@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,8 +41,9 @@ class _AddProductJourneyScreenState
   final _descriptionController = TextEditingController();
   final _imagePicker = ImagePicker();
   String _pricingType = 'Fixed';
-  String? _photoPath;
+  Uint8List? _photoBytes;
   String? _photoFileName;
+  String _photoMimeType = 'image/jpeg';
   /// Media id já enviado — evita re-upload em retry.
   String? _uploadedMediaId;
   String? _existingImageUrl;
@@ -50,8 +51,10 @@ class _AddProductJourneyScreenState
 
   bool get _isEdit => widget.itemId != null && widget.itemId!.isNotEmpty;
 
+  bool get _hasLocalPhoto => _photoBytes != null && _photoBytes!.isNotEmpty;
+
   bool get _hasPhoto =>
-      (_photoPath != null && _photoPath!.isNotEmpty) ||
+      _hasLocalPhoto ||
       (_existingImageUrl != null && _existingImageUrl!.isNotEmpty) ||
       (_uploadedMediaId != null && _uploadedMediaId!.isNotEmpty);
 
@@ -125,9 +128,15 @@ class _AddProductJourneyScreenState
       imageQuality: 85,
     );
     if (picked == null || !mounted) return;
+    final bytes = await picked.readAsBytes();
+    if (!mounted) return;
     setState(() {
-      _photoPath = picked.path;
+      _photoBytes = bytes;
       _photoFileName = picked.name;
+      _photoMimeType =
+          (picked.mimeType == null || picked.mimeType!.trim().isEmpty)
+              ? 'image/jpeg'
+              : picked.mimeType!.trim();
       _uploadedMediaId = null;
       _existingImageUrl = null;
     });
@@ -135,8 +144,9 @@ class _AddProductJourneyScreenState
 
   void _clearPhoto() {
     setState(() {
-      _photoPath = null;
+      _photoBytes = null;
       _photoFileName = null;
+      _photoMimeType = 'image/jpeg';
       _uploadedMediaId = null;
       _existingImageUrl = null;
     });
@@ -156,14 +166,15 @@ class _AddProductJourneyScreenState
   /// - Remoção da foto existente → lista vazia + include.
   /// - Edição sem mudança de foto → null / não incluir (preserva).
   Future<({List<String>? mediaIds, bool includeMediaIds})> _resolveMedia() async {
-    if (_photoPath != null && _photoPath!.isNotEmpty) {
+    if (_hasLocalPhoto) {
       final fileName = (_photoFileName == null || _photoFileName!.isEmpty)
           ? 'produto.jpg'
           : _photoFileName!;
       final mediaId = _uploadedMediaId ??
           await ref.read(mediaRepositoryProvider).uploadImage(
-                filePath: _photoPath!,
                 fileName: fileName,
+                mimeType: _photoMimeType,
+                bytes: _photoBytes,
               );
       _uploadedMediaId = mediaId;
       return (mediaIds: <String>[mediaId], includeMediaIds: true);
@@ -192,6 +203,7 @@ class _AddProductJourneyScreenState
     late final bool includeMediaIds;
     try {
       final resolved = await _resolveMedia();
+      if (!mounted) return;
       mediaIds = resolved.mediaIds;
       includeMediaIds = resolved.includeMediaIds;
     } catch (e) {
@@ -308,7 +320,7 @@ class _AddProductJourneyScreenState
         return _PhotoDescriptionStep(
           l10n: l10n,
           descriptionController: _descriptionController,
-          photoPath: _photoPath,
+          photoBytes: _photoBytes,
           existingImageUrl: _existingImageUrl,
           onPickPhoto: _pickPhoto,
           onClearPhoto: _clearPhoto,
@@ -322,7 +334,7 @@ class _AddProductJourneyScreenState
           pricingType: _pricingType,
           priceText: _priceController.text.trim(),
           hasPhoto: _hasPhoto,
-          photoPath: _photoPath,
+          photoBytes: _photoBytes,
           existingImageUrl: _existingImageUrl,
         );
     }
@@ -428,7 +440,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
   const _PhotoDescriptionStep({
     required this.l10n,
     required this.descriptionController,
-    required this.photoPath,
+    required this.photoBytes,
     required this.existingImageUrl,
     required this.onPickPhoto,
     required this.onClearPhoto,
@@ -436,7 +448,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
 
   final AppLocalizations l10n;
   final TextEditingController descriptionController;
-  final String? photoPath;
+  final Uint8List? photoBytes;
   final String? existingImageUrl;
   final VoidCallback onPickPhoto;
   final VoidCallback onClearPhoto;
@@ -445,7 +457,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.appColors;
-    final hasLocal = photoPath != null && photoPath!.isNotEmpty;
+    final hasLocal = photoBytes != null && photoBytes!.isNotEmpty;
     final hasRemote =
         existingImageUrl != null && existingImageUrl!.isNotEmpty;
 
@@ -485,8 +497,8 @@ class _PhotoDescriptionStep extends StatelessWidget {
               ),
               clipBehavior: Clip.antiAlias,
               child: hasLocal
-                  ? Image.file(
-                      File(photoPath!),
+                  ? Image.memory(
+                      photoBytes!,
                       height: 180,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -579,7 +591,7 @@ class _ReviewStep extends StatelessWidget {
     required this.pricingType,
     required this.priceText,
     required this.hasPhoto,
-    required this.photoPath,
+    required this.photoBytes,
     required this.existingImageUrl,
   });
 
@@ -590,7 +602,7 @@ class _ReviewStep extends StatelessWidget {
   final String pricingType;
   final String priceText;
   final bool hasPhoto;
-  final String? photoPath;
+  final Uint8List? photoBytes;
   final String? existingImageUrl;
 
   @override
@@ -602,7 +614,7 @@ class _ReviewStep extends StatelessWidget {
       'Negotiable' => l10n.pricingNegotiable,
       _ => priceText.isEmpty ? '—' : 'BRL $priceText',
     };
-    final hasLocal = photoPath != null && photoPath!.isNotEmpty;
+    final hasLocal = photoBytes != null && photoBytes!.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -619,8 +631,8 @@ class _ReviewStep extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             child: hasLocal
-                ? Image.file(
-                    File(photoPath!),
+                ? Image.memory(
+                    photoBytes!,
                     height: 120,
                     width: double.infinity,
                     fit: BoxFit.cover,

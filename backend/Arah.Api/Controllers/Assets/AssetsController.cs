@@ -296,7 +296,8 @@ public sealed class AssetsController : ControllerBase
             request.Description,
             request.GeoAnchors.Select(anchor => new TerritoryAssetGeoAnchorInput(anchor.Latitude, anchor.Longitude)).ToList(),
             cancellationToken,
-            request.Subtype);
+            request.Subtype,
+            request.SubtypeSpecified);
 
         if (!result.IsSuccess || result.Value is null)
         {

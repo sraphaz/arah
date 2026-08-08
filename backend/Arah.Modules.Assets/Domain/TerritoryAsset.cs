@@ -28,8 +28,7 @@ public sealed class TerritoryAsset
     {
         Id = id;
         TerritoryId = territoryId;
-        Type = type;
-        Subtype = subtype;
+        ApplyTypeAndSubtype(type, subtype);
         Name = name;
         Description = description;
         Status = status;
@@ -49,7 +48,7 @@ public sealed class TerritoryAsset
     /// </summary>
     public Guid TerritoryId { get; }
     
-    public string Type { get; private set; }
+    public string Type { get; private set; } = string.Empty;
 
     /// <summary>
     /// Especialização opcional quando Type = natural (river, stream, spring, waterfall, well, potable_water).
@@ -90,8 +89,7 @@ public sealed class TerritoryAsset
         DateTime updatedAtUtc,
         string? subtype = null)
     {
-        Type = type;
-        Subtype = subtype;
+        ApplyTypeAndSubtype(type, subtype);
         Name = name;
         Description = description;
         UpdatedByUserId = updatedByUserId;
@@ -128,5 +126,19 @@ public sealed class TerritoryAsset
         ArchiveReason = string.IsNullOrWhiteSpace(reason) ? null : reason.Trim();
         UpdatedByUserId = rejectedByUserId;
         UpdatedAtUtc = rejectedAtUtc;
+    }
+
+    private void ApplyTypeAndSubtype(string type, string? subtype)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(type);
+        var normalizedType = type.Trim().ToLowerInvariant();
+        var normalizedSubtype = NaturalWaterSubtype.Normalize(subtype);
+        if (!NaturalWaterSubtype.TryValidate(normalizedType, normalizedSubtype, out var error))
+        {
+            throw new ArgumentException(error ?? "Invalid type/subtype combination.", nameof(subtype));
+        }
+
+        Type = normalizedType;
+        Subtype = normalizedSubtype;
     }
 }

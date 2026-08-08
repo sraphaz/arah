@@ -304,4 +304,56 @@ public sealed class AssetsControllerTests
         var response = await client.PostAsJsonAsync("api/v1/assets", request);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
+
+    [Fact]
+    public async Task UpdateAsset_WhenSubtypeOmitted_PreservesExistingSubtype()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await AuthTestHelper.LoginForTokenAsync(client, "google", "resident-external");
+        AuthTestHelper.SetupAuthenticatedClient(client, token, "update-asset-omit-subtype-session");
+
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
+
+        var create = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "natural",
+                "Rio Preservado",
+                null,
+                new List<AssetGeoAnchorRequest>
+                {
+                    new AssetGeoAnchorRequest(-23.37, -45.02)
+                },
+                "river"));
+        create.EnsureSuccessStatusCode();
+        var created = await create.Content.ReadFromJsonAsync<AssetResponse>();
+        Assert.NotNull(created);
+
+        // JSON sem propriedade subtype → SubtypeSpecified=false → preserva "river"
+        var patchPayload = new
+        {
+            type = "natural",
+            name = "Rio Preservado Renomeado",
+            description = (string?)null,
+            geoAnchors = new[]
+            {
+                new { latitude = -23.37, longitude = -45.02 }
+            }
+        };
+
+        var patch = await client.PatchAsJsonAsync(
+            $"api/v1/assets/{created!.Id}?territoryId={ActiveTerritoryId}",
+            patchPayload);
+        patch.EnsureSuccessStatusCode();
+
+        var updated = await patch.Content.ReadFromJsonAsync<AssetResponse>();
+        Assert.NotNull(updated);
+        Assert.Equal("river", updated!.Subtype);
+        Assert.Equal("Rio Preservado Renomeado", updated.Name);
+    }
 }

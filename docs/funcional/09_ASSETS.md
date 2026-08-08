@@ -15,7 +15,7 @@
 
 Rios, córregos, nascentes e fontes são **entidades curáveis** do território (patrimônio hídrico). A comunidade nomeia, marca no mapa, fala sobre e organiza cuidado — sem embutir o rio na entidade `Territory` (que permanece geográfica e neutra).
 
-- **Ponte atual (WA-E1)**: TerritoryAsset `type=natural` + `subtype` opcional (`river`|`stream`|`spring`|`waterfall`|`well`|`potable_water`) + MapEntity (`espaço natural`); status runtime `Suggested`→`Active`
+- **Ponte atual (WA-E1)**: TerritoryAsset `type=natural` + `subtype` opcional (`river`|`stream`|`spring`|`waterfall`|`well`|`potable_water`) + MapEntity (`espaço natural`); status canônico `Suggested`→`Active`
 - **Alvo (FASE24.0)**: `NaturalAsset` + `WATERCOURSE_DETAILS` / `WATER_POINT_DETAILS`; status `PENDING`→`PUBLISHED`
 - **WaterBody**: alias de produto/API para NaturalAsset tipado hídrico (`naturalAssetId`) — não é tabela separada
 - **Backlog**: [CORPOS_DAGUA_TERRITORIO](../backlog-api/CORPOS_DAGUA_TERRITORIO.md) · Spec-Id: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml)
@@ -56,9 +56,9 @@ Permitir que usuários:
 #### TerritoryAsset (ponte)
 - **Propósito**: Recurso territorial valioso
 - **Atributos**: Nome, descrição, tipo, **subtype** (opcional), geolocalização obrigatória
-- **Status (runtime)**: `Suggested` → `Active` (curadoria); docs legados podem dizer PENDING/VALIDATED
+- **Status canônico**: `Suggested` → `Active` (também `Archived`|`Rejected`). Termos legados PENDING/VALIDATED = aliases documentais de Suggested/Active
 - **Características**: Não vendável, não transferível
-- **Hídrico (WA-E1)**: `type=natural` + `subtype` ∈ `river`|`stream`|`spring`|`waterfall`|`well`|`potable_water` (aliases → tipos UPPERCASE do MER); subtype sem `natural` → rejeitado
+- **Hídrico (WA-E1)**: `type=natural` + `subtype` ∈ `river`|`stream`|`spring`|`waterfall`|`well`|`potable_water` (aliases → tipos UPPERCASE do MER); subtype sem `natural` → rejeitado; PATCH omite subtype → preserva
 
 #### NaturalAsset / WaterBody *(alvo FASE24)*
 - Persistência: `NaturalAsset` tipado; **WaterBody** = alias de API
@@ -74,7 +74,7 @@ Permitir que usuários:
 2. **Geolocalização**: Obrigatória (ponto; cursos: LineString ≤500 vértices, intersecta território)
 3. **Validação**: Apenas curadores podem publicar/validar
 4. **Visibilidade**:
-   - Ponte TerritoryAsset: listagens respeitam status (`Active` após curadoria)
+   - Ponte TerritoryAsset: status canônico `Suggested`/`Active`/`Archived`/`Rejected` (listagens tipicamente após curadoria em `Active`)
    - NaturalAsset (alvo): apenas `PUBLISHED` (salvo regras de membership)
    - `sensitivity HIGH` / `access RESTRICTED`: filtrar ou omitir coordenadas em list/get/mapa/pins sem autorização de leitura
 5. **Não vendável**: Assets não podem ser vendidos via marketplace

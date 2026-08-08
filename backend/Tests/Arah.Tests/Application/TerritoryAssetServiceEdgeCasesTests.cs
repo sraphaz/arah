@@ -460,10 +460,84 @@ public class TerritoryAssetServiceEdgeCasesTests
             null,
             geoAnchors,
             CancellationToken.None,
-            "waterfall");
+            "waterfall",
+            subtypeSpecified: true);
 
         Assert.True(updated.IsSuccess);
         Assert.Equal("waterfall", updated.Value!.Asset.Subtype);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenSubtypeOmitted_PreservesExistingSubtype()
+    {
+        var assetService = CreateService();
+        var geoAnchors = new List<TerritoryAssetGeoAnchorInput>
+        {
+            new TerritoryAssetGeoAnchorInput(-23.37, -45.02)
+        };
+
+        var created = await assetService.CreateAsync(
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Rio Claro",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            "river");
+        Assert.True(created.IsSuccess);
+
+        var updated = await assetService.UpdateAsync(
+            created.Value!.Asset.Id,
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Rio Claro Atualizado",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            subtype: null,
+            subtypeSpecified: false);
+
+        Assert.True(updated.IsSuccess);
+        Assert.Equal("river", updated.Value!.Asset.Subtype);
+        Assert.Equal("Rio Claro Atualizado", updated.Value.Asset.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenSubtypeExplicitNull_ClearsSubtype()
+    {
+        var assetService = CreateService();
+        var geoAnchors = new List<TerritoryAssetGeoAnchorInput>
+        {
+            new TerritoryAssetGeoAnchorInput(-23.37, -45.02)
+        };
+
+        var created = await assetService.CreateAsync(
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Rio Claro",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            "river");
+        Assert.True(created.IsSuccess);
+
+        var updated = await assetService.UpdateAsync(
+            created.Value!.Asset.Id,
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Rio Claro",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            subtype: null,
+            subtypeSpecified: true);
+
+        Assert.True(updated.IsSuccess);
+        Assert.Null(updated.Value!.Asset.Subtype);
     }
 
     private static TerritoryAssetService CreateService()

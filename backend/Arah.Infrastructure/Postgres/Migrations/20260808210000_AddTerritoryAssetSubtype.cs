@@ -4,7 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Arah.Infrastructure.Postgres.Migrations
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Migration hand-written (mesmo padrão de MakeUserEmailNullableAndUserDeviceFk).
+    /// Sem *.Designer.cs — o modelo autoritativo está em ArahDbContextModelSnapshot.
+    /// </summary>
     public partial class AddTerritoryAssetSubtype : Migration
     {
         /// <inheritdoc />

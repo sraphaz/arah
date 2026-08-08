@@ -19,11 +19,16 @@ public sealed class UpdateAssetRequestValidator : AbstractValidator<UpdateAssetR
 
         RuleFor(x => x.Subtype)
             .MaximumLength(40)
-            .When(x => !string.IsNullOrWhiteSpace(x.Subtype));
+            .When(x => x.SubtypeSpecified && !string.IsNullOrWhiteSpace(x.Subtype));
 
         RuleFor(x => x)
             .Must(request =>
             {
+                if (!request.SubtypeSpecified)
+                {
+                    return true;
+                }
+
                 var type = request.Type?.Trim().ToLowerInvariant() ?? string.Empty;
                 var subtype = NaturalWaterSubtype.Normalize(request.Subtype);
                 return NaturalWaterSubtype.TryValidate(type, subtype, out _);

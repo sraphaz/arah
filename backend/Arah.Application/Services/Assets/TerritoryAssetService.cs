@@ -128,21 +128,29 @@ public sealed class TerritoryAssetService
         }
 
         var now = DateTime.UtcNow;
-        var asset = new TerritoryAsset(
-            Guid.NewGuid(),
-            territoryId,
-            normalizedType,
-            name.Trim(),
-            string.IsNullOrWhiteSpace(description) ? null : description.Trim(),
-            AssetStatus.Suggested,
-            userId,
-            now,
-            userId,
-            now,
-            null,
-            null,
-            null,
-            normalizedSubtype);
+        TerritoryAsset asset;
+        try
+        {
+            asset = new TerritoryAsset(
+                Guid.NewGuid(),
+                territoryId,
+                normalizedType,
+                name.Trim(),
+                string.IsNullOrWhiteSpace(description) ? null : description.Trim(),
+                AssetStatus.Suggested,
+                userId,
+                now,
+                userId,
+                now,
+                null,
+                null,
+                null,
+                normalizedSubtype);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<TerritoryAssetDetails>.Failure(ex.Message);
+        }
 
         await _assetRepository.AddAsync(asset, cancellationToken);
         await _anchorRepository.AddAsync(anchors.Select(anchor => new AssetGeoAnchor(
@@ -201,7 +209,8 @@ public sealed class TerritoryAssetService
         string? description,
         IReadOnlyCollection<TerritoryAssetGeoAnchorInput>? geoAnchors,
         CancellationToken cancellationToken,
-        string? subtype = null)
+        string? subtype = null,
+        bool subtypeSpecified = false)
     {
         if (string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(name))
         {
@@ -213,17 +222,17 @@ public sealed class TerritoryAssetService
             return Result<TerritoryAssetDetails>.Failure("At least one geoAnchor is required.");
         }
 
-        var normalizedType = NormalizeType(type);
-        var normalizedSubtype = NaturalWaterSubtype.Normalize(subtype);
-        if (!NaturalWaterSubtype.TryValidate(normalizedType, normalizedSubtype, out var subtypeError))
-        {
-            return Result<TerritoryAssetDetails>.Failure(subtypeError ?? "Invalid subtype.");
-        }
-
         var asset = await _assetRepository.GetByIdAsync(assetId, cancellationToken);
         if (asset is null || asset.TerritoryId != territoryId)
         {
             return Result<TerritoryAssetDetails>.Failure("Asset not found.");
+        }
+
+        var normalizedType = NormalizeType(type);
+        var normalizedSubtype = ResolveSubtypeForUpdate(normalizedType, asset.Subtype, subtype, subtypeSpecified);
+        if (!NaturalWaterSubtype.TryValidate(normalizedType, normalizedSubtype, out var subtypeError))
+        {
+            return Result<TerritoryAssetDetails>.Failure(subtypeError ?? "Invalid subtype.");
         }
 
         var anchors = BuildAnchors(geoAnchors);
@@ -233,13 +242,20 @@ public sealed class TerritoryAssetService
         }
 
         var now = DateTime.UtcNow;
-        asset.UpdateDetails(
-            normalizedType,
-            name.Trim(),
-            string.IsNullOrWhiteSpace(description) ? null : description.Trim(),
-            userId,
-            now,
-            normalizedSubtype);
+        try
+        {
+            asset.UpdateDetails(
+                normalizedType,
+                name.Trim(),
+                string.IsNullOrWhiteSpace(description) ? null : description.Trim(),
+                userId,
+                now,
+                normalizedSubtype);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<TerritoryAssetDetails>.Failure(ex.Message);
+        }
 
         await _assetRepository.UpdateAsync(asset, cancellationToken);
         await _anchorRepository.ReplaceForAssetAsync(asset.Id, anchors.Select(anchor => new AssetGeoAnchor(
@@ -459,5 +475,28 @@ public sealed class TerritoryAssetService
     private static string NormalizeType(string type)
     {
         return type.Trim().ToLowerInvariant();
+    }
+
+    /// <summary>
+    /// Omitido → preserva subtype se continuar natural; limpa se type deixar de ser natural.
+    /// Presente (inclui null) → aplica valor normalizado.
+    /// </summary>
+    private static string? ResolveSubtypeForUpdate(
+        string normalizedType,
+        string? existingSubtype,
+        string? requestedSubtype,
+        bool subtypeSpecified)
+    {
+        if (subtypeSpecified)
+        {
+            return NaturalWaterSubtype.Normalize(requestedSubtype);
+        }
+
+        if (string.Equals(normalizedType, NaturalWaterSubtype.NaturalType, StringComparison.Ordinal))
+        {
+            return existingSubtype;
+        }
+
+        return null;
     }
 }

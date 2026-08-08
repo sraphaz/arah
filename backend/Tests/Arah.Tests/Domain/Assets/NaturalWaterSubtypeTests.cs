@@ -72,4 +72,25 @@ public class NaturalWaterSubtypeTests
         asset.UpdateDetails("natural", "Rio Claro", null, Guid.NewGuid(), now.AddMinutes(1), "stream");
         Assert.Equal("stream", asset.Subtype);
     }
+
+    [Fact]
+    public void TerritoryAsset_Constructor_CulturalWithRiver_Throws()
+    {
+        var now = DateTime.UtcNow;
+        Assert.Throws<ArgumentException>(() => new TerritoryAsset(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            "cultural",
+            "Mirante",
+            null,
+            AssetStatus.Suggested,
+            Guid.NewGuid(),
+            now,
+            Guid.NewGuid(),
+            now,
+            null,
+            null,
+            null,
+            "river"));
+    }
 }

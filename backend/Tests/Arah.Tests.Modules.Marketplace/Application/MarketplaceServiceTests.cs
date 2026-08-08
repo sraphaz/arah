@@ -719,6 +719,34 @@ public sealed class MarketplaceServiceTests
         Assert.Single(attachmentsAfterReplace);
         Assert.Equal(mediaB, attachmentsAfterReplace[0].MediaAssetId);
 
+        // mediaIds null = preservar anexos (caminho padrão do PATCH).
+        var preserveResult = await itemService.UpdateItemAsync(
+            itemId,
+            ResidentUserId,
+            null,
+            "Novo titulo",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            CancellationToken.None);
+        Assert.True(preserveResult.IsSuccess);
+        Assert.Equal("Novo titulo", preserveResult.Value!.Title);
+
+        var attachmentsAfterPreserve = await mediaAttachmentRepository.ListByOwnerAsync(
+            Arah.Domain.Media.MediaOwnerType.StoreItem,
+            itemId,
+            CancellationToken.None);
+        Assert.Single(attachmentsAfterPreserve);
+        Assert.Equal(mediaB, attachmentsAfterPreserve[0].MediaAssetId);
+
         var clearResult = await itemService.UpdateItemAsync(
             itemId,
             ResidentUserId,

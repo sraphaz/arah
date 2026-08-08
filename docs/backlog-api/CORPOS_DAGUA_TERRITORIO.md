@@ -1,6 +1,6 @@
 # Corpos d'água do território — rios, nascentes e fontes curáveis
 
-**Versão**: 1.1  
+**Versão**: 1.2  
 **Data**: 2026-08-08  
 **Status**: ✅ Aprovado para planejamento (backlog)  
 **Domínio dono**: `mapa-lugares` (primário) · co-ativação: `territorio-membership`, `governanca-transparencia`, `feed-conteudo`, `design-ux` · sinais externos: trilha TI  
@@ -50,7 +50,7 @@ Territory (geografia neutra)
 
 | Camada | Modelo documental (hoje neste PR) | Implementação (código) | Alvo de runtime |
 |--------|-----------------------------------|------------------------|-----------------|
-| TerritoryAsset | Subtipos hídricos documentados | Tipos livres; exemplos nascente/rio | Subtypes canônicos + alias → `NATURAL_ASSET.type` |
+| TerritoryAsset | `type=natural` + allowlist `river\|stream\|spring\|waterfall\|well\|potable_water` (normalizados lowercase) | **WA-E1**: campo `Subtype` + validação; outros `type` livres sem subtype | Alias → `NATURAL_ASSET.type` (FASE24.0) |
 | MapEntity | Categoria `espaço natural` | Implementado | Espelhar/apontar para asset hídrico |
 | MER `NATURAL_ASSET` | Inclui `RIVER`, `STREAM` + `WATERCOURSE_DETAILS` | **Ainda não** há entidade `NaturalAsset` no código | Persistência + API + curadoria (FASE24.0) |
 | FASE24 | Observações `WATER` + `RelatedNaturalAssetId` planejados | Só alertas básicos | Cadastro hídrico **antes** das observações |
@@ -67,7 +67,7 @@ Territory (geografia neutra)
 | Poço (`WELL`) | **Não** é tipo top-level; `POTABLE_WATER` + `WATER_POINT_DETAILS.water_type=WELL` |
 | Ponte TerritoryAsset | subtypes minúsculos mapeados: `river→RIVER`, `stream→STREAM`, `spring→SPRING`, `waterfall→WATERFALL`, `well→POTABLE_WATER+WELL`, `potable_water→POTABLE_WATER` |
 | Status NaturalAsset | `PENDING` → `PUBLISHED` \| `HIDDEN` \| `REVIEW` |
-| Status ponte TerritoryAsset | `PENDING` → `VALIDATED` |
+| Status ponte TerritoryAsset (canônico) | `Suggested` → `Active` (legado documental: PENDING/VALIDATED) |
 
 ---
 
@@ -79,9 +79,9 @@ Refinar o que já existe em Assets/Mapa:
 
 | ID | Item | Prio | Notas |
 |----|------|------|-------|
-| WA-E1 | Tipagem hídrica em TerritoryAsset (`natural` + subtype) | P1 | Sem mudar Territory |
+| WA-E1 | Tipagem hídrica em TerritoryAsset (`natural` + subtype) | P1 | Implementado (ponte) — smoke HTTP; AC NaturalAsset ainda FASE24.0 |
 | WA-E2 | Pins/filtros de mapa para corpos d'água | P1 | Flutter + BFF; filtrar HIGH/RESTRICTED server-side |
-| WA-E3 | Glossário + docs funcionais alinhados | P0 | Este pacote |
+| WA-E3 | Glossário + docs funcionais alinhados | P0 | ✅ Docs iniciais; manter sync com código |
 | WA-E4 | Curadoria: copy/UX “cuidar do rio / da nascente” | P2 | design-ux |
 
 ### B) Fundação na FASE24 (canônico)
@@ -153,5 +153,6 @@ Refinar o que já existe em Assets/Mapa:
 
 ### Changelog
 
+- **1.2** (2026-08-08): WA-E1 implementado — `TerritoryAsset.Subtype` com allowlist hídrica.
 - **1.1** (2026-08-08): Alinhamento CodeRabbit — vocabulário canônico, MER vs implementação, typo hídrico, WaterBody alias.
 - **1.0** (2026-08-08): Introdução da capacidade no backlog — rios e fontes como entidades curáveis do território.

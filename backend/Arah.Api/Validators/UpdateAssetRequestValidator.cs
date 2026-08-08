@@ -4,13 +4,10 @@ using FluentValidation;
 
 namespace Arah.Api.Validators;
 
-public sealed class CreateAssetRequestValidator : AbstractValidator<CreateAssetRequest>
+public sealed class UpdateAssetRequestValidator : AbstractValidator<UpdateAssetRequest>
 {
-    public CreateAssetRequestValidator()
+    public UpdateAssetRequestValidator()
     {
-        RuleFor(x => x.TerritoryId)
-            .ValidGuid();
-
         RuleFor(x => x.Type)
             .NotEmptyWithMaxLength(100);
 
@@ -22,11 +19,16 @@ public sealed class CreateAssetRequestValidator : AbstractValidator<CreateAssetR
 
         RuleFor(x => x.Subtype)
             .MaximumLength(40)
-            .When(x => !string.IsNullOrWhiteSpace(x.Subtype));
+            .When(x => x.SubtypeSpecified && !string.IsNullOrWhiteSpace(x.Subtype));
 
         RuleFor(x => x)
             .Must(request =>
             {
+                if (!request.SubtypeSpecified)
+                {
+                    return true;
+                }
+
                 var type = request.Type?.Trim().ToLowerInvariant() ?? string.Empty;
                 var subtype = NaturalWaterSubtype.Normalize(request.Subtype);
                 return NaturalWaterSubtype.TryValidate(type, subtype, out _);

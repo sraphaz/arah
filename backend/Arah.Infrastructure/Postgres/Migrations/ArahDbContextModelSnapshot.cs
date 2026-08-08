@@ -2577,6 +2577,10 @@ namespace Arah.Infrastructure.Postgres.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Subtype")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
                     b.Property<Guid>("TerritoryId")
                         .HasColumnType("uuid");
 

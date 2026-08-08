@@ -18,14 +18,29 @@
 
 **Como usar**:
 - Exige autenticação
-- Body: `territoryId`, nome, descrição, tipo, `geoAnchors` (obrigatório)
+- Body: `territoryId`, `type`, `name`, `description?`, `geoAnchors` (obrigatório), `subtype?` (WA-E1)
+
+**Exemplo hídrico (ponte)**:
+```json
+{
+  "territoryId": "...",
+  "type": "natural",
+  "subtype": "river",
+  "name": "Rio do Vale",
+  "description": "Trecho urbano",
+  "geoAnchors": [{ "latitude": -23.37, "longitude": -45.02 }]
+}
+```
 
 **Regras de negócio**:
 - **Permissão**: Apenas moradores verificados (RESIDENT + `ResidencyVerification != NONE`) ou curadores podem criar
 - **Geolocalização**: Obrigatória (pelo menos um GeoAnchor)
-- **Status**: Asset é criado como `PENDING` (aguarda validação)
-- **Limites**: Nome máximo 200 caracteres, descrição máxima 1000 caracteres
+- **Status**: Asset é criado como `Suggested` (aguarda curadoria → `Active`)
+- **Subtype (WA-E1)**: opcional; se informado, `type` deve ser `natural` e subtype ∈ `river|stream|spring|waterfall|well|potable_water`
+- **Limites**: Nome máximo 200 caracteres, descrição máxima 1000 caracteres, subtype máximo 40
 - **Não vendável**: TerritoryAssets não podem ser vendidos ou transferidos via marketplace
+
+**Resposta**: inclui `subtype` (nullable) além de `type`.
 
 ### Listar Assets (`GET /api/v1/assets`)
 
@@ -37,24 +52,31 @@
 - Header `X-Session-Id` para identificar território ativo
 
 **Regras de negócio**:
-- **Visibilidade**: Apenas assets validados (`VALIDATED`) são retornados
+- **Visibilidade / status canônico**: resposta usa status runtime `Suggested` | `Active` | `Archived` | `Rejected` (curadoria promove `Suggested` → `Active`)
 - **Filtros**: `assetId` e `type` são opcionais
 - **Paginação**: Padrão 20 itens
+- **Nota histórica**: docs antigos usavam PENDING/VALIDATED como aliases de Suggested/Active
+
+### Atualizar Asset (`PATCH /api/v1/assets/{assetId}`)
+
+**Subtype (tri-estado, WA-E1)**:
+- propriedade **omitida** → preserva subtype atual (se `type` continuar `natural`)
+- `"subtype": null` → remove subtype
+- `"subtype": "river"` → substitui
 
 ### Validar Asset (`POST /api/v1/assets/{assetId}/validate`)
 
-**Descrição**: Valida um asset (curadoria).
+**Descrição**: Confirmação comunitária / curadoria auxiliar (não confundir com status `Active`).
 
 **Como usar**:
 - Exige autenticação
 - Path param: `assetId`
 
 **Regras de negócio**:
-- **Permissão**: Apenas curadores (CURATOR) podem validar
-- **Status**: Se validado, status muda para `VALIDATED`
+- **Permissão**: conforme política de curadoria do território
+- **Status canônico**: aprovação de curadoria (`Curate`) muda para `Active`; confirmações incrementam contagem de validações
 - **Idempotente**: Pode validar múltiplas vezes
 - **Contagem**: Assets retornam contagem de validações e percentual
-
 ---
 
 ## 📚 Documentação Relacionada

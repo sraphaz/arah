@@ -1359,6 +1359,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get storePixKeyHint => 'The store PIX key is configured in the territory payment gateway. Here you only enable or disable accepting payments.';
 
   @override
+  String get sellerBalanceTitle => 'Your balance';
+
+  @override
+  String get sellerBalanceHint => 'Territory amounts after confirmed sales. Payouts are processed by the territory.';
+
+  @override
+  String get sellerBalanceLoadError => 'Could not load balance.';
+
+  @override
+  String get sellerBalancePending => 'Pending';
+
+  @override
+  String get sellerBalanceReady => 'Ready for payout';
+
+  @override
+  String get sellerBalancePaid => 'Paid out';
+
+  @override
   String get myProductsTitle => 'My products';
 
   @override

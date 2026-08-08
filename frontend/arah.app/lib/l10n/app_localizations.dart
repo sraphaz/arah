@@ -2735,6 +2735,42 @@ abstract class AppLocalizations {
   /// **'A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.'**
   String get storePixKeyHint;
 
+  /// No description provided for @sellerBalanceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu saldo'**
+  String get sellerBalanceTitle;
+
+  /// No description provided for @sellerBalanceHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valores do território após vendas confirmadas. O saque é processado pelo território.'**
+  String get sellerBalanceHint;
+
+  /// No description provided for @sellerBalanceLoadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar o saldo.'**
+  String get sellerBalanceLoadError;
+
+  /// No description provided for @sellerBalancePending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente'**
+  String get sellerBalancePending;
+
+  /// No description provided for @sellerBalanceReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pronto para saque'**
+  String get sellerBalanceReady;
+
+  /// No description provided for @sellerBalancePaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já pago'**
+  String get sellerBalancePaid;
+
   /// No description provided for @myProductsTitle.
   ///
   /// In pt, this message translates to:

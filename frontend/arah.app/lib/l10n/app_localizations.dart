@@ -2747,6 +2747,12 @@ abstract class AppLocalizations {
   /// **'Valores do território após vendas confirmadas. O saque é processado pelo território.'**
   String get sellerBalanceHint;
 
+  /// No description provided for @sellerBalanceLoadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar o saldo.'**
+  String get sellerBalanceLoadError;
+
   /// No description provided for @sellerBalancePending.
   ///
   /// In pt, this message translates to:

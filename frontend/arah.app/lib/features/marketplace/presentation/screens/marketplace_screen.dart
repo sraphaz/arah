@@ -470,24 +470,32 @@ class _MyStoreTabState extends State<_MyStoreTab> {
           ),
           const SizedBox(height: AppConstants.spacingSm),
           ArahCard(
-            child: widget.state.isBalanceLoading &&
-                    widget.state.sellerBalance == null
+            child: widget.state.isBalanceLoading
                 ? const Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: AppConstants.spacingMd,
                     ),
                     child: Center(child: ArahLoadingIndicator()),
                   )
-                : _SellerBalanceSummary(
-                    balance: widget.state.sellerBalance ??
-                        const SellerBalance(
-                          pendingAmountInCents: 0,
-                          readyForPayoutAmountInCents: 0,
-                          paidAmountInCents: 0,
-                          currency: 'BRL',
+                : widget.state.balanceLoadFailed ||
+                        widget.state.sellerBalance == null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppConstants.spacingSm,
                         ),
-                    l10n: l10n,
-                  ),
+                        child: Text(
+                          widget.state.balanceLoadFailed
+                              ? l10n.sellerBalanceLoadError
+                              : l10n.sellerBalanceHint,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: colors.onSurfaceVariant,
+                              ),
+                        ),
+                      )
+                    : _SellerBalanceSummary(
+                        balance: widget.state.sellerBalance!,
+                        l10n: l10n,
+                      ),
           ),
           const SizedBox(height: AppConstants.spacingMd),
           Text(l10n.storePaymentsTitle, style: Theme.of(context).textTheme.titleMedium),

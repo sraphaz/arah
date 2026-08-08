@@ -19,6 +19,7 @@ class MarketplaceState {
     this.isStoreLoading = false,
     this.isProductsLoading = false,
     this.isBalanceLoading = false,
+    this.balanceLoadFailed = false,
     this.error,
     this.query = '',
   });
@@ -32,6 +33,8 @@ class MarketplaceState {
   final bool isStoreLoading;
   final bool isProductsLoading;
   final bool isBalanceLoading;
+  /// True quando o GET de saldo falhou (≠ 404 sem ledger).
+  final bool balanceLoadFailed;
   final Object? error;
   final String query;
 
@@ -45,6 +48,7 @@ class MarketplaceState {
     bool? isStoreLoading,
     bool? isProductsLoading,
     bool? isBalanceLoading,
+    bool? balanceLoadFailed,
     Object? error,
     String? query,
     bool clearError = false,
@@ -61,6 +65,7 @@ class MarketplaceState {
       isStoreLoading: isStoreLoading ?? this.isStoreLoading,
       isProductsLoading: isProductsLoading ?? this.isProductsLoading,
       isBalanceLoading: isBalanceLoading ?? this.isBalanceLoading,
+      balanceLoadFailed: balanceLoadFailed ?? this.balanceLoadFailed,
       error: clearError ? null : (error ?? this.error),
       query: query ?? this.query,
     );
@@ -97,7 +102,14 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     if (territoryId == null || territoryId.isEmpty) return;
 
     final gen = ++_storeLoadGen;
-    state = state.copyWith(isStoreLoading: true, clearError: true);
+    // Limpa saldo ao trocar território/recarregar — evita valores stale.
+    state = state.copyWith(
+      isStoreLoading: true,
+      clearError: true,
+      clearSellerBalance: true,
+      balanceLoadFailed: false,
+      isBalanceLoading: false,
+    );
     try {
       final store = await _repo.getMyStore(territoryId);
       if (gen != _storeLoadGen ||
@@ -109,7 +121,6 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
         cart: state.cart,
         myStore: store,
         myProducts: store == null ? const [] : state.myProducts,
-        sellerBalance: store == null ? null : state.sellerBalance,
         isStoreLoading: false,
         query: state.query,
       );
@@ -131,7 +142,11 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       return;
     }
     final gen = ++_balanceLoadGen;
-    state = state.copyWith(isBalanceLoading: true);
+    state = state.copyWith(
+      isBalanceLoading: true,
+      clearSellerBalance: true,
+      balanceLoadFailed: false,
+    );
     try {
       final balance = await _repo.getSellerBalance(territoryId);
       if (gen != _balanceLoadGen ||
@@ -141,16 +156,18 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       state = state.copyWith(
         sellerBalance: balance,
         isBalanceLoading: false,
+        balanceLoadFailed: false,
       );
     } catch (e) {
       if (gen != _balanceLoadGen ||
           _ref.read(selectedTerritoryIdValueProvider) != territoryId) {
         return;
       }
-      // Saldo é informativo: falha não derruba a aba Minha loja.
+      // Não mascarar falha com zeros (parece “sem ganhos”).
       state = state.copyWith(
-        sellerBalance: SellerBalance.zero(),
+        clearSellerBalance: true,
         isBalanceLoading: false,
+        balanceLoadFailed: true,
       );
     }
   }

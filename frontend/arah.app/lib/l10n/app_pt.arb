@@ -521,6 +521,7 @@
   "storePixKeyHint": "A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.",
   "sellerBalanceTitle": "Seu saldo",
   "sellerBalanceHint": "Valores do território após vendas confirmadas. O saque é processado pelo território.",
+  "sellerBalanceLoadError": "Não foi possível carregar o saldo.",
   "sellerBalancePending": "Pendente",
   "sellerBalanceReady": "Pronto para saque",
   "sellerBalancePaid": "Já pago",

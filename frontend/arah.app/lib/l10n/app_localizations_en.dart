@@ -1365,6 +1365,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sellerBalanceHint => 'Territory amounts after confirmed sales. Payouts are processed by the territory.';
 
   @override
+  String get sellerBalanceLoadError => 'Could not load balance.';
+
+  @override
   String get sellerBalancePending => 'Pending';
 
   @override

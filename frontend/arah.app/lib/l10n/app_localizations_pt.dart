@@ -1365,6 +1365,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sellerBalanceHint => 'Valores do território após vendas confirmadas. O saque é processado pelo território.';
 
   @override
+  String get sellerBalanceLoadError => 'Não foi possível carregar o saldo.';
+
+  @override
   String get sellerBalancePending => 'Pendente';
 
   @override

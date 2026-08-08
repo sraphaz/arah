@@ -521,6 +521,7 @@
   "storePixKeyHint": "The store PIX key is configured in the territory payment gateway. Here you only enable or disable accepting payments.",
   "sellerBalanceTitle": "Your balance",
   "sellerBalanceHint": "Territory amounts after confirmed sales. Payouts are processed by the territory.",
+  "sellerBalanceLoadError": "Could not load balance.",
   "sellerBalancePending": "Pending",
   "sellerBalanceReady": "Ready for payout",
   "sellerBalancePaid": "Paid out",

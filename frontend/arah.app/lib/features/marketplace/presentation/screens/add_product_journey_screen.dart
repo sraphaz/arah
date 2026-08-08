@@ -44,6 +44,8 @@ class _AddProductJourneyScreenState
   Uint8List? _photoBytes;
   String? _photoFileName;
   String _photoMimeType = 'image/jpeg';
+  /// Incrementado em pick/clear — detecta seleção stale após upload async.
+  int _photoGeneration = 0;
   /// Media id já enviado — evita re-upload em retry.
   String? _uploadedMediaId;
   String? _existingImageUrl;
@@ -137,6 +139,7 @@ class _AddProductJourneyScreenState
           (picked.mimeType == null || picked.mimeType!.trim().isEmpty)
               ? 'image/jpeg'
               : picked.mimeType!.trim();
+      _photoGeneration++;
       _uploadedMediaId = null;
       _existingImageUrl = null;
     });
@@ -147,6 +150,7 @@ class _AddProductJourneyScreenState
       _photoBytes = null;
       _photoFileName = null;
       _photoMimeType = 'image/jpeg';
+      _photoGeneration++;
       _uploadedMediaId = null;
       _existingImageUrl = null;
     });
@@ -167,6 +171,7 @@ class _AddProductJourneyScreenState
   /// - Edição sem mudança de foto → null / não incluir (preserva).
   Future<({List<String>? mediaIds, bool includeMediaIds})> _resolveMedia() async {
     if (_hasLocalPhoto) {
+      final generation = _photoGeneration;
       final bytesSnapshot = _photoBytes!;
       final mimeSnapshot = _photoMimeType;
       final fileName = (_photoFileName == null || _photoFileName!.isEmpty)
@@ -180,8 +185,9 @@ class _AddProductJourneyScreenState
                 bytes: bytesSnapshot,
               );
 
-      // Seleção pode ter mudado enquanto o upload corria (voltar/trocar/remover).
-      if (!identical(_photoBytes, bytesSnapshot)) {
+      // Seleção stale: usuário voltou/trocou/removeu durante o upload.
+      if (_photoGeneration != generation ||
+          !identical(_photoBytes, bytesSnapshot)) {
         _uploadedMediaId = null;
         return _resolveMedia();
       }

@@ -359,4 +359,132 @@ public class TerritoryAssetServiceEdgeCasesTests
         Assert.True(result.IsFailure);
         Assert.Contains("Asset not found", result.Error ?? "");
     }
+
+    [Fact]
+    public async Task CreateAsync_WithNaturalWaterSubtype_PersistsSubtype()
+    {
+        var assetService = CreateService();
+        var geoAnchors = new List<TerritoryAssetGeoAnchorInput>
+        {
+            new TerritoryAssetGeoAnchorInput(-23.37, -45.02)
+        };
+
+        var result = await assetService.CreateAsync(
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Rio do Peixe",
+            "Curso d'água",
+            geoAnchors,
+            CancellationToken.None,
+            "river");
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal("natural", result.Value!.Asset.Type);
+        Assert.Equal("river", result.Value.Asset.Subtype);
+    }
+
+    [Fact]
+    public async Task CreateAsync_WithSubtypeOnNonNaturalType_ReturnsFailure()
+    {
+        var assetService = CreateService();
+        var geoAnchors = new List<TerritoryAssetGeoAnchorInput>
+        {
+            new TerritoryAssetGeoAnchorInput(-23.37, -45.02)
+        };
+
+        var result = await assetService.CreateAsync(
+            TestTerritoryId,
+            TestUserId,
+            "cultural",
+            "Mirante",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            "river");
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("natural", result.Error ?? "", StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task CreateAsync_WithInvalidNaturalSubtype_ReturnsFailure()
+    {
+        var assetService = CreateService();
+        var geoAnchors = new List<TerritoryAssetGeoAnchorInput>
+        {
+            new TerritoryAssetGeoAnchorInput(-23.37, -45.02)
+        };
+
+        var result = await assetService.CreateAsync(
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Lago",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            "lake");
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("Invalid natural water subtype", result.Error ?? "");
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WithNaturalSubtype_UpdatesSubtype()
+    {
+        var assetService = CreateService();
+        var geoAnchors = new List<TerritoryAssetGeoAnchorInput>
+        {
+            new TerritoryAssetGeoAnchorInput(-23.37, -45.02)
+        };
+
+        var created = await assetService.CreateAsync(
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Nascente X",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            "spring");
+        Assert.True(created.IsSuccess);
+
+        var updated = await assetService.UpdateAsync(
+            created.Value!.Asset.Id,
+            TestTerritoryId,
+            TestUserId,
+            "natural",
+            "Nascente X",
+            null,
+            geoAnchors,
+            CancellationToken.None,
+            "waterfall");
+
+        Assert.True(updated.IsSuccess);
+        Assert.Equal("waterfall", updated.Value!.Asset.Subtype);
+    }
+
+    private static TerritoryAssetService CreateService()
+    {
+        var dataStore = new InMemoryDataStore();
+        var assetRepository = new InMemoryAssetRepository(dataStore);
+        var anchorRepository = new InMemoryAssetGeoAnchorRepository(dataStore);
+        var validationRepository = new InMemoryAssetValidationRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var workItemRepository = new InMemoryWorkItemRepository(dataStore);
+        var auditLogger = new InMemoryAuditLogger(dataStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+
+        return new TerritoryAssetService(
+            assetRepository,
+            anchorRepository,
+            validationRepository,
+            membershipRepository,
+            workItemRepository,
+            auditLogger,
+            unitOfWork);
+    }
 }

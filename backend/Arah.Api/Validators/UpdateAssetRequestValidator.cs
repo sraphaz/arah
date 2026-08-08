@@ -4,13 +4,10 @@ using FluentValidation;
 
 namespace Arah.Api.Validators;
 
-public sealed class CreateAssetRequestValidator : AbstractValidator<CreateAssetRequest>
+public sealed class UpdateAssetRequestValidator : AbstractValidator<UpdateAssetRequest>
 {
-    public CreateAssetRequestValidator()
+    public UpdateAssetRequestValidator()
     {
-        RuleFor(x => x.TerritoryId)
-            .ValidGuid();
-
         RuleFor(x => x.Type)
             .NotEmptyWithMaxLength(100);
 

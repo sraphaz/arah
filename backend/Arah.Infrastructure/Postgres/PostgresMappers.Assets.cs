@@ -12,6 +12,7 @@ public static partial class PostgresMappers
             Id = asset.Id,
             TerritoryId = asset.TerritoryId,
             Type = asset.Type,
+            Subtype = asset.Subtype,
             Name = asset.Name,
             Description = asset.Description,
             Status = asset.Status,
@@ -40,7 +41,8 @@ public static partial class PostgresMappers
             record.UpdatedAtUtc,
             record.ArchivedByUserId,
             record.ArchivedAtUtc,
-            record.ArchiveReason);
+            record.ArchiveReason,
+            record.Subtype);
     }
 
     public static AssetGeoAnchorRecord ToRecord(this AssetGeoAnchor anchor)

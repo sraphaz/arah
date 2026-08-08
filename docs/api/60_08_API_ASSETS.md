@@ -18,14 +18,29 @@
 
 **Como usar**:
 - Exige autenticação
-- Body: `territoryId`, nome, descrição, tipo, `geoAnchors` (obrigatório)
+- Body: `territoryId`, `type`, `name`, `description?`, `geoAnchors` (obrigatório), `subtype?` (WA-E1)
+
+**Exemplo hídrico (ponte)**:
+```json
+{
+  "territoryId": "...",
+  "type": "natural",
+  "subtype": "river",
+  "name": "Rio do Vale",
+  "description": "Trecho urbano",
+  "geoAnchors": [{ "latitude": -23.37, "longitude": -45.02 }]
+}
+```
 
 **Regras de negócio**:
 - **Permissão**: Apenas moradores verificados (RESIDENT + `ResidencyVerification != NONE`) ou curadores podem criar
 - **Geolocalização**: Obrigatória (pelo menos um GeoAnchor)
-- **Status**: Asset é criado como `PENDING` (aguarda validação)
-- **Limites**: Nome máximo 200 caracteres, descrição máxima 1000 caracteres
+- **Status**: Asset é criado como `Suggested` (aguarda curadoria → `Active`)
+- **Subtype (WA-E1)**: opcional; se informado, `type` deve ser `natural` e subtype ∈ `river|stream|spring|waterfall|well|potable_water`
+- **Limites**: Nome máximo 200 caracteres, descrição máxima 1000 caracteres, subtype máximo 40
 - **Não vendável**: TerritoryAssets não podem ser vendidos ou transferidos via marketplace
+
+**Resposta**: inclui `subtype` (nullable) além de `type`.
 
 ### Listar Assets (`GET /api/v1/assets`)
 

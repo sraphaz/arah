@@ -243,4 +243,65 @@ public sealed class AssetsControllerTests
                    response.StatusCode == HttpStatusCode.BadRequest ||
                    response.StatusCode == HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task CreateAsset_WithNaturalWaterSubtype_ReturnsSubtype()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await AuthTestHelper.LoginForTokenAsync(client, "google", "resident-external");
+        AuthTestHelper.SetupAuthenticatedClient(client, token, "create-asset-subtype-session");
+
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
+
+        var request = new CreateAssetRequest(
+            ActiveTerritoryId,
+            "natural",
+            "Rio do Vale",
+            "Curso d'água comunitário",
+            new List<AssetGeoAnchorRequest>
+            {
+                new AssetGeoAnchorRequest(-23.37, -45.02)
+            },
+            "river");
+
+        var response = await client.PostAsJsonAsync("api/v1/assets", request);
+        response.EnsureSuccessStatusCode();
+
+        var asset = await response.Content.ReadFromJsonAsync<AssetResponse>();
+        Assert.NotNull(asset);
+        Assert.Equal("natural", asset!.Type);
+        Assert.Equal("river", asset.Subtype);
+    }
+
+    [Fact]
+    public async Task CreateAsset_WithSubtypeOnCulturalType_ReturnsBadRequest()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await AuthTestHelper.LoginForTokenAsync(client, "google", "resident-external");
+        AuthTestHelper.SetupAuthenticatedClient(client, token, "create-asset-bad-subtype-session");
+
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
+
+        var request = new CreateAssetRequest(
+            ActiveTerritoryId,
+            "cultural",
+            "Mirante",
+            null,
+            new List<AssetGeoAnchorRequest>
+            {
+                new AssetGeoAnchorRequest(-23.37, -45.02)
+            },
+            "river");
+
+        var response = await client.PostAsJsonAsync("api/v1/assets", request);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

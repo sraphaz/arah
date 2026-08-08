@@ -101,7 +101,8 @@ public sealed class TerritoryAssetService
         string name,
         string? description,
         IReadOnlyCollection<TerritoryAssetGeoAnchorInput>? geoAnchors,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? subtype = null)
     {
         if (string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(name))
         {
@@ -111,6 +112,13 @@ public sealed class TerritoryAssetService
         if (geoAnchors is null || geoAnchors.Count == 0)
         {
             return Result<TerritoryAssetDetails>.Failure("At least one geoAnchor is required.");
+        }
+
+        var normalizedType = NormalizeType(type);
+        var normalizedSubtype = NaturalWaterSubtype.Normalize(subtype);
+        if (!NaturalWaterSubtype.TryValidate(normalizedType, normalizedSubtype, out var subtypeError))
+        {
+            return Result<TerritoryAssetDetails>.Failure(subtypeError ?? "Invalid subtype.");
         }
 
         var anchors = BuildAnchors(geoAnchors);
@@ -123,7 +131,7 @@ public sealed class TerritoryAssetService
         var asset = new TerritoryAsset(
             Guid.NewGuid(),
             territoryId,
-            NormalizeType(type),
+            normalizedType,
             name.Trim(),
             string.IsNullOrWhiteSpace(description) ? null : description.Trim(),
             AssetStatus.Suggested,
@@ -133,7 +141,8 @@ public sealed class TerritoryAssetService
             now,
             null,
             null,
-            null);
+            null,
+            normalizedSubtype);
 
         await _assetRepository.AddAsync(asset, cancellationToken);
         await _anchorRepository.AddAsync(anchors.Select(anchor => new AssetGeoAnchor(
@@ -191,7 +200,8 @@ public sealed class TerritoryAssetService
         string name,
         string? description,
         IReadOnlyCollection<TerritoryAssetGeoAnchorInput>? geoAnchors,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? subtype = null)
     {
         if (string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(name))
         {
@@ -201,6 +211,13 @@ public sealed class TerritoryAssetService
         if (geoAnchors is null || geoAnchors.Count == 0)
         {
             return Result<TerritoryAssetDetails>.Failure("At least one geoAnchor is required.");
+        }
+
+        var normalizedType = NormalizeType(type);
+        var normalizedSubtype = NaturalWaterSubtype.Normalize(subtype);
+        if (!NaturalWaterSubtype.TryValidate(normalizedType, normalizedSubtype, out var subtypeError))
+        {
+            return Result<TerritoryAssetDetails>.Failure(subtypeError ?? "Invalid subtype.");
         }
 
         var asset = await _assetRepository.GetByIdAsync(assetId, cancellationToken);
@@ -217,11 +234,12 @@ public sealed class TerritoryAssetService
 
         var now = DateTime.UtcNow;
         asset.UpdateDetails(
-            NormalizeType(type),
+            normalizedType,
             name.Trim(),
             string.IsNullOrWhiteSpace(description) ? null : description.Trim(),
             userId,
-            now);
+            now,
+            normalizedSubtype);
 
         await _assetRepository.UpdateAsync(asset, cancellationToken);
         await _anchorRepository.ReplaceForAssetAsync(asset.Id, anchors.Select(anchor => new AssetGeoAnchor(

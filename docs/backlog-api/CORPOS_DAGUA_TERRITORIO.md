@@ -1,6 +1,6 @@
 # Corpos d'água do território — rios, nascentes e fontes curáveis
 
-**Versão**: 1.1  
+**Versão**: 1.2  
 **Data**: 2026-08-08  
 **Status**: ✅ Aprovado para planejamento (backlog)  
 **Domínio dono**: `mapa-lugares` (primário) · co-ativação: `territorio-membership`, `governanca-transparencia`, `feed-conteudo`, `design-ux` · sinais externos: trilha TI  
@@ -79,9 +79,9 @@ Refinar o que já existe em Assets/Mapa:
 
 | ID | Item | Prio | Notas |
 |----|------|------|-------|
-| WA-E1 | Tipagem hídrica em TerritoryAsset (`natural` + subtype) | P1 | Sem mudar Territory |
+| WA-E1 | Tipagem hídrica em TerritoryAsset (`natural` + subtype) | P1 | ✅ Implementado — campo `Subtype` + allowlist |
 | WA-E2 | Pins/filtros de mapa para corpos d'água | P1 | Flutter + BFF; filtrar HIGH/RESTRICTED server-side |
-| WA-E3 | Glossário + docs funcionais alinhados | P0 | Este pacote |
+| WA-E3 | Glossário + docs funcionais alinhados | P0 | ✅ Docs iniciais; manter sync com código |
 | WA-E4 | Curadoria: copy/UX “cuidar do rio / da nascente” | P2 | design-ux |
 
 ### B) Fundação na FASE24 (canônico)
@@ -153,5 +153,6 @@ Refinar o que já existe em Assets/Mapa:
 
 ### Changelog
 
+- **1.2** (2026-08-08): WA-E1 implementado — `TerritoryAsset.Subtype` com allowlist hídrica.
 - **1.1** (2026-08-08): Alinhamento CodeRabbit — vocabulário canônico, MER vs implementação, typo hídrico, WaterBody alias.
 - **1.0** (2026-08-08): Introdução da capacidade no backlog — rios e fontes como entidades curáveis do território.

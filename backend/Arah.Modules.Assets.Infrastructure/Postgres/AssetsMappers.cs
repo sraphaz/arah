@@ -12,6 +12,7 @@ public static class AssetsMappers
             Id = asset.Id,
             TerritoryId = asset.TerritoryId,
             Type = asset.Type,
+            Subtype = asset.Subtype,
             Name = asset.Name,
             Description = asset.Description,
             Status = asset.Status,
@@ -40,7 +41,8 @@ public static class AssetsMappers
             record.UpdatedAtUtc,
             record.ArchivedByUserId,
             record.ArchivedAtUtc,
-            record.ArchiveReason);
+            record.ArchiveReason,
+            record.Subtype);
     }
 
     public static AssetGeoAnchorRecord ToRecord(this AssetGeoAnchor anchor)

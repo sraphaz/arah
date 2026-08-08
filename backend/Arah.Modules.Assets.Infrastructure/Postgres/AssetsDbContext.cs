@@ -21,6 +21,7 @@ public sealed class AssetsDbContext : DbContext
             entity.ToTable("territory_assets");
             entity.HasKey(a => a.Id);
             entity.Property(a => a.Type).HasMaxLength(120).IsRequired();
+            entity.Property(a => a.Subtype).HasMaxLength(40);
             entity.Property(a => a.Name).HasMaxLength(200).IsRequired();
             entity.Property(a => a.Description).HasMaxLength(1000);
             entity.Property(a => a.Status).HasConversion<int>();

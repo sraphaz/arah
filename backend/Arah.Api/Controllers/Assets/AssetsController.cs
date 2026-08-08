@@ -241,7 +241,8 @@ public sealed class AssetsController : ControllerBase
             request.Name,
             request.Description,
             request.GeoAnchors.Select(anchor => new TerritoryAssetGeoAnchorInput(anchor.Latitude, anchor.Longitude)).ToList(),
-            cancellationToken);
+            cancellationToken,
+            request.Subtype);
 
         if (!result.IsSuccess || result.Value is null)
         {
@@ -294,7 +295,8 @@ public sealed class AssetsController : ControllerBase
             request.Name,
             request.Description,
             request.GeoAnchors.Select(anchor => new TerritoryAssetGeoAnchorInput(anchor.Latitude, anchor.Longitude)).ToList(),
-            cancellationToken);
+            cancellationToken,
+            request.Subtype);
 
         if (!result.IsSuccess || result.Value is null)
         {
@@ -460,6 +462,7 @@ public sealed class AssetsController : ControllerBase
             asset.Id,
             asset.TerritoryId,
             asset.Type,
+            asset.Subtype,
             asset.Name,
             asset.Description,
             asset.Status.ToString().ToUpperInvariant(),

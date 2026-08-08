@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — WA-E1 tipagem hídrica em TerritoryAsset (2026-08-08)
+
+- Campo `Subtype` em TerritoryAsset (API create/update/response) com allowlist `river|stream|spring|waterfall|well|potable_water` quando `type=natural`
+- Domínio: `NaturalWaterSubtype` + migration Postgres `AddTerritoryAssetSubtype`
+- Testes de domínio/service/API; docs Assets + CORPOS (WA-E1 ✅)
+- Spec-Id: `water-bodies-curation` (slice ponte; NaturalAsset continua FASE24.0)
+
 ### Adicionado — Corpos d'água do território no backlog (2026-08-08)
 
 - Realinhamento: [`CORPOS_DAGUA_TERRITORIO.md`](backlog-api/CORPOS_DAGUA_TERRITORIO.md) — rios, córregos, nascentes e fontes como **entidades curáveis** (fora de `Territory`)

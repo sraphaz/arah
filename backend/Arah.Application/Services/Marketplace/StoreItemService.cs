@@ -243,11 +243,20 @@ public sealed class StoreItemService
         List<Guid>? normalizedMediaIds = null;
         if (mediaIds is not null)
         {
+            var existingAttachments = await _mediaAttachmentRepository.ListByOwnerAsync(
+                MediaOwnerType.StoreItem,
+                item.Id,
+                cancellationToken);
+            var alreadyAttachedIds = existingAttachments
+                .Select(a => a.MediaAssetId)
+                .ToHashSet();
+
             var mediaValidation = await NormalizeAndValidateMediaAsync(
                 item.TerritoryId,
                 userId,
                 mediaIds,
-                cancellationToken);
+                cancellationToken,
+                alreadyAttachedIds);
             if (mediaValidation.IsFailure)
             {
                 return Result<StoreItem>.Failure(mediaValidation.Error ?? "Invalid media.");
@@ -416,7 +425,8 @@ public sealed class StoreItemService
         Guid territoryId,
         Guid userId,
         IReadOnlyCollection<Guid>? mediaIds,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlySet<Guid>? alreadyAttachedMediaIds = null)
     {
         if (mediaIds is null)
         {
@@ -449,7 +459,16 @@ public sealed class StoreItemService
             return Result<List<Guid>?>.Failure("One or more media assets not found.");
         }
 
-        if (mediaAssets.Any(media => media.UploadedByUserId != userId || media.IsDeleted))
+        if (mediaAssets.Any(media => media.IsDeleted))
+        {
+            return Result<List<Guid>?>.Failure("One or more media assets are invalid or do not belong to the user.");
+        }
+
+        // Novas mídias exigem ownership; anexos já ligados ao item podem ser
+        // preservados por curador/owner que não fez o upload original.
+        if (mediaAssets.Any(media =>
+                media.UploadedByUserId != userId &&
+                (alreadyAttachedMediaIds == null || !alreadyAttachedMediaIds.Contains(media.Id))))
         {
             return Result<List<Guid>?>.Failure("One or more media assets are invalid or do not belong to the user.");
         }

@@ -464,14 +464,14 @@ erDiagram
   }
 
   %% =========================================================
-  %% 9) NATURAL ASSETS (SPRINGS, WATERFALLS, TRAILS, TREES, ETC.)
+  %% 9) NATURAL ASSETS (RIVERS, SPRINGS, WATERFALLS, TRAILS, TREES, ETC.)
   %% =========================================================
 
   NATURAL_ASSET {
     uuid id PK
     uuid territory_id FK
     uuid created_by_user_id FK
-    string type                         "SPRING|WATERFALL|NATIVE_TREE|SANCTUARY|VIEWPOINT|POTABLE_WATER|TRAIL"
+    string type                         "RIVER|STREAM|SPRING|WATERFALL|NATIVE_TREE|SANCTUARY|VIEWPOINT|POTABLE_WATER|TRAIL"
     string name
     text description
     float location_lat
@@ -517,6 +517,16 @@ erDiagram
     datetime last_tested_at
     string tested_by                    "LAB|COMMUNITY|UNKNOWN"
     text notes
+  }
+
+  WATERCOURSE_DETAILS {
+    uuid natural_asset_id PK,FK         "FK -> NATURAL_ASSET (type=RIVER|STREAM)"
+    string path_geojson                 "polyline/linestring of the watercourse reach"
+    string flow_regime                  "PERMANENT|SEASONAL|INTERMITTENT|UNKNOWN"
+    string community_use                "LEISURE|ABSTRACTION|SACRED|ECOLOGICAL|MIXED|UNKNOWN"
+    text care_notes                     "community care notes (riparian, cleanup, memory)"
+    datetime created_at
+    datetime updated_at
   }
 
   NATIVE_TREE_DETAILS {
@@ -715,6 +725,7 @@ erDiagram
 
   NATURAL_ASSET |o--o{ TRAIL_SEGMENT : trail_geometry
   NATURAL_ASSET |o--|| WATER_POINT_DETAILS : water_details
+  NATURAL_ASSET |o--|| WATERCOURSE_DETAILS : watercourse_details
   NATURAL_ASSET |o--|| NATIVE_TREE_DETAILS : tree_details
   NATURAL_ASSET |o--|| SANCTUARY_DETAILS : sanctuary_details
 

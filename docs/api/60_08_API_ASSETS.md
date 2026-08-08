@@ -10,9 +10,11 @@
 
 **TerritoryAssets** representam recursos valiosos do território que pertencem ao próprio território (naturais, culturais, comunitários, infraestruturais, simbólicos). TerritoryAssets não são vendáveis e não devem ser tratados como produtos ou serviços. Mídia (foto, vídeo, documento, link) deve ser tratada como registro/evidência associada a um TerritoryAsset, Event ou Post, não como TerritoryAsset em si.
 
+**Corpos d'água**: rios, córregos, nascentes e fontes entram como assets/recursos naturais curáveis (ponte TerritoryAsset; alvo `NaturalAsset` na FASE24.0). Ver [CORPOS_DAGUA_TERRITORIO](../backlog-api/CORPOS_DAGUA_TERRITORIO.md). Não embutir no modelo `Territory`.
+
 ### Criar Asset (`POST /api/v1/assets`)
 
-**Descrição**: Cria um recurso territorial valioso (ex.: trilha, nascente, ponto cultural, infraestrutura comunitária).
+**Descrição**: Cria um recurso territorial valioso (ex.: trilha, **rio**, nascente, ponto cultural, infraestrutura comunitária).
 
 **Como usar**:
 - Exige autenticação

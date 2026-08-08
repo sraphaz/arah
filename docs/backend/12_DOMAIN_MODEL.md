@@ -23,6 +23,15 @@
 - **PostGeoAnchor** (id, postId, lat/lng, type, createdAt)
 - **Media** (postId, type, url, metadata) *(pós-MVP)*
 
+### Assets e patrimônio natural (mapa vivo)
+- **TerritoryAsset** (territoryId, type, name, geo…; não vendável; curadoria comunitária) — implementado
+- **NaturalAsset** *(alvo FASE24.0)* — patrimônio natural tipado (`RIVER`, `STREAM`, `SPRING`, `WATERFALL`, `POTABLE_WATER`, `TRAIL`, …), visibility/access/sensitivity, confirmações
+- **WaterBody** — especialização hídrica (corpo d'água curável); **nunca** campo de `Territory`
+- **WatercourseDetails** / **WaterPointDetails** — geometria de curso vs potabilidade de ponto
+- Relação: `Territory 1 → N NaturalAsset`; observações de saúde e posts referenciam o asset, não o inverso social no Territory
+
+> Decisão: Territory permanece geográfico e neutro. Rios e fontes são entidades irmãs escopadas por `territoryId`. Detalhe de backlog: [CORPOS_DAGUA_TERRITORIO](../backlog-api/CORPOS_DAGUA_TERRITORIO.md).
+
 ### Social
 - **FriendRelation** (requester, target, status pending/accepted/blocked) *(pós-MVP)*
 

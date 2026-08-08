@@ -1,0 +1,63 @@
+id: water-bodies-curation
+version: "0.1.0"
+title: "Corpos d'água curáveis do território (rios, nascentes, fontes)"
+owner: backend
+status: draft
+phase: FASE24
+
+intent: |
+  Permitir que a comunidade cadastre, curadore e cuide de corpos d'água
+  (rios, córregos, nascentes, fontes, poços) como entidades do território —
+  fora de Territory, escopadas por territoryId, nunca vendáveis. Fundação
+  para observações de saúde hídrica (FASE24) e vínculo com posts/mapa.
+
+acceptance:
+  - id: AC-WA-1
+    when: "Quando um Resident (ou Curator) cria um corpo d'água no território com tipo hídrico válido"
+    then: "o sistema persiste a entidade escopada por territoryId em status PENDING e exige geolocalização (ponto ou polilinha de curso)"
+    status: pending
+  - id: AC-WA-2
+    when: "Quando um Curator valida o corpo d'água"
+    then: "o status passa a PUBLISHED/VALIDATED e a entidade aparece no mapa do território para quem tem visibilidade"
+    status: pending
+  - id: AC-WA-3
+    when: "Quando o tipo é RIVER ou STREAM"
+    then: "é possível anexar WATERCOURSE_DETAILS com geometria de trecho (GeoJSON) e metadados de regime/uso comunitário"
+    status: pending
+  - id: AC-WA-4
+    when: "Quando o tipo é SPRING ou POTABLE_WATER (ou ponto equivalente)"
+    then: "é possível anexar WATER_POINT_DETAILS com potabilidade e sensibilidade; pontos HIGH sensitivity respeitam access_level RESTRICTED"
+    status: pending
+  - id: AC-WA-5
+    when: "Quando um Post ou HealthObservation referencia o corpo d'água"
+    then: "o vínculo usa o id da entidade hídrica; Territory permanece sem lógica social/hídrica embutida"
+    status: pending
+  - id: AC-WA-6
+    when: "Quando se tenta expor o corpo d'água como item de marketplace"
+    then: "o sistema rejeita — NaturalAsset/TerritoryAsset hídrico nunca é vendável"
+    status: pending
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Asset|FullyQualifiedName~Natural|FullyQualifiedName~Water"
+  agents:
+    - backend
+    - flutter
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/CORPOS_DAGUA_TERRITORIO.md
+    - docs/backlog-api/FASE24.md
+    - docs/funcional/09_ASSETS.md
+    - docs/product/05_GLOSSARY.md
+    - docs/backend/12_DOMAIN_MODEL.md
+  tests: []
+
+guardrails:
+  - territory-first
+  - territory-is-geographic-only
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+  - no-marketplace-for-natural-assets

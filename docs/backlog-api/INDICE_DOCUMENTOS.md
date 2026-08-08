@@ -22,6 +22,7 @@
 6. **[REVISAO_COMPLETA_PRIORIDADES.md](./REVISAO_COMPLETA_PRIORIDADES.md)** - Revisão completa de prioridades
 7. **[REALINHAMENTO_ESTRATEGICO_FASES_8_14.md](./REALINHAMENTO_ESTRATEGICO_FASES_8_14.md)** - Realinhamento estratégico
 8. **[RESUMO_REALINHAMENTO.md](./RESUMO_REALINHAMENTO.md)** - Resumo do realinhamento
+8b. **[CORPOS_DAGUA_TERRITORIO.md](./CORPOS_DAGUA_TERRITORIO.md)** ⭐ - Rios e fontes como entidades curáveis (2026-08)
 9. **[ATUALIZACAO_ORDEM_FASES.md](./ATUALIZACAO_ORDEM_FASES.md)** - Atualização de ordem de fases
 
 ---

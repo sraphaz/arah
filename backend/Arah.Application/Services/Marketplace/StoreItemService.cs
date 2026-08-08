@@ -111,100 +111,17 @@ public sealed class StoreItemService
             }
         }
 
-        // Validar e normalizar mediaIds
-        var normalizedMediaIds = mediaIds?
-            .Where(id => id != Guid.Empty)
-            .Distinct()
-            .ToList();
-
-        if (normalizedMediaIds is not null && normalizedMediaIds.Count > 0)
+        var mediaValidation = await NormalizeAndValidateMediaAsync(
+            territoryId,
+            userId,
+            mediaIds,
+            cancellationToken);
+        if (mediaValidation.IsFailure)
         {
-            // Obter limites efetivos da configuração territorial (com fallback para global)
-            var limits = await _mediaConfigService.GetEffectiveContentLimitsAsync(
-                territoryId,
-                MediaContentType.Marketplace,
-                cancellationToken);
-
-            // Validar quantidade máxima de mídias
-            if (normalizedMediaIds.Count > limits.MaxMediaCount)
-            {
-                return Result<StoreItem>.Failure($"Maximum {limits.MaxMediaCount} media items allowed per item.");
-            }
-
-            var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(normalizedMediaIds, cancellationToken);
-            if (mediaAssets.Count != normalizedMediaIds.Count)
-            {
-                return Result<StoreItem>.Failure("One or more media assets not found.");
-            }
-
-            // Validar que todas as mídias pertencem ao usuário
-            if (mediaAssets.Any(media => media.UploadedByUserId != userId || media.IsDeleted))
-            {
-                return Result<StoreItem>.Failure("One or more media assets are invalid or do not belong to the user.");
-            }
-
-            var images = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Image).ToList();
-            var videos = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Video).ToList();
-            var audios = mediaAssets.Where(media => media.MediaType == Domain.Media.MediaType.Audio).ToList();
-
-            // Validar imagens
-            if (images.Count > 0 && !limits.ImagesEnabled)
-            {
-                return Result<StoreItem>.Failure("Images are not enabled for marketplace items in this territory.");
-            }
-
-            // Validar vídeos
-            if (videos.Count > 0 && !limits.VideosEnabled)
-            {
-                return Result<StoreItem>.Failure("Videos are not enabled for marketplace items in this territory.");
-            }
-            if (videos.Count > limits.MaxVideoCount)
-            {
-                return Result<StoreItem>.Failure($"Maximum {limits.MaxVideoCount} video(s) allowed per item.");
-            }
-            foreach (var video in videos)
-            {
-                if (video.SizeBytes > limits.MaxVideoSizeBytes)
-                {
-                    var maxSizeMB = limits.MaxVideoSizeBytes / (1024.0 * 1024.0);
-                    return Result<StoreItem>.Failure($"Video size exceeds {maxSizeMB:F1}MB limit for marketplace items.");
-                }
-                // Validar tipo MIME se configurado
-                if (limits.AllowedVideoMimeTypes != null && limits.AllowedVideoMimeTypes.Count > 0)
-                {
-                    if (!limits.AllowedVideoMimeTypes.Contains(video.MimeType, StringComparer.OrdinalIgnoreCase))
-                    {
-                        return Result<StoreItem>.Failure($"Video MIME type '{video.MimeType}' is not allowed for marketplace items.");
-                    }
-                }
-            }
-
-            // Validar áudios
-            if (audios.Count > 0 && !limits.AudioEnabled)
-            {
-                return Result<StoreItem>.Failure("Audio is not enabled for marketplace items in this territory.");
-            }
-            if (audios.Count > limits.MaxAudioCount)
-            {
-                return Result<StoreItem>.Failure($"Maximum {limits.MaxAudioCount} audio(s) allowed per item.");
-            }
-            foreach (var audio in audios)
-            {
-                if (audio.SizeBytes > limits.MaxAudioSizeBytes)
-                {
-                    var maxSizeMB = limits.MaxAudioSizeBytes / (1024.0 * 1024.0);
-                    return Result<StoreItem>.Failure($"Audio size exceeds {maxSizeMB:F1}MB limit for marketplace items.");
-                }
-                // Validar tipo MIME se configurado
-                if (limits.AllowedAudioMimeTypes != null && limits.AllowedAudioMimeTypes.Count > 0)
-                {
-                    if (!limits.AllowedAudioMimeTypes.Contains(audio.MimeType, StringComparer.OrdinalIgnoreCase))
-                    {
-                        return Result<StoreItem>.Failure($"Audio MIME type '{audio.MimeType}' is not allowed for marketplace items.");
-                    }
-                }
-            }
+            return Result<StoreItem>.Failure(mediaValidation.Error ?? "Invalid media.");
         }
+
+        var normalizedMediaIds = mediaValidation.Value;
 
         // Verificar regras de moderação comunitária
         if (_moderationService is not null)
@@ -298,6 +215,7 @@ public sealed class StoreItemService
         double? latitude,
         double? longitude,
         ItemStatus? status,
+        IReadOnlyCollection<Guid>? mediaIds,
         CancellationToken cancellationToken)
     {
         var item = await _itemRepository.GetByIdAsync(itemId, cancellationToken);
@@ -322,6 +240,31 @@ public sealed class StoreItemService
             return Result<StoreItem>.Failure("Not authorized.");
         }
 
+        List<Guid>? normalizedMediaIds = null;
+        if (mediaIds is not null)
+        {
+            var existingAttachments = await _mediaAttachmentRepository.ListByOwnerAsync(
+                MediaOwnerType.StoreItem,
+                item.Id,
+                cancellationToken);
+            var alreadyAttachedIds = existingAttachments
+                .Select(a => a.MediaAssetId)
+                .ToHashSet();
+
+            var mediaValidation = await NormalizeAndValidateMediaAsync(
+                item.TerritoryId,
+                userId,
+                mediaIds,
+                cancellationToken,
+                alreadyAttachedIds);
+            if (mediaValidation.IsFailure)
+            {
+                return Result<StoreItem>.Failure(mediaValidation.Error ?? "Invalid media.");
+            }
+
+            normalizedMediaIds = mediaValidation.Value;
+        }
+
         var now = DateTime.UtcNow;
         item.UpdateDetails(
             type ?? item.Type,
@@ -337,6 +280,28 @@ public sealed class StoreItemService
             longitude ?? item.Longitude,
             status ?? item.Status,
             now);
+
+        // null = preservar anexos; lista (mesmo vazia) = substituir.
+        if (normalizedMediaIds is not null)
+        {
+            await _mediaAttachmentRepository.DeleteByOwnerAsync(
+                MediaOwnerType.StoreItem,
+                item.Id,
+                cancellationToken);
+
+            foreach (var (mediaId, index) in normalizedMediaIds.Select((id, idx) => (id, idx)))
+            {
+                var attachment = new MediaAttachment(
+                    Guid.NewGuid(),
+                    mediaId,
+                    MediaOwnerType.StoreItem,
+                    item.Id,
+                    index,
+                    now);
+
+                await _mediaAttachmentRepository.AddAsync(attachment, cancellationToken);
+            }
+        }
 
         await _itemRepository.UpdateAsync(item, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
@@ -450,5 +415,187 @@ public sealed class StoreItemService
             store.TerritoryId,
             MembershipCapabilityType.Curator,
             cancellationToken);
+    }
+
+    /// <summary>
+    /// Normaliza e valida mediaIds do item.
+    /// <c>null</c> → Success(null); lista vazia → Success([]); lista com IDs → valida limites/ownership.
+    /// </summary>
+    private async Task<Result<List<Guid>?>> NormalizeAndValidateMediaAsync(
+        Guid territoryId,
+        Guid userId,
+        IReadOnlyCollection<Guid>? mediaIds,
+        CancellationToken cancellationToken,
+        IReadOnlySet<Guid>? alreadyAttachedMediaIds = null)
+    {
+        if (mediaIds is null)
+        {
+            return Result<List<Guid>?>.Success(null);
+        }
+
+        var normalizedMediaIds = mediaIds
+            .Where(id => id != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        if (normalizedMediaIds.Count == 0)
+        {
+            return Result<List<Guid>?>.Success(normalizedMediaIds);
+        }
+
+        var limits = await _mediaConfigService.GetEffectiveContentLimitsAsync(
+            territoryId,
+            MediaContentType.Marketplace,
+            cancellationToken);
+
+        if (normalizedMediaIds.Count > limits.MaxMediaCount)
+        {
+            return Result<List<Guid>?>.Failure($"Maximum {limits.MaxMediaCount} media items allowed per item.");
+        }
+
+        var assetsResult = await ResolveAssetsAsync(
+            normalizedMediaIds,
+            userId,
+            alreadyAttachedMediaIds,
+            cancellationToken);
+        if (assetsResult.IsFailure)
+        {
+            return Result<List<Guid>?>.Failure(assetsResult.Error ?? "Invalid media.");
+        }
+
+        var mediaAssets = assetsResult.Value!;
+        var images = mediaAssets.Where(m => m.MediaType == Domain.Media.MediaType.Image).ToList();
+        var videos = mediaAssets.Where(m => m.MediaType == Domain.Media.MediaType.Video).ToList();
+        var audios = mediaAssets.Where(m => m.MediaType == Domain.Media.MediaType.Audio).ToList();
+
+        if (images.Count > 0 && !limits.ImagesEnabled)
+        {
+            return Result<List<Guid>?>.Failure("Images are not enabled for marketplace items in this territory.");
+        }
+
+        var videoValidation = ValidateVideos(videos, limits);
+        if (videoValidation.IsFailure)
+        {
+            return Result<List<Guid>?>.Failure(videoValidation.Error ?? "Invalid video media.");
+        }
+
+        var audioValidation = ValidateAudios(audios, limits);
+        if (audioValidation.IsFailure)
+        {
+            return Result<List<Guid>?>.Failure(audioValidation.Error ?? "Invalid audio media.");
+        }
+
+        return Result<List<Guid>?>.Success(normalizedMediaIds);
+    }
+
+    private async Task<Result<IReadOnlyList<MediaAsset>>> ResolveAssetsAsync(
+        IReadOnlyList<Guid> mediaIds,
+        Guid userId,
+        IReadOnlySet<Guid>? alreadyAttachedMediaIds,
+        CancellationToken cancellationToken)
+    {
+        var mediaAssets = await _mediaAssetRepository.ListByIdsAsync(mediaIds, cancellationToken);
+        if (mediaAssets.Count != mediaIds.Count)
+        {
+            return Result<IReadOnlyList<MediaAsset>>.Failure("One or more media assets not found.");
+        }
+
+        if (mediaAssets.Any(media => media.IsDeleted))
+        {
+            return Result<IReadOnlyList<MediaAsset>>.Failure(
+                "One or more media assets are invalid or do not belong to the user.");
+        }
+
+        // Novas mídias exigem ownership; anexos já ligados ao item podem ser
+        // preservados por curador/owner que não fez o upload original.
+        if (mediaAssets.Any(media =>
+                media.UploadedByUserId != userId &&
+                (alreadyAttachedMediaIds == null || !alreadyAttachedMediaIds.Contains(media.Id))))
+        {
+            return Result<IReadOnlyList<MediaAsset>>.Failure(
+                "One or more media assets are invalid or do not belong to the user.");
+        }
+
+        return Result<IReadOnlyList<MediaAsset>>.Success(mediaAssets);
+    }
+
+    private static OperationResult ValidateVideos(
+        IReadOnlyList<MediaAsset> videos,
+        MediaContentConfig limits)
+    {
+        if (videos.Count == 0)
+        {
+            return OperationResult.Success();
+        }
+
+        if (!limits.VideosEnabled)
+        {
+            return OperationResult.Failure("Videos are not enabled for marketplace items in this territory.");
+        }
+
+        if (videos.Count > limits.MaxVideoCount)
+        {
+            return OperationResult.Failure($"Maximum {limits.MaxVideoCount} video(s) allowed per item.");
+        }
+
+        foreach (var video in videos)
+        {
+            if (video.SizeBytes > limits.MaxVideoSizeBytes)
+            {
+                var maxSizeMB = limits.MaxVideoSizeBytes / (1024.0 * 1024.0);
+                return OperationResult.Failure(
+                    $"Video size exceeds {maxSizeMB:F1}MB limit for marketplace items.");
+            }
+
+            if (limits.AllowedVideoMimeTypes != null &&
+                limits.AllowedVideoMimeTypes.Count > 0 &&
+                !limits.AllowedVideoMimeTypes.Contains(video.MimeType, StringComparer.OrdinalIgnoreCase))
+            {
+                return OperationResult.Failure(
+                    $"Video MIME type '{video.MimeType}' is not allowed for marketplace items.");
+            }
+        }
+
+        return OperationResult.Success();
+    }
+
+    private static OperationResult ValidateAudios(
+        IReadOnlyList<MediaAsset> audios,
+        MediaContentConfig limits)
+    {
+        if (audios.Count == 0)
+        {
+            return OperationResult.Success();
+        }
+
+        if (!limits.AudioEnabled)
+        {
+            return OperationResult.Failure("Audio is not enabled for marketplace items in this territory.");
+        }
+
+        if (audios.Count > limits.MaxAudioCount)
+        {
+            return OperationResult.Failure($"Maximum {limits.MaxAudioCount} audio(s) allowed per item.");
+        }
+
+        foreach (var audio in audios)
+        {
+            if (audio.SizeBytes > limits.MaxAudioSizeBytes)
+            {
+                var maxSizeMB = limits.MaxAudioSizeBytes / (1024.0 * 1024.0);
+                return OperationResult.Failure(
+                    $"Audio size exceeds {maxSizeMB:F1}MB limit for marketplace items.");
+            }
+
+            if (limits.AllowedAudioMimeTypes != null &&
+                limits.AllowedAudioMimeTypes.Count > 0 &&
+                !limits.AllowedAudioMimeTypes.Contains(audio.MimeType, StringComparer.OrdinalIgnoreCase))
+            {
+                return OperationResult.Failure(
+                    $"Audio MIME type '{audio.MimeType}' is not allowed for marketplace items.");
+            }
+        }
+
+        return OperationResult.Success();
     }
 }

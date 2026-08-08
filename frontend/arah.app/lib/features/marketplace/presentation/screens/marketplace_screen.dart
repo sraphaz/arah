@@ -552,14 +552,18 @@ class _MyStoreTabState extends State<_MyStoreTab> {
               ArahCard(
                 margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
                 onTap: () async {
-                  await context.push('/add-product-journey?itemId=${product.id}');
-                  if (context.mounted) {
-                    await widget.notifier.loadMyProducts();
-                  }
+                  // Mutação otimista no provider; evita reload que pisca
+                  // a lista por causa do cache GET do BFF (TTL 60s).
+                  await context.push(
+                    '/add-product-journey?itemId=${product.id}',
+                  );
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.inventory_2_outlined, color: colors.primary),
+                    _ProductThumb(
+                      imageUrl: product.primaryImageUrl,
+                      color: colors.primary,
+                    ),
                     const SizedBox(width: AppConstants.spacingMd),
                     Expanded(
                       child: Column(
@@ -686,6 +690,33 @@ class _MyStoreTabState extends State<_MyStoreTab> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ProductThumb extends StatelessWidget {
+  const _ProductThumb({required this.imageUrl, required this.color});
+
+  final String? imageUrl;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = imageUrl?.trim();
+    final hasImage = url != null && url.isNotEmpty;
+    if (!hasImage) {
+      return Icon(Icons.inventory_2_outlined, color: color);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+      child: Image.network(
+        url,
+        width: 48,
+        height: 48,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) =>
+            Icon(Icons.inventory_2_outlined, color: color),
+      ),
     );
   }
 }

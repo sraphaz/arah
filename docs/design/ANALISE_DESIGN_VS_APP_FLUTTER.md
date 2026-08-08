@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 🚧 Alinhamento avançado (Onda G 2026-08-05)  
-**Próximo passo**: upload de foto no produto, payout/saldo vendedor, mídia rica no feed
+**Status**: 🚧 Alinhamento avançado (Onda H 2026-08-08)  
+**Próximo passo**: payout/saldo vendedor (BFF allowlist), mídia rica no feed
 
 ---
 
@@ -227,6 +227,7 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | ✅ `design-ia-gate-check.ps1` no `run-gates` | APP-DS-02 |
 | **APP-DS-14** | Checkout PIX + polish Mercado/Minha loja + hub Serviços (tiles Em breve) | ✅ jornada 4 passos + payments/enable + ArahCard no hub | APP-DS-07 / backend pay |
 | **APP-DS-15** | CRUD produtos na loja + QR PIX + stub JourneyShell Em breve | ✅ `/add-product-journey`, `ArahPixPay`, `/coming-soon` | APP-DS-14 / items API |
+| **APP-DS-16** | Foto do produto (upload + thumbnail Minha loja + clear no PATCH) | ✅ `mediaIds` create/update; lista com thumb | APP-DS-15 / media API |
 
 ---
 
@@ -302,6 +303,7 @@ Comparar lado a lado com o Flutter: bottom-nav, top bar, feed card, hub Serviço
 
 ### Changelog deste documento
 
+- **1.7** (2026-08-08): Onda H — APP-DS-16 foto do produto (upload, thumb Minha loja, clear mediaIds).
 - **1.6** (2026-08-05): Onda G — APP-DS-15 CRUD produtos, QR PIX, ComingSoon JourneyShell.
 - **1.5** (2026-08-05): Onda F — APP-DS-14 checkout PIX journey, Minha loja payments toggle, hub Serviços ArahCard.
 - **1.4** (2026-08-05): Onda E — APP-DS-12 motion global; stats BFF no perfil.

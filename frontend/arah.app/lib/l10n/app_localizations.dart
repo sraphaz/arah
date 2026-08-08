@@ -2777,6 +2777,12 @@ abstract class AppLocalizations {
   /// **'Descrição'**
   String get addProductDescriptionTitle;
 
+  /// No description provided for @addProductPhotoDescriptionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto e descrição'**
+  String get addProductPhotoDescriptionTitle;
+
   /// No description provided for @addProductDescriptionHint.
   ///
   /// In pt, this message translates to:
@@ -2788,6 +2794,54 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Revisão'**
   String get addProductReviewTitle;
+
+  /// No description provided for @addProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar foto'**
+  String get addProductPhoto;
+
+  /// No description provided for @changeProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Trocar foto'**
+  String get changeProductPhoto;
+
+  /// No description provided for @removeProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover foto'**
+  String get removeProductPhoto;
+
+  /// No description provided for @addProductPhotoHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque para escolher uma foto da galeria'**
+  String get addProductPhotoHint;
+
+  /// No description provided for @addProductPhotoOptionalHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional — produtos com foto vendem melhor'**
+  String get addProductPhotoOptionalHint;
+
+  /// No description provided for @productPhotoLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto'**
+  String get productPhotoLabel;
+
+  /// No description provided for @productPhotoAttached.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anexada'**
+  String get productPhotoAttached;
+
+  /// No description provided for @productPhotoNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem foto'**
+  String get productPhotoNone;
 
   /// No description provided for @productTitleLabel.
   ///
@@ -2872,6 +2926,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao salvar produto.'**
   String get errorSaveProduct;
+
+  /// No description provided for @errorUploadProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível enviar a foto. Tente de novo.'**
+  String get errorUploadProductPhoto;
 
   /// No description provided for @comingSoonJourneyTitle.
   ///

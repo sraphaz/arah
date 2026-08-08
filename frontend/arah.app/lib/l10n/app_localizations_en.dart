@@ -1380,10 +1380,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addProductDescriptionTitle => 'Description';
 
   @override
+  String get addProductPhotoDescriptionTitle => 'Photo and description';
+
+  @override
   String get addProductDescriptionHint => 'Describe what it is, how to use it, and local conditions.';
 
   @override
   String get addProductReviewTitle => 'Review';
+
+  @override
+  String get addProductPhoto => 'Add photo';
+
+  @override
+  String get changeProductPhoto => 'Change photo';
+
+  @override
+  String get removeProductPhoto => 'Remove photo';
+
+  @override
+  String get addProductPhotoHint => 'Tap to choose a photo from the gallery';
+
+  @override
+  String get addProductPhotoOptionalHint => 'Optional — products with photos sell better';
+
+  @override
+  String get productPhotoLabel => 'Photo';
+
+  @override
+  String get productPhotoAttached => 'Attached';
+
+  @override
+  String get productPhotoNone => 'No photo';
 
   @override
   String get productTitleLabel => 'Product name';
@@ -1426,6 +1453,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorSaveProduct => 'Could not save product.';
+
+  @override
+  String get errorUploadProductPhoto => 'Could not upload the photo. Please try again.';
 
   @override
   String get comingSoonJourneyTitle => 'Coming soon';

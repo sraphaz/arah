@@ -206,6 +206,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     required String pricingType,
     double? priceAmount,
     String currency = 'BRL',
+    List<String>? mediaIds,
   }) async {
     final territoryId = _ref.read(selectedTerritoryIdValueProvider);
     final store = state.myStore;
@@ -221,6 +222,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       pricingType: pricingType,
       priceAmount: priceAmount,
       currency: currency,
+      mediaIds: mediaIds,
     );
     // Atualização local: GET items pode vir do cache BFF (TTL 60s).
     state = state.copyWith(
@@ -240,6 +242,8 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     required String pricingType,
     double? priceAmount,
     String currency = 'BRL',
+    List<String>? mediaIds,
+    bool includeMediaIds = false,
   }) async {
     final updated = await _repo.updateProduct(
       itemId: itemId,
@@ -250,6 +254,8 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       priceAmount: pricingType == 'Fixed' ? priceAmount : null,
       includePriceAmount: true,
       currency: currency,
+      mediaIds: mediaIds,
+      includeMediaIds: includeMediaIds,
     );
     state = state.copyWith(
       myProducts: state.myProducts

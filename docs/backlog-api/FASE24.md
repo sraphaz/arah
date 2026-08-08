@@ -115,16 +115,21 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 **Spec**: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml) · [CORPOS_DAGUA_TERRITORIO](./CORPOS_DAGUA_TERRITORIO.md)
 
 **Tarefas**:
-- [ ] Estender MER/`NaturalAsset` (ou tipar `TerritoryAsset`) com tipos hídricos:
-  - [ ] `RIVER`, `STREAM`, `SPRING`, `WATERFALL`, `POTABLE_WATER` (+ poço via detalhes)
-- [ ] Criar `WATERCOURSE_DETAILS` (polilinha GeoJSON, regime permanente/sazonal, uso comunitário, notas de cuidado)
+- [ ] Estender MER/`NaturalAsset` (ou tipar `TerritoryAsset`) com tipos hídricos canônicos:
+  - [ ] `RIVER`, `STREAM`, `SPRING`, `WATERFALL`, `POTABLE_WATER` (`WELL` só em `WATER_POINT_DETAILS.water_type`)
+- [ ] Criar `WATERCOURSE_DETAILS` (LineString GeoJSON ≤500 vértices, WGS84, intersecta território; regime; uso; notas)
 - [ ] Alinhar `WATER_POINT_DETAILS` (potabilidade, último teste, sensibilidade)
-- [ ] Fluxo de curadoria: PENDING → PUBLISHED/VALIDATED via Curator + WorkItem (reusar padrão AssetCuration)
+- [ ] Fluxo de curadoria **separado por modelo**:
+  - [ ] NaturalAsset (alvo): `PENDING` → `PUBLISHED` (também `HIDDEN`|`REVIEW`)
+  - [ ] TerritoryAsset (ponte): `PENDING` → `VALIDATED`
+  - [ ] WorkItem de curadoria (reusar padrão AssetCuration)
+- [ ] Autorização de leitura para `HIGH`/`RESTRICTED` em list/get/mapa/pins (server-side)
 - [ ] API: criar/listar/obter/atualizar status de corpos d'água por `territoryId` (paginação + bbox)
-- [ ] Mapa/Flutter: pin e filtro “água / rios”; detalhe com narrativa de cuidado
+- [ ] Referência de conteúdo: `naturalAssetId` em Post/HealthObservation (mesmo territoryId)
+- [ ] Mapa/Flutter via BFF: pin e filtro “água / rios”; omitir sensíveis sem auth
 - [ ] Garantir invariante: Territory permanece sem campos sociais/hídricos; asset nunca vai ao marketplace
 - [ ] Ponte opcional: migrar/alias de TerritoryAssets `natural` existentes (nascentes)
-- [ ] Testes de domínio + API + curadoria
+- [ ] Testes de domínio + API + curadoria + sensibilidade (mapear AC-WA-1…6)
 - [ ] Documentação: glossário, `09_ASSETS`, API assets/mapa
 
 **Arquivos previstos** (orientação — ajustar à Clean Architecture dos módulos Assets/Map/Health):
@@ -133,10 +138,10 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 - Contratos BFF + pins Flutter (`MAPA_PINS`)
 
 **Critérios de Sucesso**:
-- ✅ Comunidade cadastra e cura rio/nascente no território
-- ✅ Entidade aparece no mapa com tipagem correta
-- ✅ Pronto para `RelatedNaturalAssetId` nas observações (24.1+)
-- ✅ Spec AC-WA-* cobertos ou rastreados
+- ✅ Comunidade cadastra e cura rio/córrego/nascente/fonte no território
+- ✅ Entidade aparece no mapa com tipagem correta (sem vazar HIGH/RESTRICTED)
+- ✅ Pronto para `RelatedNaturalAssetId` / `naturalAssetId` nas observações e posts (24.1+)
+- ✅ Spec `water-bodies-curation` AC-WA-* cobertos ou rastreados
 - ✅ Testes passando
 
 ---

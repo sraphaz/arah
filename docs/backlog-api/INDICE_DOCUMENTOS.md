@@ -1,7 +1,7 @@
 # Índice de Documentos - Backlog API
 
 **Data**: 2025-01-13  
-**Última Atualização**: 2025-01-17
+**Última Atualização**: 2026-08-08
 
 ---
 

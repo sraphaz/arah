@@ -467,11 +467,15 @@ erDiagram
   %% 9) NATURAL ASSETS (RIVERS, SPRINGS, WATERFALLS, TRAILS, TREES, ETC.)
   %% =========================================================
 
+  %% type UPPERCASE canônico. WELL NÃO é tipo top-level (ver WATER_POINT_DETAILS.water_type).
+  %% WaterBody = alias de produto/API para types hídricos — não é tabela separada.
+  %% Ponte TerritoryAsset (minúsculo): river→RIVER, stream→STREAM, spring→SPRING,
+  %%   waterfall→WATERFALL, well→POTABLE_WATER+WELL, potable_water→POTABLE_WATER.
   NATURAL_ASSET {
     uuid id PK
     uuid territory_id FK
     uuid created_by_user_id FK
-    string type                         "RIVER|STREAM|SPRING|WATERFALL|NATIVE_TREE|SANCTUARY|VIEWPOINT|POTABLE_WATER|TRAIL"
+    string type                         "RIVER|STREAM|SPRING|WATERFALL|POTABLE_WATER|NATIVE_TREE|SANCTUARY|VIEWPOINT|TRAIL"
     string name
     text description
     float location_lat
@@ -520,8 +524,8 @@ erDiagram
   }
 
   WATERCOURSE_DETAILS {
-    uuid natural_asset_id PK,FK         "FK -> NATURAL_ASSET (type=RIVER|STREAM)"
-    string path_geojson                 "polyline/linestring of the watercourse reach"
+    uuid natural_asset_id PK,FK         "FK -> NATURAL_ASSET (type=RIVER|STREAM) only"
+    string path_geojson                 "GeoJSON LineString; WGS84; <=500 vertices; must intersect territory"
     string flow_regime                  "PERMANENT|SEASONAL|INTERMITTENT|UNKNOWN"
     string community_use                "LEISURE|ABSTRACTION|SACRED|ECOLOGICAL|MIXED|UNKNOWN"
     text care_notes                     "community care notes (riparian, cleanup, memory)"

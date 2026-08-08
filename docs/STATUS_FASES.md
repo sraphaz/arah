@@ -44,15 +44,15 @@ Trilha **transversal** (não substitui numeração FASE*). Âncoras: FASE23, FAS
 
 **Realinhamento**: [REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · **Handoff**: [inteligencia-territorial/](./handoff/inteligencia-territorial/)
 
-### 💧 Corpos d'água do território (rios, nascentes, fontes) ⭐ NOVO 2026-08
+### 💧 Corpos d'água do território (rios, córregos, nascentes, fontes) ⭐ NOVO 2026-08
 
-Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios e fontes como **entidades curáveis** escopadas por território. Âncora de implementação: **FASE24.0**.
+Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, córregos, nascentes e fontes como **entidades curáveis** escopadas por território. Âncora de implementação: **FASE24.0**.
 
 | Artefato | Papel |
 |----------|--------|
 | [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 |
 | [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico + curadoria |
-| [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD (draft) |
+| [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD draft · **Spec-Id:** `water-bodies-curation` · AC-WA-1…6 (testes planejados, status pending) |
 
 **Dono consultivo**: `mapa-lugares`.
 

@@ -1,8 +1,8 @@
 # Assets - Documentação Funcional
 
-**Versão**: 1.0  
-**Data**: 2026-01-28  
-**Status**: Funcionalidade Implementada  
+**Versão**: 1.1  
+**Data**: 2026-08-08  
+**Status**: Ponte TerritoryAsset implementada · NaturalAsset hídrico planejado (FASE24.0)  
 **Parte de**: [Documentação Funcional da Plataforma](funcional/00_PLATAFORMA_Arah.md)
 
 ---
@@ -15,17 +15,18 @@
 
 Rios, córregos, nascentes e fontes são **entidades curáveis** do território (patrimônio hídrico). A comunidade nomeia, marca no mapa, fala sobre e organiza cuidado — sem embutir o rio na entidade `Territory` (que permanece geográfica e neutra).
 
-- **Ponte atual**: TerritoryAsset com tipagem natural/hídrica + MapEntity (`espaço natural`)
-- **Alvo (FASE24.0)**: `NaturalAsset` + `WATERCOURSE_DETAILS` / `WATER_POINT_DETAILS` (MER)
-- **Backlog**: [CORPOS_DAGUA_TERRITORIO](../backlog-api/CORPOS_DAGUA_TERRITORIO.md) · Spec: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml)
+- **Ponte atual**: TerritoryAsset com tipagem natural/hídrica + MapEntity (`espaço natural`); status `PENDING`→`VALIDATED`
+- **Alvo (FASE24.0)**: `NaturalAsset` + `WATERCOURSE_DETAILS` / `WATER_POINT_DETAILS`; status `PENDING`→`PUBLISHED`
+- **WaterBody**: alias de produto/API para NaturalAsset tipado hídrico (`naturalAssetId`) — não é tabela separada
+- **Backlog**: [CORPOS_DAGUA_TERRITORIO](../backlog-api/CORPOS_DAGUA_TERRITORIO.md) · Spec-Id: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml)
 
 ### Objetivo
 
 Permitir que usuários:
-- **Cadastrem recursos** territoriais valiosos (incluindo **rios e nascentes**)
-- **Visualizem assets** no mapa
+- **Cadastrem recursos** territoriais valiosos (incluindo **rios, córregos, nascentes e fontes**)
+- **Visualizem assets** no mapa (respeitando HIGH/RESTRICTED)
 - **Validem assets** (curadores)
-- **Referenciem assets** em posts/eventos/observações de saúde
+- **Referenciem assets** em posts/eventos/observações de saúde via `naturalAssetId`
 - **Cuidem** do patrimônio hídrico ao longo do tempo (mutirões, observações)
 
 ---
@@ -34,7 +35,7 @@ Permitir que usuários:
 
 ### Para o Usuário
 
-- Cadastrar recursos territoriais (trilhas, **rios**, nascentes, pontos culturais)
+- Cadastrar recursos territoriais (trilhas, **rios**, **córregos**, nascentes, fontes, pontos culturais)
 - Visualizar assets validados no mapa
 - Referenciar assets em posts/eventos
 - Acompanhar e contribuir no cuidado da água do território
@@ -43,7 +44,7 @@ Permitir que usuários:
 
 - **Registro**: Catalogar recursos valiosos do território
 - **Preservação**: Documentar patrimônio territorial e hídrico
-- **Cuidado**: Organizar atenção coletiva a rios e fontes
+- **Cuidado**: Organizar atenção coletiva a rios, córregos, nascentes e fontes
 - **Descoberta**: Facilitar descoberta de recursos
 
 ---
@@ -52,24 +53,30 @@ Permitir que usuários:
 
 ### Entidades Principais
 
-#### TerritoryAsset
+#### TerritoryAsset (ponte)
 - **Propósito**: Recurso territorial valioso
 - **Atributos**: Nome, descrição, tipo, geolocalização obrigatória
-- **Status**: PENDING, VALIDATED
+- **Status**: `PENDING` → `VALIDATED`
 - **Características**: Não vendável, não transferível
-- **Hídrico (planejado)**: subtypes `river` | `stream` | `spring` | `waterfall` | `well` | `potable_water`
+- **Hídrico (planejado)**: subtypes `river`|`stream`|`spring`|`waterfall`|`well`|`potable_water` (aliases → tipos UPPERCASE do MER)
 
 #### NaturalAsset / WaterBody *(alvo FASE24)*
-- Tipagem rica no MER; curso d'água com polilinha; ponto d'água com potabilidade/sensibilidade
+- Persistência: `NaturalAsset` tipado; **WaterBody** = alias de API
+- Tipos hídricos: `RIVER`|`STREAM`|`SPRING`|`WATERFALL`|`POTABLE_WATER` (`WELL` só em `WATER_POINT_DETAILS.water_type`)
+- Status: `PENDING` → `PUBLISHED`|`HIDDEN`|`REVIEW`
+- Curso: `WATERCOURSE_DETAILS` (só RIVER/STREAM); ponto: `WATER_POINT_DETAILS`
 
 ---
 
 ## ⚙️ Regras de Negócio
 
 1. **Permissão**: Apenas moradores verificados ou curadores podem criar
-2. **Geolocalização**: Obrigatória (pelo menos um GeoAnchor; cursos d'água: polilinha de trecho)
-3. **Validação**: Apenas curadores podem validar
-4. **Visibilidade**: Apenas assets validados são retornados (respeitar sensitivity em nascentes)
+2. **Geolocalização**: Obrigatória (ponto; cursos: LineString ≤500 vértices, intersecta território)
+3. **Validação**: Apenas curadores podem publicar/validar
+4. **Visibilidade**:
+   - Ponte TerritoryAsset: apenas `VALIDATED` em listagens públicas
+   - NaturalAsset: apenas `PUBLISHED` (salvo regras de membership)
+   - `sensitivity HIGH` / `access RESTRICTED`: filtrar ou omitir coordenadas em list/get/mapa/pins sem autorização de leitura
 5. **Não vendável**: Assets não podem ser vendidos via marketplace
 6. **Territory neutro**: nenhum campo de rio/membership dentro de Territory
 
@@ -83,9 +90,3 @@ Permitir que usuários:
 - **[Marketplace](funcional/06_MARKETPLACE.md)** - Diferenciação: Assets não são vendáveis
 - **[Mapa Territorial](funcional/05_MAPA_TERRITORIAL.md)** - Assets aparecem no mapa
 - **[API - Assets](api/60_08_API_ASSETS.md)** - Documentação técnica
-
----
-
-**Última Atualização**: 2026-08-08  
-**Versão**: 1.1  
-**Status**: Funcionalidade Implementada (ponte TerritoryAsset) · NaturalAsset hídrico planejado

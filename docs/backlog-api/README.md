@@ -301,9 +301,9 @@ backlog-api/
 
 ---
 
-### 💧 Capacidade: Corpos d'água do território (rios, nascentes, fontes) ⭐ NOVO 2026-08
+### 💧 Capacidade: Corpos d'água do território (rios, córregos, nascentes, fontes) ⭐ NOVO 2026-08
 
-**Objetivo**: Rios e fontes como **entidades curáveis** do território — nomear, marcar, falar e cuidar — sem embutir lógica social em `Territory`.
+**Objetivo**: Rios, córregos, nascentes e fontes como **entidades curáveis** do território — nomear, marcar, falar e cuidar — sem embutir lógica social em `Territory`.
 
 **Referência**: [CORPOS_DAGUA_TERRITORIO.md](./CORPOS_DAGUA_TERRITORIO.md) · Spec draft: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml)
 

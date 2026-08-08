@@ -1,36 +1,58 @@
 id: water-bodies-curation
-version: "0.1.0"
-title: "Corpos d'água curáveis do território (rios, nascentes, fontes)"
+version: "0.1.1"
+title: "Corpos d'água curáveis do território (rios, córregos, nascentes, fontes)"
 owner: backend
 status: draft
 phase: FASE24
 
 intent: |
   Permitir que a comunidade cadastre, curadore e cuide de corpos d'água
-  (rios, córregos, nascentes, fontes, poços) como entidades do território —
-  fora de Territory, escopadas por territoryId, nunca vendáveis. Fundação
-  para observações de saúde hídrica (FASE24) e vínculo com posts/mapa.
+  (rios, córregos, nascentes, fontes, poços) como NaturalAsset tipado —
+  fora de Territory, escopados por territoryId, nunca vendáveis.
+  WaterBody é alias de produto/API (não entidade persistida separada).
+  Fundação para observações de saúde hídrica (FASE24) e vínculo com posts/mapa.
+
+# Vocabulário canônico NATURAL_ASSET.type (UPPERCASE):
+#   RIVER | STREAM | SPRING | WATERFALL | POTABLE_WATER | NATIVE_TREE | SANCTUARY | VIEWPOINT | TRAIL
+# WELL não é tipo top-level: usa POTABLE_WATER + WATER_POINT_DETAILS.water_type=WELL.
+# Ponte TerritoryAsset (minúsculas → canônico): river→RIVER, stream→STREAM, spring→SPRING,
+#   waterfall→WATERFALL, well→POTABLE_WATER+WELL, potable_water→POTABLE_WATER.
+# Máquinas de estado:
+#   NaturalAsset: PENDING → PUBLISHED | HIDDEN | REVIEW
+#   TerritoryAsset (ponte): PENDING → VALIDATED
 
 acceptance:
   - id: AC-WA-1
-    when: "Quando um Resident (ou Curator) cria um corpo d'água no território com tipo hídrico válido"
-    then: "o sistema persiste a entidade escopada por territoryId em status PENDING e exige geolocalização (ponto ou polilinha de curso)"
+    when: "Quando um Resident (ou Curator) cria um corpo d'água no território com tipo hídrico canônico válido"
+    then: >
+      o sistema persiste NaturalAsset (ou ponte TerritoryAsset tipada) escopada por territoryId
+      em status PENDING; exige geolocalização — ponto (lat/lng em ranges válidos) ou, para RIVER/STREAM,
+      LineString GeoJSON com ≤500 vértices, coordenadas WGS84 válidas e geometria intersectando o território
     status: pending
   - id: AC-WA-2
-    when: "Quando um Curator valida o corpo d'água"
-    then: "o status passa a PUBLISHED/VALIDATED e a entidade aparece no mapa do território para quem tem visibilidade"
+    when: "Quando um Curator valida o corpo d'água no modelo-alvo NaturalAsset"
+    then: >
+      o status passa a PUBLISHED; na ponte TerritoryAsset o equivalente é VALIDATED;
+      a entidade aparece em listagens/mapa apenas para quem tem direito de leitura no território
     status: pending
   - id: AC-WA-3
     when: "Quando o tipo é RIVER ou STREAM"
-    then: "é possível anexar WATERCOURSE_DETAILS com geometria de trecho (GeoJSON) e metadados de regime/uso comunitário"
+    then: >
+      WATERCOURSE_DETAILS é obrigatório (path_geojson LineString, flow_regime, community_use);
+      anexar WATERCOURSE_DETAILS a outros tipos é rejeitado (400)
     status: pending
   - id: AC-WA-4
-    when: "Quando o tipo é SPRING ou POTABLE_WATER (ou ponto equivalente)"
-    then: "é possível anexar WATER_POINT_DETAILS com potabilidade e sensibilidade; pontos HIGH sensitivity respeitam access_level RESTRICTED"
+    when: "Quando sensitivity_level=HIGH ou access_level=RESTRICTED (nascente/captação sensível)"
+    then: >
+      create/update sem autorização territorial é rejeitado; list/get/mapa/pins/posts/observações
+      filtram ou omitem coordenadas e detalhes sensíveis para quem não está autorizado;
+      Curator valida publicação, mas leitura sensível exige regra de autorização de leitura no servidor
     status: pending
   - id: AC-WA-5
     when: "Quando um Post ou HealthObservation referencia o corpo d'água"
-    then: "o vínculo usa o id da entidade hídrica; Territory permanece sem lógica social/hídrica embutida"
+    then: >
+      o payload usa naturalAssetId (mesmo territoryId do conteúdo); autorização e escopo territorial
+      são validados no servidor; Territory permanece sem lógica hídrica embutida
     status: pending
   - id: AC-WA-6
     when: "Quando se tenta expor o corpo d'água como item de marketplace"
@@ -40,7 +62,7 @@ acceptance:
 harness:
   commands:
     - "dotnet build Arah.sln --configuration Release"
-    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~Asset|FullyQualifiedName~Natural|FullyQualifiedName~Water"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter \"FullyQualifiedName~Asset|FullyQualifiedName~Natural|FullyQualifiedName~Water\""
   agents:
     - backend
     - flutter
@@ -53,7 +75,13 @@ links:
     - docs/funcional/09_ASSETS.md
     - docs/product/05_GLOSSARY.md
     - docs/backend/12_DOMAIN_MODEL.md
-  tests: []
+    - docs/api/60_08_API_ASSETS.md
+  # Planejado em FASE24.0 (status draft / AC pending). Ao implementar: status→covered + covered_by.
+  tests:
+    - "FullyQualifiedName~WaterBodyDomainTests (AC-WA-1, AC-WA-2, AC-WA-3, AC-WA-6)"
+    - "FullyQualifiedName~WaterBodySensitivityTests (AC-WA-4)"
+    - "FullyQualifiedName~WaterBodyReferenceHttpTests (AC-WA-5 naturalAssetId + territory scope)"
+    - "FullyQualifiedName~WaterBodyHttpIntegrationTests (create/list/get/status + GeoJSON bounds)"
 
 guardrails:
   - territory-first

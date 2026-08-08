@@ -1,6 +1,6 @@
 # Corpos d'água do território — rios, nascentes e fontes curáveis
 
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Data**: 2026-08-08  
 **Status**: ✅ Aprovado para planejamento (backlog)  
 **Domínio dono**: `mapa-lugares` (primário) · co-ativação: `territorio-membership`, `governanca-transparencia`, `feed-conteudo`, `design-ux` · sinais externos: trilha TI  
@@ -36,7 +36,7 @@ Isso diferencia o produto: o mapa deixa de ser só POIs comerciais/públicos e p
 | Marketplace | **Nunca** vendável |
 | Nomenclatura proibida | Não usar "Place"; não colocar membership/moderação dentro do corpo d'água nem do Territory |
 
-```
+```text
 Territory (geografia neutra)
     └── contains → NaturalAsset / TerritoryAsset (corpo d'água)
                         ├── curated by → MembershipCapability.Curator + WorkItem
@@ -48,13 +48,26 @@ Territory (geografia neutra)
 
 ## Estado atual vs alvo
 
-| Camada | Hoje | Alvo |
-|--------|------|------|
-| TerritoryAsset | Tipos livres; exemplos citam nascente/rio | Subtipos hídricos explícitos (`river`, `stream`, `spring`, `waterfall`, `well`, `potable_water`) |
-| MapEntity | Categoria `espaço natural` | Pode espelhar/apontar para o asset hídrico no mapa |
-| MER `NATURAL_ASSET` | SPRING, WATERFALL, POTABLE_WATER, TRAIL… **sem RIVER** | Incluir `RIVER`, `STREAM` + `WATERCOURSE_DETAILS` (geometria de curso) |
-| FASE24 | Observações `WATER` + `RelatedNaturalAssetId` | Exige cadastro curável de corpos d'água **antes ou no início** da fase |
-| TI | Sinais de enchente (ex. demo Rio do Peixe) | Podem referenciar corpo d'água local quando existir |
+| Camada | Modelo documental (hoje neste PR) | Implementação (código) | Alvo de runtime |
+|--------|-----------------------------------|------------------------|-----------------|
+| TerritoryAsset | Subtipos hídricos documentados | Tipos livres; exemplos nascente/rio | Subtypes canônicos + alias → `NATURAL_ASSET.type` |
+| MapEntity | Categoria `espaço natural` | Implementado | Espelhar/apontar para asset hídrico |
+| MER `NATURAL_ASSET` | Inclui `RIVER`, `STREAM` + `WATERCOURSE_DETAILS` | **Ainda não** há entidade `NaturalAsset` no código | Persistência + API + curadoria (FASE24.0) |
+| FASE24 | Observações `WATER` + `RelatedNaturalAssetId` planejados | Só alertas básicos | Cadastro hídrico **antes** das observações |
+| TI | Sinais de enchente podem citar o rio | Demo / trilhas | Referência a corpo d'água local quando existir |
+
+---
+
+## Vocabulário canônico
+
+| Conceito | Decisão |
+|----------|---------|
+| Persistência | `NaturalAsset` (MER). **WaterBody** = alias de produto/API para tipos hídricos — **não** tabela separada |
+| `NATURAL_ASSET.type` | `RIVER` \| `STREAM` \| `SPRING` \| `WATERFALL` \| `POTABLE_WATER` \| `NATIVE_TREE` \| `SANCTUARY` \| `VIEWPOINT` \| `TRAIL` (UPPERCASE) |
+| Poço (`WELL`) | **Não** é tipo top-level; `POTABLE_WATER` + `WATER_POINT_DETAILS.water_type=WELL` |
+| Ponte TerritoryAsset | subtypes minúsculos mapeados: `river→RIVER`, `stream→STREAM`, `spring→SPRING`, `waterfall→WATERFALL`, `well→POTABLE_WATER+WELL`, `potable_water→POTABLE_WATER` |
+| Status NaturalAsset | `PENDING` → `PUBLISHED` \| `HIDDEN` \| `REVIEW` |
+| Status ponte TerritoryAsset | `PENDING` → `VALIDATED` |
 
 ---
 
@@ -67,7 +80,7 @@ Refinar o que já existe em Assets/Mapa:
 | ID | Item | Prio | Notas |
 |----|------|------|-------|
 | WA-E1 | Tipagem hídrica em TerritoryAsset (`natural` + subtype) | P1 | Sem mudar Territory |
-| WA-E2 | Pins/filtros de mapa para corpos d'água | P1 | Flutter + BFF |
+| WA-E2 | Pins/filtros de mapa para corpos d'água | P1 | Flutter + BFF; filtrar HIGH/RESTRICTED server-side |
 | WA-E3 | Glossário + docs funcionais alinhados | P0 | Este pacote |
 | WA-E4 | Curadoria: copy/UX “cuidar do rio / da nascente” | P2 | design-ux |
 
@@ -85,26 +98,26 @@ Refinar o que já existe em Assets/Mapa:
 |---------------|-------|
 | TI-3…TI-6 | Alerta de enchente/estiagem pode citar o rio curado do território |
 | Dados climáticos públicos (futuro) | Contexto climático **não** substitui observação comunitária da água |
-| Feed | Post com referência a `naturalAssetId` / asset hídrico |
+| Feed | Post com `naturalAssetId` (mesmo `territoryId`) |
 | Governança | WorkItem de curadoria e contestação de cadastro sensível |
 
 ---
 
-## Modelo conceitual (hírico)
+## Modelo conceitual (hídrico)
 
 ### Tipos de NaturalAsset (extensão)
 
-`SPRING` · `WATERFALL` · `POTABLE_WATER` · **`RIVER`** · **`STREAM`** · `WELL` (via water details) · demais tipos naturais existentes
+`SPRING` · `WATERFALL` · `POTABLE_WATER` · **`RIVER`** · **`STREAM`** · demais tipos naturais existentes. Poço via `WATER_POINT_DETAILS.water_type=WELL`.
 
 ### Detalhes
 
 - **WATER_POINT_DETAILS** — ponto (nascente, torneira comunitária, poço, fonte filtrada): potabilidade, último teste, notas
-- **WATERCOURSE_DETAILS** (novo) — curso d'água (rio/córrego): trecho (polilinha GeoJSON), nome popular, regime (permanente/sazonal), uso comunitário (lazer, captação, sagrado), notas de cuidado
+- **WATERCOURSE_DETAILS** — curso d'água (rio/córrego): `path_geojson` LineString (≤500 vértices, WGS84, intersecta território), regime, uso comunitário, notas de cuidado
 
 ### Ciclo de cuidado
 
 1. Morador **sugere** o corpo d'água  
-2. Curador **valida** (ou fila WorkItem)  
+2. Curador **valida** (ou fila WorkItem) → `PUBLISHED` (alvo) / `VALIDATED` (ponte)  
 3. Comunidade **confirma** / contesta  
 4. Qualquer residente **observa** saúde da água (FASE24)  
 5. Comunidade **age** (mutirão de limpeza, restauração de mata ciliar)  
@@ -114,7 +127,7 @@ Refinar o que já existe em Assets/Mapa:
 
 ## Spec SDD
 
-- Draft: [`docs/specs/features/water-bodies-curation.spec.yaml`](../specs/features/water-bodies-curation.spec.yaml)  
+- Draft: [`docs/specs/features/water-bodies-curation.spec.yaml`](../specs/features/water-bodies-curation.spec.yaml) (`Spec-Id: water-bodies-curation`)  
 - PRs de implementação devem trazer `Spec-Id: water-bodies-curation` (ou spec de fase FASE24 quando promovida)
 
 ---
@@ -123,7 +136,7 @@ Refinar o que já existe em Assets/Mapa:
 
 - Transformar `Territory` em agregador social de rios  
 - Dados de vigilância individual junto ao rio  
-- Cadastro nacional hidrológico como fonte única da verdade (pode enriquecer via PD/TI, nunca substituir curadoria local)  
+- Cadastro nacional hidrológico como fonte única da verdade (pode enriquecer via dados públicos/TI, nunca substituir curadoria local)  
 - Monetizar acesso à água via marketplace
 
 ---
@@ -140,4 +153,5 @@ Refinar o que já existe em Assets/Mapa:
 
 ### Changelog
 
+- **1.1** (2026-08-08): Alinhamento CodeRabbit — vocabulário canônico, MER vs implementação, typo hídrico, WaterBody alias.
 - **1.0** (2026-08-08): Introdução da capacidade no backlog — rios e fontes como entidades curáveis do território.

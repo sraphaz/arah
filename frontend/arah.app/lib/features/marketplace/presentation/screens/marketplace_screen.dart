@@ -14,6 +14,7 @@ import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../data/models/marketplace_item.dart';
+import '../../data/models/seller_balance.dart';
 import '../providers/marketplace_provider.dart';
 
 class MarketplaceScreen extends ConsumerStatefulWidget {
@@ -463,6 +464,32 @@ class _MyStoreTabState extends State<_MyStoreTab> {
             ),
           ),
           const SizedBox(height: AppConstants.spacingMd),
+          Text(
+            l10n.sellerBalanceTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppConstants.spacingSm),
+          ArahCard(
+            child: widget.state.isBalanceLoading &&
+                    widget.state.sellerBalance == null
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppConstants.spacingMd,
+                    ),
+                    child: Center(child: ArahLoadingIndicator()),
+                  )
+                : _SellerBalanceSummary(
+                    balance: widget.state.sellerBalance ??
+                        const SellerBalance(
+                          pendingAmountInCents: 0,
+                          readyForPayoutAmountInCents: 0,
+                          paidAmountInCents: 0,
+                          currency: 'BRL',
+                        ),
+                    l10n: l10n,
+                  ),
+          ),
+          const SizedBox(height: AppConstants.spacingMd),
           Text(l10n.storePaymentsTitle, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppConstants.spacingSm),
           ArahCard(
@@ -716,6 +743,84 @@ class _ProductThumb extends StatelessWidget {
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) =>
             Icon(Icons.inventory_2_outlined, color: color),
+      ),
+    );
+  }
+}
+
+class _SellerBalanceSummary extends StatelessWidget {
+  const _SellerBalanceSummary({required this.balance, required this.l10n});
+
+  final SellerBalance balance;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = context.appColors;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.sellerBalanceHint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppConstants.spacingMd),
+        _balanceRow(
+          context,
+          label: l10n.sellerBalancePending,
+          value: balance.formatCents(balance.pendingAmountInCents),
+        ),
+        _balanceRow(
+          context,
+          label: l10n.sellerBalanceReady,
+          value: balance.formatCents(balance.readyForPayoutAmountInCents),
+        ),
+        _balanceRow(
+          context,
+          label: l10n.sellerBalancePaid,
+          value: balance.formatCents(balance.paidAmountInCents),
+          showDivider: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _balanceRow(
+    BuildContext context, {
+    required String label,
+    required String value,
+    bool showDivider = true,
+  }) {
+    final colors = context.appColors;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: showDivider
+            ? Border(bottom: BorderSide(color: colors.outlineSubtle))
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingSm),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+              ),
+            ),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }

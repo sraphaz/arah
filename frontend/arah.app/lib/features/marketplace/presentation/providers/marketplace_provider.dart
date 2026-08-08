@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../data/models/marketplace_item.dart';
+import '../../data/models/seller_balance.dart';
 import '../../data/models/store_item.dart';
 import '../../data/models/store_product.dart';
 import '../../data/repositories/marketplace_repository.dart';
@@ -13,9 +14,11 @@ class MarketplaceState {
     this.cart,
     this.myStore,
     this.myProducts = const [],
+    this.sellerBalance,
     this.isLoading = false,
     this.isStoreLoading = false,
     this.isProductsLoading = false,
+    this.isBalanceLoading = false,
     this.error,
     this.query = '',
   });
@@ -24,9 +27,11 @@ class MarketplaceState {
   final Map<String, dynamic>? cart;
   final MyStore? myStore;
   final List<StoreProduct> myProducts;
+  final SellerBalance? sellerBalance;
   final bool isLoading;
   final bool isStoreLoading;
   final bool isProductsLoading;
+  final bool isBalanceLoading;
   final Object? error;
   final String query;
 
@@ -35,21 +40,27 @@ class MarketplaceState {
     Map<String, dynamic>? cart,
     MyStore? myStore,
     List<StoreProduct>? myProducts,
+    SellerBalance? sellerBalance,
     bool? isLoading,
     bool? isStoreLoading,
     bool? isProductsLoading,
+    bool? isBalanceLoading,
     Object? error,
     String? query,
     bool clearError = false,
+    bool clearSellerBalance = false,
   }) {
     return MarketplaceState(
       items: items ?? this.items,
       cart: cart ?? this.cart,
       myStore: myStore ?? this.myStore,
       myProducts: myProducts ?? this.myProducts,
+      sellerBalance:
+          clearSellerBalance ? null : (sellerBalance ?? this.sellerBalance),
       isLoading: isLoading ?? this.isLoading,
       isStoreLoading: isStoreLoading ?? this.isStoreLoading,
       isProductsLoading: isProductsLoading ?? this.isProductsLoading,
+      isBalanceLoading: isBalanceLoading ?? this.isBalanceLoading,
       error: clearError ? null : (error ?? this.error),
       query: query ?? this.query,
     );
@@ -62,6 +73,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
   final Ref _ref;
   int _productsLoadGen = 0;
   int _storeLoadGen = 0;
+  int _balanceLoadGen = 0;
 
   MarketplaceRepository get _repo =>
       MarketplaceRepository(client: _ref.read(bffClientProvider));
@@ -97,11 +109,12 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
         cart: state.cart,
         myStore: store,
         myProducts: store == null ? const [] : state.myProducts,
+        sellerBalance: store == null ? null : state.sellerBalance,
         isStoreLoading: false,
         query: state.query,
       );
       if (store != null) {
-        await loadMyProducts();
+        await Future.wait([loadMyProducts(), loadSellerBalance()]);
       }
     } catch (e) {
       if (gen != _storeLoadGen ||
@@ -109,6 +122,36 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
         return;
       }
       state = state.copyWith(error: e, isStoreLoading: false);
+    }
+  }
+
+  Future<void> loadSellerBalance() async {
+    final territoryId = _ref.read(selectedTerritoryIdValueProvider);
+    if (territoryId == null || territoryId.isEmpty || state.myStore == null) {
+      return;
+    }
+    final gen = ++_balanceLoadGen;
+    state = state.copyWith(isBalanceLoading: true);
+    try {
+      final balance = await _repo.getSellerBalance(territoryId);
+      if (gen != _balanceLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId) {
+        return;
+      }
+      state = state.copyWith(
+        sellerBalance: balance,
+        isBalanceLoading: false,
+      );
+    } catch (e) {
+      if (gen != _balanceLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId) {
+        return;
+      }
+      // Saldo é informativo: falha não derruba a aba Minha loja.
+      state = state.copyWith(
+        sellerBalance: SellerBalance.zero(),
+        isBalanceLoading: false,
+      );
     }
   }
 

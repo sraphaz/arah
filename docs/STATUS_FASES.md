@@ -5,7 +5,7 @@
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
 **Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
 **Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
-**Design app**: ✅ Ondas A–H (APP-DS-01..16) — shell, jornadas, checkout PIX, CRUD produtos, foto do produto, QR PIX, Em breve  
+**Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
 
 
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend)

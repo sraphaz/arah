@@ -1359,6 +1359,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get storePixKeyHint => 'A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.';
 
   @override
+  String get sellerBalanceTitle => 'Seu saldo';
+
+  @override
+  String get sellerBalanceHint => 'Valores do território após vendas confirmadas. O saque é processado pelo território.';
+
+  @override
+  String get sellerBalancePending => 'Pendente';
+
+  @override
+  String get sellerBalanceReady => 'Pronto para saque';
+
+  @override
+  String get sellerBalancePaid => 'Já pago';
+
+  @override
   String get myProductsTitle => 'Meus produtos';
 
   @override

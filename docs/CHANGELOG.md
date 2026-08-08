@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Onda I design app (saldo vendedor) (2026-08-08)
+
+- **APP-DS-17**: Minha loja mostra saldo do vendedor (pendente / pronto / pago) via `GET territories/{id}/seller-balance/me`
+- **BFF**: allowlist `seller-balance/me` (+ transactions) na jornada `territories`
+- 404 da API tratado como saldo zerado (ledger só após primeira venda paga)
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
 ### Alterado — Onda H design app (foto do produto) (2026-08-08)
 
 - **APP-DS-16**: upload de foto na jornada de produto (`media/upload` → `mediaIds` em create/update); remoção limpa mídia no PATCH

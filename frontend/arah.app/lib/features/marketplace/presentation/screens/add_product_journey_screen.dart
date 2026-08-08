@@ -167,15 +167,24 @@ class _AddProductJourneyScreenState
   /// - Edição sem mudança de foto → null / não incluir (preserva).
   Future<({List<String>? mediaIds, bool includeMediaIds})> _resolveMedia() async {
     if (_hasLocalPhoto) {
+      final bytesSnapshot = _photoBytes!;
+      final mimeSnapshot = _photoMimeType;
       final fileName = (_photoFileName == null || _photoFileName!.isEmpty)
           ? 'produto.jpg'
           : _photoFileName!;
       final mediaId = _uploadedMediaId ??
           await ref.read(mediaRepositoryProvider).uploadImage(
                 fileName: fileName,
-                mimeType: _photoMimeType,
-                bytes: _photoBytes,
+                mimeType: mimeSnapshot,
+                bytes: bytesSnapshot,
               );
+
+      // Seleção pode ter mudado enquanto o upload corria (voltar/trocar/remover).
+      if (!identical(_photoBytes, bytesSnapshot)) {
+        _uploadedMediaId = null;
+        return _resolveMedia();
+      }
+
       _uploadedMediaId = mediaId;
       return (mediaIds: <String>[mediaId], includeMediaIds: true);
     }
@@ -293,7 +302,9 @@ class _AddProductJourneyScreenState
       currentStep: _step,
       totalSteps: _totalSteps,
       onClose: _close,
-      onBack: _step > 0 ? () => setState(() => _step -= 1) : null,
+      onBack: (_step > 0 && !_submitting)
+          ? () => setState(() => _step -= 1)
+          : null,
       primaryActionLabel: primaryLabel,
       onPrimaryAction: _submitting
           ? null
@@ -322,6 +333,7 @@ class _AddProductJourneyScreenState
           descriptionController: _descriptionController,
           photoBytes: _photoBytes,
           existingImageUrl: _existingImageUrl,
+          interactionsEnabled: !_submitting,
           onPickPhoto: _pickPhoto,
           onClearPhoto: _clearPhoto,
         );
@@ -442,6 +454,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
     required this.descriptionController,
     required this.photoBytes,
     required this.existingImageUrl,
+    required this.interactionsEnabled,
     required this.onPickPhoto,
     required this.onClearPhoto,
   });
@@ -450,6 +463,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
   final TextEditingController descriptionController;
   final Uint8List? photoBytes;
   final String? existingImageUrl;
+  final bool interactionsEnabled;
   final VoidCallback onPickPhoto;
   final VoidCallback onClearPhoto;
 
@@ -483,7 +497,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
           color: colors.surfaceContainer.withValues(alpha: 0.55),
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           child: InkWell(
-            onTap: onPickPhoto,
+            onTap: interactionsEnabled ? onPickPhoto : null,
             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
             child: Container(
               width: double.infinity,
@@ -522,7 +536,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
         Row(
           children: [
             TextButton.icon(
-              onPressed: onPickPhoto,
+              onPressed: interactionsEnabled ? onPickPhoto : null,
               icon: const Icon(Icons.add_a_photo_outlined, size: 18),
               label: Text(
                 hasLocal || hasRemote
@@ -533,7 +547,7 @@ class _PhotoDescriptionStep extends StatelessWidget {
             if (hasLocal || hasRemote) ...[
               const SizedBox(width: AppConstants.spacingSm),
               TextButton(
-                onPressed: onClearPhoto,
+                onPressed: interactionsEnabled ? onClearPhoto : null,
                 child: Text(l10n.removeProductPhoto),
               ),
             ],

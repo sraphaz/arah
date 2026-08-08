@@ -214,7 +214,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       description: description,
     );
     state = state.copyWith(myStore: store);
-    await loadMyProducts();
+    await Future.wait([loadMyProducts(), loadSellerBalance()]);
   }
 
   Future<void> addToCart(String itemId) async {

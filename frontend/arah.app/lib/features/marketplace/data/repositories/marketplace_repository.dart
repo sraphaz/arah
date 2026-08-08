@@ -155,20 +155,23 @@ class MarketplaceRepository {
 
   /// GET territories/{id}/seller-balance/me — 404 ⇒ saldo zerado (ainda sem vendas).
   Future<SellerBalance> getSellerBalance(String territoryId) async {
-    final response = await _client.get(
-      'territories',
-      '$territoryId/seller-balance/me',
-    );
-    if (response.statusCode == 404) {
-      return SellerBalance.zero();
-    }
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw ApiException(
-        'HTTP ${response.statusCode}',
-        statusCode: response.statusCode,
+    try {
+      final response = await _client.get(
+        'territories',
+        '$territoryId/seller-balance/me',
       );
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw ApiException(
+          'HTTP ${response.statusCode}',
+          statusCode: response.statusCode,
+        );
+      }
+      return SellerBalance.fromJson(response.data as Map<String, dynamic>);
+    } on ApiException catch (e) {
+      // Dio/BffClient lança em 404 — sem ledger ainda = zeros, não erro de UI.
+      if (e.statusCode == 404) return SellerBalance.zero();
+      rethrow;
     }
-    return SellerBalance.fromJson(response.data as Map<String, dynamic>);
   }
 
   /// GET marketplace-v1/items?territoryId= — filtra por storeId no cliente.

@@ -125,7 +125,7 @@ public sealed class WaterBodyDomainTests
     }
 
     [Fact]
-    public void Constructor_RejectsEmptyUpdatedByUserId()
+    public void NaturalAssetConstructor_EmptyUpdatedByUserId_ThrowsArgumentException()
     {
         Assert.Throws<ArgumentException>(() => new NaturalAsset(
             Guid.NewGuid(),
@@ -142,7 +142,7 @@ public sealed class WaterBodyDomainTests
     }
 
     [Fact]
-    public void Constructor_RejectsNameLongerThan200()
+    public void CreatePending_NameLongerThan200_ThrowsArgumentException()
     {
         Assert.Throws<ArgumentException>(() => NaturalAsset.CreatePending(
             TerritoryId,

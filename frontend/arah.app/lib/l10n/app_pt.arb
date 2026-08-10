@@ -194,6 +194,10 @@
   "approveWaterBodyCurator": "Validar cadastro do rio / da nascente",
   "rejectWaterBodyCurator": "Rejeitar cadastro hídrico",
   "noAssetsOrWaterBodies": "Nenhum asset ainda. Sugira um recurso ou um corpo d'água para cuidar.",
+  "assetStatusSuggested": "Sugerido",
+  "assetStatusActive": "Ativo",
+  "assetStatusArchived": "Arquivado",
+  "assetStatusRejected": "Rejeitado",
   "mapWaterBodyPin": "Corpo d'água · {kind}",
   "@mapWaterBodyPin": {
     "placeholders": {

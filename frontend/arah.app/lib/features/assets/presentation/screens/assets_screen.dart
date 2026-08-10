@@ -55,108 +55,137 @@ class AssetsScreen extends ConsumerWidget {
     final typeController = TextEditingController(text: 'Infrastructure');
     var asWaterBody = false;
     var waterSubtype = kWaterBodySubtypeOptions.first;
+    var isSubmitting = false;
 
-    await showDialog<void>(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setLocal) => AlertDialog(
-          title: Text(asWaterBody ? l10n.newWaterBody : l10n.newAsset),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  asWaterBody ? l10n.waterBodyCreateHint : l10n.assetCreateHint,
-                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(ctx).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-                const SizedBox(height: AppConstants.spacingMd),
-                SegmentedButton<bool>(
-                  segments: [
-                    ButtonSegment(value: false, label: Text(l10n.assetKindGeneric)),
-                    ButtonSegment(value: true, label: Text(l10n.assetKindWaterBody)),
-                  ],
-                  selected: {asWaterBody},
-                  onSelectionChanged: (value) {
-                    setLocal(() => asWaterBody = value.first);
-                  },
-                ),
-                const SizedBox(height: AppConstants.spacingMd),
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: asWaterBody ? l10n.waterBodyName : l10n.assetName,
+    try {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => StatefulBuilder(
+          builder: (ctx, setLocal) => AlertDialog(
+            title: Text(asWaterBody ? l10n.newWaterBody : l10n.newAsset),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    asWaterBody ? l10n.waterBodyCreateHint : l10n.assetCreateHint,
+                    style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                        ),
                   ),
-                ),
-                if (asWaterBody) ...[
-                  const SizedBox(height: AppConstants.spacingSm),
-                  DropdownButtonFormField<String>(
-                    key: ValueKey(waterSubtype),
-                    initialValue: waterSubtype,
-                    decoration: InputDecoration(labelText: l10n.waterBodySubtype),
-                    items: kWaterBodySubtypeOptions
-                        .map(
-                          (s) => DropdownMenuItem(
-                            value: s,
-                            child: Text(_waterBodyKindLabel(l10n, s)),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (v) {
-                      if (v != null) setLocal(() => waterSubtype = v);
-                    },
+                  const SizedBox(height: AppConstants.spacingMd),
+                  SegmentedButton<bool>(
+                    segments: [
+                      ButtonSegment(value: false, label: Text(l10n.assetKindGeneric)),
+                      ButtonSegment(value: true, label: Text(l10n.assetKindWaterBody)),
+                    ],
+                    selected: {asWaterBody},
+                    onSelectionChanged: isSubmitting
+                        ? null
+                        : (value) {
+                            setLocal(() => asWaterBody = value.first);
+                          },
                   ),
-                ] else
+                  const SizedBox(height: AppConstants.spacingMd),
                   TextField(
-                    controller: typeController,
-                    decoration: InputDecoration(labelText: l10n.assetType),
+                    controller: nameController,
+                    enabled: !isSubmitting,
+                    decoration: InputDecoration(
+                      labelText: asWaterBody ? l10n.waterBodyName : l10n.assetName,
+                    ),
                   ),
-              ],
+                  if (asWaterBody) ...[
+                    const SizedBox(height: AppConstants.spacingSm),
+                    DropdownButtonFormField<String>(
+                      key: ValueKey(waterSubtype),
+                      initialValue: waterSubtype,
+                      decoration: InputDecoration(labelText: l10n.waterBodySubtype),
+                      items: kWaterBodySubtypeOptions
+                          .map(
+                            (s) => DropdownMenuItem(
+                              value: s,
+                              child: Text(_waterBodyKindLabel(l10n, s)),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: isSubmitting
+                          ? null
+                          : (v) {
+                              if (v != null) setLocal(() => waterSubtype = v);
+                            },
+                    ),
+                  ] else
+                    TextField(
+                      controller: typeController,
+                      enabled: !isSubmitting,
+                      decoration: InputDecoration(labelText: l10n.assetType),
+                    ),
+                ],
+              ),
             ),
+            actions: [
+              TextButton(
+                onPressed: isSubmitting ? null : () => Navigator.pop(ctx),
+                child: Text(l10n.cancel),
+              ),
+              FilledButton(
+                onPressed: isSubmitting
+                    ? null
+                    : () async {
+                        final name = nameController.text.trim();
+                        if (name.isEmpty) return;
+                        setLocal(() => isSubmitting = true);
+                        try {
+                          if (asWaterBody) {
+                            await ref.read(assetsProvider.notifier).createAsset(
+                                  name: name,
+                                  type: 'natural',
+                                  subtype: waterSubtype,
+                                );
+                          } else {
+                            await ref.read(assetsProvider.notifier).createAsset(
+                                  name: name,
+                                  type: typeController.text.trim(),
+                                );
+                          }
+                          if (ctx.mounted) {
+                            Navigator.pop(ctx);
+                            showSuccessSnackBar(
+                              ctx,
+                              asWaterBody
+                                  ? l10n.waterBodySuggested
+                                  : l10n.assetCreated,
+                            );
+                          }
+                        } catch (e) {
+                          if (ctx.mounted) {
+                            setLocal(() => isSubmitting = false);
+                            showErrorSnackBar(
+                              ctx,
+                              e is ApiException
+                                  ? e.userMessage
+                                  : l10n.errorCreateAsset,
+                            );
+                          }
+                        }
+                      },
+                child: isSubmitting
+                    ? const SizedBox(
+                        width: AppConstants.loadingIndicatorSize,
+                        height: AppConstants.loadingIndicatorSize,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(l10n.create),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
-            FilledButton(
-              onPressed: () async {
-                final name = nameController.text.trim();
-                if (name.isEmpty) return;
-                try {
-                  if (asWaterBody) {
-                    await ref.read(assetsProvider.notifier).createAsset(
-                          name: name,
-                          type: 'natural',
-                          subtype: waterSubtype,
-                        );
-                  } else {
-                    await ref.read(assetsProvider.notifier).createAsset(
-                          name: name,
-                          type: typeController.text.trim(),
-                        );
-                  }
-                  if (ctx.mounted) {
-                    Navigator.pop(ctx);
-                    showSuccessSnackBar(
-                      ctx,
-                      asWaterBody ? l10n.waterBodySuggested : l10n.assetCreated,
-                    );
-                  }
-                } catch (e) {
-                  if (ctx.mounted) {
-                    showErrorSnackBar(
-                      ctx,
-                      e is ApiException ? e.userMessage : l10n.errorCreateAsset,
-                    );
-                  }
-                }
-              },
-              child: Text(l10n.create),
-            ),
-          ],
         ),
-      ),
-    );
+      );
+    } finally {
+      nameController.dispose();
+      typeController.dispose();
+    }
   }
 
   Widget _buildBody(BuildContext context, WidgetRef ref, AssetsState state) {
@@ -187,15 +216,15 @@ class AssetsScreen extends ConsumerWidget {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          SizedBox(
-            height: 240,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppConstants.spacingLg,
+              vertical: AppConstants.spacing3xl,
+            ),
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(AppConstants.spacingLg),
-                child: Text(
-                  l10n.noAssetsOrWaterBodies,
-                  textAlign: TextAlign.center,
-                ),
+              child: Text(
+                l10n.noAssetsOrWaterBodies,
+                textAlign: TextAlign.center,
               ),
             ),
           ),
@@ -257,9 +286,24 @@ class AssetsScreen extends ConsumerWidget {
     final kind = asset.isWaterBody
         ? _waterBodyKindLabel(l10n, asset.waterBodyKind ?? '')
         : asset.type;
-    final base = '$kind · ${asset.status}';
+    final base = '$kind · ${_localizedAssetStatus(l10n, asset.status)}';
     if (asset.validationsCount <= 0) return base;
     return '$base · ${l10n.assetValidationsMeta(asset.validationsCount, asset.validationPct.toStringAsFixed(0))}';
+  }
+
+  String _localizedAssetStatus(AppLocalizations l10n, String status) {
+    switch (status.toUpperCase()) {
+      case 'SUGGESTED':
+        return l10n.assetStatusSuggested;
+      case 'ACTIVE':
+        return l10n.assetStatusActive;
+      case 'ARCHIVED':
+        return l10n.assetStatusArchived;
+      case 'REJECTED':
+        return l10n.assetStatusRejected;
+      default:
+        return status;
+    }
   }
 
   Future<void> _onAssetAction(

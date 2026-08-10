@@ -1142,6 +1142,30 @@ abstract class AppLocalizations {
   /// **'Nenhum asset ainda. Sugira um recurso ou um corpo d\'água para cuidar.'**
   String get noAssetsOrWaterBodies;
 
+  /// No description provided for @assetStatusSuggested.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sugerido'**
+  String get assetStatusSuggested;
+
+  /// No description provided for @assetStatusActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativo'**
+  String get assetStatusActive;
+
+  /// No description provided for @assetStatusArchived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivado'**
+  String get assetStatusArchived;
+
+  /// No description provided for @assetStatusRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitado'**
+  String get assetStatusRejected;
+
   /// No description provided for @mapWaterBodyPin.
   ///
   /// In pt, this message translates to:

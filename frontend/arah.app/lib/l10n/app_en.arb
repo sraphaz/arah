@@ -194,6 +194,10 @@
   "approveWaterBodyCurator": "Validate river / spring registration",
   "rejectWaterBodyCurator": "Reject water registration",
   "noAssetsOrWaterBodies": "No assets yet. Suggest a resource or a water body to care for.",
+  "assetStatusSuggested": "Suggested",
+  "assetStatusActive": "Active",
+  "assetStatusArchived": "Archived",
+  "assetStatusRejected": "Rejected",
   "mapWaterBodyPin": "Water body · {kind}",
   "@mapWaterBodyPin": {
     "placeholders": {

@@ -395,12 +395,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       case 'event':
         return l10n.mapEvent;
       case 'asset':
-        final kind = pin.assetSubtype?.trim().toLowerCase() ??
-            (pin.assetType != null &&
-                    kWaterBodySubtypeValues.contains(pin.assetType!.toLowerCase())
-                ? pin.assetType!.toLowerCase()
-                : null);
-        if (kind != null && kWaterBodySubtypeValues.contains(kind)) {
+        final subtype = pin.assetSubtype?.trim().toLowerCase();
+        final type = pin.assetType?.trim().toLowerCase();
+        final kind =
+            (subtype != null && kWaterBodySubtypeValues.contains(subtype))
+                ? subtype
+                : (type != null && kWaterBodySubtypeValues.contains(type)
+                    ? type
+                    : null);
+        if (kind != null) {
           return l10n.mapWaterBodyPin(_waterKindLabel(l10n, kind));
         }
         return l10n.mapAsset;

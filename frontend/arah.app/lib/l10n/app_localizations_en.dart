@@ -561,6 +561,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'No assets yet. Suggest a resource or a water body to care for.';
 
   @override
+  String get assetStatusSuggested => 'Suggested';
+
+  @override
+  String get assetStatusActive => 'Active';
+
+  @override
+  String get assetStatusArchived => 'Archived';
+
+  @override
+  String get assetStatusRejected => 'Rejected';
+
+  @override
   String mapWaterBodyPin(String kind) {
     return 'Water body · $kind';
   }

@@ -565,6 +565,18 @@ class AppLocalizationsPt extends AppLocalizations {
       'Nenhum asset ainda. Sugira um recurso ou um corpo d\'água para cuidar.';
 
   @override
+  String get assetStatusSuggested => 'Sugerido';
+
+  @override
+  String get assetStatusActive => 'Ativo';
+
+  @override
+  String get assetStatusArchived => 'Arquivado';
+
+  @override
+  String get assetStatusRejected => 'Rejeitado';
+
+  @override
   String mapWaterBodyPin(String kind) {
     return 'Corpo d\'água · $kind';
   }

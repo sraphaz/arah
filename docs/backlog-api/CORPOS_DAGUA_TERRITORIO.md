@@ -82,7 +82,7 @@ Refinar o que já existe em Assets/Mapa:
 | WA-E1 | Tipagem hídrica em TerritoryAsset (`natural` + subtype) | P1 | ✅ Implementado (ponte) — smoke HTTP; AC NaturalAsset ainda FASE24.0 |
 | WA-E2 | Pins/filtros de mapa para corpos d'água | P1 | ✅ Filtro `assetSubtypes` + chip Flutter; HIGH/RESTRICTED → acompanhamento |
 | WA-E3 | Glossário + docs funcionais alinhados | P0 | ✅ Docs iniciais; manter sync com código |
-| WA-E4 | Curadoria: copy/UX “cuidar do rio / da nascente” | P2 | ✅ Flutter create/list/curate + pin mapa; NaturalAsset ainda FASE24.0 |
+| WA-E4 | Curadoria: copy/UX “cuidar do rio / da nascente” | P2 | ✅ Flutter create/list/curate + subtítulo do pin mapa (WA-E2); NaturalAsset ainda FASE24.0 |
 
 ### B) Fundação na FASE24 (canônico)
 

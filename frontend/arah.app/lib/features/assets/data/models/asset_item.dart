@@ -46,12 +46,17 @@ class AssetItem {
     return kWaterBodySubtypeValues.contains(t);
   }
 
-  /// Chave de rótulo: subtype preferencial, senão type legado.
+  /// Chave de rótulo: subtype allowlisted, senão type legado allowlisted.
   String? get waterBodyKind {
-    if (!isWaterBody) return null;
     final sub = subtype?.trim().toLowerCase();
-    if (sub != null && sub.isNotEmpty) return sub;
-    return type.trim().toLowerCase();
+    if (sub != null &&
+        sub.isNotEmpty &&
+        kWaterBodySubtypeValues.contains(sub)) {
+      return sub;
+    }
+    final t = type.trim().toLowerCase();
+    if (kWaterBodySubtypeValues.contains(t)) return t;
+    return null;
   }
 }
 

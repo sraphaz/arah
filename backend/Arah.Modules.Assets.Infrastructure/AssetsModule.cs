@@ -28,6 +28,7 @@ public sealed class AssetsModule : IModule
         services.AddScoped<ITerritoryAssetRepository, PostgresAssetRepository>();
         services.AddScoped<IAssetGeoAnchorRepository, PostgresAssetGeoAnchorRepository>();
         services.AddScoped<IAssetValidationRepository, PostgresAssetValidationRepository>();
+        services.AddScoped<INaturalAssetRepository, PostgresNaturalAssetRepository>();
     }
 }
 

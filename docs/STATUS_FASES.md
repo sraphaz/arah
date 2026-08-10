@@ -6,7 +6,7 @@
 **Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
 **Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
 **Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
-**Capacidade hídrica**: 💧 **Corpos d'água curáveis** — backlog em [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); WA-E1 tipagem (smoke HTTP create river + reject cultural+river); âncora FASE24.0  
+**Capacidade hídrica**: 💧 **Corpos d'água curáveis** — [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); ponte WA-E1…E4 ✅; **WA-N1** NaturalAsset ponto (FASE24.0a)  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
@@ -50,9 +50,9 @@ Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, cór
 
 | Artefato | Papel |
 |----------|--------|
-| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 · WA-E1 ✅ · WA-E2 mapa ✅ · WA-E4 UX curadoria ✅ |
-| [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico + curadoria |
-| [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD draft · **Spec-Id:** `water-bodies-curation` · ponte tipada no código; AC-WA-1…6 pendentes para NaturalAsset |
+| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 · WA-E1…E4 ✅ · **WA-N1 ponto** · AC-WA-1/2 parciais · AC-WA-6 covered · AC-WA-3…5 deferidos |
+| [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico · WA-N1 ponto em revisão ([PR #466](https://github.com/sraphaz/arah/pull/466)) · AC-WA-1/2 parciais (ponto) · AC-WA-6 covered · AC-WA-3…5 deferidos |
+| [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD · **Spec-Id:** `water-bodies-curation` · WA-N1: AC-WA-6 covered; AC-WA-1/2 parciais (ponto); AC-WA-3…5 deferidos (curso/sensibilidade/refs) |
 
 **Dono consultivo**: `mapa-lugares`.
 

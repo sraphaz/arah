@@ -128,6 +128,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ActiveTerritoryService>();
         services.AddScoped<HealthService>();
         services.AddScoped<TerritoryAssetService>();
+        services.AddScoped<NaturalAssetService>();
         services.AddScoped<ReportService>();
         services.AddScoped<UserBlockService>();
         services.AddScoped<FeatureFlagService>();
@@ -598,6 +599,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITerritoryAssetRepository, InMemoryAssetRepository>();
         services.AddSingleton<IAssetGeoAnchorRepository, InMemoryAssetGeoAnchorRepository>();
         services.AddSingleton<IAssetValidationRepository, InMemoryAssetValidationRepository>();
+        services.AddSingleton<INaturalAssetRepository, InMemoryNaturalAssetRepository>();
         services.AddSingleton<IPostAssetRepository, InMemoryPostAssetRepository>();
         services.AddSingleton<IActiveTerritoryStore, InMemoryActiveTerritoryStore>();
         services.AddSingleton<IHealthAlertRepository, InMemoryHealthAlertRepository>();

@@ -111,26 +111,25 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 
 #### 24.0 Cadastro curável de corpos d'água (NaturalAsset hídrico)
 **Estimativa**: 32 horas (4 dias)  
-**Status**: ❌ Não implementado  
+**Status**: 🟡 Em andamento (WA-N1 / 24.0a — ponto)  
 **Spec**: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml) · [CORPOS_DAGUA_TERRITORIO](./CORPOS_DAGUA_TERRITORIO.md)
 
 **Tarefas**:
-- [ ] Estender MER/`NaturalAsset` (ou tipar `TerritoryAsset`) com tipos hídricos canônicos:
-  - [ ] `RIVER`, `STREAM`, `SPRING`, `WATERFALL`, `POTABLE_WATER` (`WELL` só em `WATER_POINT_DETAILS.water_type`)
+- [x] Estender MER/`NaturalAsset` com tipos hídricos de **ponto** (`SPRING`, `WATERFALL`, `POTABLE_WATER`; `WELL` em `water_type`)
+  - [ ] `RIVER`, `STREAM` (+ WATERCOURSE_DETAILS) — 24.0b
 - [ ] Criar `WATERCOURSE_DETAILS` (LineString GeoJSON ≤500 vértices, WGS84, intersecta território; regime; uso; notas)
-- [ ] Alinhar `WATER_POINT_DETAILS` (potabilidade, último teste, sensibilidade)
-- [ ] Fluxo de curadoria **separado por modelo**:
-  - [ ] NaturalAsset (alvo): `PENDING` → `PUBLISHED` (também `HIDDEN`|`REVIEW`)
-  - [ ] TerritoryAsset (ponte): `PENDING` → `VALIDATED`
+- [x] Alinhar `WATER_POINT_DETAILS` mínimo (lat/lng, water_type WELL|TAP, notas/teste) — sensibilidade deferida
+- [x] Fluxo de curadoria NaturalAsset: `PENDING` → `PUBLISHED` (API publish Curator)
+  - [ ] TerritoryAsset ponte: alinhar vocabulário documental PENDING/VALIDATED
   - [ ] WorkItem de curadoria (reusar padrão AssetCuration)
 - [ ] Autorização de leitura para `HIGH`/`RESTRICTED` em list/get/mapa/pins (server-side)
-- [ ] API: criar/listar/obter/atualizar status de corpos d'água por `territoryId` (paginação + bbox)
+- [x] API: criar/listar/obter/publish por `territoryId` (paginação) — bbox deferido
 - [ ] Referência de conteúdo: `naturalAssetId` em Post/HealthObservation (mesmo territoryId)
-- [ ] Mapa/Flutter via BFF: pin e filtro “água / rios”; omitir sensíveis sem auth
-- [ ] Garantir invariante: Territory permanece sem campos sociais/hídricos; asset nunca vai ao marketplace
+- [ ] Mapa/Flutter via BFF: pin e filtro canônico NaturalAsset (ponte WA-E2/E4 permanece)
+- [x] Invariante: Territory sem campos hídricos; NaturalAsset nunca marketplace (AC-WA-6)
 - [ ] Ponte opcional: migrar/alias de TerritoryAssets `natural` existentes (nascentes)
-- [ ] Testes de domínio + API + curadoria + sensibilidade (mapear AC-WA-1…6)
-- [ ] Documentação: glossário, `09_ASSETS`, API assets/mapa
+- [x] Testes domínio + API (AC-WA-1/2 ponto + AC-WA-6); sensibilidade/LineString pendentes (AC-WA-3…5)
+- [x] Documentação: CHANGELOG / STATUS / CORPOS / spec (AC-WA-1/2/6 covered no escopo ponto)
 
 **Arquivos previstos** (orientação — ajustar à Clean Architecture dos módulos Assets/Map/Health):
 - Domínio NaturalAsset / WatercourseDetails / WaterPointDetails (módulo Assets ou Health compartilhado)
@@ -138,10 +137,10 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 - Contratos BFF + pins Flutter (`MAPA_PINS`)
 
 **Critérios de Sucesso**:
-- ✅ Comunidade cadastra e cura rio/córrego/nascente/fonte no território
-- ✅ Entidade aparece no mapa com tipagem correta (sem vazar HIGH/RESTRICTED)
-- ✅ Pronto para `RelatedNaturalAssetId` / `naturalAssetId` nas observações e posts (24.1+)
-- ✅ Spec `water-bodies-curation` AC-WA-* cobertos ou rastreados
+- ✅ Comunidade cadastra e cura **ponto** hídrico (nascente/cachoeira/água potável) no território (WA-N1)
+- ⏳ Rio/córrego (LineString), mapa canônico NaturalAsset, sensibilidade HIGH/RESTRICTED (24.0b+)
+- ✅ Pronto para evoluir a `RelatedNaturalAssetId` / `naturalAssetId` nas observações e posts (24.1+)
+- ✅ Spec `water-bodies-curation` AC-WA-1/2/6 no escopo ponto; AC-WA-3…5 rastreados como pending
 - ✅ Testes passando
 
 ---

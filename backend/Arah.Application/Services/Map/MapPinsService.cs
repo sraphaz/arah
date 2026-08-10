@@ -46,7 +46,8 @@ public sealed class MapPinsService
         MapPinFilters filters,
         Guid? assetId,
         IReadOnlyList<string>? assetTypes,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyList<string>? assetSubtypes = null)
     {
         var pins = new List<MapPin>();
 
@@ -63,13 +64,15 @@ public sealed class MapPinsService
         if (filters.Assets)
         {
             var assetTypeList = assetId is null ? assetTypes : null;
+            var assetSubtypeList = assetId is null ? assetSubtypes : null;
             var assets = await _assetRepository.ListAsync(
                 territoryId,
                 assetId,
                 assetTypeList,
                 AssetStatus.Active,
                 null,
-                cancellationToken);
+                cancellationToken,
+                assetSubtypeList);
 
             pins.AddRange(await BuildAssetPinsAsync(assets, cancellationToken));
         }
@@ -110,7 +113,8 @@ public sealed class MapPinsService
         Guid? assetId,
         IReadOnlyList<string>? assetTypes,
         PaginationParameters pagination,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyList<string>? assetSubtypes = null)
     {
         // Cada tipo usa query paged com a mesma paginação da request (contrato pré-refactor).
         // Depois: merge → order by PinType → Skip/Take final. Total = tamanho do merge, não dump completo.
@@ -130,6 +134,7 @@ public sealed class MapPinsService
         if (filters.Assets)
         {
             var assetTypeList = assetId is null ? assetTypes : null;
+            var assetSubtypeList = assetId is null ? assetSubtypes : null;
             var assets = await _assetRepository.ListPagedAsync(
                 territoryId,
                 assetId,
@@ -138,7 +143,8 @@ public sealed class MapPinsService
                 null,
                 pagination.Skip,
                 pagination.Take,
-                cancellationToken);
+                cancellationToken,
+                assetSubtypeList);
 
             pins.AddRange(await BuildAssetPinsAsync(assets, cancellationToken));
         }
@@ -218,7 +224,9 @@ public sealed class MapPinsService
                 null,
                 null,
                 null,
-                asset.Status.ToString().ToUpperInvariant());
+                asset.Status.ToString().ToUpperInvariant(),
+                asset.Type,
+                asset.Subtype);
         }).ToList();
     }
 

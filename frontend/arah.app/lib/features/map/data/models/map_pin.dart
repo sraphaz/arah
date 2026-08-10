@@ -10,6 +10,8 @@ class MapPin {
     this.eventId,
     this.assetId,
     this.status,
+    this.assetType,
+    this.assetSubtype,
   });
 
   final String pinType;
@@ -21,6 +23,17 @@ class MapPin {
   final String? eventId;
   final String? assetId;
   final String? status;
+  final String? assetType;
+  final String? assetSubtype;
+
+  /// Chave visual: subtype hídrico > type do asset > pinType genérico.
+  String get visualType {
+    final subtype = assetSubtype?.trim();
+    if (subtype != null && subtype.isNotEmpty) return subtype;
+    final type = assetType?.trim();
+    if (type != null && type.isNotEmpty && type != 'natural') return type;
+    return pinType;
+  }
 
   factory MapPin.fromJson(Map<String, dynamic> json) {
     String? guidToString(dynamic v) =>
@@ -36,6 +49,8 @@ class MapPin {
       eventId: guidToString(json['eventId']),
       assetId: guidToString(json['assetId']),
       status: json['status'] as String?,
+      assetType: json['assetType'] as String?,
+      assetSubtype: json['assetSubtype'] as String?,
     );
   }
 }

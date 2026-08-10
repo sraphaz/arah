@@ -18,34 +18,16 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
         IReadOnlyCollection<string>? types,
         AssetStatus? status,
         string? search,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null)
     {
-        var query = _dataStore.TerritoryAssets
-            .Where(asset => asset.TerritoryId == territoryId)
-            .AsEnumerable();
-
-        if (assetId is not null)
-        {
-            query = query.Where(asset => asset.Id == assetId.Value);
-        }
-
-        if (types is not null && types.Count > 0)
-        {
-            var normalized = types.Select(type => type.Trim().ToLowerInvariant()).ToHashSet();
-            query = query.Where(asset => normalized.Contains(asset.Type.ToLowerInvariant()));
-        }
-
-        if (status is not null)
-        {
-            query = query.Where(asset => asset.Status == status);
-        }
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            query = query.Where(asset =>
-                asset.Name.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                (asset.Description is not null && asset.Description.Contains(search, StringComparison.OrdinalIgnoreCase)));
-        }
+        var query = ApplyFilters(
+            _dataStore.TerritoryAssets.Where(asset => asset.TerritoryId == territoryId),
+            assetId,
+            types,
+            status,
+            search,
+            subtypes);
 
         return Task.FromResult<IReadOnlyList<TerritoryAsset>>(query.ToList());
     }
@@ -94,34 +76,16 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
         string? search,
         int skip,
         int take,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null)
     {
-        var query = _dataStore.TerritoryAssets
-            .Where(asset => asset.TerritoryId == territoryId)
-            .AsEnumerable();
-
-        if (assetId is not null)
-        {
-            query = query.Where(asset => asset.Id == assetId.Value);
-        }
-
-        if (types is not null && types.Count > 0)
-        {
-            var normalized = types.Select(type => type.Trim().ToLowerInvariant()).ToHashSet();
-            query = query.Where(asset => normalized.Contains(asset.Type.ToLowerInvariant()));
-        }
-
-        if (status is not null)
-        {
-            query = query.Where(asset => asset.Status == status);
-        }
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            query = query.Where(asset =>
-                asset.Name.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                (asset.Description is not null && asset.Description.Contains(search, StringComparison.OrdinalIgnoreCase)));
-        }
+        var query = ApplyFilters(
+            _dataStore.TerritoryAssets.Where(asset => asset.TerritoryId == territoryId),
+            assetId,
+            types,
+            status,
+            search,
+            subtypes);
 
         var result = query
             .OrderByDescending(asset => asset.CreatedAtUtc)
@@ -138,21 +102,42 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
         IReadOnlyCollection<string>? types,
         AssetStatus? status,
         string? search,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null)
     {
-        var query = _dataStore.TerritoryAssets
-            .Where(asset => asset.TerritoryId == territoryId)
-            .AsEnumerable();
+        var query = ApplyFilters(
+            _dataStore.TerritoryAssets.Where(asset => asset.TerritoryId == territoryId),
+            assetId,
+            types,
+            status,
+            search,
+            subtypes);
+
+        const int maxInt32 = int.MaxValue;
+        var count = query.Count();
+        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
+    }
+
+    private static IEnumerable<TerritoryAsset> ApplyFilters(
+        IEnumerable<TerritoryAsset> query,
+        Guid? assetId,
+        IReadOnlyCollection<string>? types,
+        AssetStatus? status,
+        string? search,
+        IReadOnlyCollection<string>? subtypes)
+    {
+        var normalizedTypes = TerritoryAssetTypeMatch.NormalizeFilter(types);
+        var normalizedSubtypes = TerritoryAssetTypeMatch.NormalizeFilter(subtypes);
 
         if (assetId is not null)
         {
             query = query.Where(asset => asset.Id == assetId.Value);
         }
 
-        if (types is not null && types.Count > 0)
+        if (normalizedTypes is not null || normalizedSubtypes is not null)
         {
-            var normalized = types.Select(type => type.Trim().ToLowerInvariant()).ToHashSet();
-            query = query.Where(asset => normalized.Contains(asset.Type.ToLowerInvariant()));
+            query = query.Where(asset =>
+                TerritoryAssetTypeMatch.Matches(asset.Type, asset.Subtype, normalizedTypes, normalizedSubtypes));
         }
 
         if (status is not null)
@@ -167,8 +152,6 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
                 (asset.Description is not null && asset.Description.Contains(search, StringComparison.OrdinalIgnoreCase)));
         }
 
-        const int maxInt32 = int.MaxValue;
-        var count = query.Count();
-        return Task.FromResult(count > maxInt32 ? maxInt32 : count);
+        return query;
     }
 }

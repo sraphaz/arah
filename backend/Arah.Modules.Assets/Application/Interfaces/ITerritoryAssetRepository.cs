@@ -10,7 +10,8 @@ public interface ITerritoryAssetRepository
         IReadOnlyCollection<string>? types,
         AssetStatus? status,
         string? search,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null);
 
     Task<IReadOnlyList<TerritoryAsset>> ListByIdsAsync(IReadOnlyCollection<Guid> assetIds, CancellationToken cancellationToken);
     Task<TerritoryAsset?> GetByIdAsync(Guid assetId, CancellationToken cancellationToken);
@@ -28,7 +29,8 @@ public interface ITerritoryAssetRepository
         string? search,
         int skip,
         int take,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null);
     
     /// <summary>
     /// Counts assets matching criteria.
@@ -39,5 +41,6 @@ public interface ITerritoryAssetRepository
         IReadOnlyCollection<string>? types,
         AssetStatus? status,
         string? search,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null);
 }

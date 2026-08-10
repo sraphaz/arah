@@ -202,8 +202,8 @@ public static class BffJourneyRegistry
             {
                 new("entities", "GET", "Entidades do mapa. Query: territoryId, categoryId, bounds, etc."),
                 new("entities/paged", "GET", "Entidades paginadas. Query: territoryId, pageNumber, pageSize."),
-                new("pins", "GET", "Pins do mapa. Query: territoryId, bounds."),
-                new("pins/paged", "GET", "Pins paginados."),
+                new("pins", "GET", "Pins do mapa. Query: territoryId, types, assetId, assetTypes, assetSubtypes."),
+                new("pins/paged", "GET", "Pins paginados. Query: territoryId, types, assetId, assetTypes, assetSubtypes, pageNumber, pageSize."),
                 new("entities", "POST", "Cria entidade no mapa. Body conforme API."),
                 new("entities/{entityId}/confirmations", "POST", "Confirma entidade."),
                 new("entities/{entityId}/relations", "POST", "Cria relação entre entidades.")
@@ -364,8 +364,8 @@ public static class BffJourneyRegistry
             {
                 new("entities", "GET", "Entidades do mapa."),
                 new("entities/paged", "GET", "Entidades paginadas."),
-                new("pins", "GET", "Pins do mapa."),
-                new("pins/paged", "GET", "Pins paginados.")
+                new("pins", "GET", "Pins do mapa. Query: territoryId, types, assetId, assetTypes, assetSubtypes."),
+                new("pins/paged", "GET", "Pins paginados. Query: territoryId, types, assetId, assetTypes, assetSubtypes, pageNumber, pageSize.")
             },
             [Assets] = new List<JourneyEndpoint>
             {

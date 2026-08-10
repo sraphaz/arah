@@ -111,6 +111,8 @@
   "sessionExpired": "Session expired. Please log in again.",
   "enterToAccess": "Sign in to access profile, post, and notifications.",
 "map": "Map",
+"mapFilterAll": "All",
+"mapFilterWaterBodies": "Water bodies",
 "viewOnMap": "View on map",
 "mapEntity": "Place / map point",
 "mapPost": "Post",

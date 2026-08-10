@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -46,13 +48,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profile => 'Perfil';
 
   @override
-  String get chooseTerritory => 'Escolha um território para ver o feed da região';
+  String get chooseTerritory =>
+      'Escolha um território para ver o feed da região';
 
   @override
   String get territories => 'Territórios';
 
   @override
-  String get territoriesSubtitle => 'Toque em um território para ver o feed da região ou trocar de região.';
+  String get territoriesSubtitle =>
+      'Toque em um território para ver o feed da região ou trocar de região.';
 
   @override
   String get noTerritoryAvailable => 'Nenhum território disponível';
@@ -61,22 +65,26 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingTitle => 'Escolha seu território';
 
   @override
-  String get onboardingDescription => 'Para ver o feed e participar da comunidade, escolha um território próximo a você.';
+  String get onboardingDescription =>
+      'Para ver o feed e participar da comunidade, escolha um território próximo a você.';
 
   @override
   String get useMyLocation => 'Usar minha localização';
 
   @override
-  String get enableLocationHint => 'Ative a localização para ver territórios próximos.';
+  String get enableLocationHint =>
+      'Ative a localização para ver territórios próximos.';
 
   @override
-  String get noTerritoryInRegion => 'Nenhum território cadastrado perto de você ainda.';
+  String get noTerritoryInRegion =>
+      'Nenhum território cadastrado perto de você ainda.';
 
   @override
   String get registerMunicipalityTitle => 'Cadastrar seu município';
 
   @override
-  String get registerMunicipalityDescription => 'Usamos o contorno oficial do IBGE para criar o território da sua cidade e você poder entrar como visitante.';
+  String get registerMunicipalityDescription =>
+      'Usamos o contorno oficial do IBGE para criar o território da sua cidade e você poder entrar como visitante.';
 
   @override
   String registerMunicipalityButton(String city) {
@@ -95,7 +103,8 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get registerMunicipalityFailed => 'Não foi possível obter o contorno IBGE. Ajuste o pin e desenhe sua célula.';
+  String get registerMunicipalityFailed =>
+      'Não foi possível obter o contorno IBGE. Ajuste o pin e desenhe sua célula.';
 
   @override
   String get proposeTerritoryButton => 'Desenhar minha célula';
@@ -104,13 +113,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get proposeTerritoryTitle => 'Propor território';
 
   @override
-  String get proposeTerritoryDescription => 'Ajuste o pin no mapa, confirme cidade e UF e desenhe o perímetro. Um curador validará antes da ativação; você terá acesso provisório como visitante.';
+  String get proposeTerritoryDescription =>
+      'Ajuste o pin no mapa, confirme cidade e UF e desenhe o perímetro. Um curador validará antes da ativação; você terá acesso provisório como visitante.';
 
   @override
-  String get proposeTerritoryTapPin => 'Toque no mapa para ajustar o centro do território.';
+  String get proposeTerritoryTapPin =>
+      'Toque no mapa para ajustar o centro do território.';
 
   @override
-  String get proposeTerritoryTapPolygon => 'Toque no mapa para adicionar vértices do polígono (mínimo 3).';
+  String get proposeTerritoryTapPolygon =>
+      'Toque no mapa para adicionar vértices do polígono (mínimo 3).';
 
   @override
   String get proposeTerritoryCity => 'Cidade';
@@ -125,7 +137,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get proposeTerritoryPolygonMode => 'Desenhar polígono';
 
   @override
-  String get proposeTerritoryPolygonModeHint => 'Desligado: usa círculo com raio ajustável.';
+  String get proposeTerritoryPolygonModeHint =>
+      'Desligado: usa círculo com raio ajustável.';
 
   @override
   String proposeTerritoryRadiusLabel(String km) {
@@ -147,16 +160,19 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get proposeTerritoryCityStateRequired => 'Informe cidade e UF (2 letras).';
+  String get proposeTerritoryCityStateRequired =>
+      'Informe cidade e UF (2 letras).';
 
   @override
-  String get proposeTerritoryPolygonMinPoints => 'O polígono precisa de pelo menos 3 pontos.';
+  String get proposeTerritoryPolygonMinPoints =>
+      'O polígono precisa de pelo menos 3 pontos.';
 
   @override
   String get territoryPendingBadge => 'Aguardando curador';
 
   @override
-  String get onboardingPendingTerritoryHint => 'Este território está em validação. Você pode entrar provisoriamente como visitante.';
+  String get onboardingPendingTerritoryHint =>
+      'Este território está em validação. Você pode entrar provisoriamente como visitante.';
 
   @override
   String get onboardingNearbyTitle => 'Próximos a você';
@@ -165,16 +181,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingAllTerritoriesTitle => 'Todos os territórios';
 
   @override
-  String get onboardingOrChooseFromList => 'Ou escolha um território na lista abaixo';
+  String get onboardingOrChooseFromList =>
+      'Ou escolha um território na lista abaixo';
 
   @override
   String get onboardingLocationEnabled => 'Localização ativa';
 
   @override
-  String get onboardingLocationPrivacy => 'Sua localização é privada e não fica visível para outros usuários.';
+  String get onboardingLocationPrivacy =>
+      'Sua localização é privada e não fica visível para outros usuários.';
 
   @override
-  String get onboardingAllowLocationToCenter => 'Permita a localização para centralizar o mapa e ver territórios próximos.';
+  String get onboardingAllowLocationToCenter =>
+      'Permita a localização para centralizar o mapa e ver territórios próximos.';
 
   @override
   String onboardingContinueWith(Object name) {
@@ -182,7 +201,8 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get onboardingVisitorOnContinue => 'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.';
+  String get onboardingVisitorOnContinue =>
+      'Ao continuar, você entrará como visitante neste território e poderá ver o feed da região.';
 
   @override
   String get onboardingGettingLocation => 'Obtendo localização...';
@@ -272,7 +292,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noTerritorySelected => 'Nenhum território selecionado';
 
   @override
-  String get chooseTerritoryInExplore => 'Toque em Explorar, escolha um território e volte aqui para publicar.';
+  String get chooseTerritoryInExplore =>
+      'Toque em Explorar, escolha um território e volte aqui para publicar.';
 
   @override
   String get comingSoon => 'Em breve';
@@ -284,10 +305,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sessionExpired => 'Sessão expirada. Faça login novamente.';
 
   @override
-  String get enterToAccess => 'Entre na sua conta para acessar perfil, publicar e notificações.';
+  String get enterToAccess =>
+      'Entre na sua conta para acessar perfil, publicar e notificações.';
 
   @override
   String get map => 'Mapa';
+
+  @override
+  String get mapFilterAll => 'Todos';
+
+  @override
+  String get mapFilterWaterBodies => 'Corpos d\'água';
 
   @override
   String get viewOnMap => 'Ver no mapa';
@@ -506,7 +534,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get reportAlert => 'Reportar alerta';
 
   @override
-  String get chooseTerritoryForAlerts => 'Escolha um território para ver alertas.';
+  String get chooseTerritoryForAlerts =>
+      'Escolha um território para ver alertas.';
 
   @override
   String get pending => 'Pendentes';
@@ -683,7 +712,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorLoadConnections => 'Não foi possível carregar conexões.';
 
   @override
-  String get noConnectionsYet => 'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.';
+  String get noConnectionsYet =>
+      'Nenhuma conexão ainda. Toque em Adicionar para buscar pessoas.';
 
   @override
   String get errorLoadSuggestions => 'Erro ao carregar sugestões.';
@@ -692,7 +722,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorSearch => 'Erro na busca.';
 
   @override
-  String get searchMinCharsHint => 'Digite ao menos 2 caracteres ou veja sugestões acima.';
+  String get searchMinCharsHint =>
+      'Digite ao menos 2 caracteres ou veja sugestões acima.';
 
   @override
   String get connectionRequestIncoming => 'Solicitação recebida';
@@ -753,7 +784,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorLoadAlerts => 'Não foi possível carregar alertas.';
 
   @override
-  String get alertsRequireResidency => 'Alertas do território exigem residência ou curadoria.';
+  String get alertsRequireResidency =>
+      'Alertas do território exigem residência ou curadoria.';
 
   @override
   String get filterAll => 'Todos';
@@ -762,7 +794,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get postDefaultTitle => 'Post';
 
   @override
-  String get chooseTerritoryBeforePost => 'Escolha um território antes de publicar.';
+  String get chooseTerritoryBeforePost =>
+      'Escolha um território antes de publicar.';
 
   @override
   String get addImage => 'Adicionar imagem';
@@ -780,7 +813,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get moderationEvidencesTab => 'Evidências';
 
   @override
-  String get moderationEmptyDescription => 'Quando houver itens para curadoria, eles aparecem aqui.';
+  String get moderationEmptyDescription =>
+      'Quando houver itens para curadoria, eles aparecem aqui.';
 
   @override
   String get moderationCaseTypeLabel => 'Caso de moderação';
@@ -857,7 +891,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorRequestResidency => 'Erro ao solicitar residência.';
 
   @override
-  String get errorUploadProof => 'Não foi possível enviar a foto do comprovante. Tente novamente.';
+  String get errorUploadProof =>
+      'Não foi possível enviar a foto do comprovante. Tente novamente.';
 
   @override
   String get moderationEvidenceSuffix => 'evidência';
@@ -884,7 +919,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get governanceSubtitle => 'Decisões coletivas do território.';
 
   @override
-  String get chooseTerritoryForGovernance => 'Escolha um território para ver as votações.';
+  String get chooseTerritoryForGovernance =>
+      'Escolha um território para ver as votações.';
 
   @override
   String get noVotings => 'Nenhuma votação no momento.';
@@ -988,7 +1024,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get votingTypeFeatureFlag => 'Funcionalidade';
 
   @override
-  String get votingTypeTerritoryCharacterization => 'Caracterização do território';
+  String get votingTypeTerritoryCharacterization =>
+      'Caracterização do território';
 
   @override
   String get votingTypeCommunityPolicy => 'Política comunitária';
@@ -1063,7 +1100,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get services => 'Serviços';
 
   @override
-  String get servicesHubSubtitle => 'Tudo que a vida no território precisa — economia, serviços, governança e cuidado com o lugar.';
+  String get servicesHubSubtitle =>
+      'Tudo que a vida no território precisa — economia, serviços, governança e cuidado com o lugar.';
 
   @override
   String get servicesCategoryEconomy => 'Economia local';
@@ -1138,7 +1176,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get visitorBannerTitle => 'Você está como visitante';
 
   @override
-  String get visitorBannerCta => 'Confirme residência para votar e ver conteúdo de moradores';
+  String get visitorBannerCta =>
+      'Confirme residência para votar e ver conteúdo de moradores';
 
   @override
   String get visitor => 'Visitante';
@@ -1179,7 +1218,8 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get residencyJourneyPresenceSubtitle => 'Moradores acessam conteúdo restrito, votam e participam da gestão.';
+  String get residencyJourneyPresenceSubtitle =>
+      'Moradores acessam conteúdo restrito, votam e participam da gestão.';
 
   @override
   String get residencyJourneyPresenceTitle => 'Presença no território';
@@ -1191,13 +1231,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get residencyJourneyProofTitle => 'Envie um comprovante';
 
   @override
-  String get residencyJourneyProofSubtitle => 'Conta de luz, água, contrato ou declaração da associação. Descreva e, se quiser, anexe uma foto.';
+  String get residencyJourneyProofSubtitle =>
+      'Conta de luz, água, contrato ou declaração da associação. Descreva e, se quiser, anexe uma foto.';
 
   @override
   String get residencyJourneyMessageLabel => 'Mensagem / comprovante';
 
   @override
-  String get residencyJourneyMessageHint => 'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120';
+  String get residencyJourneyMessageHint =>
+      'Ex.: Conta de luz em meu nome, Rua das Palmeiras 120';
 
   @override
   String get residencyJourneyAttachProof => 'Anexar foto do comprovante';
@@ -1257,7 +1299,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get residencyJourneySuccessTitle => 'Solicitação enviada!';
 
   @override
-  String get residencyJourneySuccessMessage => 'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.';
+  String get residencyJourneySuccessMessage =>
+      'A curadoria do território vai analisar seu comprovante. Você será avisado assim que sua residência for confirmada.';
 
   @override
   String get checkoutJourneyTitle => 'Checkout';
@@ -1266,7 +1309,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get checkoutBagTitle => 'Sua sacola';
 
   @override
-  String get checkoutEmptyCart => 'Sua sacola está vazia. Volte ao Mercado para adicionar itens.';
+  String get checkoutEmptyCart =>
+      'Sua sacola está vazia. Volte ao Mercado para adicionar itens.';
 
   @override
   String get checkoutQuantity => 'Quantidade';
@@ -1275,19 +1319,22 @@ class AppLocalizationsPt extends AppLocalizations {
   String get checkoutFulfillmentTitle => 'Como receber';
 
   @override
-  String get checkoutFulfillmentSubtitle => 'Escolha retirada no território ou entrega combinada com a loja.';
+  String get checkoutFulfillmentSubtitle =>
+      'Escolha retirada no território ou entrega combinada com a loja.';
 
   @override
   String get checkoutFulfillmentPickup => 'Retirada';
 
   @override
-  String get checkoutFulfillmentPickupHint => 'Combine o ponto e horário com a loja.';
+  String get checkoutFulfillmentPickupHint =>
+      'Combine o ponto e horário com a loja.';
 
   @override
   String get checkoutFulfillmentDelivery => 'Entrega';
 
   @override
-  String get checkoutFulfillmentDeliveryHint => 'Combinada localmente (sem frete automático).';
+  String get checkoutFulfillmentDeliveryHint =>
+      'Combinada localmente (sem frete automático).';
 
   @override
   String get checkoutReviewTitle => 'Revisão e pagamento';
@@ -1302,13 +1349,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get checkoutPayPix => 'Pagar com PIX';
 
   @override
-  String get checkoutPixHint => 'Geramos um código PIX para você copiar e pagar no app do banco.';
+  String get checkoutPixHint =>
+      'Geramos um código PIX para você copiar e pagar no app do banco.';
 
   @override
   String get checkoutSuccessTitle => 'PIX gerado';
 
   @override
-  String get checkoutSuccessMessage => 'Copie o código, pague no banco e toque em «Já paguei» quando concluir.';
+  String get checkoutSuccessMessage =>
+      'Copie o código, pague no banco e toque em «Já paguei» quando concluir.';
 
   @override
   String get checkoutDone => 'Concluir';
@@ -1323,7 +1372,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pixCodeCopied => 'Código PIX copiado';
 
   @override
-  String get pixCodeUnavailable => 'Código indisponível. Tente novamente em instantes.';
+  String get pixCodeUnavailable =>
+      'Código indisponível. Tente novamente em instantes.';
 
   @override
   String get pixAlreadyPaid => 'Já paguei';
@@ -1332,13 +1382,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pixPaymentConfirmed => 'Pagamento confirmado';
 
   @override
-  String get pixPaymentPendingHint => 'Ainda não confirmamos o pagamento. Se já pagou, aguarde alguns segundos e tente de novo.';
+  String get pixPaymentPendingHint =>
+      'Ainda não confirmamos o pagamento. Se já pagou, aguarde alguns segundos e tente de novo.';
 
   @override
   String get openStoreEmptyTitle => 'Você ainda não tem loja';
 
   @override
-  String get openStoreEmptyDescription => 'Crie sua loja no território para publicar itens e receber pagamentos.';
+  String get openStoreEmptyDescription =>
+      'Crie sua loja no território para publicar itens e receber pagamentos.';
 
   @override
   String get storePaymentsTitle => 'Pagamentos';
@@ -1347,22 +1399,26 @@ class AppLocalizationsPt extends AppLocalizations {
   String get storePaymentsEnabled => 'Aceitar pagamentos';
 
   @override
-  String get storePaymentsEnabledHint => 'Clientes podem pagar pedidos desta loja via PIX.';
+  String get storePaymentsEnabledHint =>
+      'Clientes podem pagar pedidos desta loja via PIX.';
 
   @override
-  String get storePaymentsDisabledHint => 'Pagamentos desativados — ative para receber via PIX.';
+  String get storePaymentsDisabledHint =>
+      'Pagamentos desativados — ative para receber via PIX.';
 
   @override
   String get storePixKeyLabel => 'Chave PIX';
 
   @override
-  String get storePixKeyHint => 'A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.';
+  String get storePixKeyHint =>
+      'A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.';
 
   @override
   String get sellerBalanceTitle => 'Seu saldo';
 
   @override
-  String get sellerBalanceHint => 'Valores do território após vendas confirmadas. O saque é processado pelo território.';
+  String get sellerBalanceHint =>
+      'Valores do território após vendas confirmadas. O saque é processado pelo território.';
 
   @override
   String get sellerBalanceLoadError => 'Não foi possível carregar o saldo.';
@@ -1380,7 +1436,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get myProductsTitle => 'Meus produtos';
 
   @override
-  String get myProductsEmpty => 'Nenhum produto publicado. Toque em Adicionar para criar o primeiro.';
+  String get myProductsEmpty =>
+      'Nenhum produto publicado. Toque em Adicionar para criar o primeiro.';
 
   @override
   String get addProduct => 'Adicionar';
@@ -1401,7 +1458,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get addProductPhotoDescriptionTitle => 'Foto e descrição';
 
   @override
-  String get addProductDescriptionHint => 'Conte o que é, como usar e condições do território.';
+  String get addProductDescriptionHint =>
+      'Conte o que é, como usar e condições do território.';
 
   @override
   String get addProductReviewTitle => 'Revisão';
@@ -1419,7 +1477,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get addProductPhotoHint => 'Toque para escolher uma foto da galeria';
 
   @override
-  String get addProductPhotoOptionalHint => 'Opcional — produtos com foto vendem melhor';
+  String get addProductPhotoOptionalHint =>
+      'Opcional — produtos com foto vendem melhor';
 
   @override
   String get productPhotoLabel => 'Foto';
@@ -1467,13 +1526,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get archiveProduct => 'Arquivar produto';
 
   @override
-  String get archiveProductConfirm => 'O produto deixa de aparecer no Mercado. Você pode criar outro depois.';
+  String get archiveProductConfirm =>
+      'O produto deixa de aparecer no Mercado. Você pode criar outro depois.';
 
   @override
   String get errorSaveProduct => 'Erro ao salvar produto.';
 
   @override
-  String get errorUploadProductPhoto => 'Não foi possível enviar a foto. Tente de novo.';
+  String get errorUploadProductPhoto =>
+      'Não foi possível enviar a foto. Tente de novo.';
 
   @override
   String get comingSoonJourneyTitle => 'Em breve';
@@ -1490,7 +1551,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get comingSoonNotifyTitle => 'Acompanhe o progresso';
 
   @override
-  String get comingSoonNotifyMessage => 'Quando estiver no ar, você encontra aqui no hub Serviços. Sem pressa, com cuidado coletivo.';
+  String get comingSoonNotifyMessage =>
+      'Quando estiver no ar, você encontra aqui no hub Serviços. Sem pressa, com cuidado coletivo.';
 
   @override
   String get comingSoonUnderstood => 'Entendi';

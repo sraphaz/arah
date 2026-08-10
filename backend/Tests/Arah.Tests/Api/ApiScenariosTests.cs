@@ -1101,16 +1101,104 @@ public sealed class ApiScenariosTests
                 null,
                 new[] { new AssetGeoAnchorRequest(-23.376, -45.026) }));
         springResponse.EnsureSuccessStatusCode();
+        var springAsset = await springResponse.Content.ReadFromJsonAsync<AssetResponse>();
+
+        var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        await CurateAssetApprovedAsync(client, riverAsset!.Id);
+        await CurateAssetApprovedAsync(client, springAsset!.Id);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
 
         var byType = await client.GetFromJsonAsync<List<MapPinResponse>>(
             $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetTypes=river");
         Assert.NotNull(byType);
-        Assert.All(byType!, pin => Assert.Equal(riverAsset!.Id, pin.AssetId));
+        Assert.NotEmpty(byType!);
+        Assert.All(byType, pin => Assert.Equal(riverAsset.Id, pin.AssetId));
 
         var byId = await client.GetFromJsonAsync<List<MapPinResponse>>(
-            $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetId={riverAsset!.Id}");
+            $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetId={riverAsset.Id}");
         Assert.NotNull(byId);
-        Assert.All(byId!, pin => Assert.Equal(riverAsset.Id, pin.AssetId));
+        Assert.NotEmpty(byId!);
+        Assert.All(byId, pin => Assert.Equal(riverAsset.Id, pin.AssetId));
+    }
+
+    [Fact]
+    public async Task Map_Pins_FilterWaterBodySubtypes_WAE2()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(ApiHeaders.SessionId, "map-water-bodies");
+        await SelectTerritoryAsync(client, ActiveTerritoryId);
+
+        var residentToken = await LoginForTokenAsync(client, "google", "resident-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var riverResponse = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "natural",
+                "Rio Tipado",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.381, -45.031) },
+                "river"));
+        riverResponse.EnsureSuccessStatusCode();
+        var riverAsset = await riverResponse.Content.ReadFromJsonAsync<AssetResponse>();
+
+        var springResponse = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "natural",
+                "Nascente Tipada",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.382, -45.032) },
+                "spring"));
+        springResponse.EnsureSuccessStatusCode();
+        var springAsset = await springResponse.Content.ReadFromJsonAsync<AssetResponse>();
+
+        var culturalResponse = await client.PostAsJsonAsync(
+            "api/v1/assets",
+            new CreateAssetRequest(
+                ActiveTerritoryId,
+                "cultural",
+                "Praça Central",
+                null,
+                new[] { new AssetGeoAnchorRequest(-23.383, -45.033) }));
+        culturalResponse.EnsureSuccessStatusCode();
+        var culturalAsset = await culturalResponse.Content.ReadFromJsonAsync<AssetResponse>();
+
+        var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
+        await CurateAssetApprovedAsync(client, riverAsset!.Id);
+        await CurateAssetApprovedAsync(client, springAsset!.Id);
+        await CurateAssetApprovedAsync(client, culturalAsset!.Id);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", residentToken);
+
+        var bySubtype = await client.GetFromJsonAsync<List<MapPinResponse>>(
+            $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetSubtypes=river");
+        Assert.NotNull(bySubtype);
+        Assert.Single(bySubtype!);
+        Assert.Equal(riverAsset.Id, bySubtype[0].AssetId);
+        Assert.Equal("natural", bySubtype[0].AssetType);
+        Assert.Equal("river", bySubtype[0].AssetSubtype);
+
+        var byTypesCompat = await client.GetFromJsonAsync<List<MapPinResponse>>(
+            $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetTypes=river,stream,spring,waterfall,well,potable_water");
+        Assert.NotNull(byTypesCompat);
+        Assert.Equal(2, byTypesCompat!.Count);
+        Assert.DoesNotContain(byTypesCompat, pin => pin.AssetId == culturalAsset.Id);
+        Assert.All(byTypesCompat, pin => Assert.Equal("natural", pin.AssetType));
+    }
+
+    private static async Task CurateAssetApprovedAsync(HttpClient client, Guid assetId)
+    {
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/assets/{assetId}/curate?territoryId={ActiveTerritoryId}",
+            new CurateAssetRequest("Approved", null));
+        response.EnsureSuccessStatusCode();
     }
 
     [Fact]

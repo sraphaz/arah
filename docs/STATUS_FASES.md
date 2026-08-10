@@ -50,7 +50,7 @@ Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, cór
 
 | Artefato | Papel |
 |----------|--------|
-| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 · WA-E1 tipagem ✅ · WA-E2 mapa (pins/filtros) |
+| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 · WA-E1 ✅ · WA-E2 mapa ✅ · WA-E4 UX curadoria ✅ |
 | [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico + curadoria |
 | [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD draft · **Spec-Id:** `water-bodies-curation` · ponte tipada no código; AC-WA-1…6 pendentes para NaturalAsset |
 

@@ -53,42 +53,108 @@ class AssetsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController();
     final typeController = TextEditingController(text: 'Infrastructure');
+    var asWaterBody = false;
+    var waterSubtype = kWaterBodySubtypeOptions.first;
+
     await showDialog<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.newAsset),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: nameController, decoration: InputDecoration(labelText: l10n.assetName)),
-            TextField(controller: typeController, decoration: InputDecoration(labelText: l10n.assetType)),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setLocal) => AlertDialog(
+          title: Text(asWaterBody ? l10n.newWaterBody : l10n.newAsset),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  asWaterBody ? l10n.waterBodyCreateHint : l10n.assetCreateHint,
+                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+                const SizedBox(height: AppConstants.spacingMd),
+                SegmentedButton<bool>(
+                  segments: [
+                    ButtonSegment(value: false, label: Text(l10n.assetKindGeneric)),
+                    ButtonSegment(value: true, label: Text(l10n.assetKindWaterBody)),
+                  ],
+                  selected: {asWaterBody},
+                  onSelectionChanged: (value) {
+                    setLocal(() => asWaterBody = value.first);
+                  },
+                ),
+                const SizedBox(height: AppConstants.spacingMd),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: asWaterBody ? l10n.waterBodyName : l10n.assetName,
+                  ),
+                ),
+                if (asWaterBody) ...[
+                  const SizedBox(height: AppConstants.spacingSm),
+                  DropdownButtonFormField<String>(
+                    key: ValueKey(waterSubtype),
+                    initialValue: waterSubtype,
+                    decoration: InputDecoration(labelText: l10n.waterBodySubtype),
+                    items: kWaterBodySubtypeOptions
+                        .map(
+                          (s) => DropdownMenuItem(
+                            value: s,
+                            child: Text(_waterBodyKindLabel(l10n, s)),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (v) {
+                      if (v != null) setLocal(() => waterSubtype = v);
+                    },
+                  ),
+                ] else
+                  TextField(
+                    controller: typeController,
+                    decoration: InputDecoration(labelText: l10n.assetType),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
+            FilledButton(
+              onPressed: () async {
+                final name = nameController.text.trim();
+                if (name.isEmpty) return;
+                try {
+                  if (asWaterBody) {
+                    await ref.read(assetsProvider.notifier).createAsset(
+                          name: name,
+                          type: 'natural',
+                          subtype: waterSubtype,
+                        );
+                  } else {
+                    await ref.read(assetsProvider.notifier).createAsset(
+                          name: name,
+                          type: typeController.text.trim(),
+                        );
+                  }
+                  if (ctx.mounted) {
+                    Navigator.pop(ctx);
+                    showSuccessSnackBar(
+                      ctx,
+                      asWaterBody ? l10n.waterBodySuggested : l10n.assetCreated,
+                    );
+                  }
+                } catch (e) {
+                  if (ctx.mounted) {
+                    showErrorSnackBar(
+                      ctx,
+                      e is ApiException ? e.userMessage : l10n.errorCreateAsset,
+                    );
+                  }
+                }
+              },
+              child: Text(l10n.create),
+            ),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
-          FilledButton(
-            onPressed: () async {
-              try {
-                await ref.read(assetsProvider.notifier).createAsset(
-                      name: nameController.text.trim(),
-                      type: typeController.text.trim(),
-                    );
-                if (ctx.mounted) {
-                  Navigator.pop(ctx);
-                  showSuccessSnackBar(ctx, l10n.assetCreated);
-                }
-              } catch (e) {
-                if (ctx.mounted) {
-                  showErrorSnackBar(
-                    ctx,
-                    e is ApiException ? e.userMessage : l10n.errorCreateAsset,
-                  );
-                }
-              }
-            },
-            child: Text(l10n.create),
-          ),
-        ],
       ),
     );
   }
@@ -97,7 +163,7 @@ class AssetsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     if (state.isLoading && state.items.isEmpty) {
       return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: const [ArahListSkeleton()],
       );
     }
@@ -119,8 +185,21 @@ class AssetsScreen extends ConsumerWidget {
     }
     if (state.items.isEmpty) {
       return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        children: [SizedBox(height: 200, child: Center(child: Text(l10n.noAssetsRegistered)))],
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 240,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.spacingLg),
+                child: Text(
+                  l10n.noAssetsOrWaterBodies,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }
     return ListView.builder(
@@ -131,21 +210,40 @@ class AssetsScreen extends ConsumerWidget {
         final asset = state.items[index];
         return Card(
           child: ListTile(
-            title: Text(asset.name),
-            subtitle: Text(
-              '${asset.type} · ${asset.status}'
-              '${asset.validationsCount > 0 ? ' · ${l10n.assetValidationsMeta(asset.validationsCount, asset.validationPct.toStringAsFixed(0))}' : ''}',
+            leading: Icon(
+              asset.isWaterBody ? Icons.water_drop_outlined : Icons.place_outlined,
             ),
+            title: Text(asset.name),
+            subtitle: Text(_assetSubtitle(l10n, asset)),
             trailing: PopupMenuButton<String>(
               onSelected: (value) => _onAssetAction(context, ref, asset, value),
               itemBuilder: (context) => [
                 if (asset.canValidate)
-                  PopupMenuItem(value: 'validate', child: Text(l10n.validate)),
+                  PopupMenuItem(
+                    value: 'validate',
+                    child: Text(
+                      asset.isWaterBody ? l10n.validateWaterBody : l10n.validate,
+                    ),
+                  ),
                 if (asset.canArchive)
                   PopupMenuItem(value: 'archive', child: Text(l10n.archive)),
                 if (asset.canCurate) ...[
-                  PopupMenuItem(value: 'approve', child: Text(l10n.approveCurator)),
-                  PopupMenuItem(value: 'reject', child: Text(l10n.rejectCurator)),
+                  PopupMenuItem(
+                    value: 'approve',
+                    child: Text(
+                      asset.isWaterBody
+                          ? l10n.approveWaterBodyCurator
+                          : l10n.approveCurator,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'reject',
+                    child: Text(
+                      asset.isWaterBody
+                          ? l10n.rejectWaterBodyCurator
+                          : l10n.rejectCurator,
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -153,6 +251,15 @@ class AssetsScreen extends ConsumerWidget {
         );
       },
     );
+  }
+
+  String _assetSubtitle(AppLocalizations l10n, AssetItem asset) {
+    final kind = asset.isWaterBody
+        ? _waterBodyKindLabel(l10n, asset.waterBodyKind ?? '')
+        : asset.type;
+    final base = '$kind · ${asset.status}';
+    if (asset.validationsCount <= 0) return base;
+    return '$base · ${l10n.assetValidationsMeta(asset.validationsCount, asset.validationPct.toStringAsFixed(0))}';
   }
 
   Future<void> _onAssetAction(
@@ -176,11 +283,21 @@ class AssetsScreen extends ConsumerWidget {
         await notifier.archiveAsset(asset.id);
         if (context.mounted) showSuccessSnackBar(context, l10n.assetArchived);
       } else if (action == 'approve') {
-        await notifier.curateAsset(asset.id, outcome: 'APPROVED');
-        if (context.mounted) showSuccessSnackBar(context, l10n.assetApproved);
+        await notifier.curateAsset(asset.id, outcome: 'Approved');
+        if (context.mounted) {
+          showSuccessSnackBar(
+            context,
+            asset.isWaterBody ? l10n.waterBodyApproved : l10n.assetApproved,
+          );
+        }
       } else if (action == 'reject') {
-        await notifier.curateAsset(asset.id, outcome: 'REJECTED');
-        if (context.mounted) showSuccessSnackBar(context, l10n.assetRejected);
+        await notifier.curateAsset(asset.id, outcome: 'Rejected');
+        if (context.mounted) {
+          showSuccessSnackBar(
+            context,
+            asset.isWaterBody ? l10n.waterBodyRejected : l10n.assetRejected,
+          );
+        }
       }
     } catch (e) {
       if (context.mounted) {
@@ -190,5 +307,24 @@ class AssetsScreen extends ConsumerWidget {
         );
       }
     }
+  }
+}
+
+String _waterBodyKindLabel(AppLocalizations l10n, String kind) {
+  switch (kind.toLowerCase()) {
+    case 'river':
+      return l10n.waterBodyRiver;
+    case 'stream':
+      return l10n.waterBodyStream;
+    case 'spring':
+      return l10n.waterBodySpring;
+    case 'waterfall':
+      return l10n.waterBodyWaterfall;
+    case 'well':
+      return l10n.waterBodyWell;
+    case 'potable_water':
+      return l10n.waterBodyPotableWater;
+    default:
+      return l10n.mapFilterWaterBodies;
   }
 }

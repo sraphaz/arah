@@ -501,6 +501,75 @@ class AppLocalizationsPt extends AppLocalizations {
   String get newAsset => 'Novo asset';
 
   @override
+  String get newWaterBody => 'Cuidar do rio / da nascente';
+
+  @override
+  String get assetCreateHint =>
+      'Cadastre um recurso do território (infraestrutura, cultural, etc.).';
+
+  @override
+  String get waterBodyCreateHint =>
+      'Sugira um corpo d\'água para a comunidade cuidar — nunca vendável.';
+
+  @override
+  String get assetKindGeneric => 'Asset';
+
+  @override
+  String get assetKindWaterBody => 'Água';
+
+  @override
+  String get waterBodyName => 'Nome do corpo d\'água';
+
+  @override
+  String get waterBodySubtype => 'Tipo';
+
+  @override
+  String get waterBodyRiver => 'Rio';
+
+  @override
+  String get waterBodyStream => 'Córrego';
+
+  @override
+  String get waterBodySpring => 'Nascente';
+
+  @override
+  String get waterBodyWaterfall => 'Cachoeira';
+
+  @override
+  String get waterBodyWell => 'Poço';
+
+  @override
+  String get waterBodyPotableWater => 'Água potável';
+
+  @override
+  String get waterBodySuggested =>
+      'Corpo d\'água sugerido. Aguardando curadoria.';
+
+  @override
+  String get waterBodyApproved => 'Cadastro do corpo d\'água aprovado.';
+
+  @override
+  String get waterBodyRejected => 'Cadastro do corpo d\'água rejeitado.';
+
+  @override
+  String get validateWaterBody => 'Confirmar corpo d\'água';
+
+  @override
+  String get approveWaterBodyCurator => 'Validar cadastro do rio / da nascente';
+
+  @override
+  String get rejectWaterBodyCurator => 'Rejeitar cadastro hídrico';
+
+  @override
+  String get noAssetsOrWaterBodies =>
+      'Nenhum asset ainda. Sugira um recurso ou um corpo d\'água para cuidar.';
+
+  @override
+  String mapWaterBodyPin(String kind) {
+    return 'Corpo d\'água · $kind';
+  }
+
+  @override
   String get assetName => 'Nome';
 
   @override

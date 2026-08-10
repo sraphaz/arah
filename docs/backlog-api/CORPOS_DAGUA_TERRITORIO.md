@@ -1,7 +1,7 @@
 # Corpos d'água do território — rios, nascentes e fontes curáveis
 
-**Versão**: 1.3  
-**Data**: 2026-08-09  
+**Versão**: 1.4  
+**Data**: 2026-08-10  
 **Status**: ✅ Aprovado para planejamento (backlog)  
 **Domínio dono**: `mapa-lugares` (primário) · co-ativação: `territorio-membership`, `governanca-transparencia`, `feed-conteudo`, `design-ux` · sinais externos: trilha TI  
 **Âncora de fase**: [FASE24](./FASE24.md) (Saúde Territorial) · ponte atual: TerritoryAsset / MapEntity
@@ -82,7 +82,7 @@ Refinar o que já existe em Assets/Mapa:
 | WA-E1 | Tipagem hídrica em TerritoryAsset (`natural` + subtype) | P1 | ✅ Implementado (ponte) — smoke HTTP; AC NaturalAsset ainda FASE24.0 |
 | WA-E2 | Pins/filtros de mapa para corpos d'água | P1 | ✅ Filtro `assetSubtypes` + chip Flutter; HIGH/RESTRICTED → acompanhamento |
 | WA-E3 | Glossário + docs funcionais alinhados | P0 | ✅ Docs iniciais; manter sync com código |
-| WA-E4 | Curadoria: copy/UX “cuidar do rio / da nascente” | P2 | design-ux |
+| WA-E4 | Curadoria: copy/UX “cuidar do rio / da nascente” | P2 | ✅ Flutter create/list/curate + pin mapa; NaturalAsset ainda FASE24.0 |
 
 ### B) Fundação na FASE24 (canônico)
 
@@ -153,6 +153,7 @@ Refinar o que já existe em Assets/Mapa:
 
 ### Changelog
 
+- **1.4** (2026-08-10): WA-E4 — UX Flutter de curadoria hídrica (create natural+subtype, copy de cuidado).
 - **1.3** (2026-08-09): WA-E2 — filtro de pins por subtype + chip Flutter; sensibilidade deferida.
 - **1.2** (2026-08-08): WA-E1 implementado — `TerritoryAsset.Subtype` com allowlist hídrica.
 - **1.1** (2026-08-08): Alinhamento CodeRabbit — vocabulário canônico, MER vs implementação, typo hídrico, WaterBody alias.

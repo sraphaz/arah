@@ -11,8 +11,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### Adicionado — WA-E2 pins/filtros de corpos d'água no mapa (2026-08-09)
 
-- `GET /map/pins`: query `assetSubtypes`; `assetTypes` casa Type **ou** Subtype (legado + ponte WA-E1)
-- Pin response: `assetType` / `assetSubtype`; Flutter chip "Corpos d'água" (filtro server-side)
+- `GET /map/pins`: query `assetSubtypes`; `assetTypes` casa Type **ou** Subtype **só no mapa** (API assets permanece Type-only)
+- Pin response: `assetType` / `assetSubtype`; Flutter chip "Corpos d'água" (filtro server-side via `assetTypes`)
 - Sensibilidade HIGH/RESTRICTED **fora** deste slice (sem campos em TerritoryAsset; AC-WA-4 permanece pending)
 - Spec-Id: `water-bodies-curation`
 

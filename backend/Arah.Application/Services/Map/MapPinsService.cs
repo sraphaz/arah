@@ -68,11 +68,12 @@ public sealed class MapPinsService
             var assets = await _assetRepository.ListAsync(
                 territoryId,
                 assetId,
-                assetTypeList,
+                types: null,
                 AssetStatus.Active,
                 null,
                 cancellationToken,
-                assetSubtypeList);
+                subtypes: assetSubtypeList,
+                typesOrSubtypes: assetTypeList);
 
             pins.AddRange(await BuildAssetPinsAsync(assets, cancellationToken));
         }
@@ -138,13 +139,14 @@ public sealed class MapPinsService
             var assets = await _assetRepository.ListPagedAsync(
                 territoryId,
                 assetId,
-                assetTypeList,
+                types: null,
                 AssetStatus.Active,
                 null,
                 pagination.Skip,
                 pagination.Take,
                 cancellationToken,
-                assetSubtypeList);
+                subtypes: assetSubtypeList,
+                typesOrSubtypes: assetTypeList);
 
             pins.AddRange(await BuildAssetPinsAsync(assets, cancellationToken));
         }

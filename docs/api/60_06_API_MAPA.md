@@ -89,7 +89,7 @@
   - `territoryId` (opcional, usa território ativo se não informado)
   - `types` (CSV opcional: `entity`, `post`, `event`, `asset`, `alert`, `media`)
   - `assetId` (opcional — restringe a um asset)
-  - `assetTypes` (CSV opcional — casa com `TerritoryAsset.Type` **ou** `Subtype`; WA-E2)
+  - `assetTypes` (CSV opcional — no **mapa** casa com `Type` **ou** `Subtype`; legado + WA-E2)
   - `assetSubtypes` (CSV opcional — casa apenas com `Subtype`; ex.: `river,stream,spring`)
 - Header `X-Session-Id` para identificar território ativo
 
@@ -97,7 +97,8 @@
 - **Visibilidade**: Respeita regras de visibilidade de cada tipo de conteúdo
 - **Assets no mapa**: apenas status `Active` (após curadoria)
 - **Retorno**: coordenadas, IDs, tipo de pin, título; para assets também `assetType` e `assetSubtype`
-- **Sensibilidade**: omitir HIGH/RESTRICTED ainda não aplica na ponte TerritoryAsset (follow-up FASE24.0 / AC-WA-4)
+- **Sensibilidade**: omitir HIGH/RESTRICTED ainda não aplica na ponte TerritoryAsset (acompanhamento FASE24.0 / AC-WA-4)
+- **Nota**: `GET /api/v1/assets?types=` continua filtrando só por `Type` (não por Subtype)
 
 ### Obter Pins do Mapa Paginados (`GET /api/v1/map/pins/paged`)
 

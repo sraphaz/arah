@@ -1,10 +1,12 @@
 namespace Arah.Modules.Assets.Domain;
 
 /// <summary>
-/// Critério de filtro Type/Subtype para listagens de TerritoryAsset (WA-E2).
-/// <c>types</c> casa com <see cref="TerritoryAsset.Type"/> ou <see cref="TerritoryAsset.Subtype"/>
-/// (compatível com legado type=river e ponte WA-E1 type=natural + subtype=river).
-/// <c>subtypes</c> casa apenas com Subtype.
+/// Critérios de filtro Type/Subtype para listagens de TerritoryAsset.
+/// <list type="bullet">
+/// <item><c>types</c> — só <see cref="TerritoryAsset.Type"/> (API assets).</item>
+/// <item><c>subtypes</c> — só <see cref="TerritoryAsset.Subtype"/>.</item>
+/// <item><c>typesOrSubtypes</c> — Type <b>ou</b> Subtype (mapa <c>assetTypes</c> / legado + WA-E1).</item>
+/// </list>
 /// </summary>
 public static class TerritoryAssetTypeMatch
 {
@@ -12,21 +14,29 @@ public static class TerritoryAssetTypeMatch
         string type,
         string? subtype,
         IReadOnlyCollection<string>? types,
-        IReadOnlyCollection<string>? subtypes)
+        IReadOnlyCollection<string>? subtypes,
+        IReadOnlyCollection<string>? typesOrSubtypes = null)
     {
-        if (types is { Count: > 0 })
+        if (types is { Count: > 0 }
+            && !types.Contains(type, StringComparer.OrdinalIgnoreCase))
         {
-            var typeMatch = types.Contains(type, StringComparer.OrdinalIgnoreCase)
-                || (subtype is not null && types.Contains(subtype, StringComparer.OrdinalIgnoreCase));
-            if (!typeMatch)
-            {
-                return false;
-            }
+            return false;
         }
 
         if (subtypes is { Count: > 0 })
         {
             if (subtype is null || !subtypes.Contains(subtype, StringComparer.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
+
+        if (typesOrSubtypes is { Count: > 0 })
+        {
+            var orMatch = typesOrSubtypes.Contains(type, StringComparer.OrdinalIgnoreCase)
+                || (subtype is not null
+                    && typesOrSubtypes.Contains(subtype, StringComparer.OrdinalIgnoreCase));
+            if (!orMatch)
             {
                 return false;
             }

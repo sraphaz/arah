@@ -19,7 +19,8 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
         AssetStatus? status,
         string? search,
         CancellationToken cancellationToken,
-        IReadOnlyCollection<string>? subtypes = null)
+        IReadOnlyCollection<string>? subtypes = null,
+        IReadOnlyCollection<string>? typesOrSubtypes = null)
     {
         var query = ApplyFilters(
             _dataStore.TerritoryAssets.Where(asset => asset.TerritoryId == territoryId),
@@ -27,7 +28,8 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
             types,
             status,
             search,
-            subtypes);
+            subtypes,
+            typesOrSubtypes);
 
         return Task.FromResult<IReadOnlyList<TerritoryAsset>>(query.ToList());
     }
@@ -77,7 +79,8 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
         int skip,
         int take,
         CancellationToken cancellationToken,
-        IReadOnlyCollection<string>? subtypes = null)
+        IReadOnlyCollection<string>? subtypes = null,
+        IReadOnlyCollection<string>? typesOrSubtypes = null)
     {
         var query = ApplyFilters(
             _dataStore.TerritoryAssets.Where(asset => asset.TerritoryId == territoryId),
@@ -85,7 +88,8 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
             types,
             status,
             search,
-            subtypes);
+            subtypes,
+            typesOrSubtypes);
 
         var result = query
             .OrderByDescending(asset => asset.CreatedAtUtc)
@@ -103,7 +107,8 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
         AssetStatus? status,
         string? search,
         CancellationToken cancellationToken,
-        IReadOnlyCollection<string>? subtypes = null)
+        IReadOnlyCollection<string>? subtypes = null,
+        IReadOnlyCollection<string>? typesOrSubtypes = null)
     {
         var query = ApplyFilters(
             _dataStore.TerritoryAssets.Where(asset => asset.TerritoryId == territoryId),
@@ -111,7 +116,8 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
             types,
             status,
             search,
-            subtypes);
+            subtypes,
+            typesOrSubtypes);
 
         const int maxInt32 = int.MaxValue;
         var count = query.Count();
@@ -124,20 +130,29 @@ public sealed class InMemoryAssetRepository : ITerritoryAssetRepository
         IReadOnlyCollection<string>? types,
         AssetStatus? status,
         string? search,
-        IReadOnlyCollection<string>? subtypes)
+        IReadOnlyCollection<string>? subtypes,
+        IReadOnlyCollection<string>? typesOrSubtypes)
     {
         var normalizedTypes = TerritoryAssetTypeMatch.NormalizeFilter(types);
         var normalizedSubtypes = TerritoryAssetTypeMatch.NormalizeFilter(subtypes);
+        var normalizedTypesOrSubtypes = TerritoryAssetTypeMatch.NormalizeFilter(typesOrSubtypes);
 
         if (assetId is not null)
         {
             query = query.Where(asset => asset.Id == assetId.Value);
         }
 
-        if (normalizedTypes is not null || normalizedSubtypes is not null)
+        if (normalizedTypes is not null
+            || normalizedSubtypes is not null
+            || normalizedTypesOrSubtypes is not null)
         {
             query = query.Where(asset =>
-                TerritoryAssetTypeMatch.Matches(asset.Type, asset.Subtype, normalizedTypes, normalizedSubtypes));
+                TerritoryAssetTypeMatch.Matches(
+                    asset.Type,
+                    asset.Subtype,
+                    normalizedTypes,
+                    normalizedSubtypes,
+                    normalizedTypesOrSubtypes));
         }
 
         if (status is not null)

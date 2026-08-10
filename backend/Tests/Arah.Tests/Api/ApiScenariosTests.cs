@@ -1169,9 +1169,14 @@ public sealed class ApiScenariosTests
         culturalResponse.EnsureSuccessStatusCode();
         var culturalAsset = await culturalResponse.Content.ReadFromJsonAsync<AssetResponse>();
 
+        var pendingPins = await client.GetFromJsonAsync<List<MapPinResponse>>(
+            $"api/v1/map/pins?territoryId={ActiveTerritoryId}&types=asset&assetId={riverAsset!.Id}");
+        Assert.NotNull(pendingPins);
+        Assert.Empty(pendingPins!);
+
         var curatorToken = await LoginForTokenAsync(client, "google", "curator-external");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", curatorToken);
-        await CurateAssetApprovedAsync(client, riverAsset!.Id);
+        await CurateAssetApprovedAsync(client, riverAsset.Id);
         await CurateAssetApprovedAsync(client, springAsset!.Id);
         await CurateAssetApprovedAsync(client, culturalAsset!.Id);
 
@@ -1191,6 +1196,12 @@ public sealed class ApiScenariosTests
         Assert.Equal(2, byTypesCompat!.Count);
         Assert.DoesNotContain(byTypesCompat, pin => pin.AssetId == culturalAsset.Id);
         Assert.All(byTypesCompat, pin => Assert.Equal("natural", pin.AssetType));
+
+        var assetsByTypeOnly = await client.GetFromJsonAsync<List<AssetResponse>>(
+            $"api/v1/assets?territoryId={ActiveTerritoryId}&types=river");
+        Assert.NotNull(assetsByTypeOnly);
+        Assert.DoesNotContain(assetsByTypeOnly!, a => a.Id == riverAsset.Id);
+        Assert.All(assetsByTypeOnly, a => Assert.Equal("river", a.Type));
     }
 
     private static async Task CurateAssetApprovedAsync(HttpClient client, Guid assetId)

@@ -12,6 +12,7 @@ intent: |
   WaterBody é alias de produto/API (não entidade persistida separada).
   Fundação para observações de saúde hídrica (FASE24) e vínculo com posts/mapa.
   Slice WA-E1 (ponte no código): TerritoryAsset.type=natural + subtype allowlist;
+  Slice WA-E2: map pins filtráveis por assetSubtypes (sem HIGH/RESTRICTED ainda);
   não marca AC-WA-* como covered até NaturalAsset/FASE24.0.
 
 # Vocabulário canônico NATURAL_ASSET.type (UPPERCASE):

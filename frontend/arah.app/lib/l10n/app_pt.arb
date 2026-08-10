@@ -111,6 +111,8 @@
   "sessionExpired": "Sessão expirada. Faça login novamente.",
   "enterToAccess": "Entre na sua conta para acessar perfil, publicar e notificações.",
 "map": "Mapa",
+"mapFilterAll": "Todos",
+"mapFilterWaterBodies": "Corpos d'água",
 "viewOnMap": "Ver no mapa",
 "mapEntity": "Estabelecimento / ponto no mapa",
 "mapPost": "Post",

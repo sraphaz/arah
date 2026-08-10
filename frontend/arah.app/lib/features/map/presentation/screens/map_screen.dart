@@ -48,7 +48,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     // reflita no mapa e apenas um contorno seja exibido por vez.
     final territoryId = ref.watch(selectedTerritoryIdValueProvider) ?? widget.territoryId;
     final geo = ref.watch(geoLocationStateProvider);
-    final pinsAsync = ref.watch(mapPinsProvider(territoryId));
+    final pinsFilter = ref.watch(mapPinsFilterProvider);
+    final pinsAsync = ref.watch(mapPinsProvider(MapPinsQuery(
+      territoryId: territoryId,
+      filter: pinsFilter,
+    )));
     final territoryDetailAsync = ref.watch(territoryDetailProvider(territoryId ?? ''));
 
     final hasTerritory = territoryId != null && territoryId.isNotEmpty;
@@ -94,7 +98,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 ),
               ),
             )
-          : FlutterMap(
+          : Stack(
+              children: [
+                FlutterMap(
               mapController: _mapController,
               options: MapOptions(
                 initialCenter: initialCenter,
@@ -148,6 +154,37 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 ),
                 SimpleAttributionWidget(
                   source: Text(l10n.openStreetMapAttribution),
+                ),
+              ],
+            ),
+                Positioned(
+                  top: AppConstants.spacingSm,
+                  left: AppConstants.spacingMd,
+                  right: AppConstants.spacingMd,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        FilterChip(
+                          label: Text(l10n.mapFilterAll),
+                          selected: pinsFilter == MapPinsFilter.all,
+                          onSelected: (_) {
+                            ref.read(mapPinsFilterProvider.notifier).state =
+                                MapPinsFilter.all;
+                          },
+                        ),
+                        const SizedBox(width: AppConstants.spacingSm),
+                        FilterChip(
+                          label: Text(l10n.mapFilterWaterBodies),
+                          selected: pinsFilter == MapPinsFilter.waterBodies,
+                          onSelected: (_) {
+                            ref.read(mapPinsFilterProvider.notifier).state =
+                                MapPinsFilter.waterBodies;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -206,6 +243,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Widget _buildPinsLayer(BuildContext context, List<MapPin> pins, String? territoryId) {
     return MarkerLayer(
       markers: pins.map((pin) {
+        final visualType = pin.visualType;
         return Marker(
           point: LatLng(pin.latitude, pin.longitude),
           width: AppConstants.minTouchTargetSize,
@@ -214,17 +252,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           // confiável na web do que GestureDetector dentro do marcador.
           child: Container(
             decoration: BoxDecoration(
-              color: AppDesignTokens.pinColorForType(pin.pinType).withValues(alpha: 0.25),
+              color: AppDesignTokens.pinColorForType(visualType).withValues(alpha: 0.25),
               shape: BoxShape.circle,
               border: Border.all(
-                color: AppDesignTokens.pinColorForType(pin.pinType),
+                color: AppDesignTokens.pinColorForType(visualType),
                 width: 2,
               ),
             ),
             child: Icon(
-              _iconForPinType(pin.pinType),
+              _iconForPinType(visualType),
               size: 20,
-              color: AppDesignTokens.pinColorForType(pin.pinType),
+              color: AppDesignTokens.pinColorForType(visualType),
             ),
           ),
         );
@@ -246,6 +284,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         return Icons.warning_amber;
       case 'media':
         return Icons.perm_media;
+      case 'river':
+      case 'stream':
+      case 'spring':
+      case 'waterfall':
+      case 'well':
+      case 'potable_water':
+        return Icons.water_drop;
       default:
         return Icons.place;
     }

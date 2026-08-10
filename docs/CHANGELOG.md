@@ -9,6 +9,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — WA-E4 UX curadoria corpos d'água (2026-08-10)
+
+- Flutter Assets: criar corpo d'água (`type=natural` + subtype) com copy de cuidado; lista/curadoria contextual
+- Mapa: subtítulo do pin hídrico; l10n pt/en
+- Spec-Id: `water-bodies-curation` (AC-WA-* seguem pending até FASE24.0)
+
 ### Adicionado — WA-E2 pins/filtros de corpos d'água no mapa (2026-08-09)
 
 - `GET /map/pins`: query `assetSubtypes`; `assetTypes` casa Type **ou** Subtype **só no mapa** (API assets permanece Type-only)
@@ -695,4 +701,4 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-**Última Atualização**: 2026-08-05
+**Última Atualização**: 2026-08-10

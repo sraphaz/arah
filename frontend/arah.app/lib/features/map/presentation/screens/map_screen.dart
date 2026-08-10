@@ -19,6 +19,7 @@ import '../../../territories/data/repositories/territories_repository.dart';
 import '../../../territories/presentation/providers/territories_list_provider.dart';
 import '../providers/map_pins_provider.dart';
 import '../../data/models/map_pin.dart';
+import '../../../assets/data/models/asset_item.dart';
 import 'map_deep_link.dart';
 
 /// Centro padrão do mapa (Brasil) quando não há geo nem pins.
@@ -394,11 +395,41 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       case 'event':
         return l10n.mapEvent;
       case 'asset':
+        final subtype = pin.assetSubtype?.trim().toLowerCase();
+        final type = pin.assetType?.trim().toLowerCase();
+        final kind =
+            (subtype != null && kWaterBodySubtypeValues.contains(subtype))
+                ? subtype
+                : (type != null && kWaterBodySubtypeValues.contains(type)
+                    ? type
+                    : null);
+        if (kind != null) {
+          return l10n.mapWaterBodyPin(_waterKindLabel(l10n, kind));
+        }
         return l10n.mapAsset;
       case 'alert':
         return l10n.mapAlert;
       default:
         return l10n.mapPin;
     }
+  }
+}
+
+String _waterKindLabel(AppLocalizations l10n, String kind) {
+  switch (kind.toLowerCase()) {
+    case 'river':
+      return l10n.waterBodyRiver;
+    case 'stream':
+      return l10n.waterBodyStream;
+    case 'spring':
+      return l10n.waterBodySpring;
+    case 'waterfall':
+      return l10n.waterBodyWaterfall;
+    case 'well':
+      return l10n.waterBodyWell;
+    case 'potable_water':
+      return l10n.waterBodyPotableWater;
+    default:
+      return l10n.mapFilterWaterBodies;
   }
 }

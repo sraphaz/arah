@@ -498,6 +498,86 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newAsset => 'New asset';
 
   @override
+  String get newWaterBody => 'Care for the river / spring';
+
+  @override
+  String get assetCreateHint =>
+      'Register a territory resource (infrastructure, cultural, etc.).';
+
+  @override
+  String get waterBodyCreateHint =>
+      'Suggest a water body for the community to care for — never for sale.';
+
+  @override
+  String get assetKindGeneric => 'Asset';
+
+  @override
+  String get assetKindWaterBody => 'Water';
+
+  @override
+  String get waterBodyName => 'Water body name';
+
+  @override
+  String get waterBodySubtype => 'Kind';
+
+  @override
+  String get waterBodyRiver => 'River';
+
+  @override
+  String get waterBodyStream => 'Stream';
+
+  @override
+  String get waterBodySpring => 'Spring';
+
+  @override
+  String get waterBodyWaterfall => 'Waterfall';
+
+  @override
+  String get waterBodyWell => 'Well';
+
+  @override
+  String get waterBodyPotableWater => 'Potable water';
+
+  @override
+  String get waterBodySuggested => 'Water body suggested. Awaiting curation.';
+
+  @override
+  String get waterBodyApproved => 'Water body registration approved.';
+
+  @override
+  String get waterBodyRejected => 'Water body registration rejected.';
+
+  @override
+  String get validateWaterBody => 'Confirm water body';
+
+  @override
+  String get approveWaterBodyCurator => 'Validate river / spring registration';
+
+  @override
+  String get rejectWaterBodyCurator => 'Reject water registration';
+
+  @override
+  String get noAssetsOrWaterBodies =>
+      'No assets yet. Suggest a resource or a water body to care for.';
+
+  @override
+  String get assetStatusSuggested => 'Suggested';
+
+  @override
+  String get assetStatusActive => 'Active';
+
+  @override
+  String get assetStatusArchived => 'Archived';
+
+  @override
+  String get assetStatusRejected => 'Rejected';
+
+  @override
+  String mapWaterBodyPin(String kind) {
+    return 'Water body · $kind';
+  }
+
+  @override
   String get assetName => 'Name';
 
   @override

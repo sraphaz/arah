@@ -1022,6 +1022,156 @@ abstract class AppLocalizations {
   /// **'Novo asset'**
   String get newAsset;
 
+  /// No description provided for @newWaterBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cuidar do rio / da nascente'**
+  String get newWaterBody;
+
+  /// No description provided for @assetCreateHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre um recurso do território (infraestrutura, cultural, etc.).'**
+  String get assetCreateHint;
+
+  /// No description provided for @waterBodyCreateHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sugira um corpo d\'água para a comunidade cuidar — nunca vendável.'**
+  String get waterBodyCreateHint;
+
+  /// No description provided for @assetKindGeneric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Asset'**
+  String get assetKindGeneric;
+
+  /// No description provided for @assetKindWaterBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Água'**
+  String get assetKindWaterBody;
+
+  /// No description provided for @waterBodyName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do corpo d\'água'**
+  String get waterBodyName;
+
+  /// No description provided for @waterBodySubtype.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo'**
+  String get waterBodySubtype;
+
+  /// No description provided for @waterBodyRiver.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rio'**
+  String get waterBodyRiver;
+
+  /// No description provided for @waterBodyStream.
+  ///
+  /// In pt, this message translates to:
+  /// **'Córrego'**
+  String get waterBodyStream;
+
+  /// No description provided for @waterBodySpring.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nascente'**
+  String get waterBodySpring;
+
+  /// No description provided for @waterBodyWaterfall.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cachoeira'**
+  String get waterBodyWaterfall;
+
+  /// No description provided for @waterBodyWell.
+  ///
+  /// In pt, this message translates to:
+  /// **'Poço'**
+  String get waterBodyWell;
+
+  /// No description provided for @waterBodyPotableWater.
+  ///
+  /// In pt, this message translates to:
+  /// **'Água potável'**
+  String get waterBodyPotableWater;
+
+  /// No description provided for @waterBodySuggested.
+  ///
+  /// In pt, this message translates to:
+  /// **'Corpo d\'água sugerido. Aguardando curadoria.'**
+  String get waterBodySuggested;
+
+  /// No description provided for @waterBodyApproved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastro do corpo d\'água aprovado.'**
+  String get waterBodyApproved;
+
+  /// No description provided for @waterBodyRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastro do corpo d\'água rejeitado.'**
+  String get waterBodyRejected;
+
+  /// No description provided for @validateWaterBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar corpo d\'água'**
+  String get validateWaterBody;
+
+  /// No description provided for @approveWaterBodyCurator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Validar cadastro do rio / da nascente'**
+  String get approveWaterBodyCurator;
+
+  /// No description provided for @rejectWaterBodyCurator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitar cadastro hídrico'**
+  String get rejectWaterBodyCurator;
+
+  /// No description provided for @noAssetsOrWaterBodies.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum asset ainda. Sugira um recurso ou um corpo d\'água para cuidar.'**
+  String get noAssetsOrWaterBodies;
+
+  /// No description provided for @assetStatusSuggested.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sugerido'**
+  String get assetStatusSuggested;
+
+  /// No description provided for @assetStatusActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativo'**
+  String get assetStatusActive;
+
+  /// No description provided for @assetStatusArchived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivado'**
+  String get assetStatusArchived;
+
+  /// No description provided for @assetStatusRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitado'**
+  String get assetStatusRejected;
+
+  /// No description provided for @mapWaterBodyPin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Corpo d\'água · {kind}'**
+  String mapWaterBodyPin(String kind);
+
   /// No description provided for @assetName.
   ///
   /// In pt, this message translates to:

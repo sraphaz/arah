@@ -8,7 +8,7 @@ final mapRepositoryProvider = Provider<MapRepository>((ref) {
   return MapRepository(client: ref.watch(bffClientProvider));
 });
 
-/// Filtro de pins do mapa (WA-E2: corpos d'água via assetSubtypes no servidor).
+/// Filtro de pins do mapa (WA-E2: corpos d'água via assetTypes no servidor).
 enum MapPinsFilter {
   all,
   waterBodies,
@@ -41,10 +41,11 @@ final mapPinsProvider =
   if (territoryId == null || territoryId.isEmpty) return [];
   final repo = ref.watch(mapRepositoryProvider);
   if (query.filter == MapPinsFilter.waterBodies) {
+    // assetTypes casa Type OU Subtype — inclui legado (type=river) e WA-E1 (natural+subtype).
     return repo.getPins(
       territoryId: territoryId,
       types: 'asset',
-      assetSubtypes: kWaterBodySubtypesCsv,
+      assetTypes: kWaterBodySubtypesCsv,
     );
   }
   return repo.getPins(territoryId: territoryId);

@@ -1,7 +1,7 @@
 import '../models/map_pin.dart';
 import '../../../../core/network/bff_client.dart';
 
-/// Subtypes hídricos da ponte WA-E1 (CSV para assetSubtypes / assetTypes).
+/// Valores hídricos (legado em Type ou ponte WA-E1 em Subtype) — CSV para assetTypes.
 const String kWaterBodySubtypesCsv =
     'river,stream,spring,waterfall,well,potable_water';
 
@@ -11,7 +11,7 @@ class MapRepository {
 
   final BffClient _client;
 
-  /// GET map/pins?territoryId=...&types=...&assetSubtypes=...
+  /// GET map/pins?territoryId=...&types=...&assetTypes=...&assetSubtypes=...
   Future<List<MapPin>> getPins({
     required String territoryId,
     String? types,

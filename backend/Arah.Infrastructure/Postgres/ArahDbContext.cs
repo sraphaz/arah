@@ -44,6 +44,7 @@ public sealed partial class ArahDbContext : DbContext
     public DbSet<TerritoryAssetRecord> TerritoryAssets => Set<TerritoryAssetRecord>();
     public DbSet<AssetGeoAnchorRecord> AssetGeoAnchors => Set<AssetGeoAnchorRecord>();
     public DbSet<AssetValidationRecord> AssetValidations => Set<AssetValidationRecord>();
+    public DbSet<NaturalAssetRecord> NaturalAssets => Set<NaturalAssetRecord>();
     public DbSet<ActiveTerritoryRecord> ActiveTerritories => Set<ActiveTerritoryRecord>();
     public DbSet<FeatureFlagRecord> FeatureFlags => Set<FeatureFlagRecord>();
     public DbSet<AuditEntryRecord> AuditEntries => Set<AuditEntryRecord>();

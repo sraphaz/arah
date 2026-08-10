@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — WA-N1 NaturalAsset ponto (FASE24.0a) (2026-08-10)
+
+- Domínio `NaturalAsset` + `WaterPointDetails` (tipos `SPRING|WATERFALL|POTABLE_WATER`; status `PENDING→PUBLISHED`)
+- API `GET/POST /api/v1/territories/{territoryId}/natural-assets` + `POST .../{id}/publish` (Curator)
+- Persistência InMemory + Postgres (`natural_assets`); testes `WaterBodyDomainTests` / `WaterBodyHttpIntegrationTests`
+- Spec-Id: `water-bodies-curation` (AC-WA-1 parcial ponto, AC-WA-2, AC-WA-6; RIVER/STREAM e sensibilidade deferidos)
+
 ### Adicionado — WA-E4 UX curadoria corpos d'água (2026-08-10)
 
 - Flutter Assets: criar corpo d'água (`type=natural` + subtype) com copy de cuidado; lista/curadoria contextual

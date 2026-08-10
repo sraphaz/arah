@@ -1,5 +1,5 @@
 id: water-bodies-curation
-version: "0.1.2"
+version: "0.2.0"
 title: "Corpos d'água curáveis do território (rios, córregos, nascentes, fontes)"
 owner: backend
 status: draft
@@ -11,10 +11,11 @@ intent: |
   fora de Territory, escopados por territoryId, nunca vendáveis.
   WaterBody é alias de produto/API (não entidade persistida separada).
   Fundação para observações de saúde hídrica (FASE24) e vínculo com posts/mapa.
-  Slice WA-E1 (ponte no código): TerritoryAsset.type=natural + subtype allowlist;
-  Slice WA-E2: map pins filtráveis por assetSubtypes (sem HIGH/RESTRICTED ainda);
-  Slice WA-E4: Flutter UX criar/curar corpo d'água (copy de cuidado; sem NaturalAsset);
-  não marca AC-WA-* como covered até NaturalAsset/FASE24.0.
+  Slice WA-E1 (ponte): TerritoryAsset.type=natural + subtype allowlist;
+  Slice WA-E2: map pins filtráveis (sem HIGH/RESTRICTED ainda);
+  Slice WA-E4: Flutter UX criar/curar via ponte TerritoryAsset;
+  Slice WA-N1 (FASE24.0a): NaturalAsset ponto SPRING|WATERFALL|POTABLE_WATER
+  + API create/list/get/publish; RIVER/STREAM/LineString e sensibilidade em 24.0b+.
 
 # Vocabulário canônico NATURAL_ASSET.type (UPPERCASE):
 #   RIVER | STREAM | SPRING | WATERFALL | POTABLE_WATER | NATIVE_TREE | SANCTUARY | VIEWPOINT | TRAIL
@@ -33,12 +34,20 @@ acceptance:
       em status PENDING; exige geolocalização — ponto (lat/lng em ranges válidos) ou, para RIVER/STREAM,
       LineString GeoJSON com ≤500 vértices, coordenadas WGS84 válidas e geometria intersectando o território
     status: pending
+    notes: "WA-N1 cobre ponto (SPRING|WATERFALL|POTABLE_WATER). RIVER/STREAM/LineString → 24.0b."
+    covered_by:
+      - "FullyQualifiedName~WaterBodyDomainTests"
+      - "FullyQualifiedName~WaterBodyHttpIntegrationTests"
   - id: AC-WA-2
     when: "Quando um Curator valida o corpo d'água no modelo-alvo NaturalAsset"
     then: >
       o status passa a PUBLISHED; na ponte TerritoryAsset o equivalente é VALIDATED;
       a entidade aparece em listagens/mapa apenas para quem tem direito de leitura no território
     status: pending
+    notes: "Publish Curator + listagem HTTP cobertos; mapa canônico NaturalAsset ainda na ponte WA-E2."
+    covered_by:
+      - "FullyQualifiedName~WaterBodyDomainTests.Publish_FromPending_SetsPublished"
+      - "FullyQualifiedName~WaterBodyHttpIntegrationTests.Create_List_Get_Publish_PointNaturalAsset"
   - id: AC-WA-3
     when: "Quando o tipo é RIVER ou STREAM"
     then: >
@@ -61,7 +70,9 @@ acceptance:
   - id: AC-WA-6
     when: "Quando se tenta expor o corpo d'água como item de marketplace"
     then: "o sistema rejeita — NaturalAsset/TerritoryAsset hídrico nunca é vendável"
-    status: pending
+    status: covered
+    covered_by:
+      - "FullyQualifiedName~WaterBodyDomainTests.MarketplaceExposure_AlwaysRejected"
 
 harness:
   commands:
@@ -80,12 +91,11 @@ links:
     - docs/product/05_GLOSSARY.md
     - docs/backend/12_DOMAIN_MODEL.md
     - docs/api/60_08_API_ASSETS.md
-  # Planejado em FASE24.0 (status draft / AC pending). Ao implementar: status→covered + covered_by.
   tests:
-    - "FullyQualifiedName~WaterBodyDomainTests (AC-WA-1, AC-WA-2, AC-WA-3, AC-WA-6)"
-    - "FullyQualifiedName~WaterBodySensitivityTests (AC-WA-4)"
-    - "FullyQualifiedName~WaterBodyReferenceHttpTests (AC-WA-5 naturalAssetId + territory scope)"
-    - "FullyQualifiedName~WaterBodyHttpIntegrationTests (create/list/get/status + GeoJSON bounds)"
+    - "FullyQualifiedName~WaterBodyDomainTests (AC-WA-1 parcial, AC-WA-2, AC-WA-6)"
+    - "FullyQualifiedName~WaterBodyHttpIntegrationTests (create/list/get/publish ponto)"
+    - "FullyQualifiedName~WaterBodySensitivityTests (AC-WA-4) — planejado"
+    - "FullyQualifiedName~WaterBodyReferenceHttpTests (AC-WA-5) — planejado"
 
 guardrails:
   - territory-first

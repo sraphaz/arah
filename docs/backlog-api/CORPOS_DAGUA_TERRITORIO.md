@@ -1,10 +1,10 @@
 # Corpos d'água do território — rios, nascentes e fontes curáveis
 
-**Versão**: 1.4  
+**Versão**: 1.5  
 **Data**: 2026-08-10  
 **Status**: ✅ Aprovado para planejamento (backlog)  
 **Domínio dono**: `mapa-lugares` (primário) · co-ativação: `territorio-membership`, `governanca-transparencia`, `feed-conteudo`, `design-ux` · sinais externos: trilha TI  
-**Âncora de fase**: [FASE24](./FASE24.md) (Saúde Territorial) · ponte atual: TerritoryAsset / MapEntity
+**Âncora de fase**: [FASE24](./FASE24.md) (Saúde Territorial) · ponte: TerritoryAsset · canônico: NaturalAsset (WA-N1 ponto)
 
 ---
 
@@ -52,7 +52,7 @@ Territory (geografia neutra)
 |--------|-----------------------------------|------------------------|-----------------|
 | TerritoryAsset | `type=natural` + allowlist `river\|stream\|spring\|waterfall\|well\|potable_water` (normalizados lowercase) | **WA-E1**: campo `Subtype` + validação; outros `type` livres sem subtype | Alias → `NATURAL_ASSET.type` (FASE24.0) |
 | MapEntity | Categoria `espaço natural` | Implementado | Espelhar/apontar para asset hídrico |
-| MER `NATURAL_ASSET` | Inclui `RIVER`, `STREAM` + `WATERCOURSE_DETAILS` | **Ainda não** há entidade `NaturalAsset` no código | Persistência + API + curadoria (FASE24.0) |
+| MER `NATURAL_ASSET` | Inclui `RIVER`, `STREAM` + `WATERCOURSE_DETAILS` | **WA-N1**: `NaturalAsset` ponto (`SPRING|WATERFALL|POTABLE_WATER`) + API; curso d'água → 24.0b | Persistência completa + LineString (FASE24.0) |
 | FASE24 | Observações `WATER` + `RelatedNaturalAssetId` planejados | Só alertas básicos | Cadastro hídrico **antes** das observações |
 | TI | Sinais de enchente podem citar o rio | Demo / trilhas | Referência a corpo d'água local quando existir |
 
@@ -88,7 +88,7 @@ Refinar o que já existe em Assets/Mapa:
 
 | ID | Item | Doc |
 |----|------|-----|
-| **24.0** | Cadastro curável de corpos d'água (`NATURAL_ASSET` hídrico + detalhes) | [FASE24 §24.0](./FASE24.md) |
+| **24.0** / **WA-N1** | Cadastro canônico NaturalAsset (ponto primeiro) | [FASE24 §24.0](./FASE24.md) — WA-N1 ✅ ponto; 24.0b LineString |
 | 24.1+ | Observações/sensores/ações com vínculo ao corpo d'água | FASE24 restante |
 | FASE42 | `NaturalAssetMaintenance` / contribuições de cuidado | [FASE42](./FASE42.md) |
 
@@ -153,6 +153,7 @@ Refinar o que já existe em Assets/Mapa:
 
 ### Changelog
 
+- **1.5** (2026-08-10): WA-N1 — NaturalAsset ponto + API create/list/get/publish (FASE24.0a).
 - **1.4** (2026-08-10): WA-E4 — UX Flutter de curadoria hídrica (create natural+subtype, copy de cuidado).
 - **1.3** (2026-08-09): WA-E2 — filtro de pins por subtype + chip Flutter; sensibilidade deferida.
 - **1.2** (2026-08-08): WA-E1 implementado — `TerritoryAsset.Subtype` com allowlist hídrica.

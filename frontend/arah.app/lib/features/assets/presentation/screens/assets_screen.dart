@@ -99,7 +99,7 @@ class AssetsScreen extends ConsumerWidget {
                     const SizedBox(height: AppConstants.spacingSm),
                     DropdownButtonFormField<String>(
                       key: ValueKey(waterSubtype),
-                      initialValue: waterSubtype,
+                      value: waterSubtype,
                       decoration: InputDecoration(labelText: l10n.waterBodySubtype),
                       items: kWaterBodySubtypeOptions
                           .map(

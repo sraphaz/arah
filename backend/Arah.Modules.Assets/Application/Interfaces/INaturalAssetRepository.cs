@@ -28,5 +28,6 @@ public interface INaturalAssetRepository
 
     Task AddAsync(NaturalAsset asset, CancellationToken cancellationToken);
 
-    Task UpdateAsync(NaturalAsset asset, CancellationToken cancellationToken);
+    /// <summary>Returns false when the asset id is not present in persistence.</summary>
+    Task<bool> UpdateAsync(NaturalAsset asset, CancellationToken cancellationToken);
 }

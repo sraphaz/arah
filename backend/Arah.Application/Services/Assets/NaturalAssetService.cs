@@ -135,7 +135,12 @@ public sealed class NaturalAssetService
             return Result<NaturalAsset>.Failure(ex.Message);
         }
 
-        await _repository.UpdateAsync(asset, cancellationToken);
+        var updated = await _repository.UpdateAsync(asset, cancellationToken);
+        if (!updated)
+        {
+            return Result<NaturalAsset>.Failure("Natural asset not found.");
+        }
+
         await _auditLogger.LogAsync(
             new AuditEntry("natural_asset.published", curatorUserId, territoryId, asset.Id, asset.UpdatedAtUtc),
             cancellationToken);

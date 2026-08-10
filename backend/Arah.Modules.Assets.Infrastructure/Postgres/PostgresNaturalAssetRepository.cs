@@ -63,12 +63,12 @@ public sealed class PostgresNaturalAssetRepository : INaturalAssetRepository
         await _dbContext.NaturalAssets.AddAsync(asset.ToRecord(), cancellationToken);
     }
 
-    public async Task UpdateAsync(NaturalAsset asset, CancellationToken cancellationToken)
+    public async Task<bool> UpdateAsync(NaturalAsset asset, CancellationToken cancellationToken)
     {
         var existing = await _dbContext.NaturalAssets.FirstOrDefaultAsync(a => a.Id == asset.Id, cancellationToken);
         if (existing is null)
         {
-            return;
+            return false;
         }
 
         var record = asset.ToRecord();
@@ -83,6 +83,7 @@ public sealed class PostgresNaturalAssetRepository : INaturalAssetRepository
         existing.LastTestedAtUtc = record.LastTestedAtUtc;
         existing.UpdatedByUserId = record.UpdatedByUserId;
         existing.UpdatedAtUtc = record.UpdatedAtUtc;
+        return true;
     }
 
     private IQueryable<NaturalAssetRecord> BuildQuery(

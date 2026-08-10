@@ -63,17 +63,21 @@ public sealed class InMemoryNaturalAssetRepository : INaturalAssetRepository
         return Task.CompletedTask;
     }
 
-    public Task UpdateAsync(NaturalAsset asset, CancellationToken cancellationToken)
+    public Task<bool> UpdateAsync(NaturalAsset asset, CancellationToken cancellationToken)
     {
         var existing = _dataStore.NaturalAssets.FirstOrDefault(a => a.Id == asset.Id);
         if (existing is null)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(false);
         }
 
-        _dataStore.NaturalAssets.Remove(existing);
-        _dataStore.NaturalAssets.Add(asset);
-        return Task.CompletedTask;
+        if (!ReferenceEquals(existing, asset))
+        {
+            _dataStore.NaturalAssets.Remove(existing);
+            _dataStore.NaturalAssets.Add(asset);
+        }
+
+        return Task.FromResult(true);
     }
 
     private static IEnumerable<NaturalAsset> ApplyFilters(

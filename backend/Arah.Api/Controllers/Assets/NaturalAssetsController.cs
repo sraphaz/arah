@@ -75,6 +75,7 @@ public sealed class NaturalAssetsController : ControllerBase
     [ProducesResponseType(typeof(NaturalAssetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<NaturalAssetResponse>> Get(
         [FromRoute] Guid territoryId,
         [FromRoute] Guid assetId,
@@ -89,7 +90,7 @@ public sealed class NaturalAssetsController : ControllerBase
         var asset = await _naturalAssetService.GetByIdAsync(assetId, cancellationToken);
         if (asset is null || asset.TerritoryId != territoryId)
         {
-            return BadRequest(new { error = "Natural asset not found for territory." });
+            return NotFound(new { error = "Natural asset not found for territory." });
         }
 
         return Ok(ToResponse(asset));

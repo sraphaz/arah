@@ -6,6 +6,7 @@ namespace Arah.Infrastructure.InMemory;
 public sealed class InMemoryNaturalAssetRepository : INaturalAssetRepository
 {
     private readonly InMemoryDataStore _dataStore;
+    private readonly object _gate = new();
 
     public InMemoryNaturalAssetRepository(InMemoryDataStore dataStore)
     {
@@ -14,20 +15,11 @@ public sealed class InMemoryNaturalAssetRepository : INaturalAssetRepository
 
     public Task<NaturalAsset?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var asset = _dataStore.NaturalAssets.FirstOrDefault(a => a.Id == id);
-        return Task.FromResult(asset);
-    }
-
-    public Task<IReadOnlyList<NaturalAsset>> ListAsync(
-        Guid territoryId,
-        NaturalAssetStatus? status,
-        IReadOnlyCollection<string>? types,
-        CancellationToken cancellationToken)
-    {
-        var list = ApplyFilters(_dataStore.NaturalAssets.Where(a => a.TerritoryId == territoryId), status, types)
-            .OrderByDescending(a => a.CreatedAtUtc)
-            .ToList();
-        return Task.FromResult<IReadOnlyList<NaturalAsset>>(list);
+        lock (_gate)
+        {
+            var asset = _dataStore.NaturalAssets.FirstOrDefault(a => a.Id == id);
+            return Task.FromResult(asset);
+        }
     }
 
     public Task<IReadOnlyList<NaturalAsset>> ListPagedAsync(
@@ -38,12 +30,16 @@ public sealed class InMemoryNaturalAssetRepository : INaturalAssetRepository
         int take,
         CancellationToken cancellationToken)
     {
-        var list = ApplyFilters(_dataStore.NaturalAssets.Where(a => a.TerritoryId == territoryId), status, types)
-            .OrderByDescending(a => a.CreatedAtUtc)
-            .Skip(skip)
-            .Take(take)
-            .ToList();
-        return Task.FromResult<IReadOnlyList<NaturalAsset>>(list);
+        lock (_gate)
+        {
+            var list = ApplyFilters(_dataStore.NaturalAssets.Where(a => a.TerritoryId == territoryId), status, types)
+                .OrderByDescending(a => a.CreatedAtUtc)
+                .ThenBy(a => a.Id)
+                .Skip(skip)
+                .Take(take)
+                .ToList();
+            return Task.FromResult<IReadOnlyList<NaturalAsset>>(list);
+        }
     }
 
     public Task<int> CountAsync(
@@ -52,32 +48,42 @@ public sealed class InMemoryNaturalAssetRepository : INaturalAssetRepository
         IReadOnlyCollection<string>? types,
         CancellationToken cancellationToken)
     {
-        var count = ApplyFilters(_dataStore.NaturalAssets.Where(a => a.TerritoryId == territoryId), status, types)
-            .Count();
-        return Task.FromResult(count);
+        lock (_gate)
+        {
+            var count = ApplyFilters(_dataStore.NaturalAssets.Where(a => a.TerritoryId == territoryId), status, types)
+                .Count();
+            return Task.FromResult(count);
+        }
     }
 
     public Task AddAsync(NaturalAsset asset, CancellationToken cancellationToken)
     {
-        _dataStore.NaturalAssets.Add(asset);
+        lock (_gate)
+        {
+            _dataStore.NaturalAssets.Add(asset);
+        }
+
         return Task.CompletedTask;
     }
 
     public Task<bool> UpdateAsync(NaturalAsset asset, CancellationToken cancellationToken)
     {
-        var existing = _dataStore.NaturalAssets.FirstOrDefault(a => a.Id == asset.Id);
-        if (existing is null)
+        lock (_gate)
         {
-            return Task.FromResult(false);
-        }
+            var existing = _dataStore.NaturalAssets.FirstOrDefault(a => a.Id == asset.Id);
+            if (existing is null)
+            {
+                return Task.FromResult(false);
+            }
 
-        if (!ReferenceEquals(existing, asset))
-        {
-            _dataStore.NaturalAssets.Remove(existing);
-            _dataStore.NaturalAssets.Add(asset);
-        }
+            if (!ReferenceEquals(existing, asset))
+            {
+                _dataStore.NaturalAssets.Remove(existing);
+                _dataStore.NaturalAssets.Add(asset);
+            }
 
-        return Task.FromResult(true);
+            return Task.FromResult(true);
+        }
     }
 
     private static IEnumerable<NaturalAsset> ApplyFilters(

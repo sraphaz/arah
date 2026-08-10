@@ -34,6 +34,11 @@ public sealed class NaturalAsset
             throw new ArgumentException("Created-by user ID is required.", nameof(createdByUserId));
         }
 
+        if (updatedByUserId == Guid.Empty)
+        {
+            throw new ArgumentException("Updated-by user ID is required.", nameof(updatedByUserId));
+        }
+
         if (!NaturalAssetType.TryValidatePointType(type, out var normalizedType, out var typeError))
         {
             throw new ArgumentException(typeError ?? "Invalid type.", nameof(type));
@@ -42,11 +47,23 @@ public sealed class NaturalAsset
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(waterPoint);
 
+        var trimmedName = name.Trim();
+        if (trimmedName.Length > 200)
+        {
+            throw new ArgumentException("Name must be at most 200 characters.", nameof(name));
+        }
+
+        var trimmedDescription = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+        if (trimmedDescription is { Length: > 1000 })
+        {
+            throw new ArgumentException("Description must be at most 1000 characters.", nameof(description));
+        }
+
         Id = id;
         TerritoryId = territoryId;
         Type = normalizedType!;
-        Name = name.Trim();
-        Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+        Name = trimmedName;
+        Description = trimmedDescription;
         Status = status;
         WaterPoint = waterPoint;
         CreatedByUserId = createdByUserId;

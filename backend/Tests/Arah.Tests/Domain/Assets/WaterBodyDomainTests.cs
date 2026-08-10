@@ -123,4 +123,34 @@ public sealed class WaterBodyDomainTests
     {
         Assert.Throws<ArgumentException>(() => new WaterPointDetails(-23.55, -46.63, "LAKE"));
     }
+
+    [Fact]
+    public void Constructor_RejectsEmptyUpdatedByUserId()
+    {
+        Assert.Throws<ArgumentException>(() => new NaturalAsset(
+            Guid.NewGuid(),
+            TerritoryId,
+            NaturalAssetType.Spring,
+            "Nascente",
+            null,
+            NaturalAssetStatus.Pending,
+            new WaterPointDetails(-23.55, -46.63),
+            UserId,
+            DateTime.UtcNow,
+            Guid.Empty,
+            DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void Constructor_RejectsNameLongerThan200()
+    {
+        Assert.Throws<ArgumentException>(() => NaturalAsset.CreatePending(
+            TerritoryId,
+            NaturalAssetType.Spring,
+            new string('x', 201),
+            null,
+            new WaterPointDetails(-23.55, -46.63),
+            UserId,
+            DateTime.UtcNow));
+    }
 }

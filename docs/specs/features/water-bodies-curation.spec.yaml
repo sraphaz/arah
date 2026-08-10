@@ -1,5 +1,5 @@
 id: water-bodies-curation
-version: "0.2.0"
+version: "0.2.1"
 title: "Corpos d'água curáveis do território (rios, córregos, nascentes, fontes)"
 owner: backend
 status: draft
@@ -28,23 +28,21 @@ intent: |
 
 acceptance:
   - id: AC-WA-1
-    when: "Quando um Resident (ou Curator) cria um corpo d'água no território com tipo hídrico canônico válido"
+    when: "Quando um Resident (ou Curator) cria um corpo d'água pontual no território com tipo hídrico canônico válido"
     then: >
-      o sistema persiste NaturalAsset (ou ponte TerritoryAsset tipada) escopada por territoryId
-      em status PENDING; exige geolocalização — ponto (lat/lng em ranges válidos) ou, para RIVER/STREAM,
-      LineString GeoJSON com ≤500 vértices, coordenadas WGS84 válidas e geometria intersectando o território
-    status: pending
-    notes: "WA-N1 cobre ponto (SPRING|WATERFALL|POTABLE_WATER). RIVER/STREAM/LineString → 24.0b."
+      o sistema persiste NaturalAsset escopada por territoryId em status PENDING com geolocalização
+      ponto (lat/lng em ranges válidos) para SPRING, WATERFALL ou POTABLE_WATER
+    status: covered
+    notes: "WA-N1. Curso d'água (RIVER/STREAM + LineString) → AC-WA-3 / 24.0b."
     covered_by:
       - "FullyQualifiedName~WaterBodyDomainTests"
       - "FullyQualifiedName~WaterBodyHttpIntegrationTests"
   - id: AC-WA-2
     when: "Quando um Curator valida o corpo d'água no modelo-alvo NaturalAsset"
     then: >
-      o status passa a PUBLISHED; na ponte TerritoryAsset o equivalente é VALIDATED;
-      a entidade aparece em listagens/mapa apenas para quem tem direito de leitura no território
-    status: pending
-    notes: "Publish Curator + listagem HTTP cobertos; mapa canônico NaturalAsset ainda na ponte WA-E2."
+      o status passa a PUBLISHED; a entidade aparece em listagens para quem tem direito de leitura no território
+    status: covered
+    notes: "WA-N1: publish + list HTTP. Mapa canônico NaturalAsset e ponte TerritoryAsset VALIDATED permanecem em slices posteriores."
     covered_by:
       - "FullyQualifiedName~WaterBodyDomainTests.Publish_FromPending_SetsPublished"
       - "FullyQualifiedName~WaterBodyHttpIntegrationTests.Create_List_Get_Publish_PointNaturalAsset"

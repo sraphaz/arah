@@ -6,12 +6,6 @@ public interface INaturalAssetRepository
 {
     Task<NaturalAsset?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<NaturalAsset>> ListAsync(
-        Guid territoryId,
-        NaturalAssetStatus? status,
-        IReadOnlyCollection<string>? types,
-        CancellationToken cancellationToken);
-
     Task<IReadOnlyList<NaturalAsset>> ListPagedAsync(
         Guid territoryId,
         NaturalAssetStatus? status,

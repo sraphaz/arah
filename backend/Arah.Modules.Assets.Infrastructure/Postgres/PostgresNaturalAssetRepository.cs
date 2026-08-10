@@ -21,18 +21,6 @@ public sealed class PostgresNaturalAssetRepository : INaturalAssetRepository
         return record?.ToDomain();
     }
 
-    public async Task<IReadOnlyList<NaturalAsset>> ListAsync(
-        Guid territoryId,
-        NaturalAssetStatus? status,
-        IReadOnlyCollection<string>? types,
-        CancellationToken cancellationToken)
-    {
-        var records = await BuildQuery(territoryId, status, types)
-            .OrderByDescending(a => a.CreatedAtUtc)
-            .ToListAsync(cancellationToken);
-        return records.Select(r => r.ToDomain()).ToList();
-    }
-
     public async Task<IReadOnlyList<NaturalAsset>> ListPagedAsync(
         Guid territoryId,
         NaturalAssetStatus? status,
@@ -43,6 +31,7 @@ public sealed class PostgresNaturalAssetRepository : INaturalAssetRepository
     {
         var records = await BuildQuery(territoryId, status, types)
             .OrderByDescending(a => a.CreatedAtUtc)
+            .ThenBy(a => a.Id)
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);

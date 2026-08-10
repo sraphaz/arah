@@ -25,13 +25,6 @@ public sealed class NaturalAssetService
     public Task<NaturalAsset?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         => _repository.GetByIdAsync(id, cancellationToken);
 
-    public Task<IReadOnlyList<NaturalAsset>> ListAsync(
-        Guid territoryId,
-        NaturalAssetStatus? status,
-        IReadOnlyCollection<string>? types,
-        CancellationToken cancellationToken)
-        => _repository.ListAsync(territoryId, status, types, cancellationToken);
-
     public async Task<PagedResult<NaturalAsset>> ListPagedAsync(
         Guid territoryId,
         NaturalAssetStatus? status,

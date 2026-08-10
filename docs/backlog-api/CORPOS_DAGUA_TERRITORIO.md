@@ -52,7 +52,7 @@ Territory (geografia neutra)
 |--------|-----------------------------------|------------------------|-----------------|
 | TerritoryAsset | `type=natural` + allowlist `river\|stream\|spring\|waterfall\|well\|potable_water` (normalizados lowercase) | **WA-E1**: campo `Subtype` + validação; outros `type` livres sem subtype | Alias → `NATURAL_ASSET.type` (FASE24.0) |
 | MapEntity | Categoria `espaço natural` | Implementado | Espelhar/apontar para asset hídrico |
-| MER `NATURAL_ASSET` | Inclui `RIVER`, `STREAM` + `WATERCOURSE_DETAILS` | **WA-N1**: `NaturalAsset` ponto (`SPRING|WATERFALL|POTABLE_WATER`) + API; curso d'água → 24.0b | Persistência completa + LineString (FASE24.0) |
+| MER `NATURAL_ASSET` | Inclui `RIVER`, `STREAM` + `WATERCOURSE_DETAILS` | **WA-N1**: `NaturalAsset` ponto (`SPRING`, `WATERFALL`, `POTABLE_WATER`) + API; curso d'água → 24.0b | Persistência completa + LineString (FASE24.0) |
 | FASE24 | Observações `WATER` + `RelatedNaturalAssetId` planejados | Só alertas básicos | Cadastro hídrico **antes** das observações |
 | TI | Sinais de enchente podem citar o rio | Demo / trilhas | Referência a corpo d'água local quando existir |
 

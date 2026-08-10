@@ -100,4 +100,23 @@ public sealed class WaterBodyHttpIntegrationTests
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
+    [Fact]
+    public async Task Get_MissingAsset_ReturnsNotFound()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var token = await AuthTestHelper.LoginForTokenAsync(client, "google", "resident-external");
+        AuthTestHelper.SetupAuthenticatedClient(client, token, "wa-n1-get-404");
+        await client.PostAsJsonAsync(
+            "api/v1/territories/selection",
+            new TerritorySelectionRequest(ActiveTerritoryId));
+
+        var missingId = Guid.Parse("99999999-9999-9999-9999-999999999999");
+        var response = await client.GetAsync(
+            $"api/v1/territories/{ActiveTerritoryId}/natural-assets/{missingId}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }

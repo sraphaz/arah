@@ -128,8 +128,8 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 - [ ] Mapa/Flutter via BFF: pin e filtro canônico NaturalAsset (ponte WA-E2/E4 permanece)
 - [x] Invariante: Territory sem campos hídricos; NaturalAsset nunca marketplace (AC-WA-6)
 - [ ] Ponte opcional: migrar/alias de TerritoryAssets `natural` existentes (nascentes)
-- [x] Testes domínio + API (AC-WA-1 parcial ponto, AC-WA-2, AC-WA-6); sensibilidade/LineString pendentes
-- [x] Documentação: CHANGELOG / STATUS / CORPOS / spec covered_by parcial
+- [x] Testes domínio + API (AC-WA-1/2 ponto + AC-WA-6); sensibilidade/LineString pendentes (AC-WA-3…5)
+- [x] Documentação: CHANGELOG / STATUS / CORPOS / spec (AC-WA-1/2/6 covered no escopo ponto)
 
 **Arquivos previstos** (orientação — ajustar à Clean Architecture dos módulos Assets/Map/Health):
 - Domínio NaturalAsset / WatercourseDetails / WaterPointDetails (módulo Assets ou Health compartilhado)
@@ -137,10 +137,10 @@ Implementar sistema completo de **saúde territorial e monitoramento** que:
 - Contratos BFF + pins Flutter (`MAPA_PINS`)
 
 **Critérios de Sucesso**:
-- ✅ Comunidade cadastra e cura rio/córrego/nascente/fonte no território
-- ✅ Entidade aparece no mapa com tipagem correta (sem vazar HIGH/RESTRICTED)
-- ✅ Pronto para `RelatedNaturalAssetId` / `naturalAssetId` nas observações e posts (24.1+)
-- ✅ Spec `water-bodies-curation` AC-WA-* cobertos ou rastreados
+- ✅ Comunidade cadastra e cura **ponto** hídrico (nascente/cachoeira/água potável) no território (WA-N1)
+- ⏳ Rio/córrego (LineString), mapa canônico NaturalAsset, sensibilidade HIGH/RESTRICTED (24.0b+)
+- ✅ Pronto para evoluir a `RelatedNaturalAssetId` / `naturalAssetId` nas observações e posts (24.1+)
+- ✅ Spec `water-bodies-curation` AC-WA-1/2/6 no escopo ponto; AC-WA-3…5 rastreados como pending
 - ✅ Testes passando
 
 ---

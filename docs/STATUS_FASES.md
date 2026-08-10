@@ -50,8 +50,8 @@ Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, cór
 
 | Artefato | Papel |
 |----------|--------|
-| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 · WA-E1 ✅ · WA-E2 mapa ✅ · WA-E4 UX ✅ · **WA-N1 NaturalAsset ponto** (24.0a) |
-| [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico + curadoria (slice ponto em andamento) |
+| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 · WA-E1…E4 ✅ · **WA-N1 ponto** · AC-WA-1/2 parciais · AC-WA-6 covered · AC-WA-3…5 deferidos |
+| [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico · WA-N1 ponto em andamento · AC-WA-1/2 parciais (ponto) · AC-WA-6 covered · AC-WA-3…5 deferidos |
 | [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD · **Spec-Id:** `water-bodies-curation` · WA-N1: AC-WA-6 covered; AC-WA-1/2 parciais (ponto); AC-WA-3…5 deferidos (curso/sensibilidade/refs) |
 
 **Dono consultivo**: `mapa-lugares`.

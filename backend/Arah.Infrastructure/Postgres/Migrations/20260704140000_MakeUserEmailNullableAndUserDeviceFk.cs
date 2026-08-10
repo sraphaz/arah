@@ -1,3 +1,5 @@
+using Arah.Infrastructure.Postgres;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -5,6 +7,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Arah.Infrastructure.Postgres.Migrations
 {
     /// <inheritdoc />
+    [DbContext(typeof(ArahDbContext))]
+    [Migration("20260704140000_MakeUserEmailNullableAndUserDeviceFk")]
     public partial class MakeUserEmailNullableAndUserDeviceFk : Migration
     {
         /// <inheritdoc />

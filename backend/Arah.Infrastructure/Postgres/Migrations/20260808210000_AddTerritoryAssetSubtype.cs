@@ -1,3 +1,5 @@
+using Arah.Infrastructure.Postgres;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +9,10 @@ namespace Arah.Infrastructure.Postgres.Migrations
     /// <summary>
     /// Migration hand-written (mesmo padrão de MakeUserEmailNullableAndUserDeviceFk).
     /// Sem *.Designer.cs — o modelo autoritativo está em ArahDbContextModelSnapshot.
+    /// [Migration]/[DbContext] são obrigatórios para EF descobrir a migration.
     /// </summary>
+    [DbContext(typeof(ArahDbContext))]
+    [Migration("20260808210000_AddTerritoryAssetSubtype")]
     public partial class AddTerritoryAssetSubtype : Migration
     {
         /// <inheritdoc />

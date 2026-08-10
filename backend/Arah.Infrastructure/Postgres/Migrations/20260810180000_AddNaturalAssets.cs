@@ -1,3 +1,5 @@
+using Arah.Infrastructure.Postgres;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +9,10 @@ namespace Arah.Infrastructure.Postgres.Migrations
     /// <summary>
     /// Migration hand-written (mesmo padrão de AddTerritoryAssetSubtype).
     /// NaturalAsset ponto (WA-N1 / FASE24.0a).
+    /// [Migration]/[DbContext] são obrigatórios para EF descobrir a migration (sem Designer).
     /// </summary>
+    [DbContext(typeof(ArahDbContext))]
+    [Migration("20260810180000_AddNaturalAssets")]
     public partial class AddNaturalAssets : Migration
     {
         /// <inheritdoc />

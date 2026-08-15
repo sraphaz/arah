@@ -1,33 +1,14 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter } from "next/font/google";
-import { JetBrains_Mono } from "next/font/google";
 import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
 import { MobileSidebar } from "../components/layout/MobileSidebar";
 import { Footer } from "../components/layout/Footer";
 import { brand } from "../../shared/config/brand";
 
-// Inter - Fonte moderna e sóbria para corpo de texto
-// Usada por Vercel, Stripe, Linear - transmite profissionalismo e modernidade
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-  preload: true,
-});
-
-// JetBrains Mono - Fonte técnica e sóbria para código
-// Excelente legibilidade, usada em documentação técnica enterprise
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-  preload: true,
-});
+// Fontes via CSS (system stack) — evita falha flaky do CI ao baixar Google Fonts (fonts.gstatic.com).
+// Tokens --font-inter / --font-mono continuam definidos em styles/variables.css.
 
 const siteUrl = brand.urls.wiki;
 
@@ -53,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`scroll-smooth dark ${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="pt-BR" className="scroll-smooth dark" suppressHydrationWarning>
       <body className="antialiased font-sans">
         <Script
           id="theme-init"

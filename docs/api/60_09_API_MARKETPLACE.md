@@ -86,6 +86,20 @@ O Marketplace lida exclusivamente com produtos e serviços oferecidos por morado
 
 **Feature Flag**: O módulo de marketplace é controlado por flag territorial `MARKETPLACEENABLED`. Quando desabilitado no território, endpoints de consulta/ação retornam `404` para evitar exposição do marketplace.
 
+### Merchants, carteira Aratá e consumo (FASE55 v0)
+
+**Descrição**: aliases comerciais e leitura de saldo/consumo.
+
+| Método | Path | Comportamento |
+|--------|------|----------------|
+| `POST` | `/api/v1/merchants/{merchantId}/subscription` | Alias de criar subscription para a store (`merchantId` = store id). Somente o owner. `Location`: `/api/v1/subscriptions/{id}`. |
+| `GET` | `/api/v1/merchants/{merchantId}/consumption` | Medidores `ai` / `media` / `notifications` (zeros até writers). Seed atômico/idempotente na primeira leitura. Somente o owner. |
+| `GET` | `/api/v1/wallets/{walletId}` | Carteira Aratá. Para seller, `walletId` = `SellerBalance.Id`; `balance` = (Pending + ReadyForPayout) / 100 — **não** inclui Paid. Reprojeta a cada GET a partir do ledger. Somente o titular. |
+
+**Regras**:
+- Autenticação JWT obrigatória; 403 se não for owner/titular; 404 se store/wallet inexistente.
+- `PaidAmountInCents` é histórico de payout já transferido — não entra no saldo disponível da Wallet.
+
 ---
 
 ## 📚 Documentação Relacionada

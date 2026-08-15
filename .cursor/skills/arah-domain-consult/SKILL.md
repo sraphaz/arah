@@ -24,4 +24,7 @@ Parecer de um domínio específico:
 ## Critério
 
 Endereçar cada item de "Validar no PR" do parecer aplicável à mudança antes de
-concluir. Detalhes: [docs/governance/DEFINITION_OF_DONE.md](../../docs/governance/DEFINITION_OF_DONE.md).
+concluir. No corpo do PR, preencher a seção **Pareceres endereçados**
+([`.agents/templates/pr-body.md`](../../.agents/templates/pr-body.md)).
+Fluxo: [docs/ops/AGENT_PR_FLOW_INTEGRITY.md](../../docs/ops/AGENT_PR_FLOW_INTEGRITY.md).
+Detalhes DoD: [docs/governance/DEFINITION_OF_DONE.md](../../docs/governance/DEFINITION_OF_DONE.md).

@@ -2,7 +2,7 @@
     "schema":  ".agents/agent-graph.schema.yaml",
     "version":  1,
     "generator":  "scripts/agents/export-agent-graph.ps1",
-    "generated_at":  "2026-07-23T22:46:40Z",
+    "generated_at":  "2026-08-08T19:45:55Z",
     "sources":  [
                     ".agents/choreography.yaml",
                     ".agents/**/*.agent.yaml",
@@ -16,13 +16,13 @@
                   "rules":  19,
                   "paths":  173,
                   "domains":  17,
-                  "specs":  13,
-                  "harnesses":  13,
+                  "specs":  14,
+                  "harnesses":  14,
                   "tests":  14,
-                  "guardrails":  17,
+                  "guardrails":  19,
                   "workflows":  16,
                   "review_gates":  5,
-                  "edges":  594
+                  "edges":  604
               },
     "nodes":  {
                   "agents":  [
@@ -4276,6 +4276,61 @@
                                                            "evidence":  null
                                                        }
                                                    ]
+                                },
+                                {
+                                    "id":  "water-bodies-curation",
+                                    "status":  "draft",
+                                    "manifest":  "docs/specs/features/water-bodies-curation.spec.yaml",
+                                    "harness_agents":  [
+                                                           "backend",
+                                                           "flutter",
+                                                           "spec-steward"
+                                                       ],
+                                    "guardrails":  [
+                                                       "territory-first",
+                                                       "territory-is-geographic-only",
+                                                       "no-secrets-in-repo",
+                                                       "sync-docs-on-behavior-change",
+                                                       "no-marketplace-for-natural-assets"
+                                                   ],
+                                    "acceptance":  [
+                                                       {
+                                                           "id":  "AC-WA-1",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-WA-2",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-WA-3",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-WA-4",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-WA-5",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       },
+                                                       {
+                                                           "id":  "AC-WA-6",
+                                                           "status":  "pending",
+                                                           "covered_by":  null,
+                                                           "evidence":  null
+                                                       }
+                                                   ]
                                 }
                             ],
                   "harnesses":  [
@@ -4381,6 +4436,15 @@
                                         "spec":  "TI-201-signal-review",
                                         "agents":  [
                                                        "backend",
+                                                       "spec-steward"
+                                                   ]
+                                    },
+                                    {
+                                        "id":  "water-bodies-curation",
+                                        "spec":  "water-bodies-curation",
+                                        "agents":  [
+                                                       "backend",
+                                                       "flutter",
                                                        "spec-steward"
                                                    ]
                                     }
@@ -4505,6 +4569,10 @@
                                          "executable":  false
                                      },
                                      {
+                                         "id":  "no-marketplace-for-natural-assets",
+                                         "executable":  false
+                                     },
+                                     {
                                          "id":  "no-merge-automatic",
                                          "executable":  true
                                      },
@@ -4542,6 +4610,10 @@
                                      },
                                      {
                                          "id":  "territory-first",
+                                         "executable":  false
+                                     },
+                                     {
+                                         "id":  "territory-is-geographic-only",
                                          "executable":  false
                                      }
                                  ],
@@ -5077,6 +5149,31 @@
                   {
                       "from":  "spec:TI-201-signal-review",
                       "to":  "guardrail:territory-first",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:water-bodies-curation",
+                      "to":  "guardrail:no-marketplace-for-natural-assets",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:water-bodies-curation",
+                      "to":  "guardrail:no-secrets-in-repo",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:water-bodies-curation",
+                      "to":  "guardrail:sync-docs-on-behavior-change",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:water-bodies-curation",
+                      "to":  "guardrail:territory-first",
+                      "type":  "blocked_by_guardrail"
+                  },
+                  {
+                      "from":  "spec:water-bodies-curation",
+                      "to":  "guardrail:territory-is-geographic-only",
                       "type":  "blocked_by_guardrail"
                   },
                   {
@@ -5834,13 +5931,13 @@
                       "from":  "agent:backend",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "craft-backend"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:backend",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "craft-backend"
                   },
                   {
                       "from":  "agent:backend",
@@ -6212,12 +6309,6 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
-                  },
-                  {
-                      "from":  "agent:solutions-architect",
-                      "to":  "skill:architecture-review",
-                      "type":  "may_invoke_skill",
                       "via":  "core-control-plane"
                   },
                   {
@@ -6225,6 +6316,12 @@
                       "to":  "skill:architecture-review",
                       "type":  "may_invoke_skill",
                       "via":  "inteligencia-territorial"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:architecture-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -6242,31 +6339,31 @@
                       "from":  "agent:solutions-architect",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "craft-backend"
-                  },
-                  {
-                      "from":  "agent:solutions-architect",
-                      "to":  "skill:craft-review",
-                      "type":  "may_invoke_skill",
-                      "via":  "architecture-docs"
-                  },
-                  {
-                      "from":  "agent:solutions-architect",
-                      "to":  "skill:craft-review",
-                      "type":  "may_invoke_skill",
                       "via":  "core-control-plane"
                   },
                   {
                       "from":  "agent:solutions-architect",
-                      "to":  "skill:likec4-export",
+                      "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
                       "via":  "architecture-docs"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:craft-review",
+                      "type":  "may_invoke_skill",
+                      "via":  "craft-backend"
                   },
                   {
                       "from":  "agent:solutions-architect",
                       "to":  "skill:likec4-export",
                       "type":  "may_invoke_skill",
                       "via":  "manifest"
+                  },
+                  {
+                      "from":  "agent:solutions-architect",
+                      "to":  "skill:likec4-export",
+                      "type":  "may_invoke_skill",
+                      "via":  "architecture-docs"
                   },
                   {
                       "from":  "agent:solutions-architect",
@@ -6290,13 +6387,13 @@
                       "from":  "agent:spec-steward",
                       "to":  "skill:harness-run",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "specs-sdd"
                   },
                   {
                       "from":  "agent:spec-steward",
                       "to":  "skill:harness-run",
                       "type":  "may_invoke_skill",
-                      "via":  "specs-sdd"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:spec-steward",
@@ -6314,13 +6411,13 @@
                       "from":  "agent:spec-steward",
                       "to":  "skill:spec-validate",
                       "type":  "may_invoke_skill",
-                      "via":  "specs-sdd"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:spec-steward",
                       "to":  "skill:spec-validate",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "specs-sdd"
                   },
                   {
                       "from":  "agent:spec-steward",
@@ -6344,13 +6441,13 @@
                       "from":  "agent:web",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "manifest"
+                      "via":  "craft-web"
                   },
                   {
                       "from":  "agent:web",
                       "to":  "skill:craft-review",
                       "type":  "may_invoke_skill",
-                      "via":  "craft-web"
+                      "via":  "manifest"
                   },
                   {
                       "from":  "agent:web",
@@ -6433,6 +6530,11 @@
                   {
                       "from":  "spec:TI-201-signal-review",
                       "to":  "harness:TI-201-signal-review",
+                      "type":  "requires_harness"
+                  },
+                  {
+                      "from":  "spec:water-bodies-curation",
+                      "to":  "harness:water-bodies-curation",
                       "type":  "requires_harness"
                   },
                   {
@@ -6596,6 +6698,11 @@
                   {
                       "from":  "rule:specs-sdd",
                       "to":  "spec:TI-201-signal-review",
+                      "type":  "requires_spec"
+                  },
+                  {
+                      "from":  "rule:specs-sdd",
+                      "to":  "spec:water-bodies-curation",
                       "type":  "requires_spec"
                   },
                   {
@@ -7875,6 +7982,21 @@
                       "type":  "validated_by"
                   },
                   {
+                      "from":  "harness:water-bodies-curation",
+                      "to":  "agent:backend",
+                      "type":  "validated_by"
+                  },
+                  {
+                      "from":  "harness:water-bodies-curation",
+                      "to":  "agent:flutter",
+                      "type":  "validated_by"
+                  },
+                  {
+                      "from":  "harness:water-bodies-curation",
+                      "to":  "agent:spec-steward",
+                      "type":  "validated_by"
+                  },
+                  {
                       "from":  "spec:FASE53-arah-core",
                       "to":  "test:FullyQualifiedName~Core",
                       "type":  "verified_by_test",
@@ -7890,6 +8012,12 @@
                       "from":  "spec:FASE53-arah-core",
                       "to":  "test:FullyQualifiedName~CoreControllerIntegration",
                       "type":  "verified_by_test",
+                      "via":  "AC-53-4"
+                  },
+                  {
+                      "from":  "spec:FASE53-arah-core",
+                      "to":  "test:FullyQualifiedName~CoreControllerIntegration",
+                      "type":  "verified_by_test",
                       "via":  "AC-53-2"
                   },
                   {
@@ -7897,12 +8025,6 @@
                       "to":  "test:FullyQualifiedName~CoreControllerIntegration",
                       "type":  "verified_by_test",
                       "via":  "AC-53-9"
-                  },
-                  {
-                      "from":  "spec:FASE53-arah-core",
-                      "to":  "test:FullyQualifiedName~CoreControllerIntegration",
-                      "type":  "verified_by_test",
-                      "via":  "AC-53-4"
                   },
                   {
                       "from":  "spec:FASE53-arah-core",
@@ -7968,13 +8090,13 @@
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-6"
+                      "via":  "AC-55-3"
                   },
                   {
                       "from":  "spec:FASE55-monetization",
                       "to":  "test:FullyQualifiedName~TransactionsController",
                       "type":  "verified_by_test",
-                      "via":  "AC-55-3"
+                      "via":  "AC-55-6"
                   },
                   {
                       "from":  "spec:FASE55-monetization",

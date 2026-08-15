@@ -165,7 +165,7 @@ backlog-api/
 | Fase | Título | Duração | Prioridade | Status | Descrição |
 |------|--------|---------|------------|--------|-----------|
 | **[23](./FASE23.md)** | Inteligência Artificial | 28d | 🟡 P1 | ⏳ Pendente | Integração com IA, recomendações, análise de conteúdo, moderação assistida |
-| **[24](./FASE24.md)** | Saúde Territorial | 35d | 🟡 P1 | ⏳ Pendente | Monitoramento de saúde territorial, indicadores, alertas, relatórios |
+| **[24](./FASE24.md)** | Saúde Territorial | 35d | 🟡 P1 | ⏳ Pendente | Monitoramento de saúde territorial, **corpos d'água curáveis**, indicadores, alertas · [água](./CORPOS_DAGUA_TERRITORIO.md) |
 | **[25](./FASE25.md)** | Dashboard Métricas | 14d | 🟡 P1 | ⏳ Pendente | Dashboard com métricas comunitárias, analytics, visualizações |
 
 **Total**: 77 dias | **Resultado**: Conformidade, saúde territorial e métricas implementadas
@@ -298,6 +298,23 @@ backlog-api/
 | **[TI-7](./TI7.md)** | Federação de sinais | TBD | 🟢 P2 | FASE53/59 | ⏳ Pendente |
 
 **MVP**: TI-1→TI-3 ≈ 13 semanas. **Não** altera o contador `FASE*.md` (trilha transversal).
+
+---
+
+### 💧 Capacidade: Corpos d'água do território (rios, córregos, nascentes, fontes) ⭐ NOVO 2026-08
+
+**Objetivo**: Rios, córregos, nascentes e fontes como **entidades curáveis** do território — nomear, marcar, falar e cuidar — sem embutir lógica social em `Territory`.
+
+**Referência**: [CORPOS_DAGUA_TERRITORIO.md](./CORPOS_DAGUA_TERRITORIO.md) · Spec draft: [`water-bodies-curation`](../specs/features/water-bodies-curation.spec.yaml)
+
+| Camada | Papel |
+|--------|--------|
+| Ponte (Assets/Mapa) | Tipagem hídrica em TerritoryAsset + pins |
+| **[FASE24 §24.0](./FASE24.md)** | Fundação `NaturalAsset` / `WATERCOURSE_DETAILS` / curadoria |
+| FASE24 restante | Observações `WATER`, sensores, mutirões ligados ao corpo d'água |
+| TI | Sinais externos (ex.: enchente) **complementam** a curadoria local |
+
+**Domínio dono**: `mapa-lugares`.
 
 ---
 

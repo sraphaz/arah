@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/arah_motion.dart';
 import '../../../../core/widgets/arah_empty_state.dart';
 import '../../../../core/widgets/arah_error_state.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
@@ -386,8 +387,8 @@ class _FeedListState extends ConsumerState<_FeedList> {
         return TweenAnimationBuilder<double>(
           key: ValueKey(postId.isNotEmpty ? postId : index),
           tween: Tween(begin: 0, end: 1),
-          duration: const Duration(milliseconds: AppConstants.animationNormal),
-          curve: Curves.easeOut,
+          duration: ArahMotion.resolve(context, ArahMotion.normal),
+          curve: ArahMotion.emphasized,
           builder: (context, value, child) => Opacity(
             opacity: value,
             child: Transform.translate(

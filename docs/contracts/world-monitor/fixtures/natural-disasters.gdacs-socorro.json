@@ -1,0 +1,42 @@
+{
+  "provider": "World Monitor",
+  "tool": "get_natural_disasters",
+  "fetchedAt": "2026-01-14T09:15:00Z",
+  "attributionText": "dados via World Monitor · fonte: GDACS",
+  "events": [
+    {
+      "externalId": "GDACS-FL-2026-SOC-001",
+      "sourceName": "GDACS",
+      "category": "desastre",
+      "hazard": "flood",
+      "severity": "alerta",
+      "title": "Chuva extrema e risco de enchente — bacia do Rio do Peixe (Socorro-SP)",
+      "summary": "Acumulado intenso previsto; polígono cobre a área urbana e afluentes próximos a Socorro-SP. Evento sintético para demo TI (jan/2026 fictício-plausível).",
+      "publishedAt": "2026-01-14T09:12:00Z",
+      "startsAt": "2026-01-14T06:00:00-03:00",
+      "expiresAt": "2026-01-16T21:00:00-03:00",
+      "confidence": {
+        "score": 0.78,
+        "band": "unica-fonte"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "bbox": [-46.60, -22.65, -46.48, -22.54],
+        "coordinates": [
+          [
+            [-46.60, -22.65],
+            [-46.48, -22.65],
+            [-46.48, -22.54],
+            [-46.60, -22.54],
+            [-46.60, -22.65]
+          ]
+        ]
+      },
+      "placeHints": ["Socorro", "BR-SP", "Rio do Peixe"],
+      "urls": {
+        "source": null
+      }
+    }
+  ],
+  "notes": "Fixture sintética TI-0 / demo Socorro-SP — NÃO é feed GDACS real."
+}

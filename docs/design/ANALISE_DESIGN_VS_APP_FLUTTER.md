@@ -3,8 +3,8 @@
 **Data**: 2026-07-15  
 **Autor**: Agente cloud (análise pré-alinhamento)  
 **Escopo**: `design-system/` (fonte canônica de UI) × `frontend/arah.app/` (implementação)  
-**Status**: 🚧 Alinhamento avançado (Onda D 2026-07-23)  
-**Próximo passo**: refinamentos (stats reais do BFF, Moderação polish, motion 150/250 em todas as telas)
+**Status**: 🚧 Alinhamento avançado (Onda I 2026-08-08)  
+**Próximo passo**: mídia rica no feed (multi-imagem); histórico de transações do vendedor
 
 ---
 
@@ -196,8 +196,8 @@ O UI kit já resolve descoberta de roadmap **sem implementar backend**. O app at
 | Confirmar residência (GPS + comprovante + pending) | 🟡 botões em Membership; **sem** upload/pending/journey |
 | Feed / publicar / comentar | ✅ básico; gaps mídia rica / report |
 | Eventos | ✅ listar/criar/participar |
-| Mercado & checkout PIX | 🟡 checkout stub (`Checkout via app`) |
-| Minha loja / payout | 🟡 CRUD; sem PIX/taxa |
+| Mercado & checkout PIX | ✅ jornada PIX + QR scannable (`ArahPixPay`) |
+| Minha loja / payout | 🟡 CRUD + foto + saldo read-only; saque manual / histórico fino pendente |
 | Governança | ✅ |
 | Curadoria | 🟡 API lista; UX rasa |
 | Jornadas multi-passo (reserva, babá, carteira…) | ❌ framework inexistente |
@@ -223,8 +223,12 @@ Complementam `DSG-*` da `AUDITORIA_DESIGN.md` (tokens/web). Estes focam **fideli
 | **APP-DS-09** | Redesign Perfil (papel, stats, grade) + banner visitante no Feed | ✅ stats row + RoleBadge + grade + banner | APP-DS-07 |
 | **APP-DS-10** | Mercado / Minha loja / Chat / Moderação: sair do padrão ListTile | ✅ Mercado/Chat/Moderação em cards | APP-DS-07 |
 | **APP-DS-11** | Jornada residência (comprovante + pending) alinhada ao handoff | ✅ UI + upload media; pending status fino ainda depende do BFF | backend gaps |
-| **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | 🟡 `ArahErrorState`/`ArahEmptyState` em Feed/Moderação/Mercado; motion global pendente | APP-DS-07 |
+| **APP-DS-12** | Estados loading/empty/error + motion 150/250 em todas as telas | ✅ empty/error centrados; motion (curve/press/page fade/JourneyShell) global | APP-DS-07 |
 | **APP-DS-13** | Assinar gate visual (golden/screenshot ou checklist) no CI para regressão de IA | ✅ `design-ia-gate-check.ps1` no `run-gates` | APP-DS-02 |
+| **APP-DS-14** | Checkout PIX + polish Mercado/Minha loja + hub Serviços (tiles Em breve) | ✅ jornada 4 passos + payments/enable + ArahCard no hub | APP-DS-07 / backend pay |
+| **APP-DS-15** | CRUD produtos na loja + QR PIX + stub JourneyShell Em breve | ✅ `/add-product-journey`, `ArahPixPay`, `/coming-soon` | APP-DS-14 / items API |
+| **APP-DS-16** | Foto do produto (upload + thumbnail Minha loja + clear no PATCH) | ✅ `mediaIds` create/update; lista com thumb | APP-DS-15 / media API |
+| **APP-DS-17** | Saldo vendedor na Minha loja (BFF allowlist + card pendente/pronto/pago) | ✅ `seller-balance/me`; 404 → zero | APP-DS-14 / FASE7 API |
 
 ---
 
@@ -300,6 +304,11 @@ Comparar lado a lado com o Flutter: bottom-nav, top bar, feed card, hub Serviço
 
 ### Changelog deste documento
 
+- **1.8** (2026-08-08): Onda I — APP-DS-17 saldo vendedor (BFF + card Minha loja).
+- **1.7** (2026-08-08): Onda H — APP-DS-16 foto do produto (upload, thumb Minha loja, clear mediaIds).
+- **1.6** (2026-08-05): Onda G — APP-DS-15 CRUD produtos, QR PIX, ComingSoon JourneyShell.
+- **1.5** (2026-08-05): Onda F — APP-DS-14 checkout PIX journey, Minha loja payments toggle, hub Serviços ArahCard.
+- **1.4** (2026-08-05): Onda E — APP-DS-12 motion global; stats BFF no perfil.
 - **1.3** (2026-07-23): Onda D — Moderação cards, ProfileStats, comprovante upload, ArahErrorState, design-ia-gate-check.
 - **1.2** (2026-07-21): Onda C — JourneyShell, jornada residência v0, Mercado cards, Chat bolhas, Explorar chips, shell sem Scaffold aninhado.
 - **1.1** (2026-07-21): Onda A+B — ADR-021, tokens/fonts, shell Serviços+TopBar, hub, banner visitante; APP-DS-01..06 ✅.

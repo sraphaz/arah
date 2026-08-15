@@ -29,11 +29,13 @@ class _ArahCardState extends State<ArahCard> {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final scale = _pressed && widget.onTap != null ? 0.98 : 1.0;
+    final scale =
+        _pressed && widget.onTap != null ? ArahMotion.pressScale : 1.0;
 
     final card = AnimatedScale(
       scale: scale,
-      duration: ArahMotion.fast,
+      duration: ArahMotion.resolve(context, ArahMotion.fast),
+      curve: ArahMotion.emphasized,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: colors.surfaceContainer.withValues(alpha: 0.9),

@@ -79,6 +79,47 @@ public sealed class MerchantsAndWalletsControllerTests
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
+    [Fact] // AC-55-9 Location
+    public async Task CreateMerchantSubscription_AsOwner_ReturnsAbsoluteLocation()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        var login = await AuthTestHelper.LoginAndGetResponseAsync(client, "google", "merchant-loc-owner", "mloc@Arah.com");
+        AuthTestHelper.SetAuthHeader(client, login.Token!);
+
+        var storeId = Guid.NewGuid();
+        factory.GetDataStore().TerritoryStores.Add(new Store(
+            storeId,
+            TestIds.Territory1,
+            login.User!.Id,
+            "Loja Location",
+            null,
+            StoreStatus.Active,
+            paymentsEnabled: false,
+            StoreContactVisibility.Public,
+            null, null, null, null, null, null,
+            DateTime.UtcNow,
+            DateTime.UtcNow));
+
+        var plans = await client.GetFromJsonAsync<List<SubscriptionPlanResponse>>("api/v1/subscription-plans");
+        Assert.NotNull(plans);
+        var freePlan = plans!.First(p => p.Tier == "FREE");
+
+        var response = await client.PostAsJsonAsync(
+            $"api/v1/merchants/{storeId}/subscription",
+            new CreateMerchantSubscriptionRequest { PlanId = freePlan.Id });
+
+        if (response.StatusCode == HttpStatusCode.Created)
+        {
+            Assert.NotNull(response.Headers.Location);
+            Assert.StartsWith("/api/v1/subscriptions/", response.Headers.Location!.ToString());
+        }
+        else
+        {
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+    }
+
     [Fact] // AC-55-11
     public async Task GetMerchantConsumption_AsOwner_ReturnsZeroedMeters()
     {
@@ -109,6 +150,42 @@ public sealed class MerchantsAndWalletsControllerTests
         Assert.Contains(meters, m => m.Metric == "ai" && m.Usage == 0);
         Assert.Contains(meters, m => m.Metric == "media");
         Assert.Contains(meters, m => m.Metric == "notifications");
+    }
+
+    [Fact] // AC-55-11
+    public async Task GetMerchantConsumption_ConcurrentFirstReads_DoNotDuplicateMeters()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        var login = await AuthTestHelper.LoginAndGetResponseAsync(client, "google", "merchant-cons-race", "consrace@Arah.com");
+        AuthTestHelper.SetAuthHeader(client, login.Token!);
+
+        var storeId = Guid.NewGuid();
+        factory.GetDataStore().TerritoryStores.Add(new Store(
+            storeId,
+            TestIds.Territory1,
+            login.User!.Id,
+            "Loja race",
+            null,
+            StoreStatus.Active,
+            false,
+            StoreContactVisibility.Public,
+            null, null, null, null, null, null,
+            DateTime.UtcNow,
+            DateTime.UtcNow));
+
+        var tasks = Enumerable.Range(0, 8)
+            .Select(_ => client.GetAsync($"api/v1/merchants/{storeId}/consumption"))
+            .ToArray();
+        var responses = await Task.WhenAll(tasks);
+        foreach (var response in responses)
+        {
+            response.EnsureSuccessStatusCode();
+            var meters = await response.Content.ReadFromJsonAsync<List<ConsumptionMeterResponse>>();
+            Assert.NotNull(meters);
+            Assert.Equal(3, meters!.Count);
+            Assert.Equal(3, meters.Select(m => m.Metric).Distinct().Count());
+        }
     }
 
     [Fact] // AC-55-10
@@ -151,46 +228,6 @@ public sealed class MerchantsAndWalletsControllerTests
         Assert.True(
             response.StatusCode == HttpStatusCode.Forbidden ||
             response.StatusCode == HttpStatusCode.NotFound);
-    
-    [Fact] // AC-55-9 Location
-    public async Task CreateMerchantSubscription_AsOwner_ReturnsAbsoluteLocation()
-    {
-        using var factory = new ApiFactory();
-        using var client = factory.CreateClient();
-        var login = await AuthTestHelper.LoginAndGetResponseAsync(client, "google", "merchant-loc-owner", "mloc@Arah.com");
-        AuthTestHelper.SetAuthHeader(client, login.Token!);
-
-        var storeId = Guid.NewGuid();
-        factory.GetDataStore().TerritoryStores.Add(new Store(
-            storeId,
-            TestIds.Territory1,
-            login.User!.Id,
-            "Loja Location",
-            null,
-            StoreStatus.Active,
-            paymentsEnabled: false,
-            StoreContactVisibility.Public,
-            null, null, null, null, null, null,
-            DateTime.UtcNow,
-            DateTime.UtcNow));
-
-        var plans = await client.GetFromJsonAsync<List<SubscriptionPlanResponse>>("api/v1/subscription-plans");
-        Assert.NotNull(plans);
-        var freePlan = plans!.First(p => p.Tier == "FREE");
-
-        var response = await client.PostAsJsonAsync(
-            $"api/v1/merchants/{storeId}/subscription",
-            new CreateMerchantSubscriptionRequest { PlanId = freePlan.Id });
-
-        if (response.StatusCode == HttpStatusCode.Created)
-        {
-            Assert.NotNull(response.Headers.Location);
-            Assert.StartsWith("/api/v1/subscriptions/", response.Headers.Location!.ToString());
-        }
-        else
-        {
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
     }
 
     [Fact] // AC-55-10
@@ -241,41 +278,5 @@ public sealed class MerchantsAndWalletsControllerTests
         second.EnsureSuccessStatusCode();
         var wallet2 = await second.Content.ReadFromJsonAsync<WalletResponse>();
         Assert.Equal(35.00m, wallet2!.Balance);
-    }
-
-    [Fact] // AC-55-11
-    public async Task GetMerchantConsumption_ConcurrentFirstReads_DoNotDuplicateMeters()
-    {
-        using var factory = new ApiFactory();
-        using var client = factory.CreateClient();
-        var login = await AuthTestHelper.LoginAndGetResponseAsync(client, "google", "merchant-cons-race", "consrace@Arah.com");
-        AuthTestHelper.SetAuthHeader(client, login.Token!);
-
-        var storeId = Guid.NewGuid();
-        factory.GetDataStore().TerritoryStores.Add(new Store(
-            storeId,
-            TestIds.Territory1,
-            login.User!.Id,
-            "Loja race",
-            null,
-            StoreStatus.Active,
-            false,
-            StoreContactVisibility.Public,
-            null, null, null, null, null, null,
-            DateTime.UtcNow,
-            DateTime.UtcNow));
-
-        var tasks = Enumerable.Range(0, 8)
-            .Select(_ => client.GetAsync($"api/v1/merchants/{storeId}/consumption"))
-            .ToArray();
-        var responses = await Task.WhenAll(tasks);
-        foreach (var response in responses)
-        {
-            response.EnsureSuccessStatusCode();
-            var meters = await response.Content.ReadFromJsonAsync<List<ConsumptionMeterResponse>>();
-            Assert.NotNull(meters);
-            Assert.Equal(3, meters!.Count);
-            Assert.Equal(3, meters.Select(m => m.Metric).Distinct().Count());
-        }
     }
 }

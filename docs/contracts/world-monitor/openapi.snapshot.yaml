@@ -1,0 +1,83 @@
+# OpenAPI snapshot — World Monitor (stub TI-0)
+#
+# Este arquivo NÃO é a OpenAPI completa do World Monitor.
+# Propósito: pin de versão/contrato para CI e documentação do adapter mock.
+#
+# Fonte canônica upstream (quando houver fetch autorizado fora do CI unitário):
+#   https://worldmonitor.app/openapi.yaml
+#
+# PIN
+#   upstream_document: worldmonitor.app/openapi.yaml
+#   pin_date: 2026-08-15
+#   pin_note: stub local até TI-701 (drift check). Não substitui o YAML completo.
+#   api_base: https://api.worldmonitor.app
+#   auth_header: X-WorldMonitor-Key
+#
+openapi: 3.0.3
+info:
+  title: World Monitor API (Arah TI-0 stub)
+  description: >
+    Stub mínimo para fixtures e pin de contrato. Endpoints listados são os
+    usados pelo MVP de ingestão (REST). Expandir/atualizar na TI-701 com
+    snapshot fiel do upstream.
+  version: "0.0.0-ti0-stub"
+  x-arah-pin:
+    date: "2026-08-15"
+    upstream: "https://worldmonitor.app/openapi.yaml"
+    status: stub
+servers:
+  - url: https://api.worldmonitor.app
+    description: Produção WM (não chamar no CI)
+paths:
+  /api/health:
+    get:
+      summary: Saúde agregada dos seeds
+      parameters:
+        - name: compact
+          in: query
+          schema:
+            type: integer
+            enum: [1]
+      responses:
+        "200":
+          description: >
+            Status HEALTHY|WARNING|DEGRADED|UNHEALTHY|REDIS_DOWN.
+            Exemplo sintético em fixtures/health.json.
+  /api/bootstrap:
+    get:
+      summary: Hidratação multi-payload (amostra em fixture; não usar na ingestão MVP)
+      responses:
+        "200":
+          description: data + missing
+  /api/climate/v1/get-climate-data:
+    get:
+      summary: Dados climáticos (RPC ilustrativo — path kebab conforme WM)
+      responses:
+        "200":
+          description: Amostra sintética
+  /api/natural-disasters/v1/get-natural-disasters:
+    get:
+      summary: Desastres naturais (RPC ilustrativo)
+      responses:
+        "200":
+          description: Amostra GDACS Socorro (sintética)
+  /api/batch/v1/execute:
+    post:
+      summary: Batch de até 20 GETs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Resultados por operação
+components:
+  securitySchemes:
+    WorldMonitorKey:
+      type: apiKey
+      in: header
+      name: X-WorldMonitor-Key
+security:
+  - WorldMonitorKey: []

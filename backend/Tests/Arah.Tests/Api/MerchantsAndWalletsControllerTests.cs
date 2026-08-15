@@ -240,18 +240,19 @@ public sealed class MerchantsAndWalletsControllerTests
 
         var balanceId = Guid.NewGuid();
         var balance = new SellerBalance(balanceId, TestIds.Territory1, login.User!.Id, "BRL");
-        balance.AddPendingAmount(5000);
-        balance.MoveToReadyForPayout(2000);
-        balance.MarkAsPaid(2000);
-        balance.AddPendingAmount(1500);
+        balance.AddPendingAmount(2500);
+        balance.MoveToReadyForPayout(2500);
+        balance.MarkAsPaid(2500); // historical payout — must not count as available
+        balance.AddPendingAmount(1000);
+        balance.MoveToReadyForPayout(400);
         factory.GetDataStore().SellerBalances.Add(balance);
 
         var response = await client.GetAsync($"api/v1/wallets/{balanceId}");
         response.EnsureSuccessStatusCode();
         var wallet = await response.Content.ReadFromJsonAsync<WalletResponse>();
         Assert.NotNull(wallet);
-        // Available = pending(1500) + ready(0) = 15.00; paid 20.00 must not inflate balance
-        Assert.Equal(15.00m, wallet!.Balance);
+        // Available = pending(600) + ready(400) = 10.00; paid 25.00 excluded (would be 35.00 if included)
+        Assert.Equal(10.00m, wallet!.Balance);
     }
 
     [Fact] // AC-55-10

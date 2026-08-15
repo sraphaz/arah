@@ -70,8 +70,10 @@ Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, cór
 | 59 | Federação | 🟡 P2→P1 | S3 | ⏳ Pendente | [FASE59.md](./backlog-api/FASE59.md) |
 | 60 | App Implementador | 🟡 P1 | S3 | ⏳ Pendente | [FASE60.md](./backlog-api/FASE60.md) |
 | 61 | Capital Territorial | 🟢 P2 | S3–S4 | ⏳ Pendente | [FASE61.md](./backlog-api/FASE61.md) |
+| 62 | Conformidade fiscal & KYC comercial (BR) | 🔴 P0 (62.0+a) | S1 | ⏳ Proposta | [FASE62.md](./backlog-api/FASE62.md) · [análise](../compliance/ANALISE_FISCAL_BR.md) · [packs/jornadas](../compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) |
 
-**Handoff**: [docs/handoff/](./handoff/README.md)
+**Handoff**: [docs/handoff/](./handoff/README.md)  
+**Análise fiscal BR**: [docs/compliance/ANALISE_FISCAL_BR.md](./compliance/ANALISE_FISCAL_BR.md)
 
 | Fase | Nome | Prioridade | Status | Documentação |
 |------|------|------------|--------|--------------|

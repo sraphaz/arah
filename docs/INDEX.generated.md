@@ -1,6 +1,6 @@
 # Índice gerado — docs
 
-> Gerado em **2026-08-10** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
+> Gerado em **2026-08-15** por `scripts/agents/generate-docs-index.ps1`. Não editar manualmente.
 > Exclui stubs `status: deprecated` na raiz (ver `_archive/`).
 
 | Documento | Owner | Updated |
@@ -230,6 +230,7 @@
 | [FASE6](docs/backlog-api/FASE6.md) | - | - |
 | [FASE60](docs/backlog-api/FASE60.md) | - | - |
 | [FASE61](docs/backlog-api/FASE61.md) | - | - |
+| [FASE62](docs/backlog-api/FASE62.md) | - | - |
 | [FASE7](docs/backlog-api/FASE7.md) | - | - |
 | [FASE8](docs/backlog-api/FASE8.md) | - | - |
 | [FASE9](docs/backlog-api/FASE9.md) | - | - |
@@ -309,6 +310,8 @@
 | [CHANGELOG](docs/CHANGELOG.md) | - | - |
 | [CI_CD_PIPELINE](docs/CI_CD_PIPELINE.md) | - | - |
 | [COMMUNITY_MODERATION](docs/COMMUNITY_MODERATION.md) | - | - |
+| [ANALISE_FISCAL_BR](docs/compliance/ANALISE_FISCAL_BR.md) | - | - |
+| [PACOTES_FISCAIS_POR_TERRITORIO](docs/compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) | - | - |
 | [CONFIRMACAO_FASE_15](docs/CONFIRMACAO_FASE_15.md) | - | - |
 | [CONNECTION_POOLING_METRICS](docs/CONNECTION_POOLING_METRICS.md) | - | - |
 | [COVERAGE_STATUS_2026](docs/COVERAGE_STATUS_2026.md) | - | - |

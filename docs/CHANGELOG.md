@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — FASE55 v0 merchants/wallets/consumption + TI-0 contratos + fix Dependabot board (2026-08-15)
+
+- API: `POST /api/v1/merchants/{id}/subscription`, `GET /api/v1/merchants/{id}/consumption`, `GET /api/v1/wallets/{id}` (AC-55-9…11)
+- Domínio: `Wallet`, `ConsumptionMeter`; serviços `MerchantCommercialService`, `WalletQueryService`
+- TI-0: decisões 1/19/20, ADRs 023/024, política de publicação, fixtures World Monitor, parecer jurídico pending
+- CI: `project-board-sync` não falha mais em PRs Dependabot sem `GH_PROJECT_TOKEN`
+
 ### Adicionado — WA-N1 NaturalAsset ponto (FASE24.0a) (2026-08-10)
 
 - Domínio `NaturalAsset` + `WaterPointDetails` (tipos `SPRING|WATERFALL|POTABLE_WATER`; status `PENDING→PUBLISHED`)

@@ -1,0 +1,35 @@
+{
+  "provider": "World Monitor",
+  "tool": "get_climate_data",
+  "fetchedAt": "2026-01-14T09:10:00Z",
+  "attributionText": "dados via World Monitor · fonte: amostra-clima",
+  "region": {
+    "iso2": "BR",
+    "adminHint": "BR-SP",
+    "bbox": [-46.70, -22.70, -46.40, -22.45]
+  },
+  "observations": [
+    {
+      "externalId": "CLIM-SYN-SOC-20260114",
+      "sourceName": "amostra-clima",
+      "category": "clima",
+      "severity": "atencao",
+      "title": "Precipitação acumulada elevada — Vale do Rio do Peixe",
+      "summary": "Acumulado 72h acima da mediana local (valor sintético para testes de contrato).",
+      "publishedAt": "2026-01-14T08:00:00Z",
+      "metrics": {
+        "precip_mm_72h": 118.5,
+        "unit": "mm"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-46.529, -22.591]
+      }
+    }
+  ],
+  "freshness": {
+    "status": "fresh",
+    "maxAgeMinutes": 90
+  },
+  "notes": "Fixture sintética TI-0 — não usar como previsão oficial."
+}

@@ -44,6 +44,7 @@ public sealed partial class InMemoryDataStore
     public List<TerritoryAsset> TerritoryAssets { get; } = new();
     public List<AssetGeoAnchor> AssetGeoAnchors { get; } = new();
     public List<AssetValidation> AssetValidations { get; } = new();
+    public List<NaturalAsset> NaturalAssets { get; } = new();
     public List<PostAsset> PostAssets { get; } = new();
     public List<Store> TerritoryStores { get; } = new();
     public List<StoreItem> StoreItems { get; } = new();

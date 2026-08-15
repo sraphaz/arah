@@ -242,7 +242,7 @@ Fases 20+                 ──►  Expansão funcional conforme roadmap origin
 
 | Risco | Mitigação |
 |-------|-----------|
-| **Conformidade financeira** (PSP, KYC, NF) | Tratar na Onda S1; consultoria regulatória cedo |
+| **Conformidade financeira** (PSP, KYC, NF) | Onda S1 — materializado em [ANALISE_FISCAL_BR](../compliance/ANALISE_FISCAL_BR.md) + [FASE62](./FASE62.md); consultoria regulatória cedo |
 | **Complexidade multi-instância** | Começar managed; soberano só na Onda S3 |
 | **Dependência do Core** | Modo autônomo da instância; cache de identidade |
 | **Governança das taxas** | Processo de conselho maduro; nunca retroagir regras |

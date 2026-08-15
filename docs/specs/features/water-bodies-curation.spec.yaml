@@ -1,0 +1,103 @@
+id: water-bodies-curation
+version: "0.2.1"
+title: "Corpos d'água curáveis do território (rios, córregos, nascentes, fontes)"
+owner: backend
+status: draft
+phase: FASE24
+
+intent: |
+  Permitir que a comunidade cadastre, curadore e cuide de corpos d'água
+  (rios, córregos, nascentes, fontes, poços) como NaturalAsset tipado —
+  fora de Territory, escopados por territoryId, nunca vendáveis.
+  WaterBody é alias de produto/API (não entidade persistida separada).
+  Fundação para observações de saúde hídrica (FASE24) e vínculo com posts/mapa.
+  Slice WA-E1 (ponte): TerritoryAsset.type=natural + subtype allowlist;
+  Slice WA-E2: map pins filtráveis (sem HIGH/RESTRICTED ainda);
+  Slice WA-E4: Flutter UX criar/curar via ponte TerritoryAsset;
+  Slice WA-N1 (FASE24.0a): NaturalAsset ponto SPRING|WATERFALL|POTABLE_WATER
+  + API create/list/get/publish; RIVER/STREAM/LineString e sensibilidade em 24.0b+.
+
+# Vocabulário canônico NATURAL_ASSET.type (UPPERCASE):
+#   RIVER | STREAM | SPRING | WATERFALL | POTABLE_WATER | NATIVE_TREE | SANCTUARY | VIEWPOINT | TRAIL
+# WELL não é tipo top-level: usa POTABLE_WATER + WATER_POINT_DETAILS.water_type=WELL.
+# Ponte TerritoryAsset (minúsculas → canônico): river→RIVER, stream→STREAM, spring→SPRING,
+#   waterfall→WATERFALL, well→POTABLE_WATER+WELL, potable_water→POTABLE_WATER.
+# Máquinas de estado:
+#   NaturalAsset: PENDING → PUBLISHED | HIDDEN | REVIEW
+#   TerritoryAsset (ponte): PENDING → VALIDATED
+
+acceptance:
+  - id: AC-WA-1
+    when: "Quando um Resident (ou Curator) cria um corpo d'água pontual no território com tipo hídrico canônico válido"
+    then: >
+      o sistema persiste NaturalAsset escopada por territoryId em status PENDING com geolocalização
+      ponto (lat/lng em ranges válidos) para SPRING, WATERFALL ou POTABLE_WATER
+    status: covered
+    notes: "WA-N1. Curso d'água (RIVER/STREAM + LineString) → AC-WA-3 / 24.0b."
+    covered_by:
+      - "FullyQualifiedName~WaterBodyDomainTests"
+      - "FullyQualifiedName~WaterBodyHttpIntegrationTests"
+  - id: AC-WA-2
+    when: "Quando um Curator valida o corpo d'água no modelo-alvo NaturalAsset"
+    then: >
+      o status passa a PUBLISHED; a entidade aparece em listagens para quem tem direito de leitura no território
+    status: covered
+    notes: "WA-N1: publish + list HTTP. Mapa canônico NaturalAsset e ponte TerritoryAsset VALIDATED permanecem em slices posteriores."
+    covered_by:
+      - "FullyQualifiedName~WaterBodyDomainTests.Publish_FromPending_SetsPublished"
+      - "FullyQualifiedName~WaterBodyHttpIntegrationTests.Create_List_Get_Publish_PointNaturalAsset"
+  - id: AC-WA-3
+    when: "Quando o tipo é RIVER ou STREAM"
+    then: >
+      WATERCOURSE_DETAILS é obrigatório (path_geojson LineString, flow_regime, community_use);
+      anexar WATERCOURSE_DETAILS a outros tipos é rejeitado (400)
+    status: pending
+  - id: AC-WA-4
+    when: "Quando sensitivity_level=HIGH ou access_level=RESTRICTED (nascente/captação sensível)"
+    then: >
+      create/update sem autorização territorial é rejeitado; list/get/mapa/pins/posts/observações
+      filtram ou omitem coordenadas e detalhes sensíveis para quem não está autorizado;
+      Curator valida publicação, mas leitura sensível exige regra de autorização de leitura no servidor
+    status: pending
+  - id: AC-WA-5
+    when: "Quando um Post ou HealthObservation referencia o corpo d'água"
+    then: >
+      o payload usa naturalAssetId (mesmo territoryId do conteúdo); autorização e escopo territorial
+      são validados no servidor; Territory permanece sem lógica hídrica embutida
+    status: pending
+  - id: AC-WA-6
+    when: "Quando se tenta expor o corpo d'água como item de marketplace"
+    then: "o sistema rejeita — NaturalAsset/TerritoryAsset hídrico nunca é vendável"
+    status: covered
+    covered_by:
+      - "FullyQualifiedName~WaterBodyDomainTests.MarketplaceExposure_AlwaysRejected"
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter \"FullyQualifiedName~Asset|FullyQualifiedName~Natural|FullyQualifiedName~Water\""
+  agents:
+    - backend
+    - flutter
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/CORPOS_DAGUA_TERRITORIO.md
+    - docs/backlog-api/FASE24.md
+    - docs/funcional/09_ASSETS.md
+    - docs/product/05_GLOSSARY.md
+    - docs/backend/12_DOMAIN_MODEL.md
+    - docs/api/60_08_API_ASSETS.md
+  tests:
+    - "FullyQualifiedName~WaterBodyDomainTests (AC-WA-1 parcial, AC-WA-2, AC-WA-6)"
+    - "FullyQualifiedName~WaterBodyHttpIntegrationTests (create/list/get/publish ponto)"
+    - "FullyQualifiedName~WaterBodySensitivityTests (AC-WA-4) — planejado"
+    - "FullyQualifiedName~WaterBodyReferenceHttpTests (AC-WA-5) — planejado"
+
+guardrails:
+  - territory-first
+  - territory-is-geographic-only
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+  - no-marketplace-for-natural-assets

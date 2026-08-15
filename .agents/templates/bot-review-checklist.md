@@ -4,14 +4,16 @@
 
 ### Regra obrigatória
 
-**Todo apontamento de bot deve ser resolvido ou respondido** antes de merge. Não deixar threads abertas em arquivos alterados neste PR.
+**Threads inline de bots de review** (CodeRabbit, Bugbot, Codex, …) devem ser resolvidas ou respondidas antes do merge.
+
+Sinalizações Arah (`arah-domain-consult`, `arah-agent-activity`, templates QA/Security) **não** bloqueiam sozinhas — mas exigem seção **Pareceres endereçados** no corpo do PR.
 
 ### Checklist
 
 - [ ] CI verde (build-test, Flutter, Agents Gates, CodeQL)
-- [ ] CodeRabbit / reviews — todos os threads tratados
-- [ ] Dependabot / segurança — CVEs novas endereçadas ou justificadas
-- [ ] Comentários inline em arquivos do diff — resolvidos ou respondidos
+- [ ] Threads inline de review bots — resolvidas ou respondidas
+- [ ] Dependabot / CVE (se aplicável) — endereçadas ou justificadas
+- [ ] Seção **Pareceres endereçados** preenchida no corpo do PR
 - [ ] `sync-docs-check` sem erros bloqueantes
 - [ ] Corpo do PR preenchido (template agente)
 
@@ -24,8 +26,8 @@
 
 ### Merge
 
-- Steward posta **ready-for-merge** quando `pr-ready` passa.
+- Steward posta **ready-for-merge** quando audit.ready (CI OK + zero threads de review pendentes).
 - **Humano** executa merge (ou `workflow_dispatch` em `agents-pr-steward.yml` com confirmação).
 
 ---
-_Automático via `agents-pr-steward.yml`_
+_Automático via `agents-pr-steward.yml` — contagem filtra ruído Arah (ver `address-bot-review.ps1`)._

@@ -39,7 +39,11 @@ class AssetsNotifier extends StateNotifier<AssetsState> {
     }
   }
 
-  Future<void> createAsset({required String name, required String type}) async {
+  Future<void> createAsset({
+    required String name,
+    required String type,
+    String? subtype,
+  }) async {
     final territoryId = _ref.read(selectedTerritoryIdValueProvider);
     final geo = _ref.read(geoLocationStateProvider);
     if (territoryId == null || territoryId.isEmpty || geo == null) return;
@@ -47,6 +51,7 @@ class AssetsNotifier extends StateNotifier<AssetsState> {
       territoryId: territoryId,
       type: type,
       name: name,
+      subtype: subtype,
       latitude: geo.latitude,
       longitude: geo.longitude,
     );

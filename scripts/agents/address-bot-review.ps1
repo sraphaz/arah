@@ -1,9 +1,20 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Audita apontamentos de bots em um PR e lista threads não resolvidas.
+  Audita apontamentos de bots em um PR (só o que bloqueia merge).
+
+  Conta como pendente:
+  - Threads inline NÃO resolvidas de bots de review (CodeRabbit, Bugbot, Codex, etc.)
+  - Checks CI falhando
+
+  NÃO conta (ruído de sinalização Arah):
+  - Comentários arah-domain-consult / arah-agent-activity / arah-orchestrator
+  - Templates QA/Security/Steward (arah-qa-gate, arah-security-gate, arah-pr-steward)
+  - arah-pr-graph / arah-bot-response / respostas de consumo (Pareceres endereçados)
+  - Autores github-actions em comentários de issue (publicação passiva)
+
 .EXAMPLE
-  ./address-bot-review.ps1 -PrNumber 297
+  ./address-bot-review.ps1 -PrNumber 297 -Json
 #>
 param(
     [Parameter(Mandatory)]
@@ -19,51 +30,109 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+function Test-ArahSignalComment {
+    param([string]$Body)
+    if ([string]::IsNullOrWhiteSpace($Body)) { return $false }
+    return [bool]($Body -match '(?i)(<!--\s*arah-(domain-consult|agent-activity|orchestrator|qa-gate|security-gate|pr-steward|pr-graph|bot-response|agent-reply))') `
+        -or [bool]($Body -match '(?i)(##\s*PR Steward|##\s*QA Agent — Checklist|##\s*Security Agent — Relatório|##\s*Resposta aos bots|##\s*Pareceres endereçados|##\s*Agent Graph \(PR\))')
+}
+
+function Test-ReviewBotAuthor {
+    param([string]$Author)
+    # Bots de review inline — não incluir github-actions (sinalização Arah)
+    return [bool]($Author -match '(?i)(coderabbit|bugbot|chatgpt-codex|codex|cursor|trivy|codeql|dependabot)')
+}
+
 Push-Location $Root
 try {
     $repo = gh repo view --json nameWithOwner -q .nameWithOwner
+    $owner, $name = $repo -split '/'
     $pr = gh pr view $PrNumber --json title,state,headRefName,baseRefName,statusCheckRollup | ConvertFrom-Json
 
-    $botPattern = '(?i)(coderabbit|dependabot|github-actions|cursor|bugbot|codeql|codex|trivy|\[bot\])'
-    $ignoreBodyPattern = '(?i)(review limit reached|rate limited|about codex in github|thanks for using \[coderabbit\])'
+    $botItems = @()
+    $ignoredSignal = 0
 
-    $reviewComments = gh api "repos/$repo/pulls/$PrNumber/comments" --paginate 2>$null | ConvertFrom-Json
-    if (-not $reviewComments) { $reviewComments = @() }
-    if ($reviewComments -isnot [array]) { $reviewComments = @($reviewComments) }
+    # --- Threads inline não resolvidas (fonte autoritativa) ---
+    $gq = @'
+query($owner:String!,$name:String!,$n:Int!){
+  repository(owner:$owner,name:$name){
+    pullRequest(number:$n){
+      reviewThreads(first:100){
+        nodes{
+          isResolved
+          comments(first:1){
+            nodes{ author{ login } body path url: url }
+          }
+        }
+      }
+    }
+  }
+}
+'@
+    $threadsJson = gh api graphql -f query=$gq -F owner=$owner -F name=$name -F n=$PrNumber 2>$null
+    if ($threadsJson) {
+        $threadsData = $threadsJson | ConvertFrom-Json
+        $nodes = @($threadsData.data.repository.pullRequest.reviewThreads.nodes)
+        foreach ($t in $nodes) {
+            if ($t.isResolved) { continue }
+            $c0 = $t.comments.nodes | Select-Object -First 1
+            if (-not $c0) { continue }
+            $author = [string]$c0.author.login
+            if (-not (Test-ReviewBotAuthor -Author $author)) { continue }
+            $body = [string]$c0.body
+            if (Test-ArahSignalComment -Body $body) { $ignoredSignal++; continue }
+            if ($body -match '(?i)(already resolved|fixed in|endereçado|resolvido|arah-bot-response)') { continue }
+            $botItems += [ordered]@{
+                kind   = 'unresolved_thread'
+                author = $author
+                path   = $c0.path
+                line   = $null
+                body   = $(if ($body.Length -gt 0) { ($body -replace '\s+', ' ').Substring(0, [Math]::Min(200, $body.Length)) } else { '' })
+                url    = $c0.url
+            }
+        }
+    }
 
+    # Fallback: review comments da API REST se GraphQL falhar / vazio e ainda houver inline
+    if ($botItems.Count -eq 0 -and -not $threadsJson) {
+        $reviewComments = gh api "repos/$repo/pulls/$PrNumber/comments" --paginate 2>$null | ConvertFrom-Json
+        if (-not $reviewComments) { $reviewComments = @() }
+        if ($reviewComments -isnot [array]) { $reviewComments = @($reviewComments) }
+        foreach ($c in $reviewComments) {
+            $author = [string]$c.user.login
+            if (-not (Test-ReviewBotAuthor -Author $author)) { continue }
+            if (Test-ArahSignalComment -Body ([string]$c.body)) { $ignoredSignal++; continue }
+            $botItems += [ordered]@{
+                kind   = 'review_comment'
+                author = $author
+                path   = $c.path
+                line   = $c.line
+                body   = $(if ($c.body -and $c.body.Length -gt 0) { ($c.body -replace '\s+', ' ').Substring(0, [Math]::Min(200, $c.body.Length)) } else { '' })
+                url    = $c.html_url
+            }
+        }
+    }
+
+    # Issue comments: só Dependabot/CodeRabbit com alerta acionável — nunca github-actions Arah
     $issueComments = gh api "repos/$repo/issues/$PrNumber/comments" --paginate 2>$null | ConvertFrom-Json
     if (-not $issueComments) { $issueComments = @() }
     if ($issueComments -isnot [array]) { $issueComments = @($issueComments) }
-
-    $reviews = gh api "repos/$repo/pulls/$PrNumber/reviews" --paginate 2>$null | ConvertFrom-Json
-    if (-not $reviews) { $reviews = @() }
-    if ($reviews -isnot [array]) { $reviews = @($reviews) }
-
-    $botItems = @()
-    foreach ($c in $reviewComments) {
-        $author = [string]$c.user.login
-        if ($author -notmatch $botPattern) { continue }
-        if ($c.body -and $c.body -match $ignoreBodyPattern) { continue }
-        $botItems += [ordered]@{
-            kind   = 'review_comment'
-            author = $author
-            path   = $c.path
-            line   = $c.line
-            body   = $(if ($c.body -and $c.body.Length -gt 0) { ($c.body -replace '\s+', ' ').Substring(0, [Math]::Min(200, $c.body.Length)) } else { '' })
-            url    = $c.html_url
-        }
-    }
     foreach ($c in $issueComments) {
         $author = [string]$c.user.login
-        if ($author -notmatch $botPattern) { continue }
-        if ($c.body -and $c.body -match $ignoreBodyPattern) { continue }
-        $botItems += [ordered]@{
-            kind   = 'issue_comment'
-            author = $author
-            path   = $null
-            line   = $null
-            body   = $(if ($c.body -and $c.body.Length -gt 0) { ($c.body -replace '\s+', ' ').Substring(0, [Math]::Min(200, $c.body.Length)) } else { '' })
-            url    = $c.html_url
+        $body = [string]$c.body
+        if (Test-ArahSignalComment -Body $body) { $ignoredSignal++; continue }
+        if ($author -match '(?i)^github-actions') { $ignoredSignal++; continue }
+        # Resumos CodeRabbit "Review skipped" / draft — não bloqueiam
+        if ($body -match '(?i)(review skipped|draft detected|summary by coderabbit)') { continue }
+        if ($author -match '(?i)(dependabot)' -and $body -match '(?i)(security|vulnerabilit|CVE)') {
+            $botItems += [ordered]@{
+                kind   = 'issue_comment'
+                author = $author
+                path   = $null
+                line   = $null
+                body   = $(if ($body.Length -gt 0) { ($body -replace '\s+', ' ').Substring(0, [Math]::Min(200, $body.Length)) } else { '' })
+                url    = $c.html_url
+            }
         }
     }
 
@@ -90,30 +159,29 @@ try {
                     }
                 }
             }
-        } catch {
-            # gh pr checks unavailable — rely on statusCheckRollup only
-        }
+        } catch { }
     }
 
     $ciReady = ($failedChecks.Count -eq 0)
     $botsPending = ($botItems.Count -gt 0)
 
     $result = [ordered]@{
-        pr            = $PrNumber
-        title         = $pr.title
-        state         = $pr.state
-        bot_comments  = $botItems.Count
-        bot_items     = $botItems
-        failed_checks = $failedChecks
-        ci_ready      = $ciReady
-        bots_pending  = $botsPending
-        ready         = ($ciReady -and -not $botsPending)
-        message       = if (-not $ciReady) {
+        pr                 = $PrNumber
+        title              = $pr.title
+        state              = $pr.state
+        bot_comments       = $botItems.Count
+        bot_items          = $botItems
+        ignored_signal     = $ignoredSignal
+        failed_checks      = $failedChecks
+        ci_ready           = $ciReady
+        bots_pending       = $botsPending
+        ready              = ($ciReady -and -not $botsPending)
+        message            = if (-not $ciReady) {
             "CI/checks falhando: $($failedChecks -join ', ')"
         } elseif ($botsPending) {
-            "$($botItems.Count) apontamento(s) de bot — revisar e resolver/responder antes do merge"
+            "$($botItems.Count) thread(s)/alerta(s) de bot de review — resolver/responder antes do merge (ignorados $ignoredSignal sinalizações Arah)"
         } else {
-            'CI OK e sem apontamentos de bot pendentes; validar reviews humanas.'
+            "CI OK; sem threads de review pendentes (ignoradas $ignoredSignal sinalizações Arah). Validar reviews humanas."
         }
     }
 

@@ -44,6 +44,7 @@ python -m http.server 8080
 
 - **[REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](../../backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md)** — ondas, âncoras FASE23/24/44/53
 - **TI-0…TI-7**: [TI0](../../backlog-api/TI0.md) … [TI7](../../backlog-api/TI7.md)
+- **TI-0 (docs/contratos)**: [Decisões 1/19/20](../../backlog-api/TI0-DECISOES.md) · [Política modelo](../../backlog-api/TI0-POLITICA-PUBLICACAO-MODELO.md) · [Parecer WM (pending)](../../legal/TI0-PARECER-WORLD-MONITOR.md) · [Contratos/fixtures WM](../../contracts/world-monitor/) · [ADR-023](../../architecture/adrs/ADR-023-intelligence-provider-abstraction.md) · [ADR-024](../../architecture/adrs/ADR-024-world-monitor-rest-mvp-mcp-agents.md)
 - Spec exemplo: [TI-201](../../specs/features/TI-201-signal-review.spec.yaml)
 - C4 atualizado (container Intelligence): [Arquitetura C4](../arquitetura-c4/Arquitetura%20C4%20Arah.dc.html)
 - Backlog HTML atualizado (bloco TI): [Backlog Atualizado](../arquitetura-c4/Backlog%20Atualizado%20-%20Arah.dc.html)

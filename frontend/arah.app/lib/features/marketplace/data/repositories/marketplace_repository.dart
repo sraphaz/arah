@@ -1,6 +1,7 @@
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/network/bff_client.dart';
 import '../models/marketplace_item.dart';
+import '../models/seller_balance.dart';
 import '../models/store_item.dart';
 import '../models/store_product.dart';
 
@@ -150,6 +151,27 @@ class MarketplaceRepository {
       throw ApiException('HTTP ${response.statusCode}', statusCode: response.statusCode);
     }
     return MyStore.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  /// GET territories/{id}/seller-balance/me — 404 ⇒ saldo zerado (ainda sem vendas).
+  Future<SellerBalance> getSellerBalance(String territoryId) async {
+    try {
+      final response = await _client.get(
+        'territories',
+        '$territoryId/seller-balance/me',
+      );
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw ApiException(
+          'HTTP ${response.statusCode}',
+          statusCode: response.statusCode,
+        );
+      }
+      return SellerBalance.fromJson(response.data as Map<String, dynamic>);
+    } on ApiException catch (e) {
+      // Dio/BffClient lança em 404 — sem ledger ainda = zeros, não erro de UI.
+      if (e.statusCode == 404) return SellerBalance.zero();
+      rethrow;
+    }
   }
 
   /// GET marketplace-v1/items?territoryId= — filtra por storeId no cliente.

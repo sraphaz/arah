@@ -85,13 +85,20 @@
 
 **Como usar**:
 - Exige autenticação
-- Query params: `territoryId` (opcional), `type` (filtro opcional: entity, post, asset, alert, event)
+- Query params:
+  - `territoryId` (opcional, usa território ativo se não informado)
+  - `types` (CSV opcional: `entity`, `post`, `event`, `asset`, `alert`, `media`)
+  - `assetId` (opcional — restringe a um asset)
+  - `assetTypes` (CSV opcional — no **mapa** casa com `Type` **ou** `Subtype`; legado + WA-E2)
+  - `assetSubtypes` (CSV opcional — casa apenas com `Subtype`; ex.: `river,stream,spring`)
 - Header `X-Session-Id` para identificar território ativo
 
 **Regras de negócio**:
 - **Visibilidade**: Respeita regras de visibilidade de cada tipo de conteúdo
-- **Filtros**: `type` filtra por tipo de pin
-- **Retorno**: Dados mínimos para projeção no mapa (coordenadas, ID, tipo, título básico)
+- **Assets no mapa**: apenas status `Active` (após curadoria)
+- **Retorno**: coordenadas, IDs, tipo de pin, título; para assets também `assetType` e `assetSubtype`
+- **Sensibilidade**: omitir HIGH/RESTRICTED ainda não aplica na ponte TerritoryAsset (acompanhamento FASE24.0 / AC-WA-4)
+- **Nota**: `GET /api/v1/assets?types=` continua filtrando só por `Type` (não por Subtype)
 
 ### Obter Pins do Mapa Paginados (`GET /api/v1/map/pins/paged`)
 
@@ -99,13 +106,13 @@
 
 **Como usar**:
 - Exige autenticação
-- Query params: `territoryId` (opcional), `type` (filtro opcional), `pageNumber` (padrão: 1), `pageSize` (padrão: 20)
+- Query params: mesmos de `/pins` + `pageNumber` (padrão: 1), `pageSize` (padrão: 20)
 - Header `X-Session-Id` para identificar território ativo
 
 **Regras de negócio**:
 - **Paginação**: Padrão 20 itens por página
 - **Visibilidade**: Respeita regras de visibilidade de cada tipo de conteúdo
-- **Filtros**: `type` filtra por tipo de pin
+- **Filtros**: `types` / `assetTypes` / `assetSubtypes` como em `/pins`
 - **Retorno**: `PagedResponse<MapPinResponse>` com metadados de paginação
 
 ---
@@ -117,6 +124,7 @@
 - **[Assets](./60_08_API_ASSETS.md)** - Assets aparecem como pins no mapa
 - **[Alertas](./60_07_API_ALERTAS.md)** - Alertas aparecem como pins no mapa
 - **[Regras de Visibilidade](./60_17_API_VISIBILIDADE.md)** - Visibilidade de entidades
+- **[Corpos d'água](../backlog-api/CORPOS_DAGUA_TERRITORIO.md)** - WA-E2 filtros hídricos
 
 ---
 

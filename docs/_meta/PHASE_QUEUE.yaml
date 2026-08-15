@@ -44,7 +44,11 @@ queue:
     blocked_by: []
     # Web abertos: DSG-04 (espaçamento 8px portal), DSG-06 (glass cross), DSG-07 (syntax WCAG).
     # DSG-01/02/03/05/08 já corrigidos.
-    # App×UI kit: docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md (APP-DS-01..15).
+    # App×UI kit: docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md (APP-DS-01..17).
+    # Feito 2026-08-10: WA-N1 NaturalAsset ponto (FASE24.0a).
+    # Feito 2026-08-10: WA-E4 UX curadoria corpos d'água (Flutter).
+    # Feito 2026-08-09: WA-E2 pins/filtros corpos d'água (mapa).
+    # Feito 2026-08-08: APP-DS-17 saldo vendedor (Onda I); APP-DS-16 foto do produto (Onda H).
     # Feito 2026-08-05: APP-DS-15 produtos/QR/Em breve (Onda G); APP-DS-14 checkout PIX (Onda F); APP-DS-12 motion (Onda E).
     # Feito 2026-07-23: APP-DS-01..11 + 13 (Onda A–D).
 
@@ -86,6 +90,16 @@ queue:
     priority: P0
     wave: S1
     blocked_by: [FASE52, FASE53, FASE54]
+
+  - id: FASE62
+    title: "FASE62 — Conformidade fiscal & KYC comercial (BR)"
+    area: area/backend
+    doc: docs/backlog-api/FASE62.md
+    spec_id: FASE62-fiscal-kyc-br
+    priority: P0
+    wave: S1
+    blocked_by: [FASE55]
+    # Análise: docs/compliance/ANALISE_FISCAL_BR.md — 62.a P0; 62.b/c P1
 
   - id: FASE56
     title: "FASE56 — Transparência e Taxas"

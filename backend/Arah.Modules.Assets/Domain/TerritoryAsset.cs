@@ -6,6 +6,7 @@ namespace Arah.Modules.Assets.Domain;
 /// TerritoryAssets não representam mídia (foto, vídeo, documento, link) - mídia deve ser tratada como
 /// registro/evidência associada a um TerritoryAsset, Event ou Post.
 /// O campo Type deve representar o tipo de recurso territorial (ex.: "natural", "cultural", "community", "infrastructure", "knowledge").
+/// Subtype tipifica recursos naturais (ex.: river, spring) quando Type = natural (WA-E1).
 /// </summary>
 public sealed class TerritoryAsset
 {
@@ -22,11 +23,12 @@ public sealed class TerritoryAsset
         DateTime updatedAtUtc,
         Guid? archivedByUserId,
         DateTime? archivedAtUtc,
-        string? archiveReason)
+        string? archiveReason,
+        string? subtype = null)
     {
         Id = id;
         TerritoryId = territoryId;
-        Type = type;
+        ApplyTypeAndSubtype(type, subtype);
         Name = name;
         Description = description;
         Status = status;
@@ -46,7 +48,13 @@ public sealed class TerritoryAsset
     /// </summary>
     public Guid TerritoryId { get; }
     
-    public string Type { get; private set; }
+    public string Type { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// Especialização opcional quando Type = natural (river, stream, spring, waterfall, well, potable_water).
+    /// </summary>
+    public string? Subtype { get; private set; }
+
     public string Name { get; private set; }
     public string? Description { get; private set; }
     public AssetStatus Status { get; private set; }
@@ -78,9 +86,10 @@ public sealed class TerritoryAsset
         string name,
         string? description,
         Guid updatedByUserId,
-        DateTime updatedAtUtc)
+        DateTime updatedAtUtc,
+        string? subtype = null)
     {
-        Type = type;
+        ApplyTypeAndSubtype(type, subtype);
         Name = name;
         Description = description;
         UpdatedByUserId = updatedByUserId;
@@ -117,5 +126,19 @@ public sealed class TerritoryAsset
         ArchiveReason = string.IsNullOrWhiteSpace(reason) ? null : reason.Trim();
         UpdatedByUserId = rejectedByUserId;
         UpdatedAtUtc = rejectedAtUtc;
+    }
+
+    private void ApplyTypeAndSubtype(string type, string? subtype)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(type);
+        var normalizedType = type.Trim().ToLowerInvariant();
+        var normalizedSubtype = NaturalWaterSubtype.Normalize(subtype);
+        if (!NaturalWaterSubtype.TryValidate(normalizedType, normalizedSubtype, out var error))
+        {
+            throw new ArgumentException(error ?? "Invalid type/subtype combination.", nameof(subtype));
+        }
+
+        Type = normalizedType;
+        Subtype = normalizedSubtype;
     }
 }

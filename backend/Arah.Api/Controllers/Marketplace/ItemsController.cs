@@ -169,6 +169,7 @@ public sealed class ItemsController : ControllerBase
             request.Latitude,
             request.Longitude,
             status,
+            request.MediaIds,
             cancellationToken);
 
         if (!result.IsSuccess || result.Value is null)

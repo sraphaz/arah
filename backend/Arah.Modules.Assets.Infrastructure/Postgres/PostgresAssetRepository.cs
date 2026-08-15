@@ -20,33 +20,11 @@ public sealed class PostgresAssetRepository : ITerritoryAssetRepository
         IReadOnlyCollection<string>? types,
         AssetStatus? status,
         string? search,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null,
+        IReadOnlyCollection<string>? typesOrSubtypes = null)
     {
-        IQueryable<TerritoryAssetRecord> query = _dbContext.TerritoryAssets.AsNoTracking()
-            .Where(asset => asset.TerritoryId == territoryId);
-
-        if (assetId is not null)
-        {
-            query = query.Where(asset => asset.Id == assetId);
-        }
-
-        if (types is not null && types.Count > 0)
-        {
-            query = query.Where(asset => types.Contains(asset.Type));
-        }
-
-        if (status is not null)
-        {
-            query = query.Where(asset => asset.Status == status);
-        }
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var pattern = $"%{search}%";
-            query = query.Where(asset => EF.Functions.ILike(asset.Name, pattern) ||
-                                         (asset.Description != null && EF.Functions.ILike(asset.Description, pattern)));
-        }
-
+        var query = BuildQuery(territoryId, assetId, types, status, search, subtypes, typesOrSubtypes);
         var records = await query.ToListAsync(cancellationToken);
         return records.Select(record => record.ToDomain()).ToList();
     }
@@ -92,6 +70,7 @@ public sealed class PostgresAssetRepository : ITerritoryAssetRepository
         }
 
         record.Type = asset.Type;
+        record.Subtype = asset.Subtype;
         record.Name = asset.Name;
         record.Description = asset.Description;
         record.Status = asset.Status;
@@ -110,33 +89,11 @@ public sealed class PostgresAssetRepository : ITerritoryAssetRepository
         string? search,
         int skip,
         int take,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null,
+        IReadOnlyCollection<string>? typesOrSubtypes = null)
     {
-        IQueryable<TerritoryAssetRecord> query = _dbContext.TerritoryAssets.AsNoTracking()
-            .Where(asset => asset.TerritoryId == territoryId);
-
-        if (assetId is not null)
-        {
-            query = query.Where(asset => asset.Id == assetId);
-        }
-
-        if (types is not null && types.Count > 0)
-        {
-            query = query.Where(asset => types.Contains(asset.Type));
-        }
-
-        if (status is not null)
-        {
-            query = query.Where(asset => asset.Status == status);
-        }
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var pattern = $"%{search}%";
-            query = query.Where(asset => EF.Functions.ILike(asset.Name, pattern) ||
-                                         (asset.Description != null && EF.Functions.ILike(asset.Description, pattern)));
-        }
-
+        var query = BuildQuery(territoryId, assetId, types, status, search, subtypes, typesOrSubtypes);
         var records = await query
             .OrderByDescending(asset => asset.CreatedAtUtc)
             .Skip(skip)
@@ -151,35 +108,105 @@ public sealed class PostgresAssetRepository : ITerritoryAssetRepository
         IReadOnlyCollection<string>? types,
         AssetStatus? status,
         string? search,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<string>? subtypes = null,
+        IReadOnlyCollection<string>? typesOrSubtypes = null)
     {
-        IQueryable<TerritoryAssetRecord> query = _dbContext.TerritoryAssets
-            .Where(asset => asset.TerritoryId == territoryId);
-
-        if (assetId is not null)
-        {
-            query = query.Where(asset => asset.Id == assetId);
-        }
-
-        if (types is not null && types.Count > 0)
-        {
-            query = query.Where(asset => types.Contains(asset.Type));
-        }
-
-        if (status is not null)
-        {
-            query = query.Where(asset => asset.Status == status);
-        }
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var pattern = $"%{search}%";
-            query = query.Where(asset => EF.Functions.ILike(asset.Name, pattern) ||
-                                         (asset.Description != null && EF.Functions.ILike(asset.Description, pattern)));
-        }
-
+        var query = BuildQuery(territoryId, assetId, types, status, search, subtypes, typesOrSubtypes);
         const int maxInt32 = int.MaxValue;
         var count = await query.CountAsync(cancellationToken);
         return count > maxInt32 ? maxInt32 : (int)count;
+    }
+
+    private IQueryable<TerritoryAssetRecord> BuildQuery(
+        Guid territoryId,
+        Guid? assetId,
+        IReadOnlyCollection<string>? types,
+        AssetStatus? status,
+        string? search,
+        IReadOnlyCollection<string>? subtypes,
+        IReadOnlyCollection<string>? typesOrSubtypes)
+    {
+        var query = _dbContext.TerritoryAssets.AsNoTracking()
+            .Where(asset => asset.TerritoryId == territoryId);
+
+        query = ApplyIdentityFilter(query, assetId);
+        query = ApplyClassificationFilters(query, types, subtypes, typesOrSubtypes);
+        query = ApplyStatusFilter(query, status);
+        query = ApplySearchFilter(query, search);
+        return query;
+    }
+
+    private static IQueryable<TerritoryAssetRecord> ApplyIdentityFilter(
+        IQueryable<TerritoryAssetRecord> query,
+        Guid? assetId)
+    {
+        if (assetId is null)
+        {
+            return query;
+        }
+
+        return query.Where(asset => asset.Id == assetId);
+    }
+
+    private static IQueryable<TerritoryAssetRecord> ApplyClassificationFilters(
+        IQueryable<TerritoryAssetRecord> query,
+        IReadOnlyCollection<string>? types,
+        IReadOnlyCollection<string>? subtypes,
+        IReadOnlyCollection<string>? typesOrSubtypes)
+    {
+        var normalizedTypes = TerritoryAssetTypeMatch.NormalizeFilter(types);
+        var normalizedSubtypes = TerritoryAssetTypeMatch.NormalizeFilter(subtypes);
+        var normalizedTypesOrSubtypes = TerritoryAssetTypeMatch.NormalizeFilter(typesOrSubtypes);
+
+        if (normalizedTypes is not null)
+        {
+            var typeList = normalizedTypes.ToList();
+            query = query.Where(asset => typeList.Contains(asset.Type));
+        }
+
+        if (normalizedSubtypes is not null)
+        {
+            var subtypeList = normalizedSubtypes.ToList();
+            query = query.Where(asset => asset.Subtype != null && subtypeList.Contains(asset.Subtype));
+        }
+
+        if (normalizedTypesOrSubtypes is not null)
+        {
+            // Mapa assetTypes: legado type=river OU ponte natural+subtype.
+            var keys = normalizedTypesOrSubtypes.ToList();
+            query = query.Where(asset =>
+                keys.Contains(asset.Type) ||
+                (asset.Subtype != null && keys.Contains(asset.Subtype)));
+        }
+
+        return query;
+    }
+
+    private static IQueryable<TerritoryAssetRecord> ApplyStatusFilter(
+        IQueryable<TerritoryAssetRecord> query,
+        AssetStatus? status)
+    {
+        if (status is null)
+        {
+            return query;
+        }
+
+        return query.Where(asset => asset.Status == status);
+    }
+
+    private static IQueryable<TerritoryAssetRecord> ApplySearchFilter(
+        IQueryable<TerritoryAssetRecord> query,
+        string? search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+        {
+            return query;
+        }
+
+        var pattern = $"%{search}%";
+        return query.Where(asset =>
+            EF.Functions.ILike(asset.Name, pattern) ||
+            (asset.Description != null && EF.Functions.ILike(asset.Description, pattern)));
     }
 }

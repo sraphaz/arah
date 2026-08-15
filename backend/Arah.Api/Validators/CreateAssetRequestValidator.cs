@@ -1,4 +1,5 @@
 using Arah.Api.Contracts.Assets;
+using Arah.Modules.Assets.Domain;
 using FluentValidation;
 
 namespace Arah.Api.Validators;
@@ -18,6 +19,25 @@ public sealed class CreateAssetRequestValidator : AbstractValidator<CreateAssetR
 
         RuleFor(x => x.Description)
             .MaxLengthWhenNotEmpty(1000);
+
+        RuleFor(x => x.Subtype)
+            .MaximumLength(40)
+            .When(x => !string.IsNullOrWhiteSpace(x.Subtype));
+
+        RuleFor(x => x)
+            .Must(request =>
+            {
+                var type = request.Type?.Trim().ToLowerInvariant() ?? string.Empty;
+                var subtype = NaturalWaterSubtype.Normalize(request.Subtype);
+                return NaturalWaterSubtype.TryValidate(type, subtype, out _);
+            })
+            .WithMessage(request =>
+            {
+                var type = request.Type?.Trim().ToLowerInvariant() ?? string.Empty;
+                var subtype = NaturalWaterSubtype.Normalize(request.Subtype);
+                NaturalWaterSubtype.TryValidate(type, subtype, out var error);
+                return error ?? "Invalid subtype.";
+            });
 
         RuleFor(x => x.GeoAnchors)
             .NotEmpty().WithMessage("Pelo menos um GeoAnchor é obrigatório.")

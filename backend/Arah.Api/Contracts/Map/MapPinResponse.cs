@@ -12,4 +12,6 @@ public sealed record MapPinResponse(
     Guid? MediaId,
     Guid? EventId,
     Guid? EntityId,
-    string? Status);
+    string? Status,
+    string? AssetType = null,
+    string? AssetSubtype = null);

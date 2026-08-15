@@ -205,6 +205,7 @@ public sealed class MapController : ControllerBase
         [FromQuery] string? types,
         [FromQuery] Guid? assetId,
         [FromQuery] string? assetTypes,
+        [FromQuery] string? assetSubtypes,
         CancellationToken cancellationToken)
     {
         var resolvedTerritoryId = await ResolveTerritoryIdAsync(territoryId, cancellationToken);
@@ -226,7 +227,8 @@ public sealed class MapController : ControllerBase
             filters,
             assetId,
             ParseCsv(assetTypes),
-            cancellationToken);
+            cancellationToken,
+            ParseCsv(assetSubtypes));
 
         return Ok(pins.Select(ToResponse));
     }
@@ -243,6 +245,7 @@ public sealed class MapController : ControllerBase
         [FromQuery] string? types,
         [FromQuery] Guid? assetId,
         [FromQuery] string? assetTypes,
+        [FromQuery] string? assetSubtypes,
         CancellationToken cancellationToken,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 20)
@@ -269,7 +272,8 @@ public sealed class MapController : ControllerBase
             assetId,
             ParseCsv(assetTypes),
             pagination,
-            cancellationToken);
+            cancellationToken,
+            ParseCsv(assetSubtypes));
 
         var response = new PagedResponse<MapPinResponse>(
             pagedResult.Items.Select(ToResponse).ToList(),
@@ -294,7 +298,9 @@ public sealed class MapController : ControllerBase
             pin.MediaId,
             pin.EventId,
             pin.EntityId,
-            pin.Status);
+            pin.Status,
+            pin.AssetType,
+            pin.AssetSubtype);
 
     private static IReadOnlyList<string>? ParseCsv(string? raw)
     {

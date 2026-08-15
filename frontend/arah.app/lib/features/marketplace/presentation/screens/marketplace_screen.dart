@@ -14,6 +14,7 @@ import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../territories/presentation/widgets/territory_indicator_bar.dart';
 import '../../data/models/marketplace_item.dart';
+import '../../data/models/seller_balance.dart';
 import '../providers/marketplace_provider.dart';
 
 class MarketplaceScreen extends ConsumerStatefulWidget {
@@ -463,6 +464,40 @@ class _MyStoreTabState extends State<_MyStoreTab> {
             ),
           ),
           const SizedBox(height: AppConstants.spacingMd),
+          Text(
+            l10n.sellerBalanceTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppConstants.spacingSm),
+          ArahCard(
+            child: widget.state.isBalanceLoading
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppConstants.spacingMd,
+                    ),
+                    child: Center(child: ArahLoadingIndicator()),
+                  )
+                : widget.state.balanceLoadFailed ||
+                        widget.state.sellerBalance == null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppConstants.spacingSm,
+                        ),
+                        child: Text(
+                          widget.state.balanceLoadFailed
+                              ? l10n.sellerBalanceLoadError
+                              : l10n.sellerBalanceHint,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: colors.onSurfaceVariant,
+                              ),
+                        ),
+                      )
+                    : _SellerBalanceSummary(
+                        balance: widget.state.sellerBalance!,
+                        l10n: l10n,
+                      ),
+          ),
+          const SizedBox(height: AppConstants.spacingMd),
           Text(l10n.storePaymentsTitle, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppConstants.spacingSm),
           ArahCard(
@@ -552,14 +587,18 @@ class _MyStoreTabState extends State<_MyStoreTab> {
               ArahCard(
                 margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
                 onTap: () async {
-                  await context.push('/add-product-journey?itemId=${product.id}');
-                  if (context.mounted) {
-                    await widget.notifier.loadMyProducts();
-                  }
+                  // Mutação otimista no provider; evita reload que pisca
+                  // a lista por causa do cache GET do BFF (TTL 60s).
+                  await context.push(
+                    '/add-product-journey?itemId=${product.id}',
+                  );
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.inventory_2_outlined, color: colors.primary),
+                    _ProductThumb(
+                      imageUrl: product.primaryImageUrl,
+                      color: colors.primary,
+                    ),
                     const SizedBox(width: AppConstants.spacingMd),
                     Expanded(
                       child: Column(
@@ -686,6 +725,111 @@ class _MyStoreTabState extends State<_MyStoreTab> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ProductThumb extends StatelessWidget {
+  const _ProductThumb({required this.imageUrl, required this.color});
+
+  final String? imageUrl;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = imageUrl?.trim();
+    final hasImage = url != null && url.isNotEmpty;
+    if (!hasImage) {
+      return Icon(Icons.inventory_2_outlined, color: color);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+      child: Image.network(
+        url,
+        width: 48,
+        height: 48,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) =>
+            Icon(Icons.inventory_2_outlined, color: color),
+      ),
+    );
+  }
+}
+
+class _SellerBalanceSummary extends StatelessWidget {
+  const _SellerBalanceSummary({required this.balance, required this.l10n});
+
+  final SellerBalance balance;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = context.appColors;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.sellerBalanceHint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppConstants.spacingMd),
+        _balanceRow(
+          context,
+          label: l10n.sellerBalancePending,
+          value: balance.formatCents(balance.pendingAmountInCents),
+        ),
+        _balanceRow(
+          context,
+          label: l10n.sellerBalanceReady,
+          value: balance.formatCents(balance.readyForPayoutAmountInCents),
+        ),
+        _balanceRow(
+          context,
+          label: l10n.sellerBalancePaid,
+          value: balance.formatCents(balance.paidAmountInCents),
+          showDivider: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _balanceRow(
+    BuildContext context, {
+    required String label,
+    required String value,
+    bool showDivider = true,
+  }) {
+    final colors = context.appColors;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: showDivider
+            ? Border(bottom: BorderSide(color: colors.outlineSubtle))
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingSm),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+              ),
+            ),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

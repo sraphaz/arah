@@ -185,7 +185,9 @@ public static class BffJourneyRegistry
                 new("{id}/enter", "POST", "Entra no território como visitante."),
                 new("{id}/chat/channels", "GET", "Canais de chat do território."),
                 new("{id}/chat/groups", "GET", "Grupos de chat do território."),
-                new("{id}/chat/groups", "POST", "Cria grupo de chat. Body: name.")
+                new("{id}/chat/groups", "POST", "Cria grupo de chat. Body: name."),
+                new("{id}/seller-balance/me", "GET", "Saldo do vendedor no território (pendente / pronto / pago)."),
+                new("{id}/seller-balance/me/transactions", "GET", "Transações do vendedor no território.")
             },
             [Membership] = new List<JourneyEndpoint>
             {
@@ -200,8 +202,8 @@ public static class BffJourneyRegistry
             {
                 new("entities", "GET", "Entidades do mapa. Query: territoryId, categoryId, bounds, etc."),
                 new("entities/paged", "GET", "Entidades paginadas. Query: territoryId, pageNumber, pageSize."),
-                new("pins", "GET", "Pins do mapa. Query: territoryId, bounds."),
-                new("pins/paged", "GET", "Pins paginados."),
+                new("pins", "GET", "Pins do mapa. Query: territoryId, types, assetId, assetTypes, assetSubtypes."),
+                new("pins/paged", "GET", "Pins paginados. Query: territoryId, types, assetId, assetTypes, assetSubtypes, pageNumber, pageSize."),
                 new("entities", "POST", "Cria entidade no mapa. Body conforme API."),
                 new("entities/{entityId}/confirmations", "POST", "Confirma entidade."),
                 new("entities/{entityId}/relations", "POST", "Cria relação entre entidades.")
@@ -349,7 +351,9 @@ public static class BffJourneyRegistry
                 new("", "GET", "Lista territórios."),
                 new("paged", "GET", "Lista territórios paginada."),
                 new("{id}", "GET", "Detalhe do território."),
-                new("{id}/features", "GET", "Features do território.")
+                new("{id}/features", "GET", "Features do território."),
+                new("{id}/seller-balance/me", "GET", "Saldo do vendedor."),
+                new("{id}/seller-balance/me/transactions", "GET", "Transações do vendedor.")
             },
             [Membership] = new List<JourneyEndpoint>
             {
@@ -360,8 +364,8 @@ public static class BffJourneyRegistry
             {
                 new("entities", "GET", "Entidades do mapa."),
                 new("entities/paged", "GET", "Entidades paginadas."),
-                new("pins", "GET", "Pins do mapa."),
-                new("pins/paged", "GET", "Pins paginados.")
+                new("pins", "GET", "Pins do mapa. Query: territoryId, types, assetId, assetTypes, assetSubtypes."),
+                new("pins/paged", "GET", "Pins paginados. Query: territoryId, types, assetId, assetTypes, assetSubtypes, pageNumber, pageSize.")
             },
             [Assets] = new List<JourneyEndpoint>
             {

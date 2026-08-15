@@ -1,6 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
@@ -10,10 +13,11 @@ import '../../../../core/widgets/arah_card.dart';
 import '../../../../core/widgets/arah_journey_shell.dart';
 import '../../../../core/widgets/arah_loading_indicator.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../feed/presentation/providers/feed_provider.dart';
 import '../../data/models/store_product.dart';
 import '../providers/marketplace_provider.dart';
 
-/// Jornada adicionar/editar produto (APP-DS-15): detalhes → descrição → revisão.
+/// Jornada adicionar/editar produto (APP-DS-15/16): detalhes → foto+descrição → revisão.
 class AddProductJourneyScreen extends ConsumerStatefulWidget {
   const AddProductJourneyScreen({super.key, this.itemId});
 
@@ -35,9 +39,26 @@ class _AddProductJourneyScreenState
   final _categoryController = TextEditingController();
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _imagePicker = ImagePicker();
   String _pricingType = 'Fixed';
+  Uint8List? _photoBytes;
+  String? _photoFileName;
+  String _photoMimeType = 'image/jpeg';
+  /// Incrementado em pick/clear — detecta seleção stale após upload async.
+  int _photoGeneration = 0;
+  /// Media id já enviado — evita re-upload em retry.
+  String? _uploadedMediaId;
+  String? _existingImageUrl;
+  bool _startedWithPhoto = false;
 
   bool get _isEdit => widget.itemId != null && widget.itemId!.isNotEmpty;
+
+  bool get _hasLocalPhoto => _photoBytes != null && _photoBytes!.isNotEmpty;
+
+  bool get _hasPhoto =>
+      _hasLocalPhoto ||
+      (_existingImageUrl != null && _existingImageUrl!.isNotEmpty) ||
+      (_uploadedMediaId != null && _uploadedMediaId!.isNotEmpty);
 
   @override
   void initState() {
@@ -80,6 +101,9 @@ class _AddProductJourneyScreenState
     _categoryController.text = product.category ?? '';
     _descriptionController.text = product.description ?? '';
     _pricingType = _normalizePricing(product.pricingType);
+    _existingImageUrl = product.primaryImageUrl;
+    _startedWithPhoto = product.primaryImageUrl != null &&
+        product.primaryImageUrl!.trim().isNotEmpty;
     if (product.priceAmount != null) {
       _priceController.text = product.priceAmount!.toStringAsFixed(2);
     }
@@ -100,6 +124,38 @@ class _AddProductJourneyScreenState
     }
   }
 
+  Future<void> _pickPhoto() async {
+    final picked = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
+    if (picked == null || !mounted) return;
+    final bytes = await picked.readAsBytes();
+    if (!mounted) return;
+    setState(() {
+      _photoBytes = bytes;
+      _photoFileName = picked.name;
+      _photoMimeType =
+          (picked.mimeType == null || picked.mimeType!.trim().isEmpty)
+              ? 'image/jpeg'
+              : picked.mimeType!.trim();
+      _photoGeneration++;
+      _uploadedMediaId = null;
+      _existingImageUrl = null;
+    });
+  }
+
+  void _clearPhoto() {
+    setState(() {
+      _photoBytes = null;
+      _photoFileName = null;
+      _photoMimeType = 'image/jpeg';
+      _photoGeneration++;
+      _uploadedMediaId = null;
+      _existingImageUrl = null;
+    });
+  }
+
   bool get _detailsValid {
     if (_titleController.text.trim().isEmpty) return false;
     if (_pricingType == 'Fixed') {
@@ -107,6 +163,50 @@ class _AddProductJourneyScreenState
       if (amount == null || amount <= 0) return false;
     }
     return true;
+  }
+
+  /// Resolve `mediaIds` + se devem ir no PATCH.
+  /// - Nova foto local → upload (com cache de retry).
+  /// - Remoção da foto existente → lista vazia + include.
+  /// - Edição sem mudança de foto → null / não incluir (preserva).
+  Future<({List<String>? mediaIds, bool includeMediaIds})> _resolveMedia() async {
+    if (_hasLocalPhoto) {
+      final generation = _photoGeneration;
+      final bytesSnapshot = _photoBytes!;
+      final mimeSnapshot = _photoMimeType;
+      final fileName = (_photoFileName == null || _photoFileName!.isEmpty)
+          ? 'produto.jpg'
+          : _photoFileName!;
+      final mediaId = (_uploadedMediaId != null && _uploadedMediaId!.isNotEmpty)
+          ? _uploadedMediaId!
+          : await ref.read(mediaRepositoryProvider).uploadImage(
+                fileName: fileName,
+                mimeType: mimeSnapshot,
+                bytes: bytesSnapshot,
+              );
+
+      // Seleção stale: usuário voltou/trocou/removeu durante o upload.
+      if (_photoGeneration != generation ||
+          !identical(_photoBytes, bytesSnapshot)) {
+        _uploadedMediaId = null;
+        return _resolveMedia();
+      }
+
+      _uploadedMediaId = mediaId;
+      return (mediaIds: <String>[mediaId], includeMediaIds: true);
+    }
+
+    // Sem foto local: limpa cache de upload para não reanexar id antigo.
+    _uploadedMediaId = null;
+
+    final clearedExisting = _isEdit &&
+        _startedWithPhoto &&
+        (_existingImageUrl == null || _existingImageUrl!.trim().isEmpty);
+    if (clearedExisting) {
+      return (mediaIds: <String>[], includeMediaIds: true);
+    }
+
+    return (mediaIds: null, includeMediaIds: false);
   }
 
   Future<void> _onPrimary() async {
@@ -117,6 +217,23 @@ class _AddProductJourneyScreenState
     }
 
     setState(() => _submitting = true);
+    late final List<String>? mediaIds;
+    late final bool includeMediaIds;
+    try {
+      final resolved = await _resolveMedia();
+      if (!mounted) return;
+      mediaIds = resolved.mediaIds;
+      includeMediaIds = resolved.includeMediaIds;
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _submitting = false);
+      showErrorSnackBar(
+        context,
+        e is ApiException ? e.userMessage : l10n.errorUploadProductPhoto,
+      );
+      return;
+    }
+
     try {
       final notifier = ref.read(marketplaceProvider.notifier);
       final title = _titleController.text.trim();
@@ -134,6 +251,8 @@ class _AddProductJourneyScreenState
           category: category.isEmpty ? null : category,
           pricingType: _pricingType,
           priceAmount: price,
+          mediaIds: mediaIds,
+          includeMediaIds: includeMediaIds,
         );
       } else {
         await notifier.createProduct(
@@ -142,6 +261,7 @@ class _AddProductJourneyScreenState
           category: category.isEmpty ? null : category,
           pricingType: _pricingType,
           priceAmount: price,
+          mediaIds: mediaIds,
         );
       }
       if (!mounted) return;
@@ -191,7 +311,9 @@ class _AddProductJourneyScreenState
       currentStep: _step,
       totalSteps: _totalSteps,
       onClose: _close,
-      onBack: _step > 0 ? () => setState(() => _step -= 1) : null,
+      onBack: (_step > 0 && !_submitting)
+          ? () => setState(() => _step -= 1)
+          : null,
       primaryActionLabel: primaryLabel,
       onPrimaryAction: _submitting
           ? null
@@ -215,9 +337,14 @@ class _AddProductJourneyScreenState
           onChanged: () => setState(() {}),
         );
       case 1:
-        return _DescriptionStep(
+        return _PhotoDescriptionStep(
           l10n: l10n,
           descriptionController: _descriptionController,
+          photoBytes: _photoBytes,
+          existingImageUrl: _existingImageUrl,
+          interactionsEnabled: !_submitting,
+          onPickPhoto: _pickPhoto,
+          onClearPhoto: _clearPhoto,
         );
       default:
         return _ReviewStep(
@@ -227,6 +354,9 @@ class _AddProductJourneyScreenState
           description: _descriptionController.text.trim(),
           pricingType: _pricingType,
           priceText: _priceController.text.trim(),
+          hasPhoto: _hasPhoto,
+          photoBytes: _photoBytes,
+          existingImageUrl: _existingImageUrl,
         );
     }
   }
@@ -327,23 +457,38 @@ class _DetailsStep extends StatelessWidget {
   }
 }
 
-class _DescriptionStep extends StatelessWidget {
-  const _DescriptionStep({
+class _PhotoDescriptionStep extends StatelessWidget {
+  const _PhotoDescriptionStep({
     required this.l10n,
     required this.descriptionController,
+    required this.photoBytes,
+    required this.existingImageUrl,
+    required this.interactionsEnabled,
+    required this.onPickPhoto,
+    required this.onClearPhoto,
   });
 
   final AppLocalizations l10n;
   final TextEditingController descriptionController;
+  final Uint8List? photoBytes;
+  final String? existingImageUrl;
+  final bool interactionsEnabled;
+  final VoidCallback onPickPhoto;
+  final VoidCallback onClearPhoto;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = context.appColors;
+    final hasLocal = photoBytes != null && photoBytes!.isNotEmpty;
+    final hasRemote =
+        existingImageUrl != null && existingImageUrl!.isNotEmpty;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.addProductDescriptionTitle,
+          l10n.addProductPhotoDescriptionTitle,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontFamily: AppDesignTokens.fontFamilyDisplay,
             letterSpacing: AppDesignTokens.letterSpacingTight,
@@ -353,13 +498,74 @@ class _DescriptionStep extends StatelessWidget {
         Text(
           l10n.addProductDescriptionHint,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: context.appColors.onSurfaceVariant,
+            color: colors.onSurfaceVariant,
           ),
+        ),
+        const SizedBox(height: AppConstants.spacingLg),
+        Material(
+          color: colors.surfaceContainer.withValues(alpha: 0.55),
+          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+          child: InkWell(
+            onTap: interactionsEnabled ? onPickPhoto : null,
+            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+            child: Container(
+              width: double.infinity,
+              constraints: const BoxConstraints(minHeight: 160),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+                border: Border.all(
+                  color: colors.outlineSubtle,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: hasLocal
+                  ? Image.memory(
+                      photoBytes!,
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : hasRemote
+                      ? Image.network(
+                          existingImageUrl!,
+                          height: 180,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _PhotoPlaceholder(
+                            l10n: l10n,
+                            colors: colors,
+                          ),
+                        )
+                      : _PhotoPlaceholder(l10n: l10n, colors: colors),
+            ),
+          ),
+        ),
+        const SizedBox(height: AppConstants.spacingSm),
+        Row(
+          children: [
+            TextButton.icon(
+              onPressed: interactionsEnabled ? onPickPhoto : null,
+              icon: const Icon(Icons.add_a_photo_outlined, size: 18),
+              label: Text(
+                hasLocal || hasRemote
+                    ? l10n.changeProductPhoto
+                    : l10n.addProductPhoto,
+              ),
+            ),
+            if (hasLocal || hasRemote) ...[
+              const SizedBox(width: AppConstants.spacingSm),
+              TextButton(
+                onPressed: interactionsEnabled ? onClearPhoto : null,
+                child: Text(l10n.removeProductPhoto),
+              ),
+            ],
+          ],
         ),
         const SizedBox(height: AppConstants.spacingLg),
         TextField(
           controller: descriptionController,
-          maxLines: 6,
+          maxLines: 5,
           decoration: InputDecoration(
             labelText: l10n.descriptionLabel,
             border: const OutlineInputBorder(),
@@ -367,6 +573,34 @@ class _DescriptionStep extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PhotoPlaceholder extends StatelessWidget {
+  const _PhotoPlaceholder({required this.l10n, required this.colors});
+
+  final AppLocalizations l10n;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppConstants.spacingLg),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.add_a_photo_outlined, size: 40, color: colors.primary),
+          const SizedBox(height: AppConstants.spacingSm),
+          Text(
+            l10n.addProductPhotoHint,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: colors.onSurfaceVariant,
+                ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -379,6 +613,9 @@ class _ReviewStep extends StatelessWidget {
     required this.description,
     required this.pricingType,
     required this.priceText,
+    required this.hasPhoto,
+    required this.photoBytes,
+    required this.existingImageUrl,
   });
 
   final AppLocalizations l10n;
@@ -387,15 +624,20 @@ class _ReviewStep extends StatelessWidget {
   final String description;
   final String pricingType;
   final String priceText;
+  final bool hasPhoto;
+  final Uint8List? photoBytes;
+  final String? existingImageUrl;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = context.appColors;
     final priceDisplay = switch (pricingType) {
       'Free' => l10n.pricingFree,
       'Negotiable' => l10n.pricingNegotiable,
       _ => priceText.isEmpty ? '—' : 'BRL $priceText',
     };
+    final hasLocal = photoBytes != null && photoBytes!.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,6 +650,26 @@ class _ReviewStep extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppConstants.spacingMd),
+        if (hasPhoto) ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+            child: hasLocal
+                ? Image.memory(
+                    photoBytes!,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : Image.network(
+                    existingImageUrl!,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  ),
+          ),
+          const SizedBox(height: AppConstants.spacingMd),
+        ],
         ArahCard(
           child: Column(
             children: [
@@ -420,6 +682,13 @@ class _ReviewStep extends StatelessWidget {
               _row(context, l10n.productPricingType, priceDisplay),
               _row(
                 context,
+                l10n.productPhotoLabel,
+                hasPhoto
+                    ? l10n.productPhotoAttached
+                    : l10n.productPhotoNone,
+              ),
+              _row(
+                context,
                 l10n.descriptionLabel,
                 description.isEmpty ? '—' : description,
                 showDivider: false,
@@ -427,6 +696,15 @@ class _ReviewStep extends StatelessWidget {
             ],
           ),
         ),
+        if (!hasPhoto) ...[
+          const SizedBox(height: AppConstants.spacingSm),
+          Text(
+            l10n.addProductPhotoOptionalHint,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colors.onSurfaceSubtle,
+            ),
+          ),
+        ],
       ],
     );
   }

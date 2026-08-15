@@ -9,6 +9,93 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Fluxo de agentes P0/P1 (integridade PR) (2026-08-15)
+
+- `address-bot-review.ps1`: conta só threads inline de review bots; ignora sinalização `arah-*` (`ignored_signal`)
+- Template **Pareceres endereçados** em `.agents/templates/pr-body.md` + skill `open-pr` / PR template
+- `post-pr-graph.ps1` + step em `agents.yml` → comentário `<!-- arah-pr-graph -->`
+- Checklist steward dinâmico (`- [x]` CI/threads quando `audit.ready`) em `agents-pr-steward.yml`
+- CLI: `arah-agents.ps1 pr-graph`; testes `scripts/agents/tests/address-bot-review-filter.tests.ps1`
+- Doc: [`AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) v1.1
+- Wiki: remove fetch Google Fonts no layout (system stack) — evita Build & Test Wiki flaky
+
+### Adicionado — Diagnóstico do fluxo de agentes no PR (2026-08-15)
+
+- [`docs/ops/AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) — publicação vs consumo, Agent Graph, lacunas de checklist/ready-for-merge e recomendações P0–P2
+- Link em `docs/ops/AGENT_OPERATION.md`
+
+### Adicionado — FASE55 v0 merchants/wallets/consumption + TI-0 contratos + fix Dependabot board (2026-08-15)
+
+- Bot review (PR #469): Wallet balance exclui Paid; refresh de projeção; Location `/api/v1/subscriptions/{id}`; seed atômico de ConsumptionMeter; links World Monitor README; docs domínio/API FASE55
+- API: `POST /api/v1/merchants/{id}/subscription`, `GET /api/v1/merchants/{id}/consumption`, `GET /api/v1/wallets/{id}` (AC-55-9…11)
+- Domínio: `Wallet`, `ConsumptionMeter`; serviços `MerchantCommercialService`, `WalletQueryService`
+- TI-0: decisões 1/19/20, ADRs 023/024, política de publicação, fixtures World Monitor, parecer jurídico pending
+- CI: `project-board-sync` não falha mais em PRs Dependabot sem `GH_PROJECT_TOKEN`; concurrency por PR (sync-board/wiki)
+
+### Adicionado — Canvas executivo do estado da plataforma (2026-08-15)
+
+- Novo documento: [`docs/ops/EXECUTIVE_CANVAS.md`](ops/EXECUTIVE_CANVAS.md) — síntese para diretoria/produto (o que existe, o que está testado, lacunas, instâncias, estratégia e pipeline)
+- Links a partir de `PLATFORM_STATE.md` e `STATUS_FASES.md`
+- Clarificações bot-review: WA-N1 API-only; S0 até FASE54 / S1 com FASE55; fence MD040
+
+### Adicionado — Análise fiscal BR + FASE62 proposta (2026-08-15)
+
+- [`docs/compliance/ANALISE_FISCAL_BR.md`](compliance/ANALISE_FISCAL_BR.md) — gaps fiscais/tributários vs o que já está instalado; priorização P0–P2
+- [`docs/compliance/PACOTES_FISCAIS_POR_TERRITORIO.md`](compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) — packs + meios de pagamento por território; jornadas implementador/loja/checkout
+- [`docs/backlog-api/FASE62.md`](backlog-api/FASE62.md) — Conformidade fiscal & KYC comercial (BR); fatias 62.0–c
+- Entrada em `PHASE_QUEUE.yaml` (S1, blocked_by FASE55)
+
+### Adicionado — WA-N1 NaturalAsset ponto (FASE24.0a) (2026-08-10)
+
+- Domínio `NaturalAsset` + `WaterPointDetails` (tipos `SPRING|WATERFALL|POTABLE_WATER`; status `PENDING→PUBLISHED`)
+- API `GET/POST /api/v1/territories/{territoryId}/natural-assets` + `POST .../{id}/publish` (Curator)
+- Persistência InMemory + Postgres (`natural_assets`); testes `WaterBodyDomainTests` / `WaterBodyHttpIntegrationTests`
+- Spec-Id: `water-bodies-curation` (AC-WA-1 parcial ponto, AC-WA-2, AC-WA-6; RIVER/STREAM e sensibilidade deferidos)
+
+### Adicionado — WA-E4 UX curadoria corpos d'água (2026-08-10)
+
+- Flutter Assets: criar corpo d'água (`type=natural` + subtype) com copy de cuidado; lista/curadoria contextual
+- Mapa: subtítulo do pin hídrico; l10n pt/en
+- Spec-Id: `water-bodies-curation` (AC-WA-* seguem pending até FASE24.0)
+
+### Adicionado — WA-E2 pins/filtros de corpos d'água no mapa (2026-08-09)
+
+- `GET /map/pins`: query `assetSubtypes`; `assetTypes` casa Type **ou** Subtype **só no mapa** (API assets permanece Type-only)
+- Pin response: `assetType` / `assetSubtype`; Flutter chip "Corpos d'água" (filtro server-side via `assetTypes`)
+- Sensibilidade HIGH/RESTRICTED **fora** deste slice (sem campos em TerritoryAsset; AC-WA-4 permanece pending)
+- Spec-Id: `water-bodies-curation`
+
+### Adicionado — WA-E1 tipagem hídrica em TerritoryAsset (2026-08-08)
+
+- Campo `Subtype` em TerritoryAsset (API create/update/response) com allowlist `river|stream|spring|waterfall|well|potable_water` quando `type=natural`
+- Domínio: `NaturalWaterSubtype` + migration Postgres `AddTerritoryAssetSubtype`
+- Testes de domínio/service/API; docs Assets + CORPOS (WA-E1 ✅)
+- Spec-Id: `water-bodies-curation` (slice ponte; NaturalAsset continua FASE24.0)
+
+### Adicionado — Corpos d'água do território no backlog (2026-08-08)
+
+- Realinhamento: [`CORPOS_DAGUA_TERRITORIO.md`](backlog-api/CORPOS_DAGUA_TERRITORIO.md) — rios, córregos, nascentes e fontes como **entidades curáveis** (fora de `Territory`)
+- FASE24: tarefa **24.0** (cadastro/curadoria hídrica) + vínculo a observações `WATER`
+- Spec draft SDD: [`water-bodies-curation.spec.yaml`](specs/features/water-bodies-curation.spec.yaml) (`Spec-Id: water-bodies-curation`)
+- Glossário (`TerritoryAsset`, `NaturalAsset`, `WaterBody` alias, detalhes hídricos) · domain model · MER (`RIVER`/`STREAM` + `WATERCOURSE_DETAILS`)
+- Docs funcionais Assets + agente `mapa-lugares`; índices README/STATUS_FASES
+- Follow-up review: vocabulário canônico, máquinas de estado distintas (PUBLISHED vs VALIDATED), geometria LineString, sensibilidade HIGH, filter de harness quotado, Agent Graph regenerado
+
+### Alterado — Onda I design app (saldo vendedor) (2026-08-08)
+
+- **APP-DS-17**: Minha loja mostra saldo do vendedor (pendente / pronto / pago) via `GET territories/{id}/seller-balance/me`
+- **BFF**: allowlist `seller-balance/me` (+ transactions) na jornada `territories`
+- 404 da API tratado como saldo zerado (ledger só após primeira venda paga)
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
+### Alterado — Onda H design app (foto do produto) (2026-08-08)
+
+- **APP-DS-16**: upload de foto na jornada de produto (`media/upload` → `mediaIds` em create/update); remoção limpa mídia no PATCH
+- **API**: `UpdateItem` persiste `MediaIds` (substituir/limpar anexos), alinhado ao create
+- **Upload**: `MediaRepository` envia MIME type e aceita bytes (compatível com Web)
+- **Minha loja**: thumbnail do produto na lista; sem reload pós-edição (evita flash do cache GET BFF 60s)
+- Análise: `docs/design/ANALISE_DESIGN_VS_APP_FLUTTER.md`
+
 ### Alterado — Onda G design app (produtos, QR PIX, Em breve) (2026-08-05)
 
 - **APP-DS-15**: CRUD de produtos na Minha loja (`/add-product-journey`) via `items` API; listar/editar/arquivar
@@ -657,4 +744,4 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-**Última Atualização**: 2026-08-05
+**Última Atualização**: 2026-08-10

@@ -5,14 +5,21 @@ mode: consult
 consult_only: true
 enrich: |
   O mapa é a leitura do território real: entidades de mapa e assets curados
-  representam lugares vivos (nascentes, trilhas, feiras, pontos de cuidado).
-  MapEntity é neutra como o Territory — a curadoria (capability Curator) é
-  camada social separada. Geolocalização de pessoas é dado sensível; o mapa
-  mostra o lugar, não rastreia quem passa por ele.
+  representam lugares vivos (rios, córregos, nascentes, fontes, trilhas, feiras,
+  pontos de cuidado). Corpos d'água (WaterBody = alias de produto/API para
+  NaturalAsset tipado RIVER|STREAM|SPRING|WATERFALL|POTABLE_WATER) são entidades
+  escopadas por territoryId — nunca campos de Territory. MapEntity é neutra como
+  o Territory — a curadoria (capability Curator) é camada social separada.
+  Geolocalização de pessoas é dado sensível; o mapa mostra o lugar, não rastreia
+  quem passa por ele. Nascentes e captações podem exigir sensitivity HIGH /
+  access RESTRICTED (filtragem server-side em list/get/pins).
 validate: |
   - [ ] Lat/lng validados em ranges válidos (-90..90 / -180..180)
-  - [ ] MapEntity/asset escopados por territoryId; sem vazamento entre territórios
+  - [ ] MapEntity/asset/corpo d'água escopados por territoryId; sem vazamento entre territórios
   - [ ] Curadoria de assets exige capability Curator verificada no servidor
+  - [ ] Assets com sensitivity HIGH / access RESTRICTED: autorização de leitura no servidor; omitir pin/coordenadas se não autorizado (Curator ≠ leitura automática)
+  - [ ] Assets hídricos nunca expostos como item de marketplace
+  - [ ] Flutter acessa backend só via BFF (`--dart-define=BFF_BASE_URL=...`); sem URL direta da API
   - [ ] Nenhuma localização pessoal contínua persistida (sem tracking de usuários)
   - [ ] Paginação/bounding-box em consultas geoespaciais; sem N+1
 autonomy:
@@ -31,5 +38,9 @@ scope:
 references:
   - docs/backend/12_DOMAIN_MODEL.md
   - docs/product/05_GLOSSARY.md
+  - docs/backlog-api/CORPOS_DAGUA_TERRITORIO.md
+  - docs/funcional/09_ASSETS.md
+  - docs/specs/features/water-bodies-curation.spec.yaml
+  - docs/api/60_08_API_ASSETS.md
 skills:
   - code-review

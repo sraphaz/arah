@@ -4,6 +4,7 @@ public sealed record AssetResponse(
     Guid Id,
     Guid TerritoryId,
     string Type,
+    string? Subtype,
     string Name,
     string? Description,
     string Status,

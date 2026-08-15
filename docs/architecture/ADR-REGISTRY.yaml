@@ -1,7 +1,7 @@
 ﻿# ADR Registry — fonte machine-readable para register-adr e architecture-review
 version: 1
-updated: 2026-07-24
-next_number: 23
+updated: 2026-08-15
+next_number: 25
 policy: |
   ADR-001..019 vivem em 10_ARCHITECTURE_DECISIONS.md (legado).
   ADR-020+ em docs/architecture/adrs/ADR-NNN-slug.md via register-adr.ps1.
@@ -44,3 +44,15 @@ adrs:
     status: accepted
     file: docs/architecture/adrs/ADR-022-convencao-sinalizacao-de-erros.md
     date: 2026-07-03
+  - id: ADR-023
+    title: "Abstração de provedor de inteligência (SignalProvider)"
+    status: accepted
+    file: docs/architecture/adrs/ADR-023-intelligence-provider-abstraction.md
+    spec_id: TI-0
+    date: 2026-08-15
+  - id: ADR-024
+    title: "World Monitor — REST no MVP, MCP para agentes"
+    status: accepted
+    file: docs/architecture/adrs/ADR-024-world-monitor-rest-mvp-mcp-agents.md
+    spec_id: TI-0
+    date: 2026-08-15

@@ -16,6 +16,8 @@ Decisões arquiteturais registradas pelo **Solutions Architect** e revisadas em 
 | ADR-020 | Arah Core como control plane separado | accepted | [ADR-020-arah-core-como-control-plane-separado.md](./ADR-020-arah-core-como-control-plane-separado.md) |
 | ADR-021 | Design system do app como fonte canônica de UI | Accepted | [ADR-021-design-system-app-canonic.md](./ADR-021-design-system-app-canonic.md) |
 | ADR-022 | Convenção de sinalização de erros (Result, nullable, exceptions) | accepted | [ADR-022-convencao-sinalizacao-de-erros.md](./ADR-022-convencao-sinalizacao-de-erros.md) |
+| ADR-023 | Abstração de provedor de inteligência (SignalProvider) | accepted | [ADR-023-intelligence-provider-abstraction.md](./ADR-023-intelligence-provider-abstraction.md) |
+| ADR-024 | World Monitor — REST no MVP, MCP para agentes | accepted | [ADR-024-world-monitor-rest-mvp-mcp-agents.md](./ADR-024-world-monitor-rest-mvp-mcp-agents.md) |
 
 Índice machine-readable: [ADR-REGISTRY.yaml](../ADR-REGISTRY.yaml)
 

@@ -19,6 +19,18 @@
 - [ ] Sem secrets no diff
 - [ ] PR atômico (&lt; 40 arquivos salvo justificativa)
 
+## Pareceres endereçados (obrigatório)
+
+<!-- Consumo explícito dos arah-domain-consult / Validar no PR. Sem esta seção o ciclo fica só em sinalização. -->
+
+| DomainId | Itens relevantes | Como foi atendido (commit / teste / N/A) |
+|----------|------------------|------------------------------------------|
+| <!-- ex.: monetizacao-split --> | <!-- 1–2 bullets do Validar no PR --> | <!-- ex.: AC-55-9 cobertos por MerchantsAndWalletsControllerTests --> |
+
+- [ ] Li os pareceres de domínio aplicáveis ao diff (ignorei domínios fora do escopo, ex.: TI em PR só de billing)
+- [ ] Checklists QA/Security revisados (gates automáticos + julgamento humano)
+- [ ] Threads inline de CodeRabbit/Bugbot resolvidas ou respondidas
+
 ## Documentos atualizados
 
 - 
@@ -30,3 +42,4 @@
 ---
 
 **Merge**: requer aprovação humana. Agente não faz merge.
+**Fluxo**: ver [docs/ops/AGENT_PR_FLOW_INTEGRITY.md](../../docs/ops/AGENT_PR_FLOW_INTEGRITY.md).

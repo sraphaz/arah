@@ -98,7 +98,7 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 | Workflow | [agents-pr-steward.yml](../../.github/workflows/agents-pr-steward.yml) |
 | Fila de fases | [PHASE_QUEUE.yaml](../_meta/PHASE_QUEUE.yaml) |
 | Checklist bots | [bot-review-checklist.md](../../.agents/templates/bot-review-checklist.md) |
-| Scripts | [address-bot-review.ps1](../../scripts/agents/address-bot-review.ps1), [pr-ready.ps1](../../scripts/agents/pr-ready.ps1), [next-phase.ps1](../../scripts/agents/next-phase.ps1) |
+| Scripts | [address-bot-review.ps1](../../scripts/agents/address-bot-review.ps1), [pr-ready.ps1](../../scripts/agents/pr-ready.ps1), [post-pr-graph.ps1](../../scripts/agents/post-pr-graph.ps1), [next-phase.ps1](../../scripts/agents/next-phase.ps1) |
 | Skills | [address-bot-review.skill.yaml](../../.skills/address-bot-review.skill.yaml), [next-phase.skill.yaml](../../.skills/next-phase.skill.yaml) |
 
 **Comportamento:**
@@ -136,16 +136,23 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 ./scripts/agents/arah-agents.ps1 ensure-labels   # gh label create
 ./scripts/agents/arah-agents.ps1 bot-review -PrNumber <N>
 ./scripts/agents/arah-agents.ps1 pr-ready -PrNumber <N>
+./scripts/agents/arah-agents.ps1 pr-graph -PrNumber <N> -DryRun
 ./scripts/agents/arah-agents.ps1 next-phase -DryRun
 ./scripts/agents/arah-agents.ps1 export-graph     # gera Agent Graph (JSON)
 ./scripts/agents/arah-agents.ps1 validate-graph   # audita consistência do grafo
+pwsh ./scripts/agents/tests/address-bot-review-filter.tests.ps1
+pwsh ./scripts/agents/tests/post-pr-graph.tests.ps1
 ./scripts/agents/invoke-skill.ps1 -Skill sync-docs
 ```
 
 **Agent Graph**: formaliza o grafo operacional (agentes ↔ skills ↔ rules ↔ paths
 ↔ domínios ↔ specs ↔ harnesses ↔ guardrails ↔ workflows ↔ gates) como artefato
-auditável. Fonte inicial: `.agents/choreography.yaml`. Ver
+auditável. Fonte inicial: `.agents/choreography.yaml`. No PR, o Orchestrate
+publica `<!-- arah-pr-graph -->` (`post-pr-graph.ps1`). Ver
 [AGENT_GRAPH.md](AGENT_GRAPH.md).
+
+**Integridade do fluxo no PR** (publicação vs execução, filtro steward P0,
+pareceres endereçados, checklist dinâmico): [AGENT_PR_FLOW_INTEGRITY.md](AGENT_PR_FLOW_INTEGRITY.md) (v1.1).
 
 Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 

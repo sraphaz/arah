@@ -8,6 +8,9 @@ steps:
   - git checkout -b "agent/{id}-{slug}"
   - git push -u origin HEAD
   - gh pr create --title "{title}" --body-file .agents/templates/pr-body.md
+  - Preencher seção "Pareceres endereçados" (DomainId + evidência) após Orchestrate
+  - Resolver threads inline de review bots; sinalização Arah não bloqueia sozinha
 guardrails:
   - never_push_main
   - require_issue_link
+  - require_pareceres_endereçados

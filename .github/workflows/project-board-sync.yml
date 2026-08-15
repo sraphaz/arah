@@ -1,7 +1,8 @@
 name: Project board sync
 
 concurrency:
-  group: project-board-sync-${{ github.repository }}
+  # Por PR/ref — grupo único no repo cancelava sync-board de outros PRs (checks "fail"/cancelled).
+  group: project-board-sync-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 on:

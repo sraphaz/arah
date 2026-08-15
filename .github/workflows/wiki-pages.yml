@@ -19,7 +19,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "wiki-pages"
+  # Por PR — grupo global cancelava Build & Test Wiki em PRs docs concorrentes.
+  group: wiki-pages-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:

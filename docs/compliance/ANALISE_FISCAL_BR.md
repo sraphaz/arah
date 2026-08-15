@@ -1,11 +1,13 @@
 # Análise fiscal & conformidade comercial (Brasil) — Arah
 
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Data**: 2026-08-15  
 **Público**: produto, jurídico, ops, engenharia  
 **Escopo**: gaps fiscais/tributários e de administração comercial BR para marketplace territorial + open-core, **à luz do que já está em produção lógica** (API/BFF/app + FASE55 v0).
 
 > Este documento **não** é parecer jurídico vinculante. Orienta priorização de backlog; decisões de enquadramento (marketplace × intermediário × IP) exigem consultoria.
+
+**Modelo de produto (packs por território + jornadas):** [PACOTES_FISCAIS_POR_TERRITORIO.md](./PACOTES_FISCAIS_POR_TERRITORIO.md).
 
 ---
 
@@ -17,9 +19,17 @@
 | Fiscalidade brasileira (CNPJ/MEI, NFS-e, ISS/ICMS, KYC comercial) | ❌ Quase ausente |
 | Bloqueio de piloto **com dinheiro real** | Não é só FASE54 secrets — é **PSP real + KYC/fiscal mínimo + parecer regulatório** |
 
-**Conclusão**: evoluir o backlog com uma frente explícita **FASE62 — Conformidade fiscal & KYC comercial (BR)**, encaixada na Onda S1 junto de FASE55–57, sem misturar imposto com taxa open-core nem lógica social em `Territory`.
+**Conclusão**: evoluir o backlog com **FASE62**, em modelo **pluggável por território** (implementador ativa pack `Brazil.v1` + meios de pagamento). MVP só BR; outros países = novos packs. Sem misturar imposto com taxa open-core; sem lógica fiscal embutida em `Territory`.
 
 ---
+
+## 1.1 Diretriz de produto (2026-08-15)
+
+- Cada território pode ter **seus meios de pagamento** e **seu pacote fiscal** (“inspeção” / conformidade).  
+- **Implementador** seleciona o pack (primeiro: Brasil) e ativa as funcionalidades naquele território.  
+- UI: config no **cockpit**; cadastro fiscal na **Minha loja**; **perfil** só alerta; checkout só meios + comprovante/NF.  
+- “Renda” = vendas + split (FASE55/57). **Investimento/capital** = FASE61 — fora do pack fiscal.  
+- Detalhe de jornadas: [PACOTES_FISCAIS_POR_TERRITORIO.md](./PACOTES_FISCAIS_POR_TERRITORIO.md).
 
 ## 2. O que já está instalado (base para evoluir)
 

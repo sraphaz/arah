@@ -91,6 +91,16 @@ queue:
     wave: S1
     blocked_by: [FASE52, FASE53, FASE54]
 
+  - id: FASE62
+    title: "FASE62 — Conformidade fiscal & KYC comercial (BR)"
+    area: area/backend
+    doc: docs/backlog-api/FASE62.md
+    spec_id: FASE62-fiscal-kyc-br
+    priority: P0
+    wave: S1
+    blocked_by: [FASE55]
+    # Análise: docs/compliance/ANALISE_FISCAL_BR.md — 62.a P0; 62.b/c P1
+
   - id: FASE56
     title: "FASE56 — Transparência e Taxas"
     area: area/backend

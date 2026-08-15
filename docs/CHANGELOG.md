@@ -9,6 +9,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Análise fiscal BR + FASE62 proposta (2026-08-15)
+
+- [`docs/compliance/ANALISE_FISCAL_BR.md`](compliance/ANALISE_FISCAL_BR.md) — gaps fiscais/tributários vs o que já está instalado; priorização P0–P2
+- [`docs/compliance/PACOTES_FISCAIS_POR_TERRITORIO.md`](compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) — packs + meios de pagamento por território; jornadas implementador/loja/checkout
+- [`docs/backlog-api/FASE62.md`](backlog-api/FASE62.md) — Conformidade fiscal & KYC comercial (BR); fatias 62.0–c
+- Entrada em `PHASE_QUEUE.yaml` (S1, blocked_by FASE55)
+
 ### Adicionado — WA-N1 NaturalAsset ponto (FASE24.0a) (2026-08-10)
 
 - Domínio `NaturalAsset` + `WaterPointDetails` (tipos `SPRING|WATERFALL|POTABLE_WATER`; status `PENDING→PUBLISHED`)

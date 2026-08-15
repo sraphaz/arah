@@ -147,6 +147,9 @@ Esta infraestrutura **precede** a FASE52 (CI/CD) e os épicos de sustentação (
 auditável. Fonte inicial: `.agents/choreography.yaml`. Ver
 [AGENT_GRAPH.md](AGENT_GRAPH.md).
 
+**Integridade do fluxo no PR** (o que é publicação vs execução, onde checklists
+são consumidos, lacunas de ready-for-merge): [AGENT_PR_FLOW_INTEGRITY.md](AGENT_PR_FLOW_INTEGRITY.md).
+
 Labels GitHub (uma vez): `./scripts/agents/arah-agents.ps1 ensure-labels`
 
 ---

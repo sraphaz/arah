@@ -9,6 +9,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Diagnóstico do fluxo de agentes no PR (2026-08-15)
+
+- [`docs/ops/AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) — publicação vs consumo, Agent Graph, lacunas de checklist/ready-for-merge e recomendações P0–P2
+- Link em `docs/ops/AGENT_OPERATION.md`
+
 ### Adicionado — WA-N1 NaturalAsset ponto (FASE24.0a) (2026-08-10)
 
 - Domínio `NaturalAsset` + `WaterPointDetails` (tipos `SPRING|WATERFALL|POTABLE_WATER`; status `PENDING→PUBLISHED`)

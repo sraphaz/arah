@@ -77,10 +77,11 @@ Este documento é a **fonte de verdade** para o README e para agentes. Níveis d
 
 | Fase | Nome | Status | Onda |
 |------|------|--------|------|
-| 52 | CI/CD | 🟡 Em progresso | S0 |
-| 53 | Arah Core | 🟡 Spec + início | S0 |
-| 54 | IaC 1ª instância | ⏳ | S0 |
-| 55–61 | Monetização, cockpit, federação… | ⏳ | S1–S4 |
+| 52 | CI/CD | ✅ | S0 |
+| 53 | Arah Core | ✅ | S0 |
+| 54 | IaC 1ª instância | 🟡 Código ✅ · config ops pendente | S0 |
+| 55 | Monetização open-core | 🟡 v0 em código | S1 |
+| 56–61 | Transparência, cockpit, federação… | ⏳ | S1–S4 |
 
 Detalhe: [STATUS_FASES.md](../STATUS_FASES.md) · [REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md](../backlog-api/REALINHAMENTO_SUSTENTACAO_OPERACIONAL.md)
 

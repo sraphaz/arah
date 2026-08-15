@@ -17,11 +17,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Checklist steward dinâmico (`- [x]` CI/threads quando `audit.ready`) em `agents-pr-steward.yml`
 - CLI: `arah-agents.ps1 pr-graph`; testes `scripts/agents/tests/address-bot-review-filter.tests.ps1`
 - Doc: [`AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) v1.1
+- fix(ci): concurrency por PR em `project-board-sync` e `wiki-pages` (evita cancelled cruzado)
 
 ### Adicionado — Diagnóstico do fluxo de agentes no PR (2026-08-15)
 
 - [`docs/ops/AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) — publicação vs consumo, Agent Graph, lacunas de checklist/ready-for-merge e recomendações P0–P2
 - Link em `docs/ops/AGENT_OPERATION.md`
+
+### Adicionado — Análise fiscal BR + FASE62 proposta (2026-08-15)
+
+- [`docs/compliance/ANALISE_FISCAL_BR.md`](compliance/ANALISE_FISCAL_BR.md) — gaps fiscais/tributários vs o que já está instalado; priorização P0–P2
+- [`docs/compliance/PACOTES_FISCAIS_POR_TERRITORIO.md`](compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) — packs + meios de pagamento por território; jornadas implementador/loja/checkout
+- [`docs/backlog-api/FASE62.md`](backlog-api/FASE62.md) — Conformidade fiscal & KYC comercial (BR); fatias 62.0–c
+- Entrada em `PHASE_QUEUE.yaml` (S1, blocked_by FASE55)
 
 ### Adicionado — WA-N1 NaturalAsset ponto (FASE24.0a) (2026-08-10)
 

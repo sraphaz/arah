@@ -60,6 +60,9 @@
 - **ItemInquiry** (territoryId, itemId, storeId, fromUserId, message, status)
 - **Cart** (userId, territoryId, items)
 - **Checkout** (cartId, status, paymentInfo)
+- **SellerBalance** (territoryId, sellerUserId; Pending / ReadyForPayout / Paid em centavos) — ledger do vendedor
+- **Wallet (Aratá)** (ownerType, ownerId, territoryId, balance, currency, payoutMethod?) — FASE55; saldo disponível = Pending + ReadyForPayout (Paid já saiu da carteira); id de seller wallet projeta `SellerBalance.Id`
+- **ConsumptionMeter** (subscriptionId, metric, usage, quota, overageRate) — FASE55 v0; métricas `ai` / `media` / `notifications`
 
 ## Relacionamentos (alto nível)
 
@@ -121,6 +124,9 @@
 - **StoreItem 0..N ItemInquiry** → consultas sobre o item.
 - **User 0..N Cart** → carrinho de compras do usuário.
 - **Cart 0..1 Checkout** → checkout do carrinho.
+- **User 0..N SellerBalance** → saldo de vendedor por território (fonte autoritativa do ledger).
+- **SellerBalance 0..1 Wallet** → carteira Aratá projetada (mesmo id quando ownerType=seller).
+- **Subscription 1..N ConsumptionMeter** → medidores de consumo comercial (seed atômico de defaults).
 
 ## Princípios do Modelo
 

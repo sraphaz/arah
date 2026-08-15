@@ -7,6 +7,8 @@ O Arah adota um modelo **híbrido**: contratos técnicos no repo (specs SDD, ADR
 
 **Project ativo:** [sraphaz/projects/3](https://github.com/users/sraphaz/projects/3) — roadmap completo (49 fases + extras).
 
+**Dependabot / secrets:** o job `sync-board` em `.github/workflows/project-board-sync.yml` usa `GH_PROJECT_TOKEN || github.token` no checkout e **pula** sync do Project quando o PAT não está disponível (ex.: PRs Dependabot, que não recebem secrets de Actions).
+
 ---
 
 ## O que ficou no GitHub (fonte operacional)

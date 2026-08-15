@@ -44,6 +44,21 @@ acceptance:
     status: covered
     covered_by: "FullyQualifiedName~PaymentService|FullyQualifiedName~TransactionsController"
 
+  - id: AC-55-9
+    then: "POST /merchants/{id}/subscription cria assinatura comercial do dono da loja (alias de /subscriptions)"
+    status: covered
+    covered_by: "FullyQualifiedName~MerchantsAndWalletsControllerTests|FullyQualifiedName~MerchantsController"
+
+  - id: AC-55-10
+    then: "GET /wallets/{id} retorna saldo Aratá e metadados de payout para o titular autorizado"
+    status: covered
+    covered_by: "FullyQualifiedName~MerchantsAndWalletsControllerTests|FullyQualifiedName~WalletsController"
+
+  - id: AC-55-11
+    then: "GET /merchants/{id}/consumption retorna uso vs cota (v0 pode ser zeros)"
+    status: covered
+    covered_by: "FullyQualifiedName~MerchantsAndWalletsControllerTests|FullyQualifiedName~MerchantsController"
+
 harness:
   commands:
     - "dotnet build Arah.sln --configuration Release"
@@ -53,6 +68,7 @@ harness:
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TransactionsController"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TerritoryPayoutsController"
     - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~FeeSplitRule"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~MerchantsAndWalletsControllerTests"
   agents:
     - backend
     - spec-steward

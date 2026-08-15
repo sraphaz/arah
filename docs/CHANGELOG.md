@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — FASE55 v0 merchants/wallets/consumption + TI-0 contratos + fix Dependabot board (2026-08-15)
+
+- Bot review (PR #469): Wallet balance exclui Paid; refresh de projeção; Location `/api/v1/subscriptions/{id}`; seed atômico de ConsumptionMeter; links World Monitor README; docs domínio/API FASE55
+- API: `POST /api/v1/merchants/{id}/subscription`, `GET /api/v1/merchants/{id}/consumption`, `GET /api/v1/wallets/{id}` (AC-55-9…11)
+- Domínio: `Wallet`, `ConsumptionMeter`; serviços `MerchantCommercialService`, `WalletQueryService`
+- TI-0: decisões 1/19/20, ADRs 023/024, política de publicação, fixtures World Monitor, parecer jurídico pending
+- CI: `project-board-sync` não falha mais em PRs Dependabot sem `GH_PROJECT_TOKEN`; concurrency por PR (sync-board/wiki)
+
 ### Adicionado — Canvas executivo do estado da plataforma (2026-08-15)
 
 - Novo documento: [`docs/ops/EXECUTIVE_CANVAS.md`](ops/EXECUTIVE_CANVAS.md) — síntese para diretoria/produto (o que existe, o que está testado, lacunas, instâncias, estratégia e pipeline)

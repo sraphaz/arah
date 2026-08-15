@@ -1,0 +1,12 @@
+{
+  "status": "HEALTHY",
+  "compact": true,
+  "checkedAt": "2026-01-14T12:00:00Z",
+  "seeds": {
+    "ok": 34,
+    "warning": 1,
+    "degraded": 0,
+    "unhealthy": 0
+  },
+  "notes": "Fixture sintética TI-0 — não é resposta live do World Monitor."
+}

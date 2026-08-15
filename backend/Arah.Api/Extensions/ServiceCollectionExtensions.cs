@@ -138,6 +138,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<RefundService>();
         services.AddScoped<PaymentService>();
         services.AddScoped<PayoutConsolidationService>();
+        services.AddScoped<WalletQueryService>();
+        services.AddScoped<MerchantCommercialService>();
         services.AddScoped<StoreItemService>();
         services.AddScoped<InquiryService>();
         services.AddScoped<PlatformFeeService>();
@@ -554,6 +556,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPlatformRevenueTransactionRepository, PostgresPlatformRevenueTransactionRepository>();
         services.AddScoped<IPlatformExpenseTransactionRepository, PostgresPlatformExpenseTransactionRepository>();
         services.AddScoped<IReconciliationRecordRepository, PostgresReconciliationRecordRepository>();
+        // FASE55 v0 — carteira/consumo InMemory até migração Postgres dedicada
+        services.AddSingleton<IWalletRepository, InMemoryWalletRepository>();
+        services.AddSingleton<IConsumptionMeterRepository, InMemoryConsumptionMeterRepository>();
 
         // Chat: registrado em Arah.Modules.Chat.Infrastructure.ChatModule
 
@@ -636,6 +641,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPlatformExpenseTransactionRepository, InMemoryPlatformExpenseTransactionRepository>();
         services.AddSingleton<IReconciliationRecordRepository, InMemoryReconciliationRecordRepository>();
         services.AddSingleton<IFeeSplitRuleRepository, InMemoryFeeSplitRuleRepository>();
+        services.AddSingleton<IWalletRepository, InMemoryWalletRepository>();
+        services.AddSingleton<IConsumptionMeterRepository, InMemoryConsumptionMeterRepository>();
 
         // Subscriptions
         services.AddSingleton<ISubscriptionPlanRepository, InMemorySubscriptionPlanRepository>();

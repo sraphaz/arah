@@ -91,6 +91,8 @@
 | [ADR-020-arah-core-como-control-plane-separado](docs/architecture/adrs/ADR-020-arah-core-como-control-plane-separado.md) | - | - |
 | [ADR-021-design-system-app-canonic](docs/architecture/adrs/ADR-021-design-system-app-canonic.md) | - | - |
 | [ADR-022-convencao-sinalizacao-de-erros](docs/architecture/adrs/ADR-022-convencao-sinalizacao-de-erros.md) | - | - |
+| [ADR-023-intelligence-provider-abstraction](docs/architecture/adrs/ADR-023-intelligence-provider-abstraction.md) | - | - |
+| [ADR-024-world-monitor-rest-mvp-mcp-agents](docs/architecture/adrs/ADR-024-world-monitor-rest-mvp-mcp-agents.md) | - | - |
 | [README](docs/architecture/adrs/README.md) | - | - |
 | [README](docs/architecture/diagrams/README.md) | - | - |
 | [Kanban sem título 1](docs/archive/Kanban sem título 1.md) | - | - |
@@ -292,6 +294,8 @@
 | [REVISAO_COMPLETA_PRIORIDADES](docs/backlog-api/REVISAO_COMPLETA_PRIORIDADES.md) | - | - |
 | [ROADMAP_VISUAL](docs/backlog-api/ROADMAP_VISUAL.md) | - | - |
 | [TEMPLATE_TDD_BDD_FASES](docs/backlog-api/TEMPLATE_TDD_BDD_FASES.md) | - | - |
+| [TI0-DECISOES](docs/backlog-api/TI0-DECISOES.md) | - | - |
+| [TI0-POLITICA-PUBLICACAO-MODELO](docs/backlog-api/TI0-POLITICA-PUBLICACAO-MODELO.md) | - | - |
 | [TI0](docs/backlog-api/TI0.md) | - | - |
 | [TI1](docs/backlog-api/TI1.md) | - | - |
 | [TI2](docs/backlog-api/TI2.md) | - | - |
@@ -314,6 +318,8 @@
 | [PACOTES_FISCAIS_POR_TERRITORIO](docs/compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) | - | - |
 | [CONFIRMACAO_FASE_15](docs/CONFIRMACAO_FASE_15.md) | - | - |
 | [CONNECTION_POOLING_METRICS](docs/CONNECTION_POOLING_METRICS.md) | - | - |
+| [attribution](docs/contracts/world-monitor/attribution.md) | - | - |
+| [README](docs/contracts/world-monitor/README.md) | - | - |
 | [COVERAGE_STATUS_2026](docs/COVERAGE_STATUS_2026.md) | - | - |
 | [CURSOR_CONFIG_FILES_REFERENCE](docs/CURSOR_CONFIG_FILES_REFERENCE.md) | - | - |
 | [CURSOR_CONFIGURACAO_RECOMENDADA](docs/CURSOR_CONFIGURACAO_RECOMENDADA.md) | - | - |
@@ -424,6 +430,7 @@
 | [INCIDENT_PLAYBOOK](docs/INCIDENT_PLAYBOOK.md) | - | - |
 | [INCIDENT_RESPONSE](docs/INCIDENT_RESPONSE.md) | - | - |
 | [INTEGRACAO_ONBOARDING_TECNICO_REESTRUTURACAO](docs/INTEGRACAO_ONBOARDING_TECNICO_REESTRUTURACAO.md) | - | - |
+| [TI0-PARECER-WORLD-MONITOR](docs/legal/TI0-PARECER-WORLD-MONITOR.md) | - | - |
 | [LGPD_COMPLIANCE](docs/LGPD_COMPLIANCE.md) | - | - |
 | [LICOES_APRENDIDAS](docs/LICOES_APRENDIDAS.md) | - | - |
 | [LOCAL_CHANGES_PENDENTES](docs/LOCAL_CHANGES_PENDENTES.md) | - | - |

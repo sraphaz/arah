@@ -83,14 +83,7 @@ public sealed class MerchantCommercialService
                 cancellationToken);
         }
 
-        var existing = await _meters.ListBySubscriptionAsync(subscription.Id, cancellationToken);
-        if (existing.Count > 0)
-        {
-            return Result<IReadOnlyList<ConsumptionMeter>>.Success(existing);
-        }
-
-        var defaults = ConsumptionMeter.ZeroedDefaults(subscription.Id);
-        await _meters.AddRangeAsync(defaults, cancellationToken);
-        return Result<IReadOnlyList<ConsumptionMeter>>.Success(defaults);
+        var meters = await _meters.GetOrCreateDefaultsAsync(subscription.Id, cancellationToken);
+        return Result<IReadOnlyList<ConsumptionMeter>>.Success(meters);
     }
 }

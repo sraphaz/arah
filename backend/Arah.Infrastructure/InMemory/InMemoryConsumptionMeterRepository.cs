@@ -14,7 +14,10 @@ public sealed class InMemoryConsumptionMeterRepository : IConsumptionMeterReposi
     {
         if (_bySubscription.TryGetValue(subscriptionId, out var list))
         {
-            return Task.FromResult<IReadOnlyList<ConsumptionMeter>>(list.ToList());
+            lock (list)
+            {
+                return Task.FromResult<IReadOnlyList<ConsumptionMeter>>(list.ToList());
+            }
         }
 
         return Task.FromResult<IReadOnlyList<ConsumptionMeter>>(Array.Empty<ConsumptionMeter>());
@@ -27,10 +30,35 @@ public sealed class InMemoryConsumptionMeterRepository : IConsumptionMeterReposi
             var list = _bySubscription.GetOrAdd(group.Key, _ => new List<ConsumptionMeter>());
             lock (list)
             {
-                list.AddRange(group);
+                foreach (var meter in group)
+                {
+                    if (list.Any(existing =>
+                            string.Equals(existing.Metric, meter.Metric, StringComparison.Ordinal)))
+                    {
+                        continue;
+                    }
+
+                    list.Add(meter);
+                }
             }
         }
 
         return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<ConsumptionMeter>> GetOrCreateDefaultsAsync(
+        Guid subscriptionId,
+        CancellationToken cancellationToken)
+    {
+        var list = _bySubscription.GetOrAdd(subscriptionId, _ => new List<ConsumptionMeter>());
+        lock (list)
+        {
+            if (list.Count == 0)
+            {
+                list.AddRange(ConsumptionMeter.ZeroedDefaults(subscriptionId));
+            }
+
+            return Task.FromResult<IReadOnlyList<ConsumptionMeter>>(list.ToList());
+        }
     }
 }

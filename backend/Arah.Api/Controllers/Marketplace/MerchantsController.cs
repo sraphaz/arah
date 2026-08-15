@@ -81,7 +81,7 @@ public sealed class MerchantsController : ControllerBase
             CancelAtPeriodEnd = created.CancelAtPeriodEnd
         };
 
-        return Created($"api/v1/subscriptions/{created.Id}", response);
+        return Created($"/api/v1/subscriptions/{created.Id}", response);
     }
 
     /// <summary>

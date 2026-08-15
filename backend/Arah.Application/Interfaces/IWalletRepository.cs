@@ -6,4 +6,5 @@ public interface IWalletRepository
 {
     Task<Wallet?> GetByIdAsync(Guid walletId, CancellationToken cancellationToken);
     Task AddAsync(Wallet wallet, CancellationToken cancellationToken);
+    Task UpsertAsync(Wallet wallet, CancellationToken cancellationToken);
 }

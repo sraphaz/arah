@@ -2,7 +2,7 @@
 
 **Data**: 2026-08-15  
 **Uso**: fixtures e snapshot OpenAPI para CI / adapter mock — **sem chamada real** ao World Monitor  
-**ADRs**: [ADR-023](../architecture/adrs/ADR-023-intelligence-provider-abstraction.md) · [ADR-024](../architecture/adrs/ADR-024-world-monitor-rest-mvp-mcp-agents.md)
+**ADRs**: [ADR-023](../../architecture/adrs/ADR-023-intelligence-provider-abstraction.md) · [ADR-024](../../architecture/adrs/ADR-024-world-monitor-rest-mvp-mcp-agents.md)
 
 ---
 
@@ -34,6 +34,6 @@ Todos os payloads são **sintéticos** (plausíveis para o piloto Socorro-SP). N
 
 ## Referências
 
-- [ti-research-notes.md](../handoff/inteligencia-territorial/ti-research-notes.md)
-- [TI0.md](../backlog-api/TI0.md)
-- [TI0-DECISOES.md](../backlog-api/TI0-DECISOES.md)
+- [ti-research-notes.md](../../handoff/inteligencia-territorial/ti-research-notes.md)
+- [TI0.md](../../backlog-api/TI0.md)
+- [TI0-DECISOES.md](../../backlog-api/TI0-DECISOES.md)

@@ -2,6 +2,7 @@ using Arah.Application.Common;
 using Arah.Application.Interfaces;
 using Arah.Domain.Financial;
 using Arah.Modules.Marketplace.Application.Interfaces;
+using Arah.Modules.Marketplace.Domain;
 
 namespace Arah.Application.Services;
 
@@ -21,12 +22,15 @@ public sealed class WalletQueryService
         Guid requestingUserId,
         CancellationToken cancellationToken)
     {
-        var wallet = await _wallets.GetByIdAsync(walletId, cancellationToken);
-        if (wallet is null)
+        // Always reproject from SellerBalance when this id is the caller's ledger row,
+        // so sales/payouts are reflected and paid-out funds are not treated as available.
+        var projected = await TryProjectOwnSellerBalanceAsync(walletId, requestingUserId, cancellationToken);
+        if (projected is not null)
         {
-            wallet = await TryProjectOwnSellerBalanceAsync(walletId, requestingUserId, cancellationToken);
+            return Result<Wallet>.Success(projected);
         }
 
+        var wallet = await _wallets.GetByIdAsync(walletId, cancellationToken);
         if (wallet is null)
         {
             return Result<Wallet>.Failure("Wallet not found.");
@@ -53,18 +57,23 @@ public sealed class WalletQueryService
             return null;
         }
 
-        var totalCents = balance.PendingAmountInCents
-            + balance.ReadyForPayoutAmountInCents
-            + balance.PaidAmountInCents;
+        var availableCents = AvailableBalanceInCents(balance);
         var wallet = Wallet.ForSeller(
             balance.Id,
             balance.SellerUserId,
             balance.TerritoryId,
-            totalCents / 100m,
+            availableCents / 100m,
             balance.Currency,
             DateTimeOffset.UtcNow);
 
-        await _wallets.AddAsync(wallet, cancellationToken);
+        await _wallets.UpsertAsync(wallet, cancellationToken);
         return wallet;
     }
+
+    /// <summary>
+    /// Funds still held in Aratá: pending + ready for payout.
+    /// PaidAmountInCents has already left the wallet and must not inflate balance.
+    /// </summary>
+    internal static long AvailableBalanceInCents(SellerBalance balance) =>
+        balance.PendingAmountInCents + balance.ReadyForPayoutAmountInCents;
 }

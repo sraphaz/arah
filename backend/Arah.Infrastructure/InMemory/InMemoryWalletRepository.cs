@@ -19,4 +19,10 @@ public sealed class InMemoryWalletRepository : IWalletRepository
         _wallets.TryAdd(wallet.Id, wallet);
         return Task.CompletedTask;
     }
+
+    public Task UpsertAsync(Wallet wallet, CancellationToken cancellationToken)
+    {
+        _wallets[wallet.Id] = wallet;
+        return Task.CompletedTask;
+    }
 }

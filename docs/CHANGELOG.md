@@ -18,11 +18,18 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - CLI: `arah-agents.ps1 pr-graph`; testes `scripts/agents/tests/address-bot-review-filter.tests.ps1`
 - Doc: [`AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) v1.1
 - fix(ci): concurrency por PR em `project-board-sync` e `wiki-pages` (evita cancelled cruzado)
+- Wiki CI: fallback de fonte local quando `CI=true` (evita falha flaky em `fonts.gstatic.com`)
 
 ### Adicionado — Diagnóstico do fluxo de agentes no PR (2026-08-15)
 
 - [`docs/ops/AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) — publicação vs consumo, Agent Graph, lacunas de checklist/ready-for-merge e recomendações P0–P2
 - Link em `docs/ops/AGENT_OPERATION.md`
+
+### Adicionado — Canvas executivo do estado da plataforma (2026-08-15)
+
+- Novo documento: [`docs/ops/EXECUTIVE_CANVAS.md`](ops/EXECUTIVE_CANVAS.md) — síntese para diretoria/produto (o que existe, o que está testado, lacunas, instâncias, estratégia e pipeline)
+- Links a partir de `PLATFORM_STATE.md` e `STATUS_FASES.md`
+- Clarificações bot-review: WA-N1 API-only; S0 até FASE54 / S1 com FASE55; fence MD040
 
 ### Adicionado — Análise fiscal BR + FASE62 proposta (2026-08-15)
 

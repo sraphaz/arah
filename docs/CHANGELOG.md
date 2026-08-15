@@ -9,6 +9,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Canvas executivo do estado da plataforma (2026-08-15)
+
+- Novo documento: [`docs/ops/EXECUTIVE_CANVAS.md`](ops/EXECUTIVE_CANVAS.md) — síntese para diretoria/produto (o que existe, o que está testado, lacunas, instâncias, estratégia e pipeline)
+- Links a partir de `PLATFORM_STATE.md` e `STATUS_FASES.md`
+- Clarificações bot-review: WA-N1 API-only; S0 até FASE54 / S1 com FASE55; fence MD040
+
 ### Adicionado — Análise fiscal BR + FASE62 proposta (2026-08-15)
 
 - [`docs/compliance/ANALISE_FISCAL_BR.md`](compliance/ANALISE_FISCAL_BR.md) — gaps fiscais/tributários vs o que já está instalado; priorização P0–P2

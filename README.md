@@ -148,6 +148,8 @@ Guia completo (pré-requisitos, fluxo de onboarding, o que está implementado e 
 
 **Fonte de verdade**: **[docs/ops/PLATFORM_STATE.md](./docs/ops/PLATFORM_STATE.md)** — operabilidade em 7 níveis (produto, arquitetura, qualidade, CI/CD, agentes, sustentação 52–61, governança documental).
 
+**Canvas executivo**: **[docs/ops/EXECUTIVE_CANVAS.md](./docs/ops/EXECUTIVE_CANVAS.md)** — estado do produto, testes, lacunas, instâncias e pipeline.
+
 | Nível | Resumo (2026-07) |
 |-------|------------------|
 | Produto | Onboarding, território, marketplace, eventos — app + BFF operacionais localmente |

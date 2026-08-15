@@ -23,10 +23,16 @@ jobs:
     env:
       GH_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN }}
     steps:
+      # Dependabot não recebe secrets de Actions — PAT vazio quebrava checkout.
+      # Fallback github.token; sync real continua gated em GH_PROJECT_TOKEN != ''.
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PROJECT_TOKEN }}
+          token: ${{ secrets.GH_PROJECT_TOKEN || github.token }}
           persist-credentials: true
+
+      - name: Skip board sync when token unavailable
+        if: ${{ env.GH_PROJECT_TOKEN == '' }}
+        run: echo "GH_PROJECT_TOKEN unavailable (e.g. Dependabot PRs); skipping Project board sync."
 
       - name: Reconcile + sync board
         if: ${{ env.GH_PROJECT_TOKEN != '' }}

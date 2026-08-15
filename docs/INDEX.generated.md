@@ -462,6 +462,7 @@
 | [AGENT_GRAPH](docs/ops/AGENT_GRAPH.md) | - | - |
 | [AGENT_OPERATION](docs/ops/AGENT_OPERATION.md) | - | - |
 | [AGENT_PILOT_BILLING](docs/ops/AGENT_PILOT_BILLING.md) | - | - |
+| [AGENT_PR_FLOW_INTEGRITY](docs/ops/AGENT_PR_FLOW_INTEGRITY.md) | - | - |
 | [AGENT_QUICKSTART](docs/ops/AGENT_QUICKSTART.md) | - | - |
 | [AGENT_STRATEGY_VALIDATION](docs/ops/AGENT_STRATEGY_VALIDATION.md) | - | - |
 | [CI_CD_PIPELINE](docs/ops/CI_CD_PIPELINE.md) | - | - |

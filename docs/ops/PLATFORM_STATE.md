@@ -120,7 +120,8 @@ Detalhe: [STATUS_FASES.md](../STATUS_FASES.md) · [REALINHAMENTO_SUSTENTACAO_OPE
 
 ## Prioridade atual
 
-**Onda S0**: FASE52 ✅ → FASE53 ✅ → **FASE54** (config ops: [PILOT_STAGING_CONFIG_TODO.md](./PILOT_STAGING_CONFIG_TODO.md)) → **FASE55** (quote/gate v0 em código).
+**Onda S0**: FASE52 ✅ → FASE53 ✅ → **FASE54** (config ops: [PILOT_STAGING_CONFIG_TODO.md](./PILOT_STAGING_CONFIG_TODO.md)).
+**Onda S1**: **FASE55** (quote/gate v0 em código) → FASE56–57 (transparência + cockpit).
 
 **Provisionamento piloto**: `./scripts/provision/provision-pilot-instance.ps1` · [infrastructure/pilot/README.md](../infrastructure/pilot/README.md)
 

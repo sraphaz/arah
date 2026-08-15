@@ -14,7 +14,7 @@
 | Dimensão | Situação hoje |
 |----------|---------------|
 | **Produto** | Plataforma comunitária **território-first**: feed, mapa, membership, marketplace, eventos, chat, governança, alertas — **API + BFF + app Flutter alinhados** |
-| **Maturidade de código** | Fases comunitárias **1–16** entregues; design app Ondas A–I; ponte hídrica WA-E* + **WA-N1** (NaturalAsset ponto) |
+| **Maturidade de código** | Fases comunitárias **1–16** entregues; design app Ondas A–I; ponte hídrica WA-E* + **WA-N1** (NaturalAsset ponto, **API-only**) |
 | **Go-live produção** | **Ainda não**. Bloqueio operacional: fechar **FASE54** (secrets staging / Stripe / backup) |
 | **Receita** | Modelo **open-core** em código (FASE55 v0: quote, split, gate comercial, refund, payout consolidado); fechamento depende do piloto |
 | **Qualidade** | CI bloqueante; meta cobertura **>90%** camadas de negócio; Spec-Driven Design + gates de agentes |
@@ -88,7 +88,7 @@ flowchart LR
 | Cockpit implementador | Operar territórios e receita (web) | ⏳ FASE57 |
 | Multi-instância / federação | Vários territórios, soberania, opt-in | ⏳ FASE58–59 |
 | Inteligência Territorial | Sinais externos → inbox → publicação | ⏳ TI-0…TI-3 (MVP) |
-| Saúde / corpos d’água | Rios, nascentes como ativos curáveis | 🟡 WA-N1 ponto ✅; curso 24.0b ⏳ |
+| Saúde / corpos d’água | Rios, nascentes como ativos curáveis | 🟡 WA-N1 ponto ✅ na API (sem BFF/Flutter); curso 24.0b ⏳ |
 
 ---
 
@@ -107,7 +107,8 @@ flowchart LR
 | Chat territorial | ✅ | ✅ | ✅ | Canais / grupos |
 | Governança (votações) | ✅ | ✅ | ✅ | |
 | Moderação / alertas / conexões | ✅ | ✅ | ✅ | |
-| Assets + corpos d’água (ponte + ponto) | ✅ | ✅ | ✅ | WA-E* + WA-N1 |
+| Assets / corpos d’água (ponte TerritoryAsset) | ✅ | ✅ | ✅ | WA-E* — jornada `assets` no BFF/app |
+| NaturalAsset ponto (WA-N1) | ✅ | ⏳ | ⏳ | `/natural-assets` só em `Arah.Api`; BFF/Flutter ainda não expõem |
 
 Fonte: [FEATURE_MATRIX_API_BFF_APP.md](../FEATURE_MATRIX_API_BFF_APP.md) · [STABLE_RELEASE_APP_ONBOARDING.md](../STABLE_RELEASE_APP_ONBOARDING.md).
 
@@ -175,7 +176,7 @@ Compra coletiva, hospedagem, demandas/ofertas, moeda territorial profunda, IA av
 
 | Trilha | Feito | Falta |
 |--------|-------|-------|
-| Corpos d’água | WA-E1…E4, WA-N1 ponto | 24.0b LineString (rio/córrego), sensibilidade AC-WA-3…5 |
+| Corpos d’água | WA-E1…E4; WA-N1 ponto (API-only) | BFF/Flutter para NaturalAsset; 24.0b LineString; sensibilidade AC-WA-3…5 |
 | Inteligência Territorial | Specs/issues TI-0…7 abertas | Execução TI-0 → MVP TI-1…3 |
 | Design web | Parte DSG | DSG-04 espaçamento, DSG-06 glass, DSG-07 syntax WCAG |
 | DoD retrofit | Parcial | DOD-05…08, DOD-10 |
@@ -270,7 +271,7 @@ Operação multi-instância → federação → app implementador → capital te
 
 ### Proposta de valor
 
-```
+```text
 Moradores          → pertencimento, informação, cuidado coletivo no território
 Comércios locais   → loja digital com taxa transparente (não paywall comunitário)
 Implementadores    → operação, receita compartilhada, autonomia

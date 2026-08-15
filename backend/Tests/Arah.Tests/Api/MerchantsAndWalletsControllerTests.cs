@@ -279,5 +279,3 @@ public sealed class MerchantsAndWalletsControllerTests
         }
     }
 }
-
-}

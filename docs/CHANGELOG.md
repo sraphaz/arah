@@ -9,6 +9,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Fluxo de agentes P0/P1 (integridade PR) (2026-08-15)
+
+- `address-bot-review.ps1`: conta só threads inline de review bots; ignora sinalização `arah-*` (`ignored_signal`)
+- Template **Pareceres endereçados** em `.agents/templates/pr-body.md` + skill `open-pr` / PR template
+- `post-pr-graph.ps1` + step em `agents.yml` → comentário `<!-- arah-pr-graph -->`
+- Checklist steward dinâmico (`- [x]` CI/threads quando `audit.ready`) em `agents-pr-steward.yml`
+- CLI: `arah-agents.ps1 pr-graph`; testes `scripts/agents/tests/address-bot-review-filter.tests.ps1`
+- Doc: [`AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) v1.1
+
 ### Adicionado — Diagnóstico do fluxo de agentes no PR (2026-08-15)
 
 - [`docs/ops/AGENT_PR_FLOW_INTEGRITY.md`](ops/AGENT_PR_FLOW_INTEGRITY.md) — publicação vs consumo, Agent Graph, lacunas de checklist/ready-for-merge e recomendações P0–P2

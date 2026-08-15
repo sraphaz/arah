@@ -1,9 +1,9 @@
 # Integridade do fluxo de agentes no PR
 
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Data**: 2026-08-15  
 **Público**: produto, engenharia, operação por agentes  
-**Status**: diagnóstico (observa o que o sistema **faz de verdade** vs o que a UI do PR **parece** fazer)
+**Status**: diagnóstico + **P0/P1 implementados** (filtro steward, pareceres no template, `arah-pr-graph`, checklist dinâmico)
 
 ---
 
@@ -11,10 +11,10 @@
 
 | Pergunta | Resposta |
 |----------|----------|
-| Onde os comentários dos “agentes” são consumidos? | Principalmente por **humano** e por **agente de código** (Cursor/Cloud) que **escolhe** ler o PR / `domain-review.md` / skill `arah-domain-consult`. **Não** há loop automático que marca checklists. |
-| O Agent Graph aparece no PR? | **Não.** É artefato gerado (`export-graph` → JSON em `docs/_meta/`). Serve para auditar *roteamento*, não para UI ao vivo “quem está agindo”. |
-| Os agentes de domínio “agem”? | No CI eles são **consultivos**: colam parecer + checklist “Validar no PR” a partir do YAML. **Não executam código nem respondem o checklist.** |
-| Por que parece que “anotam e não fazem”? | Porque o desenho atual é **passivo por arquivo + comentário** (sem `followup_message` / sem segundo turno de modelo no hook). Publicar ≠ cumprir. |
+| Onde os comentários dos “agentes” são consumidos? | Principalmente por **humano** e por **agente de código** (Cursor/Cloud) que **escolhe** ler o PR / `domain-review.md` / skill `arah-domain-consult`. **Não** há loop automático que marca checklists de domínio. |
+| O Agent Graph aparece no PR? | **Sim (P1):** comentário `<!-- arah-pr-graph -->` via `post-pr-graph.ps1` no Orchestrate. O grafo estático do repo continua em `export-graph` → JSON. |
+| Os agentes de domínio “agem”? | No CI eles são **consultivos**: colam parecer + checklist “Validar no PR” a partir do YAML. **Não executam código.** Consumo explícito = seção **Pareceres endereçados** no corpo do PR. |
+| Por que parece que “anotam e não fazem”? | Porque o desenho atual é **passivo por arquivo + comentário** (sem `followup_message` / sem segundo turno de modelo no hook). Publicar ≠ cumprir — o executor continua sendo humano/Cloud Agent. |
 
 ---
 
@@ -34,14 +34,16 @@ flowchart TB
     PR --> CI[ci.yml build/test]
     ORCH --> ACT[Comentários arah-agent-activity]
     ORCH --> DOM[post-domain-consult — pareceres]
+    ORCH --> GRAPH[post-pr-graph — arah-pr-graph]
     ORCH --> ROUTE[Comentário orquestrador: agente principal + skills]
-    STEW --> AUDIT[address-bot-review.ps1]
+    STEW --> AUDIT[address-bot-review.ps1 — só threads review]
     STEW --> AUTOREPLY[respond-bot-review.ps1 — só casos hardcoded]
-    STEW --> CHECK[Comentário arah-pr-steward checklist]
+    STEW --> CHECK[Checklist steward dinâmico audit.ready]
   end
 
   subgraph consumo["Consumo real"]
-    DOM --> READ1[Cursor: skill domain-consult / domain-review.md]
+    DOM --> READ1[Cursor: skill domain-consult / Pareceres endereçados]
+    GRAPH --> READ1
     CHECK --> READ2[Humano ou Cloud Agent no review]
     ACT --> READ3[Visibilidade — quem foi 'acionado']
     READ1 --> CODE[Corrigir código / responder no PR]
@@ -65,67 +67,53 @@ flowchart TB
 | Marcador no PR | Origem | Natureza |
 |----------------|--------|----------|
 | `arah-orchestrator` | `agents.yml` | Roteamento: agente principal + skills **sugeridas** |
+| `arah-pr-graph` | `post-pr-graph.ps1` | Vista do roteamento desta revisão (agentes, skills, domínios, rules) |
 | `arah-agent-activity:*` | `post-agent-activity.ps1` | “Agente X foi acionado” + checklist de **conduta** (guardrails do manifesto) |
 | `arah-domain-consult:*` | `post-domain-consult.ps1` | Texto fixo do `enrich`/`validate` do `.agents/domain/*.agent.yaml` + lista de arquivos do diff |
 | `arah-qa-gate` / security | `agents-gates.yml` | Template de checklist orientativo |
-| `arah-pr-steward` | `agents-pr-steward.yml` | Lembra regra de bots + status do audit |
+| `arah-pr-steward` | `agents-pr-steward.yml` | Checklist dinâmico (CI/threads auto-ticados quando `audit.ready`) |
 | CodeRabbit / Bugbot | SaaS externo | Review inline (quando PR não é draft) |
-| Resposta `cursor` / humano | Agente de código ou pessoa | **Único** lugar onde checklists costumam ser *respondidos* de fato |
+| Resposta `cursor` / humano | Agente de código ou pessoa | **Único** lugar onde checklists de domínio costumam ser *respondidos* de fato |
 
 ---
 
 ## 3. Agent Graph — o que é e como “apresentar”
 
-- **Não** roda no feed do PR.
 - Formaliza arestas: path → regra → agente → skill → spec → harness → guardrail → workflow.
-- Comandos: `./scripts/agents/arah-agents.ps1 export-graph` / `validate-graph`.
-- Artefato: `docs/_meta/agent-graph.generated.json` (+ doc `docs/ops/AGENT_GRAPH.md`).
-
-**Como apresentar “quem age” hoje**
-
-| Canal | O que mostra |
-|-------|----------------|
-| Comentário orquestrador no PR | Agente principal + co-agentes por path |
-| `arah-agent-activity` | Lista de agentes “ativados” naquele evento |
-| Artifact do workflow Orchestrate | JSON `agent-activity-*.json` |
-| Agent Graph JSON | Mapa estático de *possibilidade* de ativação, não o instante do PR |
-
-**Lacuna de produto**: não há vista única no PR (“grafo desta revisão” + estado cumprido/pendente por item de Validar no PR).
+- Comandos: `./scripts/agents/arah-agents.ps1 export-graph` / `validate-graph` / `pr-graph -PrNumber N`.
+- Artefato estático: `docs/_meta/agent-graph.generated.json` (+ doc `docs/ops/AGENT_GRAPH.md`).
+- **No PR (P1):** comentário `<!-- arah-pr-graph -->` com o recorte da coreografia daquele evento.
 
 ---
 
-## 4. Integridade — onde a cadeia quebra
+## 4. Integridade — onde a cadeia quebra (e o que já foi fechado)
 
 ### 4.1 Publicação sem execução (esperado pelo desenho passivo)
 
 Decisão deliberada (AGENTS.md / comunicação passiva): domínio **não** dispara turnos extras de modelo no CI.  
-Consequência: “Validar no PR” chega como **lista de verificação para quem for implementar/revisar**, não como tarefa que o bot fecha sozinho.
+Consequência: “Validar no PR” chega como **lista de verificação**; consumo obrigatório via seção **Pareceres endereçados** no `pr-body`.
 
 ### 4.2 `respond-bot-review.ps1` quase não generaliza
 
-Só responde a poucos padrões hardcoded (ex.: arquivos Core antigos).  
-Apontamentos CodeRabbit/domínio/steward **não** geram reply automático genérico.
+Só responde a poucos padrões hardcoded. Apontamentos CodeRabbit genéricos **não** geram reply automático (P2).
 
-### 4.3 `pr-ready` / contagem de bots é ruidosa
+### 4.3 `pr-ready` / contagem de bots — **corrigido (P0)**
 
-`address-bot-review` trata comentários de `github-actions` (incluindo os **próprios** checklists steward/QA/domínio) como “apontamentos de bot”.  
-Isso infla `bot_comments` e dificulta o label automático `ready-for-merge` — mesmo com CI verde e 0 threads inline.
+`address-bot-review.ps1` conta só **threads inline não resolvidas** de bots de review (CodeRabbit, Bugbot, Codex, …) + alertas Dependabot de CVE.  
+Ignora sinalização Arah (`arah-domain-consult`, activity, gates, steward, pr-graph) e autores `github-actions` em issue comments. Campo `ignored_signal` no JSON.
 
-### 4.4 Checklists nunca são “ticados” no GitHub
+### 4.4 Checklists — **parcialmente fechado (P1)**
 
-Os `- [ ]` dos templates **não** são atualizados pelo CI quando alguém cumpre o item.  
-A evidência fica em: commits, testes, comentário humano/Cursor (“Resposta aos bots”), ou threads resolvidas.
+Steward marca `- [x]` em CI / threads / Dependabot quando o audit confirma.  
+Itens humanos (pareceres, sync-docs, corpo do PR) permanecem `- [ ]` até o autor preencher.
 
 ### 4.5 Visão de domínio ≠ backlog automático
 
-Parecer de `monetizacao-split` / `carteira-arata` / TI **não** abre issues no Project.  
-Backlog operacional continua: épicos FASE* + `PHASE_QUEUE` + `next-phase` após merge em `main`.  
-Garantir “tudo feito em todos os domínios” hoje = **disciplina DoD** (spec `covered_by`, harness, sync-docs, leitura do parecer) — não um kanban gerado pelos comentários.
+Parecer de domínio **não** abre issues no Project (P2 opcional). Backlog continua FASE* + `PHASE_QUEUE` + `next-phase`.
 
 ### 4.6 Cloud Agent / Cursor
 
-Só “fecha o ciclo” se a sessão **ler** pareceres e responder (como em #469).  
-Sem essa etapa, o PR fica com dezenas de notas e zero consumo.
+Fecha o ciclo se a sessão **ler** pareceres, preencher **Pareceres endereçados** e responder threads.
 
 ---
 
@@ -138,55 +126,63 @@ Sem essa etapa, o PR fica com dezenas de notas e zero consumo.
 | Spec + `covered_by` + harness | Critérios de aceite com teste |
 | `dotnet test` / CI | Regressão |
 | sync-docs | Doc no mesmo PR |
-| Domain consult + skill | Lembrete de invariantes de negócio |
+| Domain consult + seção Pareceres endereçados | Consumo explícito de invariantes |
+| `arah-pr-graph` | Vista de quem/o quê foi roteado |
+| Steward filtrado + `audit.ready` | ready-for-merge confiável |
 | Guardrail `no_merge` | Sem merge automático |
 
-### O que **não** está fechado hoje
+### Lacunas restantes (P2)
 
 | Lacuna | Efeito |
 |--------|--------|
-| Sem estado “item de domínio cumprido” | Humano não vê progresso no PR |
-| Sem issue automática a partir de “Validar no PR” | Visão do agente não vira card |
-| Sem grafo do PR na UI | “Quem está agindo” é opaco |
-| Auto-reply limitado | Bots parecem ignorados |
-| Contagem steward ruidosa | ready-for-merge pouco confiável |
+| Sem issue automática a partir de `validate[]` | Visão do agente não vira card |
+| Auto-reply limitado | Bots parecem ignorados sem Cloud Agent |
+| Checklists de domínio não auto-ticados | Evidência fica em commits / comentário humano |
 
 ---
 
-## 6. Recomendações de evolução (prioridade)
+## 6. Recomendações de evolução
 
-| Prio | Mudança | Objetivo |
-|------|---------|----------|
-| P0 | Steward: **não** contar `arah-domain-consult` / `arah-agent-activity` / gates templates como “bot pending”; só CodeRabbit/Bugbot/CodeQL **inline** + falhas CI | Integridade do ready-for-merge |
-| P0 | Template de **resposta obrigatória** no open-pr / Cloud Agent: seção “Pareceres endereçados” com IDs de domínio | Consumo explícito |
-| P1 | Job que gera comentário `<!-- arah-pr-graph -->` com agentes ativados + link do export-graph filtrado pelos paths do PR | Apresentar o grafo na revisão |
-| P1 | Checklist dinâmico: issue/comment com `- [x]` atualizado quando `pr-ready` + evidência de testes dos ACs | Fechar o loop visual |
-| P2 | Opcional: abrir subtarefas Project a partir de validate[] **só** quando `kind: enforce` (hoje tudo consultivo) | Visão → backlog sem spam |
-| P2 | Expandir `respond-bot-review` ou skill `address-bot-review` com LLM sob gate humano | Resposta real a bots |
+| Prio | Mudança | Status |
+|------|---------|--------|
+| P0 | Steward: não contar sinalização Arah como bot pending | **Feito** — `address-bot-review.ps1` |
+| P0 | Template **Pareceres endereçados** no open-pr / pr-body | **Feito** — `.agents/templates/pr-body.md` + skill open-pr |
+| P1 | Comentário `<!-- arah-pr-graph -->` no Orchestrate | **Feito** — `post-pr-graph.ps1` + `agents.yml` |
+| P1 | Checklist steward dinâmico com `- [x]` quando audit.ready | **Feito** — `agents-pr-steward.yml` |
+| P2 | Subtarefas Project a partir de validate[] `kind: enforce` | Pendente |
+| P2 | Expandir `respond-bot-review` / LLM sob gate humano | Pendente |
 
 ---
 
 ## 7. Como usar o fluxo *agora* (operação correta)
 
 1. Abrir PR (não draft, se quiser CodeRabbit).  
-2. Esperar Orchestrate + Steward + Gates.  
+2. Esperar Orchestrate (`arah-pr-graph` + pareceres) + Steward + Gates.  
 3. **Ler** pareceres de domínio aplicáveis ao diff (ignorar TI se o PR não é TI).  
 4. Corrigir código / testes / docs.  
-5. Postar **um** comentário consolidado “Resposta aos bots / pareceres” (como #469).  
+5. Preencher **Pareceres endereçados** no corpo + postar comentário consolidado se útil.  
 6. Resolver threads inline.  
 7. `pr-ready` / label `ready-for-merge` → merge **humano**.  
-8. Após merge: `next-phase` pode abrir a próxima FASE* — isso **não** substitui itens fiscais/domínio sem entrada na `PHASE_QUEUE`.
+8. Após merge: `next-phase` pode abrir a próxima FASE*.
+
+Comandos:
+
+```powershell
+./scripts/agents/arah-agents.ps1 bot-review -PrNumber <N>
+./scripts/agents/arah-agents.ps1 pr-ready -PrNumber <N>
+./scripts/agents/arah-agents.ps1 pr-graph -PrNumber <N>   # DryRun: -DryRun
+pwsh ./scripts/agents/tests/address-bot-review-filter.tests.ps1
+```
 
 ---
 
 ## 8. Conclusão
 
-O sistema está **íntegro no desenho passivo** (publicar parecer + gates + CI), mas **incompleto no fechamento do ciclo**: a UI do PR sugere uma orquestra de agentes trabalhando, quando na prática a maior parte é **sinalização**. Quem “não quer” não é o agente — é a ausência de um **executor** obrigatório dos checklists e de uma **vista de progresso**.
-
-Até as recomendações P0/P1 entrarem, a garantia de “tudo feito em todos” continua sendo: **spec + testes + sync-docs + resposta explícita aos pareceres + merge humano**.
+O sistema permanece **passivo na publicação** (parecer + gates + CI), mas com P0/P1 o **fechamento do ciclo** fica íntegro no que a automação pode garantir: ready-for-merge sem ruído, vista do grafo no PR, e obrigação explícita de consumir pareceres no template. Domínio ainda não “fecha sozinho” checklists — e não deve, sem executor de modelo no CI.
 
 ---
 
 ### Changelog
 
+- **1.1** (2026-08-15): P0/P1 implementados (filtro steward, pareceres no template, pr-graph, checklist dinâmico).
 - **1.0** (2026-08-15): diagnóstico do fluxo PR ↔ agentes ↔ graph ↔ backlog; lacunas e recomendações.

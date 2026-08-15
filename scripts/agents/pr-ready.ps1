@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Verifica se PR está pronto para merge (CI + bot review audit).
+  Verifica se PR está pronto para merge (CI + threads de review bots).
 #>
 param(
     [Parameter(Mandatory)]
@@ -22,18 +22,19 @@ try {
     $gatesOk = $false
 }
 
-$ready = $audit.ready -and ($audit.failed_checks.Count -eq 0) -and ($audit.bot_comments -eq 0)
+$ready = [bool]$audit.ready -and ($audit.failed_checks.Count -eq 0) -and (-not [bool]$audit.bots_pending)
 $result = [ordered]@{
     pr              = $PrNumber
     ci_ready        = $audit.ci_ready
     bot_comments    = $audit.bot_comments
+    ignored_signal  = $audit.ignored_signal
     bots_pending    = $audit.bots_pending
     gates_local     = $gatesOk
     ready_for_merge = $ready
     recommendation  = if ($ready) {
         'Adicionar label ready-for-merge; humano pode mergear após revisão final.'
-    } elseif ($audit.bot_comments -gt 0) {
-        'Resolver ou responder todos os apontamentos de bots antes do merge.'
+    } elseif ($audit.bots_pending) {
+        'Resolver threads inline de bots de review (CodeRabbit/Bugbot/…) antes do merge.'
     } else {
         'Corrigir checks falhos antes do merge.'
     }

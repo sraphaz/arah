@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/constants.dart';
 import '../theme/app_design_tokens.dart';
+import '../theme/arah_motion.dart';
 import 'arah_button.dart';
 import 'arah_scaffold.dart';
 
@@ -42,9 +43,10 @@ class ArahJourneyShell extends StatelessWidget {
     final colors = context.appColors;
     final theme = Theme.of(context);
     final safeTotal = totalSteps <= 0 ? 1 : totalSteps;
-    final clampedStep = currentStep.clamp(0, safeTotal - 1);
+    final clampedStep = currentStep.clamp(0, safeTotal - 1).toInt();
     final progress = (clampedStep + 1) / safeTotal;
-    final showBack = onBack != null && clampedStep > 0;
+    final showBack = onBack != null && clampedStep > 0 && !primaryLoading;
+    final motionDuration = ArahMotion.resolve(context, ArahMotion.normal);
 
     return ArahScaffold(
       showWatermark: false,
@@ -62,7 +64,10 @@ class ArahJourneyShell extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: showBack ? onBack : onClose,
+                    // Evita voltar/fechar no meio de submit (ex.: upload async).
+                    onPressed: primaryLoading
+                        ? null
+                        : (showBack ? onBack : onClose),
                     icon: Icon(showBack ? Icons.arrow_back : Icons.close),
                     constraints: const BoxConstraints(
                       minWidth: AppConstants.minTouchTargetSize,
@@ -100,11 +105,18 @@ class ArahJourneyShell extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 4,
-                  backgroundColor: colors.surfaceContainer,
-                  color: colors.primary,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: progress),
+                  duration: motionDuration,
+                  curve: ArahMotion.emphasized,
+                  builder: (context, value, _) {
+                    return LinearProgressIndicator(
+                      value: value,
+                      minHeight: 4,
+                      backgroundColor: colors.surfaceContainer,
+                      color: colors.primary,
+                    );
+                  },
                 ),
               ),
             ),
@@ -116,7 +128,27 @@ class ArahJourneyShell extends StatelessWidget {
                   AppConstants.spacingMd + 2,
                   AppConstants.spacingMd,
                 ),
-                child: child,
+                child: AnimatedSwitcher(
+                  duration: motionDuration,
+                  switchInCurve: ArahMotion.emphasized,
+                  switchOutCurve: ArahMotion.emphasized,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.03, 0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: KeyedSubtree(
+                    key: ValueKey<int>(clampedStep),
+                    child: child,
+                  ),
+                ),
               ),
             ),
             DecoratedBox(

@@ -1,10 +1,13 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-07-23  
+**Última Atualização**: 2026-08-15  
+**Canvas executivo**: [ops/EXECUTIVE_CANVAS.md](./ops/EXECUTIVE_CANVAS.md)  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
-**Prioridade atual**: 🔴 **FASE54** (config manual) + **FASE55** (quote/gate v0)  
-**Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** (World Monitor) — planejada; MVP TI-1…TI-3 paralelo a 17–19  
+**Prioridade atual**: 🔴 **FASE54** (config manual humana) + **FASE55** (v0 merchants/wallets/consumption) + **TI-0** (docs/contratos)  
+**Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** — TI-0 docs/contratos neste ciclo; MVP TI-1…TI-3 paralelo a 17–19  
+**Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
+**Capacidade hídrica**: 💧 **Corpos d'água curáveis** — [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); ponte WA-E1…E4 ✅; **WA-N1** NaturalAsset ponto (FASE24.0a)  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
@@ -31,7 +34,7 @@ Trilha **transversal** (não substitui numeração FASE*). Âncoras: FASE23, FAS
 
 | ID | Nome | Prioridade | Status | Documentação |
 |----|------|------------|--------|--------------|
-| TI-0 | Pesquisa e contratos | 🔴 P0 | ⏳ Pendente | [TI0.md](./backlog-api/TI0.md) |
+| TI-0 | Pesquisa e contratos | 🔴 P0 | 🟡 Docs/contratos ✅ · jurídico pending | [TI0.md](./backlog-api/TI0.md) |
 | TI-1 | Fundação + adapter WM | 🔴 P0 | ⏳ Pendente | [TI1.md](./backlog-api/TI1.md) |
 | TI-2 | Intelligence Inbox | 🔴 P0 | ⏳ Pendente | [TI2.md](./backlog-api/TI2.md) · [spec](./specs/features/TI-201-signal-review.spec.yaml) |
 | TI-3 | Publicação territorial | 🔴 P0 | ⏳ Pendente | [TI3.md](./backlog-api/TI3.md) |
@@ -42,6 +45,18 @@ Trilha **transversal** (não substitui numeração FASE*). Âncoras: FASE23, FAS
 
 **Realinhamento**: [REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md](./backlog-api/REALINHAMENTO_INTELIGENCIA_TERRITORIAL.md) · **Handoff**: [inteligencia-territorial/](./handoff/inteligencia-territorial/)
 
+### 💧 Corpos d'água do território (rios, córregos, nascentes, fontes) ⭐ NOVO 2026-08
+
+Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, córregos, nascentes e fontes como **entidades curáveis** escopadas por território. Âncora de implementação: **FASE24.0**.
+
+| Artefato | Papel |
+|----------|--------|
+| [CORPOS_DAGUA_TERRITORIO.md](./backlog-api/CORPOS_DAGUA_TERRITORIO.md) | Realinhamento + backlog WA-E* / 24.0 · WA-E1…E4 ✅ · **WA-N1 ponto** · AC-WA-1/2 parciais · AC-WA-6 covered · AC-WA-3…5 deferidos |
+| [FASE24.md](./backlog-api/FASE24.md) §24.0 | Fundação NaturalAsset hídrico · WA-N1 ponto em revisão ([PR #466](https://github.com/sraphaz/arah/pull/466)) · AC-WA-1/2 parciais (ponto) · AC-WA-6 covered · AC-WA-3…5 deferidos |
+| [water-bodies-curation.spec.yaml](./specs/features/water-bodies-curation.spec.yaml) | Spec SDD · **Spec-Id:** `water-bodies-curation` · WA-N1: AC-WA-6 covered; AC-WA-1/2 parciais (ponto); AC-WA-3…5 deferidos (curso/sensibilidade/refs) |
+
+**Dono consultivo**: `mapa-lugares`.
+
 ### 🔴 Sustentação Operacional (52–61) — PRIORIDADE ATUAL
 
 | Fase | Nome | Prioridade | Onda | Status | Documentação |
@@ -49,15 +64,17 @@ Trilha **transversal** (não substitui numeração FASE*). Âncoras: FASE23, FAS
 | 52 | Fundação Técnica e CI/CD | 🔴 P0 | S0 | ✅ Completo | [FASE52.md](./backlog-api/FASE52.md) · [CI/CD](../ops/CI_CD_PIPELINE.md) |
 | 53 | Arah Core | 🔴 P0 | S0 | ✅ Completo | [FASE53.md](./backlog-api/FASE53.md) · [spec](../specs/phases/FASE53-arah-core.spec.yaml) |
 | 54 | IaC e 1ª Instância | 🔴 P0 | S0 | 🟡 Config ops pendente | [FASE54.md](./backlog-api/FASE54.md) · [config TODO](../ops/PILOT_STAGING_CONFIG_TODO.md) |
-| 55 | Monetização Open-Core | 🔴 P0 | S1 | 🟡 Em progresso (v0) | [FASE55.md](./backlog-api/FASE55.md) · [spec](../specs/phases/FASE55-monetization.spec.yaml) |
+| 55 | Monetização Open-Core | 🔴 P0 | S1 | 🟡 Em progresso (v0 + merchants/wallets/consumption) | [FASE55.md](./backlog-api/FASE55.md) · [spec](../specs/phases/FASE55-monetization.spec.yaml) |
 | 56 | Transparência e Taxas | 🔴 P0 | S2 | ⏳ Pendente | [FASE56.md](./backlog-api/FASE56.md) |
 | 57 | Cockpit Implementador | 🔴 P0 | S1–S2 | ⏳ Pendente | [FASE57.md](./backlog-api/FASE57.md) |
 | 58 | Operação Multi-Instância | 🟡 P1 | S1–S2 | ⏳ Pendente | [FASE58.md](./backlog-api/FASE58.md) |
 | 59 | Federação | 🟡 P2→P1 | S3 | ⏳ Pendente | [FASE59.md](./backlog-api/FASE59.md) |
 | 60 | App Implementador | 🟡 P1 | S3 | ⏳ Pendente | [FASE60.md](./backlog-api/FASE60.md) |
 | 61 | Capital Territorial | 🟢 P2 | S3–S4 | ⏳ Pendente | [FASE61.md](./backlog-api/FASE61.md) |
+| 62 | Conformidade fiscal & KYC comercial (BR) | 🔴 P0 (62.0+a) | S1 | ⏳ Proposta | [FASE62.md](./backlog-api/FASE62.md) · [análise](../compliance/ANALISE_FISCAL_BR.md) · [packs/jornadas](../compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) |
 
-**Handoff**: [docs/handoff/](./handoff/README.md)
+**Handoff**: [docs/handoff/](./handoff/README.md)  
+**Análise fiscal BR**: [docs/compliance/ANALISE_FISCAL_BR.md](./compliance/ANALISE_FISCAL_BR.md)
 
 | Fase | Nome | Prioridade | Status | Documentação |
 |------|------|------------|--------|--------------|

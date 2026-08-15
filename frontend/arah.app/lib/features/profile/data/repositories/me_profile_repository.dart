@@ -8,12 +8,74 @@ class MeProfileRepository {
 
   final BffClient client;
 
-  /// GET me/profile
+  /// GET me/profile (+ enriquecimento com profile/stats e conexões aceitas).
   Future<MeProfile> getProfile() async {
     final response = await client.get('me', 'profile');
     final data = response.data as Map<String, dynamic>?;
     if (data == null) throw ApiException('Resposta inválida');
-    return MeProfile.fromJson(data);
+    var profile = MeProfile.fromJson(data);
+    profile = await _enrichWithRemoteCounts(profile);
+    return profile;
+  }
+
+  /// GET me/profile/stats — contribuição territorial (postsCreated, …).
+  Future<Map<String, dynamic>?> getProfileStats() async {
+    try {
+      final response = await client.get('me', 'profile/stats');
+      final data = response.data;
+      if (data is Map<String, dynamic>) return data;
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<MeProfile> _enrichWithRemoteCounts(MeProfile profile) async {
+    final needsPosts = profile.postsCount == null;
+    final needsConnections = profile.connectionsCount == null;
+    if (!needsPosts &&
+        !needsConnections &&
+        profile.interestsCount != null) {
+      return profile;
+    }
+
+    final statsFuture =
+        needsPosts ? getProfileStats() : Future<Map<String, dynamic>?>.value(null);
+    final connectionsFuture =
+        needsConnections ? _countAcceptedConnections() : Future<int?>.value(null);
+    final results = await Future.wait<Object?>([statsFuture, connectionsFuture]);
+
+    var next = profile;
+    final stats = results[0];
+    if (stats is Map<String, dynamic>) {
+      next = next.mergeStatsJson(stats);
+    }
+    final connections = results[1];
+    if (connections is int) {
+      next = next.copyWith(connectionsCount: connections);
+    }
+    // Só preenche interestsCount quando já há stats remotas — evita
+    // hasStatCounts=true só por lista vazia (layout com dashes em vez de papel/presença).
+    if (next.interestsCount == null &&
+        (next.postsCount != null || next.connectionsCount != null)) {
+      next = next.copyWith(interestsCount: next.interests.length);
+    }
+    return next;
+  }
+
+  Future<int?> _countAcceptedConnections() async {
+    try {
+      final response = await client.get(
+        'connections',
+        '',
+        queryParameters: const {'status': 'Accepted'},
+      );
+      final data = response.data;
+      if (data is List) return data.length;
+      return null;
+    } catch (_) {
+      return null;
+    }
   }
 
   /// PUT me/profile/display-name

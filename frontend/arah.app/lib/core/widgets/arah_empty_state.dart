@@ -24,41 +24,43 @@ class ArahEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return Padding(
-      padding: const EdgeInsets.all(AppConstants.spacingXl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: AppConstants.avatarSizeLg,
-            color: colors.primary.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: AppConstants.spacingMd),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          if (description != null) ...[
-            const SizedBox(height: AppConstants.spacingSm),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppConstants.spacingXl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: AppConstants.avatarSizeLg,
+              color: colors.primary.withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: AppConstants.spacingMd),
             Text(
-              description!,
+              title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colors.onSurfaceVariant,
-                  ),
+              style: Theme.of(context).textTheme.titleMedium,
             ),
+            if (description != null) ...[
+              const SizedBox(height: AppConstants.spacingSm),
+              Text(
+                description!,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+              ),
+            ],
+            if (actionLabel != null && onAction != null) ...[
+              const SizedBox(height: AppConstants.spacingLg),
+              ArahButton(
+                label: actionLabel!,
+                onPressed: onAction,
+                expand: true,
+              ),
+            ],
           ],
-          if (actionLabel != null && onAction != null) ...[
-            const SizedBox(height: AppConstants.spacingLg),
-            ArahButton(
-              label: actionLabel!,
-              onPressed: onAction,
-              expand: true,
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }

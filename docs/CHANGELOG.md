@@ -9,6 +9,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Canvas executivo do estado da plataforma (2026-08-15)
+
+- Novo documento: [`docs/ops/EXECUTIVE_CANVAS.md`](ops/EXECUTIVE_CANVAS.md) — síntese para diretoria/produto (o que existe, o que está testado, lacunas, instâncias, estratégia e pipeline)
+- Links a partir de `PLATFORM_STATE.md` e `STATUS_FASES.md`
+
 ### Adicionado — WA-N1 NaturalAsset ponto (FASE24.0a) (2026-08-10)
 
 - Domínio `NaturalAsset` + `WaterPointDetails` (tipos `SPRING|WATERFALL|POTABLE_WATER`; status `PENDING→PUBLISHED`)

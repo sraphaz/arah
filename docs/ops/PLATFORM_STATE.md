@@ -1,10 +1,12 @@
 # Estado da Plataforma e Operabilidade
 
-**Versão**: 1.0  
-**Atualizado**: 2026-07-01  
+**Versão**: 1.1  
+**Atualizado**: 2026-08-15  
 **Fases totais**: ver [PROJECT_PHASES_CONFIG.md](../PROJECT_PHASES_CONFIG.md) (61 fases: 1–51 comunitárias + 52–61 sustentação)
 
 Este documento é a **fonte de verdade** para o README e para agentes. Níveis de operabilidade do Arah hoje.
+
+**Canvas executivo** (visão de produto + instâncias + pipeline): [EXECUTIVE_CANVAS.md](./EXECUTIVE_CANVAS.md).
 
 ---
 
@@ -25,7 +27,7 @@ Este documento é a **fonte de verdade** para o README e para agentes. Níveis d
 |---------|--------|------------|
 | Clean Architecture (.NET) | ✅ | [architecture/10_ARCHITECTURE_DECISIONS.md](../architecture/10_ARCHITECTURE_DECISIONS.md) |
 | BFF jornadas (Flutter-only API) | ✅ | [backend/60_API_LÓGICA_NEGÓCIO.md](../backend/60_API_LÓGICA_NEGÓCIO.md) |
-| Arah Core (control plane) | 🟡 FASE53 | [specs/phases/FASE53-arah-core.spec.yaml](../specs/phases/FASE53-arah-core.spec.yaml) |
+| Arah Core (control plane) | ✅ FASE53 | [specs/phases/FASE53-arah-core.spec.yaml](../specs/phases/FASE53-arah-core.spec.yaml) |
 | C4 / sustentação | 📋 Handoff | [handoff/arquitetura-c4/](../handoff/arquitetura-c4/) |
 
 ---
@@ -120,3 +122,5 @@ Detalhe: [STATUS_FASES.md](../STATUS_FASES.md) · [REALINHAMENTO_SUSTENTACAO_OPE
 **Onda S0**: FASE52 ✅ → FASE53 ✅ → **FASE54** (config ops: [PILOT_STAGING_CONFIG_TODO.md](./PILOT_STAGING_CONFIG_TODO.md)) → **FASE55** (quote/gate v0 em código).
 
 **Provisionamento piloto**: `./scripts/provision/provision-pilot-instance.ps1` · [infrastructure/pilot/README.md](../infrastructure/pilot/README.md)
+
+**Leitura executiva**: [EXECUTIVE_CANVAS.md](./EXECUTIVE_CANVAS.md)

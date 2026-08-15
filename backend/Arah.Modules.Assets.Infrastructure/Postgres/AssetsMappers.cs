@@ -12,6 +12,7 @@ public static class AssetsMappers
             Id = asset.Id,
             TerritoryId = asset.TerritoryId,
             Type = asset.Type,
+            Subtype = asset.Subtype,
             Name = asset.Name,
             Description = asset.Description,
             Status = asset.Status,
@@ -40,7 +41,8 @@ public static class AssetsMappers
             record.UpdatedAtUtc,
             record.ArchivedByUserId,
             record.ArchivedAtUtc,
-            record.ArchiveReason);
+            record.ArchiveReason,
+            record.Subtype);
     }
 
     public static AssetGeoAnchorRecord ToRecord(this AssetGeoAnchor anchor)
@@ -63,5 +65,48 @@ public static class AssetsMappers
             record.Latitude,
             record.Longitude,
             record.CreatedAtUtc);
+    }
+
+    public static NaturalAssetRecord ToRecord(this NaturalAsset asset)
+    {
+        return new NaturalAssetRecord
+        {
+            Id = asset.Id,
+            TerritoryId = asset.TerritoryId,
+            Type = asset.Type,
+            Name = asset.Name,
+            Description = asset.Description,
+            Status = asset.Status,
+            Latitude = asset.WaterPoint.Latitude,
+            Longitude = asset.WaterPoint.Longitude,
+            WaterType = asset.WaterPoint.WaterType,
+            PotabilityNotes = asset.WaterPoint.PotabilityNotes,
+            LastTestedAtUtc = asset.WaterPoint.LastTestedAtUtc,
+            CreatedByUserId = asset.CreatedByUserId,
+            CreatedAtUtc = asset.CreatedAtUtc,
+            UpdatedByUserId = asset.UpdatedByUserId,
+            UpdatedAtUtc = asset.UpdatedAtUtc
+        };
+    }
+
+    public static NaturalAsset ToDomain(this NaturalAssetRecord record)
+    {
+        return new NaturalAsset(
+            record.Id,
+            record.TerritoryId,
+            record.Type,
+            record.Name,
+            record.Description,
+            record.Status,
+            new WaterPointDetails(
+                record.Latitude,
+                record.Longitude,
+                record.WaterType,
+                record.PotabilityNotes,
+                record.LastTestedAtUtc),
+            record.CreatedByUserId,
+            record.CreatedAtUtc,
+            record.UpdatedByUserId,
+            record.UpdatedAtUtc);
     }
 }

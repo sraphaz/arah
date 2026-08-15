@@ -18,7 +18,7 @@ import 'app_localizations_pt.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'gen_l10n/app_localizations.dart';
+/// import 'l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -62,7 +62,8 @@ import 'app_localizations_pt.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -641,6 +644,18 @@ abstract class AppLocalizations {
   /// **'Mapa'**
   String get map;
 
+  /// No description provided for @mapFilterAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos'**
+  String get mapFilterAll;
+
+  /// No description provided for @mapFilterWaterBodies.
+  ///
+  /// In pt, this message translates to:
+  /// **'Corpos d\'água'**
+  String get mapFilterWaterBodies;
+
   /// No description provided for @viewOnMap.
   ///
   /// In pt, this message translates to:
@@ -1006,6 +1021,156 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Novo asset'**
   String get newAsset;
+
+  /// No description provided for @newWaterBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cuidar do rio / da nascente'**
+  String get newWaterBody;
+
+  /// No description provided for @assetCreateHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre um recurso do território (infraestrutura, cultural, etc.).'**
+  String get assetCreateHint;
+
+  /// No description provided for @waterBodyCreateHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sugira um corpo d\'água para a comunidade cuidar — nunca vendável.'**
+  String get waterBodyCreateHint;
+
+  /// No description provided for @assetKindGeneric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Asset'**
+  String get assetKindGeneric;
+
+  /// No description provided for @assetKindWaterBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Água'**
+  String get assetKindWaterBody;
+
+  /// No description provided for @waterBodyName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do corpo d\'água'**
+  String get waterBodyName;
+
+  /// No description provided for @waterBodySubtype.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo'**
+  String get waterBodySubtype;
+
+  /// No description provided for @waterBodyRiver.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rio'**
+  String get waterBodyRiver;
+
+  /// No description provided for @waterBodyStream.
+  ///
+  /// In pt, this message translates to:
+  /// **'Córrego'**
+  String get waterBodyStream;
+
+  /// No description provided for @waterBodySpring.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nascente'**
+  String get waterBodySpring;
+
+  /// No description provided for @waterBodyWaterfall.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cachoeira'**
+  String get waterBodyWaterfall;
+
+  /// No description provided for @waterBodyWell.
+  ///
+  /// In pt, this message translates to:
+  /// **'Poço'**
+  String get waterBodyWell;
+
+  /// No description provided for @waterBodyPotableWater.
+  ///
+  /// In pt, this message translates to:
+  /// **'Água potável'**
+  String get waterBodyPotableWater;
+
+  /// No description provided for @waterBodySuggested.
+  ///
+  /// In pt, this message translates to:
+  /// **'Corpo d\'água sugerido. Aguardando curadoria.'**
+  String get waterBodySuggested;
+
+  /// No description provided for @waterBodyApproved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastro do corpo d\'água aprovado.'**
+  String get waterBodyApproved;
+
+  /// No description provided for @waterBodyRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastro do corpo d\'água rejeitado.'**
+  String get waterBodyRejected;
+
+  /// No description provided for @validateWaterBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar corpo d\'água'**
+  String get validateWaterBody;
+
+  /// No description provided for @approveWaterBodyCurator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Validar cadastro do rio / da nascente'**
+  String get approveWaterBodyCurator;
+
+  /// No description provided for @rejectWaterBodyCurator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitar cadastro hídrico'**
+  String get rejectWaterBodyCurator;
+
+  /// No description provided for @noAssetsOrWaterBodies.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum asset ainda. Sugira um recurso ou um corpo d\'água para cuidar.'**
+  String get noAssetsOrWaterBodies;
+
+  /// No description provided for @assetStatusSuggested.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sugerido'**
+  String get assetStatusSuggested;
+
+  /// No description provided for @assetStatusActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativo'**
+  String get assetStatusActive;
+
+  /// No description provided for @assetStatusArchived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivado'**
+  String get assetStatusArchived;
+
+  /// No description provided for @assetStatusRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitado'**
+  String get assetStatusRejected;
+
+  /// No description provided for @mapWaterBodyPin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Corpo d\'água · {kind}'**
+  String mapWaterBodyPin(String kind);
 
   /// No description provided for @assetName.
   ///
@@ -2735,6 +2900,42 @@ abstract class AppLocalizations {
   /// **'A chave PIX da loja é configurada no gateway de pagamento do território. Aqui você só liga ou desliga a aceitação de pagamentos.'**
   String get storePixKeyHint;
 
+  /// No description provided for @sellerBalanceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu saldo'**
+  String get sellerBalanceTitle;
+
+  /// No description provided for @sellerBalanceHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valores do território após vendas confirmadas. O saque é processado pelo território.'**
+  String get sellerBalanceHint;
+
+  /// No description provided for @sellerBalanceLoadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar o saldo.'**
+  String get sellerBalanceLoadError;
+
+  /// No description provided for @sellerBalancePending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente'**
+  String get sellerBalancePending;
+
+  /// No description provided for @sellerBalanceReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pronto para saque'**
+  String get sellerBalanceReady;
+
+  /// No description provided for @sellerBalancePaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já pago'**
+  String get sellerBalancePaid;
+
   /// No description provided for @myProductsTitle.
   ///
   /// In pt, this message translates to:
@@ -2777,6 +2978,12 @@ abstract class AppLocalizations {
   /// **'Descrição'**
   String get addProductDescriptionTitle;
 
+  /// No description provided for @addProductPhotoDescriptionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto e descrição'**
+  String get addProductPhotoDescriptionTitle;
+
   /// No description provided for @addProductDescriptionHint.
   ///
   /// In pt, this message translates to:
@@ -2788,6 +2995,54 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Revisão'**
   String get addProductReviewTitle;
+
+  /// No description provided for @addProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar foto'**
+  String get addProductPhoto;
+
+  /// No description provided for @changeProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Trocar foto'**
+  String get changeProductPhoto;
+
+  /// No description provided for @removeProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover foto'**
+  String get removeProductPhoto;
+
+  /// No description provided for @addProductPhotoHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque para escolher uma foto da galeria'**
+  String get addProductPhotoHint;
+
+  /// No description provided for @addProductPhotoOptionalHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional — produtos com foto vendem melhor'**
+  String get addProductPhotoOptionalHint;
+
+  /// No description provided for @productPhotoLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Foto'**
+  String get productPhotoLabel;
+
+  /// No description provided for @productPhotoAttached.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anexada'**
+  String get productPhotoAttached;
+
+  /// No description provided for @productPhotoNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem foto'**
+  String get productPhotoNone;
 
   /// No description provided for @productTitleLabel.
   ///
@@ -2873,6 +3128,12 @@ abstract class AppLocalizations {
   /// **'Erro ao salvar produto.'**
   String get errorSaveProduct;
 
+  /// No description provided for @errorUploadProductPhoto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível enviar a foto. Tente de novo.'**
+  String get errorUploadProductPhoto;
+
   /// No description provided for @comingSoonJourneyTitle.
   ///
   /// In pt, this message translates to:
@@ -2910,7 +3171,8 @@ abstract class AppLocalizations {
   String get comingSoonUnderstood;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2919,25 +3181,25 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'pt': return AppLocalizationsPt();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'pt':
+      return AppLocalizationsPt();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

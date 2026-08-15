@@ -638,6 +638,28 @@ Resumo: Fonte canônica visual/IA = `design-system/` (handoff + UI kit + `--prem
 
 ---
 
+## ADR-023: Abstração de provedor de inteligência (SignalProvider)
+
+**Status**: Aceito  
+**Data**: 2026-08-15  
+**Arquivo**: [docs/architecture/adrs/ADR-023-intelligence-provider-abstraction.md](./adrs/ADR-023-intelligence-provider-abstraction.md)  
+**Spec-Id**: TI-0  
+
+Resumo: Porta agnóstica `SignalProvider` no Domain/Application; World Monitor só como adapter REST na Infrastructure; Territory permanece sem lógica de inteligência.
+
+---
+
+## ADR-024: World Monitor — REST no MVP, MCP para agentes
+
+**Status**: Aceito  
+**Data**: 2026-08-15  
+**Arquivo**: [docs/architecture/adrs/ADR-024-world-monitor-rest-mvp-mcp-agents.md](./adrs/ADR-024-world-monitor-rest-mvp-mcp-agents.md)  
+**Spec-Id**: TI-0  
+
+Resumo: Ingestão MVP via REST/OpenAPI + fixtures; MCP reservado a agentes (signal-scout); CI sem chamada real ao WM.
+
+---
+
 ## Referências
 - [Product Vision](./01_PRODUCT_VISION.md)
 - [User Stories](./04_USER_STORIES.md)

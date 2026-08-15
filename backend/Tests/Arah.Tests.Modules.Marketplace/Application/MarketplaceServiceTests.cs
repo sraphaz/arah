@@ -562,6 +562,7 @@ public sealed class MarketplaceServiceTests
             null,
             null,
             ItemStatus.Active,
+            null,
             CancellationToken.None);
 
         Assert.True(updateResult.IsSuccess);
@@ -571,6 +572,205 @@ public sealed class MarketplaceServiceTests
         var archiveResult = await itemService.ArchiveItemAsync(item.Id, ResidentUserId, CancellationToken.None);
         Assert.True(archiveResult.IsSuccess);
         Assert.Equal(ItemStatus.Archived, archiveResult.Value!.Status);
+    }
+
+    [Fact]
+    public async Task ListingService_UpdateItem_ReplacesAndClearsMedia()
+    {
+        var dataStore = new InMemoryDataStore();
+        var storeRepository = new InMemoryStoreRepository(dataStore);
+        var itemRepository = new InMemoryStoreItemRepository(dataStore);
+        var sharedStore = new InMemorySharedStore();
+        var membershipRepository = new InMemoryTerritoryMembershipRepository(sharedStore);
+        var userRepository = new InMemoryUserRepository(sharedStore);
+        var unitOfWork = new InMemoryUnitOfWork();
+        var cache = CacheTestHelper.CreateDistributedCacheService();
+        var (membershipAccessRules, accessEvaluator, featureGuard) = await CreateAccessAsync(
+            sharedStore,
+            membershipRepository,
+            userRepository,
+            cache,
+            TerritoryId,
+            CancellationToken.None);
+        var storeService = new StoreService(storeRepository, userRepository, accessEvaluator, membershipAccessRules, unitOfWork);
+        var mediaAssetRepository = new InMemoryMediaAssetRepository(dataStore);
+        var mediaAttachmentRepository = new InMemoryMediaAttachmentRepository(dataStore);
+        var mediaConfigRepository = new InMemoryTerritoryMediaConfigRepository(dataStore);
+        var globalMediaLimits = new Arah.Infrastructure.InMemory.InMemoryGlobalMediaLimits();
+        var featureFlagsForMedia = new InMemoryFeatureFlagService();
+        featureFlagsForMedia.SetEnabledFlags(TerritoryId, new List<FeatureFlag> { FeatureFlag.MarketplaceEnabled });
+        var mediaConfigService = new Arah.Application.Services.Media.TerritoryMediaConfigService(
+            mediaConfigRepository,
+            featureFlagsForMedia,
+            unitOfWork,
+            globalMediaLimits);
+        var itemService = new StoreItemService(
+            itemRepository,
+            storeRepository,
+            userRepository,
+            mediaAssetRepository,
+            mediaAttachmentRepository,
+            mediaConfigService,
+            accessEvaluator,
+            membershipAccessRules,
+            featureGuard,
+            unitOfWork);
+
+        var storeResult = await storeService.UpsertMyStoreAsync(
+            TerritoryId,
+            ResidentUserId,
+            "Loja mídia",
+            null,
+            StoreContactVisibility.Public,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            CancellationToken.None);
+        Assert.True(storeResult.IsSuccess);
+
+        var mediaA = Guid.NewGuid();
+        var mediaB = Guid.NewGuid();
+        var now = DateTime.UtcNow;
+        await mediaAssetRepository.AddAsync(
+            new Arah.Domain.Media.MediaAsset(
+                mediaA,
+                ResidentUserId,
+                Arah.Domain.Media.MediaType.Image,
+                "image/jpeg",
+                "marketplace/a.jpg",
+                1024,
+                800,
+                600,
+                "hash-a",
+                now,
+                null,
+                null),
+            CancellationToken.None);
+        await mediaAssetRepository.AddAsync(
+            new Arah.Domain.Media.MediaAsset(
+                mediaB,
+                ResidentUserId,
+                Arah.Domain.Media.MediaType.Image,
+                "image/jpeg",
+                "marketplace/b.jpg",
+                1024,
+                800,
+                600,
+                "hash-b",
+                now,
+                null,
+                null),
+            CancellationToken.None);
+
+        var createResult = await itemService.CreateItemAsync(
+            TerritoryId,
+            ResidentUserId,
+            storeResult.Value!.Id,
+            ItemType.Product,
+            "Com foto",
+            null,
+            null,
+            null,
+            ItemPricingType.Fixed,
+            10m,
+            "BRL",
+            null,
+            null,
+            null,
+            ItemStatus.Active,
+            new[] { mediaA },
+            CancellationToken.None);
+        Assert.True(createResult.IsSuccess);
+        var itemId = createResult.Value!.Id;
+
+        var attachmentsAfterCreate = await mediaAttachmentRepository.ListByOwnerAsync(
+            Arah.Domain.Media.MediaOwnerType.StoreItem,
+            itemId,
+            CancellationToken.None);
+        Assert.Single(attachmentsAfterCreate);
+        Assert.Equal(mediaA, attachmentsAfterCreate[0].MediaAssetId);
+
+        var replaceResult = await itemService.UpdateItemAsync(
+            itemId,
+            ResidentUserId,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            new[] { mediaB },
+            CancellationToken.None);
+        Assert.True(replaceResult.IsSuccess);
+
+        var attachmentsAfterReplace = await mediaAttachmentRepository.ListByOwnerAsync(
+            Arah.Domain.Media.MediaOwnerType.StoreItem,
+            itemId,
+            CancellationToken.None);
+        Assert.Single(attachmentsAfterReplace);
+        Assert.Equal(mediaB, attachmentsAfterReplace[0].MediaAssetId);
+
+        // mediaIds null = preservar anexos (caminho padrão do PATCH).
+        var preserveResult = await itemService.UpdateItemAsync(
+            itemId,
+            ResidentUserId,
+            null,
+            "Novo titulo",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            CancellationToken.None);
+        Assert.True(preserveResult.IsSuccess);
+        Assert.Equal("Novo titulo", preserveResult.Value!.Title);
+
+        var attachmentsAfterPreserve = await mediaAttachmentRepository.ListByOwnerAsync(
+            Arah.Domain.Media.MediaOwnerType.StoreItem,
+            itemId,
+            CancellationToken.None);
+        Assert.Single(attachmentsAfterPreserve);
+        Assert.Equal(mediaB, attachmentsAfterPreserve[0].MediaAssetId);
+
+        var clearResult = await itemService.UpdateItemAsync(
+            itemId,
+            ResidentUserId,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Array.Empty<Guid>(),
+            CancellationToken.None);
+        Assert.True(clearResult.IsSuccess);
+
+        var attachmentsAfterClear = await mediaAttachmentRepository.ListByOwnerAsync(
+            Arah.Domain.Media.MediaOwnerType.StoreItem,
+            itemId,
+            CancellationToken.None);
+        Assert.Empty(attachmentsAfterClear);
     }
 
     [Fact]

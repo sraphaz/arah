@@ -1,7 +1,7 @@
 # Glossário de Termos e Conceitos
 
-**Versão**: 2.0  
-**Data**: 2025-01-20  
+**Versão**: 2.1  
+**Data**: 2026-08-08  
 **Aplicação**: Documentação, código, comunicação e materiais do projeto Arah
 
 ---
@@ -100,7 +100,17 @@
 
 ### Assets Territoriais
 
-- **MapEntity (Entidade do Mapa)**: recurso georreferenciado no território. Name, category, lat/lng, status, visibility. Representa pontos de interesse comunitário.
+- **TerritoryAsset (Asset Territorial)**: recurso valioso do território (natural, cultural, comunitário, infraestrutura, conhecimento). Pertence ao território — **não vendável**, sem owner individual. Curadoria via capability Curator / WorkItem. Ponte atual para recursos naturais até o modelo rico `NaturalAsset`.
+
+- **NaturalAsset (Recurso Natural)**: modelo-alvo (MER) de patrimônio natural curável — trilhas, árvores nativas, santuários e **corpos d'água**. Escopado por `territoryId`; status `PENDING`→`PUBLISHED`. Ver [CORPOS_DAGUA_TERRITORIO](../backlog-api/CORPOS_DAGUA_TERRITORIO.md).
+
+- **WaterBody / Corpo d'água**: **alias de produto/API** para um `NaturalAsset` tipado (`RIVER`, `STREAM`, `SPRING`, `WATERFALL`, `POTABLE_WATER`) — não é tabela separada; identificador = `naturalAssetId`. Ponte atual: TerritoryAsset com subtype hídrico. A comunidade nomeia, marca, fala e cuida — sem embutir o rio em Territory.
+
+- **WatercourseDetails**: detalhes de curso d'água (LineString GeoJSON, regime, uso comunitário, notas) — só para `RIVER`/`STREAM`.
+
+- **WaterPointDetails**: detalhes de ponto d'água (`water_type` inclui `WELL`; potabilidade; sensibilidade). Poço = `POTABLE_WATER` + `water_type=WELL`, não tipo top-level.
+
+- **MapEntity (Entidade do Mapa)**: recurso georreferenciado no território. Name, category, lat/lng, status, visibility. Representa pontos de interesse comunitário (inclui categoria `espaço natural`).
 
 - **MapEntityRelation**: vínculo de usuário com entidade do mapa. Moradores se conectam a recursos territoriais.
 

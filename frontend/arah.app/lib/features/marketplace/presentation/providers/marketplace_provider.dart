@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../../../core/providers/territory_provider.dart';
 import '../../data/models/marketplace_item.dart';
+import '../../data/models/seller_balance.dart';
 import '../../data/models/store_item.dart';
 import '../../data/models/store_product.dart';
 import '../../data/repositories/marketplace_repository.dart';
@@ -13,9 +14,12 @@ class MarketplaceState {
     this.cart,
     this.myStore,
     this.myProducts = const [],
+    this.sellerBalance,
     this.isLoading = false,
     this.isStoreLoading = false,
     this.isProductsLoading = false,
+    this.isBalanceLoading = false,
+    this.balanceLoadFailed = false,
     this.error,
     this.query = '',
   });
@@ -24,9 +28,13 @@ class MarketplaceState {
   final Map<String, dynamic>? cart;
   final MyStore? myStore;
   final List<StoreProduct> myProducts;
+  final SellerBalance? sellerBalance;
   final bool isLoading;
   final bool isStoreLoading;
   final bool isProductsLoading;
+  final bool isBalanceLoading;
+  /// True quando o GET de saldo falhou (≠ 404 sem ledger).
+  final bool balanceLoadFailed;
   final Object? error;
   final String query;
 
@@ -35,21 +43,29 @@ class MarketplaceState {
     Map<String, dynamic>? cart,
     MyStore? myStore,
     List<StoreProduct>? myProducts,
+    SellerBalance? sellerBalance,
     bool? isLoading,
     bool? isStoreLoading,
     bool? isProductsLoading,
+    bool? isBalanceLoading,
+    bool? balanceLoadFailed,
     Object? error,
     String? query,
     bool clearError = false,
+    bool clearSellerBalance = false,
   }) {
     return MarketplaceState(
       items: items ?? this.items,
       cart: cart ?? this.cart,
       myStore: myStore ?? this.myStore,
       myProducts: myProducts ?? this.myProducts,
+      sellerBalance:
+          clearSellerBalance ? null : (sellerBalance ?? this.sellerBalance),
       isLoading: isLoading ?? this.isLoading,
       isStoreLoading: isStoreLoading ?? this.isStoreLoading,
       isProductsLoading: isProductsLoading ?? this.isProductsLoading,
+      isBalanceLoading: isBalanceLoading ?? this.isBalanceLoading,
+      balanceLoadFailed: balanceLoadFailed ?? this.balanceLoadFailed,
       error: clearError ? null : (error ?? this.error),
       query: query ?? this.query,
     );
@@ -62,6 +78,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
   final Ref _ref;
   int _productsLoadGen = 0;
   int _storeLoadGen = 0;
+  int _balanceLoadGen = 0;
 
   MarketplaceRepository get _repo =>
       MarketplaceRepository(client: _ref.read(bffClientProvider));
@@ -85,7 +102,14 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     if (territoryId == null || territoryId.isEmpty) return;
 
     final gen = ++_storeLoadGen;
-    state = state.copyWith(isStoreLoading: true, clearError: true);
+    // Limpa saldo ao trocar território/recarregar — evita valores stale.
+    state = state.copyWith(
+      isStoreLoading: true,
+      clearError: true,
+      clearSellerBalance: true,
+      balanceLoadFailed: false,
+      isBalanceLoading: false,
+    );
     try {
       final store = await _repo.getMyStore(territoryId);
       if (gen != _storeLoadGen ||
@@ -101,7 +125,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
         query: state.query,
       );
       if (store != null) {
-        await loadMyProducts();
+        await Future.wait([loadMyProducts(), loadSellerBalance()]);
       }
     } catch (e) {
       if (gen != _storeLoadGen ||
@@ -109,6 +133,42 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
         return;
       }
       state = state.copyWith(error: e, isStoreLoading: false);
+    }
+  }
+
+  Future<void> loadSellerBalance() async {
+    final territoryId = _ref.read(selectedTerritoryIdValueProvider);
+    if (territoryId == null || territoryId.isEmpty || state.myStore == null) {
+      return;
+    }
+    final gen = ++_balanceLoadGen;
+    state = state.copyWith(
+      isBalanceLoading: true,
+      clearSellerBalance: true,
+      balanceLoadFailed: false,
+    );
+    try {
+      final balance = await _repo.getSellerBalance(territoryId);
+      if (gen != _balanceLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId) {
+        return;
+      }
+      state = state.copyWith(
+        sellerBalance: balance,
+        isBalanceLoading: false,
+        balanceLoadFailed: false,
+      );
+    } catch (e) {
+      if (gen != _balanceLoadGen ||
+          _ref.read(selectedTerritoryIdValueProvider) != territoryId) {
+        return;
+      }
+      // Não mascarar falha com zeros (parece “sem ganhos”).
+      state = state.copyWith(
+        clearSellerBalance: true,
+        isBalanceLoading: false,
+        balanceLoadFailed: true,
+      );
     }
   }
 
@@ -154,7 +214,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       description: description,
     );
     state = state.copyWith(myStore: store);
-    await loadMyProducts();
+    await Future.wait([loadMyProducts(), loadSellerBalance()]);
   }
 
   Future<void> addToCart(String itemId) async {
@@ -206,6 +266,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     required String pricingType,
     double? priceAmount,
     String currency = 'BRL',
+    List<String>? mediaIds,
   }) async {
     final territoryId = _ref.read(selectedTerritoryIdValueProvider);
     final store = state.myStore;
@@ -221,6 +282,7 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       pricingType: pricingType,
       priceAmount: priceAmount,
       currency: currency,
+      mediaIds: mediaIds,
     );
     // Atualização local: GET items pode vir do cache BFF (TTL 60s).
     state = state.copyWith(
@@ -240,6 +302,8 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
     required String pricingType,
     double? priceAmount,
     String currency = 'BRL',
+    List<String>? mediaIds,
+    bool includeMediaIds = false,
   }) async {
     final updated = await _repo.updateProduct(
       itemId: itemId,
@@ -250,6 +314,8 @@ class MarketplaceNotifier extends StateNotifier<MarketplaceState> {
       priceAmount: pricingType == 'Fixed' ? priceAmount : null,
       includePriceAmount: true,
       currency: currency,
+      mediaIds: mediaIds,
+      includeMediaIds: includeMediaIds,
     );
     state = state.copyWith(
       myProducts: state.myProducts

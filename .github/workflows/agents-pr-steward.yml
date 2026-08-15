@@ -62,14 +62,32 @@ jobs:
             const fs = require('fs');
             if (!fs.existsSync('audit.json')) return;
             const audit = JSON.parse(fs.readFileSync('audit.json', 'utf8'));
-            const template = fs.readFileSync('.agents/templates/bot-review-checklist.md', 'utf8');
+            let template = fs.readFileSync('.agents/templates/bot-review-checklist.md', 'utf8');
             const marker = '<!-- arah-pr-steward -->';
-            const status = audit.failed_checks?.length
-              ? `Checks falhando: ${audit.failed_checks.join(', ')}`
-              : audit.bot_comments > 0
-                ? `${audit.bot_comments} apontamento(s) de bot — resolver/responder`
-                : 'CI OK — revisar checklist';
-            const body = `${template}\n\n**Status:** ${status}`;
+            const ciOk = !audit.failed_checks?.length;
+            const botsOk = !(audit.bots_pending || audit.bot_comments > 0);
+            const ready = !!audit.ready && ciOk && botsOk;
+            // Checklist dinâmico: marca o que o audit consegue verificar
+            const mark = (lineNeedle, done) => {
+              const unchecked = `- [ ] ${lineNeedle}`;
+              const checked = `- [x] ${lineNeedle}`;
+              if (done) {
+                template = template.replace(unchecked, checked);
+              }
+            };
+            mark('CI verde (build-test, Flutter, Agents Gates, CodeQL)', ciOk);
+            mark('Threads inline de review bots — resolvidas ou respondidas', botsOk);
+            mark('Dependabot / CVE (se aplicável) — endereçadas ou justificadas', botsOk);
+            // Pareceres / sync-docs / corpo do PR permanecem humanos
+            const ignored = typeof audit.ignored_signal === 'number' ? audit.ignored_signal : 0;
+            const status = !ciOk
+              ? `Checks falhando: ${(audit.failed_checks || []).join(', ')}`
+              : !botsOk
+                ? `${audit.bot_comments} thread(s)/alerta(s) de review — resolver/responder (ignoradas ${ignored} sinalizações Arah)`
+                : ready
+                  ? `audit.ready — CI OK + zero threads pendentes (ignoradas ${ignored} sinalizações Arah). Confirmar pareceres humanos.`
+                  : 'CI OK — revisar checklist humano (pareceres / sync-docs / corpo)';
+            const body = `${template}\n\n**Status:** ${status}\n**audit.ready:** \`${ready}\``;
             const pr = context.payload.pull_request?.number;
             if (!pr) return;
             const { data: comments } = await github.rest.issues.listComments({
@@ -94,7 +112,7 @@ jobs:
               });
             }
 
-      - name: Label ready-for-merge when CI green
+      - name: Label ready-for-merge when audit.ready
         if: github.event_name == 'pull_request' && steps.audit.outcome == 'success'
         uses: actions/github-script@v7
         with:
@@ -102,7 +120,10 @@ jobs:
             const fs = require('fs');
             if (!fs.existsSync('audit.json')) return;
             const audit = JSON.parse(fs.readFileSync('audit.json', 'utf8'));
-            if (!audit.ready || audit.failed_checks?.length || audit.bot_comments > 0) return;
+            if (!audit.ready || audit.failed_checks?.length || audit.bots_pending || audit.bot_comments > 0) {
+              core.info(`Skipping ready-for-merge (ready=${audit.ready}, bots=${audit.bot_comments}, ignored_signal=${audit.ignored_signal})`);
+              return;
+            }
             const pr = context.payload.pull_request.number;
             try {
               await github.rest.issues.addLabels({

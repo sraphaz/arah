@@ -23,6 +23,15 @@
 - **PostGeoAnchor** (id, postId, lat/lng, type, createdAt)
 - **Media** (postId, type, url, metadata) *(pós-MVP)*
 
+### Assets e patrimônio natural (mapa vivo)
+- **TerritoryAsset** (territoryId, type, name, geo…; não vendável; curadoria comunitária) — implementado; status `PENDING`→`VALIDATED`
+- **NaturalAsset** *(alvo FASE24.0)* — patrimônio natural tipado (`RIVER`|`STREAM`|`SPRING`|`WATERFALL`|`POTABLE_WATER`|`TRAIL`|…), visibility/access/sensitivity; status `PENDING`→`PUBLISHED`|`HIDDEN`|`REVIEW`
+- **WaterBody** — **alias de produto/API** para `NaturalAsset` com type hídrico (`RIVER`|`STREAM`|`SPRING`|`WATERFALL`|`POTABLE_WATER`); **não** é entidade/tabela separada; id = `naturalAssetId`
+- **WatercourseDetails** / **WaterPointDetails** — geometria de curso (só RIVER/STREAM) vs potabilidade de ponto; `WELL` só em `water_type` de ponto
+- Relação: `Territory 1 → N NaturalAsset`; `Post`/`HealthObservation` → `naturalAssetId?` (mesmo `territoryId`); pins de mapa filtram HIGH/RESTRICTED no servidor
+
+> Decisão: Territory permanece geográfico e neutro. Rios e fontes são entidades irmãs escopadas por `territoryId`. Detalhe: [CORPOS_DAGUA_TERRITORIO](../backlog-api/CORPOS_DAGUA_TERRITORIO.md) · Spec-Id: `water-bodies-curation`.
+
 ### Social
 - **FriendRelation** (requester, target, status pending/accepted/blocked) *(pós-MVP)*
 
@@ -51,6 +60,9 @@
 - **ItemInquiry** (territoryId, itemId, storeId, fromUserId, message, status)
 - **Cart** (userId, territoryId, items)
 - **Checkout** (cartId, status, paymentInfo)
+- **SellerBalance** (territoryId, sellerUserId; Pending / ReadyForPayout / Paid em centavos) — ledger do vendedor
+- **Wallet (Aratá)** (ownerType, ownerId, territoryId, balance, currency, payoutMethod?) — FASE55; saldo disponível = Pending + ReadyForPayout (Paid já saiu da carteira); id de seller wallet projeta `SellerBalance.Id`
+- **ConsumptionMeter** (subscriptionId, metric, usage, quota, overageRate) — FASE55 v0; métricas `ai` / `media` / `notifications`
 
 ## Relacionamentos (alto nível)
 
@@ -70,6 +82,7 @@
 - **Post 0..N PostGeoAnchor** → localização(ões) da postagem.
 - **Post 0..N Media** → mídias anexadas (pós-MVP).
 - **Post 0..1 MapEntity** → postagem pode referenciar entidade territorial.
+- **Post 0..1 NaturalAsset** *(alvo FASE24.0)* → `naturalAssetId` opcional; mesmo `territoryId` do post (corpo d'água / WaterBody alias).
 - **User 0..N MapEntityRelation** → moradores vinculam-se a entidades.
 - **PostGeoAnchor 1..1 Post** → GeoAnchor referencia um post específico.
 
@@ -111,6 +124,9 @@
 - **StoreItem 0..N ItemInquiry** → consultas sobre o item.
 - **User 0..N Cart** → carrinho de compras do usuário.
 - **Cart 0..1 Checkout** → checkout do carrinho.
+- **User 0..N SellerBalance** → saldo de vendedor por território (fonte autoritativa do ledger).
+- **SellerBalance 0..1 Wallet** → carteira Aratá projetada (mesmo id quando ownerType=seller).
+- **Subscription 1..N ConsumptionMeter** → medidores de consumo comercial (seed atômico de defaults).
 
 ## Princípios do Modelo
 

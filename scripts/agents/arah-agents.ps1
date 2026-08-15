@@ -11,7 +11,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'sync-milestones', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'export-graph', 'validate-graph', 'github-project', 'backlog-to-issue', 'export-phase-status', 'help')]
+    [ValidateSet('orchestrate', 'validate', 'skill', 'route-pr', 'ensure-labels', 'sync-milestones', 'doc-index', 'doc-deflate', 'gates', 'bot-review', 'pr-ready', 'pr-graph', 'next-phase', 'activate', 'harness', 'spec-validate', 'choreograph', 'export-graph', 'validate-graph', 'github-project', 'backlog-to-issue', 'export-phase-status', 'help')]
     [string]$Command = 'help',
 
     [ValidateSet('issue', 'pull_request', 'issues', 'pull_request_target', 'manual', 'workflow_dispatch')]
@@ -468,6 +468,7 @@ Comandos:
   gates         Executa run-gates.ps1 (qa/security/release)
   bot-review    Audita apontamentos de bots em um PR (obrigatório antes merge)
   pr-ready      Verifica CI + bots; indica ready-for-merge
+  pr-graph      Publica comentário <!-- arah-pr-graph --> (agentes/skills/domínios)
   next-phase    Abre issue [Agent] da próxima fase (PHASE_QUEUE.yaml)
   activate      Publica checklist de conduta do agente (issue/PR)
   harness       Executa harness SDD (specs + agentes + comandos ligados)
@@ -485,6 +486,7 @@ Exemplos:
   ./arah-agents.ps1 activate -Agent backend -PrNumber 300 -ChangedFiles backend/Arah.Api/Program.cs
   ./arah-agents.ps1 bot-review -PrNumber 300
   ./arah-agents.ps1 pr-ready -PrNumber 300
+  ./arah-agents.ps1 pr-graph -PrNumber 300 -ChangedFiles backend/Arah.Api/Program.cs
   ./arah-agents.ps1 next-phase -DryRun
   ./arah-agents.ps1 orchestrate -EventPath `$env:GITHUB_EVENT_PATH -Json
   ./arah-agents.ps1 route-pr -ChangedFiles backend/Arah.Api/Program.cs
@@ -571,6 +573,17 @@ switch ($Command) {
         $params = @{ PrNumber = $PrNumber }
         if ($Json) { $params.Json = $true }
         & (Join-Path $PSScriptRoot 'pr-ready.ps1') @params
+    }
+    'pr-graph' {
+        if ($PrNumber -le 0) {
+            Write-Error 'pr-graph requires -PrNumber'
+            exit 1
+        }
+        $params = @{ PrNumber = $PrNumber }
+        if ($ChangedFiles.Count -gt 0) { $params.ChangedFiles = $ChangedFiles }
+        if ($Json) { $params.Json = $true }
+        if (-not $DryRun) { $params.PostComment = $true }
+        & (Join-Path $PSScriptRoot 'post-pr-graph.ps1') @params
     }
     'next-phase' {
         $params = @{}

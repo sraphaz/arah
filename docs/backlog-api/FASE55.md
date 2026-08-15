@@ -5,7 +5,7 @@
 **Onda**: S1 — Fundação de receita  
 **Depende de**: FASE6, FASE7, FASE15, FASE54  
 **Estimativa Total**: 180 horas  
-**Status**: 🟡 Em progresso (quote/receipt + gate comercial v0)  
+**Status**: 🟡 Em progresso (quote/receipt/gate/refund/payout + merchants/wallets/consumption v0)  
 **Spec SDD**: [docs/specs/phases/FASE55-monetization.spec.yaml](../specs/phases/FASE55-monetization.spec.yaml)
 **Handoff**: [Adendo Monetização](../handoff/arquitetura-c4/Adendo%20de%20Monetizacao%20-%20Handoff%20Arah.dc.html)
 
@@ -62,10 +62,10 @@ Implementar o modelo de receita **open-core**: morador nunca paga; comerciantes 
 | `GET` | `/api/v1/transactions/{id}/receipt` | ✅ v0 — requer `CheckoutStatus.Paid` |
 | `POST` | `/api/v1/transactions/{id}/refund` | ✅ v0 — estorno idempotente; reverte fee/split (AC-55-6) |
 | `GET` | `/api/v1/territories/{id}/payouts/consolidated` | ✅ v0 — payout consolidado por período (AC-55-5) |
-| `POST` | `/merchants/{id}/subscription` | ⏳ — usar `/subscriptions` até alias merchant |
-| `GET` | `/wallets/{id}` | ⏳ FASE22 + FASE55 |
+| `POST` | `/merchants/{id}/subscription` | ✅ v0 — alias de `/subscriptions` (AC-55-9) |
+| `GET` | `/wallets/{id}` | ✅ v0 — Aratá + projeção SellerBalance (AC-55-10) |
 | `GET` | `/implementers/{id}/payouts` | ⏳ FASE57 |
-| `GET` | `/merchants/{id}/consumption` | ⏳ |
+| `GET` | `/merchants/{id}/consumption` | ✅ v0 — meters zerados até writers (AC-55-11) |
 
 ### Quote (resposta v0)
 

@@ -27,6 +27,7 @@ class AssetsRepository {
     required String type,
     required String name,
     String? description,
+    String? subtype,
     required double latitude,
     required double longitude,
   }) async {
@@ -38,6 +39,7 @@ class AssetsRepository {
         'type': type,
         'name': name,
         'description': description,
+        if (subtype != null && subtype.isNotEmpty) 'subtype': subtype,
         'geoAnchors': [
           {'latitude': latitude, 'longitude': longitude},
         ],

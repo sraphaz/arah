@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-01-14T12:00:00Z",
+  "tier": "fast",
+  "data": {
+    "health": {
+      "status": "HEALTHY"
+    },
+    "geo": {
+      "iso2": "BR",
+      "centroid": { "lat": -14.2, "lon": -51.9 },
+      "bbox": [-74.0, -34.0, -34.0, 5.5]
+    },
+    "climate": {
+      "truncated": true,
+      "regionHint": "BR-SP"
+    }
+  },
+  "missing": [
+    "prediction-markets",
+    "aviation-delays"
+  ],
+  "notes": "Amostra reduzida de bootstrap (TI-0). Ingestão MVP não depende de bootstrap completo."
+}

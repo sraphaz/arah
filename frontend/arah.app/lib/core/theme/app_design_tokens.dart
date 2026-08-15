@@ -116,6 +116,10 @@ class AppDesignTokens {
       case 'entity':
       case 'waterfall':
       case 'spring':
+      case 'river':
+      case 'stream':
+      case 'well':
+      case 'potable_water':
         return water;
       case 'viewpoint':
         return territoryBoundary;

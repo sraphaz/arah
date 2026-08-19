@@ -48,6 +48,14 @@
 - `POST /api/v1/transactions/{id}/refund` - Estorno idempotente (reverte fee/split; AC-55-6)
 - `GET /api/v1/territories/{id}/payouts/consolidated?from=&to=` - Payout consolidado por período (AC-55-5)
 
+### Fiscal / meios de pagamento (FASE62.0)
+
+- `GET /api/v1/fiscal-packs` - Catálogo de packs (MVP: `brazil.v1`)
+- `GET /api/v1/territories/{id}/fiscal-pack` - Binding fiscal (Off legado se ausente)
+- `PUT /api/v1/territories/{id}/fiscal-pack` - Ativar/desligar pack (SystemAdmin)
+- `GET /api/v1/territories/{id}/payment-methods` - Meios ativos (checkout; público)
+- `PUT /api/v1/territories/{id}/payment-methods` - Configurar meios (SystemAdmin)
+
 ### Assinaturas (FASE15 — base FASE55)
 
 - `GET /api/v1/subscription-plans` - Planos globais

@@ -63,6 +63,9 @@
 - **SellerBalance** (territoryId, sellerUserId; Pending / ReadyForPayout / Paid em centavos) — ledger do vendedor
 - **Wallet (Aratá)** (ownerType, ownerId, territoryId, balance, currency, payoutMethod?) — FASE55; saldo disponível = Pending + ReadyForPayout (Paid já saiu da carteira); id de seller wallet projeta `SellerBalance.Id`
 - **ConsumptionMeter** (subscriptionId, metric, usage, quota, overageRate) — FASE55 v0; métricas `ai` / `media` / `notifications`
+- **FiscalPackDefinition** (id, countryCode, capabilities) — catálogo da instância; MVP `brazil.v1` (FASE62.0)
+- **TerritoryFiscalPackBinding** (territoryId, packId, status Off\|Active, municipalityIbge?) — config fiscal escopada; Territory neutro
+- **TerritoryPaymentMethodsConfig** (territoryId, methods[], pspProvider?) — meios habilitados no território (FASE62.0)
 
 ## Relacionamentos (alto nível)
 

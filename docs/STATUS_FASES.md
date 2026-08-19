@@ -1,14 +1,14 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-08-15  
+**Última Atualização**: 2026-08-19  
 **Canvas executivo**: [ops/EXECUTIVE_CANVAS.md](./ops/EXECUTIVE_CANVAS.md)  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
-**Prioridade atual**: 🔴 **FASE54** (config manual humana) + **FASE55** (v0 merchants/wallets/consumption) + **TI-0** (docs/contratos)  
+**Prioridade atual**: 🔴 **FASE54** (config manual humana) + **FASE55** (v0 merchants/wallets/consumption) + **FASE62.0** (packs fiscais API) + **TI-0** (docs/contratos)  
 **Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** — TI-0 docs/contratos neste ciclo; MVP TI-1…TI-3 paralelo a 17–19  
 **Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
 **Capacidade hídrica**: 💧 **Corpos d'água curáveis** — [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); ponte WA-E1…E4 ✅; **WA-N1** NaturalAsset ponto (FASE24.0a)  
-**Fases em Andamento**: FASE54 (ops), FASE55 (backend)
+**Fases em Andamento**: FASE54 (ops), FASE55 (backend), FASE62 (62.0)
 **Fases Complementares**: 1 (Fase 14.5)  
 **Fases Pendentes**: [Calcular: Total - Completas - Complementares - Fase 17]
 
@@ -71,7 +71,7 @@ Capacidade de domínio (não é trilha `kind: track` nem nova FASE*): rios, cór
 | 59 | Federação | 🟡 P2→P1 | S3 | ⏳ Pendente | [FASE59.md](./backlog-api/FASE59.md) |
 | 60 | App Implementador | 🟡 P1 | S3 | ⏳ Pendente | [FASE60.md](./backlog-api/FASE60.md) |
 | 61 | Capital Territorial | 🟢 P2 | S3–S4 | ⏳ Pendente | [FASE61.md](./backlog-api/FASE61.md) |
-| 62 | Conformidade fiscal & KYC comercial (BR) | 🔴 P0 (62.0+a) | S1 | ⏳ Proposta | [FASE62.md](./backlog-api/FASE62.md) · [análise](../compliance/ANALISE_FISCAL_BR.md) · [packs/jornadas](../compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) |
+| 62 | Conformidade fiscal & KYC comercial (BR) | 🔴 P0 (62.0+a) | S1 | 🟡 62.0 API ✅ · 62.a–c pendente | [FASE62.md](./backlog-api/FASE62.md) · [spec](./specs/phases/FASE62-fiscal-kyc-br.spec.yaml) · [análise](./compliance/ANALISE_FISCAL_BR.md) · [packs/jornadas](./compliance/PACOTES_FISCAIS_POR_TERRITORIO.md) |
 
 **Handoff**: [docs/handoff/](./handoff/README.md)  
 **Análise fiscal BR**: [docs/compliance/ANALISE_FISCAL_BR.md](./compliance/ANALISE_FISCAL_BR.md)

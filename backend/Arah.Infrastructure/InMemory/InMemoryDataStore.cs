@@ -4,6 +4,7 @@ using Arah.Modules.Assets.Domain;
 using Arah.Domain.Events;
 using Arah.Domain.Feed;
 using Arah.Domain.Financial;
+using Arah.Domain.Fiscal;
 using Arah.Domain.Health;
 using Arah.Modules.Map.Domain;
 using Arah.Modules.Marketplace.Domain;
@@ -75,6 +76,8 @@ public sealed partial class InMemoryDataStore
     public List<PlatformExpenseTransaction> PlatformExpenseTransactions { get; } = new();
     public List<ReconciliationRecord> ReconciliationRecords { get; } = new();
     public List<FeeSplitRule> FeeSplitRules { get; } = new();
+    public List<TerritoryFiscalPackBinding> TerritoryFiscalPackBindings { get; } = new();
+    public List<TerritoryPaymentMethodsConfig> TerritoryPaymentMethodsConfigs { get; } = new();
 
     public ConcurrentDictionary<string, Guid> ActiveTerritories { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<Guid, HashSet<string>> PostLikes { get; } = new();

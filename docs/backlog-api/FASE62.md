@@ -4,10 +4,10 @@
 **Prioridade**: 🔴 P0 (62.0 + 62.a) / 🟡 P1 (62.b–c)  
 **Onda**: S1 — Fundação de receita (paralela a FASE55–57)  
 **Depende de**: FASE55 (billing/split), FASE54 (piloto/PSP), parecer regulatório (gate go-live)  
-**Status**: ⏳ Proposta (análise 2026-08-15; modelo packs/jornadas 2026-08-15)  
+**Status**: 🟡 Em progresso (62.0 API ✅ · 62.a–c pendente)  
 **Análise**: [ANALISE_FISCAL_BR.md](../compliance/ANALISE_FISCAL_BR.md)  
 **Produto / jornadas**: [PACOTES_FISCAIS_POR_TERRITORIO.md](../compliance/PACOTES_FISCAIS_POR_TERRITORIO.md)  
-**Spec SDD**: _pendente — `FASE62-fiscal-kyc-br`_
+**Spec SDD**: [FASE62-fiscal-kyc-br.spec.yaml](../specs/phases/FASE62-fiscal-kyc-br.spec.yaml)  
 
 ---
 
@@ -27,7 +27,7 @@ Sem confundir **taxa open-core** com **tributo**; sem misturar FASE61 (capital/i
 
 | Fatia | Escopo | Prioridade |
 |-------|--------|------------|
-| **62.0** | Catálogo de packs + `TerritoryFiscalPackBinding` + `TerritoryPaymentMethodsConfig` + UI implementador (cockpit) | P0 |
+| **62.0** | Catálogo de packs + `TerritoryFiscalPackBinding` + `TerritoryPaymentMethodsConfig` + **API** (UI cockpit em FASE57) | P0 |
 | **62.a** | `MerchantFiscalProfile` (CNPJ/CPF-MEI, regime, município ISS); KYC; PixKey; gate de venda **quando** pack BR ativo | P0 |
 | **62.b** | Emissão/armazenamento NFS-e MVP (serviços); link no comprovante do pedido | P1 |
 | **62.c** | Retenção documental fiscal vs LGPD; export contábil período | P1 |
@@ -81,10 +81,21 @@ Detalhe: [PACOTES_FISCAIS_POR_TERRITORIO.md](../compliance/PACOTES_FISCAIS_POR_T
 ## Critérios de aceite (rascunho)
 
 ### 62.0
-- [ ] Implementador ativa `brazil.v1` por território sem mutar entidade Territory  
-- [ ] Meios de pagamento do território listáveis pela API de checkout  
-- [ ] Território sem pack: comportamento documentado no spec (comércio legado vs bloqueio)
+- [x] Implementador ativa `brazil.v1` por território sem mutar entidade Territory  
+- [x] Meios de pagamento do território listáveis pela API de checkout  
+- [x] Território sem pack: comportamento documentado no spec (comércio legado vs bloqueio)  
 
+### 62.0 — endpoints (API)
+
+| Método | Rota | Auth |
+|--------|------|------|
+| `GET` | `/api/v1/fiscal-packs` | público |
+| `GET` | `/api/v1/territories/{id}/fiscal-pack` | JWT |
+| `PUT` | `/api/v1/territories/{id}/fiscal-pack` | SystemAdmin |
+| `GET` | `/api/v1/territories/{id}/payment-methods` | público (checkout) |
+| `PUT` | `/api/v1/territories/{id}/payment-methods` | SystemAdmin |
+
+UI cockpit (FASE57) consome estes endpoints — fora do slice 62.0.
 ### 62.a
 - [ ] Com pack ativo: comerciante completa CPF-MEI/CNPJ + município; validação de dígitos  
 - [ ] KYC pendente → não vende / não publica items  

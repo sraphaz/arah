@@ -76,6 +76,8 @@ public sealed partial class ArahDbContext : DbContext
     public DbSet<PlatformExpenseTransactionRecord> PlatformExpenseTransactions => Set<PlatformExpenseTransactionRecord>();
     public DbSet<ReconciliationRecordRecord> ReconciliationRecords => Set<ReconciliationRecordRecord>();
     public DbSet<FeeSplitRuleRecord> FeeSplitRules => Set<FeeSplitRuleRecord>();
+    public DbSet<TerritoryFiscalPackBindingRecord> TerritoryFiscalPackBindings => Set<TerritoryFiscalPackBindingRecord>();
+    public DbSet<TerritoryPaymentMethodsConfigRecord> TerritoryPaymentMethodsConfigs => Set<TerritoryPaymentMethodsConfigRecord>();
 
     // Chat
     public DbSet<ChatConversationRecord> ChatConversations => Set<ChatConversationRecord>();
@@ -186,6 +188,7 @@ public sealed partial class ArahDbContext : DbContext
         ConfigureConnections(modelBuilder);
         ConfigureMarketplace(modelBuilder);
         ConfigureFinancial(modelBuilder);
+        ConfigureFiscal(modelBuilder);
         ConfigureChat(modelBuilder);
         ConfigureMedia(modelBuilder);
         ConfigurePolicies(modelBuilder);

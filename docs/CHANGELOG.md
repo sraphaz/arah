@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — FASE62.0 packs fiscais + meios de pagamento por território (2026-08-19)
+
+- Spec [`FASE62-fiscal-kyc-br.spec.yaml`](specs/phases/FASE62-fiscal-kyc-br.spec.yaml) — AC-62-0-1…5 cobertos
+- Domínio `FiscalPackDefinition`, `TerritoryFiscalPackBinding`, `TerritoryPaymentMethodsConfig` (Territory neutro)
+- API: `GET /api/v1/fiscal-packs`, `GET|PUT .../fiscal-pack`, `GET|PUT .../payment-methods`
+- Persistência InMemory + Postgres (migration `AddTerritoryFiscalConfig`)
+- Sem pack: binding Off legado (`IsLegacyDefault`); ativar pack com capability `pix` exige PIX nos meios
+
 ### Adicionado — Fluxo de agentes P0/P1 (integridade PR) (2026-08-15)
 
 - `address-bot-review.ps1`: conta só threads inline de review bots; ignora sinalização `arah-*` (`ignored_signal`)

@@ -13,6 +13,7 @@ using Arah.Application.Interfaces.Users;
 using Arah.Application.Services.Connections;
 using Arah.Domain.Connections;
 using Arah.Application.Services;
+using Arah.Application.Services.Fiscal;
 using Arah.Application.Events;
 using Arah.Infrastructure;
 using Arah.Infrastructure.Eventing;
@@ -140,6 +141,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PayoutConsolidationService>();
         services.AddScoped<WalletQueryService>();
         services.AddScoped<MerchantCommercialService>();
+        services.AddScoped<TerritoryFiscalPackService>();
+        services.AddScoped<TerritoryPaymentMethodsService>();
+        services.AddSingleton<IFiscalPackCatalog, InMemoryFiscalPackCatalog>();
         services.AddScoped<StoreItemService>();
         services.AddScoped<InquiryService>();
         services.AddScoped<PlatformFeeService>();
@@ -409,6 +413,8 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddScoped<IFeeSplitRuleRepository, PostgresFeeSplitRuleRepository>();
+        services.AddScoped<ITerritoryFiscalPackBindingRepository, PostgresTerritoryFiscalPackBindingRepository>();
+        services.AddScoped<ITerritoryPaymentMethodsConfigRepository, PostgresTerritoryPaymentMethodsConfigRepository>();
         services.AddHostedService<Arah.Infrastructure.Hosting.FeeSplitRuleBootstrapHostedService>();
 
         return services;
@@ -641,6 +647,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPlatformExpenseTransactionRepository, InMemoryPlatformExpenseTransactionRepository>();
         services.AddSingleton<IReconciliationRecordRepository, InMemoryReconciliationRecordRepository>();
         services.AddSingleton<IFeeSplitRuleRepository, InMemoryFeeSplitRuleRepository>();
+        services.AddSingleton<ITerritoryFiscalPackBindingRepository, InMemoryTerritoryFiscalPackBindingRepository>();
+        services.AddSingleton<ITerritoryPaymentMethodsConfigRepository, InMemoryTerritoryPaymentMethodsConfigRepository>();
         services.AddSingleton<IWalletRepository, InMemoryWalletRepository>();
         services.AddSingleton<IConsumptionMeterRepository, InMemoryConsumptionMeterRepository>();
 

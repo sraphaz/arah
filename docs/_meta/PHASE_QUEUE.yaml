@@ -99,7 +99,7 @@ queue:
     priority: P0
     wave: S1
     blocked_by: [FASE55]
-    # Análise: docs/compliance/ANALISE_FISCAL_BR.md — 62.a P0; 62.b/c P1
+    # 62.0 API: packs + binding + payment-methods (2026-08-19). 62.a KYC; 62.b NFS-e; 62.c retenção.
 
   - id: FASE56
     title: "FASE56 — Transparência e Taxas"

@@ -1,0 +1,56 @@
+id: FASE62-fiscal-kyc-br
+version: "0.1.0"
+title: "FASE62 — Conformidade fiscal & KYC comercial (BR)"
+owner: backend
+status: active
+phase: FASE62
+
+intent: |
+  Pacotes fiscais pluggáveis por território (MVP Brazil.v1) e meios de pagamento
+  escopados por territoryId — Territory permanece geográfico e neutro.
+  Slice 62.0: catálogo + binding + payment methods (API). KYC comerciante = 62.a.
+
+acceptance:
+  - id: AC-62-0-1
+    then: "GET /api/v1/fiscal-packs lista brazil.v1 sem mutar Territory"
+    status: covered
+    covered_by: "FullyQualifiedName~TerritoryFiscalPackControllerTests.ListFiscalPacks"
+  - id: AC-62-0-2
+    then: "Implementador (SystemAdmin) ativa brazil.v1 por território via PUT .../fiscal-pack"
+    status: covered
+    covered_by: "FullyQualifiedName~TerritoryFiscalPackControllerTests.UpsertPaymentMethods_ThenActivatePack"
+  - id: AC-62-0-3
+    then: "Meios de pagamento do território listáveis em GET .../payment-methods (checkout)"
+    status: covered
+    covered_by: "FullyQualifiedName~TerritoryFiscalPackControllerTests.CheckoutCanListPaymentMethods|FullyQualifiedName~TerritoryFiscalPackControllerTests.GetPaymentMethods"
+  - id: AC-62-0-4
+    then: "Território sem pack: binding Off legado (IsLegacyDefault) — comércio sem gate fiscal até 62.a"
+    status: covered
+    covered_by: "FullyQualifiedName~TerritoryFiscalPackControllerTests.GetFiscalPack_WithoutBinding"
+  - id: AC-62-0-5
+    then: "Ativar pack com capability pix exige PIX nos payment-methods do território"
+    status: covered
+    covered_by: "FullyQualifiedName~TerritoryFiscalPackControllerTests.ActivateFiscalPack_WithoutPix"
+
+harness:
+  commands:
+    - "dotnet build Arah.sln --configuration Release"
+    - "dotnet test backend/Tests/Arah.Tests/Arah.Tests.csproj --configuration Release --filter FullyQualifiedName~TerritoryFiscalPack"
+  agents:
+    - backend
+    - spec-steward
+
+links:
+  docs:
+    - docs/backlog-api/FASE62.md
+    - docs/compliance/PACOTES_FISCAIS_POR_TERRITORIO.md
+    - docs/compliance/ANALISE_FISCAL_BR.md
+  handoff: []
+
+guardrails:
+  - territory-first
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+
+blocked_by:
+  - FASE55-monetization

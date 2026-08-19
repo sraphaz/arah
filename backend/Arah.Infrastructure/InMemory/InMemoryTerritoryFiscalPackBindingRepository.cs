@@ -20,7 +20,17 @@ public sealed class InMemoryTerritoryFiscalPackBindingRepository : ITerritoryFis
 
     public Task AddAsync(TerritoryFiscalPackBinding binding, CancellationToken cancellationToken)
     {
-        _store.TerritoryFiscalPackBindings.Add(binding);
+        lock (_store.TerritoryFiscalPackBindings)
+        {
+            if (_store.TerritoryFiscalPackBindings.Any(b => b.TerritoryId == binding.TerritoryId))
+            {
+                throw new InvalidOperationException(
+                    $"Fiscal pack binding already exists for territory {binding.TerritoryId}.");
+            }
+
+            _store.TerritoryFiscalPackBindings.Add(binding);
+        }
+
         return Task.CompletedTask;
     }
 

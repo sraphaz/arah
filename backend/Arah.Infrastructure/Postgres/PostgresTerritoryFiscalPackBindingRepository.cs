@@ -23,10 +23,17 @@ public sealed class PostgresTerritoryFiscalPackBindingRepository : ITerritoryFis
         return record?.ToDomain();
     }
 
-    public Task AddAsync(TerritoryFiscalPackBinding binding, CancellationToken cancellationToken)
+    public async Task AddAsync(TerritoryFiscalPackBinding binding, CancellationToken cancellationToken)
     {
+        var exists = await _dbContext.TerritoryFiscalPackBindings
+            .AnyAsync(b => b.TerritoryId == binding.TerritoryId, cancellationToken);
+        if (exists)
+        {
+            throw new InvalidOperationException(
+                $"Fiscal pack binding already exists for territory {binding.TerritoryId}.");
+        }
+
         _dbContext.TerritoryFiscalPackBindings.Add(binding.ToRecord());
-        return Task.CompletedTask;
     }
 
     public async Task UpdateAsync(TerritoryFiscalPackBinding binding, CancellationToken cancellationToken)

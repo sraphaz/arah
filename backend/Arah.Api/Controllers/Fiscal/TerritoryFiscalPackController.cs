@@ -83,7 +83,8 @@ public sealed class TerritoryFiscalPackController : ControllerBase
             return Forbid();
         }
 
-        if (!Enum.TryParse<FiscalPackBindingStatus>(request.Status, ignoreCase: true, out var status))
+        if (!Enum.TryParse<FiscalPackBindingStatus>(request.Status, ignoreCase: true, out var status)
+            || !Enum.IsDefined(status))
         {
             return BadRequest(new { error = "Status must be Off or Active." });
         }

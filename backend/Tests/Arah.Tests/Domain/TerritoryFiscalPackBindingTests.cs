@@ -9,7 +9,24 @@ public sealed class TerritoryFiscalPackBindingTests
     private static readonly Guid UserId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
 
     [Fact]
-    public void Activate_RequiresActorAndSetsActive()
+    public void Activate_WithoutActor_Throws()
+    {
+        var binding = new TerritoryFiscalPackBinding(
+            Guid.NewGuid(),
+            TerritoryId,
+            "brazil.v1",
+            FiscalPackBindingStatus.Off,
+            null,
+            null,
+            null,
+            DateTimeOffset.UtcNow);
+
+        Assert.Throws<ArgumentException>(() =>
+            binding.Activate(Guid.Empty, DateTimeOffset.UtcNow, "3550704"));
+    }
+
+    [Fact]
+    public void Activate_WithValidActor_SetsActive()
     {
         var binding = new TerritoryFiscalPackBinding(
             Guid.NewGuid(),

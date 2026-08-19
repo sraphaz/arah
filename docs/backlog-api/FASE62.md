@@ -27,7 +27,7 @@ Sem confundir **taxa open-core** com **tributo**; sem misturar FASE61 (capital/i
 
 | Fatia | Escopo | Prioridade |
 |-------|--------|------------|
-| **62.0** | Catálogo de packs + `TerritoryFiscalPackBinding` + `TerritoryPaymentMethodsConfig` + UI implementador (cockpit) | P0 |
+| **62.0** | Catálogo de packs + `TerritoryFiscalPackBinding` + `TerritoryPaymentMethodsConfig` + **API** (UI cockpit em FASE57) | P0 |
 | **62.a** | `MerchantFiscalProfile` (CNPJ/CPF-MEI, regime, município ISS); KYC; PixKey; gate de venda **quando** pack BR ativo | P0 |
 | **62.b** | Emissão/armazenamento NFS-e MVP (serviços); link no comprovante do pedido | P1 |
 | **62.c** | Retenção documental fiscal vs LGPD; export contábil período | P1 |

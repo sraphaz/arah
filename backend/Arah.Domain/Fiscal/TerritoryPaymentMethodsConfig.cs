@@ -24,6 +24,11 @@ public sealed class TerritoryPaymentMethodsConfig
 
         ArgumentNullException.ThrowIfNull(methods);
 
+        if (!string.IsNullOrWhiteSpace(pspProvider) && pspProvider.Trim().Length > 64)
+        {
+            throw new ArgumentException("PspProvider must be at most 64 characters.", nameof(pspProvider));
+        }
+
         Id = id;
         TerritoryId = territoryId;
         Methods = methods.Distinct().OrderBy(m => (int)m).ToArray();
@@ -45,6 +50,12 @@ public sealed class TerritoryPaymentMethodsConfig
         DateTimeOffset updatedAtUtc)
     {
         ArgumentNullException.ThrowIfNull(methods);
+
+        if (!string.IsNullOrWhiteSpace(pspProvider) && pspProvider.Trim().Length > 64)
+        {
+            throw new ArgumentException("PspProvider must be at most 64 characters.", nameof(pspProvider));
+        }
+
         Methods = methods.Distinct().OrderBy(m => (int)m).ToArray();
         PspProvider = string.IsNullOrWhiteSpace(pspProvider) ? null : pspProvider.Trim();
         UpdatedAtUtc = updatedAtUtc;

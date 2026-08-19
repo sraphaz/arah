@@ -20,7 +20,17 @@ public sealed class InMemoryTerritoryPaymentMethodsConfigRepository : ITerritory
 
     public Task AddAsync(TerritoryPaymentMethodsConfig config, CancellationToken cancellationToken)
     {
-        _store.TerritoryPaymentMethodsConfigs.Add(config);
+        lock (_store.TerritoryPaymentMethodsConfigs)
+        {
+            if (_store.TerritoryPaymentMethodsConfigs.Any(c => c.TerritoryId == config.TerritoryId))
+            {
+                throw new InvalidOperationException(
+                    $"Payment methods config already exists for territory {config.TerritoryId}.");
+            }
+
+            _store.TerritoryPaymentMethodsConfigs.Add(config);
+        }
+
         return Task.CompletedTask;
     }
 

@@ -117,6 +117,47 @@ public sealed class TerritoryFiscalPackControllerTests
     }
 
     [Fact]
+    public async Task RemovePix_WhilePackActive_ReturnsBadRequest()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        var token = await AuthTestHelper.LoginForTokenAsync(client, "google", "admin-external");
+        AuthTestHelper.SetAuthHeader(client, token);
+
+        (await client.PutAsJsonAsync(
+            $"api/v1/territories/{TestIds.Territory2}/payment-methods",
+            new UpsertTerritoryPaymentMethodsRequest(new[] { "Pix" }, "mock-psp"))).EnsureSuccessStatusCode();
+        (await client.PutAsJsonAsync(
+            $"api/v1/territories/{TestIds.Territory2}/fiscal-pack",
+            new UpsertTerritoryFiscalPackBindingRequest("brazil.v1", "Active", "3550704"))).EnsureSuccessStatusCode();
+
+        var response = await client.PutAsJsonAsync(
+            $"api/v1/territories/{TestIds.Territory2}/payment-methods",
+            new UpsertTerritoryPaymentMethodsRequest(new[] { "Card" }, "mock-psp"));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpsertFiscalPack_WithInvalidMunicipality_ReturnsBadRequest()
+    {
+        using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+        var token = await AuthTestHelper.LoginForTokenAsync(client, "google", "admin-external");
+        AuthTestHelper.SetAuthHeader(client, token);
+
+        (await client.PutAsJsonAsync(
+            $"api/v1/territories/{TestIds.Territory1}/payment-methods",
+            new UpsertTerritoryPaymentMethodsRequest(new[] { "Pix" }, null))).EnsureSuccessStatusCode();
+
+        var response = await client.PutAsJsonAsync(
+            $"api/v1/territories/{TestIds.Territory1}/fiscal-pack",
+            new UpsertTerritoryFiscalPackBindingRequest("brazil.v1", "Active", "123"));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
     public async Task CheckoutCanListPaymentMethods_WithoutAuth()
     {
         using var factory = new ApiFactory();

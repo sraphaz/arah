@@ -23,10 +23,17 @@ public sealed class PostgresTerritoryPaymentMethodsConfigRepository : ITerritory
         return record?.ToDomain();
     }
 
-    public Task AddAsync(TerritoryPaymentMethodsConfig config, CancellationToken cancellationToken)
+    public async Task AddAsync(TerritoryPaymentMethodsConfig config, CancellationToken cancellationToken)
     {
+        var exists = await _dbContext.TerritoryPaymentMethodsConfigs
+            .AnyAsync(c => c.TerritoryId == config.TerritoryId, cancellationToken);
+        if (exists)
+        {
+            throw new InvalidOperationException(
+                $"Payment methods config already exists for territory {config.TerritoryId}.");
+        }
+
         _dbContext.TerritoryPaymentMethodsConfigs.Add(config.ToRecord());
-        return Task.CompletedTask;
     }
 
     public async Task UpdateAsync(TerritoryPaymentMethodsConfig config, CancellationToken cancellationToken)

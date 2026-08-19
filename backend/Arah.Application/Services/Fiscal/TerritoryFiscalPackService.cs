@@ -22,6 +22,13 @@ public sealed class TerritoryFiscalPackService
         IAuditLogger auditLogger,
         IUnitOfWork unitOfWork)
     {
+        ArgumentNullException.ThrowIfNull(bindingRepository);
+        ArgumentNullException.ThrowIfNull(catalog);
+        ArgumentNullException.ThrowIfNull(territoryRepository);
+        ArgumentNullException.ThrowIfNull(paymentMethodsRepository);
+        ArgumentNullException.ThrowIfNull(auditLogger);
+        ArgumentNullException.ThrowIfNull(unitOfWork);
+
         _bindingRepository = bindingRepository;
         _catalog = catalog;
         _territoryRepository = territoryRepository;
@@ -61,6 +68,17 @@ public sealed class TerritoryFiscalPackService
         Guid actorUserId,
         CancellationToken cancellationToken)
     {
+        if (!Enum.IsDefined(status))
+        {
+            return OperationResult<TerritoryFiscalPackBindingView>.Failure("Status must be Off or Active.");
+        }
+
+        if (!IsValidMunicipalityIbge(municipalityIbge))
+        {
+            return OperationResult<TerritoryFiscalPackBindingView>.Failure(
+                "Municipality IBGE code must be 7 digits.");
+        }
+
         var territory = await _territoryRepository.GetByIdAsync(territoryId, cancellationToken);
         if (territory is null)
         {
@@ -88,54 +106,76 @@ public sealed class TerritoryFiscalPackService
         var existing = await _bindingRepository.GetByTerritoryIdAsync(territoryId, cancellationToken);
 
         TerritoryFiscalPackBinding binding;
-        if (existing is null)
+        try
         {
-            binding = status == FiscalPackBindingStatus.Active
-                ? new TerritoryFiscalPackBinding(
-                    Guid.NewGuid(),
-                    territoryId,
-                    pack.Id,
-                    FiscalPackBindingStatus.Active,
-                    actorUserId,
-                    now,
-                    municipalityIbge,
-                    now)
-                : new TerritoryFiscalPackBinding(
-                    Guid.NewGuid(),
-                    territoryId,
-                    pack.Id,
-                    FiscalPackBindingStatus.Off,
-                    null,
-                    null,
-                    municipalityIbge,
-                    now);
-
-            await _bindingRepository.AddAsync(binding, cancellationToken);
-            await _auditLogger.LogAsync(
-                new AuditEntry("fiscal.pack.binding.created", actorUserId, territoryId, binding.Id, DateTime.UtcNow),
-                cancellationToken);
-        }
-        else
-        {
-            existing.ChangePack(pack.Id, now);
-            if (status == FiscalPackBindingStatus.Active)
+            if (existing is null)
             {
-                existing.Activate(actorUserId, now, municipalityIbge);
+                binding = status == FiscalPackBindingStatus.Active
+                    ? new TerritoryFiscalPackBinding(
+                        Guid.NewGuid(),
+                        territoryId,
+                        pack.Id,
+                        FiscalPackBindingStatus.Active,
+                        actorUserId,
+                        now,
+                        municipalityIbge,
+                        now)
+                    : new TerritoryFiscalPackBinding(
+                        Guid.NewGuid(),
+                        territoryId,
+                        pack.Id,
+                        FiscalPackBindingStatus.Off,
+                        null,
+                        null,
+                        municipalityIbge,
+                        now);
+
+                await _bindingRepository.AddAsync(binding, cancellationToken);
+                await _auditLogger.LogAsync(
+                    new AuditEntry("fiscal.pack.binding.created", actorUserId, territoryId, binding.Id, DateTime.UtcNow),
+                    cancellationToken);
             }
             else
             {
-                existing.Deactivate(now);
-            }
+                existing.ChangePack(pack.Id, now);
+                if (status == FiscalPackBindingStatus.Active)
+                {
+                    existing.Activate(actorUserId, now, municipalityIbge);
+                }
+                else
+                {
+                    existing.Deactivate(now);
+                }
 
-            await _bindingRepository.UpdateAsync(existing, cancellationToken);
-            binding = existing;
-            await _auditLogger.LogAsync(
-                new AuditEntry("fiscal.pack.binding.updated", actorUserId, territoryId, binding.Id, DateTime.UtcNow),
-                cancellationToken);
+                await _bindingRepository.UpdateAsync(existing, cancellationToken);
+                binding = existing;
+                await _auditLogger.LogAsync(
+                    new AuditEntry("fiscal.pack.binding.updated", actorUserId, territoryId, binding.Id, DateTime.UtcNow),
+                    cancellationToken);
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            return OperationResult<TerritoryFiscalPackBindingView>.Failure(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return OperationResult<TerritoryFiscalPackBindingView>.Failure(ex.Message);
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
         return OperationResult<TerritoryFiscalPackBindingView>.Success(TerritoryFiscalPackBindingView.From(binding));
+    }
+
+    private static bool IsValidMunicipalityIbge(string? municipalityIbge)
+    {
+        if (string.IsNullOrWhiteSpace(municipalityIbge))
+        {
+            return true;
+        }
+
+        var trimmed = municipalityIbge.Trim();
+        return trimmed.Length == 7 && trimmed.All(char.IsDigit);
     }
 }
 

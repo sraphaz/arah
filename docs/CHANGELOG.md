@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Spec draft para paridade do app com model UI via e2e (2026-11-05)
+
+- Spec [`playwright-e2e-mock-bff.spec.yaml`](specs/features/playwright-e2e-mock-bff.spec.yaml) (`Spec-Id: playwright-e2e-mock-bff`)
+- Alvo explícito: `frontend/arah.app` em paridade pixel-to-pixel com `design-system/ui_kits/app/`
+- Jornadas e asserts ancorados em `design-system/handoff/Especificacao-Arah.html`
+- Gate futuro de browser e2e com backend documentado (real ou mock opcional) e com artefatos de falha previstos
+- Índice de specs atualizado; PR permanece docs-only (sem Playwright/CI/app code nesta etapa)
+
 ### Adicionado — FASE62.0 packs fiscais + meios de pagamento por território (2026-08-19)
 
 - Spec [`FASE62-fiscal-kyc-br.spec.yaml`](specs/phases/FASE62-fiscal-kyc-br.spec.yaml) — AC-62-0-1…5 cobertos

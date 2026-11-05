@@ -71,6 +71,7 @@ Ver [SDD_AND_HARNESS.md](../_meta/SDD_AND_HARNESS.md) e `scripts/harness/run-har
 | [FASE59-federation.spec.yaml](./phases/FASE59-federation.spec.yaml) | FASE59 | draft |
 | [FASE60-implementer-app.spec.yaml](./phases/FASE60-implementer-app.spec.yaml) | FASE60 | draft |
 | [FASE61-territorial-capital.spec.yaml](./phases/FASE61-territorial-capital.spec.yaml) | FASE61 | draft |
+| [playwright-e2e-mock-bff.spec.yaml](./features/playwright-e2e-mock-bff.spec.yaml) | feature | draft |
 | [operability.spec.yaml](./platform/operability.spec.yaml) | plataforma | active |
 | [agent-operation.spec.yaml](./harness/agent-operation.spec.yaml) | harness | active |
 

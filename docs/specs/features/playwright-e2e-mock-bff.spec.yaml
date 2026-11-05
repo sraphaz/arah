@@ -1,0 +1,76 @@
+id: playwright-e2e-mock-bff
+version: "0.1.0"
+title: "Playwright e2e para paridade do app com o UI kit e o handoff"
+owner: flutter
+status: draft
+phase: null
+
+intent: |
+  Implementar `frontend/arah.app` de modo que comportamento e design fiquem em
+  paridade pixel-to-pixel com a interface-modelo em
+  `design-system/ui_kits/app/`, tratada como referência visual e comportamental
+  de alta fidelidade para o app.
+
+  Validar essa paridade com e2e em navegador, usando Playwright como hipótese
+  de runner para regressão visual/screenshot compare a partir de baselines
+  derivados do model UI, além de asserts de jornadas e estados descritos em
+  `design-system/handoff/Especificacao-Arah.html`.
+
+  Mock de BFF/fixtures permanece opcional como estratégia de execução; a suíte
+  pode rodar contra backend real quando isso for o acordo da implementação,
+  desde que o modo escolhido fique documentado e verificável.
+
+  Este PR permanece estritamente docs-only: define o gate e a rastreabilidade
+  da futura implementação, sem adicionar código Flutter, Playwright, CI ou
+  integrações reais nesta mudança.
+
+acceptance:
+  - id: AC-1
+    when: "Quando a suíte de regressão visual roda contra `frontend/arah.app`"
+    then: "as telas núcleo login, onboarding, feed, explorar, mapa, publicar, notificações e perfil correspondem à referência em `design-system/ui_kits/app/` dentro da tolerância de pixel acordada"
+    status: pending
+  - id: AC-2
+    when: "Quando as jornadas críticas descritas em `design-system/handoff/Especificacao-Arah.html` rodam na suíte e2e"
+    then: "os fluxos assertam os estados observáveis esperados para as jornadas priorizadas do app"
+    status: pending
+  - id: AC-3
+    when: "Quando a suíte e2e roda em CI ou localmente com comando documentado"
+    then: "o modo de backend usado no teste (real e2e ou mock opcional) fica explícito, documentado e reprodutível para a execução"
+    status: pending
+  - id: AC-4
+    when: "Quando qualquer teste e2e falha no CI"
+    then: "o job dedicado publica artefatos de falha, incluindo screenshots de baseline/atual/diff e demais evidências aplicáveis (trace e vídeo quando suportado)"
+    status: pending
+  - id: AC-5
+    when: "Quando a spec e a futura suíte são consultadas por humanos ou CI"
+    then: "elas referenciam explicitamente `design-system/handoff/Especificacao-Arah.html` e `design-system/ui_kits/app/` como fontes de verdade para telas, jornadas e baselines"
+    status: pending
+
+harness:
+  commands:
+    - "# placeholder: comando local/CI para validar `frontend/arah.app` com runner browser acordado contra backend documentado"
+    - "# placeholder: ex.: npx playwright test (somente se Playwright estiver instalado quando a implementação começar)"
+  scripts: []
+  agents:
+    - flutter
+    - qa
+    - web
+    - spec-steward
+
+links:
+  docs:
+    - design-system/README.md
+    - design-system/handoff/Especificacao-Arah.html
+    - design-system/ui_kits/app/index.html
+    - design-system/ui_kits/app/README.md
+    - frontend/arah.app/docs/CI_CD_AND_TESTS.md
+    - docs/ops/PLATFORM_STATE.md
+    - AGENTS.md
+  tests: []
+  handoff: []
+
+guardrails:
+  - territory-first
+  - no-secrets-in-repo
+  - sync-docs-on-behavior-change
+  - no-merge-automatic

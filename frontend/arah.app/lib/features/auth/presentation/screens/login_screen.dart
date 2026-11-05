@@ -14,6 +14,8 @@ import '../providers/auth_state_provider.dart';
 
 /// Passos do fluxo de login/cadastro (email-first).
 enum LoginStep {
+  /// Estado inicial: escolha entre Google e e-mail, alinhado ao UI kit.
+  choice,
   /// Só e-mail; ao enviar chama check-email.
   email,
   /// E-mail existe: campo senha + Entrar (login dev por enquanto).
@@ -43,7 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordFocusNode = FocusNode();
   final _displayNameFocusNode = FocusNode();
 
-  LoginStep _step = LoginStep.email;
+  LoginStep _step = LoginStep.choice;
   String _email = '';
   bool _checkEmailLoading = false;
 
@@ -62,13 +64,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _goBack() {
     setState(() {
-      if (_step == LoginStep.password || _step == LoginStep.signup) {
-        _step = LoginStep.email;
+      if (_step == LoginStep.email) {
+        _step = LoginStep.choice;
         _email = '';
+        _emailController.clear();
+      } else if (_step == LoginStep.password || _step == LoginStep.signup) {
+        _step = LoginStep.email;
         _passwordController.clear();
         _displayNameController.clear();
         _signupPasswordController.clear();
         _confirmPasswordController.clear();
+      }
+    });
+  }
+
+  void _openEmailStep() {
+    setState(() => _step = LoginStep.email);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _emailFocusNode.requestFocus();
       }
     });
   }
@@ -155,40 +169,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingLg),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (_step != LoginStep.email)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton.icon(
-                        onPressed: _checkEmailLoading || auth.isLoading ? null : _goBack,
-                        icon: const Icon(Icons.arrow_back, size: 20),
-                        label: Text(l10n.back),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (_step != LoginStep.choice)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: _checkEmailLoading || auth.isLoading ? null : _goBack,
+                          icon: const Icon(Icons.arrow_back, size: 20),
+                          label: Text(l10n.back),
+                        ),
+                      ),
+                    ArahBrandHeader(
+                      subtitle: _step == LoginStep.choice || _step == LoginStep.email
+                          ? l10n.loginSubtitle
+                          : _step == LoginStep.password
+                              ? l10n.enterPassword
+                              : l10n.signUpSubtitle,
+                    ),
+                    const SizedBox(height: AppConstants.spacing2xl),
+                    ArahGlassCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (_step == LoginStep.choice) ..._buildChoiceStep(l10n, auth.isLoading),
+                          if (_step == LoginStep.email) ..._buildEmailStep(l10n),
+                          if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
+                          if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),
+                        ],
                       ),
                     ),
-                  ArahBrandHeader(
-                    subtitle: _step == LoginStep.email
-                        ? l10n.loginSubtitle
-                        : _step == LoginStep.password
-                            ? l10n.enterPassword
-                            : l10n.signUpSubtitle,
-                  ),
-                  const SizedBox(height: AppConstants.spacing2xl),
-                  ArahGlassCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (_step == LoginStep.email) ..._buildEmailStep(l10n, auth.isLoading),
-                        if (_step == LoginStep.password) ..._buildPasswordStep(l10n, auth.isLoading),
-                        if (_step == LoginStep.signup) ..._buildSignUpStep(l10n, auth.isLoading),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -197,8 +215,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  List<Widget> _buildEmailStep(AppLocalizations l10n, bool authLoading) {
-    final busy = _checkEmailLoading || authLoading;
+  List<Widget> _buildChoiceStep(AppLocalizations l10n, bool authLoading) {
+    return [
+      ArahButton(
+        label: l10n.loginWithGoogle,
+        onPressed: authLoading ? null : _loginWithGoogle,
+        expand: true,
+      ),
+      const SizedBox(height: AppConstants.spacingMd),
+      ArahButton(
+        label: l10n.loginWithEmail,
+        onPressed: authLoading ? null : _openEmailStep,
+        variant: ArahButtonVariant.secondary,
+        icon: Icons.mail_outline,
+        expand: true,
+      ),
+    ];
+  }
+
+  List<Widget> _buildEmailStep(AppLocalizations l10n) {
     return [
       TextFormField(
         controller: _emailController,
@@ -220,28 +255,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         onPressed: _checkEmailLoading ? null : _submitEmail,
         loading: _checkEmailLoading,
         expand: true,
-      ),
-      const SizedBox(height: AppConstants.spacingMd),
-      Row(
-        children: [
-          const Expanded(child: Divider()),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingSm),
-            child: Text(
-              l10n.loginOr,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-          ),
-          const Expanded(child: Divider()),
-        ],
-      ),
-      const SizedBox(height: AppConstants.spacingMd),
-      OutlinedButton.icon(
-        onPressed: busy ? null : _loginWithGoogle,
-        icon: const Icon(Icons.g_mobiledata, size: 28),
-        label: Text(l10n.loginWithGoogle),
       ),
     ];
   }

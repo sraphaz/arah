@@ -393,6 +393,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginWithGoogle => 'Sign in with Google';
 
   @override
+  String get loginWithEmail => 'Sign in with email';
+
+  @override
   String get noAccountYet => 'Don\'t have an account?';
 
   @override

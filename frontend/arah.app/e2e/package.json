@@ -1,0 +1,11 @@
+{
+  "name": "arah-app-playwright",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:update-snapshots": "playwright test --update-snapshots"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
+  }
+}

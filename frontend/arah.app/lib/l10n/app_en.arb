@@ -139,6 +139,7 @@
 "filterByInterests": "By interests",
   "inTerritory": "In",
   "loginWithGoogle": "Sign in with Google",
+  "loginWithEmail": "Sign in with email",
   "noAccountYet": "Don't have an account?",
   "createAccount": "Create account",
   "loginOr": "or",

@@ -222,70 +222,73 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            'assets/images/arah-logo.png',
-                            height: 92,
-                            fit: BoxFit.fitHeight,
-                            filterQuality: FilterQuality.high,
-                            semanticLabel: l10n.appTitle,
-                            alignment: Alignment.centerLeft,
-                          ),
-                          const SizedBox(height: 22),
-                          Text(
-                            l10n.loginEyebrow,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  color: colors.primary,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  fontVariations: const [
-                                    FontVariation('wght', 600)
-                                  ],
-                                  letterSpacing: 1.4,
-                                ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            l10n.appTitle,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall
-                                ?.copyWith(
-                                  color: colors.onSurface,
-                                  fontSize: 44,
-                                  height: 1.02,
-                                  fontWeight: FontWeight.w700,
-                                  fontVariations: const [
-                                    FontVariation('wght', 700)
-                                  ],
-                                  letterSpacing: -1.2,
-                                ),
-                          ),
-                          const SizedBox(height: 14),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 300),
-                            child: Text(
-                              l10n.loginLead,
+                      child: Transform.translate(
+                        offset: const Offset(0, -5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.asset(
+                              'assets/images/arah-logo.png',
+                              height: 92,
+                              fit: BoxFit.fitHeight,
+                              filterQuality: FilterQuality.high,
+                              semanticLabel: l10n.appTitle,
+                              alignment: Alignment.centerLeft,
+                            ),
+                            const SizedBox(height: 22),
+                            Text(
+                              l10n.loginEyebrow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodyLarge
+                                  .labelLarge
                                   ?.copyWith(
-                                color: colors.onSurfaceVariant,
-                                fontSize: 16,
-                                height: 1.5,
-                                fontVariations: const [
-                                  FontVariation('wght', 400)
-                                ],
+                                    color: colors.primary,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    fontVariations: const [
+                                      FontVariation('wght', 600)
+                                    ],
+                                    letterSpacing: 1.4,
+                                  ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              l10n.appTitle,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(
+                                    color: colors.onSurface,
+                                    fontSize: 44,
+                                    height: 1.02,
+                                    fontWeight: FontWeight.w700,
+                                    fontVariations: const [
+                                      FontVariation('wght', 700)
+                                    ],
+                                    letterSpacing: -1.2,
+                                  ),
+                            ),
+                            const SizedBox(height: 14),
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 300),
+                              child: Text(
+                                l10n.loginLead,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                  color: colors.onSurfaceVariant,
+                                  fontSize: 16,
+                                  height: 1.5,
+                                  fontVariations: const [
+                                    FontVariation('wght', 400)
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     Padding(
@@ -293,18 +296,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _LoginChoiceButton(
-                            label: l10n.loginWithGoogle,
-                            iconName: 'login',
-                            iconFill: 1,
-                            onPressed: authLoading ? null : _loginWithGoogle,
-                            variant: _LoginChoiceButtonVariant.primary,
-                          ),
-                          const SizedBox(height: 11),
-                          _LoginChoiceButton(
-                            label: l10n.loginWithEmail,
-                            iconName: 'mail',
-                            onPressed: authLoading ? null : _openEmailStep,
+                          Transform.translate(
+                            offset: const Offset(0, -11),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                _LoginChoiceButton(
+                                  label: l10n.loginWithGoogle,
+                                  iconName: 'login',
+                                  iconFill: 1,
+                                  onPressed:
+                                      authLoading ? null : _loginWithGoogle,
+                                  variant: _LoginChoiceButtonVariant.primary,
+                                ),
+                                const SizedBox(height: 11),
+                                _LoginChoiceButton(
+                                  label: l10n.loginWithEmail,
+                                  iconName: 'mail',
+                                  onPressed:
+                                      authLoading ? null : _openEmailStep,
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 8),
                           GestureDetector(
@@ -564,19 +577,16 @@ class _LoginChoiceButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final primary = variant == _LoginChoiceButtonVariant.primary;
-    final borderColor =
-        primary ? Colors.transparent : AppDesignTokens.outlineStrong;
     final shadowColor =
         primary ? AppDesignTokens.loginButtonGlow : Colors.transparent;
-
     return Opacity(
       opacity: onPressed == null ? 0.65 : 1,
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: primary
               ? const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: Alignment(-0.5, -0.866),
+                  end: Alignment(0.5, 0.866),
                   colors: [
                     AppDesignTokens.loginButtonGradientStart,
                     AppDesignTokens.loginButtonGradientEnd,
@@ -585,7 +595,8 @@ class _LoginChoiceButton extends StatelessWidget {
               : null,
           color: primary ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: borderColor),
+          border:
+              primary ? null : Border.all(color: AppDesignTokens.outlineStrong),
           boxShadow: primary
               ? [
                   BoxShadow(
@@ -610,20 +621,28 @@ class _LoginChoiceButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _MaterialSymbol(
-                    iconName,
-                    size: 20,
-                    fill: iconFill,
-                    color: primary
-                        ? AppDesignTokens.textOnAccent
-                        : colors.onSurface,
+                  SizedBox.square(
+                    dimension: 20,
+                    child: Center(
+                      child: _MaterialSymbol(
+                        iconName,
+                        size: 20,
+                        fill: iconFill,
+                        color: primary
+                            ? AppDesignTokens.textOnAccent
+                            : colors.onSurface,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     label,
+                    strutStyle:
+                        const StrutStyle(forceStrutHeight: true, height: 1),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontFamily: AppDesignTokens.fontFamilyBody,
                           fontSize: 16,
+                          height: 1,
                           fontWeight: FontWeight.w600,
                           fontVariations: const [FontVariation('wght', 600)],
                           color: primary

@@ -29,7 +29,7 @@ class AppDesignTokens {
   static const Color success = Color(0xFFA6D6B9);
   static const Color info = Color(0xFF6FC5D6); // --premium-water
   static const Color earth = Color(0xFF8B7355);
-  static const Color textOnAccent = Color(0xFF0E1F12);
+  static const Color textOnAccent = Color(0xFF0C1B10);
 
   static const Color accentSubtle = Color(0x24A6D6B9);
   static const Color accentBorderSoft = Color(0x40A6D6B9);
@@ -283,9 +283,11 @@ class AppColors extends ThemeExtension<AppColors> {
       link: Color.lerp(link, other.link, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t)!,
-      surfaceContainer: Color.lerp(surfaceContainer, other.surfaceContainer, t)!,
+      surfaceContainer:
+          Color.lerp(surfaceContainer, other.surfaceContainer, t)!,
       onSurface: Color.lerp(onSurface, other.onSurface, t)!,
-      onSurfaceVariant: Color.lerp(onSurfaceVariant, other.onSurfaceVariant, t)!,
+      onSurfaceVariant:
+          Color.lerp(onSurfaceVariant, other.onSurfaceVariant, t)!,
       onSurfaceSubtle: Color.lerp(onSurfaceSubtle, other.onSurfaceSubtle, t)!,
       outline: Color.lerp(outline, other.outline, t)!,
       outlineSubtle: Color.lerp(outlineSubtle, other.outlineSubtle, t)!,
@@ -297,10 +299,12 @@ class AppColors extends ThemeExtension<AppColors> {
       accentBorder: Color.lerp(accentBorder, other.accentBorder, t)!,
       glassBackground: Color.lerp(glassBackground, other.glassBackground, t)!,
       glassBorder: Color.lerp(glassBorder, other.glassBorder, t)!,
-      watermarkOpacity: watermarkOpacity + (other.watermarkOpacity - watermarkOpacity) * t,
-      bodyWatermarkOpacity:
-          bodyWatermarkOpacity + (other.bodyWatermarkOpacity - bodyWatermarkOpacity) * t,
-      territoryBoundary: Color.lerp(territoryBoundary, other.territoryBoundary, t)!,
+      watermarkOpacity:
+          watermarkOpacity + (other.watermarkOpacity - watermarkOpacity) * t,
+      bodyWatermarkOpacity: bodyWatermarkOpacity +
+          (other.bodyWatermarkOpacity - bodyWatermarkOpacity) * t,
+      territoryBoundary:
+          Color.lerp(territoryBoundary, other.territoryBoundary, t)!,
       locationPin: Color.lerp(locationPin, other.locationPin, t)!,
     );
   }
@@ -357,5 +361,6 @@ class AppColors extends ThemeExtension<AppColors> {
 }
 
 extension AppColorsExtension on BuildContext {
-  AppColors get appColors => Theme.of(this).extension<AppColors>() ?? AppColors.dark;
+  AppColors get appColors =>
+      Theme.of(this).extension<AppColors>() ?? AppColors.dark;
 }

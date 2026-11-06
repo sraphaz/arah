@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Adicionado — Harness Playwright smoke para login do app Flutter (2026-11-05)
+
+- Projeto `frontend/arah.app/e2e` com Playwright configurado para validar o build web do app
+- Smoke `login.smoke.spec.js` verifica `Arah`, `Entrar com Google` e `Entrar com e-mail` em viewport mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2)
+- Teste `login.pixel-parity.spec.js` renderiza o handoff `design-system/ui_kits/app` como source of truth, compara a implementação Flutter pixel a pixel (`maxDiffPixelRatio <= 0.01`) e publica diff/composite nos artefatos
+- Workflows `flutter-playwright` (smoke verde) e `flutter-playwright-pixel-parity` (non-blocking, falha explícita até a PR2) no CI, com upload de `playwright-report`/`test-results`
+- `LoginScreen` ganhou etapa inicial com CTAs Google/e-mail alinhada ao UI kit, preservando o fluxo email-first por trás
+
 ### Adicionado — Spec draft para paridade do app com model UI via e2e (2026-11-05)
 
 - Spec [`playwright-e2e-mock-bff.spec.yaml`](specs/features/playwright-e2e-mock-bff.spec.yaml) (`Spec-Id: playwright-e2e-mock-bff`)

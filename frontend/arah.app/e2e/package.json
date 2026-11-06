@@ -1,0 +1,14 @@
+{
+  "name": "arah-app-playwright",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:smoke",
+    "test:smoke": "playwright test tests/login.smoke.spec.js",
+    "test:pixel-parity": "playwright test tests/login.pixel-parity.spec.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "pixelmatch": "^8.0.0",
+    "pngjs": "^7.0.0"
+  }
+}

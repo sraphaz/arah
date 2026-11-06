@@ -10,11 +10,15 @@ Status atual (implementado) e como usar os artefatos.
 |------------|----------------|-------------|
 | Build | ✅ `dotnet build` | ✅ implícito (analyze) |
 | Testes | ✅ `dotnet test` + cobertura | ✅ `flutter test --coverage` |
+| Browser smoke | — | ✅ Playwright (`flutter-playwright`) valida copy/semântica do login web em viewport mobile |
+| Pixel parity | — | ⚠️ Playwright (`flutter-playwright-pixel-parity`) compara Flutter web vs handoff mobile e hoje falha de propósito até a PR2 |
 | Cobertura | ✅ Codecov (flag `unittests`) | ✅ Codecov (flag `flutter`) |
 | Análise estática | — | ✅ `flutter analyze --no-fatal-infos` |
 | Segurança | ✅ Trivy (fs) | — (Trivy escaneia o repo) |
 
-- **Flutter:** job `flutter-app` em `frontend/Arah.app`: `pub get` → `analyze` → `flutter test --coverage` → upload de `coverage/lcov.info` para Codecov.
+- **Flutter:** job `flutter-app` em `frontend/arah.app`: `pub get` → `analyze` → `flutter test --coverage` → upload de `coverage/lcov.info` para Codecov.
+- **Playwright smoke:** job `flutter-playwright` em `frontend/arah.app/e2e`: `flutter build web --web-renderer html` → `npm ci` → `npx playwright install --with-deps chromium` → `npm run test:smoke`. O renderer HTML é usado para manter estáveis os asserts textuais/semânticos do smoke de login. Em falha, publica `playwright-report/` e `test-results/` como artefatos do workflow.
+- **Playwright pixel parity:** job `flutter-playwright-pixel-parity` repete o build web, renderiza o handoff `design-system/ui_kits/app` como source of truth em perfil mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2), captura a implementação Flutter no mesmo perfil e falha se `maxDiffPixelRatio > 0.01`. O job é **non-blocking** (`continue-on-error`) para deixar a divergência visível sem mascarar o smoke verde; ele sempre sobe `playwright-report/` e `test-results/` como artefatos.
 
 ---
 
@@ -44,14 +48,33 @@ Status atual (implementado) e como usar os artefatos.
 | Tipo | Onde | O que cobre |
 |------|------|-------------|
 | **App** | `test/app_test.dart` | App sobe com `ProviderScope` e `MaterialApp`. |
-| **Login** | `test/features/auth/presentation/login_screen_test.dart` | Tela de login exibe título e botão Entrar. |
+| **Login** | `test/features/auth/presentation/login_screen_test.dart` | Tela de login exibe `Arah`, os CTAs iniciais e o fluxo de e-mail. |
+| **E2E / Smoke mobile** | `e2e/tests/login.smoke.spec.js` | Flutter web exibe `Arah`, `Entrar com Google` e `Entrar com e-mail` no perfil mobile. |
+| **E2E / Pixel parity** | `e2e/tests/login.pixel-parity.spec.js` | Handoff do UI kit vira a imagem esperada; a implementação Flutter é comparada pixel a pixel e deve chegar em `maxDiffPixelRatio <= 0.01`. |
 | **Explorar** | `test/features/explore/presentation/explore_screen_test.dart` | Tela Explorar exibe título e seção Territórios. |
 | **Perfil** | `test/features/profile/presentation/profile_screen_test.dart` | Perfil logado exibe nome e app bar. |
 | **Unit** | `test/core/network/api_exception_test.dart` | `ApiException.userMessage` (401, 429, 403, 5xx, outros). |
 | **Unit** | `test/features/territories/presentation/territory_item_test.dart` | `TerritoryItem.fromJson`. |
 
 - **Cobertura:** `flutter test --coverage` gera `coverage/lcov.info`; o CI envia para o Codecov (flag `flutter`).
-- **Rodar localmente:** `cd frontend/Arah.app && flutter test`.
+- **Rodar localmente:** `cd frontend/arah.app && flutter test`.
+
+### Rodar o smoke Playwright localmente
+
+```bash
+cd frontend/arah.app
+flutter pub get
+flutter build web --web-renderer html
+cd e2e
+npm ci
+npx playwright install --with-deps chromium
+npm test
+```
+
+- **Smoke:** `npm test`
+- **Pixel parity (hoje falha de propósito até a PR2):** `npm run test:pixel-parity`
+- **Relatório HTML local:** `frontend/arah.app/e2e/playwright-report/`
+- **Artefatos de falha locais:** `frontend/arah.app/e2e/test-results/`
 
 ---
 

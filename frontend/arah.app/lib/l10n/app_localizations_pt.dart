@@ -396,6 +396,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loginWithGoogle => 'Entrar com Google';
 
   @override
+  String get loginWithEmail => 'Entrar com e-mail';
+
+  @override
   String get noAccountYet => 'Não tem conta?';
 
   @override

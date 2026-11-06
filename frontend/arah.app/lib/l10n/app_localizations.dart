@@ -812,6 +812,12 @@ abstract class AppLocalizations {
   /// **'Entrar com Google'**
   String get loginWithGoogle;
 
+  /// No description provided for @loginWithEmail.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar com e-mail'**
+  String get loginWithEmail;
+
   /// No description provided for @noAccountYet.
   ///
   /// In pt, this message translates to:

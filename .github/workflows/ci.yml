@@ -117,3 +117,90 @@ jobs:
           fail_ci_if_error: false
           flags: flutter
           name: flutter-app-coverage
+
+  flutter-playwright:
+    name: Flutter Playwright smoke
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/arah.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.x'
+          channel: 'stable'
+          cache: true
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/arah.app/e2e/package-lock.json
+      - name: Install Flutter dependencies
+        run: flutter pub get
+      - name: Build Flutter web
+        run: flutter build web --web-renderer html
+      - name: Install Playwright dependencies
+        working-directory: frontend/arah.app/e2e
+        run: npm ci
+      - name: Install Playwright browser
+        working-directory: frontend/arah.app/e2e
+        run: npx playwright install --with-deps chromium
+      - name: Run login smoke
+        working-directory: frontend/arah.app/e2e
+        run: npm run test:smoke
+      - name: Upload Playwright artifacts
+        uses: actions/upload-artifact@v4
+        if: failure() || cancelled()
+        with:
+          name: playwright-login-smoke-${{ github.run_id }}
+          path: |
+            frontend/arah.app/e2e/playwright-report
+            frontend/arah.app/e2e/test-results
+          if-no-files-found: warn
+
+  flutter-playwright-pixel-parity:
+    name: Flutter Playwright pixel parity (non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: frontend/arah.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.x'
+          channel: 'stable'
+          cache: true
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/arah.app/e2e/package-lock.json
+      - name: Install Flutter dependencies
+        run: flutter pub get
+      - name: Build Flutter web
+        run: flutter build web --web-renderer html
+      - name: Install Playwright dependencies
+        working-directory: frontend/arah.app/e2e
+        run: npm ci
+      - name: Install Playwright browser
+        working-directory: frontend/arah.app/e2e
+        run: npx playwright install --with-deps chromium
+      - name: Run login pixel parity
+        working-directory: frontend/arah.app/e2e
+        run: npm run test:pixel-parity
+      - name: Upload Playwright pixel parity artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-login-pixel-parity-${{ github.run_id }}
+          path: |
+            frontend/arah.app/e2e/playwright-report
+            frontend/arah.app/e2e/test-results
+          if-no-files-found: warn

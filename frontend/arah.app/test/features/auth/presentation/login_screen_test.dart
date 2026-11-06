@@ -48,7 +48,8 @@ class FakeAuthRepository extends AuthRepository {
 }
 
 void main() {
-  testWidgets('LoginScreen shows app title and Continuar on email step', (WidgetTester tester) async {
+  testWidgets('LoginScreen shows app title and primary entry actions',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -66,11 +67,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Arah'), findsOneWidget);
-    expect(find.text('Continuar'), findsOneWidget);
-    expect(find.byType(TextFormField), findsWidgets);
+    expect(find.text('Entrar com Google'), findsOneWidget);
+    expect(find.text('Entrar com e-mail'), findsOneWidget);
+    expect(find.byIcon(Icons.login), findsOneWidget);
+    expect(find.byIcon(Icons.mail_outline), findsOneWidget);
+    expect(find.byType(TextFormField), findsNothing);
   });
 
-  testWidgets('LoginScreen shows "Entrar com Google" on email step', (WidgetTester tester) async {
+  testWidgets('LoginScreen opens email flow from secondary CTA',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -87,12 +92,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Entrar com Google'), findsOneWidget);
-    // O botão fica na etapa de e-mail, ao lado do fluxo e-mail-first ("ou").
-    expect(find.text('ou'), findsOneWidget);
+    await tester.tap(find.text('Entrar com e-mail'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Continuar'), findsOneWidget);
+    expect(find.byType(TextFormField), findsOneWidget);
   });
 
-  testWidgets('LoginScreen shows signup form when email does not exist', (WidgetTester tester) async {
+  testWidgets('LoginScreen shows signup form when email does not exist',
+      (WidgetTester tester) async {
     final fakeRepo = FakeAuthRepository(
       config: const AppConfig(bffBaseUrl: 'http://test'),
       secureStorage: _FakeStorage(),
@@ -112,6 +120,9 @@ void main() {
         ),
       ),
     );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Entrar com e-mail'));
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextFormField).first, 'new@example.com');

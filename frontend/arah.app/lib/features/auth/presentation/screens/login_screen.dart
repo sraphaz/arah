@@ -684,46 +684,49 @@ class _LoginChoiceButton extends StatelessWidget {
                 ),
                 child: Transform.translate(
                   offset: Offset(0, primary ? 0 : 1),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox.square(
-                        dimension: 20,
-                        child: Center(
-                          child: _MaterialSymbol(
-                            iconName,
-                            size: 20,
-                            fill: iconFill,
-                            color: primary
-                                ? AppDesignTokens.textOnAccent
-                                : colors.onSurface,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox.square(
+                          dimension: 20,
+                          child: Center(
+                            child: _MaterialSymbol(
+                              iconName,
+                              size: 20,
+                              fill: iconFill,
+                              color: primary
+                                  ? AppDesignTokens.textOnAccent
+                                  : colors.onSurface,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        label,
-                        strutStyle: StrutStyle(
-                          forceStrutHeight: true,
-                          height: labelHeight,
+                        const SizedBox(width: 8),
+                        Text(
+                          label,
+                          strutStyle: StrutStyle(
+                            forceStrutHeight: true,
+                            height: labelHeight,
+                          ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontFamily: AppDesignTokens.fontFamilyBody,
+                                    fontSize: 16,
+                                    height: labelHeight,
+                                    fontWeight: FontWeight.w600,
+                                    fontVariations: const [
+                                      FontVariation('wght', 600)
+                                    ],
+                                    color: primary
+                                        ? AppDesignTokens.textOnAccent
+                                        : colors.onSurface,
+                                    letterSpacing: -0.1,
+                                  ),
                         ),
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontFamily: AppDesignTokens.fontFamilyBody,
-                                  fontSize: 16,
-                                  height: labelHeight,
-                                  fontWeight: FontWeight.w600,
-                                  fontVariations: const [
-                                    FontVariation('wght', 600)
-                                  ],
-                                  color: primary
-                                      ? AppDesignTokens.textOnAccent
-                                      : colors.onSurface,
-                                  letterSpacing: -0.1,
-                                ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

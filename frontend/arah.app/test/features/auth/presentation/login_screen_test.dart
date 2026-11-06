@@ -143,6 +143,13 @@ void main() {
   testWidgets(
       'LoginScreen keeps entry CTA/footer visible on narrower mobile with larger text',
       (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(720, 1560);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -150,8 +157,6 @@ void main() {
         ],
         child: MediaQuery(
           data: const MediaQueryData(
-            size: Size(360, 780),
-            devicePixelRatio: 2,
             textScaler: TextScaler.linear(1.2),
           ),
           child: MaterialApp(

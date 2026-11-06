@@ -58,3 +58,6 @@ flutter:
     - family: Geist
       fonts:
         - asset: assets/fonts/Geist-Variable.ttf
+    - family: MaterialSymbolsRounded
+      fonts:
+        - asset: assets/fonts/MaterialSymbolsRounded-Variable.ttf

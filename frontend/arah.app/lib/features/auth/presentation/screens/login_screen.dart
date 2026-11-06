@@ -12,7 +12,6 @@ import '../../../../core/widgets/arah_button.dart';
 import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_state_provider.dart';
-import '../widgets/login_choice_web_view.dart';
 
 /// Passos do fluxo de login/cadastro (email-first).
 enum LoginStep {
@@ -189,135 +188,145 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   ) {
     final colors = context.appColors;
 
-    if (LoginChoiceWebView.isSupported) {
-      return ArahScaffold(
-        showWatermark: false,
-        body: LoginChoiceWebView(
-          l10n: l10n,
-          onGoogleTap: authLoading ? null : _loginWithGoogle,
-          onEmailTap: authLoading ? null : _openEmailStep,
-        ),
-      );
-    }
-
-    return ArahScaffold(
-      showWatermark: false,
-      body: SizedBox.expand(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: colors.surface,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 26),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 14),
-                          child: Image.asset(
-                            'assets/images/arah-logo.png',
-                            width: 92,
-                            height: 92,
-                            fit: BoxFit.contain,
-                            filterQuality: FilterQuality.high,
-                            semanticLabel: l10n.appTitle,
-                          ),
-                        ),
-                        const SizedBox(height: 22),
-                        Text(
-                          l10n.loginEyebrow,
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                color: colors.primary,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.4,
-                              ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          l10n.appTitle,
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                color: colors.onSurface,
-                                fontSize: 44,
-                                height: 1.02,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -1.2,
-                              ),
-                        ),
-                        const SizedBox(height: 14),
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 300),
-                          child: Text(
-                            l10n.loginLead,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: colors.onSurfaceVariant,
-                                  fontSize: 15.5,
-                                  height: 1.5,
-                                ),
-                          ),
-                        ),
-                      ],
+    return DecoratedBox(
+      decoration: const BoxDecoration(color: AppDesignTokens.surface),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SizedBox.expand(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              const ColoredBox(color: AppDesignTokens.surface),
+              Positioned(
+                top: -405,
+                left: -58,
+                width: 507,
+                height: 675,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: const BoxDecoration(
+                      gradient: RadialGradient(
+                        colors: [
+                          AppDesignTokens.loginHeroGlow,
+                          AppDesignTokens.surface,
+                        ],
+                        stops: [0.0, 0.58],
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 40),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _LoginChoiceButton(
-                          label: l10n.loginWithGoogle,
-                          icon: Icons.login,
-                          onPressed: authLoading ? null : _loginWithGoogle,
-                          variant: _LoginChoiceButtonVariant.primary,
-                        ),
-                        const SizedBox(height: 11),
-                        _LoginChoiceButton(
-                          label: l10n.loginWithEmail,
-                          icon: Icons.mail_outline,
-                          onPressed: authLoading ? null : _openEmailStep,
-                        ),
-                        const SizedBox(height: 8),
-                        GestureDetector(
-                          onTap: authLoading ? null : _openEmailStep,
-                          behavior: HitTestBehavior.opaque,
-                          child: Center(
-                            child: Text.rich(
-                              TextSpan(
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      fontSize: 13,
-                                      color: colors.onSurfaceSubtle,
-                                    ),
-                                children: [
-                                  TextSpan(text: l10n.noAccountYet),
-                                  const TextSpan(text: ' '),
-                                  TextSpan(
-                                    text: l10n.createAccount,
-                                    style: TextStyle(
-                                      color: colors.primary,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 26),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/arah-logo.png',
+                            height: 92,
+                            fit: BoxFit.fitHeight,
+                            filterQuality: FilterQuality.high,
+                            semanticLabel: l10n.appTitle,
+                            alignment: Alignment.centerLeft,
+                          ),
+                          const SizedBox(height: 22),
+                          Text(
+                            l10n.loginEyebrow,
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  color: colors.primary,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  fontVariations: const [FontVariation('wght', 600)],
+                                  letterSpacing: 1.4,
+                                ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            l10n.appTitle,
+                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                  color: colors.onSurface,
+                                  fontSize: 44,
+                                  height: 1.02,
+                                  fontWeight: FontWeight.w700,
+                                  fontVariations: const [FontVariation('wght', 700)],
+                                  letterSpacing: -1.2,
+                                ),
+                          ),
+                          const SizedBox(height: 14),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: Text(
+                              l10n.loginLead,
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: colors.onSurfaceVariant,
+                                    fontSize: 16,
+                                    height: 1.5,
+                                    fontVariations: const [FontVariation('wght', 400)],
                                   ),
-                                ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _LoginChoiceButton(
+                            label: l10n.loginWithGoogle,
+                          iconName: 'login',
+                          iconFill: 1,
+                            onPressed: authLoading ? null : _loginWithGoogle,
+                            variant: _LoginChoiceButtonVariant.primary,
+                          ),
+                          const SizedBox(height: 11),
+                          _LoginChoiceButton(
+                            label: l10n.loginWithEmail,
+                          iconName: 'mail',
+                            onPressed: authLoading ? null : _openEmailStep,
+                          ),
+                          const SizedBox(height: 8),
+                          GestureDetector(
+                            onTap: authLoading ? null : _openEmailStep,
+                            behavior: HitTestBehavior.opaque,
+                            child: Center(
+                              child: Text.rich(
+                                TextSpan(
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        fontSize: 13,
+                                        color: colors.onSurfaceSubtle,
+                                      fontVariations: const [FontVariation('wght', 400)],
+                                      ),
+                                  children: [
+                                    TextSpan(text: l10n.noAccountYet),
+                                    const TextSpan(text: ' '),
+                                    TextSpan(
+                                      text: l10n.createAccount,
+                                      style: TextStyle(
+                                        color: colors.primary,
+                                        fontWeight: FontWeight.w600,
+                                        fontVariations: const [FontVariation('wght', 600)],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -515,13 +524,15 @@ enum _LoginChoiceButtonVariant { primary, secondary }
 class _LoginChoiceButton extends StatelessWidget {
   const _LoginChoiceButton({
     required this.label,
-    required this.icon,
+    required this.iconName,
     required this.onPressed,
+    this.iconFill = 0,
     this.variant = _LoginChoiceButtonVariant.secondary,
   });
 
   final String label;
-  final IconData icon;
+  final String iconName;
+  final int iconFill;
   final VoidCallback? onPressed;
   final _LoginChoiceButtonVariant variant;
 
@@ -540,13 +551,15 @@ class _LoginChoiceButton extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: primary
               ? const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                   colors: [
                     AppDesignTokens.loginButtonGradientStart,
                     AppDesignTokens.loginButtonGradientEnd,
                   ],
                 )
               : null,
-          color: primary ? null : colors.surface.withValues(alpha: 0.16),
+          color: primary ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: borderColor),
           boxShadow: primary
@@ -564,39 +577,76 @@ class _LoginChoiceButton extends StatelessWidget {
           child: InkWell(
             onTap: onPressed,
             borderRadius: BorderRadius.circular(14),
-            child: SizedBox(
-              height: 50,
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      icon,
-                      size: 20,
-                      color: primary
-                          ? AppDesignTokens.textOnAccent
-                          : colors.onSurface,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      label,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontFamily: AppDesignTokens.fontFamilyBody,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: primary
-                                ? AppDesignTokens.textOnAccent
-                                : colors.onSurface,
-                            letterSpacing: -0.1,
-                          ),
-                    ),
-                  ],
-                ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 22,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _MaterialSymbol(
+                    iconName,
+                    size: 20,
+                    fill: iconFill,
+                    color: primary
+                        ? AppDesignTokens.textOnAccent
+                        : colors.onSurface,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    label,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontFamily: AppDesignTokens.fontFamilyBody,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontVariations: const [FontVariation('wght', 600)],
+                          color: primary
+                              ? AppDesignTokens.textOnAccent
+                              : colors.onSurface,
+                          letterSpacing: -0.1,
+                        ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MaterialSymbol extends StatelessWidget {
+  const _MaterialSymbol(
+    this.name, {
+    required this.size,
+    required this.color,
+    this.fill = 0,
+  });
+
+  final String name;
+  final double size;
+  final Color color;
+  final int fill;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      name,
+      strutStyle: const StrutStyle(forceStrutHeight: true, height: 1),
+      style: TextStyle(
+        fontFamily: 'MaterialSymbolsRounded',
+        fontSize: size,
+        height: 1,
+        color: color,
+        fontVariations: [
+          FontVariation('FILL', fill.toDouble()),
+          const FontVariation('wght', 500),
+          const FontVariation('GRAD', 0),
+          const FontVariation('opsz', 24),
+        ],
       ),
     );
   }

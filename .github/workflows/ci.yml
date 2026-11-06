@@ -184,7 +184,7 @@ jobs:
       - name: Install Flutter dependencies
         run: flutter pub get
       - name: Build Flutter web
-        run: flutter build web --web-renderer html
+        run: flutter build web
       - name: Install Playwright dependencies
         working-directory: frontend/arah.app/e2e
         run: npm ci

@@ -78,8 +78,6 @@ void main() {
     expect(find.text('Entrar com e-mail'), findsOneWidget);
     expect(find.textContaining('Não tem conta?'), findsOneWidget);
     expect(find.textContaining('Criar conta'), findsOneWidget);
-    expect(find.byIcon(Icons.login), findsOneWidget);
-    expect(find.byIcon(Icons.mail_outline), findsOneWidget);
     expect(find.byType(TextFormField), findsNothing);
   });
 

@@ -18,7 +18,7 @@ Status atual (implementado) e como usar os artefatos.
 
 - **Flutter:** job `flutter-app` em `frontend/arah.app`: `pub get` → `analyze` → `flutter test --coverage` → upload de `coverage/lcov.info` para Codecov.
 - **Playwright smoke:** job `flutter-playwright` em `frontend/arah.app/e2e`: `flutter build web --web-renderer html` → `npm ci` → `npx playwright install --with-deps chromium` → `npm run test:smoke`. O renderer HTML é usado para manter estáveis os asserts textuais/semânticos do smoke de login. Em falha, publica `playwright-report/` e `test-results/` como artefatos do workflow.
-- **Playwright pixel parity:** job `flutter-playwright-pixel-parity` repete o build web, renderiza o handoff `design-system/ui_kits/app` como source of truth em perfil mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2), captura a implementação Flutter no mesmo perfil e falha se `maxDiffPixelRatio > 0.01`. O job é **blocking** e sobe `playwright-report/` e `test-results/` como artefatos.
+- **Playwright pixel parity:** job `flutter-playwright-pixel-parity` usa o build web padrão do Flutter (renderer visual padrão do runtime), renderiza o handoff `design-system/ui_kits/app` como source of truth em perfil mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2), captura a implementação Flutter no mesmo perfil e falha se `maxDiffPixelRatio > 0.01`. O job é **blocking** e sobe `playwright-report/` e `test-results/` como artefatos.
 
 ---
 
@@ -72,7 +72,7 @@ npm test
 ```
 
 - **Smoke:** `npm test`
-- **Pixel parity:** `npm run test:pixel-parity`
+- **Pixel parity:** `npm run test:pixel-parity` (sobre o build web padrão do Flutter)
 - **Relatório HTML local:** `frontend/arah.app/e2e/playwright-report/`
 - **Artefatos de falha locais:** `frontend/arah.app/e2e/test-results/`
 

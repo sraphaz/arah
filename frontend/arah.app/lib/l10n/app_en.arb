@@ -140,6 +140,8 @@
   "inTerritory": "In",
   "loginWithGoogle": "Sign in with Google",
   "loginWithEmail": "Sign in with email",
+  "loginEyebrow": "TERRITORY-FIRST",
+  "loginLead": "Your community's life, organized by territory. Connect with the people nearby.",
   "noAccountYet": "Don't have an account?",
   "createAccount": "Create account",
   "loginOr": "or",

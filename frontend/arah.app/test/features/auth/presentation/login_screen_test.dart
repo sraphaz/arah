@@ -67,10 +67,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Arah'), findsOneWidget);
+    expect(find.text('TERRITÓRIO-PRIMEIRO'), findsOneWidget);
+    expect(
+      find.text(
+        'A vida da sua comunidade, organizada pelo território. Conecte-se com quem está perto.',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Entrar com Google'), findsOneWidget);
     expect(find.text('Entrar com e-mail'), findsOneWidget);
-    expect(find.byIcon(Icons.login), findsOneWidget);
-    expect(find.byIcon(Icons.mail_outline), findsOneWidget);
+    expect(find.textContaining('Não tem conta?'), findsOneWidget);
+    expect(find.textContaining('Criar conta'), findsOneWidget);
     expect(find.byType(TextFormField), findsNothing);
   });
 
@@ -131,5 +138,37 @@ void main() {
 
     expect(find.text('Criar conta'), findsOneWidget);
     expect(find.text('Confirmar senha'), findsOneWidget);
+  });
+
+  testWidgets(
+      'LoginScreen keeps entry CTA/footer visible on narrower mobile with larger text',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(() => _FakeAuthStateNotifier()),
+        ],
+        child: MediaQuery(
+          data: const MediaQueryData(
+            size: Size(360, 780),
+            devicePixelRatio: 2,
+            textScaler: TextScaler.linear(1.2),
+          ),
+          child: MaterialApp(
+            theme: AppTheme.dark,
+            locale: const Locale('pt'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const LoginScreen(bffBaseUrl: 'http://test'),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Entrar com Google'), findsOneWidget);
+    expect(find.text('Entrar com e-mail'), findsOneWidget);
+    expect(find.textContaining('Criar conta'), findsOneWidget);
   });
 }

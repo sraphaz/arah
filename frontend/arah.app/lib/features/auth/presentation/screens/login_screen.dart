@@ -4,11 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/arah_brand_header.dart';
 import '../../../../core/widgets/arah_glass_card.dart';
-import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../core/widgets/arah_button.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_state_provider.dart';
 
@@ -173,7 +174,266 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final auth = ref.watch(authStateProvider);
     final l10n = AppLocalizations.of(context)!;
 
+    if (_step == LoginStep.choice) {
+      return _buildChoiceScreen(context, l10n, auth.isLoading);
+    }
+
+    return _buildFormScreen(context, l10n, auth.isLoading);
+  }
+
+  Widget _buildChoiceScreen(
+    BuildContext context,
+    AppLocalizations l10n,
+    bool authLoading,
+  ) {
+    final colors = context.appColors;
+    final useFixedBottomLayout = MediaQuery.sizeOf(context).width >= 390 &&
+        MediaQuery.textScalerOf(context).scale(1) <= 1.05;
+
+    return DecoratedBox(
+      decoration: const BoxDecoration(color: AppDesignTokens.surface),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SizedBox.expand(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              const ColoredBox(color: AppDesignTokens.surface),
+              Positioned(
+                top: -405,
+                left: -58,
+                width: 507,
+                height: 675,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: const BoxDecoration(
+                      gradient: RadialGradient(
+                        colors: [
+                          AppDesignTokens.loginHeroGlow,
+                          AppDesignTokens.surface,
+                        ],
+                        stops: [0.0, 0.58],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 26),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Transform.translate(
+                        offset: const Offset(0, 1),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.asset(
+                              'assets/images/arah-logo.png',
+                              height: 92,
+                              fit: BoxFit.fitHeight,
+                              filterQuality: FilterQuality.high,
+                              semanticLabel: l10n.appTitle,
+                              alignment: Alignment.centerLeft,
+                            ),
+                            const SizedBox(height: 22),
+                            Text(
+                              l10n.loginEyebrow,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
+                                    color: colors.primary,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    fontVariations: const [
+                                      FontVariation('wght', 600)
+                                    ],
+                                    letterSpacing: 1.4,
+                                  ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              l10n.appTitle,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(
+                                    color: colors.onSurface,
+                                    fontSize: 44,
+                                    height: 1.02,
+                                    fontWeight: FontWeight.w700,
+                                    fontVariations: const [
+                                      FontVariation('wght', 700)
+                                    ],
+                                    letterSpacing: -1.2,
+                                  ),
+                            ),
+                            const SizedBox(height: 14),
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 300),
+                              child: Text(
+                                l10n.loginLead,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                  color: colors.onSurfaceVariant,
+                                  fontSize: 16,
+                                  height: 1.5,
+                                  fontVariations: const [
+                                    FontVariation('wght', 400)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 40),
+                      child: useFixedBottomLayout
+                          ? SizedBox(
+                              height: 151,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: 0,
+                                    child: _LoginChoiceButton(
+                                      height: 51,
+                                      label: l10n.loginWithGoogle,
+                                      iconName: 'login',
+                                      iconFill: 1,
+                                      onPressed:
+                                          authLoading ? null : _loginWithGoogle,
+                                      variant:
+                                          _LoginChoiceButtonVariant.primary,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: 62,
+                                    child: _LoginChoiceButton(
+                                      height: 53,
+                                      label: l10n.loginWithEmail,
+                                      iconName: 'mail',
+                                      onPressed:
+                                          authLoading ? null : _openEmailStep,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: 134,
+                                    height: 17,
+                                    child: GestureDetector(
+                                      onTap:
+                                          authLoading ? null : _openEmailStep,
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Center(
+                                        child: Text.rich(
+                                          TextSpan(
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontSize: 13,
+                                                  height: 17 / 13,
+                                                  color: colors.onSurfaceSubtle,
+                                                ),
+                                            children: [
+                                              TextSpan(text: l10n.noAccountYet),
+                                              const TextSpan(text: ' '),
+                                              TextSpan(
+                                                text: l10n.createAccount,
+                                                style: TextStyle(
+                                                  color: colors.primary,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                _LoginChoiceButton(
+                                  label: l10n.loginWithGoogle,
+                                  iconName: 'login',
+                                  iconFill: 1,
+                                  onPressed:
+                                      authLoading ? null : _loginWithGoogle,
+                                  variant: _LoginChoiceButtonVariant.primary,
+                                ),
+                                const SizedBox(height: 11),
+                                _LoginChoiceButton(
+                                  label: l10n.loginWithEmail,
+                                  iconName: 'mail',
+                                  onPressed:
+                                      authLoading ? null : _openEmailStep,
+                                ),
+                                const SizedBox(height: 12),
+                                GestureDetector(
+                                  onTap: authLoading ? null : _openEmailStep,
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Center(
+                                    child: Text.rich(
+                                      TextSpan(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              fontSize: 13,
+                                              color: colors.onSurfaceSubtle,
+                                            ),
+                                        children: [
+                                          TextSpan(text: l10n.noAccountYet),
+                                          const TextSpan(text: ' '),
+                                          TextSpan(
+                                            text: l10n.createAccount,
+                                            style: TextStyle(
+                                              color: colors.primary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFormScreen(
+    BuildContext context,
+    AppLocalizations l10n,
+    bool authLoading,
+  ) {
     return ArahScaffold(
+      showWatermark: false,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -187,38 +447,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (_step != LoginStep.choice)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton.icon(
-                          onPressed: _checkEmailLoading || auth.isLoading
-                              ? null
-                              : _goBack,
-                          icon: const Icon(Icons.arrow_back, size: 20),
-                          label: Text(l10n.back),
-                        ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed:
+                            _checkEmailLoading || authLoading ? null : _goBack,
+                        icon: const Icon(Icons.arrow_back, size: 20),
+                        label: Text(l10n.back),
                       ),
+                    ),
                     ArahBrandHeader(
-                      subtitle:
-                          _step == LoginStep.choice || _step == LoginStep.email
-                              ? l10n.loginSubtitle
-                              : _step == LoginStep.password
-                                  ? l10n.enterPassword
-                                  : l10n.signUpSubtitle,
+                      subtitle: _step == LoginStep.email
+                          ? l10n.loginSubtitle
+                          : _step == LoginStep.password
+                              ? l10n.enterPassword
+                              : l10n.signUpSubtitle,
                     ),
                     const SizedBox(height: AppConstants.spacing2xl),
                     ArahGlassCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (_step == LoginStep.choice)
-                            ..._buildChoiceStep(l10n, auth.isLoading),
                           if (_step == LoginStep.email)
                             ..._buildEmailStep(l10n),
                           if (_step == LoginStep.password)
-                            ..._buildPasswordStep(l10n, auth.isLoading),
+                            ..._buildPasswordStep(l10n, authLoading),
                           if (_step == LoginStep.signup)
-                            ..._buildSignUpStep(l10n, auth.isLoading),
+                            ..._buildSignUpStep(l10n, authLoading),
                         ],
                       ),
                     ),
@@ -230,25 +485,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       ),
     );
-  }
-
-  List<Widget> _buildChoiceStep(AppLocalizations l10n, bool authLoading) {
-    return [
-      ArahButton(
-        label: l10n.loginWithGoogle,
-        onPressed: authLoading ? null : _loginWithGoogle,
-        icon: Icons.login,
-        expand: true,
-      ),
-      const SizedBox(height: AppConstants.spacingMd),
-      ArahButton(
-        label: l10n.loginWithEmail,
-        onPressed: authLoading ? null : _openEmailStep,
-        variant: ArahButtonVariant.secondary,
-        icon: Icons.mail_outline,
-        expand: true,
-      ),
-    ];
   }
 
   List<Widget> _buildEmailStep(AppLocalizations l10n) {
@@ -356,9 +592,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           border: const OutlineInputBorder(),
         ),
         validator: (v) {
-          if (v == null || v.isEmpty) return l10n.confirmPasswordHint;
-          if (v != _signupPasswordController.text)
+          if (v == null || v.isEmpty) {
+            return l10n.confirmPasswordHint;
+          }
+          if (v != _signupPasswordController.text) {
             return l10n.passwordsDontMatch;
+          }
           return null;
         },
       ),
@@ -374,5 +613,158 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             : Text(l10n.signUp),
       ),
     ];
+  }
+}
+
+enum _LoginChoiceButtonVariant { primary, secondary }
+
+class _LoginChoiceButton extends StatelessWidget {
+  const _LoginChoiceButton({
+    this.height,
+    required this.label,
+    required this.iconName,
+    required this.onPressed,
+    this.iconFill = 0,
+    this.variant = _LoginChoiceButtonVariant.secondary,
+  });
+
+  final double? height;
+  final String label;
+  final String iconName;
+  final int iconFill;
+  final VoidCallback? onPressed;
+  final _LoginChoiceButtonVariant variant;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final primary = variant == _LoginChoiceButtonVariant.primary;
+    final shadowColor =
+        primary ? AppDesignTokens.loginButtonGlow : Colors.transparent;
+    final labelHeight = primary ? 1.0 : 21 / 16;
+    return Opacity(
+      opacity: onPressed == null ? 0.65 : 1,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: primary
+              ? const LinearGradient(
+                  begin: Alignment(-0.5, -0.866),
+                  end: Alignment(0.5, 0.866),
+                  colors: [
+                    AppDesignTokens.loginButtonGradientStart,
+                    AppDesignTokens.loginButtonGradientEnd,
+                  ],
+                )
+              : null,
+          color: primary ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          border:
+              primary ? null : Border.all(color: AppDesignTokens.outlineStrong),
+          boxShadow: primary
+              ? [
+                  BoxShadow(
+                    color: shadowColor,
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        child: SizedBox(
+          height: height,
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: onPressed,
+              borderRadius: BorderRadius.circular(14),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 15,
+                  horizontal: 22,
+                ),
+                child: Transform.translate(
+                  offset: Offset(0, primary ? 0 : 1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox.square(
+                        dimension: 20,
+                        child: Center(
+                          child: _MaterialSymbol(
+                            iconName,
+                            size: 20,
+                            fill: iconFill,
+                            color: primary
+                                ? AppDesignTokens.textOnAccent
+                                : colors.onSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        label,
+                        strutStyle: StrutStyle(
+                          forceStrutHeight: true,
+                          height: labelHeight,
+                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontFamily: AppDesignTokens.fontFamilyBody,
+                                  fontSize: 16,
+                                  height: labelHeight,
+                                  fontWeight: FontWeight.w600,
+                                  fontVariations: const [
+                                    FontVariation('wght', 600)
+                                  ],
+                                  color: primary
+                                      ? AppDesignTokens.textOnAccent
+                                      : colors.onSurface,
+                                  letterSpacing: -0.1,
+                                ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MaterialSymbol extends StatelessWidget {
+  const _MaterialSymbol(
+    this.name, {
+    required this.size,
+    required this.color,
+    this.fill = 0,
+  });
+
+  final String name;
+  final double size;
+  final Color color;
+  final int fill;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      name,
+      strutStyle: const StrutStyle(forceStrutHeight: true, height: 1),
+      style: TextStyle(
+        fontFamily: 'MaterialSymbolsRounded',
+        fontSize: size,
+        height: 1,
+        color: color,
+        fontVariations: [
+          FontVariation('FILL', fill.toDouble()),
+          const FontVariation('wght', 500),
+          const FontVariation('GRAD', 0),
+          const FontVariation('opsz', 24),
+        ],
+      ),
+    );
   }
 }

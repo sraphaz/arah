@@ -396,6 +396,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginWithEmail => 'Sign in with email';
 
   @override
+  String get loginEyebrow => 'TERRITORY-FIRST';
+
+  @override
+  String get loginLead =>
+      'Your community\'s life, organized by territory. Connect with the people nearby.';
+
+  @override
   String get noAccountYet => 'Don\'t have an account?';
 
   @override

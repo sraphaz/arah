@@ -399,6 +399,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loginWithEmail => 'Entrar com e-mail';
 
   @override
+  String get loginEyebrow => 'TERRITÓRIO-PRIMEIRO';
+
+  @override
+  String get loginLead =>
+      'A vida da sua comunidade, organizada pelo território. Conecte-se com quem está perto.';
+
+  @override
   String get noAccountYet => 'Não tem conta?';
 
   @override

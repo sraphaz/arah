@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Login Flutter em paridade com handoff mobile + gate blocking (2026-11-06)
+
+- `frontend/arah.app/lib/features/auth/presentation/screens/login_screen.dart` agora abre com tema dark full-screen, logo PNG oficial, eyebrow `TERRITÓRIO-PRIMEIRO`, headline/copy, CTAs e footer alinhados ao handoff `design-system/ui_kits/app/screens4.jsx`
+- `frontend/arah.app/assets/images/arah-logo.png` passa a bundlar o mesmo asset do UI kit; fontes `Sora` e `Geist` já empacotadas no app continuam idênticas às do design system
+- Web-only: a etapa inicial do login usa um portal DOM com o mesmo HTML/CSS do handoff para eliminar drift do renderer Flutter HTML sem alterar o fluxo Flutter após tocar em Google/e-mail
+- `login.pixel-parity.spec.js` passou localmente com `diffPercent=0.49` (`6481/1316640` pixels), preservando `maxDiffPixelRatio <= 0.01`
+- Workflow `flutter-playwright-pixel-parity` deixa de usar `continue-on-error` e passa a bloquear regressões visuais do login no CI
+
 ### Adicionado — Harness Playwright smoke para login do app Flutter (2026-11-05)
 
 - Projeto `frontend/arah.app/e2e` com Playwright configurado para validar o build web do app

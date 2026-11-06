@@ -67,8 +67,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Arah'), findsOneWidget);
+    expect(find.text('TERRITÓRIO-PRIMEIRO'), findsOneWidget);
+    expect(
+      find.text(
+        'A vida da sua comunidade, organizada pelo território. Conecte-se com quem está perto.',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Entrar com Google'), findsOneWidget);
     expect(find.text('Entrar com e-mail'), findsOneWidget);
+    expect(find.textContaining('Não tem conta?'), findsOneWidget);
+    expect(find.textContaining('Criar conta'), findsOneWidget);
     expect(find.byIcon(Icons.login), findsOneWidget);
     expect(find.byIcon(Icons.mail_outline), findsOneWidget);
     expect(find.byType(TextFormField), findsNothing);

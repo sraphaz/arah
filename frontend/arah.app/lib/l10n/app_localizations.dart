@@ -818,6 +818,18 @@ abstract class AppLocalizations {
   /// **'Entrar com e-mail'**
   String get loginWithEmail;
 
+  /// No description provided for @loginEyebrow.
+  ///
+  /// In pt, this message translates to:
+  /// **'TERRITÓRIO-PRIMEIRO'**
+  String get loginEyebrow;
+
+  /// No description provided for @loginLead.
+  ///
+  /// In pt, this message translates to:
+  /// **'A vida da sua comunidade, organizada pelo território. Conecte-se com quem está perto.'**
+  String get loginLead;
+
   /// No description provided for @noAccountYet.
   ///
   /// In pt, this message translates to:

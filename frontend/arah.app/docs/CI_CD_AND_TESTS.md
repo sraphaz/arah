@@ -11,14 +11,14 @@ Status atual (implementado) e como usar os artefatos.
 | Build | ✅ `dotnet build` | ✅ implícito (analyze) |
 | Testes | ✅ `dotnet test` + cobertura | ✅ `flutter test --coverage` |
 | Browser smoke | — | ✅ Playwright (`flutter-playwright`) valida copy/semântica do login web em viewport mobile |
-| Pixel parity | — | ⚠️ Playwright (`flutter-playwright-pixel-parity`) compara Flutter web vs handoff mobile e hoje falha de propósito até a PR2 |
+| Pixel parity | — | ✅ Playwright (`flutter-playwright-pixel-parity`) compara Flutter web vs handoff mobile e bloqueia regressões do login |
 | Cobertura | ✅ Codecov (flag `unittests`) | ✅ Codecov (flag `flutter`) |
 | Análise estática | — | ✅ `flutter analyze --no-fatal-infos` |
 | Segurança | ✅ Trivy (fs) | — (Trivy escaneia o repo) |
 
 - **Flutter:** job `flutter-app` em `frontend/arah.app`: `pub get` → `analyze` → `flutter test --coverage` → upload de `coverage/lcov.info` para Codecov.
 - **Playwright smoke:** job `flutter-playwright` em `frontend/arah.app/e2e`: `flutter build web --web-renderer html` → `npm ci` → `npx playwright install --with-deps chromium` → `npm run test:smoke`. O renderer HTML é usado para manter estáveis os asserts textuais/semânticos do smoke de login. Em falha, publica `playwright-report/` e `test-results/` como artefatos do workflow.
-- **Playwright pixel parity:** job `flutter-playwright-pixel-parity` repete o build web, renderiza o handoff `design-system/ui_kits/app` como source of truth em perfil mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2), captura a implementação Flutter no mesmo perfil e falha se `maxDiffPixelRatio > 0.01`. O job é **non-blocking** (`continue-on-error`) para deixar a divergência visível sem mascarar o smoke verde; ele sempre sobe `playwright-report/` e `test-results/` como artefatos.
+- **Playwright pixel parity:** job `flutter-playwright-pixel-parity` repete o build web, renderiza o handoff `design-system/ui_kits/app` como source of truth em perfil mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2), captura a implementação Flutter no mesmo perfil e falha se `maxDiffPixelRatio > 0.01`. O job é **blocking** e sobe `playwright-report/` e `test-results/` como artefatos.
 
 ---
 
@@ -72,7 +72,7 @@ npm test
 ```
 
 - **Smoke:** `npm test`
-- **Pixel parity (hoje falha de propósito até a PR2):** `npm run test:pixel-parity`
+- **Pixel parity:** `npm run test:pixel-parity`
 - **Relatório HTML local:** `frontend/arah.app/e2e/playwright-report/`
 - **Artefatos de falha locais:** `frontend/arah.app/e2e/test-results/`
 

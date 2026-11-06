@@ -33,9 +33,14 @@ class AppDesignTokens {
 
   static const Color accentSubtle = Color(0x24A6D6B9);
   static const Color accentBorderSoft = Color(0x40A6D6B9);
+  static const Color outlineStrong = Color(0x21FFFFFF);
   static const Color territoryBoundary = Color(0xFF81C784);
   static const Color locationPin = Color(0xFFE8A06A);
   static const Color water = Color(0xFF6FC5D6);
+  static const Color loginHeroGlow = Color(0xFF15201A);
+  static const Color loginButtonGradientStart = Color(0xFF93D29C);
+  static const Color loginButtonGradientEnd = Color(0xFF6FB98C);
+  static const Color loginButtonGlow = Color(0x4D81C784);
 
   // Glass morphism
   static const Color glassBackgroundDark = Color(0xF2191B17);

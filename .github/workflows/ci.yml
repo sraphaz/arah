@@ -162,9 +162,8 @@ jobs:
           if-no-files-found: warn
 
   flutter-playwright-pixel-parity:
-    name: Flutter Playwright pixel parity (non-blocking)
+    name: Flutter Playwright pixel parity
     runs-on: ubuntu-latest
-    continue-on-error: true
     defaults:
       run:
         working-directory: frontend/arah.app

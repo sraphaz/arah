@@ -48,7 +48,8 @@ class FakeAuthRepository extends AuthRepository {
 }
 
 void main() {
-  testWidgets('LoginScreen shows app title and primary entry actions', (WidgetTester tester) async {
+  testWidgets('LoginScreen shows app title and primary entry actions',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -68,10 +69,13 @@ void main() {
     expect(find.text('Arah'), findsOneWidget);
     expect(find.text('Entrar com Google'), findsOneWidget);
     expect(find.text('Entrar com e-mail'), findsOneWidget);
+    expect(find.byIcon(Icons.login), findsOneWidget);
+    expect(find.byIcon(Icons.mail_outline), findsOneWidget);
     expect(find.byType(TextFormField), findsNothing);
   });
 
-  testWidgets('LoginScreen opens email flow from secondary CTA', (WidgetTester tester) async {
+  testWidgets('LoginScreen opens email flow from secondary CTA',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -95,7 +99,8 @@ void main() {
     expect(find.byType(TextFormField), findsOneWidget);
   });
 
-  testWidgets('LoginScreen shows signup form when email does not exist', (WidgetTester tester) async {
+  testWidgets('LoginScreen shows signup form when email does not exist',
+      (WidgetTester tester) async {
     final fakeRepo = FakeAuthRepository(
       config: const AppConfig(bffBaseUrl: 'http://test'),
       secureStorage: _FakeStorage(),

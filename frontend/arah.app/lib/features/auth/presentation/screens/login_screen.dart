@@ -237,23 +237,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           const SizedBox(height: 22),
                           Text(
                             l10n.loginEyebrow,
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
                                   color: colors.primary,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  fontVariations: const [FontVariation('wght', 600)],
+                                  fontVariations: const [
+                                    FontVariation('wght', 600)
+                                  ],
                                   letterSpacing: 1.4,
                                 ),
                           ),
                           const SizedBox(height: 10),
                           Text(
                             l10n.appTitle,
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall
+                                ?.copyWith(
                                   color: colors.onSurface,
                                   fontSize: 44,
                                   height: 1.02,
                                   fontWeight: FontWeight.w700,
-                                  fontVariations: const [FontVariation('wght', 700)],
+                                  fontVariations: const [
+                                    FontVariation('wght', 700)
+                                  ],
                                   letterSpacing: -1.2,
                                 ),
                           ),
@@ -262,12 +272,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             constraints: const BoxConstraints(maxWidth: 300),
                             child: Text(
                               l10n.loginLead,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: colors.onSurfaceVariant,
-                                    fontSize: 16,
-                                    height: 1.5,
-                                    fontVariations: const [FontVariation('wght', 400)],
-                                  ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                color: colors.onSurfaceVariant,
+                                fontSize: 16,
+                                height: 1.5,
+                                fontVariations: const [
+                                  FontVariation('wght', 400)
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -280,15 +295,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           _LoginChoiceButton(
                             label: l10n.loginWithGoogle,
-                          iconName: 'login',
-                          iconFill: 1,
+                            iconName: 'login',
+                            iconFill: 1,
                             onPressed: authLoading ? null : _loginWithGoogle,
                             variant: _LoginChoiceButtonVariant.primary,
                           ),
                           const SizedBox(height: 11),
                           _LoginChoiceButton(
                             label: l10n.loginWithEmail,
-                          iconName: 'mail',
+                            iconName: 'mail',
                             onPressed: authLoading ? null : _openEmailStep,
                           ),
                           const SizedBox(height: 8),
@@ -298,11 +313,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: Center(
                               child: Text.rich(
                                 TextSpan(
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        fontSize: 13,
-                                        color: colors.onSurfaceSubtle,
-                                      fontVariations: const [FontVariation('wght', 400)],
-                                      ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                    fontSize: 13,
+                                    color: colors.onSurfaceSubtle,
+                                    fontVariations: const [
+                                      FontVariation('wght', 400)
+                                    ],
+                                  ),
                                   children: [
                                     TextSpan(text: l10n.noAccountYet),
                                     const TextSpan(text: ' '),
@@ -311,7 +331,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       style: TextStyle(
                                         color: colors.primary,
                                         fontWeight: FontWeight.w600,
-                                        fontVariations: const [FontVariation('wght', 600)],
+                                        fontVariations: const [
+                                          FontVariation('wght', 600)
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -342,7 +364,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingLg),
+            padding:
+                const EdgeInsets.symmetric(horizontal: AppConstants.spacingLg),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: Form(
@@ -372,7 +395,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (_step == LoginStep.email) ..._buildEmailStep(l10n),
+                          if (_step == LoginStep.email)
+                            ..._buildEmailStep(l10n),
                           if (_step == LoginStep.password)
                             ..._buildPasswordStep(l10n, authLoading),
                           if (_step == LoginStep.signup)

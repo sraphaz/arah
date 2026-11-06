@@ -187,6 +187,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     bool authLoading,
   ) {
     final colors = context.appColors;
+    final useFixedBottomLayout = MediaQuery.sizeOf(context).width >= 390 &&
+        MediaQuery.textScalerOf(context).scale(1) <= 1.05;
 
     return DecoratedBox(
       decoration: const BoxDecoration(color: AppDesignTokens.surface),
@@ -293,74 +295,127 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 40),
-                      child: SizedBox(
-                        height: 151,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              top: 0,
-                              child: _LoginChoiceButton(
-                                height: 51,
-                                label: l10n.loginWithGoogle,
-                                iconName: 'login',
-                                iconFill: 1,
-                                onPressed:
-                                    authLoading ? null : _loginWithGoogle,
-                                variant: _LoginChoiceButtonVariant.primary,
-                              ),
-                            ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              top: 62,
-                              child: _LoginChoiceButton(
-                                height: 53,
-                                label: l10n.loginWithEmail,
-                                iconName: 'mail',
-                                onPressed: authLoading ? null : _openEmailStep,
-                              ),
-                            ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              top: 134,
-                              height: 17,
-                              child: GestureDetector(
-                                onTap: authLoading ? null : _openEmailStep,
-                                behavior: HitTestBehavior.opaque,
-                                child: Center(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            fontSize: 13,
-                                            height: 17 / 13,
-                                            color: colors.onSurfaceSubtle,
-                                          ),
-                                      children: [
-                                        TextSpan(text: l10n.noAccountYet),
-                                        const TextSpan(text: ' '),
-                                        TextSpan(
-                                          text: l10n.createAccount,
-                                          style: TextStyle(
-                                            color: colors.primary,
-                                            fontWeight: FontWeight.w600,
+                      child: useFixedBottomLayout
+                          ? SizedBox(
+                              height: 151,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: 0,
+                                    child: _LoginChoiceButton(
+                                      height: 51,
+                                      label: l10n.loginWithGoogle,
+                                      iconName: 'login',
+                                      iconFill: 1,
+                                      onPressed:
+                                          authLoading ? null : _loginWithGoogle,
+                                      variant:
+                                          _LoginChoiceButtonVariant.primary,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: 62,
+                                    child: _LoginChoiceButton(
+                                      height: 53,
+                                      label: l10n.loginWithEmail,
+                                      iconName: 'mail',
+                                      onPressed:
+                                          authLoading ? null : _openEmailStep,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: 134,
+                                    height: 17,
+                                    child: GestureDetector(
+                                      onTap:
+                                          authLoading ? null : _openEmailStep,
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Center(
+                                        child: Text.rich(
+                                          TextSpan(
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontSize: 13,
+                                                  height: 17 / 13,
+                                                  color: colors.onSurfaceSubtle,
+                                                ),
+                                            children: [
+                                              TextSpan(text: l10n.noAccountYet),
+                                              const TextSpan(text: ' '),
+                                              TextSpan(
+                                                text: l10n.createAccount,
+                                                style: TextStyle(
+                                                  color: colors.primary,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                _LoginChoiceButton(
+                                  label: l10n.loginWithGoogle,
+                                  iconName: 'login',
+                                  iconFill: 1,
+                                  onPressed:
+                                      authLoading ? null : _loginWithGoogle,
+                                  variant: _LoginChoiceButtonVariant.primary,
+                                ),
+                                const SizedBox(height: 11),
+                                _LoginChoiceButton(
+                                  label: l10n.loginWithEmail,
+                                  iconName: 'mail',
+                                  onPressed:
+                                      authLoading ? null : _openEmailStep,
+                                ),
+                                const SizedBox(height: 12),
+                                GestureDetector(
+                                  onTap: authLoading ? null : _openEmailStep,
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Center(
+                                    child: Text.rich(
+                                      TextSpan(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              fontSize: 13,
+                                              color: colors.onSurfaceSubtle,
+                                            ),
+                                        children: [
+                                          TextSpan(text: l10n.noAccountYet),
+                                          const TextSpan(text: ' '),
+                                          TextSpan(
+                                            text: l10n.createAccount,
+                                            style: TextStyle(
+                                              color: colors.primary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -627,43 +682,49 @@ class _LoginChoiceButton extends StatelessWidget {
                   vertical: 15,
                   horizontal: 22,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox.square(
-                      dimension: 20,
-                      child: Center(
-                        child: _MaterialSymbol(
-                          iconName,
-                          size: 20,
-                          fill: iconFill,
-                          color: primary
-                              ? AppDesignTokens.textOnAccent
-                              : colors.onSurface,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      label,
-                      strutStyle: StrutStyle(
-                        forceStrutHeight: true,
-                        height: labelHeight,
-                      ),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontFamily: AppDesignTokens.fontFamilyBody,
-                            fontSize: 16,
-                            height: labelHeight,
-                            fontWeight: FontWeight.w600,
-                            fontVariations: const [FontVariation('wght', 600)],
+                child: Transform.translate(
+                  offset: Offset(0, primary ? 0 : 1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox.square(
+                        dimension: 20,
+                        child: Center(
+                          child: _MaterialSymbol(
+                            iconName,
+                            size: 20,
+                            fill: iconFill,
                             color: primary
                                 ? AppDesignTokens.textOnAccent
                                 : colors.onSurface,
-                            letterSpacing: -0.1,
                           ),
-                    ),
-                  ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        label,
+                        strutStyle: StrutStyle(
+                          forceStrutHeight: true,
+                          height: labelHeight,
+                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontFamily: AppDesignTokens.fontFamilyBody,
+                                  fontSize: 16,
+                                  height: labelHeight,
+                                  fontWeight: FontWeight.w600,
+                                  fontVariations: const [
+                                    FontVariation('wght', 600)
+                                  ],
+                                  color: primary
+                                      ? AppDesignTokens.textOnAccent
+                                      : colors.onSurface,
+                                  letterSpacing: -0.1,
+                                ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

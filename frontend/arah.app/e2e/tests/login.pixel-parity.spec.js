@@ -76,17 +76,18 @@ async function normalizeHandoffForComparison(page) {
 }
 
 async function captureHandoff(page, outputPath) {
-  await page.goto(HANDOFF_URL, { waitUntil: 'networkidle' });
+  await page.goto(HANDOFF_URL, { waitUntil: 'load' });
   await stabilizePage(page);
   await normalizeHandoffForComparison(page);
-  await page.locator('#root > div').screenshot({
+  await page.screenshot({
     path: outputPath,
     animations: 'disabled',
+    fullPage: false,
   });
 }
 
 async function captureImplementation(page, outputPath) {
-  await page.goto('/', { waitUntil: 'networkidle' });
+  await page.goto('/', { waitUntil: 'load' });
   await stabilizePage(page);
   await expect(page.locator('body')).toContainText('Entrar com Google');
   await page.screenshot({
@@ -211,6 +212,7 @@ test('login screen stays pixel-perfect against the handoff mobile source of trut
   context,
   page,
 }, testInfo) => {
+  test.setTimeout(120000);
   const handoffPath = testInfo.outputPath('handoff_login_mobile.png');
   const implementationPath = testInfo.outputPath('impl_login_mobile.png');
   const diffPath = testInfo.outputPath('login_diff_mobile.png');

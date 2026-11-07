@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
+import '../../../../core/widgets/arah_material_symbol.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/shimmer_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -116,16 +119,11 @@ class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
           itemBuilder: (context, index) {
             final t = list[index];
             final isSelected = selectedId == t.id;
-            return Card(
-              margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: Icon(Icons.terrain, color: isSelected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurfaceVariant),
-                ),
-                title: Text(t.name),
-                subtitle: t.description != null && t.description!.isNotEmpty ? Text(t.description!, maxLines: 2, overflow: TextOverflow.ellipsis) : null,
-                trailing: isSelected ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary) : null,
+            return Padding(
+              padding: const EdgeInsets.only(bottom: AppConstants.spacingSm + 2),
+              child: _TerritoryCard(
+                territory: t,
+                isSelected: isSelected,
                 onTap: () async {
                   try {
                     await ref.read(territoriesRepositoryProvider).enterTerritory(t.id);
@@ -145,29 +143,33 @@ class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
       loading: () => ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd, vertical: AppConstants.spacingSm),
         itemCount: 4,
-        itemBuilder: (_, __) => Card(
-          margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
-          child: Padding(
-            padding: const EdgeInsets.all(AppConstants.spacingMd),
-            child: Row(
-              children: [
-                ShimmerBox(
-                  width: AppConstants.avatarSizeSm,
-                  height: AppConstants.avatarSizeSm,
-                  borderRadius: BorderRadius.circular(AppConstants.avatarSizeSm / 2),
-                ),
-                const SizedBox(width: AppConstants.spacingMd),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ShimmerBox(width: double.infinity, height: 16, borderRadius: BorderRadius.circular(4)),
-                      const SizedBox(height: 6),
-                      ShimmerBox(width: 120, height: 12, borderRadius: BorderRadius.circular(4)),
-                    ],
+        itemBuilder: (_, __) => Padding(
+          padding: const EdgeInsets.only(bottom: AppConstants.spacingSm + 2),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.spacingMd),
+              child: Row(
+                children: [
+                  ShimmerBox(
+                    width: AppConstants.avatarSizeSm,
+                    height: AppConstants.avatarSizeSm,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-              ],
+                  const SizedBox(width: AppConstants.spacingMd),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ShimmerBox(width: double.infinity, height: 16, borderRadius: BorderRadius.circular(4)),
+                        const SizedBox(height: 6),
+                        ShimmerBox(width: 120, height: 12, borderRadius: BorderRadius.circular(4)),
+                        const SizedBox(height: 8),
+                        ShimmerBox(width: 180, height: 12, borderRadius: BorderRadius.circular(4)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -182,6 +184,132 @@ class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
               const SizedBox(height: AppConstants.spacingMd),
               Text(err is ApiException ? err.userMessage : err.toString().replaceFirst('ApiException: ', ''), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TerritoryCard extends StatelessWidget {
+  const _TerritoryCard({
+    required this.territory,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final TerritoryItem territory;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final region = territory.region;
+    final description = territory.description;
+    final metaParts = <String>[
+      if (region != null && region.isNotEmpty) region,
+      if (territory.memberCount != null)
+        '${NumberFormat.decimalPattern('pt_BR').format(territory.memberCount)} moradores',
+    ];
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppConstants.radiusCard),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.18),
+            borderRadius: BorderRadius.circular(AppConstants.radiusCard),
+            border: Border.all(
+              color: isSelected ? colors.accentBorder : colors.outlineSubtle,
+              width: isSelected ? 1.5 : 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(13),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: isSelected
+                        ? const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppDesignTokens.loginButtonGradientStart,
+                              AppDesignTokens.loginButtonGradientEnd,
+                            ],
+                          )
+                        : null,
+                    color: isSelected ? null : Theme.of(context).colorScheme.surfaceContainerHighest,
+                  ),
+                  child: Center(
+                    child: ArahMaterialSymbol(
+                      isSelected ? 'location_on' : 'forest',
+                      size: 20,
+                      fill: 1,
+                      color: isSelected ? AppDesignTokens.textOnAccent : colors.primary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        territory.name,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontSize: 15,
+                              letterSpacing: -0.2,
+                            ),
+                      ),
+                      if (metaParts.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          metaParts.join(' · '),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: colors.onSurfaceSubtle,
+                              ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                      if (description != null && description.isNotEmpty) ...[
+                        const SizedBox(height: 5),
+                        Text(
+                          description,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: colors.onSurfaceVariant,
+                              ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppConstants.spacingSm),
+                if (isSelected)
+                  ArahMaterialSymbol(
+                    'check_circle',
+                    size: 21,
+                    fill: 1,
+                    color: colors.primary,
+                  )
+                else
+                  ArahMaterialSymbol(
+                    'chevron_right',
+                    size: 20,
+                    color: colors.onSurfaceSubtle,
+                  ),
+              ],
+            ),
           ),
         ),
       ),

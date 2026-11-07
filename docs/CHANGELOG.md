@@ -9,6 +9,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — MainShell + Feed Flutter alinhados ao handoff com smoke/e2e incremental (2026-11-07)
+
+- `frontend/arah.app/lib/features/home/presentation/screens/main_shell_screen.dart` ganha top bar territorial premium, bottom-nav canônica e fundo dark opaco dedicado ao shell principal
+- `frontend/arah.app/lib/features/feed/presentation/screens/feed_screen.dart` passa a seguir a ordem e a linguagem do handoff: filtros `Tudo / Avisos / Vizinhança`, banner de visitante com território, cards premium do feed e rodapé territorial
+- `frontend/arah.app/lib/features/feed/presentation/widgets/*` e `lib/features/territories/presentation/widgets/*` alinham banner, cards de post e seletor de território ao UI kit sem trocar o app por DOM de referência
+- Testes Flutter adicionados em `test/features/home/presentation/main_shell_screen_test.dart` e `test/features/feed/presentation/feed_screen_test.dart`, cobrindo shell, filtros e responsividade mobile
+- Harness Playwright ganha `main-shell-feed.smoke.spec.js` e `main-shell-feed.pixel-parity.spec.js`, com artefatos separados de handoff/implementação/diff/composite para a jornada pós-onboarding
+- Situação local medida desta rodada: smoke agregado `login + onboarding + MainShell/Feed` verde; pixel parity segue falhando separadamente em `login` (`1,03%`), `onboarding` (`18,22%`) e `MainShell/Feed` (`17,61%`) sem relaxar o comparador estrito
+
 ### Alterado — Onboarding Flutter em paridade incremental com handoff + Playwright (2026-11-07)
 
 - `frontend/arah.app/lib/features/onboarding/presentation/screens/onboarding_screen.dart` passa a usar header próprio "Entrar no território" e composição alinhada ao handoff: título, localização, mapa, territórios próximos e CTA de visitante na ordem esperada

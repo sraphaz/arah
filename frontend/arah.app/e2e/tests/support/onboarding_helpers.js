@@ -1,3 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+
+const COVER_RAINFOREST_DATA_URL = `data:image/png;base64,${fs
+  .readFileSync(
+    path.resolve(__dirname, '../../../../../design-system/assets/cover-rainforest.png'),
+  )
+  .toString('base64')}`;
+
 const GEO_POSITION = {
   latitude: -23.76281,
   longitude: -45.63691,
@@ -7,6 +16,8 @@ const TERRITORIES = [
   {
     id: 't1',
     name: 'Camburi',
+    region: 'São Sebastião · SP',
+    members: 1284,
     description: '0.4 km de distancia',
     distanceKm: 0.4,
     latitude: -23.76281,
@@ -16,6 +27,8 @@ const TERRITORIES = [
   {
     id: 't3',
     name: 'Maresias',
+    region: 'São Sebastião · SP',
+    members: 2106,
     description: '6.2 km de distancia',
     distanceKm: 6.2,
     latitude: -23.7824,
@@ -25,6 +38,8 @@ const TERRITORIES = [
   {
     id: 't2',
     name: 'Boiçucanga',
+    region: 'São Sebastião · SP',
+    members: 1740,
     description: '9.1 km de distancia',
     distanceKm: 9.1,
     latitude: -23.7772,
@@ -40,6 +55,8 @@ const FEED_ITEMS = [
       title: 'Mutirao da praca',
       content: 'Sabado, 9h. Leve agua e ferramentas leves.',
       type: 'general',
+      visibility: 'Public',
+      createdAtUtc: '2026-11-06T23:00:00Z',
     },
     counts: {
       likes: 4,
@@ -54,6 +71,136 @@ const FEED_ITEMS = [
     metadata: {
       canDelete: false,
     },
+    author: {
+      displayName: 'Conselho de Moradores',
+      handle: 'conselho.camburi',
+      membership: 'MORADOR',
+    },
+  },
+];
+
+const SHELL_FEED_ITEMS = [
+  {
+    post: {
+      id: 'p1',
+      title: 'Mutirão de limpeza no costão neste sábado',
+      content:
+        'Encontro às 8h na praça da capela. Traga luvas e água. Vamos cuidar do território juntos.',
+      type: 'alert',
+      visibility: 'Public',
+      createdAtUtc: '2026-11-07T00:10:00Z',
+      isHighlighted: true,
+    },
+    counts: {
+      likes: 64,
+      comments: 12,
+      shares: 0,
+    },
+    userInteractions: {
+      liked: false,
+      shared: false,
+    },
+    media: [],
+    metadata: {
+      canDelete: false,
+      isHighlighted: true,
+    },
+    author: {
+      displayName: 'Conselho de Moradores',
+      handle: 'conselho.camburi',
+      membership: 'MORADOR',
+    },
+  },
+  {
+    post: {
+      id: 'p2',
+      title: 'Chegou robalo fresco na peixaria',
+      content:
+        'Pescado da manhã pelo seu Tião. Quem quiser, é só passar até as 18h.',
+      type: 'general',
+      visibility: 'Public',
+      createdAtUtc: '2026-11-06T21:20:00Z',
+    },
+    counts: {
+      likes: 38,
+      comments: 7,
+      shares: 0,
+    },
+    userInteractions: {
+      liked: false,
+      shared: false,
+    },
+    media: [
+      {
+        url: COVER_RAINFOREST_DATA_URL,
+      },
+    ],
+    metadata: {
+      canDelete: false,
+    },
+    author: {
+      displayName: 'Dona Marta',
+      handle: 'marta.peixaria',
+      membership: 'MORADOR',
+    },
+  },
+  {
+    post: {
+      id: 'p3',
+      title: 'Roda de conversa: água e saneamento',
+      content:
+        'Próxima terça, 19h, no centro comunitário. Vamos discutir a captação da nascente.',
+      type: 'general',
+      visibility: 'ResidentsOnly',
+      createdAtUtc: '2026-11-06T02:20:00Z',
+    },
+    counts: {
+      likes: 91,
+      comments: 28,
+      shares: 0,
+    },
+    userInteractions: {
+      liked: false,
+      shared: false,
+    },
+    media: [],
+    metadata: {
+      canDelete: false,
+    },
+    author: {
+      displayName: 'Coletivo Maré',
+      handle: 'coletivo.mare',
+      membership: 'MORADOR',
+    },
+  },
+];
+
+const SHELL_NOTIFICATIONS = [
+  {
+    id: 'n1',
+    title: 'Novo alerta no seu território',
+    body: 'Conselho de Moradores publicou um aviso sobre o mutirão de sábado.',
+    kind: 'alert',
+    createdAtUtc: '2026-11-07T00:15:00Z',
+    readAtUtc: null,
+  },
+  {
+    id: 'n2',
+    title: 'Lembrete de evento',
+    body: 'Roda de conversa sobre água começa em 1 dia.',
+    kind: 'event',
+    createdAtUtc: '2026-11-06T22:00:00Z',
+    readAtUtc: null,
+  },
+];
+
+const SHELL_CHAT_CHANNELS = [
+  {
+    id: 'ch1',
+    name: 'Conselho de Moradores',
+    kind: 'CHANNEL',
+    status: 'ACTIVE',
+    unreadCount: 2,
   },
 ];
 
@@ -159,9 +306,11 @@ async function mockOnboardingBff(page) {
     if (path.endsWith('/territories/paged')) {
       await route.fulfill(
         jsonResponse({
-          items: TERRITORIES.map(({ id, name, description }) => ({
+          items: TERRITORIES.map(({ id, name, description, region, members }) => ({
             id,
             name,
+            region,
+            members,
             description,
           })),
           pageNumber: 1,
@@ -213,6 +362,139 @@ async function mockOnboardingJourney(page) {
   await mockOnboardingBff(page);
 }
 
+async function mockShellFeedBff(page) {
+  await page.route('**/api/v2/journeys/**', async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    const path = url.pathname;
+
+    if (path.endsWith('/onboarding/suggested-territories')) {
+      await route.fulfill(jsonResponse({ territories: TERRITORIES }));
+      return;
+    }
+
+    if (path.endsWith('/onboarding/complete')) {
+      const body = request.postDataJSON();
+      const selected =
+        TERRITORIES.find((entry) => entry.id === body.selectedTerritoryId) ||
+        TERRITORIES[0];
+      await route.fulfill(
+        jsonResponse({
+          territory: {
+            id: selected.id,
+            name: selected.name,
+          },
+        }),
+      );
+      return;
+    }
+
+    if (path.endsWith('/territories/paged')) {
+      await route.fulfill(
+        jsonResponse({
+          items: TERRITORIES.map(({ id, name, description, region, members }) => ({
+            id,
+            name,
+            description,
+            region,
+            members,
+          })),
+          pageNumber: 1,
+          pageSize: 50,
+          totalCount: TERRITORIES.length,
+        }),
+      );
+      return;
+    }
+
+    const membershipMatch = path.match(/\/membership\/([^/]+)\/me$/);
+    if (membershipMatch) {
+      await route.fulfill(
+        jsonResponse({
+          id: `membership-${membershipMatch[1]}`,
+          userId: 'user-1',
+          territoryId: membershipMatch[1],
+          role: 'VISITOR',
+        }),
+      );
+      return;
+    }
+
+    if (path.endsWith('/feed/territory-feed')) {
+      await route.fulfill(
+        jsonResponse({
+          items: SHELL_FEED_ITEMS,
+          pageNumber: 1,
+          pageSize: 20,
+          totalCount: SHELL_FEED_ITEMS.length,
+        }),
+      );
+      return;
+    }
+
+    if (path.endsWith('/notifications/paged')) {
+      await route.fulfill(
+        jsonResponse({
+          items: SHELL_NOTIFICATIONS,
+          pageNumber: 1,
+          pageSize: 20,
+          totalCount: SHELL_NOTIFICATIONS.length,
+          totalPages: 1,
+        }),
+      );
+      return;
+    }
+
+    if (/\/notifications\/[^/]+\/read$/.test(path)) {
+      await route.fulfill({ status: 204, body: '' });
+      return;
+    }
+
+    if (/\/territories\/[^/]+\/chat\/channels$/.test(path)) {
+      await route.fulfill(jsonResponse({ channels: SHELL_CHAT_CHANNELS }));
+      return;
+    }
+
+    if (/\/territories\/[^/]+\/chat\/groups$/.test(path)) {
+      await route.fulfill(jsonResponse({ groups: [] }));
+      return;
+    }
+
+    if (path.endsWith('/me/profile')) {
+      await route.fulfill(
+        jsonResponse({
+          id: 'user-1',
+          displayName: 'Ana Ribeiro',
+          email: 'ana@example.com',
+          bio: 'Caiçara, professora e voluntária.',
+          interests: ['Meio ambiente', 'Cultura caiçara'],
+          avatarUrl: null,
+          createdAtUtc: '2026-01-02T12:00:00Z',
+        }),
+      );
+      return;
+    }
+
+    if (path.endsWith('/me/profile/stats')) {
+      await route.fulfill(
+        jsonResponse({
+          postsCount: 23,
+          connectionsCount: 12,
+          interestsCount: 2,
+        }),
+      );
+      return;
+    }
+
+    if (path.endsWith('/connections')) {
+      await route.fulfill(jsonResponse([]));
+      return;
+    }
+
+    await route.fulfill(jsonResponse({}));
+  });
+}
+
 async function activateFlutterSemantics(page) {
   const placeholder = page.locator('flt-semantics-placeholder');
   if ((await placeholder.count()) > 0) {
@@ -220,9 +502,16 @@ async function activateFlutterSemantics(page) {
   }
 }
 
-async function seedAuthenticatedSession(page) {
+async function seedAuthenticatedSession(page, options = {}) {
+  const territoryId = options.selectedTerritoryId;
+  await page.addInitScript(({ selectedTerritoryId }) => {
+    localStorage.setItem('flutter.arah_theme_mode', 'dark');
+    if (selectedTerritoryId) {
+      localStorage.setItem('flutter.arah_selected_territory_id', selectedTerritoryId);
+    }
+  }, { selectedTerritoryId: territoryId });
   await page.goto('/', { waitUntil: 'networkidle' });
-  await page.evaluate(async () => {
+  await page.evaluate(async ({ selectedTerritoryId }) => {
     const publicKeyKey = 'FlutterSecureStorage';
     const encoder = new TextEncoder();
 
@@ -275,15 +564,23 @@ async function seedAuthenticatedSession(page) {
     await writeSecureValue('arah_access_token', 'access-token-test');
     await writeSecureValue('arah_refresh_token', 'refresh-token-test');
     await writeSecureValue('arah_token_expiry', expiry);
-    localStorage.setItem('flutter.arah_theme_mode', JSON.stringify('dark'));
-  });
+    if (selectedTerritoryId) {
+      localStorage.setItem(
+        'flutter.arah_selected_territory_id',
+        selectedTerritoryId,
+      );
+    }
+  }, { selectedTerritoryId: territoryId });
 
   await page.goto('/', { waitUntil: 'networkidle' });
   await activateFlutterSemantics(page);
 
   await page.waitForFunction(
-    () => document.body.innerText.includes('Escolha seu território'),
-    undefined,
+    (selectedTerritoryId) =>
+      selectedTerritoryId
+        ? window.location.pathname.endsWith('/home')
+        : document.body.innerText.includes('Escolha seu território'),
+    territoryId,
     { timeout: 15000 },
   );
   await page.evaluate(
@@ -297,12 +594,16 @@ async function seedAuthenticatedSession(page) {
 module.exports = {
   FEED_ITEMS,
   GEO_POSITION,
+  SHELL_CHAT_CHANNELS,
+  SHELL_FEED_ITEMS,
+  SHELL_NOTIFICATIONS,
   TERRITORIES,
   TILE_SVG,
   activateFlutterSemantics,
   grantOnboardingGeolocation,
   mockOnboardingBff,
   mockOnboardingJourney,
+  mockShellFeedBff,
   mockTileServer,
   seedAuthenticatedSession,
 };

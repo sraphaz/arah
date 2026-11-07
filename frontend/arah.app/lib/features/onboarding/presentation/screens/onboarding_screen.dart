@@ -145,10 +145,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 padding: const EdgeInsets.fromLTRB(12, 6, 16, 14),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => _goBackToLogin(context),
-                      tooltip: l10n.back,
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.07),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, size: 22),
+                        onPressed: () => _goBackToLogin(context),
+                        tooltip: l10n.back,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(

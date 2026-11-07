@@ -27,9 +27,21 @@ class OnboardingLocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Card(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1C201A),
+            Color(0xFF161814),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppDesignTokens.radiusCard),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.spacingMd),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: hasGeo
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,10 +51,10 @@ class OnboardingLocationCard extends StatelessWidget {
                     children: [
                       const Icon(
                         Icons.my_location,
-                        color: AppDesignTokens.locationPin,
+                        color: AppDesignTokens.primary,
                         size: 20,
                       ),
-                      const SizedBox(width: AppConstants.spacingSm),
+                      const SizedBox(width: 11),
                       Expanded(
                         child: Text(
                           l10n.onboardingLocationEnabled,
@@ -51,13 +63,14 @@ class OnboardingLocationCard extends StatelessWidget {
                               .titleSmall
                               ?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
+                                fontSize: 13.5,
                                 fontWeight: FontWeight.w600,
                               ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppConstants.spacingSm),
+                  const SizedBox(height: 1),
                   Text(
                     latitude != null && longitude != null
                         ? '${latitude!.toStringAsFixed(3)}, ${longitude!.toStringAsFixed(3)} · privada'

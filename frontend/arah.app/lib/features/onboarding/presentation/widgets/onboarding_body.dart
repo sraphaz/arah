@@ -73,12 +73,16 @@ class OnboardingBody extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: 6),
-          Text(
-            l10n.onboardingDescription,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
-                  color: colors.onSurfaceVariant,
-                ),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Text(
+              l10n.onboardingDescription,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontSize: 14,
+                    height: 1.5,
+                    color: colors.onSurfaceVariant,
+                  ),
+            ),
           ),
           const SizedBox(height: AppConstants.spacingLg),
           OnboardingLocationCard(
@@ -102,7 +106,9 @@ class OnboardingBody extends StatelessWidget {
               l10n.onboardingNearbyTitle,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: colors.primary,
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
+                    letterSpacing: 1.4,
                   ),
             ),
             const SizedBox(height: AppConstants.spacingSm),

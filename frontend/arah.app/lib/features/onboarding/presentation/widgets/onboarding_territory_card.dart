@@ -23,24 +23,40 @@ class OnboardingTerritoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Card(
-      elevation: isSelected ? 2 : 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        side: isSelected
-            ? BorderSide(color: colorScheme.primary, width: 1.5)
-            : BorderSide(color: colorScheme.outline.withValues(alpha: 0.35)),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1C201A),
+            Color(0xFF161814),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isSelected
+              ? colorScheme.primary
+              : Colors.white.withValues(alpha: 0.07),
+          width: isSelected ? 1.5 : 1,
+        ),
+        boxShadow: isSelected
+            ? const [
+                BoxShadow(
+                  color: Color(0x18000000),
+                  blurRadius: 22,
+                  offset: Offset(0, 8),
+                ),
+              ]
+            : null,
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+          borderRadius: BorderRadius.circular(20),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.spacingMd,
-              vertical: 13,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 13),
             child: Row(
               children: [
                 Icon(
@@ -81,8 +97,7 @@ class OnboardingTerritoryCard extends StatelessWidget {
                         ),
                       if (subtitle.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.only(
-                              top: AppConstants.spacingXs),
+                          padding: const EdgeInsets.only(top: 2),
                           child: Text(
                             subtitle,
                             style:

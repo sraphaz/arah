@@ -324,6 +324,15 @@ async function createComposite(browser, imagePaths, outputPath) {
   await context.close();
 }
 
+function exportArtifactsIfRequested(files) {
+  const targetDir = process.env.PIXEL_EXPORT_DIR;
+  if (!targetDir) return;
+  fs.mkdirSync(targetDir, { recursive: true });
+  for (const [sourcePath, outputName] of files) {
+    fs.copyFileSync(sourcePath, `${targetDir}/${outputName}`);
+  }
+}
+
 test('login screen stays pixel-perfect against the handoff mobile source of truth', async ({
   browser,
   context,
@@ -395,6 +404,13 @@ test('login screen stays pixel-perfect against the handoff mobile source of trut
       path: summaryPath,
       contentType: 'text/plain',
     });
+    exportArtifactsIfRequested([
+      [handoffPath, 'login_handoff_mobile.png'],
+      [implementationPath, 'login_implementation_mobile.png'],
+      [diffPath, 'login_diff_mobile.png'],
+      [comparePath, 'login_compare_mobile.png'],
+      [summaryPath, 'login_pixel_summary.txt'],
+    ]);
 
     console.log(
       `Login pixel parity diff: ${diffPercent.toFixed(2)}% (${comparison.mismatchedPixels}/${comparison.width * comparison.height} pixels).`,

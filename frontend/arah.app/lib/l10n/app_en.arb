@@ -18,6 +18,7 @@
   "territoriesSubtitle": "Tap a territory to see its feed or switch region.",
   "noTerritoryAvailable": "No territory available",
   "onboardingTitle": "Choose your territory",
+  "onboardingHeaderTitle": "Enter the territory",
   "onboardingDescription": "To see the feed and join the community, choose a territory near you.",
   "useMyLocation": "Use my location",
   "enableLocationHint": "Enable location to see nearby territories.",

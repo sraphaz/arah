@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/geo/geo_location_provider.dart';
 import '../../../../core/network/api_exception.dart';
 import '../../../../core/providers/territory_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
+import '../../../../core/widgets/arah_scaffold.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/providers/auth_state_provider.dart';
@@ -29,8 +31,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   bool _completing = false;
   bool _locationRequested = false;
   bool _requestingLocation = false;
+
   /// Território escolhido na lista; null = usar o mais próximo. Só altera mapa e botão Continuar; não completa onboarding.
   String? _selectedTerritoryId;
+
   /// Território cadastrado/proposto localmente (IBGE ou desenho Pending) — pode não aparecer em suggested-territories.
   TerritorySuggestion? _provisionedTerritory;
 
@@ -64,7 +68,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       final repo = ref.read(onboardingRepositoryProvider);
       await repo.completeOnboarding(territoryId);
       if (!mounted) return;
-      await ref.read(selectedTerritoryIdProvider.notifier).setTerritoryId(territoryId);
+      await ref
+          .read(selectedTerritoryIdProvider.notifier)
+          .setTerritoryId(territoryId);
       if (!mounted) return;
       context.go('/home');
     } on ApiException catch (e) {
@@ -100,7 +106,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final hasGeo = geo != null;
     final l10n = AppLocalizations.of(context)!;
     final suggestedAsync = hasGeo
-        ? ref.watch(suggestedTerritoriesProvider((lat: geo.latitude, lng: geo.longitude)))
+        ? ref.watch(suggestedTerritoriesProvider(
+            (lat: geo.latitude, lng: geo.longitude)))
         : const AsyncValue<List<TerritorySuggestion>>.data([]);
     final nearestSuggestion = suggestedAsync.valueOrNull?.isNotEmpty == true
         ? suggestedAsync.valueOrNull!.first
@@ -114,33 +121,71 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => _goBackToLogin(context),
-          tooltip: l10n.back,
+    return ArahScaffold(
+      showWatermark: false,
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: AppDesignTokens.surface,
+          gradient: RadialGradient(
+            center: Alignment(0, -1.05),
+            radius: 1.25,
+            colors: [
+              AppDesignTokens.loginHeroGlow,
+              AppDesignTokens.surface,
+            ],
+            stops: [0, 0.65],
+          ),
         ),
-        title: Text(l10n.onboardingTitle),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: OnboardingBody(
-          latitude: geo?.latitude,
-          longitude: geo?.longitude,
-          suggestedAsync: suggestedAsync,
-          nearestSuggestion: nearestSuggestion,
-          selectedTerritoryId: _selectedTerritoryId,
-          provisionedTerritory: _provisionedTerritory,
-          completing: _completing,
-          requestingLocation: _requestingLocation,
-          onRequestLocation: _requestLocationAndRefresh,
-          onCompleteWith: _completeWith,
-          onSelectTerritory: (t) => setState(() => _selectedTerritoryId = t.id),
-          onTerritoryProvisioned: (t) => setState(() {
-            _provisionedTerritory = t;
-            _selectedTerritoryId = t.id;
-          }),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 6, 16, 14),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => _goBackToLogin(context),
+                      tooltip: l10n.back,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        l10n.onboardingHeaderTitle,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontSize: 21,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.4,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: OnboardingBody(
+                  latitude: geo?.latitude,
+                  longitude: geo?.longitude,
+                  suggestedAsync: suggestedAsync,
+                  nearestSuggestion: nearestSuggestion,
+                  selectedTerritoryId: _selectedTerritoryId,
+                  provisionedTerritory: _provisionedTerritory,
+                  completing: _completing,
+                  requestingLocation: _requestingLocation,
+                  onRequestLocation: _requestLocationAndRefresh,
+                  onCompleteWith: _completeWith,
+                  onSelectTerritory: (t) =>
+                      setState(() => _selectedTerritoryId = t.id),
+                  onTerritoryProvisioned: (t) => setState(() {
+                    _provisionedTerritory = t;
+                    _selectedTerritoryId = t.id;
+                  }),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -9,6 +9,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Alterado — Onboarding Flutter em paridade incremental com handoff + Playwright (2026-11-07)
+
+- `frontend/arah.app/lib/features/onboarding/presentation/screens/onboarding_screen.dart` passa a usar header próprio "Entrar no território" e composição alinhada ao handoff: título, localização, mapa, territórios próximos e CTA de visitante na ordem esperada
+- `frontend/arah.app/lib/features/onboarding/presentation/widgets/*` ajusta mapa compacto dark-styled, card de localização com coordenadas, cards de território mais próximos do UI kit e CTA de continuar em largura total
+- Testes Flutter adicionados em `test/features/onboarding/presentation/onboarding_screen_test.dart` cobrindo estrutura, estado vazio e responsividade mobile
+- Harness Playwright ganha `onboarding.smoke.spec.js` e `onboarding.pixel-parity.spec.js`, com mocks determinísticos de geolocalização/BFF/tile OSM e artefatos separados de handoff/implementação/diff/composite
+- CI `flutter-playwright` e `flutter-playwright-pixel-parity` passam a executar login + onboarding no mesmo job, preservando o gate bloqueante já existente do login
+
 ### Alterado — Login Flutter em paridade com handoff mobile + gate blocking (2026-11-06)
 
 - `frontend/arah.app/lib/features/auth/presentation/screens/login_screen.dart` agora abre com tema dark full-screen, logo PNG oficial, eyebrow `TERRITÓRIO-PRIMEIRO`, headline/copy, CTAs e footer alinhados ao handoff `design-system/ui_kits/app/screens4.jsx`

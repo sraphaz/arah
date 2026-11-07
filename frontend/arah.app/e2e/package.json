@@ -3,8 +3,12 @@
   "private": true,
   "scripts": {
     "test": "npm run test:smoke",
-    "test:smoke": "playwright test tests/login.smoke.spec.js",
-    "test:pixel-parity": "playwright test tests/login.pixel-parity.spec.js"
+    "test:smoke": "playwright test tests/login.smoke.spec.js tests/onboarding.smoke.spec.js",
+    "test:smoke:login": "playwright test tests/login.smoke.spec.js",
+    "test:smoke:onboarding": "playwright test tests/onboarding.smoke.spec.js",
+    "test:pixel-parity": "playwright test tests/login.pixel-parity.spec.js tests/onboarding.pixel-parity.spec.js",
+    "test:pixel-parity:login": "playwright test tests/login.pixel-parity.spec.js",
+    "test:pixel-parity:onboarding": "playwright test tests/onboarding.pixel-parity.spec.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.0",

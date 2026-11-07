@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/constants.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/onboarding_models.dart';
 import 'onboarding_continue_button.dart';
@@ -12,6 +13,7 @@ import 'onboarding_suggested_list.dart';
 /// Centro padrão do mapa quando ainda não há localização (Camburi).
 const double _defaultCenterLat = -23.76281;
 const double _defaultCenterLng = -45.63691;
+const double _screenHorizontalPadding = 18.0;
 
 /// Corpo rolável do onboarding: localização → mapa → botão Continuar → lista de
 /// territórios próximos. Recebe estado e callbacks do [OnboardingScreen]; não guarda estado.
@@ -50,27 +52,44 @@ class OnboardingBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final hasGeo = latitude != null && longitude != null;
+    final colors = context.appColors;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppConstants.spacingMd),
+      padding: const EdgeInsets.fromLTRB(
+        _screenHorizontalPadding,
+        0,
+        _screenHorizontalPadding,
+        AppConstants.spacingMd,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: AppConstants.spacingSm),
+          Text(
+            l10n.onboardingTitle,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
+                ),
+          ),
+          const SizedBox(height: 6),
           Text(
             l10n.onboardingDescription,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  color: colors.onSurfaceVariant,
+                ),
           ),
           const SizedBox(height: AppConstants.spacingLg),
-          // Fase 1: bloco de localização (sempre na mesma tela)
           OnboardingLocationCard(
             hasGeo: hasGeo,
+            latitude: latitude,
+            longitude: longitude,
             requestingLocation: requestingLocation,
             completing: completing,
             onRequestLocation: onRequestLocation,
           ),
           const SizedBox(height: AppConstants.spacingLg),
-          // Mapa: contorno do território selecionado na lista (ou o mais próximo se nenhum selecionado)
           OnboardingMap(
             centerLat: hasGeo ? latitude! : _defaultCenterLat,
             centerLng: hasGeo ? longitude! : _defaultCenterLng,
@@ -78,12 +97,30 @@ class OnboardingBody extends StatelessWidget {
             displayedTerritoryId: selectedTerritoryId ?? nearestSuggestion?.id,
           ),
           const SizedBox(height: AppConstants.spacingLg),
-          // Botão Continuar: ao tocar, o usuário se torna visitante do território (único momento).
           if (hasGeo) ...[
+            Text(
+              l10n.onboardingNearbyTitle,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: colors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(height: AppConstants.spacingSm),
+            OnboardingSuggestedList(
+              latitude: latitude!,
+              longitude: longitude!,
+              selectedTerritoryId: selectedTerritoryId,
+              provisionedTerritory: provisionedTerritory,
+              onSelectTerritory: onSelectTerritory,
+              onTerritoryProvisioned: onTerritoryProvisioned,
+              completing: completing,
+            ),
+            const SizedBox(height: 12),
             Text(
               l10n.onboardingVisitorOnContinue,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: colors.onSurfaceSubtle,
+                    fontSize: 12,
                   ),
             ),
             const SizedBox(height: AppConstants.spacingSm),
@@ -105,26 +142,6 @@ class OnboardingBody extends StatelessWidget {
                     ),
               ),
             ],
-            const SizedBox(height: AppConstants.spacingLg),
-          ],
-          if (hasGeo) ...[
-            Text(
-              l10n.onboardingNearbyTitle,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            const SizedBox(height: AppConstants.spacingSm),
-            OnboardingSuggestedList(
-              latitude: latitude!,
-              longitude: longitude!,
-              selectedTerritoryId: selectedTerritoryId,
-              provisionedTerritory: provisionedTerritory,
-              onSelectTerritory: onSelectTerritory,
-              onTerritoryProvisioned: onTerritoryProvisioned,
-              completing: completing,
-            ),
             const SizedBox(height: AppConstants.spacingLg),
           ] else
             Padding(

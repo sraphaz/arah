@@ -10,12 +10,16 @@ class OnboardingLocationCard extends StatelessWidget {
   const OnboardingLocationCard({
     super.key,
     required this.hasGeo,
+    required this.latitude,
+    required this.longitude,
     required this.requestingLocation,
     required this.completing,
     required this.onRequestLocation,
   });
 
   final bool hasGeo;
+  final double? latitude;
+  final double? longitude;
   final bool requestingLocation;
   final bool completing;
   final Future<void> Function() onRequestLocation;
@@ -34,15 +38,18 @@ class OnboardingLocationCard extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(
-                        Icons.location_on,
+                        Icons.my_location,
                         color: AppDesignTokens.locationPin,
-                        size: AppConstants.iconSizeLg,
+                        size: 20,
                       ),
                       const SizedBox(width: AppConstants.spacingSm),
                       Expanded(
                         child: Text(
                           l10n.onboardingLocationEnabled,
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -52,9 +59,12 @@ class OnboardingLocationCard extends StatelessWidget {
                   ),
                   const SizedBox(height: AppConstants.spacingSm),
                   Text(
-                    l10n.onboardingLocationPrivacy,
+                    latitude != null && longitude != null
+                        ? '${latitude!.toStringAsFixed(3)}, ${longitude!.toStringAsFixed(3)} · privada'
+                        : l10n.onboardingLocationPrivacy,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontSize: 11.5,
                         ),
                   ),
                 ],
@@ -79,7 +89,9 @@ class OnboardingLocationCard extends StatelessWidget {
                           )
                         : const Icon(Icons.location_on_outlined),
                     label: Text(
-                      requestingLocation ? l10n.onboardingGettingLocation : l10n.useMyLocation,
+                      requestingLocation
+                          ? l10n.onboardingGettingLocation
+                          : l10n.useMyLocation,
                     ),
                   ),
                   const SizedBox(height: AppConstants.spacingSm),

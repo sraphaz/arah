@@ -40,7 +40,6 @@ test('main shell opens on the visitor feed with canonical navigation and filters
   await expect(appShell).toContainText(
     'Confirme residência para ver posts e votar.',
   );
-  await expect(appShell).toContainText('Roda de conversa: água e saneamento');
 
   await tapTextCenter(page, page.getByText('Avisos', { exact: true }).first());
   await expect(

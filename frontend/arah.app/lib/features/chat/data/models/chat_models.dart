@@ -4,6 +4,7 @@ class ChatConversationSummary {
     required this.name,
     required this.kind,
     required this.status,
+    this.unreadCount = 0,
   });
 
   factory ChatConversationSummary.fromJson(Map<String, dynamic> json) {
@@ -12,6 +13,10 @@ class ChatConversationSummary {
       name: json['name']?.toString() ?? 'Conversa',
       kind: json['kind']?.toString() ?? 'CHANNEL',
       status: json['status']?.toString() ?? 'ACTIVE',
+      unreadCount: (json['unreadCount'] as num?)?.toInt() ??
+          (json['unread'] as num?)?.toInt() ??
+          int.tryParse(json['unread']?.toString() ?? '') ??
+          0,
     );
   }
 
@@ -19,6 +24,7 @@ class ChatConversationSummary {
   final String name;
   final String kind;
   final String status;
+  final int unreadCount;
 }
 
 class ChatMessage {

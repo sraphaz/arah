@@ -65,6 +65,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingTitle => 'Escolha seu território';
 
   @override
+  String get onboardingHeaderTitle => 'Entrar no território';
+
+  @override
   String get onboardingDescription =>
       'Para ver o feed e participar da comunidade, escolha um território próximo a você.';
 

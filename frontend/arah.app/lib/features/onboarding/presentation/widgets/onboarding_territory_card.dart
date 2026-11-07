@@ -23,69 +23,108 @@ class OnboardingTerritoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Card(
-      elevation: isSelected ? 2 : 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        side: isSelected
-            ? BorderSide(color: colorScheme.primary, width: 2)
-            : BorderSide.none,
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.spacingMd,
-          vertical: AppConstants.spacingSm,
-        ),
-        leading: CircleAvatar(
-          backgroundColor: isSelected
-              ? colorScheme.primaryContainer
-              : colorScheme.surfaceContainerHighest,
-          child: Icon(
-            isSelected ? Icons.place : Icons.place_outlined,
-            color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
-          ),
-        ),
-        title: Text(
-          name,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: isSelected ? FontWeight.w600 : null,
-              ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (isPending)
-              Padding(
-                padding: const EdgeInsets.only(top: AppConstants.spacingXs),
-                child: Chip(
-                  label: Text(
-                    AppLocalizations.of(context)!.territoryPendingBadge,
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                  visualDensity: VisualDensity.compact,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ),
-            if (subtitle.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: AppConstants.spacingXs),
-                child: Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-              ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1C201A),
+            Color(0xFF161814),
           ],
         ),
-        trailing: onTap != null
-            ? Icon(
-                isSelected ? Icons.check_circle : Icons.arrow_forward_ios,
-                size: AppConstants.iconSizeSm,
-                color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
-              )
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isSelected
+              ? colorScheme.primary
+              : Colors.white.withValues(alpha: 0.07),
+          width: isSelected ? 1.5 : 1,
+        ),
+        boxShadow: isSelected
+            ? const [
+                BoxShadow(
+                  color: Color(0x18000000),
+                  blurRadius: 22,
+                  offset: Offset(0, 8),
+                ),
+              ]
             : null,
-        onTap: onTap,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 13),
+            child: Row(
+              children: [
+                Icon(
+                  isSelected ? Icons.place : Icons.place_outlined,
+                  color: isSelected
+                      ? colorScheme.primary
+                      : colorScheme.onSurfaceVariant,
+                  size: 22,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        name,
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      ),
+                      if (isPending)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: AppConstants.spacingXs),
+                          child: Chip(
+                            label: Text(
+                              AppLocalizations.of(context)!
+                                  .territoryPendingBadge,
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
+                      if (subtitle.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            subtitle,
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (onTap != null)
+                  Icon(
+                    isSelected
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    size: 21,
+                    color: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.onSurfaceVariant,
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

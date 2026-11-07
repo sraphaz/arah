@@ -148,14 +148,14 @@ jobs:
       - name: Install Playwright browser
         working-directory: frontend/arah.app/e2e
         run: npx playwright install --with-deps chromium
-      - name: Run login smoke
+      - name: Run login + onboarding smoke
         working-directory: frontend/arah.app/e2e
         run: npm run test:smoke
       - name: Upload Playwright artifacts
         uses: actions/upload-artifact@v4
         if: failure() || cancelled()
         with:
-          name: playwright-login-smoke-${{ github.run_id }}
+          name: playwright-auth-onboarding-smoke-${{ github.run_id }}
           path: |
             frontend/arah.app/e2e/playwright-report
             frontend/arah.app/e2e/test-results
@@ -191,14 +191,14 @@ jobs:
       - name: Install Playwright browser
         working-directory: frontend/arah.app/e2e
         run: npx playwright install --with-deps chromium
-      - name: Run login pixel parity
+      - name: Run login + onboarding pixel parity
         working-directory: frontend/arah.app/e2e
         run: npm run test:pixel-parity
       - name: Upload Playwright pixel parity artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-login-pixel-parity-${{ github.run_id }}
+          name: playwright-auth-onboarding-pixel-parity-${{ github.run_id }}
           path: |
             frontend/arah.app/e2e/playwright-report
             frontend/arah.app/e2e/test-results

@@ -64,6 +64,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle => 'Choose your territory';
 
   @override
+  String get onboardingHeaderTitle => 'Enter the territory';
+
+  @override
   String get onboardingDescription =>
       'To see the feed and join the community, choose a territory near you.';
 

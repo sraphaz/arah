@@ -206,6 +206,12 @@ abstract class AppLocalizations {
   /// **'Escolha seu território'**
   String get onboardingTitle;
 
+  /// No description provided for @onboardingHeaderTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar no território'**
+  String get onboardingHeaderTitle;
+
   /// No description provided for @onboardingDescription.
   ///
   /// In pt, this message translates to:

@@ -8,6 +8,7 @@
 **Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** — TI-0 docs/contratos neste ciclo; MVP TI-1…TI-3 paralelo a 17–19  
 **Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
 **Login parity mobile**: ✅ `frontend/arah.app` alinhado ao handoff `design-system/ui_kits/app/screens4.jsx`; Playwright `flutter-playwright-pixel-parity` agora é gate bloqueante com diff local `0,49%`
+**Onboarding parity mobile**: 🟡 jornada incremental PR3 (localização -> territórios -> visitante) agora coberta por widget test + Playwright smoke/pixel parity, com artefatos separados de handoff/implementação/diff
 **Capacidade hídrica**: 💧 **Corpos d'água curáveis** — [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); ponte WA-E1…E4 ✅; **WA-N1** NaturalAsset ponto (FASE24.0a)  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend), FASE62 (62.0)
 **Fases Complementares**: 1 (Fase 14.5)  

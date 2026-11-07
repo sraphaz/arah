@@ -11,13 +11,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeFeedNotifier extends FeedNotifier {
-  _FakeFeedNotifier(Ref ref, List<dynamic> items) : super(ref, null) {
-    state = FeedState(items: items);
+  _FakeFeedNotifier(Ref ref, List<dynamic> items, {bool hasMore = false})
+      : super(ref, null) {
+    state = FeedState(items: items, hasMore: hasMore);
   }
 }
 
 class _FakeMembershipNotifier extends MembershipNotifier {
-  _FakeMembershipNotifier(Ref ref, MembershipInfo membership) : super(ref) {
+  _FakeMembershipNotifier(super.ref, MembershipInfo membership) {
     state = MembershipState(membership: membership);
   }
 
@@ -25,7 +26,7 @@ class _FakeMembershipNotifier extends MembershipNotifier {
   Future<void> refresh() async {}
 }
 
-Widget _buildApp({MediaQueryData? mediaQuery}) {
+Widget _buildApp({MediaQueryData? mediaQuery, bool hasMore = false}) {
   final items = <dynamic>[
     {
       'post': {
@@ -34,7 +35,10 @@ Widget _buildApp({MediaQueryData? mediaQuery}) {
         'content': 'Encontro às 8h na praça da capela. Traga luvas e água.',
         'type': 'alert',
         'visibility': 'Public',
-        'createdAtUtc': DateTime.now().toUtc().subtract(const Duration(hours: 2)).toIso8601String(),
+        'createdAtUtc': DateTime.now()
+            .toUtc()
+            .subtract(const Duration(hours: 2))
+            .toIso8601String(),
         'isHighlighted': true,
       },
       'counts': {'likes': 64, 'comments': 12, 'shares': 0},
@@ -54,7 +58,10 @@ Widget _buildApp({MediaQueryData? mediaQuery}) {
         'content': 'Pescado da manhã pelo seu Tião.',
         'type': 'general',
         'visibility': 'Public',
-        'createdAtUtc': DateTime.now().toUtc().subtract(const Duration(hours: 5)).toIso8601String(),
+        'createdAtUtc': DateTime.now()
+            .toUtc()
+            .subtract(const Duration(hours: 5))
+            .toIso8601String(),
       },
       'counts': {'likes': 38, 'comments': 7, 'shares': 0},
       'userInteractions': {'liked': false, 'shared': false},
@@ -73,7 +80,10 @@ Widget _buildApp({MediaQueryData? mediaQuery}) {
         'content': 'Próxima terça, 19h, no centro comunitário.',
         'type': 'general',
         'visibility': 'ResidentsOnly',
-        'createdAtUtc': DateTime.now().toUtc().subtract(const Duration(days: 1)).toIso8601String(),
+        'createdAtUtc': DateTime.now()
+            .toUtc()
+            .subtract(const Duration(days: 1))
+            .toIso8601String(),
       },
       'counts': {'likes': 91, 'comments': 28, 'shares': 0},
       'userInteractions': {'liked': false, 'shared': false},
@@ -101,7 +111,9 @@ Widget _buildApp({MediaQueryData? mediaQuery}) {
           ),
         ],
       ),
-      feedNotifierProvider('t1').overrideWith((ref) => _FakeFeedNotifier(ref, items)),
+      feedNotifierProvider('t1').overrideWith(
+        (ref) => _FakeFeedNotifier(ref, items, hasMore: hasMore),
+      ),
       membershipProvider.overrideWith(
         (ref) => _FakeMembershipNotifier(
           ref,
@@ -139,12 +151,14 @@ void main() {
     await tester.pumpWidget(_buildApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
+    expect(
+        find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
     expect(find.text('Chegou robalo fresco na peixaria'), findsOneWidget);
 
     await tester.tap(find.text('Avisos').first);
     await tester.pumpAndSettle();
-    expect(find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
+    expect(
+        find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
     expect(find.text('Chegou robalo fresco na peixaria'), findsNothing);
 
     await tester.tap(find.text('Vizinhança'));
@@ -175,6 +189,23 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Você é visitante de Camburi'), findsOneWidget);
-    expect(find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
+    expect(
+        find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
+  });
+
+  testWidgets(
+      'FeedScreen só mostra o rodapé de conclusão quando não há mais páginas',
+      (tester) async {
+    tester.view.physicalSize = const Size(780, 1688);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(_buildApp(hasMore: true));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Você viu tudo de Camburi'), findsNothing);
   });
 }

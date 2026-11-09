@@ -42,7 +42,7 @@ class ArahRoleBadge extends StatelessWidget {
       ArahRoleKind.resident => (
           l10n?.resident ?? 'Morador',
           'cottage',
-          AppDesignTokens.greenDim,
+          colors.primary.withValues(alpha: 0.13),
           colors.primary,
         ),
       ArahRoleKind.curator => (

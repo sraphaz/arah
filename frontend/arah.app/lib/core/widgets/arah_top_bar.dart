@@ -51,8 +51,8 @@ class ArahTopBar extends ConsumerWidget {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Color(0xFF1F2A22),
-                              Color(0xFF141A15),
+                              AppDesignTokens.surfaceCard,
+                              AppDesignTokens.surfaceElevated,
                             ],
                           ),
                           boxShadow: AppDesignTokens.elevation(1, isDark: true),

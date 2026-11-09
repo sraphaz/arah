@@ -17,7 +17,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Rodada de continuação em `cursor/mainshell-feed-09fa`: smoke Flutter passa a esperar o placeholder de semântica antes da ativação, elimina o seletor ambíguo de `Vizinhança`, corrige contrato local do gate de navegação, remove badge de chat dependente de contrato inexistente e ajusta l10n/layout do shell/feed para aproximar o handoff sem relaxar o comparador
 - Testes Flutter adicionados em `test/features/home/presentation/main_shell_screen_test.dart` e `test/features/feed/presentation/feed_screen_test.dart`, cobrindo shell, filtros e responsividade mobile
 - Harness Playwright ganha `main-shell-feed.smoke.spec.js` e `main-shell-feed.pixel-parity.spec.js`, com artefatos separados de handoff/implementação/diff/composite para a jornada pós-onboarding
-- Situação local medida nesta continuação: smoke agregado `login + onboarding + MainShell/Feed` verde; pixel parity segue falhando separadamente em `login` (`1,03%`), `onboarding` (`18,22%`) e `MainShell/Feed` (`17,35%`), com melhora regional em `visitorBanner` (`0,5942` -> `0,1286`) e `filterBar` (`0,6023` -> `0,1696`) e pior gargalo restante concentrado em `topBar`, `firstPost` e `bottomNav`
+- Situação local medida nesta continuação: smoke agregado `login + onboarding + MainShell/Feed` verde; pixel parity segue falhando separadamente em `login` (`1,03%`), `onboarding` (`18,22%`) e `MainShell/Feed` (`17,84%`), com melhora regional em `visitorBanner` (`0,5942` -> `0,1287`), `filterBar` (`0,6023` -> `0,1696`) e `firstPost` (`0,2670` -> `0,1804`), enquanto `topBar` e `bottomNav` permanecem como gargalos de maior custo
 
 ### Alterado — Onboarding Flutter em paridade incremental com handoff + Playwright (2026-11-07)
 

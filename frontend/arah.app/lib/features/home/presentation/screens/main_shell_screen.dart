@@ -48,6 +48,10 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
   Widget build(BuildContext context) {
     final currentIndex = ref.watch(mainShellTabProvider);
     final l10n = AppLocalizations.of(context)!;
+    final shellGlow = Color.alphaBlend(
+      AppDesignTokens.primary.withValues(alpha: 0.08),
+      AppDesignTokens.surfaceCard,
+    );
 
     return Theme(
       data: AppTheme.dark,
@@ -58,12 +62,12 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
           children: [
             const ColoredBox(color: AppDesignTokens.surface),
             DecoratedBox(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment(-0.6, -0.4),
-                  radius: 1.2,
-                  colors: AppDesignTokens.scaffoldGradientColors,
-                  stops: [0.0, 0.45, 0.75, 1.0],
+                  center: const Alignment(0, -1.08),
+                  radius: 1.28,
+                  colors: [shellGlow, AppDesignTokens.surface],
+                  stops: const [0.0, 0.58],
                 ),
               ),
             ),
@@ -270,8 +274,8 @@ class _CenterNavButton extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                     colors: [
                       AppDesignTokens.loginButtonGradientStart,
                       AppDesignTokens.loginButtonGradientEnd,

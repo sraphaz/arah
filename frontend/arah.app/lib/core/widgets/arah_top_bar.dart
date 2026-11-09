@@ -21,6 +21,14 @@ class ArahTopBar extends ConsumerWidget {
     final notifications = ref.watch(notificationsProvider);
     final hasUnreadNotifications =
         notifications.items.any((item) => !item.isRead);
+    final logoGlowStart = Color.alphaBlend(
+      AppDesignTokens.primary.withValues(alpha: 0.06),
+      AppDesignTokens.surfaceCard,
+    );
+    final logoGlowEnd = Color.alphaBlend(
+      AppDesignTokens.primary.withValues(alpha: 0.02),
+      AppDesignTokens.surfaceElevated,
+    );
     final territoryName = territory != null && territory.name.isNotEmpty
         ? territory.name
         : l10n.chooseTerritory;
@@ -47,13 +55,10 @@ class ArahTopBar extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(13),
                           border:
                               Border.all(color: AppDesignTokens.outlineStrong),
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [
-                              AppDesignTokens.surfaceCard,
-                              AppDesignTokens.surfaceElevated,
-                            ],
+                            colors: [logoGlowStart, logoGlowEnd],
                           ),
                           boxShadow: AppDesignTokens.elevation(1, isDark: true),
                         ),

@@ -296,10 +296,15 @@ async function createComposite(browser, imagePaths, outputPath) {
       <head>
         <meta charset="utf-8" />
         <style>
+          :root {
+            --artifact-bg: #0a0b09;
+            --artifact-fg: #e7eee7;
+            --artifact-accent: #81c784;
+          }
           body {
             margin: 0;
-            background: #0a0b09;
-            color: #e7eee7;
+            background: var(--artifact-bg);
+            color: var(--artifact-fg);
             font-family: Arial, sans-serif;
           }
           .wrap {
@@ -322,13 +327,13 @@ async function createComposite(browser, imagePaths, outputPath) {
           .rule {
             height: 3px;
             border-radius: 999px;
-            background: #81c784;
+            background: var(--artifact-accent);
           }
           img {
             width: 390px;
             height: 844px;
             object-fit: contain;
-            background: #0a0b09;
+            background: var(--artifact-bg);
             box-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
           }
         </style>

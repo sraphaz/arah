@@ -343,7 +343,8 @@ class FeedPostCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                      color: AppDesignTokens.warning.withValues(alpha: 0.14),
+                          color:
+                              AppDesignTokens.warning.withValues(alpha: 0.14),
                           borderRadius:
                               BorderRadius.circular(AppConstants.radiusXl),
                         ),
@@ -523,7 +524,14 @@ class _FeedAvatar extends StatelessWidget {
           height: 42,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppDesignTokens.primaryHover,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppDesignTokens.primaryHover,
+                AppDesignTokens.primaryHover.withValues(alpha: 0.73),
+              ],
+            ),
             image: avatarUrl != null && avatarUrl!.isNotEmpty
                 ? DecorationImage(
                     image: CachedNetworkImageProvider(avatarUrl!),

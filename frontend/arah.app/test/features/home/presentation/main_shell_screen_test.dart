@@ -137,6 +137,22 @@ void main() {
     await tester.pumpWidget(_buildApp());
     await tester.pumpAndSettle();
 
+    final safeArea = tester.widget<SafeArea>(
+      find.byWidgetPredicate(
+        (widget) => widget is SafeArea && !widget.top && widget.child is Row,
+      ),
+    );
+    final bodyPadding = tester.widget<Padding>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Padding &&
+            widget.padding == const EdgeInsets.only(bottom: 106) &&
+            widget.child is IndexedStack,
+      ),
+    );
+
+    expect(safeArea.minimum, const EdgeInsets.fromLTRB(12, 10, 12, 30));
+    expect(bodyPadding.padding, const EdgeInsets.only(bottom: 106));
     expect(find.text('Camburi'), findsOneWidget);
     expect(find.text('Feed'), findsOneWidget);
     expect(find.text('Explorar'), findsOneWidget);

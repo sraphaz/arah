@@ -72,7 +72,7 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
                 const ArahTopBar(),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 96),
+                    padding: const EdgeInsets.only(bottom: 106),
                     child: IndexedStack(
                       index: currentIndex,
                       children: _buildScreens(),
@@ -142,31 +142,29 @@ class _MainShellBottomNav extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 10, 12, 30),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: items.map((item) {
-              if (item.isCenter) {
-                return SizedBox(
-                  width: 72,
-                  child: _CenterNavButton(
-                    label: item.label,
-                    selected: currentIndex == item.index,
-                    onTap: () => onSelect(item.index),
-                  ),
-                );
-              }
-              return Expanded(
-                child: _EdgeNavButton(
+        minimum: const EdgeInsets.fromLTRB(12, 10, 12, 30),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: items.map((item) {
+            if (item.isCenter) {
+              return SizedBox(
+                width: 72,
+                child: _CenterNavButton(
                   label: item.label,
-                  symbol: item.symbol,
                   selected: currentIndex == item.index,
                   onTap: () => onSelect(item.index),
                 ),
               );
-            }).toList(),
-          ),
+            }
+            return Expanded(
+              child: _EdgeNavButton(
+                label: item.label,
+                symbol: item.symbol,
+                selected: currentIndex == item.index,
+                onTap: () => onSelect(item.index),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );

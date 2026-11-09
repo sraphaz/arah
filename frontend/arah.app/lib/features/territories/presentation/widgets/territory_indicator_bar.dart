@@ -18,6 +18,7 @@ class TerritoryIndicatorBar extends ConsumerWidget {
       useSafeArea: true,
       builder: (ctx) {
         final height = MediaQuery.of(ctx).size.height * 0.66;
+        final l10n = AppLocalizations.of(ctx)!;
         return SizedBox(
           height: height,
           child: Column(
@@ -28,7 +29,8 @@ class TerritoryIndicatorBar extends ConsumerWidget {
                 width: 38,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(ctx).colorScheme.outline.withValues(alpha: 0.8),
+                  color:
+                      Theme.of(ctx).colorScheme.outline.withValues(alpha: 0.8),
                   borderRadius: BorderRadius.circular(AppConstants.radiusXl),
                 ),
               ),
@@ -43,7 +45,7 @@ class TerritoryIndicatorBar extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.territories,
+                      l10n.territories,
                       style: Theme.of(ctx).textTheme.titleLarge?.copyWith(
                             fontFamily: AppDesignTokens.fontFamilyDisplay,
                             letterSpacing: -0.3,
@@ -51,7 +53,7 @@ class TerritoryIndicatorBar extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Você participa como morador ou visitante.',
+                      l10n.territoryMembershipHint,
                       style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
                             color: Theme.of(ctx).colorScheme.onSurfaceVariant,
                           ),
@@ -62,7 +64,6 @@ class TerritoryIndicatorBar extends ConsumerWidget {
               Expanded(
                 child: TerritorySelector(
                   onSelected: () => Navigator.of(ctx).maybePop(),
-                  subtitle: 'Selecione um território ativo',
                 ),
               ),
             ],

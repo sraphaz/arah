@@ -12,6 +12,12 @@ const GEO_POSITION = {
   longitude: -45.63691,
 };
 
+function isoAgo({ days = 0, hours = 0, minutes = 0 }) {
+  return new Date(
+    Date.now() - (((days * 24 + hours) * 60 + minutes) * 60 * 1000),
+  ).toISOString();
+}
+
 const TERRITORIES = [
   {
     id: 't1',
@@ -85,10 +91,10 @@ const SHELL_FEED_ITEMS = [
       id: 'p1',
       title: 'Mutirão de limpeza no costão neste sábado',
       content:
-        'Encontro às 8h na praça da capela. Traga luvas e água. Vamos cuidar do território juntos.',
+        'Encontro às 8h na praça da capela. Traga luvas e água. Vamos cuidar do nosso território juntos — café da manhã comunitário ao final.',
       type: 'alert',
       visibility: 'Public',
-      createdAtUtc: '2026-11-07T00:10:00Z',
+      createdAtUtc: isoAgo({ hours: 2 }),
       isHighlighted: true,
     },
     counts: {
@@ -116,10 +122,10 @@ const SHELL_FEED_ITEMS = [
       id: 'p2',
       title: 'Chegou robalo fresco na peixaria',
       content:
-        'Pescado da manhã pelo seu Tião. Quem quiser, é só passar até as 18h.',
+        'Pescado da manhã pelo seu Tião. Quem quiser, é só passar até as 18h. Apoiem a pesca artesanal da vila 🐟',
       type: 'general',
       visibility: 'Public',
-      createdAtUtc: '2026-11-06T21:20:00Z',
+      createdAtUtc: isoAgo({ hours: 5 }),
     },
     counts: {
       likes: 38,
@@ -149,10 +155,10 @@ const SHELL_FEED_ITEMS = [
       id: 'p3',
       title: 'Roda de conversa: água e saneamento',
       content:
-        'Próxima terça, 19h, no centro comunitário. Vamos discutir a captação da nascente.',
+        'Próxima terça, 19h, no centro comunitário. Vamos discutir a captação da nascente e os próximos passos com a associação.',
       type: 'general',
       visibility: 'ResidentsOnly',
-      createdAtUtc: '2026-11-06T02:20:00Z',
+      createdAtUtc: isoAgo({ days: 1 }),
     },
     counts: {
       likes: 91,
@@ -497,6 +503,10 @@ async function mockShellFeedBff(page) {
 
 async function activateFlutterSemantics(page) {
   const placeholder = page.locator('flt-semantics-placeholder');
+  await placeholder
+    .first()
+    .waitFor({ state: 'attached', timeout: 5000 })
+    .catch(() => {});
   if ((await placeholder.count()) > 0) {
     await placeholder.first().evaluate((node) => node.click());
   }

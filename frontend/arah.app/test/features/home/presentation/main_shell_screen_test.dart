@@ -1,8 +1,6 @@
 import 'package:arah_app/core/geo/geo_location_provider.dart';
 import 'package:arah_app/core/providers/territory_provider.dart';
 import 'package:arah_app/core/theme/app_theme.dart';
-import 'package:arah_app/features/chat/data/models/chat_models.dart';
-import 'package:arah_app/features/chat/presentation/providers/chat_provider.dart';
 import 'package:arah_app/features/feed/presentation/providers/feed_provider.dart';
 import 'package:arah_app/features/home/presentation/screens/main_shell_screen.dart';
 import 'package:arah_app/features/membership/data/models/membership_info.dart';
@@ -36,22 +34,13 @@ class _FakeMembershipNotifier extends MembershipNotifier {
 }
 
 class _FakeNotificationsNotifier extends NotificationsNotifier {
-  _FakeNotificationsNotifier(Ref ref, List<NotificationItem> items) : super(ref) {
+  _FakeNotificationsNotifier(Ref ref, List<NotificationItem> items)
+      : super(ref) {
     state = NotificationsState(items: items);
   }
 
   @override
   Future<void> loadPage(int pageNumber, {required bool append}) async {}
-}
-
-class _FakeChatListNotifier extends ChatListNotifier {
-  _FakeChatListNotifier(Ref ref, List<ChatConversationSummary> channels)
-      : super(ref) {
-    state = ChatListState(channels: channels);
-  }
-
-  @override
-  Future<void> refresh() async {}
 }
 
 Widget _buildApp() {
@@ -63,7 +52,10 @@ Widget _buildApp() {
         'content': 'Encontro às 8h na praça da capela. Traga luvas e água.',
         'type': 'alert',
         'visibility': 'Public',
-        'createdAtUtc': DateTime.now().toUtc().subtract(const Duration(hours: 2)).toIso8601String(),
+        'createdAtUtc': DateTime.now()
+            .toUtc()
+            .subtract(const Duration(hours: 2))
+            .toIso8601String(),
         'isHighlighted': true,
       },
       'counts': {'likes': 64, 'comments': 12, 'shares': 0},
@@ -92,8 +84,10 @@ Widget _buildApp() {
           ),
         ],
       ),
-      geoLocationStateProvider.overrideWith((ref) => _FakeGeoLocationNotifier()),
-      feedNotifierProvider('t1').overrideWith((ref) => _FakeFeedNotifier(ref, items)),
+      geoLocationStateProvider
+          .overrideWith((ref) => _FakeGeoLocationNotifier()),
+      feedNotifierProvider('t1')
+          .overrideWith((ref) => _FakeFeedNotifier(ref, items)),
       membershipProvider.overrideWith(
         (ref) => _FakeMembershipNotifier(
           ref,
@@ -118,20 +112,6 @@ Widget _buildApp() {
           ],
         ),
       ),
-      chatListProvider.overrideWith(
-        (ref) => _FakeChatListNotifier(
-          ref,
-          const [
-            ChatConversationSummary(
-              id: 'c1',
-              name: 'Conselho de Moradores',
-              kind: 'CHANNEL',
-              status: 'ACTIVE',
-              unreadCount: 2,
-            ),
-          ],
-        ),
-      ),
     ],
     child: MaterialApp(
       locale: const Locale('pt'),
@@ -144,7 +124,8 @@ Widget _buildApp() {
 }
 
 void main() {
-  testWidgets('MainShellScreen mostra top bar territorial e bottom-nav canônica',
+  testWidgets(
+      'MainShellScreen mostra top bar territorial e bottom-nav canônica',
       (tester) async {
     tester.view.physicalSize = const Size(780, 1688);
     tester.view.devicePixelRatio = 2;
@@ -163,6 +144,7 @@ void main() {
     expect(find.text('Serviços'), findsOneWidget);
     expect(find.text('Perfil'), findsOneWidget);
     expect(find.text('Você é visitante de Camburi'), findsOneWidget);
-    expect(find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
+    expect(
+        find.text('Mutirão de limpeza no costão neste sábado'), findsOneWidget);
   });
 }

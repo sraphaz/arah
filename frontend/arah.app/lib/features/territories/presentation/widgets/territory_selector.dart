@@ -15,9 +15,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../providers/territories_list_provider.dart';
 
 class TerritorySelector extends ConsumerStatefulWidget {
-  const TerritorySelector({super.key, this.onSelected, this.subtitle = 'Toque para ver o feed da região'});
+  const TerritorySelector({super.key, this.onSelected});
   final VoidCallback? onSelected;
-  final String subtitle;
 
   @override
   ConsumerState<TerritorySelector> createState() => _TerritorySelectorState();
@@ -105,33 +104,49 @@ class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(isSearching ? Icons.search_off : Icons.terrain_outlined, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  Icon(isSearching ? Icons.search_off : Icons.terrain_outlined,
+                      size: AppConstants.iconSizeLg,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                   const SizedBox(height: AppConstants.spacingMd),
-                  Text(isSearching ? AppLocalizations.of(context)!.noSearchResults : AppLocalizations.of(context)!.noTerritoryAvailable, style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+                  Text(
+                      isSearching
+                          ? AppLocalizations.of(context)!.noSearchResults
+                          : AppLocalizations.of(context)!.noTerritoryAvailable,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      textAlign: TextAlign.center),
                 ],
               ),
             ),
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd, vertical: AppConstants.spacingSm),
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppConstants.spacingMd,
+              vertical: AppConstants.spacingSm),
           itemCount: list.length,
           itemBuilder: (context, index) {
             final t = list[index];
             final isSelected = selectedId == t.id;
             return Padding(
-              padding: const EdgeInsets.only(bottom: AppConstants.spacingSm + 2),
+              padding:
+                  const EdgeInsets.only(bottom: AppConstants.spacingSm + 2),
               child: _TerritoryCard(
                 territory: t,
                 isSelected: isSelected,
                 onTap: () async {
                   try {
-                    await ref.read(territoriesRepositoryProvider).enterTerritory(t.id);
-                    await ref.read(selectedTerritoryIdProvider.notifier).setTerritoryId(t.id);
+                    await ref
+                        .read(territoriesRepositoryProvider)
+                        .enterTerritory(t.id);
+                    await ref
+                        .read(selectedTerritoryIdProvider.notifier)
+                        .setTerritoryId(t.id);
                     if (context.mounted) widget.onSelected?.call();
                   } catch (e) {
                     if (!context.mounted) return;
-                    final msg = e is ApiException ? e.userMessage : 'Não foi possível entrar no território.';
+                    final msg = e is ApiException
+                        ? e.userMessage
+                        : 'Não foi possível entrar no território.';
                     showErrorSnackBar(context, msg);
                   }
                 },
@@ -141,7 +156,9 @@ class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
         );
       },
       loading: () => ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd, vertical: AppConstants.spacingSm),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppConstants.spacingMd,
+            vertical: AppConstants.spacingSm),
         itemCount: 4,
         itemBuilder: (_, __) => Padding(
           padding: const EdgeInsets.only(bottom: AppConstants.spacingSm + 2),
@@ -160,11 +177,20 @@ class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ShimmerBox(width: double.infinity, height: 16, borderRadius: BorderRadius.circular(4)),
+                        ShimmerBox(
+                            width: double.infinity,
+                            height: 16,
+                            borderRadius: BorderRadius.circular(4)),
                         const SizedBox(height: 6),
-                        ShimmerBox(width: 120, height: 12, borderRadius: BorderRadius.circular(4)),
+                        ShimmerBox(
+                            width: 120,
+                            height: 12,
+                            borderRadius: BorderRadius.circular(4)),
                         const SizedBox(height: 8),
-                        ShimmerBox(width: 180, height: 12, borderRadius: BorderRadius.circular(4)),
+                        ShimmerBox(
+                            width: 180,
+                            height: 12,
+                            borderRadius: BorderRadius.circular(4)),
                       ],
                     ),
                   ),
@@ -180,9 +206,16 @@ class _TerritorySelectorState extends ConsumerState<TerritorySelector> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.wifi_off, size: AppConstants.iconSizeLg, color: Theme.of(context).colorScheme.error),
+              Icon(Icons.wifi_off,
+                  size: AppConstants.iconSizeLg,
+                  color: Theme.of(context).colorScheme.error),
               const SizedBox(height: AppConstants.spacingMd),
-              Text(err is ApiException ? err.userMessage : err.toString().replaceFirst('ApiException: ', ''), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                  err is ApiException
+                      ? err.userMessage
+                      : err.toString().replaceFirst('ApiException: ', ''),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),
@@ -220,7 +253,10 @@ class _TerritoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppConstants.radiusCard),
         child: Ink(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.18),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withValues(alpha: 0.18),
             borderRadius: BorderRadius.circular(AppConstants.radiusCard),
             border: Border.all(
               color: isSelected ? colors.accentBorder : colors.outlineSubtle,
@@ -246,14 +282,18 @@ class _TerritoryCard extends StatelessWidget {
                             ],
                           )
                         : null,
-                    color: isSelected ? null : Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: isSelected
+                        ? null
+                        : Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
                   child: Center(
                     child: ArahMaterialSymbol(
                       isSelected ? 'location_on' : 'forest',
                       size: 20,
                       fill: 1,
-                      color: isSelected ? AppDesignTokens.textOnAccent : colors.primary,
+                      color: isSelected
+                          ? AppDesignTokens.textOnAccent
+                          : colors.primary,
                     ),
                   ),
                 ),
@@ -264,18 +304,20 @@ class _TerritoryCard extends StatelessWidget {
                     children: [
                       Text(
                         territory.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontSize: 15,
-                              letterSpacing: -0.2,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  letterSpacing: -0.2,
+                                ),
                       ),
                       if (metaParts.isNotEmpty) ...[
                         const SizedBox(height: 2),
                         Text(
                           metaParts.join(' · '),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: colors.onSurfaceSubtle,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: colors.onSurfaceSubtle,
+                                  ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -284,9 +326,10 @@ class _TerritoryCard extends StatelessWidget {
                         const SizedBox(height: 5),
                         Text(
                           description,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: colors.onSurfaceVariant,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: colors.onSurfaceVariant,
+                                  ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

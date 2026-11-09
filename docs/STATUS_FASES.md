@@ -1,15 +1,15 @@
 # Status das Fases - Backlog API
 
-**Última Atualização**: 2026-08-19  
+**Última Atualização**: 2026-11-09  
 **Canvas executivo**: [ops/EXECUTIVE_CANVAS.md](./ops/EXECUTIVE_CANVAS.md)  
 **Fase 16**: ✅ Completa (Finalização Completa Fases 1-15)  
 **Fase 52**: ✅ Completa (CI/CD + pipelines)  
 **Prioridade atual**: 🔴 **FASE54** (config manual humana) + **FASE55** (v0 merchants/wallets/consumption) + **FASE62.0** (packs fiscais API) + **TI-0** (docs/contratos)  
 **Trilha nova**: 🟢 **Inteligência Territorial TI-0…TI-7** — TI-0 docs/contratos neste ciclo; MVP TI-1…TI-3 paralelo a 17–19  
 **Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
-**Login parity mobile**: 🟡 gate estrito preservado; medição local atual `1,03%` (`login.pixel-parity.spec.js`) ainda acima do limite de `1,00%`
-**Onboarding parity mobile**: 🟡 jornada incremental PR3 (localização -> territórios -> visitante) coberta por widget test + Playwright smoke/pixel parity; medição local atual `18,22%`
-**MainShell + Feed parity mobile**: 🟡 jornada incremental PR4 (top bar territorial + banner visitante + feed + filtros + bottom-nav) coberta por widget test + Playwright smoke; pixel parity local atual `17,61%` com artefatos separados de handoff/implementação/diff/composite
+**Login parity mobile**: 🟡 fora do escopo desta rodada; medição local de referência segue em `1,03%` (`login.pixel-parity.spec.js`), ainda acima do limite estrito de `1,00%`
+**Onboarding parity mobile**: 🟡 fora do escopo desta rodada; jornada incremental PR3 (localização -> territórios -> visitante) segue coberta por widget test + Playwright smoke/pixel parity, com medição local de referência em `18,22%`
+**MainShell + Feed parity mobile**: 🟡 jornada incremental PR4 (top bar territorial + banner visitante + feed + filtros + bottom-nav) com widget tests focados + smoke agregado Playwright verde; pixel parity local atual `17,35%`, com melhora regional em `visitorBanner` (`0,5942` -> `0,1286`) e `filterBar` (`0,6023` -> `0,1696`), mas gate estrito ainda falhando em `topBar`, `firstPost` e `bottomNav`
 **Capacidade hídrica**: 💧 **Corpos d'água curáveis** — [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); ponte WA-E1…E4 ✅; **WA-N1** NaturalAsset ponto (FASE24.0a)  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend), FASE62 (62.0)
 **Fases Complementares**: 1 (Fase 14.5)  

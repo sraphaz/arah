@@ -204,7 +204,8 @@ class _FeedListState extends ConsumerState<_FeedList> {
   void _onScroll() {
     final controller = widget.scrollController;
     final onNearBottom = widget.onScrollNearBottom;
-    if (controller == null || onNearBottom == null || !controller.hasClients) return;
+    if (controller == null || onNearBottom == null || !controller.hasClients)
+      return;
     final pos = controller.position;
     if (pos.pixels >= pos.maxScrollExtent - widget.loadMoreThreshold) {
       onNearBottom();
@@ -235,7 +236,8 @@ class _FeedListState extends ConsumerState<_FeedList> {
   void _openDetail(String postId) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PostDetailScreen(territoryId: widget.territoryId, postId: postId),
+        builder: (_) =>
+            PostDetailScreen(territoryId: widget.territoryId, postId: postId),
       ),
     );
   }
@@ -257,13 +259,19 @@ class _FeedListState extends ConsumerState<_FeedList> {
         title: Text(l10n.deletePost),
         content: Text(l10n.deletePostConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.delete)),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.cancel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.delete)),
         ],
       ),
     );
     if (confirmed != true) return;
-    await ref.read(feedNotifierProvider(widget.territoryId).notifier).deletePost(postId);
+    await ref
+        .read(feedNotifierProvider(widget.territoryId).notifier)
+        .deletePost(postId);
   }
 
   void _showPostMenu({required String postId, required bool canDelete}) {
@@ -276,7 +284,8 @@ class _FeedListState extends ConsumerState<_FeedList> {
           children: [
             if (canDelete)
               ListTile(
-                leading: Icon(Icons.delete_outline, color: Theme.of(ctx).colorScheme.error),
+                leading: Icon(Icons.delete_outline,
+                    color: Theme.of(ctx).colorScheme.error),
                 title: Text(l10n.deletePost),
                 onTap: () {
                   Navigator.pop(ctx);
@@ -296,7 +305,8 @@ class _FeedListState extends ConsumerState<_FeedList> {
       final item = rawItem as Map<String, dynamic>;
       final post = item['post'] as Map<String, dynamic>?;
       if (filterType == widget.neighborhoodFilterValue) {
-        final visibility = _normalizedVisibility(post?['visibility']?.toString());
+        final visibility =
+            _normalizedVisibility(post?['visibility']?.toString());
         return visibility != 'residents_only';
       }
       final type = post?['type']?.toString().toLowerCase();
@@ -370,7 +380,8 @@ class _FeedListState extends ConsumerState<_FeedList> {
   String _normalizedVisibility(String? value) {
     if (value == null) return '';
     final normalized = value
-        .replaceAllMapped(RegExp(r'([a-z0-9])([A-Z])'), (match) => '${match[1]}_${match[2]}')
+        .replaceAllMapped(
+            RegExp(r'([a-z0-9])([A-Z])'), (match) => '${match[1]}_${match[2]}')
         .replaceAll('-', '_')
         .toLowerCase();
     if (normalized == 'residentsonly') return 'residents_only';
@@ -379,7 +390,8 @@ class _FeedListState extends ConsumerState<_FeedList> {
 
   String _timeLabel(Map<String, dynamic>? item) {
     final post = item?['post'] as Map<String, dynamic>?;
-    final createdAt = DateTime.tryParse(post?['createdAtUtc']?.toString() ?? '');
+    final createdAt =
+        DateTime.tryParse(post?['createdAtUtc']?.toString() ?? '');
     if (createdAt == null) return '';
     final diff = DateTime.now().toUtc().difference(createdAt.toUtc());
     if (diff.inMinutes < 60) return '${diff.inMinutes.clamp(1, 59)}min';
@@ -407,17 +419,31 @@ class _FeedListState extends ConsumerState<_FeedList> {
               icon: Icons.article_outlined,
               title: l10n.noPostsHere,
               description: l10n.beFirstToPost,
-              actionLabel: widget.onGoToCreatePost != null ? l10n.createFirstPost : null,
+              actionLabel:
+                  widget.onGoToCreatePost != null ? l10n.createFirstPost : null,
               onAction: widget.onGoToCreatePost,
             ),
           ),
+          if (hasMore || isLoadingMore)
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: AppConstants.spacingLg),
+              child: Center(
+                child: isLoadingMore
+                    ? const CircularProgressIndicator()
+                    : TextButton(
+                        onPressed: onLoadMore,
+                        child: Text(l10n.loadMore),
+                      ),
+              ),
+            ),
         ],
       );
     }
     return ListView(
       controller: widget.scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(18, 0, 18, 4),
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
       children: [
         for (var index = 0; index < items.length; index += 1)
           _buildAnimatedCard(
@@ -427,20 +453,24 @@ class _FeedListState extends ConsumerState<_FeedList> {
             isLast: index == items.length - 1,
           ),
         const SizedBox(height: 14),
-        Center(
-          child: Text(
-            _footerLabel(context, territory),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontSize: 12.5,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  letterSpacing: 0.2,
-                ),
-            textAlign: TextAlign.center,
+        if (!hasMore &&
+            !isLoadingMore &&
+            _footerLabel(context, territory).isNotEmpty)
+          Center(
+            child: Text(
+              _footerLabel(context, territory),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 12.5,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    letterSpacing: 0.2,
+                  ),
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
         if (hasMore || isLoadingMore)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingLg),
+            padding:
+                const EdgeInsets.symmetric(vertical: AppConstants.spacingLg),
             child: Center(
               child: isLoadingMore
                   ? const CircularProgressIndicator()
@@ -463,16 +493,19 @@ class _FeedListState extends ConsumerState<_FeedList> {
   }) {
     final post = item?['post'] as Map<String, dynamic>?;
     final postId = post?['id']?.toString() ?? '';
-    final title = post?['title']?.toString() ?? AppLocalizations.of(context)!.postDefaultTitle;
+    final title = post?['title']?.toString() ??
+        AppLocalizations.of(context)!.postDefaultTitle;
     final content = post?['content']?.toString() ?? '';
     final postType = post?['type']?.toString();
-    final counts = FeedPostCounts.fromJson(item?['counts'] as Map<String, dynamic>?);
+    final counts =
+        FeedPostCounts.fromJson(item?['counts'] as Map<String, dynamic>?);
     final interactions = FeedUserInteractions.fromJson(
       item?['userInteractions'] as Map<String, dynamic>?,
     );
     final mediaUrls = _mediaUrls(item);
     final canDelete = _canDelete(item);
-    final notifier = ref.read(feedNotifierProvider(widget.territoryId).notifier);
+    final notifier =
+        ref.read(feedNotifierProvider(widget.territoryId).notifier);
 
     return Padding(
       padding: EdgeInsets.only(bottom: isLast ? 0 : 12),
@@ -507,14 +540,19 @@ class _FeedListState extends ConsumerState<_FeedList> {
           mediaUrls: mediaUrls,
           isPinned: _isPinned(item),
           onTap: postId.isEmpty ? null : () => _openDetail(postId),
-          onMorePressed: canDelete ? () => _showPostMenu(postId: postId, canDelete: canDelete) : null,
+          onMorePressed: canDelete
+              ? () => _showPostMenu(postId: postId, canDelete: canDelete)
+              : null,
           onLikePressed: postId.isEmpty
               ? null
-              : () => notifier.interact(postId: postId, action: FeedInteractionAction.like),
-          onCommentPressed: postId.isEmpty ? null : () => _openComments(postId, title),
+              : () => notifier.interact(
+                  postId: postId, action: FeedInteractionAction.like),
+          onCommentPressed:
+              postId.isEmpty ? null : () => _openComments(postId, title),
           onSharePressed: postId.isEmpty
               ? null
-              : () => notifier.interact(postId: postId, action: FeedInteractionAction.share),
+              : () => notifier.interact(
+                  postId: postId, action: FeedInteractionAction.share),
         ),
       ),
     );
@@ -541,10 +579,10 @@ class _FeedTypeFilterBar extends StatelessWidget {
   final ValueChanged<String?> onTypeSelected;
 
   static Map<String?, String> _options(AppLocalizations l10n) => {
-    null: l10n.filterAll,
-    'alert': 'Avisos',
-    '__public_only__': 'Vizinhança',
-  };
+        null: l10n.filterAll,
+        'alert': 'Avisos',
+        '__public_only__': 'Vizinhança',
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -555,8 +593,9 @@ class _FeedTypeFilterBar extends StatelessWidget {
       padding: EdgeInsets.zero,
       child: Row(
         children: options.entries.map((entry) {
-          final selected = selectedType?.toLowerCase() == entry.key?.toLowerCase() ||
-              (selectedType == null && entry.key == null);
+          final selected =
+              selectedType?.toLowerCase() == entry.key?.toLowerCase() ||
+                  (selectedType == null && entry.key == null);
           return Padding(
             padding: const EdgeInsets.only(right: AppConstants.spacingSm),
             child: _FeedFilterChip(
@@ -591,17 +630,21 @@ class _FeedFilterChip extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.radiusXl),
         child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppConstants.radiusXl),
             color: selected ? colors.accentSubtle : Colors.transparent,
-            border: Border.all(color: selected ? colors.accentBorder : colors.outline),
+            border: Border.all(
+              color: selected ? Colors.transparent : colors.outline,
+            ),
           ),
           child: Text(
             label,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
                   color: selected ? colors.primary : colors.onSurfaceVariant,
-                  letterSpacing: 0.1,
+                  letterSpacing: -0.1,
                 ),
           ),
         ),

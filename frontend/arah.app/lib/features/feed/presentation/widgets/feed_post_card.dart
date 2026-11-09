@@ -95,15 +95,28 @@ class FeedPostCard extends StatelessWidget {
     final colors = context.appColors;
     final typeColor = _colorForType(type);
     final showAlertPill = type == FeedPostType.alert;
-    final hasMetaLine = (authorHandle?.isNotEmpty ?? false) || (timeLabel?.isNotEmpty ?? false);
+    final hasMetaLine =
+        (authorHandle?.isNotEmpty ?? false) || (timeLabel?.isNotEmpty ?? false);
+    final isResidentAuthor = authorRole != null &&
+        ArahRoleBadge.kindFrom(authorRole!) == ArahRoleKind.resident;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.14),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppDesignTokens.surfaceCardGradientStart,
+            AppDesignTokens.surfaceCardGradientEnd,
+          ],
+        ),
         borderRadius: BorderRadius.circular(AppConstants.radiusCard),
         border: Border.all(
-          color: isPinned ? AppDesignTokens.warning.withValues(alpha: 0.28) : colors.outline,
+          color: isPinned
+              ? AppDesignTokens.warning.withValues(alpha: 0.28)
+              : colors.outline,
         ),
+        boxShadow: AppDesignTokens.elevation(isPinned ? 3 : 2, isDark: true),
       ),
       child: Material(
         color: Colors.transparent,
@@ -118,128 +131,219 @@ class FeedPostCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                if (isPinned) ...[
-                  Row(
-                    children: [
-                      const ArahMaterialSymbol(
-                        'push_pin',
-                        size: 14,
-                        fill: 1,
-                        color: AppDesignTokens.warning,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        'Fixado pelo conselho',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              fontSize: 11.5,
-                              fontWeight: FontWeight.w600,
-                              color: AppDesignTokens.warning,
-                            ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 11),
-                ],
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _FeedAvatar(
-                      initial: authorInitial ?? authorName,
-                      avatarUrl: authorAvatarUrl,
-                    ),
-                    const SizedBox(width: 11),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    if (isPinned) ...[
+                      Row(
                         children: [
-                          Wrap(
-                            spacing: 7,
-                            runSpacing: 4,
-                            crossAxisAlignment: WrapCrossAlignment.center,
+                          const ArahMaterialSymbol(
+                            'push_pin',
+                            size: 14,
+                            fill: 1,
+                            color: AppDesignTokens.warning,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            'Fixado pelo conselho',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppDesignTokens.warning,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 11),
+                    ],
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _FeedAvatar(
+                          name: authorInitial ?? authorName,
+                          avatarUrl: authorAvatarUrl,
+                          resident: isResidentAuthor,
+                        ),
+                        const SizedBox(width: 11),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                authorName,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      fontSize: 15,
-                                      letterSpacing: -0.2,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      authorName,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                            fontSize: 15,
+                                            letterSpacing: -0.2,
+                                          ),
                                     ),
+                                  ),
+                                  if (authorRole != null &&
+                                      authorRole!.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 7),
+                                      child: ArahRoleBadge(role: authorRole!),
+                                    ),
+                                ],
                               ),
-                              if (authorRole != null && authorRole!.isNotEmpty)
-                                ArahRoleBadge(role: authorRole!),
+                              if (hasMetaLine ||
+                                  (visibilityLabel?.isNotEmpty ?? false)) ...[
+                                const SizedBox(height: 1),
+                                Wrap(
+                                  spacing: 6,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    if (authorHandle != null &&
+                                        authorHandle!.isNotEmpty)
+                                      Text(
+                                        '@$authorHandle',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontSize: 12.5,
+                                              color: colors.onSurfaceSubtle,
+                                            ),
+                                      ),
+                                    if (authorHandle != null &&
+                                        authorHandle!.isNotEmpty &&
+                                        timeLabel != null &&
+                                        timeLabel!.isNotEmpty)
+                                      Text(
+                                        '·',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontSize: 12.5,
+                                              color: colors.onSurfaceSubtle
+                                                  .withValues(alpha: 0.6),
+                                            ),
+                                      ),
+                                    if (timeLabel != null &&
+                                        timeLabel!.isNotEmpty)
+                                      Text(
+                                        timeLabel!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontSize: 12.5,
+                                              color: colors.onSurfaceSubtle,
+                                            ),
+                                      ),
+                                    if (visibilityLabel != null &&
+                                        visibilityLabel!.isNotEmpty) ...[
+                                      Text(
+                                        '·',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontSize: 12.5,
+                                              color: colors.onSurfaceSubtle
+                                                  .withValues(alpha: 0.6),
+                                            ),
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ArahMaterialSymbol(
+                                            'lock',
+                                            size: 12,
+                                            color: colors.primary,
+                                          ),
+                                          const SizedBox(width: 3),
+                                          Text(
+                                            visibilityLabel!,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  fontSize: 12,
+                                                  color: colors.primary,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ],
                             ],
                           ),
-                          if (hasMetaLine || (visibilityLabel?.isNotEmpty ?? false)) ...[
-                            const SizedBox(height: 1),
-                            Wrap(
-                              spacing: 6,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                if (authorHandle != null && authorHandle!.isNotEmpty)
-                                  Text(
-                                    '@$authorHandle',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontSize: 12.5,
-                                          color: colors.onSurfaceSubtle,
-                                        ),
+                        ),
+                        if (showAlertPill && !compact || onMorePressed != null)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (showAlertPill && !compact)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: AppDesignTokens.alertDim,
+                                    borderRadius: BorderRadius.circular(
+                                        AppConstants.radiusXl),
                                   ),
-                                if (authorHandle != null &&
-                                    authorHandle!.isNotEmpty &&
-                                    timeLabel != null &&
-                                    timeLabel!.isNotEmpty)
-                                  Text(
-                                    '·',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontSize: 12.5,
-                                          color: colors.onSurfaceSubtle.withValues(alpha: 0.6),
-                                        ),
-                                  ),
-                                if (timeLabel != null && timeLabel!.isNotEmpty)
-                                  Text(
-                                    timeLabel!,
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontSize: 12.5,
-                                          color: colors.onSurfaceSubtle,
-                                        ),
-                                  ),
-                                if (visibilityLabel != null && visibilityLabel!.isNotEmpty) ...[
-                                  Text(
-                                    '·',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontSize: 12.5,
-                                          color: colors.onSurfaceSubtle.withValues(alpha: 0.6),
-                                        ),
-                                  ),
-                                  Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      ArahMaterialSymbol(
-                                        'lock',
-                                        size: 12,
-                                        color: colors.primary,
+                                      const ArahMaterialSymbol(
+                                        'warning',
+                                        size: 14,
+                                        fill: 1,
+                                        color: AppDesignTokens.warning,
                                       ),
-                                      const SizedBox(width: 3),
+                                      const SizedBox(width: 5),
                                       Text(
-                                        visibilityLabel!,
-                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                              fontSize: 12,
-                                              color: colors.primary,
+                                        'Alerta',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall
+                                            ?.copyWith(
+                                              fontSize: 11.5,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppDesignTokens.warning,
                                             ),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ],
-                            ),
-                          ],
-                        ],
-                      ),
+                                ),
+                              if (showAlertPill &&
+                                  !compact &&
+                                  onMorePressed != null)
+                                const SizedBox(width: 6),
+                              if (onMorePressed != null)
+                                IconButton(
+                                  icon: const Icon(Icons.more_horiz),
+                                  onPressed: onMorePressed,
+                                  style: IconButton.styleFrom(
+                                    minimumSize: const Size(36, 36),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                ),
+                            ],
+                          ),
+                      ],
                     ),
-                    if (showAlertPill && !compact)
+                    if (showAlertPill && compact) ...[
+                      const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: AppDesignTokens.warning.withValues(alpha: 0.16),
-                          borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                          color: AppDesignTokens.alertDim,
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radiusXl),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -253,7 +357,10 @@ class FeedPostCard extends StatelessWidget {
                             const SizedBox(width: 5),
                             Text(
                               'Alerta',
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
                                     fontSize: 11.5,
                                     fontWeight: FontWeight.w600,
                                     color: AppDesignTokens.warning,
@@ -261,147 +368,118 @@ class FeedPostCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
-                    else if (onMorePressed != null)
-                      IconButton(
-                        icon: const Icon(Icons.more_horiz),
-                        onPressed: onMorePressed,
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(36, 36),
-                          padding: EdgeInsets.zero,
-                        ),
                       ),
-                  ],
-                ),
-                if (showAlertPill && compact) ...[
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppDesignTokens.warning.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                    ],
+                    const SizedBox(height: 13),
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontSize: 16.5,
+                            height: 1.3,
+                            letterSpacing: -0.3,
+                          ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const ArahMaterialSymbol(
-                          'warning',
-                          size: 14,
-                          fill: 1,
-                          color: AppDesignTokens.warning,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Alerta',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w600,
-                                color: AppDesignTokens.warning,
+                    if (content != null && content!.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        content!,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 13.6,
+                              color: colors.onSurfaceVariant,
+                              height: 1.45,
+                            ),
+                      ),
+                    ],
+                    if (mediaUrls.isNotEmpty) ...[
+                      const SizedBox(height: 13),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Stack(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: mediaUrls.first,
+                              height: 168,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => Container(
+                                height: 168,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                                child: const Center(
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 2)),
                               ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 13),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontSize: 17,
-                        height: 1.3,
-                        letterSpacing: -0.3,
-                      ),
-                ),
-                if (content != null && content!.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  Text(
-                    content!,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontSize: 14.5,
-                          color: colors.onSurfaceVariant,
-                          height: 1.55,
-                        ),
-                  ),
-                ],
-                if (mediaUrls.isNotEmpty) ...[
-                  const SizedBox(height: 13),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: Stack(
-                      children: [
-                        CachedNetworkImage(
-                          imageUrl: mediaUrls.first,
-                          height: 168,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          placeholder: (_, __) => Container(
-                            height: 168,
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                          ),
-                          errorWidget: (_, __, ___) => Container(
-                            height: 120,
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                            child: const Center(child: Icon(Icons.broken_image_outlined)),
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [
-                                  Colors.black.withValues(alpha: 0.35),
-                                  Colors.transparent,
-                                ],
+                              errorWidget: (_, __, ___) => Container(
+                                height: 120,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                                child: const Center(
+                                    child: Icon(Icons.broken_image_outlined)),
                               ),
                             ),
+                            Positioned.fill(
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    colors: [
+                                      Colors.black.withValues(alpha: 0.35),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 14),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Wrap(
+                            spacing: 0,
+                            runSpacing: 8,
+                            children: [
+                              _InteractionButton(
+                                symbol: 'favorite',
+                                fill: isLiked ? 1 : 0,
+                                count: likeCount,
+                                color: isLiked
+                                    ? typeColor
+                                    : colors.onSurfaceSubtle,
+                                onPressed: onLikePressed,
+                              ),
+                              _InteractionButton(
+                                symbol: 'mode_comment',
+                                count: commentCount,
+                                color: colors.onSurfaceSubtle,
+                                onPressed: onCommentPressed,
+                              ),
+                              _InteractionButton(
+                                symbol: isShared ? 'send' : 'ios_share',
+                                fill: isShared ? 1 : 0,
+                                count: shareCount,
+                                color: isShared
+                                    ? colors.primary
+                                    : colors.onSurfaceSubtle,
+                                onPressed: onSharePressed,
+                              ),
+                            ],
                           ),
+                        ),
+                        const ArahMaterialSymbol(
+                          'bookmark_border',
+                          size: 19,
+                          color: AppDesignTokens.onSurfaceSubtle,
                         ),
                       ],
                     ),
-                  ),
-                ],
-                const SizedBox(height: 14),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Wrap(
-                        spacing: 0,
-                        runSpacing: 8,
-                        children: [
-                          _InteractionButton(
-                            symbol: 'favorite',
-                            fill: isLiked ? 1 : 0,
-                            count: likeCount,
-                            color: isLiked ? typeColor : colors.onSurfaceSubtle,
-                            onPressed: onLikePressed,
-                          ),
-                          _InteractionButton(
-                            symbol: 'mode_comment',
-                            count: commentCount,
-                            color: colors.onSurfaceSubtle,
-                            onPressed: onCommentPressed,
-                          ),
-                          _InteractionButton(
-                            symbol: isShared ? 'send' : 'ios_share',
-                            fill: isShared ? 1 : 0,
-                            count: shareCount,
-                            color: isShared ? colors.primary : colors.onSurfaceSubtle,
-                            onPressed: onSharePressed,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const ArahMaterialSymbol(
-                      'bookmark_border',
-                      size: 19,
-                      color: AppDesignTokens.onSurfaceSubtle,
-                    ),
-                  ],
-                ),
                   ],
                 ),
               );
@@ -415,32 +493,79 @@ class FeedPostCard extends StatelessWidget {
 
 class _FeedAvatar extends StatelessWidget {
   const _FeedAvatar({
-    required this.initial,
+    required this.name,
     this.avatarUrl,
+    this.resident = false,
   });
 
-  final String initial;
+  final String name;
   final String? avatarUrl;
+  final bool resident;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return CircleAvatar(
-      radius: 21,
-      backgroundColor: theme.colorScheme.primaryContainer,
-      backgroundImage: avatarUrl != null && avatarUrl!.isNotEmpty
-          ? CachedNetworkImageProvider(avatarUrl!)
-          : null,
-      child: avatarUrl == null || avatarUrl!.isEmpty
-          ? Text(
-              initial.isNotEmpty ? initial[0].toUpperCase() : '?',
-              style: TextStyle(
-                color: theme.colorScheme.onPrimaryContainer,
-                fontSize: AppDesignTokens.fontSizeXs,
-                fontWeight: FontWeight.w600,
+    final initials = name
+        .split(RegExp(r'[ .]'))
+        .where((segment) => segment.isNotEmpty)
+        .take(2)
+        .map((segment) => segment[0].toUpperCase())
+        .join();
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppDesignTokens.greenDeep,
+            image: avatarUrl != null && avatarUrl!.isNotEmpty
+                ? DecorationImage(
+                    image: CachedNetworkImageProvider(avatarUrl!),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+            boxShadow: AppDesignTokens.elevation(2, isDark: true),
+          ),
+          alignment: Alignment.center,
+          child: avatarUrl == null || avatarUrl!.isEmpty
+              ? Text(
+                  initials.isNotEmpty ? initials : '?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: AppDesignTokens.fontFamilyDisplay,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
+                  ),
+                )
+              : null,
+        ),
+        if (resident)
+          Positioned(
+            right: -1,
+            bottom: -1,
+            child: Container(
+              width: 16.8,
+              height: 16.8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppDesignTokens.greenSolid,
+                border: Border.all(
+                    color: AppDesignTokens.surfaceElevated, width: 2),
               ),
-            )
-          : null,
+              child: const Center(
+                child: ArahMaterialSymbol(
+                  'verified',
+                  size: 11,
+                  fill: 1,
+                  color: AppDesignTokens.textOnAccent,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

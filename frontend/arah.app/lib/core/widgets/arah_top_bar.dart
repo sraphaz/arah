@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../providers/current_territory_name_provider.dart';
 import '../theme/app_design_tokens.dart';
 import '../../l10n/app_localizations.dart';
-import '../../features/chat/presentation/providers/chat_provider.dart';
 import '../../features/notifications/presentation/providers/notifications_provider.dart';
 import '../../features/territories/presentation/widgets/territory_indicator_bar.dart';
 import 'arah_material_symbol.dart';
@@ -20,14 +19,11 @@ class ArahTopBar extends ConsumerWidget {
     final territory = ref.watch(currentTerritoryItemProvider);
     final colors = context.appColors;
     final notifications = ref.watch(notificationsProvider);
-    final chatState = ref.watch(chatListProvider);
-    final hasUnreadNotifications = notifications.items.any((item) => !item.isRead);
-    final unreadChats = [
-      ...chatState.channels,
-      ...chatState.groups,
-    ].fold<int>(0, (sum, conversation) => sum + conversation.unreadCount);
-    final territoryName =
-        territory != null && territory.name.isNotEmpty ? territory.name : l10n.chooseTerritory;
+    final hasUnreadNotifications =
+        notifications.items.any((item) => !item.isRead);
+    final territoryName = territory != null && territory.name.isNotEmpty
+        ? territory.name
+        : l10n.chooseTerritory;
 
     return SafeArea(
       bottom: false,
@@ -39,7 +35,8 @@ class ArahTopBar extends ConsumerWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => TerritoryIndicatorBar.showTerritorySelectorSheet(context),
+                  onTap: () =>
+                      TerritoryIndicatorBar.showTerritorySelectorSheet(context),
                   borderRadius: BorderRadius.circular(18),
                   child: Row(
                     children: [
@@ -48,7 +45,8 @@ class ArahTopBar extends ConsumerWidget {
                         height: 40,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(13),
-                          border: Border.all(color: AppDesignTokens.outlineStrong),
+                          border:
+                              Border.all(color: AppDesignTokens.outlineStrong),
                           gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -77,7 +75,10 @@ class ArahTopBar extends ConsumerWidget {
                           children: [
                             Text(
                               'TERRITÓRIO',
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1.2,
@@ -90,7 +91,10 @@ class ArahTopBar extends ConsumerWidget {
                                 Flexible(
                                   child: Text(
                                     territoryName,
-                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
                                           fontSize: 19,
                                           letterSpacing: -0.3,
                                         ),
@@ -118,7 +122,7 @@ class ArahTopBar extends ConsumerWidget {
             _TopIconButton(
               tooltip: l10n.chat,
               symbol: 'forum',
-              showBadge: unreadChats > 0,
+              showBadge: false,
               onPressed: () => context.push('/chat'),
             ),
             const SizedBox(width: 8),
@@ -184,7 +188,8 @@ class _TopIconButton extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppDesignTokens.warning,
-                        border: Border.all(color: AppDesignTokens.surfaceElevated, width: 1.5),
+                        border: Border.all(
+                            color: AppDesignTokens.surfaceElevated, width: 1.5),
                       ),
                     ),
                   ),

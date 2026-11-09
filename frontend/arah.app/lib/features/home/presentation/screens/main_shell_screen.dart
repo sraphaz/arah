@@ -72,7 +72,7 @@ class _MainShellScreenState extends ConsumerState<MainShellScreen> {
                 const ArahTopBar(),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 106),
+                    padding: const EdgeInsets.only(bottom: 96),
                     child: IndexedStack(
                       index: currentIndex,
                       children: _buildScreens(),
@@ -143,7 +143,7 @@ class _MainShellBottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 30),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: items.map((item) {
@@ -302,7 +302,7 @@ class _CenterNavButton extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 10.5,
                       fontWeight: FontWeight.w500,
-                      color: selected ? colors.primary : colors.onSurfaceSubtle,
+                      color: colors.onSurfaceSubtle,
                       letterSpacing: 0.1,
                     ),
               ),

@@ -49,7 +49,7 @@ test('main shell opens on the visitor feed with canonical navigation and filters
     page.getByRole('group', { name: /Roda de conversa: água e saneamento/i }),
   ).toHaveCount(0);
 
-  await tapTextCenter(page, page.getByText('Vizinhança', { exact: true }));
+  await tapTextCenter(page, page.getByText('Vizinhança', { exact: true }).first());
   await expect(
     page.getByRole('group', { name: /Chegou robalo fresco na peixaria/i }),
   ).toBeVisible();

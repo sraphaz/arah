@@ -18,6 +18,10 @@ class AppDesignTokens {
   static const Color surface = Color(0xFF0B0C0A); // --premium-bg
   static const Color surfaceElevated = Color(0xFF0E100D); // --premium-surface
   static const Color surfaceCard = Color(0xFF191B17); // --premium-card
+  static const Color surfaceCardGradientStart = Color(0xFF1C201A);
+  static const Color surfaceCardGradientEnd = Color(0xFF161814);
+  static const Color surfaceCardHighGradientStart = Color(0xFF242821);
+  static const Color surfaceCardHighGradientEnd = Color(0xFF1C201A);
   static const Color onSurface = Color(0xFFF2F4EE); // --premium-fg
   static const Color onSurfaceMuted = Color(0xFFA6AC9E); // --premium-fg2
   static const Color onSurfaceSubtle = Color(0xFF6B7164); // --premium-fg3
@@ -29,6 +33,10 @@ class AppDesignTokens {
   static const Color success = Color(0xFFA6D6B9);
   static const Color info = Color(0xFF6FC5D6); // --premium-water
   static const Color earth = Color(0xFF8B7355);
+  static const Color greenDeep = Color(0xFF2B6246);
+  static const Color greenSolid = Color(0xFF81C784);
+  static const Color greenDim = Color(0x2181C784);
+  static const Color alertDim = Color(0x24E8A06A);
   static const Color textOnAccent = Color(0xFF0C1B10);
 
   static const Color accentSubtle = Color(0x24A6D6B9);

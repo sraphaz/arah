@@ -36,16 +36,24 @@ class VisitorBanner extends ConsumerWidget {
             child: Ink(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppConstants.radiusCard),
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.16),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppDesignTokens.surfaceCardHighGradientStart,
+                    AppDesignTokens.surfaceCardGradientStart,
+                  ],
+                ),
                 border: Border.all(color: colors.outline),
+                boxShadow: AppDesignTokens.elevation(2, isDark: true),
               ),
               child: Padding(
                 padding: EdgeInsets.all(compact ? 12 : 14),
                 child: Row(
                   children: [
                     Container(
-                      width: compact ? 34 : 38,
-                      height: compact ? 34 : 38,
+                      width: compact ? 34 : 36,
+                      height: compact ? 34 : 36,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(11),
                         color: colors.accentSubtle,
@@ -66,23 +74,29 @@ class VisitorBanner extends ConsumerWidget {
                         children: [
                           Text(
                             territoryName != null && territoryName.isNotEmpty
-                                ? 'Você é visitante de $territoryName'
+                                ? l10n.visitorBannerTitleWithTerritory(
+                                    territoryName)
                                 : l10n.visitorBannerTitle,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  fontSize: compact ? 13 : 13.5,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  fontSize: compact ? 12.8 : 13.2,
                                   color: colors.onSurface,
                                   fontFamily: AppDesignTokens.fontFamilyBody,
+                                  fontWeight: FontWeight.w600,
                                 ),
                           ),
                           const SizedBox(height: 1),
                           Text(
-                            'Confirme residência para ver posts e votar.',
-                            maxLines: compact ? 3 : 2,
+                            l10n.visitorBannerSubtitle,
+                            maxLines: compact ? 2 : 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontSize: compact ? 11.5 : 12,
-                                  color: colors.onSurfaceSubtle,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontSize: 11.5,
+                                      color: colors.onSurfaceSubtle,
+                                    ),
                           ),
                         ],
                       ),
@@ -91,7 +105,7 @@ class VisitorBanner extends ConsumerWidget {
                       const SizedBox(width: 8),
                       ArahMaterialSymbol(
                         'chevron_right',
-                        size: 20,
+                        size: 18,
                         color: colors.onSurfaceSubtle,
                       ),
                     ],

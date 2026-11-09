@@ -60,18 +60,21 @@ public static class ObservabilityExtensions
     }
 
     /// <summary>
-    /// Configura OpenTelemetry (tracing + metrics) com exportadores OTLP/Jaeger/Console.
+    /// Configura OpenTelemetry (tracing + metrics) com exportadores OTLP/Console.
     /// O endpoint Prometheus é exposto no pipeline via UseMetricServer().
     /// </summary>
     public static IServiceCollection AddArahObservability(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         var otlpEndpoint = configuration["OpenTelemetry:Otlp:Endpoint"];
-        var jaegerEndpoint = configuration["OpenTelemetry:Jaeger:Endpoint"];
 
         var otelBuilder = services.AddOpenTelemetry()
             .ConfigureResource(ConfigureOpenTelemetryResource);
 
-        otelBuilder.WithTracing(tracing => ConfigureOpenTelemetryTracing(tracing, otlpEndpoint, jaegerEndpoint, environment));
+        otelBuilder.WithTracing(
+            tracing => ConfigureOpenTelemetryTracing(
+                tracing,
+                otlpEndpoint,
+                environment));
         otelBuilder.WithMetrics(metrics => ConfigureOpenTelemetryMetrics(metrics, otlpEndpoint, environment));
 
         return services;
@@ -85,7 +88,6 @@ public static class ObservabilityExtensions
     private static void ConfigureOpenTelemetryTracing(
         TracerProviderBuilder tracing,
         string? otlpEndpoint,
-        string? jaegerEndpoint,
         IWebHostEnvironment environment)
     {
         tracing
@@ -97,10 +99,6 @@ public static class ObservabilityExtensions
         if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         {
             tracing.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
-        }
-        else if (!string.IsNullOrWhiteSpace(jaegerEndpoint))
-        {
-            tracing.AddJaegerExporter(options => options.Endpoint = new Uri(jaegerEndpoint));
         }
         else if (environment.IsDevelopment())
         {

@@ -106,8 +106,8 @@ class FeedPostCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppDesignTokens.surfaceCard,
-            AppDesignTokens.surfaceElevated,
+            AppDesignTokens.surfaceCardGradientStart,
+            AppDesignTokens.surfaceCardGradientEnd,
           ],
         ),
         borderRadius: BorderRadius.circular(AppConstants.radiusCard),
@@ -523,7 +523,7 @@ class _FeedAvatar extends StatelessWidget {
           height: 42,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppDesignTokens.primaryHover,
+            color: AppDesignTokens.greenDeep,
             image: avatarUrl != null && avatarUrl!.isNotEmpty
                 ? DecorationImage(
                     image: CachedNetworkImageProvider(avatarUrl!),
@@ -536,8 +536,8 @@ class _FeedAvatar extends StatelessWidget {
           child: avatarUrl == null || avatarUrl!.isEmpty
               ? Text(
                   initials.isNotEmpty ? initials : '?',
-                  style: TextStyle(
-                    color: AppDesignTokens.onSurface,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontFamily: AppDesignTokens.fontFamilyDisplay,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -555,7 +555,7 @@ class _FeedAvatar extends StatelessWidget {
               height: 16.8,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppDesignTokens.primaryHover,
+                color: AppDesignTokens.greenSolid,
                 border: Border.all(
                     color: AppDesignTokens.surfaceElevated, width: 2),
               ),

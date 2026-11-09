@@ -22,6 +22,8 @@ class AppDesignTokens {
   static const Color surfaceCardGradientEnd = Color(0xFF161814);
   static const Color surfaceCardHighGradientStart = Color(0xFF242821);
   static const Color surfaceCardHighGradientEnd = Color(0xFF1C201A);
+  static const Color topBarLogoGradientStart = Color(0xFF1F2A22);
+  static const Color topBarLogoGradientEnd = Color(0xFF141A15);
   static const Color onSurface = Color(0xFFF2F4EE); // --premium-fg
   static const Color onSurfaceMuted = Color(0xFFA6AC9E); // --premium-fg2
   static const Color onSurfaceSubtle = Color(0xFF6B7164); // --premium-fg3
@@ -164,10 +166,10 @@ class AppDesignTokens {
         ];
       case 3:
         return [
-          BoxShadow(
-            color: const Color(0x4D81C784),
+          const BoxShadow(
+            color: Color(0x4D81C784),
             blurRadius: 18,
-            offset: const Offset(0, 6),
+            offset: Offset(0, 6),
           ),
         ];
       default:

@@ -40,8 +40,8 @@ class VisitorBanner extends ConsumerWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    AppDesignTokens.surfaceCardHighGradientStart,
-                    AppDesignTokens.surfaceCardGradientStart,
+                    AppDesignTokens.surfaceCard,
+                    AppDesignTokens.surfaceElevated,
                   ],
                 ),
                 border: Border.all(color: colors.outline),

@@ -9,7 +9,7 @@
 **Design app**: ✅ Ondas A–I (APP-DS-01..17) — shell, jornadas, checkout PIX, CRUD/foto produtos, saldo vendedor, QR PIX, Em breve  
 **Login parity mobile**: 🟡 fora do escopo desta rodada; medição local de referência segue em `1,03%` (`login.pixel-parity.spec.js`), ainda acima do limite estrito de `1,00%`
 **Onboarding parity mobile**: 🟡 fora do escopo desta rodada; jornada incremental PR3 (localização -> territórios -> visitante) segue coberta por widget test + Playwright smoke/pixel parity, com medição local de referência em `18,22%`
-**MainShell + Feed parity mobile**: 🟡 jornada incremental PR4 (top bar territorial + banner visitante + feed + filtros + bottom-nav) com widget tests focados + smoke agregado Playwright verde; pixel parity local atual `17,84%`, com melhora regional em `visitorBanner` (`0,5942` -> `0,1287`), `filterBar` (`0,6023` -> `0,1696`) e `firstPost` (`0,2670` -> `0,1804`), mas gate estrito ainda falhando em `topBar`, `firstPost` e `bottomNav`
+**MainShell + Feed parity mobile**: 🟡 jornada incremental PR4 (top bar territorial + banner visitante + feed + filtros + bottom-nav) com widget tests focados + smoke agregado Playwright verde; pixel parity local atual `17,64%`, com melhora regional em `visitorBanner` (`0,5942` -> `0,1286`), `filterBar` (`0,6023` -> `0,1696`) e `firstPost` (`0,2670` -> `0,1846`), mas gate estrito ainda falhando em `topBar`, `firstPost` e `bottomNav`
 **Capacidade hídrica**: 💧 **Corpos d'água curáveis** — [CORPOS_DAGUA_TERRITORIO](./backlog-api/CORPOS_DAGUA_TERRITORIO.md); ponte WA-E1…E4 ✅; **WA-N1** NaturalAsset ponto (FASE24.0a)  
 **Fases em Andamento**: FASE54 (ops), FASE55 (backend), FASE62 (62.0)
 **Fases Complementares**: 1 (Fase 14.5)  

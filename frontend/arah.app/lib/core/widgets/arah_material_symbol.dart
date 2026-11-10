@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 /// Renderiza um glifo da família Material Symbols Rounded usando ligatures,
@@ -26,55 +24,24 @@ class ArahMaterialSymbol extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTestBinding =
-        WidgetsBinding.instance.runtimeType.toString().contains('Test');
-    if (isTestBinding) {
-      return SizedBox.square(
-        dimension: size,
-        child: Center(
+    final offset = _resolveOpticalOffset(name, size);
+    return SizedBox.square(
+      dimension: size,
+      child: Center(
+        child: Transform.translate(
+          offset: offset,
           child: Icon(
             _resolveIcon(name, filled: fill > 0),
             size: size,
             color: color,
           ),
         ),
-      );
-    }
-
-    return SizedBox.square(
-      dimension: size,
-      child: Center(
-        child: Transform.translate(
-          offset: Offset(0, -(size * 0.03)),
-          child: Text(
-            name,
-            textAlign: TextAlign.center,
-            textHeightBehavior: const TextHeightBehavior(
-              applyHeightToFirstAscent: false,
-              applyHeightToLastDescent: false,
-              leadingDistribution: TextLeadingDistribution.even,
-            ),
-            strutStyle: const StrutStyle(
-              forceStrutHeight: true,
-              height: 1,
-              leading: 0,
-            ),
-            style: TextStyle(
-              fontFamily: 'MaterialSymbolsRounded',
-              fontSize: size,
-              height: 1,
-              color: color,
-              fontVariations: [
-                FontVariation('FILL', fill.toDouble()),
-                FontVariation('wght', weight),
-                FontVariation('GRAD', grade),
-                FontVariation('opsz', opticalSize),
-              ],
-            ),
-          ),
-        ),
       ),
     );
+  }
+
+  Offset _resolveOpticalOffset(String value, double iconSize) {
+    return Offset.zero;
   }
 
   IconData _resolveIcon(String value, {required bool filled}) {

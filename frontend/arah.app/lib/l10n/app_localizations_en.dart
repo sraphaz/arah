@@ -1263,8 +1263,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get visitorBannerTitle => 'You are visiting as a guest';
 
   @override
+  String visitorBannerTitleWithTerritory(String territoryName) {
+    return 'You are visiting $territoryName';
+  }
+
+  @override
+  String get visitorBannerSubtitle =>
+      'Confirm residency to see posts and vote.';
+
+  @override
   String get visitorBannerCta =>
       'Confirm residency to vote and see resident-only content';
+
+  @override
+  String get territoryMembershipHint =>
+      'You participate as a resident or visitor.';
 
   @override
   String get visitor => 'Visitor';

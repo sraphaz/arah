@@ -341,7 +341,7 @@
   "errorCreateAlert": "Erro ao criar alerta.",
   "errorLoadAlerts": "Não foi possível carregar alertas.",
   "alertsRequireResidency": "Alertas do território exigem residência ou curadoria.",
-  "filterAll": "Todos",
+  "filterAll": "Tudo",
   "postDefaultTitle": "Post",
   "chooseTerritoryBeforePost": "Escolha um território antes de publicar.",
   "addImage": "Adicionar imagem",
@@ -477,7 +477,15 @@
   "serviceAiAssistant": "Assistente IA",
   "serviceAchievements": "Conquistas",
   "visitorBannerTitle": "Você está como visitante",
+  "visitorBannerTitleWithTerritory": "Você é visitante de {territoryName}",
+  "@visitorBannerTitleWithTerritory": {
+    "placeholders": {
+      "territoryName": {}
+    }
+  },
+  "visitorBannerSubtitle": "Confirme residência para ver posts e votar.",
   "visitorBannerCta": "Confirme residência para votar e ver conteúdo de moradores",
+  "territoryMembershipHint": "Você participa como morador ou visitante.",
   "visitor": "Visitante",
   "resident": "Morador",
   "curator": "Curador",

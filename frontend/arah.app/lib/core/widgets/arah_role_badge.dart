@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/constants.dart';
 import '../theme/app_design_tokens.dart';
+import 'arah_material_symbol.dart';
 import '../../l10n/app_localizations.dart';
 
 /// Papel territorial normalizado para o badge.
@@ -40,19 +41,19 @@ class ArahRoleBadge extends StatelessWidget {
     final (label, icon, bg, fg) = switch (kind) {
       ArahRoleKind.resident => (
           l10n?.resident ?? 'Morador',
-          Icons.cottage_outlined,
-          colors.accentSubtle,
+          'cottage',
+          colors.primary.withValues(alpha: 0.13),
           colors.primary,
         ),
       ArahRoleKind.curator => (
           l10n?.curator ?? 'Curador',
-          Icons.verified_outlined,
+          'verified',
           colors.info.withValues(alpha: 0.18),
           colors.info,
         ),
       ArahRoleKind.visitor => (
           l10n?.visitor ?? 'Visitante',
-          Icons.explore_outlined,
+          'explore',
           colors.onSurfaceSubtle.withValues(alpha: 0.14),
           colors.onSurfaceVariant,
         ),
@@ -62,10 +63,7 @@ class ArahRoleBadge extends StatelessWidget {
       label: label,
       excludeSemantics: true,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.spacingSm,
-          vertical: AppConstants.spacingXs,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(AppConstants.radiusXl),
@@ -73,14 +71,23 @@ class ArahRoleBadge extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: AppConstants.iconSizeSm, color: fg),
-            const SizedBox(width: AppConstants.spacingXs),
+            ArahMaterialSymbol(
+              icon,
+              size: 12.5,
+              fill:
+                  kind == ArahRoleKind.resident || kind == ArahRoleKind.curator
+                      ? 1
+                      : 0,
+              color: fg,
+            ),
+            const SizedBox(width: 4),
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontSize: 10.5,
                     color: fg,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: AppDesignTokens.letterSpacingWide * 0.4,
+                    letterSpacing: 0.2,
                     fontFamily: AppDesignTokens.fontFamilyBody,
                   ),
             ),

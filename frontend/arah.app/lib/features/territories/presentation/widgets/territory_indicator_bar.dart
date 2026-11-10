@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/constants.dart';
 import '../../../../core/providers/current_territory_name_provider.dart';
+import '../../../../core/theme/app_design_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'territory_selector.dart';
 
@@ -16,23 +17,53 @@ class TerritoryIndicatorBar extends ConsumerWidget {
       isScrollControlled: true,
       useSafeArea: true,
       builder: (ctx) {
-        final height = MediaQuery.of(ctx).size.height * 0.6;
+        final height = MediaQuery.of(ctx).size.height * 0.66;
+        final l10n = AppLocalizations.of(ctx)!;
         return SizedBox(
           height: height,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: AppConstants.spacingSm),
+              Container(
+                width: 38,
+                height: 4,
+                decoration: BoxDecoration(
+                  color:
+                      Theme.of(ctx).colorScheme.outline.withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                ),
+              ),
               Padding(
-                padding: const EdgeInsets.all(AppConstants.spacingMd),
-                child: Text(
-                  AppLocalizations.of(context)!.territories,
-                  style: Theme.of(ctx).textTheme.titleMedium,
+                padding: const EdgeInsets.fromLTRB(
+                  AppConstants.spacingLg,
+                  AppConstants.spacingMd,
+                  AppConstants.spacingLg,
+                  AppConstants.spacingMd,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.territories,
+                      style: Theme.of(ctx).textTheme.titleLarge?.copyWith(
+                            fontFamily: AppDesignTokens.fontFamilyDisplay,
+                            letterSpacing: -0.3,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.territoryMembershipHint,
+                      style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
                 child: TerritorySelector(
                   onSelected: () => Navigator.of(ctx).maybePop(),
-                  subtitle: '',
                 ),
               ),
             ],

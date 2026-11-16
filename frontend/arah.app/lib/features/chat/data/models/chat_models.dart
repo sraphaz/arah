@@ -34,7 +34,8 @@ class ChatMessage {
       id: json['id']?.toString() ?? '',
       text: json['text']?.toString() ?? '',
       senderUserId: json['senderUserId']?.toString() ?? '',
-      createdAtUtc: DateTime.tryParse(json['createdAtUtc']?.toString() ?? '') ?? DateTime.now().toUtc(),
+      createdAtUtc: DateTime.tryParse(json['createdAtUtc']?.toString() ?? '') ??
+          DateTime.now().toUtc(),
     );
   }
 

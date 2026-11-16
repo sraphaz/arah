@@ -477,7 +477,15 @@
   "serviceAiAssistant": "AI assistant",
   "serviceAchievements": "Achievements",
   "visitorBannerTitle": "You are visiting as a guest",
+  "visitorBannerTitleWithTerritory": "You are visiting {territoryName}",
+  "@visitorBannerTitleWithTerritory": {
+    "placeholders": {
+      "territoryName": {}
+    }
+  },
+  "visitorBannerSubtitle": "Confirm residency to see posts and vote.",
   "visitorBannerCta": "Confirm residency to vote and see resident-only content",
+  "territoryMembershipHint": "You participate as a resident or visitor.",
   "visitor": "Visitor",
   "resident": "Resident",
   "curator": "Curator",

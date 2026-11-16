@@ -89,16 +89,6 @@
           "OpenTelemetry": "1.9.0"
         }
       },
-      "OpenTelemetry.Exporter.Jaeger": {
-        "type": "Direct",
-        "requested": "[1.6.0-rc.1, )",
-        "resolved": "1.6.0-rc.1",
-        "contentHash": "H7bJkiBhub4cu7WLXrYUdCqszvlaAWA5AYGmi0m4c+AeSEEQGC4e0ywpEdLlbk7f2eSc7eHYY5wJLER4twghpw==",
-        "dependencies": {
-          "OpenTelemetry": "1.6.0-rc.1",
-          "System.Threading.Tasks.Extensions": "4.5.4"
-        }
-      },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
         "type": "Direct",
         "requested": "[1.15.3, )",

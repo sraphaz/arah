@@ -50,8 +50,8 @@ Assert-FileMatches `
 
 Assert-FileMatches `
     -RelPath "$AppRoot/lib/features/home/presentation/screens/main_shell_screen.dart" `
-    -Pattern '(?s)NavigationDestination\([\s\S]*?label:\s*l10n\.services' `
-    -Hint 'label Serviços (l10n.services) na NavigationBar'
+    -Pattern '(?s)bottomNavigationBar:\s*_MainShellBottomNav\([\s\S]*?services:\s*l10n\.services' `
+    -Hint 'bottom-nav canônica com label Serviços (l10n.services)'
 
 Assert-FileMatches `
     -RelPath "$AppRoot/lib/features/home/presentation/screens/main_shell_screen.dart" `

@@ -77,19 +77,38 @@ final territoriesSearchProvider =
 /// Item de território para listagem (onboarding, seletor).
 /// Espera da API: id (Guid string), name, description (opcional); aceita camelCase ou PascalCase.
 class TerritoryItem {
-  const TerritoryItem({required this.id, required this.name, this.description});
+  const TerritoryItem({
+    required this.id,
+    required this.name,
+    this.description,
+    this.region,
+    this.memberCount,
+  });
   final String id;
   final String name;
   final String? description;
+  final String? region;
+  final int? memberCount;
 
   factory TerritoryItem.fromJson(Map<String, dynamic> json) {
     final id = _readString(json, ['id', 'Id']);
     final name = _readString(json, ['name', 'Name', 'title', 'Title']) ?? '';
     final description = _readString(json, ['description', 'Description']);
+    final region = _readString(json, ['region', 'Region', 'cityState', 'CityState']);
+    final memberCount = _readInt(json, [
+      'memberCount',
+      'MemberCount',
+      'members',
+      'Members',
+      'residentCount',
+      'ResidentCount',
+    ]);
     return TerritoryItem(
       id: id ?? '',
       name: name,
       description: description?.isEmpty == true ? null : description,
+      region: region?.isEmpty == true ? null : region,
+      memberCount: memberCount,
     );
   }
 
@@ -99,6 +118,17 @@ class TerritoryItem {
       if (v == null) continue;
       if (v is String) return v;
       return v.toString();
+    }
+    return null;
+  }
+
+  static int? _readInt(Map<String, dynamic> json, List<String> keys) {
+    for (final k in keys) {
+      final v = json[k];
+      if (v == null) continue;
+      if (v is int) return v;
+      if (v is num) return v.toInt();
+      return int.tryParse(v.toString());
     }
     return null;
   }

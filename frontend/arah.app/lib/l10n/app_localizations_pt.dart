@@ -882,7 +882,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Alertas do território exigem residência ou curadoria.';
 
   @override
-  String get filterAll => 'Todos';
+  String get filterAll => 'Tudo';
 
   @override
   String get postDefaultTitle => 'Post';
@@ -1270,8 +1270,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get visitorBannerTitle => 'Você está como visitante';
 
   @override
+  String visitorBannerTitleWithTerritory(String territoryName) {
+    return 'Você é visitante de $territoryName';
+  }
+
+  @override
+  String get visitorBannerSubtitle =>
+      'Confirme residência para ver posts e votar.';
+
+  @override
   String get visitorBannerCta =>
       'Confirme residência para votar e ver conteúdo de moradores';
+
+  @override
+  String get territoryMembershipHint =>
+      'Você participa como morador ou visitante.';
 
   @override
   String get visitor => 'Visitante';

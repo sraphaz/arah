@@ -24,9 +24,9 @@ test('onboarding journey enters the territory as visitor in mobile mode', async 
   await page.touchscreen.tap(195, 780);
 
   await page.waitForURL('**/home', { timeout: 15000 });
-  await expect(appShell).toContainText('Você está como visitante');
+  await expect(appShell).toContainText('Você é visitante de Camburi');
   await expect(appShell).toContainText(
-    'Confirme residência para votar e ver conteúdo de moradores',
+    'Confirme residência para ver posts e votar.',
   );
   await expect(appShell).toContainText('Camburi');
 });

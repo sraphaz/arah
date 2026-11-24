@@ -10,15 +10,15 @@ Status atual (implementado) e como usar os artefatos.
 |------------|----------------|-------------|
 | Build | ✅ `dotnet build` | ✅ implícito (analyze) |
 | Testes | ✅ `dotnet test` + cobertura | ✅ `flutter test --coverage` |
-| Browser smoke | — | ✅ Playwright (`flutter-playwright`) valida login + onboarding web em viewport mobile |
-| Pixel parity | — | ✅ Playwright (`flutter-playwright-pixel-parity`) compara Flutter web vs handoff mobile e bloqueia regressões de login + onboarding |
+| Browser smoke | — | ✅ Playwright (`flutter-playwright`) valida login + onboarding + MainShell/Feed web em viewport mobile |
+| Pixel parity | — | ✅ Playwright (`flutter-playwright-pixel-parity`) compara Flutter web vs handoff mobile e bloqueia regressões de login + onboarding + MainShell/Feed |
 | Cobertura | ✅ Codecov (flag `unittests`) | ✅ Codecov (flag `flutter`) |
 | Análise estática | — | ✅ `flutter analyze --no-fatal-infos` |
 | Segurança | ✅ Trivy (fs) | — (Trivy escaneia o repo) |
 
 - **Flutter:** job `flutter-app` em `frontend/arah.app`: `pub get` → `analyze` → `flutter test --coverage` → upload de `coverage/lcov.info` para Codecov.
-- **Playwright smoke:** job `flutter-playwright` em `frontend/arah.app/e2e`: `flutter build web --web-renderer html` → `npm ci` → `npx playwright install --with-deps chromium` → `npm run test:smoke`. O renderer HTML é usado para manter estáveis os asserts textuais/semânticos do smoke de login + onboarding. Em falha, publica `playwright-report/` e `test-results/` como artefatos do workflow.
-- **Playwright pixel parity:** job `flutter-playwright-pixel-parity` usa o build web padrão do Flutter (renderer visual padrão do runtime), renderiza o handoff `design-system/ui_kits/app` como source of truth em perfil mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2), captura a implementação Flutter no mesmo perfil para login + onboarding e falha se `maxDiffPixelRatio > 0.01`. O job é **blocking** e sobe `playwright-report/` e `test-results/` como artefatos.
+- **Playwright smoke:** job `flutter-playwright` em `frontend/arah.app/e2e`: `flutter build web --web-renderer html` → `npm ci` → `npx playwright install --with-deps chromium` → `npm run test:smoke`. O renderer HTML é usado para manter estáveis os asserts textuais/semânticos do smoke de login + onboarding + MainShell/Feed. Em falha, publica `playwright-report/` e `test-results/` como artefatos do workflow.
+- **Playwright pixel parity:** job `flutter-playwright-pixel-parity` usa o build web padrão do Flutter (renderer visual padrão do runtime), renderiza o handoff `design-system/ui_kits/app` como source of truth em perfil mobile (`390x844`, `isMobile`, `hasTouch`, DPR 2), captura a implementação Flutter no mesmo perfil para login + onboarding + MainShell/Feed e falha se `maxDiffPixelRatio > 0.01`. O job é **blocking** e sobe `playwright-report/` e `test-results/` como artefatos.
 
 ---
 
@@ -54,6 +54,10 @@ Status atual (implementado) e como usar os artefatos.
 | **Onboarding** | `test/features/onboarding/presentation/onboarding_screen_test.dart` | Cabeçalho, lista próxima, CTA de visitante, estado vazio e responsividade do onboarding. |
 | **E2E / Smoke mobile** | `e2e/tests/onboarding.smoke.spec.js` | Fluxo real Flutter `cadastro -> onboarding -> entrar como visitante` com geolocalização e BFF mockados. |
 | **E2E / Pixel parity** | `e2e/tests/onboarding.pixel-parity.spec.js` | Handoff do onboarding é comparado pixel a pixel com a implementação Flutter em `390x844` DPR 2. |
+| **MainShell + Feed** | `test/features/home/presentation/main_shell_screen_test.dart` | Top bar territorial, bottom-nav canônica e entrada no feed inicial. |
+| **Feed** | `test/features/feed/presentation/feed_screen_test.dart` | Filtros `Avisos`/`Vizinhança`, banner de visitante e responsividade mobile estreita. |
+| **E2E / Smoke mobile** | `e2e/tests/main-shell-feed.smoke.spec.js` | Fluxo real pós-onboarding até `/home` valida top bar, banner de visitante, bottom-nav e filtros do feed. |
+| **E2E / Pixel parity** | `e2e/tests/main-shell-feed.pixel-parity.spec.js` | Compara MainShell/Feed Flutter vs handoff mobile em `390x844` DPR 2, exportando handoff/implementação/diff/composite dedicados. |
 | **Explorar** | `test/features/explore/presentation/explore_screen_test.dart` | Tela Explorar exibe título e seção Territórios. |
 | **Perfil** | `test/features/profile/presentation/profile_screen_test.dart` | Perfil logado exibe nome e app bar. |
 | **Unit** | `test/core/network/api_exception_test.dart` | `ApiException.userMessage` (401, 429, 403, 5xx, outros). |
@@ -74,8 +78,8 @@ npx playwright install --with-deps chromium
 npm test
 ```
 
-- **Smoke:** `npm test` (login + onboarding) ou `npm run test:smoke:onboarding`
-- **Pixel parity:** `npm run test:pixel-parity` (login + onboarding, sobre o build web padrão do Flutter) ou `npm run test:pixel-parity:onboarding`
+- **Smoke:** `npm test` (login + onboarding + MainShell/Feed), `npm run test:smoke:onboarding` ou `npm run test:smoke:feed`
+- **Pixel parity:** `npm run test:pixel-parity` (login + onboarding + MainShell/Feed, sobre o build web padrão do Flutter), `npm run test:pixel-parity:onboarding` ou `npm run test:pixel-parity:feed`
 - **Relatório HTML local:** `frontend/arah.app/e2e/playwright-report/`
 - **Artefatos de falha locais:** `frontend/arah.app/e2e/test-results/`
 

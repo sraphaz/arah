@@ -2486,11 +2486,29 @@ abstract class AppLocalizations {
   /// **'Você está como visitante'**
   String get visitorBannerTitle;
 
+  /// No description provided for @visitorBannerTitleWithTerritory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você é visitante de {territoryName}'**
+  String visitorBannerTitleWithTerritory(String territoryName);
+
+  /// No description provided for @visitorBannerSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirme residência para ver posts e votar.'**
+  String get visitorBannerSubtitle;
+
   /// No description provided for @visitorBannerCta.
   ///
   /// In pt, this message translates to:
   /// **'Confirme residência para votar e ver conteúdo de moradores'**
   String get visitorBannerCta;
+
+  /// No description provided for @territoryMembershipHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você participa como morador ou visitante.'**
+  String get territoryMembershipHint;
 
   /// No description provided for @visitor.
   ///

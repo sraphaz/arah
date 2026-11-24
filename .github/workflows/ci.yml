@@ -148,7 +148,7 @@ jobs:
       - name: Install Playwright browser
         working-directory: frontend/arah.app/e2e
         run: npx playwright install --with-deps chromium
-      - name: Run login + onboarding smoke
+      - name: Run login + onboarding + main shell feed smoke
         working-directory: frontend/arah.app/e2e
         run: npm run test:smoke
       - name: Upload Playwright artifacts
@@ -191,7 +191,7 @@ jobs:
       - name: Install Playwright browser
         working-directory: frontend/arah.app/e2e
         run: npx playwright install --with-deps chromium
-      - name: Run login + onboarding pixel parity
+      - name: Run login + onboarding + main shell feed pixel parity
         working-directory: frontend/arah.app/e2e
         run: npm run test:pixel-parity
       - name: Upload Playwright pixel parity artifacts
